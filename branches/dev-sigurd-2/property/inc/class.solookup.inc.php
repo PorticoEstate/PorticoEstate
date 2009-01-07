@@ -111,18 +111,18 @@
 				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter		= isset($data['filter'])?$data['filter']:'none';
 				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'ASC';
 				$order		= isset($data['order'])?$data['order']:'';
 				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by org_name DESC';
+				$ordermethod = ' ORDER BY org_name ASC';
 			}
 
 
