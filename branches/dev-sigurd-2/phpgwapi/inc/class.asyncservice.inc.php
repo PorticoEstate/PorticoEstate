@@ -33,7 +33,7 @@
 		var $crontab = '';
 		var $db;
 		var $db_table = 'phpgw_async';
-		var $debug = true;
+		var $debug = false;
 
 		/**
 		* Constructor
