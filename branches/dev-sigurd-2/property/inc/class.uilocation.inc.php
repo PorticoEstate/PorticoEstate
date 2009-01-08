@@ -57,7 +57,9 @@
 			'summary'	=> true,
 			'columns'	=> true,
 			'select2String' => true,
-			'update_location' => true
+			'update_location' => true,
+			'debug'		=> true,
+			'my_print_rec'=> true
 		);
 
 		function property_uilocation()
@@ -735,6 +737,12 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
+				
+				if( phpgw::get_var('debug') == '1' )
+				{
+					phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $json);	
+				}
+				
 
 	    		return $json;
 			}
@@ -1907,5 +1915,39 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
+		
+		function debug()
+		{
+			//get session's values
+			$my_array = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
+			if(isset($my_array))
+			{
+				//clear session
+				phpgwapi_cache::session_clear($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
+				//replace '<' and '>'
+				$this->my_print_rec($my_array,0);
+				_debug_array($my_array);				
+			}
+			else
+			{
+				echo "empty session's value"; 
+			}
+			die();
+		}
+		
+		function my_print_rec(&$val,$nivel=0)
+		{
+			foreach($val as $key => &$value)
+			{
+				if(is_array($value))
+				{
+					$this->my_print_rec($value,$nivel+1);
+				}
+				else
+				{
+					$value = str_replace(array('<','>'),array('&lt;','&gt;'),$value);
+				}
+			}
+		}		
  }
 

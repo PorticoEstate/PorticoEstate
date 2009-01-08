@@ -48,7 +48,7 @@
 			'view'		=> true,
 			'edit'		=> true,
 			'delete'	=> true,
-			'list_alarm'	=> true,
+			'list_alarm'=> true,
 		);
 
 		function property_uialarm()
@@ -96,7 +96,7 @@
 			
 			if($values['delete_alarm'] && count($values['alarm']))
 			{
-				//$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
+				$receipt = $this->bo->delete_alarm('fm_async',$values['alarm']);
 			}
 			else if(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
 			{
@@ -406,6 +406,7 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
+				
 				return $json;			
 				
 			}
@@ -431,12 +432,14 @@
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('alarm') . ': ' . lang('list alarm');
 
-	  		// Prepare YUI Library
+
+			// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'alarm.index', 'property' );
+
+  			
 
 			//$this->save_sessiondata();		
 	}
-
 
 		function list_alarm()
 		{

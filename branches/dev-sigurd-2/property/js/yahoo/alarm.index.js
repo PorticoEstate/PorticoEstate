@@ -119,25 +119,8 @@
 			my_hdn_action.setAttribute("name",old_name);
 			my_hdn_action.setAttribute("value",false);
 
-			 //Maintein actual page in paginator
-			 path_values.currentPage = myPaginator.getCurrentPage();
-			 //for mantein paginator
-			 path_values.start = myPaginator.getPageRecords()[0];
-			 //for mantein paginator and fill out combo box show all rows
-			 path_values.recordsReturned = values_ds.recordsReturned;
-			
-			 array_sort_order = getSortingANDColumn()
-			 path_values.order = array_sort_order[1];
-			 path_values.sort = array_sort_order[0];
-			
-			 // if actually the datatable show all records, the class PHP has to send all records too.
-			 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
-			 {
-			 	path_values.allrows = 1;
-			 }
-			
-			//call INDEX. Update PERIOD Method is inside of INDEX
-			 execute_ds();			 
+			maintain_pagination_order();
+			execute_ds();			 
   		}		
 		
 	/* ****************************************************************************** */

@@ -43,6 +43,7 @@
 		{
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
+
 	/********************************************************************************/
 		YAHOO.util.Event.addListener(window, "load", function()
 		{

@@ -182,24 +182,9 @@
 	   	 path_values.voucher_id_for_period = p_oItem.cfg.getProperty("onclick").idvoucher;
 	   	 //'text' is the option selected
 	   	 path_values.period = p_oItem.cfg.getProperty('text');
-	   	 //Maintein actual page in paginator
-	   	 path_values.currentPage = myPaginator.getCurrentPage();
-	   	 //for mantein paginator
-	   	 path_values.start = myPaginator.getPageRecords()[0];
-	   	 //for mantein paginator and fill out combo box show all rows
-	   	 path_values.recordsReturned = values_ds.recordsReturned;
-
-	   	 array_sort_order = getSortingANDColumn()
-	   	 path_values.order = array_sort_order[1];
-	   	 path_values.sort = array_sort_order[0];
-
-	   	 // if actually the datatable show all records, the class PHP has to send all records too.
-	   	 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
-	   	 {
-	   	 	path_values.allrows = 1;
-	   	 }
-
-		//call INDEX. Update PERIOD Method is inside of INDEX
+	   	 
+	   	 maintain_pagination_order();
+	   	 //call INDEX. Update PERIOD Method is inside of INDEX
 	   	 execute_ds();
 
 	}
