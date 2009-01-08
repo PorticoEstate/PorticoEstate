@@ -1125,6 +1125,7 @@
 						}
 						else
 						{
+							$marker = str_repeat('-', ($location_type['id'] - $type_id));
 							$entities_link[] = array
 							(
 								'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
@@ -1134,7 +1135,7 @@
 															)
 														),
 								'lang_entity_statustext'	=> $location_type['descr'],
-								'text_entity'			=> '-> ' . $location_type['name'],
+								'text_entity'			=> "{$marker}> " . $location_type['name'],
 							);
 						}
 					}
