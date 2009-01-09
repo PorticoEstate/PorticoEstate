@@ -254,7 +254,7 @@
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}',"
- 	                        						."debug:'{$this->debug}',";
+ 	                        						."debug:'{$this->debug}'";
 
 				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
