@@ -2,8 +2,8 @@
 	/**
 	* phpGroupWare - property: a Facilities Management System.
 	*
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author César Ramírez <cr@ccfirst.com>
+	* @copyright Copyright (C) 2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -34,26 +34,63 @@
 	 * @package property
 	 */
 
-	class property_debug_json
+	class property_uidebug_json
 	{
 		var $public_functions = array
 		(
 			'index' 		=> true
 		);
 
-		function property_debug_json()
+		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
-			$this->acl_location		= '.debug_json';
-
+			$this->acl_location		= '.admin';
+			$this->acl_read 		= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 		}
 
-		function index()
+		public function index()
 		{
-			echo "hello";
-			//_debug_array(phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug"));
+			if(!$this->acl_read)
+			{
+				echo lang('no access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
+			//get session's values
+			$my_array = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
+			if(isset($my_array))
+			{
+				//clear session
+				phpgwapi_cache::session_clear($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
+				//replace '<' and '>'
+				self::_my_print_rec($my_array,0);
+				_debug_array($my_array);				
+			}
+			else
+			{
+				echo "empty session's value"; 
+			}
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
+		
+		static protected function _my_print_rec(&$val,$nivel=0)
+		{
+			foreach($val as $key => &$value)
+			{
+				if(is_array($value))
+				{
+					self::_my_print_rec($value,$nivel+1);
+				}
+				else
+				{
+				//	$value = str_replace(array('<','>'),array('&lt;','&gt;'),$value);
+					$value = htmlspecialchars($value);
+				}
+			}
+		}		
+
+
+
 	}
 

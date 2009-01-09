@@ -56,10 +56,7 @@
 			'stop'		=> true,
 			'summary'	=> true,
 			'columns'	=> true,
-			'select2String' => true,
-			'update_location' => true,
-			'debug'		=> true,
-			'my_print_rec'=> true
+			'update_location' => true
 		);
 
 		function property_uilocation()
@@ -93,6 +90,7 @@
 			$this->type_id				= $this->bo->type_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
+			$this->debug				= $this->bo->debug;
 		}
 
 		function save_sessiondata()
@@ -255,7 +253,8 @@
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
- 	                        						."status:'{$this->status}'";
+ 	                        						."status:'{$this->status}',"
+ 	                        						."debug:'{$this->debug}',";
 
 				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
@@ -738,7 +737,7 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 				
-				if( phpgw::get_var('debug') == '1' )
+				if( $this->debug )
 				{
 					phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $json);	
 				}
@@ -1915,39 +1914,4 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-		
-		function debug()
-		{
-			//get session's values
-			$my_array = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
-			if(isset($my_array))
-			{
-				//clear session
-				phpgwapi_cache::session_clear($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
-				//replace '<' and '>'
-				$this->my_print_rec($my_array,0);
-				_debug_array($my_array);				
-			}
-			else
-			{
-				echo "empty session's value"; 
-			}
-			die();
-		}
-		
-		function my_print_rec(&$val,$nivel=0)
-		{
-			foreach($val as $key => &$value)
-			{
-				if(is_array($value))
-				{
-					$this->my_print_rec($value,$nivel+1);
-				}
-				else
-				{
-					$value = str_replace(array('<','>'),array('&lt;','&gt;'),$value);
-				}
-			}
-		}		
  }
-

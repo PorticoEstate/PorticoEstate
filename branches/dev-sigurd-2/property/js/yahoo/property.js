@@ -879,8 +879,7 @@
 	{
 		if(path_values.debug)
 		{
-			window.open("index.php?menuaction=property.uilocation.debug","mywindow");	
-			//window.open("index.php?menuaction=property.uidebug_json.index","mywindow");
+			window.open("index.php?menuaction=property.uidebug_json.index","mywindow","location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
 		}
 
 		//Desable DropRows of Paginator and Download button.
@@ -1108,5 +1107,5 @@
 
 	CreateLoading();
 	eval("var path_values = "+base_java_url+"");
-	path_values.debug = 1;
+
 	this.execute_ds();

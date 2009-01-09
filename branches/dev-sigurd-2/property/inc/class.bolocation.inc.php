@@ -43,6 +43,7 @@
 		var $type_id;
 		var $lookup;
 		var $use_session;
+		var $debug = false;
 
 		/**
 		* @var object $custom reference to custom fields object
@@ -105,6 +106,7 @@
 			$status					= phpgw::get_var('status');
 			$type_id				= phpgw::get_var('type_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
+			$debug					= phpgw::get_var('debug', 'bool');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : $this->query;
@@ -118,6 +120,7 @@
 			$this->type_id			= isset($type_id) && $type_id ? $type_id : 1;
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->acl_location		= '.location.' . $this->type_id;
+			$this->debug			= isset($debug) && $debug ? $debug : '';
 		}
 
 		function read_sessiondata()
