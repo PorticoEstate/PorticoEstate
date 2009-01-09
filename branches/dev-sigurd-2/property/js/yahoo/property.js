@@ -8,9 +8,10 @@
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
 	var showTimer,hideTimer;
 	var tt = new YAHOO.widget.Tooltip("myTooltip");
+	var lightbox;
 	var maxRowsPerPage = 1000;
 	var myLoading;
-	
+
  /********************************************************************************
  *
  */
@@ -18,10 +19,10 @@
 	{
 		//Maintein actual page in paginator
 		path_values.currentPage = myPaginator.getCurrentPage();
-		
+
 		//for mantein paginator
 		path_values.start = myPaginator.getPageRecords()[0];
-		
+
 		//for mantein paginator and fill out combo box show all rows
 		path_values.recordsReturned = values_ds.recordsReturned;
 
@@ -33,7 +34,7 @@
 		if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
 		{
 			path_values.allrows = 1;
-		}		
+		}
 	}
 
  /********************************************************************************
@@ -422,7 +423,17 @@
 					}
 					else
 					{
-						window.open(sUrl,'_self');
+						//window.open(sUrl,'_self');
+						var onDialogShow = function(e, args, o)
+						{
+							var frame = document.createElement('iframe');
+							frame.src = sUrl;
+							frame.width = "100%";
+							frame.height = "480";
+							o.setBody(frame);
+						};
+						lightbox.showEvent.subscribe(onDialogShow, lightbox);
+						lightbox.show();
 					}
 				}
 			}
@@ -524,7 +535,7 @@
 				{
 					myLoading.hide();
 				}
-				eval('values_ds ='+o.responseText); 
+				eval('values_ds ='+o.responseText);
 				flag_particular_setting='';
 
 				if(flag==0)
@@ -566,6 +577,7 @@
 		if(typeof(linktoolTips)=='object')
 		{
 			show_link_tooltips();
+			create_lightbox();
 		}
 
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'block';
@@ -584,7 +596,7 @@
 		{
 			resultsList	: "records",
 			fields		: fields,
-			metaFields	:{totalRecords: 'totalRecords'} // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.			
+			metaFields	:{totalRecords: 'totalRecords'} // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.
 		};
 		var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
@@ -647,7 +659,7 @@
 						title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].name);
 						description = toolTips[p].description || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].ColumnDescription);
 					}
-					
+
 					if(myPaginator.getCurrentPage() == 2 && myDataTable.getRecordSet().getRecords()[0]==null)
 					{
 						title = toolTips[p].title || myDataTable.getRecordSet().getRecords()[this.getRecordIndex(target)].getData(toolTips[p].name);
@@ -713,7 +725,7 @@
 			oPayload.totalRecords = oResponse.meta.totalRecords;
 			return oPayload;
 		}
-		
+
 		// Override function for custom server-side sorting
 		myDataTable.sortColumn = function(oColumn)
 		{
@@ -767,7 +779,7 @@
 			}
 			myPaginator.setPage(1,true);
 		};
-		
+
 		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 		myContextMenu.addItems(GetMenuContext());
 
@@ -932,6 +944,26 @@
 		{
 			new YAHOO.widget.Tooltip("tt"+u, { context:linktoolTips[u].name, text: "<table class='tooltip-table'><tr class='tooltip'><td class='nolink'>"+linktoolTips[u].title+"</td></tr><tr><td>"+linktoolTips[u].description+"</td></tr></table>"});
 		}
+	}
+
+
+/****************************************************************************************
+* Function to create a lightbox object.
+*/
+	this.create_lightbox = function()
+	{
+		lightbox = new YAHOO.widget.Dialog("datatable-detail",
+		{
+			width : "600px",
+			fixedcenter : true,
+			visible : false,
+			modal : false
+			//draggable: true,
+			//constraintoviewport : true
+		});
+
+		lightbox.render();
+		YAHOO.util.Dom.setStyle('datatable-detail', 'display', 'block');
 	}
 
 
