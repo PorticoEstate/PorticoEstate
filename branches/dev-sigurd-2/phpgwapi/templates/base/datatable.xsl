@@ -356,6 +356,11 @@
       		 -->
     	</table>
   	</div>
+  	<div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
+			<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center"> Record Detail </div>
+			<div class="bd" style="text-align:center;"> </div>
+		</div>
+
   	<div id="footer"> </div>
   	<xsl:call-template name="datatable-yui-definition" />
 
