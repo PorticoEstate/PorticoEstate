@@ -36,7 +36,7 @@
 
 	var config_values =
 	{
-		date_search : 0, //if search has link "Data search"
+		date_search : 0 //if search has link "Data search"
 	}
 
 	this.particular_setting = function()
