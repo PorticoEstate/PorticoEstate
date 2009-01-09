@@ -322,7 +322,7 @@
 			//cramirez: avoid assigning an object to hidden filter.
 			if(array_options[selectsButtons[i].order].length > 0)
 			{
-				menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menu: optionsCB, onclick: {fn: mantainFocusItenMenu}};
+				menuCB = { type: "menu", label:"<em>"+ array_options[selectsButtons[i].order][0][1]+"</em>", id: selectsButtons[i].style, value:"", menuminscrollheight : 40, menumaxheight : 300 ,menu: optionsCB, onclick: {fn: mantainFocusItenMenu}};
 				var tmp = new YAHOO.widget.Button(selectsButtons[i].name, menuCB)
 				eval("oMenuButton_"+selectsButtons[i].order+" = tmp");
 			}
