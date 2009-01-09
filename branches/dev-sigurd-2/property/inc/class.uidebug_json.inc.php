@@ -58,14 +58,21 @@
 			}
 
 			//get session's values
-			$my_array = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
-			if(isset($my_array))
+			$data = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
+			if(isset($data))
 			{
 				//clear session
 				phpgwapi_cache::session_clear($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
 				//replace '<' and '>'
-				self::_my_print_rec($my_array,0);
-				_debug_array($my_array);				
+				if (is_array($data))
+				{
+					self::_my_print_rec($data,0);
+				}
+				else
+				{
+					$data = htmlspecialchars($data);
+				}
+				_debug_array($data);				
 			}
 			else
 			{

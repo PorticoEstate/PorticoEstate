@@ -741,7 +741,8 @@
 				{
 					phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $json);	
 				}
-				
+
+				_debug_json($json);
 
 	    		return $json;
 			}

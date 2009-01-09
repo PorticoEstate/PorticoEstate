@@ -36,6 +36,18 @@
 			$var['help_icon'] = 'icon icon-help';
 		}
 
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+		{
+			$var['debug_url'] = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'property.uidebug_json.index'
+			 )) . "','','')";
+
+			$var['debug_text'] = lang('debug');
+			$var['debug_icon'] = 'icon icon-debug';
+		}
+
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 

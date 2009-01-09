@@ -411,6 +411,51 @@
 	}
 
 	/**
+	* Prepare a dump of the contents of an array for json
+	*
+	* @param array $array the array to dump
+	* @return void
+	*/
+	function _debug_json($incoming_data)
+	{
+	/*  // FIXME - need some kind of unique comparison of a signature of incoming data to avoid repost of the same data set
+		$preloaded_data = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
+		if($preloaded_data)
+		{
+			if(is_array($preloaded_data))
+			{
+				if(is_array($incoming_data))
+				{
+					$data = array_merge($preloaded_data, $incoming_data);
+				}
+				else
+				{
+					$data = array_merge($preloaded_data, array($incoming_data));
+				}
+			}
+			else
+			{
+				if(is_array($incoming_data))
+				{
+					$data = array_merge(array($preloaded_data), $incoming_data);
+				}
+				else
+				{
+					$data = array_merge(array($preloaded_data), array($incoming_data));
+				}
+			
+			}
+		}
+		else
+		{
+			$data = $incoming_data;
+		}
+	*/	
+		$data = $incoming_data;
+		phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $data);
+	}
+
+	/**
 	* phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
 	* @param string $a phpgw version number to check if less than $b
 	* @param string $b phpgw version number to check $a against

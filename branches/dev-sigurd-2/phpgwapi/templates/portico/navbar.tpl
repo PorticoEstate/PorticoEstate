@@ -7,6 +7,9 @@
 					<div class="body">
 						<h2 class="icon">{site_title}</h2>
 						<div class="button-bar">
+							<a href="{debug_url}" class="icon icon-debug">
+								{debug_text}
+							</a>
 							<a href="{about_url}" class="icon icon-about">
 								{about_text}
 							</a>
