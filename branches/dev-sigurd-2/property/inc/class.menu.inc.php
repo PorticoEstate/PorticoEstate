@@ -38,7 +38,7 @@
 		 *
 		 * @return array available menus for the current user
 		 */
-		public function get_menu()
+		public function get_menu($type='')
 		{
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
@@ -821,17 +821,19 @@
 						);
 					}
 
-					$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
-
-					foreach($cat_list as $category)
+					if ($type != 'horisontal')
 					{
-						if ( $acl->check(".entity.{$entry['id']}.{$category['id']}", PHPGW_ACL_READ, 'property') )
+						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
+						foreach($cat_list as $category)
 						{
-							$menus['navigation']["entity_{$entry['id']}"]['children']["entity_{$entry['id']}_{$category['id']}"]	= array
-							(
-								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'] , 'cat_id'=> $category['id'])),
-								'text'	=> $category['name']
-							);
+							if ( $acl->check(".entity.{$entry['id']}.{$category['id']}", PHPGW_ACL_READ, 'property') )
+							{
+								$menus['navigation']["entity_{$entry['id']}"]['children']["entity_{$entry['id']}_{$category['id']}"]	= array
+								(
+									'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'] , 'cat_id'=> $category['id'])),
+									'text'	=> $category['name']
+								);
+							}
 						}
 					}
 				}
