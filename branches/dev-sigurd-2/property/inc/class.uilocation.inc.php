@@ -61,6 +61,7 @@
 
 		function property_uilocation()
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
@@ -487,6 +488,17 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'view',
+						'text' 			=> lang('open view in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.view',
+											'lookup_tenant'	=> $lookup_tenant,
+											'target'		=> '_blank'
+										)),
+						'parameters'	=> $parameters
+					);
 				}
 				if($this->acl_edit)
 				{
@@ -500,6 +512,18 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name'			=> 'edit',
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.edit',
+											'lookup_tenant'	=> $lookup_tenant,
+											'target'		=> '_blank'
+										)),
+						'parameters'	=> $parameters
+					);
+
 				}
 				if($this->acl_delete)
 				{

@@ -1830,6 +1830,7 @@
 
 		function get_menu($app = 'property')
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = false;
 			if(!isset($GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] == 'no')
 			{
 				return;

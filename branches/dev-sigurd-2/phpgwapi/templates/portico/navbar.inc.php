@@ -2,7 +2,11 @@
 
 	function parse_navbar($force = False)
 	{
-		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		$navbar = array();
+		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
+		{
+			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+		}
 
 		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 

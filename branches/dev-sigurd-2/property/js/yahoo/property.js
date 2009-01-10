@@ -423,8 +423,16 @@
 					}
 					else
 					{
+						if(substr_count(sUrl,'target=_blank')>0)
+						{
+							window.open(sUrl,'_blank');
+						}
+						else
+						{
+							window.open(sUrl,'_self');						
+						}
 						//window.open(sUrl,'_self');
-						var onDialogShow = function(e, args, o)
+					/*	var onDialogShow = function(e, args, o)
 						{
 							var frame = document.createElement('iframe');
 							frame.src = sUrl;
@@ -434,6 +442,7 @@
 						};
 						lightbox.showEvent.subscribe(onDialogShow, lightbox);
 						lightbox.show();
+					*/
 					}
 				}
 			}
