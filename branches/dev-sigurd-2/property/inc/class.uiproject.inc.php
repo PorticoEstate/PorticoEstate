@@ -60,6 +60,7 @@
 
 		function property_uiproject()
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project';
 
@@ -399,6 +400,18 @@
 										)),
 								'parameters'	=> $parameters
 							);
+							$datatable['rowactions']['action'][] = array(
+								'my_name' 			=> 'view',
+								'statustext' 		=> lang('view the project'),
+								'text' 				=> lang('open view in new window'),
+								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiproject.view',
+											'target'		=> '_blank'
+
+										)),
+								'parameters'	=> $parameters
+							);
 						}
 						else
 						{
@@ -409,12 +422,23 @@
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'edit',
-								'statustext' 			=> lang('edit the project'),
-								'text'		=> lang('edit'),
-								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								'statustext' 		=> lang('edit the project'),
+								'text'				=> lang('edit'),
+								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiproject.edit'
 
+										)),
+								'parameters'	=> $parameters
+							);
+							$datatable['rowactions']['action'][] = array(
+								'my_name' 			=> 'edit',
+								'statustext' 		=> lang('edit the project'),
+								'text'	 			=> lang('open edit in new window'),
+								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiproject.edit',
+											'target'		=> '_blank'
 										)),
 								'parameters'	=> $parameters
 							);

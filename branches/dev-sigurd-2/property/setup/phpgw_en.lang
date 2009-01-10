@@ -987,6 +987,8 @@ Open	property	en	Open
 Open Date	property	en	Open Date
 Opened	property	en	Opened
 Opened By	property	en	Opened By
+open edit in new window	property	en	Open Edit in new Window
+open view in new window	property	en	Open View in new Window
 Order	property	en	Order
 Order # that initiated the invoice	property	en	Order # that initiated the invoice
 Order ID	property	en	Order ID

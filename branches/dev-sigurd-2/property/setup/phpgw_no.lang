@@ -966,6 +966,8 @@ Open Date	property	no	Startet dato
 Opened	property	no	Åpnet
 Opened by	property	no	Startet av
 Opened By	property	no	Startet av
+open edit in new window	property	no	Åpne Edit i nytt vindu
+open view in new window	property	no	Åpne Vis i nytt vindu
 Order	property	no	bestill
 Order ID	property	no	Ordre nr
 Order # that initiated the invoice	property	no	Order nr som referanse for fakturaen

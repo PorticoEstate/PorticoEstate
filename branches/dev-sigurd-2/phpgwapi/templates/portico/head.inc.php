@@ -89,7 +89,17 @@
 
 		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
 	}
-	$_border_layout_config	= json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config'));
+
+	$_border_layout_config	= execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config');
+
+	if(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar'])
+	{
+		//FIXME This one removes the sidepanels - but the previous settings are forgotten
+		$_border_layout_config 	= array_unshift($_border_layout_config, array('nonavbar' => true));
+	}
+
+	$_border_layout_config = json_encode($_border_layout_config);
+
 	$_navbar_config			= json_encode($navbar_config);
 
 	$app = lang($app);

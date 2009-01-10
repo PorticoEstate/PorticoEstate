@@ -64,8 +64,8 @@
 
 		function property_uientity()
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -589,6 +589,19 @@
 														)),
 						'parameters'			=> $parameters
 				);
+				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'view',
+						'text' 			=> lang('open view in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+																'menuaction'	=> 'property.uientity.view',
+																'entity_id'		=> $this->entity_id,
+																'cat_id'		=> $this->cat_id,
+																'type'			=> $this->type,
+																'target'		=> '_blank'
+														)),
+						'parameters'			=> $parameters
+				);
 			}
 			if($this->acl_edit)
 			{
@@ -601,6 +614,19 @@
 																'entity_id'		=> $this->entity_id,
 																'cat_id'		=> $this->cat_id,
 																'type'			=> $this->type
+														)),
+						'parameters'			=> $parameters
+				);
+				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+																'menuaction'	=> 'property.uientity.edit',
+																'entity_id'		=> $this->entity_id,
+																'cat_id'		=> $this->cat_id,
+																'type'			=> $this->type,
+																'target'		=> '_blank'
 														)),
 						'parameters'			=> $parameters
 				);

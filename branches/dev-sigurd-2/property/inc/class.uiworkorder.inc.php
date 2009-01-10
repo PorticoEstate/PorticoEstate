@@ -60,6 +60,7 @@
 
 		function property_uiworkorder()
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::workorder';
 
@@ -446,15 +447,35 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'view',
+						'text' 			=> lang('open view in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiworkorder.view',
+											'target'		=> '_blank'
+										)),
+						'parameters'	=> $parameters
+					);
 				}
 				if($this->acl_edit && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
 				{
 					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'edit',
+						'my_name'		=> 'edit',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiworkorder.edit'
+										)),
+						'parameters'	=> $parameters
+					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiworkorder.edit',
+											'target'		=> '_blank'
 										)),
 						'parameters'	=> $parameters
 					);
