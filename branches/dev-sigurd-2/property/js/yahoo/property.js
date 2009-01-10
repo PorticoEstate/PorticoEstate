@@ -889,11 +889,6 @@
 */
 	this.myRenderEvent = function()
 	{
-		if(path_values.debug)
-		{
-			window.open("index.php?menuaction=property.uidebug_json.index","mywindow","location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
-		}
-
 		//Desable DropRows of Paginator and Download button.
 		if(myPaginator.getTotalRecords() > maxRowsPerPage)
 		{

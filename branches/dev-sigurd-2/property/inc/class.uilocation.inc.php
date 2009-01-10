@@ -90,7 +90,6 @@
 			$this->type_id				= $this->bo->type_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
-			$this->debug				= $this->bo->debug;
 		}
 
 		function save_sessiondata()
@@ -253,8 +252,7 @@
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
- 	                        						."status:'{$this->status}',"
- 	                        						."debug:'{$this->debug}'";
+ 	                        						."status:'{$this->status}'";
 
 				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
@@ -736,13 +734,8 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
-				
-				if( $this->debug )
-				{
-					phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $json);	
-				}
 
-				_debug_json($json);
+				_debug_array($json);
 
 	    		return $json;
 			}

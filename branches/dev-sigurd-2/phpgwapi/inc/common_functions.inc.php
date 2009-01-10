@@ -401,6 +401,28 @@
 	*/
 	function _debug_array($array,$print=True)
 	{
+		if( phpgw::get_var('phpgw_return_as') == 'json' )
+		{
+			$bt = debug_backtrace();
+			if($array && !is_array($array))
+			{
+				$array = array($array);
+			}
+			
+			$data = array
+			(
+				'info' => array
+							(
+								'file' => "Called from file: {$bt[0]['file']}",
+								'line' => "line: {$bt[0]['line']}"
+							), 
+				'data' => $array
+			);
+			unset($bt);
+			phpgwapi_cache::session_set($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug", $data);
+			return;
+		}
+
 		$dump = '<pre>' . print_r($array, true) . '</pre>';
 		if(!$print)
 		{
