@@ -54,12 +54,12 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soproject');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->solocation = CreateObject('property.solocation');
+			$this->bocommon 	= & $this->so->bocommon;
+			$this->solocation 	= CreateObject('property.solocation', $this->bocommon);
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
 			$this->cats->supress_info	= true;
-			$this->interlink 	= CreateObject('property.interlink');
+			$this->interlink 	= $this->so->interlink;
 
 			if ($session)
 			{

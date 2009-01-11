@@ -69,6 +69,7 @@
 
 		function property_bocommon()
 		{
+//_debug_array($bt = debug_backtrace());
 			$this->socommon			= CreateObject('property.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 

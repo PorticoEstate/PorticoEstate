@@ -69,7 +69,7 @@
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo				= CreateObject('property.boproject',true);
-			$this->bocommon			= CreateObject('property.bocommon');
+			$this->bocommon			= & $this->bo->bocommon;
 			$this->cats				= & $this->bo->cats;
 
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
@@ -81,12 +81,12 @@
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
-			$this->sort			= $this->bo->sort;
+			$this->sort				= $this->bo->sort;
 			$this->order			= $this->bo->order;
 			$this->filter			= $this->bo->filter;
 			$this->cat_id			= $this->bo->cat_id;
 			$this->status_id		= $this->bo->status_id;
-			$this->wo_hour_cat_id		= $this->bo->wo_hour_cat_id;
+			$this->wo_hour_cat_id	= $this->bo->wo_hour_cat_id;
 		}
 
 		function save_sessiondata()

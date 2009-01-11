@@ -67,7 +67,7 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= CreateObject('property.bocommon');
+			$this->bocommon				= & $this->bo->bocommon;
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 

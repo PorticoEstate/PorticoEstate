@@ -164,14 +164,15 @@ YAHOO.PORTICO.BorderLayout = function()
 		if( typeof this.config.unitRightWidth == 'undefined' )
 		{
 			this.config.unitRightWidth = 6;
-		}
-
+		}	
+		
 		this.layout = new YAHOO.widget.Layout({
 			minWidth: 600,
 			minHeight: 400,
             units: [
 				{ position: 'top', body: layout['north'], height: 26 },
-				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
+	//			{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
+				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: true , maxWidth: 300, minWidth: 6 },
                 { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
                 { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
                 { position: 'bottom', body: layout['south'], height: 26 }
@@ -180,11 +181,19 @@ YAHOO.PORTICO.BorderLayout = function()
 
         this.layout.render();
 
+// Would be nice to detect whether the menu is collapsed in a different page and the setting transferred to the next one
+//		if (this.config.collapsed == true)
+//		{
+//			this.layout.getUnitByPosition('left').collapse();
+//		}
 		this.layout.on('resize', this.handleResize );
-
 	};
 
 	this.handleResize = function() {
+		
+		//is it possible to detect if 'left' is collapsed ?
+		// var collapsed = some expression to detect...
+
 		var unitLeftWidth = self.layout.getUnitByPosition('left').getSizes().wrap.w + 10;
 		var unitRightWidth = self.layout.getUnitByPosition('right').getSizes().wrap.w + 10;
 

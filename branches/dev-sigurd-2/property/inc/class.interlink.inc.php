@@ -50,8 +50,12 @@
 		function __construct()
 		{
 //			$this->_account			=& $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db 				=& $GLOBALS['phpgw']->db;
-			$this->boadmin_entity	= CreateObject('property.boadmin_entity');
+			$this->_db 							=& $GLOBALS['phpgw']->db;
+			$this->boadmin_entity				= CreateObject('property.boadmin_entity');
+			$this->soadmin_entity				= & $this->boadmin_entity->so;
+			$this->soadmin_entity->type			= & $this->boadmin_entity->type;
+			$this->soadmin_entity->type_app		= & $this->boadmin_entity->type_app;
+
 
 //			$this->_like 			=& $this->db->like;
 //			$this->_join 			=& $this->db->join;
@@ -238,10 +242,6 @@
 		public function get_child_date($appname, $origin_location, $target_location, $id, $entity_id = '', $cat_id = '')
 		{
 			$dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if($cat_id)
-			{
-				$soadmin_entity	= CreateObject('property.soadmin_entity');
-			}
 
 			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
 			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
@@ -265,7 +265,7 @@
 				$entry['link']=$this->get_relation_link(array('location'=>$target_location), $entry['target_id']);
 				if($cat_id)
 				{
-					$entry['descr']=$soadmin_entity->read_category_name($entity_id,$cat_id);
+					$entry['descr']=$this->soadmin_entity->read_category_name($entity_id,$cat_id);
 				}
 				else
 				{

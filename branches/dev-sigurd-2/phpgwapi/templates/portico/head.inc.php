@@ -95,7 +95,7 @@
 	if(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar'])
 	{
 		//FIXME This one removes the sidepanels - but the previous settings are forgotten
-		$_border_layout_config 	= array_unshift($_border_layout_config, array('nonavbar' => true));
+		$_border_layout_config = true;
 	}
 
 	$_border_layout_config = json_encode($_border_layout_config);

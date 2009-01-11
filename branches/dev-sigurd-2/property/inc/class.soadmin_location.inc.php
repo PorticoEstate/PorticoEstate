@@ -38,7 +38,7 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
+			$this->db           = $this->bocommon->new_db();
 
 			$this->join		= $this->bocommon->join;
 			$this->like		= $this->bocommon->like;

@@ -37,12 +37,21 @@
 		var $grants;
 		var $type = 'entity';
 		var $type_app;
+		var $bocommon;
 
-		function property_soadmin_entity($entity_id='',$cat_id='')
+		function property_soadmin_entity($entity_id='', $cat_id='', $bocommon = '')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
+
+			if(!$bocommon || !is_object($bocommon))
+			{
+				$this->bocommon			= CreateObject('property.bocommon');
+			}
+			else
+			{
+				$this->bocommon = $bocommon;
+			}
+
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db($this->db);
 			$this->join			= $this->bocommon->join;

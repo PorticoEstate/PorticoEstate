@@ -35,16 +35,22 @@
 	class property_solocation
 	{
 
-		function property_solocation()
+		var $bocommon;
+		function property_solocation($bocommon = '')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
-			$this->bocommon			= CreateObject('property.bocommon');
+			if(!$bocommon || !is_object($bocommon))
+			{
+				$this->bocommon			= CreateObject('property.bocommon');
+			}
+			else
+			{
+				$this->bocommon = $bocommon;
+			}
 			$this->db           	= $this->bocommon->new_db();
 			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->socommon			= CreateObject('property.socommon');
+			$this->socommon			= & $this->bocommon->socommon;
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;

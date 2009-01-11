@@ -43,7 +43,6 @@
 			$this->db           = $this->bocommon->new_db();
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
-			$this->soadmin_entity	= CreateObject('property.soadmin_entity');
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
@@ -77,7 +76,7 @@
 
 			if(!$this->grants)
 			{
-				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
+//				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
 				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
 			}
 
