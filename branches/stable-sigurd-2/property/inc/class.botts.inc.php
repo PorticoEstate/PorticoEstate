@@ -704,7 +704,7 @@
 		// build body
 			$body  = '';
 	//		$body .= lang('Ticket').' #'.$id."\n";
-			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php','menuaction='.'property.uitts.view&id=' . $id).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$timestampopened."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
 //			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
