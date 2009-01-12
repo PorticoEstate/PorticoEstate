@@ -56,7 +56,7 @@
 				);
 
 			myLoading.setHeader("Loading, please wait...");
-			myLoading.setBody('<img src="http://us.i1.yimg.com/us.yimg.com/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
+			myLoading.setBody('<img src="phpgwapi/templates/base/images/loading.gif" />');
 			myLoading.render(document.body);
 		}
 	}
