@@ -18,7 +18,7 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'noheader'                => true,
-		'nonavbar'                => true,
+		'nonavbar'                => false,
 		'currentapp'              => 'home',
 		'enable_network_class'    => true,
 		'enable_contacts_class'   => true,
