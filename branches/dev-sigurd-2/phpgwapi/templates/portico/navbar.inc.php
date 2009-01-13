@@ -19,10 +19,10 @@
 			'user_fullname' => $user->__toString()
 		);
 
-		if ( isset($navbar['preferences']) )
+		if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 		{
-			$var['preferences_url'] = $navbar['preferences']['url'];
-			$var['preferences_text'] = $navbar['preferences']['text'];
+			$var['preferences_url'] = $GLOBALS['phpgw']->link('/preferences/index.php');
+			$var['preferences_text'] = lang('preferences');
 		}
 
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
