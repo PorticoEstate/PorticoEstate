@@ -1971,30 +1971,23 @@
 
 			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id);
 
-			if(is_array($content))
+			$sum = 0;
+			foreach ($content as & $entry)
 			{
-				$p_year = date("Y",strtotime($start_date));
-				$p_month = date("m",strtotime($start_date));
-				$i=0;
-				while(each($content))
-				{
-					$p_start_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,$content[$i]['period'],1,$p_year),$dateformat);
-					$p_end_date		= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,($content[$i]['period']+1),0,$p_year),$dateformat);
-					$sum			= $sum+$content[$i]['consume'];
-					$content[$i]['link_voucher'] 	= $GLOBALS['phpgw']->link('/index.php',array(
-														'menuaction'		=> 'property.uiinvoice.index',
-														'paid'				=> true,
-														'user_lid'			=> 'all',
-														'district_id'		=> $district_id,
-														'b_account_class'	=> $b_account_class,
-														'start_date'		=> $p_start_date,
-														'end_date'			=> $p_end_date
-														)
-													);
-					$content[$i]['consume'] 	= number_format($content[$i]['consume'], 0, ',', ' ');
-					$i++;
-				}
+				$sum			= $sum + $entry['consume'];
+				$entry['link_voucher'] 	= $GLOBALS['phpgw']->link('/index.php',array(
+													'menuaction'		=> 'property.uiinvoice.index',
+													'paid'				=> true,
+													'user_lid'			=> 'all',
+													'district_id'		=> $district_id,
+													'b_account_class'	=> $b_account_class,
+													'start_date'		=> $start_date,
+													'end_date'			=> $end_date
+													)
+												);
+				$entry['consume'] 	= number_format($entry['consume'], 0, ',', ' ');
 			}
+
 
 			$uicols = array
 			(

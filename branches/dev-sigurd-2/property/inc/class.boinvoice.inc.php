@@ -101,6 +101,9 @@
 
 		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='')
 		{
+			$start_date	= $this->bocommon->date_to_timestamp($start_date);
+			$end_date	= $this->bocommon->date_to_timestamp($end_date);
+			
 			$invoice = $this->so->read_invoice(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id, 'paid' => $paid,
 											'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
@@ -133,6 +136,9 @@
 
 		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='')
 		{
+			$start_date	= $this->bocommon->date_to_timestamp($start_date);
+			$end_date	= $this->bocommon->date_to_timestamp($end_date);
+
 			$invoice = $this->so->read_consume(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
