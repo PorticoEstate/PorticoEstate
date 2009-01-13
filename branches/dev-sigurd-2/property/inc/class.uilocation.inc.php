@@ -759,8 +759,6 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-				_debug_array($json);
-
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
