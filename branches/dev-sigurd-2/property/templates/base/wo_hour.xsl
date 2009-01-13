@@ -1678,6 +1678,14 @@
 				</td>
 				</form>
 			</tr>
+			<tr>
+				<td align="left" height="50">
+					<form method="post" action="{done_action}">
+						<input type="submit" name="save_done" value="{lang_done}">
+						</input>
+					</form>
+				</td>
+			</tr>
 		</table>
 	</xsl:template>
 

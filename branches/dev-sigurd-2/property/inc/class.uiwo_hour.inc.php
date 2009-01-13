@@ -61,7 +61,7 @@
 		function property_uiwo_hour()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->create_html			= CreateObject('phpgwapi.xslttemplates');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -560,8 +560,9 @@
 				'lang_show_details_statustext'		=> lang('Show details'),
 
 				'lang_mark_draft'			=> lang('Mark as DRAFT'),
-				'lang_mark_draft_statustext'		=> lang('Mark the tender as DRAFT')
-
+				'lang_mark_draft_statustext'		=> lang('Mark the tender as DRAFT'),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
+				'lang_done'						=> lang('done')
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
