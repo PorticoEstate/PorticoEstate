@@ -68,7 +68,6 @@
 	*/
 	this.create_message = function()
 	{
-
 		div_message= YAHOO.util.Dom.get("message");
 
 		//SHOW message if exist 'values_ds.message'
@@ -94,7 +93,6 @@
 		 	{
 		 		for(i=0; i<values_ds.message[0].error.length; i++)
 			 	{
-
 			 		oDiv=document.createElement("DIV");
 			 		txtNode = document.createTextNode(values_ds.message[0].error[i].msg);
 			 		oDiv.appendChild(txtNode);
@@ -104,7 +102,6 @@
 			 		div_message.appendChild(oDiv);
 			  	}
 		 	}
-
 		 }
 	}
 
@@ -198,14 +195,71 @@
 		var divs= YAHOO.util.Dom.getElementsByClassName('field');
 		var mydiv = divs[divs.length-1];
 		//remove all child of mydiv
-		if ( mydiv.hasChildNodes() )
-	    while ( mydiv.childNodes.length >= 1 )
-	    {
-	        mydiv.removeChild( mydiv.firstChild );
-	    }
-
+		if (mydiv.hasChildNodes())
+		{
+			while ( mydiv.childNodes.length >= 1 )
+		    {
+		        mydiv.removeChild( mydiv.firstChild );
+		    }
+		}
 		// styles for dont show
-		mydiv.style.display = 'none';
+		mydiv.style.display = "none";
+		
+		//Asign values for None/Janitor/Supervisor/Budgat
+		values_orig = YAHOO.util.Dom.getElementsByClassName('sign_origClass');
+		values_tophp = YAHOO.util.Dom.getElementsByClassName('sign_tophp');
+		
+		for(j=0;j<4;j++)
+		{
+			if(j==0)
+			{
+				values_news = YAHOO.util.Dom.getElementsByClassName('signClass');
+			}
+			else if(j==1)
+			{
+				values_news = YAHOO.util.Dom.getElementsByClassName('janitorClass');
+			}
+			else if(j==2)
+			{
+				values_news = YAHOO.util.Dom.getElementsByClassName('supervisorClass');
+			}			
+			else if(j==3)
+			{
+				values_news = YAHOO.util.Dom.getElementsByClassName('budget_responsibleClass');
+			}
+			
+			for(i=0;i<values_news.length;i++)
+			{
+				if( (values_news[i].name != "") && (values_news[i].value != values_orig[i].value) && (values_news[i].checked) )
+				{
+					values_tophp[i].value = values_news[i].value;
+				}
+			}
+		}
+		
+		//Asign values for Kreditnota
+		values_news = YAHOO.util.Dom.getElementsByClassName('kreditnota_tmp');
+		values_tophp = YAHOO.util.Dom.getElementsByClassName('kreditnota_tophp');
+
+		for(i=0;i<values_news.length;i++)
+		{
+			if(values_news[i].checked)
+			{
+				values_tophp[i].value = true;
+			}
+		}
+	
+		//Asign values for Transfer
+		values_news = YAHOO.util.Dom.getElementsByClassName('transfer_idClass');
+		values_tophp = YAHOO.util.Dom.getElementsByClassName('transfer_tophp');
+
+		for(i=0;i<values_news.length;i++)
+		{
+			if(values_news[i].checked)
+			{
+				values_tophp[i].value = true;
+			}
+		}		
 
 		//get all controls of datatable
 		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
@@ -213,31 +267,15 @@
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
-			myclone = valuesForPHP[i].cloneNode(false);
+			myclone = valuesForPHP[i].cloneNode(true);
 			mydiv.appendChild(myclone);
 		}
 		// find out the unique form
-		formObject = document.getElementsByTagName('form');
+		formObject = document.body.getElementsByTagName('form');
 		// modify the 'form' for send it as POST using asyncronize call
 		YAHOO.util.Connect.setForm(formObject[0]);
 
-		//Maintein actual page in paginator
-	   	 path_values.currentPage = myPaginator.getCurrentPage();
-	   	  //for mantein paginator
-	   	 path_values.start = myPaginator.getPageRecords()[0];
-	   	 //for mantein paginator and fill out combo box show all rows
-	   	 path_values.recordsReturned = values_ds.recordsReturned;
-
-	   	 array_sort_order	= getSortingANDColumn();
-	   	 path_values.order	= array_sort_order[1];
-	   	 path_values.sort	= array_sort_order[0];
-
-	   	 // if actually the datatable show all records, the class PHP has to send all records too.
-	   	 if(myPaginator.get("rowsPerPage")== values_ds.totalRecords)
-	   	 {
-	   	 	path_values.allrows = 1;
-	   	 }
-
+	   	 maintain_pagination_order();
 	   	 execute_ds();
 	}
 
@@ -273,7 +311,7 @@
 		newTR = document.createElement('tr');
 		//columns with colspan 10
 		newTD = document.createElement('td');
-		newTD.colSpan = 11;
+		newTD.colSpan = 14;
 		newTD.style.borderTop="1px solid #000000";
 		newTD.appendChild(document.createTextNode(''));
 		newTR.appendChild(newTD.cloneNode(true));
@@ -372,7 +410,7 @@
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		//avoid render buttons html
-		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = "none";
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique

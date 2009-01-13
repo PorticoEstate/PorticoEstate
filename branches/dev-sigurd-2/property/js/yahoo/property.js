@@ -949,14 +949,18 @@
 					}
 				}
 			}
-			//see in datatable.xsl
-			if(allow_allrows == 1)
+			//avoid error when div "paging" is delete (innerHTML="")
+			if(YAHOO.util.Dom.inDocument("yui-pg0-0-rpp"))
 			{
-				YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = false;
-			}
-			else
-			{
-				YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = true;
+				//see in datatable.xsl
+				if(allow_allrows == 1)
+				{
+					YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = false;
+				}
+				else
+				{
+					YAHOO.util.Dom.getElementsByClassName('yui-pg-rpp-options','select')[0].disabled = true;
+				}
 			}
 		}
 

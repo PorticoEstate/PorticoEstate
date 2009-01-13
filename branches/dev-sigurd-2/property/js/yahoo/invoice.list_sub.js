@@ -42,29 +42,41 @@
 			var mydiv = divs[divs.length-1];
 			//remove all child of mydiv
 			if ( mydiv.hasChildNodes() )
-		    while ( mydiv.childNodes.length >= 1 )
-		    {
-		        mydiv.removeChild( mydiv.firstChild );
-		    }
+			{
+				while ( mydiv.childNodes.length >= 1 )
+			    {
+			        mydiv.removeChild( mydiv.firstChild );
+			    }
+			}
 
 			// styles for dont show
 			mydiv.style.display = 'none';
 
+			//asign values for check buttons 'close_order'
+			checks_close_order = YAHOO.util.Dom.getElementsByClassName('close_order_tmp');
+			hiddens_close_order = YAHOO.util.Dom.getElementsByClassName('close_order');
+			for(i=0;i<checks_close_order.length;i++)
+			{
+				if(checks_close_order[i].checked)
+				{
+					hiddens_close_order[i].value = true;
+				}
+			}
+			
 			//asign values for select buttons 'tax_code'
 			selects_tax_code = YAHOO.util.Dom.getElementsByClassName('tax_code_tmp');
 			hiddens_tax_code = YAHOO.util.Dom.getElementsByClassName('tax_code');
 			for(i=0;i<selects_tax_code.length;i++)
 			{
 				hiddens_tax_code[i].value = selects_tax_code[i].value
-
 			}
+			
 			//asign values for select buttons 'dimb'
 			selects_dimb = YAHOO.util.Dom.getElementsByClassName('dimb_tmp');
 			hiddens_dimb = YAHOO.util.Dom.getElementsByClassName('dimb');
 			for(i=0;i<selects_dimb.length;i++)
 			{
 				hiddens_dimb[i].value = selects_dimb[i].value
-
 			}
 
 			//get all controls of datatable
@@ -113,7 +125,7 @@
 			// Appends mydiv to newTD
 			newTD.appendChild(mydiv);
 			//Add TD to TR
-			newTR.appendChild(newTD.cloneNode(true));
+			newTR.appendChild(newTD);
 		}
 	/********************************************************************************/
 		check_all = function(myclass)
@@ -154,6 +166,8 @@
 				tableYUI.setAttribute("id","tableYUI");
 
 				oNormalButton_0.focus();
+				create_table_info_invoice_sub();
+				delete_paginator();
 			}
 			else if(flag_particular_setting=='update')
 			{
@@ -164,27 +178,25 @@
 		this.myParticularRenderEvent = function()
 		{
 			delete_paginator();
-			create_table_info_invoice_sub();
-			delete_message();
+			delete_content_div("message");
 			create_message();
 			tableYUI.deleteTFoot();
 			addFooterDatatable();
 		}
 	/********************************************************************************/
-		this.delete_paginator = function()
+		delete_paginator = function()
 		{
 			//not SHOW paginator
-			paging= YAHOO.util.Dom.get('paging');
-		 	//add break line
-		 	paging.innerHTML = "<span><img src=''/></span>";
+			YAHOO.util.Dom.get("paging").innerHTML = '';
 		}
 
 	/********************************************************************************
 	* Delete all message un DIV 'message'
 	*/
-		this.delete_message = function()
+		//this.delete_message = function()
+		this.delete_content_div = function(mydiv)
 		{
-			div_message= YAHOO.util.Dom.get("message");
+			div_message= YAHOO.util.Dom.get(mydiv);
 			if ( div_message.hasChildNodes() )
 			{
 				while ( div_message.childNodes.length >= 1 )
@@ -198,18 +210,10 @@
 	*/
 	this.create_table_info_invoice_sub = function()
 	{
-
-		div_message= YAHOO.util.Dom.getElementsByClassName("field","div")[0];
-
-		if ( div_message.hasChildNodes() )
-		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
-		}
-
+		div_message= YAHOO.util.Dom.getElementsByClassName('field','div')[0];
 		newTable = document.createElement('table');
+		//fix IE error
+		newTbody = document.createElement("TBODY");
 
 		//SHOW message if exist 'values_ds.message'
 		 if(window.values_ds.current_consult)
@@ -221,18 +225,19 @@
 		 		{
 		 			newTD = document.createElement('td');
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i][j]));
-		 			newTR.appendChild(newTD.cloneNode(true));
+		 			newTR.appendChild(newTD);
 		 			//add : after title
 		 			if(j==0)
 		 			{
 			 			newTD = document.createElement('td');
 			 			newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
-			 			newTR.appendChild(newTD.cloneNode(true));
+			 			newTR.appendChild(newTD);
 		 			}
 		 		}
-		 		newTable.appendChild(newTR.cloneNode(true));
+		 		newTbody.appendChild(newTR);
 			 }
 		 }
+		 newTable.appendChild(newTbody);
 		 div_message.appendChild(newTable);
 	}
 
@@ -241,7 +246,9 @@
 	*/
 	this.create_message = function()
 	{
-		div_message= YAHOO.util.Dom.get("message");
+		//div_message= YAHOO.util.Dom.get("message");
+		div_message= document.getElementById("message");
+		
 		//SHOW message if exist 'values_ds.message'
 		 if(window.values_ds.message)
 		 {
@@ -274,7 +281,7 @@
 			newTD.colSpan = 1;
 			newTD.style.borderTop="1px solid #000000";
 			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD.cloneNode(true));
+			newTR.appendChild(newTD);
 
 			CreateRowChecked("transfer_idClass");
 
@@ -283,7 +290,7 @@
 			newTD.colSpan = 3;
 			newTD.style.borderTop="1px solid #000000";
 			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD.cloneNode(true));
+			newTR.appendChild(newTD);
 			//Sum
 			newTD = document.createElement('td');
 			newTD.colSpan = 1;
@@ -292,23 +299,23 @@
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
 			newTD.appendChild(document.createTextNode(values_ds.sum));
-			newTR.appendChild(newTD.cloneNode(true));
+			newTR.appendChild(newTD);
 			//columns with colspan 5
 			newTD = document.createElement('td');
 			newTD.colSpan = 5;
 			newTD.style.borderTop="1px solid #000000";
 			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD.cloneNode(true));
+			newTR.appendChild(newTD);
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
 			myfoot.setAttribute("id","myfoot");
-			myfoot.appendChild(newTR.cloneNode(true));
+			myfoot.appendChild(newTR);
 	  	}
 	/********************************************************************************/
 		YAHOO.util.Event.addListener(window, "load", function()
 		{
 			//avoid render buttons html
-			YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
+			YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = "none";
 
 			var loader = new YAHOO.util.YUILoader();
 			loader.addModule({

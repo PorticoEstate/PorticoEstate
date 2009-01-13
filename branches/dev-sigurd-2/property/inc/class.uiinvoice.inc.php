@@ -229,7 +229,9 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			 {
 			 	$values["save"]="Save";
+			 	_debug_array($values);
 			 	$receipt = $this->bo->update_invoice($values);
+
 			 }
 
 			 // Edit Period
@@ -250,10 +252,7 @@
 		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 							    				(
 													'menuaction'		=> 'property.uiinvoice.index',
-													//'order'				=> $this->order,
-													//'sort'				=> $this->sort,
 													'cat_id'			=> $this->cat_id,
-													//'user_lid'			=> 'all',
 													'user_lid'			=> $this->user_lid,
 													'sub'				=> $this->sub,
 													'query'				=> $this->query,
@@ -270,10 +269,7 @@
 
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiinvoice.index',"
-	    											//."order:'{$this->order}',"
-	    											//."sort:'{$this->sort}',"
  	                        						."cat_id: '{$this->cat_id}',"
- 	                        						//."user_lid:'all',"
  	                        						."user_lid:'{$this->user_lid}',"
 						 	                        ."sub:'{$this->sub}',"
  	                        						."query:'{$this->query}',"
@@ -306,8 +302,6 @@
 					$jscal->add_listener('start_date');
 					$jscal->add_listener('end_date');
 				}
-
-
 				if (!$paid)
 				{
 				$field_invoice = array(
@@ -610,18 +604,17 @@
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
-			//die(_debug_array($content));
 			$uicols = array (
-				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
+				'type'			=>	array(numbre,numbre,numbre,number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
 
-				'col_name'		=>	array(vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota,sign      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
-				'name'			=>	array(vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
+				'col_name'		=>	array(transfer,kreditnota,sign,vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota_tmp,sign_tmp      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
+				'name'			=>	array(dummy,dummy,dummy,vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
 
-				'formatter'		=>	array('','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
+				'formatter'		=>	array('','','','','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
 
-				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','','','centerClasss','','','','','rightClasss','rightClasss','','rightClasss','','comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
+				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'className'		=> 	array('','','','','','','','','','centerClasss','','','',$paid?'rightClasss':'','rightClasss','rightClasss','','rightClasss','',$paid?'centerClasss':'comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
 				);
 
 			//url to detail of voucher
@@ -642,12 +635,12 @@
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
 						//values column kreditnota
-						if($uicols['type'][$i]=='checkbox' && $uicols['col_name'][$i]=='kreditnota')
+						if($uicols['type'][$i]=='checkbox' && $uicols['col_name'][$i]=='kreditnota_tmp')
 						{
 							$datatable['rows']['row'][$j]['column'][$i]['value']	= 'true';
 						}
 						//values column sign
-						elseif($uicols['type'][$i]=='radio' && $uicols['col_name'][$i]=='sign')
+						elseif($uicols['type'][$i]=='radio' && $uicols['col_name'][$i]=='sign_tmp')
 						{
 							$datatable['rows']['row'][$j]['column'][$i]['value']	= 'sign_none';
 						}
@@ -658,9 +651,6 @@
 						}
 
 						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols['col_name'][$i];
-						//$datatable['rows']['row'][$j]['column'][$i]['align'] 		= 'center';
-						//$datatable['rows']['row'][$j]['column'][$i]['className'] 	= $uicols['class'][$i];
-
 
 						if($uicols['input_type'][$i]!='hidden')
 						{
@@ -679,12 +669,8 @@
 									{
 										$datatable['rows']['row'][$j]['column'][$i]['link']			= $link_sub."&voucher_id=".$invoices[$uicols['name'][$i]];
 									}
-//									else if($uicols['type'][$i]=='w_open')
-//									{
-//										$datatable['rows']['row'][$j]['column'][$i]['link']			= $link_edit_period_pre.$link_edit_period."&period=".$invoices[$uicols['name'][$i]]."&voucher_id=".$invoices['voucher_id'].$link_edit_period_post;
-//									}
+									
 									$datatable['rows']['row'][$j]['column'][$i]['target']			= '';
-
 								}
 
 								//--- special--
@@ -700,11 +686,9 @@
 									{
 										if( ($invoices['is_janitor']== 1 && $type_sign == 'janitor') || ($invoices['is_supervisor']== 1 && $type_sign == 'supervisor') || ($invoices['is_budget_responsible']== 1 && $type_sign == 'budget_responsible'))
 										{
-											//if ($type_sign == 'janitor') die($i._debug_array($invoices).$type_sign);
-
 											if( ( ($invoices['jan_date'] == '') && $type_sign == 'janitor') || (($invoices['super_date'] == '') && $type_sign == 'supervisor') || (($invoices['budget_date'] == '') && $type_sign == 'budget_responsible'))
 											{
-												$datatable['rows']['row'][$j]['column'][$i]['name']			= 'sign';
+												$datatable['rows']['row'][$j]['column'][$i]['name']			= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type']			= 'radio';
 												$datatable['rows']['row'][$j]['column'][$i]['value'] 		= ($type_sign == 'janitor'? 'sign_janitor':($type_sign == 'supervisor'? 'sign_supervisor' : 'sign_budget_responsible'));
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= "";
@@ -712,7 +696,7 @@
 
 											elseif( (($invoices['janitor'] == $invoices['current_user']) && $type_sign == 'janitor')  || (($invoices['supervisor'] == $invoices['current_user']) && $type_sign == 'supervisor') || (($invoices['budget_responsible'] == $invoices['current_user']) && $type_sign == 'budget_responsible'))
 											{
-												$datatable['rows']['row'][$j]['column'][$i]['name'] 		= 'sign';
+												$datatable['rows']['row'][$j]['column'][$i]['name'] 		= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type'] 		= 'radio';
 												$datatable['rows']['row'][$j]['column'][$i]['value']		= ($type_sign == 'janitor'? 'sign_janitor':($type_sign == 'supervisor'? 'sign_supervisor' : 'sign_budget_responsible'));
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " checked ";
@@ -763,7 +747,7 @@
 											{
 												if( ($invoices['transfer_date']==''))
 												{
-													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer';
+													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer_tmp';
 													$datatable['rows']['row'][$j]['column'][$i]['type']			= 'checkbox';
 													$datatable['rows']['row'][$j]['column'][$i]['value'] 		= 'true';
 													$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= "";
@@ -771,7 +755,7 @@
 
 												else
 												{
-													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer';
+													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer_tmp';
 													$datatable['rows']['row'][$j]['column'][$i]['type']			= 'checkbox';
 													$datatable['rows']['row'][$j]['column'][$i]['value'] 		= 'true';
 													$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " checked ";
@@ -808,11 +792,11 @@
 									{
 										$datatable['rows']['row'][$j]['column'][$i]['extra_param'] 		= "size='1' ";
 									}
-									elseif($uicols['col_name'][$i]=='kreditnota' && $invoices[$uicols['name'][$i]] == '1')
+									elseif($uicols['col_name'][$i]=='kreditnota_tmp' && $invoices[$uicols['name'][$i]] == '1')
 									{
 										$datatable['rows']['row'][$j]['column'][$i]['extra_param'] = " checked ";
 									}
-									else //(col_name=kreditnota y kreditnota == 0) y (sign = 1)
+									else 
 									{
 										$datatable['rows']['row'][$j]['column'][$i]['extra_param'] = " ";
 									}
@@ -829,7 +813,7 @@
 				}
 			}
 
-			//---- PERMISOS
+			//---- RIGHTS
 			$datatable['rowactions']['action'] = array();
 			if(!$paid)
 			{
@@ -885,8 +869,6 @@
 
 			}
 
-
-			//--- CABECERAS DEL DATATABLE sirve para crear el MycolumnsDef
 			$uicols_count	= count($uicols['descr']);
 
 			for ($i=0;$i<$uicols_count;$i++)
@@ -929,21 +911,16 @@
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
-			//die(_debug_array($datatable['headers']['header']));
 
 			// path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			//NO SE USA
-
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			//for maintein page number in datatable
-			//if (phpgw::get_var('currentPage')== "")
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
 				//avoid ,in the last page, reformate paginator when records are lower than records_returned
@@ -997,8 +974,6 @@
 	    			'currentPage'		=> $datatable['sorting']['currentPage'],
 					'records'			=> array()
 	    		);
-	    		//die($datatable['sorting']['currentPage']);
-
 				// values for datatable
 	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 	    		{
@@ -1016,15 +991,18 @@
 		    				elseif($column['format']== "input")
 		    				{
 								//this class was used for botton selectAll in Footer Datatable
-								if($column['name']=='sign')
+								if($column['name']=='sign_tmp')
 								{
-									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP signClass' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class=' signClass' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+								}
+		    					else if($column['name']=='kreditnota_tmp')
+								{
+									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class=' kreditnota_tmp' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
 								}
 								else
 								{
 									$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
 								}
-
 		    				}
 		    				elseif($column['format']== "varchar")
 		    				{
@@ -1043,18 +1021,9 @@
 			    					}
 			    					else
 			    					{
-			    						$tmp_lnk = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='myValuesForPHP ".$class."' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
+			    						$tmp_lnk = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]' class='".$class."' type='".$column['type']."' value='".$column['value']."' ".$column['extra_param']."/>";
 			    					}
 		    					}
-
-		    					/*if($column['value2'])
-	    						{
-	    							$json_row[$column['for_json']] = $tmp_lnk . $column['value2'];
-	    						}
-		    					else
-	    						{
-	    							$json_row[$column['for_json']]=$tmp_lnk;
-	    						}*/
 
 	    						$json_row[$column['for_json']] = $column['value0'].$tmp_lnk . $column['value2'];
 		    				}
@@ -1065,11 +1034,26 @@
 		    				  {
 		    				  	$json_row[$column['name']] = $column['value'];
 		    				  }
+		    				  else if($column['name']== "sign_orig")
+		    				  {
+		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP sign_origClass'  type='hidden' value='".$column['value']."'/>";
+		    				  }
+		    				  else if($column['name']== "sign")
+		    				  {
+		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP sign_tophp'  type='hidden' value='".$column['value']."'/>";
+		    				  }
+		    				  else if($column['name']== "kreditnota")
+		    				  {
+		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP kreditnota_tophp'  type='hidden' value='".$column['value']."'/>";
+		    				  }
+		    				  else if($column['name']== "transfer")
+		    				  {
+		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP transfer_tophp'  type='hidden' value='".$column['value']."'/>";
+		    				  }
 		    				  else // for imput hiddens
 		    				  {
-		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP'  type='hidden' value='".$column['value']."'/>";
+		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP '  type='hidden' value='".$column['value']."'/>";
 		    				  }
-
 		    				}
 		    			}
 		    			$json['records'][] = $json_row;
@@ -1116,8 +1100,6 @@
 			$function_msg	= lang('list voucher');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			//die($GLOBALS['phpgw']->xslttpl->xml_parse());
-			//die(_debug_array($datatable));
 	  		// Prepare YUI Library
 	  		if ($paid)
 	  		{
@@ -1128,7 +1110,6 @@
   				$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.index', 'property' );
   			}
 
-			//$this->save_sessiondata();
 	}
 
 		function list_sub()
@@ -1230,7 +1211,8 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))  //if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			 {
-				$receipt = $this->bo->update_invoice_sub($values);
+				_debug_array($values);
+			 	$receipt = $this->bo->update_invoice_sub($values);
 			 }
 
 			if ($voucher_id)
@@ -1309,12 +1291,13 @@
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][".$j."]' id='values[close_order_orig][".$j."]'  class='myValuesForPHP '  type='hidden' value='".$invoices['closed']."'/>";
 								if($invoices['closed']== 1)
 								{
-									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP transfer_idClass'  type='checkbox' value='true' checked='checked' />";
+									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][".$j."]' id='values[close_order_tmp][".$j."]'  class='close_order_tmp transfer_idClass'  type='checkbox' value='true' checked='checked' />";
 								}
 								else
 								{
-									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP transfer_idClass'  type='checkbox' value='true'/>";
+									$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][".$j."]' id='values[close_order_tmp][".$j."]'  class='close_order_tmp transfer_idClass'  type='checkbox' value='true'/>";
 								}
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order][".$j."]' id='values[close_order][".$j."]'  class='myValuesForPHP close_order'  type='hidden' value=''/>";
 							}
 							else
 							{
@@ -1555,7 +1538,6 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
-
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
@@ -1672,8 +1654,6 @@
 			$loc1 			= phpgw::get_var('loc1');
 			$district_id 	= phpgw::get_var('district_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-
-
 
 			//-- ubica focus del menu derecho
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
@@ -1967,8 +1947,6 @@
 
 			}
 
-
-
 			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id);
 
 			$sum = 0;
@@ -2139,6 +2117,7 @@
 				{
 					$json ['current_consult'] = $current_Consult;
 				}
+				_debug_array($json);
 
 	    		return $json;
 			}

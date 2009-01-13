@@ -61,8 +61,7 @@
 		this.myParticularRenderEvent = function()
 		{
 			//not SHOW paginator
-			paging= YAHOO.util.Dom.get('paging');
-		 	paging.style.display = 'none';
+			YAHOO.util.Dom.get("paging").style.display = "none";
 
 			delete_message();
 			create_message();
@@ -91,6 +90,8 @@
 
 		div_message= YAHOO.util.Dom.get("message");
 		newTable = document.createElement('table');
+		//fix IE error
+		newTbody = document.createElement("TBODY");
 
 		//SHOW message if exist 'values_ds.message'
 		 if(window.values_ds.current_consult)
@@ -102,18 +103,19 @@
 		 		{
 		 			newTD = document.createElement('td');
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i][j]));
-		 			newTR.appendChild(newTD.cloneNode(true));
+		 			newTR.appendChild(newTD);
 		 			//add : after title
 		 			if(j==0)
 		 			{
 			 			newTD = document.createElement('td');
 			 			newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
-			 			newTR.appendChild(newTD.cloneNode(true));
+			 			newTR.appendChild(newTD);
 		 			}
 		 		}
-		 		newTable.appendChild(newTR.cloneNode(true));
+		 		newTbody.appendChild(newTR);
 			 }
 		 }
+		 newTable.appendChild(newTbody);
 		 div_message.appendChild(newTable);
 	}
 	/********************************************************************************/
