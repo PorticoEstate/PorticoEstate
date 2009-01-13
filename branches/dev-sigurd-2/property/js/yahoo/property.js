@@ -124,6 +124,29 @@
 	 		}
  		}
 	}
+
+
+ /********************************************************************************
+ *
+ */
+	// Test for date search in lightbox
+	this.onDateSearchClick = function()
+	{
+		var oArgs = {menuaction:'property.uiproject.date_search'};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "300";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
  /********************************************************************************
  *
  */

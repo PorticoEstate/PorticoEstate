@@ -284,7 +284,17 @@
 		                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 		                                                     'value' => lang('Date search'),
 		                                                     'tab_index' => 5
-	                                                    )
+	                                                    ),
+				                                // FIXME test on lightbox for date search
+				                                /*
+				                                        array( //boton     Date SEARCH
+				                                            'id' => 'btn_date_search',
+				                                            'name' => 'date_search',
+				                                            'value'    => lang('date search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 5
+				                                        )
+												*/
 			                           				),
 			                       		'hidden_value' => array(
 						                                        array( //div values  combo_box_0
