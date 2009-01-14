@@ -92,11 +92,6 @@
 
 	$_border_layout_config	= execMethod('phpgwapi.template_portico.retrieve_local', 'border_layout_config');
 
-	if( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] == 'yes' )
-	{
-		$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
-	}
-
 	if(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar'])
 	{
 		//FIXME This one removes the sidepanels - but the previous settings are forgotten

@@ -94,13 +94,13 @@
 					break;
 
 				case 'datatable':
-					$load = array('element-beta', 'datasource-min', 'datatable-min' );
+					$load = array('element-beta-min', 'datasource-min', 'datatable-min' );
 					//$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
 					//$load = array('yuiloader-beta');
-					$load = array('yuiloader','yuiloader-min');
+					$load = array('yuiloader-min');
 					break;
 
 				case 'dom':

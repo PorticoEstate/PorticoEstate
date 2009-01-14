@@ -12,6 +12,9 @@
 
 		$var = array
 		(
+			'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
+			'home_text'		=> lang('home'),
+			'home_icon'		=> 'icon icon-home',
 			'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
 			'about_text'	=> lang('about'),
 			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
@@ -59,8 +62,19 @@
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
 
-		prepare_navbar($navbar);
-		$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+		$navigation = array();
+		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
+		{
+			prepare_navbar($navbar);
+			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+		}
+		else
+		{
+			foreach($navbar as & $app_tmp)
+			{
+				$app_tmp['text'] = ' ...';
+			}
+		}
 
 		$treemenu = '';
 		foreach($navbar as $app => $app_data)
