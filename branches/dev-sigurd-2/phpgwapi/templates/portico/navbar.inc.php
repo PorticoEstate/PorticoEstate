@@ -63,7 +63,7 @@
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
 
 		$navigation = array();
-		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
+		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
 		{
 			prepare_navbar($navbar);
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
