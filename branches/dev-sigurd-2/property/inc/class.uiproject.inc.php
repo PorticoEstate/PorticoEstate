@@ -425,7 +425,7 @@
 						}
 						else
 						{
-							$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
 						if ($this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
@@ -455,7 +455,7 @@
 						}
 						else
 						{
-							$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
 
@@ -476,7 +476,7 @@
 						}
 						else
 						{
-							$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
 						if ($this->acl_add && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_ADD))

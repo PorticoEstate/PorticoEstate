@@ -59,9 +59,8 @@
 
 		function property_boactor($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('property.soactor');
-			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->so 			= CreateObject('property.soactor');
+			$this->bocommon 	= & $this->so->bocommon;
 			$this->custom 		= createObject('property.custom_fields');
 
 			if ($session)
@@ -155,10 +154,11 @@
 			return (!!($has & $needed) == true);
 		}
 
-		function read()
+		function read($dry_run='')
 		{
 			$actor = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
+											'member_id'=>$this->member_id, 'dry_run' => $dry_run));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;

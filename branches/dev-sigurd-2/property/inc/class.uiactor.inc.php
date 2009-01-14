@@ -60,13 +60,14 @@
 
 		function property_uiactor()
 		{
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo				= CreateObject('property.boactor',true);
-			$this->bocommon			= CreateObject('property.bocommon');
+			$this->bocommon 		= & $this->bo->bocommon;
 
 			$this->role				= $this->bo->role;
 
@@ -189,6 +190,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+			$dry_run=false;
 			$lookup = ''; //Fix this
 
 			$datatable = array();
@@ -322,11 +324,11 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][3]);
 				}
-
+				$dry_run=true;
 			}
 
 			$actor_list = array();
-			$actor_list = $this->bo->read();
+			$actor_list = $this->bo->read($dry_run);
 
 			//echo $dry_run; count($actor_list); die(_debug_array($actor_list));
 
@@ -407,6 +409,17 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'view',
+						'text' 			=> lang('open view in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiactor.view',
+											'role'			=> $this->role,
+											'target'		=> '_blank'
+										)),
+						'parameters'	=> $parameters
+					);
 				}
 				if($this->acl_edit)
 				{
@@ -417,6 +430,17 @@
 										(
 											'menuaction'	=> 'property.uiactor.edit',
 											'role'	=> $this->role
+										)),
+						'parameters'	=> $parameters
+					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 		=> 'edit',
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiactor.edit',
+											'role'			=> $this->role,
+											'target'		=> '_blank'
 										)),
 						'parameters'	=> $parameters
 					);

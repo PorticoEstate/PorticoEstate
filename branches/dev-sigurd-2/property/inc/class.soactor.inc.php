@@ -53,14 +53,15 @@
 		{
 			if(is_array($data))
 			{
-				$start	= (isset($data['start'])?$data['start']:0);
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:'');
-				$allrows 	= (isset($data['allrows'])?$data['allrows']:'');
-				$member_id 	= (isset($data['member_id'])?$data['member_id']:0);
+				$start		= isset($data['start'])?$data['start']:0;
+				$filter		= isset($data['filter']) && $data['filter'] ?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:'';
+				$allrows	= isset($data['allrows'])?$data['allrows']:'';
+				$member_id 	= isset($data['member_id']) && $data['member_id'] ? $data['member_id']:0;
+				$dry_run	= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_actor_' . $this->role);
@@ -242,22 +243,26 @@
 			$sql .= " $filtermethod $querymethod";
 //echo $sql;
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
-			if(!$allrows)
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records = $this->db->f(0);
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
+
+				$contacts			= CreateObject('phpgwapi.contacts');
 			}
 
 			$j=0;
 			$n=count($cols_return);
-//_debug_array($cols_return);
-			$contacts			= CreateObject('phpgwapi.contacts');
-
+			$actor_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$n;$i++)
