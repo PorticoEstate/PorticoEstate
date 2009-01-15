@@ -469,11 +469,13 @@
 
 		function read_single($workorder_id)
 		{
+			$workorder_id = (int) $workorder_id;
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
-				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id=$workorder_id";
+				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$workorder = array();
 			if ($this->db->next_record())
 			{
 				$workorder['workorder_id']		= $this->db->f('id');
@@ -513,7 +515,9 @@
 
 		function project_budget_from_workorder($project_id = '')
 		{
-			$this->db->query("select budget, id as workorder_id from fm_workorder where project_id='$project_id'");
+			$project_id = (int) $project_id;
+			$this->db->query("select budget, id as workorder_id from fm_workorder where project_id={$project_id}");
+			$budget = array();
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
@@ -526,8 +530,9 @@
 
 		function branch_p_list($project_id = '')
 		{
-
-			$this->db2->query("SELECT branch_id from fm_projectbranch WHERE project_id='$project_id' ",__LINE__,__FILE__);
+			$project_id = (int) $project_id;
+			$this->db2->query("SELECT branch_id from fm_projectbranch WHERE project_id={$project_id}",__LINE__,__FILE__);
+			$selected = array();
 			while ($this->db2->next_record())
 			{
 				$selected[] = array('branch_id' => $this->db2->f('branch_id'));

@@ -395,7 +395,8 @@
 
 		function read_single($project_id)
 		{
-			$sql = "SELECT * from fm_project where id='$project_id'";
+			$project_id = (int) $project_id;
+			$sql = "SELECT * from fm_project where id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -449,9 +450,10 @@
 
 		function project_workorder_data($project_id = '')
 		{
+			$project_id = (int) $project_id;
 			$budget = array();
 			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id, vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status"
-			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id='$project_id'");
+			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
