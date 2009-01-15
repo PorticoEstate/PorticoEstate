@@ -51,12 +51,20 @@
 
 		function read_invoice($data)
 		{
+
+			$valid_order = array
+			(
+				'bilagsnr'		=> true,
+				'spvend_code'	=> true,
+				'fakturadato'	=> true
+			);
+
 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query 			= isset($data['query'])?$data['query']:'';
 				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order 			= isset($data['order'])?$data['order']:'';
+				$order 			= isset($data['order']) && $valid_order[$data['order']] ? $data['order']:'';
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
 				$paid 			= isset($data['paid'])?$data['paid']:'';
@@ -74,7 +82,7 @@
 			$filtermethod	= '';
 			$querymethod	= '';
 //_debug_array($data);
-
+			
 			$this->db->query("SELECT * FROM fm_ecoart");
 			$art_list = array();
 			while ($this->db->next_record())
