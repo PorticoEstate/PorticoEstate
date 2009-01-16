@@ -169,6 +169,8 @@
 		*/
 		public function translate($key, $vars = array(), $only_common = false )
 		{
+			$collect_missing = false;
+			
 			$ret = $key;
 			if ( !$userlang = $this->userlang )
 			{
@@ -193,7 +195,13 @@
 
  				$sql = 'SELECT message_id, content'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
-					. " AND app_name IN({$applist}) {$order}";
+					. " AND app_name IN({$applist})";
+					
+				if($collect_missing)
+				{
+					$sql .= " AND content != 'missing'";
+				}
+				$sql .= " {$order}";
 
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
@@ -207,6 +215,19 @@
 			if ( isset($this->lang[$key]) )
 			{
 				$ret = $this->lang[$key];
+			}
+			else if ($collect_missing)
+			{
+				$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
+				$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
+					. " AND app_name = '{$GLOBALS['phpgw_info']['flags']['currentapp']}'";
+				
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+
+				if( !$GLOBALS['phpgw']->db->next_record() )
+				{	
+					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','{$GLOBALS['phpgw_info']['flags']['currentapp']}','$userlang','missing')",__LINE__,__FILE__);
+				}
 			}
 			$ndx = 1;
 			foreach ( $vars as $key => $val )
