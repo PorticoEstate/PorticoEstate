@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Gnokii smsd path
+# NOT /usr/local/cache or /usr/local/cache/smsd, ITS /usr/local
+SMSD_PATH="/usr/local"
+
+SMSD_FILE=`mktemp -q $SMSD_PATH/cache/smsd/ERR.in.XXXXXX`
+
+touch $SMSD_FILE
+
+chmod 666 $SMSD_FILE
+
+echo -e "$2\n$1" > $SMSD_FILE
+
+cat >> $SMSD_FILE

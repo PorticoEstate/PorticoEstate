@@ -1,0 +1,3 @@
+#!/bin/tcsh -f
+
+grep "Languages" details | sed -f sed_languages
