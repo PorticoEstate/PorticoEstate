@@ -1,8 +1,0 @@
-- make default filter settings for index.php page a user-definable setting through the preferences page.
-- display phonenumber or a 'no phonenumber known' message after you've selected who's calling.
-  this way you know whether to ask for a phone number. note this probably should wait till the new addressbook app is finished.
-- add/check for postgresql compatibility
-- template support?
-- create a nice navbar.gif picture for the navigation bar
-- create translations to other languages
-- clean up the code

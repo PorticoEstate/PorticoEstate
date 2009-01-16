@@ -1,8 +1,0 @@
-Main author: Todd Hammer <thammer@rtccom.com>
-
-Thanks goes to all these persons who have helped:
-
-Martin Geisler <gimpster@gimpster.com>
-  His phpweather code inspired me to study weather programs for PHP.
-  I used some of his logic to implement phorecast in SQL.
-  Thanks, Martin! 

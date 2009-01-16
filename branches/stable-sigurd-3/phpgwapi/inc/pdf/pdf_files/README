@@ -1,7 +1,0 @@
-In order to have pdf-printout working with mod_deflate and IE - one has to temporary save the pdf-data as a file - and redirect the browser to this file.
-
-There is a function "print_pdf" in class.pdf.inc.php that checks the browser - and if it is 'IE' - it will follow this procedure. Files older than one day will be deleted.
-
-In order to have this work - it will need a directory which is write-able to the webserver and within the webservers document-root.
-I propose to have this directory within the pdf-section of the API: "phpgroupware/phpgwapi/inc/pdf/pdf_files".
-
