@@ -1,0 +1,55 @@
+add	developer_tools	ja	追加
+add change	developer_tools	ja	履歴追加
+add new phrase	developer_tools	ja	文言追加
+add phrase	developer_tools	ja	文言追加
+application	developer_tools	ja	アプリケーション
+back	developer_tools	ja	戻る
+cancel	developer_tools	ja	キャンセル
+change	developer_tools	ja	変更内容
+changelog entry has been added	developer_tools	ja	Changelog entry has been added
+changelogs	developer_tools	ja	変更履歴
+create new language file	developer_tools	ja	Create New Language File
+create sgml file	developer_tools	ja	SGMLファイル作成
+developer tools	common	ja	開発者用ツール
+developer tools - preferences	developer_tools	ja	Developer tools - preferences
+diary	developer_tools	ja	日誌
+done	developer_tools	ja	done
+download	developer_tools	ja	ダウンロード
+edit	developer_tools	ja	Edit
+language file management	developer_tools	ja	言語ファイル管理
+list changelogs	developer_tools	ja	履歴一覧
+loading source langfile	developer_tools	ja	元の言語ファイル読み込み
+loading target langfile	developer_tools	ja	対象言語ファイル読み込み
+message	developer_tools	ja	Message
+message_id in english	developer_tools	ja	メッセージID(英語)
+no file	developer_tools	ja	ファイルなし
+ok	developer_tools	ja	OK
+original	developer_tools	ja	オリジナル
+phrase in english	developer_tools	ja	文言(英語)
+preferences	developer_tools	ja	ユーザ設定
+preferences have been updated	developer_tools	ja	Preferences have been updated
+project	developer_tools	ja	プロジェクト
+remove	developer_tools	ja	削除
+revert	developer_tools	ja	やり直し
+search changelogs	developer_tools	ja	履歴検索
+search for missing phrase	developer_tools	ja	欠落文言検索
+select project	developer_tools	ja	プロジェクト選択
+sf project tracker	developer_tools	ja	SF Project tracker
+sf project tracker preferences	preferences	ja	SF Project tracker preferences
+sourceforge project id	developer_tools	ja	Sourceforge project ID
+sourceforge project tracker	developer_tools	ja	Sourceforge project tracker
+sourceforge project tracker preferences	developer_tools	ja	Sourceforge project tracker preferences
+source language	developer_tools	ja	元の言語
+submit	developer_tools	ja	Submit
+target language	developer_tools	ja	対象言語
+title	developer_tools	ja	Title
+translate	developer_tools	ja	Translate
+translation	developer_tools	ja	翻訳
+update	developer_tools	ja	訂正
+version	developer_tools	ja	バージョン
+write	developer_tools	ja	Write
+write to lang table	developer_tools	ja	書き込み
+you must a version	developer_tools	ja	バージョンを入力して下さい
+you must enter a change	developer_tools	ja	変更内容を入力して下さい
+you must select a project	developer_tools	ja	プロジェクトを選択して下さい
+you need to set your preferences for this app	developer_tools	ja	You need to set your preferences for this app

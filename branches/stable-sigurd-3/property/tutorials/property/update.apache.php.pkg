@@ -1,0 +1,20 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>Sample for updating apache and php</refname>
+  <refpurpose>A quick command to update to new releases of php and/or apache</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <author>
+   Sigurd Nes
+   <authorblurb>
+    {@link mailto:sigurdne@online.no sigurdne@online.no}
+   </authorblurb>
+  </author>
+ </refsynopsisdiv>
+ <refsect1 id="{@id source}">
+  <title>update apache and php</title>
+  <para>
+  {@example update.apache.and.php.sh}
+  </para>
+ </refsect1>
+</refentry>

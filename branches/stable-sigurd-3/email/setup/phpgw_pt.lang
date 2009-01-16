@@ -1,0 +1,373 @@
+%1 - %2 of %3	email	pt	%1 - %2 de %3
+%1 messages have been deleted	email	pt	%1 mensagens foram removidas
+1 message has been deleted	email	pt	1 mensagem foi eliminada
+1 message has been moved to	email	pt	1 mensagem foi movida para
+<b>*apply*</b> this filter	email	pt	<b>APLICAR</b> Este Filtro
+<b>apply all</b> filters	email	pt	<b>APLICAR TODOS</b> Filtros
+a scrips tag block of code, javascript or otherwise, is in an inline html message. not necessarily bad, but user may want to know. this is script ... code ... script blocks, not the "onmouseover"  stuff.	email	pt	
+account	email	pt	conta
+account name	email	pt	Nome da Conta
+account user name	email	pt	Nome de usuário da conta
+accounts	email	pt	Contas
+accounts:	email	pt	Contas:
+add to address book	email	pt	Adicionar ao Catálogo de Contatos
+add to addressbook	email	pt	Adicionar aos Contatos
+address book	email	pt	Contatos
+after	email	pt	Depois
+all messages	email	pt	Todas Mensagens
+and	email	pt	e
+and stop filtering	email	pt	e pára filtros
+answered	email	pt	respondido
+apply	email	pt	aplicar
+apply filters report:	email	pt	Aplicar Relatório de Filtros:
+apr	email	pt	Abr
+aqua fusion	email	pt	Aqua Fusion
+arrival date	email	pt	Data de Chegada
+as	email	pt	como
+attach file	email	pt	Anexar arquivo
+attach signature	email	pt	Anexar assinatura
+attachment	email	pt	Anexo
+aug	email	pt	Ago
+bcc	email	pt	BCC
+bcc address	email	pt	Endereço Bcc
+before	email	pt	Antes
+big	email	pt	Grande
+bigger	email	pt	Maior
+biggest	email	pt	Máximo
+body	email	pt	Corpo
+both	email	pt	Ambos
+button type	email	pt	Tipo de Botão
+cache server data whenever possible	email	pt	armazenar dados do servidor sempre que possível
+cc	email	pt	CC
+cc address	email	pt	Endereço CC
+change font size in your e-mail pages	email	pt	Munder o Tamnho de Fonte em suas Páginas de E-Mail
+check flags for type of mails	email	pt	Marcar para tipos de e-mails
+choose for rename	email	pt	Selecionar para renomear
+choose to rename	email	pt	selecionar para renomear
+click here for more info in a new window	email	pt	clique aqui para mais informação em uma nova janela
+click here to continue	email	pt	Clique aqui para continuar
+click here to edit the settings for this email account.	email	pt	clique aqui para editar as configurações para esta conta de e-mail.
+click here to return to your home page.	email	pt	clique aqui para retornar para sua página inicial.
+company	email	pt	Empresa
+compose	email	pt	Compor
+compose message	email	pt	compor mensagem
+compose new	common	pt	Compor nova
+contact your system administrator	email	pt	contate seu administrador do sistema
+contains	email	pt	Contém
+could not open this mailbox	email	pt	Não foi possível abrir esta caixa de mensagem
+create (expert)	email	pt	criar (expert)
+create a folder	email	pt	Criar uma pasta
+create a folder email	en	pt	Criar uma pasta
+current attachments (%1)	email	pt	Anexos atuais (%1)
+custom e-mail preferences	email	pt	Preferência de E-Mail personalizadas
+custom e-mail settings	email	pt	Configurações de E-Mail personalizadas
+custom email settings	email	pt	Configurações da conta de E-mail
+debugging page	email	pt	Página de Depuração
+dec	email	pt	Dez
+default sorting order	email	pt	Ordenação padrão
+default:	common	pt	padrão:
+delete (expert)	email	pt	Remover (expert)
+delete a folder	email	pt	Remover uma pasta
+delete account	common	pt	Remover Conta
+deleted	email	pt	removido
+deleted messages (trash) folder	email	pt	Pasta de mensagens removidas (Lixeira)
+deleted messages folder name	email	pt	Nome da pasta de mensagens removidas
+deleted messages go to trash	email	pt	Mensagens removidas vão para a Lixeira
+deleted messages saved to folder:	email	pt	Mensagens removidas salvas na pasta:
+discard	email	pt	Descartar
+does not contain	email	pt	Não Contém
+draft	email	pt	rascunho
+e-mail extra account	email	pt	Conta de E-Mail Extra
+e-mail extra accounts	email	pt	Contas de E-Mail Extras
+e-mail extra accounts list	email	pt	Lista de Contas Extras de E-Mail
+e-mail filters	common	pt	Filtros de E-Mail
+e-mail folders	common	pt	Pastas de E-Mail
+e-mail inbox filters list	email	pt	Lista de Filtros de email da Caixa de Entrada
+e-mail preferences	common	pt	Preferências de E-Mail
+each user has a summary page which can display a variety of information. this option will show a small list of email messages in the inbox of the users default email account on the users summary home page.	email	pt	
+edit filters	email	pt	Editar Filtros
+email account name	email	pt	Nome da conta de e-mail
+email address	email	pt	Endereço eletrônico
+email date	email	pt	Data do email
+email filters	email	pt	Filtros de email
+email password	email	pt	Senha de email
+email preferences	email	pt	Preferências de Email
+email signature	email	pt	Assinatura do E-mail
+email type	common	pt	Tipo de e-mail
+enable this email account	common	pt	Habilitar esta conta de email
+enable utf-7 encoded folder names	email	pt	Habilitar codificação utf-7 de nomes de pastas
+enter the search string in the text boxes	email	pt	Digite o texto de busca nas caixas de texto
+enter your default mail domain ( from: user@domain )	admin	pt	Digite seu domínio padrão de correio eletrônico
+enter your pop	admin	pt	Digite o endereço de seu servidor POP
+enter your smtp server hostname or ip address	admin	pt	Digite o endereço de seu servidor SMTP
+enter your smtp server port	admin	pt	Digite a porta de seu servidor SMTP
+error moving messages to	email	pt	Erro movendo mensagens para
+error text not provided	email	pt	sem mensagem de erro
+error: unknown message data	email	pt	Erro: Data de mensagem desconhecida
+evolution style	email	pt	Estilo Evolution
+extra accounts	email	pt	Contas Extras
+extra e-mail account	common	pt	Conta de E-Mail Extra
+extra e-mail accounts	common	pt	Contas de E-Mail Extras
+extra e-mail preferences number %1	email	pt	Preferências de E-Mail Extra número %1
+feb	email	pt	Fev
+fewer actions	email	pt	Menos Ações
+fewer choices	email	pt	Menos Opções
+file	email	pt	Arquivo
+file attachment	email	pt	Arquivo anexo
+file into	email	pt	Arquivar em
+fill in as much as you can	email	pt	entre o máximo que você puder
+filter [number] and name	email	pt	Filtro [número] e Nome
+filter inbox for accounts	email	pt	Filtrar Caixa de Entrada das contas
+filter name	email	pt	Nome do Filtro
+filter name:	email	pt	nome do filtro:
+filter number	email	pt	Número do Filtro
+filters	email	pt	Filtros
+filters list	email	pt	Lista de Filtros
+flag as important	email	pt	Marcar como importante
+flagged	email	pt	marcado
+folder	email	pt	Pasta
+folder maintenance	email	pt	Manutenção de Pastas
+folder name	email	pt	Nome da Pasta
+folder size	email	pt	Tamanho da Pasta
+folders	email	pt	Pastas
+for the file to actually upload	email	pt	para o arquivo realmente ser enviado
+for these items, fill only what is different from you default e-mail preferences	common	pt	Para estes items, preencha somente o que é diferente das suas preferências padrões
+forward	email	pt	Reenvio
+from	email	pt	De
+from address	email	pt	Endereço do Remetente
+get size	email	pt	ver tamanho
+go	email	pt	ir
+go back	email	pt	Voltar
+go back to	email	pt	Voltar Para
+header field	email	pt	Campo de Cabeçalho
+hidden	email	pt	escondido
+hide help	email	pt	Esconder Ajuda
+html messages with the iframe  tag may be klez or other worm emails.	email	pt	
+icon size	email	pt	Tamanho de Ìcone
+icon theme	email	pt	Tema de Ícone
+if &quot; deleted messages go to trash &quot; is checked, deleted message will be sent to the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;trash&quot;. this will be your &quot;trash&quot; folder, but it does not have to actually be called &quot;trash&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	pt	
+if &quot; sent messages folder &quot; is checked, a copy of your sent mail will be stored in the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;sent&quot;. this will be your &quot;sent&quot; folder, but it does not have to actually be called &quot;sent&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	pt	
+if applicable	email	pt	Se Aplicável
+if checked, a copy of your sent mail will be stored in the &quot;sent&quot; folder name which you specify in the box for &quot;sent messages folder &quot;. only works with imap servers, pop servers do not have folders.	email	pt	
+if checked, a copy of your sent mail will be stored in the &quot;sent&quot; folder name which you specify in the box for &quot;sent messages folder&quot;. only works with imap servers, pop servers do not have folders.	email	pt	
+if checked, deleted message will be sent to the &quot;trash&quot; folder name which you specify in the box for &quot; deleted messages (trash) folder &quot;. only works with imap servers, pop servers do not have folders.	email	pt	
+if fileto then select destination folder	email	pt	se arquivar em, selecione pasta de destino
+if messages match	email	pt	Se houver ocorrência na mensagem
+if there is no obvious error, check your username and password first.	email	pt	
+if using an imap server, what kind is it, most often this option can safely be set to &quot;cyrus or courier&quot;. technically, this means the server uses a dot between the different parts of the folder names, such as &quot;inbox.sent&quot;. the other major kind of imap server is the university of washington &quot;uwash&quot; imap server. it uses slashes instead of the dots the other servers use, and although it has a folder called &quot;inbox&quot;, it is not considered the &quot;namespace&quot; for the other folder names. the &quot;uw-maildir&quot; is a rare combination of the two above types. this is the least used kind of imap server. if you are unsure, ask your it administrator. only applies to imap servers.	email	pt	
+image	email	pt	Imagem
+imap mail server hostname or ip address	admin	pt	endereço do servidor IMAP
+imap server type	common	pt	Tipo de servidor IMAP
+important	email	pt	importante
+in the email index page, the page which lists all the mails in a folder, mail may be sorted by date, author, size, or subject, however all of these need to be ordered from first to last, this options controlls what is first and last. for example, if sorting by date, the newest to oldest displays the most recent emails first, in decending order down to the oldest emails last.	email	pt	
+inbox	email	pt	Caixa de Entrada
+input error	email	pt	
+input error:	email	pt	
+it is not rfc standard to base64 encode a part of a message that is not an attachment. note this check is currently done after the message is already being viewed, it should probably stop the message from being automatically displayed, i.e. give a "show this" button instead.	email	pt	
+jan	email	pt	Jan
+javascript	email	pt	Javascript
+jul	email	pt	Jul
+jun	email	pt	Jun
+keep	email	pt	Manter
+keyword	email	pt	palavra-chave
+keywords	email	pt	Palavras-chave
+layout 1	common	pt	Layout 1
+layout 2	common	pt	Layout 2
+lines	email	pt	Linhas
+list messages	email	pt	listar mensagens
+long names	email	pt	nomes longos
+mail folder(uw-maildir)	email	pt	Pasta de E-Mail(uw-maildir)
+mail server	email	pt	Servidor de E-mail
+mail server login type	admin	pt	Tipo de servidor de correio para login
+mail server type	email	pt	Tipo de servidor de e-mail
+mail settings	admin	pt	Configurações de E-Mail
+mail you send will use this address as the &quot;from&quot; address. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. when the recipient clicks reply, this address will be used. you can leave this box blank and the default value will be used.	email	pt	
+mailbox	email	pt	pasta de e-mail
+manage accounts	email	pt	Manutenção de contas
+manage folders	email	pt	Manutenção de pastas
+mar	email	pt	Mar
+message has an attachment that is some kind of script or exe file that windows users should be warned not to click on it. these are filenames like attachments the end with the usual "bad stuff", such as bat, inf, pif, com, exe, reg, vbs, and scr	email	pt	
+message list layout	common	pt	Layout de listagem de mensagens
+messages	email	pt	Mensagens
+messages found in folder	email	pt	Mensagens encontradas na pasta
+messages have been moved to	email	pt	menagens foram movidas para
+more actions	email	pt	Mais Ações
+more choices	email	pt	Menos Ações
+most us and european users do not need to enable this. if this option is checked then your email server can handle folder names with non us-ascii charactors in them/ default is disabled, not checked. only use if you are really sure you need it. only works with imap servers, pop servers do not have folders.	email	pt	
+move down	email	pt	Mover para baixo
+move selected messages into	email	pt	Mover mensagens para
+move this message into	email	pt	Mover esta mensagem para
+move up	email	pt	Mover para cima
+mozilla modern style	email	pt	Estilo Mozilla Modern
+name of the mail server you want to access. should be a name like &quot;mail.example.com&quot;. if you leave this box blank then the default value will be used.	email	pt	
+new	email	pt	Nova
+new account	email	pt	Nova Conta
+new filter	email	pt	Novo Filtro
+new message	email	pt	Nova Mensagem
+new messages	email	pt	Novas Mansagens
+newest	common	pt	mais nova
+next message	email	pt	Próxima Mensagem
+no change	email	pt	não mudar
+no error returned from server	email	pt	Nenhum erro retornado do servidor
+no message found in folder '%1'	email	pt	Nenhuma mensagem encontrade na pasta '%1'
+no next message	email	pt	sem próxima mensagem
+no previous message	email	pt	sem mensagem anterior
+noia &#64; carlitus style	email	pt	Noia &#64; Carlitus Style
+non-standard	email	pt	Fora do padrão
+not used	email	pt	sem uso
+notify on delivery	email	pt	Notificar na entrega
+nov	email	pt	Nov
+number	common	pt	Número
+number of matches:	email	pt	número de tentativas:
+oct	email	pt	Out
+old	email	pt	Antiga
+oldest	common	pt	mais antiga
+on	email	pt	Ligado
+only needed with the university of washington &quot;uwash&quot; imap server. the default value is &quot;mail&quot; which means your mail folders, other then inbox, are located in a directory called &quot;mail&quot; directly under your &quot;home&quot; directory. this box may be left empty, which means your mail folders are located in your &quot;home&quot; directory, not a subdirectory. if your mail folders are located in a subdirectory of &quot;home&quot; then put the name of that subdirectory here. generally, it is not necessary to use any special slashes or tildes, &quot;home&quot; is always considered the base directory, and the slash bewteen &quot;home&quot; and the subdirectory will be added for you automatically, do not put the slash in this box.	email	pt	
+or	common	pt	ou
+or enter text	email	pt	ou digite texto
+organization	email	pt	Organização
+persistent email server session	email	pt	sessão de servidor de email persistente
+phone	email	pt	Telefone
+php-imap support not installed - exiting	email	pt	suporte php-imap não instalado - saindo
+please fill in everything you need	email	pt	Por favor preencha tudo que for necessário
+please select a folder to rename	email	pt	Por favor selecione uma pasta para renomear
+please select a message first	email	pt	Selecione a mensagem primeiro
+please submit a filename to attach	email	pt	Envie o nome de um arquivo para anexar
+please type a folder name in the text box	email	pt	Por favor digite um nome de pasta no campo
+previous	email	pt	Anterior
+previous message	email	pt	Mensagem Anterior
+printable	email	pt	Impressão
+raw message	email	pt	fonte da mensagem
+read mail	email	pt	Ler Email
+received headers	email	pt	Cabeçalhos Recebidos
+recent	email	pt	Recente
+recipient	email	pt	Destinatário
+redirect	email	pt	Redirecionar
+reject	email	pt	Rejeitar
+rename (expert)	email	pt	Renomear (expert)
+rename a folder	email	pt	Renomear uma pasta
+reply	email	pt	Responder
+reply all	email	pt	Responder a todos
+replyto	email	pt	Responder para
+request delivery notification	email	pt	Pedir notificação de entrega
+requested filter action:	email	pt	ação de filtro requisitada:
+required	email	pt	obrigatório
+reset	email	pt	Limpar
+result	email	pt	resultado
+return mails during this time period	email	pt	Retornar emails durante este período de tempo
+save deleted messages in folder named below	email	pt	salvar mensagens Removidas na pasta abaixo
+save sent messages in folder named below	email	pt	salvar mensagens Enviadas na pasta abaixo
+search for mails in these folders	email	pt	Buscar emails nestas pastas
+search this folder	email	pt	procurar nesta pasta
+section	email	pt	Seção do E-mail
+seen	email	pt	Visualizado
+select home email address	email	pt	Selecione o endereço de email pessoal
+select this box if you want the text body of the message you are forwarding to appear inline in the body of your sent message	email	pt	
+select work email address	email	pt	Selecione o endereço de email profissional
+select your mail server type	admin	pt	Selecione o tipo de servidor de correio
+select your screensize for propper showing of the javascript addressbook	email	pt	
+select your style for the addressbook. the traditional, simple style. or the new javascript enabled complex addressbook	email	pt	
+send	email	pt	Enviar
+send deleted messages to the trash	email	pt	Enviar mensagens excluídas para a lixeira
+send forwarded mail as quoted attachment	email	pt	
+sender	email	pt	Remetente
+sent	email	pt	enviado
+sent folder	email	pt	pasta enviados
+sent messages folder	common	pt	Pasta mensagens enviadas
+sent messages folder name	email	pt	Nome da pasta de Enviados
+sent messages saved in &quot;sent&quot; folder	common	pt	Mensagens enviadas são salvas na pasta &quot;enviadas&quot;
+sent messages saved to folder:	email	pt	Salvar mensagens Enviadas na pasta:
+sep	email	pt	Set
+settings	email	pt	Configurações
+short names	email	pt	nomes curtos
+show help	email	pt	Exibir Ajuda
+show long names	email	pt	Exibir nomes longos
+show message	email	pt	exibir mensagem
+show new messages in combobox	email	pt	Exibir Novas Mensagem em ComboBox
+show new messages on main screen	email	pt	Exibir novas mensagens na tela principal
+show sender's email address with name	email	pt	Exibir email do remetente com o nome
+show short names	email	pt	Exibir nomes curtos
+show total folder size by default	email	pt	Exibir tamanho total da pasta por padrão
+simple	email	pt	Simples
+size	email	pt	Tamanho
+size larger than	email	pt	Tamanho Maior Que
+size smaller than	email	pt	Tamanho Menor Que
+small	email	pt	Pequeno
+smaller	email	pt	Menor
+smallest	email	pt	Mínimo
+somebody	email	pt	alguém
+sort by	email	pt	Ordenar por
+spell check	email	pt	Verificar Ortografia
+standard e-mail preferences	email	pt	Preferências padrões de Email
+stop if matched	email	pt	Parar se houver ocorrência
+switch accounts	email	pt	Trocar de contas
+switch current folder to	common	pt	Alterar a Pasta Corrente Para
+test all filters	email	pt	Testar Todos os Filtros
+test or apply all filters	email	pt	testar ou aplicar TODOS filtros
+test run this filter	email	pt	Executar Teste Deste Filtro
+text	email	pt	Texto
+the email application offers 2 different layouts for the index page, that is the page that lists the emails in a folder. this page may be the page the user looks at the most and so different layouts, or looks, are offered.	email	pt	
+the email application offers different button displays, these buttons can be text, images, or both.	email	pt	
+the email application offers different icon image themes, groups of images of a similar style which are used in this email application. currently the available themes are images based on evolution by ximian and the netscape7, mozilla browser buttons. additional themes are anticipated and welcome.	email	pt	
+the email application offers different icon image themes, these icons can be big or small.	email	pt	
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you clear this box, then it goes back to the default value. if you only need some custom settings but want this one to be the default value, then leave this box blank, the default value will be used, and you will see that default value in this box the next time you come to this preferences page.	email	pt	
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	pt	
+the password to use when checking mail for this email account. this may be the same as your phpgroupware password, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	pt	
+the type of mail server you want to access. imap mail servers have folders, such as the sent and trash folders. pop servers do not have folders. pop, pop-3, and pop3 are the same thing. you can have the server connection encrypted by using imaps or pops, only if the mailserver supports it and if your phpgroupware installation has a &quot;ssl&quot; capabable version of php.	email	pt	
+then do this	email	pt	Então fazer isto
+then take this actions	email	pt	Então executar estas ações
+there is no text or other part of the email to display to the user, all part(s) are attachments.	email	pt	
+there was an error trying to connect to your imap server.<br />please contact your admin to check the servername, username or password.	email	pt	
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	pt	Houve um erro ao tentar conectar no servidor de e-mail.<br />Por favor verifique seu usuário e sua senha ou entre em contato com o administrador do sistema.
+there was an error trying to connect to your pop3 server.<br />please contact your admin to check the servername, username or password.	email	pt	
+this confusing and often misunderstood option is left over from this email apps origins as aeromail by mark cushman. when viewing a list of emails in a folder, the from column may show you a) the senders name only, if a name was provided, b) the senders from email address, in addition to the senders name, or c) the senders reply to address if it is different from the senders from address, in addition to the senders name if it was provided. typically users set this to none, which will show only the senders name. if no name was supplied by the sender, then the senders from email address will be shown, whether a seperate reply to address is provided has no effect on this, the from address is always used if the senders name is not provided.	email	pt	
+this data not supplied.	email	pt	Este dado não foi digitado
+this folder is empty	email	pt	Esta pasta está vazia
+this is really a visual template conflict issue. the phpgw template already has it own css, and style sheets are cascading, subsequent css can be inherited by the page and totally b0rk the look of the template theme. or maybe not, only certain css tags are really capable of this such as the css body property, or the a (href) properties.	email	pt	
+this is the name that appears in the account combobox. if for leave this blank, your accounts will be given a standard name like account[1]: jane doe, where jane doe is the name you give below as your full name. if you want to give an account a special name you can fill this in. no matter what, this is for your use, your emails will still use your full name as your from name for email messages. note that your full name for your email account 0 is the name you gave in the phpgroupware setup.	email	pt	
+this is the name that appears in the users from address. the default mail account gets this value automatically from the phpgwapi. additional accounts are created with the phpgwapi supplied fullname you can specify a different fullname for each extra email account.	email	pt	
+this pref currently does nothing users may have more than one email account. in the future it is anticipated that automatic actions may be performed on these accounts, such as automatic new mail checks,auto filtering, etc... perhaps the user may want to disable an account so that these automatic actions do not occur for that account. this is one possible use. also, an admin may want to disable accounts from time to time.	email	pt	
+this specifies whether or not to show the number of new message in the folders combo box on the index screen.	email	pt	
+this specifies whether or not to show the total size of folders by default. if this is not checked, you will be presented with a button allowing you to display folder size..	email	pt	
+this text will be appended to the bottom of the users emails for this email account. currently, html tags are not supported. also, forwarded email will not get this email sig appended to it for reasons such as it clutters the email, the forwarded part probably has its own email sig from the original author, which is really the information that matters the most.	email	pt	
+to	email	pt	Para
+to address	email	pt	Endereço Para
+total messages	email	pt	Total de Mensagens
+trash	email	pt	Lixeira
+trash folder	email	pt	pasta de lixeira
+u-wash mail folder	email	pt	Pasta de Email U-Wash
+unable to get source folder name	email	pt	Impossível pegar nome da pasta de origem
+unable to get target folder name	email	pt	Impossível pegar nome da pasta de destino
+unanswered	email	pt	Não respondido
+undeleted	email	pt	Não removido
+undisclosed recipients	email	pt	Destinatários não exibidos
+undisclosed sender	email	pt	Remetende não exibido
+unflagged	email	pt	Desmarcada
+unknown action	email	pt	Ação desconhecida
+unknown error	email	pt	Erro desconhecido
+unknown translation	email	pt	Tradução desconhecida
+unseen	email	pt	Não visualizado
+use custom settings	email	pt	Usar configurações personalizadas
+view as html	email	pt	Exibir como HTML
+view formatted	email	pt	Exibir formatado
+view headers	email	pt	Exibir cabeçalhos
+view unformatted	email	pt	Exibir não formatado
+warn_attachment_name_dangerous	email	pt	warn_attachment_name_dangerous
+warn_attachment_only_mail	email	pt	warn_attachment_only_mail
+warn_b64_encoded_displayable	email	pt	warn_b64_encoded_displayable
+warn_has_iframe_maybe_klez	email	pt	warn_has_iframe_maybe_klez
+warn_script_tags	email	pt	warn_script_tags
+warn_style_sheet	email	pt	warn_style_sheet
+we have recently added this new addressbook so that users can choose to have a more complex addressbook that features a) easy, point and click searching, b) best suited for organizations with large central addressbooks with many categories. you can choose here which addressbook do you prefer.	email	pt	
+we have three sizes that tell us how to better render the addressbook for you: 800x600 (addressbook will popout in a 700 pixel wide box), 1024x768 (it will be a 800 box), 1200x1600 (will be a 900 box). the fonts for all html stuff will be, respectively set to xx-small, x-small and normal (no font setting).	email	pt	
+wrote	email	pt	escrito
+you have %1 new messages!	common	pt	Você tem %1 novas mensagens!
+you have 1 new message!	common	pt	Você tem 1 nova mensagem !
+you have messages!	common	pt	Você tem mensagens !
+you have no new messages	common	pt	Você não tem nenhuma nova mensagem !
+you must click	email	pt	você deve clicar
+you must click %1 for the file to actually upload	email	pt	você deve clicar %1 para o arquivo realmente ser enviado
+your full name	common	pt	Seu Nome Completo
+your message has been sent	common	pt	Sua mesagem foi enviada
+your server administrator will set the default values for the following options. you may never need to change any of them. if you do need to use settings that are different from the defaults for the options below here, then check this box. default is disabled, not checked. if you fill in some of the options, but later decide to go back to the default values, unchecking this box will erase your custom values and put back the default values. all of the following options start out with the default value, so you may see some settings below even if you have never filled them in. this checkbox only shows up for the default email account. if you are setting up additional email accounts, you will be required to fill in the following options and this checkbox will not be displayed, it will be checked for all extra email accounts.	email	pt	

@@ -1,0 +1,105 @@
+%1 already exists as a file	filemanager	nl	%1 bestaat al als bestand
+application	filemanager	nl	Applicatie
+back to file manager	filemanager	nl	Terug naar bestandsbeheer
+cannot create directory because it begins or ends in a space	filemanager	nl	Kan map niet aanmaken omdat de naam begint of eindigt met een spatie
+cannot replace %1 because it is a directory	filemanager	nl	Kan %1 niet vervangen omdat het een map is
+choose directory -->	filemanager	nl	Kies map -->
+command sucessfully run	filemanager	nl	Actie succesvol afgesloten
+comment	filemanager	nl	Commentaar
+comments cannot contain "%1"	filemanager	nl	Commentaar mag geen "%1" bevatten
+copied %1 to %2	filemanager	nl	%1 naar %2 gekopieerd
+copy to	filemanager	nl	Kopieer naar
+copy to:	filemanager	nl	Kopieer naar:
+could not copy %1 to %2	filemanager	nl	Kon %1 niet naar %2 kopiëren
+Could not copy %1 to %2 Quota exceeded	filemanager	nl	Kon %1 niet naar %2 kopiëren. Plaatslimiet overschreden
+could not create %1	filemanager	nl	Kon %1 niet aanmaken
+could not create directory %1	filemanager	nl	Kon map %1 niet aanmaken
+could not delete %1	filemanager	nl	Kon %1 niet verwijderen
+could not move %1 to %2	filemanager	nl	Kon %1 niet naar %2 verplaatsen
+Could not move %1 to %2 Quota exceeded	filemanager	nl	Kon %1 niet naar %2 verplaatsen. Plaatslimiet overschreden
+could not rename %1 to %2	filemanager	nl	Kon %1 niet naar %2 hernoemen
+could not save %1	filemanager	nl	Kon %1 niet opslaan
+could not upload %1 Quota exceeded	filemanager	nl	kon %1 niet uploaden. Plaatslimiet overschreden
+create file	filemanager	nl	Nieuw Bestand
+create folder	filemanager	nl	Nieuwe Map
+created	filemanager	nl	Aangemaakt
+created %1	filemanager	nl	%1 aangemaakt
+created by	filemanager	nl	Aangemaakt door
+created directory %1	filemanager	nl	Map %1 aangemaakt
+date	filemanager	nl	Datum
+default number of upload fields to show	filemanager	nl	Standaard aantal uploadvelden die zichtbaar zijn
+delete	filemanager	nl	Verwijderen
+deleted %1	filemanager	nl	%1 verwijderd
+directory	filemanager	nl	Map
+directory %1 already exists	filemanager	nl	Map %1 bestaat reeds
+directory %1 does not exist	filemanager	nl	Map %1 bestaat niet
+directory names cannot contain "%1"	filemanager	nl	Mapnamen kunnen geen "%1" bevatten
+display attributes	filemanager	nl	Weergave van attributen
+download	filemanager	nl	Download
+edit	filemanager	nl	Wijzig
+edit comments	filemanager	nl	Wijzig commentaar
+edit quota	filemanager	nl	Wijzig plaatslimiet
+Enter comma separated Quota value in MB	filemanager	nl	Voeg een kommagescheiden lijst met plaatslimieten in MB
+erroneous input! check quota value!	filemanager	nl	Foutieve waarden! Controleer plaatslimiet waarden!
+error running command	filemanager	nl	Fout bij het starten van het commando
+execute	filemanager	nl	Start
+failed to create directory	filemanager	nl	aanmaken van de map is mislukt
+file	filemanager	nl	Bestand
+file %1 already exists. please edit it or delete it first.	filemanager	nl	Bestand %1 bestaat reeds. Wijzig het bestand, of verwijder het eerst.
+file %1 could not be created.	filemanager	nl	Bestand %1 kon niet worden aangemaakt.
+file name	filemanager	nl	Bestandsnaam
+file names cannot contain "%1"	filemanager	nl	Bestandsnamen kunnen geen "%1" bevatten
+file names cannot contain \ or /	filemanager	nl	Bestandsnamen kunnen geen \ of / bevatten
+filemanager	common	nl	Bestandsbeheer
+filemanager preferences	filemanager	nl	Bestandsbeheer voorkeuren
+files	filemanager	nl	Bestanden
+folder	filemanager	nl	Map
+go to	filemanager	nl	Ga naar
+go to %1	filemanager	nl	Ga naar %1
+go to your home directory	filemanager	nl	Ga naar uw eigen documentenmap
+go to:	filemanager	nl	Ga naar:
+home	filemanager	nl	Startpagina
+locked	filemanager	nl	Gesloten
+menu -->	filemanager	nl	Menu -->
+mime type	filemanager	nl	MIME Type
+modified	filemanager	nl	Gewijzigd
+modified by	filemanager	nl	Gewijzigd door
+move to	filemanager	nl	Verplaats naar
+move to:	filemanager	nl	Verplaats naar:
+moved %1 to %2	filemanager	nl	%1 naar %2 verplaatst
+no version history for this file/directory	filemanager	nl	Geen versiegeschiedenis voor dit bestand/deze map
+operation	filemanager	nl	Actie
+other settings	filemanager	nl	andere instellingen
+owner	filemanager	nl	Eigenaar
+preview %1	filemanager	nl	Bekijk een voorproefje van %1
+preview of %1	filemanager	nl	Bekijk een voorproefje van %1
+refresh	filemanager	nl	Verversen
+rename	filemanager	nl	Hernoemen
+renamed %1 to %2	filemanager	nl	%1 naar %2 hernoemd
+replaced %1	filemanager	nl	%1 vervangen
+save %1	filemanager	nl	Sla %1 op
+save all	filemanager	nl	Opslaan als
+saved %1	filemanager	nl	%1 opgeslagen
+show	filemanager	nl	Bekijk
+show ..	filemanager	nl	Bekijk ..
+show .files	filemanager	nl	Bekijk .bestanden
+show command line (experimental. dangerous)	filemanager	nl	Bekijk commandoregel (EXPERIMENTEEL. GEVAARLIJK)
+show dotfiles	filemanager	nl	Bekijk dot-bestanden (sjablonen)
+show help	filemanager	nl	Bekijk help
+size	filemanager	nl	Grootte
+sort by:	filemanager	nl	Sorteer op:
+total files	filemanager	nl	Totaal aantal bestanden
+unknown mime-type defaults to text/plain when viewing	filemanager	nl	Onbekend MIME-type, gebruik standaard text/plain bij het bekijken
+unused space	filemanager	nl	Vrije ruimte
+up	filemanager	nl	Omhoog
+update	filemanager	nl	Bijwerken
+updated comment for %1	filemanager	nl	Bijgewerkt commentaar voor %1
+upload fields	filemanager	nl	upload velden
+upload files	filemanager	nl	Upload bestanden
+used space	filemanager	nl	Gebruikte ruimte
+users	filemanager	nl	Gebruikers
+version	filemanager	nl	Versie
+view documents in new window	filemanager	nl	Bekijk documenten in nieuw venster
+view documents on server (if available)	filemanager	nl	Bekijk documenten op de server (indien mogelijk)
+who	filemanager	nl	Wie
+you do not have access to %1	filemanager	nl	U heeft geen toegang tot %1

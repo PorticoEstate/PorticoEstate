@@ -1,0 +1,2 @@
+s#.*Languages/\([^/]*\).*#\1#
+y#ABCDEFGHIJKLMNOPQRSTUVWXYZ#abcdefghijklmnopqrstuvwxyz#
