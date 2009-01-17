@@ -497,6 +497,7 @@
 
 		function add($project)
 		{
+			$receipt = array();
 			$historylog	= CreateObject('property.historylog','project');
 
 			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
@@ -538,8 +539,10 @@
 			$project['descr'] = $this->db->db_addslashes($project['descr']);
 			$project['name'] = $this->db->db_addslashes($project['name']);
 
+			$this->db->transaction_begin();
+			$id = $this->next_project_id();
 			$values= array(
-				$project['project_id'],
+				$id,
 				$project['name'],
 				'public',
 				$project['cat_id'],
@@ -561,8 +564,6 @@
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
-			$this->db->transaction_begin();
-
 			$this->db->query("INSERT INTO fm_project (id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
@@ -581,7 +582,7 @@
 			{
 				while($branch=each($project['branch']))
 				{
-					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ('" . $project['project_id']. "','$branch[1]')",__LINE__,__FILE__);
+					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ({$id},{$branch[1]})",__LINE__,__FILE__);
 				}
 			}
 
@@ -594,7 +595,7 @@
 						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
 						'location1_item_id' => $project['origin'][0]['data'][0]['id'],
 						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
-						'location2_item_id' => $project['project_id'],
+						'location2_item_id' => $id,
 						'account_id'		=> $this->account
 					);
 					
@@ -605,20 +606,22 @@
 			if($this->db->transaction_commit())
 			{
 				$this->increment_project_id();
-				$historylog->add('SO',$project['project_id'],$project['status']);
-				$historylog->add('TO',$project['project_id'],$project['cat_id']);
-				$historylog->add('CO',$project['project_id'],$project['coordinator']);
+				$historylog->add('SO', $id, $project['status']);
+				$historylog->add('TO', $id, $project['cat_id']);
+				$historylog->add('CO', $id, $project['coordinator']);
 				if ($project['remark'])
 				{
-					$historylog->add('RM',$project['project_id'],$project['remark']);
+					$historylog->add('RM', $id, $project['remark']);
 				}
 
-				$receipt['message'][] = array('msg'=>lang('project %1 has been saved',$project['project_id']));
+				$receipt['message'][] = array('msg'=>lang('project %1 has been saved',$id));
 			}
 			else
 			{
 				$receipt['error'][] = array('msg'=>lang('the project has not been saved'));
 			}
+			
+			$receipt['id'] = $id;
 			return $receipt;
 		}
 
@@ -692,6 +695,7 @@
 		function edit($project)
 		{
 			$historylog	= CreateObject('property.historylog','project');
+			$receipt = array();
 
 			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
 			{
@@ -745,17 +749,17 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("SELECT status,category,coordinator FROM fm_project where id='" .$project['project_id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT status,category,coordinator FROM fm_project WHERE id = {$project['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$old_status = $this->db->f('status');
 			$old_category = (int)$this->db->f('category');
 			$old_coordinator = (int)$this->db->f('coordinator');
 
-			$this->db->query("UPDATE fm_project set $value_set $vals WHERE id= '" . $project['project_id'] ."'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_project SET $value_set $vals WHERE id= {$project['id']}",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
 			{
-				$this->db->query("update fm_tenant set contact_phone='". $project['extra']['contact_phone']. "' where id='". $project['extra']['tenant_id']. "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tenant SET contact_phone='". $project['extra']['contact_phone']. "' WHERE id='". $project['extra']['tenant_id']. "'",__LINE__,__FILE__);
 			}
 
 			if (isset($project['power_meter']) && $project['power_meter'])
@@ -763,27 +767,27 @@
 				$this->update_power_meter($project['power_meter'],$project['location_code'],$address);
 			}
 	// -----------------which branch is represented
-			$this->db->query("delete from fm_projectbranch where project_id='" . $project['project_id'] ."'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_projectbranch WHERE project_id={$project['id']}",__LINE__,__FILE__);
 
 			if (count($project['branch']) != 0)
 			{
 				while($branch=each($project['branch']))
 				{
-					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ('" . $project['project_id']. "','$branch[1]')",__LINE__,__FILE__);
+					$this->db->query("INSERT INTO fm_projectbranch (project_id,branch_id) VALUES ({$project['id']}, {$branch[1]})",__LINE__,__FILE__);
 				}
 			}
 
 			if($project['delete_request'])
 			{
-				$receipt = $this->delete_request_from_project($project['delete_request'],$project['project_id']);
+				$receipt = $this->delete_request_from_project($project['delete_request'],$project['id']);
 
 			}
 
-			$this->update_request_status($project['project_id'],$project['status'],$project['cat_id'],$project['coordinator']);
+			$this->update_request_status($project['id'],$project['status'],$project['cat_id'],$project['coordinator']);
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
-				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['project_id'] ,__LINE__,__FILE__);
+				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
 				$workorder = array();
 				while ($this->db->next_record())
 				{
@@ -797,9 +801,9 @@
 
 				if($old_status != $project['status'])
 				{
-					$historylog->add('S',$project['project_id'],$project['status']);
+					$historylog->add('S',$project['id'],$project['status']);
 
-					$this->db->query("UPDATE fm_workorder set status='". $project['status'] . "' WHERE project_id= '" . $project['project_id'] ."'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_workorder SET status='{$project['status']}' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 
 					if (isset($workorder) AND is_array($workorder))
 					{
@@ -812,7 +816,7 @@
 				}
 				elseif($project['confirm_status'])
 				{
-					$historylog->add('SC',$project['project_id'],$project['status']);
+					$historylog->add('SC',$project['id'],$project['status']);
 
 					if (isset($workorder) AND is_array($workorder))
 					{
@@ -828,27 +832,26 @@
 
 			if ($old_category != $project['cat_id'])
 			{
-				$historylog->add('T',$project['project_id'],$project['cat_id']);
+				$historylog->add('T',$project['id'],$project['cat_id']);
 			}
 			if ($old_coordinator != $project['coordinator'])
 			{
-				$historylog->add('C',$project['project_id'],$project['coordinator']);
+				$historylog->add('C',$project['id'],$project['coordinator']);
 				$receipt['notice_owner'][]=lang('Coordinator changed') . ': ' . $GLOBALS['phpgw']->accounts->id2name($project['coordinator']);
 			}
 
 			if ($project['remark'])
 			{
-				$historylog->add('RM',$project['project_id'],$project['remark']);
+				$historylog->add('RM',$project['id'],$project['remark']);
 			}
 
-			$receipt['message'][] = array('msg'=>lang('project %1 has been edited',$project['project_id']));
+			$receipt['id'] = $project['id'];
+			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));
 
 			$this->db->transaction_commit();
 
 			return $receipt;
-
 		}
-
 
 		function delete_request_from_project($request,$project_id)
 		{
