@@ -629,8 +629,9 @@
 			}
 
 			$table = "fm_{$this->type}_{$entity_id}_$cat_id";
-			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 			$this->db->transaction_begin();
+			$values['id'] = $this->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
+			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 
 			$this->db->query("INSERT INTO $table (id,num,address,location_code,entry_date,user_id $cols) "
 				. "VALUES ("
@@ -670,6 +671,8 @@
 
 			$this->db->transaction_commit();
 
+			$receipt = array();
+			$receipt['id'] = $values['id'];
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been saved',$values['id']));
 			return $receipt;
 		}
