@@ -478,7 +478,8 @@
 			$workorder = array();
 			if ($this->db->next_record())
 			{
-				$workorder['workorder_id']		= $this->db->f('id');
+				$workorder['id']				= $this->db->f('id');
+				$workorder['workorder_id']		= $this->db->f('id'); // FIXME
 				$workorder['project_id']		= $this->db->f('project_id');
 				$workorder['title']				= $this->db->f('title');
 				$workorder['name']				= $this->db->f('name');
@@ -548,17 +549,20 @@
 
 		function add($workorder)
 		{
+			$receipt = array();
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 
+			$this->db->transaction_begin();
+			$id = $this->next_id();
 			if(!$workorder['workorder_num'])
 			{
-				$workorder['workorder_num'] = $workorder['workorder_id'];
+				$workorder['workorder_num'] = $id;
 			}
 
 			$values= array(
-				$workorder['workorder_id'],
+				$id,
 				$workorder['workorder_num'],
 				$workorder['project_id'],
 				$workorder['title'],
@@ -581,13 +585,11 @@
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
-			$this->db->transaction_begin();
-
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
 				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id) "
 				. "VALUES ( $values )",__LINE__,__FILE__);
 
-			$this->db->query("INSERT INTO fm_orders (id,type) VALUES (" . $workorder['workorder_id'] . ",'workorder')");
+			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
 
 /*
 			if($workorder['charge_tenant'])
@@ -598,18 +600,19 @@
 			if($this->db->transaction_commit())
 			{
 				$this->increment_workorder_id();
-				$historylog->add('SO',$workorder['workorder_id'],$workorder['status']);
+				$historylog->add('SO', $id, $workorder['status']);
 				if ($workorder['remark'])
 				{
-					$historylog->add('RM',$workorder['workorder_id'],$workorder['remark']);
+					$historylog->add('RM', $id, $workorder['remark']);
 				}
 
-				$receipt['message'][] = array('msg'=>lang('workorder %1 has been saved',$workorder['workorder_id']));
+				$receipt['message'][] = array('msg'=>lang('workorder %1 has been saved', $id));
 			}
 			else
 			{
 				$receipt['error'][] = array('msg'=>lang('the workorder has not been saved'));
 			}
+			$receipt['id'] = $id;
 			return $receipt;
 		}
 
@@ -619,7 +622,7 @@
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 
-			$this->db->query("SELECT status,budget,calculation FROM fm_workorder where id='" .$workorder['workorder_id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT status,budget,calculation FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if ($this->db->f('calculation') > 0)
@@ -637,7 +640,7 @@
 			$old_status = $this->db->f('status');
 			$old_budget = $this->db->f('budget');
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilag where pmwrkord_code ='" .$workorder['workorder_id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ={$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if($this->db->f('bilagsnr'))
@@ -645,7 +648,7 @@
 				$paid = 1;
 			}
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code ='" .$workorder['workorder_id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('bilagsnr'))
 			{
@@ -679,7 +682,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_workorder set $value_set WHERE id=" . $workorder['workorder_id'] ,__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_workorder set $value_set WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
 
 /*			if($workorder['charge_tenant'])
 			{
@@ -690,32 +693,33 @@
 			{
 				if ($old_status != $workorder['status'])
 				{
-					$historylog->add('S',$workorder['workorder_id'],$workorder['status']);
+					$historylog->add('S',$workorder['id'],$workorder['status']);
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $workorder['status'];
 				}
 				elseif($workorder['confirm_status'])
 				{
-					$historylog->add('SC',$workorder['workorder_id'],$workorder['status']);
+					$historylog->add('SC',$workorder['id'],$workorder['status']);
 					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $workorder['status'];
 				}
 
 				if ($old_budget != $workorder['budget'])
 				{
-					$historylog->add('B',$workorder['workorder_id'],$workorder['budget']);
+					$historylog->add('B', $workorder['id'], $workorder['budget']);
 				}
 
 				if ($workorder['remark'])
 				{
-					$historylog->add('RM',$workorder['workorder_id'],$workorder['remark']);
+					$historylog->add('RM', $workorder['id'], $workorder['remark']);
 				}
 
-				$receipt['message'][] = array('msg'=>lang('workorder %1 has been edited',$workorder['workorder_id']));
+				$receipt['message'][] = array('msg'=>lang('workorder %1 has been edited', $workorder['id']));
 			}
 			else
 			{
-				$receipt['error'][] = array('msg'=>lang('workorder %1 has not been edited',$workorder['workorder_id']));
+				$receipt['error'][] = array('msg'=>lang('workorder %1 has not been edited', $workorder['id']));
 			}
 
+			$receipt['id'] = $workorder['id'];
 			return $receipt;
 		}
 
