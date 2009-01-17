@@ -984,16 +984,6 @@
 				'id'		=> $id
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
 			{
