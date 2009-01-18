@@ -35,16 +35,12 @@
 	class property_sopricebook
 	{
 
-		function property_sopricebook()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function add_activity_first_prize($m_cost,$w_cost,$total_cost,$activity_id,$agreement_id,$date)
@@ -251,8 +247,8 @@
 //echo $sql;
 
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -335,8 +331,8 @@
 
 			$sql = "SELECT * FROM  fm_agreement_group $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -417,8 +413,8 @@
 				. " FROM fm_activity_price_index $this->join fm_agreement on fm_activity_price_index.agreement_id = fm_agreement.id "
 				. " Where activity_id= '$activity_id' and fm_activity_price_index.agreement_id= '$agreement_id'";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -497,8 +493,8 @@
 				. " $filtermethod $querymethod ";
 
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -574,8 +570,8 @@
 				. " Where fm_activity_price_index.activity_id= '$activity_id' $querymethod group by fm_activities.id,fm_activities.num,"
 				. " fm_branch.descr,org_name , fm_agreement.id ";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -658,7 +654,7 @@
 				$values['base_descr']
 				);
 
-			$vals	= $this->bocommon->validate_db_insert($vals);
+			$vals	= $this->db->validate_insert($vals);
 
 			$this->db->transaction_begin();
 			$this->db->query("INSERT INTO fm_activities (id, num,unit,agreement_group_id,ns3420,dim_d,branch_id,descr,base_descr) "
@@ -686,7 +682,7 @@
 				'base_descr'			=> $values['base_descr']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
 			$this->db->query("UPDATE fm_activities set $value_set WHERE id= '" . $values['activity_id'] . "'",__LINE__,__FILE__);
 			$this->db->transaction_commit();
@@ -707,7 +703,7 @@
 				$values['descr']
 				);
 
-			$vals	= $this->bocommon->validate_db_insert($vals);
+			$vals	= $this->db->validate_insert($vals);
 
 			$this->db->query("INSERT INTO fm_agreement_group (id,num,status,descr) "
 				. "VALUES ($vals)",__LINE__,__FILE__);
@@ -727,7 +723,7 @@
 				'descr'	=> $values['descr']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
 
 			$this->db->query("UPDATE fm_agreement_group set $value_set WHERE id= '" . $values['agreement_group_id'] . "'",__LINE__,__FILE__);

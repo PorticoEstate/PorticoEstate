@@ -40,8 +40,7 @@
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= $this->bocommon->join;
 			$this->like			= $this->bocommon->like;
 			$this->interlink 	= CreateObject('property.interlink');

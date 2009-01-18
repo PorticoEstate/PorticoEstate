@@ -43,16 +43,16 @@
 		var $type = 'entity';
 		var $type_app;
 
-		function property_soentity($entity_id='',$cat_id='')
+		function __construct($entity_id='',$cat_id='')
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->db           = clone($GLOBALS['phpgw']->db);
+			$this->db2          = clone($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 			$this->entity_id	= $entity_id;
 			$this->cat_id		= $cat_id;
 		}

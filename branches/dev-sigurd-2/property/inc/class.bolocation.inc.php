@@ -80,7 +80,7 @@
 		function property_bolocation($session=false)
 		{
 			$this->soadmin_location		= CreateObject('property.soadmin_location');
-			$this->bocommon 			= & $this->soadmin_location->bocommon;
+			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->so 					= CreateObject('property.solocation', $this->bocommon);
 			$this->custom 				= createObject('property.custom_fields');
 

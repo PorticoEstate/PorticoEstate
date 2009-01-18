@@ -38,11 +38,10 @@
 
 		function property_soactor()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db			= $this->bocommon->new_db();
-			$this->db2			= $this->bocommon->new_db($this->db);
+			$this->db           = clone($GLOBALS['phpgw']->db);
+			$this->db2          = clone($this->db);
 
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;

@@ -38,7 +38,7 @@
 		(
 		);
 
-		function property_import()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->bocommon		= CreateObject('property.bocommon');

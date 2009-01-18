@@ -34,16 +34,12 @@
 
 	class property_socustom
 	{
-		function property_socustom()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read($data)
@@ -79,9 +75,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
@@ -169,7 +163,7 @@
 
 			$this->db->transaction_begin();
 
-			$id = $this->bocommon->next_id('fm_custom');
+			$id = $this->db->next_id('fm_custom');
 
 			$this->db->query("INSERT INTO fm_custom (id,entry_date,sql_text,name,user_id) "
 				. "VALUES ($id,'" . time() . "','" . $custom['sql_text'] . "','" . $custom['name'] . "'," . $this->account . ")",__LINE__,__FILE__);
@@ -192,7 +186,7 @@
 
 			if($custom['new_name'])
 			{
-				$column_id = $this->bocommon->next_id('fm_custom_cols', array('custom_id'=>$custom['custom_id']));
+				$column_id = $this->db->next_id('fm_custom_cols', array('custom_id'=>$custom['custom_id']));
 
 				$sql = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id=" . $custom['custom_id'];
 				$this->db->query($sql);
@@ -207,7 +201,7 @@
 					$sorting
 					);
 
-				$values	= $this->bocommon->validate_db_insert($values);
+				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("INSERT INTO fm_custom_cols (custom_id,id,name,descr,sorting) "
 				. "VALUES ($values)");

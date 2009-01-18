@@ -39,7 +39,7 @@
 		var $type_app;
 		var $bocommon;
 
-		function property_soadmin_entity($entity_id='', $cat_id='', $bocommon = '')
+		function __construct($entity_id='', $cat_id='', $bocommon = '')
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -52,10 +52,9 @@
 				$this->bocommon = $bocommon;
 			}
 
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 
 			if($entity_id && $cat_id)
 			{
@@ -96,8 +95,8 @@
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -157,8 +156,8 @@
 
 			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -271,7 +270,7 @@
 				$entity['documentation']
 				);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_{$this->type} (id,name, descr,location_form,documentation) "
 				. "VALUES ($values)",__LINE__,__FILE__);
@@ -337,7 +336,7 @@
 				$values['start_ticket']
 				);
 
-			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+			$values_insert	= $this->db->validate_insert($values_insert);
 
 			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
@@ -375,7 +374,7 @@
 					'true'
 					);
 
-				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+				$values_insert	= $this->db->validate_insert($values_insert);
 
 				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
@@ -428,7 +427,7 @@
 				'documentation'	=> $entity['documentation']
 				);
 
-				$value_set	= $this->bocommon->validate_db_update($value_set);
+				$value_set	= $this->db->validate_update($value_set);
 
 				$this->db->transaction_begin();
 
@@ -497,7 +496,7 @@
 					'start_ticket'	=> $entity['start_ticket']
 					);
 
-				$value_set	= $this->bocommon->validate_db_update($value_set);
+				$value_set	= $this->db->validate_update($value_set);
 
 				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
 

@@ -35,17 +35,17 @@
 	class property_soproject
 	{
 
-		function property_soproject()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db			= $this->bocommon->new_db();
-			$this->db2			= $this->bocommon->new_db($this->db);
 			$this->interlink 	= CreateObject('property.interlink');
 
-			$this->like =& $this->db->like;
-			$this->join =& $this->db->join;
-			$this->left_join = " LEFT JOIN ";
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2 			= clone($this->db);
+			$this->join			= & $this->db->join;
+			$this->left_join 	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 
 			$this->acl 		= & $GLOBALS['phpgw']->acl;
 			$this->grants	= $this->acl->get_grants('property','.project');

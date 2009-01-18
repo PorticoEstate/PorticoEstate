@@ -45,12 +45,13 @@
 		 var $like = 'LIKE';
 
 
-		function property_socommon()
+		function __construct()
 		{
 
 			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db = CreateObject('phpgwapi.db');
+				$this->db = & $GLOBALS['phpgw']->db;
+				//$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{
@@ -321,6 +322,10 @@
 			if(is_object($db))
 			{
 				$db = clone($db);
+			}
+			else if( is_object($GLOBALS['phpgw']->db) )
+			{
+				$db = & $GLOBALS['phpgw']->db;
 			}
 			else
 			{

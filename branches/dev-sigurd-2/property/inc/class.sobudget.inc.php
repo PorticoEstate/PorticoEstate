@@ -34,18 +34,13 @@
 
 	class property_sobudget
 	{
-		function property_sobudget()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon	= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-
-			$this->join		= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like		= $this->bocommon->like;
+			$this->bocommon		= CreateObject('property.bocommon');
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read($data)
@@ -103,17 +98,15 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where ( descr $this->like '%$query%')";
 			}
 
 
 			$sql = "SELECT fm_budget.*, descr,category FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -198,17 +191,15 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
+				$query = $this->db->db_addslashes($query);
 			//	$querymethod = " $where ( descr $this->like '%$query%')";
 			}
 
 
 			$sql = "SELECT * FROM fm_budget_basis $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{

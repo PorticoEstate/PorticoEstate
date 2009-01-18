@@ -34,15 +34,14 @@
 
 	class property_sotts
 	{
-		function property_sotts()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = $this->bocommon->new_db();
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->socommon		= CreateObject('property.socommon');
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
@@ -110,7 +109,7 @@
 			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
-				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$access_location = $this->socommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
@@ -397,7 +396,7 @@
 				time(),
 				$ticket['finnish_date']);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 			$this->db->transaction_begin();
 
 			$this->db->query("insert into fm_tts_tickets (priority,user_id,"

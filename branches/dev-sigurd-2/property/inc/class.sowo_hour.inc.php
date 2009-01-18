@@ -34,17 +34,15 @@
 
 	class property_sowo_hour
 	{
-		function property_sowo_hour()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon	= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 
-			$this->join		= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like		= $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db2			= clone($this->db);
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 		}
 
 		function get_chapter_list()
@@ -234,7 +232,7 @@
 				time()
 				);
 
-			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+			$values_insert	= $this->db->validate_insert($values_insert);
 
 			$this->db->query("INSERT INTO fm_wo_h_deviation (workorder_id,hour_id,id,amount,descr,entry_date) VALUES ($values_insert)",__LINE__,__FILE__);
 
@@ -253,7 +251,7 @@
 				'descr'			=> $this->db->db_addslashes($values['descr'])
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_wo_h_deviation set $value_set WHERE workorder_id=" . $values['workorder_id'] . " AND hour_id=" . $values['hour_id'] . " AND id=" . $values['id'],__LINE__,__FILE__);
 
@@ -299,7 +297,7 @@
 				time()
 				 );
 
-			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+			$values_insert	= $this->db->validate_insert($values_insert);
 
 			$this->db->query("insert into fm_template (owner,name,descr,chapter_id,entry_date) "
 				. " values ($values_insert)",__LINE__,__FILE__);
@@ -333,7 +331,7 @@
 					$record,
 					$template_id );
 
-				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+				$values_insert	= $this->db->validate_insert($values_insert);
 
 				$this->db->query("insert into fm_template_hours (activity_id,activity_num,owner,hours_descr,unit,"
 				. "cost,quantity,billperae,ns3420_id,dim_d,grouping_id,grouping_descr,remark,tolerance,building_part,record,template_id) "
@@ -373,7 +371,7 @@
 					$hour[$i]['cat_per_cent']
 					);
 
-				$values	= $this->bocommon->validate_db_insert($values);
+				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("insert into fm_wo_hours (activity_id,activity_num,owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,record,entry_date,workorder_id,category,cat_per_cent) "
 				. " values ($values)",__LINE__,__FILE__);
@@ -443,7 +441,7 @@
 					$hour[$i]['cat_per_cent']
 					);
 
-				$values	= $this->bocommon->validate_db_insert($values);
+				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("insert into fm_wo_hours (owner,activity_id,activity_num,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
 				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
@@ -520,7 +518,7 @@
 					$hour['cat_per_cent']
 					);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("insert into fm_wo_hours (owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
 				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
@@ -661,7 +659,7 @@
 				'cat_per_cent'		=> $hour['cat_per_cent']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_wo_hours set $value_set WHERE id= '" . $hour['hour_id'] ."'",__LINE__,__FILE__);
 

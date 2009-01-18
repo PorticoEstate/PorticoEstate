@@ -42,11 +42,10 @@
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
-
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
-			$this->db          	= $this->bocommon->new_db();
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read_invoice($data)

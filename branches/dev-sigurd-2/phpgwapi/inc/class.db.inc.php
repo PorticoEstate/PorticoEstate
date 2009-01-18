@@ -46,6 +46,8 @@
 		 */
 		 var $join = ' INNER JOIN ';
 		 
+
+		 var $left_join = ' LEFT JOIN ';
 		/**
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
@@ -1038,7 +1040,23 @@
 			}
 			return $datetime_format;
 	 	}
-				
+
+		/**
+		* Get the correct datetime format for MONEY field for a particular RDBMS
+		*
+		* @return string the formatted string
+		*/
+		public static function money_format($amount)
+		{
+			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			{
+				return "CONVERT(MONEY,'{$amount}',0)";
+			}
+			else
+			{
+				return "'{$amount}'";
+			}
+		}
 
 		/**
 		 * Execute prepared SQL statement for insert
@@ -1100,4 +1118,39 @@
 			}
 			$this->delayPointer = true;
 		}
+
+		/**
+		* Finds the next ID for a record at a table
+		*
+		* @param string $table tablename in question
+		* @param array $key conditions
+		* @return int the next id
+		*/
+
+		public function next_id($table='',$key='')
+		{
+			$where = '';
+			$condition = array();
+			if(is_array($key))
+			{
+				foreach ($key as $column => $value)
+				{
+					if($value)
+					{
+						$condition[] = $column . "='" . $value;
+					}
+				}
+
+				if( $condition )
+				{
+					$where='WHERE ' . implode("' AND ", $condition) . "'";
+				}
+			}
+
+			$this->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
+			$this->next_record();
+			$next_id = $this->f('maximum')+1;
+			return $next_id;
+		}
+
 	}

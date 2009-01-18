@@ -36,17 +36,15 @@
 	{
 		var $role;
 
-		function property_sor_agreement()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2          = clone($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= $this->db->join;
+			$this->left_join	= $this->db->left_join;
+			$this->like			= $this->db->like;
 		}
 
 		function select_vendor_list()
@@ -679,7 +677,7 @@
 
 
 			$this->db->transaction_begin();
-			$id = $this->bocommon->next_id('fm_r_agreement');
+			$id = $this->db->next_id('fm_r_agreement');
 
 			$vals[]	= $id;
 			$vals[]	= $r_agreement['name'];
@@ -724,7 +722,7 @@
 				$cols	= "," . implode(",", $cols);
 			}
 
-			$vals	= $this->bocommon->validate_db_insert($vals);
+			$vals	= $this->db->validate_insert($vals);
 
 			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,member_of,start_date,end_date,termination_date,customer_id,customer_name,account_id,user_id $cols) "
 				. "VALUES ($vals)",__LINE__,__FILE__);
@@ -802,11 +800,11 @@
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);
-				$vals	= "," . $this->bocommon->validate_db_insert($vals);
+				$vals	= "," . $this->db->validate_insert($vals);
 			}
 
 			$this->db->transaction_begin();
-			$id = $this->bocommon->next_id($table,array('agreement_id'=>$values['r_agreement_id']));
+			$id = $this->db->next_id($table,array('agreement_id'=>$values['r_agreement_id']));
 
 			$this->db->query("INSERT INTO $table (id,agreement_id,entry_date,user_id $cols) "
 				. "VALUES ($id," . $values['r_agreement_id'] ."," . time()
@@ -893,7 +891,7 @@
 			$value_set['customer_name']= $values['customer_name'];
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
@@ -955,7 +953,7 @@
 
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date=" . time() . "$value_set WHERE agreement_id=" . intval($values['r_agreement_id']) . ' AND id=' . intval($values['id']));
@@ -1091,10 +1089,10 @@
 			$vals[] = $this->db->db_addslashes($values['remark']);
 
 			$cols	= "," . implode(",", $cols);
-			$vals	= "," . $this->bocommon->validate_db_insert($vals);
+			$vals	= "," . $this->db->validate_insert($vals);
 
 			$this->db->transaction_begin();
-			$c_id = $this->bocommon->next_id($table,array('agreement_id'=>$values['r_agreement_id']));
+			$c_id = $this->db->next_id($table,array('agreement_id'=>$values['r_agreement_id']));
 
 			$this->db->query("INSERT INTO $table (id,agreement_id,entry_date,user_id $cols) "
 				. "VALUES ($c_id," . $values['r_agreement_id'] ."," . time()
@@ -1143,7 +1141,7 @@
 			$table = 'fm_r_agreement_c_history';
 
 			$this->db->transaction_begin();
-			$id = $this->bocommon->next_id($table,array('agreement_id'=>$values['r_agreement_id'],'c_id' =>$values['c_id']));
+			$id = $this->db->next_id($table,array('agreement_id'=>$values['r_agreement_id'],'c_id' =>$values['c_id']));
 
 			$this->db->query("SELECT from_date, to_date FROM $table WHERE agreement_id=" . $values['r_agreement_id'] . " AND c_id=" . $values['c_id'] . " AND id =" .($id-1),__LINE__,__FILE__);
 			$this->db->next_record();
