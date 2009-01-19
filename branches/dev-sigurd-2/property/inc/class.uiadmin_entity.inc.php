@@ -28,6 +28,7 @@
 	* @subpackage admin
  	* @version $Id$
 	*/
+	phpgw::import_class('phpgwapi.yui');
 
 	/**
 	 * Description
@@ -111,123 +112,309 @@
 			}
 
 			$this->bocommon->reset_fm_cache();
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'admin_entity',
-								'nextmatchs',
-								'search_field'));
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uiadmin_entity.index',
+					'sort'		=>$this->sort,
+					'order'		=>$this->order,
+					'query'		=>$this->query,
+					'type'		=> $this->type
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_entity.index',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+						 	                        ."query:'{$this->query}',"
+						 	                        ."type:'{$this->type}'";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiadmin_entity.index',
+					'sort'		=>$this->sort,
+					'order'		=>$this->order,
+					'query'		=>$this->query,
+					'type'		=> $this->type
+				);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uiadmin_entity.index',
+								'sort'		=>$this->sort,
+								'order'		=>$this->order,
+								'query'		=>$this->query,
+								'type'		=> $this->type
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 1
+							                            ),
+							                            array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 2
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 3
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 4
+				                                        )
+			                           				),
+			                       		'hidden_value' => array(
+
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
 
 			$entity_list = $this->bo->read();
+			$uicols['name'][0]	= 'id';
+			$uicols['descr'][0]	= lang('Entity ID');
+			$uicols['name'][1]	= 'name';
+			$uicols['descr'][1]	= lang('Name');
+			$uicols['name'][2]	= 'descr';
+			$uicols['descr'][2]	= lang('Descr');
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
 
-			if (isSet($entity_list) AND is_array($entity_list))
+			if (isset($entity_list) AND is_array($entity_list))
 			{
-				foreach($entity_list as $entry)
+				foreach($entity_list as $entity_entry)
 				{
-					$content[] = array
-					(
-						'id'				=> $entry['id'],
-						'name'				=> $entry['name'],
-						'descr'				=> $entry['descr'],
-						'link_categories'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category',' entity_id'=> $entry['id'], 'type' => $this->type)),
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit', 'id'=> $entry['id'], 'type' => $this->type)),
-						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete',' entity_id'=> $entry['id'], 'type' => $this->type)),
-						'lang_view_standardtext'	=> lang('view the standard'),
-						'lang_category_text'		=> lang('categories for the entity type'),
-						'lang_edit_standardtext'	=> lang('edit the entity'),
-						'lang_delete_standardtext'	=> lang('delete the entity'),
-						'text_categories'		=> lang('Categories'),
-						'text_edit'			=> lang('edit'),
-						'text_delete'			=> lang('delete')
-					);
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']				= $entity_entry[$uicols['name'][$k]];
+						}
+					}
+					$j++;
 				}
 			}
 
-//_debug_array($content);
+			$datatable['rowactions']['action'] = array();
 
-			$table_header[] = array
+			$parameters = array
 			(
-
-				'lang_descr'		=> lang('Descr'),
-				'lang_categories'	=> lang('Categories'),
-				'lang_edit'		=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'sort_id'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.index',
-																'allrows'=> $this->allrows,
-																'type'	=> $this->type)
-										)),
-				'lang_id'		=> lang('entity id'),
-				'sort_name'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'name',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.index',
-																'allrows'=> $this->allrows,
-																'type'	=> $this->type)
-										)),
-				'lang_name'		=> lang('Name'),
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
 			);
 
-			$table_add[] = array
+			$parameters2 = array
 			(
-				'lang_add'		=> lang('add'),
-				'lang_add_standardtext'	=> lang('add a standard'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit', 'type' => $this->type)),
-				'lang_done'		=> lang('done'),
-				'lang_done_standardtext'=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'entity_id',
+						'source'	=> 'id'
+					),
+				)
 			);
 
-			if(!$this->allrows)
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'categories',
+						'statustext' 	=> lang('categories'),
+						'text'			=> lang('Categories'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.category'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'edit',
+						'statustext' 	=> lang('edit'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.edit'
+								)),
+					'parameters'	=> $parameters
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('delete'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.delete'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+
+			$datatable['rowactions']['action'][] = array(
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uiadmin_entity.edit'
+					)));
+
+			unset($parameters);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'id';
+					}
+					if($uicols['name'][$i]=='name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'name';
+					}
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($entity_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$appname		= lang('entity');
+			$function_msg	= lang('list entity type');
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiadmin_entity.index',
-				'sort'		=>$this->sort,
-				'order'		=>$this->order,
-				'query'		=>$this->query,
-				'type'		=> $this->type
-			);
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
-			$data = array
-			(
-				'allow_allrows'				=> true,
-				'allrows'				=> $this->allrows,
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($entity_list),
-				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_standardtext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_standardtext'	=> lang('Submit the search string'),
-				'query'					=> $this->query,
-				'lang_search'				=> lang('search'),
-				'table_header'				=> $table_header,
-				'values'				=> $content,
-				'table_add'				=> $table_add
-			);
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
 
-			$appname	= lang('entity');
-			$function_msg	= lang('list entity type');
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.index', 'property' );
 		}
-
 
 		function category()
 		{
@@ -239,138 +426,371 @@
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}";
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'admin_entity',
-								'nextmatchs',
-								'search_field'));
+			$entity = $this->bo->read_single($entity_id);
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uiadmin_entity.category',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'type'		=> $this->type
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_entity.category',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+						 	                        ."query:'{$this->query}',"
+						 	                        ."entity_id:'{$this->entity_id}',"
+						 	                        ."type:'{$this->type}'";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiadmin_entity.category',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'type'		=> $this->type
+				);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uiadmin_entity.category',
+								'sort'		=> $this->sort,
+								'order'		=> $this->order,
+								'query'		=> $this->query,
+								'entity_id'	=> $entity_id,
+								'type'		=> $this->type
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 1
+							                            ),
+							                            array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 2
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 3
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 4
+				                                        ),
+				                                        array(
+				                                            'id' => 'txtcategory',
+				                                            'name' => 'search',
+				                                            'value'    => 'Entity: '.$entity['name'],
+				                                            'type' => 'label',
+				                                            'style' => 'filter'
+				                                        )
+			                           				),
+			                       		'hidden_value' => array(
+
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
 
 			$category_list = $this->bo->read_category($entity_id);
+			$uicols['name'][0]	= 'id';
+			$uicols['descr'][0]	= lang('category ID');
+			$uicols['name'][1]	= 'name';
+			$uicols['descr'][1]	= lang('Name');
+			$uicols['name'][2]	= 'descr';
+			$uicols['descr'][2]	= lang('Descr');
+			$uicols['name'][3]	= 'prefix';
+			$uicols['descr'][3]	= lang('Prefix');
+			$uicols['name'][4]	= 'entity_id';
+			$uicols['descr'][4]	= lang('id');
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
 
-			if (isSet($category_list) AND is_array($category_list))
+			if (isset($category_list) AND is_array($category_list))
 			{
-				foreach($category_list as $entry)
+				foreach($category_list as $category_entry)
 				{
-					$content[] = array
-					(
-						'id'								=> $entry['id'],
-						'name'								=> $entry['name'],
-						'prefix'							=> $entry['prefix'],
-						'descr'								=> $entry['descr'],
-						'link_custom_function'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
-						'link_attribute'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
-						'link_attribute_group'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
-						'link_edit'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category','id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
-						'link_delete'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'cat_id'=> $entry['id'], 'entity_id'=> $entity_id, 'type' => $this->type)),
-						'lang_view_standardtext'			=> lang('view the category'),
-						'lang_status_standardtext'			=> lang('Status for the entity category'),
-						'lang_attribute_standardtext'		=> lang('attributes for the entity category'),
-						'lang_custom_function_standardtext'	=> lang('custom functions for the entity category'),
-						'lang_edit_standardtext'			=> lang('edit the standard'),
-						'lang_delete_standardtext'			=> lang('delete the standard'),
-						'text_status'						=> lang('Status'),
-						'text_attribute'					=> lang('Attributes'),
-						'text_attribute_group'				=> lang('attribute groups'),
-						'text_custom_function'				=> lang('Custom functions'),
-						'text_edit'							=> lang('edit'),
-						'text_delete'						=> lang('delete')
-					);
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $category_entry[$uicols['name'][$k]];
+							if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'entity_id')
+							{
+								$datatable['rows']['row'][$j]['column'][$k]['value']		= $entity_id;
+							}
+						}
+					}
+					$j++;
 				}
 			}
 
-//_debug_array($content);
+			$datatable['rowactions']['action'] = array();
 
-			$table_header[] = array
+			$parameters = array
 			(
-
-				'lang_descr'				=> lang('Descr'),
-				'lang_prefix'				=> lang('prefix'),
-				'lang_attribute'			=> lang('Attributes'),
-				'lang_attribute_group'		=> lang('attribute groups'),
-				'lang_custom_function'		=> lang('custom functions'),
-				'lang_edit'					=> lang('edit'),
-				'lang_delete'				=> lang('delete'),
-				'sort_id'					=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.category',
-																'entity_id' =>$entity_id,
-																'allrows'=>$this->allrows,
-																'type'	=> $this->type)
-										)),
-				'lang_id'		=> lang('category id'),
-				'sort_name'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'name',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.category',
-																'entity_id' =>$entity_id,
-																'allrows'=>$this->allrows,
-																'type'	=> $this->type)
-										)),
-				'lang_name'		=> lang('Name'),
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+					array
+					(
+						'name'		=> 'entity_id',
+						'source'	=> 'entity_id'
+					)
+				)
 			);
 
-			$table_add[] = array
+			$parameters2 = array
 			(
-				'lang_add'			=> lang('add'),
-				'lang_add_standardtext'		=> lang('add a category'),
-				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_category', 'entity_id'=> $entity_id,'type' => $this->type)),
-				'lang_done'			=> lang('done'),
-				'lang_done_standardtext'	=> lang('back to entity'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.index', 'type' => $this->type))
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'cat_id',
+						'source'	=> 'id'
+					),
+					array
+					(
+						'name'		=> 'entity_id',
+						'source'	=> 'entity_id'
+					)
+				)
 			);
 
-			$entity = $this->bo->read_single($entity_id,false);
+			$parameters3 = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'entity_id',
+						'source'	=> 'entity_id'
+					)
+				)
+			);
 
-			if(!$this->allrows)
+			//_debug_array($parameters2);die;
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'attributes',
+						'statustext' 	=> lang('attributes'),
+						'text'			=> lang('Attributes'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.list_attribute'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'custom functions',
+						'statustext' 	=> lang('custom functions'),
+						'text'			=> lang('Custom functions'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.list_custom_function'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'edit',
+						'statustext' 	=> lang('edit'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.edit_category'
+								)),
+					'parameters'	=> $parameters
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('delete'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.delete'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+
+			$datatable['rowactions']['action'][] = array(
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uiadmin_entity.edit_category'
+						)),
+					'parameters'	=> $parameters3
+					);
+
+			unset($parameters);
+			unset($parameters2);
+			unset($parameters3);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'id';
+					}
+					if($uicols['name'][$i]=='name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'name';
+					}
+					if($uicols['name'][$i]=='entity_id')
+					{
+						$datatable['headers']['header'][$i]['visible'] 		= false;
+					}
+				}
 			}
 
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiadmin_entity.category',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'query'		=> $this->query,
-				'entity_id'	=> $entity_id,
-				'type'		=> $this->type
-			);
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
-			$data = array
-			(
-				'lang_entity'					=> lang('entity'),
-				'entity_name'					=> $entity['name'],
-				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($category_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_standardtext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_standardtext'		=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_category'				=> $table_header,
-				'values_category'				=> $content,
-				'table_add'					=> $table_add
-			);
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($category_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$appname	= lang('entity');
 			$function_msg	= lang('list entity type');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_category' => $data));
-			$this->save_sessiondata();
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.category', 'property' );
 		}
 
 		function edit()
@@ -701,7 +1121,7 @@
 				'type'				=> $this->type
 			);
 
-			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
@@ -728,10 +1148,377 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-
 		function list_attribute_group()
 		{
 			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+			}
+
+			$entity_id	= $this->entity_id;
+			$cat_id	= $this->cat_id;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+
+			$id	= phpgw::get_var('id', 'int');
+			$resort	= phpgw::get_var('resort');
+
+			if($resort)
+			{
+				$this->bo->resort_attrib_group($id,$resort);
+			}
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uiadmin_entity.list_attribute_group',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_entity.list_attribute_group',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+						 	                        ."query:'{$this->query}',"
+						 	                        ."entity_id:'{$this->entity_id}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."type:'{$this->type}'";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiadmin_entity.list_attribute',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+				);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uiadmin_entity.list_attribute_group',
+								'sort'		=> $this->sort,
+								'order'		=> $this->order,
+								'query'		=> $this->query,
+								'entity_id'	=> $entity_id,
+								'cat_id'	=> $cat_id,
+								'type'		=> $this->type
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 1
+							                            ),
+							                            array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 2
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 3
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 4
+				                                        )
+			                           				),
+			                       		'hidden_value' => array(
+
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
+
+			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id);
+			$uicols['name'][0]	= 'name';
+			$uicols['descr'][0]	= lang('Name');
+			$uicols['name'][1]	= 'descr';
+			$uicols['descr'][1]	= lang('Descr');
+			$uicols['name'][2]	= 'group_sort';
+			$uicols['descr'][2]	= lang('sorting');
+			$uicols['name'][3]	= 'up';
+			$uicols['descr'][3]	= lang('up');
+			$uicols['name'][4]	= 'down';
+			$uicols['descr'][4]	= lang('down');
+			$uicols['name'][5]	= 'id';
+			$uicols['descr'][5]	= lang('id');
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
+
+			if (isset($attrib_list) AND is_array($attrib_list))
+			{
+				foreach($attrib_list as $attrib_entry)
+				{
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $attrib_entry[$uicols['name'][$k]];
+						}
+
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}
+
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}
+					}
+					$j++;
+				}
+			}
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			$parameters2 = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'group_id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'edit',
+						'statustext' 	=> lang('Edit'),
+						'text'			=> lang('Edit'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.edit_attrib_group',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters
+					);
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('Delete'),
+						'text'			=> lang('Delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.delete',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'add',
+							'statustext' 	=> lang('add'),
+							'text'			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiadmin_entity.edit_attrib_group',
+										'entity_id'			=> $entity_id,
+										'cat_id'			=> $cat_id,
+										'type' 				=> $this->type
+									))
+						);
+
+			unset($parameters);
+			unset($parameters2);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['visible'] 			= false;
+					}
+
+					if($uicols['name'][$i]=='name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'name';
+					}
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($attrib_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$appname	= lang('attribute');
+			$function_msg	= lang('list entity attribute');
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'name'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					//$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  //$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				  $json_row[$column['name']] = "<a href='#' onclick='".$column['link']."'>" .$column['value']."</a>";
+		    				  //$json_row[$column['name']] = '<a href="#" onclick="delete_record("/index.php?menuaction=property.uiasync.delete")">' .$column['value'].'</a>';
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+				// query parameters
+				if(isset($current_Consult) && is_array($current_Consult))
+				{
+					$json ['current_consult'] = $current_Consult;
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.attribute_group', 'property' );
+
+			/*if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
@@ -877,7 +1664,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute_group' => $data));
-			$this->save_sessiondata();
+			$this->save_sessiondata();*/
 		}
 
 		function list_attribute()
@@ -890,152 +1677,400 @@
 			$entity_id	= $this->entity_id;
 			$cat_id	= $this->cat_id;
 
+			$entity = $this->bo->read_single($entity_id);
+			$category = $this->bo->read_single_category($entity_id,$cat_id);
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
-			$id	= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id');
 			$resort	= phpgw::get_var('resort');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'admin_entity',
-								'nextmatchs',
-								'search_field'));
-
-			if($resort)
+			if($resort && phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$this->bo->resort_attrib($id,$resort);
 			}
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uiadmin_entity.list_attribute',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_entity.list_attribute',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+						 	                        ."query:'{$this->query}',"
+						 	                        ."entity_id:'{$this->entity_id}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."type:'{$this->type}'";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiadmin_entity.list_attribute',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+				);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uiadmin_entity.list_attribute',
+								'sort'		=> $this->sort,
+								'order'		=> $this->order,
+								'query'		=> $this->query,
+								'entity_id'	=> $entity_id,
+								'cat_id'	=> $cat_id,
+								'type'		=> $this->type
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array( // mensaje
+															'type'	=> 'label',
+															'id'	=> 'msg_header',
+															'value'	=> '',
+															'style' => 'filter'
+														),
+														array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 1
+							                            ),
+							                            array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 2
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 3
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 4
+				                                        ),
+														array( //container of  control's Form
+															'type'	=> 'label',
+															'id'	=> 'controlsForm_container',
+															'value'	=> ''
+														)
+			                           				),
+			                       		'hidden_value' => array(
+
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
+
 			$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
+			$uicols['name'][0]	= 'column_name';
+			$uicols['descr'][0]	= lang('Name');
+			$uicols['name'][1]	= 'name';
+			$uicols['descr'][1]	= lang('Descr');
+			$uicols['name'][2]	= 'trans_datatype';
+			$uicols['descr'][2]	= lang('Datatype');
+			$uicols['name'][3]	= 'attrib_sort';
+			$uicols['descr'][3]	= lang('sorting');
+			$uicols['name'][4]	= 'up';
+			$uicols['descr'][4]	= lang('up');
+			$uicols['name'][5]	= 'down';
+			$uicols['descr'][5]	= lang('down');
+			$uicols['name'][6]	= 'search';
+			$uicols['descr'][6]	= lang('Search');
+			$uicols['name'][7]	= 'id';
+			$uicols['descr'][7]	= lang('id');
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
 
 			if (isset($attrib_list) AND is_array($attrib_list))
 			{
-				foreach($attrib_list as $entry)
+				foreach($attrib_list as $attrib_entry)
 				{
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $attrib_entry[$uicols['name'][$k]];
+						}
 
-					$content[] = array
-					(
-						'name'				=> $entry['name'],
-						'datatype'			=> $entry['trans_datatype'],
-						'column_name'		=> $entry['column_name'],
-						'input_text'		=> $entry['input_text'],
-						'attrib_group'		=> $entry['group_id'],
-						'sorting'			=> $entry['attrib_sort'],
-						'search'			=> $entry['search'],
-						'link_up'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
-						'link_down'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)),
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $entry['id'], 'type' => $this->type)),
-						'link_delete'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.delete', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'attrib_id'=> $entry['id'], 'type' => $this->type)),
-						'lang_up_text'		=> lang('shift up'),
-						'lang_down_text'	=> lang('shift down'),
-						'lang_edit_text'	=> lang('edit the attrib'),
-						'lang_delete_text'	=> lang('delete the attrib'),
-						'text_attribute'	=> lang('Attributes'),
-						'text_up'			=> lang('up'),
-						'text_down'			=> lang('down'),
-						'text_edit'			=> lang('edit'),
-						'text_delete'		=> lang('delete')
-					);
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}
+
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $attrib_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}
+					}
+					$j++;
 				}
 			}
 
-//_debug_array($content);
-
-			$table_header[] = array
-			(
-				'lang_descr'		=> lang('Descr'),
-				'lang_datatype'		=> lang('Datatype'),
-				'lang_attrib_group'	=> lang('group'),
-				'lang_sorting'		=> lang('sorting'),
-				'lang_search'		=> lang('search'),
-				'lang_edit'		=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'sort_name'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'column_name',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
-																'entity_id'	=>$entity_id,
-																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows,
-																'type'	=> $this->type)
-										)),
-				'sort_sorting'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'attrib_sort',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin_entity.list_attribute',
-																'entity_id'	=>$entity_id,
-																'cat_id'	=>$cat_id,
-																'allrows'=>$this->allrows,
-																'type'	=> $this->type)
-										)),
-				'lang_name'		=> lang('Name'),
-			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_attribtext'	=> lang('add an attrib'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.edit_attrib', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id,'type' => $this->type)),
-				'lang_done'		=> lang('done'),
-				'lang_done_attribtext'	=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id, 'type' => $this->type)),
-			);
-
-			if(!$this->allrows)
+			$current_Consult = array ();
+			for($i=0;$i<2;$i++)
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
+				if($i==0)
+				{
+					$current_Consult[] = array('entity',$entity['name']);
+				}
+				if($i==1)
+				{
+					$current_Consult[] = array('Category',$category['name']);
+				}
 			}
 
-			$link_data = array
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
 			(
-				'menuaction'	=> 'property.uiadmin_entity.list_attribute',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'query'		=> $this->query,
-				'entity_id'	=> $entity_id,
-				'cat_id'	=> $cat_id,
-				'type'		=> $this->type
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
 			);
 
-			$entity = $this->bo->read_single($entity_id,false);
-			$category = $this->bo->read_single_category($entity_id,$cat_id);
-
-			$data = array
+			$parameters2 = array
 			(
-				'lang_entity'					=> lang('entity'),
-				'entity_name'					=> $entity['name'],
-				'lang_category'					=> lang('category'),
-				'category_name'					=> $category['name'],
-				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'start_record'					=> $this->start,
-				'num_records'					=> count($attrib_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_attribtext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_attribtext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_attrib'				=> $table_header,
-				'values_attrib'					=> $content,
-				'table_add'					=> $table_add
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'attrib_id',
+						'source'	=> 'id'
+					),
+				)
 			);
+
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'edit',
+						'statustext' 	=> lang('Edit'),
+						'text'			=> lang('Edit'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.edit_attrib',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters
+					);
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('Delete'),
+						'text'			=> lang('Delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.delete',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'add',
+							'statustext' 	=> lang('add'),
+							'text'			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiadmin_entity.edit_attrib',
+										'entity_id'			=> $entity_id,
+										'cat_id'			=> $cat_id,
+										'type' 				=> $this->type
+									))
+						);
+
+			unset($parameters);
+			unset($parameters2);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='column_name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'column_name';
+					}
+					if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['visible'] 			= false;
+					}
+					if($uicols['name'][$i]=='attrib_sort')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'attrib_sort';
+					}
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($attrib_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$appname	= lang('attribute');
 			$function_msg	= lang('list entity attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attribute' => $data));
-			$this->save_sessiondata();
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'column_name'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					//$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  //$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				  $json_row[$column['name']] = "<a href='#' onclick='".$column['link']."'>" .$column['value']."</a>";
+		    				  //$json_row[$column['name']] = '<a href="#" onclick="delete_record("/index.php?menuaction=property.uiasync.delete")">' .$column['value'].'</a>';
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+				if(isset($current_Consult) && is_array($current_Consult))
+				{
+					$json ['current_consult'] = $current_Consult;
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.attribute', 'property' );
 		}
 
 		function edit_attrib_group()
@@ -1410,6 +2445,371 @@
 			$id		= phpgw::get_var('id', 'int');
 			$resort		= phpgw::get_var('resort');
 
+			if($resort)
+			{
+				$this->bo->resort_custom_function($id,$resort);
+			}
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uiadmin_entity.list_custom_function',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uiadmin_entity.list_custom_function',"
+	    											."sort:'{$this->sort}',"
+	    											."order:'{$this->order}',"
+						 	                        ."query:'{$this->query}',"
+						 	                        ."entity_id:'{$this->entity_id}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."type:'{$this->type}'";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uiadmin_entity.list_custom_function',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'query'		=> $this->query,
+					'entity_id'	=> $entity_id,
+					'cat_id'	=> $cat_id,
+					'type'		=> $this->type
+				);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uiadmin_entity.list_custom_function',
+								'sort'		=> $this->sort,
+								'order'		=> $this->order,
+								'query'		=> $this->query,
+								'entity_id'	=> $entity_id,
+								'cat_id'	=> $cat_id,
+								'type'		=> $this->type
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 1
+							                            ),
+							                            array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 2
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 3
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 4
+				                                        )
+			                           				),
+			                       		'hidden_value' => array(
+
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
+
+			$custom_function_list = $this->bo->read_custom_function($entity_id,$cat_id);
+			$uicols['name'][0]	= 'name';
+			$uicols['descr'][0]	= lang('Name');
+			$uicols['name'][1]	= 'descr';
+			$uicols['descr'][1]	= lang('Descr');
+			$uicols['name'][2]	= 'active';
+			$uicols['descr'][2]	= lang('Active');
+			$uicols['name'][3]	= 'group_sort';
+			$uicols['descr'][3]	= lang('sorting');
+			$uicols['name'][4]	= 'up';
+			$uicols['descr'][4]	= lang('up');
+			$uicols['name'][5]	= 'down';
+			$uicols['descr'][5]	= lang('down');
+			$uicols['name'][6]	= 'id';
+			$uicols['descr'][6]	= lang('id');
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
+
+			if (isset($custom_function_list) AND is_array($custom_function_list))
+			{
+				foreach($custom_function_list as $custom_entry)
+				{
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $custom_entry[$uicols['name'][$k]];
+						}
+
+						/*if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}
+
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
+						}*/
+					}
+					$j++;
+				}
+			}
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			$parameters2 = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'group_id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'edit',
+						'statustext' 	=> lang('Edit'),
+						'text'			=> lang('Edit'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.edit_attrib_group',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters
+					);
+
+			$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'delete',
+						'statustext' 	=> lang('Delete'),
+						'text'			=> lang('Delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link
+						(
+							'/index.php',array
+							(
+								'menuaction'		=> 'property.uiadmin_entity.delete',
+								'entity_id'			=> $entity_id,
+								'cat_id'			=> $cat_id,
+								'type' 				=> $this->type
+							)
+						),
+						'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'add',
+							'statustext' 	=> lang('add'),
+							'text'			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uiadmin_entity.edit_custom_function',
+										'entity_id'			=> $entity_id,
+										'cat_id'			=> $cat_id,
+										'type' 				=> $this->type
+									))
+						);
+
+			unset($parameters);
+			unset($parameters2);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					/*if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['visible'] 			= false;
+					}
+
+					if($uicols['name'][$i]=='name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'name';
+					}*/
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($custom_function_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$appname	= lang('custom function');
+			$function_msg	= lang('list entity custom function');
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'name'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					//$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='#' onclick='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+				// query parameters
+				if(isset($current_Consult) && is_array($current_Consult))
+				{
+					$json ['current_consult'] = $current_Consult;
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.function_group', 'property' );
+
+			/*if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+			}
+
+			$entity_id	= $this->entity_id;
+			$cat_id		= $this->cat_id;
+			$id		= phpgw::get_var('id', 'int');
+			$resort		= phpgw::get_var('resort');
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
 								'admin_entity',
 								'nextmatchs',
@@ -1545,7 +2945,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_custom_function' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
+			$this->save_sessiondata();*/
 		}
 
 		function edit_custom_function()
