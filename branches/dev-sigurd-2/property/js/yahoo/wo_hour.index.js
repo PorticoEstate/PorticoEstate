@@ -1,22 +1,33 @@
 //--------------------------------------------------------
-// Declaration of wo_hour.prizebook vars
+// Declaration of wo_hour.index vars
 //--------------------------------------------------------
 
 	//define SelectButton
  	var selectsButtons = [
 	]
 
+	// define checkbox
+	var oCheckButton_0,oCheckButton_1,oCheckButton_2,oCheckButton_3;
+	var CheckButtons = [
+	{name:'check_show_details', check:true},
+	{name:'check_calculated_cost',	check:false},
+	{name:'check_calculated_cost_tender',	check:false},
+	{name:'check_mark_draft',	check:false}
+	]
+	
 	// define buttons
-	var oNormalButton_0,oNormalButton_1,oNormalButton_2;
+	var oNormalButton_0,oNormalButton_1,oNormalButton_2,oNormalButton_3,oNormalButton_4,oNormalButton_5;
 	var normalButtons = [
-	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_save',	funct:"onSave"},
-	{order:2, name:'btn_done',	funct:"onDoneClick"}
+	{order:0, name:'btn_add_prizebook', funct:"onAddPrizebookClick"},
+	{order:1, name:'btn_add_template',	funct:"onAddTemplate"},
+	{order:2, name:'btn_add_custom',	funct:"onAddCustom"},
+	{order:3, name:'btn_save_template',	funct:"onSaveTemplate"},
+	{order:4, name:'btn_print_preview',	funct:"onPrintPreview"},
+	{order:5, name:'btn_view_tender',	funct:"onViewTender"}
 	]
 
 	// define Text buttons
 	var textImput = [
-	{order:0, name:'query',	id:'txt_query'}
 	]
 
 	// define the hidden column in datatable
@@ -24,64 +35,164 @@
 		date_search : 0 //if search has link "Data search"
 	}
 	
-	var myDataSource_details, myDataTable_details, myContextMenu_details, div_footer, table, tableYUI ;
+	var div_footer, table, tableYUI ;
 /****************************************************************************************/
 
-	this.onSave = function()
+	this.onAddPrizebookClick = function()
+	{
+		for(i=0;i<values_ds.rights_form.length;i++)
 		{
-		//get the last div in th form
-		var divs= YAHOO.util.Dom.getElementsByClassName('field');
-		var mydiv = divs[divs.length-1];
-		//remove all child of mydiv
-		if ( mydiv.hasChildNodes() )
-	    while ( mydiv.childNodes.length >= 1 )
-	    {
-	        mydiv.removeChild( mydiv.firstChild );
-	    }
+	 		if(values_ds.rights_form[i].my_name == 'add_prizebook')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl=html_entity_decode(sUrl);
+				window.open(sUrl,'_self');
+	 		}
+ 		}
+	}
 
-		// styles for dont show
-		mydiv.style.display = 'none';
-
-		//asign values for select buttons 'select'
-		selects_dimb = YAHOO.util.Dom.getElementsByClassName('select_tmp');
-		hiddens_dimb = YAHOO.util.Dom.getElementsByClassName('select');
-		for(i=0;i<selects_dimb.length;i++)
+	this.onAddTemplate = function()
+	{ 
+		for(i=0;i<values_ds.rights_form.length;i++)
 		{
-			hiddens_dimb[i].value = selects_dimb[i].value;
-
-		}
-
-		//get all controls of datatable
-		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
-		var myclone = null;
-		//add all control to form.
-		for(i=0;i<valuesForPHP.length;i++)
+	 		if(values_ds.rights_form[i].my_name == 'add_template')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl = html_entity_decode(sUrl);
+				window.open(sUrl,'_self');
+	 		}
+ 		}
+	}
+	
+	this.onAddCustom = function()
+	{ 
+		for(i=0;i<values_ds.rights_form.length;i++)
 		{
-			//Important true for Select Controls
-			myclone = valuesForPHP[i].cloneNode(true);
-			mydiv.appendChild(myclone);
+	 		if(values_ds.rights_form[i].my_name == 'add_custom')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl=html_entity_decode(sUrl);
+				window.open(sUrl,'_self');
+	 		}
+ 		}
+	}	
+	
+	this.onSaveTemplate = function()
+	{ 
+		for(i=0;i<values_ds.rights_form.length;i++)
+		{
+	 		if(values_ds.rights_form[i].my_name == 'save_template')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl=html_entity_decode(sUrl);
+				window.open(sUrl,'_self');
+	 		}
+ 		}
+	}
+
+	this.onPrintPreview = function()
+	{ 
+		for(i=0;i<values_ds.rights_form.length;i++)
+		{
+	 		if(values_ds.rights_form[i].my_name == 'print_view')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl = html_entity_decode(sUrl);				 
+	 		}
+ 		}
+		
+		if (YAHOO.util.Dom.inDocument('myform'))
+		{
+			var form = document.getElementById('myform');
+			document.body.removeChild(form);
 		}
-
-		// find out the unique form
-		formObject = document.getElementsByTagName('form');
-		// modify the 'form' for send it as POST using asyncronize call
-		YAHOO.util.Connect.setForm(formObject[0]);
-
-		 execute_ds();
+		
+		var submitForm = getNewSubmitForm(sUrl);
+		if (oCheckButton_0.get("checked")) {
+			createNewFormElement(submitForm, "show_details", "1"); 
 		}
+		if (oCheckButton_1.get("checked")) {
+			createNewFormElement(submitForm, "show_cost", "1"); 
+		}		
+		submitForm.submit();		
+	}
 
-/********************************************************************************/
+	this.onViewTender = function()
+	{ 
+		for(i=0;i<values_ds.rights_form.length;i++)
+		{
+	 		if(values_ds.rights_form[i].my_name == 'view_tender')
+	 		{
+		 		//NEW is always the last options in arrays RIGHTS
+				sUrl = values_ds.rights_form[i].action;
+				//Convert all HTML entities to their applicable characters
+				sUrl = html_entity_decode(sUrl);
+	 		}
+ 		}
+		
+		if (YAHOO.util.Dom.inDocument('myform'))
+		{
+			var form = document.getElementById('myform');
+			document.body.removeChild(form);
+		}		
+		
+		var submitForm = getNewSubmitForm(sUrl);
+		if (oCheckButton_2.get("checked")) {
+			createNewFormElement(submitForm, "show_cost", "1"); 
+		}
+		if (oCheckButton_3.get("checked")) {
+			createNewFormElement(submitForm, "mark_draft", "1"); 
+		}		
+		submitForm.submit();			
+	}
+
+	//function to create the form
+	this.getNewSubmitForm = function(url)
+	{
+		 var submitForm = document.createElement("FORM");
+		 submitForm.setAttribute("id", "myform");
+		 document.body.appendChild(submitForm);
+		 submitForm.action = url;
+		 submitForm.method = "POST";
+		 return submitForm;
+	}
+
+	//function to add elements to the form
+	this.createNewFormElement = function(inputForm, elementName, elementValue)
+	{
+		 var newElement = document.createElement("input");
+		 newElement.setAttribute("type", "hidden");
+		 newElement.setAttribute("name", elementName);
+		 newElement.setAttribute("value", elementValue);
+		 inputForm.appendChild(newElement);
+		 return newElement;
+	}
 	
 	this.particular_setting = function()
 	{
+		
 		if(flag_particular_setting=='init')
 		{			
-			//--focus for txt_query---
 			var div_toolbar = YAHOO.util.Dom.getElementsByClassName("toolbar","div")[0];
 			div_toolbar.setAttribute("style", "height:75px;");
+
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
 			
-			YAHOO.util.Dom.get(textImput[0].id).focus();
-			create_table_details();
+			div_footer = tableYUI.parentNode;
+			
+			oNormalButton_0.focus();
+			create_table_foot();
 			create_table_info();
 		}
 		else if(flag_particular_setting=='update')
@@ -96,6 +207,7 @@
 		delete_message();
 		create_message();
 		values_ds.message = null;
+		YAHOO.util.Dom.get("paging").innerHTML = '';
 	}
 	
 /********************************************************************************
@@ -249,77 +361,19 @@
 		div_message.appendChild(newTable);
 	}
 	
-	this.create_table_details = function()
-	{
-
-	    var Data = values_ds.details.rows;
-	    var total_records = values_ds.total_hours_records;
-	    var lang_total_records = values_ds.lang_total_records;
-	  
-		div_footer = document.getElementById('footer');
-		div_footer.setAttribute("class","datatable-container yui-dt");
-
-		var myColumnDefs_details = new Array();
-		for(var k=0 ; k<values_ds.uicols_details.name.length; k++)
-	    {
-	        if (values_ds.uicols_details.input_type[k] == 'hidden')
-	        	var obj_temp = {key: values_ds.uicols_details.name[k], label: values_ds.uicols_details.descr[k], visible: false, className: values_ds.uicols_details.className[k]};
-	        else
-	        	var obj_temp = {key: values_ds.uicols_details.name[k], label: values_ds.uicols_details.descr[k], visible: true, className: values_ds.uicols_details.className[k]};
-	        myColumnDefs_details.push(obj_temp);
-	    }
- 
-	   	var fields = new Array();
-	   	for(var i=0; i<myColumnDefs_details.length;i++)
-   		{
-	   		fields[i] = myColumnDefs_details[i].key;
-	   	}
-	   	
-	 	myDataSource_details = new YAHOO.util.DataSource(Data); 	        
-	 	myDataSource_details.responseType = YAHOO.util.DataSource.TYPE_JSARRAY; 
-	    myDataSource_details.responseSchema = { 	            
-	    		 fields: fields
-        }; 
-	 
-        myDataTable_details = new YAHOO.widget.DataTable(div_footer, myColumnDefs_details, myDataSource_details);
-        
-        myDataTable_details.subscribe("rowMouseoverEvent", myDataTable_details.onEventHighlightRow);
-        myDataTable_details.subscribe("rowMouseoutEvent", myDataTable_details.onEventUnhighlightRow);
-
- 	    myContextMenu_details = new YAHOO.widget.ContextMenu("mycontextmenu_details", {trigger:myDataTable_details.getTbodyEl()});
- 	    myContextMenu_details.addItems(GetMenuContext_details());
-	   
- 	    myContextMenu_details.subscribe("beforeShow", onContextMenuBeforeShow);
- 	    myContextMenu_details.subscribe("hide", onContextMenuHide);
-
- 	    myContextMenu_details.subscribe("click", onContextMenuClick_details, myDataTable_details);
- 	    myContextMenu_details.render(div_footer);	
-
-		for(var i=0; i<myColumnDefs_details.length;i++)
-		{
-			if( !myColumnDefs_details[i].visible )
-			{
-				var sKey = myColumnDefs_details[i].key;
-				myDataTable_details.hideColumn(sKey);
-			}
-			YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
-		}
-		
-		table = div_footer.getElementsByTagName("table");
-		table[0].setAttribute("id","tableYUI");
-		tableYUI = document.getElementById('tableYUI');			
-		create_table_foot();
-
-		var div_records = document.createElement('div');
-		div_records.setAttribute("id","div_records");
-		div_records.setAttribute("style", "text-align:center; height:25px; margin-top:35px;");
-		div_footer.insertBefore(div_records, tableYUI)
-		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;
-		
-	}
 
 	this.create_table_foot = function()
 	{		
+	    var total_records = values_ds.total_hours_records;
+	    var lang_total_records = values_ds.lang_total_records;
+	    
+		var div_records = document.createElement('div');
+		div_records.setAttribute("id","div_records");
+		div_records.setAttribute("style", "text-align:center; height:25px; margin-top:15px;");
+		
+		div_footer.insertBefore(div_records, tableYUI)
+		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;		
+		
 		var myfoot = tableYUI.createTFoot();
  		myfoot.setAttribute("id","myfoot");
  			
@@ -458,89 +512,13 @@
 		
 	}
 	
-	this.GetMenuContext_details = function()
-	{
-	   var opts = new Array();
-	   var p=0;
-	   for(var k =0; k < values_ds.details.rowactions.length; k ++)
-	   {
-			opts[p]=[{text: values_ds.details.rowactions[k].text}];
-			p++;			
-	   }
-	   return opts;
-    }
-	
-    this.onContextMenuClick_details = function(p_sType, p_aArgs, p_myDataTable)
-	{
-		var task = p_aArgs[1];
-            if(task)
-            {
-                // Extract which TR element triggered the context menu
-                var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
-                if(elRow)
-				{
-					var oRecord = p_myDataTable.getRecord(elRow);
-					var url = values_ds.details.rowactions[task.groupIndex].action;
-					var sUrl = "";
 
-					if(values_ds.details.rowactions[task.groupIndex].parameters!=null)
-					{
-						param_name = values_ds.details.rowactions[task.groupIndex].parameters.parameter[0].name;
-						param_source = values_ds.details.rowactions[task.groupIndex].parameters.parameter[0].source;
-						sUrl = url + "&"+param_name+"=" + oRecord.getData(param_source);
-					}
-					else 
-					{
-						sUrl = url;
-					}
-					//Convert all HTML entities to their applicable characters
-					sUrl=html_entity_decode(sUrl);
-
-					// look for the word "DELETE" in URL
-					if(substr_count(sUrl,'delete')>0)
-					{
-						confirm_msg = values_ds.details.rowactions[task.groupIndex].confirm_msg;
-						if(confirm(confirm_msg))
-						{
-							sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
-							delete_record(sUrl);
-						}
-					}
-					else
-					{
-						if(substr_count(sUrl,'target=_blank')>0)
-						{
-							window.open(sUrl,'_blank');
-						}
-						else
-						{
-							window.open(sUrl,'_self');						
-						}
-					}
-                }
-            }
-    };
     
 	this.update_datatable_details = function()
 	{
 		var total_records = values_ds.total_hours_records;
 	    var lang_total_records = values_ds.lang_total_records;
 	    
-		//delete values of datatable
-		myDataTable_details.getRecordSet().reset();
-		myDataTable_details.render();
-
-		//obtain records of the last DS and add to datatable
-		var record = values_ds.details.rows;
-
-		if(record.length)
-		{
-			myDataTable_details.addRows(record);
-		}
-		else
-		{
-			myDataTable_details.render();
-		}
 		tableYUI.deleteTFoot();
 		create_table_foot();
 		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;
@@ -563,6 +541,13 @@
 		//Insert JSON utility on the page
 
 	    loader.insert();
+
+		for(var p=0; p<CheckButtons.length; p++)
+		{
+			var check_tmp = new YAHOO.widget.Button(CheckButtons[p].name, {label:"", value:"0", checked: CheckButtons[p].check});
+			eval("oCheckButton_"+p+" = check_tmp");
+		}
+
 	});
 
 
