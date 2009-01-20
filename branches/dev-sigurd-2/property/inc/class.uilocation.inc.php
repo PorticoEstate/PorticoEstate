@@ -1833,101 +1833,257 @@
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location'));
+			$datatable = array();
 
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'		=> 'property.uilocation.summary',
+					'district_id'		=>$this->district_id,
+					'part_of_town_id'	=>$this->part_of_town_id,
+					'filter'			=>$this->filter,
+					'summary'			=>true
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.summary',"
+	    											."district_id:'{$this->district_id}',"
+	    											."part_of_town_id:'{$this->part_of_town_id}',"
+ 	                        						."filter: '{$this->filter}',"
+ 	                        						."summary: true";
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$link_data = array
+				(
+					'menuaction'		=> 'property.uilocation.summary',
+					'district_id'		=>$this->district_id,
+					'part_of_town_id'	=>$this->part_of_town_id,
+					'filter'			=>$this->filter,
+					'summary'			=>true
+				);
+
+				$link_download = array
+				(
+					'menuaction'		=> 'property.uilocation.download',
+					'district_id'		=>$this->district_id,
+					'part_of_town_id'	=>$this->part_of_town_id,
+					'filter'			=>$this->filter,
+					'summary'			=>true
+				);
+
+				$values_combo_box[0] = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=> lang('no district'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$values_combo_box[1]  = $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no part of town'));
+				array_unshift ($values_combo_box[1],$default_value);
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
+				{
+					$owner_list = $this->bo->get_owner_list('filter', $this->filter);
+				}
+				else
+				{
+					$owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
+				}
+
+				$values_combo_box[2]  = $owner_list;
+				$default_value = array ('id'=>'','name'=>lang('show all'));
+				array_unshift ($values_combo_box[2],$default_value);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'		=> 'property.uilocation.summary',
+								'district_id'		=>$this->district_id,
+								'part_of_town_id'	=>$this->part_of_town_id,
+								'filter'			=>$this->filter,
+								'summary'			=>true
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array( //boton 	CATEGORY
+				                                            'id' => 'btn_district_id',
+				                                            'name' => 'district_id',
+				                                            'value'	=> lang('district'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
+				                                        ),
+				                                        array( //boton 	STATUS
+				                                            'id' => 'btn_part_of_town_id',
+				                                            'name' => 'part_of_town_id',
+				                                            'value'	=> lang('part of town'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 2
+				                                        ),
+				                                        array( //boton 	HOUR CATEGORY
+				                                            'id' => 'btn_owner_id',
+				                                            'name' => 'owner_id',
+				                                            'value'	=> lang('owner'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 3
+				                                        ),
+														array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_export',
+							                                'value'	=> lang('download'),
+							                                'tab_index' => 4
+							                            )
+			                           				),
+			                       		'hidden_value' => array(
+						                                        array( //div values  combo_box_0
+								                                            'id' => 'values_combo_box_0',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0])
+								                                      ),
+								                                array( //div values  combo_box_1
+								                                            'id' => 'values_combo_box_1',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								                                      ),
+																 array( //div values  combo_box_2
+								                                            'id' => 'values_combo_box_2',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								                                      )
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
 
 			$summary_list= $this->bo->read_summary();
+
 			$uicols	= $this->bo->uicols;
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
 
-			$j=0;
-			if (isSet($summary_list) && is_array($summary_list))
+			if (isset($summary_list) AND is_array($summary_list))
 			{
-				foreach($summary_list as $summary)
+				foreach($summary_list as $summary_entry)
 				{
-					for ($i=0;$i<count($uicols['name']);$i++)
+					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						$content[$j]['row'][$i]['value'] 			= isset($summary[$uicols['name'][$i]])?$summary[$uicols['name'][$i]]:'';
-						$content[$j]['row'][$i]['name'] 			= isset($summary['name'][$i])?$summary['name'][$i]:'';
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $summary_entry[$uicols['name'][$k]];
+						}
 					}
-
 					$j++;
 				}
 			}
 
-			$uicols_count	= count($uicols['descr']);
-			for ($i=0;$i<$uicols_count;$i++)
-			{
-				if(!isset($uicols['input_type'][$i]) || $uicols['input_type'][$i]!='hidden')
-				{
-					$table_header[$i]['header'] 	= $uicols['descr'][$i];
-					$table_header[$i]['width'] 		= '15%';
-					$table_header[$i]['align'] 		= 'left';
+			$datatable['rowactions']['action'] = array();
 
+			for ($i=0;$i<$count_uicols_name;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
 				}
 			}
 
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
-
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uilocation.download',
-						'district_id'		=>$this->district_id,
-						'part_of_town_id'	=>$this->part_of_town_id,
-						'filter'		=>$this->filter,
-					//	'type_id'		=>$type_id,
-						'summary'		=>true
-			);
-
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uilocation.summary',
-						'district_id'		=>$this->district_id,
-						'part_of_town_id'	=>$this->part_of_town_id,
-						'filter'		=>$this->filter,
-					//	'type_id'		=>$type_id
-			);
-
-
-
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['property_filter'] == 'owner')
-			{
-				$owner_list = $this->bo->get_owner_list('filter', $this->filter);
-			}
-			else
-			{
-				$owner_list = $this->bo->get_owner_type_list('filter', $this->filter);
-			}
-
-			$data = array
-			(
-				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'owner_name'				=> 'filter',
-				'owner_list'				=> $owner_list,
-				'lang_show_all'				=> lang('Show all'),
-				'lang_owner_statustext'			=> lang('Select the owner type. To show all entries select SHOW ALL'),
-				'select_name_part_of_town'		=> 'part_of_town_id',
-				'part_of_town_list'			=> $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id),
-				'lang_town_statustext'			=> lang('Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN'),
-				'lang_no_part_of_town'			=> lang('No Part of town'),
-
-				'district_list'				=> $this->bocommon->select_district_list('filter',$this->district_id),
-				'lang_no_district'			=> lang('no district'),
-				'lang_district_statustext'		=> lang('Select the district the selection belongs to. To do not use a district select NO DISTRICT'),
-				'select_district_name'			=> 'district_id',
-				'lang_download'				=> 'download',
-				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'			=> lang('Download table to your browser'),
-				'table_header_summary'			=> $table_header,
-				'values'				=> $content
-			);
-
-//_debug_array($data);
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($summary_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$appname		= lang('Summary');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' : ' . $appname;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('summary' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+			$function_msg		= lang('List') . ' ' . lang($this->role);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.summary', 'property' );
+
+
 		}
  }
