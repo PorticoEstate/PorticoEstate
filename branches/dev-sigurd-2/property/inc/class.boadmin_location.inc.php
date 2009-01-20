@@ -91,31 +91,11 @@
 			$order	= phpgw::get_var('order');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 

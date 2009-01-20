@@ -831,7 +831,6 @@
 			$ordermethod = 'ORDER BY group_id ASC, attrib_sort ASC';
 			if ( $order )
 			{
-				$sort = 'ASC';
 				if ( $sort == 'DESC')
 				{
 					$sort = 'DESC';
@@ -947,7 +946,6 @@
 			$ordermethod = 'ORDER BY group_sort ASC';
 			if ( $order )
 			{
-				$sort = 'ASC';
 				if ( $sort == 'DESC')
 				{
 					$sort = 'DESC';

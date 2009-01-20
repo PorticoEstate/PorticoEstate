@@ -57,7 +57,6 @@
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
