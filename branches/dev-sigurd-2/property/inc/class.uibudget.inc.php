@@ -93,7 +93,7 @@
 				'order'			=> $this->order,
 				'filter'		=> $this->filter,
 				'cat_id'		=> $this->cat_id,
-				'this->allrows'	=> $this->allrows
+				'allrows'		=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -891,7 +891,8 @@
 							'district_id'	=>$this->district_id,
 							'grouping'		=>$this->grouping,
 	    					'year'			=>$this->year,
-							'details'		=> $this->details
+							'details'		=> $this->details,
+							'allrows'		=> $this->allrows
 	    				));
 	    		$datatable['config']['allow_allrows'] = false;
 
@@ -904,7 +905,10 @@
  	                        						."district_id:'{$this->district_id}',"
  	                        						."grouping:'{$this->grouping}',"
 						 	                        ."year:'{$this->year}',"
- 	                        						."details:'{$this->details}'";
+ 	                        						."details:'{$this->details}',"
+ 	                        						."allrows:'{$this->allrows}'";
+
+				$datatable['config']['allow_allrows'] = true;
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
