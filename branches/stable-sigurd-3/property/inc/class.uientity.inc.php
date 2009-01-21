@@ -972,15 +972,11 @@
 					$values['id']=$id;
 					$action='edit';
 				}
-				else
-				{
-					$values['id']=$this->bo->generate_id(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
-				}
 
 				if(!isset($receipt['error']))
 				{
 					$receipt = $this->bo->save($values,$values_attribute,$action,$this->entity_id,$this->cat_id);
-					$id = $values['id'];
+					$id = $receipt['id'];
 					$function_msg = lang('edit entity');
 //--------------files
 					$bofiles	= CreateObject('property.bofiles');

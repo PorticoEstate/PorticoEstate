@@ -27,6 +27,7 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
 	/**
 	 * Description
 	 * @package property
@@ -36,18 +37,15 @@
 	{
 		var $acl_location;
 
-		function property_sotts2()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bo 		= CreateObject('property.botts');
+			$this->bo 			= CreateObject('property.botts');
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->config		= CreateObject('phpgwapi.config');
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
 		}
 
 		function update_status($ticket,$id='')
@@ -167,7 +165,7 @@
 			** C% - Status change
 			*/
 
-			$finnish_date	= (isset($ticket['finnish_date'])?$this->bocommon->date_to_timestamp($ticket['finnish_date']):'');
+			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
 
 			if ($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date']):
 			{
@@ -218,7 +216,7 @@
 				$fields_updated = true;
 
 				$value_set=array('assignedto'	=> $ticket['assignedto']);
-				$value_set	= $this->bocommon->validate_db_update($value_set);
+				$value_set	= $this->db->validate_update($value_set);
 
 				$this->db->query("update fm_tts_tickets set $value_set where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('A',$id,$ticket['assignedto'],$oldassigned);
@@ -229,7 +227,7 @@
 				$fields_updated = true;
 
 				$value_set=array('group_id'	=> $ticket['group_id']);
-				$value_set	= $this->bocommon->validate_db_update($value_set);
+				$value_set	= $this->db->validate_update($value_set);
 
 				$this->db->query("update fm_tts_tickets set $value_set where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('G',$id,$ticket['group_id'],$oldgroup_id);

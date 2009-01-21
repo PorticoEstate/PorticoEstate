@@ -67,7 +67,7 @@
 			)
 		);
 
-		function property_bocommon()
+		function __construct()
 		{
 //_debug_array($bt = debug_backtrace());
 			$this->socommon			= CreateObject('property.socommon');

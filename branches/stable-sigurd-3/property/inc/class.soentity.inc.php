@@ -43,16 +43,16 @@
 		var $type = 'entity';
 		var $type_app;
 
-		function property_soentity($entity_id='',$cat_id='')
+		function __construct($entity_id='',$cat_id='')
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->db           = clone($GLOBALS['phpgw']->db);
+			$this->db2          = clone($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 			$this->entity_id	= $entity_id;
 			$this->cat_id		= $cat_id;
 		}
@@ -629,8 +629,9 @@
 			}
 
 			$table = "fm_{$this->type}_{$entity_id}_$cat_id";
-			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 			$this->db->transaction_begin();
+			$values['id'] = $this->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
+			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 
 			$this->db->query("INSERT INTO $table (id,num,address,location_code,entry_date,user_id $cols) "
 				. "VALUES ("
@@ -670,6 +671,8 @@
 
 			$this->db->transaction_commit();
 
+			$receipt = array();
+			$receipt['id'] = $values['id'];
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been saved',$values['id']));
 			return $receipt;
 		}

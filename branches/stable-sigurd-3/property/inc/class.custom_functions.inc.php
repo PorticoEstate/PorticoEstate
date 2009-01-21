@@ -40,7 +40,7 @@
 			'index' => true
 		);
 
-		function property_custom_functions()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;

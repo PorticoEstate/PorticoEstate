@@ -34,14 +34,12 @@
 
 	class property_soalarm
 	{
-		function property_soalarm()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->socommon		= CreateObject('property.socommon');
-			$this->db           = $this->socommon->new_db();
-
-			$this->join			= $this->socommon->join;
-			$this->like			= $this->socommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function select_method_list()

@@ -34,14 +34,12 @@
 
 	class property_soadmin_location
 	{
-		function property_soadmin_location()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = $this->bocommon->new_db();
-
-			$this->join		= $this->bocommon->join;
-			$this->like		= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function reset_fm_cache()
@@ -59,7 +57,6 @@
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -197,7 +194,7 @@
 			$standard['name'] = $this->db->db_addslashes($standard['name']);
 			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
 
-			$standard['id'] = $this->bocommon->next_id('fm_location_type');
+			$standard['id'] = $this->db->next_id('fm_location_type');
 
 			$receipt['id']= $standard['id'];
 
@@ -377,7 +374,7 @@
 				    $this->db->db_addslashes(implode(',',$uc)),
 					);
 
-				$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+				$values_insert	= $this->db->validate_insert($values_insert);
 
 				$this->db->query("INSERT INTO fm_location_type (id,name, descr,pk,ix,uc) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
@@ -399,7 +396,7 @@
 						$default_attrib['nullable'][$i]
 						);
 
-					$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+					$values_insert	= $this->db->validate_insert($values_insert);
 
 					$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,datatype,precision_,input_text,statustext,attrib_sort,custom,nullable) "
 						. "VALUES ($values_insert)",__LINE__,__FILE__);
@@ -449,7 +446,7 @@
 				'list_address'	=> (isset($values['list_address'])?$values['list_address']:''),
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE $table SET $value_set WHERE id='" . $values['id']. "'",__LINE__,__FILE__);
 
@@ -523,7 +520,7 @@
 //_debug_array($history_table_def);
 			if(!($location_type==$values[$column_name]))
 			{
-				$id = $this->bocommon->next_id('phpgw_cust_attribute',array('location_id' => $location_id));
+				$id = $this->db->next_id('phpgw_cust_attribute',array('location_id' => $location_id));
 
 				$this->init_process();
 
@@ -560,7 +557,7 @@
 						''
 					);
 
-					$values	= $this->bocommon->validate_db_insert($values);
+					$values	= $this->db->validate_insert($values);
 
 					$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name, input_text, statustext,datatype,precision_,scale,default_value,nullable,custom) "
 						. "VALUES ($values)",__LINE__,__FILE__);

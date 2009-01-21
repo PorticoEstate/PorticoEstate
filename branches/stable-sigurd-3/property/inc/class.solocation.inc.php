@@ -36,7 +36,7 @@
 	{
 
 		var $bocommon;
-		function property_solocation($bocommon = '')
+		function __construct($bocommon = '')
 		{
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
@@ -48,13 +48,13 @@
 			{
 				$this->bocommon = $bocommon;
 			}
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->socommon			= & $this->bocommon->socommon;
+			$this->db           = clone($GLOBALS['phpgw']->db);
+			$this->db2          = clone($this->db);
+			$this->socommon		= & $this->bocommon->socommon;
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->socommon->join;
+			$this->left_join	= & $this->socommon->left_join;
+			$this->like			= & $this->socommon->like;
 		}
 
 		function read_entity_to_link($location_code)

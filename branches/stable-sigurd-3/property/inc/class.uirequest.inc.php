@@ -821,12 +821,8 @@
 
 				if($id)
 				{
-					$values['request_id']=$id;
+					$values['id']=$id;
 					$action='edit';
-				}
-				elseif(!$receipt['error'])
-				{
-					$values['request_id']=$this->bo->next_id();
 				}
 
 				if(!$receipt['error'])
@@ -834,10 +830,12 @@
 					if($values['copy_request'])
 					{
 						$action='add';
-						$values['request_id']	= $this->bo->next_id();
-						$id	= $values['request_id'];
 					}
 					$receipt = $this->bo->save($values,$action);
+					if (! $receipt['error'])
+					{
+						$id = $receipt['id'];
+					}
 
 //----------files
 					$bofiles	= CreateObject('property.bofiles');
@@ -847,7 +845,7 @@
 					}
 
 					$values['file_name']=str_replace(" ","_",$_FILES['file']['name']);
-					$to_file = "{$bofiles->fakebase}/request/{$values['request_id']}/{$values['file_name']}";
+					$to_file = "{$bofiles->fakebase}/request/{$id}/{$values['file_name']}";
 
 					if(!$values['document_name_orig'] && $bofiles->vfs->file_exists(array(
 							'string' => $to_file,
@@ -859,7 +857,7 @@
 
 					if($values['file_name'])
 					{
-						$bofiles->create_document_dir("request/{$values['request_id']}");
+						$bofiles->create_document_dir("request/{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if(!$bofiles->vfs->cp (array (
@@ -872,7 +870,7 @@
 						$bofiles->vfs->override_acl = 0;
 					}
 //---------end files
-					$id = $values['request_id'];
+
 					$function_msg = lang('Edit request');
 
 					if ($values['notify'])
@@ -884,8 +882,8 @@
 						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
 						$headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
 
-						$subject = lang(notify).": ". $values['request_id'];
-						$message = lang(request) . " " . $values['request_id'] ." ". lang('is registered');
+						$subject = lang(notify).": ". $id;
+						$message = lang(request) . " " . $id ." ". lang('is registered');
 
 						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 						{
@@ -1112,7 +1110,7 @@
 				'lang_done'				=> lang('done'),
 
 				'lang_request_id'			=> lang('request ID'),
-				'value_request_id'			=> $values['request_id'],
+				'value_request_id'			=> $id,
 
 				'lang_title'				=> lang('Title'),
 				'value_title'				=> $values['title'],
@@ -1169,7 +1167,6 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function delete()

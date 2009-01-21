@@ -34,14 +34,12 @@
 
 	class property_soasync
 	{
-		function property_soasync()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read($data)
@@ -116,17 +114,22 @@
 
 		function add($method)
 		{
+			$receipt = array();
 			$table='fm_async_method';
 
-			$method['id'] = $this->bocommon->next_id($table);
+			$this->db->transaction_begin();
+			$method['id'] = $this->db->next_id($table);
 			$method['name'] = $this->db->db_addslashes($method['name']);
 			$method['descr'] = $this->db->db_addslashes($method['descr']);
 
 			$this->db->query("INSERT INTO $table (id, name,data, descr) "
 				. "VALUES ('" . $method['id'] . "','" . $method['name'] . "','" . $method['data'] . "','" . $method['descr']. "')",__LINE__,__FILE__);
 
-			$receipt['id'] = $method['id'];
-			$receipt['message'][] = array('msg' => lang('async method has been saved'));
+			if( $this->db->transaction_commit() )
+			{
+				$receipt['id'] = $method['id'];
+				$receipt['message'][] = array('msg' => lang('async method has been saved'));
+			}
 
 			return $receipt;
 		}

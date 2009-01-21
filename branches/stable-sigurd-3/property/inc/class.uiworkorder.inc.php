@@ -719,25 +719,21 @@
 
 				if($id)
 				{
-					$values['workorder_id']=$id;
+					$values['id']=$id;
 					$action='edit';
 				}
 
 				if(!$receipt['error'])
 				{
-					if(!$id)
-					{
-						$values['workorder_id']=$this->bo->next_id();
-						$id	= $values['workorder_id'];
-					}
 					if($values['copy_workorder'])
 					{
 						$action='add';
-						$values['workorder_id']	= $this->bo->next_id();
-						$id	= $values['workorder_id'];
 					}
 					$receipt = $this->bo->save($values,$action);
-					$id = $values['workorder_id'];
+					if (! $receipt['error'])
+					{
+						$id = $receipt['id'];
+					}
 					$function_msg = lang('Edit Workorder');
 //----------files
 					$bofiles	= CreateObject('property.bofiles');
@@ -785,9 +781,8 @@
 						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
 						$headers .= "MIME-Version: 1.0\r\n";
 
-						$subject = lang(Approval).": ". $values['workorder_id'];
-					//	$message = lang('Workorder %1 needs approval',$values['workorder_id']);
-						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$values['workorder_id']) .'</a>';
+						$subject = lang(Approval).": ". $id;
+						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
 
 						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 						{
@@ -887,7 +882,7 @@
 					$values['key_deliver']=$project['key_deliver'];
 				}
 
-/*				if( $project['charge_tenant'] && !$values['workorder_id'])
+/*				if( $project['charge_tenant'] && !$id)
 				{
 					$values['charge_tenant']=$project['charge_tenant'];
 				}
@@ -988,16 +983,6 @@
 				'menuaction'	=> 'property.uiworkorder.edit',
 				'id'		=> $id
 			);
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
 
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
@@ -1132,7 +1117,7 @@
 				'value_project_id'			=> $values['project_id'],
 
 				'lang_workorder_id'			=> lang('Workorder ID'),
-				'value_workorder_id'			=> (isset($values['workorder_id'])?$values['workorder_id']:''),
+				'value_workorder_id'			=> (isset($id)?$id:''),
 
 				'lang_title_statustext'			=> lang('Enter Workorder title'),
 

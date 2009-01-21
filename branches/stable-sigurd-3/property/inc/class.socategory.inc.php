@@ -34,14 +34,13 @@
 
 	class property_socategory
 	{
-		function property_socategory()
+		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->_db =& $GLOBALS['phpgw']->db;
-
-			$this->_like =& $this->_db->like;
-			$this->_join =& $this->_db->join;
+			$this->_db		= & $GLOBALS['phpgw']->db;
+			$this->_like	= & $this->_db->like;
+			$this->_join	= & $this->_db->join;
 		}
 
 		function read($data)
@@ -57,10 +56,12 @@
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
 			}
 
-			if(!$type)
+			$category = array();
+			if (!$table = $this->select_table($type,$type_id))
 			{
-				return;
+				return $category;
 			}
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -69,8 +70,6 @@
 			{
 				$ordermethod = ' order by id asc';
 			}
-
-			$table = $this->select_table($type,$type_id);
 
 			if($query)
 			{
@@ -175,47 +174,62 @@
 			return $table;
 		}
 
-
 		function read_single($id,$type,$type_id)
 		{
+			$id = (int) $id;
+			$category = array();
+			if (!$table = $this->select_table($type,$type_id))
+			{
+				return $category;
+			}
 
-			$table = $this->select_table($type,$type_id);
-
-			$sql = "SELECT * FROM $table  where id='$id'";
+			$sql = "SELECT * FROM $table WHERE id={$id}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			if ($this->_db->next_record())
 			{
-				$category['id']		= $this->_db->f('id');
-				$category['descr']	= stripslashes($this->_db->f('descr'));
-
-				return $category;
+				$category = array
+				(
+					'id'	=> $this->_db->f('id'),
+					'descr'	=> $this->_db->f('descr', true)
+				);
 			}
+			return $category;
 		}
 
 
 		function select_category_list($data)
 		{
-			$table = $this->select_table($data['type'],$data['type_id']);
+			$categories = array();
+			if (!$table = $this->select_table($data['type'],$data['type_id']))
+			{
+				return $categories;
+			}
 			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
 
 			$this->_db->query("SELECT id, descr FROM $table ORDER BY $order");
 
 			while ($this->_db->next_record())
 			{
-				$categories[] = array(
+				$categories[] = array
+				(
 					'id'	=> $this->_db->f('id'),
-					'name'	=> stripslashes($this->_db->f('descr'))
-					);
+					'name'	=> $this->_db->f('descr', true)
+				);
 			}
-			return (isset($categories)?$categories:false);
+			return $categories;
 		}
 
 
 		function add($category,$type,$type_id)
 		{
-			$table = $this->select_table($type,$type_id);
+			$receipt = array();
+			if (!$table = $this->select_table($type,$type_id))
+			{
+				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
 
 			$category['descr'] = $this->_db->db_addslashes($category['descr']);
 
@@ -228,8 +242,12 @@
 
 		function edit($category,$type,$type_id)
 		{
-
-			$table = $this->select_table($type,$type_id);
+			$receipt = array();
+			if (!$table = $this->select_table($type,$type_id))
+			{
+				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
 
 			$category['descr'] = $this->_db->db_addslashes($category['descr']);
 

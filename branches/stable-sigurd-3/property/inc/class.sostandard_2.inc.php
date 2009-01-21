@@ -35,77 +35,67 @@
 	class property_sostandard_2
 	{
 
-		function property_sostandard_2()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-
-			$this->join		= $this->bocommon->join;
-			$this->like		= $this->bocommon->like;
+			$this->_db 			= & $GLOBALS['phpgw']->db;
+			$this->_like		= & $this->_db->like;
 		}
 
 		function read($data)
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$type		= (isset($data['type'])?$data['type']:0);
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$type		= isset($data['type']) ? $data['type'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			}
+
+			$standard = array();
+			if (!$table = $this->select_table($type))
+			{
+				return $standard;
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
-
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by id asc';
+				$ordermethod = ' ORDER BY id ASC';
 			}
-
-			$table = $this->select_table($type);
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->_db->db_addslashes($query);
 
-				$querymethod = " where id $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " WHERE id $this->_like '%$query%' OR descr $this->_like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->_db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				$standard[] = array
 				(
-					'id'	=> $this->db->f('id'),
-					'descr'	=> $this->db->f('descr')
+					'id'	=> $this->_db->f('id'),
+					'descr'	=> $this->_db->f('descr')
 				);
 			}
 			return $standard;
@@ -143,61 +133,82 @@
 
 		function read_single($id,$type)
 		{
+			$standard = array();
 
-			$table = $this->select_table($type);
-
-			$sql = "SELECT * FROM $table  where id='$id'";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			if ($this->db->next_record())
+			if (!$table = $this->select_table($type))
 			{
-				$standard['id']			= $this->db->f('id');
-				$standard['descr']		= $this->db->f('descr');
-
 				return $standard;
 			}
+
+			$sql = "SELECT * FROM $table WHERE id='{$id}'";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			if ($this->_db->next_record())
+			{
+				$standard = array
+				(
+					'id'		=> $this->_db->f('id'),
+					'descr'		=> $this->_db->f('descr', true)
+				);
+			}
+			return $standard;
 		}
 
 		function add($standard,$type)
 		{
-			$table = $this->select_table($type);
+			$receipt = array();
+			if (!$table = $this->select_table($type))
+			{
+				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
 
-			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
+			$standard['descr'] = $this->_db->db_addslashes($standard['descr']);
 
-			$this->db->transaction_begin();
+			$this->_db->transaction_begin();
 
-			$this->db->query("INSERT INTO $table (id, descr) "
+			$this->_db->query("INSERT INTO $table (id, descr) "
 				. "VALUES ('" . $standard['id'] . "','" . $standard['descr']. "')",__LINE__,__FILE__);
 
-			$this->db->transaction_commit();
+			$this->_db->transaction_commit();
 			$receipt['message'][] = array('msg' => lang('standard has been saved'));
 			return $receipt;
 		}
 
 		function edit($standard,$type)
 		{
+			$receipt = array();
+			if (!$table = $this->select_table($type))
+			{
+				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
 
-			$table = $this->select_table($type);
+			$standard['descr'] = $this->_db->db_addslashes($standard['descr']);
 
-			$standard['descr'] = $this->db->db_addslashes($standard['descr']);
+			$this->_db->transaction_begin();
 
-			$this->db->transaction_begin();
-
-			$this->db->query("UPDATE $table set descr='" . $standard['descr']
+			$this->_db->query("UPDATE $table set descr='" . $standard['descr']
 							. "' WHERE id='" . $standard['id']. "'",__LINE__,__FILE__);
 
-			$this->db->transaction_commit();
+			$this->_db->transaction_commit();
 			$receipt['message'][] = array('msg' => lang('standard has been edited'));
 			return $receipt;
 		}
 
 		function delete($id,$type)
 		{
-			$table = $this->select_table($type);
-			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
-			$this->db->transaction_commit();
+			$receipt = array();
+			if (!$table = $this->select_table($type))
+			{
+				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
+
+			$this->_db->transaction_begin();
+			$this->_db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
+			$this->_db->transaction_commit();
 		}
 	}
 

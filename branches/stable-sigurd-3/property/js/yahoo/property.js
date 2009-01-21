@@ -2,7 +2,7 @@
 	var menuCB,optionsCB, options_combo_box;
 	var array_options = new Array();
 	var flag = 0;
-	var flag_update_filter='';
+	var flag_update_filter = new Array();
 	var myDataSource,myDataTable, myContextMenu, myPaginator ;
 	var ds, values_ds;
 	var myrowsPerPage,mytotalRows,ActualValueRowsPerPageDropdown;
@@ -11,7 +11,36 @@
 	var lightbox;
 	var maxRowsPerPage = 1000;
 	var myLoading;
-
+	
+ /********************************************************************************
+ *
+ */	
+	this.getSumPerPage = function(name_column)
+	{
+		//range actual of rows in datatable
+		if( (myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0] + 1 ) == myDataTable.getRecordSet().getLength() )
+		//click en Period or ComboBox. (RecordSet start in 0)
+		{
+			begin	= 0;
+			end		= myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0];
+		}
+		else
+		//click en Paginator
+		{
+			begin	= myPaginator.getPageRecords()[0];
+			end		= myPaginator.getPageRecords()[1];
+		}
+	
+			//get sumatory of column AMOUNT
+			var tmp_sum = 0;
+			for(i = begin; i <= end; i++)
+			{
+				tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData(name_column));
+			}
+	
+			return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+	}
+		
  /********************************************************************************
  *
  */
@@ -233,13 +262,16 @@
 		eval("path_values."+selectsButtons[p_oItem[2]].var_URL+"='"+p_oItem[0]+"'")
 
 		// tiene dependiente asociado?
-		if(selectsButtons[p_oItem[2]].dependiente!='')
+		if(selectsButtons[p_oItem[2]].dependiente.length)
 		{
-			control = eval("oMenuButton_"+selectsButtons[p_oItem[2]].dependiente);
-			control.set("label", ("<em>" + array_options[selectsButtons[p_oItem[2]].dependiente][0][1] + "</em>"));
-			control.set("value", array_options[selectsButtons[p_oItem[2]].dependiente][0][0]);
-			eval("path_values."+selectsButtons[selectsButtons[p_oItem[2]].dependiente].var_URL+"=''");  //empty
-			flag_update_filter = selectsButtons[p_oItem[2]].dependiente;
+			for(i=0;i<selectsButtons[p_oItem[2]].dependiente.length;i++)
+			{
+				control = eval("oMenuButton_"+selectsButtons[p_oItem[2]].dependiente[i]);
+				control.set("label", ("<em>" + array_options[selectsButtons[p_oItem[2]].dependiente[i]][0][1] + "</em>"));
+				control.set("value", array_options[selectsButtons[p_oItem[2]].dependiente[i]][0][0]);
+				eval("path_values."+selectsButtons[selectsButtons[p_oItem[2]].dependiente[i]].var_URL+"=''");  //empty
+				flag_update_filter[i] = selectsButtons[p_oItem[2]].dependiente[i];
+			}
 		}
 
 		//los valores de 'path_values' ya estan actualizados no es necesario verificar
@@ -454,18 +486,6 @@
 						{
 							window.open(sUrl,'_self');						
 						}
-						//window.open(sUrl,'_self');
-					/*	var onDialogShow = function(e, args, o)
-						{
-							var frame = document.createElement('iframe');
-							frame.src = sUrl;
-							frame.width = "100%";
-							frame.height = "480";
-							o.setBody(frame);
-						};
-						lightbox.showEvent.subscribe(onDialogShow, lightbox);
-						lightbox.show();
-					*/
 					}
 				}
 			}
@@ -593,6 +613,7 @@
 		}
 		try
 		{
+			//First call JSON (POST)
 			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
 		}
 		catch(e_async)
@@ -659,7 +680,7 @@
 							sortedBy			: {key:values_ds.sort, dir:values_ds.dir/*dir:YAHOO.widget.DataTable.CLASS_DESC*/},
 							paginator			: myPaginator
 		};
-
+		//Create DataTable ; Second call JSON (GET)
 		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
 		myDataTable.on('cellMouseoverEvent', function (oArgs)
@@ -905,14 +926,19 @@
 
 	this.update_filter = function()
 	{
-	 if (flag_update_filter !='')
+	 if (flag_update_filter.length)
 		{
-			var filter_tmp = eval("oMenuButton_"+flag_update_filter);
+			for(i=0;i<flag_update_filter.length;i++)
+			{
+			 	filter_tmp = eval("oMenuButton_"+flag_update_filter[i]);
 
-	 		filter_tmp.getMenu().clearContent();
-			filter_tmp.getMenu().itemData = create_menu_list (values_ds.hidden.dependent[0].value,selectsButtons[flag_update_filter].order);
-			filter_tmp.set("value",values_ds.hidden.dependent[0].id);
-			flag_update_filter = '';
+		 		filter_tmp.getMenu().clearContent();
+				filter_tmp.getMenu().itemData = create_menu_list (values_ds.hidden.dependent[i].value,selectsButtons[flag_update_filter[i]].order);
+				filter_tmp.set("value",values_ds.hidden.dependent[i].id);
+				flag_update_filter[i] = '';
+			}
+			//avoid update_filter again 
+			flag_update_filter.splice(0,flag_update_filter.length)
 	 	}
 	}
 
@@ -945,7 +971,7 @@
 				{
 					if(normalButtons[i].name == "btn_export")
 					{
-						eval("oNormalButton_"+i+"._setDisabled(false)")
+						eval("oNormalButton_"+i+"._setDisabled(false)");
 					}
 				}
 			}
@@ -963,6 +989,26 @@
 				}
 			}
 		}
+		//validate right ADD. 
+		if(YAHOO.util.Dom.inDocument("btn_new-button"))
+		{
+			disabled_button_add = true;
+			for(i=0;i<values_ds.rights.length;i++)
+			{
+				if(values_ds.rights[i].my_name == "add")
+				{
+					disabled_button_add = false;
+				}
+			}
+			if(disabled_button_add)
+			{
+				// button ADD should be the lastest in array normalButtons.
+				order_new = normalButtons.length - 1;
+				eval("oNormalButton_"+order_new+"._setDisabled(true)");
+			}
+		}
+		
+		
 
 		myParticularRenderEvent();
 	}

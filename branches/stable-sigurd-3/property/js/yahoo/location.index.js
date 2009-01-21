@@ -4,10 +4,10 @@
   //define SelectButton
      var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
      var selectsButtons = [
-    {order:0, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:''},
-    {order:1, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:2},
-    {order:2, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:''},
-    {order:3, var_URL:'filter',			name:'btn_owner_id',	style:'ownerIdbutton',		dependiente:''}
+    {order:0, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
+    {order:1, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[2]},
+    {order:2, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
+    {order:3, var_URL:'filter',			name:'btn_owner_id',	style:'ownerIdbutton',		dependiente:[]}
     ]
 
     // define buttons

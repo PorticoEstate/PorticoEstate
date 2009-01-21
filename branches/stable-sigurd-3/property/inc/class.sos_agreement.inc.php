@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -36,17 +38,16 @@
 	{
 		var $role;
 
-		function property_sos_agreement()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
+			$this->socommon		= CreateObject('property.socommon');
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2          = clone($this->db);
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function select_vendor_list()
@@ -638,7 +639,7 @@
 
 
 			$this->db->transaction_begin();
-			$id = $this->bocommon->increment_id('workorder');
+			$id = $this->socommon->increment_id('workorder');
 
 			$vals[]	= $id;
 			$vals[]	= $s_agreement['name'];
@@ -682,7 +683,7 @@
 				$cols	= "," . implode(",", $cols);
 			}
 
-			$vals	= $this->bocommon->validate_db_insert($vals);
+			$vals	= $this->db->validate_insert($vals);
 
 			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,member_of,start_date,end_date,termination_date,vendor_id,account_id,user_id $cols) "
 				. "VALUES ($vals)",__LINE__,__FILE__);
@@ -768,12 +769,12 @@
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);
-				$vals	= "," . $this->bocommon->validate_db_insert($vals);
+				$vals	= "," . $this->db->validate_insert($vals);
 			}
 
 			$this->db->transaction_begin();
 
-			$id = $this->bocommon->next_id($table,array('agreement_id'=>$values['s_agreement_id']));
+			$id = $this->db->next_id($table,array('agreement_id'=>$values['s_agreement_id']));
 
 			$this->db->query("INSERT INTO $table (id,agreement_id,entry_date,user_id $cols) "
 				. "VALUES ($id," . $values['s_agreement_id'] ."," . time()
@@ -854,7 +855,7 @@
 			$value_set['descr']	= $values['descr'];
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
@@ -902,7 +903,7 @@
 						if($entry['value'] != $old_value)
 						{
 							$history_set[$entry['attrib_id']] = array('value' => $entry['value'],
-												'date'  => $this->bocommon->date_to_timestamp($entry['date']));
+												'date'  => phpgwapi_datetime::date_to_timestamp($entry['date']));
 						}
 					}
 				}
@@ -926,7 +927,7 @@
 
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date=" . time() . "$value_set WHERE agreement_id=" . intval($values['s_agreement_id']) . ' AND id=' . intval($values['id']));

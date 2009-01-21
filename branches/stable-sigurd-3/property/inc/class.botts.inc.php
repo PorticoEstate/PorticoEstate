@@ -73,7 +73,7 @@
 		function property_botts($session=false)
 		{
 			$this->so 					= CreateObject('property.sotts');
-			$this->bocommon 			= & $this->so->bocommon;
+			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

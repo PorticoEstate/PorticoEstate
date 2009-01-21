@@ -259,8 +259,6 @@
 		div_footer = document.getElementById('footer');
 		div_footer.setAttribute("class","datatable-container yui-dt");
 
-
-		
 		var myColumnDefs_details = new Array();
 		for(var k=0 ; k<values_ds.uicols_details.name.length; k++)
 	    {
@@ -332,76 +330,60 @@
 			newTR.setAttribute("class","yui-dt-even");
 			
  			newTD = document.createElement('td');
- 			newTD.colSpan = 3;
 			newTD.style.borderTop="1px solid #000000";
 			newTD.style.fontWeight = 'bolder';
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_calculation));
- 			newTR.appendChild(newTD);			
+			
+			nTD = newTD.cloneNode(true);
+			nTD.colSpan = 3;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_calculation));
+ 			newTR.appendChild(nTD);			
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 5;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.value_sum_calculation));
- 			newTR.appendChild(newTD);		
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 5;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_sum_calculation));
+ 			newTR.appendChild(nTD);		
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.sum_deviation));
- 			newTR.appendChild(newTD);	
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 1;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.sum_deviation));
+ 			newTR.appendChild(nTD);	
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.sum_result));
- 			newTR.appendChild(newTD);
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 1;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.sum_result));
+ 			newTR.appendChild(nTD);
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 2;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(newTD);
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 2;
+ 			nTD.appendChild(document.createTextNode(''));
+ 			newTR.appendChild(nTD);
 
  			myfoot.appendChild(newTR);
 
  			
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
- 			
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 3;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_rs));
- 			newTR.appendChild(newTD);	
 
  			newTD = document.createElement('td');
- 			newTD.colSpan = 7;
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.value_addition_rs));
- 			newTR.appendChild(newTD);
+			
+			nTD = newTD.cloneNode(true);
+			nTD.colSpan = 3;
+			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_rs));
+ 			newTR.appendChild(nTD);	
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 2;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(newTD); 
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 7;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_addition_rs));
+ 			newTR.appendChild(nTD);
+
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 2;
+ 			nTD.appendChild(document.createTextNode(''));
+ 			newTR.appendChild(nTD); 
  			
  			myfoot.appendChild(newTR);
 		
@@ -409,26 +391,20 @@
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
  			
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 3;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_percentage));
- 			newTR.appendChild(newTD);	
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 3;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_percentage));
+ 			newTR.appendChild(nTD);	
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 7;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.value_addition_percentage));
- 			newTR.appendChild(newTD);
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 7;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_addition_percentage));
+ 			newTR.appendChild(nTD);
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 2;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(newTD); 
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 2;
+ 			nTD.appendChild(document.createTextNode(''));
+ 			newTR.appendChild(nTD); 
  			
  			myfoot.appendChild(newTR); 		
  			
@@ -436,58 +412,46 @@
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
  			
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 3;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_tax));
- 			newTR.appendChild(newTD);	
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 3;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_tax));
+ 			newTR.appendChild(nTD);	
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 7;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.value_sum_tax));
- 			newTR.appendChild(newTD);
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 7;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_sum_tax));
+ 			newTR.appendChild(nTD);
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 2;
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(newTD); 
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 2;
+ 			nTD.appendChild(document.createTextNode(''));
+ 			newTR.appendChild(nTD); 
  			
  			myfoot.appendChild(newTR);  		
  			
  			
  			newTR = document.createElement('tr');
- 			
+ 
  			newTD = document.createElement('td');
- 			newTD.colSpan = 3;
- 			newTD.style.borderTop="1px solid #000000";
+			newTD.style.borderTop="1px solid #000000";
 			newTD.style.fontWeight = 'bolder';
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.lang_total_sum));
- 			newTR.appendChild(newTD);	
+			
+			nTD = newTD.cloneNode(true);
+			nTD.colSpan = 3;
+			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_total_sum));
+ 			newTR.appendChild(nTD);	
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 7;
- 			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(values_ds.table_sum.value_total_sum));
- 			newTR.appendChild(newTD);
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 7;
+ 			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_total_sum));
+ 			newTR.appendChild(nTD);
 
- 			newTD = document.createElement('td');
- 			newTD.colSpan = 2;
- 			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
- 			newTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(newTD); 
+ 			nTD = newTD.cloneNode(true);
+ 			nTD.colSpan = 2;
+ 			nTD.appendChild(document.createTextNode(''));
+ 			newTR.appendChild(nTD); 
  			
  			myfoot.appendChild(newTR); 
 		}
@@ -525,7 +489,7 @@
 						param_source = values_ds.details.rowactions[task.groupIndex].parameters.parameter[0].source;
 						sUrl = url + "&"+param_name+"=" + oRecord.getData(param_source);
 					}
-					else //for New
+					else 
 					{
 						sUrl = url;
 					}
@@ -544,7 +508,14 @@
 					}
 					else
 					{
-						window.open(sUrl,'_self');
+						if(substr_count(sUrl,'target=_blank')>0)
+						{
+							window.open(sUrl,'_blank');
+						}
+						else
+						{
+							window.open(sUrl,'_self');						
+						}
 					}
                 }
             }

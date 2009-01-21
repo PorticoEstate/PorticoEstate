@@ -284,28 +284,8 @@
 	 */
   	this.addFooterDatatable = function()
   	{
-		//range actual of rows in datatable
-		if( (myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0] + 1 ) == myDataTable.getRecordSet().getLength() )
-		//click en Period or ComboBox. (RecordSet start in 0)
-		{
-			begin	= 0;
-			end		= myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0];
-		}
-		else
-		//click en Paginator
-		{
-			begin	= myPaginator.getPageRecords()[0];
-			end		= myPaginator.getPageRecords()[1];
-		}
-
-  		//get sumatory of column AMOUNT
-  		var tmp_sum = 0;
-  		for(i = begin; i <= end; i++)
-  		{
-  			tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData('amount_lnk'));
-  		}
-
-  		tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+  		//call getSumPerPage(name of column) in property.js
+  		tmp_sum = getSumPerPage('amount_lnk');
 
 		//Create ROW
 		newTR = document.createElement('tr');

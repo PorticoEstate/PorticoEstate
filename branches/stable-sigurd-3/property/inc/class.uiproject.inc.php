@@ -874,29 +874,22 @@
 
 				if($id)
 				{
-					$values['project_id']=$id;
+					$values['id'] = $id;
 					$action='edit';
 				}
 
 				if(!$receipt['error'])
 				{
-					if(!$id)
-					{
-						$values['project_id']=$this->bo->next_project_id();
-						$id	= $values['project_id'];
-					}
 
 					if($values['copy_project'])
 					{
 						$action='add';
-						$values['project_id']	= $this->bo->next_project_id();
-						$id	= $values['project_id'];
 					}
 					$receipt = $this->bo->save($values,$action);
-					if($receipt['error'])
+
+					if (! $receipt['error'])
 					{
-						unset($id);
-						unset($values['project_id']);
+						$id = $receipt['id'];
 					}
 
 					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -918,8 +911,8 @@
 							$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
 							$headers .= "MIME-Version: 1.0\r\n";
 
-							$subject = lang(Approval).": ". $values['project_id'];
-							$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $values['project_id'])).'">' . lang(Project) . " " . $values['project_id'] ." ". lang('needs approval') .'</a>';
+							$subject = lang(Approval).": ". $id;
+							$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang(Project) . " " . $id ." ". lang('needs approval') .'</a>';
 
 							$bcc = $from_email;
 
@@ -947,7 +940,7 @@
 								$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
 								$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-								$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $values['project_id'])).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
+								$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
 								foreach($receipt['notice_owner'] as $notice)
 								{
 									$body .= $notice . "\n";
@@ -1086,7 +1079,7 @@
 			(
 				'menuaction'	=> 'property.uirequest.index',
 				'query'		=> (isset($values['location_data']['loc1'])?$values['location_data']['loc1']:''),
-				'project_id'	=> (isset($values['project_id'])?$values['project_id']:'')
+				'project_id'	=> (isset($id)?$id:'')
 			);
 
 			$supervisor_id= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']:'');
@@ -1219,7 +1212,7 @@
 				'lang_name'					=> lang('Name'),
 
 				'lang_project_id'				=> lang('Project ID'),
-				'value_project_id'				=> (isset($values['project_id'])?$values['project_id']:''),
+				'value_project_id'				=> (isset($id)?$id:''),
 				'value_name'					=> (isset($values['name'])?$values['name']:''),
 				'lang_name_statustext'				=> lang('Enter Project Name'),
 
@@ -1260,7 +1253,7 @@
 				'lang_confirm_status'				=> lang('Confirm status'),
 				'lang_confirm_statustext'			=> lang('Confirm status to the history'),
 
-				'branch_list'					=> $this->bo->select_branch_p_list((isset($values['project_id'])?$values['project_id']:'')),
+				'branch_list'					=> $this->bo->select_branch_p_list((isset($id)?$id:'')),
 				'lang_branch'					=> lang('branch'),
 				'lang_branch_statustext'			=> lang('Select the branches for this project'),
 

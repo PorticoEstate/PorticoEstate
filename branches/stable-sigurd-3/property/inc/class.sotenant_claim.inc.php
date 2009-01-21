@@ -37,11 +37,9 @@
 		function property_sotenant_claim()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 			$this->interlink 	= CreateObject('property.interlink');
 		}
 
@@ -231,7 +229,7 @@
 				$claim['status']
 				);
 
-			$values_insert	= $this->bocommon->validate_db_insert($values_insert);
+			$values_insert	= $this->db->validate_insert($values_insert);
 
 
 			$this->db->query("INSERT INTO fm_tenant_claim (project_id,tenant_id,amount,b_account_id,category,remark,user_id,entry_date,status) "
@@ -280,7 +278,7 @@
 				'remark'			=> $this->db->db_addslashes($claim['remark'])
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_tenant_claim set $value_set  WHERE id=" . (int)$claim['claim_id'],__LINE__,__FILE__);
 

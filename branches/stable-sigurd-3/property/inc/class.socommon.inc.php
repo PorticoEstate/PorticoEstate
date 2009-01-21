@@ -45,12 +45,13 @@
 		 var $like = 'LIKE';
 
 
-		function property_socommon()
+		function __construct()
 		{
 
 			if(is_object($GLOBALS['phpgw']->db))
 			{
-				$this->db = CreateObject('phpgwapi.db');
+				$this->db = & $GLOBALS['phpgw']->db;
+				//$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{
@@ -114,7 +115,17 @@
 					$value = $GLOBALS['phpgw']->db->db_addslashes($value);
 				}
 
-				$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')",__LINE__,__FILE__);
+				$this->db->query("SELECT value FROM fm_cache WHERE name='{$name}'");
+
+				if($this->db->next_record())
+				{
+					$this->db->query("UPDATE fm_cache SET value = '{$value}' WHERE name='{$name}'",__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')",__LINE__,__FILE__);
+				}
+
 			}
 			else
 			{
@@ -311,6 +322,10 @@
 			if(is_object($db))
 			{
 				$db = clone($db);
+			}
+			else if( is_object($GLOBALS['phpgw']->db) )
+			{
+				$db = & $GLOBALS['phpgw']->db;
 			}
 			else
 			{
