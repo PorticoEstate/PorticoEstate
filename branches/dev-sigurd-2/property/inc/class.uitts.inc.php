@@ -462,7 +462,7 @@
 				$uicols['name'][7] = 'user';
 				$uicols['name'][8] = 'assignedto';
 				$uicols['name'][9] = 'timestampopened';
-				$uicols['name'][10] = 'Besiktigelse';
+				$uicols['name'][10] = 'besiktigelse';
 				$uicols['name'][11] = 'project';
 
 				$uicols['name'][12] = 'finnish_date';
