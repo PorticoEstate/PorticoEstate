@@ -1090,11 +1090,22 @@
 				'key_fetch' => array('type' => 'int','precision' => '4','nullable' => True),
 				'key_deliver' => array('type' => 'int','precision' => '4','nullable' => True),
 				'other_branch' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'key_responsible' => array('type' => 'int','precision' => '4','nullable' => True)
+				'key_responsible' => array('type' => 'int','precision' => '4','nullable' => True),
+				'project_group' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array('location_code'),
+			'uc' => array()
+		),
+		'fm_project_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
 			'uc' => array()
 		),
 		'fm_event_receipt' => array(

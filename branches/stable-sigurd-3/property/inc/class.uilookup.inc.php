@@ -57,15 +57,15 @@
 			'ns3420'		=> true,
 			'street'		=> true,
 			'tenant'		=> true,
-			'phpgw_user'	=> true
+			'phpgw_user'	=> true,
+			'project_group'	=> true
 		);
 
-		function property_uilookup()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->bo					= CreateObject('property.bolookup',true);
 
@@ -77,7 +77,28 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->district_id			= $this->bo->district_id;
-			//$GLOBALS['phpgw']->js->set_onload('document.search.query.focus();');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
 		}
 
 		function save_sessiondata()
@@ -98,7 +119,6 @@
 
 		function addressbook()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			$bocommon	= CreateObject('property.bocommon');
 			$this->cats		= CreateObject('phpgwapi.categories');
 			$this->cats->app_name = 'addressbook';
@@ -282,18 +302,6 @@
 			$appname						= lang('addressbook');
 			$function_msg					= lang('list vendors');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -350,18 +358,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -373,10 +369,7 @@
 
 		function vendor()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			$bocommon	= CreateObject('property.bocommon');
-
-			phpgwapi_yui::load_widget('tabview');
 
 			$this->cats		= CreateObject('phpgwapi.categories');
 			$this->cats->app_name = 'fm_vendor';
@@ -554,18 +547,6 @@
 			$appname						= lang('vendor');
 			$function_msg					= lang('list vendors');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -622,18 +603,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -645,7 +614,6 @@
 
 		function b_account()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -777,18 +745,6 @@
 			$appname						= lang('budget account');
 			$function_msg					= lang('list budget account');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -845,18 +801,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -869,7 +813,6 @@
 
 		function street()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -1014,18 +957,6 @@
 			$appname						= lang('street');
 			$function_msg					= lang('list street');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -1083,18 +1014,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -1106,7 +1025,6 @@
 
 		function tenant()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -1240,18 +1158,6 @@
 			$appname						= lang('tenant');
 			$function_msg					= lang('list tenant');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -1308,18 +1214,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -1331,7 +1225,6 @@
 
 		function ns3420()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -1465,18 +1358,6 @@
 			$appname						= lang('standard description');
 			$function_msg					= lang('list standard description');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -1533,18 +1414,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -1557,7 +1426,6 @@
 
 		function entity()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			$bocommon					= CreateObject('property.bocommon');
 			$boentity					= CreateObject('property.boentity');
 			$boadmin_entity				= CreateObject('property.boadmin_entity');
@@ -1773,19 +1641,6 @@
 			}
 
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
-
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -1843,18 +1698,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
 			if($this->entity_id)
 			{
 				$entity 	= $boadmin_entity->read_single($this->entity_id,false);
@@ -1877,7 +1720,6 @@
 
 		function phpgw_user()
 		{
-			phpgwapi_yui::load_widget('tabview');
 			$column = phpgw::get_var('column');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -2037,17 +1879,203 @@
 			$appname						= lang('standard description');
 			$function_msg					= lang('list standard description');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			//Title of Page
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+
+			$this->save_sessiondata();
+		}
+
+		function project_group()
+		{
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'			=> 'property.uilookup.project_group',
+								'second_display'	=> true,
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter
+	    				));
+	    		$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.project_group',"
+	    											."second_display:'{true}',"
+ 	                        						."cat_id:'{$this->cat_id}',"
+						 	                        ."query:'{$this->query}',"
+ 	                        						."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uilookup.project_group',
+									'second_display'	=> true,
+									'cat_id'			=> $this->cat_id,
+									'query'				=> $this->query,
+									'filter'			=> $this->filter
+									)
+						),
+						'fields'	=> array(
+                                    'field' => array(
+ 			                                        array( //boton  SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'tab_index' => 2
+			                                        ),
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//'',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28,
+			                                            'onkeypress' => 'return pulsar(event)',
+	                                    				'tab_index' => 1
+			                                        )
+		                           				),
+		                       		'hidden_value' => array(
+		                       								)
+												)
+										  )
+				);
+			}
+
+			$uicols = array (
+				'input_type'	=>	array(text,text),
+				'name'			=>	array(id,descr),
+				'formatter'		=>	array('',''),
+				'descr'			=>	array(lang('ID'),lang('Name'))
+			);
+
+			$project_group_list = array();
+			$project_group_list = $this->bo->read_project_group();
+
+			$content = array();
+			$j=0;
+			if (isset($project_group_list) && is_array($project_group_list))
+			{
+				foreach($project_group_list as $project_group_entry)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $project_group_entry[$uicols['name'][$i]];
+							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+					}
+					$j++;
+				}
+			}
+
+			$uicols_count	= count($uicols['descr']);
+			$datatable['rowactions']['action'] = array();
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= true;
+				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
+			}
+
+			$function_exchange_values = '';
+
+			$function_exchange_values .= "opener.document.forms[0].project_group.value = '';" ."\r\n";
+			$function_exchange_values .= "opener.document.forms[0].project_group_descr.value = '';" ."\r\n";
+
+			$function_exchange_values .= 'opener.document.forms[0].project_group.value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.forms[0].project_group_descr.value = data.getData("descr");' ."\r\n";
+
+			$function_exchange_values .= 'window.close()';
+
+			$datatable['exchange_values'] = $function_exchange_values;
+			$datatable['valida'] = '';
+
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($project_group_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			$appname						= lang('project group');
+			$function_msg					= lang('list project group');
 
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
@@ -2105,17 +2133,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
-			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -2126,4 +2143,3 @@
 			$this->save_sessiondata();
 		}
 	}
-

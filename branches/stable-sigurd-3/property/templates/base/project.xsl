@@ -212,6 +212,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
+			<xsl:call-template name="project_group_form"/>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_name"/>
@@ -812,6 +813,12 @@
 					</td>
 				</tr>
 			</xsl:for-each>
+
+			<xsl:choose>
+				<xsl:when test="project_group_data!=''">
+					<xsl:call-template name="project_group_view"/>
+				</xsl:when>
+			</xsl:choose>
 
 			<tr>
 				<td valign="top">

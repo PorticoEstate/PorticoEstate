@@ -2810,3 +2810,35 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.548 to 0.9.17.549
+	* Add new table for project_group
+ 	*/
+
+	$test[] = '0.9.17.548';
+	function property_upgrade0_9_17_548()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_group', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','project_group',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.549';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
