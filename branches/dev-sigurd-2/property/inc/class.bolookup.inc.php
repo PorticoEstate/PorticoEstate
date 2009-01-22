@@ -255,5 +255,15 @@
 
 			return $phpgw_user;
 		}
-	}
 
+		function read_project_group()
+		{
+			$project_group	= CreateObject('property.socategory');
+			$values = $project_group->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'type' => 'project_group','allrows'=>$this->allrows));
+
+			$this->total_records = $project_group->total_records;
+
+			return $values;
+		}
+	}

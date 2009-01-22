@@ -186,9 +186,12 @@
 
 		function get_project($id)
 		{
-			$this->db->query("select project_id from fm_workorder where id='$id'");
+			$id = (int) $id;
+			$sql = "SELECT project_group FROM fm_workorder"
+			. " $this->join fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id={$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			return $this->db->f('project_id');
+			return $this->db->f('project_group');
 		}
 
 		function check_spbudact_code($id)

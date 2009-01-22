@@ -491,10 +491,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$type	= phpgw::get_var('type');
+			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
-			$id	= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values');
+			$id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
 
@@ -521,6 +521,10 @@
 				if(!$receipt['error'])
 				{
 					$receipt = $this->bo->save($values,$action,$type,$type_id);
+					if($receipt['error'])
+					{
+						$id = '';
+					}
 				}
 			}
 
@@ -554,16 +558,16 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'lang_id'					=> lang('category ID'),
+				'lang_id'						=> lang('category ID'),
 				'lang_descr'					=> lang('Descr'),
-				'lang_save'					=> lang('save'),
-				'lang_done'					=> lang('done'),
-				'value_id'					=> $id,
-				'lang_id_categorytext'				=> lang('Enter the category ID'),
-				'lang_descr_categorytext'			=> lang('Enter a description the category'),
-				'lang_done_categorytext'			=> lang('Back to the list'),
-				'lang_save_categorytext'			=> lang('Save the category'),
-				'type_id'					=> $category['type_id'],
+				'lang_save'						=> lang('save'),
+				'lang_done'						=> lang('done'),
+				'value_id'						=> $id,
+				'lang_id_categorytext'			=> lang('Enter the category ID'),
+				'lang_descr_categorytext'		=> lang('Enter a description the category'),
+				'lang_done_categorytext'		=> lang('Back to the list'),
+				'lang_save_categorytext'		=> lang('Save the category'),
+				'type_id'						=> $category['type_id'],
 				'value_descr'					=> $category['descr']
 			);
 
@@ -582,7 +586,7 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
-			$id		= phpgw::get_var('id', 'int');
+			$id			= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array

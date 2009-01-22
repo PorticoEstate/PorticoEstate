@@ -717,9 +717,10 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
-			$id 				= phpgw::get_var('id', 'int');
-			$values				= phpgw::get_var('values');
-			$add_request			= phpgw::get_var('add_request');
+			$id 						= phpgw::get_var('id', 'int');
+			$values						= phpgw::get_var('values');
+			$add_request				= phpgw::get_var('add_request');
+			$values['project_group']	= phpgw::get_var('project_group');
 
 			$config				= CreateObject('phpgwapi.config');
 			$bolocation			= CreateObject('property.bolocation');
@@ -1135,149 +1136,131 @@
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
 
+			$project_group_data=$this->bocommon->initiate_project_group_lookup(array(
+						'project_group'			=> $values['project_group'],
+						'project_group_descr'	=> $values['project_group_descr']));
+
+
 			$data = array
 			(
-				'tabs'							=> self::_generate_tabs(),
-
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
-				'value_origin_type'				=> (isset($origin)?$origin:''),
-				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
-		//		'selected_request'				=> (isset($selected_request)?$selected_request:''),
-
+				'tabs'								=> self::_generate_tabs(),
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
+				'value_origin_type'					=> isset($origin)?$origin:'',
+				'value_origin_id'					=> isset($origin_id)?$origin_id:'',
 				'lang_select_request'				=> lang('Select request'),
-				'lang_select_request_statustext'		=> lang('Add request for this project'),
+				'lang_select_request_statustext'	=> lang('Add request for this project'),
 				'lang_request_statustext'			=> lang('Link to the request for this project'),
-				'lang_delete_request_statustext'		=> lang('Check to delete this request from this project'),
+				'lang_delete_request_statustext'	=> lang('Check to delete this request from this project'),
 				'link_select_request'				=> $GLOBALS['phpgw']->link('/index.php',$link_request_data),
-				'link_request'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
-
+				'link_request'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
 				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lang_add_workorder'				=> lang('Add workorder'),
-				'lang_add_workorder_statustext'			=> lang('Add a workorder to this project'),
-
-				'table_header_workorder_budget'			=> $table_header_workorder_budget,
+				'lang_add_workorder_statustext'		=> lang('Add a workorder to this project'),
+				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'				=> lang('No workorder budget'),
-				'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-				'record_history'				=> $record_history,
+				'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'record_history'					=> $record_history,
 				'table_header_history'				=> $table_header_history,
-				'lang_history'					=> lang('History'),
-				'lang_no_history'				=> lang('No history'),
-
-				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'				=> lang('Select date'),
-
-				'lang_start_date_statustext'			=> lang('Select the estimated end date for the Project'),
-				'lang_start_date'				=> lang('Project start date'),
-				'value_start_date'				=> $values['start_date'],
-
+				'lang_history'						=> lang('History'),
+				'lang_no_history'					=> lang('No history'),
+				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'					=> lang('Select date'),
+				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
+				'lang_start_date'					=> lang('Project start date'),
+				'value_start_date'					=> $values['start_date'],
 				'lang_end_date_statustext'			=> lang('Select the estimated end date for the Project'),
-				'lang_end_date'					=> lang('Project end date'),
-				'value_end_date'				=> isset($values['end_date']) ? $values['end_date'] : '' ,
-
-				'lang_copy_project'				=> lang('Copy project ?'),
-				'lang_copy_project_statustext'			=> lang('Choose Copy Project to copy this project to a new project'),
-
+				'lang_end_date'						=> lang('Project end date'),
+				'value_end_date'					=> isset($values['end_date']) ? $values['end_date'] : '' ,
+				'lang_copy_project'					=> lang('Copy project ?'),
+				'lang_copy_project_statustext'		=> lang('Choose Copy Project to copy this project to a new project'),
 				'lang_charge_tenant'				=> lang('Charge tenant'),
-				'lang_charge_tenant_statustext'			=> lang('Choose charge tenant if the tenant i to pay for this project'),
-				'charge_tenant'					=> (isset($values['charge_tenant'])?$values['charge_tenant']:''),
-
-				'lang_power_meter'				=> lang('Power meter'),
-				'lang_power_meter_statustext'			=> lang('Enter the power meter'),
-				'value_power_meter'				=> (isset($values['power_meter'])?$values['power_meter']:''),
-
-				'lang_budget'					=> lang('Budget'),
-				'value_budget'					=> (isset($values['budget'])?$values['budget']:''),
+				'lang_charge_tenant_statustext'		=> lang('Choose charge tenant if the tenant i to pay for this project'),
+				'charge_tenant'						=> isset($values['charge_tenant'])?$values['charge_tenant']:'',
+				'lang_power_meter'					=> lang('Power meter'),
+				'lang_power_meter_statustext'		=> lang('Enter the power meter'),
+				'value_power_meter'					=> isset($values['power_meter'])?$values['power_meter']:'',
+				'lang_budget'						=> lang('Budget'),
+				'value_budget'						=> isset($values['budget'])?$values['budget']:'',
 				'lang_budget_statustext'			=> lang('Enter the budget'),
-
-				'lang_reserve'					=> lang('reserve'),
-				'value_reserve'					=> (isset($values['reserve'])?$values['reserve']:''),
+				'lang_reserve'						=> lang('reserve'),
+				'value_reserve'						=> isset($values['reserve'])?$values['reserve']:'',
 				'lang_reserve_statustext'			=> lang('Enter the reserve'),
-
-				'value_sum'						=> (isset($values['sum'])?$values['sum']:''),
-
+				'value_sum'							=> isset($values['sum'])?$values['sum']:'',
 				'lang_reserve_remainder'			=> lang('reserve remainder'),
-				'value_reserve_remainder'			=> (isset($reserve_remainder)?$reserve_remainder:''),
-				'value_reserve_remainder_percent'		=> (isset($remainder_percent)?$remainder_percent:''),
-
-				'location_data'					=> $location_data,
-				'location_type'					=> 'form',
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
-				'lang_year'					=> lang('Year'),
-				'lang_category'					=> lang('category'),
-				'lang_save'					=> lang('save'),
-				'lang_done'					=> lang('done'),
-				'lang_name'					=> lang('Name'),
-
-				'lang_project_id'				=> lang('Project ID'),
-				'value_project_id'				=> (isset($id)?$id:''),
-				'value_name'					=> (isset($values['name'])?$values['name']:''),
+				'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
+				'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
+				'location_data'						=> $location_data,
+				'location_type'						=> 'form',
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
+				'lang_year'							=> lang('Year'),
+				'lang_category'						=> lang('category'),
+				'lang_save'							=> lang('save'),
+				'lang_done'							=> lang('done'),
+				'lang_name'							=> lang('Name'),
+				'lang_project_id'					=> lang('Project ID'),
+				'value_project_id'					=> isset($id)?$id:'',
+				'project_group_data'				=> $project_group_data,
+				'value_name'						=> isset($values['name'])?$values['name']:'',
 				'lang_name_statustext'				=> lang('Enter Project Name'),
-
-				'lang_other_branch'				=> lang('Other branch'),
-				'lang_other_branch_statustext'			=> lang('Enter other branch if not found in the list'),
-				'value_other_branch'				=> (isset($values['other_branch'])?$values['other_branch']:''),
-
+				'lang_other_branch'					=> lang('Other branch'),
+				'lang_other_branch_statustext'		=> lang('Enter other branch if not found in the list'),
+				'value_other_branch'				=> isset($values['other_branch'])?$values['other_branch']:'',
 				'lang_descr_statustext'				=> lang('Enter a description of the project'),
-				'lang_descr'					=> lang('Description'),
-				'value_descr'					=> (isset($values['descr'])?$values['descr']:''),
-
+				'lang_descr'						=> lang('Description'),
+				'value_descr'						=> isset($values['descr'])?$values['descr']:'',
 				'lang_remark_statustext'			=> lang('Enter a remark to add to the history of the project'),
-				'lang_remark'					=> lang('remark'),
-				'value_remark'					=> (isset($values['remark'])?$values['remark']:''),
+				'lang_remark'						=> lang('remark'),
+				'value_remark'						=> isset($values['remark'])?$values['remark']:'',
 				'lang_done_statustext'				=> lang('Back to the list'),
 				'lang_save_statustext'				=> lang('Save the project'),
-				'lang_no_cat'					=> lang('Select category'),
-				'value_cat_id'					=> (isset($values['cat_id'])?$values['cat_id']:''),
-				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
-				'lang_workorder_id'				=> lang('Workorder ID'),
-				'sum_workorder_budget'				=> (isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:''),
-				'sum_workorder_calculation'			=> (isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:''),
-				'workorder_budget'				=> (isset($values['workorder_budget'])?$values['workorder_budget']:''),
-				'sum_workorder_actual_cost'			=> (isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:''),
-				'lang_actual_cost'				=> lang('Actual cost'),
-				'lang_coordinator'				=> lang('Coordinator'),
-				'lang_sum'					=> lang('Sum'),
+				'lang_no_cat'						=> lang('Select category'),
+				'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
+				'lang_workorder_id'					=> lang('Workorder ID'),
+				'sum_workorder_budget'				=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
+				'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
+				'workorder_budget'					=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
+				'sum_workorder_actual_cost'			=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
+				'lang_actual_cost'					=> lang('Actual cost'),
+				'lang_coordinator'					=> lang('Coordinator'),
+				'lang_sum'							=> lang('Sum'),
 				'lang_user_statustext'				=> lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
-				'select_user_name'				=> 'values[coordinator]',
-				'lang_no_user'					=> lang('Select coordinator'),
-				'user_list'					=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
-
-				'status_list'					=> $this->bo->select_status_list('select',$values['status']),
-				'status_name'					=> 'values[status]',
-				'lang_no_status'				=> lang('Select status'),
-				'lang_status'					=> lang('Status'),
+				'select_user_name'					=> 'values[coordinator]',
+				'lang_no_user'						=> lang('Select coordinator'),
+				'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
+				'status_list'						=> $this->bo->select_status_list('select',$values['status']),
+				'status_name'						=> 'values[status]',
+				'lang_no_status'					=> lang('Select status'),
+				'lang_status'						=> lang('Status'),
 				'lang_status_statustext'			=> lang('What is the current status of this project ?'),
 				'lang_confirm_status'				=> lang('Confirm status'),
 				'lang_confirm_statustext'			=> lang('Confirm status to the history'),
-
-				'branch_list'					=> $this->bo->select_branch_p_list((isset($id)?$id:'')),
-				'lang_branch'					=> lang('branch'),
+				'branch_list'						=> $this->bo->select_branch_p_list((isset($id)?$id:'')),
+				'lang_branch'						=> lang('branch'),
 				'lang_branch_statustext'			=> lang('Select the branches for this project'),
-
 				'key_responsible_list'				=> $this->bo->select_branch_list((isset($values['key_responsible'])?$values['key_responsible']:'')),
 				'lang_no_key_responsible'			=> lang('Select key responsible'),
 				'lang_key_responsible'				=> lang('key responsible'),
-				'lang_key_responsible_statustext'		=> lang('Select the key responsible for this project'),
+				'lang_key_responsible_statustext'	=> lang('Select the key responsible for this project'),
 
-				'key_fetch_list'				=> $this->bo->select_key_location_list((isset($values['key_fetch'])?$values['key_fetch']:'')),
-				'lang_no_key_fetch'				=> lang('Where to fetch the key'),
-				'lang_key_fetch'				=> lang('key fetch location'),
+				'key_fetch_list'					=> $this->bo->select_key_location_list((isset($values['key_fetch'])?$values['key_fetch']:'')),
+				'lang_no_key_fetch'					=> lang('Where to fetch the key'),
+				'lang_key_fetch'					=> lang('key fetch location'),
 				'lang_key_fetch_statustext'			=> lang('Select where to fetch the key'),
 
-				'key_deliver_list'				=> $this->bo->select_key_location_list((isset($values['key_deliver'])?$values['key_deliver']:'')),
+				'key_deliver_list'					=> $this->bo->select_key_location_list((isset($values['key_deliver'])?$values['key_deliver']:'')),
 				'lang_no_key_deliver'				=> lang('Where to deliver the key'),
-				'lang_key_deliver'				=> lang('key deliver location'),
-				'lang_key_deliver_statustext'			=> lang('Select where to deliver the key'),
+				'lang_key_deliver'					=> lang('key deliver location'),
+				'lang_key_deliver_statustext'		=> lang('Select where to deliver the key'),
 
-				'need_approval'					=> (isset($need_approval)?$need_approval:''),
-				'lang_ask_approval'				=> lang('Ask for approval'),
-				'lang_ask_approval_statustext'			=> lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'			=> (isset($supervisor_email)?$supervisor_email:''),
+				'need_approval'						=> isset($need_approval)?$need_approval:'',
+				'lang_ask_approval'					=> lang('Ask for approval'),
+				'lang_ask_approval_statustext'		=> lang('Check this to send a mail to your supervisor for approval'),
+				'value_approval_mail_address'		=> isset($supervisor_email)?$supervisor_email:'',
 
-				'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
+				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
 
 			$appname		= lang('project');
@@ -1408,12 +1391,18 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id));
 
+			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
+						'project_group'			=> $values['project_group'],
+						'project_group_descr'	=> $values['project_group_descr'],
+						'type'					=> 'view'));
+
 			$data = array
 			(
 				'tabs'							=> self::_generate_tabs(),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
+				'project_group_data'		=> $project_group_data,
 				'value_origin'				=> $values['origin'],
 			//	'value_origin_type'			=> $origin,
 			//	'value_origin_id'			=> $origin_id,

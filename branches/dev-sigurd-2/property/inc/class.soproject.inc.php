@@ -396,42 +396,45 @@
 		function read_single($project_id)
 		{
 			$project_id = (int) $project_id;
-			$sql = "SELECT * from fm_project where id={$project_id}";
+			$sql = "SELECT * from fm_project WHERE id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$project = array();
 			if ($this->db->next_record())
 			{
-				$project['project_id']			= $this->db->f('id');
-				$project['title']			= $this->db->f('title');
-				$project['name']			= $this->db->f('name');
-				$project['location_code']		= $this->db->f('location_code');
-				$project['key_fetch']			= $this->db->f('key_fetch');
-				$project['key_deliver']			= $this->db->f('key_deliver');
-				$project['other_branch']		= $this->db->f('other_branch');
-				$project['key_responsible']		= $this->db->f('key_responsible');
-				$project['descr']			= stripslashes($this->db->f('descr'));
-				$project['status']			= $this->db->f('status');
-				$project['budget']			= (int)$this->db->f('budget');
-				$project['reserve']			= (int)$this->db->f('reserve');
-				$project['tenant_id']			= $this->db->f('tenant_id');
-				$project['user_id']			= $this->db->f('user_id');
-				$project['coordinator']			= $this->db->f('coordinator');
-				$project['access']			= $this->db->f('access');
-				$project['start_date']			= $this->db->f('start_date');
-				$project['end_date']			= $this->db->f('end_date');
-				$project['cat_id']			= $this->db->f('category');
-				$project['grants'] 			= (int)$this->grants[$this->db->f('user_id')];
-				$project['p_num']			= $this->db->f('p_num');
-				$project['p_entity_id']			= $this->db->f('p_entity_id');
-				$project['p_cat_id']			= $this->db->f('p_cat_id');
-				$project['contact_phone']		= $this->db->f('contact_phone');
-
-				$project['power_meter']	= $this->get_power_meter($this->db->f('location_code'));
+				$project = array
+				(
+					'project_id'			=> $this->db->f('id'),
+					'title'					=> $this->db->f('title'),
+					'name'					=> $this->db->f('name'),
+					'location_code'			=> $this->db->f('location_code'),
+					'key_fetch'				=> $this->db->f('key_fetch'),
+					'key_deliver'			=> $this->db->f('key_deliver'),
+					'other_branch'			=> $this->db->f('other_branch'),
+					'key_responsible'		=> $this->db->f('key_responsible'),
+					'descr'					=> $this->db->f('descr', true),
+					'status'				=> $this->db->f('status'),
+					'budget'				=> (int)$this->db->f('budget'),
+					'reserve'				=> (int)$this->db->f('reserve'),
+					'tenant_id'				=> $this->db->f('tenant_id'),
+					'user_id'				=> $this->db->f('user_id'),
+					'coordinator'			=> $this->db->f('coordinator'),
+					'access'				=> $this->db->f('access'),
+					'start_date'			=> $this->db->f('start_date'),
+					'end_date'				=> $this->db->f('end_date'),
+					'cat_id'				=> $this->db->f('category'),
+					'grants' 				=> (int)$this->grants[$this->db->f('user_id')],
+					'p_num'					=> $this->db->f('p_num'),
+					'p_entity_id'			=> $this->db->f('p_entity_id'),
+					'p_cat_id'				=> $this->db->f('p_cat_id'),
+					'contact_phone'			=> $this->db->f('contact_phone'),
+					'project_group'			=> $this->db->f('project_group'),
+					'power_meter'			=> $this->get_power_meter($this->db->f('location_code'))
+				);
 			}
-
 //_debug_array($project);
-				return $project;
+			return $project;
 		}
 
 		function get_power_meter($location_code = '')
@@ -543,6 +546,7 @@
 			$id = $this->next_project_id();
 			$values= array(
 				$id,
+				$project['project_group'],
 				$project['name'],
 				'public',
 				$project['cat_id'],
@@ -564,7 +568,7 @@
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
-			$this->db->query("INSERT INTO fm_project (id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
+			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
@@ -728,21 +732,22 @@
 			$project['name'] = $this->db->db_addslashes($project['name']);
 
 			$value_set=array(
-				'name'			=> $project['name'],
-				'status'		=> $project['status'],
-				'category'		=> $project['cat_id'],
+				'project_group'		=> $project['project_group'],
+				'name'				=> $project['name'],
+				'status'			=> $project['status'],
+				'category'			=> $project['cat_id'],
 				'start_date'		=> $project['start_date'],
-				'end_date'		=> $project['end_date'],
+				'end_date'			=> $project['end_date'],
 				'coordinator'		=> $project['coordinator'],
-				'descr'			=> $project['descr'],
-				'budget'		=> (int)$project['budget'],
-				'reserve'		=> (int)$project['reserve'],
+				'descr'				=> $project['descr'],
+				'budget'			=> (int)$project['budget'],
+				'reserve'			=> (int)$project['reserve'],
 				'key_deliver'		=> $project['key_deliver'],
-				'key_fetch'		=> $project['key_fetch'],
+				'key_fetch'			=> $project['key_fetch'],
 				'other_branch'		=> $project['other_branch'],
 				'key_responsible'	=> $project['key_responsible'],
 				'location_code'		=> $project['location_code'],
-				'address'		=> $address
+				'address'			=> $address
 				);
 
 			$value_set	= $this->bocommon->validate_db_update($value_set);

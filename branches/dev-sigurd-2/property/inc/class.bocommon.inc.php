@@ -692,6 +692,38 @@
 			return $b_account;
 		}
 
+		function initiate_project_group_lookup($data)
+		{
+			if( isset($data['type']) && $data['type']=='view')
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_view'));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_form'));
+			}
+
+			$project_group = array();
+			
+			if(!isset($data['project_group']) || !$data['project_group'])
+			{
+				return $project_group;
+			}
+			$project_group['value_project_group']				= $data['project_group'];
+			$project_group['value_project_group_descr']			= $data['project_group_descr'];
+			$project_group['project_group_url']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.project_group'));
+			$project_group['lang_select_project_group_help']	= lang('click to select project group');
+			$project_group['lang_project_group']				= lang('project group');
+			if($data['project_group'] && (!isset($data['project_group_descr']) || !$data['project_group_descr']))
+			{
+				$project_group_object				= CreateObject('property.socategory');
+				$project_group_data					= $project_group_object->read_single($data['project_group'], 'project_group',false);
+				$project_group['value_project_group_descr']	= $project_group_data['descr'];
+			}
+
+			return $project_group;
+		}
+
 
 		function initiate_ui_alarm($data)
 		{

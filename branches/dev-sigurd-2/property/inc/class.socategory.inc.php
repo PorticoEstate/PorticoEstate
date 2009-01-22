@@ -108,6 +108,9 @@
 
 			switch($type)
 			{
+				case 'project_group':
+					$table='fm_project_group';
+					break;
 				case 'dim_b':
 					$table='fm_ecodimb';
 					break;
@@ -228,6 +231,14 @@
 			if (!$table = $this->select_table($type,$type_id))
 			{
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
+				return $receipt;
+			}
+
+			$this->_db->query("SELECT id from {$table} WHERE id = {$category['id']}",__LINE__,__FILE__);
+			if($this->_db->next_record())
+			{
+				$receipt['error'][]=array('msg'=>lang('duplicate key value'));
+				$receipt['error'][]=array('msg'=>lang('category has not been saved'));
 				return $receipt;
 			}
 
