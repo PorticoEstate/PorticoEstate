@@ -153,8 +153,46 @@
 		function import_ppc()
 		{
 			//do the actual import
+			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse->setEncoding('UTF-8');
 
+			$file_list = $this->get_files();
+
+			foreach ($file_list as $file)
+			{
+				$var_result = $xmlparse->parseFile($file);
+				_debug_array($var_result);
+			}
+		}
+
+		public function get_files()
+		{
+			$dirname = $this->pickup_path;
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| mime_content_type($file->getPathname()) != 'text/xml')
+					{
+						continue;
+					}
+
+					$file_list[] = (string) "{$dirname}/{$file}";
+				}
+			}
+
+			return $file_list;
 		}
 	}
-
-
