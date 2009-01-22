@@ -861,6 +861,7 @@
 	
 		function obligations()
 		{
+			$this->allrows = 1;
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
@@ -883,8 +884,8 @@
 		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 							'menuaction'	=>'property.uibudget.obligations',
-							'sort'			=>$this->sort,
-							'order'			=>$this->order,
+							//'sort'			=>$this->sort,
+							//'order'			=>$this->order,
 							'cat_id'		=>$this->cat_id,
 							'filter'		=>$this->filter,
 							'query'			=>$this->query,
@@ -897,8 +898,8 @@
 	    		$datatable['config']['allow_allrows'] = false;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uibudget.obligations',"
-	    											."sort:'{$this->sort}',"
-	    											."order:'{$this->order}',"
+	    											//."sort:'{$this->sort}',"
+	    											//."order:'{$this->order}',"
  	                        						."cat_id: '{$this->cat_id}',"
  	                        						."filter:'{$this->filter}',"
 						 	                        ."query:'{$this->query}',"
@@ -907,8 +908,6 @@
 						 	                        ."year:'{$this->year}',"
  	                        						."details:'{$this->details}',"
  	                        						."allrows:'{$this->allrows}'";
-
-				$datatable['config']['allow_allrows'] = true;
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -1032,6 +1031,7 @@
 					'col_name'=>diff,			'visible'=>true,	'name'=>diff,			'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatCount)
 				);	
 			$location_list = array();
+			
 			$location_list = $this->bo->read_obligations(); 
 			$entry = array();
 			$j = 0;
@@ -1175,7 +1175,7 @@
 				$json ['sum_budget_cost']	= $sum_budget_cost;
 				$json ['sum_actual_cost']	= $sum_actual_cost;
 				
-				//_debug_array($json);
+				_debug_array($json);
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
