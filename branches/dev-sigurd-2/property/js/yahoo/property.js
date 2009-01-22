@@ -11,6 +11,23 @@
 	var lightbox;
 	var maxRowsPerPage = 1000;
 	var myLoading;
+	var message_delete = "";
+
+	
+ /********************************************************************************
+ * Delete all message un DIV 'message'
+ */
+	this.delete_content_div = function(mydiv)
+	{
+		div_message= YAHOO.util.Dom.get(mydiv);
+		if ( div_message.hasChildNodes() )
+		{
+			while ( div_message.childNodes.length >= 1 )
+		    {
+		        div_message.removeChild( div_message.firstChild );
+		    }
+		}
+	}
 	
  /********************************************************************************
  *
@@ -390,7 +407,10 @@
  */
 	this.delete_record = function(sUrl)
 	{
-		var callback =	{	success: function(o){execute_ds()},
+		var callback =	{	success: function(o){
+									message_delete = o.responseText.toString().replace("\"","").replace("\"","");
+									execute_ds()
+									},
 							failure: function(o){window.alert('Server or your connection is death.')},
 							timeout: 10000
 						};
@@ -1008,8 +1028,20 @@
 			}
 		}
 		
-		
+		//shown message if delete records
+		delete_content_div("message");	
+		if(message_delete != "")
+		{
+	 		oDiv=document.createElement("DIV");
+	 		txtNode = document.createTextNode(message_delete);
+	 		oDiv.appendChild(txtNode);
+	 		oDiv.style.color = '#009900';
+	 		oDiv.style.fontWeight = 'bold';
+	 		div_message.appendChild(oDiv);
+	 		message_delete = "";
+		}
 
+		// go to RENDER function in each particular js
 		myParticularRenderEvent();
 	}
 /****************************************************************************************
