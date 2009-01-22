@@ -653,7 +653,12 @@
 			create_lightbox();
 		}
 
-		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'block';
+		toolbars = YAHOO.util.Dom.getElementsByClassName('toolbar','div');
+		for(i=0;i<toolbars.length;i++)
+		{
+			toolbars[i].style.display = 'block';
+		}
+		
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
