@@ -490,7 +490,6 @@
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id ";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
 
 			while ($this->db->next_record())
 			{
@@ -536,7 +535,6 @@
 			{
 				$sql = "SELECT budget_cost,b_group as b_account_field,district_id FROM fm_budget_basis WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_group,district_id";
 			}
-
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -622,6 +620,7 @@
 				$accout_info = array_keys($accout_info);
 				$district = array_keys($district);
 
+				$result = array();
 				foreach($accout_info as $b_account)
 				{
 					foreach($district as $district_id)
@@ -644,9 +643,22 @@
 				}
 			}
 
-//_debug_array($details);die;
-//_debug_array($result); die;
-			return $result;
+			$this->total_records = count($result);
+
+			if(!$allrows)
+			{
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])?intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']):15;
+
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+
+				$out = array_chunk($result, $num_rows);
+
+				return $out[$page];
+			}
+			else
+			{
+				return $result;
+			}
 		}
 
 		function get_b_group_list()
