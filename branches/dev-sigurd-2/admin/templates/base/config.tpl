@@ -226,6 +226,15 @@
        </select>
     </td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_collect_missing_translations_}:</td>
+    <td>
+      <select name="newsettings[collect_missing_translations]">
+         <option value="">{lang_No}</option>
+	 <option value="True"{selected_collect_missing_translations_True}>{lang_Yes}</option>
+       </select>
+    </td>
+   </tr>
 <!-- END body -->
 
 <!-- BEGIN footer -->

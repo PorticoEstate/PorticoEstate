@@ -41,6 +41,11 @@
 		public $errors = array();
 
 		/**
+		* @var bool $collect_missing collects missing translations to the lang_table with app_name = ##currentapp##
+		*/
+		private $collect_missing = false;
+
+		/**
 		* Maxiumum length of a translation string
 		*/
 		const MAX_MESSAGE_ID_LENGTH = 230;
@@ -60,6 +65,12 @@
 
 			$this->set_userlang($lang);
 			$this->reset_lang($reset);
+
+			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations']) 
+				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
+			{
+				 $this->collect_missing = true;
+			}
 		}
 
 		/**
@@ -194,7 +205,7 @@
  				$sql = 'SELECT message_id, content'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
 					. " AND app_name IN({$applist}) {$order}";
-
+					
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
@@ -207,6 +218,19 @@
 			if ( isset($this->lang[$key]) )
 			{
 				$ret = $this->lang[$key];
+			}
+			else if ($this->collect_missing)
+			{
+				$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
+				$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
+					. " AND app_name = '##{$GLOBALS['phpgw_info']['flags']['currentapp']}##'";
+				
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+
+				if( !$GLOBALS['phpgw']->db->next_record() )
+				{	
+					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$GLOBALS['phpgw_info']['flags']['currentapp']}##','$userlang','missing')",__LINE__,__FILE__);
+				}
 			}
 			$ndx = 1;
 			foreach ( $vars as $key => $val )
