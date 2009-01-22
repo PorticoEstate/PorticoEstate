@@ -40,6 +40,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $allrows;
 
 		var $public_functions = array
 		(
@@ -85,38 +86,16 @@
 			$query	= phpgw::get_var('query');
 			$sort	= phpgw::get_var('sort');
 			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : $this->query;
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
 		}
 
 		function save_sessiondata($data)
@@ -142,7 +121,8 @@
 
 		function read()
 		{
-			$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order));
+			$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'allrows' => $this->allrows));
 
 			$this->total_records = $this->so->total_records;
 

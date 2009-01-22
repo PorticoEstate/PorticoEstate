@@ -50,6 +50,7 @@
 				$query	= isset($data['query']) ? $data['query'] : '';
 				$sort	= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order	= isset($data['order']) ? $data['order'] : '';
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
 			if ($order)
@@ -74,7 +75,15 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
 
 			$method = array();
 			while ($this->db->next_record())
