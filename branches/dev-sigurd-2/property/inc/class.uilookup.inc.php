@@ -157,6 +157,7 @@
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}',"
 						 	                        ."column:'{$column}'";
+						 	                        
 				$values_combo_box[0]	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));;
 				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
@@ -268,12 +269,12 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0]." . $contact_id . ".value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0]." . $contact_name . ".value = '';" ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = "";' ."\r\n";
 
-			$function_exchange_values .= 'opener.document.forms[0].' . $contact_id .'.value = data.getData("contact_id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].' . $contact_name .'.value = data.getData("contact_name");' ."\r\n";
-
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("contact_id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = data.getData("contact_name");' ."\r\n";
+			
 			$function_exchange_values .= 'window.close()';
 
 			$datatable['exchange_values'] = $function_exchange_values;
@@ -513,12 +514,12 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0]." . $contact_id . ".value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0]." . $org_name . ".value = '';" ."\r\n";
-
-			$function_exchange_values .= 'opener.document.forms[0].' . $contact_id .'.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].' . $org_name .'.value = data.getData("org_name");' ."\r\n";
-
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$org_name.'")[0].value = "";' ."\r\n";
+			
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$org_name.'")[0].value = data.getData("org_name");' ."\r\n";
+			
 			$function_exchange_values .= 'window.close()';
 
 			$datatable['exchange_values'] = $function_exchange_values;
@@ -711,11 +712,11 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0].b_account_id.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].b_account_name.value = '';" ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("b_account_id")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("b_account_name")[0].value = "";' ."\r\n";
 
-			$function_exchange_values .= 'opener.document.forms[0].b_account_id.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].b_account_name.value = data.getData("descr");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("b_account_id")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("b_account_name")[0].value = data.getData("descr");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -923,11 +924,11 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0].street_id.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].street_name.value = '';" ."\r\n";
-
-			$function_exchange_values .= 'opener.document.forms[0].street_id.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].street_name.value = data.getData("street_name");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("street_id")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("street_name")[0].value = "";' ."\r\n";
+			
+			$function_exchange_values .= 'opener.document.getElementsByName("street_id")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("street_name")[0].value = data.getData("street_name");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -1122,13 +1123,13 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0].tenant_id.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].last_name.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].first_name.value = '';" ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("tenant_id")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("last_name")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("first_name")[0].value = "";' ."\r\n";
 
-			$function_exchange_values .= 'opener.document.forms[0].tenant_id.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].last_name.value = data.getData("last_name");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].first_name.value = data.getData("first_name");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("tenant_id")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("last_name")[0].value = data.getData("last_name");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("first_name")[0].value = data.getData("first_name");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -1324,11 +1325,12 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0].ns3420_id.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].ns3420_descr.value = '';" ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("ns3420_id")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("ns3420_descr")[0].value = "";' ."\r\n";
 
-			$function_exchange_values .= 'opener.document.forms[0].ns3420_id.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].ns3420_descr.value = data.getData("ns3420_descr");' ."\r\n";
+
+			$function_exchange_values .= 'opener.document.getElementsByName("ns3420_id")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("ns3420_descr")[0].value = data.getData("ns3420_descr");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -1607,12 +1609,12 @@
 
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$function_exchange_values .= "opener.document.forms[0]." . $input_name[$i] . ".value = '';" ."\r\n";
+				$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$i].'")[0].value = "";' ."\r\n";
 			}
 
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$function_exchange_values .= 'opener.document.forms[0].' . $input_name[$i] .'.value = data.getData("'.$input_name[$i].'");' ."\r\n";
+				$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$i].'")[0].value = data.getData("'.$input_name[$i].'");' ."\r\n";
 			}
 
 			$function_exchange_values .= 'window.close()';
@@ -1845,11 +1847,11 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0]." . $user_id . ".value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0]." . $user_name . ".value = '';" ."\r\n";
-
-			$function_exchange_values .= 'opener.document.forms[0].' . $user_id .'.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].' . $user_name .'.value = data.getData("first_name") + " " + data.getData("last_name");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_id.'")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_name.'")[0].value = "";' ."\r\n";
+			
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_id.'")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_name.'")[0].value = data.getData("first_name") + " " + data.getData("last_name");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
@@ -2043,11 +2045,11 @@
 
 			$function_exchange_values = '';
 
-			$function_exchange_values .= "opener.document.forms[0].project_group.value = '';" ."\r\n";
-			$function_exchange_values .= "opener.document.forms[0].project_group_descr.value = '';" ."\r\n";
-
-			$function_exchange_values .= 'opener.document.forms[0].project_group.value = data.getData("id");' ."\r\n";
-			$function_exchange_values .= 'opener.document.forms[0].project_group_descr.value = data.getData("descr");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("project_group")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("project_group_descr")[0].value = "";' ."\r\n";
+			
+			$function_exchange_values .= 'opener.document.getElementsByName("project_group")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("project_group_descr")[0].value = data.getData("descr");' ."\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
