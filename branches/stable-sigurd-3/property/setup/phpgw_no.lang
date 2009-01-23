@@ -1132,6 +1132,7 @@ project coordinator	property	no	Prosjekt ansvarlig
 project end date	property	no	prosjekt sluttdato
 project id	property	no	Prosjekt ID
 project info	property	no	Prosjekt info.
+project group	property	no	Agresso-Prosjekt
 project name	property	no	Prosjekt navn
 .project.request	property	no	Behov
 project start date	property	no	prosjekt startdato
