@@ -97,7 +97,23 @@
 			<xsl:apply-templates select="datatable/actions" />
 		</div>
 	</div>
+	
 	<xsl:apply-templates select="datatable" />
+	
+	<div><br/></div>
+	
+	<xsl:choose>
+		<xsl:when test="datatable/actions/down-toolbar/fields/field!=''">
+			<div class="toolbar-container">
+				<div class="toolbar">
+					<form>
+						<xsl:apply-templates select="datatable/actions/down-toolbar/fields/field" />
+					</form>
+				</div>
+			</div>
+		</xsl:when>
+	</xsl:choose>
+
 </xsl:template>
 
 <!--
@@ -356,11 +372,6 @@
       		 -->
     	</table>
   	</div>
-  	<div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
-			<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center"> Record Detail </div>
-			<div class="bd" style="text-align:center;"> </div>
-		</div>
-
   	<div id="footer"> </div>
   	<xsl:call-template name="datatable-yui-definition" />
 

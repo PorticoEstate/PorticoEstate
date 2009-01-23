@@ -72,9 +72,9 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
-	//		$this->allrows				= $this->bo->allrows;
+			$this->allrows				= $this->bo->allrows;
 
 			if(!$this->acl_manage)
 			{
@@ -122,7 +122,7 @@
 					'sort'		=> $this->sort
 				);
 
-				$datatable['config']['allow_allrows'] = false;
+				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['actions']['form'] = array(
 				array(

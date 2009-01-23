@@ -178,7 +178,7 @@
 		this.myParticularRenderEvent = function()
 		{
 			delete_paginator();
-			delete_content_div("message");
+			delete_content_div("message"); //find it in property.js
 			create_message();
 			tableYUI.deleteTFoot();
 			addFooterDatatable();
@@ -190,21 +190,6 @@
 			YAHOO.util.Dom.get("paging").innerHTML = '';
 		}
 
-	/********************************************************************************
-	* Delete all message un DIV 'message'
-	*/
-		//this.delete_message = function()
-		this.delete_content_div = function(mydiv)
-		{
-			div_message= YAHOO.util.Dom.get(mydiv);
-			if ( div_message.hasChildNodes() )
-			{
-				while ( div_message.childNodes.length >= 1 )
-			    {
-			        div_message.removeChild( div_message.firstChild );
-			    }
-			}
-		}
 	/********************************************************************************
 	*
 	*/

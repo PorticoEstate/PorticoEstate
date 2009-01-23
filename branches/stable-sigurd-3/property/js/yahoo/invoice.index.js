@@ -43,26 +43,11 @@
 	*/
 	this.myParticularRenderEvent = function()
 	{
-		delete_message();
+		delete_content_div("message"); //find it in property.js
 		create_message();
 		tableYUI.deleteTFoot();
 		addFooterDatatable();
 	}
-	/********************************************************************************
-	* Delete all message un DIV 'message'
-	*/
-	this.delete_message = function()
-	{
-		div_message= YAHOO.util.Dom.get("message");
-		if ( div_message.hasChildNodes() )
-		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
-		}
-	}
-
 	/********************************************************************************
 	* Delete all message un DIV 'message'
 	*/

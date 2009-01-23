@@ -11,8 +11,8 @@ div.toolbar-container div.toolbar
 {
 	float: left;
 	background-color: #eee;
-	border-top: 1px solid #fff;
-	border-left: 1px solid #fff;
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
 	border-right: 1px solid #bbb;
 	border-bottom: 1px solid #bbb;
 	width: 100%;
