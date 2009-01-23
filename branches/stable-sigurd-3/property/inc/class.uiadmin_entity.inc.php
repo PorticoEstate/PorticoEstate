@@ -657,7 +657,8 @@
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uiadmin_entity.edit_category'
+							'menuaction'	=> 'property.uiadmin_entity.edit_category',
+							'entity_id'	=> $entity_id
 						)),
 					'parameters'	=> $parameters3
 					);
