@@ -196,7 +196,8 @@
 			{
 				$selected=$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"];
 			}
-			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true, false, $filter);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}

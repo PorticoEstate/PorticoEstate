@@ -380,7 +380,8 @@
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"])?$GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"]:'';
 			}
 
-			$columns = $this->custom->find('property','.agreement', 0, '','','',true);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property','.agreement', 0, '','','',true, false, $filter);
 
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 

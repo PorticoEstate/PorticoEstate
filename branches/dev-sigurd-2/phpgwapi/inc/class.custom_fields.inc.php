@@ -807,27 +807,49 @@
 		 * 
 		 * @param string $appname      the name of the application
 		 * @param string $location     the name of the location
-		 * @param ?????? $start        ask sigurd
-		 * @param ?????? $query        ask sigurd
-		 * @param ?????? $sort         ask sigurd
-		 * @param ?????? $order        ask sigurd
-		 * @param ?????? $allrows      ask sigurd
-		 * @param ?????? $inc_choices  ask sigurd
-		 * @param ?????? $filtermethod THIS IS INSECURE - code that relies on this is broken by design
+		 * @param integer $start
+		 * @param string query         
+		 * @param string $sort         
+		 * @param string $order        
+		 * @param bool   $allrows      
+		 * @param bool   $inc_choices  
+		 * @param array $filtermethod
 		 *
-		 * @return ???? something
+		 * @return array attributes at location
 		 */
 		public function find($appname, $location, $start = 0, $query = '', $sort = 'ASC', 
-				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filtermethod = '')
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
 			$order			= $this->_db->db_addslashes($order);
 			$allrows		= !!$allrows;
-			// Drop raw SQL
-			$filtermethod	= '';
 
+			
+			$filtermethod	= '';
+			if ($filter && is_array($filter))
+			{
+				$condition = array();
+				foreach ($filter as $column => $value)
+				{
+					if($value)
+					{
+						$condition[] = "$column = '{$value}'";
+					}
+					else
+					{
+						$condition[] = "$column IS NULL";					
+					}
+				}
+
+				if( $condition )
+				{
+					$filtermethod = 'AND ' . implode(" AND ", $condition);
+				}
+
+			}
+			
 			$ordermethod = 'ORDER BY group_id ASC, attrib_sort ASC';
 			if ( $order )
 			{
