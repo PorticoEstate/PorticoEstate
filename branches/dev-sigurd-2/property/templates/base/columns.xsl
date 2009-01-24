@@ -25,25 +25,16 @@
 			<form method="post" name="form" action="{$form_action}">
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_columns"/>
-				</td>
-				<td>
-					<xsl:variable name="lang_columns_statustext"><xsl:value-of select="lang_columns_statustext"/></xsl:variable>
-						<select name="values[columns][]" class="forms" multiple="multiple" onMouseover="window.status='{$lang_columns_statustext}'; return true;" onMouseout="window.status='';return true;">
-							<option value=""><xsl:value-of select="lang_none"/></option>
-							<xsl:apply-templates select="column_list"/>
-						</select>
-						
+					<b><xsl:value-of select="lang_columns"/></b>
 				</td>
 			</tr>
+			<xsl:apply-templates select="column_list"/>
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -57,14 +48,18 @@
 
 	<xsl:template match="column_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<tr>
+			<td>
+				<xsl:choose>
+					<xsl:when test="selected">
+						<input id="column{$id}" name="values[columns][]" value="{$id}" checked="checked" type="checkbox"></input>
+					</xsl:when>
+					<xsl:otherwise>
+						<input id="column{$id}" name="values[columns][]" value="{$id}" type="checkbox"></input>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:value-of select="name"/>
+			</td>
+		</tr>
 	</xsl:template>
-
-
