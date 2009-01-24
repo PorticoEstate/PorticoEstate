@@ -69,10 +69,9 @@
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo				= CreateObject('property.boentity',true);
-			$this->bocommon				= CreateObject('property.bocommon');
-
-			$this->boadmin_entity			= CreateObject('property.boadmin_entity',true);
+			$this->bo					= CreateObject('property.boentity',true);
+			$this->bocommon				= & $this->bo->bocommon;
+			$this->soadmin_entity		= & $this->bo->soadmin_entity;
 
 			$this->entity_id			= $this->bo->entity_id;
 			$this->cat_id				= $this->bo->cat_id;
@@ -303,7 +302,7 @@
 				//// ---- DISTRICT filter----------------------
 				if($this->cat_id)
 				{
-					$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+					$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 					//this validation comes to previous versions
 					if (isset($category['location_level']) && $category['location_level']>0)
 					{
@@ -820,9 +819,9 @@
 			//Title of Page
 			if($this->entity_id && $this->cat_id)
 			{
-				$entity	   = $this->boadmin_entity->read_single($this->entity_id,false);
+				$entity	   = $this->soadmin_entity->read_single($this->entity_id,false);
 				$appname	  = $entity['name'];
-				$category	 = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$category	 = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 				$function_msg = 'list ' . $category['name'];
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			}
@@ -891,7 +890,7 @@
 
 				if($p_entity_id && $p_cat_id)
 				{
-					$entity_category = $this->boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
+					$entity_category = $this->soadmin_entity->read_single_category($p_entity_id,$p_cat_id);
 					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
 				}
 
@@ -930,7 +929,7 @@
 
 			if($this->cat_id)
 			{
-				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 			}
 			else
 			{
@@ -1060,7 +1059,7 @@
 
 			$lookup_type='form';
 
-			$entity = $this->boadmin_entity->read_single($this->entity_id,false);
+			$entity = $this->soadmin_entity->read_single($this->entity_id);
 
 			if ($id)
 			{
@@ -1077,13 +1076,19 @@
 			}
 
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
-			{	for ($i=0;$i<count($entity['lookup_entity']);$i++)
+			{	
+				$lookup_entity = array();
+				foreach ($entity['lookup_entity'] as $lookup_id)
 				{
-					$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
-					$entity_lookup = $this->boadmin_entity->read_single($entity['lookup_entity'][$i],false);
-					$lookup_entity[$i]['name'] = $entity_lookup['name'];
+					$entity_lookup = $this->soadmin_entity->read_single($lookup_id);
+					$lookup_entity[] = array
+					(
+						'id'		=> $lookup_id,
+						'name'		=> $entity_lookup['name']
+					);
 				}
 			}
+
 
 			if(isset($category['lookup_tenant']) && $category['lookup_tenant'])
 			{
@@ -1108,7 +1113,7 @@
 						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
-						'lookup_entity'	=> isset($lookup_entity)?$lookup_entity:'',
+						'lookup_entity'	=> $lookup_entity,
 						'entity_data'	=> isset($values['p'])?$values['p']:''
 						));
 			}
@@ -1334,13 +1339,11 @@
 				'attrib_id' 	=> $attrib_id
 				);
 
-			$boadmin_entity	= CreateObject('property.boadmin_entity');
-
-			$entity_category = $boadmin_entity->read_single_category($entity_id,$cat_id);
+			$entity_category = $this->soadmin_entity->read_single_category($entity_id,$cat_id);
 
 			$help_msg	= $this->bo->read_attrib_help($data_lookup);
 
-			$attrib_data 	= $this->boadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
+			$attrib_data 	= $this->soadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
 			$attrib_name	= $attrib_data['input_text'];
 			$function_msg	= lang('Help');
 
@@ -1439,8 +1442,8 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$entity = $this->boadmin_entity->read_single($this->entity_id,false);
-			$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+			$entity = $this->soadmin_entity->read_single($this->entity_id);
+			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{	for ($i=0;$i<count($entity['lookup_entity']);$i++)
@@ -1448,7 +1451,7 @@
 					if(isset($values['p'][$entity['lookup_entity'][$i]]) && $values['p'][$entity['lookup_entity'][$i]])
 					{
 						$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
-						$entity_lookup = $this->boadmin_entity->read_single($entity['lookup_entity'][$i],false);
+						$entity_lookup = $this->soadmin_entity->read_single($entity['lookup_entity'][$i]);
 						$lookup_entity[$i]['name'] = $entity_lookup['name'];
 					}
 				}
@@ -1692,7 +1695,7 @@
 				'table_header'		=> $table_header,
 			);
 //_debug_array($data);
-			$attrib_data 	= $this->boadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
+			$attrib_data 	= $this->soadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
 			$appname	= $attrib_data['input_text'];
 			$function_msg	= lang('history');
 
@@ -1738,8 +1741,8 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$entity = $this->boadmin_entity->read_single($this->entity_id,false);
-			$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+			$entity = $this->soadmin_entity->read_single($this->entity_id);
+			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{	for ($i=0;$i<count($entity['lookup_entity']);$i++)
@@ -1747,7 +1750,7 @@
 					if(isset($values['p'][$entity['lookup_entity'][$i]]) && $values['p'][$entity['lookup_entity'][$i]])
 					{
 						$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
-						$entity_lookup = $this->boadmin_entity->read_single($entity['lookup_entity'][$i],false);
+						$entity_lookup = $this->soadmin_entity->read_single($entity['lookup_entity'][$i]);
 						$lookup_entity[$i]['name'] = $entity_lookup['name'];
 					}
 				}
