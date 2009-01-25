@@ -175,9 +175,10 @@
 		}
 
 
-		function get_attrib_group_list($location, $selected)
+		function get_attrib_group_list($type_id, $selected)
 		{
-			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
+			$location = ".location.{$type_id}";
+			$group_list = $this->read_attrib_group($location, true);
 			
 			foreach($group_list as &$group)
 			{
@@ -186,7 +187,6 @@
 					$group['selected'] = true;
 				}
 			}
-//_debug_array($group_list);die();
 			return $group_list;
 		}
 

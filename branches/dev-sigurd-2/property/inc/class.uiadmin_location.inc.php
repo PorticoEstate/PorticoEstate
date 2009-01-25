@@ -239,6 +239,17 @@
 					);
 
 			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'attribute_groups',
+						'statustext' 	=> lang('attribute groups'),
+						'text'			=> lang('attribute groups'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_location.list_attribute_group'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
 						'my_name' 			=> 'attributes',
 						'statustext' 	=> lang('attributes'),
 						'text'			=> lang('Attributes'),
@@ -1036,18 +1047,20 @@
 			$attrib_list = $this->bo->read_attrib($type_id);
 			$uicols['name'][0]	= 'column_name';
 			$uicols['descr'][0]	= lang('Name');
-			$uicols['name'][1]	= 'name';
+			$uicols['name'][1]	= 'input_text';
 			$uicols['descr'][1]	= lang('Descr');
 			$uicols['name'][2]	= 'trans_datatype';
 			$uicols['descr'][2]	= lang('Datatype');
-			$uicols['name'][3]	= 'attrib_sort';
-			$uicols['descr'][3]	= lang('sorting');
-			$uicols['name'][4]	= 'up';
-			$uicols['descr'][4]	= lang('up');
-			$uicols['name'][5]	= 'down';
-			$uicols['descr'][5]	= lang('down');
-			$uicols['name'][6]	= 'id';
-			$uicols['descr'][6]	= lang('id');
+			$uicols['name'][3]	= 'group_id';
+			$uicols['descr'][3]	= lang('group');
+			$uicols['name'][4]	= 'attrib_sort';
+			$uicols['descr'][4]	= lang('sorting');
+			$uicols['name'][5]	= 'up';
+			$uicols['descr'][5]	= lang('up');
+			$uicols['name'][6]	= 'down';
+			$uicols['descr'][6]	= lang('down');
+			$uicols['name'][7]	= 'id';
+			$uicols['descr'][7]	= lang('id');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1580,6 +1593,11 @@
 				'lang_datatype_statustext'		=> lang('Select a datatype'),
 				'lang_no_datatype'				=> lang('No datatype'),
 				'datatype_list'					=> $this->bocommon->select_datatype($values['column_info']['type']),
+
+				'lang_group'					=> lang('group'),
+				'lang_group_statustext'			=> lang('Select a group'),
+				'lang_no_group'					=> lang('no group'),
+				'attrib_group_list'				=> $this->bo->get_attrib_group_list($type_id, $values['group_id']),
 
 				'lang_precision'				=> lang('Precision'),
 				'lang_precision_statustext'		=> lang('enter the record length'),
