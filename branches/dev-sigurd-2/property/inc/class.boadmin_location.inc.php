@@ -258,11 +258,11 @@
 		}
 
 
-		function read_attrib($type_id)
+		function read_attrib($type_id, $allrows = '')
 		{
-			if($allrows)
+			if($allrows || phpgw::get_var('allrows') == 1)
 			{
-				$this->allrows = $allrows;
+				$this->allrows = true;
 			}
 
 			$attrib = $this->custom->find('property', '.location.' . $type_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
