@@ -102,6 +102,11 @@
 						'text'	=> lang('Configuration'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'catch') )
 					),
+					'config'	=> array
+					(
+						'text'	=> lang('config'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index'))
+					),
 					'entity'	=> array
 					(
 						'text'	=> lang('Admin entity'),
