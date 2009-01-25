@@ -232,7 +232,8 @@
 			{
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']["actor_columns_" . $this->role];
 			}
-			$columns = $this->custom->find('property','.' . $this->role, 0, '','','',true);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property','.' . $this->role, 0, '','','',true, false, $filter);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
 			return $column_list;

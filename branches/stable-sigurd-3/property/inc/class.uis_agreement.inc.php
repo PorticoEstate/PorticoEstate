@@ -225,7 +225,7 @@
 				$default_value = array ('cat_id'=>'','name'=> lang('no member'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$values_combo_box[1]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'branch','order'=>'descr'));
+				$values_combo_box[1]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' =>'s_agreement','order'=>'descr'));
 				$default_value = array ('id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[1],$default_value);
 

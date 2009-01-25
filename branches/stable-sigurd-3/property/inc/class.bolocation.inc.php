@@ -183,7 +183,8 @@
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup]:'';
 			}
-			$columns = $this->custom->find('property','.location.' . $type_id, 0, '','','',true);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property','.location.' . $type_id, 0, '','','',true, false, $filter);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -277,12 +278,10 @@
 			}
 //_debug_array($data);
 //_debug_array($location_types);
-//			$filtermethod = " OR (type_id < $lookup_type AND lookup_form=1)";
-			$filtermethod = " OR (lookup_form=1)";
 			$fm_location_cols = array();
 			for ($i=1;$i<($data['type_id']+1);$i++)
 			{
-				$fm_location_cols_temp = $this->custom->find('property', '.location.' . $i, 0, '', '', '', true,$filtermethod);
+				$fm_location_cols_temp = $this->custom->find('property', '.location.' . $i, 0, '', '', '', true);
 				foreach ($fm_location_cols_temp as & $entry)
 				{
 					$entry['location_type']=$i;

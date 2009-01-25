@@ -607,6 +607,17 @@
 			//_debug_array($parameters2);die;
 
 			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'attribute_groups',
+						'statustext' 	=> lang('attribute groups'),
+						'text'			=> lang('attribute groups'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiadmin_entity.list_attribute_group'
+								)),
+					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
 						'my_name' 			=> 'attributes',
 						'statustext' 	=> lang('attributes'),
 						'text'			=> lang('Attributes'),
@@ -1796,20 +1807,22 @@
 			$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
 			$uicols['name'][0]	= 'column_name';
 			$uicols['descr'][0]	= lang('Name');
-			$uicols['name'][1]	= 'name';
+			$uicols['name'][1]	= 'input_text';
 			$uicols['descr'][1]	= lang('Descr');
 			$uicols['name'][2]	= 'trans_datatype';
 			$uicols['descr'][2]	= lang('Datatype');
-			$uicols['name'][3]	= 'attrib_sort';
-			$uicols['descr'][3]	= lang('sorting');
-			$uicols['name'][4]	= 'up';
-			$uicols['descr'][4]	= lang('up');
-			$uicols['name'][5]	= 'down';
-			$uicols['descr'][5]	= lang('down');
-			$uicols['name'][6]	= 'search';
-			$uicols['descr'][6]	= lang('Search');
-			$uicols['name'][7]	= 'id';
-			$uicols['descr'][7]	= lang('id');
+			$uicols['name'][3]	= 'group_id';
+			$uicols['descr'][3]	= lang('group');
+			$uicols['name'][4]	= 'attrib_sort';
+			$uicols['descr'][4]	= lang('sorting');
+			$uicols['name'][5]	= 'up';
+			$uicols['descr'][5]	= lang('up');
+			$uicols['name'][6]	= 'down';
+			$uicols['descr'][6]	= lang('down');
+			$uicols['name'][7]	= 'search';
+			$uicols['descr'][7]	= lang('Search');
+			$uicols['name'][8]	= 'id';
+			$uicols['descr'][8]	= lang('id');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 

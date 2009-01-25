@@ -175,9 +175,10 @@
 		}
 
 
-		function get_attrib_group_list($location, $selected)
+		function get_attrib_group_list($type_id, $selected)
 		{
-			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
+			$location = ".location.{$type_id}";
+			$group_list = $this->read_attrib_group($location, true);
 			
 			foreach($group_list as &$group)
 			{
@@ -186,7 +187,6 @@
 					$group['selected'] = true;
 				}
 			}
-//_debug_array($group_list);die();
 			return $group_list;
 		}
 
@@ -258,11 +258,11 @@
 		}
 
 
-		function read_attrib($type_id)
+		function read_attrib($type_id, $allrows = '')
 		{
-			if($allrows)
+			if($allrows || phpgw::get_var('allrows') == 1)
 			{
-				$this->allrows = $allrows;
+				$this->allrows = true;
 			}
 
 			$attrib = $this->custom->find('property', '.location.' . $type_id, $this->start, $this->query, $this->sort, $this->order, $this->allrows);

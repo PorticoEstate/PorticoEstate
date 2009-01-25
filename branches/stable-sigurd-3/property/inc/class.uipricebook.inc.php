@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.yui');
+
 	class property_uipricebook
 	{
 		var $grants;
@@ -330,111 +332,303 @@
 
 			$GLOBALS['phpgw']->session->appsession('referer','property','');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
-										'nextmatchs',
-										'search_field'));
+			$datatable = array();
+			
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
 
-			$agreement_list = $this->bo->read_agreement_group();
+				if(!$lookup)
+				{
+					$datatable['menu']	= $this->bocommon->get_menu();
+				}
+			
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    							'menuaction'=> 'property.uipricebook.agreement_group',
+									'cat_id'	=> $this->cat_id,
+									'filter'	=> $this->filter,
+									'query'		=> $this->query
 
-			while (is_array($agreement_list) && list(,$agreement) = each($agreement_list))
-			{
-				$content[] = array
-				(
-					'agreement_group_id'		=> $agreement['agreement_group_id'],
-					'num'				=> $agreement['num'],
-					'status'			=> lang($agreement['status']),
-					'descr'				=> $agreement['descr'],
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'])),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=>'agreement_group', 'agreement_group_id'=> $agreement['agreement_group_id'], 'start'=>$this->start)),
-					'lang_edit_statustext'		=> lang('edit the agreement_group'),
-					'lang_delete_statustext'	=> lang('Delete this agreement group'),
-					'text_edit'			=> lang('edit'),
-					'text_delete'			=> lang('delete')
+	    				));
+	    				
+	    		$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uipricebook.agreement_group',"	    											
+													."cat_id:'{$this->cat_id}',"
+													."filter:'{$this->filter}',"
+													."query:'{$this->query}'";
+            
+				
+				$values_combo_box[0]  = $this->bo->select_status_list('filter',$this->cat_id);
+				$default_value = array ('id'=>'','name'=>lang('No status'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 	=> 'property.uipricebook.agreement_group',
+									'cat_id'	=> $this->cat_id,
+									'filter'	=> $this->filter,
+									'query'		=> $this->query
+								)
+							),
+						'fields'	=> array(
+                                    	'field' => array(
+			                                        array(
+			                                            'id' => 'btn_cat_id',
+			                                            'name' => 'cat_id',
+			                                            'value'	=> lang('Category'),
+			                                            'type' => 'button',
+			                                            'style' => 'filter',
+			                                            'tab_index' => 2
+			                                        ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add'),
+						                                'tab_index' => 5
+						                            ),
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'tab_index' => 4
+			                                        ),
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'onkeypress' => 'return pulsar(event)',
+			                                            'size'    => 28,
+			                                            'tab_index' => 3
+			                                        )
+		                           				),
+		                       		'hidden_value' => array(
+					                                        array( //div values  combo_box_0
+							                                            'id' => 'values_combo_box_0',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                      )
+		                       								)
+												)
+										  )
 				);
 			}
+			
+			$agreement_list = array();
+			$agreement_list = $this->bo->read_agreement_group();
 
-			$table_header[] = array
-			(
-				'lang_id'		=> lang('ID'),
-				'sort_num'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'num',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.agreement_group',
-																	'cat_id'	=>$this->cat_id,
-																	'allrows'	=>$this->allrows)
-										)),
-				'lang_num'		=> lang('Activity Num'),
-				'lang_delete'		=> lang('Delete'),
-				'lang_descr'		=> lang('Description'),
-				'lang_edit'		=> lang('edit')
+			$uicols = array (
+				'input_type'	=>	array(text,text,text,text),
+				'name'			=>	array(agreement_group_id,num,descr,status),
+				'formatter'		=>	array('','','',''),
+				'descr'			=>	array(lang('ID'),lang('Activity Num'),lang('Description'),lang('Status'))
 			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uipricebook.agreement_group',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
-			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_statustext'	=> lang('add an activity'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_agreement_group'))
-			);
-
-			if(!$this->allrows)
+			
+			$j=0;
+			if (isset($agreement_list) && is_array($agreement_list))
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				foreach ($agreement_list as $agreement)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $agreement[$uicols['name'][$i]];												
+					}
+
+					$j++;
+				}
+			}
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'agreement_group_id',
+						'source'	=> 'agreement_group_id'
+					)
+				)
+			);
+
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 			=> 'edit',
+				'text' 			=> lang('edit'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.edit_agreement_group'
+								)),
+				'parameters'	=> $parameters
+			);
+			
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 		=> 'edit',
+				'text' 			=> lang('open edit in new window'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.edit_agreement_group',
+									'target'		=> '_blank'
+								)),
+				'parameters'	=> $parameters
+			);					
+
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 			=> 'delete',
+				'text' 			=> lang('delete'),
+				'confirm_msg'	=> lang('do you really want to delete this entry'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.delete',
+									'method'	=>	'agreement_group'
+								)),
+				'parameters'	=> $parameters
+			);
+		
+			$datatable['rowactions']['action'][] = array(
+					'my_name' 			=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uipricebook.edit_agreement_group'
+									))
+			);
+			
+			unset($parameters);
+			
+			
+			$uicols_count	= count($uicols['descr']);
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= false;
+				
+				if ($uicols['name'][$i] == 'num')
+				{
+					$datatable['headers']['header'][$i]['sortable']			= true;
+					$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
+				}
+			}
+
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($agreement_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
-
-			$GLOBALS['phpgw']->js->validate_file('core','check','property');
-
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'allrows'					=> $this->allrows,
-				'allow_allrows'					=> true,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($agreement_list),
-				'all_records'					=> $this->bo->total_records,
-				'lang_select_all'				=> lang('Select All'),
-				'img_check'					=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_status_statustext'			=> lang('Select the status the agreement group belongs to. To do not use a category select NO STATUS'),
-				'status_name'					=> 'cat_id',
-				'lang_no_status'				=> lang('No status'),
-				'status_list'					=> $this->bo->select_status_list('filter',$this->cat_id),
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'yours' => 'yes')),
-				'lang_filter_statustext'			=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_agreement_group'			=> $table_header,
-				'values_agreement_group'			=> $content,
-				'table_add'					=> $table_add,
-				'update_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.agreement_group'))
-				);
 
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list agreement group');
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('agreement_group' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'pricebook.agreement_group', 'property' );				
+	
 			$this->save_sessiondata();
 		}
 
@@ -823,134 +1017,345 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::activities';
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('pricebook',
-										'nextmatchs',
-										'search_field'));
+			$datatable = array();
+			
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
 
-			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
-//_debug_array($pricebook_list);
-			while (is_array($pricebook_list) && list(,$pricebook) = each($pricebook_list))
-			{
-				$content[] = array
-				(
-					'activity_id'				=> $pricebook['activity_id'],
-					'num'					=> $pricebook['num'],
-					'branch'				=> $pricebook['branch'],
-					'base_descr'				=> $pricebook['base_descr'],
-					'dim_d'					=> $pricebook['dim_d'],
-					'ns3420'				=> $pricebook['ns3420'],
-					'unit'					=> $pricebook['unit'],
-					'descr'					=> $pricebook['descr'],
-					'link_vendor'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.activity_vendor', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'activity_id'=> $pricebook['activity_id'], 'agreement_group'=> $this->cat_id)),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> 'activity', 'activity_id'=> $pricebook['activity_id'])),
-					'lang_vendor_statustext'		=> lang('view the vendor(s) for this activity'),
-					'lang_edit_statustext'			=> lang('edit this activity'),
-					'lang_delete_statustext'		=> lang('delete this activity'),
-					'text_vendor'				=> lang('vendor'),
-					'text_edit'				=> lang('edit'),
-					'text_delete'				=> lang('delete')
+				if(!$lookup)
+				{
+					$datatable['menu']	= $this->bocommon->get_menu();
+				}
+			
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    							'menuaction'=> 'property.uipricebook.activity',
+									'cat_id'	=>$this->cat_id,
+									'filter'	=> $this->filter,
+									'query'		=>$this->query
+
+	    				));
+	    				
+	    		$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uipricebook.activity',"	    											
+													."cat_id:'{$this->cat_id}',"
+													."filter:'{$this->filter}',"
+													."query:'{$this->query}'";
+            
+				
+				$values_combo_box[0]  = $this->bo->get_agreement_group_list('filter',$this->cat_id);
+				$default_value = array ('id'=>'','name'=>lang('select agreement_group'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 	=> 'property.uipricebook.activity',
+									'cat_id'	=>$this->cat_id,
+									'filter'	=> $this->filter,
+									'query'		=>$this->query
+								)
+							),
+						'fields'	=> array(
+                                    	'field' => array(
+			                                        array(
+			                                            'id' => 'btn_cat_id',
+			                                            'name' => 'cat_id',
+			                                            'value'	=> lang('Category'),
+			                                            'type' => 'button',
+			                                            'style' => 'filter',
+			                                            'tab_index' => 1
+			                                        ),
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_export',
+						                                'value'	=> lang('download'),
+						                                'tab_index' => 5
+						                            ),				                                        
+													array(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add'),
+						                                'tab_index' => 4
+						                            ),
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'tab_index' => 3
+			                                        ),
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'onkeypress' => 'return pulsar(event)',
+			                                            'size'    => 28,
+			                                            'tab_index' => 2
+			                                        )		                                        
+		                           				),
+		                       		'hidden_value' => array(
+					                                        array( //div values  combo_box_0
+							                                            'id' => 'values_combo_box_0',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+							                                      )
+		                       								)
+												)
+										  )
 				);
 			}
-
-			$table_header[] = array
-			(
-				'sort_num'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'num',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uipricebook.activity',
-																	'cat_id'	=>$this->cat_id,
-																	'allrows'	=>$this->allrows)
-										)),
-				'lang_num'		=> lang('Activity Num'),
-				'lang_branch'		=> lang('Branch'),
-				'lang_vendor'		=> lang('Vendor'),
-				'lang_descr'		=> lang('Description'),
-				'lang_base_descr'	=> lang('Base'),
-				'lang_dim_d'		=> lang('Dim d'),
-				'lang_ns3420'		=> lang('NS3420'),
-				'lang_unit'		=> lang('Unit'),
-				'lang_edit'		=> lang('edit'),
-				'lang_delete'		=> lang('delete')
+			
+			$pricebook_list = array();
+			$pricebook_list = $this->bo->read_activities_pr_agreement_group();
+									
+			$uicols = array (
+				'input_type'	=>	array(hidden,text,text,text,text,text,text,text),
+				'name'			=>	array(activity_id,num,descr,unit,ns3420,base_descr,branch,dim_d),
+				'formatter'		=>	array('','','','','','','',''),
+				'descr'			=>	array('',lang('Activity Num'),lang('Description'),lang('Unit'),lang('NS3420'),lang('Base'),lang('Branch'),lang('Dim d'))
 			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_statustext'	=> lang('add an activity'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.edit_activity', 'agreement_group'=> $this->cat_id))
-			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uipricebook.activity',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
-			);
-
-			if(!$this->allrows)
+			
+			$j=0;
+			if (isset($pricebook_list) && is_array($pricebook_list))
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				foreach ($pricebook_list as $pricebook)
+				{
+					for ($i=0; $i<count($uicols['name']); $i++)
+					{
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $pricebook[$uicols['name'][$i]];												
+					}
+
+					$j++;
+				}
+			}
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'activity_id',
+						'source'	=> 'activity_id'
+					)
+				)
+			);
+
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 			=> 'vendor',
+				'text' 			=> lang('vendor'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.activity_vendor',
+									'agreement_group'	=> $this->cat_id
+								)),
+				'parameters'	=> $parameters
+			);
+			
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 		=> 'vendor',
+				'text' 			=> lang('open vendor in new window'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.activity_vendor',
+									'agreement_group'	=> $this->cat_id,
+									'target'		=> '_blank'
+								)),
+				'parameters'	=> $parameters
+			);					
+
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 			=> 'edit',
+				'text' 			=> lang('edit'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.edit_activity',
+									'agreement_group'	=> $this->cat_id
+								)),
+				'parameters'	=> $parameters
+			);
+			
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 		=> 'edit',
+				'text' 			=> lang('open edit in new window'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.edit_activity',
+									'agreement_group'	=> $this->cat_id,
+									'target'		=> '_blank'
+								)),
+				'parameters'	=> $parameters
+			);	
+			
+			$datatable['rowactions']['action'][] = array(
+				'my_name' 			=> 'delete',
+				'text' 			=> lang('delete'),
+				'confirm_msg'	=> lang('do you really want to delete this entry'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uipricebook.delete',
+									'method'	=> 'activity'
+								)),
+				'parameters'	=> $parameters
+			);
+		
+			$datatable['rowactions']['action'][] = array(
+					'my_name' 			=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uipricebook.edit_activity',
+										'agreement_group'	=> $this->cat_id
+									))
+			);
+			
+			unset($parameters);
+			
+			
+			$uicols_count	= count($uicols['descr']);
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					
+					if ($uicols['name'][$i] == 'num')
+					{
+						$datatable['headers']['header'][$i]['sortable']			= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
+					}
+				}
+				else
+				{
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];					
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;					
+				}
+			}
+
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($pricebook_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'num'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
-
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uipricebook.download_2',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query,
-				'allrows'	=> $this->allrows,
-				'start'		=> $this->start
-			);
-
-			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'lang_download'					=> 'download',
-				'link_download'					=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'				=> lang('Download table to your browser'),
-				'allrows'					=> $this->allrows,
-				'allow_allrows'					=> true,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($pricebook_list),
-				'all_records'					=> $this->bo->total_records,
-				'lang_select_all'				=> lang('Select All'),
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_no_cat'					=> lang('select agreement_group'),
-				'lang_cat_statustext'				=> lang('Select the agreement_group the pricebook belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'					=> $this->bo->get_agreement_group_list('filter',$this->cat_id),
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'filter_list'					=> $this->nextmatchs->xslt_filter(array('filter' => $this->filter,'yours' => 'yes')),
-				'lang_filter_statustext'			=> lang('Select the filter. To show all entries select SHOW ALL'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_activities'			=> $table_header,
-				'values_activities'				=> $content,
-				'table_add'					=> $table_add
-			);
 
 			$appname	= lang('pricebook');
 			$function_msg	= lang('list activities per agreement_group');
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+			// Prepare CSS Style
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_activities' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'pricebook.activity', 'property' );	
+  			
 			$this->save_sessiondata();
 		}
 
@@ -1282,12 +1687,25 @@
 			}
 			elseif($method=='activity')
 			{
+				
+				//cramirez add JsonCod for Delete
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+					$function_msg	=lang('delete activity');
+					$this->bo->delete_activity($activity_id);
+					$json = array
+					(
+						'msg' 		=> $function_msg
+					);
+					return $json ;
+				}				
+				
 				$link_data = array
 				(
 					'menuaction' => 'property.uipricebook.activity'
 				);
 
-				$function_msg	=lang('delete activity');
+				//$function_msg	=lang('delete activity');
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'activity_id'=> $activity_id));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -1316,13 +1734,26 @@
 			}
 			elseif($method=='agreement_group')
 			{
+				
+				//cramirez add JsonCod for Delete
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+					$function_msg	=lang('Delete agreement group and all the activities associated with it!');
+					$this->bo->delete_agreement_group($agreement_group_id);
+					$json = array
+					(
+						'msg' 		=> $function_msg
+					);
+					return $json ;
+				}
+			
 				$link_data = array
 				(
 					'menuaction'	=> 'property.uipricebook.agreement_group',
 					'start'		=> $this->start
 				);
 
-				$function_msg	=lang('Delete agreement group and all the activities associated with it!');
+				
 				$delete_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uipricebook.delete', 'method'=> $method, 'agreement_group_id'=> $agreement_group_id, 'start'=> $this->start));
 
 				if (phpgw::get_var('confirm', 'bool', 'POST'))

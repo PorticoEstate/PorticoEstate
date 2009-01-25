@@ -406,7 +406,8 @@
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns'];
 			}
 
-			$columns = $this->custom->find('property','.s_agreement', 0, '','','',true);
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property','.s_agreement', 0, '','','',true, false, $filter);
 
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
