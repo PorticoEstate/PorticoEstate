@@ -1343,7 +1343,9 @@
 
 			$help_msg	= $this->bo->read_attrib_help($data_lookup);
 
-			$attrib_data 	= $this->soadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
+			$custom			= createObject('phpgwapi.custom_fields');
+			$attrib_data 	= $custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
+
 			$attrib_name	= $attrib_data['input_text'];
 			$function_msg	= lang('Help');
 
@@ -1694,9 +1696,10 @@
 				'values' 		=> $content,
 				'table_header'		=> $table_header,
 			);
-//_debug_array($data);
-			$attrib_data 	= $this->soadmin_entity->read_single_attrib($entity_id,$cat_id,$attrib_id);
-			$appname	= $attrib_data['input_text'];
+
+			$custom			= createObject('phpgwapi.custom_fields');
+			$attrib_data 	= $custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
+			$appname		= $attrib_data['input_text'];
 			$function_msg	= lang('history');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
