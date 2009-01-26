@@ -54,13 +54,15 @@
 
 		function property_bodocument($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.sodocument');
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->historylog	= CreateObject('property.historylog','document');
 			$this->contacts		= CreateObject('property.soactor');
 			$this->contacts->role='vendor';
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.document';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{
@@ -68,64 +70,27 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$status_id	= phpgw::get_var('status_id');
-			$entity_id	= phpgw::get_var('entity_id', 'int');
-			$doc_type	= phpgw::get_var('doc_type');
+			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			= phpgw::get_var('query');
+			$sort			= phpgw::get_var('sort');
+			$order			= phpgw::get_var('order');
+			$filter			= phpgw::get_var('filter', 'int');
+			$cat_id			= phpgw::get_var('cat_id', 'int');
+			$status_id		= phpgw::get_var('status_id');
+			$entity_id		= phpgw::get_var('entity_id', 'int');
+			$doc_type		= phpgw::get_var('doc_type');
 			$query_location	= phpgw::get_var('query_location');
 
-
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(isset($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($status_id))
-			{
-				$this->status_id = $status_id;
-			}
-			if($entity_id)
-			{
-				$this->entity_id = $entity_id;
-			}
-			if(isset($doc_type))
-			{
-				$this->doc_type = $doc_type;
-			}
-			if(isset($query_location))
-			{
-				$this->query_location = $query_location;
-			}
-
+			$this->start			= $start ? $start : 0;
+			$this->query			= isset($query) ? $query : '';
+			$this->sort				= isset($sort) && $sort ? $sort : '';
+			$this->order			= isset($order) && $order ? $order : '';
+			$this->filter			= isset($filter) && $filter ? $filter : '';
+			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
+			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
+			$this->doc_typ			= isset($doc_typ) && $doc_typ ? $doc_typ : '';
+			$this->query_location	= isset($query_location) && $query_location ? $query_location : '';
 		}
 
 		function save_sessiondata($data)

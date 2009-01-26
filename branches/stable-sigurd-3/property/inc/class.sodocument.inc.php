@@ -318,14 +318,15 @@
 				. " $this->like '%$query%' OR fm_document.location_code $this->like '$location_code%'";
 			}
 
-			$sql = "SELECT fm_document.*, fm_document_category.descr as category FROM fm_document"
-			. " $this->join fm_document_category on fm_document.category = fm_document_category.id"
+			$sql = "SELECT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
+			. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
 			. " WHERE  $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$document_list = array();
 			while ($this->db->next_record())
 			{
 				$document_list[] = array
@@ -338,7 +339,7 @@
 					'user_id'			=> $this->db->f('user_id')
 					);
 			}
-//_debug_array($document_list);
+
 			return $document_list;
 		}
 

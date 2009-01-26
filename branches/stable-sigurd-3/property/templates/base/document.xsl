@@ -145,7 +145,7 @@
 			<xsl:call-template name="location_view"/>
 			<tr>
 				<td>
-					<xsl:call-template name="cat_filter"/>
+					<xsl:call-template name="categories"/>
 				</td>
 				<td align="center">
 					<xsl:call-template name="user_id_filter"/>
@@ -397,7 +397,7 @@
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
-					<xsl:call-template name="cat_select"/>							
+					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
 			<xsl:choose>
@@ -608,15 +608,15 @@
 				<td>
 					<xsl:value-of select="lang_category"/>
 				</td>
-					<xsl:for-each select="cat_list" >
-						<xsl:choose>
-							<xsl:when test="selected">
-								<td>
-									<xsl:value-of select="name"/>
-								</td>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:for-each>
+				<xsl:for-each select="cat_list" >
+					<xsl:choose>
+						<xsl:when test="selected='selected'">
+							<td>
+								<xsl:value-of select="name"/>
+							</td>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
 			</tr>
 			<xsl:call-template name="location_view"/>
 			<tr>
