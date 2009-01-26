@@ -61,11 +61,11 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation";
 
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bodocument',true);
-			$this->bocommon				= CreateObject('property.bocommon');
+			$this->bocommon				= & $this->bo->bocommon;
+			$this->cats					= & $this->bo->cats;
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->boadmin_entity		= CreateObject('property.boadmin_entity');
@@ -188,9 +188,9 @@
 
 			    $datatable['config']['allow_allrows'] = false;
 
-			    $values_combo_box[0] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->doc_type,'type' =>'document','order'=>'descr'));
-				$default_value = array ('id'=>'','name'=> lang('no document type'));
-				array_unshift ($values_combo_box[0],$default_value);
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->doc_type,'globals' => True));
+				$default_value = array ('cat_id'=>'','name'=> lang('no document type'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
 				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',4,$this->filter,$this->acl_location,array('all'),$default=$this->account);
 				$default_value = array ('id'=>'','name'=>lang('no status'));
@@ -255,7 +255,7 @@
 			                       		'hidden_value' => array(
 						                                        array( //div values  combo_box_0
 								                                            'id' => 'values_combo_box_0',
-								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 								                                      ),
 								                                array( //div values  combo_box_1
 								                                            'id' => 'values_combo_box_1',
@@ -489,7 +489,7 @@
 
 				$this->start				= $this->bo->start;
 				$this->query				= $this->bo->query;
-				$this->sort				= $this->bo->sort;
+				$this->sort					= $this->bo->sort;
 				$this->order				= $this->bo->order;
 				$this->filter				= $this->bo->filter;
 				$this->entity_id			= $this->bo->entity_id;
@@ -702,45 +702,44 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'					=> $location_data,
 				'link_history'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.list_doc', 'cat_id'=> $this->cat_id)),
-				'lang_history_statustext'			=> lang('search for history at this location'),
+				'lang_history_statustext'		=> lang('search for history at this location'),
 				'lang_select'					=> lang('select'),
 				'lookup_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiworkorder.edit')),
-				'lookup'					=> $lookup,
+				'lookup'						=> $lookup,
 				'allow_allrows'					=> false,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records'					=> count($document_list),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'type'						=> $this->doc_type,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'type'							=> $this->doc_type,
 				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the document belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'doc_type',
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->doc_type,'type' =>'document','order'=>'descr')),
+				'lang_cat_statustext'			=> lang('Select the category the document belongs to. To do not use a category select NO CATEGORY'),
+				'cat_filter'					=> $this->cats->formatted_xslt_list(array('select_name' => 'doc_type','selected' => $this->doc_type,'globals' => True,'link_data' => $link_data)),
 
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 
-				'lang_status_statustext'			=> lang('Select the status the document belongs to. To do not use a category select NO STATUS'),
+				'lang_status_statustext'		=> lang('Select the status the document belongs to. To do not use a category select NO STATUS'),
 				'status_name'					=> 'status_id',
 				'lang_no_status'				=> lang('No status'),
 				'status_list'					=> $this->bo->select_status_list('filter',$this->status_id),
 
-				'lang_user_statustext'				=> lang('Select the user the document belongs to. To do not use a category select NO USER'),
+				'lang_user_statustext'			=> lang('Select the user the document belongs to. To do not use a category select NO USER'),
 				'select_user_name'				=> 'filter',
 				'lang_no_user'					=> lang('No user'),
-				'user_list'					=> $this->bocommon->get_user_list_right2('filter',4,$this->filter,$this->acl_location,array('all'),$default=$this->account),
+				'user_list'						=> $this->bocommon->get_user_list_right2('filter',4,$this->filter,$this->acl_location,array('all'),$default=$this->account),
 
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
-				'table_header_document'				=> $table_header,
+				'table_header_document'			=> $table_header,
 				'values_document'				=> $content,
-				'table_add'					=> $table_add,
+				'table_add'						=> $table_add,
 				'done_action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.index', 'preserve'=> 1)),
-				'lang_done'					=> lang('done'),
-				'lang_done_statustext'				=> lang('Back to the list')
+				'lang_done'						=> lang('done'),
+				'lang_done_statustext'			=> lang('Back to the list')
 			);
 
 			$appname	= lang('document');
@@ -1071,10 +1070,8 @@
 				'value_descr'					=> $values['descr'],
 				'lang_no_cat'					=> lang('Select category'),
 				'lang_cat_statustext'				=> lang('Select the category the document belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'values[doc_type]',
 				'value_cat_id'					=> $values['doc_type'],
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['doc_type'],'type' =>'document','order'=>'descr')),
-
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[doc_type]','selected' => $values['doc_type'])),
 				'lang_coordinator'				=> lang('Coordinator'),
 				'lang_user_statustext'				=> lang('Select the coordinator the document belongs to. To do not use a category select NO USER'),
 				'select_user_name'				=> 'values[coordinator]',
@@ -1206,10 +1203,12 @@
 				'document_id'	=> $document_id
 			);
 
+			$categories = $this->cats->formatted_xslt_list(array('selected' => $values['doc_type']));
+
 			$data = array
 			(
-				'vendor_data'					=> $vendor_data,
-				'record_history'				=> $record_history,
+				'vendor_data'						=> $vendor_data,
+				'record_history'					=> $record_history,
 				'table_header_history'				=> $table_header_history,
 				'lang_history'					=> lang('History'),
 				'lang_no_history'				=> lang('No history'),
@@ -1252,12 +1251,8 @@
 				'lang_descr'					=> lang('Description'),
 				'value_descr'					=> $values['descr'],
 				'lang_done_statustext'				=> lang('Back to the list'),
-				'lang_save_statustext'				=> lang('Save the document'),
-				'lang_no_cat'					=> lang('Select category'),
-				'lang_cat_statustext'				=> lang('Select the category the document belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'values[doc_type]',
-				'value_cat_id'					=> $values['doc_type'],
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['doc_type'],'type' =>'document','order'=>'descr')),
+
+				'cat_list'						=> $categories['cat_list'],
 
 				'lang_coordinator'				=> lang('Coordinator'),
 				'lang_user_statustext'				=> lang('Select the coordinator the document belongs to. To do not use a category select NO USER'),

@@ -342,10 +342,16 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor', 'admin' => true) ),
 						'children'	=> $admin_children_vendor
 					),
-					'doc_cats'	=> array
+/*					'doc_cats'	=> array
 					(
 						'text'	=> lang('Document Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'document', 'menu_selection' => 'admin::property::doc_cats') )
+					),
+*/
+					'doc_cats'	=> array
+					(
+						'text'	=> lang('document categories'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.document', 'global_cats' => 'true', 'menu_selection' => 'admin::property::doc_cats') )
 					),
 					'building_part'	=> array
 					(

@@ -2842,3 +2842,57 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.549 to 0.9.17.550
+	* FIXME: Figure out the correct conversion of categories that comply with interlink
+ 	*/
+
+	$test[] = '0.9.17.549';
+	function property_upgrade0_9_17_549()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		// Need account_repository, accounts, acl and hooks to use categories
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'account_repository'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$GLOBALS['phpgw_info']['server']['account_repository'] = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		$GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
+
+		$GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+		$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
+		$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_document_category");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[$GLOBALS['phpgw_setup']->oProc->f('id')]=array(
+				'name'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr', true),
+				'parent' => 'none',
+				'old_parent' => 0,
+				'access' => 'public'
+			);
+		}
+
+		foreach ($categories as $old => $values)
+		{
+			$cat_id = $cats->add($values);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_document SET category = $cat_id WHERE cat_id = $old");		
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_document_category');
+
+		unset($GLOBALS['phpgw']->accounts);
+		unset($GLOBALS['phpgw']->acl);
+		unset($GLOBALS['phpgw']->hooks);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.550';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
