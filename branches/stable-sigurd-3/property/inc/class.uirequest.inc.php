@@ -62,8 +62,6 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::request';
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('property.borequest',true);
 			$this->boproject			= CreateObject('property.boproject');

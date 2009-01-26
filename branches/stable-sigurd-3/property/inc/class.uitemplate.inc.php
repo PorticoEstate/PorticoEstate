@@ -60,8 +60,6 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::template';
 
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->bo				= CreateObject('property.botemplate',true);
 			$this->bowo_hour			= CreateObject('property.bowo_hour');
 			$this->bocommon				= CreateObject('property.bocommon');
