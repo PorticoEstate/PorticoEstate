@@ -66,7 +66,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly']=true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
+
 			$this->bo					= CreateObject('property.bolookup',true);
 
 			$this->start				= $this->bo->start;

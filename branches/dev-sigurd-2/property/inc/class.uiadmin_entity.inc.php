@@ -64,7 +64,6 @@
 		function property_uiadmin_entity()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boadmin_entity',true);
 			$this->bocommon				= & $this->bo->bocommon;
