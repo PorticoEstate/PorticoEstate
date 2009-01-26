@@ -2880,7 +2880,7 @@
 		foreach ($categories as $old => $values)
 		{
 			$cat_id = $cats->add($values);
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_document SET category = $cat_id WHERE cat_id = $old");		
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_document SET category = $cat_id WHERE category = $old");		
 		}
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_document_category');
