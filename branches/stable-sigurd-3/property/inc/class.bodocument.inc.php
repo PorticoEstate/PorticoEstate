@@ -89,7 +89,7 @@
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->doc_typ			= isset($doc_typ) && $doc_typ ? $doc_typ : '';
+			$this->doc_type			= isset($doc_type) && $doc_type ? $doc_type : '';
 			$this->query_location	= isset($query_location) && $query_location ? $query_location : '';
 		}
 
