@@ -98,12 +98,38 @@
 			$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			if($this->db->f('hits'))
+			$hits = (int) $this->db->f('hits');
+
+			$entity[] = array
+			(
+				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code)),
+				'name'		=> lang('documents') . ' [' . $hits . ']',
+				'descr'		=> lang('Documentation')
+			);
+
+			$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
+			$categories = $cats->return_sorted_array(0, false);
+			unset($cats);
+
+			foreach ($categories as $category)
 			{
+			
+				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category = {$category['id']}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$hits = (int) $this->db->f('hits');
+				
+				$spaceset = '-';
+				if ($category['level'] > 0)
+				{
+					$space = '-';
+					$spaceset .= str_repeat($space, $category['level']);
+				}
+				$spaceset .= '>';
 				$entity[] = array
 				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code)),
-					'name'		=> lang('Documentation') . ' [' . $this->db->f('hits') . ']',
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.index','query'=> $location_code, 'doc_type'=> $category['id'])),
+					'name'		=> $spaceset . $category['name'] . ' [' . $hits . ']',
 					'descr'		=> lang('Documentation')
 				);
 			}
