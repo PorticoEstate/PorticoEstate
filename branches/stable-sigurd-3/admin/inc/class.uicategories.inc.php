@@ -274,7 +274,7 @@
 		{
 			$appname		= phpgw::get_var('appname');
 			$global_cats	= phpgw::get_var('global_cats');
-			$parent			= phpgw::get_var('parent', 'int', 'GET');
+			$parent			= phpgw::get_var('parent', 'int', 'GET', 0);
 			$values			= phpgw::get_var('values', 'string', 'POST');
 
 			$message = '';
@@ -327,7 +327,7 @@
 					'id'			=> 0,
 					'name'			=> '',
 					'description'	=> '',
-					'parent'		=> 0
+					'parent'		=> $parent
 				));
 			}
 			$parent = $cats[0]['parent'];
