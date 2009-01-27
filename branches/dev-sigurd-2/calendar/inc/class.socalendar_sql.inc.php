@@ -399,10 +399,11 @@ class calendar_socalendar_ extends calendar_socalendar__
 		}
 		$member_groups = $GLOBALS['phpgw']->accounts->membership($this->user);
 		@reset($member_groups);
-		while($member_groups != False && list($key,$group_info) = each($member_groups))
+		foreach ($member_groups as $key => $group_info)
 		{
-			$member[] = $group_info['account_id'];
+			$member[] = $group_info->id;		
 		}
+
 		@reset($member);
 //		$user_where .= ','.implode(',',$member);
 		$user_where .= ')) ';
@@ -863,10 +864,11 @@ class calendar_socalendar_ extends calendar_socalendar__
 
 		$member_groups = $GLOBALS['phpgw']->accounts->membership($this->user);
 		@reset($member_groups);
-		while($member_groups != False && list($key,$group_info) = each($member_groups))
+		foreach ($member_groups as $key => $group_info)
 		{
-			$member[] = intval($group_info['account_id']);
+			$member[] = $group_info->id;		
 		}
+
 		@reset($member);
 
 		if($this->debug)
