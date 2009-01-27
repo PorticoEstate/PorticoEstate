@@ -241,8 +241,7 @@
 										)
 					 )
 				);
-			}	
-			$datatable['actions']['down-toolbar'] = array('fields'	=> array('field' => array (
+				$datatable['actions']['down-toolbar'] = array('fields'	=> array('field' => array (
 	                                array( //container of  control's Form
 											'type'	=> 'label',
 											'id'	=> 'controlsForm_container',
@@ -291,7 +290,9 @@
 	                                    'tab_index' => 9,
 	                                    'type' => 'button',
 	                                    'style' => 'filter'
-	                                ))));  	
+	                                ))));
+			}	
+  	
 		//_debug_array($datatable);die();
 		
 			$uicols = array (
