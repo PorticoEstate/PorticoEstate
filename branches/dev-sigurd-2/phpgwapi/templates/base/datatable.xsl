@@ -325,6 +325,9 @@
 					<xsl:if test="onkeypress">
 						<xsl:attribute name="onkeypress"><xsl:value-of select="onkeypress"/></xsl:attribute>
 					</xsl:if>
+					<xsl:if test="class">
+						<xsl:attribute name="class"><xsl:value-of select="class"/></xsl:attribute>
+					</xsl:if>
 
 				</input>
 			</xsl:otherwise>
