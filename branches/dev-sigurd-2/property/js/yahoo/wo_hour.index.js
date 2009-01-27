@@ -529,6 +529,7 @@
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[1].style.display = 'none';
 		var loader = new YAHOO.util.YUILoader();
 		loader.addModule({
 			name: "anyone", //module name; must be unique
