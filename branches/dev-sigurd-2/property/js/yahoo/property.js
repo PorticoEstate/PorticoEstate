@@ -12,7 +12,64 @@
 	var maxRowsPerPage = 1000;
 	var myLoading;
 	var message_delete = "";
-
+	
+	
+ /********************************************************************************
+ * 
+ */	
+  	this.td_empty = function(colspan)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = colspan;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+  	}
+ /********************************************************************************
+ * 
+ */ 	
+  	this.td_sum = function(sum)
+  	{			  	
+		newTD = document.createElement('td');
+		newTD.colSpan = 1;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.style.fontWeight = 'bolder';
+		newTD.style.textAlign = 'right';
+		newTD.style.paddingRight = '0.8em';
+		newTD.appendChild(document.createTextNode(sum));
+		newTR.appendChild(newTD);
+  	}
+ /********************************************************************************
+ * 
+ */
+	CreateRowChecked = function(Class)
+	{
+		newTD = document.createElement('td');
+		newTD.colSpan = 1;
+		newTD.style.borderTop="1px solid #000000";
+		//create the anchor node
+		myA=document.createElement("A");
+		url = "javascript:check_all(\""+Class+"\")";  //particular function in each JS
+		myA.setAttribute("href",url);
+		//create the image node
+		url = "/pgwsvn/property/templates/portico/images/check.png";
+		myImg=document.createElement("IMG");
+		myImg.setAttribute("src",url);
+		myImg.setAttribute("width","16");
+		myImg.setAttribute("height","16");
+		myImg.setAttribute("border","0");
+		myImg.setAttribute("alt","Select All");
+		// Appends the image node to the anchor
+		myA.appendChild(myImg);
+		// Appends myA to mydiv
+		mydiv=document.createElement("div");
+		mydiv.setAttribute("align","center");
+		mydiv.appendChild(myA);
+		// Appends mydiv to newTD
+		newTD.appendChild(mydiv);
+		//Add TD to TR
+		newTR.appendChild(newTD);
+	}
 	
  /********************************************************************************
  * Delete all message un DIV 'message'
@@ -32,9 +89,10 @@
  /********************************************************************************
  *
  */	
-	this.getSumPerPage = function(name_column)
+	this.getSumPerPage = function(name_column,round)
 	{
 		//range actual of rows in datatable
+		begin = end = 0;
 		if( (myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0] + 1 ) == myDataTable.getRecordSet().getLength() )
 		//click en Period or ComboBox. (RecordSet start in 0)
 		{
@@ -48,14 +106,14 @@
 			end		= myPaginator.getPageRecords()[1];
 		}
 	
-			//get sumatory of column AMOUNT
-			var tmp_sum = 0;
-			for(i = begin; i <= end; i++)
-			{
-				tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData(name_column));
-			}
-	
-			return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+		//get sumatory of column AMOUNT
+		tmp_sum = 0;
+		for(i = begin; i <= end; i++)
+		{
+			tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData(name_column));
+		}
+
+		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
 	}
 		
  /********************************************************************************

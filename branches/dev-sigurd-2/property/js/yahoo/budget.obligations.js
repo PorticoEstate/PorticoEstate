@@ -73,28 +73,6 @@
 		}
 
 	/********************************************************************************/
-		this.myFormatNum = function(Data)
-		{
-			return  YAHOO.util.Number.format(Data, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
-		}	
-	/********************************************************************************/
-		this.myFormatNum2 = function(Data)
-		{
-			return  YAHOO.util.Number.format(Data, {decimalPlaces:0, decimalSeparator:"", thousandsSeparator:" "});
-		}		
-			
-	/********************************************************************************/
-		var myFormatCount = function(elCell, oRecord, oColumn, oData)
-		{
-			elCell.innerHTML = myFormatNum(oData);
-		}
-	/********************************************************************************/
-		var myFormatCount2 = function(elCell, oRecord, oColumn, oData)
-		{
-			elCell.innerHTML = myFormatNum2(oData);
-		}		
-		
-	/********************************************************************************/
 		var myformatLinkPGW = function(elCell, oRecord, oColumn, oData)
 		{
 			var details;
@@ -114,8 +92,7 @@
 				case "obligation" :  link = oRecord._oData.link_obligation; break;
 				case "actual_cost" :  link = oRecord._oData.link_actual_cost; break;
 			}
-			text = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
-			elCell.innerHTML = "<a href=\"" + link + "\">" + text + "</a>";
+			elCell.innerHTML = "<a href=\"" + link + "\">" + oData + "</a>";
 		}		
 	/********************************************************************************/
 		this.particular_setting = function()
@@ -145,67 +122,17 @@
 	  	this.addFooterDatatable = function()
 	  	{
   		
-	  		//call getSumPerPage(name of column) in property.js
-	  		//tmp_sum = getSumPerPage('budget_cost');
-
 			//Create ROW
 			newTR = document.createElement('tr');
-			//columns with colspan 3
-			newTD = document.createElement('td');
-			newTD.colSpan = 3;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD);
-
-			//Sum hits
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(myFormatNum2(values_ds.sum_hits)));
-			newTR.appendChild(newTD);
-
-			//Sum budget Cost
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(myFormatNum(values_ds.sum_budget_cost)));
-			newTR.appendChild(newTD);
-
-			//Sum obligation
-			newTD = document.createElement('td');
-			newTD.colSpan = 2;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(myFormatNum(values_ds.sum_obligation)));
-			newTR.appendChild(newTD);
 			
-			//Sum obligation
-			newTD = document.createElement('td');
-			newTD.colSpan = 2;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(myFormatNum(values_ds.sum_actual_cost)));
-			newTR.appendChild(newTD);
-			
-			//Sum obligation
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(myFormatNum(values_ds.sum_diff)));
-			newTR.appendChild(newTD);
+			td_empty(3);
+			td_sum(values_ds.sum_hits);
+			td_sum(values_ds.sum_budget_cost);
+			td_sum(values_ds.sum_obligation);
+			td_empty(1);
+			td_sum(values_ds.sum_actual_cost);
+			td_empty(1);			
+			td_sum(values_ds.sum_diff);
 			
 			//Add to Table
 			myfoot = tableYUI.createTFoot();

@@ -110,25 +110,12 @@
 	  	{
 			//Create ROW
 			newTR = document.createElement('tr');
-			//columns with colspan 3
-			newTD = document.createElement('td');
-			newTD.colSpan = 3;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD.cloneNode(true));
-			//Sum
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(values_ds.sum));
-			newTR.appendChild(newTD.cloneNode(true));
+			td_empty(3);
+			td_sum(values_ds.sum);
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
 			myfoot.setAttribute("id","myfoot");
-			myfoot.appendChild(newTR.cloneNode(true));
+			myfoot.appendChild(newTR);
 	  	}
 	/********************************************************************************/
 		YAHOO.util.Event.addListener(window, "load", function()
