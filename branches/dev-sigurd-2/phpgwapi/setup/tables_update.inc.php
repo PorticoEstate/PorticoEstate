@@ -2195,6 +2195,13 @@
 		foreach ( $choices as $choice )
 		{
 			$choice['location_id'] = $GLOBALS['phpgw']->locations->get_id($choice['appname'], $choice['location']);
+			if(!$choice['location_id'])
+			{
+				echo "The location <b>{$choice['location']}</b> for Appname <b>{$choice['appname']}</b> is not defined<br>";
+				echo "You may try to fix it manually by adding it to the table <b>phpgw_locations</b> if it is really needed (check the table <b>phpgw_cust_choicez</b>)";
+				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
+				die();
+			}
 			unset($choice['appname'], $choice['location']);
 
 			$sql = 'INSERT INTO phpgw_cust_choice(' . implode(',',array_keys($choice)) . ') '
