@@ -233,9 +233,43 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id
 # fm_document_category
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_category (id, descr) VALUES ('1', 'Picture')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_category (id, descr) VALUES ('2', 'Report')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_category (id, descr) VALUES ('3', 'Instruction')");
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_categories WHERE cat_appname = 'property.document'");
+$GLOBALS['phpgw_info']['server']['account_repository'] = isset($GLOBALS['phpgw_info']['server']['account_repository']) ? $GLOBALS['phpgw_info']['server']['account_repository'] : '';
+$GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
+$GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+$GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
+$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
+
+$cats->add(	array
+	(
+		'name'	=> 'Picture',
+		'descr'	=> 'Picture',
+		'parent' => 'none',
+		'old_parent' => 0,
+		'access' => 'public'
+	)
+);
+
+$cats->add(	array
+	(
+		'name'	=> 'Report',
+		'descr'	=> 'Report',
+		'parent' => 'none',
+		'old_parent' => 0,
+		'access' => 'public'
+	)
+);
+
+$cats->add(	array
+	(
+		'name'	=> 'Instruction',
+		'descr'	=> 'Instruction',
+		'parent' => 'none',
+		'old_parent' => 0,
+		'access' => 'public'
+	)
+);
 
 #
 # fm_tts_category
