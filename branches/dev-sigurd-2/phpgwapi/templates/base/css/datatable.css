@@ -18,6 +18,26 @@ div.toolbar-container div.toolbar
 	width: 100%;
 }
 
+div.toolbar-container2 div.toolbar
+{
+	float: left;
+	background-color: #eee;
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+	width: 100%;
+	height:100px;
+}
+
+div.toolbar-first div.toolbar
+{
+	float: left;
+	background-color: #ff0000;
+	width: 0px;
+	height:100px;
+}
+
 div.toolbar-container div.toolbar form
 {
 	float: left;
