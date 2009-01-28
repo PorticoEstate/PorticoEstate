@@ -1135,7 +1135,8 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				return;
+				//$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
