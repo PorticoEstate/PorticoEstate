@@ -35,7 +35,11 @@
   	{
 	    if(flag_particular_setting=='init')
 	    {
-	      oMenuButton_0.focus();
+	    	oMenuButton_0.focus();
+			//setting
+			oMenuButton_1.set("label", ("<em>" + array_options[1][32][1] + "</em>"));
+			oMenuButton_1.set("value", array_options[1][32][0]);
+			path_values.part_of_town_id = array_options[1][32][0]
 	    }
 	    else if(flag_particular_setting=='update')
 	    {
@@ -46,9 +50,8 @@
 
   	this.myParticularRenderEvent = function()
   	{
-  		//don't delete it
   		//not SHOW paginator
-		YAHOO.util.Dom.get("paging").style.display = "none";
+		YAHOO.util.Dom.get("paging").innerHTML = '';
   	}
 
 /****************************************************************************************/

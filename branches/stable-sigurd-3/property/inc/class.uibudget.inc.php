@@ -860,6 +860,7 @@
 	
 		function obligations()
 		{
+			//$this->allrows = 1;
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
@@ -882,8 +883,8 @@
 		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 							'menuaction'	=>'property.uibudget.obligations',
-							'sort'			=>$this->sort,
-							'order'			=>$this->order,
+							//'sort'			=>$this->sort,
+							//'order'			=>$this->order,
 							'cat_id'		=>$this->cat_id,
 							'filter'		=>$this->filter,
 							'query'			=>$this->query,
@@ -896,8 +897,8 @@
 	    		$datatable['config']['allow_allrows'] = false;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uibudget.obligations',"
-	    											."sort:'{$this->sort}',"
-	    											."order:'{$this->order}',"
+	    											//."sort:'{$this->sort}',"
+	    											//."order:'{$this->order}',"
  	                        						."cat_id: '{$this->cat_id}',"
  	                        						."filter:'{$this->filter}',"
 						 	                        ."query:'{$this->query}',"
@@ -906,8 +907,6 @@
 						 	                        ."year:'{$this->year}',"
  	                        						."details:'{$this->details}',"
  	                        						."allrows:'{$this->allrows}'";
-
-				$datatable['config']['allow_allrows'] = true;
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -1016,9 +1015,9 @@
 				array(
 					'col_name'=>district_id,	'visible'=>true,	'name'=>district_id,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>hits,			'visible'=>true,	'name'=>hits,			'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatCount2),
+					'col_name'=>hits,			'visible'=>true,	'name'=>hits,			'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>budget_cost,	'visible'=>true,	'name'=>budget_cost,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatCount),
+					'col_name'=>budget_cost,	'visible'=>true,	'name'=>budget_cost,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
 					'col_name'=>obligation,		'visible'=>true,	'name'=>obligation,		'label'=>lang('obligations'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
 				array(
@@ -1028,9 +1027,10 @@
 				array(
 					'col_name'=>link_actual_cost,'visible'=>false,	'name'=>actual_cost,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>diff,			'visible'=>true,	'name'=>diff,			'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatCount)
+					'col_name'=>diff,			'visible'=>true,	'name'=>diff,			'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);	
 			$location_list = array();
+			
 			$location_list = $this->bo->read_obligations(); 
 			$entry = array();
 			$j = 0;
@@ -1065,25 +1065,25 @@
 					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['district_id'];
 					
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['hits'];					
+					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['hits'], 0, ',', ' ');//$entry['hits'];					
 					
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['budget_cost'];					
+					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['budget_cost'], 0, ',', ' ');//$entry['budget_cost'];					
 					
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['obligation'];		
+					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['obligation'], 0, ',', ' ');//$entry['obligation'];		
 
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
 					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$b_account, 'start_date'=> $start_date, 'end_date'=> $end_date));	
 
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['actual_cost'];
+					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['actual_cost'], 0, ',', ' ');//$entry['actual_cost'];
 
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
 					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$b_account,  'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true));
 
 					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']; 
+					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ');//$entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']; 
 
 
 					$sum_obligation += $entry['obligation'];
@@ -1168,13 +1168,12 @@
 				// right in datatable
 				$json ['rights'] = $datatable['rowactions']['action'];
 				
-				$json ['sum_diff'] 			= $sum_diff;
-				$json ['sum_obligation']	= $sum_obligation;
-				$json ['sum_hits'] 			= $sum_hits;
-				$json ['sum_budget_cost']	= $sum_budget_cost;
-				$json ['sum_actual_cost']	= $sum_actual_cost;
-				
-				//_debug_array($json);
+				$json ['sum_diff'] 			= number_format($sum_diff, 0, ',', ' ');;//$sum_diff;
+				$json ['sum_obligation']	= number_format($sum_obligation, 0, ',', ' ');//$sum_obligation;
+				$json ['sum_hits'] 			= number_format($sum_hits, 0, ',', ' ');//$sum_hits;
+				$json ['sum_budget_cost']	= number_format($sum_budget_cost, 0, ',', ' ');//$sum_budget_cost;
+				$json ['sum_actual_cost']	= number_format($sum_actual_cost, 0, ',', ' ');//$sum_actual_cost;
+
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------

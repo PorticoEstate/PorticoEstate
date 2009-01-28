@@ -38,11 +38,9 @@
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 		}
 
 		function get_type_list()
@@ -142,8 +140,8 @@
 			}
 			if($sql)
 			{
-				$this->db2->query($sql,__LINE__,__FILE__);
-				$this->total_records = $this->db2->num_rows();
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->total_records = $this->db->num_rows();
 
 				if(!$allrows)
 				{
@@ -263,7 +261,9 @@
 
 		function update_investment($values)
 		{
-			if (isSet($values) AND is_array($values))
+			$receipt = array();
+
+			if ($values)
 			{
 				$this->db->transaction_begin();
 				foreach($values as $entry)
@@ -286,13 +286,16 @@
 						1
 						);
 
-					$insert	= $this->bocommon->validate_db_insert($insert);
+					$insert	= $this->db->validate_insert($insert);
 
 
 					$this->db->query("insert into fm_investment_value (entity_id, invest_id, index_count, this_index, value,initial_value, index_date,current_index) "
 					. " values ($insert)");
+
+					$receipt['message'][]=array('msg'=>lang('investment %1 is updated at entity %2', $entry['invest_id'], $entry['entity_id']));
 				}
 				$this->db->transaction_commit();
+				return $receipt;
 			}
 		}
 
@@ -307,8 +310,8 @@
 			$sql = "SELECT index_count, this_index,current_index,value, initial_value, index_date  "
 			. " FROM fm_investment_value Where entity_id= '$entity_id' and invest_id= '$investment_id' order by index_count";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{

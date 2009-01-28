@@ -557,62 +557,6 @@
 														'value'	=> '',
 														'style' => 'filter'
 													),	
-			   										array( 		                                       
-			                                            'id'     => 'check_mark_draft',
-			                                            'value'    => 0,
-			                                            'type' => 'checkbox',
-			                                            'tab_index' => 10			                                            
-			                                        ),														
-					                                array( // check label
-						                                'type' => 'label',
-						                                'id' => 'lbl_check_mark',
-														'value' => lang('Mark as DRAFT')														
-													),			                                        		
-			   										array( 
-			                                            'id'     => 'check_calculated_cost_tender',
-			                                            'value'    => 0,
-			                                            'type' => 'checkbox',
-			                                            'tab_index' => 9			                                        
-			                                        ),													
-					                                array( // check label
-						                                'type' => 'label',
-						                                'id' => 'lbl_check_cost_tender',
-														'value' => lang('Show calculated cost')													
-													),			                                        		
- 			                                        array( 
-			                                            'id' => 'btn_view_tender',
-			                                            'value'    => lang('View tender'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 8
-			                                        ),
-			   										array( 
-			                                            'id'     => 'check_calculated_cost',
-			                                            'value'    => 0,
-			                                            'type' => 'checkbox',
-			                                            'tab_index' => 7			                                            
-			                                        ),			                                        
-					                                array( // check label
-						                                'type' => 'label',
-						                                'id' => 'lbl_check_cost',
-														'value' => lang('Show calculated cost')														
-													),			                                        		
-			   										array( 
-			                                            'id'     => 'check_show_details',
-			                                            'value'    => 0,
-			                                            'type' => 'checkbox',
-			                                            'tab_index' => 6			                                            
-			                                        ),			                                        
-					                                array( // check label
-						                                'type' => 'label',
-						                                'id' => 'lbl_check_details',
-														'value' => lang('Show details')													
-													),			                                        				                                        
- 			                                        array(
-			                                            'id' => 'btn_print_preview',
-			                                            'value'    => lang('Print view'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 5
-			                                        ),	
  			                                        array( 
 			                                            'id' => 'btn_save_template',
 			                                            'value'    => lang('Save as template'),
@@ -644,6 +588,70 @@
 												)
 										  )
 				);
+				
+				$datatable['actions']['down-toolbar'] = array('fields'	=> array('field' => array (
+                                         array(
+                                            'id' => 'btn_print_preview',
+                                            'value'    => lang('Print view'),
+                                            'type' => 'button',
+                                            'tab_index' => 5,
+                                            'style' => 'filter'
+                                        ),
+                                        array( // check label
+			                                'type' => 'label',
+			                                'id' => 'lbl_check_details',
+											'value' => lang('Show details'),
+											'style' => 'filter'												
+										),
+										array( 
+                                            'id'     => 'check_show_details',
+                                            'value'    => 0,
+                                            'type' => 'checkbox',
+                                            'tab_index' => 6,
+                                            'style' => 'filter'			                                            
+                                        ),
+                                        array( // check label
+			                                'type' => 'label',
+			                                'id' => 'lbl_check_cost',
+											'value' => lang('Show calculated cost'),
+											'style' => 'filter'													
+										),
+										array( 
+                                            'id'     => 'check_calculated_cost',
+                                            'value'    => 0,
+                                            'type' => 'checkbox',
+                                            'tab_index' => 7,
+                                            'style' => 'filter'			                                            
+                                        ),
+                                        array( 		                                       
+                                            'id'     => 'check_mark_draft',
+                                            'value'    => 0,
+                                            'type' => 'checkbox',
+                                            'tab_index' => 10			                                            
+                                        ),														
+		                                array( // check label
+			                                'type' => 'label',
+			                                'id' => 'lbl_check_mark',
+											'value' => lang('Mark as DRAFT')														
+										),			                                        		
+   										array( 
+                                            'id'     => 'check_calculated_cost_tender',
+                                            'value'    => 0,
+                                            'type' => 'checkbox',
+                                            'tab_index' => 9			                                        
+                                        ),													
+		                                array( // check label
+			                                'type' => 'label',
+			                                'id' => 'lbl_check_cost_tender',
+											'value' => lang('Show calculated cost')													
+										),			                                        		
+                                         array( 
+                                            'id' => 'btn_view_tender',
+                                            'value'    => lang('View tender'),
+                                            'type' => 'button',
+                                            'tab_index' => 8
+                                        ))));				
+				
 			}
 
 			$uicols = array (

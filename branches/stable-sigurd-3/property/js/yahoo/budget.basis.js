@@ -40,7 +40,7 @@
 	/********************************************************************************/
 		var myFormatDate = function(elCell, oRecord, oColumn, oData)
 		{
-			elCell.innerHTML = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+			elCell.innerHTML = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 		}
 
 	/********************************************************************************/
@@ -83,26 +83,12 @@
 	  	{
   		
 	  		//call getSumPerPage(name of column) in property.js
-	  		tmp_sum = getSumPerPage('budget_cost');
+	  		tmp_sum = getSumPerPage('budget_cost',0);
 
 			//Create ROW
 			newTR = document.createElement('tr');
-			//columns with colspan 5
-			newTD = document.createElement('td');
-			newTD.colSpan = 5;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD);
-
-			//Sum
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(tmp_sum));
-			newTR.appendChild(newTD);
+			td_empty(5);
+			td_sum(tmp_sum);
 
 			//Add to Table
 			myfoot = tableYUI.createTFoot();

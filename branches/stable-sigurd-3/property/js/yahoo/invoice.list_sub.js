@@ -99,35 +99,6 @@
   		}
 
 	/********************************************************************************/
-		CreateRowChecked = function(Class)
-		{
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			//create the anchor node
-			myA=document.createElement("A");
-			url = "javascript:check_all(\""+Class+"\")";
-			myA.setAttribute("href",url);
-			//create the image node
-			url = "/pgwsvn/property/templates/portico/images/check.png";
-			myImg=document.createElement("IMG");
-			myImg.setAttribute("src",url);
-			myImg.setAttribute("width","16");
-			myImg.setAttribute("height","16");
-			myImg.setAttribute("border","0");
-			myImg.setAttribute("alt","Select All");
-			// Appends the image node to the anchor
-			myA.appendChild(myImg);
-			// Appends myA to mydiv
-			mydiv=document.createElement("div");
-			mydiv.setAttribute("align","center");
-			mydiv.appendChild(myA);
-			// Appends mydiv to newTD
-			newTD.appendChild(mydiv);
-			//Add TD to TR
-			newTR.appendChild(newTD);
-		}
-	/********************************************************************************/
 		check_all = function(myclass)
 	  	{
 			controls = YAHOO.util.Dom.getElementsByClassName(myclass);
@@ -261,36 +232,11 @@
 	  	{
 			//Create ROW
 			newTR = document.createElement('tr');
-			//columns with colspan 1
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD);
-
+			td_empty(1);
 			CreateRowChecked("transfer_idClass");
-
-			//columns with colspan 3
-			newTD = document.createElement('td');
-			newTD.colSpan = 3;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD);
-			//Sum
-			newTD = document.createElement('td');
-			newTD.colSpan = 1;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.style.fontWeight = 'bolder';
-			newTD.style.textAlign = 'right';
-			newTD.style.paddingRight = '0.8em';
-			newTD.appendChild(document.createTextNode(values_ds.sum));
-			newTR.appendChild(newTD);
-			//columns with colspan 5
-			newTD = document.createElement('td');
-			newTD.colSpan = 5;
-			newTD.style.borderTop="1px solid #000000";
-			newTD.appendChild(document.createTextNode(''));
-			newTR.appendChild(newTD);
+			td_empty(3);
+			td_sum(values_ds.sum);
+			td_empty(5);
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
 			myfoot.setAttribute("id","myfoot");
