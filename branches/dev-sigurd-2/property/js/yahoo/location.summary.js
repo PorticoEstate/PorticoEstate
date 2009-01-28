@@ -4,7 +4,7 @@
   //define SelectButton
      var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
      var selectsButtons = [
-    {order:0, var_URL:'district_id',	name:'btn_district_id',		style:'categorybutton',	dependiente:[]},
+    {order:0, var_URL:'district_id',	name:'btn_district_id',		style:'categorybutton',	dependiente:[1]},
     {order:1, var_URL:'part_of_town_id',name:'btn_part_of_town_id',	style:'districtbutton',	dependiente:[]},
     {order:2, var_URL:'filter',			name:'btn_owner_id',		style:'partOFTownbutton',dependiente:[]}
     ]
@@ -28,7 +28,8 @@
 
 
     var config_values = {
-      date_search : 0 //if search has link "Data search"
+      date_search : 0, //if search has link "Data search"
+      PanelLoading : 1
     }
 /****************************************************************************************/
   	this.particular_setting = function()

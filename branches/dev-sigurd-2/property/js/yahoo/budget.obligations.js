@@ -32,7 +32,7 @@
 		// define the hidden column in datatable
 		var config_values = {
 			date_search : 0, //if search has link "Data search"
-			PanelLoading : 1
+			PanelLoading : 0
 		}
 
 		var tableYUI;

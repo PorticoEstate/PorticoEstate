@@ -2051,6 +2051,17 @@
 		    			$json['records'][] = $json_row;
 	    			}
 	    		}
+	    		
+	    		// 'part of town' depended on the selected 'district'
+				$opt_cb_depend =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+		 		$default_value = array ('id'=>'','name'=>'!no part of town');
+				array_unshift ($opt_cb_depend,$default_value);
+
+				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
+	                                                      'value' => $this->bocommon->select2String($opt_cb_depend)
+														);
+	    		
+	    		
 
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
