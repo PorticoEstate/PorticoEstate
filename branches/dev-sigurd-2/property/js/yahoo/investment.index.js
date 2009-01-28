@@ -166,10 +166,11 @@
 			tableYUI.setAttribute("id","tableYUI");
 			//focus initial
 			oMenuButton_0.focus();
-			//setting
-			oMenuButton_1.set("label", ("<em>" + array_options[1][32][1] + "</em>"));
-			oMenuButton_1.set("value", array_options[1][32][0]);
-			path_values.part_of_town_id = array_options[1][32][0]
+			//setting in part of town button
+			index = locate_in_array_options(1,"value","0");
+			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			oMenuButton_1.set("value", array_options[1][index][0]);
+			path_values.part_of_town_id = array_options[1][index][0];
 			
 		}
 		else if(flag_particular_setting=='update')

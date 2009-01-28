@@ -4,9 +4,9 @@
   //define SelectButton
      var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
      var selectsButtons = [
-    {order:0, var_URL:'district_id',			name:'btn_district_id',		style:'categorybutton',		dependiente:[]},
-    {order:1, var_URL:'part_of_town_id',	name:'btn_part_of_town_id',	style:'districtbutton',		dependiente:[]},
-    {order:2, var_URL:'filter',name:'btn_owner_id',style:'partOFTownbutton',dependiente:[]}
+    {order:0, var_URL:'district_id',	name:'btn_district_id',		style:'categorybutton',	dependiente:[]},
+    {order:1, var_URL:'part_of_town_id',name:'btn_part_of_town_id',	style:'districtbutton',	dependiente:[]},
+    {order:2, var_URL:'filter',			name:'btn_owner_id',		style:'partOFTownbutton',dependiente:[]}
     ]
 
     // define buttons
@@ -36,10 +36,11 @@
 	    if(flag_particular_setting=='init')
 	    {
 	    	oMenuButton_0.focus();
-			//setting
-			oMenuButton_1.set("label", ("<em>" + array_options[1][32][1] + "</em>"));
-			oMenuButton_1.set("value", array_options[1][32][0]);
-			path_values.part_of_town_id = array_options[1][32][0]
+   			//setting in part of town button
+   			index = locate_in_array_options(1,"value","0");
+   			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+   			oMenuButton_1.set("value", array_options[1][index][0]);
+   			path_values.part_of_town_id = array_options[1][index][0];
 	    }
 	    else if(flag_particular_setting=='update')
 	    {
