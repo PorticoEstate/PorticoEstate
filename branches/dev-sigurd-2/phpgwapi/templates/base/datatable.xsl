@@ -92,16 +92,25 @@
 -->
 <xsl:template match="phpgw">
 	<xsl:apply-templates select="datatable/menu" />
-	<div class="toolbar-container">
-		<div class="toolbar">
-			<xsl:apply-templates select="datatable/actions" />
+
+		<xsl:choose>
+			<xsl:when test="datatable/locdata!=''">
+				<div class="toolbar-first">
+					<div class="toolbar">
+
+					</div>
+				</div>
+			</xsl:when>
+		</xsl:choose>
+		<div class="toolbar-container">
+			<div class="toolbar">
+				<xsl:apply-templates select="datatable/actions" />
+			</div>
 		</div>
-	</div>
-	
 	<xsl:apply-templates select="datatable" />
-	
+
 	<div><br/></div>
-	
+
 	<xsl:choose>
 		<xsl:when test="datatable/actions/down-toolbar/fields/field!=''">
 			<div class="toolbar-container">
