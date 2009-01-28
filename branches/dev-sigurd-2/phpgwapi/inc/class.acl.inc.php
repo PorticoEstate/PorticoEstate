@@ -1073,7 +1073,7 @@
 					. " AND acl_account IN ($ids)";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
-			if ( $this->_db->num_rows() == 0 && $mask == 0 )
+			if ( $this->_db->num_rows() == 0 && $mask == 0  && isset($GLOBALS['phpgw_info']['user']['account_id']))
 			{
 				return array($GLOBALS['phpgw_info']['user']['account_id'] => 31);
 			}
@@ -1137,13 +1137,13 @@
 				}
 			}
 
-			if ( $mask == 0 )
+			if ( $mask == 0 && isset($GLOBALS['phpgw_info']['user']['account_id']))
 			{
 				$grants[$GLOBALS['phpgw_info']['user']['account_id']] = 31;
 			}
 			else
 			{
-				if ( isset($grants[$GLOBALS['phpgw_info']['user']['account_id']]) )
+				if ( isset($GLOBALS['phpgw_info']['user']['account_id']) && isset($grants[$GLOBALS['phpgw_info']['user']['account_id']]) )
 				{
 					unset ($grants[$GLOBALS['phpgw_info']['user']['account_id']]);
 				}
