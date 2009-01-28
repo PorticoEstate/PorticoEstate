@@ -285,10 +285,11 @@
 
 			$new_index=str_replace(",",".",$values['new_index']);
 
-			while($entry=each($values['update']))
+			$update = array();
+			foreach($values['update'] as $entry)
 			{
-				$local_error='';
-				$n=$entry[0];
+				$local_error = false;
+				$n = $entry;
 
 				if ($values['value'][$n])
 				{
@@ -312,7 +313,7 @@
 						);
 				}
 			}
-			$this->so->update_investment($update);
+			return $this->so->update_investment($update);
 		}
 
 

@@ -35,12 +35,11 @@
 	class property_soinvoice
 	{
 		var $total_records = 0;
+		var $role = array();
 
 		function property_soinvoice()
 		{
-			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
-
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
@@ -532,7 +531,7 @@
 
 		function update_invoice_sub($values)
 		{
-
+			$receipt = array();
 			$GLOBALS['phpgw']->db->transaction_begin();
 
 			while($entry=each($values['counter']))
@@ -705,6 +704,7 @@
 
 		function update_period($voucher_id='',$period='')
 		{
+			$receipt = array();
 			$this->db->transaction_begin();
 
 			$this->db->query("UPDATE fm_ecobilag set periode='$period' where bilagsnr='$voucher_id'");
@@ -749,6 +749,7 @@
 		function tax_code_list($selected='')
 		{
 			$this->db->query("SELECT * FROM fm_ecomva order by id asc ");
+			$tax_code_list = array();
 			while ($this->db->next_record())
 			{
 				$tax_code_list[] = Array(
@@ -763,6 +764,7 @@
 		function get_lisfm_ecoart()
 		{
 			$this->db->query("SELECT * FROM fm_ecoart order by id asc ");
+			$art_list = array();
 			while ($this->db->next_record())
 			{
 				$art_list[] = Array(
@@ -779,20 +781,22 @@
 		function get_type_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecobilag_category order by id asc ");
+			$category = array();
 			while ($this->db->next_record())
 			{
-				$art_list[] = Array(
+				$category[] = Array(
 					'id'        => $this->db->f('id'),
 					'name'       => $this->db->f('descr')
 				);
 			}
-			return $art_list;
+			return $category;
 		}
 
 	//----------
 		function select_dimb_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecodimb order by id asc ");
+			$dimb_list = array();
 			while ($this->db->next_record())
 			{
 				$dimb_list[] = Array(
@@ -807,6 +811,7 @@
 		function select_dimd_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecodimd order by id asc ");
+			$dimd_list = array();
 			while ($this->db->next_record())
 			{
 				$dimd_list[] = Array(
@@ -821,6 +826,7 @@
 		function select_tax_code_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecomva order by id asc ");
+			$tax_code_list = array();
 			while ($this->db->next_record())
 			{
 				$tax_code_list[] = Array(
@@ -836,6 +842,7 @@
 			$sql = "SELECT id from fm_b_account_category order by id";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$class = array();
 			while ($this->db->next_record())
 			{
 				$class[] = Array(
@@ -856,6 +863,7 @@
 			$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$values = array();
 			while ($this->db->next_record())
 			{
 				$values[] = Array(
@@ -971,63 +979,63 @@
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_supervisor'):
 							$blank_date = 'saksigndato= NULL';
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_budget_responsible'):
 							$blank_date = 'budsjettsigndato= NULL';
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_supervisor' && !$values['sign_orig'][$n]):
 							$blank_date = '';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_janitor'):
 							$blank_date = 'oppsynsigndato= NULL';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_budget_responsible'):
 							$blank_date = 'budsjettsigndato= NULL';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_janitor'):
 							$blank_date = 'oppsynsigndato= NULL';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_supervisor'):
 							$blank_date = 'saksigndato= NULL';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						elseif ($values['sign'][$n]=='sign_budget_responsible' && !$values['sign_orig'][$n]):
 							$blank_date = '';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
-							$sign_date="'" . date($this->bocommon->datetimeformat) . "'";
+							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
 						endif;
 
@@ -1046,7 +1054,7 @@
 
 						if (!($values['num_days_orig'][$n]==$values['num_days'][$n]))
 						{
-							$payment_date = date($this->bocommon->dateformat,$values['timestamp_voucher_date'][$n]+(24*3600*$values['num_days'][$n]));
+							$payment_date = date($this->db->date_format(),$values['timestamp_voucher_date'][$n]+(24*3600*$values['num_days'][$n]));
 							$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set forfallsdato= '$payment_date' where bilagsnr='$voucher_id'");
 						}
 
@@ -1058,7 +1066,7 @@
 							if ($this->check_for_transfer($voucher_id))
 							{
 								$transfer_id="'$user_lid',";
-								$transfer_date="'" . date($this->bocommon->datetimeformat) . "'";
+								$transfer_date="'" . date($this->db->datetime_format()) . "'";
 							}
 							else
 							{

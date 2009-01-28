@@ -564,19 +564,19 @@
 		{
 //_debug_array($values);
 
-			$errorcount = 0;
+			$receipt = array();
 
 			if(!$values['date'])
 			{
-				$receipt['error'][$errorcount++]=array('msg'=>lang('Please select a date !'));
+				$receipt['error'][]=array('msg'=>lang('Please select a date !'));
 			}
 			if(!$values['new_index'])
 			{
-				$receipt['error'][$errorcount++]=array('msg'=>lang('Please set a new index !'));
+				$receipt['error'][]=array('msg'=>lang('Please set a new index !'));
 			}
 			if(!$values['update'])
 			{
-				$receipt['error'][$errorcount++]=array('msg'=>lang('Nothing to do!'));
+				$receipt['error'][]=array('msg'=>lang('Nothing to do!'));
 			}
 
 			if(!$receipt['error'])

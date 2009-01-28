@@ -860,7 +860,7 @@
 	
 		function obligations()
 		{
-			$this->allrows = 1;
+			//$this->allrows = 1;
 			$acl_location	= '.budget.obligations';
 			$acl_read 	= $this->acl->check($acl_location, PHPGW_ACL_READ, 'property');
 
@@ -1173,9 +1173,7 @@
 				$json ['sum_hits'] 			= number_format($sum_hits, 0, ',', ' ');//$sum_hits;
 				$json ['sum_budget_cost']	= number_format($sum_budget_cost, 0, ',', ' ');//$sum_budget_cost;
 				$json ['sum_actual_cost']	= number_format($sum_actual_cost, 0, ',', ' ');//$sum_actual_cost;
-				
-				
-				_debug_array($json);
+
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
