@@ -518,6 +518,524 @@
 				$this->cat_id				= $this->bo->cat_id;
 				$this->status_id			= $this->bo->status_id;
 			}
+
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','document_receipt');
+			$GLOBALS['phpgw']->session->appsession('session_data','document_receipt','');
+
+			$location_code = phpgw::get_var('location_code');
+			if($this->query_location)
+			{
+				$location_code = $this->query_location;
+			}
+
+			$p_num = phpgw::get_var('p_num');
+
+			$location = $this->bo->read_location_data($location_code);
+			//_debug_array($location);
+
+			if($this->cat_id)
+			{
+				$entity_data[$this->entity_id]['p_num']=$p_num;
+				$entity_data[$this->entity_id]['p_entity_id']=$this->entity_id;
+				$entity_data[$this->entity_id]['p_cat_id']=$this->cat_id;
+				$entity = $this->boadmin_entity->read_single($this->entity_id,false);
+				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+				$lookup_entity	= $this->bocommon->get_lookup_entity('document');
+				$appname_sub	= $entity['name'];
+			}
+			else
+			{
+				$appname_sub	= lang('location');
+			}
+
+			if($category['name'])
+			{
+				$entity_data[$this->entity_id]['p_cat_name']=$category['name'];
+			}
+
+			$link_data = array
+				(
+					'menuaction'	=> 'property.uidocument.list_doc',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'entity_id'	=> $this->entity_id,
+					'cat_id'	=> $this->cat_id,
+					'p_num'		=> $p_num,
+					'doc_type'	=> $this->doc_type,
+					'location_code'	=> $location_code,
+					'filter'	=> $this->filter,
+					'query'		=> $this->query,
+					'query_location'=> $this->query_location
+				);
+
+			$this->config->read();
+			$files_url = $this->config->config_data['files_url'];
+
+			$datatable = array();
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['menu']					= $this->bocommon->get_menu();
+	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'property.uidocument.list_doc',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'entity_id'	=> $this->entity_id,
+					'cat_id'	=> $this->cat_id,
+					'p_num'		=> $p_num,
+					'doc_type'	=> $this->doc_type,
+					'location_code'	=> $location_code,
+					'filter'	=> $this->filter,
+					'query'		=> $this->query,
+					'query_location'=> $this->query_location
+   				));
+
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uidocument.list_doc',"
+	    												."sort:'{$this->sort}',"
+	    												."order:'{$this->order}',"
+	    												."entity_id:'{$this->entity_id}',"
+	    												."cat_id:'{$this->cat_id}',"
+	    												."p_num:'{$p_num}',"
+	    												."doc_type:'{$this->doc_type}',"
+	    												."location_code:'{$location_code}',"
+	    												."filter:'{$this->filter}',"
+	    												."query:'{$this->query}',"
+	    												."query_location:'{$this->query_location}'";
+
+
+
+			    $datatable['config']['allow_allrows'] = false;
+
+			    $values_combo_box[0] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->doc_type,'type' =>'document','order'=>'descr'));
+				$default_value = array ('id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',4,$this->filter,$this->acl_location,array('all'),$default=$this->account);
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[1],$default_value);
+
+				$datatable['actions']['form'] = array(
+				array(
+					'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array(
+								'menuaction'	=> 'property.uidocument.list_doc',
+								'sort'		=> $this->sort,
+								'order'		=> $this->order,
+								'entity_id'	=> $this->entity_id,
+								'cat_id'	=> $this->cat_id,
+								'p_num'		=> $p_num,
+								'doc_type'	=> $this->doc_type,
+								'location_code'	=> $location_code,
+								'filter'	=> $this->filter,
+								'query'		=> $this->query,
+								'query_location'=> $this->query_location
+							)
+						),
+					'fields'	=> array(
+	                                    'field' => array(
+				                                        array( // mensaje
+															'type'	=> 'label',
+															'id'	=> 'msg_header',
+															'value'	=> '',
+															'style' => 'filter'
+														),
+														array( //boton 	CATEGORY
+				                                            'id' => 'btn_type_id',
+				                                            'name' => 'type_id',
+				                                            'value'	=> lang('Type'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
+				                                        ),
+				                                        array( //boton 	STATUS
+				                                            'id' => 'btn_user_id',
+				                                            'name' => 'user_id',
+				                                            'value'	=> lang('User'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 2
+				                                        ),
+														array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_new',
+							                                'value'	=> lang('add'),
+							                                'tab_index' => 8
+							                            ),
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 7
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+				                                            'value'    => '',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 6
+				                                        ),
+														array( //container of  control's Form
+															'type'	=> 'label',
+															'id'	=> 'controlsForm_container',
+															'value'	=> ''
+														)
+			                           				),
+			                       		'hidden_value' => array(
+						                                        array( //div values  combo_box_0
+								                                            'id' => 'values_combo_box_0',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+								                                      ),
+								                                array( //div values  combo_box_1
+								                                            'id' => 'values_combo_box_1',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								                                      )
+			                       								)
+										)
+					 )
+				);
+
+				$dry_run = true;
+			}
+
+			$document_list = $this->bo->read_at_location($location_code);
+
+			if($this->cat_id)
+			{
+				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
+			}
+			else
+			{
+				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'];
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+
+			$uicols['name'][0]		= 'document_name';
+			$uicols['descr'][0]		= lang('Document name');
+			$uicols['datatype'][0]	= 'link';
+			$uicols['name'][1]		= 'title';
+			$uicols['descr'][1]		= lang('Title');
+			$uicols['datatype'][1]	= 'text';
+			$uicols['name'][2]		= 'doc_type';
+			$uicols['descr'][2]		= lang('Doc type');
+			$uicols['datatype'][2]	= 'text';
+			$uicols['name'][3]		= 'user';
+			$uicols['descr'][3]		= lang('User');
+			$uicols['datatype'][3]	= 'text';
+			$uicols['name'][4]		= 'document_id';
+			$uicols['descr'][4]		= lang('document id');
+			$uicols['datatype'][4]	= 'text';
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
+
+			if (isset($document_list) AND is_array($document_list))
+			{
+				foreach($document_list as $document_entry )
+				{
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if($document_entry['link'])
+						{
+							$link_view_file=$document_entry['link'];
+							$document_entry['document_name']='link';
+							unset($link_to_files);
+						}
+						else
+						{
+							if(!$link_to_files)
+							{
+								$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.view_file', 'id'=> $document_entry['document_id'], 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $p_num));
+								$link_to_files = $files_url;
+							}
+						}
+
+						if($uicols['input_type'][$k]!='hidden')
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= $document_entry[$uicols['name'][$k]];
+
+							if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $document_entry[$uicols['name'][$k]])
+							{
+								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
+								$datatable['rows']['row'][$j]['column'][$k]['value']		= $document_entry[$uicols['name'][$k]];
+								$datatable['rows']['row'][$j]['column'][$k]['link']		= $link_to_files.'/'.$directory.'/'.$document_entry['document_name'];
+								$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							}
+						}
+					}
+					$j++;
+				}
+			}
+
+			$location_data = array();
+
+			$location_data = $this->bolocation->initiate_ui_location(array(
+						'values'		=> $location,
+						'type_id'		=> count(explode('-',$location_code)),
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
+						'lookup_type'		=> 'view',
+						'lookup_entity'		=> $lookup_entity,
+						'entity_data'		=> $entity_data,
+						'link_data'		=> $link_data,
+						'query_link'		=> true
+						));
+
+			$datatable['locdata'] = $location_data['location'];
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'document_id',
+						'source'	=> 'document_id'
+					),
+				)
+			);
+
+			if($this->acl_read)
+			{
+				$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'view',
+							'statustext' 	=> lang('view this entity'),
+							'text'			=> lang('view'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uidocument.view',
+										'from'			=> 'list_doc'
+									)),
+						'parameters'	=> $parameters
+						);
+			}
+
+			if($this->acl_edit)
+			{
+				$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'edit',
+							'statustext' 	=> lang('edit this entity'),
+							'text'			=> lang('edit'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uidocument.edit',
+										'from'			=> 'list_doc'
+									)),
+						'parameters'	=> $parameters
+						);
+			}
+
+			if($this->acl_delete)
+			{
+				$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'delete',
+							'statustext' 	=> lang('delete this entity'),
+							'text'			=> lang('delete'),
+							'confirm_msg'	=> lang('do you really want to delete this entry'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uidocument.delete',
+										'location_code'	=> $location_code
+										, 'p_num'		=> $p_num
+									)),
+						'parameters'	=> $parameters
+						);
+			}
+
+			if($this->acl_add)
+			{
+				$datatable['rowactions']['action'][] = array(
+							'my_name' 			=> 'add',
+							'statustext' 	=> lang('add an entity'),
+							'text'			=> lang('add'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uis_agreement.edit',
+										'role'			=> $this->role
+									))
+						);
+			}
+
+			unset($parameters);
+
+			for ($i=0;$i<$count_uicols_name;$i++)
+			{
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+
+					if($uicols['name'][$i]=='document_name')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']	= 'document_name';
+					}
+
+					if($uicols['name'][$i]=='document_id')
+					{
+						$datatable['headers']['header'][$i]['visible'] 		= false;
+					}
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($document_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$appname	= lang('document');
+			$function_msg	= lang('list document');
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'document_name'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+				if(isset($location_data) && is_array($location_data))
+				{
+					$json ['current_consult'] = $datatable['locdata'];
+				}
+	    		return $json;
+			}
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+	      	{
+	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+	      	}
+
+	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'document.list_doc', 'property' );
+
+
+
+			/*if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$preserve = phpgw::get_var('preserve', 'bool');
+
+			if($preserve)
+			{
+				$this->bo->read_sessiondata();
+
+				$this->start				= $this->bo->start;
+				$this->query				= $this->bo->query;
+				$this->sort				= $this->bo->sort;
+				$this->order				= $this->bo->order;
+				$this->filter				= $this->bo->filter;
+				$this->entity_id			= $this->bo->entity_id;
+				$this->cat_id				= $this->bo->cat_id;
+				$this->status_id			= $this->bo->status_id;
+			}
+
+
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$preserve = phpgw::get_var('preserve', 'bool');
+
+			if($preserve)
+			{
+				$this->bo->read_sessiondata();
+
+				$this->start				= $this->bo->start;
+				$this->query				= $this->bo->query;
+				$this->sort				= $this->bo->sort;
+				$this->order				= $this->bo->order;
+				$this->filter				= $this->bo->filter;
+				$this->entity_id			= $this->bo->entity_id;
+				$this->cat_id				= $this->bo->cat_id;
+				$this->status_id			= $this->bo->status_id;
+			}
 //_debug_array($this->cat_id);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('document',
@@ -748,7 +1266,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg . ' - ' . $appname_sub;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_document' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
-			$this->save_sessiondata();
+			$this->save_sessiondata();*/
 		}
 
 		function view_file()
@@ -1118,7 +1636,7 @@
 				'p_num'		=> $p_num
 			);
 
-			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($document_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
