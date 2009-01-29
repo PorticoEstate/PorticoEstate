@@ -166,8 +166,9 @@
 
 		function read_obligations()
 		{
+			//cramirez: add strtoupper function for $this->sort. in YUI use asc/desc (lowercase letters)
 			$obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
-							'sort' => $this->sort, 'order' => $this->order, 'filter' => $this->filter,
+							'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 							'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
 							'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
 							'details' => $this->details));
