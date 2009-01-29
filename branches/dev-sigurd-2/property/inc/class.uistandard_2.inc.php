@@ -472,6 +472,14 @@
 			$type	= phpgw::get_var('type');
 			$id		= phpgw::get_var('id');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
+			
+			//json code delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id,$type);
+				return "id ".$id." ".lang("has been deleted");
+				
+			}			
 
 			$link_data = array
 			(
@@ -480,11 +488,7 @@
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($id,$type);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
+
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

@@ -1084,7 +1084,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
-				return "entity_id ".$entity_id." ".lang("has been deleted");
+				return lang("this record has been deleted");
 			}
 
 			if($group_id)

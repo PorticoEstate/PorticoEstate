@@ -1499,18 +1499,19 @@
 		{
 			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-
+			
+			//json code delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($s_agreement_id);
+				return "s_agreement_id ".$s_agreement_id." ".lang("has been deleted");
+			}
+			
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uis_agreement.index',
 				'role'		=> $this->role
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($s_agreement_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
