@@ -677,19 +677,19 @@
 
 		function delete()
 		{
-			$id		= phpgw::get_var('id', 'int');
-			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
+			$id			= phpgw::get_var('id', 'int');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+			
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id);
+				return "id ".$id." ".lang("has been deleted");
+			}
 
 			$link_data = array
 			(
 				'menuaction' => 'property.uiasync.index'
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

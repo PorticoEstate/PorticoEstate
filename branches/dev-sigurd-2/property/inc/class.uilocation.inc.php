@@ -1327,13 +1327,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete($location_code);
-	    		$json = array
-	    		(
-	    			'result' 			=> 1,
-    				'location_code' 	=> $location_code,
-	    			'type_id' 			=> $type_id
-				);
-				return $json ;
+	    		return "location_code ".$location_code." ".lang("has been deleted");
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";

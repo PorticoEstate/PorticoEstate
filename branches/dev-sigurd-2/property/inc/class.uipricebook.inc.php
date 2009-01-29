@@ -1687,17 +1687,12 @@
 			}
 			elseif($method=='activity')
 			{
-				
-				//cramirez add JsonCod for Delete
+				//delete with JSON
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
 					$function_msg	=lang('delete activity');
 					$this->bo->delete_activity($activity_id);
-					$json = array
-					(
-						'msg' 		=> $function_msg
-					);
-					return $json ;
+					return $function_msg;
 				}				
 				
 				$link_data = array
@@ -1735,16 +1730,12 @@
 			elseif($method=='agreement_group')
 			{
 				
-				//cramirez add JsonCod for Delete
+				//JsonCod for Delete
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
 					$function_msg	=lang('Delete agreement group and all the activities associated with it!');
 					$this->bo->delete_agreement_group($agreement_group_id);
-					$json = array
-					(
-						'msg' 		=> $function_msg
-					);
-					return $json ;
+					return $function_msg ;
 				}
 			
 				$link_data = array

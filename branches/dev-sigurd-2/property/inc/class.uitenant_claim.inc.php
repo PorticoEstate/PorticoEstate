@@ -787,21 +787,20 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
 
-
 			$claim_id	= phpgw::get_var('claim_id', 'int');
 			$delete		= phpgw::get_var('delete', 'bool', 'POST');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+			
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($claim_id);
+				return "claim_id ".$claim_id." ".lang("has been deleted");
+			}
 
 			$link_data = array
 			(
 				'menuaction' => 'property.uitenant_claim.index'
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($claim_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

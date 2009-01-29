@@ -1079,6 +1079,13 @@
 			$acl_location		= phpgw::get_var('acl_location');
 			$custom_function_id	= phpgw::get_var('custom_function_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
+			
+			// JSON code delete
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
+				return "entity_id ".$entity_id." ".lang("has been deleted");
+			}
 
 			if($group_id)
 			{
@@ -1131,13 +1138,6 @@
 				'custom_function_id' => $custom_function_id,
 				'type'				=> $this->type
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($cat_id,$entity_id,$attrib_id,$acl_location,$custom_function_id,$group_id);
-				return;
-				//$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

@@ -1274,21 +1274,18 @@
 			}
 
 			$project_id = phpgw::get_var('project_id', 'int');
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($project_id);
+				return "project_id ".$project_id." ".lang("has been deleted");
+			}
+			
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-
 			$link_data = array
 			(
 				'menuaction' => 'property.uiproject.index',
 				'project_id'	=> $project_id
 			);
-
-			//if (phpgw::get_var('confirm', 'bool', 'POST'))
-			//{
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($project_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
