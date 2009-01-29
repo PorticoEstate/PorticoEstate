@@ -1367,11 +1367,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($id);
-				$json = array
-				(
-					'result' 			=> 1,
-				);
-				return $json ;
+				return "id ".$id." ".lang("has been deleted");
 			}
 
 

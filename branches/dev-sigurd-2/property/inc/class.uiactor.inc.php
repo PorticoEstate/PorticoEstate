@@ -832,11 +832,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($actor_id);
-				$json = array
-				(
-					'result' 			=> 1,
-				);
-				return $json ;
+				return "actor_id ".$actor_id." ".lang("has been deleted");
 			}
 
 			if(!$this->acl_delete)

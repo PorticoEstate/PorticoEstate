@@ -1489,12 +1489,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete($budget_id);
-	    		$json = array
-	    		(
-	    			'result'	=> 1,
-    				'budget_id' => $budget_id
-				);
-				return $json ;
+	    		return "budget_id ".$budget_id." ".lang("has been deleted");
 			}
 			
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1538,12 +1533,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete_basis($budget_id);
-	    		$json = array
-	    		(
-	    			'result'	=> 1,
-    				'budget_id' => $budget_id
-				);
-				return $json ;
+				return "budget_id ".$budget_id." ".lang("has been deleted");
 			}
 			
 			

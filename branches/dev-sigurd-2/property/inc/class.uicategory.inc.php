@@ -598,7 +598,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($id,$type,$type_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				return "id ".$id." ".lang("has been deleted");
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));

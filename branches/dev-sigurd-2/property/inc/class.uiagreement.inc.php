@@ -1554,7 +1554,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($agreement_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				return "agreement_id ".$agreement_id." ".lang("has been deleted");
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
