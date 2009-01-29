@@ -271,10 +271,10 @@
 				$query			= isset($data['query'])?$data['query']:'';
 				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order			= isset($data['order'])?$data['order']:'';
-				$filter			= isset($data['filter'])?$data['filter']:'';
-				$entity_id		= isset($data['entity_id'])?$data['entity_id']:'';
-				$cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
-				$doc_type		= isset($data['doc_type'])?$data['doc_type']:'';
+				$filter			= isset($data['filter']) && $data['filter'] ? (int) $data['filter']: 0;
+				$entity_id		= isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id']:0;
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']: 0;
+				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? (int)$data['doc_type']: 0;
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
@@ -288,33 +288,41 @@
 				$ordermethod = ' order by location_code ASC';
 			}
 
-			$filtermethod = " fm_document.location_code $this->like '$location_code%'";
+			$where = 'WHERE';
+			$filtermethod = '';
+			if($location_code)
+			{
+				$filtermethod = " $where fm_document.location_code $this->like '$location_code%'";
+				$where = 'AND';
+			}
 
 			if ($doc_type > 0)
 			{
-				$filtermethod .= " AND fm_document.category='$doc_type' ";
+				$filtermethod .= " $where fm_document.category={$doc_type} ";
+				$where = 'AND';
 			}
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " AND fm_document.p_cat_id=$cat_id AND fm_document.p_entity_id=$entity_id ";
+				$filtermethod .= " $where fm_document.p_cat_id={$cat_id} AND fm_document.p_entity_id={$entity_id} ";
+				$where = 'AND';
 			}
 
-
-			if ($filter)
+			if ($filter > 0)
 			{
-				$filtermethod .= " AND fm_document.user_id='$filter' ";
+				$filtermethod .= "  $where fm_document.user_id='$filter' ";
+				$where = 'AND';
 			}
 
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND fm_document.title $this->like '%$query%' OR fm_document.document_name"
-				. " $this->like '%$query%'";
+				$querymethod = " $where (fm_document.title $this->like '%$query%' OR fm_document.document_name"
+				. " $this->like '%$query%')";
 			}
 
 			$sql = "SELECT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
 			. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
-			. " WHERE  $filtermethod $querymethod";
+			. " $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -439,7 +447,7 @@
 				$document['vendor_id'],
 				$this->account);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_document (document_name,link,title,access,category,entry_date,document_date,version,coordinator,status,"
 				. "descr,location_code,address,branch_id,vendor_id,user_id $cols) "
@@ -544,11 +552,11 @@
 
 				if($old_p_num)
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $old_loc1 . '/' . $document['entity_name'] . '/' . $document['category_name'] . '/' . $p_num . '/' . $old_document_name;
+					$file = $this->fakebase. '/document/' . $old_loc1 . '/' . $document['entity_name'] . '/' . $document['category_name'] . '/' . $p_num . '/' . $old_document_name;
 				}
 				else
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $old_loc1 . '/' . $old_document_name;
+					$file = $this->fakebase. '/document/' . $old_loc1 . '/' . $old_document_name;
 				}
 
 				$receipt= $this->delete_file($file);
@@ -579,7 +587,7 @@
 				'address'		=>$address
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_document set $value_set $vals WHERE id= '" . $document['document_id'] ."'",__LINE__,__FILE__);
 
@@ -605,11 +613,11 @@
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/' . 'document'. '/' . $document_name);
+					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/document/' . $document_name);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/' . 'document'. '/' . $document_name);
+					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/document/' . $document_name);
 				}
 				$this->vfs->override_acl = 0;
 			}
@@ -639,11 +647,11 @@
 			{
 				if($p_num)
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $loc1 . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $document_name;
+					$file = $this->fakebase. '/document/' . $loc1 . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $document_name;
 				}
 				else
 				{
-					$file = $this->fakebase. '/' . 'document' . '/' . $loc1 . '/' . $document_name;
+					$file = $this->fakebase. '/document/' . $loc1 . '/' . $document_name;
 				}
 
 				$receipt= $this->delete_file($file);

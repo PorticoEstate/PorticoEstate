@@ -79,7 +79,7 @@
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$status_id		= phpgw::get_var('status_id');
 			$entity_id		= phpgw::get_var('entity_id', 'int');
-			$doc_type		= phpgw::get_var('doc_type');
+			$doc_type		= phpgw::get_var('doc_type', 'int');
 			$query_location	= phpgw::get_var('query_location');
 			$allrows		= phpgw::get_var('allrows', 'bool');
 
