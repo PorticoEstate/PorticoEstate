@@ -6,7 +6,7 @@
 
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
 
-		$this->db = $this->bocommon->new_db();
+		$this->db 		= & $GLOBALS['phpgw']->db;
 
 		//'property'	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
@@ -24,7 +24,7 @@
 			}
 		}
 
-		$sql = "SELECT besiktet_dato FROM fm_entity_2_1 WHERE id ='" . $values['id'] . "'";
+		$sql = "SELECT besiktet_dato FROM fm_entity_2_1 WHERE id ='{$receipt['id']}'";
 		$this->db->query($sql,__LINE__,__FILE__);
 		$this->db->next_record();
 		if($this->db->f('besiktet_dato'))
