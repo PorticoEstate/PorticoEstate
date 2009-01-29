@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $entity_id;
 		var $status_id;
+		var $allrows;
 
 		var $public_functions = array
 		(
@@ -80,6 +81,7 @@
 			$entity_id		= phpgw::get_var('entity_id', 'int');
 			$doc_type		= phpgw::get_var('doc_type');
 			$query_location	= phpgw::get_var('query_location');
+			$allrows		= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : '';
@@ -91,6 +93,7 @@
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->doc_type			= isset($doc_type) && $doc_type ? $doc_type : '';
 			$this->query_location	= isset($query_location) && $query_location ? $query_location : '';
+			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata($data)
@@ -167,7 +170,7 @@
 		{
 			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
-											'location_code' => $location_code,'doc_type'=>$this->doc_type));
+											'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

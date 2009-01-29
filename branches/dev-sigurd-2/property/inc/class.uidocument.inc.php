@@ -45,6 +45,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
+		var $allrows;
 
 		var $public_functions = array
 		(
@@ -61,7 +62,6 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation";
 
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bodocument',true);
 			$this->bocommon				= & $this->bo->bocommon;
@@ -89,6 +89,7 @@
 			$this->entity_id			= $this->bo->entity_id;
 			$this->doc_type				= $this->bo->doc_type;
 			$this->query_location		= $this->bo->query_location;
+			$this->allrows				= $this->bo->allrows;
 
 			// FIXME: $this->entity_id always has a value set here - skwashd jan08
 			if ( $this->entity_id )
@@ -503,21 +504,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$preserve = phpgw::get_var('preserve', 'bool');
-
-			if($preserve)
-			{
-				$this->bo->read_sessiondata();
-
-				$this->start				= $this->bo->start;
-				$this->query				= $this->bo->query;
-				$this->sort				= $this->bo->sort;
-				$this->order				= $this->bo->order;
-				$this->filter				= $this->bo->filter;
-				$this->entity_id			= $this->bo->entity_id;
-				$this->cat_id				= $this->bo->cat_id;
-				$this->status_id			= $this->bo->status_id;
-			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','document_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data','document_receipt','');
@@ -565,7 +551,8 @@
 					'location_code'	=> $location_code,
 					'filter'	=> $this->filter,
 					'query'		=> $this->query,
-					'query_location'=> $this->query_location
+					'query_location'=> $this->query_location,
+					'allrows'		=> $this->allrows
 				);
 
 			$this->config->read();
@@ -588,7 +575,8 @@
 					'location_code'	=> $location_code,
 					'filter'	=> $this->filter,
 					'query'		=> $this->query,
-					'query_location'=> $this->query_location
+					'query_location'=> $this->query_location,
+					'allrows'		=> $this->allrows
    				));
 
    				$datatable['config']['base_java_url'] = "menuaction:'property.uidocument.list_doc',"
@@ -601,15 +589,14 @@
 	    												."location_code:'{$location_code}',"
 	    												."filter:'{$this->filter}',"
 	    												."query:'{$this->query}',"
-	    												."query_location:'{$this->query_location}'";
+	    												."query_location:'{$this->query_location}',"
+	    												."allrows:'{$this->allrows}'";
 
+			    $datatable['config']['allow_allrows'] = true;
 
-
-			    $datatable['config']['allow_allrows'] = false;
-
-			    $values_combo_box[0] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->doc_type,'type' =>'document','order'=>'descr'));
-				$default_value = array ('id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->doc_type,'globals' => True));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
 				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',4,$this->filter,$this->acl_location,array('all'),$default=$this->account);
 				$default_value = array ('id'=>'','name'=>lang('no user'));
@@ -687,7 +674,7 @@
 			                       		'hidden_value' => array(
 						                                        array( //div values  combo_box_0
 								                                            'id' => 'values_combo_box_0',
-								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 								                                      ),
 								                                array( //div values  combo_box_1
 								                                            'id' => 'values_combo_box_1',
@@ -705,11 +692,11 @@
 
 			if($this->cat_id)
 			{
-				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
+				$directory = $this->fakebase. '/document/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
 			}
 			else
 			{
-				$directory = $this->fakebase. '/' . 'document' . '/' . $location['loc1'];
+				$directory = $this->fakebase. '/document/' . $location['loc1'];
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -733,43 +720,44 @@
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
-			if (isset($document_list) AND is_array($document_list))
+			foreach($document_list as $document_entry )
 			{
-				foreach($document_list as $document_entry )
+				for ($k=0;$k<$count_uicols_name;$k++)
 				{
-					for ($k=0;$k<$count_uicols_name;$k++)
+					if($document_entry['link'])
 					{
-						if($document_entry['link'])
+						$link_view_file=$document_entry['link'];
+						$document_entry['document_name']='link';
+						unset($link_to_files);
+					}
+					else
+					{
+						if(!$link_to_files)
 						{
-							$link_view_file=$document_entry['link'];
-							$document_entry['document_name']='link';
-							unset($link_to_files);
+							$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.view_file', 'id'=> $document_entry['document_id'], 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $p_num));
+							$link_to_files = $files_url;
 						}
 						else
 						{
-							if(!$link_to_files)
-							{
-								$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uidocument.view_file', 'id'=> $document_entry['document_id'], 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $p_num));
-								$link_to_files = $files_url;
-							}
-						}
-
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']			= $document_entry[$uicols['name'][$k]];
-
-							if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $document_entry[$uicols['name'][$k]])
-							{
-								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-								$datatable['rows']['row'][$j]['column'][$k]['value']		= $document_entry[$uicols['name'][$k]];
-								$datatable['rows']['row'][$j]['column'][$k]['link']		= $link_to_files.'/'.$directory.'/'.$document_entry['document_name'];
-								$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-							}
+							$link_view_file ="{$files_url}/{$directory}/{$document_entry['document_name']}";
 						}
 					}
-					$j++;
+
+					if($uicols['input_type'][$k]!='hidden')
+					{
+						$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+						$datatable['rows']['row'][$j]['column'][$k]['value']			= $document_entry[$uicols['name'][$k]];
+
+						if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $document_entry[$uicols['name'][$k]])
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $document_entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['link']			= $link_view_file;
+							$datatable['rows']['row'][$j]['column'][$k]['target']		= '_blank';
+						}
+					}
 				}
+				$j++;
 			}
 
 			$location_data = array();

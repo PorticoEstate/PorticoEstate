@@ -267,22 +267,16 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$filter	= (isset($data['filter'])?$data['filter']:'');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$entity_id = (isset($data['entity_id'])?$data['entity_id']:0);
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$doc_type = (isset($data['doc_type'])?$data['doc_type']:0);
-				$location_code = (isset($data['location_code'])?$data['location_code']:'');
+				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+				$query			= isset($data['query'])?$data['query']:'';
+				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order			= isset($data['order'])?$data['order']:'';
+				$filter			= isset($data['filter'])?$data['filter']:'';
+				$entity_id		= isset($data['entity_id'])?$data['entity_id']:'';
+				$cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+				$doc_type		= isset($data['doc_type'])?$data['doc_type']:'';
+				$allrows		= isset($data['allrows'])?$data['allrows']:'';
+				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
 
 			if ($order)
@@ -315,7 +309,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND fm_document.title $this->like '%$query%' OR fm_document.document_name"
-				. " $this->like '%$query%' OR fm_document.location_code $this->like '$location_code%'";
+				. " $this->like '%$query%'";
 			}
 
 			$sql = "SELECT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
@@ -324,7 +318,15 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
-			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
 
 			$document_list = array();
 			while ($this->db->next_record())
