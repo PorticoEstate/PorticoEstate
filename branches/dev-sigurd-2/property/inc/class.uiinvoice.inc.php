@@ -1229,7 +1229,6 @@
 					$content[$i]['paid']					= $paid;
 					$content[$i]['dimb_list']				= $this->bo->select_dimb_list($content[$i]['dimb']);
 					$content[$i]['tax_code_list']			= $this->bo->tax_code_list($content[$i]['tax_code']);
-					$content[$i]['link_remark'] 			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.remark'));
 					$content[$i]['link_order'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.view_order'));
 					$content[$i]['link_claim'] 				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check'));
 					$i++;
@@ -1424,10 +1423,14 @@
 						}
 						elseif(($i == 10))
 						{
-							if($invoices['remark='] == true)
+							if($invoices['remark'] == true)
 							{
-								$temp_lnk = $invoices['link_remark']."&id=".$invoices['id']."&paid=".$invoices['paid'];
-								$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href=\"javascript:var w=window.open('".$temp_lnk."','','width=550,height=400,scrollbars')\" >".lang('Remark')."</a>";
+								$json_row[$uicols[$i]['col_name']] .= " <a href=\"javascript:openwindow('".$GLOBALS['phpgw']->link('/index.php', array
+										 (
+										 	'menuaction'=> 'property.uiinvoice.remark',
+										 	'id'		=> $invoices['id'],
+										 	'paid'		=> $invoices['paid']
+										 )). "','550','400')\" >".lang('Remark')."</a>";
 							}
 							else
 							{
