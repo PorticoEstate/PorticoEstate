@@ -45,10 +45,12 @@
 		{
 			//eliminate "no category" option because is necesary have a category in the  PHP query
 			delete oMenuButton_0.getMenu().itemData[0];
-
-			//for this particular module, the Category's combo box has sets his own category.
-			oMenuButton_0.set("label", ("<em>" + array_options[0][path_values.cat_id][1] + "</em>"));
+			//correcting it. now look for value 
+			index = locate_in_array_options(0,"value",path_values.cat_id);
+			//only change LABEL, because value (cat_id) is include un URL (PHP use redirect)
+			oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 			oMenuButton_0.focus();
+
 		}
 		else if(flag_particular_setting=='update')
 		{

@@ -1213,12 +1213,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete($gab_id,$location_code);
-	    		$json = array
-	    		(
-	    			'menuaction' 	=> 'property.uigab.list_detail',
-    				'gab_id' 		=> $gab_id
-				);
-				return $json ;
+	    		return "gab_id ".$gab_id." ".lang("has been deleted");
 			}
 			
 			$link_data = array

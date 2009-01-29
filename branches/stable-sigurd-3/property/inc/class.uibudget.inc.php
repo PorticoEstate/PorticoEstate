@@ -883,8 +883,6 @@
 		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 	    				(
 							'menuaction'	=>'property.uibudget.obligations',
-							//'sort'			=>$this->sort,
-							//'order'			=>$this->order,
 							'cat_id'		=>$this->cat_id,
 							'filter'		=>$this->filter,
 							'query'			=>$this->query,
@@ -894,19 +892,17 @@
 							'details'		=> $this->details,
 							'allrows'		=> $this->allrows
 	    				));
-	    		$datatable['config']['allow_allrows'] = false;
+	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uibudget.obligations',"
-	    											//."sort:'{$this->sort}',"
-	    											//."order:'{$this->order}',"
- 	                        						."cat_id: '{$this->cat_id}',"
- 	                        						."filter:'{$this->filter}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."district_id:'{$this->district_id}',"
- 	                        						."grouping:'{$this->grouping}',"
-						 	                        ."year:'{$this->year}',"
- 	                        						."details:'{$this->details}',"
- 	                        						."allrows:'{$this->allrows}'";
+	    												."cat_id: '{$this->cat_id}',"
+	 	                        						."filter:'{$this->filter}',"
+							 	                        ."query:'{$this->query}',"
+	 	                        						."district_id:'{$this->district_id}',"
+	 	                        						."grouping:'{$this->grouping}',"
+							 	                        ."year:'{$this->year}',"
+	 	                        						."details:'{$this->details}',"
+	 	                        						."allrows:'{$this->allrows}'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -1009,30 +1005,42 @@
 			$uicols = array (
 				
 				array(
-					'col_name'=>grouping,		'visible'=>false,	'name'=>grouping,		'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>grouping,		'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>b_account,		'visible'=>true,	'name'=>b_account,		'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>myformatLinkPGW),
+					'col_name'=>b_account,		'visible'=>true,	'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>myformatLinkPGW),
 				array(
-					'col_name'=>district_id,	'visible'=>true,	'name'=>district_id,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>district_id,	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>hits,			'visible'=>true,	'name'=>hits,			'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>hits_ex,		'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>budget_cost,	'visible'=>true,	'name'=>budget_cost,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>hits,			'visible'=>true,	'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>obligation,		'visible'=>true,	'name'=>obligation,		'label'=>lang('obligations'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+					'col_name'=>budget_cost_ex,	'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>link_obligation,'visible'=>false,	'name'=>'',				'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>budget_cost,	'visible'=>true,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>actual_cost,	'visible'=>true,	'name'=>actual_cost,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+					'col_name'=>obligation_ex,	'visible'=>false,	'label'=>''					,'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>link_actual_cost,'visible'=>false,	'name'=>actual_cost,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>obligation,		'visible'=>true,	'label'=>lang('obligations'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
 				array(
-					'col_name'=>diff,			'visible'=>true,	'name'=>diff,			'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
+					'col_name'=>link_obligation,'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>actual_cost_ex,	'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>actual_cost,	'visible'=>true,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+				array(
+					'col_name'=>link_actual_cost,'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>diff_ex,		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>diff,			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);	
+				
 			$location_list = array();
 			
 			$location_list = $this->bo->read_obligations(); 
-			$entry = array();
+//_debug_array($location_list);
+			$entry = $content = array();
 			$j = 0;
 			//cramirez: add this code because  "mktime" functions fire an error
 			if($this->year == "")
@@ -1048,53 +1056,52 @@
 				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,1,1,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$end_date	= $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,12,31,$this->year),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']); 
 				
-				$sum = 0;
-				
 				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
 				foreach($location_list as $entry)
 				{
-					$i = 0;
-					$b_account = $this->details ? $entry['b_account'] : '';
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['grouping'];
+//_debug_array($entry);
+					$content[] = array
+					(
+						'grouping'			=> $entry['grouping'],
+						'b_account'			=> $entry['b_account'],	
+						'district_id'		=> $entry['district_id'],
+						'hits_ex'			=> $entry['hits'],
+						'hits'				=> number_format($entry['hits'], 0, ',', ' '),
+						'budget_cost_ex'	=> $entry['budget_cost'],
+						'budget_cost'		=> number_format($entry['budget_cost'], 0, ',', ' '),
+						'obligation_ex'		=> $entry['obligation'],
+						'obligation'		=> number_format($entry['obligation'], 0, ',', ' '),
+						'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$b_account, 'start_date'=> $start_date, 'end_date'=> $end_date)),
+						'actual_cost_ex'	=> $entry['actual_cost'],
+						'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
+						'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$b_account,  'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
+						'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
+						'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ')
+					);	
 					
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['b_account'];
-					
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $entry['district_id'];
-					
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['hits'], 0, ',', ' ');//$entry['hits'];					
-					
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['budget_cost'], 0, ',', ' ');//$entry['budget_cost'];					
-					
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['obligation'], 0, ',', ' ');//$entry['obligation'];		
-
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$b_account, 'start_date'=> $start_date, 'end_date'=> $end_date));	
-
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['actual_cost'], 0, ',', ' ');//$entry['actual_cost'];
-
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$b_account,  'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true));
-
-					$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols[$i]['col_name'];
-					$datatable['rows']['row'][$j]['column'][$i++]['value']	= number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ');//$entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']; 
-
-
-					$sum_obligation += $entry['obligation'];
-					$sum_hits += $entry['hits'];
-					$sum_budget_cost += $entry['budget_cost'];
-					$sum_actual_cost += $entry['actual_cost'];	
-
+//					$sum_obligation += $entry['obligation'];
+//					$sum_hits += $entry['hits'];
+//					$sum_budget_cost += $entry['budget_cost'];
+//					$sum_actual_cost += $entry['actual_cost'];					
+				}
+				
+//				$sum_diff = $sum_budget_cost - $sum_actual_cost - $sum_obligation;
+			}
+			
+			$j=0;
+			if (isset($content) && is_array($content))
+			{
+				foreach($content as $budget)
+				{
+					for ($i=0;$i<count($uicols);$i++)
+					{
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 		= $uicols[$i]['col_name'];
+						$datatable['rows']['row'][$j]['column'][$i]['value']		= $budget[$uicols[$i]['col_name']];
+					}
 					$j++;
 				}
-			$sum_diff = $sum_budget_cost - $sum_actual_cost - $sum_obligation;
 			}
+			
 			$datatable['rowactions']['action'] = array();
 			
 			for ($i=0;$i<count($uicols);$i++)
@@ -1119,7 +1126,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= "b_account";//$uicols[1]['name']; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= $uicols[1]['col_name']; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
@@ -1168,11 +1175,13 @@
 				// right in datatable
 				$json ['rights'] = $datatable['rowactions']['action'];
 				
-				$json ['sum_diff'] 			= number_format($sum_diff, 0, ',', ' ');;//$sum_diff;
-				$json ['sum_obligation']	= number_format($sum_obligation, 0, ',', ' ');//$sum_obligation;
-				$json ['sum_hits'] 			= number_format($sum_hits, 0, ',', ' ');//$sum_hits;
-				$json ['sum_budget_cost']	= number_format($sum_budget_cost, 0, ',', ' ');//$sum_budget_cost;
-				$json ['sum_actual_cost']	= number_format($sum_actual_cost, 0, ',', ' ');//$sum_actual_cost;
+//				$json ['sum_hits'] 			= number_format($sum_hits, 0, ',', ' ');
+//				$json ['sum_budget_cost']	= number_format($sum_budget_cost, 0, ',', ' ');
+//				$json ['sum_obligation']	= number_format($sum_obligation, 0, ',', ' ');
+//				$json ['sum_actual_cost']	= number_format($sum_actual_cost, 0, ',', ' ');
+//				$json ['sum_diff'] 			= number_format($sum_diff, 0, ',', ' ');
+				
+//_debug_array($json);
 
 	    		return $json;
 			}
@@ -1480,12 +1489,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete($budget_id);
-	    		$json = array
-	    		(
-	    			'result'	=> 1,
-    				'budget_id' => $budget_id
-				);
-				return $json ;
+	    		return "budget_id ".$budget_id." ".lang("has been deleted");
 			}
 			
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
@@ -1529,12 +1533,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete_basis($budget_id);
-	    		$json = array
-	    		(
-	    			'result'	=> 1,
-    				'budget_id' => $budget_id
-				);
-				return $json ;
+				return "budget_id ".$budget_id." ".lang("has been deleted");
 			}
 			
 			

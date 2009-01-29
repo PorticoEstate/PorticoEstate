@@ -13,7 +13,31 @@
 	var myLoading;
 	var message_delete = "";
 	
-	
+/********************************************************************************
+* This functions is used for initial settings in filter buttons
+* 
+* order_button = index of oMenuButton_
+* type = value or text
+* value = value to find
+*/	
+	this.locate_in_array_options = function(order_button,type,value)
+	{
+		if(type=="value")
+		{
+			index = 0;
+		}
+		else if(type=="text")
+		{
+			index = 1;
+		}
+		for(i=0;i<array_options[order_button].length;i++)
+		{
+			if(array_options[order_button][i][index]==value)
+			{
+				return i;
+			}
+		}
+	}	
  /********************************************************************************
  * 
  */	

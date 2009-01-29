@@ -32,7 +32,7 @@
 		// define the hidden column in datatable
 		var config_values = {
 			date_search : 0, //if search has link "Data search"
-			PanelLoading : 1
+			PanelLoading : 0
 		}
 
 		var tableYUI;
@@ -43,6 +43,7 @@
 			{
 				//look for  "grouping" column
 				oMenuButton_3.set("label", ("<em>" + param + "</em>"));
+				oMenuButton_3.set("value", param);
 				path_values.grouping = param;
 			}
 			else
@@ -50,23 +51,17 @@
 				//reset GROUPING filter
 				oMenuButton_3.set("label", ("<em>" + array_options[3][0][1] + "</em>"));
 				path_values.grouping =  array_options[3][0][0];
-				//look for  "b_account" column
 				path_values.b_account = param;
 			}
 
 			oMenuButton_0.set("label", ("<em>" + year + "</em>"));
 			path_values.year= year;
-
-			//look for the text for filter DISTRICT
-			for (i=0;i<array_options[1].length;i++)
-			{
-				if(array_options[1][i][0] == district_id)
-				{
-					oMenuButton_1.set("label", ("<em>" + array_options[1][i][1] + "</em>"));
-					path_values.district_id = district_id;
-					break;
-				}
-			}
+		
+			//look for REVISION filter 's text using COD
+			index = locate_in_array_options(1,"value",district_id);
+			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			oMenuButton_1.set("value", array_options[1][index][0]);
+			path_values.district_id = district_id;
 			
 			path_values.details = details;
 			execute_ds();
@@ -125,14 +120,16 @@
 			//Create ROW
 			newTR = document.createElement('tr');
 			
-			td_empty(3);
-			td_sum(values_ds.sum_hits);
-			td_sum(values_ds.sum_budget_cost);
-			td_sum(values_ds.sum_obligation);
+			td_empty(4);
+			td_sum(getSumPerPage("hits_ex",0));
 			td_empty(1);
-			td_sum(values_ds.sum_actual_cost);
-			td_empty(1);			
-			td_sum(values_ds.sum_diff);
+			td_sum(getSumPerPage("budget_cost_ex",0));
+			td_empty(1);
+			td_sum(getSumPerPage("obligation_ex",0));
+			td_empty(2);
+			td_sum(getSumPerPage("actual_cost_ex",0));
+			td_empty(2);			
+			td_sum(getSumPerPage("diff_ex",0));
 			
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
