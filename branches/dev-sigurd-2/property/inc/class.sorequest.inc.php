@@ -295,7 +295,7 @@
 			$sql .= " $filtermethod $querymethod";
 
 			$this->uicols		= $this->bocommon->uicols;
-//			$cols_return		= $this->bocommon->cols_return;
+			$cols_return		= $this->bocommon->cols_return;
 			$type_id		= $this->bocommon->type_id;
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
