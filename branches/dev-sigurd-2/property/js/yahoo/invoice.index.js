@@ -26,7 +26,7 @@
 	var toolTips = [
 		{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
 		{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
-		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'},
+		{name:'voucher_date_lnk', title:'payment_date', description:'',ColumnDescription:'voucher_date_lnk'},
 		//{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
