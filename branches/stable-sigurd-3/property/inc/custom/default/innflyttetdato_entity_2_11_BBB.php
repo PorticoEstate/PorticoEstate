@@ -6,7 +6,7 @@
 
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
 
-		$db = $this->bocommon->new_db();
+		$db = & $GLOBALS['phpgw']->db;
 
 		$sql = "SELECT innflyttet FROM fm_entity_2_11 WHERE location_code ='" . $values['location_code'] . "'";
 		$db->query($sql,__LINE__,__FILE__);
@@ -24,7 +24,7 @@
 			$value_set['innflyttet']	= $innflyttetdato;
 			$value_set	= $this->bocommon->validate_db_update($value_set);
 			$db->transaction_begin();
-			$db->query("UPDATE fm_entity_2_11 set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
+			$db->query("UPDATE fm_entity_2_11 set $value_set WHERE id=" . (int) $receipt['id'],__LINE__,__FILE__);
 			$db->transaction_commit();
 		}
 
