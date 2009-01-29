@@ -602,17 +602,18 @@
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
+			//_debug_array($content);
 			$uicols = array (
-				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(numbre,numbre,numbre,number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
+				'type'			=>	array(number,numbre,numbre,numbre,number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
 
-				'col_name'		=>	array(transfer,kreditnota,sign,vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota_tmp,sign_tmp      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
-				'name'			=>	array(dummy,dummy,dummy,vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
+				'col_name'		=>	array(payment_date,transfer,kreditnota,sign,vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota_tmp,sign_tmp      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
+				'name'			=>	array(payment_date,dummy,dummy,dummy,vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
 
-				'formatter'		=>	array('','','','','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
+				'formatter'		=>	array('','','','','','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
 
-				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','','','','','','centerClasss','','','',$paid?'rightClasss':'','rightClasss','rightClasss','','rightClasss','',$paid?'centerClasss':'comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
+				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'className'		=> 	array('','','','','','','','','','','centerClasss','','','',$paid?'rightClasss':'','rightClasss','rightClasss','','rightClasss','',$paid?'centerClasss':'comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
 				);
 
 			//url to detail of voucher
