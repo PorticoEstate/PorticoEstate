@@ -274,7 +274,7 @@
 
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(14);
+		td_empty(15);
 		td_sum(tmp_sum);
 		td_empty(6);
 		//RowChecked

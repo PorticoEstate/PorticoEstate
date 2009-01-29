@@ -605,7 +605,7 @@
 			//_debug_array($content);
 			$uicols = array (
 				'input_type'	=>	array(hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,link,link   ,hidden,hidden,hidden,$paid?varchar:input,varchar,link   ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(number,numbre,numbre,numbre,number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'type'			=>	array(number,hd_txt,hd_txt,numbre,number,number,''	   ,number,''	 ,url ,msg_box,''    ,''    ,''    ,$paid?'':text	   ,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
 
 				'col_name'		=>	array(payment_date,transfer,kreditnota,sign,vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota_tmp,sign_tmp      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
 				'name'			=>	array(payment_date,dummy,dummy,dummy,vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
@@ -1049,7 +1049,7 @@
 		    				  {
 		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP transfer_tophp'  type='hidden' value='".$column['value']."'/>";
 		    				  }
-		    				  else // for imput hiddens
+		    				  else // for imput hiddens hd_text
 		    				  {
 		    				  	$json_row[$column['name']] = " <input name='values[".$column['name']."][".$k."]' id='values[".$column['name']."][".$k."]'  class='myValuesForPHP '  type='hidden' value='".$column['value']."'/>";
 		    				  }
@@ -2166,12 +2166,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 	    		$this->bo->delete($voucher_id);
-	    		$json = array
-	    		(
-	    			'result' 		=> 1,
-    				'voucher_id' 	=> $voucher_id
-	    		);
-				return $json ;
+	    		return "voucher_id ".$voucher_id." ".lang("has been deleted");
 			}
 
 
