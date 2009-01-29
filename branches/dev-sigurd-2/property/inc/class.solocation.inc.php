@@ -102,7 +102,7 @@
 
 			$entity[] = array
 			(
-				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','query'=> $location_code)),
+				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
 				'name'		=> lang('documents') . ' [' . $hits . ']',
 				'descr'		=> lang('Documentation')
 			);
@@ -128,7 +128,7 @@
 				$spaceset .= '>';
 				$entity[] = array
 				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','query'=> $location_code, 'doc_type'=> $category['id'])),
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])),
 					'name'		=> $spaceset . $category['name'] . ' [' . $hits . ']',
 					'descr'		=> lang('Documentation')
 				);
