@@ -68,7 +68,7 @@
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo			= CreateObject('property.boinvoice',true);
-			$this->bocommon			= CreateObject('property.bocommon');
+			$this->bocommon			= &$this->bo->bocommon;
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
