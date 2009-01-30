@@ -46,6 +46,7 @@
 		function get_type_list()
 		{
 			$this->db->query("SELECT entity_type FROM fm_investment GROUP BY entity_type ");
+			$type_list = array();
 			while ($this->db->next_record())
 			{
 				$type_list[] = Array(
@@ -154,6 +155,7 @@
 			}
 
 
+			$investment = array();
 			$i=0;
 			while ($this->db->next_record())
 			{
@@ -190,6 +192,7 @@
 		{
 //_debug_array($values);
 
+			$receipt = array();
 			while (is_array($values['location']) && list($input_name,$value) = each($values['location']))
 			{
 				if($value)
@@ -322,6 +325,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 
+			$investment = array();
 			$i=0;
 			while ($this->db->next_record())
 			{
@@ -344,6 +348,7 @@
 		{
 			$this->db->query("SELECT writeoff_year FROM fm_investment GROUP BY writeoff_year ",__LINE__,__FILE__);
 
+			$period_list = array();
 			while ($this->db->next_record())
 			{
 				$period_list[] = Array(
