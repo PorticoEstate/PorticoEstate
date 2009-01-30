@@ -93,7 +93,7 @@
 <xsl:template match="phpgw">
 	<xsl:apply-templates select="datatable/menu" />
 
-		<xsl:choose>
+		<!--  xsl:choose>
 			<xsl:when test="datatable/locdata!=''">
 				<div class="toolbar-first">
 					<div class="toolbar">
@@ -101,7 +101,7 @@
 					</div>
 				</div>
 			</xsl:when>
-		</xsl:choose>
+		</xsl:choose>-->
 		<div class="toolbar-container">
 			<div class="toolbar">
 				<xsl:apply-templates select="datatable/actions" />

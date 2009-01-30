@@ -571,17 +571,18 @@
 			$id		= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id,$type);
+				//$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				return "id ".$id." ".lang("has been deleted");
+			}
+
 			$link_data = array
 			(
 				'menuaction' => 'property.uistandard_3.index',
 				'type' => $type
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($id,$type);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

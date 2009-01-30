@@ -1242,15 +1242,10 @@
 
 			$id = phpgw::get_var('id', 'int');
 
-			//cramirez add JsonCod for Delete
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($id);
-				$json = array
-				(
-					'result' 			=> 1,
-				);
-				return $json ;
+				return "id ".$id." ".lang("has been deleted");
 			}
 
 			if(!$this->acl_delete)

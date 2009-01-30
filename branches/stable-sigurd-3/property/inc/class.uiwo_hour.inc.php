@@ -522,6 +522,7 @@
 			if($delete && $hour_id)
 			{
 				$receipt = $this->bo->delete($hour_id,$workorder_id);
+				return "hour_id ".$hour_id." ".lang("has been deleted");
 			}
 
 			$common_data=$this->common_data($workorder_id);
@@ -838,7 +839,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
 					$datatable['headers']['header'][$i]['className']		= $uicols['className'][$i];
 				}
 				else
@@ -846,7 +847,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}

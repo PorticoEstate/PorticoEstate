@@ -485,7 +485,7 @@
 			if($delete && $hour_id && phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$receipt = $this->bo->delete_hour($hour_id,$template_id);
-				return "hour ".$hour_id." has been deleted";
+				return "hour ".$hour_id." ".lang("has been deleted");
 			}
 			else
 			{
@@ -1015,19 +1015,18 @@
 		function delete()
 		{
 			$id	= phpgw::get_var('id', 'int');
+			
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($id);
+				return "id ".$id." ".lang("has been deleted");
+			}
+			
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
-
 			$link_data = array
 			(
 				'menuaction' => 'property.uitemplate.index'
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($id);
-				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
-			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
 			$data = array

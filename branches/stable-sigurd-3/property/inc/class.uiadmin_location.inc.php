@@ -631,6 +631,12 @@
 			$id			= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$this->bo->delete($type_id,$id,$attrib);
+				return "id ".$id." ".lang("has been deleted");
+			}
+			
 			if($attrib)
 			{
 				$function='list_attribute';
@@ -644,11 +650,6 @@
 				'menuaction' => 'property.uiadmin_location.'.$function,
 				'type_id' => $type_id
 			);
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($type_id,$id,$attrib);
-			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 

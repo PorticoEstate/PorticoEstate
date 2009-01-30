@@ -26,7 +26,7 @@
 	var toolTips = [
 		{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
 		{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
-		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'},
+		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'payment_date'},
 		//{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
@@ -274,7 +274,7 @@
 
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(14);
+		td_empty(15);
 		td_sum(tmp_sum);
 		td_empty(6);
 		//RowChecked
