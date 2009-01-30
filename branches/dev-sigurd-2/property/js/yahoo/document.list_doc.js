@@ -49,8 +49,11 @@
 	*/
 	this.create_table_info_invoice_sub = function()
 	{
-		div_message = YAHOO.util.Dom.getElementsByClassName('toolbar-first','div')[0];
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = "60px";
+		div_message = YAHOO.util.Dom.getElementsByClassName('field','div')[0];
 		newTable = document.createElement('table');
+		newDiv = document.createElement("div");
+
 		//fix IE error
 		newTbody = document.createElement("TBODY");
 
@@ -64,8 +67,9 @@
 			 		newTR = document.createElement('tr');
 		 			newTD = document.createElement('td');
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['name']));
-		 			newTD.setAttribute("width","350");
+		 			newTD.setAttribute("width","170");
 		 			newTR.appendChild(newTD);
+		 			newTbody.appendChild(newTR);
 
 		 			newTD = document.createElement('td');
 		 			newTD.setAttribute("width","30");
@@ -75,20 +79,16 @@
 
 		 			newTD = document.createElement('td');
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['extra'][0]['value']));
-		 			/*itemlink = document.createElement('a');
-					itemlink.setAttribute('href', '#');
-					itemlink.appendChild(document.createTextNode(document.createTextNode(values_ds.current_consult[i]['value'])));
-					itemlink.onclick = function(){window.open('http://www.google.com');}
-					newTD.appendChild(itemlink);*/
 		 			newTR.appendChild(newTD);
 			 		newTbody.appendChild(newTR);
 		 		}
 			 }
 		 }
-		 newTable.setAttribute("style","background-color:#eee;");
-		 newTable.setAttribute("width","100%");
 		 newTable.appendChild(newTbody);
-		 div_message.appendChild(newTable);
+		 newTable.setAttribute("style","clear:both; width:400px;");
+		 newDiv.appendChild(newTable);
+		 newDiv.setAttribute("style","clear:both; width:450px;");
+		 div_message.appendChild(newDiv);
 	}
 
 
@@ -103,6 +103,7 @@
 /****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		//YAHOO.util.Dom.getElementsByClassName('toolbar-first','div')[0].style.display = 'none';
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 
 		var loader = new YAHOO.util.YUILoader();
