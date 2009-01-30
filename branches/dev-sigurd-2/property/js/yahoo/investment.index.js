@@ -200,7 +200,10 @@
   		td_empty(1);
   		tmp_sum = getSumPerPage('value_ex',0);
   		td_sum(tmp_sum);
-  		td_empty(5);
+  		td_empty(2);
+  		tmp_sum = getSumPerPage('this_write_off_ex',0);
+  		td_sum(tmp_sum);
+  		td_empty(3);
 		//RowChecked
 		CreateRowChecked("select_check");
 

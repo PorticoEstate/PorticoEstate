@@ -313,6 +313,8 @@
 				array(
 					'visible'=>true,	'name'=>this_index,		'label'=>lang('Last index'),	'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
 				array(
+					'visible'=>false,	'name'=>this_write_off_ex,'label'=>'',					'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
+				array(
 					'visible'=>true,	'name'=>this_write_off,	'label'=>lang('Write off'),		'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',	'formatter'=>'myFormatCount2'),
 				array(
 					'visible'=>true,	'name'=>date,			'label'=>lang('Date'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',	'formatter'=>''),
@@ -372,6 +374,7 @@
 				'value_ex'			=> ($investment['value']==""?0:$investment['value']),
 				'value'				=> number_format($investment['value'], 0, ',', ''),//to avoid error in YUI's sum
 				'this_index'		=> $investment['this_index'],
+				'this_write_off_ex'	=> $investment['this_write_off'],
 				'this_write_off'	=> number_format($investment['this_write_off'], 0, ',', ''),
 				'date'				=> date($dateformat,strtotime($investment['date'])),
 				'index_count'		=> $investment['index_count'],
@@ -381,6 +384,7 @@
 				
 				//$sum_initial_value	+= $investment['initial_value'];
 				//$sum_value			+= $investment['value'];
+				//$sum_this_write_off_ex			+= $investment['this_write_off'];
 				$counter++;
 			}	
 								
@@ -493,9 +497,11 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
-				$json ['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				$json['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				//$json ['sum_initial_value'] = number_format($sum_initial_value, 0, ',', '');
 				//$json ['sum_value'] 		= number_format($sum_value, 0, ',', '');
+				//$json['sum_this_write_off_ex'] 		= number_format($sum_this_write_off_ex, 0, ',', '');
+				//_debug_array($json);
 				
 	    		return $json;
 			}
