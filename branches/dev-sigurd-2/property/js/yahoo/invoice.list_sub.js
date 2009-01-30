@@ -149,7 +149,7 @@
 		this.myParticularRenderEvent = function()
 		{
 			delete_paginator();
-			delete_content_div("message"); //find it in property.js
+			//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 			create_message();
 			tableYUI.deleteTFoot();
 			addFooterDatatable();

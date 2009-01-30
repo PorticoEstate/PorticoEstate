@@ -190,6 +190,12 @@
 			tableYUI.setAttribute("id","tableYUI");
 			
 			div_footer = tableYUI.parentNode;
+
+			var div_records = document.createElement('div');
+			div_records.setAttribute("id","div_records");
+			div_records.setAttribute("style", "text-align:center; height:25px; margin-top:15px;");
+			
+			div_footer.insertBefore(div_records, tableYUI)
 			
 			oNormalButton_0.focus();
 			create_table_foot();
@@ -204,27 +210,12 @@
 /********************************************************************************/
 	this.myParticularRenderEvent = function()
 	{
-		delete_message();
+		//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 		create_message();
 		values_ds.message = null;
 		YAHOO.util.Dom.get("paging").innerHTML = '';
 	}
 	
-/********************************************************************************
-* Delete all message un DIV 'message'
-*/
-	this.delete_message = function()
-	{
-		div_message= YAHOO.util.Dom.get("message");
-		if ( div_message.hasChildNodes() )
-		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
-		}
-	}
-
 /********************************************************************************
 * Delete all message un DIV 'message'
 */
@@ -367,11 +358,7 @@
 	    var total_records = values_ds.total_hours_records;
 	    var lang_total_records = values_ds.lang_total_records;
 	    
-		var div_records = document.createElement('div');
-		div_records.setAttribute("id","div_records");
-		div_records.setAttribute("style", "text-align:center; height:25px; margin-top:15px;");
-		
-		div_footer.insertBefore(div_records, tableYUI)
+
 		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;		
 		
 		var myfoot = tableYUI.createTFoot();

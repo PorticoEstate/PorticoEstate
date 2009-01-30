@@ -674,21 +674,21 @@
 		                                'type'	=> 'hidden',
 		                                'name'     => 'values[update][0]',
 		                                'value'	=> 0,
-		                                'class' => 'myValuesForPHP down-toolbar_button',
+		                                'class' => 'myValuesForPHP',
 		                                'style' => 'filter'
 		                            ),	   
 									array( //hidden entity_id
 		                                'type'	=> 'hidden',
 		                                'name'     => 'values[entity_id][0]',
 		                                'value'	=> $entity_id,
-		                                'class' => 'myValuesForPHP down-toolbar_button',
+		                                'class' => 'myValuesForPHP',
 		                                'style' => 'filter'
 		                            ),	
 									array( //hidden investment_id
 		                                'type'	=> 'hidden',
 		                                'name'     => 'values[investment_id][0]',
 		                                'value'	=> $investment_id,
-		                                'class' => 'myValuesForPHP down-toolbar_button',
+		                                'class' => 'myValuesForPHP',
 		                                'style' => 'filter'
 		                            ),			                            		                                                         
 	                                array( //boton   SEARCH
