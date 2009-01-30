@@ -1486,12 +1486,7 @@ HTML;
 				$receipt = $this->bo->delete($hour_id,$workorder_id);
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
-					$json = array();
-					if(isset($receipt) && is_array($receipt))
-					{
-						$json ['message'][] = $receipt;
-					}
-		    		return $json;
+					return "hour ".$hour_id." ".lang("has been deleted");
 				}
 			}
 					

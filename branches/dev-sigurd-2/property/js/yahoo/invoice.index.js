@@ -43,7 +43,7 @@
 	*/
 	this.myParticularRenderEvent = function()
 	{
-		delete_content_div("message"); //find it in property.js
+		delete_content_div("message",2); //find it in property.js
 		create_message();
 		tableYUI.deleteTFoot();
 		addFooterDatatable();
@@ -88,6 +88,7 @@
 			  	}
 		 	}
 		 }
+		 window.values_ds.message = null;
 	}
 
 	/********************************************************************************
