@@ -222,6 +222,11 @@
 
 		$errors = validate_admin($username, $passwd, $passwd2, $fname, $lname);
 		
+		if(in_array($username, array('admin', 'default')))
+		{
+			$errors[] = lang('That loginid has already been taken');
+		}
+		
 		if ( !count($errors) )
 		{
 			$admin_acct = array
@@ -284,9 +289,6 @@
 			$groups = array($defaultgroupid, $admingroupid);
 
 			$accountid = add_account($admin_acct, 'u', $groups, array('admin'), $acls);
-
-			//$GLOBALS['phpgw_setup']->db->transaction_commit();
-
 			Header('Location: index.php');
 			exit;
 		}
