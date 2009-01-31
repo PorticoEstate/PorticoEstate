@@ -337,6 +337,7 @@
 				$receipt	= $this->bo->set_permission($values,$r_processed,false,$initials);
 			}
 
+			$num_records = 0;
 			if ($this->location)
 			{
 				if($this->cat_id=='accounts')
@@ -346,6 +347,7 @@
 
 				if (isSet($user_list) AND is_array($user_list))
 				{
+					$num_records = count($user_list);
 					foreach($user_list as $user)
 					{
 						$processed[] = $user['account_id'];
@@ -403,6 +405,7 @@
 
 				if (isSet($group_list) AND is_array($group_list))
 				{
+					$num_records = count($group_list);
 					foreach($group_list as $group)
 					{
 						$processed[] = $group['account_id'];
@@ -541,8 +544,8 @@
 				'processed'						=> (isset($processed)?$processed:''),
 				'location'						=> $this->location,
 
-				'num_records'					=> (isset($user_list)?count($user_list):''),
-				'all_records'					=> (isset($this->bo->total_records)?$this->bo->total_records:''),
+				'num_records'					=> $num_records,
+				'all_records'					=> isset($this->bo->total_records) && $this->bo->total_records ? $this->bo->total_records : 0,
 				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
