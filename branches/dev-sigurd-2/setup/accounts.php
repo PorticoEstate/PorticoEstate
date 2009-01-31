@@ -78,7 +78,7 @@
 		(
 			'common' => array
 			(
-				'maxmatchs'		=> 25,
+				'maxmatchs'		=> 10,
 				'template_set'	=> 'portico',
 				'theme'			=> 'portico',
 				'tz_offset'		=> 0,
