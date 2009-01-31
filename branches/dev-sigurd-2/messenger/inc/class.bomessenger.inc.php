@@ -47,7 +47,7 @@
 				$tmp_users = $GLOBALS['phpgw']->accounts->member($config->data['restrict_to_group']);
 				foreach ( $tmp_users as $user )
 				{
-					$users[$user['account_id']] = $user['account_name'];
+					$users[$user->id] = $user['account_name'];
 				}
 			}
 			else
@@ -55,7 +55,7 @@
 				$tmp_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lid', '', -1);
 				foreach ( $tmp_users as $user )
 				{
-					$users[$user['account_id']] = $GLOBALS['phpgw']->common->display_fullname($user['account_lid'], $user['account_firstname'], $user['account_lastname']);
+					$users[$user->id] = $GLOBALS['phpgw']->common->display_fullname($user->lid, $user->firstname, $user->lastname);
 				}
 			}
 			return $users;
@@ -118,7 +118,8 @@
 			if ($message['to'] > 0)
 			{
 				$user = $this->get_available_users();
-				if ( isset($user[$message['to']]) )
+
+				if ( !isset($user[$message['to']]) )
 				{
 					$errors[] = lang('You are not allow to send messages to the user you have selected');
 				}

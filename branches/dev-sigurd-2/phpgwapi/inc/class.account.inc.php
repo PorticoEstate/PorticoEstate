@@ -425,7 +425,7 @@
 		 */
 		public function is_expired()
 		{
-			$expires = $this->data['expires'];
+			$expires = $this->_data['expires'];
 			return $expires <> -1 && $expires < time();
 		}
 
