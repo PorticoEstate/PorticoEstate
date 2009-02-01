@@ -38,7 +38,6 @@
 			}
 		}
 
-
 		function compose($errors = '')
 		{
 			$message = isset($_POST['message']) ? $_POST['message'] : array('subject' => '', 'content' => '');
@@ -253,6 +252,7 @@
 			$this->_display_headers();
 			$this->_set_compose_read_blocks();
 			$this->_set_common_langs();
+			$this->template->set_block('_form','form_reply_to');
 
 			if (is_array($errors))
 			{
@@ -261,15 +261,15 @@
 
 			$this->template->set_var('header_message',lang('Reply to a message'));
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.bomessenger.reply', 'message_id=' . $message['id']) ) );
-			$this->template->set_var('value_to','<input name="n_message[to]" value="' . $message['from'] . '" size="30">');
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.bomessenger.reply', 'message_id' => $message['id']) ) );
+			$this->template->set_var('value_to',"<input type= 'hidden' name='n_message[to]' value={$message['from']}>{$message['from_fullname']}");
 			$this->template->set_var('value_subject','<input name="n_message[subject]" value="' .  $GLOBALS['phpgw']->strip_html(stripslashes($message['subject'])) . '" size="30">');
 			$this->template->set_var('value_content','<textarea name="n_message[content]" rows="20" wrap="hard" cols="76">' .  $GLOBALS['phpgw']->strip_html(stripslashes($message['content'])) . '</textarea>');
 
 			$this->template->set_var('button_send','<input type="submit" name="send" value="' . lang('Send') . '">');
 			$this->template->set_var('button_cancel','<input type="submit" name="cancel" value="' . lang('Cancel') . '">');
 
-			$this->template->fp('to','form_to');
+			$this->template->fp('to','form_reply_to');
 			$this->template->fp('buttons','form_buttons');
 			$this->template->pfp('out','form');
 		}
@@ -293,6 +293,18 @@
 			$this->_set_compose_read_blocks();
 			$this->_set_common_langs();
 
+			$users = $this->bo->get_available_users();
+			foreach ( $users as $uid => $name )
+			{
+				$this->template->set_var(array
+				(
+					'uid'		=> $uid,
+					'full_name'	=> $name
+				));
+				$this->template->parse('select_tos', 'select_to', true);
+			}
+
+
 			if (is_array($errors))
 			{
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
@@ -312,7 +324,7 @@
 			$this->template->fp('buttons','form_buttons');
 			$this->template->pfp('out','form');
 		}
-		
+
 		function _display_headers($extras = '')
 		{
 			$this->template->set_file('_header','header.tpl');
@@ -334,13 +346,12 @@
 
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 		}
-		
+
 		function _error_not_connected()
 		{
 			$this->_display_headers();
 			die( lang('exiting with error!') . "<br />\n" . lang('Unable to connect to server, please contact your system administrator') );
 		}
-		
 		
 		function _set_common_langs()
 		{
@@ -350,7 +361,7 @@
 			$this->template->set_var('lang_content',lang('Message'));
 			$this->template->set_var('lang_date',lang('Date'));
 		}
-		
+
 		function _set_compose_read_blocks()
 		{
 			$this->template->set_file('_form','form.tpl');
@@ -365,4 +376,3 @@
 			$this->template->set_block('_form','form_read_buttons_for_global');
 		}
 	}
-?>

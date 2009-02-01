@@ -27,11 +27,15 @@
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['messenger']['hooks'][] = 'admin';
-	$setup_info['messenger']['hooks'][] = 'preferences';
-	$setup_info['messenger']['hooks'][] = 'home';
-	$setup_info['messenger']['hooks'][] = 'after_navbar';
-	$setup_info['messenger']['hooks'][] = 'config';
+	$setup_info['messenger']['hooks'] = array
+	(
+		'admin',
+		'preferences',
+		'home',
+		'after_navbar',
+		'config',
+		'menu'	=> 'messenger.menu.get_menu'
+	);
 
 	/* Dependencies for this app to work */
 	$setup_info['messenger']['depends'][] = array(
