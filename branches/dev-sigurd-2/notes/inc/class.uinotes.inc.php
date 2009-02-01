@@ -230,7 +230,7 @@
 				// Must be a reply request
 				$action	= 'apply';
 				$GLOBALS['phpgw']->redirect_link('/index.php', 
-							array('menuaction' => 'notes.uinotes.edit', 'node_id' => $note_id));
+							array('menuaction' => 'notes.uinotes.edit', 'note_id' => $note_id));
 			}
 
 			if ( $note_id )

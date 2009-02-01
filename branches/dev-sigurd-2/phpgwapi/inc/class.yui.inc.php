@@ -112,7 +112,7 @@
 					break;
 
 				case 'editor':
-					$load = array('editor-min', 'menu-min', 'element-beta-min', 'button-min', 'animation-min', 'dragdrop-min');
+					$load = array('dragdrop-min', 'element-beta-min', 'animation-min', 'resize-min', 'container_core-min', 'menu-min', 'button-min', 'editor-min');
 					break;
 
 				case 'element':

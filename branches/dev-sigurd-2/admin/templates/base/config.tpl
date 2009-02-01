@@ -235,6 +235,17 @@
        </select>
     </td>
    </tr>
+   <tr class="row_on">
+    <td>{lang_use_HTML_Filtering}:<br>
+    <td>
+     <select name="newsettings[html_filtering]">
+      <option value="" {selected_html_filtering_}>NO</option>
+      <option value="1" {selected_html_filtering_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+
+
 <!-- END body -->
 
 <!-- BEGIN footer -->
