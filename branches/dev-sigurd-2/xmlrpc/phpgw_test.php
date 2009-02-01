@@ -27,7 +27,7 @@
 			CreateObject('phpgwapi.xmlrpcval',$HTTP_POST_VARS['param'], 'string')
 		));
 		print "<pre>" . htmlentities($f->serialize()) . "</pre>\n";
-		$c = CreateObject('phpgwapi.xmlrpc_client',"/phpgroupware/xmlrpc.php", $HTTP_SERVER_VARS['HTTP_HOST'], 80);
+		$c = CreateObject('phpgwapi.xmlrpc_client',"{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php", $HTTP_SERVER_VARS['HTTP_HOST'], 80);
 		$c->setDebug(1);
 		$r = $c->send($f);
 		if (!$r)

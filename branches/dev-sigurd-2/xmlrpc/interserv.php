@@ -200,6 +200,7 @@
 //		$is->send('phpgwapi.app_registry.get_appbyid',1,$is->server['server_url']);
 	}
 
+	$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 	$GLOBALS['phpgw']->template->set_file('interserv','interserv.tpl');
 
 	$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/xmlrpc/interserv.php'));

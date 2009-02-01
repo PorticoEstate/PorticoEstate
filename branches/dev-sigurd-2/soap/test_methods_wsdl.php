@@ -113,7 +113,7 @@ $servers["SOAPx4  - interop test suite (dev)"] = array(
 	"name" => "SOAPx4  - interop test suite (dev)");
 
 // get list of all endpoints from xmethods
-	$soapclient = CreateObject('phpgwapi.phpgw_soapclient',"http://www.xmethods.net/perl/soaplite.cgi");
+	$soapclient = CreateObject('phpgwapi.soap_client',"http://www.xmethods.net/perl/soaplite.cgi");
 	if($endpointArray = $soapclient->call("getAllEndpoints",array(),"http://soapinterop.org/ilab","http://soapinterop.org/ilab#getAllEndpoints"))
 	{
 		foreach($endpointArray as $k => $v)
@@ -159,7 +159,7 @@ if($method && $nserver){
 	}
 	print "<br>";
 	print "<b>METHOD: $method</b><br>";
-	$soapclient = CreateObject('phpgwapi.phpgw_soapclient',$server["wsdl"],"wsdl");
+	$soapclient = CreateObject('phpgwapi.soap_client',$server["wsdl"],"wsdl");
 	//$soapclient->debug_flag = true;
 	$return_val = $soapclient->call($method,$method_params[$method],$server["methodNamespace"]);
 	
