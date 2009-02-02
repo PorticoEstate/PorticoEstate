@@ -719,6 +719,11 @@
 			$add_request				= phpgw::get_var('add_request');
 			$values['project_group']	= phpgw::get_var('project_group');
 
+			$datatable = array();
+
+			/*$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.edit',"
+	    											."id:'{$id}'";*/
+
 			$config				= CreateObject('phpgwapi.config');
 			$bolocation			= CreateObject('property.bolocation');
 
@@ -1137,9 +1142,13 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 
-
 			$data = array
 			(
+				'values'							=> json_encode($values['workorder_budget']),
+				'budget'				 			=> json_encode($values['sum_workorder_budget']),
+				'calculation'					 	=> json_encode($values['sum_workorder_calculation']),
+				'edit_action'						=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+				'edit_history'						=> json_encode($record_history),
 				'tabs'								=> self::_generate_tabs(),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
@@ -1154,7 +1163,7 @@
 				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lang_add_workorder'				=> lang('Add workorder'),
 				'lang_add_workorder_statustext'		=> lang('Add a workorder to this project'),
-				'table_header_workorder_budget'		=> $table_header_workorder_budget,
+				//'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'				=> lang('No workorder budget'),
 				'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'record_history'					=> $record_history,
@@ -1216,13 +1225,13 @@
 				'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
 				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_workorder_id'					=> lang('Workorder ID'),
-				'sum_workorder_budget'				=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
-				'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
-				'workorder_budget'					=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
-				'sum_workorder_actual_cost'			=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
+				//'sum_workorder_budget'				=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
+				//'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
+				//'workorder_budget'					=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
+				//'sum_workorder_actual_cost'			=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
+				//'lang_sum'							=> lang('Sum'),
 				'lang_actual_cost'					=> lang('Actual cost'),
 				'lang_coordinator'					=> lang('Coordinator'),
-				'lang_sum'							=> lang('Sum'),
 				'lang_user_statustext'				=> lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
 				'select_user_name'					=> 'values[coordinator]',
 				'lang_no_user'						=> lang('Select coordinator'),
@@ -1260,9 +1269,63 @@
 				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
 
+			//_debug_array($data);die;
+
+			$datatable['headers']['header'][0]['formatter'] 		= "''";
+			$datatable['headers']['header'][0]['name'] 			= $table_header_workorder_budget[0]['lang_workorder_id'];
+			$datatable['headers']['header'][0]['text'] 			= $table_header_workorder_budget[0]['lang_workorder_id'];
+			$datatable['headers']['header'][0]['visible'] 			= true;
+			$datatable['headers']['header'][0]['sortable']			= false;
+
+			$datatable['headers']['header'][1]['formatter'] 		= "''";
+			$datatable['headers']['header'][1]['name'] 			= $table_header_workorder_budget[0]['lang_budget'];
+			$datatable['headers']['header'][1]['text'] 			= $table_header_workorder_budget[0]['lang_budget'];
+			$datatable['headers']['header'][1]['visible'] 			= true;
+			$datatable['headers']['header'][1]['sortable']			= false;
+
+			$datatable['headers']['header'][2]['formatter'] 		= "''";
+			$datatable['headers']['header'][2]['name'] 			= $table_header_workorder_budget[0]['lang_calculation'];
+			$datatable['headers']['header'][2]['text'] 			= $table_header_workorder_budget[0]['lang_calculation'];
+			$datatable['headers']['header'][2]['visible'] 			= true;
+			$datatable['headers']['header'][2]['sortable']			= false;
+
+			$datatable['headers']['header'][3]['formatter'] 		= "''";
+			$datatable['headers']['header'][3]['name'] 			= $table_header_workorder_budget[0]['lang_vendor'];
+			$datatable['headers']['header'][3]['text'] 			= $table_header_workorder_budget[0]['lang_vendor'];
+			$datatable['headers']['header'][3]['visible'] 			= true;
+			$datatable['headers']['header'][3]['sortable']			= false;
+
+			$datatable['headers']['header'][4]['formatter'] 		= "''";
+			$datatable['headers']['header'][4]['name'] 			= $table_header_workorder_budget[0]['lang_status'];
+			$datatable['headers']['header'][4]['text'] 			= $table_header_workorder_budget[0]['lang_status'];
+			$datatable['headers']['header'][4]['visible'] 			= true;
+			$datatable['headers']['header'][4]['sortable']			= false;
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
 			$appname		= lang('project');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.edit', 'property' );
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
@@ -1279,7 +1342,7 @@
 				$this->bo->delete($project_id);
 				return "project_id ".$project_id." ".lang("has been deleted");
 			}
-			
+
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 			$link_data = array
 			(
