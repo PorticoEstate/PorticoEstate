@@ -214,7 +214,7 @@
 		$lname			= phpgw::get_var('lname', 'string', 'POST');
 
 		if ( ($GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap')
-			&& !$GLOBALS['phpgw']->accounts->ds )
+			&& !$GLOBALS['phpgw']->accounts->connected )
 		{
 			echo "<strong>Error: Error connecting to LDAP server {$GLOBALS['phpgw_info']['server']['ldap_host']}</strong><br>";
 			exit;

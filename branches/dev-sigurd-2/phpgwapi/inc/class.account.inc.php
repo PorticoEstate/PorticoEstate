@@ -88,7 +88,8 @@
 			'expires'			=> 0,
 			'person_id'			=> 0,
 			'quota'				=> 0,
-			'old_loginid'		=> ''
+			'old_loginid'		=> '',
+			'type' 				=> ''
 		);
 
 		/**
@@ -256,6 +257,7 @@
 				}
 			}
 			$this->_data['lastname'] = 'Group';
+			$this->_data['type'] = 'g';
 			$this->_hash = $this->_generate_hash();
 		}
 
@@ -266,7 +268,8 @@
 		 */
 		public function __construct()
 		{
-			$this->_data['lastname'] = 'Group';
+			$this->_data['lastname']	= 'Group';
+			$this->_data['type'] 		= parent::TYPE_GROUP;
 		}
 
 		/**
@@ -292,6 +295,7 @@
 				case 'person_id':
 				case 'quota':
 				case 'old_loginid':
+				case 'type':
 					return $this->_data[$name];
 
 				default:
@@ -381,6 +385,12 @@
 	 */
 	class phpgwapi_user extends phpgwapi_account
 	{
+
+		public function __construct()
+		{
+			$this->_data['type'] 		= parent::TYPE_USER;
+		}
+
 		/**
 		 * Initialise the values of the object - this should only be called from phpgwapi_accounts
 		 *
@@ -412,6 +422,7 @@
 					case 'enabled':
 					case 'person_id':
 					case 'quota':
+					case 'type':
 						$this->_data[$key] = $val;
 				}
 			}
@@ -470,6 +481,7 @@
 				case 'person_id':
 				case 'quota':
 				case 'old_loginid':
+				case 'type':
 					return $this->_data[$name];
 				default:
 					throw new Exception(lang('Unknown value: %1', $name));
@@ -533,6 +545,10 @@
 
 				case 'quota':
 					$this->_validate_quota($value);
+					break;
+
+				case 'type':
+					$this->_data['type'] = 'u';
 					break;
 
 				case 'dn':
