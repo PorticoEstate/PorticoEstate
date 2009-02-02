@@ -755,15 +755,16 @@
 			{
 				$entry['sn'] = ' ';
 			}
-			if ( isset($account_info->passwd) )
+			if ( isset($account_info->passwd) && !isset($account_info->passwd_hash) )
 			{
-				$entry['userpassword'] = $GLOBALS['phpgw']->auth->generate_hash($account_info->passwd);
+
+				$entry['userpassword'] = $GLOBALS['phpgw']->auth->create_hash($account_info->passwd);
 			}
 
 			// Fields are must for LDAP - so we write them in any case
 			// FIXME
-			$entry['homedirectory']       = $this->_get_homedirectory($account_info['homedirectory'], $account_info->lid);
-			$entry['loginshell']          = $this->_get_loginshell($account_info['loginshell']);
+			$entry['homedirectory']       = $this->_get_homedirectory($account_info->homedirectory, $account_info->lid);
+			$entry['loginshell']          = $this->_get_loginshell($account_info->loginshell);
 
 
 			// special gidnumber handling
@@ -890,6 +891,11 @@
 			}
 		}
 
+		function create_group_account($account_info)
+		{
+			return $this->create_group($account_info);
+		}
+
 		/**
 		* Create new group
 		*
@@ -898,12 +904,14 @@
 		*/
 		function create_group($account_info)
 		{
+			$ok = false;
 			$dn = $this->rdn_group . '=' . $account_info->lid . ',' . $this->group_context;
 
 			// phpgw needed attributes
 
-			$entry['objectclass'][]  = 'phpgwGroup';
-			$entry['phpgwgroupID']   = $account_info->id;
+			//$entry['objectclass'][]  = 'phpgwGroup';
+			$entry['objectclass'][]  = 'top';
+			//$entry['phpgwgroupID']   = $account_info->id;
 			$entry['gidnumber']      = $account_info->id;
 
 			// additional attributes from the phpgw for groups
@@ -915,25 +923,25 @@
 			{
 				unset ($entry['memberuid']);
 			}
-			if (isset($account_info->quota))
+			if (isset($account_info->quota) && $account_info->quota > 0)
 			{
 				$entry['phpgwquota'] = $account_info->quota;
 			}
-			else
+			else if (isset($this->quota) && $this->quota > 0)
 			{
-				$entry['phpgwquota'] = isset($this->quota) && $this->quota ? $this->quota : 0;
+				$entry['phpgwquota'] = $this->quota;
 			}
 
 			$oldEntry = $this->_group_exists($account_info->id, $dn);
 
 			if ($oldEntry) // found an existing entry in LDAP
 			{
-				if ($this->createMode == 'replace')
+				if (isset($this->createMode) && $this->createMode == 'replace')
 				{
 					ldap_delete($this->ds, $oldEntry['dn']);
-					$this->add_ldap_entry($dn, $entry);
+					$ok = $this->add_ldap_entry($dn, $entry);
 				}
-				elseif ($this->createMode == 'extend')
+				else if (isset($this->createMode) && $this->createMode == 'extend')
 				{
 					/* not yet implemented */
 				}
@@ -967,7 +975,8 @@
 								case 'memberuid':
 									break;
 
-								case 'objectclass':
+							//FIXME
+							/*	case 'objectclass':
 									if( !in_array('phpgwGroup', $oldEntry[$key]) && !in_array('phpgwgroup', $oldEntry[$key]) )
 									{
 										$entry[$key] = $oldEntry[$key];
@@ -978,19 +987,21 @@
 											$entry[$key] = $oldEntry[$key];
 									}
 									break;
+							*/
 
 								default:
 									$entry[$key] = $oldEntry[$key];
 							}
 						}
 					}
-					$this->modify_LDAP_Entry($oldEntry['dn'], $entry);
+					$ok = $this->modify_LDAP_Entry($oldEntry['dn'], $entry);
 				}
 			}
 			else // entry not yet in LDAP
 			{
-				$this->add_ldap_entry($dn, $entry);
+				$ok = $this->add_ldap_entry($dn, $entry);
 			}
+			return $ok;
 		}
 
 		/**
