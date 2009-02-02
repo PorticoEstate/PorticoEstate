@@ -808,7 +808,7 @@
 						$Tekst	= sprintf("%-50s",'');//sprintf("%-50s",substr($oRsOverfBilag['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
 					}
 					
-					$Fakturanr	= sprintf("%-15s",utf8_decode($oRsOverfBilag['fakturanr']));// verdi: Fakturanr, type: c15, plass: 283 - 297
+					$Fakturanr	= sprintf("%-15s",substr(utf8_decode($oRsOverfBilag['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
 
 					$Ordrenummer	= sprintf("%-9s",$oRsOverfBilag['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
 	
