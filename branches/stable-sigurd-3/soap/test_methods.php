@@ -28,11 +28,12 @@
 	</script>
 <?php
 	// get list of all endpoints from xmethods
-	$soapmsg = CreateObject('phpgwapi.soapmsg','getAllEndpoints','','http://soapinterop.org/ilab');
+//	$soapmsg = CreateObject('phpgwapi.soapmsg','getAllEndpoints','','http://soapinterop.org/ilab');
 	// invoke the client
-	$client = CreateObject('phpgwapi.soap_client','http://www.xmethods.net/perl/soaplite.cgi');
+//	$client = CreateObject('phpgwapi.soap_client','http://www.xmethods.net/perl/soaplite.cgi');
 	// send message and get response
-	if($return = $client->send($soapmsg,'','http://soapinterop.org/ilab#getAllEndpoints'))
+//	if($return = $client->send($soapmsg,'','http://soapinterop.org/ilab#getAllEndpoints'))
+	if(false)
 	{
 		//print 'REQUEST:<br><xmp>'.$client->outgoing_payload.'</xmp><br>';
 		//print '<strong>RESPONSE:</strong><br><xmp>'.$client->incoming_payload.'</xmp><br>';
@@ -150,7 +151,8 @@
 
 	$servers['phpGroupWare'] = array(
 		'soapaction' => 'urn:soapinterop',
-		'endpoint'   => 'http://www.phpgroupware.org/cvsdemo/soap.php',
+//		'endpoint'   => 'http://www.phpgroupware.org/cvsdemo/soap.php',
+		'endpoint'   => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/soap.php",
 		'methodNamespace' => 'http://soapinterop.org',
 		'soapactionNeedsMethod' => 0,
 		'name'       => 'SOAPx4  - interop test suite (dev)'
@@ -190,6 +192,8 @@
 </form>
 
 <?php
+	$method = phpgw::get_var('method');
+	$nserver = phpgw::get_var('nserver');
 	if($method && $nserver)
 	{
 		$server = $servers[$nserver];
@@ -201,6 +205,7 @@
 		);
 		/* print_r($soap_message);exit; */
 		$soap = CreateObject('phpgwapi.soap_client',$server['endpoint']);
+
 		/* print_r($soap);exit; */
 		if($return = $soap->send($soap_message,$server['soapaction']))
 		{

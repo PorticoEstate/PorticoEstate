@@ -3,7 +3,7 @@
 	function parse_navbar($force = False)
 	{
 		$navbar = array();
-		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
+//		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
 		{
 			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 		}

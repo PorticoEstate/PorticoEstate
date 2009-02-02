@@ -1244,7 +1244,7 @@
 
 			foreach($accounts as $id)
 			{
-				phpgwapi_cache::user_clear('phpgwapi', "acl_data_{$id}", $id);
+				phpgwapi_cache::user_clear('phpgwapi', 'acl_data', $id);
 			}
 		}
 
@@ -1262,7 +1262,7 @@
 				$this->set_account_id($this->_account_id, false);
 			}
 
-			$data = phpgwapi_cache::user_get('phpgwapi', "acl_data_{$this->_account_id}", $this->_account_id);
+			$data = phpgwapi_cache::user_get('phpgwapi', 'acl_data', $this->_account_id);
 			if ( !is_null($data) )
 			{
 				$this->_data[$this->_account_id] = $data;
@@ -1278,7 +1278,7 @@
 				default:
 					$this->_read_repository_sql($account_type);
 			}
-			$data = phpgwapi_cache::user_set('phpgwapi', "acl_data_{$this->_account_id}", $this->_data[$this->_account_id], $this->_account_id);
+			$data = phpgwapi_cache::user_set('phpgwapi', 'acl_data', $this->_data[$this->_account_id], $this->_account_id);
 		}
 
 		/**

@@ -64,6 +64,14 @@
    </td>
   </tr>
 <!-- END form_to -->
+<!-- BEGIN form_reply_to -->
+  <tr bgcolor="{row_off}">
+   <td>{lang_to}</td>
+   <td>
+		{value_to}
+   </td>
+  </tr>
+<!-- END form_reply_to -->
 
 <!-- BEGIN form_read_buttons -->
 {link_reply}&nbsp;|&nbsp;{link_forward}&nbsp;|&nbsp;{link_delete}&nbsp;

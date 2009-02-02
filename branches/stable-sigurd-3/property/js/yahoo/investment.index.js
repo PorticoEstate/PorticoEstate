@@ -108,12 +108,12 @@
 	*/
 	this.myParticularRenderEvent = function()
 	{
-		delete_content_div("message"); //find it in property.js
+		//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 		create_message();
 		tableYUI.deleteTFoot();
 		addFooterDatatable();
 
-		//clean up values for check buttons 'close_order'
+		//clean values for down-toolbar_button class (buttons in  down-toolbar menu)
 		down_toolbar_button = YAHOO.util.Dom.getElementsByClassName('down-toolbar_button');
 		for(i=0;i<down_toolbar_button.length;i++)
 		{

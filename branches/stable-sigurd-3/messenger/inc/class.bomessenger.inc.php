@@ -47,7 +47,7 @@
 				$tmp_users = $GLOBALS['phpgw']->accounts->member($config->data['restrict_to_group']);
 				foreach ( $tmp_users as $user )
 				{
-					$users[$user['account_id']] = $user['account_name'];
+					$users[$user->id] = $user['account_name'];
 				}
 			}
 			else
@@ -55,7 +55,7 @@
 				$tmp_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lid', '', -1);
 				foreach ( $tmp_users as $user )
 				{
-					$users[$user['account_id']] = $GLOBALS['phpgw']->common->display_fullname($user['account_lid'], $user['account_firstname'], $user['account_lastname']);
+					$users[$user->id] = $GLOBALS['phpgw']->common->display_fullname($user->lid, $user->firstname, $user->lastname);
 				}
 			}
 			return $users;
@@ -71,9 +71,9 @@
 			}
 			else
 			{
-				$message = get_var('message',Array('POST'));
-				$send    = get_var('send',Array('POST'));
-				$cancel  = get_var('cancel',Array('POST'));
+				$message = phpgw::get_var('message');
+				$send    = phpgw::get_var('send');
+				$cancel  = phpgw::get_var('cancel');
 			}
 
 			if (! $GLOBALS['phpgw']->acl->check('run',1,'admin') || $cancel)
@@ -102,9 +102,10 @@
 				$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts');
 
 				$this->so->db->transaction_begin();
-				while (list(,$account) = each($account_info))
+				
+				foreach($account_info as $account)
 				{
-					$message['to'] = $account['account_lid'];
+					$message['to'] = $account->id;
 					$this->so->send_message($message,True);
 				}
 				$this->so->db->transaction_commit();
@@ -118,7 +119,8 @@
 			if ($message['to'] > 0)
 			{
 				$user = $this->get_available_users();
-				if ( isset($user[$message['to']]) )
+
+				if ( !isset($user[$message['to']]) )
 				{
 					$errors[] = lang('You are not allow to send messages to the user you have selected');
 				}
@@ -191,6 +193,7 @@
 			$_messages = array();
 
 			$messages = $this->so->read_inbox($params);
+
 			foreach ( $messages as $message )
 			{
 				if ($message['from'] == -1)
@@ -202,10 +205,9 @@
 				// Cache our results, so we don't query the same account multiable times
 				if ( !isset($cached[$message['from']]) || !$cached[$message['from']] )
 				{
-					$acct = createobject('phpgwapi.accounts',$message['from']);
-					$acct->read();
+					$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
 					$cached[$message['from']]       = $message['from'];
-					$cached_names[$message['from']] = $GLOBALS['phpgw']->common->display_fullname($acct->data['account_lid'],$acct->data['firstname'],$acct->data['lastname']);
+					$cached_names[$message['from']] = $acct->__toString();
 				}
 
 				/*
@@ -256,9 +258,8 @@
 			}
 			else
 			{
-				$acct = createobject('phpgwapi.accounts',$message['from']);
-				$acct->read();
-				$message['from'] = $GLOBALS['phpgw']->common->display_fullname($acct->data['account_lid'],$acct->data['firstname'],$acct->data['lastname']);
+				$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
+				$message['from'] = $acct->__toString();
 			}
 
 			return $message;
@@ -268,20 +269,19 @@
 		{
 			if(!$n_message)
 			{
-				$n_message = get_var('n_message',Array('POST'));
+				$n_message = phpgw::get_var('n_message');
 			}
 
 			$message = $this->so->read_message($message_id);
 
-			$acct = createobject('phpgwapi.accounts',$message['from']);
-			$acct->read();
+			$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
 
 			if (! $n_message['content'])
 			{
 				$content_array = explode("\n",$message['content']);
 
 				$new_content_array[] = ' ';
-				$new_content_array[] = '> ' . $GLOBALS['phpgw']->common->display_fullname($acct->data['account_lid'],$acct->data['firstname'],$acct->data['lastname']) . ' wrote:';
+				$new_content_array[] = '> ' . $acct->__toString() . ' wrote:';
 				$new_content_array[] = '>';
 				while (list(,$line) = each($content_array))
 				{
@@ -291,8 +291,7 @@
 			}
 
 			$message['subject'] = $type . ': ' . $message['subject'];
-			$message['from']    = $acct->data['account_lid'];
-
+			$message['from_fullname']    = $acct->__toString();
 			return $message;
 		}
 
@@ -300,7 +299,7 @@
 		{
 			if(!$messages)
 			{
-				$messages = get_var('messages',Array('GET','POST'));
+				$messages = phpgw::get_var('messages');
 			}
 
 			if (! is_array($messages))
@@ -319,14 +318,18 @@
 
 		function reply($message_id='',$n_message='')
 		{
+			if (phpgw::get_var('cancel','bool') == true)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+			}
 			if(!$message_id)
 			{
-				$message_id = get_var('message_id',Array('POST'));
-				$n_message  = get_var('n_message',Array('POST'));
+				$message_id = phpgw::get_var('message_id');
+				$n_message  = phpgw::get_var('n_message');
 			}
 
 			$errors = $this->check_for_missing_fields($n_message);
-			if (is_array($errors))
+			if ($errors)
 			{
 				ExecMethod('messenger.uimessenger.reply',array($errors,$n_message));
 				//$this->ui->reply($errors, $n_message);
@@ -343,8 +346,8 @@
 		{
 			if(!$message_id)
 			{
-				$message_id = get_var('message_id',Array('POST'));
-				$n_message  = get_var('n_message',Array('POST'));
+				$message_id = phpgw::get_var('message_id');
+				$n_message  = phpgw::get_var('n_message');
 			}
 
 			$errors = $this->check_for_missing_fields($n_message);

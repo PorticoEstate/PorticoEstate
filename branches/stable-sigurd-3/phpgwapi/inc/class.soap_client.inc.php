@@ -12,7 +12,7 @@
 
 /* Please see class.base_nusoap.inc.php for more information */
 
-	phpgw::import_class('phpgwapi.phpgwapi_soap_transport_http');
+	phpgw::import_class('phpgwapi.soap_transport_http');
 /***************************************************************************
 * TOTALY DEPRECATED , DON'T USE
 */
@@ -43,7 +43,7 @@ Exp $
 	* @deprecated : this is a wrapper to class.soap_transport_http.inc.php
 	*/
 
-class phpgwapi_soap_client extends phpgwapi_phpgwapi_soap_transport_http 
+class phpgwapi_soap_client extends phpgwapi_soap_transport_http 
 	{
 		 function phpgwapi_soap_client($path,$server=False,$port=False)
 		 {
@@ -58,7 +58,7 @@ class phpgwapi_soap_client extends phpgwapi_phpgwapi_soap_transport_http
 			}
 			$url .= $path;
 			/* Call our parent constructor */
-			$this->soap_transport_http($url);
+			$this->phpgwapi_soap_transport_http($url);
 		}
 
 		function send($msg, $action, $timeout=0, $ssl=False)
@@ -100,7 +100,7 @@ class phpgwapi_soap_client extends phpgwapi_phpgwapi_soap_transport_http
 			if ( $username ) {
 				$this->setCredentials($username,$password);
 			}
-			return soap_transport_http::send($msg,$timeout);
+			return phpgwapi_soap_transport_http::send($msg,$timeout);
 		}
 
 		function ssl_sendPayloadHTTP10($msg, $server, $port, $timeout=0,$username='', $password='')
@@ -112,7 +112,7 @@ class phpgwapi_soap_client extends phpgwapi_phpgwapi_soap_transport_http
 			if ( $username ) {
 				$this->setCredentials($username,$password);
 			}
-			return soap_transport_http::send($msg,$timeout);
+			return phpgwapi_soap_transport_http::send($msg,$timeout);
 		}
 
 	} // end class soap_client

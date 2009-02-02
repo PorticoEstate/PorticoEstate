@@ -65,11 +65,11 @@
 				Event = YAHOO.util.Event;
 				
 				var editorConfig = {
-					width: '100em',
-					height: '10em',
-					dompath: true,
+					height: '300px',
+					width: '600px',
 					animate: true,
-					handleSubmit: true
+					dompath: true,
+ 					handleSubmit: true
 				};
 				
 				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);

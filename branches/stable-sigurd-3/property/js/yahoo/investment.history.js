@@ -42,19 +42,7 @@
 
 		oNormalButton_0.focus();
 	}
-/****************************************************************************************/
-	
-	this.delete_message = function()
-	{
-		var div_message = YAHOO.util.Dom.get("message");
-		if ( div_message.hasChildNodes() )
-		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
-		}
-	}
+
 /****************************************************************************************/
 
 	this.create_message = function()
@@ -128,9 +116,16 @@
 	this.myParticularRenderEvent = function()
 	{
 		YAHOO.util.Dom.get("paging").innerHTML = '';
-		delete_message();
+		//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 		create_message();
-		values_ds.message = null;
+
+		//clean values for down-toolbar_button class (buttons in  down-toolbar menu)
+		down_toolbar_button = YAHOO.util.Dom.getElementsByClassName('down-toolbar_button');
+		for(i=0;i<down_toolbar_button.length;i++)
+		{
+			down_toolbar_button[i].value = "";
+		}
+		
 	}
 /********************************************************************************/	  
 	  
@@ -199,6 +194,7 @@
 			{
 				//avoid render buttons html
 				YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
+				YAHOO.util.Dom.getElementsByClassName('toolbar','div')[1].style.display = 'none';
 				var loader = new YAHOO.util.YUILoader();
 				loader.addModule({
 					name: "anyone", //module name; must be unique

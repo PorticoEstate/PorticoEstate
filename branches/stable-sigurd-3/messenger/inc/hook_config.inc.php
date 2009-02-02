@@ -23,8 +23,8 @@
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lid', '', -1);
 		foreach ( $groups as $group )
 		{
-			$str .= '<option value="' . $group['account_id'] . '"' . ($config['restrict_to_group'] == $group['account_id'] ? ' selected="selected"' : '' ) .'>'
-				. $GLOBALS['phpgw']->common->display_fullname($group['account_lid'], $group['account_firstname'], $group['account_lastname'])
+			$str .= '<option value="' . $group->id . '"' . ($config['restrict_to_group'] == $group->id ? ' selected="selected"' : '' ) .'>'
+				. $GLOBALS['phpgw']->common->display_fullname($group->lid, $group->firstname, $group->lastname)
 			."</option>\n";
 		}
 		return $str;

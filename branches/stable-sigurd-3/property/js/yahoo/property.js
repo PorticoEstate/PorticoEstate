@@ -97,16 +97,34 @@
 	
  /********************************************************************************
  * Delete all message un DIV 'message'
+ * type == 1	always delete div content
+ * type == 2	depende of if exists  "values_ds.message" values
  */
-	this.delete_content_div = function(mydiv)
+	this.delete_content_div = function(mydiv,type)
 	{
 		div_message= YAHOO.util.Dom.get(mydiv);
-		if ( div_message.hasChildNodes() )
+		//flag borrar
+		borrar = false;
+		//depende of values_ds.message
+		if(type == 2)
 		{
-			while ( div_message.childNodes.length >= 1 )
-		    {
-		        div_message.removeChild( div_message.firstChild );
-		    }
+			if(window.values_ds.message && window.values_ds.message.length)
+			{
+				//delete content
+				borrar = true;
+			}
+		}
+
+		//always delete div content
+		if(type == 1 || borrar)
+		{
+			if ( div_message.hasChildNodes() )
+			{
+				while ( div_message.childNodes.length >= 1 )
+			    {
+			        div_message.removeChild( div_message.firstChild );
+			    }
+			}
 		}
 	}
 	
@@ -1116,7 +1134,7 @@
 		}
 		
 		//shown message if delete records
-		delete_content_div("message");	
+		delete_content_div("message",1);	
 		if(message_delete != "")
 		{
 	 		oDiv=document.createElement("DIV");

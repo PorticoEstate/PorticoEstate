@@ -145,6 +145,12 @@
 		 */
 		public static function clean_html($html, $base_url = '')
 		{
+			if ( !isset($GLOBALS['phpgw_info']['server']['html_filtering']) 
+				|| !$GLOBALS['phpgw_info']['server']['html_filtering'])
+			{
+				return $html;
+			}
+			
 			if ( !$base_url )
 			{
 				$base_url = $GLOBALS['phpgw_info']['server']['webserver_url'];

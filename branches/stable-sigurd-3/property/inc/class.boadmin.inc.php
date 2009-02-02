@@ -49,6 +49,7 @@
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->right		= array(1,2,4,8,16);
+			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($session)
 			{
@@ -253,7 +254,7 @@
 				}
 				else
 				{
-					$grantor = $GLOBALS['phpgw_info']['user']['account_id'];
+					$grantor = $this->account_id;
 				}
 			}
 
@@ -286,7 +287,7 @@
 				}
 				else
 				{
-					$grantor = $GLOBALS['phpgw_info']['user']['account_id'];
+					$grantor = $this->account_id;
 				}
 			}
 

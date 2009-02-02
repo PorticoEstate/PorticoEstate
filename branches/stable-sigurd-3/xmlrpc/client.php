@@ -23,9 +23,10 @@
 
 	if ($HTTP_POST_VARS['stateno'] != '')
 	{
+		$c = CreateObject('phpgwapi.xmlrpc_client',"{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php", $HTTP_SERVER_VARS['HTTP_HOST'], 80);
 		$f = CreateObject('phpgwapi.xmlrpcmsg','examples.getStateName',array(CreateObject('phpgwapi.xmlrpcval',$HTTP_POST_VARS['stateno'], 'int')));
-		print "<pre>" . htmlentities($f->serialize()) . "</pre>\n";
-		$c = CreateObject('phpgwapi.xmlrpc_client',"/phpgroupware/xmlrpc.php", $HTTP_SERVER_VARS['HTTP_HOST'], 80);
+		print "<pre>" . htmlentities($f->serialize('UTF-8')) . "</pre>\n";
+
 		$c->setDebug(1);
 		$r = $c->send($f);
 		if (!$r)
