@@ -267,6 +267,7 @@
 	{
 
 		var ds_action = '';
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = "70px";
 		div_message= YAHOO.util.Dom.getElementsByClassName("field","div")[0];
 
 		if ( div_message.hasChildNodes() )
@@ -359,7 +360,8 @@
 	    var lang_total_records = values_ds.lang_total_records;
 	    
 
-		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;		
+		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;	
+		document.getElementById("div_records").style.textAlign = 'left';
 		
 		var myfoot = tableYUI.createTFoot();
  		myfoot.setAttribute("id","myfoot");
