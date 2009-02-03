@@ -763,8 +763,10 @@
 
 			// Fields are must for LDAP - so we write them in any case
 			// FIXME
-			$entry['homedirectory']       = $this->_get_homedirectory($account_info->homedirectory, $account_info->lid);
-			$entry['loginshell']          = $this->_get_loginshell($account_info->loginshell);
+		//	$entry['homedirectory']       = $this->_get_homedirectory($account_info->homedirectory, $account_info->lid);
+		//	$entry['loginshell']          = $this->_get_loginshell($account_info->loginshell);
+			$entry['homedirectory']       = $this->_get_homedirectory('', $account_info->lid);
+			$entry['loginshell']          = $this->_get_loginshell('');
 
 
 			// special gidnumber handling
@@ -1018,8 +1020,10 @@
 			if (!$success)
 			{
 				echo 'ldap_add FAILED: [' . ldap_errno($this->ds) . '] ' . ldap_error($this->ds).'<br><br>';
+				echo "Did you remeber to include the phpgroupware ldap shema in slapd.conf?<br>";
+				echo "phpgwapi/doc/ldap/phpgroupware.schema<br>";
 				echo "<strong>Adds: {$dn}</strong><br>";
-				die("<pre>" . print_r($entry, true) . "</pre>\n<br>");
+				die("<pre>" . print_r($entry, true) . "</pre>\n<br>");				
 			}
 			else
 			{
