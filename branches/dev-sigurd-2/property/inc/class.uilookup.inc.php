@@ -1545,6 +1545,7 @@
 					if (!array_search($input_name[$m],$uicols['name']))
 					{
 						$uicols['name'][] 	= $input_name[$m];
+						$uicols['descr'][] 	= '';
 						$uicols['input_type'][] 	= 'hidden';
 					}
 				}
