@@ -81,3 +81,9 @@ include		/etc/openldap/phpgw.at.conf
 include		/etc/openldap/phpgwcontact.oc.conf
 include		/etc/openldap/phpgwcontact.at.conf
 
+
+
+Some useful info:
+http://howtoforge.org/installing-and-configuring-openldap-on-ubuntu-intrepid-ibex
+http://www.debuntu.org/ldap-server-and-linux-ldap-clients
+
