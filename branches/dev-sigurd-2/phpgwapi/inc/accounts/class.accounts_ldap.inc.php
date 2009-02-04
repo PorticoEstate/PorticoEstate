@@ -1400,7 +1400,7 @@
 			return $this->account;
 		}
 
-		public function get($id, $use_cache = false)
+		public function get($id, $use_cache = true)
 		{
 			$id = (int) $id;
 			$account = null;
