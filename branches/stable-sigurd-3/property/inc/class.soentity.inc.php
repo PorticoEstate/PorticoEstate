@@ -679,6 +679,7 @@
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)
 		{
+			$receipt = array();
 			if(isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]= $values['street_name'];
@@ -787,6 +788,7 @@
 
 			$this->db->transaction_commit();
 
+			$receipt['id'] = $values['id'];
 			$receipt['message'][] = array('msg'=>lang('entity %1 has been edited',$values['num']));
 			return $receipt;
 		}

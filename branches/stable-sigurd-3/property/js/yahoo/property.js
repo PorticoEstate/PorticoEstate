@@ -1043,6 +1043,11 @@
 		myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
 
 		myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
+		
+		//update "sortedBy" values 
+		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
+		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
+
 	}
 
 /****************************************************************************************

@@ -144,7 +144,7 @@
 					//fall through
 
 				case 'ldap':
-					include_once PHPGW_API_INC . "/aaccounts/class.accounts_ldap.inc.php";
+					include_once PHPGW_API_INC . "/accounts/class.accounts_ldap.inc.php";
 					break;
 
 				default:

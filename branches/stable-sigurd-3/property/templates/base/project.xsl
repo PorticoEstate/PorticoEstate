@@ -1,3 +1,29 @@
+<!--
+	Function
+	phpgw:conditional( expression $test, mixed $true, mixed $false )
+	Evaluates test expression and returns the contents in the true variable if
+	the expression is true and the contents of the false variable if its false
+
+	Returns mixed
+-->
+<func:function name="phpgw:conditional">
+	<xsl:param name="test"/>
+	<xsl:param name="true"/>
+	<xsl:param name="false"/>
+
+	<func:result>
+		<xsl:choose>
+			<xsl:when test="$test">
+	        	<xsl:value-of select="$true"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$false"/>
+			</xsl:otherwise>
+		</xsl:choose>
+  	</func:result>
+</func:function>
+
+
 <!-- $Id: project.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
 
 	<xsl:template name="app_data">
@@ -280,6 +306,17 @@
 			</xsl:choose>
 
 </table>
+
+	<script>
+		var data_values = <xsl:value-of select="values"/>;
+		var sum_workorder_budget 		= <xsl:value-of select="budget"/>;
+		var sum_workorder_calculation 	= <xsl:value-of select="calculation"/>;
+		var edit_action					= <xsl:value-of select="edit_action" />
+
+	</script>
+
+
+
 </div>
 
 <div id="location">
@@ -407,7 +444,8 @@
 					</xsl:when>
 					<xsl:otherwise>
 					<td>
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<div class="datatable-container"></div>
+					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_header_workorder_budget"/>
 						<xsl:apply-templates select="workorder_budget"/>
 						<tr class="th">
@@ -425,7 +463,8 @@
 							<td>
 							</td>
 						</tr>
-					</table>
+					</table> -->
+
 					</td>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -571,8 +610,8 @@
 </div>
 
 <div id="history">
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		<!-- <hr noshade="noshade" width="100%" align="center" size="1"/>
+		table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -591,7 +630,12 @@
 					<xsl:apply-templates select="record_history"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</table>
+		</table> -->
+		<div class="datatable-container2"></div>
+
+		<script>
+			var record_history = <xsl:value-of select="edit_history"/>;
+		</script>
 </div>
 </div>
 </div>
@@ -1143,3 +1187,6 @@
 			</tr>
 		</table>
 	</xsl:template>
+
+
+

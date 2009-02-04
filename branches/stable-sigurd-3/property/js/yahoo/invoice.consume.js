@@ -61,7 +61,7 @@
 		this.myParticularRenderEvent = function()
 		{
 			//not SHOW paginator
-			YAHOO.util.Dom.get("paging").style.display = "none";
+			YAHOO.util.Dom.get("paging").innerHTML = '';
 
 			//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 			create_message();

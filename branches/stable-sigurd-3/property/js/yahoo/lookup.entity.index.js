@@ -25,9 +25,6 @@
 		date_search : 0 //if search has link "Data search"
 	}
 	
-	var fields_name = new Array();
-	var fields_descr = new Array();
-	var fields_input_type = new Array();
 	/****************************************************************************************/
 		
 	this.particular_setting = function()
@@ -38,70 +35,27 @@
 		}
 		else if(flag_particular_setting=='update')
 		{
-			if(fields_name != '' || fields_name != null)
-			{
-				for(var x=0; x < fields_name.length; x++)
-		   		{
-					 var oColumn = myDataTable.getColumn(fields_name[x]);
-					 myDataTable.removeColumn(oColumn);
-			   	}				
-				fields_name = new Array();
-				fields_descr = new Array();
-				fields_input_type = new Array();
-			}
-			
-			for(var x=0; x < values_ds.headers.name.length; x++)
-	   		{
-				if (values_ds.headers.name[x] != 'num') 
-				{
-					myDataTable.insertColumn({key:values_ds.headers.name[x], label:values_ds.headers.descr[x]});
-					fields_name[x] = values_ds.headers.name[x];
-					fields_descr[x] = values_ds.headers.descr[x];
-					fields_input_type[x] = values_ds.headers.input_type[x];
-				}
-		   	}
 
-			for(var i=0; i<fields_name.length;i++)
-			{
-				if( fields_input_type[i] == 'hidden' )
-				{
-					var sKey = myDataTable.getColumn(fields_name[i]);
-					myDataTable.hideColumn(sKey);
-				}
-			}
-			
-			myDataTable.render();
+			myColumnDefs = [];
+			for(var k=0 ; k<values_ds.headers.name.length; k++)
+		    {
+		        if (values_ds.headers.input_type[k] == 'hidden')
+		        {
+		        	var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: false, resizeable:true,	sortable: false, source: ""};
+		        }else{
+		        	if (values_ds.headers.name[k] == 'num')	{
+		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: true, source: "num"};
+		        	}else{
+		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: false, source: ""};	
+		        	}
+		        }
+		        myColumnDefs.push(obj_temp);
+		    }
+
+			init_datatable();
 		}
 	}
-	/****************************************************************************************/
-	  
-	  this.myParticularRenderEvent = function()
-	  {
-	
-			for(var i=0; i < fields_name.length;i++)
-			{
-				if( fields_input_type[i] == 'hidden' )
-				{
-					var sKey = myDataTable.getColumn(fields_name[i]);
-					myDataTable.hideColumn(sKey);
-				}
-			}
 
-		    var fields = new Array();
-			for(var x= 0; x<values_ds.headers.name.length; x++)
-			{
-				fields[x] = values_ds.headers.name[x];
-		    }
-			
-		    myDataSource.responseSchema =
-		    {
-				resultsList: "records",
-				fields: fields,
-				metaFields : {
-	            			  totalRecords: "totalRecords" // The totalRecords meta field is a "magic" meta, and will be passed to the Paginator.	        				 
-		    	}
-		    };
-	  }
 /****************************************************************************************/
 	
 	YAHOO.util.Event.addListener(window, "load", function()

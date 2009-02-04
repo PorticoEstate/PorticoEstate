@@ -347,7 +347,8 @@
 					'enabled'			=> $this->db->f('account_status') == 'A',
 					'expires'			=> $this->db->f('account_expires'),
 					'person_id'			=> $this->db->f('person_id'),
-					'quota'				=> $this->db->f('account_quota')
+					'quota'				=> $this->db->f('account_quota'),
+					'type'				=> $this->db->f('account_type'),
 				);
 
 				if ( $this->db->f('account_type') == 'g' )

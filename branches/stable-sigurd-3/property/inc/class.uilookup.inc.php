@@ -1545,6 +1545,7 @@
 					if (!array_search($input_name[$m],$uicols['name']))
 					{
 						$uicols['name'][] 	= $input_name[$m];
+						$uicols['descr'][] 	= '';
 						$uicols['input_type'][] 	= 'hidden';
 					}
 				}
@@ -1563,7 +1564,7 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $entity_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= ($entity_entry[$uicols['name'][$i]] == null ? '' : $entity_entry[$uicols['name'][$i]]);
 						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					/*for ($i=0;$i<count($input_name);$i++)
