@@ -312,6 +312,7 @@
 		var sum_workorder_budget 		= <xsl:value-of select="budget"/>;
 		var sum_workorder_calculation 	= <xsl:value-of select="calculation"/>;
 		var edit_action					= <xsl:value-of select="edit_action" />
+		var total_records 				= <xsl:value-of select="total_records" />
 
 	</script>
 
@@ -444,6 +445,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 					<td>
+					<div id="paging"> </div>
 					<div class="datatable-container"></div>
 					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_header_workorder_budget"/>
