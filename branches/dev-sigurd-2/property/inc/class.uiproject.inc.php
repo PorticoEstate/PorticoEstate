@@ -1149,6 +1149,7 @@
 				'calculation'					 	=> json_encode($values['sum_workorder_calculation']),
 				'edit_action'						=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 				'edit_history'						=> json_encode($record_history),
+				'total_records'						=> json_encode(count($values['workorder_budget'])),
 				'tabs'								=> self::_generate_tabs(),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
