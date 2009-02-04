@@ -278,31 +278,48 @@
 			$arrayFunctions = createObject('phpgwapi.arrayfunctions');
 			if(empty($order))
 			{
-				$order = 'account_lid';
+				$order = 'lid';
 			}
 			$sortedlist = $arrayFunctions->arfsort($listentries,array($order),$sort);
 			$this->total = count($listentries); // this shouldn't be an obejct var for one account/group whatever
 			unset($listentries);
+
+			$accounts = array();
 
 			if ( is_array($sortedlist) )
 			{
 				if( $start > 0 && $offset > 0 )
 				{
 					//echo "defined limit - start: $start, offset: $offset<br>";
-					return array_slice($sortedlist, $start, $offset);
+					$result = array_slice($sortedlist, $start, $offset);
 				}
 				elseif($start != -1)
 				{
 					//echo "defined limit - start: $start, offset: user[max]<br>";
-					return array_slice($sortedlist, $start, $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']);
+					$result =  array_slice($sortedlist, $start, $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']);
 				}
 				else
 				{
-					//echo "return all<br>";
-					return $sortedlist;
+					$result =  $sortedlist;
+				}
+
+				foreach($result as $record)
+				{
+					$id = $record['id'];
+
+					if($record['type'] == 'u')
+					{
+						$accounts[$id] = new phpgwapi_user();
+					}
+					else
+					{
+						$accounts[$id] = new phpgwapi_group();					
+					}
+					$accounts[$id]->init($record);
 				}
 			}
-			return array();
+
+			return $accounts;
 		}
 
 		/**
@@ -408,7 +425,7 @@
 
 			$allValues = array();
 			// Groups are person? are you sure?
-			$sri = ldap_search($this->ds, $this->group_context, "(&(phpgwContactID={$person_id})(phpgwGroupID=*))");
+			$sri = ldap_search($this->ds, $this->group_context, "(&(phpgwcontactid={$person_id})(phpgwgroupid=*))");
 			$allValues = ldap_get_entries($this->ds, $sri);
 
 			if (@$allValues[0]['gidnumber'][0])
@@ -418,7 +435,7 @@
 			}
 
 			$allValues = array();
-			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwContactID={$person_id})(phpgwAccountID=*))");
+			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwcontactid={$person_id})(phpgwaccountid=*))");
 			$allValues = ldap_get_entries($this->ds, $sri);
 
 			if (@$allValues[0]['uidnumber'][0])
@@ -705,41 +722,36 @@
 
 			// phpgw attributes
 			$entry['objectclass'][]       = 'phpgwAccount';
-			$entry['phpgwAccountID']      = $account_info->id;
-			$entry['phpgwAccountExpires'] = isset($account_info->expires) && $account_info->expires ? $account_info->expires : -1;
-			if (isset($account_info->status))
-			{
-				$entry['phpgwAccountStatus'] = isset($account_info->status) && $account_info->status ? $account_info->status : 'A';
-			}
-			else
-			{
-				$entry['phpgwAccountStatus'] = 'I'; // 'I' for inactiv
-			}
+			$entry['phpgwaccountid']      = $account_info->id;
+			$entry['phpgwaccountexpires'] = isset($account_info->expires) && $account_info->expires ? $account_info->expires : -1;
+			
+			$entry['phpgwaccountstatus'] = isset($account_info->enabled) && $account_info->enabled ? 'A' : 'I';
+			
 			if (isset($account_info->last_login) && $account_info->last_login)
 			{
-				$entry['phpgwLastLogin'] = $account_info->last_login;
+				$entry['phpgwlastlogin'] = $account_info->last_login;
 			}
 			if (isset($account_info->last_login_from) && $account_info->last_login_from)
 			{
-				$entry['phpgwLastLoginFrom'] = $account_info->last_login_from;
+				$entry['phpgwlastloginfrom'] = $account_info->last_login_from;
 			}
 			if (isset($account_info->last_passwd_change) && $account_info->last_passwd_change)
 			{
-				$entry['phpgwLastPasswordChange'] = $account_info->last_passwd_change;
+				$entry['phpgwlastpasswordchange'] = $account_info->last_passwd_change;
 			}
 			if (isset($account_info->quota) && $account_info->quota)
 			{
-				$entry['phpgwQuota'] = $account_info->quota;
+				$entry['phpgwquota'] = $account_info->quota;
 			}
 			else
 			{
-				$entry['phpgwQuota'] = isset($this->quota)  && $this->quota ? $this->quota : 0;
+				$entry['phpgwquota'] = isset($this->quota)  && $this->quota ? $this->quota : 0;
 			}
 			$structural_modification = false;
 			if(isset($account_info->person_id) && (int) $account_info->person_id)
 			{
 				$entry['objectclass'][] = 'phpgwContact'; // shouldn't be structural
-				$entry['phpgwContactID'] = (int)$account_info->person_id;
+				$entry['phpgwcontactid'] = (int)$account_info->person_id;
 			}
 			else
 			{
@@ -827,10 +839,10 @@
 								case 'count':
 								case 'cn':
 								case 'description':
-								case 'phpgwAccountID':
+								case 'phpgwaccountid':
 								case 'gidnumber':
-								case 'phpgwAccountStatus':
-								case 'phpgwAccountExpires':
+								case 'phpgwaccountstatus':
+								case 'phpgwaccountexpires':
 								case 'uidnumber':
 								case 'uid':
 								case 'userpassword':
@@ -838,11 +850,11 @@
 								case 'loginshell':
 								case 'givenname':
 								case 'sn':
-								case 'phpgwLastLogin':
-								case 'phpgwLastLoginFrom':
-								case 'phpgwLastPasswordChange':
-								case 'phpgwContactID':
-								case 'phpgwQuota':
+								case 'phpgwlastlogin':
+								case 'phpgwlastloginfrom':
+								case 'phpgwlastpasswordchange':
+								case 'phpgwcontactid':
+								case 'phpgwquota':
 									break;
 
 								case 'objectclass':
@@ -947,7 +959,7 @@
 
 			$entry['objectclass'][]  = 'phpgwGroup';
 		//	$entry['objectclass'][]  = 'top';
-			$entry['phpgwGroupID']   = $account_info->id;
+			$entry['phpgwgroupid']   = $account_info->id;
 			$entry['gidnumber']      = $account_info->id;
 
 			// additional attributes from the phpgw for groups
@@ -961,11 +973,11 @@
 			}
 			if (isset($account_info->quota) && $account_info->quota > 0)
 			{
-				$entry['phpgwQuota'] = $account_info->quota;
+				$entry['phpgwquota'] = $account_info->quota;
 			}
 			else if (isset($this->quota) && $this->quota > 0)
 			{
-				$entry['phpgwQuota'] = $this->quota;
+				$entry['phpgwquota'] = $this->quota;
 			}
 
 			$oldEntry = $this->_group_exists($account_info->id, $dn);
@@ -1006,7 +1018,7 @@
 								case 'count':
 								case 'cn':
 								case 'description':
-								case 'phpgwGroupID':
+								case 'phpgwgroupid':
 								case 'gidnumber':
 								case 'memberuid':
 									break;
@@ -1201,7 +1213,7 @@
 		function get_account_with_contact()
 		{
 			$accounts = array();
-			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(phpgwContactID=*))", array('uidnumber', 'phpgwContactID'));
+			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(phpgwcontactid=*))", array('uidnumber', 'phpgwcontactid'));
 			$allValues = ldap_get_entries($this->ds, $sri);
 			if(is_array($allValues))
 			{
@@ -1209,7 +1221,7 @@
 				for($i=0;$i<$count; $i++)
 				{
 					$value = &$allValue[$i];
-					$accounts[$value['uidnumber'][0]] = $value['phpgwContactID'][0];
+					$accounts[$value['uidnumber'][0]] = $value['phpgwcontactid'][0];
 				}
 			}
 
@@ -1218,7 +1230,7 @@
 
 		function get_account_without_contact()
 		{
-			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(!(phpgwContactID=*)))", array('uidnumber'));
+			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(!(phpgwcontactid=*)))", array('uidnumber'));
 			$allValues = ldap_get_entries($this->ds, $sri);
 			if(is_array($allValues))
 			{
@@ -1388,12 +1400,21 @@
 			return $this->account;
 		}
 
-		public function get($id, $use_cache = true)
+		public function get($id, $use_cache = false)
 		{
 			$id = (int) $id;
 			$account = null;
 
-			$acct_type = $this->get_type($this->account_id);
+			if ( $use_cache )
+			{
+				$account = phpgwapi_cache::system_get('phpgwapi', "account_{$id}");
+				if ( is_object($account) )
+				{
+					return $account;
+				}
+			}
+
+			$acct_type = $this->get_type($id);
 
 			/* search the dn for the given uid */
 			if ( $acct_type == phpgwapi_account::TYPE_GROUP
@@ -1410,47 +1431,60 @@
 			{
 				throw new Exception('Invalid account requested');
 			}
+
 			$entries = ldap_get_entries($this->ds, $sri);
+
 			// first in best dressed - we can't tell which one is the correct one
 			$entry = $entries[0];
-			unset($entries);
 
+			unset($entries);
+			$record = array();
 			/* Now dump it into the array; take first entry found */
-			$this->data['account_dn']             = $entries[0]['dn'];
-			$this->data['fullname']               = $entries[0]['cn'][0];
+			if ( isset($entry['phpgwcontactid']) )
+			{
+				$this->person_id	= $record['person_id'] = $entry['phpgwcontactid'][0];
+			}
+			if ( !isset($entry['phpgwquota']) || $entry['phpgwquota'] === '')
+			{
+				$record['quota'] = $this->quota; // set to 0 by default
+			}
+			else
+			{
+				$record['quota'] = $entry['phpgwquota'][0];
+			}
+
+			$record['dn']					= $entry['dn'];
+			$record['fullname']				= $entry['cn'][0];
 			if($acct_type == 'g')
 			{
-				$this->account_id	= $this->data['account_id']			= $entries[0]['gidnumber'][0];
-				$this->lid			= $this->data['account_lid']		= $entries[0]['cn'][0];
-				$this->firstname	= $this->data['account_firstname']	= $entries[0]['cn'][0];
-				$this->lastname		= $this->data['account_lastname']	= lang('group');
-				$this->account_type	= $this->data['type']				= 'g';
+				$record['id']				= $entry['gidnumber'][0];
+				$record['lid']				= $entry['cn'][0];
+				$record['firstname']		= $entry['cn'][0];
+				$record['lastname']			= lang('group');
+				$record['type']				= 'g';
+
+				$account = new phpgwapi_group();
 			}
 			else
 			{
-				$this->account_id	= $this->data['account_id']			= $entries[0]['uidnumber'][0];
-				$this->lid			= $this->data['account_lid']		= $entries[0]['uid'][0];
-				$this->firstname	= $this->data['account_firstname']	= (isset($entries[0]['givenname']) && isset($entries[0]['givenname'][0])) ? $entries[0]['givenname'][0] : '';
-				$this->lastname		= $this->data['account_lastname']	= (isset($entries[0]['sn']) && isset($entries[0]['sn'][0])) ? $entries[0]['sn'][0] : '';
-				$this->expires 		= $this->data['expires'] = $this->data['account_expires'] = $entries[0]['phpgwAccountExpires'][0];
-				$this->data['homedirectory']          = isset($entries[0]['homedirectory']) ? $entries[0]['homedirectory'][0] : self::FALLBACK_HOMEDIRECTORY;
-				$this->data['loginshell']             = isset($entries[0]['loginshell']) ? $entries[0]['loginshell'][0] : self::FALLBACK_LOGINSHELL;
-				$this->status = $this->data['status'] = isset($entries[0]['phpgwAccountStatus']) && $entries[0]['phpgwAccountStatus'][0] == 'A' ? 'A' : '';
-				$this->account_type	= $this->data['type']				= 'u';
+				$record['id']				= $entry['uidnumber'][0];
+				$record['lid']				= $entry['uid'][0];
+				$record['firstname']		= (isset($entry['givenname']) && isset($entry['givenname'][0])) ? $entry['givenname'][0] : '';
+				$record['lastname']			= (isset($entry['sn']) && isset($entry['sn'][0])) ? $entry['sn'][0] : '';
+				$record['expires'] 			= $record['account_expires'] = $entry['phpgwaccountexpires'][0];
+		//		$record['homedirectory']    = isset($entry['homedirectory']) ? $entry['homedirectory'][0] : self::FALLBACK_HOMEDIRECTORY;
+		//		$record['loginshell']       = isset($entry['loginshell']) ? $entry['loginshell'][0] : self::FALLBACK_LOGINSHELL;
+				$record['enabled'] 			= isset($entry['phpgwaccountstatus']) && $entry['phpgwaccountstatus'][0] == 'A' ? true : false;
+				$record['type']				= 'u';
+
+				$account = new phpgwapi_user();
 			}
-			if ( isset($entries[0]['phpgwContactID']) )
-			{
-				$this->person_id	= $this->data['person_id'] = $entries[0]['phpgwContactID'][0];
-			}
-			if ( !isset($entries[0]['phpgwQuota']) || $entries[0]['phpgwQuota'] === '')
-			{
-				$this->data['quota'] = $this->quota; // set to 0 by default
-			}
-			else
-			{
-				$this->quota = $this->data['quota'] = $entries[0]['phpgwQuota'];
-			}
-			return $this->data;
+
+			$account->init($record);
+
+			phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
+
+			return $account;
 		}
 
 		public function save_repository()
@@ -1459,11 +1493,11 @@
 
 			if ($acct_type == 'g')
 			{
-				return $this->create_group($this->data, '');
+				return $this->_create_group($this->data, '');
 			}
 			else
 			{
-				return $this->create_account($this->data, '');
+				return $this->_create_user($this->data, '');
 			}
 		}
 
@@ -1499,16 +1533,15 @@
 				{
 					continue;
 				}
-
 				if ( !isset($GLOBALS['phpgw_info']['server']['global_denied_groups'][$test]) )
 				{
 					$groups[] = array
 					(
-						'account_id'        => $entry['gidnumber'][0],
-						'account_lid'       => $entry['cn'][0],
-						'account_firstname' => $entry['cn'][0],
-						'account_lastname'  => lang('group'),
-						'account_type'      => 'g',
+						'id'        => $entry['gidnumber'][0],
+						'lid'       => $entry['cn'][0],
+						'firstname' => $entry['cn'][0],
+						'lastname'  => lang('group'),
+						'type'      => 'g',
 					);
 				}
 			}
@@ -1637,12 +1670,12 @@
 				{
 					$accounts[] = array
 					(
-						'account_id'        => $entry['uidnumber'][0],
-						'account_lid'       => $entry['uid'][0],
-						'account_type'      => 'u',
-						'account_firstname' => $entry['givenname'][0],
-						'account_lastname'  => $entry['sn'][0],
-						'account_status'    => $entry['phpgwAccountStatus'][0] == 'A' ? 'A' : 'I'
+						'id'        => $entry['uidnumber'][0],
+						'lid'       => $entry['uid'][0],
+						'type'      => 'u',
+						'firstname' => $entry['givenname'][0],
+						'lastname'  => $entry['sn'][0],
+						'enabled'    => $entry['phpgwaccountstatus'][0] == 'A' ? true : false
 					);
 				}
 			}
