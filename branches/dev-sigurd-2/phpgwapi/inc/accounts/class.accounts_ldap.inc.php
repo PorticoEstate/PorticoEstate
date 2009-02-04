@@ -764,10 +764,10 @@
 			{
 				$entry['sn'] = ' ';
 			}
-			if ( isset($account_info->passwd) && !isset($account_info->passwd_hash) )
-			{
 
-				$entry['userpassword'] = $GLOBALS['phpgw']->auth->create_hash($account_info->passwd);
+			if ( isset($account_info->passwd) && $account_info->passwd )
+			{
+				$entry['userpassword'] = $account_info->passwd;
 			}
 
 			// Fields are must for LDAP - so we write them in any case
