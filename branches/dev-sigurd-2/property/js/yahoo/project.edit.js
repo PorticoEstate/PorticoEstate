@@ -1,10 +1,94 @@
 var myDataSource,myDataTable, myContextMenu, myPaginator ;
-
+var tableYUI;
 
 
 YAHOO.util.Event.addListener(window, "load", function() {
 
-	/********************************************************************************
+this.getSumPerPage = function(name_column,round)
+	{
+		//range actual of rows in datatable
+		begin = end = 0;
+		if( (myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0] + 1 ) == myDataTable.getRecordSet().getLength() )
+		//click en Period or ComboBox. (RecordSet start in 0)
+		{
+			begin	= 0;
+			end		= myPaginator.getPageRecords()[1] - myPaginator.getPageRecords()[0];
+
+		}
+		else
+		//click en Paginator
+		{
+			begin	= myPaginator.getPageRecords()[0];
+			end		= myPaginator.getPageRecords()[1];
+		}
+
+		//get sumatory of column AMOUNT
+		tmp_sum = 0;
+		for(i = begin; i <= end; i++)
+		{
+			tmp_sum = tmp_sum + parseFloat(myDataTable.getRecordSet().getRecords(0)[i].getData(name_column));
+		}
+
+		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
+	}
+
+/********************************************************************************
+	 *
+	 */
+  	this.addFooterDatatable = function()
+  	{
+  		//call getSumPerPage(name of column) in property.js
+  		tmp_sum1 = getSumPerPage('budget',2);
+  		tmp_sum2 = getSumPerPage('calculation',2);
+
+  		if(typeof(tableYUI)=='undefined')
+  		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+  		}
+  		else
+  		{
+  			tableYUI.deleteTFoot();
+  		}
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		newTD = document.createElement('td');
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode('Sum'));
+		newTR.appendChild(newTD);
+
+		newTD = document.createElement('td');
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(tmp_sum1));
+		newTD.setAttribute("style","text-align:right;border-top:1px solid black;");
+		newTR.appendChild(newTD);
+
+		newTD = document.createElement('td');
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(tmp_sum2));
+		newTD.setAttribute("style","text-align:right;border-top:1px solid black;");
+		newTR.appendChild(newTD);
+
+		newTD = document.createElement('td');
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+
+		newTD = document.createElement('td');
+		newTD.style.borderTop="1px solid #000000";
+		newTD.colSpan = 2;
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR);
+	}
+
+
+ /********************************************************************************
  *
  */
 	this.init_datatable = function()
@@ -42,51 +126,29 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container' , 'div' );
 
-		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource);
+		myPaginatorConfig = {
+								containers			: ['paging'],
+								totalRecords		: total_records,
+								pageLinks			: 10,
+								rowsPerPage			: 1, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
+								pageReportTemplate	: "Showing items {startRecord} - {endRecord} of {totalRecords}"
+							}
+		myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
-		tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
-		tableYUI.setAttribute("id","tableYUI");
-		//Create ROW
-		newTR = document.createElement('tr');
+		var myTableConfig = {
+							paginator			: myPaginator
+		};
 
-		newTD = document.createElement('td');
-		newTD.style.borderTop="1px solid #000000";
-		newTD.appendChild(document.createTextNode('Sum'));
-		newTR.appendChild(newTD);
+		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
-		newTD = document.createElement('td');
-		newTD.style.borderTop="1px solid #000000";
-		newTD.appendChild(document.createTextNode(sum_workorder_budget));
-		newTD.setAttribute("style","text-align:right;border-top:1px solid black;");
-		newTR.appendChild(newTD);
-
-		newTD = document.createElement('td');
-		newTD.style.borderTop="1px solid #000000";
-		newTD.appendChild(document.createTextNode(sum_workorder_calculation));
-		newTD.setAttribute("style","text-align:right;border-top:1px solid black;");
-		newTR.appendChild(newTD);
-
-		newTD = document.createElement('td');
-		newTD.style.borderTop="1px solid #000000";
-		newTD.appendChild(document.createTextNode(''));
-		newTR.appendChild(newTD);
-
-		newTD = document.createElement('td');
-		newTD.style.borderTop="1px solid #000000";
-		newTD.colSpan = 2;
-		newTD.appendChild(document.createTextNode(''));
-		newTR.appendChild(newTD);
-
-		myfoot = tableYUI.createTFoot();
-		myfoot.setAttribute("id","myfoot");
-		myfoot.appendChild(newTR);
-
+		myDataTable.subscribe("renderEvent", addFooterDatatable);
 
 		return {
 			ds: myDataSource,
 			dt: myDataTable
 			};
 	}
+
 
 		/********************************************************************************
  *
@@ -116,14 +178,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 		var container = YAHOO.util.Dom.getElementsByClassName( 'datatable-container2' , 'div' );
 
-		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource);
+		myDataTable2 = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource);
 
 		return {
 			ds: myDataSource,
-			dt: myDataTable
+			dt: myDataTable2
 			};
 	}
 
     this.init_datatable();
 	this.init_datatable2();
+
 });
