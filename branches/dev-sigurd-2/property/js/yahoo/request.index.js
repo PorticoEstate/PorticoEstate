@@ -77,10 +77,10 @@
 		for(i=0;i<valuesForPHP.length;i++)
 		{
 			myclone = valuesForPHP[i].cloneNode(false);
-			/*if (myclone.checked == true) {
+			if (myclone.checked == true) {
 				var b = new YAHOO.widget.Button('btn_update');
 				b.set("disabled", true);
-			}*/
+			}
 			mydiv.appendChild(myclone);
 		}
 
