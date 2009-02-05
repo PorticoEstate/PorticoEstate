@@ -1,5 +1,5 @@
 //--------------------------------------------------------
-// Declaration of location.index vars
+// Declaration of template.index vars
 //--------------------------------------------------------
 	//define SelectButton
  	var oMenuButton_0, oMenuButton_1;
@@ -9,15 +9,17 @@
 	];
 
 	// define buttons
-	var oNormalButton_0;
+	var oNormalButton_0, oNormalButton_1, oNormalButton_2, oNormalButton_3;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_new', funct:"onNewClick"}
+	{order:1, name:'btn_new', funct:"onNewClick"},
+	{order:2, name:'btn_done',	funct:"onNewDoneClick"},
+	{order:3, name:'btn_select', funct:"onAddTemplate"}
 	];
 
 	// define Text buttons
 	var textImput = [
-		{order:0, name:'query',id:'txt_query'}
+		{order:0, name:'query', id:'txt_query'}
 	];
 
 	var toolTips =
@@ -47,9 +49,59 @@
   	{
   	//don't delete it
   	}
+  	
+ /****************************************************************************************/
+ 
+	this.onNewDoneClick = function()
+	{
+ 		var path_update = new Array();
+ 		path_update["menuaction"] = "property.uiwo_hour.index";
+ 		path_update["workorder_id"] = path_values.workorder_id;
+ 		
+		window.open(phpGWLink('index.php',path_update),'_self');
+	}
+/****************************************************************************************/
+	
+    this.onAddTemplate = function()
+    {
+ 		//get all controls of datatable
+    	
+ 		var valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
+ 		var myclone = null;
+ 		
+ 		var template_id = "";
+ 		//add all control to form
+ 		for(i=0;i<valuesForPHP.length;i++)
+ 		{
+ 			myclone = valuesForPHP[i].cloneNode(false);
+ 			if (myclone.checked == true) {
+ 				var b = new YAHOO.widget.Button('btn_select');
+ 				b.set("disabled", true);
+ 				template_id = myclone.value;
+ 				break;
+ 			}
+ 		}
+ 		
+ 		var path_update = new Array();
+ 		path_update["menuaction"] = "property.uiwo_hour.template";
+ 		document.getElementById("workorder_id").value  = path_values.workorder_id;
+ 		document.getElementById("template_id").value  = template_id;
 
+ 		var sUrl = phpGWLink('index.php',path_update);
+ 		formObject = document.getElementsByTagName('form');
+ 		YAHOO.util.Connect.setForm(formObject[0]);
+ 		
+ 		if(template_id != "") 
+ 		{
+	 		formObject[0].action = sUrl;
+	 		formObject[0].method = "post";
+	 		formObject[0].submit();
+ 		}
+
+    }
 
 /****************************************************************************************/
+    
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';

@@ -92,24 +92,16 @@
 
 		function index()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-								'template',
-								'nextmatchs',
-								'search_field'));
-
 			$workorder_id = phpgw::get_var('workorder_id', 'int');
 			$lookup 	= phpgw::get_var('lookup', 'bool');
-
-			/*if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}*/
 
 			$datatable = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
+				
 				$datatable['menu']					= $this->bocommon->get_menu();
+				
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 		    		(
 		    			'menuaction'			=> 'property.uitemplate.index',
@@ -124,16 +116,9 @@
 	    											."sort: '{$this->sort}',"
  	                        						."order: '{$this->order}',"
  	                        						."status: '{$this->status}',"
+ 	                        						."workorder_id:'{$workorder_id}',"
+ 	                        						."lookup:'{$lookup}',"
  	                        						."query: '{$this->query}'";
-   				$link_data = array
-				(
-					'menuaction'	=> 'property.uitemplate.index',
-					'sort'		=> $this->sort,
-					'order'		=> $this->order,
-					'chapter_id'	=> $this->chapter_id,
-					'workorder_id'	=> $workorder_id,
-					'query'		=> $this->query
-				);
 
 				$values_combo_box[0] = $this->bowo_hour->get_chapter_list('filter',$this->chapter_id);
 				$default_value = array ('id'=>'','name'=> lang('select chapter'));
@@ -150,7 +135,7 @@
 							array(
 								'menuaction' 		=> 'property.uitemplate.index',
 								'query'            		=> $this->query,
- 	                			'chapter_id'				=> $this->chapter_id
+ 	                			'chapter_id'			=> $this->chapter_id
 							)
 						),
 					'fields'	=> array(
@@ -170,7 +155,19 @@
 				                                            'type' => 'button',
 				                                            'style' => 'filter',
 				                                            'tab_index' => 2
-				                                        ),
+				                                        ),						                            				                                        
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_done',
+							                                'value'	=> lang('done'),
+							                                'tab_index' => 7
+							                            ),				                                        
+				                                        array(
+							                                'type'	=> 'button',
+							                            	'id'	=> 'btn_select',
+							                                'value'	=> lang('Select'),
+							                                'tab_index' => 6
+							                            ),				                                        
 				                                        array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
@@ -193,6 +190,20 @@
 				                                            'size'    => 28,
 				                                            'tab_index' => 3
 				                                        ),
+														array( //hidden 
+							                                'type'	=> 'hidden',
+							                                'name'     => 'workorder_id',
+							                            	'id'	=> 'workorder_id',
+							                                'value'	=> 0,
+							                                'style' => 'filter'
+							                            ),
+														array( //hidden 
+							                                'type'	=> 'hidden',
+							                                'name'     => 'template_id',
+							                            	'id'	=> 'template_id',
+							                                'value'	=> 0,
+							                                'style' => 'filter'
+							                            )				                                        
 			                           				),
 			                       		'hidden_value' => array
 			                       						  (
@@ -211,13 +222,22 @@
 					 )
 				);
 
+				if($lookup)
+				{
+					unset($datatable['actions']['form'][0]['fields']['field'][4]);
+				} 
+				if(!$lookup) {
+					unset($datatable['actions']['form'][0]['fields']['field'][3]);
+					unset($datatable['actions']['form'][0]['fields']['field'][2]);
+				}
+				
 				$dry_run = true;
 			}
 
 			$template_list	= $this->bo->read();
 
 			$uicols = array();
-			//$uicols['name'][0] = 'workorder_id';
+
 			$uicols['name'][0]['name'] = 'ID';
 			$uicols['name'][0]['value'] = 'template_id';
 
@@ -236,7 +256,6 @@
 			$uicols['name'][5]['name'] = 'Entry Date';
 			$uicols['name'][5]['value'] = 'entry_date';
 
-			//_debug_array($uicols);die;
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -250,70 +269,69 @@
 						$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k]['value'];
 						$datatable['rows']['row'][$j]['column'][$k]['value']	= $template_entry[$uicols['name'][$k]['value']];
 					}
+					if($lookup)
+					{
+						$datatable['rows']['row'][$j]['column'][$k + 1]['name'] 	= 'select';
+						$datatable['rows']['row'][$j]['column'][$k + 1]['value']	= '<input type="radio" name="template" value="'.$template_entry['template_id'].'" class="myValuesForPHP"">';
+					}
 					$j++;
 				}
 			}
 
-			//_debug_array($uicols);die;
+			$datatable['rowactions']['action'] = array();
 
-			$parameters = array
-			(
-				'parameter' => array
+			if(!$lookup) 
+			{
+				$parameters = array
 				(
-					array
+					'parameter' => array
 					(
-						'name'		=> 'template_id',
-						'source'	=> 'template_id'
-					),
-				)
-			);
-
-			$parameters2 = array
-			(
-				'parameter' => array
+						array
+						(
+							'name'		=> 'template_id',
+							'source'	=> 'template_id'
+						),
+					)
+				);
+	
+				$parameters2 = array
 				(
-					array
+					'parameter' => array
 					(
-						'name'		=> 'id',
-						'source'	=> 'template_id'
-					),
-				)
-			);
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'template_id'
+						),
+					)
+				);
 
-			//if($this->acl_read)
-			//{
 				$datatable['rowactions']['action'][] = array
 				(
 					'my_name' 			=> 'view',
 					'statustext' 	=> lang('view the claim'),
 					'text'			=> lang('view'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'property.uitemplate.hour'
-					)
-				),
-				'parameters'	=> $parameters
+						(
+							'menuaction'	=> 'property.uitemplate.hour'
+						)
+					),
+					'parameters'	=> $parameters
 				);
-			//}
-
-			//if ($this->acl_edit)
-			//{
+		
 				$datatable['rowactions']['action'][] = array
 				(
 					'my_name' 			=> 'edit',
 					'statustext' 			=> lang('edit the claim'),
 					'text'		=> lang('edit'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'property.uitemplate.edit_template'
-					)
-				),
-				'parameters'	=> $parameters
+						(
+							'menuaction'	=> 'property.uitemplate.edit_template'
+						)
+					),
+					'parameters'	=> $parameters
 				);
-			//}
 
-			//if ($this->acl_delete)
-			//{
 				$datatable['rowactions']['action'][] = array
 				(
 					'my_name' 			=> 'delete',
@@ -321,28 +339,28 @@
 					'text'		=> lang('delete'),
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'	=> 'property.uitemplate.delete'
-					)
-				),
-				'parameters'	=> $parameters2
+						(
+							'menuaction'	=> 'property.uitemplate.delete'
+						)
+					),
+					'parameters'	=> $parameters2
 				);
-			//}
 
-			$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'add',
-					'text' 			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				$datatable['rowactions']['action'][] = array
 					(
-										'menuaction'	=> 'property.uitemplate.edit_template'
-					)
-				 )
-			);
-
-			unset($parameters);
-			unset($parameters2);
-
+						'my_name' 		=> 'add',
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+											'menuaction'	=> 'property.uitemplate.edit_template'
+						)
+					 )
+				);
+	
+				unset($parameters);
+				unset($parameters2);
+			}
+			
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
 				if($uicols['input_type'][$i]!='hidden')
@@ -365,6 +383,19 @@
 					$datatable['headers']['header'][$i]['sortable']			= true;
 					$datatable['headers']['header'][$i]['sort_field']   	= "fm_template.id";
 				}
+			}
+
+			if($lookup)
+			{
+				$i++;
+				$datatable['headers']['header'][$i]['name'] 			= 'select';
+				$datatable['headers']['header'][$i]['text'] 			= lang('select');
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= false;
+				$datatable['headers']['header'][$i]['format'] 			= '';
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['formatter']		= '""';
+				
 			}
 
 			//path for property.js
@@ -395,12 +426,9 @@
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
 			phpgwapi_yui::load_widget('animation');
 
 
@@ -449,6 +477,7 @@
 
 	    		return $json;
 			}
+			
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
