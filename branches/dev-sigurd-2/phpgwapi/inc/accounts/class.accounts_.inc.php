@@ -343,7 +343,7 @@
 				}
 
 				// application permissions
-				foreach ( $modules as $module => $dummy)
+				foreach ( $modules as $module)
 				{
 					$aclobj->add($module, 'run', phpgwapi_acl::READ);
 				}
@@ -603,6 +603,7 @@
 		public function update_group($group, $users, $modules = null)
 		{
 			$this->account = $group;
+			$this->account_id = $group->id;
 			$this->save_repository();
 
 			// handle group memberships
@@ -611,7 +612,7 @@
 			$drop_users = array_diff($old_users, $new_users);
 			if ( is_array($drop_users) && count($drop_users) )
 			{
-				foreach ( $drop_user as $user )
+				foreach ( $drop_users as $user )
 				{
 					$this->delete_account4group($user, $group->id);
 				}
@@ -695,7 +696,7 @@
 			if ( is_array($modules) )
 			{
 				$apps = createObject('phpgwapi.applications', $user->id);
-				$apps->update_data(array_keys($modules));
+				$apps->update_data($modules);
 				$apps->save_repository();
 			}
 

@@ -254,6 +254,11 @@
 		{
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			
+			if( !$location_id > 0)
+			{
+				return $this->_data;
+			}
 
 			if ( !is_array($this->_data[$this->_account_id]) )
 			{

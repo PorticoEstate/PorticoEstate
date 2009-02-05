@@ -180,13 +180,13 @@
 			$new_group->lastname	= lang('group');
 			$new_group->expires		= -1;
 			$new_group->enabled		= true;
-_debug_array($new_group);
+
 			$id = (int) $values['account_id'];
 			if ( !$id ) // add new group?
 			{
 				$new_group->id = $id;
 				$id = $GLOBALS['phpgw']->accounts->create($new_group, $values['account_user'],
-														array(), $values['account_apps']);
+														array(), array_keys($values['account_apps']));
 			}
 			else //edit group
 			{
@@ -320,8 +320,9 @@ _debug_array($new_group);
 					'rights'	=> 1
 				);
 			}
-			
-			$apps = $values['account_permissions'];
+
+			$apps = array_keys($values['account_permissions']);
+
 			unset($values['account_groups'], $values['account_permissions']);
 
 			try

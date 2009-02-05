@@ -199,6 +199,7 @@
 
 			if (isset($allValues[0]['dn']) && $allValues[0]['dn'])
 			{
+				echo "TODO: clean up the group_map and acl";
 				return ldap_delete($this->ds, $allValues[0]['dn']);
 			}
 			else
@@ -421,7 +422,7 @@
 			elseif ($type == 'u')
 			{
 				$account = $this->_user_exists($id);
-				$name = $account['cn'][0];
+				$name = $account['uid'][0];
 			}
 			else
 			{
@@ -985,14 +986,11 @@
 		* @param string $default_prefs Unused
 		*/
 		function _create_group($account_info, $members)
-	//	function create_group($account_info)
 		{
-
-			if ( !isset($account_info->id) || empty($account_info->id) || !$account_info->id == 0 )
+			if ( !isset($account_info->id) || !$account_info->id )
 			{
 				$account_info->id = $this->_get_nextid($account_info->type);
 			}
-
 
 			$ok = false;
 			$dn = $this->rdn_group . '=' . $account_info->lid . ',' . $this->group_context;
@@ -1381,38 +1379,25 @@
 
 			$sri = ldap_search($this->ds, $this->group_context, "gidnumber={$group_id}");
 			$entries = ldap_get_entries($this->ds, $sri);
-//_debug_array($entries);die();
+
 			if ( !is_array($entries) )
 			{
 				$entries = array();
 			}
-/*
+
 			foreach ( $entries as $entry )
 			{
-				if (isset($entry['uidnumber']))
+				if (isset($entry['memberuid']))
 				{
-					$this->members[$group_id][] = array
-					(
-						'account_id'	=> $entry['uidnumber'],
-						'account_name'	=> $GLOBALS['phpgw']->common->display_fullname($entry[$this->rdn_account], $entry['givenname'], $entry['sn'])
-					);
-				}
-			}
-			return $this->members[$group_id];
-*/
-			
-			
-			//FIXME - probably best to use memberuid
-			
-			foreach ( $entries as $entry )
-			{
-				if (isset($entry['uidnumber']))
-				{
-					$id =  $entry['uidnumber'];
-					$this->members[$group_id][$id] = array
-					(
-						'account_id'	=> $id
-					);
+					unset ($entry['memberuid']['count']);
+					foreach ($entry['memberuid'] as $memberuid)
+					{
+						$id =  $this->name2id($memberuid);
+						$this->members[$group_id][$id] = array
+						(
+							'account_id'	=> $id
+						);
+					}
 				}
 			}
 
@@ -1468,11 +1453,15 @@
 			return $this->account;
 		}
 
-		public function get($id, $use_cache = false)
+		public function get($id, $use_cache = true)
 		{
 			$id = (int) $id;
 			$account = null;
 
+			if(!$id)
+			{
+				return null;
+			}
 			if ( $use_cache )
 			{
 				$account = phpgwapi_cache::system_get('phpgwapi', "account_{$id}");
@@ -1562,9 +1551,7 @@
 			{
 				return true; // nothing to do here
 			}
-
 			$acct_type = $this->get_type($this->account_id);
-
 			if ($acct_type == 'g')
 			{
 				return $this->_create_group($this->account, '');
@@ -1680,11 +1667,11 @@
 		{
 			if ( !empty($account_id) )
 			{
-   			$members = $this->member($account_id);
+  	 			$members = $this->member($account_id);
 			}
 			else
 			{
-   			$members = $this->member($this->data['account_id']);
+  	 			$members = $this->member($this->data['account_id']);
 			}
 			$return = array();
 			for ($i=0; $i<count($members); $i++)

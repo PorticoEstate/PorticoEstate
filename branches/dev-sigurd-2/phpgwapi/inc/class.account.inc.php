@@ -379,10 +379,20 @@
 				throw new Exception('Group name is too short');
 			}
 
-			if ( $lookup && 
-				$this->_data['id'] != $GLOBALS['phpgw']->accounts->name2id($group) )
+			if ( $lookup )
 			{
-				throw new Exception('Group name already in use');
+				if ($this->_data['id'])
+				{
+					if($this->_data['id'] != $GLOBALS['phpgw']->accounts->name2id($group)
+						&& $GLOBALS['phpgw']->accounts->name2id($group) )
+					{
+						throw new Exception('Group name already in use');
+					}
+				}
+				else if($GLOBALS['phpgw']->accounts->name2id($group))
+				{
+					throw new Exception('Group name already in use');				
+				}
 			}
 
 			phpgw::import_class('phpgwapi.globally_denied');

@@ -41,7 +41,7 @@
 
 	<xsl:template match="group_header">
 		<tr>
-			<th><a href="$sort_name"><xsl:value-of select="lang_name"/></a></th>
+			<th><a href="{sort_name}"><xsl:value-of select="lang_name"/></a></th>
 			<th><xsl:value-of select="lang_edit"/></th>
 			<th><xsl:value-of select="lang_delete"/></th>
 		</tr>
