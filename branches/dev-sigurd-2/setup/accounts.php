@@ -241,26 +241,30 @@
 			// FIXME: Conflicting transactions - there are transactions in phpgwapi_accounts_::create() and acl::save_repository()
 			//$GLOBALS['phpgw_setup']->db->transaction_begin();
 
-			
-			// Temporary hack for LDAP
-			if ( $user_id = $GLOBALS['phpgw']->accounts->name2id($username))
-			{
-				$GLOBALS['phpgw']->accounts->delete($user_id);
-			}
-			if ( $user_id = $GLOBALS['phpgw']->accounts->name2id('admin') )
-			{
-				$GLOBALS['phpgw']->accounts->delete($user_id);
-			}
-			if ( $user_id = $GLOBALS['phpgw']->accounts->name2id('default') );
-			{
-				$GLOBALS['phpgw']->accounts->delete($user_id);
-			}
 			// Now, clear out existing tables
 			$contacts_to_delete = $GLOBALS['phpgw']->accounts->get_account_with_contact();
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_accounts');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_preferences');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_acl');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_mapping');
+			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_group_map');
+
+			// Clean out LDAP
+			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap')
+			{
+				$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, '', '', '',-1);
+
+				foreach ($accounts as $account)
+				{
+					$GLOBALS['phpgw']->accounts->delete($account->id);
+				}
+				$accounts = $GLOBALS['phpgw']->accounts->get_list('groups', -1, '', '', '',-1);
+				foreach ($accounts as $account)
+				{
+					$GLOBALS['phpgw']->accounts->delete($account->id);
+				}
+			}
+
 			$contacts = CreateObject('phpgwapi.contacts');
 			if(is_array($contacts_to_delete))
 			{

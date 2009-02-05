@@ -115,12 +115,52 @@
 					{
 						$entry = array();
 						$entry['memberuid'][] = $memberUID;
+						$this->_add_user2group_sql($account_id, $group_id); // to get easy access to membership
 						return ldap_mod_add($this->ds, $groupEntry['dn'], $entry);
 					}
 				}
 			}
 			return false;
 		}
+
+
+		/**
+		* Add an account to a group entry
+		*
+		* @param integer $account_id Account id
+		* @param integer $group_id   Group id
+		*
+		* @return boolean true on success otherwise false
+		*/
+		protected function _add_user2group_sql($account_id, $group_id)
+		{
+			$account_id = (int) $account_id;
+			$group_id = (int) $group_id;
+			$read = phpgwapi_acl::READ;
+
+			if ( !$account_id || !$group_id )
+			{
+				return false;
+			}
+
+			// Check if it already exists
+			$sql = 'SELECT group_id FROM phpgw_group_map'
+				. " WHERE	group_id = {$group_id}"
+					. " AND account_id = {$account_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ( $this->db->next_record() )
+			{
+				return true;
+			}
+
+			$sql = 'INSERT INTO phpgw_group_map'
+				. " VALUES({$group_id}, {$account_id}, {$read})";
+
+			return !!$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+
 
 		/**
 		 * Create a new user account  - this only creates the acccount
@@ -280,6 +320,7 @@
 			{
 				$order = 'lid';
 			}
+
 			$sortedlist = $arrayFunctions->arfsort($listentries,array($order),$sort);
 			$this->total = count($listentries); // this shouldn't be an obejct var for one account/group whatever
 			unset($listentries);
@@ -704,9 +745,8 @@
 		* @param string $default_prefs Unused
 		*/
 		function _create_user($account_info, $groups)
-//		function create_account($account_info)
 		{
-			if ( !isset($account_info->id) || empty($account_info->id) || !$account_info->id == 0 )
+			if ( !isset($account_info->id) || !$account_info->id )
 			{
 				$account_info->id = $this->_get_nextid($account_info->type);
 			}
@@ -815,6 +855,8 @@
 				}
 				else  // createMode == 'modify'
 				{
+//_debug_array($account_info);
+//_debug_array($oldEntry);
 					while (list($key,$val) = each($oldEntry))
 					{
 						if (!is_int($key))
@@ -1339,12 +1381,12 @@
 
 			$sri = ldap_search($this->ds, $this->group_context, "gidnumber={$group_id}");
 			$entries = ldap_get_entries($this->ds, $sri);
-
+//_debug_array($entries);die();
 			if ( !is_array($entries) )
 			{
 				$entries = array();
 			}
-
+/*
 			foreach ( $entries as $entry )
 			{
 				if (isset($entry['uidnumber']))
@@ -1355,6 +1397,28 @@
 						'account_name'	=> $GLOBALS['phpgw']->common->display_fullname($entry[$this->rdn_account], $entry['givenname'], $entry['sn'])
 					);
 				}
+			}
+			return $this->members[$group_id];
+*/
+			
+			
+			//FIXME - probably best to use memberuid
+			
+			foreach ( $entries as $entry )
+			{
+				if (isset($entry['uidnumber']))
+				{
+					$id =  $entry['uidnumber'];
+					$this->members[$group_id][$id] = array
+					(
+						'account_id'	=> $id
+					);
+				}
+			}
+
+			foreach ( $this->members[$group_id] as $id => &$acct )
+			{
+				$acct['account_name'] = (string) $this->get($id);
 			}
 			return $this->members[$group_id];
 		}
@@ -1370,27 +1434,31 @@
 		{
 			$account_id = get_account_id($account_id);
 
-			if ( isset($this->memberships[$account_id]) )
+			if ( isset($this->memberships[$account_id])
+				&& is_array($this->memberships[$account_id]) )
 			{
-				return $this->memeberships[$account_id];
+				return $this->memberships[$account_id];
 			}
 
 			$this->memberships[$account_id] = array();
 
-			$sql = 'SELECT phpgw_accounts.account_id, phpgw_accounts.account_firstname FROM phpgw_accounts, phpgw_group_map'
-				. ' WHERE phpgw_accounts.account_id = phpgw_group_map.group_id'
-					. " AND phpgw_group_map.account_id = {$account_id}";
-
+			$sql = 'SELECT group_id'
+				. ' FROM phpgw_group_map'
+				. " WHERE phpgw_group_map.account_id = {$account_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
+			$ids = array();
 			while ( $this->db->next_record() )
 			{
-				$this->memberships[$account_id][] = array
-				(
-					'account_id'	=> $this->db->f('account_id'),
-					'account_name'	=> lang('%1 group', $this->db->f('account_firstname'))
-				);
+				$ids[] = $this->db->f('group_id');
 			}
+
+			$this->memberships[$account_id] = array();
+			foreach ( $ids as $id )
+			{
+				$this->memberships[$account_id][$id] = $this->get($id);
+			}
+
 			return $this->memberships[$account_id];
 		}
 
@@ -1400,7 +1468,7 @@
 			return $this->account;
 		}
 
-		public function get($id, $use_cache = true)
+		public function get($id, $use_cache = false)
 		{
 			$id = (int) $id;
 			$account = null;
@@ -1442,15 +1510,7 @@
 			/* Now dump it into the array; take first entry found */
 			if ( isset($entry['phpgwcontactid']) )
 			{
-				$this->person_id	= $record['person_id'] = $entry['phpgwcontactid'][0];
-			}
-			if ( !isset($entry['phpgwquota']) || $entry['phpgwquota'] === '')
-			{
-				$record['quota'] = $this->quota; // set to 0 by default
-			}
-			else
-			{
-				$record['quota'] = $entry['phpgwquota'][0];
+				$record['person_id'] = $entry['phpgwcontactid'][0];
 			}
 
 			$record['dn']					= $entry['dn'];
@@ -1476,11 +1536,20 @@
 		//		$record['loginshell']       = isset($entry['loginshell']) ? $entry['loginshell'][0] : self::FALLBACK_LOGINSHELL;
 				$record['enabled'] 			= isset($entry['phpgwaccountstatus']) && $entry['phpgwaccountstatus'][0] == 'A' ? true : false;
 				$record['type']				= 'u';
+				if ( !isset($entry['phpgwquota']) || $entry['phpgwquota'] === '')
+				{
+					$record['quota'] = $this->quota; // set to 0 by default
+				}
+				else
+				{
+					$record['quota'] = $entry['phpgwquota'][0];
+				}
 
 				$account = new phpgwapi_user();
 			}
-
+//_debug_array($record);
 			$account->init($record);
+//_debug_array($account);
 
 			phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
 
@@ -1489,15 +1558,20 @@
 
 		public function save_repository()
 		{
+			if ( !$this->account->is_dirty() )
+			{
+				return true; // nothing to do here
+			}
+
 			$acct_type = $this->get_type($this->account_id);
 
 			if ($acct_type == 'g')
 			{
-				return $this->_create_group($this->data, '');
+				return $this->_create_group($this->account, '');
 			}
 			else
 			{
-				return $this->_create_user($this->data, '');
+				return $this->_create_user($this->account, '');
 			}
 		}
 

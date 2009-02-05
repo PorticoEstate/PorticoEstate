@@ -180,7 +180,7 @@
 			$new_group->lastname	= lang('group');
 			$new_group->expires		= -1;
 			$new_group->enabled		= true;
-
+_debug_array($new_group);
 			$id = (int) $values['account_id'];
 			if ( !$id ) // add new group?
 			{

@@ -342,22 +342,13 @@
 					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
 				}
 
-/* // Didn't work...
-				foreach ( $modules as $module )
+				// application permissions
+				foreach ( $modules as $module => $dummy)
 				{
 					$aclobj->add($module, 'run', phpgwapi_acl::READ);
 				}
-*/
+
 				$aclobj->save_repository();
-
-				// application permissions
-				if ( $modules )
-				{
-					$apps = createObject('phpgwapi.applications', $account->id);
-					$apps->update_data(array_values($modules));
-					$apps->save_repository();
-				}
-
 			}
 			catch (Exception $e)
 			{
