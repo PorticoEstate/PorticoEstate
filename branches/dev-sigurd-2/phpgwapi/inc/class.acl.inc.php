@@ -1308,18 +1308,9 @@
 
 			if($account_type == 'groups' || $account_type == 'both')
 			{
-				$groups = $this->get_location_list_for_id('phpgw_group', 1, $this->_account_id);
-				if ( is_array($groups) && count($groups) )
-				{
-					foreach ( $groups as $key => $value )
-					{
-						if ( !$value )
-						{
-							continue;
-						}
-						$account_list[] = $value;
-					}
-				}
+				$groups = createObject('phpgwapi.accounts')->membership($this->_account_id);
+				$account_list = array_merge($account_list, array_keys($groups));
+				unset($groups);
 			}
 
 			if(!is_array($account_list))
@@ -1453,7 +1444,17 @@
 
 			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' )
 			{
-				$active_accounts = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', 'account_lastname', $query = '', -1); // maybe $query could be used for filtering on active accounts?
+				$account_objects = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', 'account_lastname', $query = '', -1); // maybe $query could be used for filtering on active accounts?
+				$active_accounts = array();
+
+				foreach ($account_objects as $account_object)
+				{
+					$active_accounts[] = array
+					(
+						'account_id'	=> $account_object->id,
+						'account_type'	=> $account_object->type
+					);
+				}
 			}
 			else
 			{
@@ -1470,7 +1471,7 @@
 					$active_accounts[] = array
 					(
 						'account_id'	=> $this->_db->f('account_id'),
-						'account_type'	=> $this->_db->f('account_type'),
+						'account_type'	=> $this->_db->f('account_type')
 					);
 				}
 			}

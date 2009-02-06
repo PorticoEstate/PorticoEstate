@@ -199,8 +199,27 @@
 
 			if (isset($allValues[0]['dn']) && $allValues[0]['dn'])
 			{
-				echo "TODO: clean up the group_map and acl";
-				return ldap_delete($this->ds, $allValues[0]['dn']);
+				if( ldap_delete($this->ds, $allValues[0]['dn']))
+				{
+					phpgwapi_cache::system_clear('phpgwapi', "account_{$id}");
+					if ($type == 'g')
+					{
+						$sql = "DELETE FROM phpgw_group_map WHERE group_id = {$id}";
+					}
+					else
+					{
+						$sql = "DELETE FROM phpgw_group_map WHERE account_id = {$id}";
+					}
+					$sql_acl = "DELETE FROM phpgw_acl WHERE acl_account = {$id}";
+					$sql_acl_grant = "DELETE FROM phpgw_acl WHERE acl_grantor = {$id}";
+
+					$this->db->transaction_begin();
+					$this->db->query($sql, __LINE__, __FILE__, true);
+					$this->db->query($sql_acl, __LINE__, __FILE__, true);
+					$this->db->query($sql_acl_grant, __LINE__, __FILE__, true);
+					$this->db->transaction_commit();
+					return true;
+				}
 			}
 			else
 			{
@@ -217,6 +236,7 @@
 		*/
 		public function delete_account4group($account_id, $group_id)
 		{
+			$ok = false;
 			if ($account_id && $group_id)
 			{
 				$groupEntry = $this->_group_exists($group_id);
@@ -230,10 +250,16 @@
 							if ($groupEntry['memberuid'][$i] == $memberUID)
 							{
 								$entry = array('memberuid' => array($memberUID));
-								return ldap_mod_del($this->ds, $groupEntry['dn'], $entry);
+								$ok =  ldap_mod_del($this->ds, $groupEntry['dn'], $entry);
 							}
 						}
 					}
+				}
+				if($ok)
+				{
+					$sql = 'DELETE FROM phpgw_group_map'
+					. " WHERE group_id = {$group_id} AND account_id = {$account_id}";
+					return !!$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
 			return false;
@@ -856,8 +882,6 @@
 				}
 				else  // createMode == 'modify'
 				{
-//_debug_array($account_info);
-//_debug_array($oldEntry);
 					while (list($key,$val) = each($oldEntry))
 					{
 						if (!is_int($key))
@@ -1536,9 +1560,8 @@
 
 				$account = new phpgwapi_user();
 			}
-//_debug_array($record);
+
 			$account->init($record);
-//_debug_array($account);
 
 			phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
 
