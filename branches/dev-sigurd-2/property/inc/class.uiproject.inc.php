@@ -1142,14 +1142,37 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($values['workorder_budget']),
+					'total_records'			=> count($values['workorder_budget']),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 1
+			);
+
+			$datavalues[1] = array(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> 0,
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+
+
 			$data = array
 			(
-				'values'							=> json_encode($values['workorder_budget']),
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'							=> $datavalues,
+				/*'values'							=> json_encode($values['workorder_budget']),
 				'budget'				 			=> json_encode($values['sum_workorder_budget']),
 				'calculation'					 	=> json_encode($values['sum_workorder_calculation']),
 				'edit_action'						=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 				'edit_history'						=> json_encode($record_history),
-				'total_records'						=> json_encode(count($values['workorder_budget'])),
+				'total_records'						=> json_encode(count($values['workorder_budget'])),*/
 				'tabs'								=> self::_generate_tabs(),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
@@ -1269,38 +1292,7 @@
 
 				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
-
 			//_debug_array($data);die;
-
-			$datatable['headers']['header'][0]['formatter'] 		= "''";
-			$datatable['headers']['header'][0]['name'] 			= $table_header_workorder_budget[0]['lang_workorder_id'];
-			$datatable['headers']['header'][0]['text'] 			= $table_header_workorder_budget[0]['lang_workorder_id'];
-			$datatable['headers']['header'][0]['visible'] 			= true;
-			$datatable['headers']['header'][0]['sortable']			= false;
-
-			$datatable['headers']['header'][1]['formatter'] 		= "''";
-			$datatable['headers']['header'][1]['name'] 			= $table_header_workorder_budget[0]['lang_budget'];
-			$datatable['headers']['header'][1]['text'] 			= $table_header_workorder_budget[0]['lang_budget'];
-			$datatable['headers']['header'][1]['visible'] 			= true;
-			$datatable['headers']['header'][1]['sortable']			= false;
-
-			$datatable['headers']['header'][2]['formatter'] 		= "''";
-			$datatable['headers']['header'][2]['name'] 			= $table_header_workorder_budget[0]['lang_calculation'];
-			$datatable['headers']['header'][2]['text'] 			= $table_header_workorder_budget[0]['lang_calculation'];
-			$datatable['headers']['header'][2]['visible'] 			= true;
-			$datatable['headers']['header'][2]['sortable']			= false;
-
-			$datatable['headers']['header'][3]['formatter'] 		= "''";
-			$datatable['headers']['header'][3]['name'] 			= $table_header_workorder_budget[0]['lang_vendor'];
-			$datatable['headers']['header'][3]['text'] 			= $table_header_workorder_budget[0]['lang_vendor'];
-			$datatable['headers']['header'][3]['visible'] 			= true;
-			$datatable['headers']['header'][3]['sortable']			= false;
-
-			$datatable['headers']['header'][4]['formatter'] 		= "''";
-			$datatable['headers']['header'][4]['name'] 			= $table_header_workorder_budget[0]['lang_status'];
-			$datatable['headers']['header'][4]['text'] 			= $table_header_workorder_budget[0]['lang_status'];
-			$datatable['headers']['header'][4]['visible'] 			= true;
-			$datatable['headers']['header'][4]['sortable']			= false;
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
