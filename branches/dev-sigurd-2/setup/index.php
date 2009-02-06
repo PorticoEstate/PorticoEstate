@@ -345,7 +345,7 @@
 					$btn_config_ldap = $GLOBALS['phpgw_setup']->html->make_frm_btn_simple(
 						lang('LDAP account import/export'),
 						'POST','ldap.php',
-						'submit',lang('Configure Now'),
+						'submit',lang('Configure LDAP accounts'),
 						''
 					);
 				}
