@@ -70,11 +70,22 @@
 		 			newTD.setAttribute("width","170");
 		 			newTR.appendChild(newTD);
 		 			newTbody.appendChild(newTR);
-
 		 			newTD = document.createElement('td');
 		 			newTD.setAttribute("width","30");
 		 			valor = document.createTextNode(values_ds.current_consult[i]['value']);
-		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+		 			if(i<values_ds.current_consult.length-2)
+		 			{
+			 			var newLink = document.createElement('a');
+			 			newLink.setAttribute("href", html_entity_decode(values_ds.current_consult[i]['query_link']));
+			 			newLink.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+			 			newTD.appendChild(newLink);
+		 			}
+		 			else
+		 			{
+		 				newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+		 			}
+
+		 			//newTD.appendChild(newLink);
 		 			newTR.appendChild(newTD);
 
 		 			newTD = document.createElement('td');
