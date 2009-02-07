@@ -66,14 +66,13 @@
     {
  		//get all controls of datatable
     	
- 		var valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
  		var myclone = null;
- 		
  		var template_id = "";
  		//add all control to form
- 		for(i=0;i<valuesForPHP.length;i++)
+ 		
+ 		for(i=0; i<document.getElementsByName('rad_template').length; i++)
  		{
- 			myclone = valuesForPHP[i].cloneNode(false);
+ 			myclone = document.getElementsByName('rad_template')[i];
  			if (myclone.checked == true) {
  				var b = new YAHOO.widget.Button('btn_select');
  				b.set("disabled", true);
@@ -90,7 +89,7 @@
  		var sUrl = phpGWLink('index.php',path_update);
  		formObject = document.getElementsByTagName('form');
  		YAHOO.util.Connect.setForm(formObject[0]);
- 		
+
  		if(template_id != "") 
  		{
 	 		formObject[0].action = sUrl;

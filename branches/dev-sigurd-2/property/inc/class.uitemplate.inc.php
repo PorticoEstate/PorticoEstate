@@ -272,7 +272,7 @@
 					if($lookup)
 					{
 						$datatable['rows']['row'][$j]['column'][$k + 1]['name'] 	= 'select';
-						$datatable['rows']['row'][$j]['column'][$k + 1]['value']	= '<input type="radio" name="template" value="'.$template_entry['template_id'].'" class="myValuesForPHP"">';
+						$datatable['rows']['row'][$j]['column'][$k + 1]['value']	= '<input type="radio" name="rad_template" value="'.$template_entry['template_id'].'" class="myValuesForPHP"">';
 					}
 					$j++;
 				}
