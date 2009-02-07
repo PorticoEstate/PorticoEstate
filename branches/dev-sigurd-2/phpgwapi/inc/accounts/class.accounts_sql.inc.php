@@ -99,6 +99,7 @@
 		 */
 		public function create_group_account($account)
 		{
+			$this->db->transaction_begin();
 			$id = (int) $account->id;
 			if ( !$id || $this->exists($id) )
 			{
@@ -121,6 +122,7 @@
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
+			$this->db->transaction_commit();
 			$account->id = $id;
 			return $account->id;
 		}
@@ -139,47 +141,32 @@
 		 */
 		public function create_user_account($account)
 		{
-			$fields = array
-			(
-				'account_lid',
-				'account_type',
-				'account_firstname',
-				'account_lastname',
-				'account_pwd',
-				'account_status',
-				'account_expires',
-				'person_id',
-				'account_quota',
-				'account_id'
-			);
+			$this->db->transaction_begin();
+			$id = (int) $account->id;
+			if ( !$id || $this->exists($id) )
+			{
+				$id = $this->_get_nextid('u');
+			}
 
 			$data = array
 			(
-				'lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
-				'type'		=> "'" . phpgwapi_account::TYPE_USER . "'",
-				'firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
-				'lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
-				'password'	=> "'" . $this->db->db_addslashes($account->passwd_hash) . "'",
-				'status'	=> $account->enabled ? "'A'" : "'I'", // FIXME this really has to become a bool
-				'expires'	=> (int) $account->expires,
-				'person_id'	=> (int) $account->person_id,
-				'quota'		=> (int) $account->quota,
+				'account_id'=> $id,
+				'account_lid'		=> "'" . $this->db->db_addslashes($account->lid) . "'",
+				'account_type'		=> "'" . phpgwapi_account::TYPE_USER . "'",
+				'account_firstname'	=> "'" . $this->db->db_addslashes($account->firstname) ."'",
+				'account_lastname'	=> "'" . $this->db->db_addslashes($account->lastname) . "'",
+				'account_pwd'		=> "'" . $this->db->db_addslashes($account->passwd_hash) . "'",
+				'account_status'	=> $account->enabled ? "'A'" : "'I'", // FIXME this really has to become a bool
+				'account_expires'	=> (int) $account->expires,
+				'person_id'			=> (int) $account->person_id,
+				'account_quota'		=> (int) $account->quota,
 			);
 
-			if ( (int) $account->id 
-				&& !$this->exists($account->id) )
-			{
-				$data['id'] = (int) $account->id;
-			}
-			else
-			{
-				$data['id'] = $this->_get_nextid();
-			}
-
-			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', $fields) . ') '.
+			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
-			$account->id = $data['id'];
+			$this->db->transaction_commit();
+			$account->id = $id;
 
 			$this->account = $account;
 

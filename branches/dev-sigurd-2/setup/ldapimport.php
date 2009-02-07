@@ -2,21 +2,20 @@
 	/**
 	* Setup
 	*
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
 	*/
 
-	$GLOBALS['phpgw_info'] = array();
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'noheader'   => True,
-		'nonavbar'   => True,
+		'noheader'   => true,
+		'nonavbar'   => true,
 		'currentapp' => 'home',
-		'noapi'      => True
+		'noapi'      => true
 	);
-	
+
 	/**
 	 * Include setup functions
 	 */
@@ -30,59 +29,51 @@
 	}
 	// Does not return unless user is authorized
 
-	/**
-	* phpGroupWare class
-	* @package setup
-	* @ignore
-	*/
-	class phpgw
-	{
-		/**
-		 * Common
-		 * @var object
-		 */
-		var $common;
-		
-		/**
-		 * Accounts
-		 * @var object
-		 */
-		var $accounts;
-		
-		/**
-		 * Applications
-		 * @var object
-		 */
-		var $applications;
-		
-		/**
-		 * Database
-		 * @var object
-		 */
-		var $db;
-		
-		/**
-		 * Hooks
-		 * @var object
-		 */
-		var $hooks;
-		
-		/**
-		 * Access control list
-		 * @var object
-		 */
-		var $acl;
-	}
-	$GLOBALS['phpgw'] = new phpgw;
-	$GLOBALS['phpgw']->common = CreateObject('phpgwapi.common');
 
+	/**
+	 * Add account
+	 * 
+	 * @param array  $acct    Account name and other information to use
+	 * @param string $type    Account type: u = user | g = group
+	 * @param array  $groups  Groups to add account to
+	 * @param array  $modules Modules to grant account access to
+	 * @param array  $acls    ACLs to set for account
+	 *
+	 * @return integer Account ID
+	 */
+	function add_account($acct, $type, $groups = array(), $modules = array(), $acls = array())
+	{
+		$person_id = 0;
+		if ( $type == 'u' )
+		{
+			$account			= new phpgwapi_user();
+			$account->id		= $acct['id'];
+			$account->lid		= $acct['lid'];
+			$account->firstname	= $acct['firstname'];
+			$account->lastname	= $acct['lastname'];
+			$account->passwd	= $acct['password'];
+			$account->enabled	= true;
+			$account->expires	= -1;
+		}
+		else
+		{
+			$account			= new phpgwapi_group();
+			$account->id		= $acct['id'];
+			$account->lid		= $acct['lid'];
+			$account->firstname = ucfirst($acct['lid']);
+		}
+
+		return $GLOBALS['phpgw']->accounts->create($account, $groups, $acls, $modules);
+	}
+
+
+	$GLOBALS['phpgw_info']['server']['account_repository'] = 'sql'; // importing into sql repository
 	$common = $GLOBALS['phpgw']->common;
 	$GLOBALS['phpgw_setup']->loaddb();
 	$GLOBALS['phpgw']->db = $GLOBALS['phpgw_setup']->db;
 	$GLOBALS['phpgw']->hooks = createObject('phpgwapi.hooks');
 	
 	$GLOBALS['phpgw']->acl = createObject('phpgwapi.acl');
-	$GLOBALS['phpgw']->acl->db = $GLOBALS['phpgw_setup']->db;
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
@@ -99,7 +90,17 @@
 	$GLOBALS['phpgw']->applications = CreateObject('phpgwapi.applications');
 	$applications        = $GLOBALS['phpgw']->applications;
 
-	$GLOBALS['phpgw_setup']->db->query("SELECT config_name,config_value FROM phpgw_config WHERE config_name LIKE 'ldap%' OR config_name='account_repository'",__LINE__,__FILE__);
+	$sql = "SELECT config_name,config_value FROM phpgw_config"
+		. " WHERE config_name LIKE 'ldap%'"
+		. " OR config_name='account_repository'"
+		. " OR config_name='account_min_id'"
+		. " OR config_name='account_max_id'"
+		. " OR config_name='group_min_id'"
+		. " OR config_name='group_max_id'"
+		. " OR config_name='encryption_type'";
+
+	$GLOBALS['phpgw_setup']->db->query($sql, __LINE__,__FILE__);
+
 	while ($GLOBALS['phpgw_setup']->db->next_record())
 	{
 		$config[$GLOBALS['phpgw_setup']->db->f('config_name')] = $GLOBALS['phpgw_setup']->db->f('config_value');
@@ -109,7 +110,14 @@
 	$GLOBALS['phpgw_info']['server']['ldap_group_context'] = $config['ldap_group_context'];
 	$GLOBALS['phpgw_info']['server']['ldap_root_dn']       = $config['ldap_root_dn'];
 	$GLOBALS['phpgw_info']['server']['ldap_root_pw']       = $config['ldap_root_pw'];
-	$GLOBALS['phpgw_info']['server']['account_repository'] = $config['account_repository'];
+	$GLOBALS['phpgw_info']['server']['account_min_id']     = $config['account_min_id'];
+	$GLOBALS['phpgw_info']['server']['account_max_id']     = $config['account_max_id'];
+	$GLOBALS['phpgw_info']['server']['group_min_id']       = $config['group_min_id'];
+	$GLOBALS['phpgw_info']['server']['group_max_id']       = $config['group_max_id'];
+	$GLOBALS['phpgw_info']['server']['encryption_type']    = $config['encryption_type'];
+	$GLOBALS['phpgw_info']['server']['password_level']     = '8CHAR';
+
+	//$GLOBALS['phpgw_info']['server']['account_repository'] = $config['account_repository'];
 
 	$GLOBALS['phpgw']->accounts = CreateObject('phpgwapi.accounts');
 	$acct = $GLOBALS['phpgw']->accounts;
@@ -120,55 +128,52 @@
 	// connect to ldap server
 	if (! $ldap = $common->ldapConnect())
 	{
-		$noldapconnection = True;
-	}
-
-	if ($noldapconnection)
-	{
 		Header('Location: config.php?error=badldapconnection');
 		exit;
 	}
 
 	$sr = ldap_search($ldap,$config['ldap_context'],'(|(uid=*))',array('sn','givenname','uid','uidnumber'));
 	$info = ldap_get_entries($ldap, $sr);
-	$tmp = '';
 
+	$tmp = '';
+	phpgw::import_class('phpgwapi.globally_denied');
+
+	$account_info = array();
 	for ($i=0; $i<$info['count']; ++$i)
 	{
-		if (! $GLOBALS['phpgw_info']['server']['global_denied_users'][$info[$i]['uid'][0]])
+		if (! phpgwapi_globally_denied::user($info[$i]['uid'][0]) )
 		{
 			$tmp = $info[$i]['uidnumber'][0];
-			$account_info[$tmp]['account_id']        = $info[$i]['uidnumber'][0];
-			$account_info[$tmp]['account_lid']       = $info[$i]['uid'][0];
-			$account_info[$tmp]['account_firstname'] = $info[$i]['givenname'][0];
-			$account_info[$tmp]['account_lastname']  = $info[$i]['sn'][0];
-			$account_info[$tmp]['account_passwd']    = $info[$i]['userpassword'][0];
+			$account_info[$tmp]['id']        = $info[$i]['uidnumber'][0];
+			$account_info[$tmp]['lid']       = $info[$i]['uid'][0];
+			$account_info[$tmp]['firstname'] = $info[$i]['givenname'][0];
+			$account_info[$tmp]['lastname']  = $info[$i]['sn'][0];
+			$account_info[$tmp]['password']    = isset($info[$i]['userpassword'][0]) ? $info[$i]['userpassword'][0] : '';
+			//echo 'password?';
 		}
 	}
 
+	$group_info = array();
 	if ($GLOBALS['phpgw_info']['server']['ldap_group_context'])
 	{
 		$srg = ldap_search($ldap,$config['ldap_group_context'],'(|(cn=*))',array('gidnumber','cn','memberuid'));
 		$info = ldap_get_entries($ldap, $srg);
-		$tmp = '';
 
+		$tmp = '';
 		for ($i=0; $i<$info['count']; ++$i)
 		{
-			if (! $GLOBALS['phpgw_info']['server']['global_denied_groups'][$info[$i]['cn'][0]] &&
-				! $account_info[$i][$info[$i]['cn'][0]])
+			if ( isset($info[$i]['cn'][0])
+				 &&  ! phpgwapi_globally_denied::user($info[$i]['cn'][0]) 
+				 &&	 ( !isset($account_info[$i][$info[$i]['cn'][0]]) || ! $account_info[$i][$info[$i]['cn'][0]]) )
 			{
 				$tmp = $info[$i]['gidnumber'][0];
-				$group_info[$tmp]['account_id']        = $info[$i]['gidnumber'][0];
-				$group_info[$tmp]['account_lid']       = $info[$i]['cn'][0];
-				$group_info[$tmp]['members']           = $info[$i]['memberuid'];
-				$group_info[$tmp]['account_firstname'] = $info[$i]['cn'][0];
-				$group_info[$tmp]['account_lastname']  = 'Group';
+				$group_info[$tmp]['id']				= $info[$i]['gidnumber'][0];
+				$group_info[$tmp]['lid']			= $info[$i]['cn'][0];
+				$group_info[$tmp]['members']		= $info[$i]['memberuid'];
+				$group_info[$tmp]['firstname']		= $info[$i]['cn'][0];
+				$group_info[$tmp]['lastname']		= 'Group';
 			}
 		}
-	}
-	else
-	{
-		$group_info = array();
 	}
 
 	$GLOBALS['phpgw_setup']->db->query("SELECT app_name FROM phpgw_applications WHERE app_enabled!='0' AND app_enabled!='3' ORDER BY app_name",__LINE__,__FILE__);
@@ -177,13 +182,13 @@
 		$apps[$GLOBALS['phpgw_setup']->db->f('app_name')] = lang($GLOBALS['phpgw_setup']->db->f('app_name'));
 	}
 
-	if ($_POST['cancel'])
+	if (isset($_POST['cancel']) && $_POST['cancel'])
 	{
 		Header("Location: ldap.php");
 		exit;
 	}
 
-	if ($_POST['submit'])
+	if (isset($_POST['submit']) && $_POST['submit'])
 	{
 		if (! @count($_POST['admins']) )
 		{
@@ -195,24 +200,35 @@
 			$error .= '<br />You must select at least 1 application';
 		}
 
-		if (!$error)
+		if (!isset($error) || !$error)
 		{
-			if ( isset($_POST['ldapgroups']) && count($_POST['ldapgroups']) )
+			if ( $ldapgroups =  phpgw::get_var('ldapgroups', '', 'POST') )
 			{
+				$modules = array
+				(
+					'addressbook',
+					'calendar',
+					'email',
+					'filemanager',
+					'manual',
+					'preferences',
+					'notes',
+					'todo'
+				);
+
 				foreach($ldapgroups as $key => $groupid)
 				{
 					$id_exist = 0;
-					$thisacctid    = $group_info[$groupid]['account_id'];
-					$thisacctlid   = $group_info[$groupid]['account_lid'];
-					$thisfirstname = $group_info[$groupid]['account_firstname'];
-					$thislastname  = $group_info[$groupid]['account_lastname'];
+					$thisacctid    = $group_info[$groupid]['id'];
+					$thisacctlid   = $group_info[$groupid]['lid'];
+					$thisfirstname = $group_info[$groupid]['firstname'];
+					$thislastname  = $group_info[$groupid]['lastname'];
 					$thismembers   = $group_info[$groupid]['members'];
 
 					// Do some checks before we try to import the data.
-					if (!empty($thisacctid) && !empty($thisacctlid))
+					if ($thisacctid > 0  && !empty($thisacctlid))
 					{
 						$groups = CreateObject('phpgwapi.accounts',intval($thisacctid));
-						$groups->db = $GLOBALS['phpgw_setup']->db;
 	
 						// Check if the account is already there.
 						// If so, we won't try to create it again.
@@ -227,16 +243,18 @@
 						if(!$id_exist)
 						{
 							$thisgroup_info = array(
-								'account_type'      => 'g',
-								'account_lid'       => $thisacctlid,
-								'account_passwd'    => $passwd,
-								'account_firstname' => $thisfirstname,
-								'account_lastname'  => $thislastname,
-								'account_status'    => 'A',
-								'account_expires'   => -1
+								'type'      => 'g',
+								'id'       	=> $thisacctid,
+								'lid'       => $thisacctlid,
+					//			'passwd'    => $passwd,
+								'firstname' => $thisfirstname,
+								'lastname'  => $thislastname,
+								'status'    => 'A',
+								'expires'   => -1
 							);
-							$groups->create($thisgroup_info);
-							$thisacctid = $acct->name2id($thisacctlid);
+
+							add_account($thisgroup_info, 'g', array(), $modules);
+					//		$thisacctid = $acct->name2id($thisacctlid);
 						}
 
 						// Now make them a member of this group in phpgw.
@@ -264,14 +282,10 @@
 							*/
 							if($tmpid)
 							{
-								$GLOBALS['phpgw']->acl->acl($tmpid);
-								$GLOBALS['phpgw']->acl->read();
+								$acct->add_user2group($tmpid, $thisacctid);
 
-								$GLOBALS['phpgw']->acl->delete('phpgw_group',$thisacctid,1);
-								$GLOBALS['phpgw']->acl->add('phpgw_group',$thisacctid,1);
-
+								$GLOBALS['phpgw']->acl->set_account_id($tmpid);
 								/* Now add the acl to let them change their password */
-								$GLOBALS['phpgw']->acl->delete('preferences','changepassword',1);
 								$GLOBALS['phpgw']->acl->add('preferences','changepassword',1);
 
 								$GLOBALS['phpgw']->acl->save_repository();
@@ -280,8 +294,7 @@
 									App access is added below.
 								*/
 								$pref = CreateObject('phpgwapi.preferences',$tmpid);
-								$pref->db = $GLOBALS['phpgw_setup']->db;
-								$pref->account_id = intval($tmpid);
+								$pref->set_account_id(intval($tmpid));
 								$pref->read();
 								@reset($_POST['s_apps']);
 								while (list($key,$app) = each($_POST['s_apps']))
@@ -292,15 +305,13 @@
 							}
 						}
 						/* Now give this group some rights */
-						$GLOBALS['phpgw']->acl->acl($thisacctid);
-						$GLOBALS['phpgw']->acl->read();
+						$GLOBALS['phpgw']->acl->set_account_id($thisacctid);
 						@reset($_POST['s_apps']);
 						while (list($key,$app) = each($_POST['s_apps']))
 						{
-							$GLOBALS['phpgw']->acl->delete($app,'run',1);
 							$GLOBALS['phpgw']->acl->add($app,'run',1);
 						}
-						$acl->add('preferences','changepassword', 1);
+						$GLOBALS['phpgw']->acl->add('preferences','changepassword', 1);
 						$GLOBALS['phpgw']->acl->save_repository();
 						$defaultgroupid = $thisacctid;
 					}
@@ -308,9 +319,9 @@
 			}
 			else
 			{
+				$acls = array();
 				/* Create the 'Default' group */
 				$groups = CreateObject('phpgwapi.accounts',$defaultgroupid);
-				$groups->db = $GLOBALS['phpgw_setup']->db;
 
 				// Check if the group account is already there.
 				// If so, set our group_id to that account's id for use below.
@@ -325,30 +336,25 @@
 				{
 					$groups->delete($defaultgroupid);
 				}
-				$thisgroup_info = array
-				(
-					'account_type'      => 'g',
-					'account_lid'       => 'Default',
-					'account_passwd'    => $passwd,
-					'account_firstname' => 'Default',
-					'account_lastname'  => 'Group',
-					'account_status'    => 'A',
-					'account_expires'   => -1
-				);
-				$acct->create($thisgroup_info);
 
-				$defaultgroupid = $acct->name2id('Default');
-
-				$acl = CreateObject('phpgwapi.acl',$defaultgroupid);
-				$acl->db = $GLOBALS['phpgw_setup']->db;
-				$acl->set_account_id(intval($defaultgroupid))
 				foreach ( $_POST['s_apps'] as $app )
 				{
-					$acl->delete($app,'run',1);
-					$acl->add($app,'run',1);
+					$acls[] = array
+					(
+						'appname'	=> $app,
+						'location'	=> 'run',
+						'rights'	=> 1
+					);
 				}
-				$acl->add('preferences','changepassword', 1);
-				$acl->save_repository();
+				$acls[] = array
+				(
+					'appname'	=> 'preferences',
+					'location'	=> 'changepassword',
+					'rights'	=> 1
+				);
+		
+				add_account(array('username' => 'default'), 'g', array(), $modules, $acls);
+
 			} //end default group creation
 		}
 
@@ -356,18 +362,18 @@
 		{
 			foreach($_POST['users'] as $key => $id)
 			{
+				$acls = array();
 				$id_exist = 0;
-				$thisacctid    = $account_info[$id]['account_id'];
-				$thisacctlid   = $account_info[$id]['account_lid'];
-				$thisfirstname = $account_info[$id]['account_firstname'];
-				$thislastname  = $account_info[$id]['account_lastname'];
-				$thispasswd    = $account_info[$id]['account_passwd'];
+				$thisacctid    = $account_info[$id]['id'];
+				$thisacctlid   = $account_info[$id]['lid'];
+				$thisfirstname = $account_info[$id]['firstname'];
+				$thislastname  = $account_info[$id]['lastname'];
+				$thispasswd    = $account_info[$id]['password'];
 
 				// Do some checks before we try to import the data.
 				if (!empty($thisacctid) && !empty($thisacctlid) )
 				{
 					$accounts = CreateObject('phpgwapi.accounts',intval($thisacctid));
-					$accounts->db = $GLOBALS['phpgw_setup']->db;
 
 					// Check if the account is already there.
 					// If so, we won't try to create it again.
@@ -381,36 +387,39 @@
 					if(!$id_exist)
 					{
 						$thisaccount_info = array(
-							'account_type'      => 'u',
-							'account_lid'       => $thisacctlid,
-							'account_passwd'    => 'x',
+							'type'      => 'u',
+							'id'       	=> $thisacctid,
+							'lid'       => $thisacctlid,
+							'password'  => 'xxxxxxxx',
 						/*	'account_passwd'    => $thispasswd, */
-							'account_firstname' => $thisfirstname,
-							'account_lastname'  => $thislastname,
-							'account_status'    => 'A',
-							'account_expires'   => -1
+							'firstname' => $thisfirstname,
+							'lastname'  => $thislastname,
+							'status'    => 'A',
+							'expires'   => -1
 						);
-						$accounts->create($thisaccount_info);
-						$thisacctid = $acct->name2id($thisacctlid);
 					}
 
 					// Insert default acls for this user.
 					// Since the group has app rights, we don't need to give users
 					//  these rights.  Instead, we make the user a member of the Default group
 					//  below.
-					$GLOBALS['phpgw']->acl->acl($thisacctid);
-					$GLOBALS['phpgw']->acl->read();
 
 					// Only give them admin if we asked for them to have it.
 					// This is typically an exception to apps for run rights
 					//  as a group member.
-					$cnt_admins = count($_POST['admins']);
+					$admins =  phpgw::get_var('admins', '', 'POST');
+					$cnt_admins = count($admins);
+
 					for ($a = 0; $a < $cnt_admins; ++$a)
 					{
 						if ($admins[$a] == $thisacctlid)
 						{
-							$GLOBALS['phpgw']->acl->delete('admin','run',1);
-							$GLOBALS['phpgw']->acl->add('admin','run',1);
+							$acls[] = array
+							(
+								'appname'	=> 'admin',
+								'location'	=> 'run',
+								'rights'	=> 1
+							);
 						}
 					}
 
@@ -423,27 +432,28 @@
 
 					if($defaultgroupid)
 					{
-						$GLOBALS['phpgw']->acl->delete('phpgw_group',$defaultgroupid,1);
-						$GLOBALS['phpgw']->acl->add('phpgw_group',$defaultgroupid,1);
+						$groups = array($defaultgroupid);
 					}
-
+					if(!$id_exist)
+					{
+						$thisacctid = add_account($thisaccount_info, 'u', $groups, array('admin'), $acls);
+					}
 					// Save these new acls.
-					$GLOBALS['phpgw']->acl->save_repository();
 				}
 			}
 		}
-		$setup_complete = True;
+		$setup_complete = true;
 	}
 
 	$GLOBALS['phpgw_setup']->html->show_header('LDAP Import','','config',$_COOKIE['ConfigDomain']);
 
-	if ($error)
+	if (isset($error) && $error)
 	{
 		//echo '<br /><center><b>Error:</b> '.$error.'</center>';
 		$GLOBALS['phpgw_setup']->html->show_alert_msg('Error',$error);
 	}
 
-	if ($setup_complete)
+	if (isset($setup_complete) && $setup_complete)
 	{
 		echo '<br /><center>'.lang('Import has been completed!').' '.lang('Click <a href="index.php">here</a> to return to setup.').'</center>';
 		$GLOBALS['phpgw_setup']->html->show_footer();
@@ -458,28 +468,32 @@
 	$setup_tpl->set_block('ldap','submit','submit');
 	$setup_tpl->set_block('ldap','footer','footer');
 
+	$user_list = '';
 	while (list($key,$account) = each($account_info))
 	{
-		$user_list .= '<option value="' . $account['account_id'] . '">'
-			. $common->display_fullname($account['account_lid'],$account['account_firstname'],$account['account_lastname'])
+		$user_list .= '<option value="' . $account['id'] . '">'
+			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
 			. '</option>';
 	}
 
 	@reset($account_info);
+	$admin_list = '';
 	while (list($key,$account) = each($account_info))
 	{
-		$admin_list .= '<option value="' . $account['account_lid'] . '">'
-			. $common->display_fullname($account['account_lid'],$account['account_firstname'],$account['account_lastname'])
+		$admin_list .= '<option value="' . $account['lid'] . '">'
+			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
 			. '</option>';
 	}
 
+	$group_list = '';
 	while (list($key,$group) = each($group_info))
 	{
-		$group_list .= '<option value="' . $group['account_id'] . '">'
-			. $group['account_lid']
+		$group_list .= '<option value="' . $group['id'] . '">'
+			. $group['lid']
 			. '</option>';
 	}
 
+	$app_list = '';
 	while(list($appname,$apptitle) = each($apps))
 	{
 		if($appname == 'admin' ||

@@ -2,7 +2,7 @@
 	/**
 	* Setup
 	*
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
@@ -202,8 +202,8 @@
 		
 		$GLOBALS['phpgw'] = new phpgw;
 		$GLOBALS['phpgw']->db       =& $db;
-		$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
 		$GLOBALS['phpgw']->accounts = CreateObject('phpgwapi.accounts');
+		$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
 
 		/* Posted admin data */
 		// We need to reverse the entities or the password can be mangled
@@ -248,6 +248,7 @@
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_acl');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_mapping');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_group_map');
+			$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_nextid WHERE appname = 'groups' OR appname = 'accounts'");
 
 			// Clean out LDAP
 			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap')

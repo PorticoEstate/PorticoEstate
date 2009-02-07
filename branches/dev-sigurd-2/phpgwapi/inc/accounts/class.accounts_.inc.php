@@ -581,7 +581,7 @@
 						'per_first_name'	=> $user->firstname,
 						'per_last_name'		=> $user->lastname,
 						'access'			=> 'public',
-						'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
+						'owner'				=> isset ($GLOBALS['phpgw_info']['server']['addressmaster']) ? $GLOBALS['phpgw_info']['server']['addressmaster'] : ''
 					);
 					$contact_type = $contacts->search_contact_type('Persons');
 					$user->person_id = $contacts->add_contact($contact_type, $principal);
