@@ -879,7 +879,7 @@
 			$contacts = createObject('phpgwapi.contacts');
 
 			// does the user already exist in the addressbook?
-			if ( $group->person_id && $group->exist_contact($group->person_id) )
+			if ( $group->person_id && $contacts->exist_contact($group->person_id) )
 			{
 				return !!$contacts->edit_org($group->person_id, $primary);
 			}

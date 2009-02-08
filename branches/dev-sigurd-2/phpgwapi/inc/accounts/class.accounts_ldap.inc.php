@@ -277,7 +277,6 @@
 			{
 				$id = $this->name2id($id);
 			}
-
 			if ($id)
 			{
 				$return = 0;
@@ -641,9 +640,10 @@
 			{
 				$result = ldap_search($this->ds, $this->group_context, "(&(gidnumber={$id})(objectclass=posixGroup))");
 				$entries = ldap_get_entries($this->ds, $result);
-				if ( !is_array($entries) || !count($entries) )
+
+				if ( !is_array($entries) || !count($entries) || $entries['count'] == 0 )
 				{
-					return array();
+					return false;
 				}
 
 				if ( isset($entries[0]) && is_array($entries[0]) )
@@ -1021,7 +1021,6 @@
 			// phpgw needed attributes
 
 			$entry['objectclass'][]  = 'phpgwGroup';
-		//	$entry['objectclass'][]  = 'top';
 			$entry['phpgwgroupid']   = $account_info->id;
 			$entry['gidnumber']      = $account_info->id;
 
@@ -1041,6 +1040,12 @@
 			else if (isset($this->quota) && $this->quota > 0)
 			{
 				$entry['phpgwquota'] = $this->quota;
+			}
+
+			if(isset($account_info->person_id) && (int) $account_info->person_id > 0)
+			{
+				$entry['objectclass'][] = 'phpgwContact'; // shouldn't be structural
+				$entry['phpgwcontactid'] = (int)$account_info->person_id;
 			}
 
 			$oldEntry = $this->_group_exists($account_info->id, $dn);
