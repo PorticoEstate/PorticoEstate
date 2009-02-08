@@ -142,6 +142,7 @@
      <select name="newsettings[account_repository]">
       <option value="sql"{selected_account_repository_sql}>SQL</option>
       <option value="ldap"{selected_account_repository_ldap}>LDAP</option>
+      <option value="sqlldap"{selected_account_repository_sqlldap}>SQL - replicate changes to LDAP</option>
       <option value="contacts"{selected_account_repository_contacts} style="text-decoration: line-through;">Contacts - DEPRECATED</option>
      </select>
     </td>

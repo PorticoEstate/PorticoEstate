@@ -249,9 +249,12 @@
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_mapping');
 			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_group_map');
 			$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_nextid WHERE appname = 'groups' OR appname = 'accounts'");
+			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_contact');
+			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_contact_person');
+			$GLOBALS['phpgw_setup']->db->query('DELETE FROM phpgw_contact_org');
 
 			// Clean out LDAP
-			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap')
+			if( $GLOBALS['phpgw_info']['server']['account_repository'] == 'ldap' || $GLOBALS['phpgw_info']['server']['account_repository'] = 'sqlldap')
 			{
 				$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, '', '', '',-1);
 

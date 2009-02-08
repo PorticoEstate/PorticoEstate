@@ -4,7 +4,7 @@
 	 *
 	 * @author Philipp Kamps <pkamps@probusiness.de>
 	 * @author Dave Hall <skwashd@phpgroupware.org>
-	 * @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. fsf.org
+	 * @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. fsf.org
 	 * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
@@ -46,7 +46,7 @@
 		 */
 		public function __construct($account_id = null, $account_type = null)
 		{
-			$this->ldap = new accounts_ldap($account_id, $account_type);
+			$this->ldap = new phpgwapi_accounts_ldap($account_id, $account_type);
 			parent::__construct($account_id, $account_type);
 		}
 
@@ -69,7 +69,7 @@
 		 * @param integer $account_id the account to delete
 		 * @return boolean was the account deleted?
 		 */
-		public function delete($accountid = 0)
+		public function delete($accountid)
 		{
 			if ( parent::delete($accountid) )
 			{
@@ -78,21 +78,50 @@
 			return false;
 		}
 
+
 		/**
-		 * Create a new account
+		 * Create a new group account  - this only creates the acccount
 		 *
-		 * @param object $account_info the new account to create
-		 * @param boolean $default_prefs apply the default preferences for the user
-		 * @return integer the new account id
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
 		 */
-		public function create($account_info, $default_prefs = true)
+		public function create_group_account($account)
 		{
-			if ( parent::create($account_info, $default_prefs) )
+			if ( parent::create_group_account($account) )
 			{
-				return $this->ldap->create($account_info, $default_prefs);
+				$members = parent::member($account->id);
+				return $this->ldap->_create_group($account, $members);
 			}
 			return false;
 		}
+
+
+		/**
+		 * Create a new user account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		public function create_user_account($account)
+		{
+			if ( $account->id = parent::create_user_account($account) )
+			{
+				$groups = parent::membership($account->id);
+				return $this->ldap->_create_user($account, $groups);
+			}
+			return false;
+		}
+
 
 		/**
 		 * Add an account to a group entry

@@ -773,6 +773,7 @@
 		*/
 		function _create_user($account_info, $groups)
 		{
+			$this->_save_contact_for_user($account_info);
 			if ( !isset($account_info->id) || !$account_info->id )
 			{
 				$account_info->id = $this->_get_nextid($account_info->type);
@@ -815,16 +816,13 @@
 				$entry['phpgwquota'] = isset($this->quota)  && $this->quota ? $this->quota : 0;
 			}
 			$structural_modification = false;
+
 			if(isset($account_info->person_id) && (int) $account_info->person_id)
 			{
 				$entry['objectclass'][] = 'phpgwContact'; // shouldn't be structural
 				$entry['phpgwcontactid'] = (int)$account_info->person_id;
 			}
-			else
-			{
-				$entry['objectclass'][]       = 'account';
-			}
-
+			$entry['objectclass'][]       = 'account';
 			// additional attributes from the phpgw for groups
 			$entry['objectclass'][]       = 'posixAccount';
 			$entry['cn']                  = $this->get_fullname($account_info->firstname, $account_info->lastname);
@@ -871,12 +869,12 @@
 
 			if ($oldEntry) // found an existing entry in LDAP
 			{
-				if ($this->createMode == 'replace')
+				if (isset($this->createMode) && $this->createMode == 'replace')
 				{
 					ldap_delete($this->ds, $oldEntry['dn']);
 					$this->add_ldap_entry($dn, $entry);
 				}
-				elseif ($this->createMode == 'extend')
+				elseif (isset($this->createMode) && $this->createMode == 'extend')
 				{
 					/* not yet implemented */
 				}
@@ -1011,6 +1009,7 @@
 		*/
 		function _create_group($account_info, $members)
 		{
+			$this->_save_contact_for_group($account_info);
 			if ( !isset($account_info->id) || !$account_info->id )
 			{
 				$account_info->id = $this->_get_nextid($account_info->type);
@@ -1132,7 +1131,7 @@
 			if (!$success)
 			{
 				echo 'ldap_add FAILED: [' . ldap_errno($this->ds) . '] ' . ldap_error($this->ds).'<br><br>';
-				echo "Did you remeber to include the phpgroupware ldap shema in slapd.conf?<br>";
+				echo "Did you remember to include the phpgroupware ldap shema in slapd.conf?<br>";
 				echo "phpgwapi/doc/ldap/phpgroupware.schema<br>";
 				echo "<strong>Adds: {$dn}</strong><br>";
 				die("<pre>" . print_r($entry, true) . "</pre>\n<br>");				
@@ -1696,10 +1695,12 @@
 			{
   	 			$members = $this->member($this->data['account_id']);
 			}
+
 			$return = array();
+			foreach( $members as $entry)
 			for ($i=0; $i<count($members); $i++)
 			{
-				$member = $this->id2name($members[$i]['account_id']);
+				$member = $this->id2name($entry['account_id']);
 				// function $this->member returns duplicated entries and empty entries :-(
 				if (!in_array($member, $return) && $member != '')
 				{
