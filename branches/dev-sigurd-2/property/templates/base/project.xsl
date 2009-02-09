@@ -317,7 +317,7 @@
 				total_records	: 	<xsl:value-of select="total_records"/>,
 				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
 				edit_action		:	<xsl:value-of select="edit_action"/>,
-				footer			:	<xsl:value-of select="footer"/>,
+				footer			:	<xsl:value-of select="footer"/>
 			}
 			]
 		<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
