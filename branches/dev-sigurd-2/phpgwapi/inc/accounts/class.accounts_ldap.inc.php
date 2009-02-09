@@ -1097,6 +1097,10 @@
 										$entry[$key] = $oldEntry[$key];
 										array_push($entry[$key], 'phpgwGroup');
 									}
+									elseif((in_array('phpgwContact',$entry[$key]) && ! in_array('phpgwContact',$oldEntry[$key])))
+									{
+										$structural_modification = true;
+									}
 									else
 									{
 											$entry[$key] = $oldEntry[$key];
@@ -1296,22 +1300,44 @@
 			return $accounts;
 		}
 
-		function get_account_without_contact()
+		function get_account_without_contact($get_groups = true)
 		{
-			$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(!(phpgwcontactid=*)))", array('uidnumber'));
+	//		$sri = ldap_search($this->ds, $this->user_context, "(&(phpgwaccounttype=u)(!(phpgwcontactid=*)))", array('uidnumber'));
+			$sri = ldap_search($this->ds, $this->user_context, "(!(objectClass=phpgwcontact))", array('uidnumber'));
 			$allValues = ldap_get_entries($this->ds, $sri);
+
+			$accounts = array();
 			if(is_array($allValues))
 			{
 				$count = intval($allValues['count']);
 				for ( $i = 0; $i < $count; ++$i)//foreach(allValues as $value)
 				{
-					$value = &$allValue[$i];
-					$accounts[] = $value['uidnumber'][0];
+				//	$value = &$allValue[$i];
+					if(isset($allValues[$i]['uidnumber'][0]) && $allValues[$i]['uidnumber'][0])
+					$accounts[] = $allValues[$i]['uidnumber'][0];
+				}
+			}
+			unset ($allValues);
+
+			// get the groups as well
+			if($get_groups)
+			{
+				$sri = ldap_search($this->ds, $this->group_context, "(!(objectClass=phpgwcontact))", array('gidnumber'));
+				$allValues = ldap_get_entries($this->ds, $sri);
+
+				if(is_array($allValues))
+				{
+					$count = intval($allValues['count']);
+					for ( $i = 0; $i < $count; ++$i)//foreach(allValues as $value)
+					{
+					//	$value = &$allValue[$i];
+						if(isset($allValues[$i]['gidnumber'][0]) && $allValues[$i]['gidnumber'][0])
+						$accounts[] = $allValues[$i]['gidnumber'][0];
+					}
 				}
 			}
 			return $accounts;
 		}
-
 
 		/**
 		* Full name generation
@@ -1578,6 +1604,7 @@
 			{
 				return true; // nothing to do here
 			}
+
 			$acct_type = $this->get_type($this->account_id);
 			if ($acct_type == 'g')
 			{

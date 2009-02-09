@@ -46,13 +46,14 @@
 		 */
 		public $public_functions = array
 		(
-			'list_groups'	=> true,
-			'list_users'	=> true,
-			'delete_group'	=> true,
-			'delete_user'	=> true,
-			'edit_user'		=> true,
-			'edit_group'	=> true,
-			'view_user'		=> true,
+			'list_groups'				=> true,
+			'list_users'				=> true,
+			'delete_group'				=> true,
+			'delete_user'				=> true,
+			'edit_user'					=> true,
+			'edit_group'				=> true,
+			'view_user'					=> true,
+			'sync_accounts_contacts'	=> true
 		);
 
 		/**
@@ -1270,4 +1271,17 @@
 
 			return "<a href=\"{$url}\">{$lang_action}</a>";
 		}
+
+		/**
+		* Generates contacts from users
+		*
+		* @return void
+		*/
+
+		function sync_accounts_contacts()
+		{
+			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
+
 	}

@@ -585,7 +585,7 @@
 					);
 					$contact_type = $contacts->search_contact_type('Persons');
 					$user->person_id = $contacts->add_contact($contact_type, $principal);
-					$this->update_data($user_account);
+					$this->update_data($user->toArray());
 					$this->save_repository();
 				}
 			}
