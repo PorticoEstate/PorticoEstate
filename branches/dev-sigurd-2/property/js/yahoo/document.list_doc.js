@@ -66,26 +66,33 @@
 		 		{
 			 		newTR = document.createElement('tr');
 		 			newTD = document.createElement('td');
+		 			newTD.setAttribute("width","20");
+
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['name']));
-		 			newTD.setAttribute("width","170");
 		 			newTR.appendChild(newTD);
+		 			newTD = document.createElement('td');
+		 			newTD.setAttribute("width","5");
+
+		 			newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
+		 			newTR.appendChild(newTD);
+
 		 			newTbody.appendChild(newTR);
 		 			newTD = document.createElement('td');
-		 			newTD.setAttribute("width","30");
-		 			valor = document.createTextNode(values_ds.current_consult[i]['value']);
+
 		 			if(i<values_ds.current_consult.length-2)
 		 			{
 			 			var newLink = document.createElement('a');
 			 			newLink.setAttribute("href", html_entity_decode(values_ds.current_consult[i]['query_link']));
 			 			newLink.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
 			 			newTD.appendChild(newLink);
+			 			newTD.setAttribute("width","20");
 		 			}
 		 			else
 		 			{
 		 				newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+			 			newTD.setAttribute("width","20");
 		 			}
 
-		 			//newTD.appendChild(newLink);
 		 			newTR.appendChild(newTD);
 
 		 			newTD = document.createElement('td');
