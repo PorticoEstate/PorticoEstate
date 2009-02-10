@@ -121,9 +121,8 @@
 				}
 
 				/* try to bind as the user with user suplied password */
-				$user_bind = @ldap_bind($ldap, $userDN, $passwd);
-				$ok = is_resource($user_bind);
-				@ldap_unbind($user_bind); // we don't need this connection anymore, so avoid a leak.
+				$ok = @ldap_bind($ldap, $userDN, $passwd);
+				@ldap_unbind($ldap); // we don't need this connection anymore, so avoid a leak.
 			}
 			@ldap_unbind($ldap);
 

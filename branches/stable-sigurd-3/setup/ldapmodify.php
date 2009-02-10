@@ -2,19 +2,19 @@
 	/**
 	* Setup
 	*
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
 	*/
 
-	$GLOBALS['phpgw_info'] = array();
-	$GLOBALS['phpgw_info']['flags'] = array(
-			'noheader'   => True,
-			'nonavbar'   => True,
-			'currentapp' => 'home',
-			'noapi'      => True
-		);
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'noheader'   => true,
+		'nonavbar'   => true,
+		'currentapp' => 'home',
+		'noapi'      => true
+	);
 
 	/**
 	 * Include setup functions
@@ -35,34 +35,6 @@
 	* @package setup
 	* @ignore
 	*/
-	class phpgw
-	{
-		/**
-		 * Common
-		 * @var object
-		 */
-		var $common;
-		
-		/**
-		 * Accounts
-		 * @var object
-		 */
-		var $accounts;
-		
-		/**
-		 * Applications
-		 * @var object
-		 */
-		var $applications;
-		
-		/**
-		 * Database
-		 * @var object
-		 */
-		var $db;
-	}
-	$GLOBALS['phpgw'] = new phpgw;
-	$GLOBALS['phpgw']->common = CreateObject('phpgwapi.common');
 
 	$common =& $GLOBALS['phpgw']->common;
 	$GLOBALS['phpgw_setup']->loaddb();
@@ -94,10 +66,10 @@
 	// connect to ldap server
 	if (! $ldap = $common->ldapConnect())
 	{
-		$noldapconnection = True;
+		$noldapconnection = true;
 	}
 
-	if ($noldapconnection)
+	if (isset($noldapconnection))
 	{
 		Header('Location: config.php?error=badldapconnection');
 		exit;
@@ -109,7 +81,7 @@
 
 	for ($i=0; $i<$info['count']; ++$i)
 	{
-		if (! $GLOBALS['phpgw_info']['server']['global_denied_users'][$info[$i]['uid'][0]])
+		if (!isset($GLOBALS['phpgw_info']['server']['global_denied_users'][$info[$i]['uid'][0]]) || !$GLOBALS['phpgw_info']['server']['global_denied_users'][$info[$i]['uid'][0]])
 		{
 			$account_info[$info[$i]['uidnumber'][0]] = $info[$i];
 		}
@@ -123,8 +95,8 @@
 
 		for ($i=0; $i<$info['count']; ++$i)
 		{
-			if (! $GLOBALS['phpgw_info']['server']['global_denied_groups'][$info[$i]['cn'][0]] &&
-				! $account_info[$i][$info[$i]['cn'][0]])
+			if ((!isset($GLOBALS['phpgw_info']['server']['global_denied_groups'][$info[$i]['cn'][0]]) || !$GLOBALS['phpgw_info']['server']['global_denied_groups'][$info[$i]['cn'][0]]) &&
+				(!isset($account_info[$i][$info[$i]['cn'][0]]) || !$account_info[$i][$info[$i]['cn'][0]]))
 			{
 				$group_info[$info[$i]['gidnumber'][0]] = $info[$i];
 			}
@@ -151,14 +123,12 @@
 
 	$GLOBALS['phpgw_setup']->html->show_header('LDAP Modify','','config',$ConfigDomain);
 
-	if ($_POST['submit'])
+	if (isset($_POST['submit']) && $_POST['submit'])
 	{
 		$acl = CreateObject('phpgwapi.acl');
-		$acl->db = $GLOBALS['phpgw_setup']->db;
 		if ( isset($_POST['ldapgroups']) && count($_POST['ldapgroups']) )
 		{
 			$groups = CreateObject('phpgwapi.accounts');
-			$groups->db = $GLOBALS['phpgw_setup']->db;
 			foreach($_POST['ldapgroups'] as $key => $groupid)
 			{
 				$id_exist = 0;
@@ -173,7 +143,7 @@
 				// Do some checks before we try to import the data.
 				if (!empty($thisacctid) && !empty($thisacctlid))
 				{
-					$groups->account_id = intval($thisacctid);
+					$groups->set_account(intval($thisacctid));
 
 					$sr = ldap_search($ldap,$config['ldap_group_context'],'cn='.$thisacctlid);
 					$entry = ldap_get_entries($ldap, $sr);
@@ -197,8 +167,7 @@
 
 						// We add this here as it is mandatory
 						$replace['phpgwGroupID'] = $thisacctlid;
-
-						$ok = ldap_mod_replace($ldap,$thisdn,$replace);
+						$ok = @ldap_mod_replace($ldap,$thisdn,$replace);
 						if (!$ok) // give user some feedback
 						{
 							echo lang('failed to modify: %1', $thisdn) . '<br />';
@@ -263,7 +232,7 @@
 		if( isset($_POST['users']) && count($_POST['users']) )
 		{
 			$accounts = CreateObject('phpgwapi.accounts');
-			$accounts->db = $GLOBALS['phpgw_setup']->db;
+		//	$accounts->db = $GLOBALS['phpgw_setup']->db;
 			foreach($_POST['users'] as $key => $id)
 			{
 				$id_exist = 0;
@@ -275,7 +244,7 @@
 				/* Do some checks before we try to import the data. */
 				if (!empty($thisacctid) && !empty($thisacctlid))
 				{
-					$accounts->account_id = intval($thisacctid);
+					$accounts->set_account(intval($thisacctid));
 					$sr = ldap_search($ldap,$config['ldap_context'],'uid='.$thisacctlid);
 					$entry = ldap_get_entries($ldap, $sr);
 					reset($entry[0]['objectclass']);
@@ -358,12 +327,15 @@
 					This is typically an exception to apps for run rights
 					as a group member.
 					*/
-					for ($a=0; $a < count($admins); ++$a)
+					if(isset($admins) && is_array($admins)) // Sigurd: don't seems to defined at all
 					{
-						if ($admins[$a] == $thisacctid)
+						for ($a=0; $a < count($admins); ++$a)
 						{
-							$acl->delete('admin','run',1);
-							$acl->add('admin','run',1);
+							if ($admins[$a] == $thisacctid)
+							{
+								$acl->delete('admin','run',1);
+								$acl->add('admin','run',1);
+							}
 						}
 					}
 					/* Save these new acls. */
@@ -374,13 +346,13 @@
 		$setup_complete = True;
 	}
 
-	if ($error)
+	if (isset($error) && $error)
 	{
 		/* echo '<br /><center><b>Error:</b> '.$error.'</center>'; */
 		$GLOBALS['phpgw_setup']->html->show_alert_msg('Error',$error);
 	}
 
-	if ($setup_complete)
+	if (isset($setup_complete) && $setup_complete)
 	{
 		echo '<br /><center>'.lang('Modifications have been completed!').' '.lang('Click <a href="index.php">here</a> to return to setup.').'<br /><center>';
 		$GLOBALS['phpgw_setup']->html->show_footer();
@@ -395,22 +367,26 @@
 	$setup_tpl->set_block('ldap','submit','submit');
 	$setup_tpl->set_block('ldap','footer','footer');
 
+	$user_list = '';
 	while (list($key,$account) = @each($account_info))
 	{
 		$user_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
 	}
 
 	@reset($account_info);
+	$admin_list = '';
 	while (list($key,$account) = @each($account_info))
 	{
 		$admin_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
 	}
 
+	$group_list = '';
 	while (list($key,$group) = @each($group_info))
 	{
 		$group_list .= '<option value="' . $group['gidnumber'][0] . '">' . $group['cn'][0]  . '</option>';
 	}
 
+	$app_list = '';
 	while(list($appname,$apptitle) = each($apps)) // TODO: IMHO This needs to go - skwashd Jul-04
 	{
 		if($appname == 'admin' ||

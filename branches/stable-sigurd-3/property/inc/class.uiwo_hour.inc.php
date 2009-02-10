@@ -1172,9 +1172,9 @@
 
 				'table_header_view_order'			=> $table_header,
 				'values_view_order'				=> $values_hour,
-				'sms_data'					=> $sms_data
+				'sms_data'					=> $sms_data,
+				'use_yui_table' 			=> true
 			);
-
 
 			if($send_order && !$to_email)
 			{
@@ -1183,10 +1183,14 @@
 
 			if($to_email || $print)
 			{
+				$email_data['use_yui_table'] = false;
+				
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/location_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
+
+				$email_data['use_yui_table'] = true;
 
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
@@ -1201,10 +1205,23 @@
 				$proc = new XSLTProcessor;
 				$proc->importStyleSheet($xsl); // attach the xsl rules
 
+					$header =  <<<HTML
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<body>
+HTML;
+
+					$footer =  <<<HTML
+	</body>
+</html>
+HTML;
+
 				$html =  $proc->transformToXML($xml);
 
 				if($print)
 				{
+					echo $header;
 					echo <<<HTML
 						<script language="Javascript1.2">
 						<!--
@@ -1213,7 +1230,9 @@
 						//-->
 						</script>
 HTML;
+
 					echo $html;
+					echo $footer;
 					exit;
 				}
 
@@ -1224,7 +1243,7 @@ HTML;
 					$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
 					$bcc = $from_email;
 				}
-				$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+				$headers .= "Content-type: text/html; charset=utf-8\r\n";
 				$headers .= "MIME-Version: 1.0\r\n";
 				$subject = lang('Workorder').": ".$workorder_id;
 
@@ -1242,7 +1261,7 @@ HTML;
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $html, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $header . $html . $footer, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 				}
 				else
 				{
@@ -1283,15 +1302,77 @@ HTML;
 				'menuaction'	=> 'property.uiworkorder.view_file',
 				'id'			=> $workorder_id
 			);
+			
+//------------------------------------------------------	
 
+			$table_view_order = array();
+			if(count($email_data['values_view_order']))
+			{
+				
+				for($i = 0;$i<count($email_data['values_view_order']);$i++)
+				{
+					$table_view_order[$i]['post'] 		= $email_data['values_view_order'][$i]['post'];
+					$table_view_order[$i]['code'] 		= $email_data['values_view_order'][$i]['code'];
+					$table_view_order[$i]['descr'] 		= $email_data['values_view_order'][$i]['hours_descr']."<br>".$email_data['values_view_order']['remark'];
+					$table_view_order[$i]['unit'] 		= $email_data['values_view_order'][$i]['unit'];
+					$table_view_order[$i]['quantity'] 	= $email_data['values_view_order'][$i]['quantity'];
+					$table_view_order[$i]['billperae']	= $email_data['values_view_order'][$i]['billperae'];
+					$table_view_order[$i]['cost'] 		= $email_data['values_view_order'][$i]['cost'];
+				}
+			}
+	
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($table_view_order),
+					'total_records'			=> count($table_view_order),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);	
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => post,label=>lang('Post'),sorteable=>true,resizeable=>true),
+									       			array(key => code,label=>lang('Code'),sorteable=>true,resizeable=>true),
+									       			array(key => descr,label=>lang('descr'),sorteable=>true,resizeable=>true),
+		       				       					array(key => unit,label=>lang('Unit'),sorteable=>true,resizeable=>true),
+		       				       					array(key => quantity,label=>lang('Quantity'),sorteable=>true,resizeable=>true),
+		       				       					array(key => billperae,label=>lang('Bill per unit'),sorteable=>true,resizeable=>true),
+		       				       					array(key => cost,label=>lang('cost'),sorteable=>true,resizeable=>true)))
+			);	
+			
+			$datavalues[1] = array
+			(
+					'name'					=> "1",
+					'values' 				=> json_encode($workorder_history),
+					'total_records'			=> count($workorder_history),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);	
+
+       		$myColumnDefs[1] = array
+       		(
+       			'name'		=> "1",
+       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sorteable=>true,resizeable=>true),
+									       			array(key => value_user,label=>lang('User'),sorteable=>true,resizeable=>true),
+									       			array(key => value_action,label=>lang('Action'),sorteable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New value'),sorteable=>true,resizeable=>true)))
+			);	
+			
+			
+//------------------------------------------------------
 			$data = array
 			(
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'lang_mail'					=> lang('E-Mail'),
+				'lang_mail'						=> lang('E-Mail'),
 				'lang_update_email'				=> lang('Update email'),
-				'lang_update_email_statustext'			=> lang('Check to update the email-address for this vendor'),
+				'lang_update_email_statustext'	=> lang('Check to update the email-address for this vendor'),
 				'lang_to_email_address_statustext'		=> lang('The address to which this order will be sendt'),
-				'to_email'					=> $to_email,
+				'to_email'						=> $to_email,
 				'email_list'					=> $email_list,
 				'lang_select_email'				=> lang('Select email'),
 				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'send'=>true, 'workorder_id'=> $workorder_id, 'show_details'=> $show_details)),
@@ -1301,7 +1382,7 @@ HTML;
 				'workorder_history'				=> $workorder_history,
 				'table_header_history'				=> $table_header_history,
 				'email_data'					=> $email_data,
-				'no_email'					=> $no_email,
+				'no_email'						=> $no_email,
 				'table_send'					=> $table_send,
 				'table_done'					=> $table_done,
 
@@ -1325,7 +1406,25 @@ HTML;
 												 )) . "','1000','1200')"
 			);
 
-//_debug_array($data);
+//_debug_array($data);die();
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			
+			
 
 			$appname		= lang('Workorder');
 			$function_msg		= lang('Send order');
@@ -1335,7 +1434,9 @@ HTML;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 
-			$this->save_sessiondata();
+			//$this->save_sessiondata();
+			
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.view', 'property' );
 		}
 
 
@@ -2215,6 +2316,14 @@ HTML;
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			
+			
+			
+			
+			
+			
+		
+			
 			$data = array
 			(
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -2315,7 +2424,7 @@ HTML;
 				'value_cat_per_cent'			=> $values['cat_per_cent'],
 				'lang_per_cent'				=> lang('Per Cent')
 			);
-
+_debug_array($data);
 			$appname = lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;

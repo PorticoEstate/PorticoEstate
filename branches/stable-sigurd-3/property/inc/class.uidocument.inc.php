@@ -945,7 +945,7 @@
 	    			}
 	    		}
 
-				// right in datatable
+	    		// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];

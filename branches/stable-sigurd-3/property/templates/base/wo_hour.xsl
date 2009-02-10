@@ -402,9 +402,17 @@
 							<td class="th_text" align="left">
 								<xsl:value-of select="lang_history"/>
 							</td>
-						</tr>					
+						</tr>	
+						<tr>
+							<td>
+									<div id="paging_1"> </div>
+									<div id="datatable-container_1"></div>									
+							</td>
+						</tr>							
+						<!-- 				
 						<xsl:apply-templates select="table_header_history"/>
 						<xsl:apply-templates select="workorder_history"/>
+						 -->
 					</xsl:otherwise>
 				</xsl:choose>
 				</table>
@@ -422,6 +430,28 @@
 			</xsl:when>
 		</xsl:choose>
 		</table>
+		
+		<script>
+		var property_js = <xsl:value-of select="property_js" />;
+		var datatable = new Array();
+		var myColumnDefs = new Array();
+
+		<xsl:for-each select="datatable">
+			datatable[<xsl:value-of select="name"/>] = [
+			{
+				values			:	<xsl:value-of select="values"/>,
+				total_records	: 	<xsl:value-of select="total_records"/>,
+				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+				footer			:	<xsl:value-of select="footer"/>
+			}
+			]
+		</xsl:for-each>
+		
+		<xsl:for-each select="myColumnDefs">
+			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+		</xsl:for-each>
+	</script>
+		
 	</xsl:template>
 
 	<xsl:template match="table_header_history">
@@ -662,12 +692,25 @@
 		</table></td></tr>
 		<xsl:choose>
 			<xsl:when test="values_view_order!=''">
-				<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="center">
-					<xsl:apply-templates select="table_header_view_order"/>
-					<xsl:apply-templates select="values_view_order"/>
-				</table></td></tr>
+				<tr><td colspand="3">
+					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<xsl:choose>
+							<xsl:when test="use_yui_table='1'">
+								<td>
+									<div id="paging_0"> </div>
+									<div id="datatable-container_0"></div> 
+								</td>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="table_header_view_order"/>
+								<xsl:apply-templates select="values_view_order"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</table>
+				</td></tr>
 			</xsl:when>
 		</xsl:choose>
+				
 		<xsl:choose>
 			<xsl:when test="sms_data!=''">		
 				<xsl:apply-templates select="sms_data"/>

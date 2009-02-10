@@ -13,9 +13,9 @@
 	var oNormalButton_0, oNormalButton_1, oNormalButton_2, oNormalButton_3;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_new', funct:"onNewClick"},
-	{order:2, name:'btn_export', funct:"onDownloadClick"},
-	{order:3, name:'btn_update', funct:"onUpdateProject"}
+	{order:1, name:'btn_export', funct:"onDownloadClick"},
+	{order:2, name:'btn_update', funct:"onUpdateProject"},
+	{order:3, name:'btn_new', funct:"onNewClick"}
 	]
 
 	// define Text buttons

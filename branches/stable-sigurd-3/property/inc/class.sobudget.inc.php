@@ -429,6 +429,7 @@
 
 		function read_obligations($data)
 		{
+//_debug_array($data);			
 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -450,7 +451,7 @@
 			{
 				return array();
 			}
-_debug_array($allrows);
+//_debug_array($allrows);
 			$ordermethod = '';
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
 			$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
@@ -656,11 +657,18 @@ _debug_array($allrows);
 			}
 
 			$this->total_records = count($result);
+			
+			//cramirez
+			if($this->total_records == 0)
+			{
+				return $result;				
+			}
 
 			if(!$allrows)
 			{
 				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])?intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']):15;
 
+//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));				
 				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
 
 				$out = array_chunk($result, $num_rows);

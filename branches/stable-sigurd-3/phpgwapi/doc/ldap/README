@@ -87,3 +87,14 @@ Some useful info:
 http://howtoforge.org/installing-and-configuring-openldap-on-ubuntu-intrepid-ibex
 http://www.debuntu.org/ldap-server-and-linux-ldap-clients
 
+Modify the slapd.conf file according to your needs and update the configuration of OpenLDAP:
+
+sudo /etc/init.d/slapd stop
+cd /etc/ldap
+sudo mv slapd.d slapd.d.bck
+sudo mkdir slapd.d
+sudo slaptest -f slapd.conf -F slapd.d
+sudo chown -R openldap:openldap slapd.d
+sudo /etc/init.d/slapd start
+
+

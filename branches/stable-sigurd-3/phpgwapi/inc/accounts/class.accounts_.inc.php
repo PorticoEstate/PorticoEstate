@@ -342,22 +342,13 @@
 					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
 				}
 
-/* // Didn't work...
-				foreach ( $modules as $module )
+				// application permissions
+				foreach ( $modules as $module)
 				{
 					$aclobj->add($module, 'run', phpgwapi_acl::READ);
 				}
-*/
+
 				$aclobj->save_repository();
-
-				// application permissions
-				if ( $modules )
-				{
-					$apps = createObject('phpgwapi.applications', $account->id);
-					$apps->update_data(array_values($modules));
-					$apps->save_repository();
-				}
-
 			}
 			catch (Exception $e)
 			{
@@ -590,11 +581,11 @@
 						'per_first_name'	=> $user->firstname,
 						'per_last_name'		=> $user->lastname,
 						'access'			=> 'public',
-						'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
+						'owner'				=> isset ($GLOBALS['phpgw_info']['server']['addressmaster']) ? $GLOBALS['phpgw_info']['server']['addressmaster'] : ''
 					);
 					$contact_type = $contacts->search_contact_type('Persons');
 					$user->person_id = $contacts->add_contact($contact_type, $principal);
-					$this->update_data($user_account);
+					$this->update_data($user->toArray());
 					$this->save_repository();
 				}
 			}
@@ -612,6 +603,7 @@
 		public function update_group($group, $users, $modules = null)
 		{
 			$this->account = $group;
+			$this->account_id = $group->id;
 			$this->save_repository();
 
 			// handle group memberships
@@ -620,7 +612,7 @@
 			$drop_users = array_diff($old_users, $new_users);
 			if ( is_array($drop_users) && count($drop_users) )
 			{
-				foreach ( $drop_user as $user )
+				foreach ( $drop_users as $user )
 				{
 					$this->delete_account4group($user, $group->id);
 				}
@@ -704,7 +696,7 @@
 			if ( is_array($modules) )
 			{
 				$apps = createObject('phpgwapi.applications', $user->id);
-				$apps->update_data(array_keys($modules));
+				$apps->update_data($modules);
 				$apps->save_repository();
 			}
 
@@ -887,7 +879,7 @@
 			$contacts = createObject('phpgwapi.contacts');
 
 			// does the user already exist in the addressbook?
-			if ( $group->person_id && $group->exist_contact($group->person_id) )
+			if ( $group->person_id && $contacts->exist_contact($group->person_id) )
 			{
 				return !!$contacts->edit_org($group->person_id, $primary);
 			}

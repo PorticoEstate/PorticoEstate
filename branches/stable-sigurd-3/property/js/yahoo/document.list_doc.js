@@ -49,8 +49,11 @@
 	*/
 	this.create_table_info_invoice_sub = function()
 	{
-		div_message = YAHOO.util.Dom.getElementsByClassName('toolbar-first','div')[0];
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = "60px";
+		div_message = YAHOO.util.Dom.getElementsByClassName('field','div')[0];
 		newTable = document.createElement('table');
+		newDiv = document.createElement("div");
+
 		//fix IE error
 		newTbody = document.createElement("TBODY");
 
@@ -63,32 +66,47 @@
 		 		{
 			 		newTR = document.createElement('tr');
 		 			newTD = document.createElement('td');
+		 			newTD.setAttribute("width","20");
+
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['name']));
-		 			newTD.setAttribute("width","350");
+		 			newTR.appendChild(newTD);
+		 			newTD = document.createElement('td');
+		 			newTD.setAttribute("width","5");
+
+		 			newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
 		 			newTR.appendChild(newTD);
 
+		 			newTbody.appendChild(newTR);
 		 			newTD = document.createElement('td');
-		 			newTD.setAttribute("width","30");
-		 			valor = document.createTextNode(values_ds.current_consult[i]['value']);
-		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+
+		 			if(i<values_ds.current_consult.length-2)
+		 			{
+			 			var newLink = document.createElement('a');
+			 			newLink.setAttribute("href", html_entity_decode(values_ds.current_consult[i]['query_link']));
+			 			newLink.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+			 			newTD.appendChild(newLink);
+			 			newTD.setAttribute("width","20");
+		 			}
+		 			else
+		 			{
+		 				newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+			 			newTD.setAttribute("width","20");
+		 			}
+
 		 			newTR.appendChild(newTD);
 
 		 			newTD = document.createElement('td');
 		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['extra'][0]['value']));
-		 			/*itemlink = document.createElement('a');
-					itemlink.setAttribute('href', '#');
-					itemlink.appendChild(document.createTextNode(document.createTextNode(values_ds.current_consult[i]['value'])));
-					itemlink.onclick = function(){window.open('http://www.google.com');}
-					newTD.appendChild(itemlink);*/
 		 			newTR.appendChild(newTD);
 			 		newTbody.appendChild(newTR);
 		 		}
 			 }
 		 }
-		 newTable.setAttribute("style","background-color:#eee;");
-		 newTable.setAttribute("width","100%");
 		 newTable.appendChild(newTbody);
-		 div_message.appendChild(newTable);
+		 newTable.setAttribute("style","clear:both; width:400px;");
+		 newDiv.appendChild(newTable);
+		 newDiv.setAttribute("style","clear:both; width:450px;");
+		 div_message.appendChild(newDiv);
 	}
 
 
@@ -103,6 +121,7 @@
 /****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
+		//YAHOO.util.Dom.getElementsByClassName('toolbar-first','div')[0].style.display = 'none';
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
 
 		var loader = new YAHOO.util.YUILoader();
@@ -118,9 +137,4 @@
 
 	    loader.insert();
 	});
-
-
-
-
-
 

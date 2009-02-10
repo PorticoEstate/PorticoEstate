@@ -228,6 +228,25 @@
 	 */
 	class phpgwapi_group extends phpgwapi_account
 	{
+
+		/**
+		 * @var array $_data the group data
+		 */
+
+		protected $_data = array
+		(
+			'id'				=> 0,
+			'lid'				=> '',
+			'firstname'			=> '',
+			'lastname'			=> 'Group',
+			'passwd_hash'		=> '',
+			'enabled'			=> false,
+			'expires'			=> 0,
+			'person_id'			=> 0,
+			'old_loginid'		=> '',
+			'type' 				=> 'g'
+		);
+
 		/**
 		 * Initialise the values of the object - this should only be called from phpgwapi_accounts
 		 *
@@ -256,8 +275,8 @@
 					// we ignore the rest
 				}
 			}
-			$this->_data['lastname'] = 'Group';
-			$this->_data['type'] = 'g';
+		//	$this->_data['lastname'] = 'Group';
+		//	$this->_data['type'] = 'g';
 			$this->_hash = $this->_generate_hash();
 		}
 
@@ -360,10 +379,20 @@
 				throw new Exception('Group name is too short');
 			}
 
-			if ( $lookup && 
-				$this->_data['id'] != $GLOBALS['phpgw']->accounts->name2id($group) )
+			if ( $lookup )
 			{
-				throw new Exception('Group name already in use');
+				if ($this->_data['id'])
+				{
+					if($this->_data['id'] != $GLOBALS['phpgw']->accounts->name2id($group)
+						&& $GLOBALS['phpgw']->accounts->name2id($group) )
+					{
+						throw new Exception('Group name already in use');
+					}
+				}
+				else if($GLOBALS['phpgw']->accounts->name2id($group))
+				{
+					throw new Exception('Group name already in use');				
+				}
 			}
 
 			phpgw::import_class('phpgwapi.globally_denied');

@@ -254,13 +254,6 @@
 						);
 			}
 
-			$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'done',
-							'statustext' 	=> lang('done'),
-							'text'			=> lang('done'),
-							'action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
-						);
-
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
 				if($uicols['input_type'][$i]!='hidden')

@@ -186,7 +186,7 @@
 			{
 				$new_group->id = $id;
 				$id = $GLOBALS['phpgw']->accounts->create($new_group, $values['account_user'],
-														array(), $values['account_apps']);
+														array(), array_keys($values['account_apps']));
 			}
 			else //edit group
 			{
@@ -320,8 +320,9 @@
 					'rights'	=> 1
 				);
 			}
-			
-			$apps = $values['account_permissions'];
+
+			$apps = array_keys($values['account_permissions']);
+
 			unset($values['account_groups'], $values['account_permissions']);
 
 			try

@@ -46,13 +46,14 @@
 		 */
 		public $public_functions = array
 		(
-			'list_groups'	=> true,
-			'list_users'	=> true,
-			'delete_group'	=> true,
-			'delete_user'	=> true,
-			'edit_user'		=> true,
-			'edit_group'	=> true,
-			'view_user'		=> true,
+			'list_groups'				=> true,
+			'list_users'				=> true,
+			'delete_group'				=> true,
+			'delete_user'				=> true,
+			'edit_user'					=> true,
+			'edit_group'				=> true,
+			'view_user'					=> true,
+			'sync_accounts_contacts'	=> true
 		);
 
 		/**
@@ -135,7 +136,7 @@
 				'sort_name'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'account_lid',
+												'var'	=> 'lid',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -250,8 +251,8 @@
 			}
 
 			$query		= phpgw::get_var('query', 'string', 'POST');
-			$start		= phpgw::get_var('start', 'int');
-			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
+			$start		= phpgw::get_var('start', 'int', 'GET', -1);
+			$order		= phpgw::get_var('order', 'string', 'GET', 'lid');
 			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
@@ -290,7 +291,7 @@
 				'sort_lid'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'account_lid',
+												'var'	=> 'lid',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -298,7 +299,7 @@
 				'sort_lastname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'account_lastname',
+												'var'	=> 'lastname',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -306,7 +307,7 @@
 				'sort_firstname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'account_firstname',
+												'var'	=> 'firstname',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -314,7 +315,7 @@
 				'sort_status'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'account_status',
+												'var'	=> 'status',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -1270,4 +1271,17 @@
 
 			return "<a href=\"{$url}\">{$lang_action}</a>";
 		}
+
+		/**
+		* Generates contacts from users
+		*
+		* @return void
+		*/
+
+		function sync_accounts_contacts()
+		{
+			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
+
 	}
