@@ -1303,7 +1303,7 @@ HTML;
 				'id'			=> $workorder_id
 			);
 			
-//------------------------------------------------------	
+			//---datatable settings---------------------------------------------------			
 
 			$table_view_order = array();
 			if(count($email_data['values_view_order']))
@@ -1333,13 +1333,13 @@ HTML;
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => post,label=>lang('Post'),sorteable=>true,resizeable=>true),
-									       			array(key => code,label=>lang('Code'),sorteable=>true,resizeable=>true),
-									       			array(key => descr,label=>lang('descr'),sorteable=>true,resizeable=>true),
-		       				       					array(key => unit,label=>lang('Unit'),sorteable=>true,resizeable=>true),
-		       				       					array(key => quantity,label=>lang('Quantity'),sorteable=>true,resizeable=>true),
-		       				       					array(key => billperae,label=>lang('Bill per unit'),sorteable=>true,resizeable=>true),
-		       				       					array(key => cost,label=>lang('cost'),sorteable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array(key => post,		label=>lang('Post'),		sortable=>true,resizeable=>true),
+									       			array(key => code,		label=>lang('Code'),		sortable=>true,resizeable=>true),
+									       			array(key => descr,		label=>lang('descr'),		sortable=>true,resizeable=>true),
+		       				       					array(key => unit,		label=>lang('Unit'),		sortable=>true,resizeable=>true),
+		       				       					array(key => quantity,label=>lang('Quantity'),		sortable=>true,resizeable=>true),
+		       				       					array(key => billperae,label=>lang('Bill per unit'),sortable=>true,resizeable=>true),
+		       				       					array(key => cost,		label=>lang('cost'),		sortable=>true,resizeable=>true)))
 			);	
 			
 			$datavalues[1] = array
@@ -1354,19 +1354,20 @@ HTML;
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sorteable=>true,resizeable=>true),
-									       			array(key => value_user,label=>lang('User'),sorteable=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('Action'),sorteable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New value'),sorteable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),	sortable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),	sortable=>true,resizeable=>true),
+									       			array(key => value_action,	label=>lang('Action'),	sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New value'),sortable=>true,resizeable=>true)))
 			);	
 			
 			
-//------------------------------------------------------
+			//----------------------------------------------datatable settings--------	
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
+			
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_mail'						=> lang('E-Mail'),
 				'lang_update_email'				=> lang('Update email'),
@@ -1406,8 +1407,8 @@ HTML;
 												 )) . "','1000','1200')"
 			);
 
-//_debug_array($data);die();
 
+			//---datatable settings-----------------------------
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
@@ -1423,20 +1424,16 @@ HTML;
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			
-			
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.view', 'property' );
+			//------------------------------datatable settings--
 
 			$appname		= lang('Workorder');
-			$function_msg		= lang('Send order');
-
+			$function_msg	= lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
-
+			//$GLOBALS['phpgw']->xslttpl->pp();
 			//$this->save_sessiondata();
 			
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.view', 'property' );
 		}
 
 

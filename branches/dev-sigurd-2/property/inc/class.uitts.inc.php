@@ -1823,10 +1823,10 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => value_count,	label=>'#',			sorteable=>true,resizeable=>true),
-									       			array(key => value_date,	label=>lang('Date'),sorteable=>true,resizeable=>true),
-									       			array(key => value_user,	label=>lang('User'),sorteable=>true,resizeable=>true),
-		       				       					array(key => value_note,	label=>lang('Note'),sorteable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array(key => value_count,	label=>'#',			sortable=>true,resizeable=>true),
+									       			array(key => value_date,	label=>lang('Date'),sortable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),sortable=>true,resizeable=>true),
+		       				       					array(key => value_note,	label=>lang('Note'),sortable=>true,resizeable=>true)))
 			);		
 			$datavalues[1] = array
 			(
@@ -1839,10 +1839,10 @@
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),sorteable=>true,resizeable=>true),
-									       			array(key => value_user,	label=>lang('User'),sorteable=>true,resizeable=>true),
-									       			array(key => value_action,	label=>lang('Action'),sorteable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New value'),sorteable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),	sortable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),	sortable=>true,resizeable=>true),
+									       			array(key => value_action,	label=>lang('Action'),	sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New value'),sortable=>true,resizeable=>true)))
 			);	
 			//----------------------------------------------datatable settings--------			
 			
@@ -1852,6 +1852,7 @@
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'					=> $datavalues,
 				'myColumnDefs'				=> $myColumnDefs,
+			
 				'value_origin'				=> $ticket['origin'],
 				'value_target'				=> $ticket['target'],
 				'lang_finnish_date'			=> lang('finnish date'),
