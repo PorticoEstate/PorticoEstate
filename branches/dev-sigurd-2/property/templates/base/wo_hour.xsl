@@ -694,12 +694,18 @@
 			<xsl:when test="values_view_order!=''">
 				<tr><td colspand="3">
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-					<td>
-						<div id="paging_0"> </div>
-						<div id="datatable-container_0"></div> 
-					</td>
-						<!-- <xsl:apply-templates select="table_header_view_order"/>
-						<xsl:apply-templates select="values_view_order"/> --> 
+						<xsl:choose>
+							<xsl:when test="use_yui_table='1'">
+								<td>
+									<div id="paging_0"> </div>
+									<div id="datatable-container_0"></div> 
+								</td>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="table_header_view_order"/>
+								<xsl:apply-templates select="values_view_order"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</table>
 				</td></tr>
 			</xsl:when>

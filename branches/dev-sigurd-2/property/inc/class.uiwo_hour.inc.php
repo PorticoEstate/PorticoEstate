@@ -1172,9 +1172,9 @@
 
 				'table_header_view_order'			=> $table_header,
 				'values_view_order'				=> $values_hour,
-				'sms_data'					=> $sms_data
+				'sms_data'					=> $sms_data,
+				'use_yui_table' 			=> true
 			);
-
 
 			if($send_order && !$to_email)
 			{
@@ -1183,10 +1183,14 @@
 
 			if($to_email || $print)
 			{
+				$email_data['use_yui_table'] = false;
+				
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/location_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
+
+				$email_data['use_yui_table'] = true;
 
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
@@ -1201,10 +1205,23 @@
 				$proc = new XSLTProcessor;
 				$proc->importStyleSheet($xsl); // attach the xsl rules
 
+					$header =  <<<HTML
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<body>
+HTML;
+
+					$footer =  <<<HTML
+	</body>
+</html>
+HTML;
+
 				$html =  $proc->transformToXML($xml);
 
 				if($print)
 				{
+					echo $header;
 					echo <<<HTML
 						<script language="Javascript1.2">
 						<!--
@@ -1213,7 +1230,9 @@
 						//-->
 						</script>
 HTML;
+
 					echo $html;
+					echo $footer;
 					exit;
 				}
 
@@ -1224,7 +1243,7 @@ HTML;
 					$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
 					$bcc = $from_email;
 				}
-				$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+				$headers .= "Content-type: text/html; charset=utf-8\r\n";
 				$headers .= "MIME-Version: 1.0\r\n";
 				$subject = lang('Workorder').": ".$workorder_id;
 
@@ -1242,7 +1261,7 @@ HTML;
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $html, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $header . $html . $footer, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 				}
 				else
 				{
