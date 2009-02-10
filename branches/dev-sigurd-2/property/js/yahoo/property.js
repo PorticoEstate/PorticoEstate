@@ -12,14 +12,14 @@
 	var maxRowsPerPage = 1000;
 	var myLoading;
 	var message_delete = "";
-	
+
 /********************************************************************************
 * This functions is used for initial settings in filter buttons
-* 
+*
 * order_button = index of oMenuButton_
 * type = value or text
 * value = value to find
-*/	
+*/
 	this.locate_in_array_options = function(order_button,type,value)
 	{
 		if(type=="value")
@@ -37,10 +37,10 @@
 				return i;
 			}
 		}
-	}	
+	}
  /********************************************************************************
- * 
- */	
+ *
+ */
   	this.td_empty = function(colspan)
   	{
 		newTD = document.createElement('td');
@@ -50,10 +50,10 @@
 		newTR.appendChild(newTD);
   	}
  /********************************************************************************
- * 
- */ 	
+ *
+ */
   	this.td_sum = function(sum)
-  	{			  	
+  	{
 		newTD = document.createElement('td');
 		newTD.colSpan = 1;
 		newTD.style.borderTop="1px solid #000000";
@@ -64,7 +64,7 @@
 		newTR.appendChild(newTD);
   	}
  /********************************************************************************
- * 
+ *
  */
 	CreateRowChecked = function(Class)
 	{
@@ -94,7 +94,7 @@
 		//Add TD to TR
 		newTR.appendChild(newTD);
 	}
-	
+
  /********************************************************************************
  * Delete all message un DIV 'message'
  * type == 1	always delete div content
@@ -127,10 +127,10 @@
 			}
 		}
 	}
-	
+
  /********************************************************************************
  *
- */	
+ */
 	this.getSumPerPage = function(name_column,round)
 	{
 		//range actual of rows in datatable
@@ -147,7 +147,7 @@
 			begin	= myPaginator.getPageRecords()[0];
 			end		= myPaginator.getPageRecords()[1];
 		}
-	
+
 		//get sumatory of column AMOUNT
 		tmp_sum = 0;
 		for(i = begin; i <= end; i++)
@@ -157,7 +157,7 @@
 
 		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
 	}
-		
+
  /********************************************************************************
  *
  */
@@ -213,6 +213,13 @@
 	this.pulsar = function(e)
 	{
 		tecla = (document.all) ? e.keyCode :e.which;
+		if(tecla==13)
+		{
+			if (YAHOO.util.Dom.inDocument('btn_search-button'))
+			{
+				document.getElementById('btn_search-button').click();
+			}
+		}
 		return (tecla!=13);
 	}
 
@@ -604,7 +611,7 @@
 						}
 						else
 						{
-							window.open(sUrl,'_self');						
+							window.open(sUrl,'_self');
 						}
 					}
 				}
@@ -758,7 +765,7 @@
 		{
 			toolbars[i].style.display = 'block';
 		}
-		
+
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
@@ -1043,8 +1050,8 @@
 		myPaginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
 
 		myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
-		
-		//update "sortedBy" values 
+
+		//update "sortedBy" values
 		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
 		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
 
@@ -1067,7 +1074,7 @@
 				filter_tmp.set("value",values_ds.hidden.dependent[i].id);
 				flag_update_filter[i] = '';
 			}
-			//avoid update_filter again 
+			//avoid update_filter again
 			flag_update_filter.splice(0,flag_update_filter.length)
 	 	}
 	}
@@ -1119,7 +1126,7 @@
 				}
 			}
 		}
-		//validate right ADD. 
+		//validate right ADD.
 		if(YAHOO.util.Dom.inDocument("btn_new-button"))
 		{
 			disabled_button_add = true;
@@ -1137,9 +1144,9 @@
 				eval("oNormalButton_"+order_new+"._setDisabled(true)");
 			}
 		}
-		
+
 		//shown message if delete records
-		delete_content_div("message",1);	
+		delete_content_div("message",1);
 		if(message_delete != "")
 		{
 	 		oDiv=document.createElement("DIV");
