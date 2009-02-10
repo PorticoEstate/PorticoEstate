@@ -1810,9 +1810,48 @@
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_finnish_date');
+			
+			//---datatable settings---------------------------------------------------	
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($additional_notes),
+					'total_records'			=> count($additional_notes),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);					
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => value_count,	label=>'#',			sorteable=>true,resizeable=>true),
+									       			array(key => value_date,	label=>lang('Date'),sorteable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),sorteable=>true,resizeable=>true),
+		       				       					array(key => value_note,	label=>lang('Note'),sorteable=>true,resizeable=>true)))
+			);		
+			$datavalues[1] = array
+			(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);					
+       		$myColumnDefs[1] = array
+       		(
+       			'name'		=> "1",
+       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),sorteable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),sorteable=>true,resizeable=>true),
+									       			array(key => value_action,	label=>lang('Action'),sorteable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New value'),sorteable=>true,resizeable=>true)))
+			);	
+			//----------------------------------------------datatable settings--------			
+			
 
 			$data = array
 			(
+				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'					=> $datavalues,
+				'myColumnDefs'				=> $myColumnDefs,
 				'value_origin'				=> $ticket['origin'],
 				'value_target'				=> $ticket['target'],
 				'lang_finnish_date'			=> lang('finnish date'),
@@ -1912,10 +1951,30 @@
 				'lang_file_statustext'			=> lang('Select file to upload'),
 
 			);
-//_debug_array($data);
-			$appname					= lang('helpdesk');
-			$function_msg					= lang('view ticket detail');
 
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.view', 'property' );
+			//-----------------------datatable settings---
+			
+			
+			
+			$appname		= lang('helpdesk');
+			$function_msg	= lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
