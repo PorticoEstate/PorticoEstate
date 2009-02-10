@@ -1241,9 +1241,37 @@
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_document_date');
+	
+			//data test    	$record_history = array(array(value_date=>"1111",value_user=>"22222",value_action=>"33333",value_new_value=>"44444444"));
+			
+//----datatable settings------------------------------------
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);	
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),	sortable=>true,resizeable=>true),
+									       			array(key => value_user,	label=>lang('User'),	sortable=>true,resizeable=>true),
+									       			array(key => value_action,	label=>lang('Action'),	sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New value'),sortable=>true,resizeable=>true)))
+			);	
+			
+//-----------------------------------------datatable settings-----
 
 			$data = array
 			(
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,	
+									
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'vendor_data'					=> $vendor_data,
 				'record_history'				=> $record_history,
@@ -1322,6 +1350,24 @@
 				'lang_branch'					=> lang('branch'),
 				'lang_branch_statustext'			=> lang('Select the branch for this document')
 			);
+			//----datatable settings------------------------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');			
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'document.view', 'property' );
+			//--------------------------------datatable settings--------
 
 			$appname		= lang('document');
 
