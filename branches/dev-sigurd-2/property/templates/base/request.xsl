@@ -16,7 +16,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="priority_form">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" action="{$form_action}">
@@ -41,7 +41,7 @@
 			</tr>
 		</table>
 		</div>
-		</form> 
+		</form>
 		<!-- to reload the table -->
 		<xsl:choose>
 			<xsl:when test="//exchange_values!=''">
@@ -49,7 +49,7 @@
 					<xsl:value-of select="//exchange_values"/>
 				</script>
 			</xsl:when>
-		</xsl:choose>				
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="priority_key">
@@ -83,7 +83,7 @@
 	</xsl:template>
 
 	<xsl:template match="list">
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td>
@@ -104,7 +104,7 @@
 							<a href="javascript:var w=window.open('{$link_priority_key}','','width=300,height=300')"
 								onMouseOver="overlib('{$lang_priority_help}', CAPTION, '{$lang_priority_key}')"
 								onMouseOut="nd()">
-								<xsl:value-of select="lang_priority_key"/></a>					
+								<xsl:value-of select="lang_priority_key"/></a>
 						</td>
 					</xsl:when>
 				</xsl:choose>
@@ -162,7 +162,7 @@
 					<xsl:when test="table_add !=''">
 						<xsl:apply-templates select="table_add"/>
 					</xsl:when>
-				</xsl:choose>	
+				</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 		</table>
@@ -210,7 +210,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td align="left">
-								<xsl:value-of select="value"/>					
+								<xsl:value-of select="value"/>
 							</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -241,7 +241,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<div align="left">		
+		<div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -313,14 +313,14 @@
 							</td>
 							<td>
 							<table>
-							
+
 							<xsl:for-each select="data">
 							<tr>
-		
+
 							<td class="th_text"  align="left" >
 								<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 								<xsl:text> </xsl:text>
-		
+
 								<xsl:choose>
 									<xsl:when test="location ='.project.request'">
 									<input type="checkbox" name="values[delete_request][]" value="{id}"  onMouseout="window.status='';return true;">
@@ -347,7 +347,7 @@
 								<xsl:value-of select="descr"/>
 							</td>
 							<td>
-								<table>							
+								<table>
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
@@ -401,7 +401,7 @@
 								<xsl:value-of select="lang_descr_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_descr"/>		
+						<xsl:value-of select="value_descr"/>
 					</textarea>
 				</td>
 			</tr>
@@ -426,7 +426,7 @@
 									<xsl:value-of select="lang_contact_phone"/>
 								</td>
 								<td  align="left">
-									<xsl:value-of select="contact_phone"/>					
+									<xsl:value-of select="contact_phone"/>
 								</td>
 							</tr>
 						</xsl:when>
@@ -528,6 +528,8 @@
 					<xsl:value-of select="lang_importance"/>
 				</td>
 					<td>
+
+
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_header_importance"/>
 						<xsl:apply-templates select="condition_list"/>
@@ -560,6 +562,9 @@
 						</tr>
 
 					</table>
+
+
+
 					</td>
 			</tr>
 
@@ -642,7 +647,9 @@
 			</tr>
 		</table>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
+		<div id="paging_0"> </div>
+		<div id="datatable-container_0" style="left:330px; position:absolute;"></div>
+		<!-- table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="record_history=''">
 					<tr>
@@ -661,7 +668,29 @@
 					<xsl:apply-templates select="record_history"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</table>
+		</table-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					edit_action		:  	<xsl:value-of select="edit_action"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 	</xsl:template>
@@ -1080,7 +1109,7 @@
 	<xsl:template match="view">
 
 		<div align="left">
-		
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:for-each select="value_origin" >
 			<tr>
@@ -1088,7 +1117,7 @@
 					<xsl:value-of select="descr"/>
 				</td>
 				<td>
-					<table>							
+					<table>
 						<xsl:for-each select="data">
 							<tr>
 								<td class="th_text"  align="left" >
@@ -1187,7 +1216,7 @@
 							<xsl:value-of select="lang_contact_phone"/>
 						</td>
 						<td  align="left">
-							<xsl:value-of select="contact_phone"/>					
+							<xsl:value-of select="contact_phone"/>
 						</td>
 					</tr>
 				</xsl:when>
@@ -1242,7 +1271,7 @@
 					<xsl:value-of select="lang_start_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_start_date"/>			
+					<xsl:value-of select="value_start_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -1250,7 +1279,7 @@
 					<xsl:value-of select="lang_end_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_end_date"/>			
+					<xsl:value-of select="value_end_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -1358,5 +1387,5 @@
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 	</xsl:template>
-	
-	
+
+
