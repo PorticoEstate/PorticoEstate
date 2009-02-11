@@ -1,5 +1,22 @@
 	var myDataSource,myDataTable, myContextMenu,tableYUI;
 
+
+/********************************************************************************/
+	this.create_formatters = function()
+	{
+		for(y=0;y<myColumnDefs.length;y++)
+		{
+			for(z=0;z<myColumnDefs[y].length;z++)
+			{
+				if(typeof(myColumnDefs[y][z]['formatter'])!="undefined")
+				{
+					formatter = myColumnDefs[y][z]['formatter'];
+					myColumnDefs[y][z]['formatter'] = eval(formatter);
+				}
+			}
+		}
+	}
+
 /********************************************************************************/
 
 	this.getSumPerPage = function(name_column,round,paginator,datatable)
@@ -90,16 +107,18 @@
 		});
 
 	}
- 	
+
  /********************************************************************************/
- 	
+
+	this.create_formatters();
+
 	for(j=0;j<datatable.length;j++)
 	{
 		if(YAHOO.util.Dom.inDocument("datatable-container_"+j))
 		{
-			pager = YAHOO.util.Dom.get("paging_"+j);		
+			pager = YAHOO.util.Dom.get("paging_"+j);
 			div   = YAHOO.util.Dom.get("datatable-container_"+j);
-			
+
 			this.init_datatable(datatable[j],div,pager,myColumnDefs[j],j);
 		}
 	}
