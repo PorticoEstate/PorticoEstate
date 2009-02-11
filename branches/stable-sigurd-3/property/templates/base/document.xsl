@@ -491,18 +491,42 @@
 					</tr>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr>
-						<td class="th_text" align="left">
-							<xsl:value-of select="lang_history"/>
-						</td>
-					</tr>
-					<xsl:apply-templates select="table_header_history"/>
-					<xsl:apply-templates select="record_history"/>
+				<tr>
+					<td class="th_text" align="left">
+						<xsl:value-of select="lang_history"/>
+					</td>
+				</tr>
+				<!--  DATATABLE 0-->
+					<!--  <xsl:apply-templates select="table_header_history"/><xsl:apply-templates select="record_history"/> -->
+					<tr><td class="th_text"  colspan="3"><div id="paging_0"></div><div id="datatable-container_0"></div></td></tr>	
+					
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
+		
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+	
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>			
 	</xsl:template>
 
 

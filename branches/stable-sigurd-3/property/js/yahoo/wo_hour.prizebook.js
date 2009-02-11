@@ -23,7 +23,7 @@
 	var config_values =	{
 		date_search : 0 //if search has link "Data search"
 	}
-	
+
 	var myDataSource_details, myDataTable_details, myContextMenu_details, div_footer, table, tableYUI ;
 /****************************************************************************************/
 
@@ -71,15 +71,15 @@
 		}
 
 /********************************************************************************/
-	
+
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
-		{			
+		{
 			//--focus for txt_query---
 			var div_toolbar = YAHOO.util.Dom.getElementsByClassName("toolbar","div")[0];
 			div_toolbar.setAttribute("style", "height:75px;");
-			
+
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 			create_table_details();
 			create_table_info();
@@ -89,7 +89,7 @@
 			update_datatable_details();
 		}
 	}
-	
+
 /********************************************************************************/
 	this.myParticularRenderEvent = function()
 	{
@@ -97,7 +97,7 @@
 		create_message();
 		values_ds.message = null;
 	}
-	
+
 /********************************************************************************
 * Delete all message un DIV 'message'
 */
@@ -142,12 +142,12 @@
 		 }
 		 values_ds.message = null;
 	}
-	
+
 /********************************************************************************/
 
 	this.create_table_info = function()
 	{
-
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = "75px";
 		var ds_action = '';
 		div_message= YAHOO.util.Dom.getElementsByClassName("field","div")[0];
 
@@ -161,31 +161,31 @@
 
 		newTable = document.createElement('table');
 		mewBody = document.createElement('tbody');
-		
+
 		newTR = document.createElement('tr');
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.lang_project_id));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
-		newTR.appendChild(newTD);	
- 		
+		newTR.appendChild(newTD);
+
 		var link = document.createElement('a');
 		link.setAttribute('href', html_entity_decode(values_ds.workorder_data.link_project));
 		link.appendChild(document.createTextNode(values_ds.workorder_data.project_id));
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(link);
 		newTR.appendChild(newTD);
 		mewBody.appendChild(newTR);
-	
-		
+
+
 		newTR = document.createElement('tr');
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.lang_workorder_id));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
 		newTR.appendChild(newTD);
@@ -193,54 +193,54 @@
 		var link = document.createElement('a');
 		link.setAttribute('href', html_entity_decode(values_ds.workorder_data.link_workorder));
 		link.appendChild(document.createTextNode(values_ds.workorder_data.workorder_id));
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(link);
 		newTR.appendChild(newTD);
 		mewBody.appendChild(newTR);
 
-		
+
 		newTR = document.createElement('tr');
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.lang_workorder_title));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.workorder_title));
 		newTR.appendChild(newTD);
 		mewBody.appendChild(newTR);
 
-		
+
 		newTR = document.createElement('tr');
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.lang_vendor_name));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode("\u00A0:\u00A0"));
 		newTR.appendChild(newTD);
-		
+
 		newTD = document.createElement('td');
 		newTD.appendChild(document.createTextNode(values_ds.workorder_data.vendor_name));
 		newTR.appendChild(newTD);
 		mewBody.appendChild(newTR);
-		
+
 		newTable.appendChild(mewBody);
-		
+
 		div_message.appendChild(newTable);
 	}
-	
+
 	this.create_table_details = function()
 	{
 
 	    var Data = values_ds.details.rows;
 	    var total_records = values_ds.total_hours_records;
 	    var lang_total_records = values_ds.lang_total_records;
-	  
+
 		div_footer = document.getElementById('footer');
 		div_footer.setAttribute("class","datatable-container yui-dt");
 
@@ -253,32 +253,32 @@
 	        	var obj_temp = {key: values_ds.uicols_details.name[k], label: values_ds.uicols_details.descr[k], visible: true, className: values_ds.uicols_details.className[k]};
 	        myColumnDefs_details.push(obj_temp);
 	    }
- 
+
 	   	var fields = new Array();
 	   	for(var i=0; i<myColumnDefs_details.length;i++)
    		{
 	   		fields[i] = myColumnDefs_details[i].key;
 	   	}
-	   	
-	 	myDataSource_details = new YAHOO.util.DataSource(Data); 	        
-	 	myDataSource_details.responseType = YAHOO.util.DataSource.TYPE_JSARRAY; 
-	    myDataSource_details.responseSchema = { 	            
+
+	 	myDataSource_details = new YAHOO.util.DataSource(Data);
+	 	myDataSource_details.responseType = YAHOO.util.DataSource.TYPE_JSARRAY;
+	    myDataSource_details.responseSchema = {
 	    		 fields: fields
-        }; 
-	 
+        };
+
         myDataTable_details = new YAHOO.widget.DataTable(div_footer, myColumnDefs_details, myDataSource_details);
-        
+
         myDataTable_details.subscribe("rowMouseoverEvent", myDataTable_details.onEventHighlightRow);
         myDataTable_details.subscribe("rowMouseoutEvent", myDataTable_details.onEventUnhighlightRow);
 
  	    myContextMenu_details = new YAHOO.widget.ContextMenu("mycontextmenu_details", {trigger:myDataTable_details.getTbodyEl()});
  	    myContextMenu_details.addItems(GetMenuContext_details());
-	   
+
  	    myContextMenu_details.subscribe("beforeShow", onContextMenuBeforeShow);
  	    myContextMenu_details.subscribe("hide", onContextMenuHide);
 
  	    myContextMenu_details.subscribe("click", onContextMenuClick_details, myDataTable_details);
- 	    myContextMenu_details.render(div_footer);	
+ 	    myContextMenu_details.render(div_footer);
 
 		for(var i=0; i<myColumnDefs_details.length;i++)
 		{
@@ -289,10 +289,10 @@
 			}
 			YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
 		}
-		
+
 		table = div_footer.getElementsByTagName("table");
 		table[0].setAttribute("id","tableYUI");
-		tableYUI = document.getElementById('tableYUI');			
+		tableYUI = document.getElementById('tableYUI');
 		create_table_foot();
 
 		var div_records = document.createElement('div');
@@ -300,40 +300,40 @@
 		div_records.setAttribute("style", "text-align:center; height:25px; margin-top:35px;");
 		div_footer.insertBefore(div_records, tableYUI)
 		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;
-		
+
 	}
 
 	this.create_table_foot = function()
-	{		
+	{
 		var myfoot = tableYUI.createTFoot();
  		myfoot.setAttribute("id","myfoot");
- 			
+
 		if (values_ds.table_sum)
 		{
-			
+
 			newTR = document.createElement('tr');
 			newTR.setAttribute("class","yui-dt-even");
-			
+
  			newTD = document.createElement('td');
 			newTD.style.borderTop="1px solid #000000";
 			newTD.style.fontWeight = 'bolder';
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
-			
+
 			nTD = newTD.cloneNode(true);
 			nTD.colSpan = 3;
  			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_calculation));
- 			newTR.appendChild(nTD);			
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 5;
  			nTD.appendChild(document.createTextNode(values_ds.table_sum.value_sum_calculation));
- 			newTR.appendChild(nTD);		
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 1;
  			nTD.appendChild(document.createTextNode(values_ds.table_sum.sum_deviation));
- 			newTR.appendChild(nTD);	
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 1;
@@ -347,18 +347,18 @@
 
  			myfoot.appendChild(newTR);
 
- 			
+
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
 
  			newTD = document.createElement('td');
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
-			
+
 			nTD = newTD.cloneNode(true);
 			nTD.colSpan = 3;
 			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_rs));
- 			newTR.appendChild(nTD);	
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 7;
@@ -368,18 +368,18 @@
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 2;
  			nTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(nTD); 
- 			
+ 			newTR.appendChild(nTD);
+
  			myfoot.appendChild(newTR);
-		
- 			
+
+
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
- 			
+
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 3;
  			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_addition_percentage));
- 			newTR.appendChild(nTD);	
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 7;
@@ -389,18 +389,18 @@
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 2;
  			nTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(nTD); 
- 			
- 			myfoot.appendChild(newTR); 		
- 			
- 			
+ 			newTR.appendChild(nTD);
+
+ 			myfoot.appendChild(newTR);
+
+
  			newTR = document.createElement('tr');
  			newTR.setAttribute("class","yui-dt-even");
- 			
+
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 3;
  			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_sum_tax));
- 			newTR.appendChild(nTD);	
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 7;
@@ -410,23 +410,23 @@
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 2;
  			nTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(nTD); 
- 			
- 			myfoot.appendChild(newTR);  		
- 			
- 			
+ 			newTR.appendChild(nTD);
+
+ 			myfoot.appendChild(newTR);
+
+
  			newTR = document.createElement('tr');
- 
+
  			newTD = document.createElement('td');
 			newTD.style.borderTop="1px solid #000000";
 			newTD.style.fontWeight = 'bolder';
 			newTD.style.textAlign = 'right';
 			newTD.style.paddingRight = '0.8em';
-			
+
 			nTD = newTD.cloneNode(true);
 			nTD.colSpan = 3;
 			nTD.appendChild(document.createTextNode(values_ds.table_sum.lang_total_sum));
- 			newTR.appendChild(nTD);	
+ 			newTR.appendChild(nTD);
 
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 7;
@@ -436,13 +436,13 @@
  			nTD = newTD.cloneNode(true);
  			nTD.colSpan = 2;
  			nTD.appendChild(document.createTextNode(''));
- 			newTR.appendChild(nTD); 
- 			
- 			myfoot.appendChild(newTR); 
+ 			newTR.appendChild(nTD);
+
+ 			myfoot.appendChild(newTR);
 		}
-		
+
 	}
-	
+
 	this.GetMenuContext_details = function()
 	{
 	   var opts = new Array();
@@ -450,11 +450,11 @@
 	   for(var k =0; k < values_ds.details.rowactions.length; k ++)
 	   {
 			opts[p]=[{text: values_ds.details.rowactions[k].text}];
-			p++;			
+			p++;
 	   }
 	   return opts;
     }
-	
+
     this.onContextMenuClick_details = function(p_sType, p_aArgs, p_myDataTable)
 	{
 		var task = p_aArgs[1];
@@ -474,7 +474,7 @@
 						param_source = values_ds.details.rowactions[task.groupIndex].parameters.parameter[0].source;
 						sUrl = url + "&"+param_name+"=" + oRecord.getData(param_source);
 					}
-					else 
+					else
 					{
 						sUrl = url;
 					}
@@ -499,18 +499,18 @@
 						}
 						else
 						{
-							window.open(sUrl,'_self');						
+							window.open(sUrl,'_self');
 						}
 					}
                 }
             }
     };
-    
+
 	this.update_datatable_details = function()
 	{
 		var total_records = values_ds.total_hours_records;
 	    var lang_total_records = values_ds.lang_total_records;
-	    
+
 		//delete values of datatable
 		myDataTable_details.getRecordSet().reset();
 		myDataTable_details.render();
@@ -530,9 +530,9 @@
 		create_table_foot();
 		document.getElementById("div_records").innerHTML = lang_total_records + " : " + total_records;
 	}
-	 	
+
 /********************************************************************************/
-  	
+
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.display = 'none';
