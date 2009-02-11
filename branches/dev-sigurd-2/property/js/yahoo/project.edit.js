@@ -1,18 +1,14 @@
-var myDataSource,myDataTable, myContextMenu;
-var tableYUI;
-var  myPaginator_0,myPaginator_1,myPaginator_2;
-var  myDataTable_0,myDataTable_1,myDataTable_2;
+var  myPaginator_0, myDataTable_0
+var  myPaginator_1, myDataTable_1;
 
 YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 {
   	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
 };
 
-
-
-this.myParticularRenderEvent = function(paginator,datatable)
+this.myParticularRenderEvent = function(myPaginator_1,myDataTable_1)
 	{
-		this.addFooterDatatable(paginator,datatable);
+		this.addFooterDatatable(myPaginator_0,myDataTable_0);
 	}
 
 /********************************************************************************
@@ -48,7 +44,7 @@ this.myParticularRenderEvent = function(paginator,datatable)
 	}
 
 
-var myColumnDefs = new Array();
+/*var myColumnDefs = new Array();
  		 myColumnDefs[0] = [
            {key:"workorder_id", label:"Workorder", sortable:true, resizeable:true, formatter:YAHOO.widget.DataTable.formatLink},
            {key:"budget", label:"Budget", sortable:true, resizeable:true},
@@ -62,13 +58,14 @@ var myColumnDefs = new Array();
             {key:"value_user", label:"User", sortable:true, resizeable:true},
             {key:"value_action", label:"Action", sortable:true, resizeable:true},
             {key:"value_new_value", label:"New Value", sortable:true, resizeable:true}
-        ];
+        ];*/
 
 
+ /********************************************************************************/
 
 YAHOO.util.Event.addListener(window, "load", function()
 {
-	var loader = new YAHOO.util.YUILoader();
+	loader = new YAHOO.util.YUILoader();
 	loader.addModule({
 		name: "anyone",
 		type: "js",
@@ -78,5 +75,6 @@ YAHOO.util.Event.addListener(window, "load", function()
 	loader.require("anyone");
     loader.insert();
 });
+
 
 
