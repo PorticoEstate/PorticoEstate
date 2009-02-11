@@ -1034,8 +1034,32 @@
 				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
 			}
 
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			//_debug_array($datavalues);die;
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
+									       			array(key => value_user,label=>lang('User'),sortable=>true,resizeable=>true),
+									       			array(key => value_action,label=>lang('Action'),sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New Value'),sortable=>true,resizeable=>true)))
+			);
+
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
 				'fileupload'				=> true,
 				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'				=> $link_to_files,
@@ -1072,8 +1096,8 @@
 
 				'lang_no_workorders'			=> lang('No workorder budget'),
 				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-				'record_history'			=> $record_history,
-				'table_header_history'			=> $table_header_history,
+				//'record_history'			=> $record_history,
+				//'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
 				'lang_no_history'			=> lang('No history'),
 
@@ -1159,12 +1183,31 @@
 
 			);
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			//_debug_array($data);die;
+			//_debug_array($datavalues);die;
+
 			$appname	= lang('request');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'request.edit', 'property' );
 		}
 
 		function delete()
