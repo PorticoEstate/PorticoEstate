@@ -1142,7 +1142,51 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 
+
 			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($values['workorder_budget']),
+					'total_records'			=> count($values['workorder_budget']),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+			);
+
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
+									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true),
+									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true),
+		       				       					array(key => charge_tenant,label=>lang('Unit'),sortable=>true,resizeable=>true),
+		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
+		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
+			);
+
+			$datavalues[1] = array
+			(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+
+       		$myColumnDefs[1] = array
+       		(
+       			'name'		=> "1",
+       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
+									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
+									       			array(key => value_action,label=>lang('Calculation'),sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('Unit'),sortable=>true,resizeable=>true)))
+			);
+
+
+			/*$datavalues[0] = array
 			(
 					'name'					=> "0",
 					'values' 				=> json_encode($values['workorder_budget']),
@@ -1159,7 +1203,7 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
-			);
+			);*/
 
 
 
@@ -1167,12 +1211,7 @@
 			(
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
-				/*'values'							=> json_encode($values['workorder_budget']),
-				'budget'				 			=> json_encode($values['sum_workorder_budget']),
-				'calculation'					 	=> json_encode($values['sum_workorder_calculation']),
-				'edit_action'						=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
-				'edit_history'						=> json_encode($record_history),
-				'total_records'						=> json_encode(count($values['workorder_budget'])),*/
+				'myColumnDefs'						=> $myColumnDefs,
 				'tabs'								=> self::_generate_tabs(),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
@@ -1187,7 +1226,6 @@
 				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lang_add_workorder'				=> lang('Add workorder'),
 				'lang_add_workorder_statustext'		=> lang('Add a workorder to this project'),
-				//'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'				=> lang('No workorder budget'),
 				'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'record_history'					=> $record_history,

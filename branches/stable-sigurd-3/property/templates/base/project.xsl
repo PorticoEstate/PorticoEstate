@@ -306,7 +306,7 @@
 
 </table>
 
-	<script>
+	<!-- script>
 		var property_js = <xsl:value-of select="property_js" />
 		var datatable = new Array();
 
@@ -322,7 +322,7 @@
 			]
 		<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 		</xsl:for-each>
-	</script>
+	</script-->
 
 
 
@@ -453,8 +453,8 @@
 					</xsl:when>
 					<xsl:otherwise>
 					<td>
-					<div class="paging"> </div>
-					<div class="datatable-container"></div>
+					<div id="paging_0"> </div>
+					<div id="datatable-container_0"></div>
 					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_header_workorder_budget"/>
 						<xsl:apply-templates select="workorder_budget"/>
@@ -474,6 +474,28 @@
 							</td>
 						</tr>
 					</table> -->
+
+					<script>
+						var property_js = <xsl:value-of select="property_js" />;
+						var datatable = new Array();
+						var myColumnDefs = new Array();
+
+						<xsl:for-each select="datatable">
+							datatable[<xsl:value-of select="name"/>] = [
+							{
+								values			:	<xsl:value-of select="values"/>,
+								total_records	: 	<xsl:value-of select="total_records"/>,
+								edit_action		:  	<xsl:value-of select="edit_action"/>,
+								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+								footer			:	<xsl:value-of select="footer"/>
+							}
+							]
+						</xsl:for-each>
+
+						<xsl:for-each select="myColumnDefs">
+							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+					</script>
 
 					</td>
 					</xsl:otherwise>
@@ -641,8 +663,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table> -->
-		<div class="paging"> </div>
-		<div class="datatable-container"></div>
+		<div id="paging_1"> </div>
+		<div id="datatable-container_1"></div>
 
 </div>
 </div>
