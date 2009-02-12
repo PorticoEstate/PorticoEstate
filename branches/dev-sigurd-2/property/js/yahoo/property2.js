@@ -1,7 +1,6 @@
-	var myDataSource,myDataTable, myContextMenu,tableYUI;
+	var myDataSource,myDataTable, myContextMenu,tableYUI,values_ds;
 
-
-/********************************************************************************/
+/********************************************************************************/	
 	this.create_formatters = function()
 	{
 		for(y=0;y<myColumnDefs.length;y++)
@@ -105,11 +104,79 @@
 		eval("myDataTable_" + num).subscribe("renderEvent", function(){
 			myParticularRenderEvent();
 		});
+	}
+/********************************************************************************/	
 
+ 	this.init_buttons = function(div,j)
+	{
+		for(p=0; p<myButtons[j].length; p++)
+		{
+			config = {name: myButtons[j][p].id, id: myButtons[j][p].id, type: myButtons[j][p].type, label: myButtons[j][p].label, container: div,	value: myButtons[j][p].value }
+			botton_tmp = new YAHOO.widget.Button(config);
+			botton_tmp.on("click", eval(myButtons[j][p].funct));
+			eval("Button_"+j+"_"+p+" = botton_tmp");
+		}
+	}
+/********************************************************************************/	
+ 	this.update_datatable = function(datatable)
+	{
+ 		//delete records
+ 		length = datatable.getRecordSet().getLength();
+ 		if(length > 0)
+ 		{
+ 			datatable.deleteRows(0,length);
+ 		} 
+ 		//add records
+ 		for(i=0;i<values_ds.length;i++)
+ 		{
+ 			datatable.addRow(values_ds[i]);
+ 		}
 	}
 
- /********************************************************************************/
+/********************************************************************************/
+	
+	this.execute_async = function(datatable)
+	{
+		try	{
+	 			ds = phpGWLink('index.php',base_java_url,true);
+			}
+		catch(e)
+			{
+				alert(e);
+			}
+		var callback =
+		{
+			success: function(o)
+			{
+				eval("values_ds ="+o.responseText);
+				if(values_ds=="")
+				{
+					update_datatable(datatable);
+				}
+				else
+				{
+					eval("values_ds ="+values_ds); 
+					update_datatable(datatable);					
+				}
+			
+			},
+			failure: function(o) {window.alert('Server or your connection is death.')},
+			timeout: 10000,
+			cache: false
+		}
+		try
+		{
+			YAHOO.util.Connect.asyncRequest('POST',ds,callback);
+		}
+		catch(e_async)
+		{
+		   alert(e_async.message);
+		}
+	}
 
+/********************************************************************************/
+	
+	//delete commas in mycolumnsDef-formatters
 	this.create_formatters();
 
 	for(j=0;j<datatable.length;j++)
@@ -118,7 +185,12 @@
 		{
 			pager = YAHOO.util.Dom.get("paging_"+j);
 			div   = YAHOO.util.Dom.get("datatable-container_"+j);
-
 			this.init_datatable(datatable[j],div,pager,myColumnDefs[j],j);
+		}
+		
+		if(YAHOO.util.Dom.inDocument("datatable-buttons_"+j))
+		{
+			div = YAHOO.util.Dom.get("datatable-buttons_"+j);
+			this.init_buttons(div,j);
 		}
 	}
