@@ -304,7 +304,7 @@
 
 			if ($district_id > 0)
 			{
-				$filtermethod .= " $where  district_id='$district_id' ";
+				$filtermethod .= " $where  fm_part_of_town.district_id='$district_id' ";
 				$where = 'AND';
 			}
 
