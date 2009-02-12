@@ -458,8 +458,10 @@
 
 		function delete($id)
 		{
+			//FIXME - drop columns from  $acolumns_in_tables=array('fm_project','fm_tts_tickets','fm_request','fm_document','fm_investment'); 
+
+			$receipt = array();
 			$this->init_process();
-			$this->oProc->m_odb->transaction_begin();
 			$this->db->transaction_begin();
 
 			$table 		= 'fm_location_type';
@@ -468,11 +470,8 @@
 			if($this->db->f('id') > $id)
 			{
 				$this->db->transaction_abort();
-				$this->oProc->m_odb->transaction_abort();
 				$receipt['error'][] = array('msg' => lang('please delete from the bottom'));
-				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-
-				return;
+				return $receipt;
 			}
 
 			$this->oProc->DropTable('fm_location' . $id);
@@ -487,16 +486,22 @@
 			$this->db->query("DELETE FROM {$choice_table} WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM {$table} WHERE id=" . (int)$id,__LINE__,__FILE__);
 
-			$this->db->transaction_commit();
-			$this->oProc->m_odb->transaction_commit();
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][] = array('msg' => lang('location at level %1 has been deleted', $id));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('the process failed'));			
+			}
+			return $receipt;
 		}
-
 
 
 		function init_process()
 		{
 			$this->oProc 				= CreateObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb			= $this->db;
+			$this->oProc->m_odb			= & $this->db;
 			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
 
