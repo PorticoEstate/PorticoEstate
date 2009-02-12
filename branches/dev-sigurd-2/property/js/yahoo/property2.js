@@ -121,7 +121,8 @@
  	this.update_datatable = function(datatable)
 	{
  		//delete records
- 		length = datatable.getRecordSet().getLength();
+ 		var length = datatable.getRecordSet().getLength();
+
  		if(length > 0)
  		{
  			datatable.deleteRows(0,length);
