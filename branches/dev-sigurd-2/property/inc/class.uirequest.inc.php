@@ -366,8 +366,7 @@
 						$datatable['rows']['row'][$j]['column'][$i + 1]['name'] 			= 'select';
 						$datatable['rows']['row'][$j]['column'][$i + 1]['statustext']		= lang('select');
 						$datatable['rows']['row'][$j]['column'][$i + 1]['align'] 			= 'center';
-						$datatable['rows']['row'][$j]['column'][$i + 1]['value']			= '<input type="checkbox" name="add_request[request_id][]" id="add_request[request_id][]" value="'.$request['request_id'].'" class="myValuesForPHP"">';
-					}
+						$datatable['rows']['row'][$j]['column'][$i + 1]['value']			= '<input name="add_request[request_id][]" id="add_request[request_id][]"  class="myValuesForPHP close_order" type="hidden" value=""/> <input type="checkbox" name="add_request[request_id_tmp][]" id="add_request[request_id_tmp][]" value="'.$request['request_id'].'" class="close_order_tmp">';					}
 					$j++;
 				}
 			}

@@ -69,19 +69,29 @@
 		// styles for dont show
 		mydiv.style.display = 'none';
 
-		//get all controls of datatable
-		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
 		var myclone = null;
 
+		//asign values for check buttons
+		checks_close_order = YAHOO.util.Dom.getElementsByClassName('close_order_tmp');
+		hiddens_close_order = YAHOO.util.Dom.getElementsByClassName('close_order');
+		for(i=0;i<checks_close_order.length;i++)
+		{
+			if(checks_close_order[i].checked)
+			{
+				var b = new YAHOO.widget.Button('btn_update');
+				b.set("disabled", true);				
+				hiddens_close_order[i].value = checks_close_order[i].value;
+			}
+		}
+		
+		//get all controls of datatable
+		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');		
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
-			myclone = valuesForPHP[i].cloneNode(false);
-			if (myclone.checked == true) {
-				var b = new YAHOO.widget.Button('btn_update');
-				b.set("disabled", true);
-			}
-			mydiv.appendChild(myclone);
+			myclone = valuesForPHP[i].cloneNode(true);
+			if (myclone.value != '')
+				mydiv.appendChild(myclone);
 		}
 
 		var path_update = new Array();
