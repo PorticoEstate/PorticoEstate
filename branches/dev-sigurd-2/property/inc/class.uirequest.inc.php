@@ -1043,9 +1043,7 @@
 					'footer'				=> 0
 			);
 
-			//_debug_array($datavalues);die;
-
-       		$myColumnDefs[0] = array
+			$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
        			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
@@ -1059,6 +1057,7 @@
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
+				'tabs'							=> self::_generate_tabs(),
 				'fileupload'				=> true,
 				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'				=> $link_to_files,
@@ -1095,8 +1094,8 @@
 
 				'lang_no_workorders'			=> lang('No workorder budget'),
 				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-				//'record_history'			=> $record_history,
-				//'table_header_history'			=> $table_header_history,
+				'record_history'			=> $record_history,
+				'table_header_history'			=> $table_header_history,
 				'lang_history'				=> lang('History'),
 				'lang_no_history'			=> lang('No history'),
 
@@ -1190,9 +1189,6 @@
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
-
-			//_debug_array($data);die;
-			//_debug_array($datavalues);die;
 
 			$appname	= lang('request');
 
@@ -1451,6 +1447,21 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		protected function _generate_tabs()
+		{
+			$tabs = array
+			(
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'location'		=> array('label' => lang('importance'), 'link' => '#importance'),
+				'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
+				'history'		=> array('label' => lang('history'), 'link' => '#history')
+			);
+
+			phpgwapi_yui::tabview_setup('project_tabview');
+
+			return  phpgwapi_yui::tabview_generate($tabs, 'general');
 		}
 	}
 
