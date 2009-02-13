@@ -563,6 +563,8 @@
 			</xsl:choose>
 
 </table>
+
+	
 </div>
 
 <div id="budget">
@@ -798,7 +800,7 @@
 </div>
 
 <div id="documents">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+<table cellpadding="2" cellspacing="2" width="80%" align="center">
 	<xsl:choose>
 		<xsl:when test="files!=''">
 			<xsl:call-template name="file_list"/>
@@ -811,6 +813,7 @@
 </div>
 <div id="history">
 
+		<!--  
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -832,6 +835,32 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</table>
+		-->
+		<div id="paging_0"> </div>
+		<div id="datatable-container_0"></div>	
+
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					edit_action		:  	<xsl:value-of select="edit_action"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+							
 </div>
 </div>
 </div>
