@@ -537,6 +537,32 @@
 										</select>
 								</td>
 							</tr>
+							<tr>
+									<xsl:choose>
+										<xsl:when test="notify='yes'">
+										<td valign="top">
+											<xsl:value-of select="lang_notify"/>
+										</td>
+										<td>
+											<input type="checkbox" name="values[notify]" value="True"  onMouseout="window.status='';return true;">
+												<xsl:attribute name="onMouseover">
+													<xsl:text>window.status='</xsl:text>
+														<xsl:value-of select="lang_notify_statustext"/>
+													<xsl:text>'; return true;</xsl:text>
+												</xsl:attribute>
+											</input>
+
+											<input type="text" name="values[mail_address]" value="{value_notify_mail_address}" onMouseout="window.status='';return true;">
+												<xsl:attribute name="onMouseover">
+													<xsl:text>window.status='</xsl:text>
+														<xsl:value-of select="lang_notify_statustext"/>
+													<xsl:text>'; return true;</xsl:text>
+												</xsl:attribute>
+											</input>
+										</td>
+										</xsl:when>
+									</xsl:choose>
+								</tr>
 										</table>
 						</div>
 
@@ -608,32 +634,7 @@
 									</xsl:when>
 								</xsl:choose>
 
-								<tr>
-									<xsl:choose>
-										<xsl:when test="notify='yes'">
-										<td valign="top">
-											<xsl:value-of select="lang_notify"/>
-										</td>
-										<td>
-											<input type="checkbox" name="values[notify]" value="True"  onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-														<xsl:value-of select="lang_notify_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
 
-											<input type="text" name="values[mail_address]" value="{value_notify_mail_address}" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-														<xsl:value-of select="lang_notify_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</td>
-										</xsl:when>
-									</xsl:choose>
-								</tr>
 								<tr height="50">
 									<td>
 										<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
