@@ -346,6 +346,10 @@
 			{
 				$order = 'lid';
 			}
+			else
+			{
+				$order = str_replace('account_'  , '', $order);
+			}
 
 			$sortedlist = $arrayFunctions->arfsort($listentries,array($order),$sort);
 			$this->total = count($listentries); // this shouldn't be an obejct var for one account/group whatever
