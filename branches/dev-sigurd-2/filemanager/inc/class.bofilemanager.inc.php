@@ -289,9 +289,9 @@
 			 */
 			foreach($groups as $idx => $group)
 			{
-				if ($GLOBALS['phpgw']->vfs->acl_check(array('owner_id' => $group['account_id'],'operation' => PHPGW_ACL_READ)))
+				if ($GLOBALS['phpgw']->vfs->acl_check(array('owner_id' => $group->id,'operation' => PHPGW_ACL_READ)))
 				{
-					$applications = CreateObject('phpgwapi.applications', $group['account_id']);
+					$applications = CreateObject('phpgwapi.applications', $group->id);
 					$apps = $applications->read_account_specific();
 					if(!$apps['filemanager'])
 					{
