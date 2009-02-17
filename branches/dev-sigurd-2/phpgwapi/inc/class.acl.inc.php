@@ -145,8 +145,9 @@
 		{
 			$this->_db =& $GLOBALS['phpgw']->db;
 
-			$this->_like =& $this->_db->like;
-			$this->_join =& $this->_db->join;
+			$this->_like		=& $this->_db->like;
+			$this->_join		=& $this->_db->join;
+			$this->_left_join	=& $this->_db->left_join;			
 
 			$this->set_account_id($account_id);
 		}
@@ -252,7 +253,7 @@
 		*/
 		public function add($appname, $location, $rights, $grantor = -1, $mask = 0)
 		{
-		//	$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			
 			if( !$location_id > 0)
@@ -265,7 +266,7 @@
 				$this->_data[$this->_account_id] = array();
 			}
 
-			$this->_data[$this->_account_id][$location_id][] = array
+			$this->_data[$this->_account_id][$app_id][$location_id][] = array
 			(
 				'account'	=> $this->_account_id,
 				'rights'	=> $rights,
@@ -293,7 +294,7 @@
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
-	//		$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 
 			$locations = array();
 			$locations[] = $GLOBALS['phpgw']->locations->get_id($appname, $location);
@@ -306,18 +307,18 @@
 
 			foreach ($locations as $location_id )
 			{
-				if(isset($this->_data[$this->_account_id][$location_id]) && is_array($this->_data[$this->_account_id][$location_id]))
+				if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
 				{
-					foreach ( $this->_data[$this->_account_id][$location_id] as $idx => $value )
+					foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $idx => $value )
 					{
 						if ( $value['account'] == $this->_account_id
 							&& $value['grantor'] == $grantor
 							&& $value['type'] == $mask )
 						{
-							unset($this->_data[$this->_account_id][$location_id][$idx]);
-							if(!count($this->_data[$this->_account_id][$location_id]))
+							unset($this->_data[$this->_account_id][$app_id][$location_id][$idx]);
+							if(!count($this->_data[$this->_account_id][$app_id][$location_id]))
 							{
-								unset($this->_data[$this->_account_id][$location_id]);
+								unset($this->_data[$this->_account_id][$app_id][$location_id]);
 							}
 						}
 					}
@@ -356,47 +357,49 @@
 				return $this->_data[$acct_id];
 			}
 
-			$new_data		= array();
-			$clear_cache	= array();
-
-			foreach ( $this->_data[$acct_id] as $location_id => $loc )
+			$new_data = array();
+			$clear_cache    = array(); 
+			foreach ( $this->_data[$acct_id] as $app => $loc )
 			{
-				$clear_cache[$location_id] = true;
-				$location_info = $locations->get_name($location_id);
-				foreach ( $loc as $entry )
+				foreach ( $loc as $location_id => $at_location )
 				{
-					$entry['grantor']	= $entry['grantor'] ? $entry['grantor'] : -1;
-					$entry['type']		= $entry['type'] ? $entry['type'] : 0;
+					$clear_cache[$location_id] = true;
+					$location_info = $locations->get_name($location_id);
+					foreach ($at_location as $entry)
+					{
+						$entry['grantor']	= $entry['grantor'] ? $entry['grantor'] : -1; 
+						$entry['type']		= $entry['type'] ? $entry['type'] : 0; 
 					
-					if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]))
-					{
-						$new_data[$location_id][$entry['grantor']][$entry['type']] = 0;
-					}
-					$new_data[$location_id][$entry['grantor']][$entry['type']] |= $entry['rights'];
-					/*
-						FIXME The inheritence model should be handled in the check
-					*/
-				}
-
-				if( $this->enable_inheritance )
-				{
-					$subs = $locations->get_subs($location_info['appname'], $location_info['location']);
-					foreach ( array_keys($subs) as $sub )
-					{
-						if ( !isset($new_data[$sub][$entry['grantor']][$entry['type']]) )
+						if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]) )
 						{
-							$new_data[$sub][$entry['grantor']][$entry['type']] = 0;
+							$new_data[$location_id][$entry['grantor']][$entry['type']] = 0;
 						}
+						$new_data[$location_id][$entry['grantor']][$entry['type']] |= $entry['rights'];
 
-						$new_data[$sub][$entry['grantor']][$entry['type']] |= $entry['rights'];
+						/*
+							FIXME The inheritence model should be handled in the check
+						*/
+					}
+
+					if( $this->enable_inheritance )
+					{
+						$subs = $locations->get_subs($location_info['appname'], $location_info['location']);
+						foreach ( array_keys($subs) as $sub )
+						{
+							if ( !isset($new_data[$sub][$entry['grantor']][$entry['type']]) )
+							{
+								$new_data[$sub][$entry['grantor']][$entry['type']] = 0;
+							}
+
+							$new_data[$sub][$entry['grantor']][$entry['type']] |= $entry['rights'];
+						}
 					}
 				}
 			}
 
-			// FIXME:This one is causing a lot of duplicates
-			// converted to stored prosedures
+			// using stored prosedures
 			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
-								. ' VALUES(?, ?, ?, ?, ?)';
+							. ' VALUES(?, ?, ?, ?, ?)';
 			$valueset=array();
 
 			foreach ( $new_data as $loc_id => $grants )
@@ -436,13 +439,14 @@
 					}
 				}
 			}
-//_debug_array($valueset);
+
 			$this->_db->insert($sql, $valueset, __LINE__, __FILE__);
 			unset($sql);
 			unset($valueset);
 
-			/*remove duplicates*/
 
+			/*remove duplicates*/
+/*
 			$sql = "SELECT * FROM phpgw_acl WHERE acl_account = {$acct_id}"
 			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -487,10 +491,11 @@
 							. ' VALUES(?, ?, ?, ?, ?)';
 
 			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
+			unset($unique_data);
 
 			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
 			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
-
+*/
 			$this->_db->transaction_commit();
 
 			$clear_cache = array_keys($clear_cache);
@@ -499,8 +504,105 @@
 				$this->_delete_cache($this->_account_id, $location_id);
 			}
 
+	//		$this->remove_duplicates($acct_id);
+	//		$this->remove_duplicates();
 			return $this->_data[$this->_account_id];
 		}
+
+
+
+		/**
+		* experimental clean up in case of duplicates or references to deleted accounts
+		*
+		* @$param integer $acct_id  account to clean - all accounts if not given
+		*
+		* @return void
+		*/
+		public function remove_duplicates($acct_id = 0)
+		{
+			$this->_db->transaction_begin();
+
+			$acconts_to_delete = array();
+			$sql = "SELECT acl_account FROM phpgw_acl $this->_left_join phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id WHERE phpgw_accounts.account_id IS NULL GROUP BY acl_account";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			while($this->_db->next_record())
+			{
+				$acconts_to_delete[] = $this->_db->f('acl_account');
+			}
+
+			if($acconts_to_delete)
+			{
+				$sql = 'DELETE FROM phpgw_acl WHERE acl_account IN (' . implode(',', $acconts_to_delete) . ')';
+				$this->_db->query($sql,__LINE__,__FILE__);
+			}
+
+			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
+			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
+
+			$condition = '';
+			if($acct_id > 0)
+			{
+				$condition = "WHERE acl_account = {$acct_id}";
+			}
+			$sql = "SELECT * FROM phpgw_acl {$condition}"
+			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$cache_info = array();
+			while($this->_db->next_record())
+			{
+				$cache_info[$this->_db->f('acl_account')][$this->_db->f('location_id')] = $this->_db->f('location_id');
+
+				$unique_data[]= array
+				(
+					1	=> array
+					(
+						'value'	=> $this->_db->f('acl_account'),
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> $this->_db->f('acl_rights'),
+						'type'	=>	PDO::PARAM_INT
+					),
+					3	=> array
+					(
+						'value'	=> $this->_db->f('acl_grantor'),
+						'type'	=> PDO::PARAM_INT
+					),
+					4	=> array
+					(
+						'value'	=> $this->_db->f('acl_type'),
+						'type'	=>	PDO::PARAM_INT
+					),
+					5	=> array
+					(
+						'value'	=> $this->_db->f('location_id'),
+						'type'	=> PDO::PARAM_INT
+					),								
+				);
+			}
+
+			$sql = "DELETE FROM phpgw_acl {$condition}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
+							. ' VALUES(?, ?, ?, ?, ?)';
+
+			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
+			unset($unique_data);
+
+			$this->_db->transaction_commit();
+
+			foreach($cache_info as $account_id => $location)
+			{
+				foreach($location as $location_id)
+				{
+					$this->_delete_cache($account_id, $location_id);
+				}
+			}
+		}
+
 
 		/**
 		* Get rights from the repository not specific to this object
@@ -536,14 +638,14 @@
 				$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
-	//		$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			if ( !isset($this->_data[$this->_account_id][$location_id])
-				|| count($this->_data[$this->_account_id][$location_id]) == 0)
+			if ( !isset($this->_data[$this->_account_id][$app_id][$location_id])
+				|| count($this->_data[$this->_account_id][$app_id][$location_id]) == 0)
 			{
-				$this->_data[$this->_account_id][$location_id] = array();
-				$this->_read_repository($account_type, $location_id);
+				$this->_data[$this->_account_id][$app_id][$location_id] = array();
+				$this->_read_repository($account_type, $app_id, $location_id);
 			}
 
 
@@ -551,9 +653,9 @@
 		//	$count = (isset($this->_data[$this->_account_id])?count($this->_data[$this->_account_id]):0);
 			$rights = 0;
 
-			if(isset($this->_data[$this->_account_id][$location_id]) && is_array($this->_data[$this->_account_id][$location_id]))
+			if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
 			{
-				foreach ( $this->_data[$this->_account_id][$location_id] as $values )
+				foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $values )
 				{
 					if ( $values['type'] == $mask && $values['rights'] > 0 && $values['grantor'] ==$grantor)
 					{
@@ -645,12 +747,12 @@
 			}
 			$rights = 0;
 
-	//		$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
-			if(isset($this->_data[$this->_account_id][$location_id]) && count($this->_data[$this->_account_id][$location_id]))
+			if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && count($this->_data[$this->_account_id][$app_id][$location_id]))
 			{
-				foreach ( $this->_data[$this->_account_id][$location_id] as $value )
+				foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $value )
 				{
 					if ($value['account'] == $this->_account_id)
 					{
@@ -1098,7 +1200,6 @@
 				);
 			}
 
-			// we do this so we don't have to use multiple db objects and other hacks
 			foreach ($records as $record )
 			{
 				$grantor = $record['grantor'];
@@ -1253,7 +1354,11 @@
 
 			foreach($accounts as $id)
 			{
-				phpgwapi_cache::user_clear('phpgwapi', "acl_data_{$location_id}", $id);
+				$sql = "SELECT app_id FROM phpgw_locations WHERE location_id = {$location_id}";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$app_id	= $this->_db->f('app_id');
+				phpgwapi_cache::user_clear('phpgwapi', "acl_data_{$app_id}_{$location_id}", $id);
 			}
 		}
 
@@ -1264,14 +1369,14 @@
 		 *
 		 * @return array Array with ACL records
 		 */
-		protected function _read_repository($account_type = 'both', $location_id= '')
+		protected function _read_repository($account_type = 'both',  $app_id = '', $location_id= '')
 		{
 			if ( !$this->_account_id )
 			{
 				$this->set_account_id($this->_account_id, false);
 			}
 
-			if(!$location_id)
+			if(!$app_id)
 			{
 				$data = phpgwapi_cache::user_get('phpgwapi', 'acl_data', $this->_account_id);
 				if ( !is_null($data) )
@@ -1282,10 +1387,10 @@
 			}
 			else
 			{
-				$data = phpgwapi_cache::user_get('phpgwapi', "acl_data_{$location_id}", $this->_account_id);
+				$data = phpgwapi_cache::user_get('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_account_id);
 				if ( !is_null($data) )
 				{
-					$this->_data[$this->_account_id][$location_id] = $data;
+					$this->_data[$this->_account_id][$app_id][$location_id] = $data;
 					return; // nothing more to do
 				}
 			}
@@ -1293,19 +1398,19 @@
 			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
 			{
 				case 'ldap':
-					$this->_read_repository_ldap($account_type, $location_id);
+					$this->_read_repository_ldap($account_type, $app_id, $location_id);
 					break;
 
 				default:
-					$this->_read_repository_sql($account_type, $location_id);
+					$this->_read_repository_sql($account_type, $app_id, $location_id);
 			}
-			if(!$location_id)
+			if(!$app_id)
 			{
 				$data = phpgwapi_cache::user_set('phpgwapi', 'acl_data', $this->_data[$this->_account_id], $this->_account_id);
 			}
 			else
 			{
-				$data = phpgwapi_cache::user_set('phpgwapi', "acl_data_{$location_id}", $this->_data[$this->_account_id][$location_id], $this->_account_id);			
+				$data = phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);			
 			}
 		}
 
@@ -1317,8 +1422,9 @@
 		* @return array Array with ACL records
 		*
 		* @internal data is cached for future look ups
+		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
-		protected function _read_repository_ldap($account_type, $location_id= '')
+		protected function _read_repository_ldap($account_type, $app_id = '', $location_id= '')
 		{
 			if(!$account_type || $account_type == 'accounts' || $account_type == 'both')
 			{
@@ -1343,26 +1449,26 @@
 			{
 				$location_id = (int) $location_id;
 				$at_location = " AND phpgw_acl.location_id = {$location_id}";
-				$this->_data[$this->_account_id][$location_id] = array();
+				$this->_data[$this->_account_id][$app_id][$location_id] = array();
 			}
 			else
 			{
 				$this->_data[$this->_account_id] = array();
 			}
 
-			$sql = 'SELECT phpgw_locations.location_id,'
+			$sql = 'SELECT phpgw_applications.app_id, phpgw_locations.location_id,'
 					. ' phpgw_acl.acl_account, phpgw_acl.acl_grantor,'
 					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type'
 					. ' FROM phpgw_acl'
 					. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
-				//	. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 					. ' WHERE acl_account in (' . implode(',', $account_list) . "){$at_location}";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			while ( $this->_db->next_record() )
 			{
-				$this->_data[$this->_account_id][$this->_db->f('location_id')][] = array
+				$this->_data[$this->_account_id][$this->_db->f('app_id')][$this->_db->f('location_id')][] = array
 				(
 					'account'		=> $this->_db->f('acl_account'),
 					'rights'		=> $this->_db->f('acl_rights'),
@@ -1380,6 +1486,7 @@
 		* @param integer $account_id Account id
 		*
 		* @return string account_type for ldap-user 'g' (group) or 'u' (user)
+		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
 		protected function _get_type_ldap($account_id)
 		{
@@ -1400,7 +1507,7 @@
 		*
 		* @return array Array with ACL records
 		*/
-		protected function _read_repository_sql($account_type, $location_id= '')
+		protected function _read_repository_sql($account_type, $app_id = '', $location_id= '')
 		{
 			$account_list = array();
 			if ( $account_type == 'accounts' || $account_type == 'both' )
@@ -1425,19 +1532,19 @@
 			{
 				$location_id = (int) $location_id;
 				$at_location = " AND phpgw_acl.location_id = {$location_id}";
-				$this->_data[$this->_account_id][$location_id] = array();
+				$this->_data[$this->_account_id][$app_id][$location_id] = array();
 			}
 			else
 			{
 				$this->_data[$this->_account_id] = array();
 			}
 			$ids = implode(',', $account_list);
-			$sql = 'SELECT phpgw_locations.location_id,'
+			$sql = 'SELECT phpgw_applications.app_id, phpgw_locations.location_id,'
 					. ' phpgw_acl.acl_account, phpgw_acl.acl_grantor,'
 					. ' phpgw_acl.acl_rights, phpgw_acl.acl_type, phpgw_accounts.account_type'
 				. ' FROM phpgw_acl'
 					. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
-			//		. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
+					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 					. " {$this->_join} phpgw_accounts ON phpgw_acl.acl_account = phpgw_accounts.account_id "
 				. " WHERE acl_account IN ($ids){$at_location}";
 
@@ -1445,7 +1552,7 @@
 
 			while ( $this->_db->next_record() )
 			{
-				$this->_data[$this->_account_id][$this->_db->f('location_id')][] = array
+				$this->_data[$this->_account_id][$this->_db->f('app_id')][$this->_db->f('location_id')][] = array
 				(
 					'account'		=> $this->_db->f('acl_account'),
 					'rights'		=> $this->_db->f('acl_rights'),
@@ -1501,7 +1608,7 @@
 				$sql = "SELECT account_id, account_type FROM phpgw_accounts"
 					. " $this->_join phpgw_acl on phpgw_accounts.account_id = phpgw_acl.acl_account"
 					. " $this->_join phpgw_locations on phpgw_acl.location_id = phpgw_locations.location_id"
-					. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"  // FIXME better to use location_id for this one
+					. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"
 					. " ORDER BY account_lastname ASC";
 
 				$this->_db->query($sql,__LINE__,__FILE__);
