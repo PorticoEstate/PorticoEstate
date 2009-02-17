@@ -1142,7 +1142,6 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 
-
 			$datavalues[0] = array
 			(
 					'name'					=> "0",
@@ -1160,7 +1159,7 @@
        			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
 									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true),
 									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true),
-		       				       					array(key => charge_tenant,label=>lang('Unit'),sortable=>true,resizeable=>true),
+		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
 		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
 		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
 			);
