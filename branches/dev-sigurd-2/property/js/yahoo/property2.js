@@ -203,12 +203,24 @@
 	{
 		for(m=0;m<myButtons[k].length;m++)
 		{
-			for(p=0;p<myButtons[k][m]['value'].length;p++)
+			if(myButtons[k][m]['type']=='menu')
 			{
-				this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
+				for(p=0;p<myButtons[k][m]['value'].length;p++)
+				{
+					try
+					  {
+						this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
+					  }
+					catch(err)
+					  {
+						txt="There was an error on this page.\n\n";
+						txt+="Error description: " + err.description + "\n\n";
+						alert(txt);
+					  }
+				}
 			}
-		}
-	}
+		}	
+	}		
 
 	//for DataTables
 	for(j=0;j<datatable.length;j++)
