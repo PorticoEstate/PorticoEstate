@@ -1032,8 +1032,30 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
 
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
+									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
+									       			array(key => value_action,label=>lang('Action'),sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('New Value'),sortable=>true,resizeable=>true)))
+			);
+			
 			$data = array
 			(
+				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'				=> $datavalues,
+				'myColumnDefs'			=> $myColumnDefs,		
 				'tabs'							=> self::_generate_tabs(),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
@@ -1196,6 +1218,24 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+						
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );	
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 

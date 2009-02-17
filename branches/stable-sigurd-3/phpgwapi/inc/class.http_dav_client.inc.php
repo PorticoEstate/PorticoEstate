@@ -29,6 +29,18 @@
 	*/
   define ('DEBUG_CACHEPROP', 0);
 
+	// FIXME - code should be updated to the new PHP5/DOM to parse the XML.
+	if (!function_exists('domxml_open_mem'))
+	{
+		if(is_file(PHPGW_API_INC.'/domxml-php4-to-php5.php'))
+		{
+			require_once PHPGW_API_INC.'/domxml-php4-to-php5.php'; //Load a PHP5 converter
+		}
+		else
+		{
+			throw new Exception(lang('ERROR: you need the DOM XML Functions or a converter'));
+		}
+	}
 
 	/**
 	* DAV parser

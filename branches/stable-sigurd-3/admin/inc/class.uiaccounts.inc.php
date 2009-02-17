@@ -252,7 +252,7 @@
 
 			$query		= phpgw::get_var('query', 'string', 'POST');
 			$start		= phpgw::get_var('start', 'int', 'GET', -1);
-			$order		= phpgw::get_var('order', 'string', 'GET', 'lid');
+			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
@@ -291,7 +291,7 @@
 				'sort_lid'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'lid',
+												'var'	=> 'account_lid',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -299,7 +299,7 @@
 				'sort_lastname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'lastname',
+												'var'	=> 'account_lastname',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -307,7 +307,7 @@
 				'sort_firstname'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'firstname',
+												'var'	=> 'account_firstname',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
@@ -315,7 +315,7 @@
 				'sort_status'			=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'status',
+												'var'	=> 'account_status',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),

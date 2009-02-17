@@ -74,3 +74,20 @@ To install:
 
 	Note that using an Apache module for authentication is not strictly
 	required in order to use WebDAV within phpGroupWare.
+	
+	
+Note:
+For svn you need the "SVNAutoversioning on", example:
+ 
+  <Location /svn/myproject>
+     DAV svn
+     SVNPath /home/svn/myproject
+     AuthType Basic
+     AuthName "myproject subversion repository"
+     AuthUserFile /etc/subversion/passwd
+	 SVNAutoversioning on
+     <LimitExcept GET PROPFIND OPTIONS REPORT>
+        Require valid-user
+     </LimitExcept>
+  </Location>
+

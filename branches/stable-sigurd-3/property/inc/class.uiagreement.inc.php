@@ -738,22 +738,21 @@
 
 		function edit()
 		{
+
 			if(!$this->acl_add)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
-
-
-			$id	= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$id				= phpgw::get_var('id', 'int');
+			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
-			$config		= CreateObject('phpgwapi.config','property');
-			$boalarm	= CreateObject('property.boalarm');
-			$receipt 	= array();
-
+			$config			= CreateObject('phpgwapi.config','property');
+			$boalarm		= CreateObject('property.boalarm');
+			$receipt 		= array();
+			
 			if($delete_item && $id && $activity_id)
 			{
 				$this->bo->delete_item($id,$activity_id);
@@ -884,21 +883,22 @@
 				}
 				else if(isset($values['delete_alarm']) && $values['delete_alarm'] && count($values['alarm']))
 				{
-
+				
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 						$receipt = $boalarm->delete_alarm('agreement',$values['alarm']);
 					}
-
+				
 				}
 				else if(((isset($values['enable_alarm']) && $values['enable_alarm']) || (isset($values['disable_alarm']) && $values['disable_alarm'])) && count($values['alarm']))
 				{
-
+				
 					if(!isset($receipt['error']) || !$receipt['error'])
 					{
 						$receipt = $boalarm->enable_alarm('agreement',$values['alarm'],isset($values['enable_alarm'])?$values['enable_alarm']:'');
+						
 					}
-
+				
 				}
 				else if(isset($values['add_alarm']) && $values['add_alarm'])
 				{
@@ -916,8 +916,34 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
 				}
 			}
-
-
+			//------JSON code-------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$alarm_data=$this->bocommon->initiate_ui_alarm(array(
+						'acl_location'=>$this->acl_location,
+						'alarm_type'=> 'agreement',
+						'type'		=> 'form',
+						'text'		=> 'Email notification',
+						'times'		=> isset($times)?$times:'',
+						//'id'		=> $id,
+						'id'		=> $values[entity_id],
+						'method'	=> isset($method)?$method:'',
+						'data'		=> isset($data)?$data:'',
+						'account_id'=> isset($account_id)?$account_id:''
+						));
+				//$alarm_data['values'] = array();
+				if(count($alarm_data['values']))		
+				{
+					return json_encode($alarm_data['values']);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			//--------------------JSON code-----
+			
+			
 			$agreement = $this->bo->read_single(array('agreement_id'=>$id));
 
 			/* Preserve attribute values from post */
@@ -1154,10 +1180,47 @@
 				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
 
+			//---datatable settings---------------------------------------------------	
 
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($alarm_data['values']),
+				'total_records'	=> count($alarm_data['values']),
+				'is_paginator'	=> 0,
+				'footer'		=> 0
+			);					
+       		$myColumnDefs[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true),
+									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true),
+									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true),
+		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter),
+		       				       						array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
+		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck)))
+			);	
+			
+       		$myButtons[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick ),
+       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick ),
+       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick )))
+			);				
+			
+//_debug_array($alarm_data);die;			
+			//----------------------------------------------datatable settings--------			
+			
 			$data = array
 			(
- 				'allow_allrows'							=> true,
+ 				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'							=> json_encode(array(menuaction => "property.uiagreement.edit")),
+				'datatable'								=> $datavalues,
+				'myColumnDefs'							=> $myColumnDefs,
+				'myButtons'								=> $myButtons,
+				
+				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
 				'record_limit'							=> $record_limit,
@@ -1251,9 +1314,27 @@
 				'textarearows'							=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'									=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 			);
+//_debug_array($data);die;	
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.view', 'property' );
+			//-----------------------datatable settings---		
+				
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
-
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 

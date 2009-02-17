@@ -1,4 +1,5 @@
 
+
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">
@@ -475,7 +476,7 @@
 
 				<div id="general">
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<table cellpadding="2" cellspacing="2" align="center">
+		<table cellpadding="2" cellspacing="2" align="center" >
 			<tr><td>
 		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
@@ -673,16 +674,24 @@
 		</table>
 		</form>
 		</td></tr>
-		<tr><td>
+		<tr><td align="right" valign="bottom">
 		<form method="post" name="alarm" action="{$edit_url}">
 			<input type="hidden" name="values[entity_id]" value="{value_agreement_id}" ></input>
-			<table>
+			<table cellpadding="2" cellspacing="2" width="53%" align="center">
 				<tr>
-					<td class="th_text" align="left" colspan="5">
+					<td class="center" align="left">
 						<xsl:value-of select="lang_alarm"/>
 					</td>
 				</tr>
-				<xsl:call-template name="alarm_form"/>
+				<!--  DATATABLE 0  -->
+				<tr><td align="center">
+					<div id="paging_0"></div>
+					<div id="datatable-container_0"></div>
+					<div id="datatable-buttons_0"></div>
+				</td></tr> 
+				
+				<!-- <xsl:call-template name="alarm_form"/>  -->
+				
 			</table>
 		</form>
 		</td>
@@ -743,6 +752,34 @@
 		</div>					
 		</div>
 		</div>
+		
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+	
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>			
 	</xsl:template>
 
 <!-- add item / edit item -->

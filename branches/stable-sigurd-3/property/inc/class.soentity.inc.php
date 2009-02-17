@@ -172,8 +172,9 @@
 									'datatype'	=> 'user_id'
 								);
 
-				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
-				$paranthesis ='(';
+				// Don't work with LDAP - where phpgw_accounts is empty
+	//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
+	//			$paranthesis ='(';
 
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
@@ -252,7 +253,7 @@
 				switch($order)
 				{
 					case 'user_id':
-						$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
 						$ordermethod = " ORDER BY $entity_table.$order $sort";	

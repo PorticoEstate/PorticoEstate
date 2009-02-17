@@ -165,13 +165,31 @@
 		{
 			if($id && !$attrib)
 			{
-				$this->so->delete($id);
+				$receipt = $this->so->delete($id);
 			}
 			else if($type_id && $id && $attrib)
 			{
-				$this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}_history", true );
-				$this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}" );
+				$ok = 0;
+				$receipt = array();
+				
+				if($this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}_history", true ))
+				{
+					$ok++;
+				}
+				if($this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}" ))
+				{
+					$ok++;
+				}
+				if ($ok == 2)
+				{
+					$receipt['message'][] = array('msg' => lang('attibute has been deleted'));
+				}
+				else
+				{
+					$receipt['error'][] = array('msg' => lang('something went wrong'));
+				}
 			}
+			return $receipt;
 		}
 
 
