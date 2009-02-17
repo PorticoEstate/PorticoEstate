@@ -88,7 +88,7 @@
 									containers			: pager,
 									totalRecords		: data[0]["total_records"],
 									pageLinks			: 10,
-									rowsPerPage			: 3
+									rowsPerPage			: 10
 								}
 
 			eval("myPaginator_"+num+" = new YAHOO.widget.Paginator(myPaginatorConfig)");
