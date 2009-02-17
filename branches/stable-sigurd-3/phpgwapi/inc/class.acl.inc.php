@@ -356,24 +356,23 @@
 				return $this->_data[$acct_id];
 			}
 
-			$new_data = array();
+			$new_data		= array();
+			$clear_cache	= array();
 
 			foreach ( $this->_data[$acct_id] as $location_id => $loc )
 			{
+				$clear_cache[$location_id] = true;
 				$location_info = $locations->get_name($location_id);
 				foreach ( $loc as $entry )
 				{
-					if ( $entry['grantor'] == '' )
-					{
-						$entry['grantor'] = -1;
-					}
+					$entry['grantor']	= $entry['grantor'] ? $entry['grantor'] : -1;
+					$entry['type']		= $entry['type'] ? $entry['type'] : 0;
 					
-					if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]) )
+					if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]))
 					{
 						$new_data[$location_id][$entry['grantor']][$entry['type']] = 0;
 					}
 					$new_data[$location_id][$entry['grantor']][$entry['type']] |= $entry['rights'];
-
 					/*
 						FIXME The inheritence model should be handled in the check
 					*/
@@ -437,7 +436,7 @@
 					}
 				}
 			}
-
+//_debug_array($valueset);
 			$this->_db->insert($sql, $valueset, __LINE__, __FILE__);
 			unset($sql);
 			unset($valueset);
@@ -494,7 +493,11 @@
 
 			$this->_db->transaction_commit();
 
-			$this->_delete_cache($this->_account_id);
+			$clear_cache = array_keys($clear_cache);
+			foreach($clear_cache as $location_id)
+			{
+				$this->_delete_cache($this->_account_id, $location_id);
+			}
 
 			return $this->_data[$this->_account_id];
 		}
@@ -762,7 +765,8 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
-			$this->_delete_cache($account_id);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($app, $location);
+			$this->_delete_cache($account_id, $location_id);
 
 			return true;
 		}
@@ -814,7 +818,8 @@
 
 			if ( $ret )
 			{
-				$this->_delete_cache($account_id);
+				$location_id	= $GLOBALS['phpgw']->locations->get_id($app, $location);
+				$this->_delete_cache($account_id, $location_id);
 			}
 
 			return $ret;
@@ -1234,7 +1239,7 @@
 		*
 		* @return null
 		*/
-		protected function _delete_cache($account_id)
+		protected function _delete_cache($account_id, $location_id)
 		{
 			$accounts = array($account_id);
 			if($GLOBALS['phpgw']->accounts->get_type($account_id) == 'g')
@@ -1248,7 +1253,7 @@
 
 			foreach($accounts as $id)
 			{
-				phpgwapi_cache::user_clear('phpgwapi', 'acl_data', $id);
+				phpgwapi_cache::user_clear('phpgwapi', "acl_data_{$location_id}", $id);
 			}
 		}
 
