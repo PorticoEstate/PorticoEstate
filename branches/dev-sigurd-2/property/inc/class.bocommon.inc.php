@@ -1973,6 +1973,36 @@
              }
              return $str_array_values;
         }
-
-
+        
+		public function make_menu_date($array,$id_buttons,$name_hidden) 
+		{
+			$split_values = array ();			
+			foreach ($array as $value)
+			{
+				array_push($split_values,array (text => "$value[id]", value => $value[id], onclick => array(fn => onDateClick, obj => array (id_button=>$id_buttons, opt=>$value[id], hidden_name=>$name_hidden))));
+			}	
+			return 	$split_values;	
+		}
+		
+		public function make_menu_user($array,$id_buttons,$name_hidden)  
+		{
+			$split_values = array ();			
+			foreach ($array as $value)
+			{
+				array_push($split_values,array (text => "$value[name]", value => $value[id], onclick => array(fn => onUserClick, obj => array (id_button=>$id_buttons, id=>$value[id], name =>$value[name], hidden_name=>$name_hidden))));
+			}	
+			return 	$split_values;	
+		}
+		
+		public function choose_select($array) 
+		{
+			foreach ($array as $value)
+			{
+				if($value["selected"]=="selected")
+				{
+					return 	$value["name"];
+				}
+			}	
+			return $array[count($array)-1]["name"];
+		}		
 	}

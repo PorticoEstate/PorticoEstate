@@ -1,21 +1,5 @@
 	var myDataSource,myDataTable, myContextMenu,tableYUI,values_ds;
 
-/********************************************************************************/	
-	this.create_formatters = function()
-	{
-		for(y=0;y<myColumnDefs.length;y++)
-		{
-			for(z=0;z<myColumnDefs[y].length;z++)
-			{
-				if(typeof(myColumnDefs[y][z]['formatter'])!="undefined")
-				{
-					formatter = myColumnDefs[y][z]['formatter'];
-					myColumnDefs[y][z]['formatter'] = eval(formatter);
-				}
-			}
-		}
-	}
-
 /********************************************************************************/
 
 	this.getSumPerPage = function(name_column,round,paginator,datatable)
@@ -111,10 +95,30 @@
 	{
 		for(p=0; p<myButtons[j].length; p++)
 		{
-			config = {name: myButtons[j][p].id, id: myButtons[j][p].id, type: myButtons[j][p].type, label: myButtons[j][p].label, container: div,	value: myButtons[j][p].value }
-			botton_tmp = new YAHOO.widget.Button(config);
-			botton_tmp.on("click", eval(myButtons[j][p].funct));
-			eval("Button_"+j+"_"+p+" = botton_tmp");
+			//buttons
+			if(myButtons[j][p].type == "buttons")
+			{
+				var config = {id: myButtons[j][p].id, type: myButtons[j][p].type, label: myButtons[j][p].label, container: div,	value: myButtons[j][p].value}
+				botton_tmp = new YAHOO.widget.Button(config);
+				botton_tmp.on("click", eval(myButtons[j][p].funct));
+				eval("Button_"+j+"_"+p+" = botton_tmp");
+			}
+			//filters
+			else if(myButtons[j][p].type == "menu")
+			{
+				var config = {name: myButtons[j][p].id,  type: myButtons[j][p].type, label: myButtons[j][p].label, container: div,	menu: myButtons[j][p].value, menumaxheight : 300}
+				botton_tmp = new YAHOO.widget.Button(config);
+				eval("Button_"+j+"_"+p+" = botton_tmp");
+			}
+			
+			//creating respective hidden
+			hd = document.createElement('input'); 
+			hd.setAttribute("type","hidden");
+			//preposition "HD_"+id
+			hd.setAttribute("id","hd_"+myButtons[j][p].id);
+			hd.setAttribute("class",myButtons[j][p].classname);
+			hd.setAttribute("name",myButtons[j][p].id); 
+			div.appendChild(hd);
 		}
 	}
 /********************************************************************************/	
@@ -122,11 +126,11 @@
 	{
  		//delete records
  		var length = datatable.getRecordSet().getLength();
-
  		if(length > 0)
  		{
  			datatable.deleteRows(0,length);
  		} 
+ 		
  		//add records
  		for(i=0;i<values_ds.length;i++)
  		{
@@ -176,10 +180,37 @@
 	}
 
 /********************************************************************************/
+	this.deletes_quotes = function(array,field)
+	{
+		if ((typeof(array)!="undefined") && (typeof(array[field])!="undefined") ) 
+		{
+			field_quotes = array[field];
+			array[field] = eval(field_quotes);
+		}
+	}
+/********************************************************************************/	
+	//delete quotes in field inside an array
+	for(i=0;i<myColumnDefs.length;i++)
+	{
+		for(j=0;j<myColumnDefs[i].length;j++)
+		{
+			this.deletes_quotes(myColumnDefs[i][j],"formatter");
+		}
+	}
 	
-	//delete commas in mycolumnsDef-formatters
-	this.create_formatters();
+	//delete quotes in myButtons, field: "fn"
+	for(k=0;k<myButtons.length;k++)
+	{
+		for(m=0;m<myButtons[k].length;m++)
+		{
+			for(p=0;p<myButtons[k][m]['value'].length;p++)
+			{
+				this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
+			}
+		}
+	}
 
+	//for DataTables
 	for(j=0;j<datatable.length;j++)
 	{
 		if(YAHOO.util.Dom.inDocument("datatable-container_"+j))
@@ -188,10 +219,17 @@
 			div   = YAHOO.util.Dom.get("datatable-container_"+j);
 			this.init_datatable(datatable[j],div,pager,myColumnDefs[j],j);
 		}
-		
+	}
+	//for buttons
+	for(j=0;j<myButtons.length;j++)
+	{
 		if(YAHOO.util.Dom.inDocument("datatable-buttons_"+j))
 		{
 			div = YAHOO.util.Dom.get("datatable-buttons_"+j);
 			this.init_buttons(div,j);
 		}
-	}
+	}	
+	
+	
+	
+

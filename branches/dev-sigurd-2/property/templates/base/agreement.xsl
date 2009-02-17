@@ -674,24 +674,18 @@
 		</table>
 		</form>
 		</td></tr>
+		<tr><td><br/><br/></td></tr>
 		<tr><td align="right" valign="bottom">
 		<form method="post" name="alarm" action="{$edit_url}">
 			<input type="hidden" name="values[entity_id]" value="{value_agreement_id}" ></input>
-			<table cellpadding="2" cellspacing="2" width="53%" align="center">
-				<tr>
-					<td class="center" align="left">
-						<xsl:value-of select="lang_alarm"/>
-					</td>
-				</tr>
-				<!--  DATATABLE 0  -->
-				<tr><td align="center">
-					<div id="paging_0"></div>
-					<div id="datatable-container_0"></div>
-					<div id="datatable-buttons_0"></div>
-				</td></tr> 
-				
-				<!-- <xsl:call-template name="alarm_form"/>  -->
-				
+			<table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
+				<tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
+						<!-- DataTable -->
+							<tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
+							<tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
+							<tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
+							<tr><td class="center" align="left" colspan="10"><div id="datatable-buttons_1"></div></td></tr>
+						<!-- <xsl:call-template name="alarm_form"/>  -->
 			</table>
 		</form>
 		</td>
