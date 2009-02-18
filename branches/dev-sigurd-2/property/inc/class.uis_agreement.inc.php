@@ -848,11 +848,12 @@
 					$time = intval($values['time']['days'])*24*3600 +
 						intval($values['time']['hours'])*3600 +
 						intval($values['time']['mins'])*60;
-
+						
 					if ($time > 0)
 					{
 						$receipt = $boalarm->add_alarm('s_agreement',$this->bo->read_event(array('s_agreement_id'=>$id)),$time,$values['user_id']);
 					}
+					
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
@@ -870,8 +871,7 @@
 						'type'		=> 'form',
 						'text'		=> 'Email notification',
 						'times'		=> isset($times)?$times:'',
-						//'id'		=> $id,
-						'id'		=> $values[entity_id],
+						'id'		=> $id,
 						'method'	=> isset($method)?$method:'',
 						'data'		=> isset($data)?$data:'',
 						'account_id'=> isset($account_id)?$account_id:''
