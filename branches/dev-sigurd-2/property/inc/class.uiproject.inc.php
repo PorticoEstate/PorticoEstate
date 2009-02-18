@@ -990,7 +990,8 @@
 				}
 			}
 
-			$record_history = '';
+			//$record_history = '';
+			$record_history = array();
 			if(isset($bypass_error) || ((!isset($receipt['error']) || $add_request) && !$bypass) && $id)
 			{
 				$values	= $this->bo->read_single($id);
@@ -1141,7 +1142,9 @@
 			$project_group_data=$this->bocommon->initiate_project_group_lookup(array(
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
-
+			
+			//---datatable settings---------------------------------------------------	
+			
 			$datavalues[0] = array
 			(
 					'name'					=> "0",
@@ -1157,8 +1160,8 @@
        		(
        			'name'		=> "0",
        			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
-									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true),
-									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true),
+									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
+									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
 		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
 		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
 		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
@@ -1184,26 +1187,7 @@
 		       				       					array(key => value_new_value,label=>lang('Unit'),sortable=>true,resizeable=>true)))
 			);
 
-
-			/*$datavalues[0] = array
-			(
-					'name'					=> "0",
-					'values' 				=> json_encode($values['workorder_budget']),
-					'total_records'			=> count($values['workorder_budget']),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
-					'is_paginator'			=> 1,
-					'footer'				=> 1
-			);
-
-			$datavalues[1] = array(
-					'name'					=> "1",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> 0,
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-			);*/
-
+			//----------------------------------------------datatable settings--------
 
 
 			$data = array

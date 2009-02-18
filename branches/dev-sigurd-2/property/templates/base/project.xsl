@@ -453,8 +453,10 @@
 					</xsl:when>
 					<xsl:otherwise>
 					<td>
+					<!-- DataTable -->
 					<div id="paging_0"> </div>
 					<div id="datatable-container_0"></div>
+					
 					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_header_workorder_budget"/>
 						<xsl:apply-templates select="workorder_budget"/>
@@ -474,7 +476,8 @@
 							</td>
 						</tr>
 					</table> -->
-
+					
+					<!--  DATATABLE DEFINITIONS-->
 					<script>
 						var property_js = <xsl:value-of select="property_js" />;
 						var datatable = new Array();
