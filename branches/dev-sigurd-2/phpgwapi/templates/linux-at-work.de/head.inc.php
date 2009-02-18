@@ -8,7 +8,7 @@
 * @version $Id$
 */
 	$p = createobject('phpgwapi.preferences');
-	$preferences = $p->read_repository();
+	$preferences = $p->read();
 	if (isset ($preferences[$GLOBALS['phpgw_info']['flags']['currentapp']]['refreshTime']))
 	{
 		$refreshTime = $preferences[$GLOBALS['phpgw_info']['flags']['currentapp']]['refreshTime'] * 60;

@@ -1,6 +1,6 @@
 <?php
-	$GLOBALS['pref']->change('addressbook','company','addressbook_True');
-	$GLOBALS['pref']->change('addressbook','lastname','addressbook_True');
-	$GLOBALS['pref']->change('addressbook','firstname','addressbook_True');
-	$GLOBALS['pref']->change('addressbook','default_category','');
+	$GLOBALS['pref']->add('addressbook','company','addressbook_True');
+	$GLOBALS['pref']->add('addressbook','lastname','addressbook_True');
+	$GLOBALS['pref']->add('addressbook','firstname','addressbook_True');
+	$GLOBALS['pref']->add('addressbook','default_category','');
 ?>

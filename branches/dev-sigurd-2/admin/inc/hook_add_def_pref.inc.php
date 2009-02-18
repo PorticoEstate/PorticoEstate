@@ -1,8 +1,8 @@
 <?php
-  $GLOBALS['pref']->change('common','maxmatchs','15');
-  $GLOBALS['pref']->change('common','theme','default');
-  $GLOBALS['pref']->change('common','tz_offset',0);
-  $GLOBALS['pref']->change('common','dateformat','m/d/Y');
-  $GLOBALS['pref']->change('common','timeformat',12);
-  $GLOBALS['pref']->change('common','lang','en');
+  $GLOBALS['pref']->add('common','maxmatchs','15');
+  $GLOBALS['pref']->add('common','theme','default');
+  $GLOBALS['pref']->add('common','tz_offset',0);
+  $GLOBALS['pref']->add('common','dateformat','m/d/Y');
+  $GLOBALS['pref']->add('common','timeformat',12);
+  $GLOBALS['pref']->add('common','lang','en');
 ?>

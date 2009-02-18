@@ -191,6 +191,7 @@
 					. " OR config_name = 'account_repository'"
 					. " OR config_name = 'auth_type'"
 					. " OR config_name = 'encryption_type'"
+					. " OR config_name = 'encryptkey'"
 					. " OR config_name = 'password_level'"
 					. " OR config_name = 'webserver_url'";
 
@@ -204,6 +205,7 @@
 		$GLOBALS['phpgw']->db       =& $db;
 		$GLOBALS['phpgw']->accounts = CreateObject('phpgwapi.accounts');
 		$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+		$GLOBALS['phpgw']->crypto->init(array(md5(session_id() . $GLOBALS['phpgw_info']['server']['encryptkey']), $GLOBALS['phpgw_info']['server']['mcrypt_iv']));
 
 		/* Posted admin data */
 		// We need to reverse the entities or the password can be mangled

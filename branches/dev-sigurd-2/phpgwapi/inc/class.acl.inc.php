@@ -261,7 +261,7 @@
 				return $this->_data;
 			}
 
-			if ( !is_array($this->_data[$this->_account_id]) )
+			if ( !isset($this->_data[$this->_account_id]) || !is_array($this->_data[$this->_account_id]) )
 			{
 				$this->_data[$this->_account_id] = array();
 			}
