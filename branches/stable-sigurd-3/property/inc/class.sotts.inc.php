@@ -419,10 +419,10 @@
 						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']),
 						'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
 						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),			
-						'location2_item_id' => $ticket['project_id'],
+						'location2_item_id' => $id,
 						'account_id'		=> $this->account
 					);
-					
+
 					$interlink 	= CreateObject('property.interlink');
 					$interlink->add($interlink_data,$this->db);
 				}
