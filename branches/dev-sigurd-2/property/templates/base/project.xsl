@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <!--
 	Function
 	phpgw:conditional( expression $test, mixed $true, mixed $false )
@@ -22,8 +23,6 @@
 		</xsl:choose>
   	</func:result>
 </func:function>
-
-<!-- $Id: project.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>
