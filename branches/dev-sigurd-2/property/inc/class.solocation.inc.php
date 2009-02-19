@@ -103,7 +103,7 @@
 			$entity[] = array
 			(
 				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
-				'name'		=> lang('documents') . ' [' . $hits . ']',
+				'name'		=> lang('documents') . ' [' . $hits . ']:',
 				'descr'		=> lang('Documentation')
 			);
 
@@ -119,13 +119,13 @@
 				$this->db->next_record();
 				$hits = (int) $this->db->f('hits');
 				
-				$spaceset = '-';
+				$spaceset = '/';
 				if ($category['level'] > 0)
 				{
-					$space = '-';
+					$space = ' .  . ';
 					$spaceset .= str_repeat($space, $category['level']);
 				}
-				$spaceset .= '>';
+				$spaceset .= '';
 				$entity[] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])),
