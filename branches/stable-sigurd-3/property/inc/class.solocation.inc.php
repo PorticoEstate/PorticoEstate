@@ -65,19 +65,31 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$category = array();
 			while ($this->db->next_record())
 			{
-				$sql = "SELECT count(*) as hits FROM fm_entity_" . $this->db->f('entity_id') . "_" . $this->db->f('id') . " WHERE location_code $this->like '$location_code%'";
+				$category[] = array
+				(
+					'entity_id'	=> $this->db->f('entity_id'),
+					'cat_id'	=> $this->db->f('id'),
+					'name'		=> $this->db->f('name'),
+					'descr'		=> $this->db->f('descr')
+				);
+			}
+
+			foreach($category as $entry)
+			{
+				$sql = "SELECT count(*) as hits FROM fm_entity_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code $this->like '$location_code%'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				if($this->db->f('hits'))
 				{
 					$entity[] = array
 					(
-						'entity_id'	=> $this->db->f('entity_id'),
-						'cat_id'	=> $this->db->f('id'),
-						'name'		=> $this->db->f('name') . ' [' . $this->db->f('hits') . ']',
-						'descr'		=> $this->db->f('descr')
+						'entity_id'	=> $entry['entity_id'],
+						'cat_id'	=> $entry['cat_id'],
+						'name'		=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
+						'descr'		=> $entry['descr']
 					);
 				}
 			}
