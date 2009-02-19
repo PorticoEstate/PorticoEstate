@@ -314,7 +314,7 @@
 					$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$ticket['id']);
 					$ticket['timestampclosed'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 				}
-				if (isset($ticket['new_ticket']))
+				if ($ticket['new_ticket'])
 				{
 					$ticket['new_ticket'] = lang('New');
 				}

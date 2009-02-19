@@ -867,7 +867,7 @@
 				(
 					'id'					=> $ticket['id'],
 					'bgcolor'				=> $bgcolor[$ticket['priority']],
-					'new_ticket'			=> (isset($ticket['new_ticket'])?$ticket['new_ticket']:''),
+					'new_ticket'			=> $ticket['new_ticket']?$ticket['new_ticket']:'',
 					'priostr'				=> str_repeat("||", $ticket['priority']),
 					'subject'				=> $ticket['subject'],
 					'location_code'			=> $ticket['location_code'],
@@ -1165,7 +1165,7 @@
 
 				if($location_code)
 				{
-					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
+					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
 				}
 			}
 
