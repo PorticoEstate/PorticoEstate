@@ -436,21 +436,21 @@
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_assign_to"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
 					<xsl:value-of select="lang_group"/>
 				</td>
 				<td>
 					<xsl:call-template name="group_select"/>
 				</td>
 			</tr>
-
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_assign_to"/>
+				</td>
+				<td>
+					<xsl:call-template name="user_id_select"/>
+				</td>
+			</tr>
+	
 			<xsl:choose>
 				<xsl:when test="mailnotification != ''">
 					<tr>
@@ -940,18 +940,18 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_assignedto"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
 					<xsl:value-of select="lang_group"/>
 				</td>
 				<td>
 					<xsl:call-template name="group_select"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_assignedto"/>
+				</td>
+				<td>
+					<xsl:call-template name="user_id_select"/>
 				</td>
 			</tr>
 			<xsl:choose>
