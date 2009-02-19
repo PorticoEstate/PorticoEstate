@@ -264,6 +264,18 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ': ' . lang('list addressmasters');
 			$GLOBALS['phpgw']->xslttpl->add_file('addressmaster');
 
+			try
+			{
+				if($GLOBALS['phpgw']->locations->get_id('addressbook', 'addressmaster') == 0)
+				{
+					$GLOBALS['phpgw']->locations->add('addressmaster', 'Address Master', 'addressbook');
+				}
+			}
+			catch(Exception $e)
+			{
+				$GLOBALS['phpgw']->locations->add('addressmaster', 'Address Master', 'addressbook');
+			}
+
 			$admins = $this->_boacl->list_addressmasters();
 
 			//_debug_array($admins);
@@ -349,7 +361,7 @@ HTML;
 				$account_addressmaster = phpgw::get_var('account_addressmaster', 'string', 'POST', array());
 				$group_addressmaster = phpgw::get_var('group_addressmaster', 'int', 'POST', array());
 
-				$error = $this->_boacl->check_values($account_addressmaster, $group_addressmaster);
+				$error = array();//$this->_boacl->check_values($account_addressmaster, $group_addressmaster);
 				if ( count($error) )
 				{
 					$error_message = $GLOBALS['phpgw']->common->error_list($error);
@@ -372,7 +384,7 @@ HTML;
 			$popwin_user = array();
 			$select_user = array();
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['account_selection'])
-				&& $GLOBALS['phpgw_info']['user']['preferences']['common']['account_selection'] == 'popup')
+				&& $GLOBALS['phpgw_info']['user']['preferences']['common']['account_selection'] == 'popup_xxxx') // FIXME 'popup is broken'
 			{
 				$usel = $this->_boacl->list_addressmasters();
 				foreach ( $usel as $acc )

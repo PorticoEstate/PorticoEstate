@@ -77,7 +77,7 @@
 		* Entity, class and general section                           *
 		\*************************************************************/
 
-		function _constructor($table='', $alias='')
+		public function _constructor($table='', $alias='')
 		{
 			$this->table = $table;
 			// Temp alias name, just if not empty
@@ -897,13 +897,12 @@
 
 			$this->ldebug('add_element', array('Element' => $element), 'dump');
 
-			$default = '';//add this to stop E_NOTICE output, no idea wtf it is meant to be
 			if($method == PHPGW_SQL_DEFAULT_METHOD)
 			{
 				$this->ldebug('add_element', array
 											(
 												'Method_Default DEF' => $method_default,
-												'Method DEF' => $default
+												'Method DEF' => $method
 											));
 				$this->$method_default($element);
 			}
@@ -912,7 +911,7 @@
 				$this->ldebug('add_element', array
 											(
 												'Method_Default' => $method_default,
-												'Method' => $default
+												'Method' => $method
 											));
 				$this->$method($element);
 			}
@@ -943,6 +942,7 @@
 				}
 			}
 			// this is an error :/ not $field in map
+			trigger_error("Unknown method for {$field}", E_USER_NOTICE);
 			return;
 		}
 
@@ -961,6 +961,7 @@
 				}
 			}
 			// this is an error :/ not $field in map
+			trigger_error("Unknown real field for {$field}", E_USER_NOTICE);
 			return;
 		}
 
@@ -991,6 +992,7 @@
 				}
 			}
 			// this is an error :/ not $field in map
+			trigger_error("Unknown field {$field}", E_USER_NOTICE);
 			return;
 		}
 
@@ -1043,6 +1045,7 @@
 		*/
 		function dont_exist($data)
 		{
+			trigger_error("Sorry, this data doesn't exist {$data}", E_USER_NOTICE);
 		}
 
 		/**

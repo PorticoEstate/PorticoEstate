@@ -2332,6 +2332,7 @@ class uiaddressbook
 
 				'others_data',
 				'addr_data');
+		$load_vars = array();
 		//	$load_vars = $GLOBALS['phpgw']->session->appsession('load_vars', 'addressbook');
 		foreach($tabs_data as $tab)
 		{
@@ -2368,6 +2369,7 @@ class uiaddressbook
 				'old_my_person',
 				'old_comm',
 				'old_others');
+		$fields = array();
 		foreach($tabs_data as $tab)
 		{
 			$fields[$tab] = $GLOBALS['phpgw']->session->appsession($tab, 'addressbook');

@@ -227,6 +227,10 @@
 			{
 				$map[$appname][$location] = $this->_db->f('location_id');
 			}
+			else
+			{
+//				throw new Exception("get_id ({$appname}, {$location}) returned 0");
+			}
 			return $map[$appname][$location];
 		}
 

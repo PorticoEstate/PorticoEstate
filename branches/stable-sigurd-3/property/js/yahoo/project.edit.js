@@ -1,19 +1,24 @@
 var  myPaginator_0, myDataTable_0
 var  myPaginator_1, myDataTable_1;
 
-YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
-{
-  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
-};
-
-this.myParticularRenderEvent = function(myPaginator_1,myDataTable_1)
+/********************************************************************************/
+	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
+	};
+/********************************************************************************/	
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+	}	
+	
+/********************************************************************************/	
+	this.myParticularRenderEvent = function()
 	{
 		this.addFooterDatatable(myPaginator_0,myDataTable_0);
 	}
 
-/********************************************************************************
-	 *
-	 */
+/********************************************************************************/
   	this.addFooterDatatable = function(paginator,datatable)
   	{
   		//call getSumPerPage(name of column) in property.js
@@ -42,24 +47,6 @@ this.myParticularRenderEvent = function(myPaginator_1,myDataTable_1)
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR);
 	}
-
-
-/*var myColumnDefs = new Array();
- 		 myColumnDefs[0] = [
-           {key:"workorder_id", label:"Workorder", sortable:true, resizeable:true, formatter:YAHOO.widget.DataTable.formatLink},
-           {key:"budget", label:"Budget", sortable:true, resizeable:true},
-           {key:"calculation", label:"Calculation", sortable:true, resizeable:true},
-           {key:"charge_tenant", sortable:true, resizeable:true, hidden:true},
-           {key:"vendor_name", label:"Vendor", sortable:true, resizeable:true},
-           {key:"status", label:"Status", sortable:true, resizeable:true}
-       ];
-        myColumnDefs[1] = [
-            {key:"value_date", label:"Date", sortable:true, resizeable:true},
-            {key:"value_user", label:"User", sortable:true, resizeable:true},
-            {key:"value_action", label:"Action", sortable:true, resizeable:true},
-            {key:"value_new_value", label:"New Value", sortable:true, resizeable:true}
-        ];*/
-
 
  /********************************************************************************/
 

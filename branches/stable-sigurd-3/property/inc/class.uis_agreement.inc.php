@@ -713,7 +713,7 @@
 
 			$insert_record_s_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.s_agreement','property');
 
-//_debug_array($insert_record_s_agreement);
+
 			for ($j=0;$j<count($insert_record_s_agreement);$j++)
 			{
 				$insert_record['extra'][$insert_record_s_agreement[$j]]	= $insert_record_s_agreement[$j];
@@ -732,7 +732,6 @@
 					}
 				}
 
-//_debug_array($values);
 
 				if ($values['save'] || $values['apply']):
 				{
@@ -849,11 +848,12 @@
 					$time = intval($values['time']['days'])*24*3600 +
 						intval($values['time']['hours'])*3600 +
 						intval($values['time']['mins'])*60;
-
+						
 					if ($time > 0)
 					{
 						$receipt = $boalarm->add_alarm('s_agreement',$this->bo->read_event(array('s_agreement_id'=>$id)),$time,$values['user_id']);
 					}
+					
 				}
 				elseif (!$values['save'] && !$values['apply'] && !$values['update']):
 				{
@@ -862,7 +862,32 @@
 				endif;
 			}
 
-
+			//------JSON code-------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$alarm_data=$this->bocommon->initiate_ui_alarm(array(
+						'acl_location'=>$this->acl_location,
+						'alarm_type'=> 's_agreement',
+						'type'		=> 'form',
+						'text'		=> 'Email notification',
+						'times'		=> isset($times)?$times:'',
+						'id'		=> $id,
+						'method'	=> isset($method)?$method:'',
+						'data'		=> isset($data)?$data:'',
+						'account_id'=> isset($account_id)?$account_id:''
+						));
+				//$alarm_data['values'] = array();
+				if(count($alarm_data['values']))		
+				{
+					return json_encode($alarm_data['values']);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			//--------------------JSON code-----
+			
 			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$id));
 
 			/* Preserve attribute values from post */
@@ -1015,14 +1040,67 @@
 				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
 
+
+			//---datatable settings---------------------------------------------------	
+
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($alarm_data['values']),
+				'total_records'	=> count($alarm_data['values']),
+				'is_paginator'	=> 0,
+				'footer'		=> 0
+			);					
+			
+       		$myColumnDefs[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>130),
+									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>300),
+									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>150),
+		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>50),
+		       				       						array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
+		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>50)))
+			);	
+		
+       		$myButtons[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton),
+       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton),
+       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton),
+       													))
+			);
+			
+       		$myButtons[1] = array
+       		(
+       			'name'			=> "1",
+       			'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter),
+       													array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter),
+       													array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter),
+       													array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list']),classname=> actionsFilter),
+       													
+       													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton),
+       													))
+			);			
+			
+			//----------------------------------------------datatable settings--------
+			
 			$data = array
 			(
+				
+ 				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'			=> json_encode(array(menuaction => "property.uis_agreement.edit",id=>$id)),
+				'datatable'				=> $datavalues,
+				'myColumnDefs'			=> $myColumnDefs,
+				'myButtons'				=> $myButtons,
+				
 				'link_import'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import', 'tab' => 'items')),
 				'alarm_data'				=> $alarm_data,
 				'lang_alarm'				=> lang('Alarm'),
 				'lang_download'				=> 'download',
 				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'			=> lang('Download table to your browser'),
+				'lang_download_help'		=> lang('Download table to your browser'),
 
 				'fileupload'				=> true,
 				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
@@ -1101,6 +1179,25 @@
 				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 			);
 
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'ui_agreement.edit', 'property' );
+			//-----------------------datatable settings---		
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));

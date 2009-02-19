@@ -753,6 +753,7 @@
 			$boalarm		= CreateObject('property.boalarm');
 			$receipt 		= array();
 			
+
 			if($delete_item && $id && $activity_id)
 			{
 				$this->bo->delete_item($id,$activity_id);
@@ -905,7 +906,7 @@
 					$time = intval($values['time']['days'])*24*3600 +
 						intval($values['time']['hours'])*3600 +
 						intval($values['time']['mins'])*60;
-
+				
 					if ($time > 0)
 					{
 						$receipt = $boalarm->add_alarm('agreement',$this->bo->read_event(array('agreement_id'=>$id)),$time,$values['user_id']);
@@ -925,8 +926,7 @@
 						'type'		=> 'form',
 						'text'		=> 'Email notification',
 						'times'		=> isset($times)?$times:'',
-						//'id'		=> $id,
-						'id'		=> $values[entity_id],
+						'id'		=> $id,
 						'method'	=> isset($method)?$method:'',
 						'data'		=> isset($data)?$data:'',
 						'account_id'=> isset($account_id)?$account_id:''
@@ -1193,29 +1193,42 @@
        		$myColumnDefs[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true),
-									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true),
-									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true),
-		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter),
+       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>130),
+									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>300),
+									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>150),
+		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>50),
 		       				       						array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck)))
+		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>50)))
 			);	
-			
+		
        		$myButtons[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick ),
-       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick ),
-       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick )))
-			);				
+       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton),
+       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton),
+       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton),
+       													))
+			);
+       		$myButtons[1] = array
+       		(
+       			'name'			=> "1",
+       			'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter),
+       													array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter),
+       													array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter),
+       													array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list']),classname=> actionsFilter),
+       													
+       													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton),
+       													))
+			);			
+
 			
-//_debug_array($alarm_data);die;			
+//_debug_array(array($alarm_data[alter_alarm][lang_add]));die;			
 			//----------------------------------------------datatable settings--------			
 			
 			$data = array
 			(
  				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'							=> json_encode(array(menuaction => "property.uiagreement.edit")),
+				'base_java_url'							=> json_encode(array(menuaction => "property.uiagreement.edit",id=>$id)),
 				'datatable'								=> $datavalues,
 				'myColumnDefs'							=> $myColumnDefs,
 				'myButtons'								=> $myButtons,
@@ -1337,7 +1350,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
-
+			
 		function download()
 		{
 			$id	= phpgw::get_var('id', 'int');

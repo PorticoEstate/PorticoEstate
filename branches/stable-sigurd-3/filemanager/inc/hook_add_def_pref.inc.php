@@ -7,13 +7,13 @@
 	* @version $Id$
 	*/
 
-	$GLOBALS['pref']->change ('filemanager','name','name');
-	$GLOBALS['pref']->change ('filemanager','size','size');
-	$GLOBALS['pref']->change ('filemanager','created','created');
-	$GLOBALS['pref']->change ('filemanager','version','version');
-	$GLOBALS['pref']->change ('filemanager','mime_type','mime_type');
-	$GLOBALS['pref']->change ('filemanager','comment','comment');
-	$GLOBALS['pref']->change ('filemanager','viewtextplain','viewtextplain');
-	$GLOBALS['pref']->change ('filemanager','show_help','show_help');
-	$GLOBALS['pref']->change ('filemanager','show_upload_boxes','5');
+	$GLOBALS['pref']->add ('filemanager','name','name');
+	$GLOBALS['pref']->add ('filemanager','size','size');
+	$GLOBALS['pref']->add ('filemanager','created','created');
+	$GLOBALS['pref']->add ('filemanager','version','version');
+	$GLOBALS['pref']->add ('filemanager','mime_type','mime_type');
+	$GLOBALS['pref']->add ('filemanager','comment','comment');
+	$GLOBALS['pref']->add ('filemanager','viewtextplain','viewtextplain');
+	$GLOBALS['pref']->add ('filemanager','show_help','show_help');
+	$GLOBALS['pref']->add ('filemanager','show_upload_boxes','5');
 ?>

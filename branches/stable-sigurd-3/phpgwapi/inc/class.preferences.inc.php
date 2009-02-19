@@ -161,7 +161,7 @@
 			// standard notify replacements
 			$this->values = array
 			(
-				'fullname'  => (string) $user,
+				'fullname'  => $user->__toString(),
 				'firstname' => $user->firstname,
 				'lastname'  => $user->lastname,
 				'domain'    => $GLOBALS['phpgw_info']['server']['mail_suffix'],
@@ -239,6 +239,7 @@
 		 */
 		protected function read_repository()
 		{
+			//FIXME - ever used?
 			if($GLOBALS['phpgw']->acl->check('session_only_preferences',1,'preferences') && strlen($GLOBALS['phpgw']->session->appsession('session_prefs','initiated')))
 			{
 				$this->user		= $GLOBALS['phpgw']->session->appsession('session_prefs','user');

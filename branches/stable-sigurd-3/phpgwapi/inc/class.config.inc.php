@@ -115,7 +115,7 @@
 
 			if ( is_array($config_data) && count($config_data) )
 			{
-				$this->db->lock(array('phpgw_config','phpgw_app_sessions'));
+				$this->db->transaction_begin();
 				$this->delete_repository();
 				foreach ( $config_data as $name => $value )
 				{
@@ -129,7 +129,7 @@
 						. "VALUES ('{$this->module}', '{$name}', '{$value}')";
 					$this->db->query($query, __LINE__, __FILE__);
 				}
-				$this->db->unlock();
+				$this->db->transaction_commit();
 			}
 		}
 
