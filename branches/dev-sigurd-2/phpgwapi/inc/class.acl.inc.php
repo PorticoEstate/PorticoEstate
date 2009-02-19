@@ -536,8 +536,9 @@
 				$this->_db->query($sql,__LINE__,__FILE__);
 			}
 
-			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
+			//This one is temporary to avoid problems with the old acl_grantor being NULL
 			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
+			$this->_db->query('DELETE FROM phpgw_acl WHERE location_id = 0',__LINE__,__FILE__,true);
 
 			$condition = '';
 			if($acct_id > 0)
@@ -572,7 +573,7 @@
 					),
 					4	=> array
 					(
-						'value'	=> $this->_db->f('acl_type'),
+						'value'	=> (int) $this->_db->f('acl_type'),
 						'type'	=>	PDO::PARAM_INT
 					),
 					5	=> array
@@ -889,6 +890,7 @@
 			$account_sel = '';
 
 			$accountid = (int) $accountid;
+			$account_id = 0;
 			if ($accountid )
 			{
 				if ( isset($cache_accountid[$accountid])
@@ -907,13 +909,23 @@
 			$app = $this->_db->db_addslashes($app);
 
 			// this slows things down but makes the code easier to read & this isn't a common operation
-			$sub = 'SELECT location_id FROM phpgw_locations'
+			$sql = 'SELECT location_id FROM phpgw_locations'
 				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
 				. " WHERE phpgw_applications.app_name {$this->_like} '{$app}'"
 					. " AND phpgw_locations.name {$this->_like} '{$location}'";
 
-			$sql = 'DELETE FROM phpgw_acl '
-				. " WHERE location_id IN ({$sub}) $account_sel";
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+			$locations = array();
+			while ($this->_db->next_record())
+			{
+				$locations[] = $this->_db->f('location_id');
+			}
+
+			$location_filter = implode(',', $locations);
+
+			$sql = 'DELETE FROM phpgw_acl'
+				. " WHERE location_id IN ({$location_filter}) $account_sel";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$ret = !!$this->_db->num_rows();
@@ -921,9 +933,19 @@
 			if ( $ret )
 			{
 				$location_id	= $GLOBALS['phpgw']->locations->get_id($app, $location);
-				$this->_delete_cache($account_id, $location_id);
+				if($account_id)
+				{
+					$this->_delete_cache($account_id, $location_id);
+				}
+				else
+				{
+					$account_objects = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', '', '', -1);
+					foreach($account_objects as $account)
+					{
+						$this->_delete_cache($account->id, $location_id);
+					}
+				}
 			}
-
 			return $ret;
 		}
 
@@ -1422,7 +1444,6 @@
 		* @return array Array with ACL records
 		*
 		* @internal data is cached for future look ups
-		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
 		protected function _read_repository_ldap($account_type, $app_id = '', $location_id= '')
 		{
@@ -1486,7 +1507,6 @@
 		* @param integer $account_id Account id
 		*
 		* @return string account_type for ldap-user 'g' (group) or 'u' (user)
-		* @todo FIXME - this is not tested - sigurd jul2008
 		*/
 		protected function _get_type_ldap($account_id)
 		{

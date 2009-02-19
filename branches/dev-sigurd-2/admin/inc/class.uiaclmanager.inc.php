@@ -361,7 +361,7 @@ HTML;
 				$account_addressmaster = phpgw::get_var('account_addressmaster', 'string', 'POST', array());
 				$group_addressmaster = phpgw::get_var('group_addressmaster', 'int', 'POST', array());
 
-				$error = $this->_boacl->check_values($account_addressmaster, $group_addressmaster);
+				$error = array();//$this->_boacl->check_values($account_addressmaster, $group_addressmaster);
 				if ( count($error) )
 				{
 					$error_message = $GLOBALS['phpgw']->common->error_list($error);
