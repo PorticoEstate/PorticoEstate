@@ -773,12 +773,15 @@
 			$values['id']		= intval($values['cat_id']);
 			$values['parent']	= intval($values['parent']);
 
-			if (isset($values['old_parent']) && intval($values['old_parent']) != $values['parent'])
+			//Sigurd feb 09: Seems like an error to me - will break relations to existing records
+/*			if (isset($values['old_parent']) && intval($values['old_parent']) != $values['parent'])
 			{
 				$this->delete($values['id'],False,True);
 				return $this->add($values);
 			}
 			else
+
+*/
 			{
 				if ($values['parent'] > 0)
 				{
