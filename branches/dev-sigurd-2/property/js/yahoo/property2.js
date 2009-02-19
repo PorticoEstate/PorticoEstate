@@ -503,29 +503,39 @@
 		}
 	}
 
-	//delete quotes in myButtons, field: "fn"
-	for(k=0;k<myButtons.length;k++)
+	//if exist myButtons 
+	if(typeof(myButtons)!="undefined") 
 	{
-		for(m=0;m<myButtons[k].length;m++)
+		//delete quotes in myButtons, field: "fn"
+		for(k=0;k<myButtons.length;k++)
 		{
-			if(myButtons[k][m]['type']=='menu')
+			for(m=0;m<myButtons[k].length;m++)
 			{
-				for(p=0;p<myButtons[k][m]['value'].length;p++)
+				if(myButtons[k][m]['type']=='menu')
 				{
-					try
-					  {
-						this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
-					  }
-					catch(err)
-					  {
-						txt="There was an error on this page.\n\n";
-						txt+="Error description: " + err.description + "\n\n";
-						alert(txt);
-					  }
+					for(p=0;p<myButtons[k][m]['value'].length;p++)
+					{
+						try
+						  {
+							this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
+						  }
+						catch(err)
+						  {
+							txt="There was an error on this page.\n\n";
+							txt+="Error description: " + err.description + "\n\n";
+							alert(txt);
+						  }
+					}
 				}
 			}
-		}
+		}	
 	}
+	
+	
+	
+	
+	
+
 
 	//for DataTables
 	for(j=0;j<datatable.length;j++)
@@ -537,13 +547,17 @@
 			this.init_datatable(datatable[j],div,pager,myColumnDefs[j],j);
 		}
 	}
-	//for buttons
-	for(j=0;j<myButtons.length;j++)
+	
+	//if exist myButtons 
+	if(typeof(myButtons)!="undefined") 
 	{
-		if(YAHOO.util.Dom.inDocument("datatable-buttons_"+j))
+		for(j=0;j<myButtons.length;j++)
 		{
-			div = YAHOO.util.Dom.get("datatable-buttons_"+j);
-			this.init_buttons(div,j);
+			if(YAHOO.util.Dom.inDocument("datatable-buttons_"+j))
+			{
+				div = YAHOO.util.Dom.get("datatable-buttons_"+j);
+				this.init_buttons(div,j);
+			}
 		}
 	}
 
