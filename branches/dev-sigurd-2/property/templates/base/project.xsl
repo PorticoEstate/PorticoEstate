@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- $Id:$ -->
 <!--
 	Function
 	phpgw:conditional( expression $test, mixed $true, mixed $false )
