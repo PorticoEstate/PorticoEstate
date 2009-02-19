@@ -234,7 +234,8 @@
 					'group_id'			=> $this->db->f('group_id'),
 					'entry_date'		=> $this->db->f('entry_date'),
 					'finnish_date'		=> $this->db->f('finnish_date'),
-					'finnish_date2'		=> $this->db->f('finnish_date2')
+					'finnish_date2'		=> $this->db->f('finnish_date2'),
+					'new_ticket'		=> ''
 				);
 			}
 			
@@ -249,7 +250,6 @@
 					$ticket['new_ticket'] = true;
 				}
 			}
-
 			return $tickets;
 		}
 
