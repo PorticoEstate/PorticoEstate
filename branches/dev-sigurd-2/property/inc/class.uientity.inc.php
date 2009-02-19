@@ -1631,17 +1631,17 @@
 			while (is_array($values) && list(,$entry) = each($values))
 			{
 				$link_delete_history_data = array
-					(
-						'menuaction'	=> 'property.uientity.attrib_history',
-						'entity_id'	=> $data_lookup['entity_id'],
-						'cat_id'	=> $data_lookup['cat_id'],
-						'id'		=> $data_lookup['id'],
-						'attrib_id'	=> $data_lookup['attrib_id'],
-						'history_id'	=> $entry['id'],
-						'delete'	=> true,
-						'edit'		=> true,
-						'type'		=> $this->type
-					);
+				(
+					'menuaction'	=> 'property.uientity.attrib_history',
+					'entity_id'	=> $data_lookup['entity_id'],
+					'cat_id'	=> $data_lookup['cat_id'],
+					'id'		=> $data_lookup['id'],
+					'attrib_id'	=> $data_lookup['attrib_id'],
+					'history_id'	=> $entry['id'],
+					'delete'	=> true,
+					'edit'		=> true,
+					'type'		=> $this->type
+				);
 				if($edit)
 				{
 					$text_delete	= lang('delete');
@@ -1679,9 +1679,92 @@
 				'edit'			=> $edit,
 				'type'			=> $this->type
 			);
+//_debug_array($data);die;
 
+//---datatable settings---------------------------------------------------				
+		
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name'  => 'entity_id',
+			      		'source' => $data_lookup['entity_id'],
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'cat_id',
+			      		'source' => $data_lookup['cat_id'],
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'id',
+			      		'source' => $data_lookup['id'],
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'attrib_id',
+			      		'source' => $data_lookup['attrib_id'],
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'history_id',
+			      		'source' => 'id',
+			      	),
+			      	array(
+						'name'  => 'delete',
+			      		'source' => true,
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'edit',
+			      		'source' => true,
+			      		'ready'  => 1
+					),
+					array(
+						'name'  => 'type',
+			      		'source' => $this->type,
+			      		'ready'  => 1
+					)				
+			    )
+		    );
+			$permissions['rowactions'][] = array(
+				'text'    => lang('Delete'),
+				'action'  => $GLOBALS['phpgw']->link('/index.php',array
+			         (
+			          'menuaction' => 'property.uientity.attrib_history'
+			         )),
+			     'parameters' => $parameters
+			   );
+			   
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($content),
+				'total_records'	=> count($content),
+			 	'permission'   	=> json_encode($permissions['rowactions']),
+				'is_paginator'	=> 0,
+				'footer'		=> 0
+			);			   
+   				
+       		$myColumnDefs[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(key => id,			label=>'',					sortable=>true,resizeable=>true,width=>130,hidden=>true),
+       													array(key => value,			label=>lang('value'),		sortable=>true,resizeable=>true,width=>130),
+									       				array(key => time_created,	label=>lang('time created'),sortable=>true,resizeable=>true,width=>300),
+									       				array(key => user,			label=>lang('user'),		sortable=>true,resizeable=>true,width=>150)
+									       				))
+			);				
+			
+			
+			
+//----------------------------------------------datatable settings--------			
 			$data = array
 			(
+				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
+				'datatable'			=> $datavalues,
+				'myColumnDefs'		=> $myColumnDefs,
+				
 				'allow_allrows'		=> false,
 				'start_record'		=> $this->start,
 				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
@@ -1692,7 +1775,26 @@
 				'values' 		=> $content,
 				'table_header'		=> $table_header,
 			);
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.attrib_history', 'property' );
+			//-----------------------datatable settings---	
+			
+//_debug_array($data);die();
 			$custom			= createObject('phpgwapi.custom_fields');
 			$attrib_data 	= $custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
 			$appname		= $attrib_data['input_text'];
@@ -1702,6 +1804,7 @@
 			//_debug_array($GLOBALS['phpgw_info']['flags']['app_header']);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}
+
 
 		function print_pdf()
 		{
