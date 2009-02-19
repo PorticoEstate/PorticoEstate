@@ -97,7 +97,7 @@
 								<a href="{sort}" onMouseover="window.status='{header}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="header"/></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="header"/>					
+								<xsl:value-of select="header"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -131,7 +131,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td class="small_text" align="left">
-								<xsl:value-of select="value"/>				
+								<xsl:value-of select="value"/>
 							</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -180,7 +180,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<td class="small_text" align="left">
-								<xsl:value-of select="value"/>				
+								<xsl:value-of select="value"/>
 							</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -223,7 +223,7 @@
 		</script>
 		<div class="yui-navset" id="edit_tabview">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div class="yui-content">		
+			<div class="yui-content">
 
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 			<div id="general">
@@ -277,7 +277,7 @@
 								<xsl:value-of select="lang_descr_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_descr"/>		
+						<xsl:value-of select="value_descr"/>
 					</textarea>
 				</td>
 			</tr>
@@ -355,7 +355,7 @@
 
 
 			</table>
-		
+
 			<xsl:call-template name="attributes_values"/>
 
 			<table>
@@ -407,18 +407,24 @@
 		</table>
 		</form>
 
+
 		<form method="post" name="alarm" action="{$edit_url}">
-			<input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}" ></input>
-			<table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
-				<tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
-						<!-- DataTable -->
-							<tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
-							<tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
-							<tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
-							<tr><td class="center" align="left" colspan="10"><div id="datatable-buttons_1"></div></td></tr>
-						<!-- <xsl:call-template name="alarm_form"/>  -->
-			</table>
-		</form>
+		   <input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}" ></input>
+		   <table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
+		    <tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
+
+		      <!-- DataTable 0-->
+		       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
+		       <tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
+		       <tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
+		       <tr><td class="center" align="left" colspan="10"><div id="datatable-buttons_1"></div></td></tr>
+		      <!-- <xsl:call-template name="alarm_form"/>  -->
+
+		   </table>
+		  </form>
+
+
+
 		</div>
 		<div id="items">
 
@@ -465,7 +471,52 @@
 			<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
 				<form method="post" name="form2" action="{$update_action}">
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+
+					<!-- datatable 1 -->
+					<div id="paging_1"> </div>
+					<div id="datatable-container_1"></div>
+					<div id="contextmenu_1"></div>
+					<div id="datatable-buttons_2">
+
+						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_date_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						</input>
+						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</div>
+
+					<script>
+						var property_js = <xsl:value-of select="property_js" />;
+						var base_java_url = <xsl:value-of select="base_java_url" />;
+						var datatable = new Array();
+						var myColumnDefs = new Array();
+						var myButtons = new Array();
+
+						<xsl:for-each select="datatable">
+							datatable[<xsl:value-of select="name"/>] = [
+							{
+								values			:	<xsl:value-of select="values"/>,
+								total_records	: 	<xsl:value-of select="total_records"/>,
+								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+								permission		:	<xsl:value-of select="permission"/>,
+								footer			:	<xsl:value-of select="footer"/>
+							}
+							]
+						</xsl:for-each>
+
+						<xsl:for-each select="myColumnDefs">
+							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+						<xsl:for-each select="myButtons">
+							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+					</script>
+
+
+					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<tr>
 							<xsl:for-each select="set_column" >
 								<td></td>
@@ -491,52 +542,26 @@
 								 <a href="javascript:check_all_checkbox2('values[select]')"><img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/></a>
 							</td>
 						</tr>
-					</table>
-					<table width="70%" cellpadding="2" cellspacing="2" align="center">
+					</table> -->
+
+
+					<!-- table width="70%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:apply-templates select="table_update"/>
-					</table>
+					</table> -->
 				</form>
 			</xsl:when>
-		</xsl:choose>						
+		</xsl:choose>
 		<xsl:choose>
 			<xsl:when test="value_s_agreement_id!=''">
 				<table width="100%" cellpadding="2" cellspacing="2" align="center">
 					<xsl:apply-templates select="table_add"/>
 				</table>
 			</xsl:when>
-		</xsl:choose>	
-		</div>					
+		</xsl:choose>
 		</div>
 		</div>
-		
-		<!--  DATATABLE DEFINITIONS-->
-		<script>
-			var property_js = <xsl:value-of select="property_js" />;
-			var base_java_url = <xsl:value-of select="base_java_url" />;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-	
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-				{
-					values			:	<xsl:value-of select="values"/>,
-					total_records	: 	<xsl:value-of select="total_records"/>,
-					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-					footer			:	<xsl:value-of select="footer"/>
-				}
-				]
-			</xsl:for-each>
-			
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			
-			<xsl:for-each select="myButtons">
-				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>	
-				
+		</div>
+
 	</xsl:template>
 
 <!-- add item / edit item -->
@@ -549,7 +574,7 @@
 
 		<div class="yui-navset" id="edit_tabview">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div class="yui-content">		
+			<div class="yui-content">
 
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 		<div id="general">
@@ -652,7 +677,7 @@
 
 		<xsl:choose>
 			<xsl:when test="values != ''">
-			<div id="history">		
+			<div id="history">
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
 				<form method="post" name="form2" action="{$update_action}">
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
@@ -735,7 +760,7 @@
 						<xsl:value-of select="value_s_agreement_id"/>
 					</td>
 				</tr>
-	
+
 				<tr>
 					<td valign="top">
 						<xsl:value-of select="lang_name"/>
@@ -755,7 +780,7 @@
 									<xsl:value-of select="lang_descr_statustext"/>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
-							<xsl:value-of select="value_descr"/>		
+							<xsl:value-of select="value_descr"/>
 						</textarea>
 					</td>
 				</tr>
@@ -803,11 +828,11 @@
 					<xsl:when test="files!=''">
 						<xsl:call-template name="file_list_view"/>
 					</xsl:when>
-				</xsl:choose>				
+				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="attributes_view != ''">
 						<tr>
-							<td colspan="2" width="50%" align="left">				
+							<td colspan="2" width="50%" align="left">
 								<xsl:apply-templates select="attributes_view"/>
 							</td>
 						</tr>
@@ -825,7 +850,7 @@
 								<xsl:if test="position() != last()">, </xsl:if>
 							</xsl:for-each>
 						</td>-->
-	
+
 						<td>
 							<xsl:variable name="lang_member_of_statustext"><xsl:value-of select="lang_member_of_statustext"/></xsl:variable>
 								<select disabled="disabled" name="values[member_of][]" class="forms" multiple="multiple" onMouseover="window.status='{$lang_member_of_statustext}'; return true;" onMouseout="window.status='';return true;">
@@ -852,7 +877,7 @@
 			<xsl:choose>
 				<xsl:when test="values!=''">
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<tr><td align = "center" colspan="10">	
+						<tr><td align = "center" colspan="10">
 						<xsl:value-of select="lang_total_records"/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="total_records"/>
@@ -862,7 +887,7 @@
 						<xsl:call-template name="values"/>
 					</table>
 				</xsl:when>
-			</xsl:choose>						
+			</xsl:choose>
 			<table width="80%" cellpadding="2" cellspacing="2" align="center">
 
 			<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
@@ -939,7 +964,7 @@
 			<xsl:choose>
 				<xsl:when test="attributes_view != ''">
 					<tr>
-						<td colspan="2" width="50%" align="left">				
+						<td colspan="2" width="50%" align="left">
 							<xsl:apply-templates select="attributes_view"/>
 						</td>
 					</tr>
@@ -948,7 +973,7 @@
 		</table>
 		<xsl:choose>
 			<xsl:when test="values != ''">
-		
+
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:call-template name="table_header"/>
@@ -973,7 +998,7 @@
 			</tr>
 		</table>
 		</form>
-		
+
 		</div>
 	</xsl:template>
 
@@ -1015,7 +1040,7 @@
 <!-- list attribute -->
 
 	<xsl:template match="list_attribute">
-		
+
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -1063,7 +1088,7 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="values_attrib"> 
+	<xsl:template match="values_attrib">
 		<xsl:variable name="lang_up_text"><xsl:value-of select="lang_up_text"/></xsl:variable>
 		<xsl:variable name="lang_down_text"><xsl:value-of select="lang_down_text"/></xsl:variable>
 		<xsl:variable name="lang_attribute_attribtext"><xsl:value-of select="lang_delete_attribtext"/></xsl:variable>
@@ -1130,9 +1155,9 @@
 
 	<xsl:template match="edit_attrib">
 		<div align="left">
-		
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			
+
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -1161,7 +1186,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 						</xsl:otherwise>
-					</xsl:choose>	
+					</xsl:choose>
 				</td>
 			</tr>
 			<tr>
@@ -1203,7 +1228,7 @@
 								<xsl:value-of select="lang_statustext_attribtext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_statustext"/>		
+						<xsl:value-of select="value_statustext"/>
 					</textarea>
 
 				</td>
@@ -1402,7 +1427,7 @@
 		</div>
 	</xsl:template>
 
-<!-- datatype_list -->	
+<!-- datatype_list -->
 
 	<xsl:template match="datatype_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
@@ -1416,7 +1441,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- nullable_list -->	
+<!-- nullable_list -->
 
 	<xsl:template match="nullable_list">
 	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
