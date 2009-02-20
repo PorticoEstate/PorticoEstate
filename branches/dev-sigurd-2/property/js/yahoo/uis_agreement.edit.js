@@ -1,6 +1,7 @@
 var  myPaginator_0, myDataTable_0;
 var Button_0_0, Button_0_1, Button_0_2;
 var Button_1_0,Button_1_1,Button_1_2,Button_1_3,Button_1_4;
+var tableYUI;
 
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
@@ -152,8 +153,64 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 	}
 
 /********************************************************************************/
-	this.myParticularRenderEvent = function()
+	this.myParticularRenderEvent = function(num)
 	{
+		if(num==1)
+		{
+			alert("sss");
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+			addFooterDatatable();
+		}
+	}
+
+/********************************************************************************
+*
+*/
+  	this.addFooterDatatable = function()
+  	{
+  		//Create ROW
+		newTR = document.createElement('tr');
+		//RowChecked
+		CreateRowChecked("mychecks_update");
+
+		//Add to Table
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+		//clean value for values_ds.message
+		//values_ds.message = null;
+  	}
+
+/********************************************************************************
+*
+*/
+  	check_all = function(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+		for(i=0;i<controls.length;i++)
+		{
+			if(!controls[i].disabled)
+			{
+				//for class=transfer_idClass, they have to be interchanged
+				if(myclass=="mychecks_update")
+				{
+					if(controls[i].checked)
+					{
+						controls[i].checked = false;
+					}
+					else
+					{
+						controls[i].checked = true;
+					}
+				}
+				//for the rest, always id checked
+				else
+				{
+					controls[i].checked = true;
+				}
+			}
+		}
 	}
 
 /********************************************************************************/
