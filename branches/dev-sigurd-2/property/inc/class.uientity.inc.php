@@ -1679,79 +1679,89 @@
 				'edit'			=> $edit,
 				'type'			=> $this->type
 			);
-//_debug_array($data);die;
 
-//---datatable settings---------------------------------------------------				
+
+//--- asynchronous response --------------------------------------------				
 		
-			$parameters = array(
-				'parameter' => array(
-					array(
-						'name'  => 'entity_id',
-			      		'source' => $data_lookup['entity_id'],
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'cat_id',
-			      		'source' => $data_lookup['cat_id'],
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'id',
-			      		'source' => $data_lookup['id'],
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'attrib_id',
-			      		'source' => $data_lookup['attrib_id'],
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'history_id',
-			      		'source' => 'id',
-			      	),
-			      	array(
-						'name'  => 'delete',
-			      		'source' => true,
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'edit',
-			      		'source' => true,
-			      		'ready'  => 1
-					),
-					array(
-						'name'  => 'type',
-			      		'source' => $this->type,
-			      		'ready'  => 1
-					)				
-			    )
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}		
+//---datatable settings---------------------------------------------------				
+			$parameters['delete'] = array('parameter' => array(
+				array(
+					'name'  => 'entity_id',
+		      		'source' => $data_lookup['entity_id'],
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'cat_id',
+		      		'source' => $data_lookup['cat_id'],
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'id',
+		      		'source' => $data_lookup['id'],
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'attrib_id',
+		      		'source' => $data_lookup['attrib_id'],
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'history_id',
+		      		'source' => 'id',
+		      	),
+		      	array(
+					'name'  => 'delete',
+		      		'source' => true,
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'edit',
+		      		'source' => true,
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'type',
+		      		'source' => $this->type,
+		      		'ready'  => 1
+				)				
+		    )
 		    );
+		    
 			$permissions['rowactions'][] = array(
-				'text'    => lang('Delete'),
-				'action'  => $GLOBALS['phpgw']->link('/index.php',array
-			         (
-			          'menuaction' => 'property.uientity.attrib_history'
-			         )),
-			     'parameters' => $parameters
-			   );
-			   
+				'text'    	=> lang('delete'),
+				'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uientity.attrib_history' )),
+				'confirm_msg'=> lang('do you really want to delete this entry'),
+				'parameters'=> $parameters['delete']
+			);
+			   				   
 			$datavalues[0] = array
 			(
 				'name'			=> "0",
 				'values' 		=> json_encode($content),
 				'total_records'	=> count($content),
 			 	'permission'   	=> json_encode($permissions['rowactions']),
-				'is_paginator'	=> 0,
+				'is_paginator'	=> 1,
 				'footer'		=> 0
 			);			   
    				
        		$myColumnDefs[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(key => id,			label=>'',					sortable=>true,resizeable=>true,width=>130,hidden=>true),
-       													array(key => value,			label=>lang('value'),		sortable=>true,resizeable=>true,width=>130),
-									       				array(key => time_created,	label=>lang('time created'),sortable=>true,resizeable=>true,width=>300),
-									       				array(key => user,			label=>lang('user'),		sortable=>true,resizeable=>true,width=>150)
+       			'values'		=>	json_encode(array(	array(key => id,			hidden=>true),
+       													array(key => value,			label=>lang('value'),		sortable=>true,resizeable=>true),
+									       				array(key => time_created,	label=>lang('time created'),sortable=>true,resizeable=>true),
+									       				array(key => user,			label=>lang('user'),		sortable=>true,resizeable=>true)
 									       				))
 			);				
 			
