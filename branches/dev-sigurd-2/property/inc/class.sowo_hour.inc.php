@@ -49,6 +49,7 @@
 		{
 			$this->db->query("SELECT id, descr FROM fm_chapter ORDER BY id ");
 
+			$chapter_entries = array();
 			$i = 0;
 			while ($this->db->next_record())
 			{
