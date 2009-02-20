@@ -680,7 +680,8 @@
 			<input type="hidden" name="values[entity_id]" value="{value_agreement_id}" ></input>
 			<table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
 				<tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
-						<!-- DataTable -->
+						
+						<!-- DataTable 0 -->
 							<tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 							<tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
 							<tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
@@ -692,58 +693,78 @@
 		</tr>
 		</table>
 		</div>
-		<div id="items">
-		<xsl:choose>
-			<xsl:when test="table_update!=''">
-			<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
-				<form method="post" name="form2" action="{$update_action}">
-					<input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+		
+<div id="items">
+					
+
+					
+
+		
+	
+			<xsl:choose>
+				<xsl:when test="table_update!=''">
+				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
+					
+					<form method="post" name="form2" action="{$update_action}">
+						<input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+						<table width="100%" cellpadding="2" cellspacing="2" align="center" border="0">
+							<tr>
+								<xsl:for-each select="set_column" >
+									<td></td>
+								</xsl:for-each>
+								<td colspan="15" width="100%" class="small_text" valign="bottom" align="left">
+									<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
+									<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
+									<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
+									<a href="javascript:var w=window.open('{$link_download}','','')"
+										onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
+										onMouseOut="nd()">
+									<xsl:value-of select="lang_download"/></a>
+								</td>
+							</tr>
+							<!-- DataTable 1 -->
+							<tr><td colspan="15" width="100%">
+								<div id="paging_1"> </div>
+								<div id="datatable-container_1"></div>
+								<div id="contextmenu_1"></div>
+							</td></tr>	
+														
+							<!--
+							<tr><td colspan="15" width="100%"><xsl:call-template name="nextmatchs"/></td></tr>
+							<xsl:call-template name="table_header"/>
+							<xsl:call-template name="values3"/>
+							<tr><xsl:for-each select="set_column" ><td></td></xsl:for-each><td align="center"><xsl:variable name="img_check"><xsl:value-of select="img_check"/></xsl:variable><a href="javascript:check_all_checkbox2('values[select]')"><img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/></a></td></tr>
+							-->
+						</table>
+						<br/>
+						<table width="70%" cellpadding="2" cellspacing="2" align="center">
+							<!-- Buttons 2 -->
+								<div id="datatable-buttons_2">
+								
+								<input class="mybottonsUpdates" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<xsl:attribute name="onMouseover">
+									<xsl:text>window.status='</xsl:text>
+										<xsl:value-of select="lang_date_statustext"/>
+									<xsl:text>'; return true;</xsl:text>
+								</xsl:attribute>
+								</input>
+								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+							</div>
+								
+							<!-- <xsl:apply-templates select="table_update"/>  -->
+						</table>
+					</form>
+				</xsl:when>
+			</xsl:choose>						
+			<xsl:choose>
+				<xsl:when test="value_agreement_id!=''">
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<tr>
-							<xsl:for-each select="set_column" >
-								<td></td>
-							</xsl:for-each>
-							<td class="small_text" valign="bottom" align="center">
-								<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
-								<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
-								<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
-								<a href="javascript:var w=window.open('{$link_download}','','')"
-									onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
-									onMouseOut="nd()">
-								<xsl:value-of select="lang_download"/></a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="15" width="100%">
-								<xsl:call-template name="nextmatchs"/>
-							</td>
-						</tr>
-						<xsl:call-template name="table_header"/>
-						<xsl:call-template name="values3"/>
-						<tr>
-							<xsl:for-each select="set_column" >
-								<td></td>
-							</xsl:for-each>
-							<td align="center">
-								<xsl:variable name="img_check"><xsl:value-of select="img_check"/></xsl:variable>
-								 <a href="javascript:check_all_checkbox2('values[select]')"><img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/></a>
-							</td>
-						</tr>
+						<xsl:apply-templates select="table_add"/>
 					</table>
-					<table width="70%" cellpadding="2" cellspacing="2" align="center">
-						<xsl:apply-templates select="table_update"/>
-					</table>
-				</form>
-			</xsl:when>
-		</xsl:choose>						
-		<xsl:choose>
-			<xsl:when test="value_agreement_id!=''">
-				<table width="100%" cellpadding="2" cellspacing="2" align="center">
-					<xsl:apply-templates select="table_add"/>
-				</table>
-			</xsl:when>
-		</xsl:choose>	
-		</div>					
+				</xsl:when>
+			</xsl:choose>	
+	
+		</div>	
 		</div>
 		</div>
 		
@@ -760,6 +781,7 @@
 				{
 					values			:	<xsl:value-of select="values"/>,
 					total_records	: 	<xsl:value-of select="total_records"/>,
+					permission		:	<xsl:value-of select="permission"/>,
 					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
 					footer			:	<xsl:value-of select="footer"/>
 				}
@@ -868,7 +890,7 @@
 					<xsl:value-of select="lang_total_cost"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_total_cost"/>
+					<xsl:value-of select="value_total_cost"/>  CESAR
 				</td>
 			</tr>
 
