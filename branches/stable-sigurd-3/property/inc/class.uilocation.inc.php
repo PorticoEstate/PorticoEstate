@@ -545,7 +545,8 @@
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 											(
-												'menuaction'	=> 'property.uilocation.edit'
+												'menuaction'	=> 'property.uilocation.edit',
+												'type_id'		=>	$type_id
 											))
 					);
 				}
@@ -758,7 +759,7 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
-				_debug_array($json);
+
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
