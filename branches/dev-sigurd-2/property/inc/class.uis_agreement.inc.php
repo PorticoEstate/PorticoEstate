@@ -1162,6 +1162,8 @@
 				)
 			);
 
+			//_debug_array($parameters3);die;
+
 			/*REQUIRES VALIDATION OF PERMISSIONS*/
 			$permissions['rowactions'][] = array(
 					'text' 			=> lang('View'),
