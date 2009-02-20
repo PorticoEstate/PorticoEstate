@@ -11,7 +11,7 @@
 					<xsl:for-each select="attributes" >
 					<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 						<tr>
-							<td align="left" valign="top" title="{$statustext}" style="cursor:help">
+							<td align="left" width="19%" valign="top" title="{$statustext}" style="cursor:help">
 								<xsl:choose>
 									<xsl:when test="helpmsg=1">
 										<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
