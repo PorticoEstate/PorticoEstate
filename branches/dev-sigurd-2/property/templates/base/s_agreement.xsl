@@ -476,13 +476,13 @@
 					<div id="paging_1"> </div>
 					<div id="datatable-container_1"></div>
 					<div id="contextmenu_1"></div>
+					<div style="height:15px;"></div>
 					<div id="datatable-buttons_2">
-
-						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_date_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_date_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 						</input>
 						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
