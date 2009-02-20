@@ -441,6 +441,7 @@
 			  txt = document.createElement('input');
 			  txt.setAttribute("type",myButtons[j][p].type);
 			  txt.setAttribute("name",myButtons[j][p].id);
+			  txt.setAttribute("id",myButtons[j][p].id);
 			  txt.setAttribute("size",myButtons[j][p].size);
 			  div.appendChild(txt);
 		   }
@@ -489,7 +490,15 @@
  			datatable.addRow(values_ds[i]);
  		}
 	}
-
+ /********************************************************************************/
+  	this.td_empty = function(colspan)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = colspan;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+  	}
 /********************************************************************************/
 
 	this.execute_async = function(datatable)
