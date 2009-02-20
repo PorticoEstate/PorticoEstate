@@ -1344,7 +1344,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.view', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.edit', 'property' );
 			//-----------------------datatable settings---		
 				
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($id?lang('edit') . ' ' . lang($this->role):lang('add') . ' ' . lang($this->role));

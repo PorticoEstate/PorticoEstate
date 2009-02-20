@@ -1326,6 +1326,7 @@
 
 			$data = array
 			(
+				'tabs'							=> self::_generate_tabs(),
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
@@ -1849,6 +1850,7 @@
 
 			$data = array
 			(
+				'tabs'						=> self::_generate_tabs(true),
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'					=> $datavalues,
 				'myColumnDefs'				=> $myColumnDefs,
@@ -2222,4 +2224,23 @@
 			$bofiles	= CreateObject('property.bofiles');
 			$bofiles->view_file('fmticket');
 		}
+
+		protected function _generate_tabs($history='')
+		{
+			$tabs = array
+			(
+				'location'		=> array('label' => lang('location'), 'link' => '#location'),
+				'details'		=> array('label' => lang('details'), 'link' => '#details')
+			);
+
+			if($history)
+			{
+				$tabs['history']	= array('label' => lang('history'), 'link' => '#history');
+			}
+
+			phpgwapi_yui::tabview_setup('ticket_tabview');
+
+			return  phpgwapi_yui::tabview_generate($tabs, 'location');
+		}
+
 	}

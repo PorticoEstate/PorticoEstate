@@ -389,8 +389,6 @@
 <!-- add -->
 
 	<xsl:template match="add">
-		<div align="left">		
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -402,6 +400,12 @@
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+				<div class="yui-navset" id="ticket_tabview">
+					<xsl:value-of disable-output-escaping="yes" select="tabs" />
+					<div class="yui-content">
+<div id="location">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+
 				<xsl:for-each select="value_origin" >
 					<tr>
 						<td valign ="top">
@@ -411,7 +415,7 @@
 							<table>							
 								<xsl:for-each select="data">
 									<tr>
-										<td class="th_text"  align="left" >
+										<td align="left" >
 											<xsl:variable name="link_request"><xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
 											<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
 											<xsl:text> </xsl:text>
@@ -426,14 +430,10 @@
 				<input type="hidden" name="values[origin_id]" value="{value_origin_id}"></input>
 				
 			<xsl:call-template name="location_form"/>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_assign_to"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
+		</table>
+</div>
+<div id="details">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_group"/>
@@ -442,7 +442,15 @@
 					<xsl:call-template name="group_select"/>
 				</td>
 			</tr>
-
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_assign_to"/>
+				</td>
+				<td>
+					<xsl:call-template name="user_id_select"/>
+				</td>
+			</tr>
+	
 			<xsl:choose>
 				<xsl:when test="mailnotification != ''">
 					<tr>
@@ -482,7 +490,7 @@
 				<td>
 				<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
 				<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
-					<select name="{$select_priority_name}" class="forms" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+					<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
 							<xsl:apply-templates select="priority_list"/>
 					</select>			
 				</td>
@@ -563,7 +571,10 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-
+		</table>
+</div>
+</div>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -576,7 +587,10 @@
 					</input>
 				</td>
 			</tr>
+		</table>
+</div>
 			</form>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
@@ -593,7 +607,6 @@
 				</td>
 			</tr>
 		</table>
-		</div>
 
 	</xsl:template>
 
@@ -771,8 +784,6 @@
 				Window1=window.open('<xsl:value-of select="request_link"/>');
 			}		
 		</script>
-		<div align="left">
-		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -783,8 +794,14 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
+		</table>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+				<div class="yui-navset" id="ticket_tabview">
+					<xsl:value-of disable-output-escaping="yes" select="tabs" />
+					<div class="yui-content">
+<div id="location">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr class="th">
 				<td class="th_text" valign="top">
 					<xsl:value-of select="lang_ticket"/>
@@ -832,6 +849,10 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
+		</table>
+</div>
+<div id="details">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 
 			<tr>
 				<td class="th_text" valign="top">
@@ -919,18 +940,18 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_assignedto"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
 					<xsl:value-of select="lang_group"/>
 				</td>
 				<td>
 					<xsl:call-template name="group_select"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_assignedto"/>
+				</td>
+				<td>
+					<xsl:call-template name="user_id_select"/>
 				</td>
 			</tr>
 			<xsl:choose>
@@ -1040,7 +1061,13 @@
 					<xsl:call-template name="file_upload"/>
 				</xsl:when>
 			</xsl:choose>
-
+		</table>
+</div>
+<div id="history">
+				<div id="paging_1"></div>
+				<div id="datatable-container_1"></div>	
+</div>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -1053,7 +1080,11 @@
 					</input>
 				</td>
 			</tr>
+		</table>
+</div>
+</div>
 			</form>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td>
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
@@ -1121,24 +1152,6 @@
 			</tr>
 		</table>
 
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table width="80%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="record_history=''">
-					<tr>
-						<td class="th_text" align="center">
-							<xsl:value-of select="lang_no_history"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
-					<!--  DATATABLE 1-->
-					<!-- <xsl:apply-templates select="table_header_history"/><xsl:apply-templates select="record_history"/> -->
-					<tr><td class="th_text"  colspan="3"><div id="paging_1"></div><div id="datatable-container_1"></div></td></tr>		
-				</xsl:otherwise>
-			</xsl:choose>
-		</table>
-		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		
 		<!--  DATATABLE DEFINITIONS-->
