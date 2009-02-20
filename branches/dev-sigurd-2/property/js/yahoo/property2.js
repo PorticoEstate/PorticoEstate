@@ -416,63 +416,57 @@
 
 /********************************************************************************/
 
- this.init_buttons = function(div,j)
- {
-	  for(p=0; p<myButtons[j].length; p++)
-	  {
-		   //buttons
-		   if(myButtons[j][p].type == "buttons")
-		   {
-		    var config = {id: myButtons[j][p].id, type: myButtons[j][p].type, label: myButtons[j][p].label, container: div, value: myButtons[j][p].value}
-		    botton_tmp = new YAHOO.widget.Button(config);
-		    botton_tmp.on("click", eval(myButtons[j][p].funct));
-		    eval("Button_"+j+"_"+p+" = botton_tmp");
-		   }
-		   //filters
-		   else if(myButtons[j][p].type == "menu")
-		   {
-		    var config = {name: myButtons[j][p].id,  type: myButtons[j][p].type, label: myButtons[j][p].label, container: div, menu: myButtons[j][p].value, menumaxheight : 300}
-		    botton_tmp = new YAHOO.widget.Button(config);
-		    eval("Button_"+j+"_"+p+" = botton_tmp");
-		   }
-		   //input-text
-		   else if(myButtons[j][p].type == "inputText")
-		   {
-			  txt = document.createElement('input');
-			  txt.setAttribute("type",myButtons[j][p].type);
-			  txt.setAttribute("name",myButtons[j][p].id);
-			  txt.setAttribute("id",myButtons[j][p].id);
-			  txt.setAttribute("size",myButtons[j][p].size);
-			  div.appendChild(txt);
-		   }
-		   // texto
-		   else if(myButtons[j][p].type == "text")
-		   {
-		  		div.appendChild(document.createTextNode(myButtons[j][p].label));
-		   }
-		    // img
-		   else if(myButtons[j][p].type == "img")
-		   {
-			  img=document.createElement('img');
-			  img.src=myButtons[j][p].src;
-			  img.id=myButtons[j][p].id;
-			  div.appendChild(img);
-		   }
+	this.init_buttons = function(div,j)
+	{
+		for(p=0; p<myButtons[j].length; p++)
+		{
+			//buttons
+			if(myButtons[j][p].type == "buttons")
+			{
+				var config = {id: myButtons[j][p].id, type: myButtons[j][p].type, label: myButtons[j][p].label, container: div, value: myButtons[j][p].value}
+				botton_tmp = new YAHOO.widget.Button(config);
+				botton_tmp.on("click", eval(myButtons[j][p].funct));
+				eval("Button_"+j+"_"+p+" = botton_tmp");
+			}
+			//filters
+			else if(myButtons[j][p].type == "menu")
+			{
+				var config = {name: myButtons[j][p].id,  type: myButtons[j][p].type, label: myButtons[j][p].label, container: div, menu: myButtons[j][p].value, menumaxheight : 300}
+				botton_tmp = new YAHOO.widget.Button(config);
+				eval("Button_"+j+"_"+p+" = botton_tmp");
+			}
+			//input-text
+			else if(myButtons[j][p].type == "inputText")
+			{
+				txt = document.createElement('input');
+				txt.setAttribute("type",myButtons[j][p].type);
+				txt.setAttribute("name",myButtons[j][p].id);
+				txt.setAttribute("id",myButtons[j][p].id);
+				txt.setAttribute("size",myButtons[j][p].size);
+				txt.setAttribute("class",myButtons[j][p].classname);
 
-		   if(myButtons[j][p].type == "menu" || myButtons[j][p].type == "buttons")
-		   {
-		    //creating respective hidden
-		    hd = document.createElement('input');
-		    hd.setAttribute("type","hidden");
-		    //preposition "HD_"+id
-		    hd.setAttribute("id","hd_"+myButtons[j][p].id);
-		    hd.setAttribute("class",myButtons[j][p].classname);
-		    hd.setAttribute("name",myButtons[j][p].id);
-		    div.appendChild(hd);
-		   }
+				div.appendChild(txt);
+			}
+			// texto
+			else if(myButtons[j][p].type == "text")
+			{
+				div.appendChild(document.createTextNode(myButtons[j][p].label));
+			}
 
-	  }
- }
+
+			if(myButtons[j][p].type == "menu" || myButtons[j][p].type == "buttons")
+			{
+				//creating respective hidden
+				hd = document.createElement('input');
+				hd.setAttribute("type","hidden");
+				//preposition "HD_"+id
+				hd.setAttribute("id","hd_"+myButtons[j][p].id);
+				hd.setAttribute("class",myButtons[j][p].classname);
+				hd.setAttribute("name",myButtons[j][p].id);
+				div.appendChild(hd);
+			}
+		}
+	}
 
 /********************************************************************************/
 	this.update_datatable = function(datatable)
