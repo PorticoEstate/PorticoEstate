@@ -202,69 +202,85 @@
   	this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
 	{
 		var task = p_aArgs[1];
+		var num = datatable.length;
+
+
 
 		if(task)
 		{
-			var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
-
-			if(elRow)
+			for(y=0;y<num;y++)
 			{
-				var oRecord = p_myDataTable.getRecord(elRow);
-				var url = datatable[0][0].permission[task.groupIndex].action;
-				var sUrl = "";
-				var vars2 = "";
+				var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
 
-				if(datatable[0][0].permission[task.groupIndex].parameters!=null)
+				if(elRow)
 				{
-					for(f=0; f<datatable[0][0].permission[task.groupIndex].parameters.parameter.length; f++)
+					var oRecord = p_myDataTable.getRecord(elRow);
+
+					if(datatable[y][0].permission!='')
 					{
-						param_name = datatable[0][0].permission[task.groupIndex].parameters.parameter[f].name;
-						param_source = datatable[0][0].permission[task.groupIndex].parameters.parameter[f].source;
-						if(typeof(datatable[0][0].permission[task.groupIndex].parameters.parameter[f].ready)!='undefined')
+						var url = datatable[y][0].permission[task.groupIndex].action;
+						var sUrl = "";
+						var vars2 = "";
+
+						if(datatable[y][0].permission[task.groupIndex].parameters!=null)
 						{
-							vars2 = vars2 + "&"+param_name+"=" + param_source;
+							for(f=0; f<datatable[y][0].permission[task.groupIndex].parameters.parameter.length; f++)
+							{
+								param_name = datatable[y][0].permission[task.groupIndex].parameters.parameter[f].name;
+								param_source = datatable[y][0].permission[task.groupIndex].parameters.parameter[f].source;
+								if(typeof(datatable[y][0].permission[task.groupIndex].parameters.parameter[f].ready)!='undefined')
+								{
+									vars2 = vars2 + "&"+param_name+"=" + param_source;
+								}
+								else
+								{
+									vars2 = vars2 + "&"+param_name+"=" + oRecord.getData(param_source);
+								}
+							}
+							sUrl = url + vars2;
+						}
+
+						if(datatable[y][0].permission[task.groupIndex].parameters.parameter.length > 0)
+						{
+							//nothing
+						}
+						else //for New
+						{
+							sUrl = url;
+						}
+						//Convert all HTML entities to their applicable characters
+						sUrl = html_entity_decode(sUrl);
+
+						// look for the word "DELETE" in URL
+						if(substr_count(sUrl,'delete')>0)
+						{
+							confirm_msg = datatable[y][0].permission[task.groupIndex].confirm_msg;
+							if(confirm(confirm_msg))
+							{
+								sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
+								delete_record(sUrl,p_myDataTable);
+							}
 						}
 						else
 						{
-							vars2 = vars2 + "&"+param_name+"=" + oRecord.getData(param_source);
+							if(substr_count(sUrl,'target=_blank')>0)
+							{
+								window.open(sUrl,'_blank');
+							}
+							else
+							{
+								window.open(sUrl,'_self');
+							}
 						}
 					}
-					sUrl = url + vars2;
-				}
 
-				if(datatable[0][0].permission[task.groupIndex].parameters.parameter.length > 0)
-				{
-					//nothing
-				}
-				else //for New
-				{
-					sUrl = url;
-				}
-				//Convert all HTML entities to their applicable characters
-				sUrl = html_entity_decode(sUrl);
+					}
 
-				// look for the word "DELETE" in URL
-				if(substr_count(sUrl,'delete')>0)
-				{
-					confirm_msg = datatable[0][0].permission[task.groupIndex].confirm_msg;
-					if(confirm(confirm_msg))
-					{
-						sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
-						delete_record(sUrl,p_myDataTable);
-					}
-				}
-				else
-				{
-					if(substr_count(sUrl,'target=_blank')>0)
-					{
-						window.open(sUrl,'_blank');
-					}
-					else
-					{
-						window.open(sUrl,'_self');
-					}
-				}
+
+
 			}
+
+
 		}
 
 	}
@@ -347,7 +363,7 @@
 		}
 
 		eval("myDataTable_" + num).subscribe("renderEvent", function(){
-			myParticularRenderEvent();
+			myParticularRenderEvent(num);
 		});
 
 		eval("myDataTable_" + num).subscribe("rowMouseoverEvent", eval("myDataTable_" + num).onEventHighlightRow);
@@ -363,6 +379,41 @@
 	        myContextMenu.subscribe("click", onContextMenuClick, eval("myDataTable_" + num));
 		}
 	}
+
+
+ /********************************************************************************
+ *
+ */
+	CreateRowChecked = function(Class)
+	{
+		newTD = document.createElement('td');
+		newTD.colSpan = 1;
+		newTD.style.borderTop="1px solid #000000";
+		//create the anchor node
+		myA=document.createElement("A");
+		url = "javascript:check_all(\""+Class+"\")";  //particular function in each JS
+		myA.setAttribute("href",url);
+		//create the image node
+		url = "/pgwsvn/property/templates/portico/images/check.png";
+		myImg=document.createElement("IMG");
+		myImg.setAttribute("src",url);
+		myImg.setAttribute("width","16");
+		myImg.setAttribute("height","16");
+		myImg.setAttribute("border","0");
+		myImg.setAttribute("alt","Select All");
+		// Appends the image node to the anchor
+		myA.appendChild(myImg);
+		// Appends myA to mydiv
+		mydiv=document.createElement("div");
+		mydiv.setAttribute("align","center");
+		mydiv.appendChild(myA);
+		// Appends mydiv to newTD
+		newTD.appendChild(mydiv);
+		//Add TD to TR
+		newTR.appendChild(newTD);
+	}
+
+
 /********************************************************************************/
 
  this.init_buttons = function(div,j)
@@ -503,8 +554,8 @@
 		}
 	}
 
-	//if exist myButtons 
-	if(typeof(myButtons)!="undefined") 
+	//if exist myButtons
+	if(typeof(myButtons)!="undefined")
 	{
 		//delete quotes in myButtons, field: "fn"
 		for(k=0;k<myButtons.length;k++)
@@ -528,13 +579,13 @@
 					}
 				}
 			}
-		}	
+		}
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 
 
 	//for DataTables
@@ -547,9 +598,9 @@
 			this.init_datatable(datatable[j],div,pager,myColumnDefs[j],j);
 		}
 	}
-	
-	//if exist myButtons 
-	if(typeof(myButtons)!="undefined") 
+
+	//if exist myButtons
+	if(typeof(myButtons)!="undefined")
 	{
 		for(j=0;j<myButtons.length;j++)
 		{
