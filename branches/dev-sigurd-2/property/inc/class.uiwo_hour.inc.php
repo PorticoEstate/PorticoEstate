@@ -2692,7 +2692,7 @@ HTML;
 				'value_cat_per_cent'			=> $values['cat_per_cent'],
 				'lang_per_cent'				=> lang('Per Cent')
 			);
-_debug_array($data);
+//_debug_array($data);
 			$appname = lang('Workorder');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
