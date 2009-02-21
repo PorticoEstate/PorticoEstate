@@ -450,7 +450,12 @@
 			// texto
 			else if(myButtons[j][p].type == "text")
 			{
-				div.appendChild(document.createTextNode(myButtons[j][p].label));
+				//div.appendChild(document.createTextNode(myButtons[j][p].label));
+				
+				sp = document.createElement("span");
+				sp.className =myButtons[j][p].classname;
+				sp.innerHTML = myButtons[j][p].label;
+				div.appendChild(sp);
 			}
 
 

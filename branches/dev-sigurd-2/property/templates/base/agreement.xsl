@@ -476,10 +476,10 @@
 
 				<div id="general">
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<table cellpadding="2" cellspacing="2" align="center" >
+		<table cellpadding="2" cellspacing="2" align="center" width="79%" >
 			<tr><td>
 		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
-		<table cellpadding="2" cellspacing="2" width="79%" align="center">
+		<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -649,8 +649,7 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td valign="bottom">
+				<!-- </td><td valign="bottom">  -->
 					<xsl:variable name="lang_apply"><xsl:value-of select="lang_apply"/></xsl:variable>
 					<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -659,8 +658,7 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td align="right" valign="bottom">
+				<!-- </td><td align="right" valign="bottom">-->
 					<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
 					<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -678,7 +676,7 @@
 		<tr><td align="right" valign="bottom">
 		<form method="post" name="alarm" action="{$edit_url}">
 			<input type="hidden" name="values[entity_id]" value="{value_agreement_id}" ></input>
-			<table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
+			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				<tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
 						
 						<!-- DataTable 0 -->
@@ -737,9 +735,9 @@
 							-->
 						</table>
 						<br/>
-						<table width="70%" cellpadding="2" cellspacing="2" align="center">
+						<table width="70%" cellpadding="2" cellspacing="2" >
 							<!-- Buttons 2 -->
-								<div id="datatable-buttons_2">
+								<div id="datatable-buttons_2" class="valign">
 								
 								<input class="mybottonsUpdates" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
 								<xsl:attribute name="onMouseover">
@@ -748,7 +746,7 @@
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								</input>
-								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
 							</div>
 								
 							<!-- <xsl:apply-templates select="table_update"/>  -->
@@ -769,6 +767,12 @@
 		</div>
 		
 		<!--  DATATABLE DEFINITIONS-->
+		<style type="text/css">
+			.valign {
+			   height: 100%;
+			   vertical-align: top;
+			}
+		</style> 
 		<script>
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;

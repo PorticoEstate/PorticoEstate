@@ -7,7 +7,7 @@
 	<xsl:template name="attributes_values">
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
 					<xsl:for-each select="attributes" >
 					<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 						<tr>

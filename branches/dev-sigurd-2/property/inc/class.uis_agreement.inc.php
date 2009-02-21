@@ -1282,11 +1282,9 @@
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
-       			'values'		=>	json_encode(array(	array(id =>'values[new_index]', type=>inputText, size=>12, classname=> ''),
-       													array(type=>text, label=>'New index'),
+       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'valign'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'valign'),
        													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onUpdateClick , classname=> '')
-       													/*array(type=>img, src=>'/pgwsvn/phpgwapi/templates/base/images/cal.png', id=>'values_date-trigger')*/
-
        													))
 			);
 

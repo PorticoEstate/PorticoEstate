@@ -352,9 +352,15 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
+
+
+			</table>
+			
+			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+			<tr><td><xsl:call-template name="attributes_values"/></td></tr>
+			
 			</table>
 
-			<xsl:call-template name="attributes_values"/>
 
 			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				<xsl:choose>
@@ -489,9 +495,14 @@
 						<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 						</input>
-						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
 					</div>
-
+					<style type="text/css">
+						.valign {
+						   height: 100%;
+						   vertical-align: top;
+						}
+					</style> 
 					<script>
 						var property_js = <xsl:value-of select="property_js" />;
 						var base_java_url = <xsl:value-of select="base_java_url" />;
