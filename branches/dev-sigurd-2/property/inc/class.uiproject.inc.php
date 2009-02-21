@@ -254,7 +254,7 @@
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
 				                                            'id'     => 'txt_query',
-				                                            'value'    => '',//$query,
+			                                                'value'    => $this->query,//'',//$query,
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
 				                                            'size'    => 28,
@@ -522,12 +522,19 @@
 			$function_exchange_values = '';
 			if($lookup)
 			{
+				$lookup_target = array
+				(
+					'menuaction'		=> 'property.ui'.$from.'.edit',
+					'origin'			=> phpgw::get_var('origin'),
+					'origin_id'			=> phpgw::get_var('origin_id')
+				);
+
 				for ($i=0;$i<$count_uicols_name;$i++)
 				{
 					if($uicols['name'][$i]=='project_id')
 					{
 						$function_exchange_values .= "var code_project = data.getData('".$uicols["name"][$i]."');"."\r\n";
-						$function_exchange_values .= "valida('".$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui'.$from.'.edit'))."', code_project);";
+						$function_exchange_values .= "valida('".$GLOBALS['phpgw']->link('/index.php',$lookup_target)."', code_project);";
 						$function_detail .= "var url=data+'&project_id='+param;"."\r\n";
 						$function_detail .= "window.open(url,'_self');";
 
@@ -771,7 +778,7 @@
 					$boticket= CreateObject('property.botts');
 					$ticket = $boticket->read_single($origin_id);
 					$values['descr'] = $ticket['details'];
-					$values['name'] = $ticket['subject'];
+					$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
 					$ticket_notes = $boticket->read_additional_notes($origin_id);
 					$i = count($ticket_notes)-1;
 					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])

@@ -44,7 +44,7 @@
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
-
+			$this->interlink 	= CreateObject('property.interlink');
 		//	$this->grants 		= $GLOBALS['phpgw']->session->appsession('grants_project','property');
 		//	if(!$this->grants)
 			{
@@ -594,6 +594,25 @@
 				$this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			}
 */
+
+			if(is_array($workorder['origin']))
+			{
+				if($workorder['origin'][0]['data'][0]['id'])
+				{					
+					$interlink_data = array
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $workorder['origin'][0]['location']),
+						'location1_item_id' => $workorder['origin'][0]['data'][0]['id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),			
+						'location2_item_id' => $id,
+						'account_id'		=> $this->account
+					);
+					
+					$this->interlink->add($interlink_data,$this->db);
+				}
+			}
+
+
 			if($this->db->transaction_commit())
 			{
 				$this->increment_workorder_id();
@@ -723,6 +742,7 @@
 		function delete($workorder_id )
 		{
 			$this->db->transaction_begin();
+			$this->interlink->delete_at_target('property', '.project.workorder', $workorder_id, $this->db);
 			$this->db->query("DELETE FROM fm_workorder WHERE id='" . $workorder_id . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_workorder_history  WHERE  history_record_id='" . $workorder_id   . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_wo_hours WHERE workorder_id='" . $workorder_id   . "'",__LINE__,__FILE__);

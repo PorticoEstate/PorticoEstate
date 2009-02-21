@@ -58,7 +58,7 @@
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
 			$this->cats->supress_info	= true;
-
+			$this->interlink 	= & $this->so->interlink;
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -311,6 +311,9 @@
 			{
 				unset($workorder['files']);
 			}
+
+			$workorder['origin'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
+			$workorder['target'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'target');
 
 			return $workorder;
 		}
