@@ -1583,10 +1583,108 @@
 				'lang_update_statustext'	=> lang('update selected investments')
 			);
 
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$content_values = array();
+
+	  			$hidden = '';
+				for($y=0;$y<count($content);$y++)
+				{
+					for($z=0;$z<=count($content[$y]['row']);$z++)
+					{
+						if($content[$y]['row'][$z]['name']!='')
+						{
+							$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+						}
+					}									
+				}
+													 
+				$hidden .= " <input name='values[select][0]' type='hidden' value='".$content_values[$y - 1]['activity_id']."'/>";
+				$hidden .= " <input name='values[total_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['total_cost']."'/>";
+				$hidden .= " <input name='values[w_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['w_cost']."'/>";
+				$hidden .= " <input name='values[m_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['m_cost']."'/>";
+				$hidden .= " <input name='values[id][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+				
+				$content_values[$y - 1]['index_date'] .= $hidden;
+
+				if(count($content_values))
+				{
+					return json_encode($content_values);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+  			$hidden = '';
+			for($y=0;$y<count($content);$y++)
+			{
+				for($z=0;$z<=count($content[$y]['row']);$z++)
+				{
+					if($content[$y]['row'][$z]['name']!='')
+					{
+						$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+					}
+				}									
+			}
+												 
+			$hidden .= " <input name='values[select][0]'  type='hidden' value='".$content_values[$y - 1]['activity_id']."'/>";
+			$hidden .= " <input name='values[total_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['total_cost']."'/>";
+			$hidden .= " <input name='values[w_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['w_cost']."'/>";
+			$hidden .= " <input name='values[m_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['m_cost']."'/>";
+			$hidden .= " <input name='values[id][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+			
+			$content_values[$y - 1]['index_date'] .= $hidden;
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_values),
+					'total_records'			=> count($content_values),
+					'is_paginator'			=> 0,
+					'permission'			=> '""',
+					'footer'				=> 0
+			);
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => activity_id,label=>lang('Activity ID'),sortable=>false,resizeable=>true),
+									       			array(key => m_cost,label=>lang('m_cost'),sortable=>false,resizeable=>true),
+									       			array(key => w_cost,label=>lang('w_cost'),sortable=>false,resizeable=>true),
+									       			array(key => total_cost,label=>lang('Total Cost'),sortable=>false,resizeable=>true),
+									       			array(key => this_index,label=>lang('index'),sortable=>false,resizeable=>true),
+									       			array(key => index_count,label=>lang('index_count'),sortable=>false,resizeable=>true),
+									       			array(key => index_date,label=>lang('Date'),sortable=>false,resizeable=>true)))
+									       			
+
+			);
+			
+			$myButtons[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(type=>text, label=>'New index'),
+       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>lang('Update'),	funct=> onUpdateClick , classname=> ''),
+       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> ''),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> '')
+       													
+       													
+
+       													))
+			);
+			
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'						=> json_encode(array(menuaction => "property.uiagreement.edit_item", agreement_id=>$agreement_id, id=>$id, role=>$this->role)),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+				'myButtons'							=> $myButtons,	
+
 				'activity_descr' 				=> $activity_descr,
 				'lang_descr' 					=> lang('Descr'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1606,6 +1704,7 @@
 				'attributes_values'				=> $values['attributes'],
 				'lookup_functions'				=> $values['lookup_functions'],
 				'dateformat'					=> $dateformat,
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 
 				'lang_agreement'				=> lang('Agreement'),
 				'agreement_name'				=> $agreement['name'],
@@ -1639,9 +1738,25 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($values['id']?lang('edit item') . ' ' . $agreement['name']:lang('add item') . ' ' . $agreement['name']);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_item' => $data));
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.edit_item', 'property' );
+	
+			
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 

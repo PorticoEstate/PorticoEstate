@@ -805,6 +805,33 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+	
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>		
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 		<div align="left">
 		<form name="form" method="post" action="{$edit_url}">
@@ -890,7 +917,7 @@
 					<xsl:value-of select="lang_total_cost"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_total_cost"/>  CESAR
+					<xsl:value-of select="value_total_cost"/>  
 				</td>
 			</tr>
 
@@ -914,8 +941,8 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td valign="bottom">
+				<!-- </td>
+				<td valign="bottom"> -->
 					<xsl:variable name="lang_apply"><xsl:value-of select="lang_apply"/></xsl:variable>
 					<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -924,8 +951,8 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td align="right" valign="bottom">
+				<!--</td>
+				<td align="right" valign="bottom"> -->
 					<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
 					<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -943,8 +970,31 @@
 			<xsl:when test="values != ''">
 		
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
+				
 				<form method="post" name="form2" action="{$update_action}">
-					<input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+				
+				   <input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+
+				   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+				   	  <tr><td><br/></td></tr>
+				      <!-- DataTable 0-->
+				       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
+				       <tr><td><br/></td></tr>
+				       <tr><td class="center" align="left" colspan="10">
+							<div id="datatable-buttons_0">
+								<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<xsl:attribute name="onMouseover">
+									<xsl:text>window.status='</xsl:text>
+										<xsl:value-of select="lang_date_statustext"/>
+									<xsl:text>'; return true;</xsl:text>
+								</xsl:attribute>
+								</input>
+								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+							</div>	
+						</td></tr>
+				    </table>
+									
+					<!--
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:call-template name="table_header"/>
 						<xsl:call-template name="values2"/>
@@ -963,6 +1013,7 @@
 						</tr>
 
 					</table>
+					-->
 				</form>
 			</xsl:when>
 		</xsl:choose>
