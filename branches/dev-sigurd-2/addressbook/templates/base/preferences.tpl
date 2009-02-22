@@ -23,13 +23,16 @@
 	<td>
 	{hider_open}
         <select name="{select_columns_selectbox_name}" multiple size="5">
-
-        {B_select_columns_form_options}
+		<!-- BEGIN B_select_columns_form_options -->
+		<option value="{value}">{lang_contact_field}</option>
+		<!-- END B_select_columns_form_options -->
         </select>
 	</td>
 	<td>
         <select name="{select_columns_comtypes_name}" multiple size="5">
-        	{B_select_ctypes_options}
+		<!-- BEGIN B_select_ctypes_options -->
+		<option value="{commtype_description}">{lang_comtype_field}</option>
+		<!-- END B_select_ctypes_options -->
         </select>
 	</td>
 	</tr>

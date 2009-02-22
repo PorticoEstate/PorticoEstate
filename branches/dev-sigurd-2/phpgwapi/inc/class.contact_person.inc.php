@@ -321,9 +321,10 @@
 
 		function full_name()
 		{
-
-			$this->add_field('per_full_name', phpgwapi_sql::concat_null(array($this->real_field('per_first_name'), phpgwapi_sql::string(' '),
+			$this->add_field('per_full_name', phpgwapi_sql::concat_null(array($this->real_field('per_prefix'), phpgwapi_sql::string(' '),
+										 $this->real_field('per_first_name'), phpgwapi_sql::string(' '),
 										 $this->real_field('per_middle_name'), phpgwapi_sql::string(' '),
-										 $this->real_field('per_last_name'))));
+										 $this->real_field('per_last_name'), phpgwapi_sql::string(' '),
+										 $this->real_field('per_suffix'))));
 		}
 	}

@@ -422,6 +422,7 @@ class uiaddressbook_prefs
 
 			print "<br /><b>Columns</b><br />"; */
 		}
+
 		function linearize_query($qresult,$key)
 		{
 	//		print_r($qresult);
@@ -576,12 +577,9 @@ class uiaddressbook_prefs
 		$this->template->set_root(PHPGW_APP_TPL);
 		$this->template->set_file(
 					array(
-					'addressbook_preferences_t' =>'preferences.tpl',
-					'preferences_bits_t' => 'preferences_bits.tpl',
-					'select_columns_form_options_t' => 'preferences_bits.tpl',
-					'select_columns_commtypes_options_t' => 'preferences_bits.tpl',
-					'selected_rows_t' => 'preferences_bits.tpl',
-					'principal_tabs_t' => 'principal_tabs.tpl'
+						'addressbook_preferences_t' =>'preferences.tpl',
+						'selected_rows_t' => 'preferences_bits.tpl',
+						'principal_tabs_t' => 'principal_tabs.tpl'
 						)
 					);
 		//first, build the selectbox, select where needed
@@ -678,51 +676,54 @@ class uiaddressbook_prefs
 	}
 	function show_selectbox($org_or_person='')
 	{
-
 		if(empty($org_or_person))
 		{
 			$org_or_person=$this->org_or_person;
 		}
 		$this->fields_to_show();
-		$this->template->set_block('select_columns_form_options_t','B_select_columns_form_options','V_select_columns_form_options');
-		$this->template->set_block('select_columns_commtypes_options_t','B_select_ctypes_options','V_select_columns_commtypes_options');
-		if(count($this->fields_show_selectbox) > 1)
+		$this->template->set_block('addressbook_preferences_t','B_select_columns_form_options','V_select_columns_form_options');
+		$this->template->set_block('addressbook_preferences_t', 'B_select_ctypes_options', 'V_select_ctypes_options');
+ 
+		if ( isset($this->fields_show_selectbox['comm_types']) )
 		{
-			reset($this->fields_show_selectbox);
-			//			print "<br /><B> To Show in Selectbox<br />".print_r($this->fields_show_selectbox)."</B><br />";
-			while(list($field,$lang)=each($this->fields_show_selectbox))
+			if ( is_array($this->fields_show_selectbox['comm_types']) 
+				&& count($this->fields_show_selectbox['comm_types']) )
 			{
-				//not a comtype
-
-					if(!is_array($lang))
-					{
-						$this->template->set_var('lang_contact_field',$lang);
-						$this->template->set_var('value',$field);
-						$this->template->parse('V_select_columns_form_options','B_select_columns_form_options',True);
-					}
-					else
-					{
-						while(list($k,$description)=each($lang))
-						{
-							$this->template->set_var('lang_comtype_field',$description);
-							$this->template->set_var('commtype_description',$description);
-							$this->template->parse('V_select_ctypes_options',
-									'B_select_ctypes_options',True);
-
-						}
-					}
+				foreach ( $this->fields_show_selectbox['comm_types'] as $k => $description )
+				{
+					$this->template->set_var('lang_comtype_field', $description);
+					$this->template->set_var('commtype_description', $description);
+					$this->template->parse('V_select_ctypes_options', 'B_select_ctypes_options', True);
 				}
 			}
 			else
 			{
-				$this->template->set_var('lang_contact_field',$GLOBALS['phpgw']->lang('Empty'));
-				$this->template->set_var('value',"");
-				$this->template->parse('V_select_columns_form_options','B_select_columns_form_options');
+				$this->template->set_var('lang_comtype_field',$GLOBALS['phpgw']->lang('Empty'));
+				$this->template->set_var('value', '');
+				$this->template->parse('V_select_ctypes_options', 'B_select_ctypes_options', True);
 			}
-			$this->template->parse('B_select_columns_form_options','V_select_columns_form_options');
-			$this->template->parse('B_select_ctypes_options', 'V_select_ctypes_options');
-
+  
+			unset($this->fields_show_selectbox['comm_types']);
+		}
+ 			
+		if ( count($this->fields_show_selectbox) )
+		{
+			//print "<br /><B> To Show in Selectbox<br />".print_r($this->fields_show_selectbox, true)."</B><br />";
+			foreach ( $this->fields_show_selectbox as $field => $lang )
+			{
+				$this->template->set_var('lang_contact_field',$lang);
+				$this->template->set_var('value',$field);
+				$this->template->parse('V_select_columns_form_options','B_select_columns_form_options',True);
+			}
+		}
+		else
+		{
+			$this->template->set_var('lang_contact_field',$GLOBALS['phpgw']->lang('Empty'));
+			$this->template->set_var('value', '');
+			$this->template->parse('V_select_columns_form_options','B_select_columns_form_options',True);
+		}
 	}
+
 	function show_cols($org_or_person='')
 	{
 		if(empty($org_or_person))

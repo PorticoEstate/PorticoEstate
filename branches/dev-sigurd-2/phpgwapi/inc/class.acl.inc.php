@@ -348,7 +348,9 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			if ( !isset($this->_data[$acct_id])
-				|| !count($this->_data[$acct_id]) )
+				|| !is_array($this->_data[$acct_id])
+				|| !count($this->_data[$acct_id])
+				)
 			{
 				$this->_db->transaction_commit();
 
@@ -640,7 +642,12 @@
 			}
 
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
-			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			
+			if( !$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location))
+			{
+				//not a valid location
+				return 0;
+			}
 
 			if ( !isset($this->_data[$this->_account_id][$app_id][$location_id])
 				|| count($this->_data[$this->_account_id][$app_id][$location_id]) == 0)
@@ -1432,6 +1439,10 @@
 			}
 			else
 			{
+if(!isset($this->_data[$this->_account_id][$app_id][$location_id]))
+{
+				throw new Exception("user_set ({$app_id}, {$location_id}) not set");
+}
 				$data = phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);			
 			}
 		}

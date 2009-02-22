@@ -3225,7 +3225,7 @@ class uiaddressbook
 	function get_persons($fields_to_search, $current_person)
 	{
 		$criteria = $this->bo->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields_to_search);
-		$persons = $this->bo->get_persons($fields_to_search,'','','first_name','','',$criteria);
+		$persons = $this->bo->get_persons($fields_to_search,'','','last_name','','',$criteria);
 
 		if ($persons)
 		{

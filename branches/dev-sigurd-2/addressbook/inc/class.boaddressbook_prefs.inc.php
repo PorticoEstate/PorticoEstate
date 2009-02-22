@@ -44,7 +44,7 @@ class boaddressbook_prefs
 			    &&(count($this->person_columns['comm_types'])>0)))
 			{
 				//print "<br /><B>count(Person )columns >= 1".print_r($this->person_columns)."</B><br />";
-				$this->preferences->add('addressbook','person_columns',serialize($this->person_columns),$type);
+				$this->preferences->add('addressbook', 'person_columns', $this->person_columns, $type);
 			}
 			else
 			{
@@ -56,7 +56,7 @@ class boaddressbook_prefs
 		}
 		else
 		{
-				$this->preferences->delete('addressbook','person_columns',$type);
+			$this->preferences->delete('addressbook','person_columns',$type);
 			$this->remove_from_forced("person_columns");
 		}
 
@@ -68,7 +68,7 @@ class boaddressbook_prefs
 			if(count($this->org_columns) >=1)
 			{
 
-				$this->preferences->add('addressbook','org_columns',serialize($this->org_columns),$type);
+				$this->preferences->add('addressbook', 'org_columns', $this->org_columns, $type);
 			}
 			else
 			{
@@ -98,15 +98,15 @@ class boaddressbook_prefs
 				$this->preferences->delete('addressbook','default_category',$type);
 				$this->remove_from_forced('default_category');
 		}
-		$this->preferences->save_repository(true,$type);
+		$this->preferences->save_repository(true, $type);
 
 	}
 	function read_preferences($type='') 
 	{
 		$this->preferences->read();
 		$temp=$this->preferences->data['addressbook'];
-		$this->person_columns=unserialize($temp['person_columns']);
-		$this->person_columns_forced=$this->is_forced_value('person_columns');
+		$this->person_columns = $temp['person_columns'];
+		$this->person_columns_forced = $this->is_forced_value('person_columns');
 		//Check that we dont reflect types that arent asked of us in 'type'
 		if(!$this->person_columns_forced && $type=='forced')
 		{
@@ -114,7 +114,7 @@ class boaddressbook_prefs
 			unset($this->person_columns);
 		}
 
-		$this->org_columns=unserialize($temp['org_columns']);
+		$this->org_columns = $temp['org_columns'];
 		$this->org_columns_forced=$this->is_forced_value('org_columns');
 		if(!$this->org_columns_forced && $type=='forced')
 		{
@@ -130,7 +130,6 @@ class boaddressbook_prefs
 		{
 			$this->default_category='__NONE__';
 		}
-
 	}
 	function remove_from_forced($preference_name)
 	{
