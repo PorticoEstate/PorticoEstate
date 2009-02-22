@@ -109,7 +109,8 @@
 				phpgw::get_var('qfield'),
 				phpgw::get_var('start'),
 				phpgw::get_var('order'),
-				phpgw::get_var('sort')
+				phpgw::get_var('sort'),
+				phpgw::get_var('query')
 			);
 		}
 
@@ -153,7 +154,7 @@
 		 */
 		function show_tpl($sn,$localstart,$total,$extra, $twidth, $bgtheme,$search_obj=0,$filter_obj=1,$showsearch=1,$yours=0,$cat_id=0,$cat_field='fcat_id')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
+			list($filter,$qfield,$start,$order,$sort,$query) = $this->_get_var();
 
 			$start = $localstart;
 
@@ -175,7 +176,7 @@
 				'start_value'   => $start,
 				'order_value'   => $order,
 				'sort_value'    => $sort,
-				'query_value'   => phpgw::get_var('query'),
+				'query_value'   => $query,
 				'table_width'   => $twidth,
 				'left'          => $this->left($sn,$start,$total,$extra),
 				'search'        => ($showsearch?$this->search($search_obj):''),
@@ -276,9 +277,8 @@
 		 */
 		function left($scriptname,$start,$total,$extradata = '')
 		{
-			list($filter,$qfield,,$order,$sort) = $this->_get_var();
+			list($filter,$qfield,,$order,$sort,$query) = $this->_get_var();
 
-			$query = phpgw::get_var('query');
 			$extravars = array
 			(
 				'order'   => $order,
@@ -332,9 +332,8 @@
 		 */
 		function right($scriptname,$start,$total,$extradata = '')
 		{
-			list($filter,$qfield,,$order,$sort) = $this->_get_var();
+			list($filter,$qfield,,$order,$sort,$query) = $this->_get_var();
 
-			$query = isset($_REQUEST['query']) ? urlencode(stripslashes($_REQUEST['query'])) : '';
 			$extravars = Array(
 				'order'   => $order,
 				'filter'  => $filter,
@@ -378,7 +377,7 @@
 		 */
 		function search_filter($search_obj=0,$filter_obj=1,$yours=0,$link='',$extra='')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
+			list($filter,$qfield,$start,$order,$sort,$query) = $this->_get_var();
 
 			$start = $localstart;
 			$var = array(
@@ -388,7 +387,7 @@
 				'start_value'  => $start,
 				'order_value'  => $order,
 				'sort_value'   => $sort,
-				'query_value'  => urlencode($query), //FIXME was global
+				'query_value'  => $query,
 				'th_bg'        => $GLOBALS['phpgw_info']['theme']['th_bg'],
 				'search'       => $this->search($search_obj),
 				'filter'       => ($filter_obj?$this->filter($filter_obj,$yours):'')
@@ -404,7 +403,7 @@
 		 */
 		function cats_search_filter($search_obj=0,$filter_obj=1,$yours=0,$cat_id=0,$cat_field='fcat_id',$link='',$extra='')
 		{
-			list($filter,$qfield,$start,$order,$sort) = $this->_get_var();
+			list($filter,$qfield,$start,$order,$sort,$query) = $this->_get_var();
 
 			$start = $localstart;
 			$cats  = createObject('phpgwapi.categories');
@@ -420,7 +419,7 @@
 				'start_value'   => $start,
 				'order_value'   => $order,
 				'sort_value'    => $sort,
-				'query_value'   => urlencode($query), //FIXME was gloval
+				'query_value'   => $query,
 				'th_bg'         => $GLOBALS['phpgw_info']['theme']['th_bg'],
 				'search'        => $this->search($search_obj),
 				'filter'        => ($filter_obj?$this->filter($filter_obj,$yours):'')
@@ -732,9 +731,7 @@
 				unset($temp_format);
 			}
 
-			$query = isset($_REQUEST['query']) ? urlencode(stripslashes($_REQUEST['query'])) : '';
-
-			list($filter,$qfield,$start,$NULL1,$NULL) = $this->_get_var();
+			list($filter,$qfield,$start,$NULL1,$NULL,$query) = $this->_get_var();
 
 			if(($order == $var) && ($sort == 'ASC'))
 			{

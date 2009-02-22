@@ -296,7 +296,7 @@
 						}
 						$tpl_vars = Array(
 							// new checkbox value, new fake_uri method of embedding coumpound data in a single HTML element
-							'mlist_embedded_uri' => $this->bo->xi['msg_list_dsp'][$i]['uri'],
+							'mlist_embedded_uri' => http_build_query($this->bo->xi['msg_list_dsp'][$i]['uri']),
 							'mlist_backcolor'	=> $this->bo->xi['msg_list_dsp'][$i]['back_color'],
 							'mlist_backcolor_class'	=> $this->bo->xi['msg_list_dsp'][$i]['back_color_class'],
 							'mlist_subject'		=> $this->bo->xi['msg_list_dsp'][$i]['subject'],

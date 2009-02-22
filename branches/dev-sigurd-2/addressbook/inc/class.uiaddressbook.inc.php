@@ -116,7 +116,7 @@ class uiaddressbook
 		$this->template				=& $GLOBALS['phpgw']->template;
 		$this->cat					= CreateObject('phpgwapi.categories');
 		$this->company				= CreateObject('phpgwapi.categories','addressbook_company');
-		$this->prefs				= $GLOBALS['phpgw_info']['user']['preferences']['addressbook'];
+		$this->prefs				= isset($GLOBALS['phpgw_info']['user']['preferences']['addressbook']) ? $GLOBALS['phpgw_info']['user']['preferences']['addressbook'] : array();
 		$this->owner				= $GLOBALS['phpgw_info']['user']['account_id']; 
 
 		$this->contact_type			= $this->bo->contact_type;

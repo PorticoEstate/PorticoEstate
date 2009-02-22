@@ -5636,7 +5636,7 @@ Array
 				}
 				$evaled = '';
 				eval($code);
-				if ( !$extra_keys && preg_match('/folder_status_info/', $argname) )
+				if ( !$extra_keys && preg_match('/folder_status_info/', $arg_name) )
 				{
 					$evaled = unserialize(base64_decode($evaled));
 				}

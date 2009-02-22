@@ -1504,6 +1504,7 @@
 		protected function _setup_cache($write_cache = true)
 		{
 			$this->_data                = $GLOBALS['phpgw']->accounts->read()->toArray();
+			$this->_data['fullname']	= $GLOBALS['phpgw']->accounts->read()->__toString();
 //			$this->_data['acl']         = $GLOBALS['phpgw']->acl->read(); // This one is never used
 			$this->_data['preferences'] = $GLOBALS['phpgw']->preferences->read();
 			$this->_data['apps']        = $GLOBALS['phpgw']->applications->read();

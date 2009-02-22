@@ -1008,34 +1008,49 @@
 
 		function add_select($field)
 		{
-			$this->add_element('select',$this->make_pair($field,''));
-			$this->ldebug('add_select', array('Field' => $field));
+			if(array_key_exists($field, $this->map))
+			{
+				$this->add_element('select',$this->make_pair($field,''));
+				$this->ldebug('add_select', array('Field' => $field));
+			}
 		}
 
 		function add_criteria($field, $value)
 		{
-			$this->add_element('criteria',$this->make_pair($field,
+			if(array_key_exists($field, $this->map))
+			{
+				$this->add_element('criteria',$this->make_pair($field,
 									   $value));
-			$this->ldebug('add_criteria', array('Field' => $field));
+				$this->ldebug('add_criteria', array('Field' => $field));
+			}
 
 		}
 		function add_update($value, $field)
 		{
-			$this->add_element('update',$this->make_pair($field,
+			if(array_key_exists($field, $this->map))
+			{
+				$this->add_element('update',$this->make_pair($field,
 									 $value));
+			}
 		}
 
 		function add_delete($field, $value)
 		{
-			$this->add_element('delete',$this->make_pair($field,
+			if(array_key_exists($field, $this->map))
+			{
+				$this->add_element('delete',$this->make_pair($field,
 									 $value));
+			}
 		}
 
 		function add_insert($field, $value, $idx = 0)
 		{
-			$this->insert_index = $idx;
-			$this->add_element('insert',$this->make_pair($field,
-									  $value));
+			if(array_key_exists($field, $this->map))
+			{
+				$this->insert_index = $idx;
+				$this->add_element('insert',$this->make_pair($field, 
+						$value));
+			}
 		}
 
 		/**

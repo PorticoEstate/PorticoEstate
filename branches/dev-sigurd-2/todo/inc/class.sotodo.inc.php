@@ -351,7 +351,7 @@
 			$this->db->transaction_begin();
 			if($old_values['descr'] != $values['descr'])
 			{
-				$this->historylog->add('D',$values['id'],$values['descr']);
+				$this->historylog->add('D',$values['id'],$values['descr'], $old_values['descr']);
 			}
 
 			if(($old_values['parent'] || $values['parent']) && ($old_values['parent'] != $values['parent']))
