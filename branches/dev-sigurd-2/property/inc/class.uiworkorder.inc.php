@@ -956,7 +956,7 @@
 			}
 			else
 			{
-				$record_history = '';
+				$record_history = array();
 			}
 
 //_debug_array($hour_data);
