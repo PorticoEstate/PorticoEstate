@@ -89,10 +89,10 @@ var tableYUI;
 		Button_1_3.set("label", myButtons[1][3].label);*/
 
 		//clean hidden filter
-		/*for ( var i in array_buttons )
+		for ( var i in array_buttons )
 		{
 			array_buttons[i].value = "";
-		}*/
+		}
 
 	}
 
