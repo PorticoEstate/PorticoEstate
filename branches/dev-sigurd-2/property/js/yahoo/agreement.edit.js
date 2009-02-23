@@ -223,7 +223,11 @@ var Button_1_0,Button_1_1,Button_1_2,Button_1_3,Button_1_4;
 	{
 		elCell.innerHTML = "<center>"+oData+"</center>";
 	}
-
+/********************************************************************************/	
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
+	}
  /********************************************************************************/
 
 	YAHOO.util.Event.addListener(window, "load", function()
