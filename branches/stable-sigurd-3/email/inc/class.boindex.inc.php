@@ -198,7 +198,7 @@
 				//'stats_backcolor' => $GLOBALS['phpgw_info']['theme']['em_folder'],
 				//'stats_backcolor_class' => 'th',
 				'stats_backcolor_class' => 'email_folder',
-				'stats_font' => $GLOBALS['phpgw_info']['theme']['font'],
+				'stats_font' => '',
 				'stats_font_size' => '2',
 				'stats_foldername_size' => '3',
 				//'stats_color' => $GLOBALS['phpgw_info']['theme']['em_folder_text'],

@@ -254,7 +254,7 @@
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
 				                                            'id'     => 'txt_query',
-				                                            'value'    => '',//$query,
+			                                                'value'    => $this->query,//'',//$query,
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
 				                                            'size'    => 28,
@@ -522,12 +522,19 @@
 			$function_exchange_values = '';
 			if($lookup)
 			{
+				$lookup_target = array
+				(
+					'menuaction'		=> 'property.ui'.$from.'.edit',
+					'origin'			=> phpgw::get_var('origin'),
+					'origin_id'			=> phpgw::get_var('origin_id')
+				);
+
 				for ($i=0;$i<$count_uicols_name;$i++)
 				{
 					if($uicols['name'][$i]=='project_id')
 					{
 						$function_exchange_values .= "var code_project = data.getData('".$uicols["name"][$i]."');"."\r\n";
-						$function_exchange_values .= "valida('".$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.ui'.$from.'.edit'))."', code_project);";
+						$function_exchange_values .= "valida('".$GLOBALS['phpgw']->link('/index.php',$lookup_target)."', code_project);";
 						$function_detail .= "var url=data+'&project_id='+param;"."\r\n";
 						$function_detail .= "window.open(url,'_self');";
 
@@ -771,7 +778,7 @@
 					$boticket= CreateObject('property.botts');
 					$ticket = $boticket->read_single($origin_id);
 					$values['descr'] = $ticket['details'];
-					$values['name'] = $ticket['subject'];
+					$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
 					$ticket_notes = $boticket->read_additional_notes($origin_id);
 					$i = count($ticket_notes)-1;
 					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
@@ -1135,6 +1142,14 @@
 				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
+			$value_remainder = $values['sum'];
+			if(isset($values['sum_workorder_actual_cost']))
+			{
+				$value_remainder = $values['sum'] - $values['sum_workorder_actual_cost'];
+			}
+			$$values['sum']  = number_format($values['sum'], 0, ',', ' ');
+			$value_remainder = number_format($value_remainder, 0, ',', ' ');
+
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
@@ -1143,6 +1158,7 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 			
+
 			//---datatable settings---------------------------------------------------	
 			
 			$datavalues[0] = array
@@ -1162,6 +1178,7 @@
        			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
 									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
 									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
+									       			array(key => actual_cost,label=>lang('actual cost'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
 		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
 		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
 		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
@@ -1274,8 +1291,10 @@
 				//'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
 				//'workorder_budget'					=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
 				//'sum_workorder_actual_cost'			=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
-				//'lang_sum'							=> lang('Sum'),
-				'lang_actual_cost'					=> lang('Actual cost'),
+				'lang_sum'							=> lang('Sum'),
+				//'lang_actual_cost'					=> lang('Actual cost'),
+				'value_remainder'					=> $value_remainder,
+				'lang_remainder'					=> lang('remainder'),
 				'lang_coordinator'					=> lang('Coordinator'),
 				'lang_user_statustext'				=> lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
 				'select_user_name'					=> 'values[coordinator]',

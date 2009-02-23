@@ -103,7 +103,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<select name="account">
+						<select name="new_owner">
 							<xsl:apply-templates select="accountlist"/>
 						</select><br />
 					</td>

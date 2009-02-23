@@ -681,6 +681,44 @@
 
 			$config->read();
 
+
+			$origin				= phpgw::get_var('origin');
+			$origin_id			= phpgw::get_var('origin_id', 'int');
+
+			if($origin == '.ticket' && $origin_id && !$values['descr'])
+			{
+				$boticket= CreateObject('property.botts');
+				$ticket = $boticket->read_single($origin_id);
+				$values['descr'] = $ticket['details'];
+				$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+				$ticket_notes = $boticket->read_additional_notes($origin_id);
+				$i = count($ticket_notes)-1;
+				if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+				{
+					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+				}
+			}
+
+			if(isset($values['origin']) && $values['origin'])
+			{
+				$origin		= $values['origin'];
+				$origin_id	= $values['origin_id'];
+			}
+
+			$interlink 	= & $this->bo->interlink;
+			if(isset($origin) && $origin)
+			{
+				unset($values['origin']);
+				unset($values['origin_id']);
+				$values['origin'][0]['location']= $origin;
+				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
+				$values['origin'][0]['data'][]= array(
+					'id'	=> $origin_id,
+					'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					);
+			}
+
+
 			if (isset($values['save']))
 			{
 				if(!$values['title'])
@@ -818,6 +856,10 @@
 				if($id)
 				{
 					$values		= $this->bo->read_single($id);
+					if(!isset($values['origin']))
+					{
+						$values['origin'] = '';
+					}
 				}
 				if($project_id && !isset($values['project_id']))
 				{
@@ -914,7 +956,7 @@
 			}
 			else
 			{
-				$record_history = '';
+				$record_history = array();
 			}
 
 //_debug_array($hour_data);
@@ -1053,16 +1095,20 @@
 			
 			$data = array
 			(
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'				=> $datavalues,
-				'myColumnDefs'			=> $myColumnDefs,		
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,		
 				'tabs'							=> self::_generate_tabs(),
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'calculate_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
-				'lang_calculate'			=> lang('Calculate Workorder'),
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
+				'value_origin_type'				=> isset($origin)?$origin:'',
+				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
+
+				'calculate_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
+				'lang_calculate'				=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'		=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
-				'send_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
+				'send_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
 				'lang_send'				=> lang('Send Workorder'),
 				'lang_send_statustext'			=> lang('send this workorder to vendor'),
 
@@ -1408,6 +1454,8 @@
 
 				'lang_project_name'			=> lang('Project name'),
 				'value_project_name'			=> $project['name'],
+
+				'value_origin'				=> $values['origin'],
 
 				'lang_vendor'				=> lang('Vendor'),
 				'value_vendor_id'			=> $values['vendor_id'],

@@ -135,7 +135,7 @@
 				$GLOBALS['phpgw_info']['user']['account_id'], $access, $cat_id);
 			$persons = $this->contacts->get_persons(
 				array('person_id', 'per_full_name'),
-				'','','','','',$criteria);
+				'', '', 'last_name','ASC','',$criteria);
 			
 			if(is_array($persons))
 			{

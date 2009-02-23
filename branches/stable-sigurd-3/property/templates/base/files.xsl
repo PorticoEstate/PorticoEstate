@@ -1,6 +1,6 @@
 	<xsl:template name="file_list">
 			<tr>
-				<td align="left" valign="top">
+				<td width="19%" align="left" valign="top">
 					<xsl:value-of select="//lang_files"/>
 				</td>
 				<td>

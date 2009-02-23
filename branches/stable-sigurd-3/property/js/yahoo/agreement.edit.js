@@ -1,3 +1,116 @@
+var  myPaginator_1, myDataTable_1;
+var Button_2_0;
+
+var FormatterCheckItems = function(elCell, oRecord, oColumn, oData)
+{
+	elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks_update\"  value=\""+oRecord.getData('activity_id')+"\" name=\"values[select][]\"/></center>" +
+			"<input type=\"hidden\" value=\""+oRecord.getData('index_count')+"\" name=\"values[id]["+oRecord.getData('activity_id')+"]\"/>" +
+			"<input type=\"hidden\" value=\""+oRecord.getData('m_cost')+"\" name=\"values[m_cost]["+oRecord.getData('activity_id')+"]\"/>" +
+			"<input type=\"hidden\" value=\""+oRecord.getData('w_cost')+"\" name=\"values[w_cost]["+oRecord.getData('activity_id')+"]\"/>" +
+			"<input type=\"hidden\" value=\""+oRecord.getData('total_cost')+"\" name=\"values[total_cost]["+oRecord.getData('activity_id')+"]\"/>";
+}
+/********************************************************************************/
+	this.onUpdateClick=function()
+	{
+		flag = false;
+		//clean hidden buttons actions
+		//cleanValuesHiddenActionsButtons();
+	
+		//validate ckecks true
+		array_checks = YAHOO.util.Dom.getElementsByClassName('mychecks_update');
+		for ( var i in array_checks )
+		{
+			if(array_checks[i].checked)
+			{
+				flag = true;
+				break;
+			}
+		}
+		//validate textbox (newIndex and date)
+		array_txtboxs_buttons = YAHOO.util.Dom.getElementsByClassName('mybottonsUpdates');
+		for ( var i in array_txtboxs_buttons )
+		{
+			if(array_txtboxs_buttons[i].value =="")
+			{
+				return;
+			}
+		}
+	
+		if(flag)
+		{
+			//asign value to hidden
+			YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
+	
+			formObject = document.body.getElementsByTagName('form');
+			YAHOO.util.Connect.setForm(formObject[2]);
+			execute_async(myDataTable_1);
+		}
+	
+	}
+/********************************************************************************/
+	this.myParticularRenderEvent = function(num)
+	{
+		if(num==1)
+		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+			tableYUI.deleteTFoot();
+			YAHOO.util.Dom.get("values_date").value = "";
+			YAHOO.util.Dom.get("values[new_index]").value = "";
+			addFooterDatatable();
+		}
+	}
+
+/********************************************************************************
+*
+*/
+  	this.addFooterDatatable = function()
+  	{
+  		//Create ROW
+		newTR = document.createElement('tr');
+		//RowChecked
+		td_empty(10);
+		CreateRowChecked("mychecks_update");
+
+		//Add to Table
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+  	}
+
+/********************************************************************************
+*
+*/
+  	check_all = function(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+		for(i=0;i<controls.length;i++)
+		{
+			if(!controls[i].disabled)
+			{
+				//for class=transfer_idClass, they have to be interchanged
+				if(myclass=="mychecks_update")
+				{
+					if(controls[i].checked)
+					{
+						controls[i].checked = false;
+					}
+					else
+					{
+						controls[i].checked = true;
+					}
+				}
+				//for the rest, always id checked
+				else
+				{
+					controls[i].checked = true;
+				}
+			}
+		}
+	}
+
+/********************************************************************************/
+/********************************************************************************/
 var  myPaginator_0, myDataTable_0;
 var Button_0_0, Button_0_1, Button_0_2;
 var Button_1_0,Button_1_1,Button_1_2,Button_1_3,Button_1_4;
@@ -99,10 +212,7 @@ var Button_1_0,Button_1_1,Button_1_2,Button_1_3,Button_1_4;
 		YAHOO.util.Dom.get("hd_"+p_oItem.hidden_name).value = p_oItem.id;		
 	}
 	
-/********************************************************************************/
-	this.myParticularRenderEvent = function()
-	{
-	}
+
 /********************************************************************************/
 	var myFormatterCheck = function(elCell, oRecord, oColumn, oData)
 	{

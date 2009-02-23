@@ -121,6 +121,7 @@ add the selected items	property	no	legg til valgte element
 add this invoice	property	no	Legg til denne fakturaen
 add this vendor to this activity	property	no	legg til denne leverandøren til denne aktiviteten
 add ticket	property	no	legg til melding
+add to project	property	no	Legg til eksisterende prosjekt
 add workorder	property	no	Legg til Arbeidsordre
 admin async services	property	no	Administrer planlagte oppgaver
 admin custom functions	property	no	Administrer tilpassede funksjoner
@@ -296,8 +297,9 @@ click this link to select property	property	no	klikk her for å velge eiendom
 click this link to select tenant	property	no	klikk her for å velge leietaker
 click this link to select vendor	property	no	klikk her for å velge leverandør
 click this link to view the remark	property	no	klikk her for å vise merknad
-click this to generate an order with this information	property	no	klikk her for å generere et prosjekt med basis denne informasjonen
+click this to add an order to an existing project	property	no	klikk her for å legge til en ny bestilling til et eksisterende prosjekt
 click this to generate a request with this information	property	no	klikk her for å generere en anmodning med basis denne informasjonen
+click this to generate a project with this information	property	no	klikk her for å lage ett nytt prosjekt med informasjon fra denne saken
 click to view file	property	no	Klikk for vise fil
 close	property	no	Avslutt
 closed	property	no	Avsluttet
@@ -740,6 +742,7 @@ generate id ?	property	no	generer ID
 generate order	property	no	Lag bestilling
 generate project	property	no	generer prosjekt
 generate request	property	no	Registrer behov
+generate new project	property	no	Registrer nytt prosjekt
 global	property	no	Global
 global categories	property	no	Globale kategorier
 global configuration	property	no	Global konfigurasjon
@@ -1149,6 +1152,7 @@ re-assigned	property	no	Videresendt
 receipt	property	no	Kvittering
 record	property	no	Post
 related info	property	no	Relatert info
+remainder	property	no	Rest
 reminder	property	no	Påminning
 rental	property	no	Utleie
 rental agreement	property	no	Utleieavtale
@@ -1171,7 +1175,7 @@ request status	property	no	Status anmodning
 request title	property	no	Tiltak tittel
 requirement	property	no	Behov/pålegg
 reserve	property	no	reserve
-reserve remainder	property	no	rest
+reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 responsible	property	no	Ansvarlig

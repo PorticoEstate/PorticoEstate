@@ -71,7 +71,8 @@
 		*/
 		function get_originating_ip()
 		{
-			$got_ip = '';
+			$got_ip = phpgw::get_var('HTTP_X_FORWARDED_FOR', 'ip', 'SERVER', phpgw::get_var('REMOTE_ADDR', 'ip', 'SERVER'));
+		/*
 			if (is_object($GLOBALS['phpgw']->session))
 			{
 				$got_ip = $GLOBALS['phpgw']->session->getuser_ip();
@@ -80,7 +81,7 @@
 			{
 				$got_ip = $_SERVER['REMOTE_ADDR'];
 			}
-			
+		*/	
 			// did we get anything useful ?
 			if (trim((string)$got_ip) == '')
 			{
@@ -366,6 +367,7 @@
 			if ($returnccode)
 			{
 				// Success
+				/*
 				if ($GLOBALS['phpgw']->mail_send->trace_flag > 0)
 				{
 					// for debugging
@@ -380,7 +382,7 @@
 					echo '</body></html>';
 					$this->send_message_cleanup();
 				}
-				else
+				else*/
 				{
 					// unset some vars (is this necessary?)
 					$this->send_message_cleanup();
@@ -506,7 +508,7 @@
 			i.e. with NO ENCODED HTML ENTITIES, so use > instead of $rt; and " instead of &quot; . etc...
 			it's up to the endusers MUA to handle any htmlspecialchars, whether to encode them or leave as it, the MUA should decide 
 			*/
-			$body = $GLOBALS['phpgw']->msg->htmlspecialchars_decode($body);
+			$this->smtp->Body = $GLOBALS['phpgw']->msg->htmlspecialchars_decode($this->smtp->Body);
 			
 			// ----  Add Email Sig to Body   -----
 			if (($GLOBALS['phpgw']->msg->get_isset_pref('email_sig'))
@@ -520,7 +522,7 @@
 				$user_sig = $GLOBALS['phpgw']->msg->get_pref_value('email_sig');
 				// html_quotes_decode may be obsoleted someday:  workaround for a preferences database issue (<=pgpgw ver 0.9.13)
 				$user_sig = $GLOBALS['phpgw']->msg->html_quotes_decode($user_sig);
-				$body = $body."\r\n"
+				$this->smtp->Body = $this->smtp->Body."\r\n"
 						."\r\n"
 						.'-- '."\r\n" 
 						.$user_sig ."\r\n";

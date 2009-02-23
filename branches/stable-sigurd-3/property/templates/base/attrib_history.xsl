@@ -2,8 +2,8 @@
 	<xsl:template match="attrib_history">
 	<div><br/></div>
 	<!--  DATATABLE -->	
+	<div align="left" id="paging_0"> </div>
 	<div id="datatable-container_0"></div>
-	<div id="datatable-buttons_0"></div>
 	<div id="contextmenu_0"></div>
 	<div><br/></div>
 	<!--  DATATABLE DEFINITIONS-->

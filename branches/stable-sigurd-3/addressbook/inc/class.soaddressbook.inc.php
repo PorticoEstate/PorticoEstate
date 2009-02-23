@@ -1092,26 +1092,16 @@
 		*/
 		function read_preferences($contact_type)
 		{
-			$prefs =& $GLOBALS['phpgw']->preferences->data['addressbook'];
-
+			$prefs = $GLOBALS['phpgw']->preferences->read();
+			$prefs = $prefs['addressbook'];
 			if($contact_type==$this->tab_main_persons)
 			{
-				if ( isset($prefs['person_columns'])
-					&& strlen($prefs['person_columns']) )
-				{
-					return unserialize($prefs['person_columns']);
-				}
+				
+				return $prefs['person_columns'];
 			}
 			elseif($contact_type==$this->tab_main_organizations)
 			{
-				if ( isset($prefs['org_columns'])
-					&& strlen($prefs['org_columns']) )
-				{
-					return unserialize($prefs['org_columns']);
-				}
-			}
-			return array();//whoops
+				return $prefs['org_columns'];
+			}	
 		}
-
 	}
-?>

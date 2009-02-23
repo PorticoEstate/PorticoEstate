@@ -1220,12 +1220,12 @@
          $myColumnDefs[0] = array
          (
           'name'   => "0",
-          'values'  => json_encode(array( array(key => time, label=>$alarm_data['header'][0]['lang_time'], sortable=>true,resizeable=>true,width=>130),
-                    array(key => text, label=>$alarm_data['header'][0]['lang_text'], sortable=>true,resizeable=>true,width=>300),
-                    array(key => user, label=>$alarm_data['header'][0]['lang_user'], sortable=>true,resizeable=>true,width=>150),
-                          array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>50),
+          'values'  => json_encode(array( array(key => time, label=>$alarm_data['header'][0]['lang_time'], sortable=>true,resizeable=>true,width=>140),
+                    array(key => text, label=>$alarm_data['header'][0]['lang_text'], sortable=>true,resizeable=>true,width=>340),
+                    array(key => user, label=>$alarm_data['header'][0]['lang_user'], sortable=>true,resizeable=>true,width=>200),
+                          array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
                           array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-                          array(key => select,label=>$alarm_data['header'][0]['lang_select'], sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>50)))
+                          array(key => select,label=>$alarm_data['header'][0]['lang_select'], sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
    );
 
          $myButtons[0] = array
@@ -1282,11 +1282,9 @@
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
-       			'values'		=>	json_encode(array(	array(id =>'values[new_index]', type=>inputText, size=>12, classname=> ''),
-       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onUpdateClick , classname=> ''),
-       													array(type=>text, label=>'New index')
-       													/*array(type=>img, src=>'/pgwsvn/phpgwapi/templates/base/images/cal.png', id=>'values_date-trigger')*/
-
+       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'valign'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'valign'),
+       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onUpdateClick , classname=> '')
        													))
 			);
 

@@ -1000,7 +1000,11 @@
 				$year = $this->year;
 			}
 			$holiday = CreateObject('calendar.boholiday');
-			$holiday->prepare_read_holidays($year,$this->owner);
+			
+			$account = $this->contacts->are_users($this->owner);
+	//		_debug_array($account[0]['account_id']);
+			
+			$holiday->prepare_read_holidays($year,$account[0]['account_id']);
 			$this->cached_holidays = $holiday->read_holiday();
 			unset($holiday);
 		}

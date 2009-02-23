@@ -745,6 +745,7 @@
 			}
 			$id				= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
+//return _debug_array($values);
 			$delete_item	= phpgw::get_var('delete_item', 'bool');
 			$activity_id	= phpgw::get_var('activity_id', 'int');
 			$active_tab		= phpgw::get_var('tab', 'string', 'REQUEST', 'general');
@@ -752,18 +753,16 @@
 			$config			= CreateObject('phpgwapi.config','property');
 			$boalarm		= CreateObject('property.boalarm');
 			$receipt 		= array();
-			
+			$get_items 		= false;
 
 			if($delete_item && $id && $activity_id)
 			{
 				$this->bo->delete_item($id,$activity_id);
+				$get_items = true;
 			}
-
 			$values_attribute  = phpgw::get_var('values_attribute');
-
 			$insert_record_agreement = $GLOBALS['phpgw']->session->appsession('insert_record_values.agreement','property');
 
-//_debug_array($insert_record_agreement);
 			if(isset($insert_record_agreement) && is_array($insert_record_agreement))
 			{
 				for ($j=0;$j<count($insert_record_agreement);$j++)
@@ -875,12 +874,13 @@
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a index !'));
 					}
-
+				
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->update($values);
+						$get_items = true;
 					}
-
+				
 				}
 				else if(isset($values['delete_alarm']) && $values['delete_alarm'] && count($values['alarm']))
 				{
@@ -904,8 +904,8 @@
 				else if(isset($values['add_alarm']) && $values['add_alarm'])
 				{
 					$time = intval($values['time']['days'])*24*3600 +
-						intval($values['time']['hours'])*3600 +
-						intval($values['time']['mins'])*60;
+					intval($values['time']['hours'])*3600 +
+					intval($values['time']['mins'])*60;
 				
 					if ($time > 0)
 					{
@@ -917,33 +917,8 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiagreement.index', 'role'=> $this->role));
 				}
 			}
-			//------JSON code-------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$alarm_data=$this->bocommon->initiate_ui_alarm(array(
-						'acl_location'=>$this->acl_location,
-						'alarm_type'=> 'agreement',
-						'type'		=> 'form',
-						'text'		=> 'Email notification',
-						'times'		=> isset($times)?$times:'',
-						'id'		=> $id,
-						'method'	=> isset($method)?$method:'',
-						'data'		=> isset($data)?$data:'',
-						'account_id'=> isset($account_id)?$account_id:''
-						));
-				//$alarm_data['values'] = array();
-				if(count($alarm_data['values']))		
-				{
-					return json_encode($alarm_data['values']);
-				}
-				else
-				{
-					return "";
-				}
-			}
-			//--------------------JSON code-----
-			
-			
+	
+	
 			$agreement = $this->bo->read_single(array('agreement_id'=>$id));
 
 			/* Preserve attribute values from post */
@@ -1180,25 +1155,66 @@
 				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
 
-			//---datatable settings---------------------------------------------------	
+//------JSON code-------------------
+			
+			//---GET ITEMS
+			if( phpgw::get_var('phpgw_return_as') == 'json' &&  $get_items )
+			{
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+			//-- ALARMS ---
+			else if( phpgw::get_var('phpgw_return_as') == 'json' && !$get_items )
+			{
+				$alarm_data=$this->bocommon->initiate_ui_alarm(array(
+						'acl_location'=>$this->acl_location,
+						'alarm_type'=> 'agreement',
+						'type'		=> 'form',
+						'text'		=> 'Email notification',
+						'times'		=> isset($times)?$times:'',
+						'id'		=> $id,
+						'method'	=> isset($method)?$method:'',
+						'data'		=> isset($data)?$data:'',
+						'account_id'=> isset($account_id)?$account_id:''
+						));
+				//$alarm_data['values'] = array();
+				if(count($alarm_data['values']))		
+				{
+					return json_encode($alarm_data['values']);
+				}
+				else
+				{
+					return "";
+				}
+			}
+
+			//---datatable0 settings---------------------------------------------------	
 
 			$datavalues[0] = array
 			(
 				'name'			=> "0",
 				'values' 		=> json_encode($alarm_data['values']),
 				'total_records'	=> count($alarm_data['values']),
+				'permission'   	=> "''",
 				'is_paginator'	=> 0,
 				'footer'		=> 0
 			);					
        		$myColumnDefs[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>130),
-									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>300),
-									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>150),
-		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>50),
+       			'values'		=>	json_encode(array(	array(key => time,	label=>$alarm_data['header'][0]['lang_time'],	sortable=>true,resizeable=>true,width=>140),
+									       				array(key => text,	label=>$alarm_data['header'][0]['lang_text'],	sortable=>true,resizeable=>true,width=>340),
+									       				array(key => user,	label=>$alarm_data['header'][0]['lang_user'],	sortable=>true,resizeable=>true,width=>200),
+		       				       						array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
 		       				       						array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>50)))
+		       				       						array(key => select,label=>$alarm_data['header'][0]['lang_select'],	sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
 			);	
 		
        		$myButtons[0] = array
@@ -1219,9 +1235,96 @@
        													
        													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton),
        													))
-			);			
+			);	
 
+//---datatable1 settings---------------------------------------------------
+			$parameters['view'] = array('parameter' => array(
+					array('name'  => 'agreement_id','source' => 'agreement_id'),
+					array('name'  => 'id',			'source' => 'id')));	
+							
+			$parameters['edit'] = array('parameter' => array(
+					array('name'  => 'agreement_id','source' => 'agreement_id'),
+					array('name'  => 'id',			'source' => 'id')));				
 			
+			$parameters['delete'] = array('parameter' => array(
+					array('name'  => 'delete_item',	'source' => 1,	'ready'  => 1),
+					array('name'  => 'id',			'source' => 'agreement_id'),
+					array('name'  => 'activity_id',	'source' => 'activity_id')));
+								
+			$permission_update = false;
+			if($this->acl_read && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
+			{
+				$permissions['rowactions'][] = array(
+					'text'    => lang('view'),
+					'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.view_item')),
+					'parameters' => $parameters['view']
+			   	);				
+			}
+			if($this->acl_edit && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
+			{
+				$permissions['rowactions'][] = array(
+					'text'    => lang('edit'),
+					'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.edit_item')),
+					'parameters' => $parameters['edit']
+			   	);
+			}
+			if($this->acl_delete && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
+			{
+				$permissions['rowactions'][] = array(
+					'text'    	=> lang('delete'),
+					'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.edit' )),
+					'confirm_msg'=> lang('do you really want to delete this entry'),
+					'parameters'=> $parameters['delete']
+			   	);
+			}
+			if($this->acl_manage && (!isset($edit_item) || !$edit_item) && (!isset($view_only) || !$view_only))
+			{
+				$permission_update = true;
+			}
+			
+			$datavalues[1] = array
+			(
+				'name'			=> "1",
+				'values' 		=> json_encode($content),
+				'total_records'	=> count($content),
+				'permission'   	=> json_encode($permissions['rowactions']),
+				'is_paginator'	=> 0,
+				'footer'		=> 1
+			);		
+			
+			//_debug_array($datavalues[1]);die;
+						
+	       $myColumnDefs[1] = array
+	       (
+	       'name'			=> "1",
+	       'values'		=>	json_encode(array(	array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => unit,			label=>$table_header[3]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => this_index,	label=>$table_header[7]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true),
+										       	array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true),
+										       	$permission_update?array(key => select,		label=>$table_header[13]['header'],	sortable=>false,resizeable=>false,formatter=>FormatterCheckItems):"",
+										       	array(key => activity_id,	hidden=>true),
+										       	array(key => agreement_id,	hidden=>true)
+	       )));	
+       
+       
+       
+       
+       
+
+			$myButtons[2] = array
+       		(
+       			'name'			=> "2",
+       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'valign'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'mybottonsUpdates valign'),
+       													array(id =>'values[update]',	type=>buttons,		value=>Update,	label=>lang('update'),	funct=> onUpdateClick , classname=> '')
+       													)));		
+	
 //_debug_array(array($alarm_data[alter_alarm][lang_add]));die;			
 			//----------------------------------------------datatable settings--------			
 			
@@ -1233,6 +1336,7 @@
 				'myColumnDefs'							=> $myColumnDefs,
 				'myButtons'								=> $myButtons,
 				
+				'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'allow_allrows'							=> true,
 				'allrows'								=> $this->allrows,
 				'start_record'							=> $this->start,
@@ -1479,10 +1583,108 @@
 				'lang_update_statustext'	=> lang('update selected investments')
 			);
 
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$content_values = array();
+
+	  			$hidden = '';
+				for($y=0;$y<count($content);$y++)
+				{
+					for($z=0;$z<=count($content[$y]['row']);$z++)
+					{
+						if($content[$y]['row'][$z]['name']!='')
+						{
+							$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+						}
+					}									
+				}
+													 
+				$hidden .= " <input name='values[select][0]' type='hidden' value='".$content_values[$y - 1]['activity_id']."'/>";
+				$hidden .= " <input name='values[total_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['total_cost']."'/>";
+				$hidden .= " <input name='values[w_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['w_cost']."'/>";
+				$hidden .= " <input name='values[m_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['m_cost']."'/>";
+				$hidden .= " <input name='values[id][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+				
+				$content_values[$y - 1]['index_date'] .= $hidden;
+
+				if(count($content_values))
+				{
+					return json_encode($content_values);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+  			$hidden = '';
+			for($y=0;$y<count($content);$y++)
+			{
+				for($z=0;$z<=count($content[$y]['row']);$z++)
+				{
+					if($content[$y]['row'][$z]['name']!='')
+					{
+						$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+					}
+				}									
+			}
+												 
+			$hidden .= " <input name='values[select][0]'  type='hidden' value='".$content_values[$y - 1]['activity_id']."'/>";
+			$hidden .= " <input name='values[total_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['total_cost']."'/>";
+			$hidden .= " <input name='values[w_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['w_cost']."'/>";
+			$hidden .= " <input name='values[m_cost][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['m_cost']."'/>";
+			$hidden .= " <input name='values[id][".$content_values[$y - 1]['activity_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+			
+			$content_values[$y - 1]['index_date'] .= $hidden;
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_values),
+					'total_records'			=> count($content_values),
+					'is_paginator'			=> 0,
+					'permission'			=> '""',
+					'footer'				=> 0
+			);
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => activity_id,label=>lang('Activity ID'),sortable=>false,resizeable=>true),
+									       			array(key => m_cost,label=>lang('m_cost'),sortable=>false,resizeable=>true),
+									       			array(key => w_cost,label=>lang('w_cost'),sortable=>false,resizeable=>true),
+									       			array(key => total_cost,label=>lang('Total Cost'),sortable=>false,resizeable=>true),
+									       			array(key => this_index,label=>lang('index'),sortable=>false,resizeable=>true),
+									       			array(key => index_count,label=>lang('index_count'),sortable=>false,resizeable=>true),
+									       			array(key => index_date,label=>lang('Date'),sortable=>false,resizeable=>true)))
+									       			
+
+			);
+			
+			$myButtons[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(type=>text, label=>'New index'),
+       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>lang('Update'),	funct=> onUpdateClick , classname=> ''),
+       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> ''),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> '')
+       													
+       													
+
+       													))
+			);
+			
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'						=> json_encode(array(menuaction => "property.uiagreement.edit_item", agreement_id=>$agreement_id, id=>$id, role=>$this->role)),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+				'myButtons'							=> $myButtons,	
+
 				'activity_descr' 				=> $activity_descr,
 				'lang_descr' 					=> lang('Descr'),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1502,6 +1704,7 @@
 				'attributes_values'				=> $values['attributes'],
 				'lookup_functions'				=> $values['lookup_functions'],
 				'dateformat'					=> $dateformat,
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 
 				'lang_agreement'				=> lang('Agreement'),
 				'agreement_name'				=> $agreement['name'],
@@ -1535,9 +1738,25 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('agreement') . ': ' . ($values['id']?lang('edit item') . ' ' . $agreement['name']:lang('add item') . ' ' . $agreement['name']);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_item' => $data));
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'agreement.edit_item', 'property' );
+	
+			
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 

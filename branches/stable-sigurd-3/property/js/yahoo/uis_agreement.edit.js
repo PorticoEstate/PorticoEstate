@@ -157,9 +157,11 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 	{
 		if(num==1)
 		{
-			alert("sss");
 			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
 			tableYUI.setAttribute("id","tableYUI");
+			tableYUI.deleteTFoot();
+			YAHOO.util.Dom.get("values_date").value = "";
+			YAHOO.util.Dom.get("values[new_index]").value = "";
 			addFooterDatatable();
 		}
 	}
@@ -172,14 +174,13 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
   		//Create ROW
 		newTR = document.createElement('tr');
 		//RowChecked
+		td_empty(12);
 		CreateRowChecked("mychecks_update");
 
 		//Add to Table
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR.cloneNode(true));
-		//clean value for values_ds.message
-		//values_ds.message = null;
   	}
 
 /********************************************************************************

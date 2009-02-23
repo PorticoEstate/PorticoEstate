@@ -115,7 +115,7 @@
 			$order = phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			$sort = phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			$total = 0;
-			$query = phpgw::get_var('query', 'string', 'POST');
+			$query = phpgw::get_var('query', 'string');
 			$GLOBALS['cd'] = phpgw::get_var('cd', 'int', 'GET');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration')
 															. ': ' . lang('list groups');
@@ -250,7 +250,7 @@
 						array('menuaction' => 'admin.uiaccounts.edit_user'));
 			}
 
-			$query		= phpgw::get_var('query', 'string', 'POST');
+			$query		= phpgw::get_var('query', 'string');
 			$start		= phpgw::get_var('start', 'int', 'GET', -1);
 			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
@@ -912,7 +912,7 @@
 			unset($group_ids);
 
 			/* create list of available apps */
-			$apps = createObject('phpgwapi.applications', $account_id);
+			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
 			$db_perms = $apps->read_account_specific();
 
 			$available_apps = $GLOBALS['phpgw_info']['apps'];

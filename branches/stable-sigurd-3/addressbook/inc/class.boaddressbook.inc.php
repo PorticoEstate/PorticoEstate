@@ -518,9 +518,9 @@
 		function criteria_contacts($access, $category, $field, $pattern, $show_fields)
 		{
 			$fields = array();
-			if($pattern)
+			if ($pattern)
 			{
-				switch($field)
+				switch ($field)
 				{
 					case 'person':
 						$fields = array
@@ -528,31 +528,22 @@
 							'per_full_name',
 							'per_prefix',
 							'per_suffix',
-							'per_birthday',
-							'per_pubkey',
-							'per_title',
-							'per_department',
-							'per_initials',
-							'per_sound',
-							'per_active'
+							'per_initials'
 						);
 						break;
-					case 'person_first':
-						$fields = array('per_first_name');
-						break;
-					case 'person_last':
-						$fields = array('per_last_name');
-						break;
+
 					case 'org':
-						$fields = array('org_name');
+						$fields = array ('org_name' );
 						break;
+
 					case 'comms':
-						foreach($this->comm_descr as $data)
+						$fields['comm_media'] = array();
+						foreach ( $this->comm_descr as $data )
 						{
-							$comms[] = $data['comm_description'];
+							$fields['comm_media'][] = $data ['comm_description'];
 						}
-						$fields['comm_media'] = $comms;
 						break;
+
 					case 'location':
 						$fields = array
 						(
@@ -565,17 +556,17 @@
 							'addr_country'
 						);
 						break;
+
 					case 'other':
-						$fields = array('other_value');
+						$fields = array ('other_value');
 						break;
+
 					case 'note':
-						$fields = array('note_text');
+						$fields = array ('note_text');
 						break;
-					/*
-					not needed 
-					default:
-						$fields = array();
-					*/
+
+					default :
+						$fields = array ();
 				}
 			}
 			return $this->so->criteria_contacts($GLOBALS['phpgw_info']['user']['account_id'], $access, $category, $fields, $pattern, $show_fields);

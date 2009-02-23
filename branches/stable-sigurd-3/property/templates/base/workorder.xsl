@@ -480,6 +480,25 @@
 
 <div id="general">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:for-each select="value_origin" >
+				<tr>
+					<td valign ="top">
+						<xsl:value-of select="descr"/>
+					</td>
+					<td>
+						<table>
+							<xsl:for-each select="data">
+								<tr>
+									<td class="th_text"  align="left" >
+										<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+										<xsl:text> </xsl:text>
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</td>
+				</tr>
+			</xsl:for-each>
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!=''">
 					<tr>
@@ -511,6 +530,9 @@
 					<xsl:value-of select="lang_title"/>
 				</td>
 				<td>
+					<input type="hidden" name="values[origin]" value="{value_origin_type}"></input>
+					<input type="hidden" name="values[origin_id]" value="{value_origin_id}"></input>
+
 					<input type="text" name="values[title]" value="{value_title}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
@@ -1085,6 +1107,25 @@
 </div>
 <div id="general">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:for-each select="value_origin" >
+				<tr>
+					<td valign ="top">
+						<xsl:value-of select="descr"/>
+					</td>
+					<td>
+						<table>
+							<xsl:for-each select="data">
+								<tr>
+									<td class="th_text"  align="left" >
+										<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+										<xsl:text> </xsl:text>
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</td>
+				</tr>
+			</xsl:for-each>
 
 			<tr>
 				<td>

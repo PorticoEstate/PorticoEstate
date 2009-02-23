@@ -506,6 +506,10 @@ class Template
 		reset($this->varvals);
 		while (list($k, $v) = each($this->varvals)) {
 			$varvals_quoted[$k] = preg_replace(array('/\\\\/', '/\$/'), array('\\\\\\\\', '\\\\$'), $v);
+			if(is_array($varvals_quoted[$k]))
+			{
+				$varvals_quoted[$k] = implode($varvals_quoted[$k]);
+			}
 		}
 
 		$str = $this->get_var($varname);

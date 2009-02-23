@@ -229,7 +229,7 @@
 			<div id="general">
 		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$edit_url}">
 
-		<table cellpadding="2" cellspacing="2" width="79%" align="center">
+		<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -355,23 +355,32 @@
 
 
 			</table>
-
-			<xsl:call-template name="attributes_values"/>
-
-			<table>
-			<xsl:choose>
-				<xsl:when test="files!=''">
-					<xsl:call-template name="file_list"/>
-				</xsl:when>
-			</xsl:choose>
-
-			<xsl:choose>
-				<xsl:when test="fileupload = 1">
-					<xsl:call-template name="file_upload"/>
-				</xsl:when>
-			</xsl:choose>
+			
+			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+			<tr><td><xsl:call-template name="attributes_values"/></td></tr>
+			
 			</table>
-			<table>
+
+
+			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+				<xsl:choose>
+					<xsl:when test="files!=''">
+						<xsl:call-template name="file_list"/>
+					</xsl:when>
+				</xsl:choose>
+				
+				<xsl:choose>
+					<xsl:when test="fileupload = 1">
+						<xsl:call-template name="file_upload"/>
+					</xsl:when>
+				</xsl:choose>
+			</table>
+			
+			
+			
+			
+			
+			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 			<tr height="50">
 				<td valign="bottom">
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -382,8 +391,8 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td valign="bottom">
+				<!-- </td> 
+				<td valign="bottom">-->
 					<xsl:variable name="lang_apply"><xsl:value-of select="lang_apply"/></xsl:variable>
 					<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -392,8 +401,8 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
-				<td align="right" valign="bottom">
+				<!-- </td> 
+				<td valign="bottom">-->
 					<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
 					<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -410,8 +419,9 @@
 
 		<form method="post" name="alarm" action="{$edit_url}">
 		   <input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}" ></input>
-		   <table cellpadding="2" cellspacing="2" width="53%" align="center" border="0">
-		    <tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
+		   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+		   <tr><td width="79%" class="center" align="left"><br/></td></tr>
+		    <tr><td width="79%" class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
 
 		      <!-- DataTable 0-->
 		       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
@@ -476,18 +486,23 @@
 					<div id="paging_1"> </div>
 					<div id="datatable-container_1"></div>
 					<div id="contextmenu_1"></div>
+					<div style="height:15px;"></div>
 					<div id="datatable-buttons_2">
-
-						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_date_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_date_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 						</input>
-						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
 					</div>
-
+					<style type="text/css">
+						.valign {
+						   height: 100%;
+						   vertical-align: top;
+						}
+					</style> 
 					<script>
 						var property_js = <xsl:value-of select="property_js" />;
 						var base_java_url = <xsl:value-of select="base_java_url" />;

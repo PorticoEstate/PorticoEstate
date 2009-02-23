@@ -116,7 +116,7 @@ class uiaddressbook
 		$this->template				=& $GLOBALS['phpgw']->template;
 		$this->cat					= CreateObject('phpgwapi.categories');
 		$this->company				= CreateObject('phpgwapi.categories','addressbook_company');
-		$this->prefs				= $GLOBALS['phpgw_info']['user']['preferences']['addressbook'];
+		$this->prefs				= isset($GLOBALS['phpgw_info']['user']['preferences']['addressbook']) ? $GLOBALS['phpgw_info']['user']['preferences']['addressbook'] : array();
 		$this->owner				= $GLOBALS['phpgw_info']['user']['account_id']; 
 
 		$this->contact_type			= $this->bo->contact_type;
@@ -3225,7 +3225,7 @@ class uiaddressbook
 	function get_persons($fields_to_search, $current_person)
 	{
 		$criteria = $this->bo->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields_to_search);
-		$persons = $this->bo->get_persons($fields_to_search,'','','first_name','','',$criteria);
+		$persons = $this->bo->get_persons($fields_to_search,'','','last_name','','',$criteria);
 
 		if ($persons)
 		{

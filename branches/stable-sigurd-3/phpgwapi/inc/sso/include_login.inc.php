@@ -40,7 +40,7 @@
 	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
 	 		. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
-	$tmpl = CreateObject('phpgwapi.Template', $GLOBALS["phpgw_info"]['server']['template_dir']);
+	$tmpl = CreateObject('phpgwapi.Template', $GLOBALS['phpgw_info']['server']['template_dir']);
 
 	/*
 	 * Generic include for mapping / remoteuser mode
@@ -133,7 +133,7 @@
 					// fix for bug php4 expired sessions bug
 					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
 					{
-						$GLOBALS['phpgw']->session->phpgw_setcookie(PHPGW_PHPSESSID);
+						$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
 					}
 
 					return lang('Your session could not be verified.');

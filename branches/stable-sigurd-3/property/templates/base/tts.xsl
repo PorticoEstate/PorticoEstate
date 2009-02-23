@@ -1109,10 +1109,8 @@
 					<form method="post" action="{$request_link}">
 					<xsl:variable name="lang_generate_request"><xsl:value-of select="lang_generate_request"/></xsl:variable>
 					<input type="submit" name="location" value="{$lang_generate_request}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_generate_request_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_generate_request_statustext"/>
 						</xsl:attribute>
 					</input>
 					</form>
@@ -1120,16 +1118,26 @@
 				<td valign="top">
 					<xsl:variable name="order_link"><xsl:value-of select="order_link"/></xsl:variable>
 					<form method="post" action="{$order_link}">
-					<xsl:variable name="lang_generate_order"><xsl:value-of select="lang_generate_order"/></xsl:variable>
-					<input type="submit" name="location" value="{$lang_generate_order}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_generate_order_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<xsl:variable name="lang_generate_project"><xsl:value-of select="lang_generate_project"/></xsl:variable>
+					<input type="submit" name="location" value="{$lang_generate_project}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_generate_project_statustext"/>
 						</xsl:attribute>
 					</input>
 					</form>
 				</td>
+				<td valign="top">
+					<xsl:variable name="add_to_project_link"><xsl:value-of select="add_to_project_link"/></xsl:variable>
+					<form method="post" action="{$add_to_project_link}">
+					<xsl:variable name="lang_add_to_project"><xsl:value-of select="lang_add_to_project"/></xsl:variable>
+					<input type="submit" name="location" value="{$lang_add_to_project}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="title">
+								<xsl:value-of select="lang_add_to_project_statustext"/>
+						</xsl:attribute>
+					</input>
+					</form>
+				</td>
+
 				<xsl:choose>
 					<xsl:when test="link_entity!=''">
 						<xsl:for-each select="link_entity" >
@@ -1138,10 +1146,8 @@
 							<form method="post" action="{$link}">
 							<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
 							<input type="submit" name="location" value="{$name}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_start_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_start_statustext"/>
 								</xsl:attribute>
 							</input>
 							</form>

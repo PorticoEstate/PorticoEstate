@@ -431,6 +431,15 @@
 			</tr>
 			<tr>
 				<td valign="top">
+					<xsl:value-of select="lang_remainder"/>
+				</td>
+				<td>
+					<xsl:value-of select="value_remainder"/>
+					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
 					<xsl:value-of select="lang_reserve_remainder"/>
 				</td>
 				<td>

@@ -1721,6 +1721,20 @@
 				'origin_id'		=> $id
 			);
 
+			$add_to_project_link_data = array
+			(
+				'menuaction'		=> 'property.uiproject.index',
+				'from'				=> 'workorder',
+				'lookup'			=> true,
+				'query'				=> isset($ticket['location_data']['loc1']) ? $ticket['location_data']['loc1'] : '',
+		//		'p_num'				=> $ticket['p_num'],
+		//		'p_entity_id'		=> $ticket['p_entity_id'],
+		//		'p_cat_id'			=> $ticket['p_cat_id'],
+				'tenant_id'			=> $ticket['tenant_id'],
+				'origin'			=> '.ticket',
+				'origin_id'			=> $id
+			);
+
 			$form_link = array
 			(
 				'menuaction'	=> 'property.uitts.view',
@@ -1926,11 +1940,16 @@
 				'record_history'			=> $record_history,
 				'request_link'				=> $GLOBALS['phpgw']->link('/index.php',$request_link_data),
 				'order_link'				=> $GLOBALS['phpgw']->link('/index.php',$order_link_data),
-
+				'add_to_project_link'		=> $GLOBALS['phpgw']->link('/index.php',$add_to_project_link_data),				
+				
 				'lang_generate_request'			=> lang('Generate Request'),
 				'lang_generate_request_statustext'	=> lang('click this to generate a request with this information'),
-				'lang_generate_order'			=> lang('Generate order'),
-				'lang_generate_order_statustext'	=> lang('click this to generate an order with this information'),
+				'lang_generate_project'			=> lang('generate new project'),
+				'lang_generate_project_statustext'	=> lang('click this to generate a project with this information'),
+
+				'lang_add_to_project'			=> lang('add to project'),
+				'lang_add_to_project_statustext'	=> lang('click this to add an order to an existing project'),
+
 
 				'lang_save'				=> lang('save'),
 				'lang_name'				=> lang('name'),

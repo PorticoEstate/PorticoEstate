@@ -7,11 +7,11 @@
 	<xsl:template name="attributes_values">
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
 					<xsl:for-each select="attributes" >
 					<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 						<tr>
-							<td align="left" valign="top" title="{$statustext}" style="cursor:help">
+							<td align="left" width="19%" valign="top" title="{$statustext}" style="cursor:help">
 								<xsl:choose>
 									<xsl:when test="helpmsg=1">
 										<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
