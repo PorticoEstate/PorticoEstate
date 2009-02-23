@@ -1152,6 +1152,7 @@ re-assigned	property	no	Videresendt
 receipt	property	no	Kvittering
 record	property	no	Post
 related info	property	no	Relatert info
+remainder	property	no	Rest
 reminder	property	no	Påminning
 rental	property	no	Utleie
 rental agreement	property	no	Utleieavtale
@@ -1174,7 +1175,7 @@ request status	property	no	Status anmodning
 request title	property	no	Tiltak tittel
 requirement	property	no	Behov/pålegg
 reserve	property	no	reserve
-reserve remainder	property	no	rest
+reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 responsible	property	no	Ansvarlig

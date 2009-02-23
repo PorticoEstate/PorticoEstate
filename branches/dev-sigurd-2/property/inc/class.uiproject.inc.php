@@ -1142,6 +1142,14 @@
 				$values['sum'] = $values['sum'] + $values['reserve'];
 			}
 
+			$value_remainder = $values['sum'];
+			if(isset($values['sum_workorder_actual_cost']))
+			{
+				$value_remainder = $values['sum'] - $values['sum_workorder_actual_cost'];
+			}
+			$$values['sum']  = number_format($values['sum'], 0, ',', ' ');
+			$value_remainder = number_format($value_remainder, 0, ',', ' ');
+
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
@@ -1150,6 +1158,7 @@
 						'project_group'			=> $values['project_group'],
 						'project_group_descr'	=> $values['project_group_descr']));
 			
+
 			//---datatable settings---------------------------------------------------	
 			
 			$datavalues[0] = array
@@ -1169,6 +1178,7 @@
        			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
 									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
 									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
+									       			array(key => actual_cost,label=>lang('actual cost'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
 		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
 		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
 		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
@@ -1281,8 +1291,10 @@
 				//'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
 				//'workorder_budget'					=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
 				//'sum_workorder_actual_cost'			=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
-				//'lang_sum'							=> lang('Sum'),
-				'lang_actual_cost'					=> lang('Actual cost'),
+				'lang_sum'							=> lang('Sum'),
+				//'lang_actual_cost'					=> lang('Actual cost'),
+				'value_remainder'					=> $value_remainder,
+				'lang_remainder'					=> lang('remainder'),
 				'lang_coordinator'					=> lang('Coordinator'),
 				'lang_user_statustext'				=> lang('Select the coordinator the project belongs to. To do not use a category select NO USER'),
 				'select_user_name'					=> 'values[coordinator]',

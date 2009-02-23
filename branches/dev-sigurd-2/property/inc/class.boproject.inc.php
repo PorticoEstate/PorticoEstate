@@ -251,6 +251,7 @@
 				$project['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
 				$project['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$project['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
+				$project['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{

@@ -24,6 +24,7 @@ var  myPaginator_1, myDataTable_1;
   		//call getSumPerPage(name of column) in property.js
   		tmp_sum1 = getSumPerPage('budget',2,paginator,datatable);
   		tmp_sum2 = getSumPerPage('calculation',2,paginator,datatable);
+  		tmp_sum3 = getSumPerPage('actual_cost',2,paginator,datatable);
 
   		if(typeof(tableYUI)=='undefined')
   		{
@@ -41,6 +42,7 @@ var  myPaginator_1, myDataTable_1;
 		td_sum('Sum');
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
+		td_sum(tmp_sum3);
 		td_empty(3);
 
 		myfoot = tableYUI.createTFoot();
