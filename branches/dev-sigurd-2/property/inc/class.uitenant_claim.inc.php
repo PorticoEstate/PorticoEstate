@@ -668,6 +668,42 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+
+			for($d=0;$d<count($project_values['workorder_budget']);$d++)
+			{
+				if($project_values['workorder_budget'][$d]['charge_tenant']==1)
+				{
+					$project_values['workorder_budget'][$d]['charge_tenant']='x';
+				}
+			}
+
+			//---datatable0 settings---------------------------------------------------
+
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($project_values['workorder_budget']),
+				'total_records'	=> count($project_values['workorder_budget']),
+				'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view'))),
+				'is_paginator'	=> 1,
+				'footer'		=> 0
+			);
+
+
+
+			$myColumnDefs[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(key => workorder_id,	label=>'Workorder',	sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
+									       				array(key => budget,	label=>'Budget',	sortable=>true,resizeable=>true),
+									       				array(key => calculation,	label=>'Calculation',	sortable=>true,resizeable=>true),
+		       				       						array(key => vendor_name,label=>'Vendor',sortable=>true,resizeable=>true),
+		       				       						array(key => charge_tenant,label=>'Charge tenant',sortable=>true,resizeable=>true),
+		       				       						array(key => status,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
+		       				       						array(key => actual_cost,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
+		       				       						array(key => selected,label=>'select',	sortable=>false,resizeable=>false,formatter=>'YAHOO.widget.DataTable.formatCheckbox')))
+			);
+
 			$data = array
 			(
 				'table_header_workorder'		=> $table_header_workorder,
@@ -675,6 +711,12 @@
 				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
 				'lang_start_date'			=> lang('Project start date'),
 				'value_start_date'			=> $project_values['start_date'],
+
+				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'							=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
+				'datatable'								=> $datavalues,
+				'myColumnDefs'							=> $myColumnDefs,
+				//'myButtons'								=> $myButtons,
 
 				'lang_end_date'				=> lang('Project end date'),
 				'value_end_date'			=> $project_values['end_date'],
@@ -775,6 +817,27 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id?lang('edit claim'):lang('add claim'));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+
+			//_debug_array($data);die;
+
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uitenant.edit', 'property' );
+			//-----------------------datatable settings---
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
@@ -790,7 +853,7 @@
 			$claim_id	= phpgw::get_var('claim_id', 'int');
 			$delete		= phpgw::get_var('delete', 'bool', 'POST');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-			
+
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete($claim_id);
