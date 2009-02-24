@@ -308,7 +308,8 @@
 		//no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
 		for(i=0;i<textImput.length;i++)
 		{
-			eval("path_values."+textImput[i].name+"='"+YAHOO.util.Dom.get(textImput[i].id).value+"'")
+			var busq = encodeURIComponent(YAHOO.util.Dom.get(textImput[i].id).value);
+			eval("path_values."+textImput[i].name+"='"+busq+"'")
 		}
 
 		//si esta configurado que la busqueda sea por fechas
