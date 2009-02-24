@@ -450,6 +450,26 @@
 			return $common_data;
 		}
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		function save_template()
 		{
 
@@ -473,32 +493,156 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			
+
+			
+			
+			
+//------JSON code-------------------
+			//foreach ($common_data['content'] as $row)
+			for($i=0;$i<count($common_data['content']);$i++ ) 
+			{
+				
+				if($common_data['content'][$i]['remark']!="")
+				{
+					if(trim($common_data['content'][$i]["hours_descr"]) == "")
+					{
+						$conector = "";
+					}
+					else
+					{
+						$conector = "<br>";
+					}
+					$extra = $common_data['content'][$i]["hours_descr"].$conector.$common_data['content'][$i]["remark"];
+				}
+				else
+				{
+					$extra = $common_data['content'][$i]["hours_descr"];
+				}
+				$common_data['content'][$i]['extra_hours_descr'] = $extra;
+			}	
+				
+			//---GET ITEMS
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+
+//---datatable1 settings---------------------------------------------------
+			$parameters['edit'] = array('parameter' => array(
+					array('name'  => 'workorder_id','source' => $workorder_id, 'ready'  => 1),
+					array('name'  => 'hour_id',		'source' => 'hour_id')));				
+			
+			$parameters['delete'] = array('parameter' => array(
+					array('name'  => 'hour_id',		'source' => 'hour_id')
+					/*,array('name'  => 'id',			'source' => 'agreement_id'),
+					array('name'  => 'activity_id',	'source' => 'activity_id')*/));
+								
+			
+			$permissions['rowactions'][] = array(
+					'text'    => lang('edit'),
+					'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.edit')),
+					'parameters' => $parameters['edit']
+			);
+	
+			$permissions['rowactions'][] = array(
+					'text'    	=> lang('delete'),
+					'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.xxx' )),
+					'confirm_msg'=> lang('do you really want to delete this entry'),
+					'parameters'=> $parameters['delete']
+			);
+
+			
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($common_data['content']),
+				'total_records'	=> count($common_data['content']),
+				'permission'   	=> json_encode($permissions['rowactions']),
+				'is_paginator'	=> 0,
+				'footer'		=> 0
+			);		
+			
+//_debug_array($common_data['table_header'][0]['lang_post']);die;
+						
+	       $myColumnDefs[0] = array
+	       (
+	       'name'			=> "0",
+	       'values'		=>	json_encode(array(	array(key => post,			label=>$common_data['table_header'][0]['lang_post'],	sortable=>true,resizeable=>true),
+										       	array(key => code,			label=>$common_data['table_header'][0]['lang_code'],	sortable=>true,resizeable=>true),
+										       	array(key => extra_hours_descr,label=>$common_data['table_header'][0]['lang_descr'],sortable=>true,resizeable=>true),
+										       	array(key => unit,			label=>$common_data['table_header'][0]['lang_unit'],	sortable=>true,resizeable=>true),
+	       										array(key => quantity,		label=>$common_data['table_header'][0]['lang_quantity'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => billperae,		label=>$common_data['table_header'][0]['lang_billperae'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => cost,			label=>$common_data['table_header'][0]['lang_cost'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => deviation,		label=>$common_data['table_header'][0]['lang_deviation'],sortable=>true,resizeable=>true, formatter=>FormatterLink),
+	       										array(key => link_deviation,hidden=>True),
+	       										array(key => result,		label=>$common_data['table_header'][0]['lang_result'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => wo_hour_category,label=>$common_data['table_header'][0]['lang_category'],sortable=>true,resizeable=>true),
+	       										array(key => cat_per_cent,	label=>$common_data['table_header'][0]['lang_per_cent'],sortable=>true,resizeable=>true, formatter=>FormatterCenter),
+	       										array(key => hour_id,		hidden=>True),
+	       										array(key => link_edit,		hidden=>True)
+	       )));	
+//----------------------------------------------datatable settings--------			
+
 			$data = array
 			(
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.save_template', 'workorder_id'=> $workorder_id)),
+				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'			=> json_encode(array(menuaction => "property.uiwo_hour.index",workorder_id=>$workorder_id)),
+				'datatable'				=> $datavalues,
+				'myColumnDefs'			=> $myColumnDefs,
+				
+				
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.save_template', 'workorder_id'=> $workorder_id)),
 
-				'lang_done_statustext'			=> lang('Back to the workorder list'),
-				'lang_add_statustext'			=> lang('Adds this workorders calculation as a template for later use'),
-				'lang_search_statustext'		=> lang('Adds a new workorder to an existing project'),
+				'lang_done_statustext'	=> lang('Back to the workorder list'),
+				'lang_add_statustext'	=> lang('Adds this workorders calculation as a template for later use'),
+				'lang_search_statustext'=> lang('Adds a new workorder to an existing project'),
 
 				'lang_done'				=> lang('Done'),
 				'lang_add'				=> lang('Add'),
-				'lang_search'				=> lang('Search'),
+				'lang_search'			=> lang('Search'),
 
 				'lang_name'				=> lang('name'),
-				'lang_name_statustext'			=> lang('Enter the name the template'),
+				'lang_name_statustext'	=> lang('Enter the name the template'),
 
-				'lang_descr'				=> lang('Description'),
-				'lang_descr_statustext'			=> lang('Enter a short description of this template'),
+				'lang_descr'			=> lang('Description'),
+				'lang_descr_statustext'	=> lang('Enter a short description of this template'),
 
-				'total_hours_records'			=> $common_data['total_hours_records'],
-				'lang_total_records'			=> lang('Total records'),
-				'table_header_hour'			=> $common_data['table_header'],
-				'values_hour'				=> $common_data['content'],
-				'workorder_data' 			=> $common_data['workorder_data']
+				'total_hours_records'	=> $common_data['total_hours_records'],
+				'lang_total_records'	=> lang('Total records'),
+				'table_header_hour'		=> $common_data['table_header'],
+				'values_hour'			=> $common_data['content'],
+				'workorder_data' 		=> $common_data['workorder_data']
 			);
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.save_template', 'property' );
+			//-----------------------datatable settings---	
+//_debug_array($data);die;
 
 			$appname	= lang('Workorder');
 			$function_msg	= lang('Add template');
@@ -508,6 +652,22 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		function index()
 		{
 			if(!$this->acl_read)
