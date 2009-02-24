@@ -1546,6 +1546,40 @@
 			$content	= $list['content'];
 			$table_header=$list['table_header'];
 
+			//------JSON code-------------------
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$content_values = array();
+				$hidden = '';
+
+				for($y=0;$y<count($content);$y++)
+				{
+					for($z=0;$z<count($content[$y]['row']);$z++)
+					{
+						if($content[$y]['row'][$z]['name']!='')
+						{
+							$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+						}
+					}
+				}
+
+				$hidden .= " <input name='values[select][".$content_values[$y - 1]['item_id']."]'  type='hidden' value='".$content_values[$y - 1]['cost']."'/>";
+				$hidden .= " <input name='values[id][".$content_values[$y - 1]['item_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+
+				$content_values[$y - 1]['index_date'] .= $hidden;
+
+				if(count($content_values))
+				{
+					return json_encode($content_values);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			//--------------------JSON code-----
+
+
 			for ($i=0; $i<count($list['content'][0]['row']); $i++)
 			{
 				$set_column[]=true;
@@ -1628,9 +1662,88 @@
 				}
 			}
 
+			/*REQUIRES VALIDATION OF PERMISSIONS*/
+			$permissions['rowactions'][] = array(
+					'text' 			=> lang('View'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uis_agreement.view_item'
+									)),
+					'parameters'	=> $parameters
+			);
+
+			$content_values = array();
+
+			for($y=0;$y<count($content);$y++)
+			{
+				for($z=0;$z<count($content[$y]['row']);$z++)
+				{
+					if($content[$y]['row'][$z]['name']!='')
+					{
+						$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+					}
+				}
+			}
+
+			$hidden = '';
+
+			for($y=0;$y<count($content);$y++)
+			{
+				for($z=0;$z<count($content[$y]['row']);$z++)
+				{
+					if($content[$y]['row'][$z]['name']!='')
+					{
+						$content_values[$y][$content[$y]['row'][$z]['name']] = $content[$y]['row'][$z]['value'];
+					}
+				}
+			}
+			$hidden .= " <input name='values[select][".$content_values[$y - 1]['item_id']."]'  type='hidden' value='".$content_values[$y - 1]['cost']."'/>";
+			$hidden .= " <input name='values[id][".$content_values[$y - 1]['item_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
+
+			$content_values[$y - 1]['index_date'] .= $hidden;
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_values),
+					'total_records'			=> count($content_values),
+					'is_paginator'			=> 0,
+					//'permission'			=> json_encode($permissions['rowactions']),
+					'permission'			=> '""',
+					'footer'				=> 0
+			);
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array(key => item_id,label=>lang('ID'),sortable=>true,resizeable=>true),
+									       			array(key => cost,label=>lang('Cost'),sortable=>true,resizeable=>true),
+									       			array(key => this_index,label=>lang('index'),sortable=>true,resizeable=>true),
+									       			array(key => index_count,label=>lang('index_count'),sortable=>true,resizeable=>true),
+									       			array(key => index_date,label=>lang('Date'),sortable=>true,resizeable=>true)))
+			);
+
+			$myButtons[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'actionsFilter'),
+       													array(type=>text, label=>'New index'),
+       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> ''),
+       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onAddClick , classname=> '')
+       													))
+			);
+
+
+
 
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'						=> json_encode(array(menuaction => "property.uis_agreement.edit_item",id=>$id,s_agreement_id=>$s_agreement_id)),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+				'myButtons'							=> $myButtons,
+
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'						=> lang('ID'),
@@ -1679,9 +1792,26 @@
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 			);
 
+			//_debug_array($data['values']);die;
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($values['id']?lang('edit item') . ' ' . $s_agreement['name']:lang('add item') . ' ' . $s_agreement['name']);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_item' => $data));
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit_item', 'property' );
+
 		}
 
 		function view_item()

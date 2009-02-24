@@ -698,8 +698,11 @@
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
 					<input type="hidden" name="values[item_id]" value="{value_id}" ></input>
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<xsl:call-template name="table_header"/>
-						<xsl:call-template name="values2"/>
+						<!-- xsl:call-template name="table_header"/>
+						<xsl:call-template name="values2"/> -->
+						<div id="paging_0"> </div>
+						<div id="datatable-container_0"></div>
+						<div id="contextmenu_0"></div>
 					</table>
 					<table width="70%" cellpadding="2" cellspacing="2" align="center">
 					<xsl:choose>
@@ -707,16 +710,45 @@
 							<xsl:apply-templates select="table_update"/>
 						</xsl:when>
 					</xsl:choose>
-						<tr>
+						<!-- tr>
 							<td></td><td></td>
 							<td class="small_text" align="left">
 								<a href="{delete_action}" onMouseover="window.status='{lang_delete_last_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_delete_last"/></a>
 							</td>
-						</tr>
+						</tr-->
 
 					</table>
 				</form>
 				</div>
+
+				<script>
+						var property_js = <xsl:value-of select="property_js" />;
+						var base_java_url = <xsl:value-of select="base_java_url" />;
+						var datatable = new Array();
+						var myColumnDefs = new Array();
+						var myButtons = new Array();
+
+						<xsl:for-each select="datatable">
+							datatable[<xsl:value-of select="name"/>] = [
+							{
+								values			:	<xsl:value-of select="values"/>,
+								total_records	: 	<xsl:value-of select="total_records"/>,
+								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+								permission		:	<xsl:value-of select="permission"/>,
+								footer			:	<xsl:value-of select="footer"/>
+							}
+							]
+						</xsl:for-each>
+
+						<xsl:for-each select="myColumnDefs">
+							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+						<xsl:for-each select="myButtons">
+							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+					</script>
+
+
 			</xsl:when>
 		</xsl:choose>
 		</div>
@@ -726,7 +758,7 @@
 
 	<xsl:template match="table_update">
 			<tr>
-				<td>
+				<!-- <td>
 					<xsl:value-of select="lang_new_index"/>
 					<input type="text" name="values[new_index]"  size="12" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="onMouseover">
@@ -735,9 +767,18 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
+				</td>-->
 				<td>
-					<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+					<!-- input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_date_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+					<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" /-->
+					<div id="datatable-buttons_0">
+						<input type="text" id="values_date" name="values[date]" class="actionsFilter" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_date_statustext"/>
@@ -745,8 +786,10 @@
 						</xsl:attribute>
 					</input>
 					<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</div>
+
 				</td>
-				<td height="50">
+				<!-- td height="50">
 					<xsl:variable name="lang_update"><xsl:value-of select="lang_update"/></xsl:variable>
 						<input type="submit" name="values[update]" value="{$lang_update}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -755,7 +798,7 @@
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-				</td>
+				</td-->
 			</tr>
 	</xsl:template>
 

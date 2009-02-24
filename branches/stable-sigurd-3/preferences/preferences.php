@@ -318,7 +318,7 @@
 		$vars = $GLOBALS['phpgw']->preferences->vars;
 		if (is_array($vars2))
 		{
-			$vars += $vars2;
+			$vars = array_merge($vars, $vars2);
 		}
 		$prefs[$name] = $GLOBALS['phpgw']->preferences->lang_notify($prefs[$name],$vars);
 

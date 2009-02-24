@@ -710,7 +710,7 @@
 								<xsl:for-each select="set_column" >
 									<td></td>
 								</xsl:for-each>
-								<td colspan="15" width="100%" class="small_text" valign="bottom" align="left">
+								<td colspan="15" width="100%" class="small_text" valign="bottom" align="right">
 									<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
 									<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
 									<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
