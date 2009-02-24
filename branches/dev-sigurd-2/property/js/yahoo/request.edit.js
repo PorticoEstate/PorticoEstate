@@ -35,8 +35,14 @@ var  myDataTable_0,myDataTable_1,myDataTable_2;
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR);
 	}
-
-
+  	
+/********************************************************************************/	
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
+	
+/********************************************************************************/
 YAHOO.util.Event.addListener(window, "load", function()
 {
 	var loader = new YAHOO.util.YUILoader();

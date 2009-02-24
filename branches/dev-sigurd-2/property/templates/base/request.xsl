@@ -621,13 +621,24 @@
 										<xsl:value-of select="value_score"/>
 									</td>
 								</tr>
-
-								<xsl:choose>
-									<xsl:when test="files!=''">
-										<xsl:call-template name="file_list"/>
-									</xsl:when>
-								</xsl:choose>
-
+								
+								<tr>
+									<td width="19%" align="left" valign="top">
+										<xsl:value-of select="//lang_files"/>
+									</td>
+									<td>
+										<div id="datatable-container_1"></div>
+									</td>
+								</tr>		
+													
+								<!--
+									<xsl:choose>
+										<xsl:when test="files!=''">
+											<xsl:call-template name="file_list"/>
+										</xsl:when>
+									</xsl:choose>
+								-->
+							
 								<xsl:choose>
 									<xsl:when test="fileupload = 1">
 										<xsl:call-template name="file_upload"/>
