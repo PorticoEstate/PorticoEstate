@@ -1228,14 +1228,15 @@
        		$myButtons[1] = array
        		(
        			'name'			=> "1",
-       			'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter),
-       													array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter),
-       													array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter),
-       													array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list']),classname=> actionsFilter),
+       			'values'		=>	json_encode(array(	array(id =>'values[time][days]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+       													array(id =>'values[time][hours]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'),	label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+       													array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+       													array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
        													
        													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton),
        													))
 			);	
+//_debug_array($alarm_data['add_alarm']['user_list']);die;			
 
 //---datatable1 settings---------------------------------------------------
 			$parameters['view'] = array('parameter' => array(

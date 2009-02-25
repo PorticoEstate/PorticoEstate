@@ -468,6 +468,8 @@
 				hd.setAttribute("id","hd_"+myButtons[j][p].id);
 				hd.setAttribute("class",myButtons[j][p].classname);
 				hd.setAttribute("name",myButtons[j][p].id);
+				//initial value for respective hidden
+				hd.setAttribute("value",myButtons[j][p].value_hidden);
 				div.appendChild(hd);
 			}
 		}
