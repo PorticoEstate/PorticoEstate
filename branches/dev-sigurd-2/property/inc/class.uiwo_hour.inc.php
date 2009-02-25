@@ -450,26 +450,6 @@
 			return $common_data;
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		function save_template()
 		{
 
@@ -492,14 +472,9 @@
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			
-
-			
-			
-			
+	
 //------JSON code-------------------
-			//foreach ($common_data['content'] as $row)
+			//join columns hours_descr and remark
 			for($i=0;$i<count($common_data['content']);$i++ ) 
 			{
 				
@@ -521,43 +496,9 @@
 				}
 				$common_data['content'][$i]['extra_hours_descr'] = $extra;
 			}	
-				
-			//---GET ITEMS
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				if(count($content))
-				{
-					return json_encode($content);
-				}
-				else
-				{
-					return "";
-				}
-			}
+
 
 //---datatable1 settings---------------------------------------------------
-			$parameters['edit'] = array('parameter' => array(
-					array('name'  => 'workorder_id','source' => $workorder_id, 'ready'  => 1),
-					array('name'  => 'hour_id',		'source' => 'hour_id')));				
-			
-			$parameters['delete'] = array('parameter' => array(
-					array('name'  => 'hour_id',		'source' => 'hour_id')
-					/*,array('name'  => 'id',			'source' => 'agreement_id'),
-					array('name'  => 'activity_id',	'source' => 'activity_id')*/));
-								
-			
-			$permissions['rowactions'][] = array(
-					'text'    => lang('edit'),
-					'action'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.edit')),
-					'parameters' => $parameters['edit']
-			);
-	
-			$permissions['rowactions'][] = array(
-					'text'    	=> lang('delete'),
-					'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiagreement.xxx' )),
-					'confirm_msg'=> lang('do you really want to delete this entry'),
-					'parameters'=> $parameters['delete']
-			);
 
 			
 			$datavalues[0] = array
@@ -565,8 +506,7 @@
 				'name'			=> "0",
 				'values' 		=> json_encode($common_data['content']),
 				'total_records'	=> count($common_data['content']),
-				'permission'   	=> json_encode($permissions['rowactions']),
-				'is_paginator'	=> 0,
+				'is_paginator'	=> 1,
 				'footer'		=> 0
 			);		
 			
@@ -575,21 +515,17 @@
 	       $myColumnDefs[0] = array
 	       (
 	       'name'			=> "0",
-	       'values'		=>	json_encode(array(	array(key => post,			label=>$common_data['table_header'][0]['lang_post'],	sortable=>true,resizeable=>true),
-										       	array(key => code,			label=>$common_data['table_header'][0]['lang_code'],	sortable=>true,resizeable=>true),
-										       	array(key => extra_hours_descr,label=>$common_data['table_header'][0]['lang_descr'],sortable=>true,resizeable=>true),
-										       	array(key => unit,			label=>$common_data['table_header'][0]['lang_unit'],	sortable=>true,resizeable=>true),
-	       										array(key => quantity,		label=>$common_data['table_header'][0]['lang_quantity'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => billperae,		label=>$common_data['table_header'][0]['lang_billperae'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => cost,			label=>$common_data['table_header'][0]['lang_cost'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => deviation,		label=>$common_data['table_header'][0]['lang_deviation'],sortable=>true,resizeable=>true, formatter=>FormatterLink),
-	       										array(key => link_deviation,hidden=>True),
-	       										array(key => result,		label=>$common_data['table_header'][0]['lang_result'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => wo_hour_category,label=>$common_data['table_header'][0]['lang_category'],sortable=>true,resizeable=>true),
-	       										array(key => cat_per_cent,	label=>$common_data['table_header'][0]['lang_per_cent'],sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-	       										array(key => hour_id,		hidden=>True),
-	       										array(key => link_edit,		hidden=>True)
-	       )));	
+	       'values'		=>	json_encode(array(	array(key => post,				label=>$common_data['table_header'][0]['lang_post'],	sortable=>true,resizeable=>true),
+										       	array(key => code,				label=>$common_data['table_header'][0]['lang_code'],	sortable=>true,resizeable=>true),
+										       	array(key => extra_hours_descr,	label=>$common_data['table_header'][0]['lang_descr'],	sortable=>true,resizeable=>true),
+										       	array(key => unit,				label=>$common_data['table_header'][0]['lang_unit'],	sortable=>true,resizeable=>true),
+	       										array(key => quantity,			label=>$common_data['table_header'][0]['lang_quantity'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => billperae,			label=>$common_data['table_header'][0]['lang_billperae'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => cost,				label=>$common_data['table_header'][0]['lang_cost'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => result,			label=>$common_data['table_header'][0]['lang_result'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+	       										array(key => wo_hour_category,	label=>$common_data['table_header'][0]['lang_category'],sortable=>true,resizeable=>true),
+	       										array(key => cat_per_cent,		label=>$common_data['table_header'][0]['lang_per_cent'],sortable=>true,resizeable=>true, formatter=>FormatterCenter)
+	      )));	
 //----------------------------------------------datatable settings--------			
 
 			$data = array
@@ -598,7 +534,6 @@
 				'base_java_url'			=> json_encode(array(menuaction => "property.uiwo_hour.index",workorder_id=>$workorder_id)),
 				'datatable'				=> $datavalues,
 				'myColumnDefs'			=> $myColumnDefs,
-				
 				
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -644,7 +579,7 @@
 			//-----------------------datatable settings---	
 //_debug_array($data);die;
 
-			$appname	= lang('Workorder');
+			$appname		= lang('Workorder');
 			$function_msg	= lang('Add template');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -652,21 +587,6 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		function index()
 		{

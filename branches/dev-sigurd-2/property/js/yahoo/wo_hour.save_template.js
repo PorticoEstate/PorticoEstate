@@ -10,15 +10,10 @@ var  myPaginator_0, myDataTable_0;
 	{
 		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
 	}
-/********************************************************************************/	
-	var FormatterLink = function(elCell, oRecord, oColumn, oData)
-	{
-		elCell.innerHTML = "<center><a href=\""+oRecord.getData('link_deviation')+"\"> "+oData+"</a></center>";
-	}	
+	
 /********************************************************************************/
 	this.myParticularRenderEvent = function(num)
 	{
-
 	}
  /********************************************************************************/
 
