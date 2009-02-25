@@ -84,12 +84,17 @@
 				$this->db->next_record();
 				if($this->db->f('hits'))
 				{
-					$entity[] = array
+					$entity['related'][] = array
 					(
-						'entity_id'	=> $entry['entity_id'],
-						'cat_id'	=> $entry['cat_id'],
-						'name'		=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
-						'descr'		=> $entry['descr']
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array(
+															'menuaction'=> 'property.uientity.index',
+															'entity_id'=> $entity['entity_id'],
+															'cat_id'=> $entity['cat_id'],
+															'query'=> $location_code
+															)
+														),
+						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
+						'descr'			=> $entry['descr']
 					);
 				}
 			}
@@ -99,7 +104,7 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
-				$entity[] = array
+				$entity['related'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
 					'name'		=> lang('Helpdesk') . ' [' . $this->db->f('hits') . ']',
@@ -112,7 +117,7 @@
 			$this->db->next_record();
 			$hits = (int) $this->db->f('hits');
 
-			$entity[] = array
+			$entity['document'][] = array
 			(
 				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
 				'name'		=> lang('documents') . ' [' . $hits . ']:',
@@ -138,7 +143,7 @@
 					$spaceset .= str_repeat($space, $category['level']);
 				}
 				$spaceset .= '';
-				$entity[] = array
+				$entity['document'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])),
 					'name'		=> $spaceset . $category['name'] . ' [' . $hits . ']',
@@ -151,7 +156,7 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
-				$entity[] = array
+				$entity['related'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index','query'=> $location_code)),
 					'name'		=> lang('request') . ' [' . $this->db->f('hits') . ']',
@@ -164,7 +169,7 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
-				$entity[] = array
+				$entity['related'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigab.index','location_code'=> $location_code)),
 					'name'		=> lang('gabnr') . ' [' . $this->db->f('hits') . ']',
@@ -172,11 +177,7 @@
 				);
 			}
 
-			if (isset($entity))
-			{
-				return $entity;
-			}
-
+			return $entity;
 		}
 
 		function select_status_list($type_id)
