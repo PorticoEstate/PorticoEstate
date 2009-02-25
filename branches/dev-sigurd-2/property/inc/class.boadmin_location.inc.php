@@ -161,7 +161,7 @@
 			return $receipt;
 		}
 
-		function delete($type_id,$id,$attrib='')
+		function delete($type_id,$id,$attrib='',$group_id)
 		{
 			if($id && !$attrib)
 			{
@@ -189,6 +189,18 @@
 					$receipt['error'][] = array('msg' => lang('something went wrong'));
 				}
 			}
+			else if($type_id && $group_id)
+			{
+				if($this->custom->delete_group('property',".location.{$type_id}", $group_id))
+				{
+					$receipt['message'][] = array('msg' => lang('attibute group %1 has been deleted',$group_id));
+				}
+				else
+				{
+					$receipt['error'][] = array('msg' => lang('something went wrong'));
+				}
+			}
+
 			return $receipt;
 		}
 

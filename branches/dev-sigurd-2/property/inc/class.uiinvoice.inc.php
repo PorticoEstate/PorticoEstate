@@ -227,7 +227,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			 {
 			 	$values["save"]="Save";
-			 	_debug_array($values);
+//			 	_debug_array($values);
 			 	$receipt = $this->bo->update_invoice($values);
 
 			 }
@@ -1210,7 +1210,7 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))  //if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
 			 {
-				_debug_array($values);
+		//		_debug_array($values);
 			 	$receipt = $this->bo->update_invoice_sub($values);
 			 }
 
@@ -2119,7 +2119,7 @@
 				{
 					$json ['current_consult'] = $current_Consult;
 				}
-				_debug_array($json);
+	//			_debug_array($json);
 
 	    		return $json;
 			}

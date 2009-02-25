@@ -845,8 +845,9 @@
 							'text'			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 									(
-										'menuaction'	=> 'property.uis_agreement.edit',
-										'role'			=> $this->role
+										'menuaction'	=> 'property.uidocument.edit',
+										'from'			=> 'list_doc',
+										'location_code' => $location_code
 									))
 						);
 			}
