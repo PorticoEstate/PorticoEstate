@@ -169,7 +169,7 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
-				$entity['related'][] = array
+				$entity['gab'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigab.index','location_code'=> $location_code)),
 					'name'		=> lang('gabnr') . ' [' . $this->db->f('hits') . ']',

@@ -1164,11 +1164,11 @@
 						}
 					}
 				}
-
-
-				phpgwapi_yui::tabview_setup('location_edit_tabview');
-				$tabs = array();
 			}
+
+			phpgwapi_yui::tabview_setup('location_edit_tabview');
+			$tabs = array();
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1209,8 +1209,6 @@
 
 			if($location_code)
 			{
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-
 				$related = $this->bo->read_entity_to_link($location_code);
 				$document_link = array();
 				$related_link = array();
@@ -1226,6 +1224,18 @@
 
 				foreach($related as $related_key => $related_data)
 				{
+					if( $related_key == 'gab')
+					{
+						foreach($related_data as $entry)
+						{
+							$entities_link[] = array
+							(
+								'entity_link'				=> $entry['entity_link'],
+								'lang_entity_statustext'	=> $entry['descr'],
+								'text_entity'				=> $entry['name'],
+							);
+						}
+					}
 					if( $related_key == 'document')
 					{
 						foreach($related_data as $entry)
