@@ -365,7 +365,15 @@
 			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				<xsl:choose>
 					<xsl:when test="files!=''">
-						<xsl:call-template name="file_list"/>
+						<!-- <xsl:call-template name="file_list"/> -->						
+						<tr>
+							<td width="19%" align="left" valign="top">
+								<xsl:value-of select="//lang_files"/>
+							</td>
+							<td>
+								<div id="datatable-container_2"></div>
+							</td>
+						</tr>						
 					</xsl:when>
 				</xsl:choose>
 				
@@ -437,7 +445,32 @@
 
 		</div>
 		<div id="items">
+					<script>
+						var property_js = <xsl:value-of select="property_js" />;
+						var base_java_url = <xsl:value-of select="base_java_url" />;
+						var datatable = new Array();
+						var myColumnDefs = new Array();
+						var myButtons = new Array();
 
+						<xsl:for-each select="datatable">
+							datatable[<xsl:value-of select="name"/>] = [
+							{
+								values			:	<xsl:value-of select="values"/>,
+								total_records	: 	<xsl:value-of select="total_records"/>,
+								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+								permission		:	<xsl:value-of select="permission"/>,
+								footer			:	<xsl:value-of select="footer"/>
+							}
+							]
+						</xsl:for-each>
+
+						<xsl:for-each select="myColumnDefs">
+							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+						<xsl:for-each select="myButtons">
+							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+					</script>
 		<table>
 		<xsl:choose>
 			<xsl:when test="value_s_agreement_id!=''">
@@ -503,32 +536,7 @@
 						   vertical-align: top;
 						}
 					</style> 
-					<script>
-						var property_js = <xsl:value-of select="property_js" />;
-						var base_java_url = <xsl:value-of select="base_java_url" />;
-						var datatable = new Array();
-						var myColumnDefs = new Array();
-						var myButtons = new Array();
 
-						<xsl:for-each select="datatable">
-							datatable[<xsl:value-of select="name"/>] = [
-							{
-								values			:	<xsl:value-of select="values"/>,
-								total_records	: 	<xsl:value-of select="total_records"/>,
-								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-								permission		:	<xsl:value-of select="permission"/>,
-								footer			:	<xsl:value-of select="footer"/>
-							}
-							]
-						</xsl:for-each>
-
-						<xsl:for-each select="myColumnDefs">
-							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-						<xsl:for-each select="myButtons">
-							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-					</script>
 
 
 					<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
