@@ -1052,7 +1052,15 @@
 
 			<xsl:choose>
 				<xsl:when test="files!=''">
-					<xsl:call-template name="file_list"/>
+					<!-- <xsl:call-template name="file_list"/> -->						
+					<tr>
+						<td width="19%" align="left" valign="top">
+							<xsl:value-of select="//lang_files"/>
+						</td>
+						<td>
+							<div id="datatable-container_2"></div>
+						</td>
+					</tr>	
 				</xsl:when>
 			</xsl:choose>
 
