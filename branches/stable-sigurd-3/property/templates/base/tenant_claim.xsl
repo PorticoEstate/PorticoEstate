@@ -55,7 +55,7 @@
 		<xsl:variable name="sort_project" select="sort_project"/>
 		<xsl:variable name="sort_name" select="sort_name"/>
 		<xsl:variable name="sort_category" select="sort_category"/>
-		
+
 			<tr class="th">
 				<td width="10%" align="right">
 					<a href="{$sort_claim_id}" class="th_text"><xsl:value-of select="lang_claim_id"/></a>
@@ -166,7 +166,7 @@
 			function tenant_lookup()
 			{
 				Window1=window.open('<xsl:value-of select="tenant_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
+			}
 		</script>
 
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
@@ -232,7 +232,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_descr"/>		
+					<xsl:value-of select="value_descr"/>
 				</td>
 			</tr>
 			<tr>
@@ -250,7 +250,7 @@
 				</xsl:for-each>
 			</tr>
 			<xsl:call-template name="location_view"/>
-			
+
 			<xsl:choose>
 				<xsl:when test="contact_phone !=''">
 					<tr>
@@ -258,7 +258,7 @@
 							<xsl:value-of select="lang_contact_phone"/>
 						</td>
 						<td  align="left">
-							<xsl:value-of select="contact_phone"/>					
+							<xsl:value-of select="contact_phone"/>
 						</td>
 					</tr>
 				</xsl:when>
@@ -325,16 +325,16 @@
 			</tr>
 
 			<tr>
-				<xsl:choose>
+				<!--xsl:choose>
 					<xsl:when test="sum_workorder_budget=''">
 						<td class="th_text">
 							<xsl:value-of select="lang_no_workorders"/>
 						</td>
 					</xsl:when>
-					<xsl:otherwise>
+					<xsl:otherwise-->
 					<td colspan="2">
 					<table width="80%" cellpadding="2" cellspacing="2" align="left">
-						<xsl:apply-templates select="table_header_workorder"/>
+						<!-- xsl:apply-templates select="table_header_workorder"/>
 						<xsl:apply-templates select="workorder_budget"/>
 						<tr class="th">
 							<td class="th_text" align="right">
@@ -352,13 +352,38 @@
 							</td>
 							<td>
 							</td>
-						</tr>
+						</tr-->
+						<div id="paging_0"> </div>
+						<div id="datatable-container_0"></div>
+						<div id="footer"> </div>
+
+						<script>
+							var property_js = <xsl:value-of select="property_js" />;
+							var base_java_url = <xsl:value-of select="base_java_url" />;
+							var datatable = new Array();
+							var myColumnDefs = new Array();
+
+							<xsl:for-each select="datatable">
+								datatable[<xsl:value-of select="name"/>] = [
+								{
+									values			:	<xsl:value-of select="values"/>,
+									total_records	: 	<xsl:value-of select="total_records"/>,
+									edit_action		:   <xsl:value-of select="edit_action"/>,
+									is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+									footer			:	<xsl:value-of select="footer"/>
+								}
+								]
+							</xsl:for-each>
+
+							<xsl:for-each select="myColumnDefs">
+								myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+							</xsl:for-each>
+						</script>
 					</table>
 					</td>
-					</xsl:otherwise>
-				</xsl:choose>
+					<!-- /xsl:otherwise>
+				</xsl:choose-->
 			</tr>
-
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -391,8 +416,8 @@
 				<td valign="top">
 					<xsl:value-of select="lang_start_date"/>
 				</td>
-				<td>			
-					<xsl:value-of select="value_start_date"/>			
+				<td>
+					<xsl:value-of select="value_start_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -400,7 +425,7 @@
 					<xsl:value-of select="lang_end_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_end_date"/>			
+					<xsl:value-of select="value_end_date"/>
 				</td>
 			</tr>
 
@@ -474,7 +499,7 @@
 								<xsl:value-of select="lang_remark_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>		
+						<xsl:value-of select="value_remark"/>
 					</textarea>
 				</td>
 			</tr>
@@ -551,7 +576,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_descr"/>		
+					<xsl:value-of select="value_descr"/>
 				</td>
 			</tr>
 			<tr>
@@ -569,7 +594,7 @@
 				</xsl:for-each>
 			</tr>
 			<xsl:call-template name="location_view"/>
-			
+
 			<xsl:choose>
 				<xsl:when test="contact_phone !=''">
 					<tr>
@@ -577,7 +602,7 @@
 							<xsl:value-of select="lang_contact_phone"/>
 						</td>
 						<td  align="left">
-							<xsl:value-of select="contact_phone"/>					
+							<xsl:value-of select="contact_phone"/>
 						</td>
 					</tr>
 				</xsl:when>
@@ -710,8 +735,8 @@
 				<td valign="top">
 					<xsl:value-of select="lang_start_date"/>
 				</td>
-				<td>			
-					<xsl:value-of select="value_start_date"/>			
+				<td>
+					<xsl:value-of select="value_start_date"/>
 				</td>
 			</tr>
 			<tr>
@@ -719,7 +744,7 @@
 					<xsl:value-of select="lang_end_date"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_end_date"/>			
+					<xsl:value-of select="value_end_date"/>
 				</td>
 			</tr>
 
@@ -789,7 +814,7 @@
 								<xsl:value-of select="lang_remark_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>		
+						<xsl:value-of select="value_remark"/>
 					</textarea>
 				</td>
 			</tr>

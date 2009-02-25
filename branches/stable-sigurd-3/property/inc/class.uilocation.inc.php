@@ -1165,42 +1165,10 @@
 					}
 				}
 
-				$entities= $this->bo->read_entity_to_link($location_code);
 
-				if (isset($entities) && is_array($entities))
-				{
-					foreach($entities as $entity_entry)
-					{
-						if(isset($entity_entry['entity_link']) && $entity_entry['entity_link'])
-						{
-							$entities_link[] = array
-							(
-								'entity_link'			=> $entity_entry['entity_link'],
-								'lang_entity_statustext'	=> $entity_entry['descr'],
-								'text_entity'			=> $entity_entry['name'],
-							);
-						}
-						else
-						{
-							$entities_link[] = array
-							(
-								'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
-																'menuaction'=> 'property.uientity.index',
-																'entity_id'=> $entity_entry['entity_id'],
-																'cat_id'=> $entity_entry['cat_id'],
-																'query'=> $location_code
-																)
-															),
-								'lang_entity_statustext'	=> $entity_entry['descr'],
-								'text_entity'			=> $entity_entry['name'],
-							);
-						}
-					}
-				}
+				phpgwapi_yui::tabview_setup('location_edit_tabview');
+				$tabs = array();
 			}
-
-
-			$tabs = array();
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1222,9 +1190,6 @@
 					}
 				}
 
-				phpgwapi_yui::tabview_setup('location_edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-
 				$location = ".location.{$type_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
@@ -1242,6 +1207,52 @@
 				unset($values['attributes']);
 			}
 
+			if($location_code)
+			{
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$related = $this->bo->read_entity_to_link($location_code);
+				$document_link = array();
+				$related_link = array();
+
+				if(isset($related['document']))
+				{
+					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');				
+				}
+				if(isset($related['related']))
+				{
+						$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
+				}
+
+				foreach($related as $related_key => $related_data)
+				{
+					if( $related_key == 'document')
+					{
+						foreach($related_data as $entry)
+						{
+							$document_link[] = array
+							(
+								'entity_link'				=> $entry['entity_link'],
+								'lang_entity_statustext'	=> $entry['descr'],
+								'text_entity'				=> $entry['name'],
+							);
+						}
+					}
+					if( $related_key == 'related')
+					{
+						foreach($related_data as $entry)
+						{
+							$related_link[] = array
+							(
+								'entity_link'				=> $entry['entity_link'],
+								'lang_entity_statustext'	=> $entry['descr'],
+								'text_entity'				=> $entry['name'],
+							);
+						}
+					}
+				}
+			}
+
 			$data = array
 			(
 				'lang_change_type'				=> lang('Change type'),
@@ -1256,6 +1267,8 @@
 
 				'lang_related_info'				=> lang('related info'),
 				'entities_link'					=> (isset($entities_link)?$entities_link:''),
+				'document_link'					=> $document_link,
+				'related_link'					=> $related_link,
 				'edit_street'					=> (isset($edit_street)?$edit_street:''),
 				'edit_tenant'					=> (isset($edit_tenant)?$edit_tenant:''),
 				'edit_part_of_town'				=> (isset($edit_part_of_town)?$edit_part_of_town:''),

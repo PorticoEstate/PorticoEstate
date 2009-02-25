@@ -468,6 +468,38 @@
 
 		<xsl:call-template name="attributes_values"/>
 
+			<xsl:choose>
+				<xsl:when test="document_link != ''">
+				<div id="document">
+					<table cellpadding="2" cellspacing="2" width="80%" align="center">
+						<tr>
+							<td>
+								<table width="100%" cellpadding="2" cellspacing="2" align="center">
+									<xsl:apply-templates select="document_link"/>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="related_link != ''">
+				<div id="related">
+					<table cellpadding="2" cellspacing="2" width="80%" align="center">
+						<tr>
+							<td>
+								<table width="100%" cellpadding="2" cellspacing="2" align="center">
+									<xsl:apply-templates select="related_link"/>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+				</xsl:when>
+			</xsl:choose>
+
+
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 
 			<tr height="50">
@@ -826,6 +858,25 @@
 			</tr>
 	</xsl:template>
 
+	<xsl:template match="document_link">
+		<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>
+		<xsl:variable name="entity_link"><xsl:value-of select="entity_link"/></xsl:variable>
+			<tr >
+				<td class="small_text" align="left">
+					<a href="{$entity_link}" title="{$lang_entity_statustext}" onMouseout="window.status='';return true;"><xsl:value-of select="text_entity"/></a>
+				</td>
+			</tr>
+	</xsl:template>
+
+	<xsl:template match="related_link">
+		<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>
+		<xsl:variable name="entity_link"><xsl:value-of select="entity_link"/></xsl:variable>
+			<tr >
+				<td class="small_text" align="left">
+					<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_entity"/></a>
+				</td>
+			</tr>
+	</xsl:template>
 
 	<xsl:template match="summary">
 		<xsl:apply-templates select="menu"/>
