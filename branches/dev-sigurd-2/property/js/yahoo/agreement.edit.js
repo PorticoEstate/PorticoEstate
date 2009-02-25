@@ -52,7 +52,13 @@ var FormatterCheckItems = function(elCell, oRecord, oColumn, oData)
 	{
 		if(num==1)
 		{
-			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableObject = document.body.getElementsByTagName('table');
+			for (x=0; x<tableObject.length; x++) 
+			{
+				if (tableObject[x].parentNode.id == 'datatable-container_1')
+					{ tableYUI = tableObject[x]; }
+			}
 			tableYUI.setAttribute("id","tableYUI");
 			tableYUI.deleteTFoot();
 			YAHOO.util.Dom.get("values_date").value = "";

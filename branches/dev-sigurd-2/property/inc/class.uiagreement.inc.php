@@ -1292,7 +1292,7 @@
 				'footer'		=> 1
 			);		
 			
-			//_debug_array($datavalues[1]);die;
+		
 						
 	       $myColumnDefs[1] = array
 	       (
@@ -1325,7 +1325,33 @@
        													array(id =>'values[update]',	type=>buttons,		value=>Update,	label=>lang('update'),	funct=> onUpdateClick , classname=> '')
        													)));		
 	
-//_debug_array(array($alarm_data[alter_alarm][lang_add]));die;			
+	
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			
+			for($z=0; $z<count($agreement['files']); $z++)
+			{
+				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+			}									
+
+			$datavalues[2] = array
+			(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$myColumnDefs[2] = array
+       		(
+       			'name'		=> "2",
+       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
+									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+			);
+			
+			
 			//----------------------------------------------datatable settings--------			
 			
 			$data = array

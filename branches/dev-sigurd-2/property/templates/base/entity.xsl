@@ -207,7 +207,29 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+		
+		<script language="JavaScript">
+			var property_js = <xsl:value-of select="property_js" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
 
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					edit_action		:  	<xsl:value-of select="edit_action"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+							
 		<div class="yui-navset" id="entity_edit_tabview">
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
@@ -373,12 +395,21 @@
 
 		<div id="files">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			  
 			<xsl:choose>
 				<xsl:when test="files!=''">
-					<xsl:call-template name="file_list"/>
+					<!-- <xsl:call-template name="file_list"/> -->
+					<tr>
+						<td align="left" valign="top">
+							<xsl:value-of select="//lang_files"/>
+						</td>
+						<td>
+							<div id="datatable-container_0"></div>
+						</td>
+					</tr>
 				</xsl:when>
 			</xsl:choose>
-
+		
 			<xsl:choose>
 				<xsl:when test="cat_list='' and fileupload = 1">
 					<xsl:call-template name="file_upload"/>

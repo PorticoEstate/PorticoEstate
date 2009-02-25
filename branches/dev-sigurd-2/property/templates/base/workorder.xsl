@@ -823,12 +823,21 @@
 
 <div id="documents">
 <table cellpadding="2" cellspacing="2" width="80%" align="center">
+ 
 	<xsl:choose>
 		<xsl:when test="files!=''">
-			<xsl:call-template name="file_list"/>
+			<!-- <xsl:call-template name="file_list"/> -->
+			<tr>
+				<td align="left" valign="top">
+					<xsl:value-of select="//lang_files"/>
+				</td>
+				<td>
+					<div id="datatable-container_1"></div>
+				</td>
+			</tr>				
 		</xsl:when>
 	</xsl:choose>
-
+									
 	<xsl:call-template name="file_upload"/>
 </table>
 
