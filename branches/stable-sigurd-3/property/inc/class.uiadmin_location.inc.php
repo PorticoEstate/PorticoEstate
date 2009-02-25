@@ -626,6 +626,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
 			}
 
+			$group_id   = phpgw::get_var('group_id', 'int');
 			$attrib		= phpgw::get_var('attrib');
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
@@ -633,8 +634,17 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-				$this->bo->delete($type_id,$id,$attrib);
-				return "id ".$id." ".lang("has been deleted");
+				$receipt =  $this->bo->delete($type_id,$id,$attrib,$group_id);
+
+				//FIXME
+				if(isset($receipt['message']))
+				{
+					return $receipt['message'][0]['msg'];
+				}
+				else
+				{
+					return $receipt['error'][0]['msg'];
+				}
 			}
 			
 			if($attrib)
