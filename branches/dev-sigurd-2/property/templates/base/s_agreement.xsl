@@ -371,6 +371,7 @@
 								<xsl:value-of select="//lang_files"/>
 							</td>
 							<td>
+								<!-- DataTable 2 EDIT -->
 								<div id="datatable-container_2"></div>
 							</td>
 						</tr>						
@@ -431,7 +432,7 @@
 		   <tr><td width="79%" class="center" align="left"><br/></td></tr>
 		    <tr><td width="79%" class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
 
-		      <!-- DataTable 0-->
+		      <!-- DataTable 0 EDIT -->
 		       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 		       <tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
 		       <tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
@@ -515,7 +516,7 @@
 				<form method="post" name="form2" action="{$update_action}">
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
 
-					<!-- datatable 1 -->
+					<!-- DataTable 1 EDIT -->
 					<div id="paging_1"> </div>
 					<div id="datatable-container_1"></div>
 					<div id="contextmenu_1"></div>
@@ -708,6 +709,7 @@
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<!-- xsl:call-template name="table_header"/>
 						<xsl:call-template name="values2"/> -->
+						<!-- DataTable 0 EDIT ITEM -->
 						<div id="paging_0"> </div>
 						<div id="datatable-container_0"></div>
 						<div id="contextmenu_0"></div>
@@ -815,6 +817,34 @@
 
 	<xsl:template match="view">
 		<div align="left">
+		
+		<script>
+				var property_js = <xsl:value-of select="property_js" />;
+				var base_java_url = <xsl:value-of select="base_java_url" />;
+				var datatable = new Array();
+				var myColumnDefs = new Array();
+				var myButtons = new Array();
+
+				<xsl:for-each select="datatable">
+					datatable[<xsl:value-of select="name"/>] = [
+					{
+						values			:	<xsl:value-of select="values"/>,
+						total_records	: 	<xsl:value-of select="total_records"/>,
+						is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+						permission		:	<xsl:value-of select="permission"/>,
+						footer			:	<xsl:value-of select="footer"/>
+					}
+					]
+				</xsl:for-each>
+
+				<xsl:for-each select="myColumnDefs">
+					myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+				</xsl:for-each>
+				<xsl:for-each select="myButtons">
+					myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+				</xsl:for-each>
+		</script>
+							
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr><td>
 			<table cellpadding="2" cellspacing="2" width="79%" align="center">
@@ -929,28 +959,43 @@
 			</table>
 			</td></tr>
 			<tr><td>
-			<table>
+			<table align="center">
 				<tr>
 					<td class="th_text" align="left" colspan="4">
 						<xsl:value-of select="lang_alarm"/>
 					</td>
 				</tr>
-				<xsl:call-template name="alarm_view"/>
+				<!--  DataTable 0 VIEW -->
+				<tr>
+					<td align="left" colspan="4">
+						<div id="datatable-container_0"></div>
+					</td>
+				</tr>				
+				<!-- <xsl:call-template name="alarm_view"/> -->
 			</table>
 			</td>
 			</tr>
 			</table>
 			<xsl:choose>
 				<xsl:when test="values!=''">
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<tr><td align = "center" colspan="10">
+					<table width="79%" cellpadding="2" cellspacing="2" align="center">
+						<tr><td align = "center" colspan="10" height="30">
 						<xsl:value-of select="lang_total_records"/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="total_records"/>
 						</td></tr>
-
+						<!--  DataTable 1 VIEW -->
+						<tr>
+							<td align="left" colspan="4">
+								<div id="paging_1"> </div>
+								<div id="datatable-container_1"></div>
+								<div id="contextmenu_1"></div>
+							</td>
+						</tr>
+						<!--						
 						<xsl:call-template name="table_header"/>
 						<xsl:call-template name="values"/>
+						-->
 					</table>
 				</xsl:when>
 			</xsl:choose>
@@ -979,6 +1024,34 @@
 
 	<xsl:template match="view_item">
 		<div align="left">
+
+		<script>
+				var property_js = <xsl:value-of select="property_js" />;
+				var base_java_url = <xsl:value-of select="base_java_url" />;
+				var datatable = new Array();
+				var myColumnDefs = new Array();
+				var myButtons = new Array();
+
+				<xsl:for-each select="datatable">
+					datatable[<xsl:value-of select="name"/>] = [
+					{
+						values			:	<xsl:value-of select="values"/>,
+						total_records	: 	<xsl:value-of select="total_records"/>,
+						is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+						permission		:	<xsl:value-of select="permission"/>,
+						footer			:	<xsl:value-of select="footer"/>
+					}
+					]
+				</xsl:for-each>
+
+				<xsl:for-each select="myColumnDefs">
+					myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+				</xsl:for-each>
+				<xsl:for-each select="myButtons">
+					myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+				</xsl:for-each>
+		</script>
+				
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -1041,9 +1114,18 @@
 			<xsl:when test="values != ''">
 
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<table width="79%" cellpadding="2" cellspacing="2" align="center">
+						<!--  DataTable 0 VIEW ITEM -->
+						<tr>
+							<td align="left" colspan="4">
+								<div id="datatable-container_0"></div>
+								<div id="contextmenu_0"></div>
+							</td>
+						</tr>
+						<!--					
 						<xsl:call-template name="table_header"/>
 						<xsl:call-template name="values2"/>
+						-->
 					</table>
 			</xsl:when>
 		</xsl:choose>
