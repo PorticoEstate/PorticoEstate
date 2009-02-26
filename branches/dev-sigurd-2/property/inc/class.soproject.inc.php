@@ -754,11 +754,13 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("SELECT status,category,coordinator FROM fm_project WHERE id = {$project['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT status,category,coordinator,budget,reserve FROM fm_project WHERE id = {$project['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$old_status = $this->db->f('status');
 			$old_category = (int)$this->db->f('category');
 			$old_coordinator = (int)$this->db->f('coordinator');
+			$old_budget = (int)$this->db->f('budget');
+			$old_reserve = (int)$this->db->f('reserve');
 
 			$this->db->query("UPDATE fm_project SET $value_set $vals WHERE id= {$project['id']}",__LINE__,__FILE__);
 
@@ -806,7 +808,7 @@
 
 				if($old_status != $project['status'])
 				{
-					$historylog->add('S',$project['id'],$project['status']);
+					$historylog->add('S',$project['id'],$project['status'], $old_status);
 
 					$this->db->query("UPDATE fm_workorder SET status='{$project['status']}' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 
@@ -837,12 +839,22 @@
 
 			if ($old_category != $project['cat_id'])
 			{
-				$historylog->add('T',$project['id'],$project['cat_id']);
+				$historylog->add('T',$project['id'],$project['cat_id'], $old_category);
 			}
 			if ($old_coordinator != $project['coordinator'])
 			{
-				$historylog->add('C',$project['id'],$project['coordinator']);
+				$historylog->add('C',$project['id'],$project['coordinator'], $old_coordinator);
 				$receipt['notice_owner'][]=lang('Coordinator changed') . ': ' . $GLOBALS['phpgw']->accounts->id2name($project['coordinator']);
+			}
+
+			if ($old_budget != (int)$project['budget'])
+			{
+				$historylog->add('B',$project['id'],$project['budget'], $old_budget);
+			}
+
+			if ($old_reserve != (int)$project['reserve'])
+			{
+				$historylog->add('BR',$project['id'],$project['reserve'], $old_reserve);
 			}
 
 			if ($project['remark'])

@@ -2896,3 +2896,28 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.550 to 0.9.17.551
+	*/
+
+	$test[] = '0.9.17.550';
+	function property_upgrade0_9_17_550()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_document_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_history','history_old_value',array('type' => 'text','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_s_agreement_history','history_old_value',array('type' => 'text','nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.551';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

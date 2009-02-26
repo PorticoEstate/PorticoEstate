@@ -172,7 +172,9 @@
 				'title'			=> lang('Site Configuration'),
 			));
 
+	//		$t->unknown_regexp = 'loose';
 			$vars = $t->get_undefined('body');
+	//		$t->unknown_regexp = '';
 
 			$GLOBALS['phpgw']->hooks->single('config',$appname);
 

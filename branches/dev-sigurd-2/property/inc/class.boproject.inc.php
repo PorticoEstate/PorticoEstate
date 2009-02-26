@@ -361,6 +361,8 @@
 
 				switch ($value['status'])
 				{
+					case 'B': $type = lang('Budget'); break;
+					case 'BR': $type = lang('reserve'); break;
 					case 'R': $type = lang('Re-opened'); break;
 					case 'RM': $type = lang('remark'); break;
 					case 'X': $type = lang('Closed');    break;
@@ -394,19 +396,46 @@
 					{
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
+					if (! $value['old_value'])
+					{
+						$record_history[$i]['value_old_value']	= '';
+					}
+					else
+					{
+						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
+					}
 				}
 				else if ($value['status'] == 'C' || $value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
+					if (! $value['old_value'])
+					{
+						$record_history[$i]['value_old_value']	= '';
+					}
+					else
+					{
+						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
+					}
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category 								= $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value']	= $category[0]['name'];
+					if($value['old_value'])
+					{
+						$category 								= $this->cats->return_single($value['old_value']);
+						$record_history[$i]['value_old_value']	= $category[0]['name'];
+					}
+				}
+				else if ($value['status'] == 'B' || $value['status'] == 'BR')
+				{
+					$record_history[$i]['value_new_value']	=number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	=number_format($value['old_value'], 0, ',', ' ');
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
+					$record_history[$i]['value_old_value']	= $value['old_value'];
 				}
 				else
 				{

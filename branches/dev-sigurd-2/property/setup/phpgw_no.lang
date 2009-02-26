@@ -1013,6 +1013,7 @@ num	property	no	Num
 number	property	no	Nummer
 obligations	property	no	forpliktelser
 of	property	no	av
+old value	property	no	opprinnelig verdi
 only private	property	no	Bare privat
 open	property	no	Åpen
 open date	property	no	Startet dato
@@ -1149,6 +1150,7 @@ purchase cost	property	no	anskaffelses kostnad
 quantity	property	no	Mengde
 read	property	no	Les
 re-assigned	property	no	Videresendt
+re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 record	property	no	Post
 related info	property	no	Relatert info

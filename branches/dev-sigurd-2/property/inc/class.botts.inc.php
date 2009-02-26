@@ -457,6 +457,7 @@
 		function read_record_history($id)
 		{
 			$history_array = $this->historylog->return_array(array('C','O'),array(),'','',$id);
+
 			$status_text = $this->_get_status_text();
 			$record_history = array();
 			$i=0;
@@ -506,15 +507,18 @@
 						if ((int)$value['new_value']>0)
 						{
 							$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
+							$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
 						}
 						else
 						{
 							$record_history[$i]['value_new_value']	= lang('None');
+							$record_history[$i]['value_old_value']	= lang('None');
 						}
 					}
 					else if ($value['status'] == 'T')
 					{
 						$record_history[$i]['value_new_value']	= $this->get_category_name($value['new_value']);
+						$record_history[$i]['value_old_value']	= $this->get_category_name($value['old_value']);
 					}
 					else if (($value['status'] == 'F') || ($value['status'] =='IF'))
 					{
@@ -523,6 +527,7 @@
 					else if ($value['status'] != 'O' && $value['new_value'])
 					{
 						$record_history[$i]['value_new_value']	= $value['new_value'];
+						$record_history[$i]['value_old_value']	= $value['old_value'];
 					}
 					else
 					{
@@ -532,6 +537,7 @@
 					$i++;
 				}
 			}
+
 			return $record_history;
 		}
 

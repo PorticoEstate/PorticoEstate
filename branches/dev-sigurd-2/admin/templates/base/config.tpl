@@ -13,7 +13,7 @@
 <!-- END header -->
 <!-- BEGIN body -->
    <tr class="row_on">
-    <td>{lang_Would_you_like_phpGroupWare_to_check_for_a_new_version<br />when_admins_login_?}:</td>
+    <td>{lang_Would_you_like_phpGroupWare_to_check_for_a_new_version_when_admins_login_?}:</td>
     <td>
      <select name="newsettings[checkfornewversion]">
       <option value="">{lang_No}</option>
