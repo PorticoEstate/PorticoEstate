@@ -1118,7 +1118,6 @@
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
 
-
 			$datatable = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -1194,11 +1193,10 @@
 													'user_lid'			=> $this->user_lid,
 													'paid'				=> $paid,
 													'voucher_id'		=> $voucher_id
-
 												)
 										),
 									'fields'	=> array(
-														'field' => $field_invoice,
+														'field' => $field_invoice
 														)
 									  ));
 
@@ -1208,11 +1206,10 @@
 			$values  = phpgw::get_var('values');
 			$receipt = array();
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))  //if(isset($values['save']) && $values['save'] && isset($values['counter']) && $values['counter'])
-			 {
-		//		_debug_array($values);
-			 	$receipt = $this->bo->update_invoice_sub($values);
-			 }
+			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
+			{
+				$receipt = $this->bo->update_invoice_sub($values);
+			}
 
 			if ($voucher_id)
 			{
@@ -1238,27 +1235,29 @@
 
 			$uicols = array (
 				array(
-					'col_name'=>workorder		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'name'=>'','formatter'=>''),
+					'col_name'=>workorder		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
 				array(
-					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>budget_Account,	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'name'=>'','formatter'=>''),
+					'col_name'=>budget_Account,	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'visible'=>true),
 				array(
-					'col_name'=>sum,			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'name'=>'','formatter'=>''),
+					'col_name'=>sum,			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
 				array(
-					'col_name'=>dim_A,			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'name'=>'','formatter'=>''),
+					'col_name'=>dim_A,			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
 				array(
-					'col_name'=>dim_B,			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>dim_B,			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>dim_D,			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>dim_D,			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Tax_code,		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>''),
+					'col_name'=>Tax_code,		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Remark,			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'name'=>'','formatter'=>'')
+					'col_name'=>Remark,			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+				array(
+					'col_name'=>counter,		'visible'=>false)
 				);
 
 			$j=0;
@@ -1438,7 +1437,11 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-
+						elseif($i == 11)
+						{
+							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
+						}
+						
 					}
 					$datatable['rows']['row'][] = $json_row;
 					$j++;
@@ -1467,11 +1470,11 @@
 				$datatable['headers']['header'][$i]['text'] 			= $uicols[$i]['label'];
 				$datatable['headers']['header'][$i]['formatter'] 		= ($uicols[$i]['formatter']=='' ?  '""' : $uicols[$i]['formatter']);
 				$datatable['headers']['header'][$i]['className']		= $uicols[$i]['className'];
-				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['visible'] 			= $uicols[$i]['visible'];
 				$datatable['headers']['header'][$i]['sortable']			= $uicols[$i]['sortable'];
 				$datatable['headers']['header'][$i]['sort_field']		= $uicols[$i]['sort_field'];
-
 			}
+		
 			// path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
@@ -1480,30 +1483,27 @@
 			$datatable['pagination']['records_limit'] 	= count($content);
 			$datatable['pagination']['records_returned']= count($content);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			
+			if ( (phpgw::get_var("start")== 0) && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= $uicols[$i]['col_name']; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
+				$datatable['sorting']['order'] 			= $uicols[11]['col_name']; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
 			{
-				$datatable['sorting']['order']			= null;
-				$datatable['sorting']['sort'] 			= null;
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
 		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
+		  	phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			//FIXME this one is only needed when $lookup==true - so there is probably an error
 			phpgwapi_yui::load_widget('animation');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
