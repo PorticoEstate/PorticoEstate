@@ -595,13 +595,37 @@
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
+    <script>
+      var property_js = <xsl:value-of select="property_js" />;
+      var base_java_url = <xsl:value-of select="base_java_url" />;
+      var datatable = new Array();
+      var myColumnDefs = new Array();
+      var myButtons = new Array();
+
+      <xsl:for-each select="datatable">
+        datatable[<xsl:value-of select="name"/>] = [
+        {
+          values			:	<xsl:value-of select="values"/>,
+          total_records	: 	<xsl:value-of select="total_records"/>,
+          is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+          permission		:	<xsl:value-of select="permission"/>,
+          footer			:	<xsl:value-of select="footer"/>
+        }
+        ]
+      </xsl:for-each>
+
+      <xsl:for-each select="myColumnDefs">
+        myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+      </xsl:for-each>
+      <xsl:for-each select="myButtons">
+        myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+      </xsl:for-each>
+    </script>
 
 		<div class="yui-navset" id="edit_tabview">
-		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">
 
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<div id="general">
 		<form name="form" method="post" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" width="79%" align="center">
 			<xsl:choose>
@@ -696,71 +720,63 @@
 			</tr>
 		</table>
 		</form>
-		</div>
-
+	<style type="text/css">
+		.calendar-opt
+		{
+			position:relative;
+			float:left;
+		}
+		.index-opt
+		{
+			position:relative;
+			float:left;
+			margin-top:2px;
+		}
+		.div-buttons
+		{
+			position:relative;
+			float:left;
+			width:750px;
+			height:100px;
+		}
+	</style>
 
 		<xsl:choose>
 			<xsl:when test="values != ''">
-			<div id="history">
+
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
+
 				<form method="post" name="form2" action="{$update_action}">
+
 					<input type="hidden" name="values[agreement_id]" value="{value_s_agreement_id}" ></input>
 					<input type="hidden" name="values[item_id]" value="{value_id}" ></input>
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<!-- xsl:call-template name="table_header"/>
-						<xsl:call-template name="values2"/> -->
-						<!-- DataTable 0 EDIT ITEM -->
-						<div id="paging_0"> </div>
-						<div id="datatable-container_0"></div>
-						<div id="contextmenu_0"></div>
-					</table>
-					<table width="70%" cellpadding="2" cellspacing="2" align="center">
-					<xsl:choose>
-						<xsl:when test="table_update!=''">
-							<xsl:apply-templates select="table_update"/>
-						</xsl:when>
-					</xsl:choose>
-						<!-- tr>
-							<td></td><td></td>
-							<td class="small_text" align="left">
-								<a href="{delete_action}" onMouseover="window.status='{lang_delete_last_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_delete_last"/></a>
-							</td>
-						</tr-->
 
-					</table>
-				</form>
-				</div>
+           <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+               <tr><td><br/></td></tr>
+              <!-- DataTable 0 EDIT_ITEM-->
+               <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
+               <tr><td><br/></td></tr>
+               <tr><td class="center" align="left" colspan="10">
 
-				<script>
-						var property_js = <xsl:value-of select="property_js" />;
-						var base_java_url = <xsl:value-of select="base_java_url" />;
-						var datatable = new Array();
-						var myColumnDefs = new Array();
-						var myButtons = new Array();
+              <div id="datatable-buttons_0" class="div-buttons">
+                <input type="text" class="calendar-opt" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+                <xsl:attribute name="onMouseover">
+                  <xsl:text>window.status='</xsl:text>
+                    <xsl:value-of select="lang_date_statustext"/>
+                  <xsl:text>'; return true;</xsl:text>
+                </xsl:attribute>
+                </input>
+                <img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="calendar-opt" />
+                <div style="width:25px;height:15px;position:relative;float:left;"></div>
 
-						<xsl:for-each select="datatable">
-							datatable[<xsl:value-of select="name"/>] = [
-							{
-								values			:	<xsl:value-of select="values"/>,
-								total_records	: 	<xsl:value-of select="total_records"/>,
-								is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-								permission		:	<xsl:value-of select="permission"/>,
-								footer			:	<xsl:value-of select="footer"/>
-							}
-							]
-						</xsl:for-each>
-
-						<xsl:for-each select="myColumnDefs">
-							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-						<xsl:for-each select="myButtons">
-							myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-					</script>
-
-
+              </div>
+            </td></tr>
+            </table>
+        </form>
 			</xsl:when>
 		</xsl:choose>
+
+
 		</div>
 		</div>
 	</xsl:template>
