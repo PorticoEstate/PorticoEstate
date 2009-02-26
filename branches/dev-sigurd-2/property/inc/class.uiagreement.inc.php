@@ -1984,12 +1984,9 @@
 			
 			$this->bo->allrows	= 1; 
 			$agreement_id	= phpgw::get_var('id', 'int');
-			$config		= CreateObject('phpgwapi.config','property');
-
+			$config			= CreateObject('phpgwapi.config','property');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('agreement', 'nextmatchs', 'attributes_view', 'files'));
-
-
-			$agreement = $this->bo->read_single(array('agreement_id'=>$agreement_id));
+			$agreement 		= $this->bo->read_single(array('agreement_id'=>$agreement_id));
 
 
 			if ($agreement_id)
@@ -2011,20 +2008,20 @@
 			);
 
 			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
-						'vendor_id'	=> $agreement['vendor_id'],
+						'vendor_id'		=> $agreement['vendor_id'],
 						'vendor_name'	=> $agreement['vendor_name'],
-						'type'		=> 'view'));
+						'type'			=> 'view'));
 
 			$alarm_data=$this->bocommon->initiate_ui_alarm(array(
-						'acl_location'=>$this->acl_location,
-						'alarm_type'=> 'agreement',
-						'type'		=> 'view',
-						'text'		=> 'Email notification',
-						'times'		=> $times,
-						'id'		=> $agreement_id,
-						'method'	=> $method,
-						'data'		=> $data,
-						'account_id'=> $account_id
+						'acl_location'	=>$this->acl_location,
+						'alarm_type'	=> 'agreement',
+						'type'			=> 'view',
+						'text'			=> 'Email notification',
+						'times'			=> $times,
+						'id'			=> $agreement_id,
+						'method'		=> $method,
+						'data'			=> $data,
+						'account_id'	=> $account_id
 						));
 
 
@@ -2041,7 +2038,7 @@
 
 			$link_file_data = array
 			(
-				'menuaction'	=> 'property.uiagreement.view_file',
+				'menuaction'=> 'property.uiagreement.view_file',
 				'id'		=>$agreement_id
 			);
 
@@ -2103,7 +2100,7 @@
 					}
 				}									
 			}
-//_debug_array(array(count($content),count($content_values)));die;				
+			
 			$datavalues[1] = array
 			(
 				'name'			=> "1",
@@ -2128,8 +2125,42 @@
 										       	array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
 										       	array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true)
 	       )));	
-			
+	       
+//---datatable2 settings---------------------------------------------------	
 
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			
+			for($z=0; $z<count($agreement['files']); $z++)
+			{
+				if ($link_to_files != '') 
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$agreement['files'][$z]['directory'].'/'.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
+				}
+				else 
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$agreement['files'][$z]['name'].'</a>';
+				}				
+			}										
+
+			$datavalues[2] = array
+			(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$myColumnDefs[2] = array
+       		(
+       			'name'		=> "2",
+       			'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
+			);
+	       
+	       
+	       
+	       
 			$data = array
 			(
  				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
