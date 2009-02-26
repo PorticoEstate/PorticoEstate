@@ -1289,7 +1289,7 @@
 			);
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
-			
+
 			for($z=0; $z<count($s_agreement['files']); $z++)
 			{
 				if ($link_to_files != '') {
@@ -1297,9 +1297,9 @@
 				}
 				else {
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
-				}				
+				}
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$s_agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
-			}										
+			}
 
 			$datavalues[2] = array
 			(
@@ -1643,7 +1643,7 @@
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
 
-			$tabs = array();
+			//$tabs = array();
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1667,8 +1667,8 @@
 				}
 
 
-				phpgwapi_yui::tabview_setup('edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+				//phpgwapi_yui::tabview_setup('edit_tabview');
+				//$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location = $this->acl_location . '.detail';
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
@@ -1684,10 +1684,10 @@
 				unset($attributes_groups);
 				unset($s_agreement['attributes']);
 
-				if($content)
+				/*if($content)
 				{
 					$tabs['history']	= array('label' => lang('history'), 'link' => '#history');
-				}
+				}*/
 			}
 
 			/*REQUIRES VALIDATION OF PERMISSIONS*/
@@ -1736,8 +1736,7 @@
 					'values' 				=> json_encode($content_values),
 					'total_records'			=> count($content_values),
 					'is_paginator'			=> 0,
-					//'permission'			=> json_encode($permissions['rowactions']),
-					'permission'			=> '""',
+					'permission'			=> json_encode($permissions['rowactions']),
 					'footer'				=> 0
 			);
 
@@ -1754,10 +1753,10 @@
 			$myButtons[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'actionsFilter'),
-       													array(type=>text, label=>'New index'),
-       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> ''),
-       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onAddClick , classname=> '')
+       			'values'		=>	json_encode(array(	array(type=>text, label=>'New index', classname=> 'index-opt'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'index-opt'),
+       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onAddClick , classname=> ''),
+       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> '')
        													))
 			);
 
@@ -1804,6 +1803,7 @@
 				'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 				'location_data'					=> $location_data,
 
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_cost'						=> lang('cost'),
 				'lang_cost_statustext'			=> lang('cost'),
 				'value_cost'					=> $values['cost'],
@@ -1817,7 +1817,7 @@
 				'lang_history_date_statustext'	=> lang('Enter the date for this reading'),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
+				//'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
 			);
 
 			//_debug_array($data['values']);die;
@@ -1880,7 +1880,7 @@
 			$list		= $this->list_content($list,$uicols,$edit_item=true);
 			$content	= $list['content'];
 			$table_header=$list['table_header'];
-			
+
 //_debug_array($table_header[0]['header']); die;
 
 			$lookup_type='view';
@@ -1935,7 +1935,7 @@
 					)
 				)
 			);
-			
+
 			$permissions['rowactions'][] = array(
 					'text' 			=> lang('View'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -1957,7 +1957,7 @@
 					}
 				}
 			}
-						
+
 		     $datavalues[0] = array
 		     (
 			    'name'   		=> "0",
@@ -1967,7 +1967,7 @@
 			    'permission'	=> json_encode($permissions['rowactions']),
 			    'footer'  		=> 0
 		     );
-	
+
 	         $myColumnDefs[0] = array
 	         (
 	          	'name'   => "0",
@@ -1977,14 +1977,14 @@
 	                          array(key => index_count, label=>$table_header[4]['header'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
 	                          array(key => index_date, label=>$table_header[5]['header'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60)))
 	   		  );
-   		  
-			
+
+
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view_item")),
 				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,				
+				'myColumnDefs'					=> $myColumnDefs,
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -2033,7 +2033,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
-			
+
 		}
 
 
@@ -2183,7 +2183,7 @@
 					)
 				)
 			);
-			
+
 			$permissions['rowactions'][] = array(
 					'text' 			=> lang('View'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -2192,7 +2192,7 @@
 									)),
 					'parameters'	=> $parameters
 			);
-			
+
 
 //------- alarm--------
 	     $datavalues[0] = array
@@ -2228,7 +2228,7 @@
 					}
 				}
 			}
-				
+
 //---------items------------------------------------
 			$datavalues[1] = array
 			(
@@ -2256,13 +2256,13 @@
 									       			array(key => enhet,label=>lang('Enhet'),sortable=>true,resizeable=>true),
 									       			array(key => quantity,label=>lang('mengde'),sortable=>true,resizeable=>true)))
 			);
-			
+
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view")),
 				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,			
+				'myColumnDefs'					=> $myColumnDefs,
 
 				'lang_total_records'			=> lang('Total'),
 				'total_records'					=> $total_records,
@@ -2333,7 +2333,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
-			
+
 			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
