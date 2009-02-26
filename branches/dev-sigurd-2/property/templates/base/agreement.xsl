@@ -614,6 +614,7 @@
 							<xsl:value-of select="//lang_files"/>
 						</td>
 						<td>
+						<!-- DataTable 2 EDIT-->
 							<div id="datatable-container_2"></div>
 						</td>
 					</tr>
@@ -687,7 +688,7 @@
 			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				<tr><td class="center" align="left"><xsl:value-of select="lang_alarm"/></td></tr>
 						
-						<!-- DataTable 0 -->
+						<!-- DataTable 0  EDIT-->
 							<tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 							<tr><td class="center" align="right" colspan="10"><div id="datatable-buttons_0"></div></td></tr>
 							<tr><td class="center" align="left" colspan="10"><xsl:value-of select="alarm_data/add_alarm/lang_add_alarm"/><xsl:text> : </xsl:text><xsl:value-of select="alarm_data/add_alarm/lang_day_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_hour_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_minute_statustext"/><xsl:value-of select="alarm_data/add_alarm/lang_user"/></td></tr>
@@ -701,12 +702,7 @@
 		</div>
 		
 <div id="items">
-					
 
-					
-
-		
-	
 			<xsl:choose>
 				<xsl:when test="table_update!=''">
 				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
@@ -728,7 +724,7 @@
 									<xsl:value-of select="lang_download"/></a>
 								</td>
 							</tr>
-							<!-- DataTable 1 -->
+							<!-- DataTable 1 EDIT_ITEMS-->
 							<tr><td colspan="15" width="100%">
 								<div id="paging_1"> </div>
 								<div id="datatable-container_1"></div>
@@ -989,7 +985,7 @@
 
 				   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				   	  <tr><td><br/></td></tr>
-				      <!-- DataTable 0-->
+				      <!-- DataTable 0 EDIT_ITEM-->
 				       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 				       <tr><td><br/></td></tr>
 				       <tr><td class="center" align="left" colspan="10">
@@ -1220,22 +1216,40 @@
 						<xsl:value-of select="lang_alarm"/>
 					</td>
 				</tr>
-				<xsl:call-template name="alarm_view"/>
+				<tr>
+					<td class="th_text" align="left" colspan="4">
+					
+						<!--  DataTable 0 VIEW -->
+						<div id="datatable-container_0"></div>
+						<!-- <xsl:call-template name="alarm_view"/>  -->
+					</td>
+				</tr>
+
+
 			</table>
 			</td>
 			</tr>
 			</table>
+			<br/><br/>
 			<xsl:choose>
 				<xsl:when test="values!=''">
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<!--  DataTable 1 VIEW-->	
+					<div id="paging_1"/>
+					<div id="datatable-container_1"></div>
+
+					<!--  <table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<tr>
 							<td colspan="12" width="100%">
 								<xsl:call-template name="nextmatchs"/>
 							</td>
 						</tr>
-						<xsl:call-template name="table_header"/>
-						<xsl:call-template name="values"/>
-					</table>
+						<tr>
+							<td colspan="12" width="100%">
+								<xsl:call-template name="table_header"/><xsl:call-template name="values"/>
+							</td>
+						</tr>
+					</table>-->
+
 				</xsl:when>
 			</xsl:choose>						
 			<table width="80%" cellpadding="2" cellspacing="2" align="center">
@@ -1257,6 +1271,30 @@
 			</form>
 			</table>
 		</div>
+		
+		<!--  DATATABLE DEFINITIONS--> 
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+	
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+
+		</script>			
 	</xsl:template>
 
 <!-- view item -->
@@ -1346,17 +1384,28 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-		</table>
+		
 		<xsl:choose>
 			<xsl:when test="values != ''">
-		
-				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable>
+				<xsl:variable name="update_action"><xsl:value-of select="update_action"/></xsl:variable><br/>
+				<!-- DataTable 0  VIEW_ITEMS-->
+				<tr>
+						<td colspan="2" width="50%" align="left">				
+							<br/>
+							<div id="datatable-container_0"></div>
+						</td>
+					</tr>
+				
+				<!--  
 					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<xsl:call-template name="table_header"/>
 						<xsl:call-template name="values2"/>
 					</table>
+				-->					
+								
 			</xsl:when>
 		</xsl:choose>
+		</table>
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 		<form name="form" method="post" action="{$edit_url}">
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
@@ -1376,6 +1425,30 @@
 		</form>
 		
 		</div>
+		
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+	
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+
+		</script>			
 	</xsl:template>
 
 
