@@ -25,7 +25,6 @@
 		phpgwapi_yui::load_widget('container');
 		phpgwapi_yui::load_widget('connection');
 		phpgwapi_yui::load_widget('resize');
-		phpgwapi_yui::load_widget('layout');
 		$javascripts = array
 		(
 			"/phpgwapi/js/json/json.js",
@@ -33,7 +32,7 @@
 
 		);
 	}
-
+	phpgwapi_yui::load_widget('layout');
 	phpgwapi_yui::load_widget('button');
 	$stylesheets = array
 		(

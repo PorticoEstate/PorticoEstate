@@ -280,6 +280,13 @@ strong
 	color: #f00;
 }
 
+.msg
+{
+	background-color: #FFA500;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
 .warn
 {
 	background-color: #ff8;

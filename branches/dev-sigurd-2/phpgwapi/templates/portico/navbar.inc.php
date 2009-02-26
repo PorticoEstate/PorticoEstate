@@ -95,6 +95,7 @@ HTML;
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
+		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');
 	}
 

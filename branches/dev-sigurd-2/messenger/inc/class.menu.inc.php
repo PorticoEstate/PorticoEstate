@@ -42,12 +42,6 @@
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'messenger';
 			$acl = & $GLOBALS['phpgw']->acl;
-			$start_page = 'messenger';
-			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['messenger']['default_start_page'])
-					&& $GLOBALS['phpgw_info']['user']['preferences']['messenger']['default_start_page'] )
-			{
-					$start_page = $GLOBALS['phpgw_info']['user']['preferences']['messenger']['default_start_page'];
-			}
 
 			$menus = array();
 
@@ -56,7 +50,7 @@
 				'messenger' => array
 				(
 					'text'	=> lang('messenger'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.ui{$start_page}.index") ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.uimessenger.inbox") ),
 					'image'	=> array('messenger', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -102,7 +96,7 @@
 
 			$menus['navigation'] = array
 			(
-				'index' => array
+				'inbox' => array
 				(
 					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox')),
 					'text'  => $GLOBALS['phpgw']->translation->translate('inbox', array(), true),
