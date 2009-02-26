@@ -506,6 +506,7 @@
 			$claim_id = phpgw::get_var('claim_id', 'int');
 
 			$values	 = phpgw::get_var('values');
+			//_debug_array($values);die;
 			$values['project_id']		= phpgw::get_var('project_id', 'int');
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
@@ -675,6 +676,15 @@
 				{
 					$project_values['workorder_budget'][$d]['charge_tenant']='x';
 				}
+
+				if($project_values['workorder_budget'][$d]['selected']==1)
+				{
+					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" checked value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
+				}
+				else
+				{
+					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
+				}
 			}
 
 			//---datatable0 settings---------------------------------------------------
@@ -701,7 +711,7 @@
 		       				       						array(key => charge_tenant,label=>'Charge tenant',sortable=>true,resizeable=>true),
 		       				       						array(key => status,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
 		       				       						array(key => actual_cost,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-		       				       						array(key => selected,label=>'select',	sortable=>false,resizeable=>false,formatter=>'YAHOO.widget.DataTable.formatCheckbox')))
+		       				       						array(key => selected,label=>'select',	sortable=>false,resizeable=>false)))
 			);
 
 			$data = array

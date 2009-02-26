@@ -225,24 +225,26 @@
 			</tr>
 		</table>
 		<xsl:apply-templates select="workorder_data"/>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
+		
+		<table width="100%" cellpadding="2" cellspacing="2" align="center">
+
 			<tr >
-				<td class="th_text" colspan="3" align="right">
+				<td class="th_text" align="center" >
 					<xsl:value-of select="lang_total_records"/>
 					<xsl:text> : </xsl:text>
-				</td>
-				<td class="th_text" colspan="5" align="left">
 					<xsl:value-of select="total_hours_records"/>
 				</td>
 			</tr>
-			
-		<!-- DataTable 0 -->
-			<div id="paging_0"> </div>
-			<div id="datatable-container_0"></div>
-			<div id="contextmenu_0"></div>
-			
-			<xsl:apply-templates select="table_header_hour"/><xsl:apply-templates select="values_hour"/>
+			<tr>
+				<td colspan="1">
+							<!-- DataTable 0 -->
+							<div id="paging_0"> </div>
+							<div id="datatable-container_0"></div>
+				</td>
+			</tr>
+		
+			<!-- <xsl:apply-templates select="table_header_hour"/><xsl:apply-templates select="values_hour"/>  -->
 			
 		</table>
 		</div>
@@ -258,7 +260,6 @@
 				{
 					values			:	<xsl:value-of select="values"/>,
 					total_records	: 	<xsl:value-of select="total_records"/>,
-					permission		:	<xsl:value-of select="permission"/>, 
 					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
 					footer			:	<xsl:value-of select="footer"/>
 				}

@@ -13,7 +13,6 @@ var tableYUI;
   	this.addFooterDatatable = function(paginator,datatable)
   	{
   		//call getSumPerPage(name of column) in property.js
-  		//tmp_sum = getSumPerPage('budget_cost',0);
   		tmp_sum1 = getSumPerPage('budget',2,paginator,datatable);
   		tmp_sum2 = getSumPerPage('calculation',2,paginator,datatable);
 
@@ -36,20 +35,6 @@ var tableYUI;
 		tableYUI.setAttribute("id","tableYUI");
 		tableYUI.deleteTFoot();
 		addFooterDatatable(myPaginator_0,myDataTable_0);
-		enablechecks(myDataTable_0);
-	}
-/********************************************************************************/
-	this.enablechecks = function(datatable)
-	{
-		for(var y=0;y<datatable.getRecordSet().getRecords().length;y++)
-		{
-			if(datatable.getRecordSet().getRecords(0)[y].getData('select')==1)
-			{
-				alert("on");
-			}
-		}
-		//var checks = datatable.getRecordSet().getRecords().length;
-		//alert(checks);
 	}
 /********************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()

@@ -62,16 +62,16 @@ var tableYUI;
 		YAHOO.util.Connect.setForm(formObject[1]);//second form
 		execute_async(myDataTable_0);
 
-		//come back label to bottons_1_*
+		//come back initial labels to bottons_1_*
 		Button_1_0.set("label", myButtons[1][0].label);
 		Button_1_1.set("label",myButtons[1][1].label);
 		Button_1_2.set("label", myButtons[1][2].label);
 		Button_1_3.set("label", myButtons[1][3].label);
 
-		//clean hidden filter
+		//set up initial values to hidden filter buttons
 		for ( var i in array_buttons )
 		{
-			array_buttons[i].value = "";
+			array_buttons[i].value = myButtons[1][i].value_hidden;
 		}
 
 	}
@@ -157,7 +157,13 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 	{
 		if(num==1)
 		{
-			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableObject = document.body.getElementsByTagName('table');
+			for (x=0; x<tableObject.length; x++) 
+			{
+				if (tableObject[x].parentNode.id == 'datatable-container_1')
+					{ tableYUI = tableObject[x]; }
+			}
 			tableYUI.setAttribute("id","tableYUI");
 			tableYUI.deleteTFoot();
 			YAHOO.util.Dom.get("values_date").value = "";

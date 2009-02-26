@@ -5,6 +5,13 @@ var  myPaginator_1, myDataTable_1;
 this.myParticularRenderEvent = function()
 {
 }
+
+/********************************************************************************/	
+var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+{
+	elCell.innerHTML = "<center>"+oData+"</center>";
+}
+
  /********************************************************************************/
 
 YAHOO.util.Event.addListener(window, "load", function()

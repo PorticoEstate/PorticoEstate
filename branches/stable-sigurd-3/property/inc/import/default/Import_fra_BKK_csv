@@ -49,7 +49,7 @@
 		var $import = array(
 			'Bestilling' => 'pmwrkord_code', 
 			'Fakt. Nr' => 'fakturanr',
-			'Måler nr' => 'maalernr',
+			'MÃ¥ler nr' => 'maalernr',
 			'Konto' => 'spbudact_code',
 			'Objekt' => 'dima',
 			'Omr' => 'omraade',
@@ -59,7 +59,7 @@
 			'Belop [kr]' => 'belop'
 			);
 
-		var $header = array('Fakt. Nr','Måler nr','Konto','Objekt','MVA','Belop [kr]','Omr','Adresse');
+		var $header = array('Fakt. Nr','MÃ¥ler nr','Konto','Objekt','MVA','Belop [kr]','Omr','Adresse');
 
 		var $import_bkk = array('kundenr','under_fakturanr','Utskriftsdato','Forfdato','Maalepunktid',
 			'stedsnavn','Girobeloep','maalernr','kunde_navn');
@@ -157,7 +157,7 @@
 				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
 			}
 
-			$this->header = array('Fakt. Nr','Måler nr','Konto','Objekt','MVA','Tjeneste','Belop [kr]','Omr','Adresse');
+			$this->header = array('Fakt. Nr','MÃ¥ler nr','Konto','Objekt','MVA','Tjeneste','Belop [kr]','Omr','Adresse');
 			return $buffer;
 		}
 		

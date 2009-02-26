@@ -1240,10 +1240,10 @@
          $myButtons[1] = array
          (
           'name'   => "1",
-          'values'  => json_encode(array( array(id =>'values[time][days]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), label=>"0", classname=> actionsFilter),
-                    array(id =>'values[time][hours]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), label=>"0", classname=> actionsFilter),
-                    array(id =>'values[time][mins]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter),
-                    array(id =>'values[user_id]',  type=>menu,  value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list']),classname=> actionsFilter),
+          'values'  => json_encode(array( array(id =>'values[time][days]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+                    array(id =>'values[time][hours]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+                    array(id =>'values[time][mins]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
+                    array(id =>'values[user_id]',  type=>menu,  value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
 
                     array(id =>'values[add_alarm]',  type=>buttons, value=>Add,  label=>$alarm_data[add_alarm][lang_add],   funct=> onAddClick , classname=> actionButton),
                     ))
@@ -1288,7 +1288,35 @@
        													))
 			);
 
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			
+			for($z=0; $z<count($s_agreement['files']); $z++)
+			{
+				if ($link_to_files != '') {
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$s_agreement['files'][$z]['directory'].'/'.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				}
+				else {
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				}				
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$s_agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+			}										
 
+			$datavalues[2] = array
+			(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$myColumnDefs[2] = array
+       		(
+       			'name'		=> "2",
+       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
+									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+			);
 
 //--------------------------------------------JSON CODE------------
 

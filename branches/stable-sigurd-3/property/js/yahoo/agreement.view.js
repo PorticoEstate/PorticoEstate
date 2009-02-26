@@ -1,5 +1,9 @@
 var  myPaginator_0, myDataTable_0;
 
+/********************************************************************************/
+	this.myParticularRenderEvent = function(num)
+	{
+	}
 /********************************************************************************/	
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{
@@ -9,11 +13,6 @@ var  myPaginator_0, myDataTable_0;
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
-	}
-	
-/********************************************************************************/
-	this.myParticularRenderEvent = function(num)
-	{
 	}
  /********************************************************************************/
 

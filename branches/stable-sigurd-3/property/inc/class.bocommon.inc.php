@@ -1994,15 +1994,16 @@
 			return 	$split_values;	
 		}
 		
-		public function choose_select($array) 
+		public function choose_select($array, $index_return) 
 		{
 			foreach ($array as $value)
 			{
 				if($value["selected"]=="selected")
 				{
-					return 	$value["name"];
+					return 	$value[$index_return];
 				}
 			}	
-			return $array[count($array)-1]["name"];
+			//for avoid erros, return the last value
+			return $array[count($array)-1][$index_return];
 		}		
 	}
