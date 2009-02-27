@@ -1246,11 +1246,15 @@
 			<br/><br/>
 			<xsl:choose>
 				<xsl:when test="values!=''">
-					<!--  DataTable 1 VIEW-->	
-					<div id="paging_1"/>
-					<div id="datatable-container_1"></div>
-
-					<!--  <table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<table align="center">
+						<tr>
+							<td>
+								<!--  DataTable 1 VIEW-->	
+								<div id="paging_1"/>
+								<div id="datatable-container_1"></div>
+							</td>
+						</tr>
+					<!--
 						<tr>
 							<td colspan="12" width="100%">
 								<xsl:call-template name="nextmatchs"/>
@@ -1260,8 +1264,8 @@
 							<td colspan="12" width="100%">
 								<xsl:call-template name="table_header"/><xsl:call-template name="values"/>
 							</td>
-						</tr>
-					</table>-->
+						</tr> -->
+					</table> 
 
 				</xsl:when>
 			</xsl:choose>						
