@@ -521,20 +521,35 @@
 					<div id="datatable-container_1"></div>
 					<div id="contextmenu_1"></div>
 					<div style="height:15px;"></div>
-					<div id="datatable-buttons_2">
-						<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
+					<div id="datatable-buttons_2" class="div-buttons">
+						<input type="text" id="values_date" class="calendar-opt" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 						<xsl:text>window.status='</xsl:text>
 						<xsl:value-of select="lang_date_statustext"/>
 						<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 						</input>
-						<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
+						<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<div style="width:25px;height:15px;position:relative;float:left;"></div>
 					</div>
 					<style type="text/css">
-						.valign {
-						   height: 100%;
-						   vertical-align: top;
+						.calendar-opt
+						{
+							position:relative;
+							float:left;
+						}
+						.index-opt
+						{
+							position:relative;
+							float:left;
+							margin-top:2px;
+						}
+						.div-buttons
+						{
+							position:relative;
+							float:left;
+							width:750px;
+							height:100px;
 						}
 					</style> 
 
@@ -754,6 +769,8 @@
            <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
                <tr><td><br/></td></tr>
               <!-- DataTable 0 EDIT_ITEM-->
+              <div id="contextmenu_0"></div>
+
                <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
                <tr><td><br/></td></tr>
                <tr><td class="center" align="left" colspan="10">
