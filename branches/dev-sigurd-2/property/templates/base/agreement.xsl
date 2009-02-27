@@ -862,7 +862,7 @@
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
-						<td align="left" colspan="3">
+						<td align="left" colspan="2">
 							<xsl:call-template name="msgbox"/>
 						</td>
 					</tr>
@@ -870,7 +870,7 @@
 			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_agreement_id!=''">
-					<tr >
+					<tr>
 						<td align="left">
 							<xsl:value-of select="lang_agreement"/>
 						</td>
@@ -954,7 +954,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<tr height="50">
-				<td valign="bottom">
+				<td valign="bottom" colspan="2" width="30%">
 					<input type="hidden" name="values[index_count]" value="{index_count}" ></input>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
@@ -984,7 +984,7 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
+				</td> 
 			</tr>
 		</table>
 		</form>
