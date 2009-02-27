@@ -6,11 +6,10 @@ var tableYUI;
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
 	{
-		array_buttons = YAHOO.util.Dom.getElementsByClassName('actionButton');
-		for ( var i in array_buttons )
-		{
-			array_buttons[i].setAttribute("value","");
-		}
+		YAHOO.util.Dom.get('hd_values[enable_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[disable_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[delete_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[add_alarm]').value = '';
 	}
 /********************************************************************************/
 	this.onActionsClick=function()
