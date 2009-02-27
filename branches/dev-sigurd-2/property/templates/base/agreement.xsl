@@ -741,16 +741,17 @@
 						<br/>
 						<table width="70%" cellpadding="2" cellspacing="2" >
 							<!-- Buttons 2 -->
-								<div id="datatable-buttons_2" class="valign">
+								<div id="datatable-buttons_2" class="div-buttons">
 								
-								<input class="mybottonsUpdates" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<input class="mybottonsUpdates calendar-opt" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_date_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								</input>
-								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
+								<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"  />
+								<div style="width:25px;height:15px;position:relative;float:left;"></div>
 							</div>
 								
 							<!-- <xsl:apply-templates select="table_update"/>  -->
@@ -772,9 +773,23 @@
 		
 		<!--  DATATABLE DEFINITIONS-->
 		<style type="text/css">
-			.valign {
-			   height: 100%;
-			   vertical-align: top;
+			.calendar-opt
+			{
+				position:relative;
+				float:left;
+			}
+			.index-opt
+			{
+				position:relative;
+				float:left;
+				margin-top:2px;
+			}
+			.div-buttons
+			{
+				position:relative;
+				float:left;
+				width:750px;
+				height:100px;
 			}
 		</style> 
 		<script>
@@ -982,6 +997,26 @@
 				<form method="post" name="form2" action="{$update_action}">
 				
 				   <input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+				   <style type="text/css">
+						.calendar-opt
+						{
+							position:relative;
+							float:left;
+						}
+						.index-opt
+						{
+							position:relative;
+							float:left;
+							margin-top:2px;
+						}
+						.div-buttons
+						{
+							position:relative;
+							float:left;
+							width:750px;
+							height:100px;
+						}
+					</style>
 
 				   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				   	  <tr><td><br/></td></tr>
@@ -989,15 +1024,16 @@
 				       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 				       <tr><td><br/></td></tr>
 				       <tr><td class="center" align="left" colspan="10">
-							<div id="datatable-buttons_0">
-								<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+							<div id="datatable-buttons_0" class="div-buttons">
+								<input type="text" id="values_date" class="calendar-opt" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_date_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								</input>
-								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								<div style="width:25px;height:15px;position:relative;float:left;"></div>
 							</div>	
 						</td></tr>
 				    </table>
