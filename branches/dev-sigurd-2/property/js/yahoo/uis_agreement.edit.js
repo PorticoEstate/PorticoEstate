@@ -149,7 +149,7 @@ var Button_2_0;
 /********************************************************************************/
 var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 	{
-		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks_update\"  value="+oRecord.getData('cost')+" name=\"values[select]["+oRecord.getData('item_id')+"]\"/></center> <input type=\"hidden\" name=\"values[item_id]["+oRecord.getData('item_id')+"]\" value="+oRecord.getData('item_id')+" /> <input type=\"hidden\" value="+oRecord.getData('index_count')+" name=\"values[id]["+oRecord.getData('item_id')+"]\" />";
+		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks_update\"  value="+oRecord.getData('item_id')+" name=\"values[select]["+oRecord.getData('item_id')+"]\"/></center> <input type=\"hidden\" name=\"values[item_id]["+oRecord.getData('item_id')+"]\" value="+oRecord.getData('item_id')+" /> <input type=\"hidden\" value="+oRecord.getData('index_count')+" name=\"values[id]["+oRecord.getData('item_id')+"]\" />";
 	}
 
 /********************************************************************************/
@@ -159,7 +159,7 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 		{
 			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
 			tableObject = document.body.getElementsByTagName('table');
-			for (x=0; x<tableObject.length; x++) 
+			for (x=0; x<tableObject.length; x++)
 			{
 				if (tableObject[x].parentNode.id == 'datatable-container_1')
 					{ tableYUI = tableObject[x]; }
