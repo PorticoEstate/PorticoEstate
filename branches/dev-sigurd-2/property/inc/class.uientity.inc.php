@@ -1089,7 +1089,6 @@
 				}
 			}
 
-
 			if(isset($category['lookup_tenant']) && $category['lookup_tenant'])
 			{
 				$lookup_tenant=true;

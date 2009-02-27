@@ -37,52 +37,50 @@
 
 		function __construct()
 		{
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->historylog	= CreateObject('property.historylog','document');
-			$this->vfs 			= CreateObject('phpgwapi.vfs');
-			$this->rootdir 		= $this->vfs->basedir;
-			$this->fakebase 	= $this->vfs->fakebase;
+			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bocommon			= CreateObject('property.bocommon');
+			$this->historylog		= CreateObject('property.historylog','document');
+			$this->vfs 				= CreateObject('phpgwapi.vfs');
+			//$this->rootdir 			= $this->vfs->basedir;
+			$this->vfs->fakebase 	= '/property';
+			$this->fakebase 		= $this->vfs->fakebase;
 
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
-			$this->like			= & $this->db->like;
+			$this->db           	= & $GLOBALS['phpgw']->db;
+			$this->join				= & $this->db->join;
+			$this->like				= & $this->db->like;
 		}
 
-
-		function read_single_category($id='')
-		{
-			$this->db->query("SELECT descr FROM fm_document_category where id='$id' ");
-			$this->db->next_record();
-			return $this->db->f('descr');
-		}
 
 		function select_status_list()
 		{
+			$status = array();
 			$this->db->query("SELECT id, descr FROM fm_document_status ORDER BY id ");
 
-			$i = 0;
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id']				= $this->db->f('id');
-				$status_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $status;
 		}
 
 		function select_branch_list()
 		{
+			$branch = array();
 			$this->db->query("SELECT id, descr FROM fm_branch ORDER BY id ");
 
-			$i = 0;
 			while ($this->db->next_record())
 			{
-				$branch_entries[$i]['id']				= $this->db->f('id');
-				$branch_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$branch[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $branch_entries;
+			return $branch;
 		}
 
 		function read($data)
@@ -96,7 +94,7 @@
 				$order		= isset($data['order'])?$data['order']:'';
 				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
-				$doc_type	= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']:0;
+				$doc_types	= isset($data['doc_types']) && $data['doc_types'] ? $data['doc_types']: array();
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
@@ -212,10 +210,10 @@
 				$where= 'AND';
 			}
 
-			if ($doc_type > 0)
+			if ($doc_types && is_array($doc_types))
 			{
-				$filtermethod .= " $where fm_document.category='$doc_type' ";
-				$where= 'AND';
+				$filtermethod .= " $where fm_document.category IN (". implode(',', $doc_types) . ')';
+				$where = 'AND';
 			}
 
 			if ($filter!='all' && $filter)
@@ -274,7 +272,7 @@
 				$filter			= isset($data['filter']) && $data['filter'] ? (int) $data['filter']: 0;
 				$entity_id		= isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id']:0;
 				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']: 0;
-				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? (int)$data['doc_type']: 0;
+				$doc_types		= isset($data['doc_types']) && $data['doc_types'] ? $data['doc_types']: array();
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
@@ -296,9 +294,9 @@
 				$where = 'AND';
 			}
 
-			if ($doc_type > 0)
+			if ($doc_types && is_array($doc_types))
 			{
-				$filtermethod .= " $where fm_document.category={$doc_type} ";
+				$filtermethod .= " $where fm_document.category IN (". implode(',', $doc_types) . ')';
 				$where = 'AND';
 			}
 			if ($cat_id > 0)
@@ -476,6 +474,7 @@
 
 		function edit($document)
 		{
+			$receipt = array();
 			while (is_array($document['location']) && list($input_name,$value) = each($document['location']))
 			{
 				$vals[]	= "$input_name = '$value'";
@@ -503,28 +502,43 @@
 				$address = $this->db->db_addslashes($document['location_name']);
 			}
 
-			$this->db->query("SELECT status,category,coordinator,document_name,loc1,link,p_num FROM fm_document where id='" .$document['document_id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT status,category,coordinator,document_name,location_code,link,p_entity_id,p_cat_id,p_num FROM fm_document where id='" .$document['document_id']."'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			$old_status = $this->db->f('status');
-			$old_doc_type = $this->db->f('category');
-			$old_coordinator = $this->db->f('coordinator');
-			$old_document_name = $this->db->f('document_name');
-			$old_loc1 = $this->db->f('loc1');
-			$old_link = $this->db->f('link');
-			$old_p_num = $this->db->f('p_num');
+			$old_status			= $this->db->f('status');
+			$old_doc_type		= $this->db->f('category');
+			$old_coordinator	= $this->db->f('coordinator');
+			$old_document_name	= $this->db->f('document_name');
+			$old_link			= $this->db->f('link');
+			$old_location_code	= $this->db->f('location_code');
+			$old_p_entity_id	= $this->db->f('p_entity_id');
+			$old_p_cat_id		= $this->db->f('p_cat_id');
+			$old_p_num			= $this->db->f('p_num');
+
+			$move_file = false;
+
+			if($old_location_code != $document['location_code'])
+			{
+				$move_file = true;			
+			}
+
+			if("{$old_p_entity_id}_{$old_p_cat_id}" != "{$document['extra']['p_entity_id']}_{$document['extra']['p_cat_id']}")
+			{
+				$move_file = true;			
+			}
 
 			if ($old_status != $document['status'])
 			{
-				$this->historylog->add('S',$document['document_id'],$document['status']);
+				$this->historylog->add('S',$document['document_id'],$document['status'],$old_status);
 			}
 			if ($old_doc_type != $document['doc_type'])
 			{
-				$this->historylog->add('T',$document['document_id'],$document['doc_type']);
+				$this->historylog->add('T',$document['document_id'],$document['doc_type'],$old_doc_type);
+				$move_file = true;
 			}
 			if ((int)$old_coordinator != (int)$document['coordinator'])
 			{
-				$this->historylog->add('C',$document['document_id'],$document['coordinator']);
+				$this->historylog->add('C',$document['document_id'],$document['coordinator'],$old_coordinator);
 			}
 
 			if($document['document_name_orig'] && !$document['document_name'] )
@@ -534,32 +548,34 @@
 
 			if($old_link !=$document['link'] )
 			{
-					$this->historylog->add('L',$document['document_id'],$document['link']);
+					$this->historylog->add('L',$document['document_id'],$document['link'],$old_link);
 					$alter_link=true;
 			}
 
-//_debug_array($document);
-			if ($old_document_name && ($old_document_name != $document['document_name']))
+
+			if ($old_document_name && ($old_document_name != $document['document_name'] || $move_file = true))
 			{
 				if($document['link'] && !$alter_link)
 				{
-					$this->historylog->add('L',$document['document_id'],$document['link']);
+					$this->historylog->add('L',$document['document_id'],$document['link'],$old_document_name);
 				}
 				else
 				{
-					$this->historylog->add('F',$document['document_id'],$document['document_name']);
+					$this->historylog->add('F',$document['document_id'],$document['document_name'],$old_document_name);
 				}
 
-				if($old_p_num)
+				// file is already moved
+			/*	if($old_p_entity_id)
 				{
-					$file = $this->fakebase. '/document/' . $old_loc1 . '/' . $document['entity_name'] . '/' . $document['category_name'] . '/' . $p_num . '/' . $old_document_name;
+					$file = "{$this->fakebase}/document/entity_{$old_p_entity_id}_{$old_p_cat_id}/{$old_p_num}/{$old_doc_type}/$old_document_name";
 				}
 				else
 				{
-					$file = $this->fakebase. '/document/' . $old_loc1 . '/' . $old_document_name;
+					$file = "{$this->fakebase}/document/{$old_location_code}/{$old_doc_type}/{$old_document_name}";
 				}
 
 				$receipt= $this->delete_file($file);
+			*/
 			}
 
 			if($document['link'])
@@ -594,11 +610,11 @@
 			$receipt['document_id'] = $document['document_id'];
 			$receipt['message'][] = array('msg'=>lang('document %1 has been edited',"'".$document['title']."'"));
 			return $receipt;
-
 		}
 
 		function delete_file($file)
 		{
+			$receipt = array();
 			if($this->vfs->file_exists(array(
 					'string' => $file,
 					'relatives' => Array(RELATIVE_NONE)
@@ -613,52 +629,51 @@
 				     )
 				)))
 				{
-					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase. '/document/' . $document_name);
+					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $file);
 				}
 				else
 				{
-					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $this->fakebase. '/document/' . $document_name);
+					$receipt['message'][]=array('msg'=>lang('file deleted') . ' :'. $file);
 				}
 				$this->vfs->override_acl = 0;
 			}
-
+			return $receipt;
 		}
 
-		function delete($document_id )
+		function delete($document_id)
 		{
-			$this->db->query("SELECT document_name,location_code,p_num,p_entity_id,p_cat_id FROM fm_document where id='$document_id'",__LINE__,__FILE__);
+			$receipt = array();
+			$document_id = (int) $document_id;
+			$this->db->query("SELECT document_name,location_code,p_num,p_entity_id,p_cat_id,category FROM fm_document where id='$document_id'",__LINE__,__FILE__);
 			$this->db->next_record();
 			$document_name	= $this->db->f('document_name');
 			$location_code	= $this->db->f('location_code');
-			$p_num			= $this->db->f('p_num');
 			$p_entity_id	= $this->db->f('p_entity_id');
 			$p_cat_id		= $this->db->f('p_cat_id');
-
-			$location		= split("-", $location_code);
-			$loc1	= $location[0];
-			if($p_cat_id)
-			{
-				$boadmin_entity		= CreateObject('property.boadmin_entity');
-				$entity = $boadmin_entity->read_single($p_entity_id,false);
-				$category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
-			}
-
+			$p_num		= $this->db->f('p_num');
+			$category	= $this->db->f('category');
+			
 			if($document_name)
 			{
-				if($p_num)
+				if($p_cat_id > 0)
 				{
-					$file = $this->fakebase. '/document/' . $loc1 . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num . '/' . $document_name;
+					$file = "{$this->fakebase}/document/entity_{$p_entity_id}_{$p_cat_id}/{$p_num}/{$category}/$document_name";
 				}
 				else
 				{
-					$file = $this->fakebase. '/document/' . $loc1 . '/' . $document_name;
+					$file = "{$this->fakebase}/document/{$location_code}/{$category}/{$document_name}";
 				}
 
 				$receipt= $this->delete_file($file);
 			}
-
-			$this->db->query("DELETE FROM fm_document WHERE id='$document_id'",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_document_history  WHERE  history_record_id='$document_id'",__LINE__,__FILE__);
+			if(!isset($receipt['error']))
+			{
+				$this->db->transaction_begin();
+				$this->db->query("DELETE FROM fm_document WHERE id={$document_id}",__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_document_history  WHERE  history_record_id={$document_id}",__LINE__,__FILE__);
+				$this->db->transaction_commit();
+			}
+			return $receipt;
 		}
 	}
 

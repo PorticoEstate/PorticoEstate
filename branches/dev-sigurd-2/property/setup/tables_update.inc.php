@@ -2921,3 +2921,101 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.550 to 0.9.17.551
+	* Reorganise documents
+	*/
+
+	$test[] = '0.9.17.551';
+	function property_upgrade0_9_17_551()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_document");
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$files[]=array
+			(
+				'document_name'	=> $GLOBALS['phpgw_setup']->oProc->f('document_name'),
+				'location_code'	=> $GLOBALS['phpgw_setup']->oProc->f('location_code'),
+				'loc1'			=> $GLOBALS['phpgw_setup']->oProc->f('loc1'),
+				'category'		=> $GLOBALS['phpgw_setup']->oProc->f('category'),
+				'p_num'			=> $GLOBALS['phpgw_setup']->oProc->f('p_num'),
+				'p_entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('p_entity_id'),
+				'p_cat_id'		=> $GLOBALS['phpgw_setup']->oProc->f('p_cat_id'),
+			);
+		}
+
+		$sql = 'SELECT config_name,config_value FROM phpgw_config'
+					. " WHERE config_name = 'files_dir'"
+					. " OR config_name = 'file_repository'";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$GLOBALS['phpgw_info']['server'][$GLOBALS['phpgw_setup']->oProc->f('config_name', true)] = $GLOBALS['phpgw_setup']->oProc->f('config_value', true);
+		}
+
+		$GLOBALS['phpgw']->session		= createObject('phpgwapi.sessions');
+		$vfs 			= CreateObject('phpgwapi.vfs');
+		$vfs->fakebase 	= '/property';
+		$vfs->override_acl = 1;
+
+
+		$to_dir = array();
+		foreach ($files as $entry)
+		{
+			 if($entry['p_num'])
+			 {
+				continue;
+			 }
+			 else
+			 {
+			 	$to_dir["{$vfs->basedir}{$vfs->fakebase}/{$entry['location_code']}/{$entry['category']}"] = true;
+			 }
+		}
+
+		foreach ($to_dir as $dir => $dummy)
+		{
+	//		@mkdir($dir, 0770);
+		_debug_array($dir);
+		}
+
+		reset($files);
+		foreach ($files as $entry)
+		{
+			 if($entry['p_num'])
+			 {
+				continue;
+			 }
+			 else
+			 {
+			 	$from_file = "{$vfs->fakebase}/{$entry['loc1']}/{$entry['document_name']}";
+			 	$to_file = "{$vfs->fakebase}/{$entry['location_code']}/{$entry['category']}/{$entry['document_name']}";
+			 }
+//		_debug_array($from_file);
+//		_debug_array($to_file);
+			
+		/*	if(!$vfs->mv (array (
+				'from'		=> $from_file,
+				'to'		=> $to_file,
+				'relatives'	=> array (RELATIVE_ALL, RELATIVE_ALL))))
+			{
+				$error[] = lang('Failed to move file !') . " {$from_file}";
+			}
+		*/
+		}
+
+		$vfs->override_acl = 0;
+		if(isset($error))
+		{
+			_debug_array($error);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.551';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

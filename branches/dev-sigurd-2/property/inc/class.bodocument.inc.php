@@ -145,8 +145,9 @@
 
 		function read()
 		{
+			$doc_types = $this->get_sub_doc_types();
 			$document = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_types'=>$doc_types));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -166,11 +167,29 @@
 			return $document;
 		}
 
+		function get_sub_doc_types()
+		{
+			$doc_types = array();
+			if($this->doc_type)
+			{
+				$doc_types[] = $this->doc_type;
+				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $this->doc_type);
+				foreach ($cat_sub as $doc_type)
+				{
+					$doc_types[] = $doc_type['id'];
+				}
+			}
+			return $doc_types;
+		}
+
 		function read_at_location($location_code='')
 		{
+
+			$doc_types = $this->get_sub_doc_types();
+
 			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
-											'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
+											'location_code' => $location_code,'doc_types'=>$doc_types, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -298,7 +317,13 @@
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
-					$record_history[$i]['value_new_value']	= $this->so->read_single_category($value['new_value']);
+					$category 								= $this->cats->return_single($value['new_value']);
+					$record_history[$i]['value_new_value']	= $category[0]['name'];
+					if($value['old_value'])
+					{
+						$category 								= $this->cats->return_single($value['old_value']);
+						$record_history[$i]['value_old_value']	= $category[0]['name'];
+					}
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
@@ -315,21 +340,34 @@
 			return $record_history;
 		}
 
+		function get_file($document_id)
+		{
+			$values = $this->read_single($document_id);
+			$bofiles	= CreateObject('property.bofiles');
+			if($values['p_num'])
+			{
+				$file	= "{$bofiles->fakebase}/document/entity_{$values['p_entity_id']}_{$values['p_cat_id']}/{$values['p_num']}/{$values['doc_type']}/{$values['document_name']}";
+			}
+			else
+			{
+				$file	= "{$bofiles->fakebase}/document/{$values['location_code']}/{$values['doc_type']}/{$values['document_name']}";
+			}
+
+			if($bofiles->vfs->file_exists(array(
+					'string' => $file,
+					'relatives' => Array(RELATIVE_NONE)
+				)))
+			{
+				return $file;
+			}
+			return false;
+		}
+
 		function save($values)
 		{
 
 			$document_date	= $this->bocommon->date_array($values['document_date']);
 			$values['document_date']	= mktime (2,0,0,$document_date['month'],$document_date['day'],$document_date['year']);
-
-			while (is_array($values['location']) && list(,$value) = each($values['location']))
-			{
-				if($value)
-				{
-					$location[] = $value;
-				}
-			}
-
-			$values['location_code']=implode("-", $location);
 
 //_debug_array($values);
 			if ($values['document_id'])

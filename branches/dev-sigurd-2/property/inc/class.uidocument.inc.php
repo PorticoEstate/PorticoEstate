@@ -77,7 +77,7 @@
 			$this->acl_edit 			= $this->acl->check('.document', PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 			= $this->acl->check('.document', PHPGW_ACL_DELETE, 'property');
 
-			$this->rootdir 				= $this->bo->rootdir;
+			//$this->rootdir 				= $this->bo->rootdir;
 			$this->fakebase 			= $this->bo->fakebase;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -692,11 +692,11 @@
 
 			if($this->cat_id)
 			{
-				$directory = $this->fakebase. '/document/' . $location['loc1'] . '/' . $entity['name'] . '/' . $category['name'] . '/' . $p_num;
+				$directory = "{$this->fakebase}/document/entity_{$this->entity_id}_{$this->cat_id}/{$p_num}/{$this->doc_type}";
 			}
 			else
 			{
-				$directory = $this->fakebase. '/document/' . $location['loc1'];
+				$directory = "{$this->fakebase}/document/{$location_code}/{$this->doc_type}";
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -830,8 +830,8 @@
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 									(
 										'menuaction'	=> 'property.uidocument.delete',
-										'location_code'	=> $location_code
-										, 'p_num'		=> $p_num
+										'location_code'	=> $location_code,
+										'p_num'		=> $p_num
 									)),
 						'parameters'	=> $parameters
 						);
@@ -847,7 +847,10 @@
 									(
 										'menuaction'	=> 'property.uidocument.edit',
 										'from'			=> 'list_doc',
-										'location_code' => $location_code
+										'location_code' => $location_code,
+										'p_entity_id'	=> $this->entity_id,
+										'p_cat_id'		=> $this->cat_id,
+										'p_num'			=> $p_num
 									))
 						);
 			}
@@ -990,22 +993,11 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$document_id 		= phpgw::get_var('id', 'int');
-			$p_num = phpgw::get_var('p_num');
+			$document_id 	= phpgw::get_var('id', 'int');
 
-			$values = $this->bo->read_single($document_id);
+			$file 			= $this->bo->get_file($document_id);
 
-			$bofiles	= CreateObject('property.bofiles');
-			if($this->cat_id)
-			{
-				$entity = $this->boadmin_entity->read_single($this->entity_id,false);
-				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
-				$file	= "{$bofiles->fakebase}/document/{$values['location_data']['loc1']}/entity_{$this->entity_id}_{$this->cat_id}/{$p_num}/{$values['document_name']}";
-			}
-			else
-			{
-				$file	= "{$bofiles->fakebase}/document/{$values['location_data']['loc1']}/{$values['document_name']}";
-			}
+			$bofiles		= CreateObject('property.bofiles');
 
 			$bofiles->view_file('', $file);
 		}
@@ -1067,14 +1059,14 @@
 				}
 			}
 
-//_debug_array($values);
 			if($values[extra]['p_entity_id'])
 			{
-				$this->entity_id=$values[extra]['p_entity_id'];
-				$this->cat_id=$values[extra]['p_cat_id'];
+				$this->entity_id=$values['extra']['p_entity_id'];
+				$this->cat_id=$values['extra']['p_cat_id'];
 				$p_num=$values['extra']['p_num'];
 			}
 
+/*
 			if($this->cat_id)
 			{
 				$entity = $this->boadmin_entity->read_single($this->entity_id,false);
@@ -1082,7 +1074,7 @@
 				$values['entity_name']=$entity['name'];
 				$values['category_name']=$category['name'];
 			}
-
+*/
 			if ($values['save'])
 			{
 				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
@@ -1114,12 +1106,16 @@
 
 				$bofiles	= CreateObject('property.bofiles');
 
-				$document_dir = 'document/' . $values['location']['loc1'];
+				$values['location_code'] = isset($values['location_code']) && $values['location_code'] ? $values['location_code'] : implode('-',$values['location']);
+
+				$document_dir = "document/{$values['location_code']}";
 
 				if($values['extra']['p_num'])
 				{
-					$document_dir .= "/entity_{$this->entity_id}_{$this->cat_id}/{$values['extra']['p_num']}";
+					$document_dir = "document/entity_{$this->entity_id}_{$this->cat_id}/{$values['extra']['p_num']}";
 				}
+				
+				$document_dir .= "/{$values['doc_type']}";
 
 				$to_file	= "{$bofiles->fakebase}/{$document_dir}/{$values['document_name']}";
 
@@ -1131,9 +1127,29 @@
 					$receipt['error'][]=array('msg'=>lang('This file already exists !'));
 				}
 
-				$receipt2 = $bofiles->create_document_dir($document_dir);
-				$receipt = array_merge($receipt, $receipt2);
-				unset($receipt2);
+				if(!$receipt['error'])
+				{
+					$receipt = $bofiles->create_document_dir($document_dir);
+					if(isset($values['document_name_orig']) && $values['document_name_orig'] && (!isset($values['document_name']) || !$values['document_name']))
+					{
+						$old_file 	= $this->bo->get_file($document_id);
+						
+						$to_file .= $values['document_name_orig'];
+						
+						if($old_file != $to_file)
+						{
+							$bofiles->vfs->override_acl = 1;
+							if(!$bofiles->vfs->mv (array (
+								'from'		=> $old_file,
+								'to'		=> $to_file,
+								'relatives'	=> array (RELATIVE_ALL, RELATIVE_ALL))))
+							{
+								$receipt['error'][]=array('msg'=>lang('Failed to move file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+				}
 
 				$values['document_id'] = $document_id;
 
@@ -1166,9 +1182,9 @@
 					$values['document_name']='';
 					if($values['location'])
 					{
-						$location_code=implode("-", $values['location']);
+		//				$location_code=implode("-", $values['location']);
 						$values['extra']['view'] = true;
-						$values['location_data'] = $this->bolocation->read_single($location_code,$values['extra']);
+						$values['location_data'] = $this->bolocation->read_single($values['location_code'],$values['extra']);
 					}
 					if($values['extra']['p_num'])
 					{
