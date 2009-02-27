@@ -1221,9 +1221,9 @@
        		$myButtons[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton),
-       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton),
-       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton),
+       			'values'		=>	json_encode(array(	array(id =>'values[enable_alarm]',type=>buttons,	value=>Enable,	label=>$alarm_data[alter_alarm][0][lang_enable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+       													array(id =>'values[disable_alarm]',type=>buttons,	value=>Disable,	label=>$alarm_data[alter_alarm][0][lang_disable],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+       													array(id =>'values[delete_alarm]',type=>buttons,	value=>Delete,	label=>$alarm_data[alter_alarm][0][lang_delete],	funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
        													))
 			);
        		$myButtons[1] = array
@@ -1234,7 +1234,7 @@
        													array(id =>'values[time][mins]',	type=>menu,		value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
        													array(id =>'values[user_id]',		type=>menu,		value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'),	label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
 
-       													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton),
+       													array(id =>'values[add_alarm]',		type=>buttons,	value=>Add,		label=>$alarm_data[add_alarm][lang_add],			funct=> onAddClick , classname=> actionButton, value_hidden=>"")
        													))
 			);
 //_debug_array($alarm_data['add_alarm']['user_list']);die;
@@ -1323,7 +1323,7 @@
        		(
        			'name'			=> "2",
        			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'index-opt'),
-       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'mybottonsUpdates index-opt'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'mybottonsUpdates'),
        													array(id =>'values[update]',	type=>buttons,		value=>Update,	label=>lang('update'),	funct=> onUpdateClick , classname=> '')
        													)));
 
