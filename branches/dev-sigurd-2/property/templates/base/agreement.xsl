@@ -1284,6 +1284,13 @@
 				<xsl:when test="values!=''">
 					<table align="center">
 						<tr>
+							<td align="center">
+								<xsl:value-of select="lang_total_records"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="num_records"/>
+							</td>
+						</tr>
+						<tr>
 							<td>
 								<!--  DataTable 1 VIEW-->	
 								<div id="paging_1"/>

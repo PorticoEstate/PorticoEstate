@@ -2174,6 +2174,7 @@
 				'start_record'				=> $this->start,
 				'record_limit'				=> $record_limit,
 				'num_records'				=> count($content),
+				'lang_total_records'		=> lang('Total'),
  				'all_records'				=> $this->bo->total_records,
 				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data2),
 				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),

@@ -1018,17 +1018,20 @@
 			</td>
 			</tr>
 			</table>
+			<br/><br/>
 			<xsl:choose>
 				<xsl:when test="values!=''">
 					<table width="79%" cellpadding="2" cellspacing="2" align="center">
-						<tr><td align = "center" colspan="10" height="30">
-						<xsl:value-of select="lang_total_records"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="total_records"/>
-						</td></tr>
+						<tr>
+							<td align="center">
+								<xsl:value-of select="lang_total_records"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="total_records"/>
+							</td>
+						</tr>
 						<!--  DataTable 1 VIEW -->
 						<tr>
-							<td align="left" colspan="4">
+							<td>
 								<div id="paging_1"> </div>
 								<div id="datatable-container_1"></div>
 								<div id="contextmenu_1"></div>
