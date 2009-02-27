@@ -938,7 +938,16 @@
 				</tr>
 				<xsl:choose>
 					<xsl:when test="files!=''">
-						<xsl:call-template name="file_list_view"/>
+						<!-- <xsl:call-template name="file_list_view"/>	-->					
+						<tr>
+							<td width="19%" align="left" valign="top">
+								<xsl:value-of select="//lang_files"/>
+							</td>
+							<td>
+								<!-- DataTable 2 VIEW -->
+								<div id="datatable-container_2"></div>
+							</td>
+						</tr>							
 					</xsl:when>
 				</xsl:choose>
 				<xsl:choose>

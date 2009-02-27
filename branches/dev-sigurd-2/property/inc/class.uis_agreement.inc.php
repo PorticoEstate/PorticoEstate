@@ -2257,6 +2257,38 @@
 									       			array(key => quantity,label=>lang('mengde'),sortable=>true,resizeable=>true)))
 			);
 
+//---datatable2 settings---------------------------------------------------	
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			
+			for($z=0; $z<count($s_agreement['files']); $z++)
+			{
+				if ($link_to_files != '') 
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$s_agreement['files'][$z]['directory'].'/'.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				}
+				else 
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				}				
+			}										
+
+			$datavalues[2] = array
+			(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$myColumnDefs[2] = array
+       		(
+       			'name'		=> "2",
+       			'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
+			);
+			
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
