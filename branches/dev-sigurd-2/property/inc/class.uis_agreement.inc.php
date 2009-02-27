@@ -1282,8 +1282,8 @@
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
-       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'valign'),
-       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'valign'),
+       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'index-opt'),
+       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'index-opt'),
        													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onUpdateClick , classname=> '')
        													))
 			);
@@ -1690,16 +1690,6 @@
 				}*/
 			}
 
-			/*REQUIRES VALIDATION OF PERMISSIONS*/
-			$permissions['rowactions'][] = array(
-					'text' 			=> lang('View'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uis_agreement.view_item'
-									)),
-					'parameters'	=> $parameters
-			);
-
 			$content_values = array();
 
 			for($y=0;$y<count($content);$y++)
@@ -1729,6 +1719,40 @@
 			$hidden .= " <input name='values[id][".$content_values[$y - 1]['item_id']."]'  type='hidden' value='".$content_values[$y - 1]['index_count']."'/>";
 
 			$content_values[$y - 1]['index_date'] .= $hidden;
+
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 's_agreement_id',
+						'source'	=> $s_agreement_id,
+						'ready'		=> 1
+					),
+					array
+					(
+						'name'		=> 'from',
+						'source'	=> $view_only?'view':'edit',
+						'ready'		=> 1
+					)
+				)
+			);
+
+
+			/*REQUIRES VALIDATION OF PERMISSIONS*/
+			$permissions['rowactions'][] = array(
+					'text' 			=> lang('View'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+									(
+										'menuaction'	=> 'property.uis_agreement.view_item'
+									)),
+					'parameters'	=> $parameters
+			);
+
+
+
 
 			$datavalues[0] = array
 			(
