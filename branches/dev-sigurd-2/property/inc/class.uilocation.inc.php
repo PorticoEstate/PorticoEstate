@@ -611,20 +611,23 @@
 				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
 
 				$function_exchange_values = '';
-				if(is_array($input_name))
+				//if(is_array($input_name))
+				//{
+				for ($i=0;$i<count($uicols['name']);$i++)
 				{
-					for ($k=0;$k<count($input_name);$k++)
+					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 					{
-						$function_exchange_values .= "opener.document.forms[0]." . $input_name[$k] . ".value = '';" ."\r\n";
+						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = "";' ."\r\n";
 					}
 				}
+				//}
 
 				for ($i=0;$i<count($uicols['name']);$i++)
 				{
 					if(isset($uicols['exchange'][$i]) && $uicols['exchange'][$i])
 					{
-						//$function_exchange_values .= 'opener.document.form.' . $uicols['name'][$i] .'.value = thisform.elements[' . $i . '].value;' ."\r\n";
-						$function_exchange_values .= 'opener.document.forms[0].' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
+						$function_exchange_values .= 'opener.document.getElementsByName("'.$uicols['name'][$i].'")[0].value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
+						//$function_exchange_values .= 'opener.document.forms[0].' . $uicols['name'][$i] .'.value = valida(data.getData("'.$uicols['name'][$i].'"));' ."\r\n";
 					}
 				}
 
