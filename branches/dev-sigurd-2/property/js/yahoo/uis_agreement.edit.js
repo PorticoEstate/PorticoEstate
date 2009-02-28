@@ -11,6 +11,22 @@ var tableYUI;
 		YAHOO.util.Dom.get('hd_values[delete_alarm]').value = '';
 		YAHOO.util.Dom.get('hd_values[add_alarm]').value = '';
 	}
+/********************************************************************************/	
+	this.validateValuesHiddenFilterButtons=function()
+	{
+		if( (YAHOO.util.Dom.get('hd_values[time][days]').value == 0) || (YAHOO.util.Dom.get('hd_values[time][hours]').value == 0) || (YAHOO.util.Dom.get('hd_values[time][mins]').value == 0) )
+		{
+			exit;
+		}
+	}
+/********************************************************************************/	
+	this.cleanValuesHiddenFilterButtons=function()
+	{
+		YAHOO.util.Dom.get('hd_values[time][days]').value = myButtons[1][0].value_hidden;
+		YAHOO.util.Dom.get('hd_values[time][hours]').value = myButtons[1][1].value_hidden;
+		YAHOO.util.Dom.get('hd_values[time][mins]').value = myButtons[1][2].value_hidden;
+		YAHOO.util.Dom.get('hd_values[user_id]').value = myButtons[1][3].value_hidden;
+	}
 /********************************************************************************/
 	this.onActionsClick=function()
 	{
@@ -46,14 +62,8 @@ var tableYUI;
 		cleanValuesHiddenActionsButtons();
 
 		//validate date drop-down in hidden buttons
-		array_buttons = YAHOO.util.Dom.getElementsByClassName('actionsFilter');
-		for ( var i in array_buttons )
-		{
-			if(array_buttons[i].value ==0 || array_buttons[i].value =="" )
-			{
-				return;
-			}
-		}
+		validateValuesHiddenFilterButtons();
+		
 		//asign value to hidden
 		YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
 
@@ -68,10 +78,7 @@ var tableYUI;
 		Button_1_3.set("label", myButtons[1][3].label);
 
 		//set up initial values to hidden filter buttons
-		for ( var i in array_buttons )
-		{
-			array_buttons[i].value = myButtons[1][i].value_hidden;
-		}
+		cleanValuesHiddenFilterButtons();
 
 	}
 
