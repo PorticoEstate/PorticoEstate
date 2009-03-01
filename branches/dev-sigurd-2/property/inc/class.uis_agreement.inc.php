@@ -55,7 +55,6 @@
 			'view_item'		=> true,
 			'view_file'		=> true,
 			'download'			=> true,
-			'attrib_history'=> true,
 			'import'		=> true
 		);
 
@@ -1261,24 +1260,53 @@
 					'footer'				=> 0
 			);
 
+			$ColumnDefs_data = array();
+			foreach($uicols['input_type'] as $key => $input_type)
+			{
+				if($input_type != 'hidden')
+				{
+					$ColumnDefs_data[] = array
+					(
+						'key'			=> $uicols['name'][$key],
+						'label'			=> $uicols['descr'][$key],
+						'sortable'		=> true,
+						'resizeable'	=> true
+					);
+				}
+			}
+
+			$ColumnDefs_data[] = array
+			(
+				'key'			=> 'update',
+				'label'			=> lang('Update'),
+				'sortable'		=> true,
+				'resizeable'	=> true,
+				'formatter'		=> 'myFormatterCheckUpdate'
+			);
+//_debug_array($ColumnDefs_data);
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
+       			'values'	=>	json_encode($ColumnDefs_data)
+       		);
+			unset($ColumnDefs_data);
+
+ /*
        			'values'	=>	json_encode(array(	array(key => item_id,label=>lang('ID'),sortable=>true,resizeable=>true),
 									       			array(key => location_code,label=>lang('Location'),sortable=>true,resizeable=>true),
 									       			array(key => address,label=>lang('Address'),sortable=>true,resizeable=>true),
-									       			array(key => p_entity_id,label=>lang('entity_id'),sortable=>true,resizeable=>true),
-									       			array(key => p_cat_id,label=>lang('cat_id'),sortable=>true,resizeable=>true),
-									       			array(key => p_num,label=>lang('entity_num'),sortable=>true,resizeable=>true),
+									       			array(key => p_entity_id,label=>lang('entity'),sortable=>true,resizeable=>true),
+									       			array(key => p_cat_id,label=>lang('category'),sortable=>true,resizeable=>true),
+									       			array(key => p_num,label=>lang('num'),sortable=>true,resizeable=>true),
 									       			array(key => cost,label=>lang('Cost'),sortable=>true,resizeable=>true),
 									       			array(key => this_index,label=>lang('index'),sortable=>true,resizeable=>true),
-									       			array(key => index_count,label=>lang('index_count'),sortable=>true,resizeable=>true),
+									       			array(key => index_count,label=>lang('index count'),sortable=>true,resizeable=>true),
 									       			array(key => index_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => enhet,label=>lang('Enhet'),sortable=>true,resizeable=>true),
-									       			array(key => quantity,label=>lang('mengde'),sortable=>true,resizeable=>true),
+									       			array(key => enhet,label=>lang('unit'),sortable=>true,resizeable=>true),
+									       			array(key => quantity,label=>lang('amount'),sortable=>true,resizeable=>true),
 									       			array(key => update,label=>lang('Update'),resizeable=>true,formatter=>myFormatterCheckUpdate)))
 			);
-
+*/
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
@@ -1647,25 +1675,24 @@
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-
 				foreach ($values['attributes'] as & $attribute)
 				{
 					if($attribute['history'] == true)
 					{
 						$link_history_data = array
 						(
-							'menuaction'	=> 'property.uis_agreement.attrib_history',
-							's_agreement_id'	=> $s_agreement_id,
-							'attrib_id'	=> $values['attributes'][$i]['id'],
-							'item_id'	=> $id,
-							'edit'		=> true,
-							'role'		=>'detail'
+							'menuaction'	=> 'property.uientity.attrib_history',
+							'acl_location'	=> '.s_agreement',
+							'id'			=> $s_agreement_id,
+							'attrib_id'		=> $attribute['id'],
+							'detail_id'		=> $id,
+							'edit'			=> true,
+							'role'			=>'detail'
 						);
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
 				}
-
 
 				//phpgwapi_yui::tabview_setup('edit_tabview');
 				//$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
@@ -1920,23 +1947,28 @@
 						));
 
 
-			for ($i=0;$i<count($values['attributes']);$i++)
+			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
-				if($values['attributes'][$i]['history']==1)
+				foreach ($values['attributes'] as & $attribute)
 				{
-					$link_history_data = array
-					(
-						'menuaction'	=> 'property.uis_agreement.attrib_history',
-						's_agreement_id'	=> $s_agreement_id,
-						'attrib_id'	=> $values['attributes'][$i]['id'],
-						'item_id'	=> $id,
-						'edit'		=> false,
-						'role'		=>'detail'
-					);
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uientity.attrib_history',
+							'acl_location'	=> '.s_agreement',
+							'id'			=> $s_agreement_id,
+							'attrib_id'		=> $attribute['id'],
+							'detail_id'		=> $id,
+							'edit'			=> false,
+							'role'			=>'detail'
+						);
 
-					$values['attributes'][$i]['link_history']=$GLOBALS['phpgw']->link('/index.php',$link_history_data);
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
 				}
 			}
+
 
 			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 			$GLOBALS['phpgw']->js->validate_file('core','check','property');
@@ -2392,105 +2424,5 @@
 
 			//$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
-		}
-
-
-		function attrib_history()
-		{			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-
-			$s_agreement_id		= phpgw::get_var('s_agreement_id', 'int');
-			$item_id	= phpgw::get_var('item_id', 'int');
-			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
-
-			$data_lookup= array(
-				'id'		=> $s_agreement_id,
-				'item_id'	=> $item_id,
-				'attrib_id' 	=> $attrib_id
-				);
-
-			$delete = phpgw::get_var('delete', 'bool');
-			$edit = phpgw::get_var('edit', 'bool');
-
-			if ($delete)
-			{
-				$data_lookup['history_id'] = phpgw::get_var('history_id', 'int');
-				$this->bo->delete_history_item($data_lookup);
-			}
-
-			$values = $this->bo->read_attrib_history($data_lookup);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			while (is_array($values) && list(,$entry) = each($values))
-			{
-				$link_delete_history_data = array
-					(
-						'menuaction'		=> 'property.uis_agreement.attrib_history',
-						's_agreement_id'	=> $s_agreement_id,
-						'item_id'			=> $item_id,
-						'attrib_id'			=> $attrib_id,
-						'history_id'		=> $entry['id'],
-						'delete'			=> true,
-						'edit'				=> true,
-						'role'				=> $this->bo->role
-					);
-
-				if($edit)
-				{
-					$text_delete	= lang('delete');
-					$link_delete	= $GLOBALS['phpgw']->link('/index.php',$link_delete_history_data);
-				}
-
-				$content[] = array
-				(
-					'id'						=> $entry['id'],
-					'value'						=> $entry['new_value'],
-					'user'						=> $entry['owner'],
-					'time_created'				=> $GLOBALS['phpgw']->common->show_date($entry['datetime'],$dateformat),
-					'link_delete'				=> $link_delete,
-					'lang_delete_statustext'	=> lang('delete the item'),
-					'text_delete'				=> $text_delete,
-				);
-			}
-
-
-			$table_header = array
-			(
-				'lang_value'		=> lang('value'),
-				'lang_user'			=> lang('user'),
-				'lang_time_created'	=> lang('time created'),
-				'lang_delete'		=> lang('delete')
-			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uis_agreement.attrib_history',
-				's_agreement_id'=> $s_agreement_id,
-				'item_id'		=> $item_id,
-				'attrib_id'		=> $attrib_id,
-				'edit'			=> $edit
-			);
-
-			$data = array
-			(
-				'allow_allrows'		=> false,
-				'start_record'		=> $this->start,
-				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'		=> count($values),
-				'all_records'		=> $this->bo->total_records,
-				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'values' 			=> $content,
-				'table_header'		=> $table_header,
-			);
-
-			$attrib_data 	= $this->custom->get('property', '.s_agreement.detail', $attrib_id);
-			$appname	= $attrib_data['input_text'];
-
-			$function_msg	= lang('history');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('attrib_history' => $data));
 		}
 	}

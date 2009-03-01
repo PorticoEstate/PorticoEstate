@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
@@ -2929,9 +2929,12 @@
 	$test[] = '0.9.17.551';
 	function property_upgrade0_9_17_551()
 	{
+		$next_version = '0.9.17.551';
+		
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_document");
+		$files = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$files[]=array
@@ -2955,6 +2958,11 @@
 		{
 			$GLOBALS['phpgw_info']['server'][$GLOBALS['phpgw_setup']->oProc->f('config_name', true)] = $GLOBALS['phpgw_setup']->oProc->f('config_value', true);
 		}
+		$GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$acl = CreateObject('phpgwapi.acl');
+
+		$admins = $acl->get_ids_for_location('run', 1, 'admin');
+		$GLOBALS['phpgw_info']['user']['account_id'] = $admins[0];
 
 		$GLOBALS['phpgw']->session		= createObject('phpgwapi.sessions');
 		$vfs 			= CreateObject('phpgwapi.vfs');
@@ -2973,6 +2981,12 @@
 			 {
 			 	$to_dir["{$vfs->basedir}{$vfs->fakebase}/{$entry['location_code']}/{$entry['category']}"] = true;
 			 }
+		}
+
+		if(!$files || !is_dir("$vfs->basedir}{$vfs->fakebase}"))
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
+			return $GLOBALS['setup_info']['property']['currentver'];		
 		}
 
 		foreach ($to_dir as $dir => $dummy)
@@ -3014,7 +3028,7 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.551';
+			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
