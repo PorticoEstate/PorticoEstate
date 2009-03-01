@@ -1260,6 +1260,7 @@
 					'footer'				=> 0
 			);
 
+			$td_count = 0;
 			$ColumnDefs_data = array();
 			foreach($uicols['input_type'] as $key => $input_type)
 			{
@@ -1272,6 +1273,7 @@
 						'sortable'		=> true,
 						'resizeable'	=> true
 					);
+					$td_count ++;
 				}
 			}
 
@@ -1291,22 +1293,6 @@
        		);
 			unset($ColumnDefs_data);
 
- /*
-       			'values'	=>	json_encode(array(	array(key => item_id,label=>lang('ID'),sortable=>true,resizeable=>true),
-									       			array(key => location_code,label=>lang('Location'),sortable=>true,resizeable=>true),
-									       			array(key => address,label=>lang('Address'),sortable=>true,resizeable=>true),
-									       			array(key => p_entity_id,label=>lang('entity'),sortable=>true,resizeable=>true),
-									       			array(key => p_cat_id,label=>lang('category'),sortable=>true,resizeable=>true),
-									       			array(key => p_num,label=>lang('num'),sortable=>true,resizeable=>true),
-									       			array(key => cost,label=>lang('Cost'),sortable=>true,resizeable=>true),
-									       			array(key => this_index,label=>lang('index'),sortable=>true,resizeable=>true),
-									       			array(key => index_count,label=>lang('index count'),sortable=>true,resizeable=>true),
-									       			array(key => index_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => enhet,label=>lang('unit'),sortable=>true,resizeable=>true),
-									       			array(key => quantity,label=>lang('amount'),sortable=>true,resizeable=>true),
-									       			array(key => update,label=>lang('Update'),resizeable=>true,formatter=>myFormatterCheckUpdate)))
-			);
-*/
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
@@ -1350,7 +1336,7 @@
 
 			$data = array
 			(
-
+				'td_count'					=> $td_count,
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'						=> json_encode(array(menuaction => "property.uis_agreement.edit",id=>$id)),
 				'datatable'							=> $datavalues,

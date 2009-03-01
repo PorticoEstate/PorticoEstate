@@ -186,7 +186,7 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
   		//Create ROW
 		newTR = document.createElement('tr');
 		//RowChecked
-		td_empty(12);
+		td_empty(td_count);
 		CreateRowChecked("mychecks_update");
 
 		//Add to Table

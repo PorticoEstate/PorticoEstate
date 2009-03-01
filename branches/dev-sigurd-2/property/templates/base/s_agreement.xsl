@@ -452,6 +452,7 @@
 						var datatable = new Array();
 						var myColumnDefs = new Array();
 						var myButtons = new Array();
+					    var td_count = <xsl:value-of select="td_count" />;
 
 						<xsl:for-each select="datatable">
 							datatable[<xsl:value-of select="name"/>] = [
