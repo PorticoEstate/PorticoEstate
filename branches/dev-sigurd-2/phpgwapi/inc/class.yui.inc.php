@@ -89,11 +89,11 @@
 					break;
 
 				case 'datasource':
-					$load = array('datasource-min', 'connection-min');
+					$load = array('json-min', 'datasource-min', 'connection-min');
 					break;
 
 				case 'datatable':
-					$load = array('element-min', 'datasource-min', 'datatable-min' );
+					$load = array('json-min', 'element-min', 'datasource-min', 'datatable-min' );
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
