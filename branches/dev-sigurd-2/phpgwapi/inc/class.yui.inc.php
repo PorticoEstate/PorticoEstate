@@ -64,7 +64,7 @@
 					break;
 
 				case 'button':
-					$load = array('button-min', 'element-beta-min');
+					$load = array('button-min', 'element-min');
 					break;
 
 				case 'calendar':
@@ -89,17 +89,14 @@
 					break;
 
 				case 'datasource':
-					//$load = array('datasource-beta-min', 'connection-min');
 					$load = array('datasource-min', 'connection-min');
 					break;
 
 				case 'datatable':
-					$load = array('element-beta-min', 'datasource-min', 'datatable-min' );
-					//$load = array('element-beta', 'datasource-beta', 'datatable-beta' );
+					$load = array('element-min', 'datasource-min', 'datatable-min' );
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
-					//$load = array('yuiloader-beta');
 					$load = array('yuiloader-min');
 					break;
 
@@ -112,11 +109,11 @@
 					break;
 
 				case 'editor':
-					$load = array('dragdrop-min', 'element-beta-min', 'animation-min', 'resize-min', 'container_core-min', 'menu-min', 'button-min', 'editor-min');
+					$load = array('dragdrop-min', 'element-min', 'animation-min', 'resize-min', 'container_core-min', 'menu-min', 'button-min', 'editor-min');
 					break;
 
 				case 'element':
-					$load = array('element-beta-min');
+					$load = array('element-min');
 					break;
 
 				case 'paginator':
@@ -142,13 +139,11 @@
 					break;
 
                 case 'resize':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-min');
-					//$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min');
+					$load = array('dragdrop-min', 'element-min', 'resize-min');
 					break;
 
 				case 'layout':
-					$load = array('dragdrop-min', 'element-beta-min', 'resize-min', 'layout-min');
-					//$load = array('dragdrop-min', 'element-beta-min', 'resize-beta-min', 'layout-beta-min');
+					$load = array('dragdrop-min', 'element-min', 'resize-min', 'layout-min');
 					break;
 
 				case 'slider':
@@ -156,7 +151,7 @@
 					break;
 
 				case 'tabview':
-					$load = array('element-beta-min', 'tabview-min');
+					$load = array('element-min', 'tabview-min');
 					break;
 
 				case 'treeview':
