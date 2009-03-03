@@ -2979,6 +2979,7 @@
 
 		if(!is_dir("{$vfs->basedir}{$vfs->fakebase}"))
 		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
 			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
 			return $GLOBALS['setup_info']['property']['currentver'];		
 		}
