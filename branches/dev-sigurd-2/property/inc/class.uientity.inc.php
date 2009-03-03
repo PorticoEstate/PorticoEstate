@@ -987,7 +987,7 @@
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
 						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}/{$values['file_name']}";
+						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$id}/{$values['file_name']}";
 
 						if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
 								'string' => $to_file,
@@ -1000,7 +1000,7 @@
 
 					if(isset($values['file_name']) && $values['file_name'])
 					{
-						$bofiles->create_document_dir("{$this->category_dir}/{$values['location']['loc1']}/{$values['id']}");
+						$bofiles->create_document_dir("{$this->category_dir}/{$values['location']['loc1']}/{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if(!$bofiles->vfs->cp (array (
