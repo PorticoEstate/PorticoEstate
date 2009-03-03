@@ -261,7 +261,7 @@
 			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_request_id!=''">
-						<td valign="top">
+						<td valign="top" align="center">
 							<xsl:variable name="generate_project_action"><xsl:value-of select="generate_project_action"/></xsl:variable>
 							<xsl:variable name="lang_generate_project"><xsl:value-of select="lang_generate_project"/></xsl:variable>
 							<form method="post" action="{$generate_project_action}">
@@ -635,7 +635,7 @@
 										</tr>
 									</xsl:when>
 								</xsl:choose>
-														
+
 								<xsl:choose>
 									<xsl:when test="fileupload = 1">
 										<xsl:call-template name="file_upload"/>

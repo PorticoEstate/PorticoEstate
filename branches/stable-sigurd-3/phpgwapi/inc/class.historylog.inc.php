@@ -113,8 +113,8 @@
 					'owner'      => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
 //					'status'     => lang($this->types[$this->db->f('history_status')]),
 					'status'     => ereg_replace(' ','',$this->db->f('history_status')),
-					'new_value'  => $this->db->f('history_new_value'),
-					'old_value'  => $this->db->f('history_old_value'),
+					'new_value'  => htmlspecialchars_decode($this->db->f('history_new_value',true)),
+					'old_value'  => htmlspecialchars_decode($this->db->f('history_old_value',true)),
 					'datetime'   => $this->db->from_timestamp($this->db->f('history_timestamp'))
 				);
 			}

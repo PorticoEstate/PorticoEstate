@@ -1147,7 +1147,7 @@
 			{
 				$value_remainder = $values['sum'] - $values['sum_workorder_actual_cost'];
 			}
-			$$values['sum']  = number_format($values['sum'], 0, ',', ' ');
+			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
@@ -1201,7 +1201,8 @@
        			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
 									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
 									       			array(key => value_action,label=>lang('Calculation'),sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('Unit'),sortable=>true,resizeable=>true)))
+									       			array(key => value_old_value,label=>lang('old value'),	sortable=>true,resizeable=>true),
+		       				       					array(key => value_new_value,label=>lang('new value'),sortable=>true,resizeable=>true)))
 			);
 
 			//----------------------------------------------datatable settings--------

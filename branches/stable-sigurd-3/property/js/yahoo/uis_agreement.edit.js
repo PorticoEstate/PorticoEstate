@@ -6,11 +6,26 @@ var tableYUI;
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
 	{
-		array_buttons = YAHOO.util.Dom.getElementsByClassName('actionButton');
-		for ( var i in array_buttons )
+		YAHOO.util.Dom.get('hd_values[enable_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[disable_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[delete_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_values[add_alarm]').value = '';
+	}
+/********************************************************************************/	
+	this.validateValuesHiddenFilterButtons=function()
+	{
+		if( (YAHOO.util.Dom.get('hd_values[time][days]').value == 0) || (YAHOO.util.Dom.get('hd_values[time][hours]').value == 0) || (YAHOO.util.Dom.get('hd_values[time][mins]').value == 0) )
 		{
-			array_buttons[i].setAttribute("value","");
+			exit;
 		}
+	}
+/********************************************************************************/	
+	this.cleanValuesHiddenFilterButtons=function()
+	{
+		YAHOO.util.Dom.get('hd_values[time][days]').value = myButtons[1][0].value_hidden;
+		YAHOO.util.Dom.get('hd_values[time][hours]').value = myButtons[1][1].value_hidden;
+		YAHOO.util.Dom.get('hd_values[time][mins]').value = myButtons[1][2].value_hidden;
+		YAHOO.util.Dom.get('hd_values[user_id]').value = myButtons[1][3].value_hidden;
 	}
 /********************************************************************************/
 	this.onActionsClick=function()
@@ -47,14 +62,8 @@ var tableYUI;
 		cleanValuesHiddenActionsButtons();
 
 		//validate date drop-down in hidden buttons
-		array_buttons = YAHOO.util.Dom.getElementsByClassName('actionsFilter');
-		for ( var i in array_buttons )
-		{
-			if(array_buttons[i].value ==0 || array_buttons[i].value =="" )
-			{
-				return;
-			}
-		}
+		validateValuesHiddenFilterButtons();
+		
 		//asign value to hidden
 		YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
 
@@ -69,10 +78,7 @@ var tableYUI;
 		Button_1_3.set("label", myButtons[1][3].label);
 
 		//set up initial values to hidden filter buttons
-		for ( var i in array_buttons )
-		{
-			array_buttons[i].value = myButtons[1][i].value_hidden;
-		}
+		cleanValuesHiddenFilterButtons();
 
 	}
 
@@ -149,7 +155,7 @@ var Button_2_0;
 /********************************************************************************/
 var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 	{
-		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks_update\"  value="+oRecord.getData('cost')+" name=\"values[select]["+oRecord.getData('item_id')+"]\"/></center> <input type=\"hidden\" name=\"values[item_id]["+oRecord.getData('item_id')+"]\" value="+oRecord.getData('item_id')+" /> <input type=\"hidden\" value="+oRecord.getData('index_count')+" name=\"values[id]["+oRecord.getData('item_id')+"]\" />";
+		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks_update\"  value="+oRecord.getData('item_id')+" name=\"values[select]["+oRecord.getData('item_id')+"]\"/></center> <input type=\"hidden\" name=\"values[item_id]["+oRecord.getData('item_id')+"]\" value="+oRecord.getData('item_id')+" /> <input type=\"hidden\" value="+oRecord.getData('index_count')+" name=\"values[id]["+oRecord.getData('item_id')+"]\" />";
 	}
 
 /********************************************************************************/
@@ -159,7 +165,7 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
 		{
 			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
 			tableObject = document.body.getElementsByTagName('table');
-			for (x=0; x<tableObject.length; x++) 
+			for (x=0; x<tableObject.length; x++)
 			{
 				if (tableObject[x].parentNode.id == 'datatable-container_1')
 					{ tableYUI = tableObject[x]; }
@@ -180,7 +186,7 @@ var myFormatterCheckUpdate = function(elCell, oRecord, oColumn, oData)
   		//Create ROW
 		newTR = document.createElement('tr');
 		//RowChecked
-		td_empty(12);
+		td_empty(td_count);
 		CreateRowChecked("mychecks_update");
 
 		//Add to Table

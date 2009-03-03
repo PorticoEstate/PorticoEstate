@@ -3,7 +3,6 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	//var oMenuButton_0, oMenuButton_1, oMenuButton_2;
 	 	var selectsButtons = [
 		]
 
@@ -17,14 +16,13 @@
 
 		// define Link Buttons
 		var linktoolTips = [
-		 ]
+        ]
 
 		var textImput = [
 		]
 
 		var toolTips = [
 			{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
-			//,{name:'Remark', title:'Remark', description:'',ColumnDescription:'Remark'}
 		]
 
 		var config_values = {
@@ -148,6 +146,7 @@
 	/********************************************************************************/
 		this.myParticularRenderEvent = function()
 		{
+			
 			delete_paginator();
 			//unnecessary delete_content_div("message",2) here. wiht delete_content_div in property is sufficient.
 			create_message();

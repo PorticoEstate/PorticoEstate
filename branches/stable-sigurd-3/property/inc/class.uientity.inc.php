@@ -1089,7 +1089,6 @@
 				}
 			}
 
-
 			if(isset($category['lookup_tenant']) && $category['lookup_tenant'])
 			{
 				$lookup_tenant=true;
@@ -1215,8 +1214,9 @@
 						$link_history_data = array
 						(
 							'menuaction'	=> 'property.uientity.attrib_history',
-							'entity_id'	=> $this->entity_id,
-							'cat_id'	=> $this->cat_id,
+							'acl_location'	=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
+					//		'entity_id'	=> $this->entity_id,
+					//		'cat_id'	=> $this->cat_id,
 							'attrib_id'	=> $attribute['id'],
 							'id'		=> $id,
 							'edit'		=> true,
@@ -1653,16 +1653,20 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
+			$acl_location = phpgw::get_var('acl_location', 'string');
 			$id		= phpgw::get_var('id', 'int');
-			$entity_id	= phpgw::get_var('entity_id', 'int');
-			$cat_id 	= phpgw::get_var('cat_id', 'int');
+	//		$entity_id	= phpgw::get_var('entity_id', 'int');
+	//		$cat_id 	= phpgw::get_var('cat_id', 'int');
 			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
+			$detail_id 	= phpgw::get_var('detail_id', 'int');
 
 			$data_lookup= array(
+				'acl_location'	=> $acl_location,
 				'id'		=> $id,
-				'entity_id'	=> $entity_id,
-				'cat_id' 	=> $cat_id,
-				'attrib_id' 	=> $attrib_id
+		//		'entity_id'	=> $entity_id,
+		//		'cat_id' 	=> $cat_id,
+				'attrib_id' 	=> $attrib_id,
+				'detail_id' 	=> $detail_id,
 				);
 
 			$delete = phpgw::get_var('delete', 'bool');
@@ -1682,14 +1686,16 @@
 				$link_delete_history_data = array
 				(
 					'menuaction'	=> 'property.uientity.attrib_history',
-					'entity_id'	=> $data_lookup['entity_id'],
-					'cat_id'	=> $data_lookup['cat_id'],
-					'id'		=> $data_lookup['id'],
-					'attrib_id'	=> $data_lookup['attrib_id'],
+					'acl_location'	=> $acl_location,
+			//		'entity_id'		=> $data_lookup['entity_id'],
+			//		'cat_id'		=> $data_lookup['cat_id'],
+					'id'			=> $data_lookup['id'],
+					'attrib_id'		=> $data_lookup['attrib_id'],
+					'detail_id' 	=> $data_lookup['detail_id'],
 					'history_id'	=> $entry['id'],
-					'delete'	=> true,
-					'edit'		=> true,
-					'type'		=> $this->type
+					'delete'		=> true,
+					'edit'			=> true,
+					'type'			=> $this->type
 				);
 				if($edit)
 				{
@@ -1721,10 +1727,12 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uientity.attrib_history',
+				'acl_location'	=> $acl_location,
 				'id'			=> $id,
-				'entity_id'		=> $entity_id,
-				'cat_id'		=> $cat_id,
-				'entity_id'		=> $entity_id,
+				'detail_id' 	=> $data_lookup['detail_id'],
+		//		'entity_id'		=> $entity_id,
+		//		'cat_id'		=> $cat_id,
+		//		'entity_id'		=> $entity_id,
 				'edit'			=> $edit,
 				'type'			=> $this->type
 			);
@@ -1746,6 +1754,11 @@
 //---datatable settings---------------------------------------------------				
 			$parameters['delete'] = array('parameter' => array(
 				array(
+					'name'  => 'acl_location',
+		      		'source' => $data_lookup['acl_location'],
+		      		'ready'  => 1
+				),
+	/*			array(
 					'name'  => 'entity_id',
 		      		'source' => $data_lookup['entity_id'],
 		      		'ready'  => 1
@@ -1755,6 +1768,7 @@
 		      		'source' => $data_lookup['cat_id'],
 		      		'ready'  => 1
 				),
+		*/
 				array(
 					'name'  => 'id',
 		      		'source' => $data_lookup['id'],
@@ -1763,6 +1777,11 @@
 				array(
 					'name'  => 'attrib_id',
 		      		'source' => $data_lookup['attrib_id'],
+		      		'ready'  => 1
+				),
+				array(
+					'name'  => 'detail_id',
+		      		'source' => $data_lookup['detail_id'],
 		      		'ready'  => 1
 				),
 				array(
@@ -1787,12 +1806,15 @@
 		    )
 		    );
 		    
-			$permissions['rowactions'][] = array(
-				'text'    	=> lang('delete'),
-				'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uientity.attrib_history' )),
-				'confirm_msg'=> lang('do you really want to delete this entry'),
-				'parameters'=> $parameters['delete']
-			);
+			if($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
+			{
+				$permissions['rowactions'][] = array(
+					'text'    	=> lang('delete'),
+					'action'  	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uientity.attrib_history' )),
+					'confirm_msg'=> lang('do you really want to delete this entry'),
+					'parameters'=> $parameters['delete']
+				);
+			}
 			   				   
 			$datavalues[0] = array
 			(

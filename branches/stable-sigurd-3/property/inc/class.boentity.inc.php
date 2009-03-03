@@ -414,11 +414,50 @@
 			}
 		}
 
+		function get_history_type_for_location($acl_location)
+		{
+			switch($acl_location)
+			{
+				case '.project.request':
+					$history_type ='request';
+					break;
+				case '.project.workorder':
+					$history_type ='workorder';
+					break;
+				case '.project':
+					$history_type ='project';
+					break;
+				case '.tts':
+					$history_type ='tts';
+					break;
+				case '.document':
+					$history_type ='document';
+					break;
+				case 'entity':
+					$this->table='fm_entity_history';
+					$this->attrib_id_field = ',history_attrib_id';
+					break;
+				case '.s_agreement':
+					$history_type ='s_agreement';
+					break;
+				case '.s_agreement.detail':
+					$history_type ='s_agreement';
+				default:
+					$history_type = str_replace('.','_',substr($acl_location,-strlen($acl_location)+1));
+			}
+			if(!$history_type)
+			{
+					throw new Exception(lang('Unknown history type for acl_location: %1', $acl_location));
+			}
+			return $history_type;
+		}
+		
 		function read_attrib_history($data)
 		{
 		//	_debug_array($data);
-			$historylog = CreateObject('property.historylog',"{$this->type}_{$data['entity_id']}_{$data['cat_id']}");
-			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id']);
+			$history_type = $this->get_history_type_for_location($data['acl_location']);
+			$historylog = CreateObject('property.historylog',$history_type);
+			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id'], $data['detail_id']);
 			$this->total_records = count($history_values);
 		//	_debug_array($history_values);
 			return $history_values;
@@ -426,7 +465,8 @@
 
 		function delete_history_item($data)
 		{
-			$historylog = CreateObject('property.historylog', "{$this->type}_{$data['entity_id']}_{$data['cat_id']}");
+			$history_type = $this->get_history_type_for_location($data['acl_location']);
+			$historylog = CreateObject('property.historylog', $history_type);
 			$historylog->delete_single_record($data['history_id']);
 		}
 

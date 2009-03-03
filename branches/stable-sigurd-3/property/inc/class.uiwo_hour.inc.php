@@ -131,16 +131,16 @@
 
 					$content[] = array
 					(
-						'id'				=> $entry['id'],
-						'amount'			=> $entry['amount'],
-						'descr'				=> $entry['descr'],
+						'id'					=> $entry['id'],
+						'amount'				=> $entry['amount'],
+						'descr'					=> $entry['descr'],
 						'entry_date'			=> $entry_date,
-						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.edit_deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'id'=> $entry['id'])),
-						'lang_edit_statustext'		=> lang('edit the deviation'),
-						'text_edit'			=> lang('edit'),
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.edit_deviation', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'id'=> $entry['id'])),
+						'lang_edit_statustext'	=> lang('edit the deviation'),
+						'text_edit'				=> lang('edit'),
 						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.delete', 'workorder_id'=> $workorder_id, 'hour_id'=> $hour_id, 'deviation_id'=> $entry['id'])),
-						'lang_delete_statustext'	=> lang('delete the deviation'),
-						'text_delete'			=> lang('delete'),
+						'lang_delete_statustext'=> lang('delete the deviation'),
+						'text_delete'			=> lang('delete')
 					);
 				}
 			}
@@ -148,11 +148,11 @@
 
 			$table_header[] = array
 			(
-				'lang_id'	=> lang('ID'),
+				'lang_id'		=> lang('ID'),
 				'lang_amount'	=> lang('amount'),
 				'lang_descr'	=> lang('Descr'),
-				'lang_date'	=> lang('date'),
-				'lang_edit'	=> lang('edit'),
+				'lang_date'		=> lang('date'),
+				'lang_edit'		=> lang('edit'),
 				'lang_delete'	=> lang('delete')
 			);
 
@@ -160,31 +160,116 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiwo_hour.edit_deviation',
-						'workorder_id'	=> $workorder_id,
-						'hour_id'	=> $hour_id
+				'workorder_id'	=> $workorder_id,
+				'hour_id'		=> $hour_id
 			);
 
+//---datatable0 settings---------------------------------------------------	
 
+			$parameters['edit'] = array('parameter' => array(
+					array('name'  => 'workorder_id','source' => $workorder_id,	'ready'  => 1),
+					array('name'  => 'hour_id',		'source' => $hour_id,		'ready'  => 1),
+					array('name'  => 'id',			'source' => 'id')));				
+			
+			$parameters['delete'] = array('parameter' => array(
+					array('name'  => 'workorder_id','source' => $workorder_id,	'ready'  => 1),
+					array('name'  => 'hour_id',		'source' => $hour_id,		'ready'  => 1),
+					array('name'  => 'deviation_id','source' => 'id')));
+
+			$permissions['rowactions'][] = array(
+					'text'    		=> lang('edit'),
+					'action'  		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.edit_deviation')),
+					'parameters' 	=> $parameters['edit']);
+
+			$permissions['rowactions'][] = array(
+					'text'    		=> lang('delete'),
+					'action'  		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiwo_hour.delete' )),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'parameters'	=> $parameters['delete']);
+			
+			
+			$datavalues[0] = array
+			(
+				'name'			=> "0",
+				'values' 		=> json_encode($content),
+				'total_records'	=> count($content),
+				'permission'   	=> json_encode($permissions['rowactions']),
+				'is_paginator'	=> 0,
+				'footer'		=> 0
+			);					
+       		$myColumnDefs[0] = array
+       		(
+       			'name'			=> "0",
+       			'values'		=>	json_encode(array(	array(key => id,		label=>$table_header[0]['lang_id'],		sortable=>true,resizeable=>true),
+									       				array(key => amount,	label=>$table_header[0]['lang_amount'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
+									       				array(key => descr,		label=>$table_header[0]['lang_descr'],	sortable=>true,resizeable=>true),
+		       				       						array(key => entry_date,label=>$table_header[0]['lang_date'],	sortable=>true,resizeable=>true)))
+			);	
+			
+//------------------------------------datatable0 settings------------------				
 			$data = array
 			(
+				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'				=> json_encode(array(menuaction => "property.uiwo_hour.deviation")),
+				'datatable'					=> $datavalues,
+				'myColumnDefs'				=> $myColumnDefs,
+				
 				'sum_deviation'				=> $sum_deviation,
-				'table_header_deviation'		=> $table_header,
+				'table_header_deviation'	=> $table_header,
 				'values_deviation'			=> $content,
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'			=> lang('add a deviation'),
+				'lang_add'					=> lang('add'),
+				'lang_add_statustext'		=> lang('add a deviation'),
 				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_done'				=> lang('done'),
+				'lang_done'					=> lang('done'),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id))
 			);
+		
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'wo_hour.deviation', 'property' );
+			//-----------------------datatable settings---					
 
 			$appname			= lang('Workorder');
-			$function_msg			= lang('list deviation');
+			$function_msg		= lang('list deviation');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_deviation' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		function edit_deviation()
 		{
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
@@ -2792,6 +2877,13 @@ HTML;
 			$deviation_id	= phpgw::get_var('deviation_id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
+
+			//delete for JSON proerty2
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$this->bo->delete_deviation($workorder_id,$hour_id,$deviation_id);	
+				return "";	
+			}
 
 			if($deviation_id)
 			{

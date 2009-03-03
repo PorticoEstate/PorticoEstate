@@ -276,7 +276,7 @@
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
 				$fields_updated = true;
-				$this->historylog->add('C',$id,$this->db->db_addslashes($ticket['note']),$old_note);
+				$this->historylog->add('C',$id,$ticket['note'],$old_note);
 			}
 
 			$this->db->transaction_commit();

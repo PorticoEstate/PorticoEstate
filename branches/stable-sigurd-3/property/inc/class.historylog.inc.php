@@ -135,10 +135,11 @@
 			}
 
 			$this->db->query("insert into $this->table (history_record_id,"
-				. "history_appname,history_owner,history_status,history_new_value,history_timestamp $attrib_id_field $detail_id_field) "
+				. "history_appname,history_owner,history_status,history_new_value, history_old_value, history_timestamp $attrib_id_field $detail_id_field) "
 				. "values ('$record_id','" . $this->appname . "','"
 				. $this->account . "','$status','"
-				. $this->db->db_addslashes($new_value) . "','" . $timestamp
+				. $this->db->db_addslashes($new_value) . "','"
+				. $this->db->db_addslashes($old_value) . "','" . $timestamp
 				. "' $attrib_id_value $detail_id_value)",__LINE__,__FILE__);
 		}
 
@@ -201,7 +202,8 @@
 					'owner'      => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
 //					'status'     => lang($this->types[$this->db->f('history_status')]),
 					'status'     => preg_replace('/ /','',$this->db->f('history_status')),
-					'new_value'  => $this->db->f('history_new_value'),
+					'new_value'  => htmlspecialchars_decode($this->db->f('history_new_value',true)),
+					'old_value'  => htmlspecialchars_decode($this->db->f('history_old_value',true)),
 					'datetime'   => strtotime($this->db->f('history_timestamp'))
 				);
 			}

@@ -37,18 +37,15 @@
 
 
 	<xsl:template match="list_deviation">
+			<!-- DataTable 0 DESVIATION-->
+			<div id="datatable-container_0"></div>
+			<div id="contextmenu_0"></div>
+		
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:apply-templates select="table_header_deviation"/>
-			<xsl:apply-templates select="values_deviation"/>
+			<!--  <xsl:apply-templates select="table_header_deviation"/><xsl:apply-templates select="values_deviation"/> -->
+			<!--  <tr><td></td><td class="small_text" align="right"><xsl:value-of select="sum_deviation"/></td></tr>  -->
 			<tr>
-				<td>
-				</td>
-				<td class="small_text" align="right">
-					<xsl:value-of select="sum_deviation"/>
-				</td>
-			</tr>
-			<tr>
-				<td height="50">
+				<td height="50" width="4%">
 					<xsl:variable name="add_action"><xsl:value-of select="add_action"/></xsl:variable>
 					<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
 					<form method="post" action="{$add_action}">
@@ -61,7 +58,7 @@
 						</input>
 					</form>
 				</td>
-				<td height="50">
+				<td height="50" width="96%">
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
@@ -76,6 +73,30 @@
 				</td>
 			</tr>
 		</table>
+
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					permission		:	<xsl:value-of select="permission"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>			
 	</xsl:template>
 
 

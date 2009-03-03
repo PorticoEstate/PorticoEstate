@@ -287,7 +287,7 @@
 				$values['disabled'] = !!$attrib['disabled'];
 			}
 
-			if ( isset($attrib['default']) )
+			if ( isset($attrib['column_info']['default']) )
 			{
 				$values['default_value'] = $this->_db->db_addslashes($attrib['column_info']['default']);
 			}
@@ -370,7 +370,10 @@
 
 			if ( !$col_info['default'] )
 			{
-				unset($col_info['default']);
+				if($col_info['default'] != 0 )
+				{
+					unset($col_info['default']);
+				}
 			}
 
 			$this->_oProc->AddColumn($attrib_table, $values['column_name'], $col_info);

@@ -741,16 +741,17 @@
 						<br/>
 						<table width="70%" cellpadding="2" cellspacing="2" >
 							<!-- Buttons 2 -->
-								<div id="datatable-buttons_2" class="valign">
+								<div id="datatable-buttons_2" class="div-buttons">
 								
-								<input class="mybottonsUpdates" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<input class="mybottonsUpdates calendar-opt" type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_date_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								</input>
-								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="valign" />
+								<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"  />
+								<div style="width:25px;height:15px;position:relative;float:left;"></div>
 							</div>
 								
 							<!-- <xsl:apply-templates select="table_update"/>  -->
@@ -772,9 +773,23 @@
 		
 		<!--  DATATABLE DEFINITIONS-->
 		<style type="text/css">
-			.valign {
-			   height: 100%;
-			   vertical-align: top;
+			.calendar-opt
+			{
+				position:relative;
+				float:left;
+			}
+			.index-opt
+			{
+				position:relative;
+				float:left;
+				margin-top:2px;
+			}
+			.div-buttons
+			{
+				position:relative;
+				float:left;
+				width:750px;
+				height:100px;
 			}
 		</style> 
 		<script>
@@ -847,7 +862,7 @@
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
-						<td align="left" colspan="3">
+						<td align="left" colspan="2">
 							<xsl:call-template name="msgbox"/>
 						</td>
 					</tr>
@@ -855,7 +870,7 @@
 			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_agreement_id!=''">
-					<tr >
+					<tr>
 						<td align="left">
 							<xsl:value-of select="lang_agreement"/>
 						</td>
@@ -939,7 +954,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<tr height="50">
-				<td valign="bottom">
+				<td valign="bottom" colspan="2" width="30%">
 					<input type="hidden" name="values[index_count]" value="{index_count}" ></input>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
@@ -969,7 +984,7 @@
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
-				</td>
+				</td> 
 			</tr>
 		</table>
 		</form>
@@ -982,6 +997,26 @@
 				<form method="post" name="form2" action="{$update_action}">
 				
 				   <input type="hidden" name="values[agreement_id]" value="{value_agreement_id}" ></input>
+				   <style type="text/css">
+						.calendar-opt
+						{
+							position:relative;
+							float:left;
+						}
+						.index-opt
+						{
+							position:relative;
+							float:left;
+							margin-top:2px;
+						}
+						.div-buttons
+						{
+							position:relative;
+							float:left;
+							width:750px;
+							height:100px;
+						}
+					</style>
 
 				   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 				   	  <tr><td><br/></td></tr>
@@ -989,15 +1024,16 @@
 				       <tr><td class="center" align="left" colspan="10"><div id="datatable-container_0"></div></td></tr>
 				       <tr><td><br/></td></tr>
 				       <tr><td class="center" align="left" colspan="10">
-							<div id="datatable-buttons_0">
-								<input type="text" id="values_date" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
+							<div id="datatable-buttons_0" class="div-buttons">
+								<input type="text" id="values_date" class="calendar-opt" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;" >
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_date_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								</input>
-								<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								<div style="width:25px;height:15px;position:relative;float:left;"></div>
 							</div>	
 						</td></tr>
 				    </table>
@@ -1171,11 +1207,23 @@
 						<input type="text" id="termination_date" name="termination_date" size="10" value="{value_termination_date}" readonly="readonly" onMouseout="window.status='';return true;" ></input>
 					</td>
 				</tr>
+				
 				<xsl:choose>
 					<xsl:when test="files!=''">
-						<xsl:call-template name="file_list_view"/>
+						<!-- <xsl:call-template name="file_list_view"/> -->
+						<tr>
+							<td width="19%" align="left" valign="top">
+								<xsl:value-of select="//lang_files"/>
+							</td>
+							<td>
+							<!-- DataTable 2 VIEW-->
+								<div id="datatable-container_2"></div>
+							</td>
+						</tr>
 					</xsl:when>
-				</xsl:choose>				
+				</xsl:choose>
+				
+								
 				<xsl:choose>
 					<xsl:when test="attributes_view != ''">
 						<tr>
@@ -1185,6 +1233,7 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
+				
 				<xsl:choose>
 					<xsl:when test="member_of_list != ''">
 					<tr>
@@ -1233,11 +1282,22 @@
 			<br/><br/>
 			<xsl:choose>
 				<xsl:when test="values!=''">
-					<!--  DataTable 1 VIEW-->	
-					<div id="paging_1"/>
-					<div id="datatable-container_1"></div>
-
-					<!--  <table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<table align="center">
+						<tr>
+							<td align="center">
+								<xsl:value-of select="lang_total_records"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="num_records"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<!--  DataTable 1 VIEW-->	
+								<div id="paging_1"/>
+								<div id="datatable-container_1"></div>
+							</td>
+						</tr>
+					<!--
 						<tr>
 							<td colspan="12" width="100%">
 								<xsl:call-template name="nextmatchs"/>
@@ -1247,8 +1307,8 @@
 							<td colspan="12" width="100%">
 								<xsl:call-template name="table_header"/><xsl:call-template name="values"/>
 							</td>
-						</tr>
-					</table>-->
+						</tr> -->
+					</table> 
 
 				</xsl:when>
 			</xsl:choose>						

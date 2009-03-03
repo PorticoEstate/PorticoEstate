@@ -302,7 +302,7 @@
 										update_datatable(datatable);
 									}
 						},
-							failure: function(o){window.alert('Server or your connection is death.')},
+							failure: function(o){window.alert('Server or your connection is dead.')},
 							timeout: 10000
 						};
 		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback);
@@ -394,7 +394,7 @@
 		url = "javascript:check_all(\""+Class+"\")";  //particular function in each JS
 		myA.setAttribute("href",url);
 		//create the image node
-		url = "/pgwsvn/property/templates/portico/images/check.png";
+		url = "property/templates/portico/images/check.png";
 		myImg=document.createElement("IMG");
 		myImg.setAttribute("src",url);
 		myImg.setAttribute("width","16");
@@ -451,7 +451,7 @@
 			else if(myButtons[j][p].type == "text")
 			{
 				//div.appendChild(document.createTextNode(myButtons[j][p].label));
-				
+
 				sp = document.createElement("span");
 				sp.className =myButtons[j][p].classname;
 				sp.innerHTML = myButtons[j][p].label;
@@ -528,7 +528,7 @@
 				}
 
 			},
-			failure: function(o) {window.alert('Server or your connection is death.')},
+			failure: function(o) {window.alert('Server or your connection is dead.')},
 			timeout: 10000,
 			cache: false
 		}
