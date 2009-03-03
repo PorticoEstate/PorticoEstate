@@ -617,7 +617,7 @@
 				);
 
 			//url to detail of voucher
-			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>all));
+			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>$this->user_lid));
 
 
 			if($paid)

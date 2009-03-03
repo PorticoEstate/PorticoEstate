@@ -104,6 +104,8 @@
 			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 			tableYUI.setAttribute("id","tableYUI");
 			//focus initial
+			index = locate_in_array_options(1,"value",path_values.user_lid);
+			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
 			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
