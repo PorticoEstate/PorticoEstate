@@ -2929,7 +2929,8 @@
 	$test[] = '0.9.17.551';
 	function property_upgrade0_9_17_551()
 	{
-		$next_version = '0.9.17.551';
+		set_time_limit(1800);
+		$next_version = '0.9.17.552';
 		
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
@@ -2964,10 +2965,23 @@
 		$admins = $acl->get_ids_for_location('run', 1, 'admin');
 		$GLOBALS['phpgw_info']['user']['account_id'] = $admins[0];
 
+		//used in vfs
+		define('PHPGW_ACL_READ',1);
+		define('PHPGW_ACL_ADD',2);
+		define('PHPGW_ACL_EDIT',4);
+		define('PHPGW_ACL_DELETE',8);
+
 		$GLOBALS['phpgw']->session		= createObject('phpgwapi.sessions');
 		$vfs 			= CreateObject('phpgwapi.vfs');
 		$vfs->fakebase 	= '/property';
 		$vfs->override_acl = 1;
+
+
+		if(!is_dir("{$vfs->basedir}{$vfs->fakebase}"))
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
+			return $GLOBALS['setup_info']['property']['currentver'];		
+		}
 
 
 		$to_dir = array();
@@ -2979,23 +2993,21 @@
 			 }
 			 else
 			 {
-			 	$to_dir["{$vfs->basedir}{$vfs->fakebase}/{$entry['location_code']}/{$entry['category']}"] = true;
+			 	$to_dir["{$vfs->basedir}{$vfs->fakebase}/document/{$entry['location_code']}"] = true;
+			 	$to_dir["{$vfs->basedir}{$vfs->fakebase}/document/{$entry['location_code']}/{$entry['category']}"] = true;
 			 }
-		}
-
-		if(!$files || !is_dir("$vfs->basedir}{$vfs->fakebase}"))
-		{
-			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
-			return $GLOBALS['setup_info']['property']['currentver'];		
 		}
 
 		foreach ($to_dir as $dir => $dummy)
 		{
-	//		@mkdir($dir, 0770);
-		_debug_array($dir);
+			if(!is_dir($dir))
+			{
+				mkdir($dir, 0770);
+			}
 		}
 
 		reset($files);
+		$error = array();
 		foreach ($files as $entry)
 		{
 			 if($entry['p_num'])
@@ -3004,24 +3016,21 @@
 			 }
 			 else
 			 {
-			 	$from_file = "{$vfs->fakebase}/{$entry['loc1']}/{$entry['document_name']}";
-			 	$to_file = "{$vfs->fakebase}/{$entry['location_code']}/{$entry['category']}/{$entry['document_name']}";
+			 	$from_file = "{$vfs->fakebase}/document/{$entry['loc1']}/{$entry['document_name']}";
+			 	$to_file = "{$vfs->fakebase}/document/{$entry['location_code']}/{$entry['category']}/{$entry['document_name']}";
 			 }
-//		_debug_array($from_file);
-//		_debug_array($to_file);
 			
-		/*	if(!$vfs->mv (array (
+			if(!$vfs->mv (array (
 				'from'		=> $from_file,
 				'to'		=> $to_file,
 				'relatives'	=> array (RELATIVE_ALL, RELATIVE_ALL))))
 			{
-				$error[] = lang('Failed to move file !') . " {$from_file}";
+				$error[] = lang('Failed to move file') . " {$from_file}";
 			}
-		*/
 		}
 
 		$vfs->override_acl = 0;
-		if(isset($error))
+		if($error)
 		{
 			_debug_array($error);
 		}
