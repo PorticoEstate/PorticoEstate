@@ -320,7 +320,7 @@
 					";
 				$sdc->query($sql_get_default, __LINE__, __FILE__);
 				$sdc->next_record();
-				if ($sdc->f(0))
+				if ($sdc->f(0) != '')
 				{
 					if (ereg('nextval',$sdc->f(0)))
 					{
