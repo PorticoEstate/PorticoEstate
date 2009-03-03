@@ -674,7 +674,7 @@
 
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			if (isset($aColumnDef['nullable']) && $aColumnDef['nullable'])	// pgsql cant add a column not nullable if there is data in the table
+			if (!isset($aColumnDef['nullable']) || (isset($aColumnDef['nullable']) && ($aColumnDef['nullable'] === 'False' || $aColumnDef['nullable'] === false)) )	// pgsql cant add a column not nullable if there is data in the table
 			{
 				if(!isset($aColumnDef['default']))
 				{

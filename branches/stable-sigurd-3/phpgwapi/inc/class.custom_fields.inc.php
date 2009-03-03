@@ -370,7 +370,7 @@
 
 			if ( !$col_info['default'] )
 			{
-				if($col_info['default'] != 0 )
+				if(!is_numeric($col_info['default']) )
 				{
 					unset($col_info['default']);
 				}
