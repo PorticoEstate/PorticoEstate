@@ -87,6 +87,9 @@
 				case 'text':
 					$sTranslated = 'text';
 					break;
+				case 'time':
+					$sTranslated = 'time';
+					break;
 				case 'timestamp':
 					$sTranslated = 'datetime';
 					break;

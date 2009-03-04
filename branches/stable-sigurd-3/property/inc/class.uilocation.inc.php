@@ -1223,7 +1223,7 @@
 				$document_link = array();
 				$related_link = array();
 
-				if(isset($related['document']))
+				if(isset($related['documents']))
 				{
 					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');				
 				}
@@ -1246,18 +1246,7 @@
 							);
 						}
 					}
-					if( $related_key == 'document')
-					{
-						foreach($related_data as $entry)
-						{
-							$document_link[] = array
-							(
-								'entity_link'				=> $entry['entity_link'],
-								'lang_entity_statustext'	=> $entry['descr'],
-								'text_entity'				=> $entry['name'],
-							);
-						}
-					}
+
 					if( $related_key == 'related')
 					{
 						foreach($related_data as $entry)
@@ -1287,7 +1276,6 @@
 
 				'lang_related_info'				=> lang('related info'),
 				'entities_link'					=> (isset($entities_link)?$entities_link:''),
-				'document_link'					=> $document_link,
 				'related_link'					=> $related_link,
 				'edit_street'					=> (isset($edit_street)?$edit_street:''),
 				'edit_tenant'					=> (isset($edit_tenant)?$edit_tenant:''),
@@ -1341,9 +1329,15 @@
 				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'documents'						=> json_encode($related['documents']),
+				'lang_expand_all'				=> lang('expand all'),
+				'lang_collapse_all'				=> lang('collapse all')
 			);
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+			phpgwapi_yui::load_widget('treeview');
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;

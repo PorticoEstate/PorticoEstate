@@ -306,6 +306,7 @@ closed	property	no	Avsluttet
 close order	property	no	Avslutt Ordre
 close this window	property	no	Steng vindu
 code	property	no	Kode
+collapse all	property	no	Slå samen
 column could not be added	property	no	Kolonne kunne ikke legges til
 column description	property	no	Beskrivelse av kolonne
 column name	property	no	Kolonnenavn
@@ -696,6 +697,7 @@ equipment type	property	no	Type utstyr/anlegg
 event	property	no	Hendelse
 events	property	no	Hendelser
 example	property	no	Eksempel
+expand all	property	no	Vis alle
 exp date	property	no	Utgått dato
 export contacts	property	no	Eksporter kontakter
 export date	property	no	Eksport dato
