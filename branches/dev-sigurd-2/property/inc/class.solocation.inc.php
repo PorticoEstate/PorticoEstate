@@ -125,6 +125,19 @@
 				'level'		=> 0
 			);
 
+			$x = 0; // within level
+			$y = 0; //level
+			$cache_x_at_y[$y] = $x;
+			$documents[$x] = array
+			(
+				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
+				'name'		=> lang('documents') . ' [' . $hits . ']:',
+				'descr'		=> lang('Documentation'),
+				'level'		=> 0
+			);
+
+
+
 			$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
 			$categories = $cats->return_sorted_array(0, false);
 			unset($cats);
@@ -151,7 +164,43 @@
 					'descr'		=> lang('Documentation'),
 					'level'		=> $category['level'] +1
 				);
+
+
+				$level = $category['level']+1;
+				if($level == $y)
+				{
+					$x++;
+				}
+				else if($level < $y )
+				{
+					$x = $cache_x_at_y[$level]+1;
+				}
+				else if($level > $y )
+				{
+					$x = 0;
+				}
+				$y = $level;
+
+					$map = '$documents'; 
+					for ($i = 0; $i < $level ; $i++)
+					{
+						
+						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
+					}
+
+					$map .= '[]'; 
+
+					eval($map . ' =array('
+					.	"'entity_link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
+					.	"'name'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
+					.	"'descr'		=> '" . lang('Documentation') . "',\n"
+					.	"'level'		=> "  . ($category['level']+1) . "\n"
+					 . ');');
+
+				$cache_x_at_y[$y] = $x;
 			}
+
+			$entity['documents'] = $documents;
 
 			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code $this->like '$location_code%'";
 			$this->db->query($sql,__LINE__,__FILE__);
