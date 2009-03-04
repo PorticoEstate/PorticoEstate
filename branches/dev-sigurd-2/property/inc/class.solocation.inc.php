@@ -88,8 +88,8 @@
 					(
 						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array(
 															'menuaction'=> 'property.uientity.index',
-															'entity_id'=> $entity['entity_id'],
-															'cat_id'=> $entity['cat_id'],
+															'entity_id'=> $entry['entity_id'],
+															'cat_id'=> $entry['cat_id'],
 															'query'=> $location_code
 															)
 														),
