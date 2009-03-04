@@ -259,7 +259,7 @@
 			case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
-				echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
+			//	echo "\n<br>" . lang('ERROR Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n"; //this will be commented in the final version
 			//No default, we just ignore it, for now
 		}
 	}
