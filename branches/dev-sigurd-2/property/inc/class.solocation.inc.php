@@ -117,25 +117,17 @@
 			$this->db->next_record();
 			$hits = (int) $this->db->f('hits');
 
-			$entity['document'][] = array
-			(
-				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
-				'name'		=> lang('documents') . ' [' . $hits . ']:',
-				'descr'		=> lang('Documentation'),
-				'level'		=> 0
-			);
-
 			$x = 0; // within level
 			$y = 0; //level
 			$cache_x_at_y[$y] = $x;
+			$documents = array();
 			$documents[$x] = array
 			(
-				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
-				'name'		=> lang('documents') . ' [' . $hits . ']:',
+				'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
+				'text'		=> lang('documents') . ' [' . $hits . ']:',
 				'descr'		=> lang('Documentation'),
 				'level'		=> 0
 			);
-
 
 
 			$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
@@ -143,28 +135,11 @@
 			unset($cats);
 
 			foreach ($categories as $category)
-			{
-			
+			{			
 				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category = {$category['id']}";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$hits = (int) $this->db->f('hits');
-				
-				$spaceset = '/';
-				if ($category['level'] > 0)
-				{
-					$space = ' .  . ';
-					$spaceset .= str_repeat($space, $category['level']);
-				}
-				$spaceset .= '';
-				$entity['document'][] = array
-				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])),
-					'name'		=> $spaceset . $category['name'] . ' [' . $hits . ']',
-					'descr'		=> lang('Documentation'),
-					'level'		=> $category['level'] +1
-				);
-
 
 				$level = $category['level']+1;
 				if($level == $y)
@@ -191,8 +166,8 @@
 					$map .= '[]'; 
 
 					eval($map . ' =array('
-					.	"'entity_link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
-					.	"'name'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
+					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
+					.	"'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
 					.	"'descr'		=> '" . lang('Documentation') . "',\n"
 					.	"'level'		=> "  . ($category['level']+1) . "\n"
 					 . ');');

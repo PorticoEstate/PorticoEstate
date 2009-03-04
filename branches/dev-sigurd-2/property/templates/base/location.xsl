@@ -469,12 +469,12 @@
 		<xsl:call-template name="attributes_values"/>
 
 			<xsl:choose>
-				<xsl:when test="document_link != ''">
+				<xsl:when test="documents != ''">
 				<div id="document">
 
 				<!-- Some style for the expand/contract section-->
 				<style>
-				#expandcontractdiv {border:1px dotted #dedede; background-color:#EBE4F2; margin:0 0 .5em 0; padding:0.4em;}
+				#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
 				#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
 				</style>
 
@@ -485,13 +485,13 @@
 	
 				<!-- markup for expand/contract links -->
 				<div id="expandcontractdiv">
-					<a id="expand" href="#">Expand all</a>
-					<a id="collapse" href="#">Collapse all</a>
+					<a id="expand" href="#"><xsl:value-of select="lang_expand_all"/></a>
+					<xsl:text> </xsl:text>
+					<a id="collapse" href="#"><xsl:value-of select="lang_collapse_all"/></a>
 				</div>
 
 				<div id="treeDiv1"></div>
-				<div id="msg">&nbsp;</div>
-
+<!--
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
 						<tr>
 							<td>
@@ -501,6 +501,7 @@
 							</td>
 						</tr>
 					</table>
+-->
 				</div>
 				</xsl:when>
 			</xsl:choose>

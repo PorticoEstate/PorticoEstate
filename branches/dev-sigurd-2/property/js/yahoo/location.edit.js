@@ -1,14 +1,11 @@
 //an anonymous function wraps our code to keep our variables
 //in function scope rather than in the global namespace:
 (function() {
-	var tree; //will hold our TreeView instance
+	var tree;
 	
-	function treeInit() {
-		
-	//	YAHOO.log("Example's treeInit function firing.", "info", "example");
-		
-		//Hand off ot a method that randomly generates tree nodes:
-		buildRandomTextNodeTree();
+	function treeInit()
+	{
+		buildTextNodeTree();
 		
 		//handler for expanding all nodes
 		YAHOO.util.Event.on("expand", "click", function(e) {
@@ -25,69 +22,40 @@
 		tree.subscribe('clickEvent',function(oArgs) {
 			window.open(oArgs.node.href,oArgs.node.target);
 		});
-
 	}
 	
-	//This method will build a TreeView instance and populate it with
-	//between 3 and 7 top-level nodes
-	function buildRandomTextNodeTree() {
-	
+	function buildTextNodeTree()
+	{
 		//instantiate the tree:
 		tree = new YAHOO.widget.TreeView("treeDiv1");
-		
-		var root = tree.getRoot();
-		var myobj = { label: documents[0]['text_entity'], href:documents[0]['entity_link'],target:"_blank" };
-		var tmpNode = new YAHOO.widget.TextNode(myobj, root);
-		buildTextBranch(tmpNode,1,0);
-
-/*		//create top-level nodes
-		for (var i = 0; i < Math.floor((Math.random()*4) + 3); i++) {
-
+		for (var i = 0; i < documents.length; i++)
+		{
 			var root = tree.getRoot();
-			var myobj = { label: "label-" + i, href:"http://www.yahoo.com",target:"_blank" };
+			var myobj = { label: documents[i]['text'], href:documents[i]['link'],target:"_self" };
 			var tmpNode = new YAHOO.widget.TextNode(myobj, root);
-			
-			//we'll delegate to another function to build child nodes:
-			buildRandomTextBranch(tmpNode);
+
+			if(documents[i]['children'].length)
+			{
+				buildBranch(tmpNode, documents[i]['children']);
+			}
 		}
-*/		
-		//once it's all built out, we need to render
-		//our TreeView instance:
+
 		tree.draw();
 	}
 
-	function buildTextBranch(node, k, level)
+	function buildBranch(node, parent)
 	{
-		for (var i = k; i < documents.length; i++) 
+		for (var i = 0; i < parent.length; i++)
 		{
-			if(documents[i]['level'] < level)
+			var tmpNode = new YAHOO.widget.TextNode({label:parent[i]['text'], href:parent[i]['link']}, node, false);
+			if(parent[i]['children'])
 			{
-				root = tree.getRoot();
-				buildTextBranch(root,i,documents[i]['level']);
-				break;
-			}
-			level = documents[i]['level'];
-			var myobj = { label: documents[i]['text_entity'], href:documents[i]['entity_link'],target:"_blank" };
-			var tmpNode = new YAHOO.widget.TextNode(myobj, node, false);
-
-//			break;
-		}
-	}
-
-
-	//This function adds a random number <4 of child nodes to a given
-	//node, stopping at a specific node depth:
-	function buildRandomTextBranch(node) {
-		if (node.depth < 6) {
-			for ( var i = 0; i < Math.floor(Math.random() * 4) ; i++ ) {
-				var tmpNode = new YAHOO.widget.TextNode(node.label + "-" + i, node, false);
-				buildRandomTextBranch(tmpNode);
+				buildBranch(tmpNode, parent[i]['children']);
 			}
 		}
 	}
-	
-	//When the DOM is done loading, we can initialize our TreeView
-	//instance:
+
+	//When the DOM is done loading, initialize TreeView instance:
 	YAHOO.util.Event.onDOMReady(treeInit);
 	
-})();//anonymous function wrapper closed; () notation executes function
+})();
