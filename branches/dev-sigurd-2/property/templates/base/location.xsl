@@ -471,6 +471,27 @@
 			<xsl:choose>
 				<xsl:when test="document_link != ''">
 				<div id="document">
+
+				<!-- Some style for the expand/contract section-->
+				<style>
+				#expandcontractdiv {border:1px dotted #dedede; background-color:#EBE4F2; margin:0 0 .5em 0; padding:0.4em;}
+				#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+				</style>
+
+					<script>
+						var documents = <xsl:value-of select="documents" />;
+					</script>
+
+	
+				<!-- markup for expand/contract links -->
+				<div id="expandcontractdiv">
+					<a id="expand" href="#">Expand all</a>
+					<a id="collapse" href="#">Collapse all</a>
+				</div>
+
+				<div id="treeDiv1"></div>
+				<div id="msg">&nbsp;</div>
+
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
 						<tr>
 							<td>

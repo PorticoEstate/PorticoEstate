@@ -121,7 +121,8 @@
 			(
 				'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
 				'name'		=> lang('documents') . ' [' . $hits . ']:',
-				'descr'		=> lang('Documentation')
+				'descr'		=> lang('Documentation'),
+				'level'		=> 0
 			);
 
 			$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
@@ -147,7 +148,8 @@
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])),
 					'name'		=> $spaceset . $category['name'] . ' [' . $hits . ']',
-					'descr'		=> lang('Documentation')
+					'descr'		=> lang('Documentation'),
+					'level'		=> $category['level'] +1
 				);
 			}
 

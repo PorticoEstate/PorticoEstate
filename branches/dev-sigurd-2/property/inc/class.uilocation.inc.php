@@ -1255,6 +1255,7 @@
 								'entity_link'				=> $entry['entity_link'],
 								'lang_entity_statustext'	=> $entry['descr'],
 								'text_entity'				=> $entry['name'],
+								'level'						=> $entry['level']
 							);
 						}
 					}
@@ -1341,9 +1342,13 @@
 				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'documents'						=> json_encode($document_link)
 			);
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+			phpgwapi_yui::load_widget('treeview');
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.edit', 'property' );
 			$appname	= lang('location');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
