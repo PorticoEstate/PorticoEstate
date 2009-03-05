@@ -188,7 +188,7 @@
 			$use_svn = false;
 			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
-				$use_svn = true;
+		//		$use_svn = true;
 			}
 
 			$doc_types = $this->get_sub_doc_types();
