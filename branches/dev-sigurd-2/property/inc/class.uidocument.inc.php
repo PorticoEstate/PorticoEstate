@@ -78,6 +78,7 @@
 			$this->acl_delete 			= $this->acl->check('.document', PHPGW_ACL_DELETE, 'property');
 
 			//$this->rootdir 				= $this->bo->rootdir;
+			$this->bofiles				= & $this->bo->bofiles;
 			$this->fakebase 			= $this->bo->fakebase;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -997,9 +998,7 @@
 
 			$file 			= $this->bo->get_file($document_id);
 
-			$bofiles		= CreateObject('property.bofiles');
-
-			$bofiles->view_file('', $file);
+			$this->bofiles->view_file('', $file);
 		}
 
 		function edit()
@@ -1104,8 +1103,6 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
 				}
 
-				$bofiles	= CreateObject('property.bofiles');
-
 				$values['location_code'] = isset($values['location_code']) && $values['location_code'] ? $values['location_code'] : implode('-',$values['location']);
 
 				$document_dir = "document/{$values['location_code']}";
@@ -1117,9 +1114,9 @@
 				
 				$document_dir .= "/{$values['doc_type']}";
 
-				$to_file	= "{$bofiles->fakebase}/{$document_dir}/{$values['document_name']}";
+				$to_file	= "{$this->bofiles->fakebase}/{$document_dir}/{$values['document_name']}";
 
-				if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
+				if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $this->bofiles->vfs->file_exists(array(
 						'string' => $to_file,
 						'relatives' => Array(RELATIVE_NONE)
 					)))
@@ -1129,7 +1126,7 @@
 
 				if(!$receipt['error'])
 				{
-					$receipt = $bofiles->create_document_dir($document_dir);
+					$receipt = $this->bofiles->create_document_dir($document_dir);
 					if(isset($values['document_name_orig']) && $values['document_name_orig'] && (!isset($values['document_name']) || !$values['document_name']))
 					{
 						$old_file 	= $this->bo->get_file($document_id);
@@ -1138,15 +1135,15 @@
 						
 						if($old_file != $to_file)
 						{
-							$bofiles->vfs->override_acl = 1;
-							if(!$bofiles->vfs->mv (array (
+							$this->bofiles->vfs->override_acl = 1;
+							if(!$this->bofiles->vfs->mv (array (
 								'from'		=> $old_file,
 								'to'		=> $to_file,
 								'relatives'	=> array (RELATIVE_ALL, RELATIVE_ALL))))
 							{
 								$receipt['error'][]=array('msg'=>lang('Failed to move file !'));
 							}
-							$bofiles->vfs->override_acl = 0;
+							$this->bofiles->vfs->override_acl = 0;
 						}
 					}
 				}
@@ -1157,16 +1154,16 @@
 				{
 					if($values['document_name'] && !$values['link'])
 					{
-						$bofiles->vfs->override_acl = 1;
+						$this->bofiles->vfs->override_acl = 1;
 
-						if(!$bofiles->vfs->cp (array (
+						if(!$this->bofiles->vfs->cp (array (
 							'from'		=> $_FILES['document_file']['tmp_name'],
 							'to'		=> $to_file,
 							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 						{
 							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 						}
-						$bofiles->vfs->override_acl = 0;
+						$this->bofiles->vfs->override_acl = 0;
 					}
 
 					if(!$receipt['error'])

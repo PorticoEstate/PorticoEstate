@@ -136,7 +136,10 @@
 		{
 			$svnxml = '<?xml version="1.0" encoding="utf-8" ?>
 			<S:log-report xmlns:S="svn:" xmlns:D="DAV">';
-			$svnxml .= '<S:start-revision>'.$startvers.'</S:start-revision>'; 
+			if($startvers)
+			{
+				$svnxml .= '<S:start-revision>'.$startvers.'</S:start-revision>'; 
+			}
 			$svnxml .= '<S:end-revision>'.$endvers.'</S:end-revision>';   
 			$svnxml .= '<S:path/>';
 			$svnxml.='<S:strict-node-history/>';
@@ -174,6 +177,7 @@
 		{
 			$ret=$this->report($uri,$startvers,$endvers);
 			$xml_result=$this->http_client->getBody();			
+
 			if ( !is_object($this->svn_processor))
 			{
 				$this->svn_processor = new SVNParser();

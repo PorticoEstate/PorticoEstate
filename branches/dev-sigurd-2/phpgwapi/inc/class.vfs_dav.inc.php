@@ -816,7 +816,9 @@
 			{
 				$parsed_url['pwd'] = $this->dav_pwd;
 			}
+
 			$location = $this->glue_url($parsed_url);
+
 			header( 'Location: '.$location, true);
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}

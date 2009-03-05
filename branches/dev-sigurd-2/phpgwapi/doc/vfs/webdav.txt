@@ -91,3 +91,9 @@ For svn you need the "SVNAutoversioning on", example:
      </LimitExcept>
   </Location>
 
+When using the svn-protocoll (neede for version information)- one still needs to spesify the http-url in setup.
+
+example:
+
+svn://localhost/svn/myproject (the same as for the http-version - even if the command line url is different)
+http://localhost/svn/myproject
