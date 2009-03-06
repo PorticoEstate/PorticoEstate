@@ -55,16 +55,14 @@
 
 		function property_bodocument($session=false)
 		{
-			$this->so 			= CreateObject('property.sodocument');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->solocation 	= CreateObject('property.solocation');
-			$this->historylog	= CreateObject('property.historylog','document');
-			$this->contacts		= CreateObject('property.soactor');
-			$this->contacts->role='vendor';
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.document';
-			$this->cats->supress_info	= true;
-			$this->bofiles		= CreateObject('property.bofiles');
+			$this->so 				= CreateObject('property.sodocument');
+			$this->bocommon 		= CreateObject('property.bocommon');
+			$this->solocation 		= CreateObject('property.solocation');
+			$this->historylog		= CreateObject('property.historylog','document');
+			$this->contacts			= CreateObject('property.soactor');
+			$this->contacts->role	='vendor';
+			$this->cats				= & $this->so->cats;
+			$this->bofiles			= CreateObject('property.bofiles');
 
 			if ($session)
 			{
@@ -146,9 +144,8 @@
 
 		function read()
 		{
-			$doc_types = $this->get_sub_doc_types();
 			$document = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_types'=>$doc_types));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -168,20 +165,11 @@
 			return $document;
 		}
 
-		function get_sub_doc_types()
+		function get_files_at_location($location_code)
 		{
-			$doc_types = array();
-			if($this->doc_type)
-			{
-				$doc_types[] = $this->doc_type;
-				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $this->doc_type);
-				foreach ($cat_sub as $doc_type)
-				{
-					$doc_types[] = $doc_type['id'];
-				}
-			}
-			return $doc_types;
+			return $this->so->get_files_at_location($location_code);
 		}
+
 
 		function read_at_location($location_code='')
 		{
@@ -191,11 +179,10 @@
 		//		$use_svn = true;
 			}
 
-			$doc_types = $this->get_sub_doc_types();
 
 			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
-											'location_code' => $location_code,'doc_types'=>$doc_types, 'allrows' => $this->allrows));
+											'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

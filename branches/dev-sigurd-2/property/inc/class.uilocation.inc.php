@@ -1220,10 +1220,12 @@
 			if($location_code)
 			{
 				$related = $this->bo->read_entity_to_link($location_code);
-				$document_link = array();
 				$related_link = array();
 
-				if(isset($related['documents']))
+				$document = CreateObject('property.sodocument');
+				$documents = $document->get_files_at_location($location_code);
+
+				if($documents)
 				{
 					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');				
 				}
@@ -1330,7 +1332,7 @@
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
-				'documents'						=> json_encode($related['documents']),
+				'documents'						=> json_encode($documents),
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);
