@@ -1565,19 +1565,22 @@ HTML;
 					{
 						$img	= $this->image('phpgwapi','msgbox_good');
 						$alt	= lang('OK');
+						$class  = 'msg_good';
 					}
 					else
 					{
 						$img	= $this->image('phpgwapi','msgbox_bad');
 						$alt	= lang('ERROR');
+						$class  = 'error';
 					}
 
 					$data[] = array
 					(
-						'msgbox_text'				=> lang($key),
+						'msgbox_text'				=> $key,
 						'msgbox_img'				=> $img,
 						'msgbox_img_alt'			=> $alt,
-						'lang_msgbox_statustext'	=> $alt
+						'lang_msgbox_statustext'	=> $alt,
+						'msgbox_class'				=> $class
 					);
 				}
 			}
@@ -1625,26 +1628,25 @@ HTML;
 
 		public function msgbox_data($receipt)
 		{
-			$msgbox_data_error=array();
+			$msgbox_data_error	 = array();
+			$msgbox_data_message = array();
 			if (isSet($receipt['error']) AND is_array($receipt['error']))
 			{
-				foreach($receipt['error'] as $errors)
+				foreach($receipt['error'] as $dummy => $error)
 				{
-					$msgbox_data_error += array($errors['msg']=> False);
+					$msgbox_data_error[$error['msg']] = false;
 				}
 			}
-
-			$msgbox_data_message=array();
 
 			if (isSet($receipt['message']) AND is_array($receipt['message']))
 			{
-				foreach($receipt['message'] as $messages)
+				foreach($receipt['message'] as $dummy => $message)
 				{
-					$msgbox_data_message += array($messages['msg']=> True);
+					$msgbox_data_message[$message['msg']] = true;
 				}
 			}
 
-			$msgbox_data = $msgbox_data_error + $msgbox_data_message;
+			$msgbox_data = array_merge($msgbox_data_error, $msgbox_data_message);
 
 			return $msgbox_data;
 		}

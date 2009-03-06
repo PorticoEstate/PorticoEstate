@@ -129,26 +129,25 @@
 
 		function msgbox_data($receipt)
 		{
-			$msgbox_data_error=array();
+			$msgbox_data_error	 = array();
+			$msgbox_data_message = array();
 			if (isSet($receipt['error']) AND is_array($receipt['error']))
 			{
-				foreach($receipt['error'] as $errors)
+				foreach($receipt['error'] as $dummy => $error)
 				{
-					$msgbox_data_error += array($errors['msg']=> false);
+					$msgbox_data_error[$error['msg']] = false;
 				}
 			}
-
-			$msgbox_data_message=array();
 
 			if (isSet($receipt['message']) AND is_array($receipt['message']))
 			{
-				foreach($receipt['message'] as $messages)
+				foreach($receipt['message'] as $dummy => $message)
 				{
-					$msgbox_data_message += array($messages['msg']=> true);
+					$msgbox_data_message[$message['msg']] = true;
 				}
 			}
 
-			$msgbox_data = $msgbox_data_error + $msgbox_data_message;
+			$msgbox_data = array_merge($msgbox_data_error, $msgbox_data_message);
 
 			return $msgbox_data;
 		}
