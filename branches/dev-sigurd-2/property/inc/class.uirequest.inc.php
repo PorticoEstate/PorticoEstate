@@ -816,6 +816,12 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
 				}
 
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				{
+					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+					$error_id=true;
+				}
+
 				if($id)
 				{
 					$values['id']=$id;
