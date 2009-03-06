@@ -128,7 +128,7 @@
 		function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','fm_tts');
-_debug_array($data);
+
 			$this->start		= isset($data['start'])?$data['start']:'';
 			$this->query		= isset($data['query'])?$data['query']:'';
 			$this->user_id		= isset($data['user_id'])?$data['user_id']:'';
