@@ -43,9 +43,30 @@
 	{
 		if(flag_particular_setting=='init')
 		{
-			//focus initial
+			//category
+			index = locate_in_array_options(0,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+			//district
 			index = locate_in_array_options(1,"value",path_values.district_id);
-			oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
+			//status
+			index = locate_in_array_options(2,"value",path_values.status_id);
+			if(index)
+			{
+				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+			}
+			//user
+			index = locate_in_array_options(3,"value",path_values.user_id);
+			if(index)
+			{
+				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
+			}
 			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
