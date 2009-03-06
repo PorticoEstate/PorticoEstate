@@ -1361,8 +1361,8 @@
 			'fd' => array(
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'name' => array('type' => 'varchar','precision' => '100','nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True),
 				'prefix' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'lookup_tenant' => array('type' => 'int','precision' => '4','nullable' => True),
 				'tracking' => array('type' => 'int','precision' => '4','nullable' => True),
