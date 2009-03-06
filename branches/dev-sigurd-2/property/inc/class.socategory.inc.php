@@ -390,11 +390,13 @@
 			return $values;
 		}
 
-/*
+
 		function select_category_list($data)
 		{
 			$values = array();
 
+			$this->get_location_info($data['type'], $data['type_id']);
+			
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
@@ -413,7 +415,7 @@
 			}
 			return $values;
 		}
-*/
+
 
 		function add($data)
 		{
