@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@
 		var $order;
 		var $sub;
 		var $currentapp;
+		var $location_info;
 
 		var $public_functions = array
 		(
@@ -54,13 +55,14 @@
 		function property_uicategory()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.bocategory',true);
+			$this->bo					= CreateObject('property.bocategory',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 
+			$this->location_info		= $this->bo->location_info;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= '.admin';
+			$this->acl_location			= $this->location_info['acl_location'];
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
@@ -69,7 +71,7 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
@@ -97,6 +99,7 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
+			$this->save_sessiondata();
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "category.index.{$type}";
 
@@ -124,54 +127,62 @@
 
 				$datatable['config']['allow_allrows'] = true;
 
-				$datatable['actions']['form'] = array(
-				array(
+				$datatable['actions']['form'] = array
+				(
+					array
+					(
 					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array(
-								'menuaction'	=> 'property.uicategory.index',
-								'type'		=> $type,
-					'type_id'		=> $type_id
+								array
+								(
+									'menuaction'	=> 'property.uicategory.index',
+									'type'			=> $type,
+									'type_id'		=> $type_id
+								)
+							),
+					'fields'	=> array
+					(
+	                		'field' => array
+	                		(
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_done',
+									'value'	=> lang('done'),
+									'tab_index' => 9
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 8
+								),
+								array
+								( //button     SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 7
+								),
+								array
+								( // TEXT INPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => $this->query,
+									'type' => 'text',
+									'onkeypress' => 'return pulsar(event)',
+									'size'    => 28,
+									'tab_index' => 6
+								)
 							)
-						),
-					'fields'	=> array(
-	                                    'field' => array
-	                                    			(
-														array(
-							                                'type'	=> 'button',
-							                            	'id'	=> 'btn_done',
-							                                'value'	=> lang('done'),
-							                                'tab_index' => 9
-							                            ),
-														array(
-							                                'type'	=> 'button',
-							                            	'id'	=> 'btn_new',
-							                                'value'	=> lang('add'),
-							                                'tab_index' => 8
-							                            ),
-				                                        array( //boton     SEARCH
-				                                            'id' => 'btn_search',
-				                                            'name' => 'search',
-				                                            'value'    => lang('search'),
-				                                            'type' => 'button',
-				                                            'tab_index' => 7
-				                                        ),
-				   										array( // TEXT INPUT
-				                                            'name'     => 'query',
-				                                            'id'     => 'txt_query',
-				                                            'value'    => '',//$query,
-				                                            'type' => 'text',
-				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28,
-				                                            'tab_index' => 6
-				                                        )
-			                           				)
-										)
-					 )
+						)
+					)
 				);
 				$dry_run = true;
 			}
 
-			$category_list = $this->bo->read($type,$type_id);
+			$values = $this->bo->read();
 			$uicols['name'][0]	= 'id';
 			$uicols['descr'][0]	= lang('category ID');
 			$uicols['name'][1]	= 'descr';
@@ -179,9 +190,9 @@
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
-			if (isset($category_list) AND is_array($category_list))
+			if (isset($values) AND is_array($values))
 			{
-				foreach($category_list as $category_entry)
+				foreach($values as $category_entry)
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
@@ -195,7 +206,6 @@
 				}
 			}
 
-			//_debug_array($datatable);die;
 			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
@@ -212,54 +222,67 @@
 
 			if($this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'edit',
-							'statustext' 	=> lang('edit the actor'),
-							'text'			=> lang('edit'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'		=> 'property.uicategory.edit',
-										'type'				=> $type,
-										'type_id'				=> $type_id,
-										'menu_selection' 	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
-									)),
-						'parameters'	=> $parameters
-						);
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 		=> 'edit',
+					'statustext' 	=> lang('edit the actor'),
+					'text'			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'		=> 'property.uicategory.edit',
+											'type'				=> $type,
+											'type_id'			=> $type_id
+										)),
+					'parameters'	=> $parameters
+				);
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('open edit in new window'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'		=> 'property.uicategory.edit',
+											'type'				=> $type,
+											'type_id'			=> $type_id,
+											'target'			=> '_blank'
+										)),
+					'parameters'	=> $parameters
+				);
 			}
 
 			if($this->acl_delete)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'delete',
-							'statustext' 	=> lang('delete the actor'),
-							'text'			=> lang('delete'),
-							'confirm_msg'	=> lang('do you really want to delete this entry'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uicategory.delete',
-										'type'				=> $type,
-										'type_id'				=> $type_id,
-										'menu_selection' 	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
-									)),
-						'parameters'	=> $parameters
-						);
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 		=> 'delete',
+					'statustext' 	=> lang('delete the actor'),
+					'text'			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uicategory.delete',
+											'type'			=> $type,
+											'type_id'		=> $type_id
+										)),
+					'parameters'	=> $parameters
+				);
 			}
 			unset($parameters);
 
 			if($this->acl_add)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'add',
-							'statustext' 	=> lang('add'),
-							'text'			=> lang('add'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uicategory.edit',
-										'type'				=> $type,
-										'type_id'				=> $type_id,
-										'menu_selection' 	=> $GLOBALS['phpgw_info']['flags']['menu_selection']
-									))
-						);
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 			=> 'add',
+					'statustext' 	=> lang('add'),
+					'text'			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uicategory.edit',
+											'type'			=> $type,
+											'type_id'		=> $type_id
+										))
+				);
 			}
 
 			for ($i=0;$i<$count_uicols_name;$i++)
@@ -285,21 +308,21 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($category_list);
+			$datatable['pagination']['records_returned']= count($values);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$appname					= lang('document');
-			$function_msg				= lang('list document category');
+			$appname			=  $this->location_info['name'];
+			$function_msg		= lang('list %1', $appname);
 
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			if ( ($this->start == 0) && (!$this->order))
 			{
 				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
-				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$datatable['sorting']['order']			= $this->order; // name of column of Database
+				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -375,111 +398,9 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ' : ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'category.index', 'property' );
-
-			$this->save_sessiondata();
-			/*if(!$this->acl_read)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
-
-			$type		= phpgw::get_var('type');
-			$type_id	= phpgw::get_var('type_id', 'int');
-
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "category.index.{$type}";
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('category','nextmatchs',
-										'search_field'));
-
-			$category_list = $this->bo->read($type,$type_id);
-
-			while (is_array($category_list) && list(,$category) = each($category_list))
-			{
-				$content[] = array
-				(
-					'id'				=> $category['id'],
-					'first'				=> $category['descr'],
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $category['id'], 'type'=> $type, 'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-					'lang_view_categorytext'	=> lang('view the category'),
-					'lang_edit_categorytext'	=> lang('edit the category'),
-					'lang_delete_categorytext'	=> lang('delete the category'),
-					'text_view'			=> lang('view'),
-					'text_edit'			=> lang('edit'),
-					'text_delete'			=> lang('delete')
-				);
-			}
-
-//_debug_array($content);
-
-			$table_header[] = array
-			(
-
-				'lang_descr'		=> lang('Descr'),
-				'lang_edit'		=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'sort_id'		=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'id',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uicategory.index',
-																	'type'	=> $type,
-																	'type_id' => $type_id,
-																	'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
-															)
-										)),
-				'lang_id'		=> lang('category id'),
-			);
-
-			$table_add[] = array
-			(
-				'lang_add'		=> lang('add'),
-				'lang_add_categorytext'	=> lang('add a category'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.edit', 'type'=> $type,  'type_id'=> $type_id, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'lang_done'		=> lang('done'),
-				'lang_done_categorytext'=> lang('back to admin'),
-				'done_action'		=> $GLOBALS['phpgw']->link('/admin/index.php')
-			);
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-
-			$data = array
-			(
-				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($category_list),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_categorytext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_categorytext'		=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'values'					=> $content,
-				'table_add'					=> $table_add
-			);
-
-			$appname	= lang($type). ' ' . $type_id;
-;
-			$function_msg	= lang('list %1 category',$type);
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list' => $data));
-			$this->save_sessiondata();*/
 		}
 
 		function edit()
@@ -497,6 +418,7 @@
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
+			$receipt = array();
 
 			if ($values['save'])
 			{
@@ -518,7 +440,7 @@
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->save($values,$action,$type,$type_id);
+					$receipt = $this->bo->save($values,$action);
 					if($receipt['error'])
 					{
 						$id = '';
@@ -528,24 +450,22 @@
 
 			if ($id)
 			{
-				$category = $this->bo->read_single(array('id' => $id, 'type' => $type, 'type_id' => $type_id));
-				$function_msg = lang('edit category');
+				$values = $this->bo->read_single(array('id' => $id));
+				$function_msg = $this->location_info['edit_msg'];
 				$action='edit';
 			}
 			else
 			{
-				$function_msg = lang('add category');
+				$function_msg = $this->location_info['add_msg'];
 				$action='add';
 			}
-
 
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uicategory.edit',
-				'id'		=> $id,
-				'type'		=> $type,
-				'type_id'	=> $type_id,
-				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
+				'id'			=> $id,
+				'type'			=> $type,
+				'type_id'		=> $type_id
 			);
 //_debug_array($link_data);
 
@@ -555,23 +475,22 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'lang_id'						=> lang('category ID'),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
+				'lang_id'						=> lang('ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'						=> lang('save'),
 				'lang_done'						=> lang('done'),
 				'value_id'						=> $id,
-				'lang_id_categorytext'			=> lang('Enter the category ID'),
-				'lang_descr_categorytext'		=> lang('Enter a description the category'),
-				'lang_done_categorytext'		=> lang('Back to the list'),
-				'lang_save_categorytext'		=> lang('Save the category'),
-				'type_id'						=> $category['type_id'],
-				'value_descr'					=> $category['descr']
+				'value_descr'					=> $values['descr'],
+				'lang_id_text'					=> lang('Enter the ID'),
+				'lang_descr_text'				=> lang('Enter a description of the record'),
+				'lang_done_text'				=> lang('Back to the list'),
+				'lang_save_text'				=> lang('Save the record')
 			);
 
-			$appname	= lang($type). ' ' . $type_id;
+			$appname	=  $this->location_info['name'];
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
@@ -579,7 +498,7 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				return lang('no access');
 			}
 
 			$type		= phpgw::get_var('type');
@@ -587,38 +506,11 @@
 			$id			= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uicategory.index',
-				'type'		=> $type,
-				'type_id'	=> $type_id,
-				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
-			);
-
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-				$this->bo->delete($id,$type,$type_id);
-				return "id ".$id." ".lang("has been deleted");
+				$this->bo->delete($id);
+				return lang('id %1 has been deleted', $id);
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
-
-			$data = array
-			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.delete', 'id'=> $id, 'type'=> $type, 'type_id'=> $type_id,'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
-				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'			=> lang('yes'),
-				'lang_yes_categorytext'		=> lang('Delete the entry'),
-				'lang_no_categorytext'		=> lang('Back to the list'),
-				'lang_no'			=> lang('no')
-			);
-
-			$appname	= lang($type). ' ' . $type_id;
-			$function_msg	= lang('delete '.$type.' category');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
 

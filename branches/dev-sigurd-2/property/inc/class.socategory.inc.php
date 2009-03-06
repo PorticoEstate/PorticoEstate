@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -34,6 +34,8 @@
 
 	class property_socategory
 	{
+		var $location_info = array();
+
 		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -51,16 +53,13 @@
 				$query		= isset($data['query'])?$data['query']:'';
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order		= isset($data['order'])?$data['order']:'';
-				$type		= isset($data['type'])?$data['type']:'';
-				$type_id	= isset($data['type_id'])?$data['type_id']:'';
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
 			}
 
-			$category = array();
-			$location_info = $this->get_location_info($type,$type_id);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+			$values = array();
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
-				return $category;
+				return $values;
 			}
 
 			if ($order)
@@ -94,18 +93,19 @@
 
 			while ($this->_db->next_record())
 			{
-				$category[] = array
+				$values[] = array
 				(
 					'id'	=> $this->_db->f('id'),
 					'descr'	=> $this->_db->f('descr',true)
 				);
 			}
-			return $category;
+			return $values;
 		}
 
 
 		function get_location_info($type,$type_id)
 		{
+			$type_id = (int)$type_id;
 			$info = array();
 			switch($type)
 			{
@@ -113,213 +113,233 @@
 					$info = array
 					(
 						'table' => 'fm_project_group',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::project_group'
 					);
 					break;
 				case 'dim_b':
 					$info = array
 					(
 						'table' => 'fm_ecodimb',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::accounting_dim_b'
 					);
 					break;
 				case 'dim_d':
 					$info = array
 					(
 						'table' => 'fm_ecodimd',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::accounting_dim_d'
 					);
 					break;
 				case 'tax':
 					$info = array
 					(
 						'table' => 'fm_ecomva',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::accounting_tax'
 					);
 					break;
 				case 'voucher_cat':
 					$info = array
 					(
 						'table' => 'fm_ecobilag_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::voucher_cats'
 					);
 					break;
 				case 'voucher_type':
 					$info = array
 					(
 						'table' => 'fm_ecoart',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::voucher_type'
 					);
 					break;
 				case 'tender_chapter':
 					$info = array
 					(
 						'table' => 'fm_chapter',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::tender'
 					);
 					break;
 				case 'location':
-					$info = array
-					(
-						'table' => "fm_location{$type_id}_category",
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
-						'name'		=> '',
-						'acl_location' => ''
-					);
-					break;
-				case 'document':
-					$info = array
-					(
-						'table' => 'fm_document_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
-						'name'		=> lang('document'),
-						'acl_location' => ''
-					);
+
+					$this->_db->query("SELECT id FROM fm_location_type WHERE id ={$type_id}",__LINE__,__FILE__);
+
+					if($this->_db->next_record())
+					{
+						$info = array
+						(
+							'table' => "fm_location{$type_id}_category",
+							'edit_msg'	=> lang('edit'),
+							'add_msg'	=> lang('add'),
+							'name'		=> '',
+							'acl_location' => '.admin',
+							'menu_selection' => "admin::property::location::location::category_{$type_id}"
+						);
+					}
+					else
+					{
+						throw new Exception(lang('ERROR: illegal type %1', $type_id));
+					}
 					break;
 				case 'owner':
 					$info = array
 					(
 						'table' => 'fm_owner_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
 					break;
 				case 'tenant':
 					$info = array
 					(
 						'table' => 'fm_tenant_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> lang('tenant category'),
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
 					break;
 				case 'vendor':
 					$info = array
 					(
 						'table' => 'fm_vendor_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> lang('vendor category'),
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::vendor::vendor_cats'
 					);
 					break;
 				case 'district':
 					$info = array
 					(
 						'table' => 'fm_district',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> lang('district'),
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::location::district'
 					);
-					$table='fm_district';
 					break;
 				case 'street':
 					$info = array
 					(
 						'table' => 'fm_streetaddress',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> lang('streetaddress'),
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::location::street'
 					);
 					break;
 				case 's_agreement':
 					$info = array
 					(
 						'table' => 'fm_s_agreement_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::agreement::service_agree_cats'
 					);
 					break;
 				case 'tenant_claim':
 					$info = array
 					(
 						'table' => 'fm_tenant_claim_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::tenant::claims_cats'
 					);
 					break;
 				case 'wo_hours':
 					$info = array
 					(
 						'table' => 'fm_wo_hours_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::workorder_detail'
 					);
 					break;
 				case 'r_condition_type':
 					$info = array
 					(
 						'table' => 'fm_request_condition_type',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::request_condition'
 					);
 					break;
 				case 'r_agreement':
 					$info = array
 					(
 						'table' => 'fm_r_agreement_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::agreement::rental_agree_cats'
 					);
 					break;
 				case 'b_account':
 					$info = array
 					(
 						'table' => 'fm_b_account_category',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
-						'name'		=> '',
-						'acl_location' => ''
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('budget account'),
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
 					break;
-				case 'branch':
+/*				case 'branch':
 					$info = array
 					(
 						'table' => 'fm_branch',
-						'edit_msg'	=> '',
-						'add_msg'	=> '',
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
 						'name'		=> '',
-						'acl_location' => ''
+						'acl_location' => '.admin',
+						'menu_selection'	=>''
 					);
 					break;
+*/
 				case 'ecoorg_unit':
 					$info = array
 					(
@@ -327,21 +347,24 @@
 						'edit_msg'	=> lang('edit unit'),
 						'add_msg'	=> lang('add unit'),
 						'name'		=> lang('Accounting organisation unit'),
-						'acl_location' => '.invoice.org_unit'
+						'acl_location' => '.invoice.org_unit',
+						'menu_selection' => 'admin::property::accounting::org_unit'
 					);
 					break;
+				default:
+					throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
+			$this->location_info = $info;
 			return $info;
 		}
 
 		function read_single($data,$values = array())
 		{
 			$id = (int) $data['id'];
-			$location_info = $this->get_location_info($data['type'],$data['type_id']);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
-				return $category;
+				return $values;
 			}
 
 			$sql = "SELECT * FROM $table WHERE id={$id}";
@@ -367,14 +390,14 @@
 			return $values;
 		}
 
-
+/*
 		function select_category_list($data)
 		{
-			$categories = array();
-			$location_info = $this->get_location_info($data['type'],$data['type_id']);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+			$values = array();
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
-				return $categories;
+				return $values;
 			}
 			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
 
@@ -382,67 +405,66 @@
 
 			while ($this->_db->next_record())
 			{
-				$categories[] = array
+				$values[] = array
 				(
 					'id'	=> $this->_db->f('id'),
 					'name'	=> $this->_db->f('descr', true)
 				);
 			}
-			return $categories;
+			return $values;
 		}
+*/
 
-
-		function add($category,$type,$type_id)
+		function add($data)
 		{
 			$receipt = array();
-			$location_info = $this->get_location_info($type,$type_id);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
 				return $receipt;
 			}
 
-			$this->_db->query("SELECT id from {$table} WHERE id = {$category['id']}",__LINE__,__FILE__);
+			$this->_db->query("SELECT id from {$table} WHERE id = {$data['id']}",__LINE__,__FILE__);
 			if($this->_db->next_record())
 			{
 				$receipt['error'][]=array('msg'=>lang('duplicate key value'));
-				$receipt['error'][]=array('msg'=>lang('category has not been saved'));
+				$receipt['error'][]=array('msg'=>lang('record has not been saved'));
 				return $receipt;
 			}
 
-			$category['descr'] = $this->_db->db_addslashes($category['descr']);
+			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
 			$this->_db->query("INSERT INTO $table (id, descr) "
-				. "VALUES ('" . $category['id'] . "','" . $category['descr']. "')",__LINE__,__FILE__);
+				. "VALUES ('" . $data['id'] . "','" . $data['descr']. "')",__LINE__,__FILE__);
 
-			$receipt['message'][]=array('msg'=>lang('category has been saved'));
+			$receipt['message'][]=array('msg'=>lang('record has been saved'));
 			return $receipt;
 		}
 
-		function edit($category,$type,$type_id)
+		function edit($data)
 		{
 			$receipt = array();
-			$location_info = $this->get_location_info($type,$type_id);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
 				return $receipt;
 			}
 
-			$category['descr'] = $this->_db->db_addslashes($category['descr']);
+			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
-			$this->_db->query("UPDATE $table set descr='" . $category['descr']
-							. "' WHERE id='" . $category['id']. "'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE $table set descr='" . $data['descr']
+							. "' WHERE id='" . $data['id']. "'",__LINE__,__FILE__);
 
 
-			$receipt['message'][]=array('msg'=>lang('category has been edited'));
+			$receipt['message'][]=array('msg'=>lang('record has been edited'));
 			return $receipt;
 		}
 
-		function delete($id,$type,$type_id)
+		function delete($id)
 		{
-			$location_info = $this->get_location_info($type,$type_id);
-			if (!isset($location_info['table']) || !$table = $location_info['table'])
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return false;
 			}

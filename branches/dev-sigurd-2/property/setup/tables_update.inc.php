@@ -3055,7 +3055,6 @@
 
 		$GLOBALS['phpgw']->locations->add('.invoice.org_unit', 'Accounting organisation unit', 'property', $allow_grant = false, $custom_tbl = 'fm_ecoorg_unit', $c_function = false);
 
-
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','name',array('type' => 'varchar','precision' => '100','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','descr',array('type' => 'text','nullable' => True));
 

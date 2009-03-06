@@ -202,6 +202,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
 
+			$this->save_sessiondata();
+
 			$dry_run=false;
 
 			if(phpgw::get_var('edit_status', 'bool', 'GET'))
@@ -800,9 +802,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.index', 'property' );
-			$this->save_sessiondata();
-			//_debug_array($datatable);die;
-
 		}
 
 		function index2()
