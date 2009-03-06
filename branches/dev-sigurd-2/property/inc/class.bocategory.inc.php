@@ -81,49 +81,22 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
-
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->start		= $start ? $start : 0;
+			$this->query		= isset($query) ? $query : $this->query;
+			$this->sort			= isset($sort) && $sort ? $sort : '';
+			$this->order		= isset($order) && $order ? $order : '';
+			$this->filter		= isset($filter) && $filter ? $filter : '';
+			$this->cat_id		= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->allrows		= isset($allrows) && $allrows ? $allrows : '';
 		}
-
 
 		function save_sessiondata($data)
 		{
@@ -148,6 +121,10 @@
 			$this->allrows	= $data['allrows'];
 		}
 
+		function get_location_info($type,$type_id)
+		{
+			return $this->so->get_location_info($type,$type_id);
+		}
 
 		function read($type='',$type_id='')
 		{
@@ -159,9 +136,26 @@
 			return $category;
 		}
 
-		function read_single($id,$type,$type_id)
+		function read_single($data)
 		{
-			return $this->so->read_single($id,$type,$type_id);
+			$location_info = $this->get_location_info($data['type'],$data['type_id']);
+			
+			$custom_fields = false;
+			if($GLOBALS['phpgw']->locations->get_attrib_table($appname, $location))
+			{
+				$custom_fields = true;
+				$values = array();
+				$values['attributes'] = $this->custom->find('property',$location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+			}
+			if(isset($data['id']) && $data['id'])
+			{
+				$values = $this->so->read_single($data, $values);
+			}
+			if($custom_fields)
+			{
+				$values = $this->custom->prepare($values, 'property',$location_info['acl_location'], $data['view']);
+			}
+			return $values;
 		}
 
 		function select_part_of_town($part_of_town_id)

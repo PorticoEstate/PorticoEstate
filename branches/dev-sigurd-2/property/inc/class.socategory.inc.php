@@ -57,18 +57,19 @@
 			}
 
 			$category = array();
-			if (!$table = $this->select_table($type,$type_id))
+			$location_info = $this->get_location_info($type,$type_id);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
 			{
 				return $category;
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by id asc';
+				$ordermethod = ' ORDER BY id ASC';
 			}
 
 			if($query)
@@ -96,92 +97,249 @@
 				$category[] = array
 				(
 					'id'	=> $this->_db->f('id'),
-					'descr'	=> stripslashes($this->_db->f('descr'))
+					'descr'	=> $this->_db->f('descr',true)
 				);
 			}
 			return $category;
 		}
 
 
-		function select_table($type,$type_id)
+		function get_location_info($type,$type_id)
 		{
-
+			$info = array();
 			switch($type)
 			{
 				case 'project_group':
-					$table='fm_project_group';
+					$info = array
+					(
+						'table' => 'fm_project_group',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'dim_b':
-					$table='fm_ecodimb';
+					$info = array
+					(
+						'table' => 'fm_ecodimb',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'dim_d':
-					$table='fm_ecodimd';
+					$info = array
+					(
+						'table' => 'fm_ecodimd',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'tax':
-					$table='fm_ecomva';
+					$info = array
+					(
+						'table' => 'fm_ecomva',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'voucher_cat':
-					$table='fm_ecobilag_category';
+					$info = array
+					(
+						'table' => 'fm_ecobilag_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'voucher_type':
-					$table='fm_ecoart';
+					$info = array
+					(
+						'table' => 'fm_ecoart',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'tender_chapter':
-					$table='fm_chapter';
+					$info = array
+					(
+						'table' => 'fm_chapter',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'location':
-					$table='fm_location' . $type_id . '_category';
+					$info = array
+					(
+						'table' => "fm_location{$type_id}_category",
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'document':
-					$table='fm_document_category';
+					$info = array
+					(
+						'table' => 'fm_document_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> lang('document'),
+						'acl_location' => ''
+					);
 					break;
 				case 'owner':
-					$table='fm_owner_category';
+					$info = array
+					(
+						'table' => 'fm_owner_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'tenant':
-					$table='fm_tenant_category';
+					$info = array
+					(
+						'table' => 'fm_tenant_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> lang('tenant category'),
+						'acl_location' => ''
+					);
 					break;
 				case 'vendor':
-					$table='fm_vendor_category';
+					$info = array
+					(
+						'table' => 'fm_vendor_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> lang('vendor category'),
+						'acl_location' => ''
+					);
 					break;
 				case 'district':
+					$info = array
+					(
+						'table' => 'fm_district',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> lang('district'),
+						'acl_location' => ''
+					);
 					$table='fm_district';
 					break;
 				case 'street':
-					$table='fm_streetaddress';
+					$info = array
+					(
+						'table' => 'fm_streetaddress',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> lang('streetaddress'),
+						'acl_location' => ''
+					);
 					break;
 				case 's_agreement':
-					$table='fm_s_agreement_category';
+					$info = array
+					(
+						'table' => 'fm_s_agreement_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'tenant_claim':
-					$table='fm_tenant_claim_category';
+					$info = array
+					(
+						'table' => 'fm_tenant_claim_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'wo_hours':
-					$table='fm_wo_hours_category';
+					$info = array
+					(
+						'table' => 'fm_wo_hours_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'r_condition_type':
-					$table='fm_request_condition_type';
+					$info = array
+					(
+						'table' => 'fm_request_condition_type',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'r_agreement':
-					$table='fm_r_agreement_category';
+					$info = array
+					(
+						'table' => 'fm_r_agreement_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'b_account':
-					$table='fm_b_account_category';
+					$info = array
+					(
+						'table' => 'fm_b_account_category',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
 				case 'branch':
-					$table='fm_branch';
+					$info = array
+					(
+						'table' => 'fm_branch',
+						'edit_msg'	=> '',
+						'add_msg'	=> '',
+						'name'		=> '',
+						'acl_location' => ''
+					);
 					break;
-
+				case 'ecoorg_unit':
+					$info = array
+					(
+						'table' => 'fm_ecoorg_unit',
+						'edit_msg'	=> lang('edit unit'),
+						'add_msg'	=> lang('add unit'),
+						'name'		=> lang('Accounting organisation unit'),
+						'acl_location' => '.invoice.org_unit'
+					);
+					break;
 			}
 
-			return $table;
+			return $info;
 		}
 
-		function read_single($id,$type,$type_id)
+		function read_single($data,$values = array())
 		{
-			$id = (int) $id;
-			$category = array();
-			if (!$table = $this->select_table($type,$type_id))
+			$id = (int) $data['id'];
+			$location_info = $this->get_location_info($data['type'],$data['type_id']);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
 			{
 				return $category;
 			}
@@ -192,20 +350,29 @@
 
 			if ($this->_db->next_record())
 			{
-				$category = array
+				$values = array
 				(
 					'id'	=> $this->_db->f('id'),
 					'descr'	=> $this->_db->f('descr', true)
 				);
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					foreach ( $values['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
+				}
 			}
-			return $category;
+			return $values;
 		}
 
 
 		function select_category_list($data)
 		{
 			$categories = array();
-			if (!$table = $this->select_table($data['type'],$data['type_id']))
+			$location_info = $this->get_location_info($data['type'],$data['type_id']);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
 			{
 				return $categories;
 			}
@@ -228,7 +395,8 @@
 		function add($category,$type,$type_id)
 		{
 			$receipt = array();
-			if (!$table = $this->select_table($type,$type_id))
+			$location_info = $this->get_location_info($type,$type_id);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
 			{
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
 				return $receipt;
@@ -254,7 +422,8 @@
 		function edit($category,$type,$type_id)
 		{
 			$receipt = array();
-			if (!$table = $this->select_table($type,$type_id))
+			$location_info = $this->get_location_info($type,$type_id);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
 			{
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
 				return $receipt;
@@ -272,9 +441,12 @@
 
 		function delete($id,$type,$type_id)
 		{
-			$table = $this->select_table($type,$type_id);
-
-			$this->_db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
+			$location_info = $this->get_location_info($type,$type_id);
+			if (!isset($location_info['table']) || !$table = $location_info['table'])
+			{
+				return false;
+			}
+			$this->_db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
 		}
 	}
 

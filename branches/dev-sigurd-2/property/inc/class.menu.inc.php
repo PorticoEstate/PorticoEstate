@@ -185,6 +185,11 @@
 					(
 						'text'	=> lang('Accounting voucher type'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'voucher_type', 'menu_selection' => 'admin::property::accounting::voucher_type') )
+					),
+					'org_unit'	=> array
+					(
+						'text'	=> lang('Accounting organisation unit'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ecoorg_unit', 'menu_selection' => 'admin::property::accounting::org_unit') )
 					)
 				);
 

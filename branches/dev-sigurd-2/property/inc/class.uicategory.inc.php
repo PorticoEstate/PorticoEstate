@@ -528,7 +528,7 @@
 
 			if ($id)
 			{
-				$category = $this->bo->read_single($id,$type,$type_id);
+				$category = $this->bo->read_single(array('id' => $id, 'type' => $type, 'type_id' => $type_id));
 				$function_msg = lang('edit category');
 				$action='edit';
 			}

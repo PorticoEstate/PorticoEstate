@@ -138,6 +138,7 @@
 		'fm_ecologg',
 		'fm_ecomva',
 		'fm_ecouser',
+		'fm_ecoorg_unit',
 		'fm_investment',
 		'fm_investment_value',
 		'fm_event_receipt',
