@@ -61,10 +61,11 @@
 			)
 		);
 
-		function property_bocategory($session=false)
+		function __construct($session=false)
 		{
-			$this->so 		= CreateObject('property.socategory');
-			$this->socommon = CreateObject('property.socommon');
+			$this->so 			= CreateObject('property.socategory');
+			$this->socommon 	= CreateObject('property.socommon');
+			$this->custom 		= & $this->so->custom;
 
 			if ($session)
 			{
@@ -128,19 +129,21 @@
 											'allrows'=>$this->allrows));
 
 			$this->total_records = $this->so->total_records;
+			$this->uicols = $this->so->uicols;
 
 			return $values;
 		}
 
-		public function read_single($data)
+		public function read_single($data=array())
 		{
 			$custom_fields = false;
-			if($GLOBALS['phpgw']->locations->get_attrib_table($appname, $location))
+			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
 				$values = array();
-				$values['attributes'] = $this->custom->find('property',$this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['attributes'] = $this->custom->find('property', $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
 			}
+
 			if(isset($data['id']) && $data['id'])
 			{
 				$values = $this->so->read_single($data, $values);
@@ -152,19 +155,19 @@
 			return $values;
 		}
 
-		public function save($data,$action='')
+		public function save($data,$action='',$values_attribute = array())
 		{
 			if ($action=='edit')
 			{
 				if ($data['id'] != '')
 				{
 
-					$receipt = $this->so->edit($data);
+					$receipt = $this->so->edit($data,$values_attribute);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add($data);
+				$receipt = $this->so->add($data,$values_attribute);
 			}
 
 			return $receipt;

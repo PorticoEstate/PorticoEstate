@@ -52,12 +52,13 @@
 			'delete' => true
 		);
 
-		function property_uicategory()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bocategory',true);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$this->custom				= & $this->bo->custom;
 
 			$this->location_info		= $this->bo->location_info;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
@@ -74,7 +75,6 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-
 		}
 
 		function save_sessiondata()
@@ -99,9 +99,10 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$type}_{$type_id}");
 			$this->save_sessiondata();
 
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "category.index.{$type}";
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$type}";
 
 			$datatable = array();
 
@@ -183,10 +184,13 @@
 			}
 
 			$values = $this->bo->read();
-			$uicols['name'][0]	= 'id';
+			$uicols = $this->bo->uicols;
+
+/*			$uicols['name'][0]	= 'id';
 			$uicols['descr'][0]	= lang('category ID');
 			$uicols['name'][1]	= 'descr';
 			$uicols['descr'][1]	= lang('Descr');
+*/
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -412,39 +416,83 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
-			$id			= phpgw::get_var('id', 'int');
+			$id			= phpgw::get_var('id');
 			$values		= phpgw::get_var('values');
 
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'category.edit.' . $type;
+			$values_attribute  = phpgw::get_var('values_attribute');
+		
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('category'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('category','attributes_form'));
 			$receipt = array();
 
-			if ($values['save'])
+			if (is_array($values))
 			{
-				if(!$id && !ctype_digit($values['id']))
+				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
+				
+				if(is_array($insert_record_values))
 				{
-					$receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
-					unset($values['id']);
+					foreach($insert_record_values as $field)
+					{
+						$values['extra'][$field] = 	phpgw::get_var($field);
+					}
 				}
 
-				if($id)
+				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					$values['id']=$id;
-					$action='edit';
+					if(!$id && !$values['id'] && $this->location_info['id']['type'] !='auto')
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter an id!'));									
+					}
+
+					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
+						unset($values['id']);
+					}
+
+					if(isset($values_attribute) && is_array($values_attribute))
+					{
+						foreach ($values_attribute as $attribute )
+						{
+							if($attribute['nullable'] != 1 && !$attribute['value'])
+							{
+								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+							}
+						}
+					}
+
+					if($id)
+					{
+						$values['id']=$id;
+						$action='edit';
+					}
+					else
+					{
+						$id =	$values['id'];
+					}
+
+					if(!$receipt['error'])
+					{
+						$receipt = $this->bo->save($values,$action,$values_attribute);
+
+						if (isset($values['save']) && $values['save'])
+						{
+							$GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$type}_{$type_id}", $receipt);
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type,	'type_id' => $type_id));
+						}
+						$id = $receipt['id'];
+					}
+					else
+					{
+						unset($values['id']);
+						$id = '';
+					}
+					
 				}
 				else
 				{
-					$id =	$values['id'];
-				}
-
-				if(!$receipt['error'])
-				{
-					$receipt = $this->bo->save($values,$action);
-					if($receipt['error'])
-					{
-						$id = '';
-					}
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type,	'type_id' => $type_id));
 				}
 			}
 
@@ -456,9 +504,17 @@
 			}
 			else
 			{
+				$values = $this->bo->read_single();
 				$function_msg = $this->location_info['add_msg'];
 				$action='add';
 			}
+
+			/* Preserve attribute values from post */
+			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			{
+				$values = $this->custom->preserve_attribute_values($values,$values_attribute);
+			}
+
 
 			$link_data = array
 			(
@@ -468,6 +524,51 @@
 				'type_id'		=> $type_id
 			);
 //_debug_array($link_data);
+
+			$tabs = array();
+
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uiactor.attrib_history',
+							'attrib_id'	=> $attribute['id'],
+							'actor_id'	=> $actor_id,
+							'role'		=> $this->role,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+
+				phpgwapi_yui::tabview_setup('general_edit_tabview');
+				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+
+				$attributes_groups = $this->custom->get_attribute_groups('property', $this->acl_location, $values['attributes']);
+
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+						$group['link'] = str_replace(' ', '_', $group['name']);
+						$attributes[] = $group;
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+			}
+
+			foreach ($this->location_info['fields'] as & $field)
+			{
+				$field['value'] = 	isset($values[$field['name']]) ? $values[$field['name']] : '';
+			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -479,15 +580,27 @@
 				'lang_id'						=> lang('ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'						=> lang('save'),
-				'lang_done'						=> lang('done'),
-				'value_id'						=> $id,
+				'lang_cancel'					=> lang('cancel'),
+				'lang_apply'					=> lang('apply'),
+				'value_id'						=> isset($values['id']) ? $values['id'] : '',
 				'value_descr'					=> $values['descr'],
 				'lang_id_text'					=> lang('Enter the ID'),
 				'lang_descr_text'				=> lang('Enter a description of the record'),
 				'lang_done_text'				=> lang('Back to the list'),
-				'lang_save_text'				=> lang('Save the record')
-			);
+				'lang_save_text'				=> lang('Save the record'),
+				'lang_apply_statustext'			=> lang('Apply the values'),
+				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
+				'lang_save_statustext'			=> lang('Save the actor and return back to the list'),
 
+				'attributes_group'				=> $attributes,
+				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'id_type'						=> $this->location_info['id']['type'],
+				'fields'						=> $this->location_info['fields']
+			);
+//_debug_array($this->location_info['fields']);die();
 			$appname	=  $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
@@ -501,10 +614,7 @@
 				return lang('no access');
 			}
 
-			$type		= phpgw::get_var('type');
-			$type_id	= phpgw::get_var('type_id', 'int');
-			$id			= phpgw::get_var('id', 'int');
-			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+			$id	= phpgw::get_var('id');
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

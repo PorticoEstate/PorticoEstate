@@ -39,7 +39,7 @@
 		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-
+			$this->custom 	= createObject('property.custom_fields');
 			$this->_db		= & $GLOBALS['phpgw']->db;
 			$this->_like	= & $this->_db->like;
 			$this->_join	= & $this->_db->join;
@@ -61,6 +61,51 @@
 			{
 				return $values;
 			}
+
+			$uicols = array();
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'id';
+			$uicols['descr'][]			= lang('id');
+			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
+
+			foreach($this->location_info['fields'] as $field)
+			{
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= $field['name'];
+				$uicols['descr'][]			= $field['descr'];
+				$uicols['datatype'][]		= 'V';
+			}
+			
+			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+			{
+
+				$choice_table = 'phpgw_cust_choice';
+				$attribute_table = 'phpgw_cust_attribute';
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->location_info['acl_location']);
+				$attribute_filter = " location_id = {$location_id}";
+
+				$this->_db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter ORDER BY attrib_sort ASC");
+
+				$i	= count($uicols['name']);
+				while ($this->_db->next_record())
+				{
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= $this->_db->f('column_name');
+					$uicols['descr'][]			= $this->_db->f('input_text');
+					$uicols['statustext'][]		= $this->_db->f('statustext');
+					$uicols['datatype'][$i]		= $this->_db->f('datatype');
+					$uicols['attib_id'][$i]		= $this->_db->f('id');
+					$cols_return_extra[]= array(
+						'name'	=> $this->_db->f('column_name'),
+						'datatype'	=> $this->_db->f('datatype'),
+						'attrib_id'	=> $this->_db->f('id')
+					);
+
+					$i++;
+				}
+			}
+
+			$this->uicols = $uicols;
 
 			if ($order)
 			{
@@ -91,14 +136,27 @@
 				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$cols_return = $uicols['name'];
+			$j=0;
+			$n=count($cols_return);
+
+			$dataset = array();
 			while ($this->_db->next_record())
 			{
-				$values[] = array
-				(
-					'id'	=> $this->_db->f('id'),
-					'descr'	=> $this->_db->f('descr',true)
-				);
+				foreach($cols_return as $key => $field)
+				{
+					$dataset[$j][$field] = array
+					(
+						'value'		=> $this->_db->f($field),
+						'datatype'	=> $uicols['datatype'][$key],
+						'attrib_id'	=> $uicols['attib_id'][$key]
+					);
+				}
+				$j++;				
 			}
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+
 			return $values;
 		}
 
@@ -109,10 +167,21 @@
 			$info = array();
 			switch($type)
 			{
+//-------- ID type integer
 				case 'project_group':
 					$info = array
 					(
 						'table' => 'fm_project_group',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -124,6 +193,16 @@
 					$info = array
 					(
 						'table' => 'fm_ecodimb',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -135,6 +214,16 @@
 					$info = array
 					(
 						'table' => 'fm_ecodimd',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -146,6 +235,16 @@
 					$info = array
 					(
 						'table' => 'fm_ecomva',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -157,6 +256,16 @@
 					$info = array
 					(
 						'table' => 'fm_ecobilag_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -168,6 +277,16 @@
 					$info = array
 					(
 						'table' => 'fm_ecoart',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -179,6 +298,16 @@
 					$info = array
 					(
 						'table' => 'fm_chapter',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -195,6 +324,16 @@
 						$info = array
 						(
 							'table' => "fm_location{$type_id}_category",
+							'id'				=> array('name' => 'id', 'type' => 'int'),
+							'fields'			=> array
+							(
+								array
+								(
+									'name' => 'descr',
+										'descr' => lang('descr'),
+								'type' => 'varchar'
+								)
+							),
 							'edit_msg'	=> lang('edit'),
 							'add_msg'	=> lang('add'),
 							'name'		=> '',
@@ -211,6 +350,16 @@
 					$info = array
 					(
 						'table' => 'fm_owner_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -222,6 +371,16 @@
 					$info = array
 					(
 						'table' => 'fm_tenant_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('tenant category'),
@@ -233,6 +392,16 @@
 					$info = array
 					(
 						'table' => 'fm_vendor_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('vendor category'),
@@ -244,6 +413,16 @@
 					$info = array
 					(
 						'table' => 'fm_district',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('district'),
@@ -255,6 +434,16 @@
 					$info = array
 					(
 						'table' => 'fm_streetaddress',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('streetaddress'),
@@ -266,6 +455,16 @@
 					$info = array
 					(
 						'table' => 'fm_s_agreement_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -277,6 +476,16 @@
 					$info = array
 					(
 						'table' => 'fm_tenant_claim_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -288,6 +497,16 @@
 					$info = array
 					(
 						'table' => 'fm_wo_hours_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -299,6 +518,16 @@
 					$info = array
 					(
 						'table' => 'fm_request_condition_type',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -310,6 +539,16 @@
 					$info = array
 					(
 						'table' => 'fm_r_agreement_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
@@ -321,6 +560,16 @@
 					$info = array
 					(
 						'table' => 'fm_b_account_category',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('budget account'),
@@ -328,22 +577,20 @@
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
 					break;
-/*				case 'branch':
-					$info = array
-					(
-						'table' => 'fm_branch',
-						'edit_msg'	=> lang('edit'),
-						'add_msg'	=> lang('add'),
-						'name'		=> '',
-						'acl_location' => '.admin',
-						'menu_selection'	=>''
-					);
-					break;
-*/
 				case 'ecoorg_unit':
 					$info = array
 					(
 						'table' => 'fm_ecoorg_unit',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
 						'edit_msg'	=> lang('edit unit'),
 						'add_msg'	=> lang('add unit'),
 						'name'		=> lang('Accounting organisation unit'),
@@ -351,8 +598,229 @@
 						'menu_selection' => 'admin::property::accounting::org_unit'
 					);
 					break;
+//-------- ID type varchar
+				case 'workorder_status':
+					$info = array
+					(
+						'table' 			=> 'fm_workorder_status',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('workorder status'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::workorder_status'
+					);
+					break;
+				case 'request_status':
+					$info = array
+					(
+						'table' 			=> 'fm_request_status',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('request status'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::request_status'
+					);
+					break;
+				case 'agreement_status':
+					$info = array
+					(
+						'table' 			=> 'fm_agreement_status',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('agreement status'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::agreement::agreement_status'
+					);
+					break;
+				case 'building_part':
+					$info = array
+					(
+						'table' 			=> 'fm_building_part',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('building part'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::building_part'
+					);
+					break;
+				case 'document_status':
+					$info = array
+					(
+						'table' 			=> 'fm_document_status',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('document status'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::document_status'
+					);
+					break;
+				case 'unit':
+					$info = array
+					(
+						'table' 			=> 'fm_standard_unit',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit unit'),
+						'add_msg'			=> lang('add unit'),
+						'name'				=> lang('unit'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::unit'
+					);
+					break;
+//-------- ID type auto
+				case 'branch':
+					$info = array
+					(
+						'table' 			=> 'fm_branch',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('branch'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::branch'
+					);
+
+					break;
+				case 'key_location':
+					$info = array
+					(
+						'table' 			=> 'fm_key_loc',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('key location'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('branch'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::key_location'
+					);
+
+					break;
+
+				case 'async':
+					$info = array
+					(
+						'table' 			=> 'fm_async_method',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'data',
+								'descr' => lang('data'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('Async services'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::async'
+					);
+					break;
 				default:
-					throw new Exception(lang('ERROR: illegal type %1', $type));
+					$receipt = array();
+					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
+					phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+				//	throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
 			$this->location_info = $info;
@@ -361,10 +829,18 @@
 
 		function read_single($data,$values = array())
 		{
-			$id = (int) $data['id'];
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
+			}
+
+			if($this->location_info['id']['type']=='auto' || $this->location_info['id']['type']=='int')
+			{
+				$id = (int) $data['id'];
+			}
+			else
+			{
+				$id = "'{$data['id']}'";
 			}
 
 			$sql = "SELECT * FROM $table WHERE id={$id}";
@@ -373,17 +849,19 @@
 
 			if ($this->_db->next_record())
 			{
-				$values = array
-				(
-					'id'	=> $this->_db->f('id'),
-					'descr'	=> $this->_db->f('descr', true)
-				);
+				$values['id'] = $this->_db->f($this->location_info['id']['name']);
+
+				// FIXME - add field to $values['attributes']
+				foreach($this->location_info['fields'] as $field)
+				{
+					$values[$field['name']] = $this->_db->f($field['name'], true);
+				}
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
 					foreach ( $values['attributes'] as &$attr )
 					{
-						$attr['value'] 	= $this->db->f($attr['column_name']);
+						$attr['value'] 	= $this->_db->f($attr['column_name']);
 					}
 				}
 			}
@@ -417,7 +895,7 @@
 		}
 
 
-		function add($data)
+		function add($data,$values_attribute)
 		{
 			$receipt = array();
 
@@ -427,24 +905,96 @@
 				return $receipt;
 			}
 
-			$this->_db->query("SELECT id from {$table} WHERE id = {$data['id']}",__LINE__,__FILE__);
-			if($this->_db->next_record())
+			if(isset($data['save']))
 			{
-				$receipt['error'][]=array('msg'=>lang('duplicate key value'));
-				$receipt['error'][]=array('msg'=>lang('record has not been saved'));
-				return $receipt;
+				unset($data['save']);
 			}
-
+			if(isset($data['apply']))
+			{
+				unset($data['apply']);
+			}
+			$cols = array();
+			$vals = array();
+						
 			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
-			$this->_db->query("INSERT INTO $table (id, descr) "
-				. "VALUES ('" . $data['id'] . "','" . $data['descr']. "')",__LINE__,__FILE__);
+			if(isset($data['extra']))
+			{
+				foreach ($data['extra'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
+				}
+			}
+			unset($data['extra']);
 
+			foreach ($data as $input_name => $value)
+			{
+				if(isset($value) && $value)
+				{
+					$cols[] = $input_name;
+					$vals[] = $this->_db->db_addslashes($value);
+				}
+			}
+
+			$data_attribute = $this->custom->prepare_for_db($table, $values_attribute);
+			if(isset($data_attribute['value_set']))
+			{
+				foreach($data_attribute['value_set'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
+				}
+			}
+
+
+			$this->_db->transaction_begin();
+
+			if($this->location_info['id']['type']!='auto')
+			{
+				$this->_db->query("SELECT id FROM {$table} WHERE id = '{$data['id']}'",__LINE__,__FILE__);
+				if($this->_db->next_record())
+				{
+					$receipt['error'][]=array('msg'=>lang('duplicate key value'));
+					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
+					return $receipt;
+				}
+				$id = $data['id'];
+			}
+			else
+			{
+				$id = $this->_db->next_id($table);
+				$cols[] = 'id';
+				$vals[] = $id;
+			}
+
+			$cols	= implode(",", $cols);
+			$vals	= $this->_db->validate_insert($vals);
+
+			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})",__LINE__,__FILE__);
+
+/*			if($this->location_info['id']['type']=='auto')
+			{
+				if(!$data['id'] = $this->_db->get_last_insert_id($table, 'id'))
+				{
+					$this->_db->transaction_abort();				
+					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
+				}
+			}
+*/
+			$this->_db->transaction_commit();
+			$receipt['id'] = $id;
 			$receipt['message'][]=array('msg'=>lang('record has been saved'));
 			return $receipt;
 		}
 
-		function edit($data)
+		function edit($data,$values_attribute)
 		{
 			$receipt = array();
 
@@ -454,11 +1004,45 @@
 				return $receipt;
 			}
 
-			$data['descr'] = $this->_db->db_addslashes($data['descr']);
+			$value_set = array();
 
-			$this->_db->query("UPDATE $table set descr='" . $data['descr']
-							. "' WHERE id='" . $data['id']. "'",__LINE__,__FILE__);
+			if(isset($data['extra']))
+			{
+				foreach ($data['extra'] as $input_name => $value)
+				{
+					$value_set[$input_name] = $value;
+				}
+				unset($data['extra']);
+			}
 
+			$data_attribute = $this->custom->prepare_for_db($table, $values_attribute, $data['id']);
+
+			if(isset($data_attribute['value_set']))
+			{
+				$value_set = array_merge($value_set, $data_attribute['value_set']);
+			}
+			foreach($this->location_info['fields'] as $field)
+			{
+				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
+			}
+
+			$value_set	= $this->_db->validate_update($value_set);
+			$this->_db->transaction_begin();
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE id='" . $data['id']. "'",__LINE__,__FILE__);
+
+/*			//FIXME
+			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
+			{
+				$historylog	= CreateObject('phpgwapi.historylog','property', $this->location_info['acl_location']);
+				foreach ($data_attribute['history_set'] as $attrib_id => $history)
+				{
+					$historylog->add('SO',$data['id'],$history['value'],false, $attrib_id,$history['date']);
+				}
+			}
+*/
+			$this->_db->transaction_commit();
+
+			$receipt['id'] = $data['id'];
 
 			$receipt['message'][]=array('msg'=>lang('record has been edited'));
 			return $receipt;

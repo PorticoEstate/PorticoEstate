@@ -40,6 +40,7 @@
 	 */
 	class property_custom_fields extends phpgwapi_custom_fields
 	{
+
 		/**
 		 * Constructor
 		 *
@@ -226,4 +227,143 @@
 
 			return $values;
 		}
+
+		function prepare_for_db($table, $values_attribute, $id = 0)
+		{	
+			$id = (int)$id;
+			$data = array();
+			if (isset($values_attribute) AND is_array($values_attribute))
+			{
+				foreach($values_attribute as $entry)
+				{
+					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
+					{
+						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						{
+							$entry['value'] = $this->_db->db_addslashes($entry['value']);
+						}
+
+						if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
+						{
+							if($entry['value'] || $entry['value2'])
+							{
+								if($entry['value'] == $entry['value2'])
+								{
+									$data['value_set'][$entry['name']]	= md5($entry['value']);
+								}
+								else
+								{
+									$data['receipt']['error'][]=array('msg'=>lang('Passwords do not match!'));
+								}
+							}
+						}
+						else
+						{
+							$data['value_set'][$entry['name']]	= isset($entry['value'])?$entry['value']:'';
+						}
+					}
+
+					if($entry['history'] == 1)
+					{
+						if($id)
+						{
+							$this->_db->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}",__LINE__,__FILE__);
+							$this->_db->next_record();
+							$old_value = $this->_db->f($entry['name']);
+							if($entry['value'] != $old_value)
+							{
+								$data['history_set'][$entry['attrib_id']] = array
+								('
+									value'	=> $entry['value'],
+									'date'	=> phpgwapi_datetime::date_to_timestamp($entry['date'])
+								);
+							}
+						}
+						else
+						{
+								$data['history_set'][$entry['attrib_id']] = $entry['value'];
+						}
+					}
+				}
+			}
+			return $data;
+		}
+
+		function translate_value($values, $location_id)
+		{
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " location_id = {$location_id}";
+			$contacts = CreateObject('phpgwapi.contacts');
+
+			$j=0;
+			foreach ($values as $row)
+			{
+				foreach ($row as $field => $data)
+				{
+//					$ret[$j][$field] = $this->custom->translate_value($entry, $location_id);
+
+					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'])
+					{
+						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$data['attrib_id']. "  AND id=" . $data['value'];
+						$this->_db->query($sql);
+						$this->_db->next_record();
+						$ret[$j][$field] =  $this->_db->f('value');
+					}
+					else if($data['datatype']=='AB' && $data['value'])
+					{
+						$contact_data	= $contacts->read_single_entry($data['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
+						$ret[$j][$field] =  $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+					}
+					else if($data['datatype']=='VENDOR' && $data['value'])
+					{
+						$sql="SELECT org_name FROM fm_vendor where id={$data['value']}";
+						$this->_db->query($sql);
+						$this->_db->next_record();
+						$ret[$j][$field] =  $this->_db->f('org_name');
+					}
+					else if($data['datatype']=='CH' && $data['value'])
+					{
+						$ch= unserialize($data['value']);
+						if (isset($ch) AND is_array($ch))
+						{
+							for ($k=0;$k<count($ch);$k++)
+							{
+								$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= {$data['attrib_id']} AND id=" . $ch[$k];
+								$this->_db->query($sql);
+								while ($this->_db->next_record())
+								{
+									$ch_value[]=$this->_db->f('value');
+								}
+							}
+							$ret[$j][$field] =  @implode(",", $ch_value);
+							unset($ch_value);
+						}
+					}
+					else if($data['datatype']=='D' && $data['value'])
+					{
+						$ret[$j][$field] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($data['value']));
+					}
+					else if($data['datatype']=='timestamp' && $data['value'])
+					{
+						$ret[$j][$field] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$data['value']);
+					}
+					else if($data['datatype']=='link' && $data['value'])
+					{
+						$ret[$j][$field] =  phpgw::safe_redirect($data['value']);
+					}
+					else if($data['datatype']=='user_id' && $data['value'])
+					{
+						$ret[$j][$field] =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
+					}
+					else
+					{
+						$ret[$j][$field] =  $data['value'];
+					}
+				}
+				$j++;
+			}
+			return $ret;
+		}
+
 	}

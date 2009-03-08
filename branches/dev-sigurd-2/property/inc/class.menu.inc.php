@@ -198,7 +198,7 @@
 					'agreement_status'	=> array
 					(
 						'text'	=> lang('Agreement status'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'agreement_status', 'menu_selection' => 'admin::property::agreement::agreement_status') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'agreement_status') )
 					),
 					'agreement_attribs'	=> array
 					(
@@ -350,12 +350,12 @@
 					'doc_cats'	=> array
 					(
 						'text'	=> lang('document categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.document', 'global_cats' => 'true', 'menu_selection' => 'admin::property::doc_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.document', 'global_cats' => 'true') )
 					),
 					'building_part'	=> array
 					(
 						'text'	=> lang('Building Part'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'building_part') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'building_part') )
 					),
 					'tender'	=> array
 					(
@@ -380,7 +380,7 @@
 					'request_status'	=> array
 					(
 						'text'	=> lang('Request status'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'request_status') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'request_status') )
 					),
 					'request_condition'	=> array
 					(
@@ -390,7 +390,7 @@
 					'workorder_status'	=> array
 					(
 						'text'	=> lang('Workorders status'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'workorder_status') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'workorder_status') )
 					),
 					'project_group'	=> array
 					(
@@ -400,29 +400,29 @@
 					'agreement'	=> array
 					(
 						'text'	=> lang('Agreement'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'agreement_status') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'agreement_status') ),
 						'image'		=> array( 'property', 'agreement' ),
 						'children'	=> $admin_children_agreement
 					),
 					'document_status'	=> array
 					(
 						'text'	=> lang('Document Status'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'document_status', 'menu_selection' => 'admin::property::document_status') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'document_status') )
 					),
 					'unit'	=> array
 					(
 						'text'	=> lang('Unit'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_2.index', 'type' => 'unit', 'menu_selection' => 'admin::property::unit') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'unit') )
 					),
 					'key_location'	=> array
 					(
 						'text'	=> lang('Key location'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_3.index', 'type' => 'key_location') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'key_location') )
 					),
 					'branch'	=> array
 					(
 						'text'	=> lang('Branch'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uistandard_3.index', 'type' => 'branch') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'branch') )
 					),
 					'accounting'	=> array
 					(
