@@ -166,10 +166,10 @@
 						'text'	=> lang('Accounting dim b'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dimb') )
 					),
-					'dimb_cats'	=> array
+					'dimb_roles'	=> array
 					(
-						'text'	=> lang('dimb categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_cats') )
+						'text'	=> lang('dimb roles'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 					),
 					'accounting_dimd'	=> array
 					(
