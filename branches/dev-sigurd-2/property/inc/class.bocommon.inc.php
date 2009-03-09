@@ -717,11 +717,46 @@
 			if($data['project_group'] && (!isset($data['project_group_descr']) || !$data['project_group_descr']))
 			{
 				$project_group_object				= CreateObject('property.socategory');
-				$project_group_data					= $project_group_object->read_single($data['project_group'], 'project_group',false);
+				$project_group_object->get_location_info('project_group',false);
+				$project_group_data					= $project_group_object->read_single(array('id'=> $data['project_group']));
 				$project_group['value_project_group_descr']	= $project_group_data['descr'];
 			}
 
 			return $project_group;
+		}
+
+		function initiate_ecodimb_lookup($data)
+		{
+			$ecodimb = array();
+
+			if( isset($data['type']) && $data['type']=='view')
+			{
+				if(!isset($data['ecodimb']) || !$data['ecodimb'])
+				{
+					return $ecodimb;
+				}
+
+				$GLOBALS['phpgw']->xslttpl->add_file_(array('ecodimb_view'));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_form'));
+			}
+
+			$ecodimb['value_ecodimb']				= $data['ecodimb'];
+			$ecodimb['value_ecodimb_descr']			= $data['ecodimb_descr'];
+			$ecodimb['ecodimb_url']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ecodimb'));
+			$ecodimb['lang_select_ecodimb_help']	= lang('click to select dimd');
+			$ecodimb['lang_ecodimb']				= lang('dimd');
+			if($data['ecodimb'] && (!isset($data['ecodimb_descr']) || !$data['ecodimb_descr']))
+			{
+				$ecodimb_object					= CreateObject('property.socategory');
+				$ecodimb_object->get_location_info('dimb',false);
+				$ecodimb_data					= $ecodimb_object->read_single(array('id'=> $data['ecodimb']));
+				$ecodimb['value_ecodimb_descr']	= $ecodimb_data['descr'];
+			}
+
+			return $ecodimb;
 		}
 
 

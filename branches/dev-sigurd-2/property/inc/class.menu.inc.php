@@ -161,15 +161,20 @@
 						'text'	=> lang('Accounting Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'b_account') )
 					),
-					'accounting_dim_b'	=> array
+					'accounting_dimb'	=> array
 					(
 						'text'	=> lang('Accounting dim b'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_b') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dimb') )
 					),
-					'accounting_dim_d'	=> array
+					'dimb_cats'	=> array
+					(
+						'text'	=> lang('dimb categories'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_cats') )
+					),
+					'accounting_dimd'	=> array
 					(
 						'text'	=> lang('Accounting dim d'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dim_d') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'dimd') )
 					),
 					'accounting_tax'	=> array
 					(

@@ -235,10 +235,22 @@
 		function read_project_group()
 		{
 			$project_group	= CreateObject('property.socategory');
+			$project_group->get_location_info('project_group',false);
 			$values = $project_group->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'type' => 'project_group','allrows'=>$this->allrows));
 
 			$this->total_records = $project_group->total_records;
+
+			return $values;
+		}
+		function read_ecodimb()
+		{
+			$ecodimb	= CreateObject('property.socategory');
+			$ecodimb->get_location_info('dimb',false);
+			$values = $ecodimb->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'allrows'=>$this->allrows));
+
+			$this->total_records = $ecodimb->total_records;
 
 			return $values;
 		}

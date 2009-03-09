@@ -189,7 +189,7 @@
 						'menu_selection' => 'admin::property::project_group'
 					);
 					break;
-				case 'dim_b':
+				case 'dimb':
 					$info = array
 					(
 						'table' => 'fm_ecodimb',
@@ -205,12 +205,12 @@
 						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
-						'name'		=> '',
+						'name'		=> lang('dimb'),
 						'acl_location' => '.admin',
-						'menu_selection' => 'admin::property::accounting::accounting_dim_b'
+						'menu_selection' => 'admin::property::accounting::accounting_dimb'
 					);
 					break;
-				case 'dim_d':
+				case 'dimd':
 					$info = array
 					(
 						'table' => 'fm_ecodimd',
@@ -226,9 +226,9 @@
 						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
-						'name'		=> '',
+						'name'		=> lang('dimd'),
 						'acl_location' => '.admin',
-						'menu_selection' => 'admin::property::accounting::accounting_dim_d'
+						'menu_selection' => 'admin::property::accounting::accounting_dimd'
 					);
 					break;
 				case 'tax':

@@ -673,6 +673,7 @@
 			$id 				= phpgw::get_var('id', 'int');
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');
+			$values['ecodimb']	= phpgw::get_var('ecodimb');
 
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
@@ -1019,6 +1020,13 @@
 						'b_account_name'	=> $values['b_account_name']));
 
 
+
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			
+
+
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uiworkorder.edit',
@@ -1197,7 +1205,7 @@
 
 				'actual_cost'				=> (isset($values['actual_cost'])?$values['actual_cost']:''),
 				'lang_actual_cost'			=> lang('Actual cost'),
-
+				'ecodimb_data'				=> $ecodimb_data,
 				'vendor_data'				=> $vendor_data,
 				'location_data'				=> $location_data,
 				'location_type'				=> 'view',
@@ -1452,6 +1460,11 @@
 						'lookup_type'	=> 'view'
 						));
 
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr'],
+						'type'				=>'view'));
+			
 
 			if($project['contact_phone'])
 			{
@@ -1492,7 +1505,7 @@
 				'lang_vendor'				=> lang('Vendor'),
 				'value_vendor_id'			=> $values['vendor_id'],
 				'value_vendor_name'			=> $values['vendor_name'],
-
+				'ecodimb_data'				=> $ecodimb_data,
 				'lang_b_account'			=> lang('Budget account'),
 				'value_b_account_id'			=> $values['b_account_id'],
 				'value_b_account_name'			=> $values['b_account_name'],

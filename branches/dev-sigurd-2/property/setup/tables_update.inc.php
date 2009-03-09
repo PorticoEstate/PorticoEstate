@@ -3053,28 +3053,14 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw']->locations->add('.invoice.org_unit', 'Accounting organisation unit', 'property', $allow_grant = false, $custom_tbl = 'fm_ecoorg_unit', $c_function = false);
-
+		$GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','ecodimb',array('type' => 'int','precision' => 4,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','name',array('type' => 'varchar','precision' => '100','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','descr',array('type' => 'text','nullable' => True));
 
-
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'fm_ecoorg_unit', array(
-				'fd' => array(
-					'id' => array('type' => 'int','precision' => '4','nullable' => False),
-					'descr' => array('type' => 'varchar','precision' => '255','nullable' => True)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
-			)
-		);
-
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.552';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.553';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

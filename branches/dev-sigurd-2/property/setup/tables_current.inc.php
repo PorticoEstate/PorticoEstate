@@ -1040,16 +1040,6 @@
 			'fk' => array(),
 			'uc' => array()
 		),
-		'fm_ecoorg_unit' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => True)
-			),
-			'pk' => array('id'),
-			'ix' => array(),
-			'fk' => array(),
-			'uc' => array()
-		),
 		'fm_request_condition_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
