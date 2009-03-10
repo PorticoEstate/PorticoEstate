@@ -736,7 +736,7 @@
 					return $ecodimb;
 				}
 
-				$GLOBALS['phpgw']->xslttpl->add_file_(array('ecodimb_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_view'));
 			}
 			else
 			{

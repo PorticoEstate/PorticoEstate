@@ -670,7 +670,7 @@
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
 			$config				= CreateObject('phpgwapi.config');
-			$id 				= phpgw::get_var('id', 'int');
+			$id 				= phpgw::get_var('id'); // in case of bigint
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');
 			$values['ecodimb']	= phpgw::get_var('ecodimb');
@@ -1366,7 +1366,7 @@
 		function delete()
 		{
 
-			$id = phpgw::get_var('id', 'int');
+			$id = phpgw::get_var('id');
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -1426,7 +1426,7 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
-			$id	= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
 

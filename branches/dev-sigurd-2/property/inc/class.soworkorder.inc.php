@@ -464,9 +464,8 @@
 			return $workorder_list;
 		}
 
-		function read_single($workorder_id)
+		function read_single($workorder_id = 0)
 		{
-			$workorder_id = (int) $workorder_id;
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
