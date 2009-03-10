@@ -417,7 +417,7 @@
 									<tr>
 										<td align="left" >
 											<xsl:variable name="link_request"><xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
-											<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+											<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
 											<xsl:text> </xsl:text>
 										</td>
 									</tr>
@@ -512,9 +512,6 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_finnish_date_statustext"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
@@ -527,10 +524,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[subject]" value="{value_subject}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_subject_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_subject_statustext"/>
 						</xsl:attribute>
 					</input>
 
@@ -827,7 +822,7 @@
 							<xsl:for-each select="data">
 								<tr>
 									<td class="th_text"  align="left" >
-										<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+										<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="id"/></a>
 										<xsl:text> </xsl:text>
 									</td>
 								</tr>
@@ -902,7 +897,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
@@ -1026,9 +1021,6 @@
 					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_finnish_date_statustext"/>
-						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
 					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
@@ -1298,7 +1290,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
