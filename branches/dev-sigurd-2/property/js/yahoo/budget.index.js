@@ -90,7 +90,7 @@
 
 			//Create ROW
 			newTR = document.createElement('tr');
-			td_empty(7);
+			td_empty(9);
 			td_sum(tmp_sum);
 
 			//Add to Table

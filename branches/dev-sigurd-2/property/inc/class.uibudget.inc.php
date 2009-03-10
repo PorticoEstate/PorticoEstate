@@ -278,21 +278,25 @@
 			$location_list = $this->bo->read();
 			$uicols = array (
 				array(
-					'visible'=>false,	'name'=>budget_id,		'label'=>'dummy',				'className'=>'',			'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>false,	'name'=>'budget_id',		'label'=>'dummy',				'className'=>'',			'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>year,			'label'=>lang('year'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'year',			'label'=>lang('year'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>revision,		'label'=>lang('revision'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'revision',		'label'=>lang('revision'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>b_account_id,	'label'=>lang('budget account'),'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'b_account_id',	'label'=>lang('budget account'),'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>b_account_name,	'label'=>lang('name'),			'className'=>'leftClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'b_account_name',	'label'=>lang('name'),			'className'=>'leftClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>grouping,		'label'=>lang('grouping'),		'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'category',	'formatter'=>''),
+					'visible'=>true,	'name'=>'grouping',		'label'=>lang('grouping'),		'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'category',	'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>district_id,	'label'=>lang('district_id'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'district_id','formatter'=>''),
+					'visible'=>true,	'name'=>'district_id',	'label'=>lang('district_id'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'district_id','formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>budget_cost,	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
+					'visible'=>true,	'name'=>'ecodimb',	'label'=>lang('dimb'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.ecodimb','formatter'=>''),
+				array(
+					'visible'=>true,	'name'=>'cat_id',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.category','formatter'=>''),
+				array(
+					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
 			);			
 
 			$content = array();
@@ -330,7 +334,7 @@
 				'parameters'	=> $parameters
 			);
 			
-			if($this->acl_add)
+			if($acl_add)
 			{
 				$datatable['rowactions']['action'][] = array(
 					'my_name'		=> 'add',
@@ -661,17 +665,21 @@
 
 			$uicols = array (
 				array(
-					'visible'=>false,	'name'=>budget_id,		'label'=>'dummy',				'className'=>'',			'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>false,	'name'=>'budget_id',		'label'=>'dummy',				'className'=>'',			'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>year,			'label'=>lang('year'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'year',			'label'=>lang('year'),			'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>revision,		'label'=>lang('revision'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'visible'=>true,	'name'=>'revision',		'label'=>lang('revision'),		'className'=>'centerClasss','sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>grouping,		'label'=>lang('grouping'),		'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'b_group',	'formatter'=>''),
+					'visible'=>true,	'name'=>'grouping',		'label'=>lang('grouping'),		'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'b_group',	'formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>district_id,	'label'=>lang('district_id'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'district_id','formatter'=>''),
+					'visible'=>true,	'name'=>'district_id',	'label'=>lang('district_id'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'district_id','formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>budget_cost,	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate)
+					'visible'=>true,	'name'=>'ecodimb',	'label'=>lang('dimb'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.ecodimb','formatter'=>''),
+				array(
+					'visible'=>true,	'name'=>'cat_id',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.category','formatter'=>''),
+				array(
+					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
 				);			
 
 			$content = array();
@@ -709,7 +717,7 @@
 				'parameters'	=> $parameters
 			);
 			
-			if($this->acl_add)
+			if($acl_add)
 			{
 				$datatable['rowactions']['action'][] = array(
 					'my_name'		=> 'add',
@@ -1234,6 +1242,7 @@
 			{
 				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+				$values['ecodimb']			= phpgw::get_var('ecodimb');
 
 				if(!$values['b_account_id'] > 0)
 				{
@@ -1299,8 +1308,16 @@
 						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:'',
 						'type'			=> isset($values['b_account_id']) && $values['b_account_id'] > 0 ?'view':'form'));
 
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			
 			$data = array
 			(
+				'ecodimb_data'						=>	$ecodimb_data,
+				'lang_category'						=> lang('category'),
+				'lang_no_cat'						=> lang('Select category'),
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 				'b_account_data'			=> $b_account_data,
 				'value_b_account'			=> $values['b_account_id'],
 				'lang_revision'				=> lang('revision'),
@@ -1362,6 +1379,8 @@
 
 			if ((isset($values['save']) && $values['save'])|| (isset($values['apply']) && $values['apply']))
 			{
+				$values['ecodimb']	= phpgw::get_var('ecodimb');
+
 				if(!$values['b_group'] && !$budget_id)
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a budget group !'));
@@ -1427,55 +1446,62 @@
 			$year[2]['id'] = date(Y) +2;
 			$year[3]['id'] = date(Y) +3;
 
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			
+
 			$data = array
 			(
-				'lang_distribute'			=> lang('distribute'),
-				'lang_distribute_year'			=> lang('distribute year'),
+				'ecodimb_data'						=>	$ecodimb_data,
+				'lang_category'						=> lang('category'),
+				'lang_no_cat'						=> lang('Select category'),
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
+				'lang_distribute'					=> lang('distribute'),
+				'lang_distribute_year'				=> lang('distribute year'),
 				'lang_distribute_year_statustext'	=> lang('of years'),
-				'distribute_year_list'			=> $this->bo->get_distribute_year_list($values['distribute_year']),
+				'distribute_year_list'				=> $this->bo->get_distribute_year_list($values['distribute_year']),
 
-				'lang_revision'				=> lang('revision'),
-				'lang_revision_statustext'		=> lang('Select revision'),
-				'revision_list'				=> $this->bo->get_revision_list($revision),
+				'lang_revision'						=> lang('revision'),
+				'lang_revision_statustext'			=> lang('Select revision'),
+				'revision_list'						=> $this->bo->get_revision_list($revision),
 
-				'lang_b_group'				=> lang('budget group'),
-				'lang_b_group_statustext'		=> lang('Select budget group'),
-				'b_group_list'				=> $this->bo->get_b_group_list($b_group),
+				'lang_b_group'						=> lang('budget group'),
+				'lang_b_group_statustext'			=> lang('Select budget group'),
+				'b_group_list'						=> $this->bo->get_b_group_list($b_group),
 
-				'lang_year'				=> lang('year'),
-				'lang_year_statustext'			=> lang('Budget year'),
-				'year'					=> $this->bocommon->select_list($year_selected,$year),
+				'lang_year'							=> lang('year'),
+				'lang_year_statustext'				=> lang('Budget year'),
+				'year'								=> $this->bocommon->select_list($year_selected,$year),
 
-				'lang_district'				=> lang('District'),
-				'lang_no_district'			=> lang('no district'),
-				'lang_district_statustext'		=> lang('Select the district'),
-				'select_district_name'			=> 'values[district_id]',
-				'district_list'				=> $this->bocommon->select_district_list('select',$district_id),
+				'lang_district'						=> lang('District'),
+				'lang_no_district'					=> lang('no district'),
+				'lang_district_statustext'			=> lang('Select the district'),
+				'select_district_name'				=> 'values[district_id]',
+				'district_list'						=> $this->bocommon->select_district_list('select',$district_id),
 
-				'value_year'				=> $values['year'],
-				'value_district_id'			=> $values['district_id'],
-				'value_b_group'				=> $values['b_group'],
-				'value_revision'			=> $values['revision'],
+				'value_year'						=> $values['year'],
+				'value_district_id'					=> $values['district_id'],
+				'value_b_group'						=> $values['b_group'],
+				'value_revision'					=> $values['revision'],
 
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_budget_id'			=> lang('ID'),
-				'value_budget_id'			=> $budget_id,
-				'value_distribute_id'			=> $budget_id?$budget_id:'new',
-				'lang_budget_cost'			=> lang('budget cost'),
-				'lang_remark'				=> lang('remark'),
-				'lang_save'				=> lang('save'),
-				'lang_cancel'				=> lang('cancel'),
-				'lang_apply'				=> lang('apply'),
-				'value_remark'				=> $values['remark'],
-				'value_budget_cost'			=> $values['budget_cost'],
-				'lang_name_statustext'			=> lang('Enter a name for the query'),
-				'lang_remark_statustext'		=> lang('Enter a remark'),
-				'lang_apply_statustext'			=> lang('Apply the values'),
-				'lang_cancel_statustext'		=> lang('Leave the budget untouched and return to the list'),
-				'lang_save_statustext'			=> lang('Save the budget and return to the list'),
-
-
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'edit_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_budget_id'					=> lang('ID'),
+				'value_budget_id'					=> $budget_id,
+				'value_distribute_id'				=> $budget_id?$budget_id:'new',
+				'lang_budget_cost'					=> lang('budget cost'),
+				'lang_remark'						=> lang('remark'),
+				'lang_save'							=> lang('save'),
+				'lang_cancel'						=> lang('cancel'),
+				'lang_apply'						=> lang('apply'),
+				'value_remark'						=> $values['remark'],
+				'value_budget_cost'					=> $values['budget_cost'],
+				'lang_name_statustext'				=> lang('Enter a name for the query'),
+				'lang_remark_statustext'			=> lang('Enter a remark'),
+				'lang_apply_statustext'				=> lang('Apply the values'),
+				'lang_cancel_statustext'			=> lang('Leave the budget untouched and return to the list'),
+				'lang_save_statustext'				=> lang('Save the budget and return to the list'),
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . ($budget_id?lang('edit budget'):lang('add budget'));
 

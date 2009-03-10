@@ -477,7 +477,8 @@
 				'integration' => array('type' => 'int','precision' => '4','nullable' => True),
 				'charge_tenant' => array('type' => 'int','precision' => '2','nullable' => True),
 				'claim_issued' => array('type' => 'int','precision' => '2','nullable' => True),
-				'paid' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '1')
+				'paid' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '1'),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1852,7 +1853,9 @@
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'budget_cost' => array('type' => 'int', 'precision' => 4,'default' => '0','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
-				'distribute_year' => array('type' => 'text','nullable' => True)
+				'distribute_year' => array('type' => 'text','nullable' => True),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'category'=> array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1870,7 +1873,9 @@
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'budget_cost' => array('type' => 'int', 'precision' => 4,'default' => '0','nullable' => True),
-				'remark' => array('type' => 'text','nullable' => True)
+				'remark' => array('type' => 'text','nullable' => True),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'category'=> array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
