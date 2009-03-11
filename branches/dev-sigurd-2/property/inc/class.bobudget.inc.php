@@ -58,12 +58,9 @@
 
 		function property_bobudget($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('property.sobudget');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
-			$this->cats->supress_info	= true;
+			$this->so 					= CreateObject('property.sobudget');
+			$this->bocommon 			= CreateObject('property.bocommon');
+			$this->cats					= & $this->so->cats;
 
 			if ($session)
 			{
@@ -77,6 +74,7 @@
 			$order					= phpgw::get_var('order');
 			$filter					= phpgw::get_var('filter', 'int');
 			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$dimb_id				= phpgw::get_var('dimb_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$year					= phpgw::get_var('year', 'int');
@@ -91,6 +89,7 @@
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : '';
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
 			$this->grouping			= isset($grouping) && $grouping ? $grouping : '';
@@ -124,6 +123,7 @@
 			$this->sort				= isset($data['sort'])?$data['sort']:'';
 			$this->order			= isset($data['order'])?$data['order']:'';;
 			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->dimb_id			= isset($data['dimb_id'])?$data['dimb_id']:'';
 			$this->details			= isset($data['details'])?$data['details']:'';
 		}
 
@@ -137,14 +137,18 @@
 		{
 			$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 							'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
-							'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));
+							'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
+							'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id));
 
 			$this->total_records = $this->so->total_records;
 
-			for ($i=0; $i<count($budget); $i++)
+			foreach ($budget as & $entry)
 			{
-				$budget[$i]['entry_date']  = $GLOBALS['phpgw']->common->show_date($budget[$i]['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+//				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$category = $this->cats->return_single($entry['cat_id']);
+				$entry['category']		=$category[0]['name'];
 			}
+
 			return $budget;
 		}
 

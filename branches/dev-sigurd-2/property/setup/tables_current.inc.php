@@ -1867,7 +1867,7 @@
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'year' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'b_account_id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'district_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'district_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'revision' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'access' => array('type' => 'varchar','precision' => '7','nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),

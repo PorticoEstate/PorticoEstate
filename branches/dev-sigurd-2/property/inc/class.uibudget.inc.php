@@ -71,6 +71,7 @@
 			$this->order		= $this->bo->order;
 			$this->filter		= $this->bo->filter;
 			$this->cat_id		= $this->bo->cat_id;
+			$this->dimb_id		= $this->bo->dimb_id;
 			$this->allrows		= $this->bo->allrows;
 			$this->district_id	= $this->bo->district_id;
 			$this->year			= $this->bo->year;
@@ -92,6 +93,7 @@
 				'order'			=> $this->order,
 				'filter'		=> $this->filter,
 				'cat_id'		=> $this->cat_id,
+				'dimb_id'		=> $this->dimb_id,
 				'allrows'		=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
@@ -127,6 +129,7 @@
 							'sort'			=>$this->sort,
 							'order'			=>$this->order,
 							'cat_id'		=>$this->cat_id,
+							'dimb_id'		=>$this->dimb_id,
 							'filter'		=>$this->filter,
 							'query'			=>$this->query,
 							'district_id'	=>$this->district_id,
@@ -140,6 +143,7 @@
 	    											."sort:'{$this->sort}',"
 	    											."order:'{$this->order}',"
  	                        						."cat_id: '{$this->cat_id}',"
+ 	                        						."dimb_id: '{$this->dimb_id}',"
  	                        						."filter:'{$this->filter}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."district_id:'{$this->district_id}',"
@@ -184,6 +188,18 @@
 					$values_combo_box[3][] = $default_value;
 				}
 
+				$values_combo_box[4] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[4]['cat_list'],$default_value);
+
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+			  	if(count($values_combo_box[5]))
+				{
+					$default_value = array ('id'=>'','name'=>lang('no dimb'));
+					array_unshift ($values_combo_box[5],$default_value);
+				}
+
+
 				$datatable['actions']['form'] = array(
 					array(
 						'action'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -225,19 +241,35 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 4
 			                                        ),
+			                                        array( //boton 	GROUPING
+			                                            'id' 		=> 'btn_cat_id',
+			                                            'name' 		=> 'cat_id',
+			                                            'value'		=> lang('category'),
+			                                            'type' 		=> 'button',
+			                                            'style' 	=> 'filter',
+			                                            'tab_index' => 5
+			                                        ),
+			                                        array( //boton 	GROUPING
+			                                            'id' 		=> 'btn_dimb_id',
+			                                            'name' 		=> 'dimb_id',
+			                                            'value'		=> lang('dimb'),
+			                                            'type' 		=> 'button',
+			                                            'style' 	=> 'filter',
+			                                            'tab_index' => 6
+			                                        ),
 			                                        array( //boton     add
 			                                            'id' 		=> 'btn_new',
 			                                            'name' 		=> 'new',
 			                                            'value'    	=> lang('add'),
 			                                            'type' 		=> 'button',
-			                                            'tab_index' => 7
+			                                            'tab_index' => 9
 			                                        ),
 			                                        array( //boton     SEARCH
 			                                            'id' 		=> 'btn_search',
 			                                            'name' 		=> 'search',
 			                                            'value'    	=> lang('search'),
 			                                            'type' 		=> 'button',
-			                                            'tab_index' => 6
+			                                            'tab_index' => 8
 			                                        ),
 			   										 array( // TEXT IMPUT
 			                                            'name'     	=> 'query',
@@ -246,7 +278,7 @@
 			                                            'type' 		=> 'text',
 			                                            'size'    	=> 28,
 			                                            'onkeypress'=> 'return pulsar(event)',
-	                                    				'tab_index' => 5
+	                                    				'tab_index' => 7
 			                                        )
 		                           				),
 		                       		'hidden_value' => array(
@@ -265,6 +297,14 @@
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+							                                      ),
+						                                    array( //div values  combo_box_4
+								                                        'id' => 'values_combo_box_4',
+								                                        'value'	=> $this->bocommon->select2String($values_combo_box[4]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								                                 ),
+							                                array( //div values  combo_box_5
+							                                            'id' => 'values_combo_box_5',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[5])
 							                                      )
 		                       								)
 												)
@@ -294,7 +334,7 @@
 				array(
 					'visible'=>true,	'name'=>'ecodimb',	'label'=>lang('dimb'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.ecodimb','formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>'cat_id',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.category','formatter'=>''),
+					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
 			);			
@@ -677,7 +717,7 @@
 				array(
 					'visible'=>true,	'name'=>'ecodimb',	'label'=>lang('dimb'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.ecodimb','formatter'=>''),
 				array(
-					'visible'=>true,	'name'=>'cat_id',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'fm_budget.category','formatter'=>''),
+					'visible'=>true,	'name'=>'category',	'label'=>lang('category'),	'className'=>'rightClasss', 'sortable'=>false,	'sort_field'=>'','formatter'=>''),
 				array(
 					'visible'=>true,	'name'=>'budget_cost',	'label'=>lang('budget_cost'),	'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'budget_cost','formatter'=>myFormatDate),
 				);			
@@ -1252,7 +1292,7 @@
 
 				if(!$values['district_id'] && !$budget_id > 0)
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select a district !'));
+		//			$receipt['error'][]=array('msg'=>lang('Please select a district !'));
 				}
 
 				if(!$values['budget_cost'])

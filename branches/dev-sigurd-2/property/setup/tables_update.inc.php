@@ -3062,6 +3062,8 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','name',array('type' => 'varchar','precision' => '100','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','descr',array('type' => 'text','nullable' => True));
 
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget','district_id',array('type' => 'int','precision' => 4,'nullable' => True));
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.553';

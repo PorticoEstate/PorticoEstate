@@ -36,11 +36,39 @@
 	{
 		function __construct()
 		{
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.project';
+			$this->cats->supress_info	= true;
+
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
+
+
+		/**
+		 * Get a list of categories , included subs
+		 *
+		 * @param int $cat_id the parent doc-type
+		 * @return array parent and children
+		 */
+
+		function get_sub_cats($cat_id = 0)
+		{
+			$cat_ids = array();
+			if($cat_id)
+			{
+				$cat_ids[] = $cat_id;
+				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $cat_id);
+				foreach ($cat_sub as $category)
+				{
+					$cat_ids[] = $category['id'];
+				}
+			}
+			return $cat_ids;
+		}
+
 
 		function read($data)
 		{
@@ -56,7 +84,12 @@
 				$year			= isset($data['year']) && $data['year'] ? (int) $data['year'] : 0;
 				$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
 				$revision		= isset($data['revision']) ? $data['revision'] : '';
+				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']: 0;
+				$dimb_id			= isset($data['dimb_id']) && $data['dimb_id'] ? $data['dimb_id']: 0;
 			}
+
+			$cat_ids = $this->get_sub_cats($cat_id);
+
 
 			if ($order)
 			{
@@ -95,10 +128,22 @@
 
 			}
 
+			if ($cat_ids && is_array($cat_ids))
+			{
+				$filtermethod .= " $where fm_budget.category IN (". implode(',', $cat_ids) . ')';
+				$where = 'AND';
+			}
+
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where fm_budget.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( descr $this->like '%$query%')";
+				$querymethod = " $where ( descr $this->like '%$query%') OR fm_budget.b_account_id='$query'";
 			}
 
 
@@ -375,7 +420,12 @@
 
 			$this->db->transaction_begin();
 
-			$sql = "SELECT id FROM fm_budget WHERE year ='" . $budget['year'] . "'  AND b_account_id ='" . $budget['b_account_id'] . "' AND revision = '" . $budget['revision'] . "' AND district_id='" . $budget['district_id'] . "'";
+			if($budget['district_id'])
+			{
+				$district_filter =  "AND district_id='{$budget['district_id']}";
+			}
+			$sql = "SELECT id FROM fm_budget WHERE year ='{$budget['year']}' AND b_account_id ='{$budget['b_account_id']}' AND revision = '{$budget['revision']}' {$district_filter}";
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			if($this->db->next_record())

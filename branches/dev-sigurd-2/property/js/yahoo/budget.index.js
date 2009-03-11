@@ -3,12 +3,14 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
 	 	var selectsButtons = [
 		{order:0, var_URL:'year',			name:'btn_year',			style:'',dependiente:[1,3]},
 		{order:1, var_URL:'revision',		name:'btn_revision',		style:'',dependiente:[]},
 		{order:2, var_URL:'district_id',	name:'btn_district_id',		style:'',dependiente:[]},
-		{order:3, var_URL:'grouping',		name:'btn_grouping',		style:'',dependiente:[]}
+		{order:3, var_URL:'grouping',		name:'btn_grouping',		style:'',dependiente:[]},
+		{order:4, var_URL:'cat_id',			name:'btn_cat_id',			style:'',dependiente:[]},
+		{order:5, var_URL:'dimb_id',		name:'btn_dimb_id',			style:'',dependiente:[]}
 		]
 
 		// define buttons
