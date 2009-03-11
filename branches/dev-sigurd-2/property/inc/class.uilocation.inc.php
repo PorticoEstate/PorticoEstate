@@ -191,6 +191,7 @@
 			$lookup_name 	= phpgw::get_var('lookup_name');
 			// use in option menu TENANT
 			$lookup_tenant 	= phpgw::get_var('lookup_tenant', 'bool');
+			$block_query	= phpgw::get_var('block_query', 'bool');
 			$dry_run=false;
 
 			if(!$type_id)
@@ -299,36 +300,36 @@
 						'fields'	=> array(
                                     'field' => array(
 			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 1
+														'id' => 'btn_cat_id',
+														'name' => 'cat_id',
+														'value'	=> lang('Category'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 1
 			                                        ),
 			                                        array( //boton 	DISTINT
-			                                            'id' => 'btn_district_id',
-			                                            'name' => 'district_id',
-			                                            'value'	=> lang('District'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 2
+														'id' => 'btn_district_id',
+														'name' => 'district_id',
+														'value'	=> lang('District'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 2
 			                                        ),
 			                                        array( //boton 	PART OF TOWN
-			                                            'id' => 'btn_part_of_town_id',
-			                                            'name' => 'part_of_town_id',
-			                                            'value'	=> lang('Part of Town'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 3
+														'id' => 'btn_part_of_town_id',
+														'name' => 'part_of_town_id',
+														'value'	=> lang('Part of Town'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 3
 			                                        ),
 			                                        array( //boton 	FILTER
-			                                            'id' => 'btn_owner_id',
-			                                            'name' => 'owner_id',
-			                                            'value'	=> lang('Filter'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 4
+														'id' => 'btn_owner_id',
+														'name' => 'owner_id',
+														'value'	=> lang('Filter'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 4
 			                                        ),
 						                            //for link "columns", next to Export button
 										           array(
@@ -350,28 +351,6 @@
 						                                'value'	=> lang('download'),
 						                                'tab_index' => 8
 						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add'),
-						                                'tab_index' => 7
-						                            ),
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 6
-			                                        ),
-			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => $this->query,//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 5
-			                                        ),
 													array( //hidden type_id
 						                                'type'	=> 'hidden',
 						                            	'id'	=> 'type_id',
@@ -380,28 +359,61 @@
 		                           				),
 		                       		'hidden_value' => array(
 					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+																		'id' => 'values_combo_box_0',
+																		'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
 							                                      ),
 							                                array( //div values  combo_box_1
-							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+																		'id' => 'values_combo_box_1',
+																		'value'	=> $this->bocommon->select2String($values_combo_box[1])
 							                                      ),
 															 array( //div values  combo_box_2
-							                                            'id' => 'values_combo_box_2',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+																		'id' => 'values_combo_box_2',
+																		'value'	=> $this->bocommon->select2String($values_combo_box[2])
 							                                      ),
 							                                array( //div values  combo_box_3
-							                                            'id' => 'values_combo_box_3',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+																		'id' => 'values_combo_box_3',
+																		'value'	=> $this->bocommon->select2String($values_combo_box[3])
 							                                      )
 		                       								)
 												)
 										  )
 				);
-				//cramirez: $dry_run is use "$this->bo->read"
-				$dry_run=true;
 
+				if(!$block_query)
+				{	
+			        $datatable['actions']['form'][0]['fields']['field'][] =  array
+													(
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 6
+			                                        );
+			                                        
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+													(
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => $this->query,//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
+	                                    				'tab_index' => 5
+			                                        );
+				}
+
+				if(!$lookup)
+				{
+					$datatable['actions']['form'][0]['fields']['field'][] =  array
+													(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_new',
+						                                'value'	=> lang('add'),
+						                                'tab_index' => 7
+						                            );
+				}
+
+				$dry_run=true;
 			}
 
 			$location_list = array();
@@ -599,15 +611,6 @@
 			// for POP-UPs
 			if($lookup)
 			{
-				$i++;
-				$datatable['headers']['header'][$i]['width'] 			= '5%';
-				$datatable['headers']['header'][$i]['align'] 			= 'center';
-				$datatable['headers']['header'][$i]['name']				= 'select_record';
-				$datatable['headers']['header'][$i]['text']				= lang('select');
-				$datatable['headers']['header'][$i]['format'] 			= 'form';
-				$datatable['headers']['header'][$i]['sortable']			= false;
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['formatter']		= '""';
 				$input_name		= $GLOBALS['phpgw']->session->appsession('lookup_fields','property');
 
 				$function_exchange_values = '';
@@ -1932,28 +1935,28 @@
 					'fields'	=> array(
 	                                    'field' => array(
 				                                        array( //boton 	CATEGORY
-				                                            'id' => 'btn_district_id',
-				                                            'name' => 'district_id',
-				                                            'value'	=> lang('district'),
-				                                            'type' => 'button',
-				                                            'style' => 'filter',
-				                                            'tab_index' => 1
+															'id' => 'btn_district_id',
+															'name' => 'district_id',
+															'value'	=> lang('district'),
+															'type' => 'button',
+															'style' => 'filter',
+															'tab_index' => 1
 				                                        ),
 				                                        array( //boton 	STATUS
-				                                            'id' => 'btn_part_of_town_id',
-				                                            'name' => 'part_of_town_id',
-				                                            'value'	=> lang('part of town'),
-				                                            'type' => 'button',
-				                                            'style' => 'filter',
-				                                            'tab_index' => 2
+															'id' => 'btn_part_of_town_id',
+															'name' => 'part_of_town_id',
+															'value'	=> lang('part of town'),
+															'type' => 'button',
+															'style' => 'filter',
+															'tab_index' => 2
 				                                        ),
 				                                        array( //boton 	HOUR CATEGORY
-				                                            'id' => 'btn_owner_id',
-				                                            'name' => 'owner_id',
-				                                            'value'	=> lang('owner'),
-				                                            'type' => 'button',
-				                                            'style' => 'filter',
-				                                            'tab_index' => 3
+															'id' => 'btn_owner_id',
+															'name' => 'owner_id',
+															'value'	=> lang('owner'),
+															'type' => 'button',
+															'style' => 'filter',
+															'tab_index' => 3
 				                                        ),
 														array(
 							                                'type'	=> 'button',
@@ -1964,16 +1967,16 @@
 			                           				),
 			                       		'hidden_value' => array(
 						                                        array( //div values  combo_box_0
-								                                            'id' => 'values_combo_box_0',
-								                                            'value'	=> $this->bocommon->select2String($values_combo_box[0])
+																			'id' => 'values_combo_box_0',
+																			'value'	=> $this->bocommon->select2String($values_combo_box[0])
 								                                      ),
 								                                array( //div values  combo_box_1
-								                                            'id' => 'values_combo_box_1',
-								                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+																			'id' => 'values_combo_box_1',
+																			'value'	=> $this->bocommon->select2String($values_combo_box[1])
 								                                      ),
 																 array( //div values  combo_box_2
-								                                            'id' => 'values_combo_box_2',
-								                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+																			'id' => 'values_combo_box_2',
+																			'value'	=> $this->bocommon->select2String($values_combo_box[2])
 								                                      )
 			                       								)
 										)

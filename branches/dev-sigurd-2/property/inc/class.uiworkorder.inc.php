@@ -719,9 +719,22 @@
 					);
 			}
 
-
 			if (isset($values['save']))
 			{
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				if(is_array($insert_record))
+				{
+					$values = $this->bocommon->collect_locationdata($values,$insert_record);
+				}
+
 				if(!$values['title'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a workorder title !'));
@@ -989,15 +1002,36 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-
-			$location_data=$bolocation->initiate_ui_location(array(
+			if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+			{
+				$admin_location = & $bolocation->soadmin_location;
+				$location_types	= $admin_location->select_location_type();
+				$max_level = 4;//count($location_types);
+			
+				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
+				$location_template_type='form';
+				$location_data=$bolocation->initiate_ui_location(array(
+						'values'		=> isset($project['location_data'])?$project['location_data']:'',
+						'type_id'		=> $max_level,
+						'no_link'		=> false, // disable lookup links for location type less than type_id
+						'tenant'		=> false,
+						'block_parent' 	=> $location_level,
+						'lookup_type'	=> $location_template_type,
+						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
+						'entity_data'	=> (isset($values['p'])?$values['p']:'')
+						));
+			}
+			else
+			{
+				$location_template_type='view';
+				$location_data=$bolocation->initiate_ui_location(array(
 						'values'		=> (isset($project['location_data'])?$project['location_data']:''),
 						'type_id'		=> (isset($project['location_data']['location_code'])?count(explode('-',$project['location_data']['location_code'])):''),
 						'no_link'		=> false, // disable lookup links for location type less than type_id
 						'tenant'		=> (isset($project['location_data']['tenant_id'])?$project['location_data']['tenant_id']:''),
 						'lookup_type'		=> 'view'
 						));
-
+			}
 
 			if(isset($project['contact_phone']))
 			{
@@ -1208,7 +1242,7 @@
 				'ecodimb_data'				=> $ecodimb_data,
 				'vendor_data'				=> $vendor_data,
 				'location_data'				=> $location_data,
-				'location_type'				=> 'view',
+				'location_template_type'	=> $location_template_type,
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 				'lang_year'				=> lang('Year'),

@@ -263,7 +263,7 @@
 				}
 			}
 
-			$location_link		= "menuaction:'". 'property'.".uilocation.index',lookup:1";
+			$location_link		= "menuaction:'property.uilocation.index',lookup:1,query:'{$data['values']['location_code']}',block_query:1";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -276,7 +276,7 @@
 			{
 				$data['type_id'] = count($location_types);
 			}
-//_debug_array($data);
+//_debug_array($data);die();
 //_debug_array($location_types);
 			$fm_location_cols = array();
 			for ($i=1;$i<($data['type_id']+1);$i++)
@@ -325,9 +325,16 @@
 				$location['location'][$i]['lookup_function_call']			= 'lookup_loc' . ($i+1) . '()';
 				$location['location'][$i]['lookup_link']				= true;
 				$location['location'][$i]['readonly']					= true;
-				$lookup_functions[$i]['name'] 						= 'lookup_loc' . ($i+1) . '()';
-				$lookup_functions[$i]['link']						=  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i;
-				$lookup_functions[$i]['action'] 					= 'Window1=window.open(strURL,"Search","width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+				
+				if(!isset($data['block_parent']) || $data['block_parent'] < ($i+1))
+				{
+					$lookup_functions[] = array
+					(
+						'name' 						=> 'lookup_loc' . ($i+1) . '()',
+						'link'						=>  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i,
+						'action' 					=> 'Window1=window.open(strURL,"Search","width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+					);
+				}
 
 				if(isset($data['no_link']) && $data['no_link']>=($i+3))
 				{
@@ -410,9 +417,12 @@
 					elseif($config[$j]['column_name']=='tenant_id' && $data['tenant']):
 					{
 						$m++;
-						$lookup_functions[$m]['name'] 						= 'lookup_loc' . ($m+1) . '()';
-						$lookup_functions[$m]['link']						= $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i;
-						$lookup_functions[$m]['action'] 					= 'Window1=window.open(strURL,"Search","width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+						$lookup_functions[] = array
+						(
+							'name' 						=> 'lookup_loc' . ($m+1) . '()',
+							'link'						=> $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
+							'action' 					=> 'Window1=window.open(strURL,"Search","width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+						);
 
 						$location['location'][$i]['lookup_link']			= true;
 						$location['location'][$i]['name']					= lang('Tenant');
@@ -420,7 +430,7 @@
 						$location['location'][$i]['input_name']				= 'tenant_id';
 						$input_name[]										= $location['location'][$i]['input_name'];
 						$location['location'][$i]['value']					= (isset($data['values'][$config[$j]['column_name']])?$data['values'][$config[$j]['column_name']]:'');
-						$location['location'][$i]['lookup_function_call']	= $lookup_functions[$m]['name'];
+						$location['location'][$i]['lookup_function_call']	= 'lookup_loc' . ($m+1) . '()';
 						$location['location'][$i]['statustext']				= lang('tenant');
 						$insert_record['extra']['tenant_id']				= 'tenant_id';
 
@@ -429,7 +439,7 @@
 						$location['location'][$i]['extra'][0]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][0]['input_name'];
 						$location['location'][$i]['extra'][0]['size']		= 15;
-						$location['location'][$i]['extra'][0]['lookup_function_call']	= $lookup_functions[$m]['name'];
+						$location['location'][$i]['extra'][0]['lookup_function_call']	= 'lookup_loc' . ($m+1) . '()';
 						$location['location'][$i]['extra'][0]['value']		= (isset($data['values']['last_name'])?$data['values']['last_name']:'');
 						$location['location'][$i]['extra'][0]['statustext']	= lang('last name');
 
@@ -438,7 +448,7 @@
 						$location['location'][$i]['extra'][1]['readonly']	= true;
 						$input_name[]										= $location['location'][$i]['extra'][1]['input_name'];
 						$location['location'][$i]['extra'][1]['size']		= 15;
-						$location['location'][$i]['extra'][1]['lookup_function_call']	= $lookup_functions[$m]['name'];
+						$location['location'][$i]['extra'][1]['lookup_function_call']	= 'lookup_loc' . ($m+1) . '()';
 						$location['location'][$i]['extra'][1]['value']		= (isset($data['values']['first_name'])?$data['values']['first_name']:'');
 						$location['location'][$i]['extra'][1]['statustext']	= lang('first name');
 						$i++;
@@ -478,9 +488,12 @@
 				{
 					$m++;
 
-					$lookup_functions[$m]['name'] = 'lookup_entity_' . $entity['id'] .'()';
-					$lookup_functions[$m]['link'] = "menuaction:'". 'property'.".uilookup.entity',location_type:".$data['type_id'] . ',entity_id:'. $entity['id'];
-					$lookup_functions[$m]['action'] = 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[] = array
+					(
+						'name'		=> 'lookup_entity_' . $entity['id'] .'()',
+						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$data['values']['location_code']}',block_query:1",
+						'action'	=> 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+					);
 
 					$location['location'][$i]['input_type']						= 'text';
 					$location['location'][$i]['input_name']						= 'entity_num_' . $entity['id'];

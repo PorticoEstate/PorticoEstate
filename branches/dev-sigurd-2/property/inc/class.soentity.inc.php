@@ -108,6 +108,7 @@
 				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 				$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+				$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
 			if(!$entity_id || !$cat_id)
@@ -313,6 +314,12 @@
 			{
 				$filtermethod .= " $where $entity_table.entry_date >= $start_date AND $entity_table.entry_date <= $end_date ";
 				$where= 'AND';
+			}
+
+			if ($location_code)
+			{
+				$filtermethod .= " $where $entity_table.location_code='$location_code'";
+				$where= 'AND';			
 			}
 
 			$querymethod = '';

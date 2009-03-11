@@ -1441,6 +1441,7 @@
 			$this->part_of_town_id		= $boentity->part_of_town_id;
 			$this->district_id			= $boentity->district_id;
 			$this->entity_id			= $boentity->entity_id;
+			$this->location_code		= $boentity->location_code;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
@@ -1452,7 +1453,8 @@
 							'cat_id'			=> $this->cat_id,
 							'district_id'		=> $this->district_id,
 							'query'				=> $this->query,
-							'filter'			=> $this->filter
+							'filter'			=> $this->filter,
+							'location_code'		=> $this->location_code,							
 
 	    				));
 
@@ -1463,7 +1465,8 @@
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."district_id:'{$this->district_id}',"
  	                        						."query:'{$this->query}',"
-						 	                        ."filter:'{$this->filter}'";
+						 	                        ."filter:'{$this->filter}',"
+						 	                        ."location_code:'{$this->location_code}'";
 
 				$values_combo_box[0] = $boentity->select_category_list('filter',$this->cat_id);
 				$default_value = array ('id'=>'','name'=>lang('no category'));

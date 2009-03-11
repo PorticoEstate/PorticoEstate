@@ -413,7 +413,7 @@
 				</xsl:for-each>
 			</tr>
 			<xsl:choose>
-				<xsl:when test="location_type='form'">
+				<xsl:when test="location_template_type='form'">
 					<xsl:call-template name="location_form"/>
 				</xsl:when>
 				<xsl:otherwise>

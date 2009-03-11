@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $allrows;
 		var $part_of_town_id;
+		var $location_code;
 
 		/**
 		* @var object $custom reference to custom fields object
@@ -107,8 +108,10 @@
 			$end_date	= phpgw::get_var('end_date');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$type		= phpgw::get_var('type');
+			$location_code		= phpgw::get_var('location_code');
 			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
-
+			$this->location_code	= isset($location_code)  && $location_code ? $location_code : '';
+			
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
 			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
 			$this->soadmin_entity->type		= $this->type;
@@ -246,8 +249,11 @@
 
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-											'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'','entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
-											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),'dry_run'=>$data['dry_run'], 'type'=>$data['type']));
+											'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'',
+											'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
+											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
+											'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
+											'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;

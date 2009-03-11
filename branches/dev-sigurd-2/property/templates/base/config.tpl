@@ -161,6 +161,15 @@
      </select>
     </td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_Use_location_at_workorder}.</td>
+    <td>
+     <select name="newsettings[location_at_workorder]">
+      <option value="" {selected_location_at_workorder_}>NO</option>
+      <option value="1" {selected_location_at_workorder_1}>YES</option>
+     </select>
+    </td>
+   </tr>
 
 <!--
 groupnotification
