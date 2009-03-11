@@ -318,7 +318,7 @@
 
 			if ($location_code)
 			{
-				$filtermethod .= " $where $entity_table.location_code='$location_code'";
+				$filtermethod .= " $where $entity_table.location_code $this->like '$location_code%'";
 				$where= 'AND';			
 			}
 
