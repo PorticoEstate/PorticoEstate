@@ -44,6 +44,7 @@
 		var $filter;
 		var $currentapp;
 		var $type_id;
+		var $location_code;
 
 		var $public_functions = array
 		(
@@ -90,6 +91,7 @@
 			$this->type_id				= $this->bo->type_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
+			$this->location_code		= $this->bo->location_code;
 		}
 
 		function save_sessiondata()
@@ -239,8 +241,8 @@
  	                        'lookup_tenant'        	=> $lookup_tenant,
  	                        'lookup_name'        	=> $lookup_name,
  	                        'cat_id'        		=> $this->cat_id,
- 	                        'status'        		=> $this->status
-
+ 	                        'status'        		=> $this->status,
+ 	                        'location_code'			=> $this->location_code
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -253,7 +255,8 @@
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
- 	                        						."status:'{$this->status}'";
+ 	                        						."status:'{$this->status}',"
+ 	                        						."location_code:'{$this->location_code}'";
 
 				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',

@@ -3064,6 +3064,14 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget','district_id',array('type' => 'int','precision' => 4,'nullable' => True));
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_num', array('type' => 'varchar','precision' => '15','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_entity_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_cat_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','location_code', array('type' => 'varchar','precision' => '20','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','address', array('type' => 'varchar','precision' => '150','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','tenant_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','contact_phone', array('type' => 'varchar','precision' => '20','nullable' => True));
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.553';

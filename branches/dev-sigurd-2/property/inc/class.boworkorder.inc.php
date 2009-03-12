@@ -315,6 +315,39 @@
 			$workorder['origin'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
 			$workorder['target'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'target');
 
+			if($workorder['location_code'])
+			{
+				$solocation 	= CreateObject('property.solocation', $this->bocommon);
+				$workorder['location_data'] = $solocation->read_single($workorder['location_code']);
+			}
+
+			if($workorder['tenant_id']>0)
+			{
+				$tenant_data=$this->bocommon->read_single_tenant($workorder['tenant_id']);
+				$workorder['location_data']['tenant_id']= $workorder['tenant_id'];
+				$workorder['location_data']['contact_phone']= $tenant_data['contact_phone'];
+				$workorder['location_data']['last_name']	= $tenant_data['last_name'];
+				$workorder['location_data']['first_name']	= $tenant_data['first_name'];
+			}
+			else
+			{
+				unset($workorder['location_data']['tenant_id']);
+				unset($workorder['location_data']['contact_phone']);
+				unset($workorder['location_data']['last_name']);
+				unset($workorder['location_data']['first_name']);
+			}
+
+			if($workorder['p_num'])
+			{
+				$soadmin_entity	= CreateObject('property.soadmin_entity');
+				$category = $soadmin_entity->read_single_category($workorder['p_entity_id'],$workorder['p_cat_id']);
+
+				$workorder['p'][$workorder['p_entity_id']]['p_num']=$workorder['p_num'];
+				$workorder['p'][$workorder['p_entity_id']]['p_entity_id']=$workorder['p_entity_id'];
+				$workorder['p'][$workorder['p_entity_id']]['p_cat_id']=$workorder['p_cat_id'];
+				$workorder['p'][$workorder['p_entity_id']]['p_cat_name'] = $category['name'];
+			}
+
 			return $workorder;
 		}
 
@@ -399,6 +432,7 @@
 		{
 			$workorder['start_date']	= $this->bocommon->date_to_timestamp($workorder['start_date']);
 			$workorder['end_date']	= $this->bocommon->date_to_timestamp($workorder['end_date']);
+			$workorder['location_code'] = isset($workorder['location']) && $workorder['location'] ? implode('-',$workorder['location']) : '';
 
 			if ($action=='edit')
 			{

@@ -229,6 +229,7 @@
 				$status				= isset($data['status']) ? $data['status'] : '';
 				$part_of_town_id	= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
 				$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
 			if (!$type_id)
@@ -606,6 +607,12 @@
 			{
 				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
 				$where= 'AND';
+			}
+
+			if ($location_code)
+			{
+				$filtermethod .= "  {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
+				$where= 'AND';			
 			}
 
 			$querymethod = '';

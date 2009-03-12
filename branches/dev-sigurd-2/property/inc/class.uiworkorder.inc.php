@@ -870,6 +870,7 @@
 				if($id)
 				{
 					$values		= $this->bo->read_single($id);
+
 					if(!isset($values['origin']))
 					{
 						$values['origin'] = '';
@@ -1007,18 +1008,33 @@
 				$admin_location = & $bolocation->soadmin_location;
 				$location_types	= $admin_location->select_location_type();
 				$max_level = 4;//count($location_types);
-			
+
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
-				$location_template_type='form';
+				$location_template_type = 'form';
+				$_location_data = array();
+				
+				if(isset($values['location_data']) && $values['location_data'])
+				{
+					$_location_data = $values['location_data'];
+				}
+				else
+				{
+						if(isset($project['location_data']) && $project['location_data'])
+						{
+							$_location_data = $project['location_data'];
+						}
+				}
+
 				$location_data=$bolocation->initiate_ui_location(array(
-						'values'		=> isset($project['location_data'])?$project['location_data']:'',
-						'type_id'		=> $max_level,
-						'no_link'		=> false, // disable lookup links for location type less than type_id
-						'tenant'		=> false,
-						'block_parent' 	=> $location_level,
-						'lookup_type'	=> $location_template_type,
-						'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
-						'entity_data'	=> (isset($values['p'])?$values['p']:'')
+						'values'			=> $_location_data,
+						'type_id'			=> $max_level,
+						'no_link'			=> false, // disable lookup links for location type less than type_id
+						'tenant'			=> true,
+						'block_parent' 		=> $location_level,
+						'lookup_type'		=> $location_template_type,
+						'lookup_entity'		=> $this->bocommon->get_lookup_entity('project'),
+						'entity_data'		=> (isset($values['p'])?$values['p']:''),
+						'filter_location'	=> $project['location_data']['location_code']
 						));
 			}
 			else
@@ -1486,11 +1502,30 @@
 
 			$function_msg = lang('View Workorder');
 
+			$_location_data = array();
+			$_tenant = 0;
+			$_level = 0;
+			if(isset($values['location_data']) && $values['location_data'])
+			{
+				$_location_data = $values['location_data'];
+				$_tenant = isset($values['location_data']['tenant_id']) ? $values['location_data']['tenant_id'] : 0;
+				$_level = count(explode('-',$values['location_data']['location_code']));
+			}
+			else
+			{
+					if(isset($project['location_data']) && $project['location_data'])
+					{
+						$_location_data = $project['location_data'];
+						$_tenant = isset($project['location_data']['tenant_id']) ? $project['location_data']['tenant_id'] : 0;
+						$_level = count(explode('-',$project['location_data']['location_code']));
+					}
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
-						'values'	=> $project['location_data'],
-						'type_id'	=> count(explode('-',$project['location_data']['location_code'])),
+						'values'	=> $_location_data,
+						'type_id'	=> $_level,
 						'no_link'	=> false, // disable lookup links for location type less than type_id
-						'tenant'	=> $project['location_data']['tenant_id'],
+						'tenant'	=> $_tenant,
 						'lookup_type'	=> 'view'
 						));
 

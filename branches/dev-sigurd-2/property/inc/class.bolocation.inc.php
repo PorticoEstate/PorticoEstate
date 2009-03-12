@@ -43,6 +43,7 @@
 		var $type_id;
 		var $lookup;
 		var $use_session;
+		var $location_code;
 
 		/**
 		* @var object $custom reference to custom fields object
@@ -104,6 +105,7 @@
 			$status					= phpgw::get_var('status');
 			$type_id				= phpgw::get_var('type_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
+			$location_code			= phpgw::get_var('location_code');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : $this->query;
@@ -117,6 +119,7 @@
 			$this->type_id			= isset($type_id) && $type_id ? $type_id : 1;
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->acl_location		= '.location.' . $this->type_id;
+			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
 		}
 
 		function read_sessiondata()
@@ -263,7 +266,8 @@
 				}
 			}
 
-			$location_link		= "menuaction:'property.uilocation.index',lookup:1,query:'{$data['values']['location_code']}',block_query:1";
+			$filter_location = isset($data['filter_location']) ? $data['filter_location'] : '';
+			$location_link		= "menuaction:'property.uilocation.index',lookup:1,location_code:'{$filter_location}',block_query:1";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -323,11 +327,11 @@
 				}
 
 				$location['location'][$i]['lookup_function_call']			= 'lookup_loc' . ($i+1) . '()';
-				$location['location'][$i]['lookup_link']				= true;
 				$location['location'][$i]['readonly']					= true;
 				
 				if(!isset($data['block_parent']) || $data['block_parent'] < ($i+1))
 				{
+					$location['location'][$i]['lookup_link']				= true;
 					$lookup_functions[] = array
 					(
 						'name' 						=> 'lookup_loc' . ($i+1) . '()',
@@ -491,7 +495,7 @@
 					$lookup_functions[] = array
 					(
 						'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$data['values']['location_code']}',block_query:1",
+						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:1",
 						'action'	=> 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 					);
 
@@ -590,7 +594,8 @@
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
-											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run']));
+											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
+											'location_code' => $this->location_code));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;

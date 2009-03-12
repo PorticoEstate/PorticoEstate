@@ -478,7 +478,14 @@
 				'charge_tenant' => array('type' => 'int','precision' => '2','nullable' => True),
 				'claim_issued' => array('type' => 'int','precision' => '2','nullable' => True),
 				'paid' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '1'),
-				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True)
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
+				'p_entity_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'p_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
+				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),
