@@ -120,6 +120,8 @@
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->acl_location		= '.location.' . $this->type_id;
 			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
+// FIXME -- need to blank the location_code..
+//			$this->location_code	= isset($_REQUEST['query']) 		? $query			: $this->query;
 		}
 
 		function read_sessiondata()

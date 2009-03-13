@@ -277,7 +277,7 @@
 			<div class="yui-content">		
 				<div id="general">
 
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		<table cellpadding="2" cellspacing="2" width="100%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -287,7 +287,8 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-
+		</table>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="change_type_list != ''">
 					<tr>
@@ -344,10 +345,8 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="statustext"/>
-										<xsl:text>'; return true;</xsl:text>
+									<xsl:attribute name="title">
+										<xsl:value-of select="statustext"/>
 									</xsl:attribute>
 								</input>
 							</xsl:otherwise>
@@ -467,42 +466,27 @@
 		</div>
 
 		<xsl:call-template name="attributes_values"/>
-
 			<xsl:choose>
 				<xsl:when test="documents != ''">
-				<div id="document">
+					<div id="document">
+						<!-- Some style for the expand/contract section-->
+						<style>
+							#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+							#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
+						</style>
+						<script>
+							var documents = <xsl:value-of select="documents" />;
+						</script>
 
-				<!-- Some style for the expand/contract section-->
-				<style>
-				#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-				#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-				</style>
+						<!-- markup for expand/contract links -->
+						<div id="expandcontractdiv">
+							<a id="expand" href="#"><xsl:value-of select="lang_expand_all"/></a>
+							<xsl:text> </xsl:text>
+							<a id="collapse" href="#"><xsl:value-of select="lang_collapse_all"/></a>
+						</div>
 
-					<script>
-						var documents = <xsl:value-of select="documents" />;
-					</script>
-
-	
-				<!-- markup for expand/contract links -->
-				<div id="expandcontractdiv">
-					<a id="expand" href="#"><xsl:value-of select="lang_expand_all"/></a>
-					<xsl:text> </xsl:text>
-					<a id="collapse" href="#"><xsl:value-of select="lang_collapse_all"/></a>
-				</div>
-
-				<div id="treeDiv1"></div>
-<!--
-					<table cellpadding="2" cellspacing="2" width="80%" align="center">
-						<tr>
-							<td>
-								<table width="100%" cellpadding="2" cellspacing="2" align="center">
-									<xsl:apply-templates select="document_link"/>
-								</table>
-							</td>
-						</tr>
-					</table>
--->
-				</div>
+						<div id="treeDiv1"></div>
+					</div>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>

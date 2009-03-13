@@ -86,13 +86,14 @@
 				{
 					$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array(
-															'menuaction'=> 'property.uientity.index',
-															'entity_id'=> $entry['entity_id'],
-															'cat_id'=> $entry['cat_id'],
-															'query'=> $location_code
-															)
-														),
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'	=> 'property.uientity.index',
+															'entity_id'		=> $entry['entity_id'],
+															'cat_id'		=> $entry['cat_id'],
+															'location_code'	=> $location_code
+														)
+													),
 						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
 						'descr'			=> $entry['descr']
 					);

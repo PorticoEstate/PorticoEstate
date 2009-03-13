@@ -561,7 +561,8 @@
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 											(
 												'menuaction'	=> 'property.uilocation.edit',
-												'type_id'		=>	$type_id
+												'type_id'		=>	$type_id,
+												'parent'		=>  $this->location_code
 											))
 					);
 				}
@@ -904,6 +905,26 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a category'));
 				}
 
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && !$attribute['value'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if($attribute['datatype'] == 'I' && isset($attribute['value']) && !ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));
+						}
+
+
+
+					}
+				}
+
+
 				if (isset($insert_record['extra']) && array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a street'));
@@ -1085,6 +1106,7 @@
 			$additional_fields[$j]['input_name']	= 'loc' . $type_id . '_name';
 			$additional_fields[$j]['name']			= 'loc' . $type_id . '_name';
 			$additional_fields[$j]['value']			= isset($values[$additional_fields[$j]['input_name']])?$values[$additional_fields[$j]['input_name']]:'';
+			$additional_fields[$j]['size']			= $additional_fields[$j]['value'] ? strlen($additional_fields[$j]['value']) + 5 : 30;
 			$insert_record['extra'][]				= $additional_fields[$j]['input_name'];
 			$j++;
 
@@ -1165,18 +1187,21 @@
 						}
 						else
 						{
+							$_location_code = implode('-',array_slice($location, 0, $location_type['id']));
 							$marker = str_repeat('-', ($location_type['id'] - $type_id));
 							$entities_link[] = array
 							(
 								'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
-															'menuaction'=> 'property.uilocation.index',
-															'type_id'=> $location_type['id'],
-															'query'=>implode('-',array_slice($location, 0, $location_type['id']))
+															'menuaction'	=> 'property.uilocation.index',
+															'type_id'		=> $location_type['id'],
+															'query'			=> $_location_code,
+															'location_code' => $_location_code
 															)
 														),
 								'lang_entity_statustext'	=> $location_type['descr'],
 								'text_entity'			=> "{$marker}> " . $location_type['name'],
 							);
+							unset($_location_code);
 						}
 					}
 				}
@@ -1223,6 +1248,7 @@
 				unset($values['attributes']);
 			}
 
+			$documents = array();
 			if($location_code)
 			{
 				$related = $this->bo->read_entity_to_link($location_code);
@@ -1233,7 +1259,8 @@
 
 				if($documents)
 				{
-					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');				
+					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+					$documents = json_encode($documents);				
 				}
 				if(isset($related['related']))
 				{
@@ -1338,7 +1365,7 @@
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
-				'documents'						=> json_encode($documents),
+				'documents'						=> $documents,
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);
