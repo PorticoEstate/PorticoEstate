@@ -59,9 +59,12 @@
 
 		function property_bos_agreement($session=false)
 		{
-			$this->so = CreateObject('property.sos_agreement');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->so			= CreateObject('property.sos_agreement');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name 		= 'fm_vendor';
+			$this->cats->supress_info	= true;
 
 			if ($session)
 			{
@@ -434,5 +437,52 @@
 			$historylog = CreateObject('property.historylog','s_agreement');
 			$historylog->delete_single_record($data['history_id']);
 		}
+
+		function get_year_list($agreement_id)
+		{
+			$list = $this->so->get_year_filter_list($agreement_id);
+			$year = date('Y');
+			$limit = $year + 4;
+			
+			while ($year < $limit)
+			{
+				$list[] =  $year;
+				$year++;
+			}
+
+			$list = array_unique($list);
+			sort($list);
+			
+			$values;
+			foreach($list as $entry)
+			{
+				$values[] = array
+				(
+					'id'	=> $entry,
+					'name'	=> $entry
+				);
+			}
+			return $values;
+		}
+
+		function get_budget($agreement_id)
+		{
+			$values = $this->so->get_budget($agreement_id);
+
+			$this->cats->app_name		= 'property.project';
+			foreach($values as & $entry)
+			{
+				$category = $this->cats->return_single($entry['cat_id']);
+				$entry['category']		= $category[0]['name'];
+			}
+			$this->cats->app_name 		= 'fm_vendor';	
+			return $values;		
+		}
+
+		function delete_year_from_budget($data,$agreement_id)
+		{
+			return $this->so->delete_year_from_budget($data,$agreement_id);
+		}
+
 	}
 

@@ -162,6 +162,7 @@
 		'fm_custom_cols',
 		'fm_orders',
 		'fm_s_agreement',
+		'fm_s_agreement_budget',
 		'fm_s_agreement_category',
 		'fm_s_agreement_detail',
 		'fm_s_agreement_pricing',
