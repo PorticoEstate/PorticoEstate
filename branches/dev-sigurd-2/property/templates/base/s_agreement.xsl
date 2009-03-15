@@ -1004,6 +1004,15 @@
 						<input type="text" id="termination_date" name="termination_date" size="10" value="{value_termination_date}" readonly="readonly" onMouseout="window.status='';return true;" ></input>
 					</td>
 				</tr>
+				<tr>
+					<td width="19%" align="left" valign="top">
+						<xsl:value-of select="lang_budget"/>
+					</td>
+					<td>
+						<div id="datatable-container_3"></div>
+					</td>
+				</tr>						
+
 				<xsl:choose>
 					<xsl:when test="files!=''">
 						<!-- <xsl:call-template name="file_list_view"/>	-->					

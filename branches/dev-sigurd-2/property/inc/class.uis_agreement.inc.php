@@ -2388,8 +2388,33 @@
        			'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
 			);
 
+
+			$content_budget = $this->bo->get_budget($s_agreement_id);
+
+			$datavalues[3] = array
+			(
+					'name'					=> "3",
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+			);
+
+			$myColumnDefs[3] = array
+       		(
+       			'name'		=> "3",
+       			'values'	=>	json_encode(array(	array(key => 'year',label=>lang('year'),sortable=>false,resizeable=>true),
+       												array(key => 'category',label=>lang('category'),sortable=>false,resizeable=>true),
+       												array(key => 'ecodimb',label=>lang('dimb'),sortable=>false,resizeable=>true),
+       												array(key => 'budget_account',label=>lang('budget account'),sortable=>false,resizeable=>true),
+       												array(key => 'budget',label=>lang('budget'),sortable=>false,resizeable=>true),
+       												array(key => 'actual_cost',label=>lang('actual cost'),sortable=>false,resizeable=>true)))
+			);
+
 			$data = array
 			(
+				'lang_budget'					=> lang('budget'),
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view")),
 				'datatable'						=> $datavalues,
