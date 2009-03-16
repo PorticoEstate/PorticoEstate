@@ -85,10 +85,10 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;

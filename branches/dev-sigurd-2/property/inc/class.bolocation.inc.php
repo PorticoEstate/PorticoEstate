@@ -618,9 +618,17 @@
 				return;
 			}
 
-			$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
-			$values = $this->so->read_single($location_code, $values);
-			$values = $this->custom->prepare($values, 'property','.location.' . $type_id, $extra['view']);
+			if(!isset($extra['noattrib']) || !$extra['noattrib'])
+			{
+				$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$values = $this->so->read_single($location_code, $values);
+				$values = $this->custom->prepare($values, 'property','.location.' . $type_id, $extra['view']);
+			}
+			else
+			{
+				$values = $this->so->read_single($location_code);
+			}
+			
 
 			if( isset($extra['tenant_id']) && $extra['tenant_id']!='lookup')
 			{

@@ -199,7 +199,7 @@
 		function read_street()
 		{
 			$street = $this->so->read_street(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $street;
@@ -208,7 +208,7 @@
 		function read_tenant()
 		{
 			$tenant = $this->so->read_tenant(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $tenant;

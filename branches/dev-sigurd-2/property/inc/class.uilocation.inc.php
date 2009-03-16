@@ -490,6 +490,18 @@
 					)
 				);
 
+				$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'sibling',
+							'source'	=> 'location_code'
+						),
+					)
+				);
+
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -512,6 +524,19 @@
 											'target'		=> '_blank'
 										)),
 						'parameters'	=> $parameters
+					);
+				}
+				if($this->acl_add)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name'			=> 'edit',
+						'text' 			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uilocation.edit',
+											'lookup_tenant'	=> $lookup_tenant
+										)),
+						'parameters'	=> $parameters2
 					);
 				}
 				if($this->acl_edit)
@@ -815,8 +840,22 @@
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
 			$lookup_tenant 		= phpgw::get_var('lookup_tenant', 'bool');
 			$location_code		= phpgw::get_var('location_code');
+			$sibling			= phpgw::get_var('sibling');
+			$parent				= phpgw::get_var('parent');
 			$values_attribute	= phpgw::get_var('values_attribute');
 			$location 			= explode('-',$location_code);
+
+			if($sibling)
+			{
+				$parent = array();
+				$sibling = explode('-',$sibling);
+				$this->type_id = count($sibling);
+				for ($i=0;$i<(count($sibling)-1);$i++)
+				{
+					$parent[] = $sibling[$i];
+				}
+				$parent = implode('-', $parent);
+			}
 
 			$type_id	 	= $this->type_id;
 
@@ -1060,8 +1099,18 @@
 
 			$lookup_type='form';
 
+			if(!$location_code && $parent)
+			{
+				$_values = $this->bo->read_single($parent,array('noattrib' => true));
+				$_values['attributes'] = $values['attributes'];
+			}
+			else
+			{
+				$_values = $values;
+			}
+			
 			$location_data=$this->bo->initiate_ui_location(array(
-						'values'		=> $values,
+						'values'		=> $_values,
 						'type_id'		=> ($type_id-1),
 						'no_link'		=> ($type_id), // disable lookup links for location type less than type_id
 						'tenant'		=> false,

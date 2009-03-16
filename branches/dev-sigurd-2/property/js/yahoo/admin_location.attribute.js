@@ -63,9 +63,9 @@
 	/********************************************************************************
  *
  */
-	this.move_record = function(sUrl)
+	this.move_record = function(sUrl,allrows)
 	{
-		var callback =	{	success: function(o){execute_ds()},
+		var callback =	{	success: function(o){execute_ds(allrows)},
 							failure: function(o){window.alert('Server or your connection is death.')},
 							timeout: 10000
 						};
