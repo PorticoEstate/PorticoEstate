@@ -123,13 +123,13 @@
 				<td align="center">
 					<xsl:value-of select="active"/>
 				</td>
-				<td align="center" title="{lang_contacts_text}" style="cursor:help">
+				<td align="center" title="{lang_contacts_text}">
 					<xsl:variable name="link_contacts"><xsl:value-of select="link_contacts"/></xsl:variable>
 					<a href="{link_contacts}"><xsl:value-of select="text_contacts"/></a>
 				</td>
 				<xsl:choose>
 					<xsl:when test="link_edit != ''">
-						<td align="center" title="{lang_edit_text}" style="cursor:help">
+						<td align="center" title="{lang_edit_text}">
 							<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
 							<a href="{link_edit}"><xsl:value-of select="text_edit"/></a>
 						</td>
@@ -137,7 +137,7 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="link_delete != ''">
-						<td align="center" title="{lang_delete_text}" style="cursor:help">
+						<td align="center" title="{lang_delete_text}">
 							<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
 							<a href="{link_delete}"><xsl:value-of select="text_delete"/></a>
 						</td>
@@ -283,7 +283,7 @@
 				</td>
 				<xsl:choose>
 					<xsl:when test="link_edit != ''">
-						<td align="center" title="{lang_edit_text}" style="cursor:help">
+						<td align="center" title="{lang_edit_text}">
 							<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
 							<a href="{link_edit}"><xsl:value-of select="text_edit"/></a>
 						</td>
@@ -291,7 +291,7 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="link_delete != ''">
-						<td align="center" title="{lang_delete_text}" style="cursor:help">
+						<td align="center" title="{lang_delete_text}">
 							<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
 							<a href="{link_delete}"><xsl:value-of select="text_delete"/></a>
 						</td>
@@ -312,9 +312,6 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_add_statustext"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 				</form>
 			</td>
@@ -325,9 +322,6 @@
 							<input type="submit" name="add" value="{lang_cancel}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_cancel_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="style">
-									<xsl:text>cursor:help</xsl:text>
 								</xsl:attribute>
 							</input>
 						</form>
@@ -381,7 +375,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" width="10%"  title="{lang_name_status_text}" style="cursor:help">
+				<td valign="top" width="10%"  title="{lang_name_status_text}">
 					<xsl:value-of select="lang_name"/>
 				</td>
 				<td>
@@ -390,7 +384,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td valign="top"  title="{lang_descr_status_text}" style="cursor:help">
+				<td valign="top"  title="{lang_descr_status_text}">
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
@@ -410,18 +404,12 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_active_on_statustext"/>
 								</xsl:attribute>
-								<xsl:attribute name="style">
-									<xsl:text>cursor:help</xsl:text>
-								</xsl:attribute>
 							</input>
 						</xsl:when>
 						<xsl:otherwise>
 							<input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_active_off_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="style">
-									<xsl:text>cursor:help</xsl:text>
 								</xsl:attribute>
 							</input>
 						</xsl:otherwise>
@@ -438,9 +426,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_save_status_text"/>
 									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
-									</xsl:attribute>
 								</input>
 							</td>
 							<td valign="bottom">
@@ -449,9 +434,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_apply_status_text"/>
 									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
-									</xsl:attribute>
 								</input>
 							</td>
 							<td align="left" valign="bottom">
@@ -459,9 +441,6 @@
 								<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_cancel_status_text"/>
-									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
 									</xsl:attribute>
 								</input>
 							</td>
@@ -527,16 +506,10 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_responsibility_status_text"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 					<input  size="30" type="text" name="responsibility_name" value="{value_responsibility_name}"  onClick="lookup_responsibility()" readonly="readonly"> 
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_responsibility_status_text"/>
-						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -550,16 +523,10 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_contact_status_text"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 					<input  size="30" type="text" name="contact_name" value="{value_contact_name}"  onClick="lookup_contact()" readonly="readonly"> 
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_contact_status_text"/>
-						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -576,9 +543,6 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_active_from_statustext"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 					<img id="values_active_from-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
@@ -592,9 +556,6 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_active_to_statustext"/>
 						</xsl:attribute>
-						<xsl:attribute name="style">
-							<xsl:text>cursor:help</xsl:text>
-						</xsl:attribute>
 					</input>
 					<img id="values_active_to-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
@@ -602,7 +563,7 @@
 
 
 			<tr>
-				<td valign="top"  title="{lang_remark_status_text}" style="cursor:help">
+				<td valign="top"  title="{lang_remark_status_text}">
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
@@ -621,9 +582,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_save_status_text"/>
 									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
-									</xsl:attribute>
 								</input>
 							</td>
 							<td valign="bottom">
@@ -632,9 +590,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_apply_status_text"/>
 									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
-									</xsl:attribute>
 								</input>
 							</td>
 							<td align="left" valign="bottom">
@@ -642,9 +597,6 @@
 								<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_cancel_status_text"/>
-									</xsl:attribute>
-									<xsl:attribute name="style">
-										<xsl:text>cursor:help</xsl:text>
 									</xsl:attribute>
 								</input>
 							</td>

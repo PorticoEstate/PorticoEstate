@@ -86,13 +86,14 @@
 				{
 					$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array(
-															'menuaction'=> 'property.uientity.index',
-															'entity_id'=> $entry['entity_id'],
-															'cat_id'=> $entry['cat_id'],
-															'query'=> $location_code
-															)
-														),
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'	=> 'property.uientity.index',
+															'entity_id'		=> $entry['entity_id'],
+															'cat_id'		=> $entry['cat_id'],
+															'location_code'	=> $location_code
+														)
+													),
 						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
 						'descr'			=> $entry['descr']
 					);
@@ -111,71 +112,6 @@
 					'descr'		=> lang('Helpdesk')
 				);
 			}
-
-			$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$hits = (int) $this->db->f('hits');
-
-			$x = 0; // within level
-			$y = 0; //level
-			$cache_x_at_y[$y] = $x;
-			$documents = array();
-			$documents[$x] = array
-			(
-				'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
-				'text'		=> lang('documents') . ' [' . $hits . ']:',
-				'descr'		=> lang('Documentation'),
-				'level'		=> 0
-			);
-
-
-			$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
-			$categories = $cats->return_sorted_array(0, false);
-			unset($cats);
-
-			foreach ($categories as $category)
-			{			
-				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category = {$category['id']}";
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
-				$hits = (int) $this->db->f('hits');
-
-				$level = $category['level']+1;
-				if($level == $y)
-				{
-					$x++;
-				}
-				else if($level < $y )
-				{
-					$x = $cache_x_at_y[$level]+1;
-				}
-				else if($level > $y )
-				{
-					$x = 0;
-				}
-				$y = $level;
-
-					$map = '$documents'; 
-					for ($i = 0; $i < $level ; $i++)
-					{
-						
-						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
-					}
-
-					$map .= '[]'; 
-
-					eval($map . ' =array('
-					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
-					.	"'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
-					.	"'descr'		=> '" . lang('Documentation') . "',\n"
-					.	"'level'		=> "  . ($category['level']+1) . "\n"
-					 . ');');
-
-				$cache_x_at_y[$y] = $x;
-			}
-
-			$entity['documents'] = $documents;
 
 			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code $this->like '$location_code%'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -294,6 +230,7 @@
 				$status				= isset($data['status']) ? $data['status'] : '';
 				$part_of_town_id	= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
 				$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
 			if (!$type_id)
@@ -671,6 +608,12 @@
 			{
 				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
 				$where= 'AND';
+			}
+
+			if ($location_code)
+			{
+				$filtermethod .= "  {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
+				$where= 'AND';			
 			}
 
 			$querymethod = '';

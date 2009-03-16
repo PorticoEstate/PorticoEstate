@@ -58,7 +58,8 @@
 			'street'		=> true,
 			'tenant'		=> true,
 			'phpgw_user'	=> true,
-			'project_group'	=> true
+			'project_group'	=> true,
+			'ecodimb'		=> true
 		);
 
 		function __construct()
@@ -1440,6 +1441,7 @@
 			$this->part_of_town_id		= $boentity->part_of_town_id;
 			$this->district_id			= $boentity->district_id;
 			$this->entity_id			= $boentity->entity_id;
+			$this->location_code		= $boentity->location_code;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
@@ -1451,7 +1453,8 @@
 							'cat_id'			=> $this->cat_id,
 							'district_id'		=> $this->district_id,
 							'query'				=> $this->query,
-							'filter'			=> $this->filter
+							'filter'			=> $this->filter,
+							'location_code'		=> $this->location_code,							
 
 	    				));
 
@@ -1462,7 +1465,8 @@
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."district_id:'{$this->district_id}',"
  	                        						."query:'{$this->query}',"
-						 	                        ."filter:'{$this->filter}'";
+						 	                        ."filter:'{$this->filter}',"
+						 	                        ."location_code:'{$this->location_code}'";
 
 				$values_combo_box[0] = $boentity->select_category_list('filter',$this->cat_id);
 				$default_value = array ('id'=>'','name'=>lang('no category'));
@@ -2064,6 +2068,205 @@
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$datatable['pagination']['records_returned']= count($project_group_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			$appname						= lang('project group');
+			$function_msg					= lang('list project group');
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+    		//values for Pagination
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
+
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
+	    			{
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+		    				}
+		    				else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
+	    			}
+	    		}
+
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+	    		return $json;
+			}
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+
+			//Title of Page
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+
+			$this->save_sessiondata();
+		}
+
+		function ecodimb()
+		{
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			 {
+
+		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+	    				(
+	    					'menuaction'			=> 'property.uilookup.ecodimb',
+								'second_display'	=> true,
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter
+	    				));
+	    		$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ecodimb',"
+	    											."second_display:'{true}',"
+ 	                        						."cat_id:'{$this->cat_id}',"
+						 	                        ."query:'{$this->query}',"
+ 	                        						."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array(
+					array(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array(
+									'menuaction' 		=> 'property.uilookup.ecodimb',
+									'second_display'	=> true,
+									'cat_id'			=> $this->cat_id,
+									'query'				=> $this->query,
+									'filter'			=> $this->filter
+									)
+						),
+						'fields'	=> array(
+                                    'field' => array(
+ 			                                        array( //boton  SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'tab_index' => 2
+			                                        ),
+			   										 array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//'',//$query,
+			                                            'type' => 'text',
+			                                            'size'    => 28,
+			                                            'onkeypress' => 'return pulsar(event)',
+	                                    				'tab_index' => 1
+			                                        )
+		                           				),
+		                       		'hidden_value' => array(
+		                       								)
+												)
+										  )
+				);
+			}
+
+			$uicols = array (
+				'input_type'	=>	array(text,text),
+				'name'			=>	array(id,descr),
+				'formatter'		=>	array('',''),
+				'descr'			=>	array(lang('ID'),lang('Name'))
+			);
+
+			$ecodimb_list = array();
+			$ecodimb_list = $this->bo->read_ecodimb();
+
+			$content = array();
+			$j=0;
+			if (isset($ecodimb_list) && is_array($ecodimb_list))
+			{
+				foreach($ecodimb_list as $ecodimb_entry)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $ecodimb_entry[$uicols['name'][$i]];
+							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+					}
+					$j++;
+				}
+			}
+
+			$uicols_count	= count($uicols['descr']);
+			$datatable['rowactions']['action'] = array();
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= true;
+				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['name'][$i];
+			}
+
+			$function_exchange_values = '';
+
+			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb_descr")[0].value = "";' ."\r\n";
+			
+			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb_descr")[0].value = data.getData("descr");' ."\r\n";
+
+			$function_exchange_values .= 'window.close()';
+
+			$datatable['exchange_values'] = $function_exchange_values;
+			$datatable['valida'] = '';
+
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($ecodimb_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))

@@ -55,15 +55,14 @@
 
 		function property_bodocument($session=false)
 		{
-			$this->so 			= CreateObject('property.sodocument');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->solocation 	= CreateObject('property.solocation');
-			$this->historylog	= CreateObject('property.historylog','document');
-			$this->contacts		= CreateObject('property.soactor');
-			$this->contacts->role='vendor';
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.document';
-			$this->cats->supress_info	= true;
+			$this->so 				= CreateObject('property.sodocument');
+			$this->bocommon 		= CreateObject('property.bocommon');
+			$this->solocation 		= CreateObject('property.solocation');
+			$this->historylog		= CreateObject('property.historylog','document');
+			$this->contacts			= CreateObject('property.soactor');
+			$this->contacts->role	='vendor';
+			$this->cats				= & $this->so->cats;
+			$this->bofiles			= CreateObject('property.bofiles');
 
 			if ($session)
 			{
@@ -145,9 +144,8 @@
 
 		function read()
 		{
-			$doc_types = $this->get_sub_doc_types();
 			$document = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_types'=>$doc_types));
+											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -167,38 +165,37 @@
 			return $document;
 		}
 
-		function get_sub_doc_types()
+		function get_files_at_location($location_code)
 		{
-			$doc_types = array();
-			if($this->doc_type)
-			{
-				$doc_types[] = $this->doc_type;
-				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $this->doc_type);
-				foreach ($cat_sub as $doc_type)
-				{
-					$doc_types[] = $doc_type['id'];
-				}
-			}
-			return $doc_types;
+			return $this->so->get_files_at_location($location_code);
 		}
+
 
 		function read_at_location($location_code='')
 		{
+			$use_svn = false;
+			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
+			{
+		//		$use_svn = true;
+			}
 
-			$doc_types = $this->get_sub_doc_types();
 
 			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
-											'location_code' => $location_code,'doc_types'=>$doc_types, 'allrows' => $this->allrows));
+											'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			for ($i=0; $i<count($document); $i++)
+			foreach ($document as & $entry)
 			{
-				$document[$i]['user'] = $GLOBALS['phpgw']->accounts->id2name($document[$i]['user_id']);
-				$document[$i]['document_date'] = $GLOBALS['phpgw']->common->show_date($document[$i]['start_date'],$dateformat);
-				$document[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($document[$i]['entry_date'],$dateformat);
+				$entry['user'] = $GLOBALS['phpgw']->accounts->id2name($entry['user_id']);
+				$entry['document_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['entry_date'] 	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
+				if($use_svn)
+				{
+					$entry['journal'] 		= $this->get_file($entry['document_id'], true);
+				}
 			}
 
 			return $document;
@@ -209,6 +206,11 @@
 			$document						= $this->so->read_single($document_id);
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date']		= $GLOBALS['phpgw']->common->show_date($document['document_date'],$dateformat);
+
+			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
+			{
+				$document['journal']			= $this->get_file($document_id, true, $document);
+			}
 
 			if(isset($document['vendor_id']) && $document['vendor_id'])
 			{
@@ -240,7 +242,6 @@
 				$document['p'][$document['p_entity_id']]['p_cat_id']=$document['p_cat_id'];
 				$document['p'][$document['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
-
 			return $document;
 		}
 
@@ -340,25 +341,39 @@
 			return $record_history;
 		}
 
-		function get_file($document_id)
+		function get_file($document_id, $get_journal = false, $values = array())
 		{
-			$values = $this->read_single($document_id);
-			$bofiles	= CreateObject('property.bofiles');
+			if(!$values)
+			{
+				$values = $this->read_single($document_id);
+			}
+
 			if($values['p_num'])
 			{
-				$file	= "{$bofiles->fakebase}/document/entity_{$values['p_entity_id']}_{$values['p_cat_id']}/{$values['p_num']}/{$values['doc_type']}/{$values['document_name']}";
+				$file	= "{$this->bofiles->fakebase}/document/entity_{$values['p_entity_id']}_{$values['p_cat_id']}/{$values['p_num']}/{$values['doc_type']}/{$values['document_name']}";
 			}
 			else
 			{
-				$file	= "{$bofiles->fakebase}/document/{$values['location_code']}/{$values['doc_type']}/{$values['document_name']}";
+				$file	= "{$this->bofiles->fakebase}/document/{$values['location_code']}/{$values['doc_type']}/{$values['document_name']}";
 			}
 
-			if($bofiles->vfs->file_exists(array(
+			if($this->bofiles->vfs->file_exists(array(
 					'string' => $file,
 					'relatives' => Array(RELATIVE_NONE)
 				)))
 			{
-				return $file;
+
+				if($get_journal)
+				{
+					return $this->bofiles->vfs->get_journal(array(
+							'string' => $file,
+							'relatives' => Array(RELATIVE_NONE)
+							));
+				}
+				else
+				{
+					return $file;
+				}
 			}
 			return false;
 		}

@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -40,15 +40,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-
-		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+		var $location_info = array();
 
 		var $soap_functions = array(
 			'list' => array(
@@ -69,11 +61,11 @@
 			)
 		);
 
-		function property_bocategory($session=false)
+		function __construct($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('property.socategory');
-			$this->socommon = CreateObject('property.socommon');
+			$this->so 			= CreateObject('property.socategory');
+			$this->socommon 	= CreateObject('property.socommon');
+			$this->custom 		= & $this->so->custom;
 
 			if ($session)
 			{
@@ -81,51 +73,29 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
+			$type				= phpgw::get_var('type');
+			$type_id			= phpgw::get_var('type_id', 'int');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start		= $start ? $start : 0;
+			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
+			$this->sort			= isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
+			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
+			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
+			$this->allrows		= isset($allrows) ? $allrows : false;
 
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
-			if(!empty($filter))
-			{
-				$this->filter = $filter;
-			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
-			if(isset($order))
-			{
-				$this->order = $order;
-			}
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
+			$this->location_info = $this->so->get_location_info($type, $type_id);
+
 		}
 
-
-		function save_sessiondata($data)
+		public function save_sessiondata($data)
 		{
 			if ($this->use_session)
 			{
@@ -137,7 +107,7 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','category');
 
-			//_debug_array($data);
+	//		_debug_array($data);
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -148,48 +118,64 @@
 			$this->allrows	= $data['allrows'];
 		}
 
-
-		function read($type='',$type_id='')
+		public function get_location_info($type,$type_id)
 		{
-			$category = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'type' => $type,type_id=>$type_id,'allrows'=>$this->allrows));
+			return $this->so->get_location_info($type,$type_id);
+		}
+
+		public function read()
+		{
+			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'allrows'=>$this->allrows));
 
 			$this->total_records = $this->so->total_records;
+			$this->uicols = $this->so->uicols;
 
-			return $category;
+			return $values;
 		}
 
-		function read_single($id,$type,$type_id)
+		public function read_single($data=array())
 		{
-			return $this->so->read_single($id,$type,$type_id);
+			$custom_fields = false;
+			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+			{
+				$custom_fields = true;
+				$values = array();
+				$values['attributes'] = $this->custom->find('property', $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+			}
+
+			if(isset($data['id']) && $data['id'])
+			{
+				$values = $this->so->read_single($data, $values);
+			}
+			if($custom_fields)
+			{
+				$values = $this->custom->prepare($values, 'property',$this->location_info['acl_location'], $data['view']);
+			}
+			return $values;
 		}
 
-		function select_part_of_town($part_of_town_id)
-		{
-			return $this->socommon->select_part_of_town($part_of_town_id);
-		}
-
-		function save($category,$action='',$type ='',$type_id)
+		public function save($data,$action='',$values_attribute = array())
 		{
 			if ($action=='edit')
 			{
-				if ($category['id'] != '')
+				if ($data['id'] != '')
 				{
 
-					$receipt = $this->so->edit($category,$type,$type_id);
+					$receipt = $this->so->edit($data,$values_attribute);
 				}
 			}
 			else
 			{
-				$receipt = $this->so->add($category,$type,$type_id);
+				$receipt = $this->so->add($data,$values_attribute);
 			}
 
 			return $receipt;
 		}
 
-		function delete($id,$type,$type_id)
+		public function delete($id)
 		{
-			$this->so->delete($id,$type,$type_id);
+			$this->so->delete($id);
 		}
 	}
 

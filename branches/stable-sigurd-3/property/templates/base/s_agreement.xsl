@@ -290,7 +290,42 @@
 				</td>
 			</tr>
 			<xsl:call-template name="vendor_form"/>
+
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_budget"/>
+				</td>
+				<td>
+					<input type="text" name="values[budget]" value="{value_budget}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_budget_statustext"/>
+						</xsl:attribute>
+					</input>
+					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+				</td>
+			</tr>
+
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_year"/>
+				</td>
+				<td valign="top">
+					<select name="values[year]" class="forms" title="{lang_year_statustext}">
+						<xsl:apply-templates select="year"/>
+					</select>
+				</td>
+			</tr>
+
+			<xsl:call-template name="ecodimb_form"/>
 			<xsl:call-template name="b_account_form"/>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td>
+					<xsl:call-template name="categories"/>
+				</td>
+			</tr>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_start_date"/>
@@ -353,6 +388,16 @@
 				</xsl:when>
 			</xsl:choose>
 
+						<tr>
+							<td width="19%" align="left" valign="top">
+								<xsl:value-of select="lang_budget"/>
+							</td>
+							<td>
+								<!-- DataTable 2 EDIT -->
+								<div id="datatable-container_3"></div>
+							</td>
+						</tr>						
+
 
 			</table>
 			
@@ -384,10 +429,6 @@
 					</xsl:when>
 				</xsl:choose>
 			</table>
-			
-			
-			
-			
 			
 			<table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 			<tr height="50">
@@ -963,6 +1004,15 @@
 						<input type="text" id="termination_date" name="termination_date" size="10" value="{value_termination_date}" readonly="readonly" onMouseout="window.status='';return true;" ></input>
 					</td>
 				</tr>
+				<tr>
+					<td width="19%" align="left" valign="top">
+						<xsl:value-of select="lang_budget"/>
+					</td>
+					<td>
+						<div id="datatable-container_3"></div>
+					</td>
+				</tr>						
+
 				<xsl:choose>
 					<xsl:when test="files!=''">
 						<!-- <xsl:call-template name="file_list_view"/>	-->					
@@ -1669,3 +1719,16 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+	<xsl:template match="year">
+	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:choose>
+			<xsl:when test="selected='selected'">
+				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+

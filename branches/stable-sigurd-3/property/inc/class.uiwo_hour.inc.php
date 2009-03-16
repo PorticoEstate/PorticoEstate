@@ -112,7 +112,7 @@
 
 		function deviation()
 		{
-			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$workorder_id 	= phpgw::get_var('workorder_id'); // in case of bigint
 			$hour_id	 	= phpgw::get_var('hour_id', 'int');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
@@ -250,29 +250,10 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_deviation' => $data));
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		function edit_deviation()
 		{
-			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$workorder_id 	= phpgw::get_var('workorder_id'); // in case of bigint
 			$hour_id	= phpgw::get_var('hour_id', 'int');
 			$id	 	= phpgw::get_var('id', 'int');
 			$values	 	= phpgw::get_var('values');
@@ -541,7 +522,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour'));
 
 			$values 		= phpgw::get_var('values');
-			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
+			$workorder_id 	= phpgw::get_var('workorder_id'); // in case of bigint
 
 			if($values['name'])
 			{
@@ -682,7 +663,7 @@
 
 			$delete = phpgw::get_var('delete', 'bool');
 			$hour_id = phpgw::get_var('hour_id', 'int');
-			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 
 			if($delete && $hour_id)
 			{
@@ -1157,7 +1138,7 @@
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details	= phpgw::get_var('show_details', 'bool');
-			$workorder_id	= phpgw::get_var('workorder_id', 'int');
+			$workorder_id	= phpgw::get_var('workorder_id'); // in case of bigint
 			$to_email 		= phpgw::get_var('to_email', 'email');
 			$update_email	= phpgw::get_var('update_email', 'bool');
 			$send_order		= phpgw::get_var('send_order', 'bool');
@@ -1615,7 +1596,7 @@ HTML;
 			}
 			$show_cost = phpgw::get_var('show_cost', 'bool');
 			$mark_draft = phpgw::get_var('mark_draft', 'bool');
-			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 
 			$common_data		= $this->common_data($workorder_id);
 			$values_hour		= $common_data['content'];
@@ -1740,7 +1721,7 @@ HTML;
 			$delete = phpgw::get_var('delete', 'bool');
 			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$values = phpgw::get_var('values');
 
 
@@ -2191,7 +2172,7 @@ HTML;
 			$delete = phpgw::get_var('delete', 'bool');
 			$hour_id = phpgw::get_var('hour_id', 'int');
 
-			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$template_id = phpgw::get_var('template_id', 'int');
 
 			$values = phpgw::get_var('values');
@@ -2688,7 +2669,7 @@ HTML;
 			}
 			$from			= phpgw::get_var('from');
 			$template_id 		= phpgw::get_var('template_id', 'int');
-			$workorder_id 		= phpgw::get_var('workorder_id', 'int');
+			$workorder_id 		= phpgw::get_var('workorder_id'); // in case of bigint
 			$activity_id		= phpgw::get_var('activity_id', 'int');
 			$hour_id		= phpgw::get_var('hour_id', 'int');
 			$values			= phpgw::get_var('values');
@@ -2872,7 +2853,7 @@ HTML;
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 			$id 		= phpgw::get_var('id', 'int');
-			$workorder_id	= phpgw::get_var('workorder_id', 'int');
+			$workorder_id	= phpgw::get_var('workorder_id'); // in case of bigint
 			$hour_id	= phpgw::get_var('hour_id', 'int');
 			$deviation_id	= phpgw::get_var('deviation_id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');

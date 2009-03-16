@@ -37,13 +37,16 @@
 
 		function __construct()
 		{
-			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon			= CreateObject('property.bocommon');
-			$this->historylog		= CreateObject('property.historylog','document');
-			$this->vfs 				= CreateObject('phpgwapi.vfs');
-			//$this->rootdir 			= $this->vfs->basedir;
-			$this->vfs->fakebase 	= '/property';
-			$this->fakebase 		= $this->vfs->fakebase;
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->historylog			= CreateObject('property.historylog','document');
+			$this->vfs 					= CreateObject('phpgwapi.vfs');
+			$this->vfs->fakebase 		= '/property';
+			$this->fakebase 			= $this->vfs->fakebase;
+			$this->cats					= CreateObject('phpgwapi.categories');
+			$this->cats->app_name		= 'property.document';
+			$this->cats->supress_info	= true;
+
 
 			$this->db           	= & $GLOBALS['phpgw']->db;
 			$this->join				= & $this->db->join;
@@ -94,8 +97,10 @@
 				$order		= isset($data['order'])?$data['order']:'';
 				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
-				$doc_types	= isset($data['doc_types']) && $data['doc_types'] ? $data['doc_types']: array();
+				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
 			}
+
+			$doc_types = $this->get_sub_doc_types($doc_type);
 
 			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
@@ -272,10 +277,12 @@
 				$filter			= isset($data['filter']) && $data['filter'] ? (int) $data['filter']: 0;
 				$entity_id		= isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id']:0;
 				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']: 0;
-				$doc_types		= isset($data['doc_types']) && $data['doc_types'] ? $data['doc_types']: array();
+				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
+
+			$doc_types = $this->get_sub_doc_types($doc_type);
 
 			if ($order)
 			{
@@ -610,6 +617,110 @@
 			$receipt['document_id'] = $document['document_id'];
 			$receipt['message'][] = array('msg'=>lang('document %1 has been edited',"'".$document['title']."'"));
 			return $receipt;
+		}
+
+		/**
+		 * Get a list of doc-types , included subtypes
+		 *
+		 * @param int $doc_type the parent doc-type
+		 * @return array parent and children
+		 */
+
+		function get_sub_doc_types($doc_type = 0)
+		{
+			$doc_types = array();
+			if($doc_type)
+			{
+				$doc_types[] = $doc_type;
+				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $doc_type);
+				foreach ($cat_sub as $doc_type)
+				{
+					$doc_types[] = $doc_type['id'];
+				}
+			}
+			return $doc_types;
+		}
+
+
+		/**
+		 * Get a hierarchical array of doc-types with number of hits for each level at locatin and link to list.
+		 * Basis for the folder-menu
+		 *
+		 * @param string $location_code location_code in the (physical) location-hierarchy
+		 * @return array parent and children
+		 */
+
+		function get_files_at_location($location_code)
+		{
+			$documents = array();
+			$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$hits = (int) $this->db->f('hits');
+
+				$x = 0; // within level
+				$y = 0; //level
+				$cache_x_at_y[$y] = $x;
+				$documents[$x] = array
+				(
+					'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
+					'text'		=> lang('documents') . ' [' . $hits . ']:',
+					'descr'		=> lang('Documentation'),
+					'level'		=> 0
+				);
+			}
+			else
+			{
+				return $documents;
+			}
+
+			$categories = $this->cats->return_sorted_array(0, false);
+
+			foreach ($categories as $category)
+			{			
+				$doc_types = $this->get_sub_doc_types($category['id']);
+
+				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category IN (". implode(',', $doc_types) . ')';
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$hits = (int) $this->db->f('hits');
+
+				$level = $category['level']+1;
+				if($level == $y)
+				{
+					$x++;
+				}
+				else if($level < $y )
+				{
+					$x = $cache_x_at_y[$level]+1;
+				}
+				else if($level > $y )
+				{
+					$x = 0;
+				}
+				$y = $level;
+
+					$map = '$documents'; 
+					for ($i = 0; $i < $level ; $i++)
+					{
+						
+						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
+					}
+
+					$map .= '[]'; 
+
+					eval($map . ' =array('
+					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
+					.	"'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
+					.	"'descr'		=> '" . lang('Documentation') . "',\n"
+					.	"'level'		=> "  . ($category['level']+1) . "\n"
+					 . ');');
+
+				$cache_x_at_y[$y] = $x;
+			}
+
+			return $documents;
 		}
 
 		function delete_file($file)

@@ -566,11 +566,12 @@
 		{
 			$table = 'fm_s_agreement';
 
-			$this->db->query("SELECT * from $table where id='$s_agreement_id'");
+			$sql = "SELECT fm_s_agreement.* FROM $table WHERE id='$s_agreement_id'";
+			$this->db->query($sql);
 
 			if($this->db->next_record())
 			{
-				$values['id']				= (int)$this->db->f('id');
+				$values['id']				= $this->db->f('id');
 				$values['entry_date']		= $this->db->f('entry_date');
 				$values['cat_id']			= $this->db->f('category');
 				$values['member_of']		= explode(',',$this->db->f('member_of'));
@@ -591,7 +592,20 @@
 						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
 				}
+
+				$sql = "SELECT fm_s_agreement_budget.category as order_category, year, ecodimb,budget_account,budget"
+					. " FROM fm_s_agreement_budget WHERE agreement_id='$s_agreement_id' AND fm_s_agreement_budget.year =" . date('Y');
+				$this->db->query($sql);
+				$this->db->next_record();
+
+				$values['order_category']	= $this->db->f('order_category');
+				$values['year']				= $this->db->f('year');
+				$values['ecodimb']			= $this->db->f('ecodimb');
+				$values['b_account_id']		= $this->db->f('budget_account');
+				$values['budget']			= (int)$this->db->f('budget');
+				$values['year']				= $this->db->f('year');
 			}
+
 			return $values;
 		}
 
@@ -606,7 +620,7 @@
 
 			if($this->db->next_record())
 			{
-				$values['agreement_id']		= (int)$this->db->f('agreement_id');
+				$values['agreement_id']		= $this->db->f('agreement_id');
 				$values['id']				= (int)$this->db->f('id');
 				$values['entry_date']		= $this->db->f('entry_date');
 				$values['location_code']	= $this->db->f('location_code');
@@ -625,16 +639,16 @@
 			return $values;
 		}
 
-		function add($s_agreement,$values_attribute='')
+		function add($values,$values_attribute='')
 		{
-//_debug_array($s_agreement);
+//_debug_array($values);
 			$table = 'fm_s_agreement';
-			$s_agreement['name'] = $this->db->db_addslashes($s_agreement['name']);
-			$s_agreement['descr'] = $this->db->db_addslashes($s_agreement['descr']);
+			$values['name'] = $this->db->db_addslashes($values['name']);
+			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
-			if($s_agreement['member_of'])
+			if($values['member_of'])
 			{
-				$s_agreement['member_of']=',' . implode(',',$s_agreement['member_of']) . ',';
+				$values['member_of']=',' . implode(',',$values['member_of']) . ',';
 			}
 
 
@@ -642,21 +656,21 @@
 			$id = $this->socommon->increment_id('workorder');
 
 			$vals[]	= $id;
-			$vals[]	= $s_agreement['name'];
-			$vals[]	= $s_agreement['descr'];
+			$vals[]	= $values['name'];
+			$vals[]	= $values['descr'];
 			$vals[]	= time();
-			$vals[]	= $s_agreement['cat_id'];
-			$vals[]	= $s_agreement['member_of'];
-			$vals[]	= $s_agreement['start_date'];
-			$vals[]	= $s_agreement['end_date'];
-			$vals[]	= $s_agreement['termination_date'];
-			$vals[]	= $s_agreement['vendor_id'];
-			$vals[]	= $s_agreement['b_account_id'];
+			$vals[]	= $values['cat_id'];
+			$vals[]	= $values['member_of'];
+			$vals[]	= $values['start_date'];
+			$vals[]	= $values['end_date'];
+			$vals[]	= $values['termination_date'];
+			$vals[]	= $values['vendor_id'];
+			$vals[]	= $values['b_account_id'];
 			$vals[]	= $this->account;
 
-			if(isset($s_agreement['extra']) && is_array($s_agreement['extra']))
+			if(isset($values['extra']) && is_array($values['extra']))
 			{
-				foreach ($s_agreement['extra'] as $input_name => $value)
+				foreach ($values['extra'] as $input_name => $value)
 				{
 					if(isset($value) && $value)
 					{
@@ -684,6 +698,21 @@
 			}
 
 			$vals	= $this->db->validate_insert($vals);
+
+			if(isset($values['budget']) && $values['budget'])
+			{
+				$_budget = array
+				(
+					'agreement_id'		=> $values['s_agreement_id'],
+					'category'			=> $values['order_category'],
+					'year'				=> (int)$values['year'],
+					'ecodimb'			=> (int)$values['ecodimb'],
+					'budget_account'	=> $values['b_account_id'],
+					'budget'			=> $values['budget'],				
+				);
+
+				$this->update_budget($_budget);
+			}
 
 			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,member_of,start_date,end_date,termination_date,vendor_id,account_id,user_id $cols) "
 				. "VALUES ($vals)",__LINE__,__FILE__);
@@ -812,10 +841,48 @@
 			return $receipt;
 		}
 
+		function update_budget($data)
+		{
+			$sql = "SELECT * FROM fm_s_agreement_budget WHERE agreement_id = {$data['agreement_id']} AND year = {$data['year']}";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			if($this->db->next_record())
+			{
+				$old_category	= $this->db->f('category');
+				$old_ecodimb		= $this->db->f('ecodimb');
+				$old_budget_account	= $this->db->f('budget_account');
+				$old_budget			= $this->db->f('budget');
+				$sql = "UPDATE fm_s_agreement_budget SET"
+				 . " category = {$data['category']},"
+				 . " ecodimb = {$data['ecodimb']},"
+				 . " budget_account = '{$data['budget_account']}',"
+				 . " budget = {$data['budget']},"
+				 . ' modified_date=' . time()
+				 . " WHERE agreement_id = {$data['agreement_id']} AND year = {$data['year']}";
+				 				
+			}
+			else
+			{
+				$sql = "INSERT INTO fm_s_agreement_budget (agreement_id,year,category,ecodimb,budget_account,budget,user_id,entry_date) VALUES("
+				 . "{$data['agreement_id']},"
+				 . "{$data['year']},"
+				 . "{$data['category']},"
+				 . "{$data['ecodimb']},"
+				 . "'{$data['budget_account']}',"
+				 . "{$data['budget']},"
+				 . "{$this->account},"
+				 . time() . ')';
+			}
+
+			$this->db->query($sql,__LINE__,__FILE__);
+		
+		}
+
 		function edit($values,$values_attribute='')
 		{
 //_debug_array($values);
 //_debug_array($values_attribute);
+
 			$table = 'fm_s_agreement';
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
@@ -858,11 +925,27 @@
 				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
+			$this->db->transaction_begin();
+			if(isset($values['budget']) && $values['budget'])
+			{
+				$_budget = array
+				(
+					'agreement_id'		=> $values['s_agreement_id'],
+					'category'			=> $values['order_category'],
+					'year'				=> (int)$values['year'],
+					'ecodimb'			=> (int)$values['ecodimb'],
+					'budget_account'	=> $values['b_account_id'],
+					'budget'			=> $values['budget'],				
+				);
+
+				$this->update_budget($_budget);
+			}
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
 							. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id=" . intval($values['s_agreement_id']));
 
-			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= " . intval($values['s_agreement_id']));
+			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= " . $values['s_agreement_id']);
 
+			$this->db->transaction_commit();
 			$receipt['s_agreement_id']= $values['s_agreement_id'];
 			$receipt['message'][] = array('msg'=>lang('s_agreement %1 has been edited',$values['s_agreement_id']));
 			return $receipt;
@@ -930,9 +1013,9 @@
 				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
-			$this->db->query("UPDATE $table set entry_date=" . time() . "$value_set WHERE agreement_id=" . intval($values['s_agreement_id']) . ' AND id=' . intval($values['id']));
+			$this->db->query("UPDATE $table set entry_date=" . time() . "$value_set WHERE agreement_id=" . ($values['s_agreement_id']) . ' AND id=' . intval($values['id']));
 
-			$this->db->query("UPDATE fm_s_agreement_pricing set cost = this_index *" . $this->floatval($values['cost']) . " WHERE agreement_id=" . intval($values['s_agreement_id']) . ' AND item_id=' . intval($values['id']));
+			$this->db->query("UPDATE fm_s_agreement_pricing set cost = this_index *" . $this->floatval($values['cost']) . " WHERE agreement_id=" . $values['s_agreement_id'] . ' AND item_id=' . intval($values['id']));
 
 			if (isset($history_set) AND is_array($history_set))
 			{
@@ -960,7 +1043,7 @@
 			while (is_array($values['select']) && list($item_id,$value) = each($values['select']))
 			{
 
-				$this->db->query("UPDATE fm_s_agreement_pricing set current_index = NULL WHERE agreement_id=" . intval($values['agreement_id']) . ' AND item_id=' . intval($item_id));
+				$this->db->query("UPDATE fm_s_agreement_pricing set current_index = NULL WHERE agreement_id=" . $values['agreement_id'] . ' AND item_id=' . intval($item_id));
 
 				$this->db->query("INSERT INTO fm_s_agreement_pricing (agreement_id,item_id,id,current_index,this_index,cost,index_date,entry_date,user_id)"
 					. "VALUES (" . $values['agreement_id'] . "," . $item_id ."," . ($values['id'][$item_id]+1) .",1,'" . $values['new_index'] . "','" . ($value * $values['new_index'])  . "'," . (int)$values['date'] . "," . time()
@@ -1014,10 +1097,10 @@
 		{
 			$table = 'fm_s_agreement';
 			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM $table WHERE id=" . intval($s_agreement_id));
-			$this->db->query("DELETE FROM fm_s_agreement_detail WHERE agreement_id=" . intval($s_agreement_id));
-			$this->db->query("DELETE FROM fm_s_agreement_pricing WHERE agreement_id=" . intval($s_agreement_id));
-			$this->db->query("DELETE FROM fm_orders WHERE id=" . intval($s_agreement_id));
+			$this->db->query("DELETE FROM $table WHERE id=" . $s_agreement_id);
+			$this->db->query("DELETE FROM fm_s_agreement_detail WHERE agreement_id=" . $s_agreement_id);
+			$this->db->query("DELETE FROM fm_s_agreement_pricing WHERE agreement_id=" . $s_agreement_id);
+			$this->db->query("DELETE FROM fm_orders WHERE id=" . $s_agreement_id);
 			$this->db->transaction_commit();
 		}
 
@@ -1041,5 +1124,50 @@
 			$next_id= $this->db->f('id')+1;
 			return $next_id;
 		}
-	}
 
+		function get_year_filter_list($agreement_id)
+		{
+			$table = 'fm_s_agreement_budget';
+			$sql = "SELECT year FROM $table WHERE agreement_id = {$agreement_id} group by year ORDER BY year ASC";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[]	= $this->db->f('year');
+			}
+
+			return $values;
+		}
+
+		function get_budget($agreement_id)
+		{
+			$values = array();
+
+			$sql = "SELECT * FROM fm_s_agreement_budget WHERE agreement_id = {$agreement_id} ORDER BY year ASC";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'agreement_id'		=> $agreement_id,
+					'year'				=> $this->db->f('year'),
+					'cat_id'			=> $this->db->f('category'),
+					'ecodimb'			=> $this->db->f('ecodimb'),
+					'budget_account'	=> $this->db->f('budget_account'),
+					'budget'			=> $this->db->f('budget'),
+					'actual_cost'		=> $this->db->f('actual_cost')
+				);
+			}
+			
+			return $values;
+		}
+
+		function delete_year_from_budget($data,$agreement_id)
+		{
+			$sql = "DELETE FROM fm_s_agreement_budget WHERE agreement_id = {$agreement_id} AND year IN(" . implode(',', $data) . ')';
+			$this->db->query($sql,__LINE__,__FILE__);
+		}
+	}

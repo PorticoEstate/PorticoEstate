@@ -670,9 +670,10 @@
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
 			$config				= CreateObject('phpgwapi.config');
-			$id 				= phpgw::get_var('id', 'int');
+			$id 				= phpgw::get_var('id'); // in case of bigint
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');
+			$values['ecodimb']	= phpgw::get_var('ecodimb');
 
 			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
@@ -718,9 +719,22 @@
 					);
 			}
 
-
 			if (isset($values['save']))
 			{
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				if(is_array($insert_record))
+				{
+					$values = $this->bocommon->collect_locationdata($values,$insert_record);
+				}
+
 				if(!$values['title'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a workorder title !'));
@@ -856,6 +870,7 @@
 				if($id)
 				{
 					$values		= $this->bo->read_single($id);
+
 					if(!isset($values['origin']))
 					{
 						$values['origin'] = '';
@@ -988,15 +1003,51 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
+			if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+			{
+				$admin_location = & $bolocation->soadmin_location;
+				$location_types	= $admin_location->select_location_type();
+				$max_level = 4;//count($location_types);
 
-			$location_data=$bolocation->initiate_ui_location(array(
+				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
+				$location_template_type = 'form';
+				$_location_data = array();
+				
+				if(isset($values['location_data']) && $values['location_data'])
+				{
+					$_location_data = $values['location_data'];
+				}
+				else
+				{
+						if(isset($project['location_data']) && $project['location_data'])
+						{
+							$_location_data = $project['location_data'];
+						}
+				}
+
+				$location_data=$bolocation->initiate_ui_location(array(
+						'values'			=> $_location_data,
+						'type_id'			=> $max_level,
+						'no_link'			=> false, // disable lookup links for location type less than type_id
+						'tenant'			=> true,
+						'block_parent' 		=> $location_level,
+						'lookup_type'		=> $location_template_type,
+						'lookup_entity'		=> $this->bocommon->get_lookup_entity('project'),
+						'entity_data'		=> (isset($values['p'])?$values['p']:''),
+						'filter_location'	=> $project['location_data']['location_code']
+						));
+			}
+			else
+			{
+				$location_template_type='view';
+				$location_data=$bolocation->initiate_ui_location(array(
 						'values'		=> (isset($project['location_data'])?$project['location_data']:''),
 						'type_id'		=> (isset($project['location_data']['location_code'])?count(explode('-',$project['location_data']['location_code'])):''),
 						'no_link'		=> false, // disable lookup links for location type less than type_id
 						'tenant'		=> (isset($project['location_data']['tenant_id'])?$project['location_data']['tenant_id']:''),
 						'lookup_type'		=> 'view'
 						));
-
+			}
 
 			if(isset($project['contact_phone']))
 			{
@@ -1017,6 +1068,13 @@
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name']));
+
+
+
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			
 
 
 			$link_data = array
@@ -1197,10 +1255,10 @@
 
 				'actual_cost'				=> (isset($values['actual_cost'])?$values['actual_cost']:''),
 				'lang_actual_cost'			=> lang('Actual cost'),
-
+				'ecodimb_data'				=> $ecodimb_data,
 				'vendor_data'				=> $vendor_data,
 				'location_data'				=> $location_data,
-				'location_type'				=> 'view',
+				'location_template_type'	=> $location_template_type,
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 				'lang_year'				=> lang('Year'),
@@ -1358,7 +1416,7 @@
 		function delete()
 		{
 
-			$id = phpgw::get_var('id', 'int');
+			$id = phpgw::get_var('id');
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -1418,7 +1476,7 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
-			$id	= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
 
@@ -1444,14 +1502,38 @@
 
 			$function_msg = lang('View Workorder');
 
+			$_location_data = array();
+			$_tenant = 0;
+			$_level = 0;
+			if(isset($values['location_data']) && $values['location_data'])
+			{
+				$_location_data = $values['location_data'];
+				$_tenant = isset($values['location_data']['tenant_id']) ? $values['location_data']['tenant_id'] : 0;
+				$_level = count(explode('-',$values['location_data']['location_code']));
+			}
+			else
+			{
+					if(isset($project['location_data']) && $project['location_data'])
+					{
+						$_location_data = $project['location_data'];
+						$_tenant = isset($project['location_data']['tenant_id']) ? $project['location_data']['tenant_id'] : 0;
+						$_level = count(explode('-',$project['location_data']['location_code']));
+					}
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
-						'values'	=> $project['location_data'],
-						'type_id'	=> count(explode('-',$project['location_data']['location_code'])),
+						'values'	=> $_location_data,
+						'type_id'	=> $_level,
 						'no_link'	=> false, // disable lookup links for location type less than type_id
-						'tenant'	=> $project['location_data']['tenant_id'],
+						'tenant'	=> $_tenant,
 						'lookup_type'	=> 'view'
 						));
 
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr'],
+						'type'				=>'view'));
+			
 
 			if($project['contact_phone'])
 			{
@@ -1492,7 +1574,7 @@
 				'lang_vendor'				=> lang('Vendor'),
 				'value_vendor_id'			=> $values['vendor_id'],
 				'value_vendor_name'			=> $values['vendor_name'],
-
+				'ecodimb_data'				=> $ecodimb_data,
 				'lang_b_account'			=> lang('Budget account'),
 				'value_b_account_id'			=> $values['b_account_id'],
 				'value_b_account_name'			=> $values['b_account_name'],

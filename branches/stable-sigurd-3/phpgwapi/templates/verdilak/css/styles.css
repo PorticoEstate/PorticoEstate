@@ -120,6 +120,26 @@ a:hover
 	background-color: #ffffff;
 }
 
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+}
+
 .row_off
 {
 	background-color: #ddf0ff;

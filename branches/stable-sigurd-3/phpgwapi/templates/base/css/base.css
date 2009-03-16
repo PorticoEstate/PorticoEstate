@@ -40,6 +40,13 @@ thead
 {
 	text-align: center;
 }
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
 .msg
 {
 	color: #f00;
@@ -47,6 +54,11 @@ thead
 	text-align: center;
 }
 
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+}
 ol.source
 {
 	background-color: #ccc;

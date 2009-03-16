@@ -287,6 +287,12 @@ strong
 	color: #f00;
 }
 
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+}
+
 .warn
 {
 	background-color: #ff8;

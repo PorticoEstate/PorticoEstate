@@ -693,8 +693,12 @@
 /********************************************************************************
  *
  */
-	this.execute_ds = function()
+	this.execute_ds = function(allrows)
 	{
+		if(allrows == true)
+		{
+			path_values.allrows = true;
+		}
 		if(config_values.PanelLoading)
 		{
 			myLoading.show();

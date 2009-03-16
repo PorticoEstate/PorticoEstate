@@ -64,33 +64,31 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::service';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.bos_agreement',true);
-			$this->bocommon		= CreateObject('property.bocommon');
+			$this->bo					= CreateObject('property.bos_agreement',true);
+			$this->bocommon				= & $this->bo->bocommon;
 
-			$this->role		= $this->bo->role;
+			$this->role					= $this->bo->role;
 
-			$this->cats		= CreateObject('phpgwapi.categories');
-			$this->cats->app_name 	= 'fm_vendor';
+			$this->cats					= & $this->bo->cats;
+			$this->acl					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location			= '.s_agreement';
 
-			$this->acl		= & $GLOBALS['phpgw']->acl;
-			$this->acl_location= '.s_agreement';
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit				= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage			= $this->acl->check($this->acl_location, 16, 'property');
+			$this->custom				= & $this->bo->custom;
 
-			$this->acl_read 	= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add		= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit		= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete	= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage	= $this->acl->check($this->acl_location, 16, 'property');
-			$this->custom		= & $this->bo->custom;
-
-			$this->start		= $this->bo->start;
-			$this->query		= $this->bo->query;
-			$this->sort			= $this->bo->sort;
-			$this->order		= $this->bo->order;
-			$this->filter		= $this->bo->filter;
-			$this->cat_id		= $this->bo->cat_id;
-			$this->vendor_id	= $this->bo->vendor_id;
-			$this->allrows		= $this->bo->allrows;
-			$this->member_id	= $this->bo->member_id;
+			$this->start				= $this->bo->start;
+			$this->query				= $this->bo->query;
+			$this->sort					= $this->bo->sort;
+			$this->order				= $this->bo->order;
+			$this->filter				= $this->bo->filter;
+			$this->cat_id				= $this->bo->cat_id;
+			$this->vendor_id			= $this->bo->vendor_id;
+			$this->allrows				= $this->bo->allrows;
+			$this->member_id			= $this->bo->member_id;
 		}
 
 		function save_sessiondata()
@@ -694,7 +692,7 @@
 
 		function edit()
 		{
-			$id				= phpgw::get_var('id');
+			$id				= phpgw::get_var('id'); // in case of bigint
 			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item');
 			$item_id		= phpgw::get_var('item_id');
@@ -725,6 +723,7 @@
 
 			if (is_array($values))
 			{
+				$values['ecodimb']	= phpgw::get_var('ecodimb');
 				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
 				{
 					if($_POST[$key])
@@ -751,6 +750,10 @@
 //						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
 					}
 
+					if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+					{
+						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+					}
 
 					if($id)
 					{
@@ -760,6 +763,11 @@
 					else
 					{
 						$values['s_agreement_id']=$this->bo->request_next_id();
+					}
+
+					if(isset($values['delete_b_year']) && is_array($values['delete_b_year']))
+					{
+						$this->bo->delete_year_from_budget($values['delete_b_year'],$id);
 					}
 
 					$bofiles	= CreateObject('property.bofiles');
@@ -926,6 +934,9 @@
 						'b_account_id'		=> $s_agreement['b_account_id'],
 						'b_account_name'	=> $s_agreement['b_account_name']));
 
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $s_agreement['ecodimb'],
+						'ecodimb_descr'		=> $s_agreement['ecodimb_descr']));
 
 			$alarm_data=$this->bocommon->initiate_ui_alarm(array(
 						'acl_location'=>$this->acl_location,
@@ -1332,7 +1343,38 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 			);
 
+			$content_budget = $this->bo->get_budget($id);
+			foreach($content_budget as & $b_entry)
+			{
+				$b_entry['delete_year'] = '<input type="checkbox" name="values[delete_b_year][]" value="'.$b_entry['year'].'" title="'.lang('Check to delete year').'">';				
+			}
+
+			$datavalues[3] = array
+			(
+					'name'					=> "3",
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+			);
+
+	
+			$myColumnDefs[3] = array
+       		(
+       			'name'		=> "3",
+       			'values'	=>	json_encode(array(	array(key => 'year',label=>lang('year'),sortable=>false,resizeable=>true),
+       												array(key => 'category',label=>lang('category'),sortable=>false,resizeable=>true),
+       												array(key => 'ecodimb',label=>lang('dimb'),sortable=>false,resizeable=>true),
+       												array(key => 'budget_account',label=>lang('budget account'),sortable=>false,resizeable=>true),
+       												array(key => 'budget',label=>lang('budget'),sortable=>false,resizeable=>true),
+       												array(key => 'actual_cost',label=>lang('actual cost'),sortable=>false,resizeable=>true),
+									       			array(key => delete_year,label=>lang('Delete budget'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+			);
+
 //--------------------------------------------JSON CODE------------
+
+			$this->cats->app_name		= 'property.project';
 
 			$data = array
 			(
@@ -1402,8 +1444,23 @@
 				'lang_termination_date'			=> lang('termination date'),
 				'value_termination_date'		=> $s_agreement['termination_date'],
 
-				'vendor_data'				=> $vendor_data,
+				'vendor_data'					=> $vendor_data,
+
+				'lang_budget'					=> lang('Budget'),
+				'lang_budget_statustext'		=> lang('Budget for selected year'),
+				'value_budget'					=> $s_agreement['budget'],
+				'currency'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+
+				'lang_year'						=> lang('year'),
+				'lang_year_statustext'			=> lang('Budget year'),
+				'year'							=> $this->bocommon->select_list($s_agreement['year'],$this->bo->get_year_list($id)),
+
 				'b_account_data'			=> $b_account_data,
+				'ecodimb_data'				=> $ecodimb_data,
+				'lang_category'						=> lang('category'),
+				'lang_no_cat'						=> lang('Select category'),
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[order_category]','selected' => $s_agreement['order_category'])),
+
 				'lang_name'				=> lang('name'),
 				'lang_name_statustext'			=> lang('name'),
 				'value_name'				=> $s_agreement['name'],
@@ -1459,7 +1516,7 @@
 
 		function edit_item()
 		{
-			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$id	= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 			$delete_last	= phpgw::get_var('delete_last', 'bool', 'GET');
@@ -1883,7 +1940,7 @@
 		{
 			$from = phpgw::get_var('from');
 			$from = $from == 'edit'?'edit':'view';
-			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$id	= phpgw::get_var('id', 'int');
 
 			$bolocation			= CreateObject('property.bolocation');
@@ -2081,7 +2138,7 @@
 
 		function delete()
 		{
-			$s_agreement_id	= phpgw::get_var('s_agreement_id', 'int');
+			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			//json code delete
@@ -2122,7 +2179,7 @@
 
 		function view()
 		{
-			$s_agreement_id	= phpgw::get_var('id', 'int');
+			$s_agreement_id	= phpgw::get_var('id'); // in case of bigint
 			$config		= CreateObject('phpgwapi.config','property');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('s_agreement', 'attributes_view', 'files'));
@@ -2331,8 +2388,33 @@
        			'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
 			);
 
+
+			$content_budget = $this->bo->get_budget($s_agreement_id);
+
+			$datavalues[3] = array
+			(
+					'name'					=> "3",
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+			);
+
+			$myColumnDefs[3] = array
+       		(
+       			'name'		=> "3",
+       			'values'	=>	json_encode(array(	array(key => 'year',label=>lang('year'),sortable=>false,resizeable=>true),
+       												array(key => 'category',label=>lang('category'),sortable=>false,resizeable=>true),
+       												array(key => 'ecodimb',label=>lang('dimb'),sortable=>false,resizeable=>true),
+       												array(key => 'budget_account',label=>lang('budget account'),sortable=>false,resizeable=>true),
+       												array(key => 'budget',label=>lang('budget'),sortable=>false,resizeable=>true),
+       												array(key => 'actual_cost',label=>lang('actual cost'),sortable=>false,resizeable=>true)))
+			);
+
 			$data = array
 			(
+				'lang_budget'					=> lang('budget'),
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view")),
 				'datatable'						=> $datavalues,

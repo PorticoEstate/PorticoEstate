@@ -477,7 +477,15 @@
 				'integration' => array('type' => 'int','precision' => '4','nullable' => True),
 				'charge_tenant' => array('type' => 'int','precision' => '2','nullable' => True),
 				'claim_issued' => array('type' => 'int','precision' => '2','nullable' => True),
-				'paid' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '1')
+				'paid' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '1'),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
+				'p_entity_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'p_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
+				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1091,7 +1099,8 @@
 				'key_deliver' => array('type' => 'int','precision' => '4','nullable' => True),
 				'other_branch' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'key_responsible' => array('type' => 'int','precision' => '4','nullable' => True),
-				'project_group' => array('type' => 'int','precision' => '4','nullable' => True)
+				'project_group' => array('type' => 'int','precision' => '4','nullable' => True),
+				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1351,8 +1360,8 @@
 			'fd' => array(
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'name' => array('type' => 'varchar','precision' => '100','nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True),
 				'prefix' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'lookup_tenant' => array('type' => 'int','precision' => '4','nullable' => True),
 				'tracking' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -1594,6 +1603,25 @@
 				'account_id' => array('type' => 'varchar', 'precision' => 20,'nullable' => True)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_s_agreement_budget' => array(
+			'fd' => array(
+				'agreement_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'budget_account' =>  array('type' => 'varchar','precision' => 15,'nullable' => False),
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'category' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('agreement_id','year'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1852,7 +1880,9 @@
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'budget_cost' => array('type' => 'int', 'precision' => 4,'default' => '0','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
-				'distribute_year' => array('type' => 'text','nullable' => True)
+				'distribute_year' => array('type' => 'text','nullable' => True),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'category'=> array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1864,13 +1894,15 @@
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'year' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'b_account_id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'district_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'district_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'revision' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'access' => array('type' => 'varchar','precision' => '7','nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'budget_cost' => array('type' => 'int', 'precision' => 4,'default' => '0','nullable' => True),
-				'remark' => array('type' => 'text','nullable' => True)
+				'remark' => array('type' => 'text','nullable' => True),
+				'ecodimb'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'category'=> array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

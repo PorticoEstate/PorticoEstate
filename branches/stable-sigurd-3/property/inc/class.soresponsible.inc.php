@@ -413,7 +413,7 @@
 
 			$orig = $this->read_single_contact($values['id']);
 
-			if(implode('-', $values['location']) != $orig['location_code']
+			if(isset($values['location']) &&(implode('-', $values['location']) != $orig['location_code'])
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
 				|| $values['extra']['p_num'] != $orig['p_num']

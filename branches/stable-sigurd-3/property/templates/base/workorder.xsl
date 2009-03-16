@@ -413,7 +413,7 @@
 				</xsl:for-each>
 			</tr>
 			<xsl:choose>
-				<xsl:when test="location_type='form'">
+				<xsl:when test="location_template_type='form'">
 					<xsl:call-template name="location_form"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -625,6 +625,7 @@
 
 
 				<xsl:call-template name="vendor_form"/>
+				<xsl:call-template name="ecodimb_form"/>
 				<xsl:call-template name="b_account_form"/>
 
 			<tr>
@@ -1187,6 +1188,12 @@
 					<xsl:value-of select="value_vendor_name"/>
 				</td>
 			</tr>
+			<xsl:choose>
+				<xsl:when test="ecodimb_data!=''">
+					<xsl:call-template name="ecodimb_view"/>
+				</xsl:when>
+			</xsl:choose>
+
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_b_account"/>

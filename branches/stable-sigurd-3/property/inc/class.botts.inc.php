@@ -93,28 +93,27 @@
 			$query					= phpgw::get_var('query');
 			$sort					= phpgw::get_var('sort');
 			$order					= phpgw::get_var('order');
-			$status_id				= phpgw::get_var('status_id');
-			$user_id				= phpgw::get_var('user_id');
+			$status_id				= phpgw::get_var('status_id', 'string');
+			$user_id				= phpgw::get_var('user_id', 'int');
 			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
-			$start_date				= phpgw::get_var('start_date');
-			$end_date				= phpgw::get_var('end_date');
+			$start_date				= phpgw::get_var('start_date', 'string');
+			$end_date				= phpgw::get_var('end_date', 'string');
 
-			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
-			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
-			$this->user_id			= isset($user_id) && $user_id ? $user_id : '';
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
-			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
-			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
-			$this->status			= isset($status) && $status ? $status : '';
-			$this->type_id			= isset($type_id) && $type_id ? $type_id : 1;
-			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
-			$this->start_date		= isset($start_date) && $start_date ? $start_date : '';
-			$this->end_date			= isset($end_date) && $end_date ? $end_date : '';
+			$this->start			= $start 							? $start 			: 0;
+			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
+			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
+			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
+			$this->cat_id			= isset($_REQUEST['cat_id']) 		? $cat_id			:  $this->cat_id;
+			$this->status_id		= isset($_REQUEST['status_id'])		? $status_id		: $this->status_id;
+			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
+			$this->part_of_town_id	= isset($_REQUEST['part_of_town_id'])? $part_of_town_id : $this->part_of_town_id;
+			$this->district_id		= isset($_REQUEST['district_id']) 	? $district_id		: $this->district_id;
+			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
+			$this->start_date		= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
+			$this->end_date			= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
 		}
 
 
@@ -132,10 +131,10 @@
 
 			$this->start		= isset($data['start'])?$data['start']:'';
 			$this->query		= isset($data['query'])?$data['query']:'';
-			$this->filter		= isset($data['filter'])?$data['filter']:'';
-			$this->user_filter	= isset($data['user_filter'])?$data['user_filter']:'';
+			$this->user_id		= isset($data['user_id'])?$data['user_id']:'';
 			$this->sort			= isset($data['sort'])?$data['sort']:'';
 			$this->order		= isset($data['order'])?$data['order']:'';
+			$this->status_id	= isset($data['status_id'])?$data['status_id']:'';
 			$this->cat_id		= isset($data['cat_id'])?$data['cat_id']:'';
 			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
 			$this->allrows		= isset($data['allrows'])?$data['allrows']:'';

@@ -92,7 +92,7 @@
 
 		function index()
 		{
-			$workorder_id = phpgw::get_var('workorder_id', 'int');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$lookup 	= phpgw::get_var('lookup', 'bool');
 
 			$datatable = array();

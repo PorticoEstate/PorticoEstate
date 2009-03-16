@@ -79,8 +79,8 @@
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
-			$this->status_id				= $this->bo->status_id;
-			$this->user_id			= $this->bo->user_id;
+			$this->status_id			= $this->bo->status_id;
+			$this->user_id				= $this->bo->user_id;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->district_id			= $this->bo->district_id;
 			$this->allrows				= $this->bo->allrows;
@@ -92,17 +92,17 @@
 		{
 			$data = array
 			(
-				'start'		=> $this->start,
-				'query'		=> $this->query,
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'filter'	=> $this->status_id,
-				'user_id'	=> $this->user_id,
-				'cat_id'	=> $this->cat_id,
+				'start'			=> $this->start,
+				'query'			=> $this->query,
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'status_id'		=> $this->status_id,
+				'user_id'		=> $this->user_id,
+				'cat_id'		=> $this->cat_id,
 				'district_id'	=> $this->district_id,
-				'allrows'	=> $this->allrows,
+				'allrows'		=> $this->allrows,
 				'start_date'	=> $this->start_date,
-				'end_date'	=> $this->end_date
+				'end_date'		=> $this->end_date
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -201,6 +201,8 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
 			}
+
+			$this->save_sessiondata();
 
 			$dry_run=false;
 
@@ -321,7 +323,7 @@
 			$default_value = array ('id'=>'','name'=>lang('Open'));
 			array_unshift ($values_combo_box[2],$default_value);
 
-			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->status_id,$this->acl_location);
+			$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
 			$default_value = array ('id'=>'','name'=>lang('no user'));
 			array_unshift ($values_combo_box[3],$default_value);
 
@@ -800,9 +802,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.index', 'property' );
-			$this->save_sessiondata();
-			//_debug_array($datatable);die;
-
 		}
 
 		function index2()

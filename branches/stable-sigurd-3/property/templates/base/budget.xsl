@@ -426,8 +426,17 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</tr>
-
+			<xsl:call-template name="ecodimb_form"/>
 			<tr>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td>
+					<xsl:call-template name="categories"/>
+				</td>
+			</tr>
+
 				<td valign="top">
 					<xsl:value-of select="lang_b_group"/>
 				</td>
@@ -633,6 +642,17 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</tr>
+
+			<xsl:call-template name="ecodimb_form"/>
+			<tr>
+				<td>
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<td>
+					<xsl:call-template name="categories"/>
+				</td>
+			</tr>
+
 
 	<!--		<tr>
 				<td valign="top">

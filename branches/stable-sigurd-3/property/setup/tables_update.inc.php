@@ -2922,7 +2922,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.550 to 0.9.17.551
+	* Update property version from 0.9.17.551 to 0.9.17.552
 	* Reorganise documents
 	*/
 
@@ -3042,4 +3042,64 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.552 to 0.9.17.553
+	* Org unit at accounting
+	*/
+
+	$test[] = '0.9.17.552';
+	function property_upgrade0_9_17_552()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','ecodimb',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_budget','ecodimb',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_budget_basis','ecodimb',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_budget','category',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_budget_basis','category',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','name',array('type' => 'varchar','precision' => '100','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','descr',array('type' => 'text','nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget','district_id',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_num', array('type' => 'varchar','precision' => 15,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_entity_id', array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','p_cat_id', array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','location_code', array('type' => 'varchar','precision' => 20,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','address', array('type' => 'varchar','precision' => 150,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','tenant_id', array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','contact_phone', array('type' => 'varchar','precision' => 20,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','planned_cost', array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_s_agreement_budget', array(
+				'fd' => array(
+					'agreement_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'budget_account' =>  array('type' => 'varchar','precision' => 15,'nullable' => False),
+					'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'category' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('agreement_id','year'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.553';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 

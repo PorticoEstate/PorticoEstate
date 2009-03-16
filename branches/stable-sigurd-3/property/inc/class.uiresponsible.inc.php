@@ -971,7 +971,7 @@
 
 					if(!isset($values['location']['loc1']))
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+			//			$receipt['error'][]=array('msg'=>lang('Please select a location!'));
 					}
 
 					if($GLOBALS['phpgw']->session->is_repost())
