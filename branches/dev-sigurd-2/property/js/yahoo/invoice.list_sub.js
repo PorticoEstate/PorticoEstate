@@ -234,7 +234,7 @@
 			newTR = document.createElement('tr');
 			td_empty(1);
 			CreateRowChecked("transfer_idClass");
-			td_empty(3);
+			td_empty(4);
 			td_sum(values_ds.sum);
 			td_empty(5);
 			//Add to Table

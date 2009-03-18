@@ -339,7 +339,7 @@
 			}
 			else
 			{
-				$ordermethod = ' order by bilagsnr DESC';
+				$ordermethod = ' order by id DESC';
 			}
 
 			if ($voucher_id)
@@ -347,7 +347,7 @@
 				$filtermethod = " WHERE ( bilagsnr= '$voucher_id')";
 			}
 
-			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued FROM $table "
+			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table "
 			. " $this->left_join fm_workorder on fm_workorder.id = $table.pmwrkord_code  "
 			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
@@ -378,7 +378,8 @@
 					'tax_code'				=> $this->db->f('mvakode'),
 					'amount'				=> $this->db->f('belop'),
 					'charge_tenant'			=> $this->db->f('charge_tenant'),
-					'vendor'				=> $this->db->f('org_name')
+					'vendor'				=> $this->db->f('org_name'),
+					'paid_percent'			=> $this->db->f('paid_percent')
 				);
 
 				$i++;
@@ -535,14 +536,13 @@
 			$GLOBALS['phpgw']->db->transaction_begin();
 
 			while($entry=each($values['counter']))
-				{
+			{
 					$local_error='';
 
 					$n=$entry[0];
 
 
 //_debug_array($entry);
-
 
 				if ($values['budget_account'][$n])
 				{
@@ -626,6 +626,11 @@
 						$update_status[$workorder_id]='R';
 					}
 
+					if(isset($values['paid_percent'][$n]) && $values['paid_percent'][$n])
+					{
+						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
+					}
+
 					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb where id='$id'");
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
@@ -647,6 +652,15 @@
 				}
 			}
 
+			if (isset($update_paid_percent) AND is_array($update_paid_percent))
+			{
+				foreach ($update_paid_percent as $workorder_id => $paid_percent)
+				{
+					$paid_percent = (int) $paid_percent;
+					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
+				}
+			}
+			
 			$GLOBALS['phpgw']->db->transaction_commit();
 
 			return $receipt;

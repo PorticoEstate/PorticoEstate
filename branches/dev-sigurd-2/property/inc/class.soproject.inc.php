@@ -416,6 +416,7 @@
 					'descr'					=> $this->db->f('descr', true),
 					'status'				=> $this->db->f('status'),
 					'budget'				=> (int)$this->db->f('budget'),
+					'planned_cost'			=> (int)$this->db->f('planned_cost'),
 					'reserve'				=> (int)$this->db->f('reserve'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'user_id'				=> $this->db->f('user_id'),

@@ -556,7 +556,7 @@
 		function project_budget_from_workorder($project_id = '')
 		{
 			$project_id = (int) $project_id;
-			$this->db->query("select budget, id as workorder_id from fm_workorder where project_id={$project_id}");
+			$this->db->query("select budget, id as workorder_id from fm_workorder WHERE project_id={$project_id}");
 			$budget = array();
 			while ($this->db->next_record())
 			{
@@ -566,6 +566,42 @@
 					);
 			}
 			return $budget;
+		}
+
+		function update_planned_cost($workorder_id)
+		{
+			$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}");
+			$this->db->next_record();
+			$project_id = $this->db->f('project_id');
+
+			$this->db->query("SELECT paid_percent, act_mtrl_cost, act_vendor_cost, calculation, budget FROM fm_workorder WHERE project_id={$project_id}");
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = array
+				(
+				//	'paid'			=> $this->db->f('paid') //0-ordered/1-invoice received but not paid / 2 - paid
+					'paid_percent'	=> $this->db->f('paid_percent')/100,
+					'actual_cost'	=> $this->db->f('act_mtrl_cost') + $this->db->f('act_vendor_cost'),
+					'cost'			=> abs($this->db->f('calculation')) > 0 ? $this->db->f('calculation') : $this->db->f('budget'),
+				);
+			}
+
+			$this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}");
+			$this->db->next_record();
+
+			$project_sum = $this->db->f('budget') + $this->db->f('reserve');
+
+			$orded_minus_paid = 0;
+
+			foreach($workorders as $workorder)
+			{
+				$orded_minus_paid = $orded_minus_paid + $workorder['cost'] - ((1- $workorder['paid_percent'])*$workorder['actual_cost']);
+			}
+
+			$project_planned_cost = round($orded_minus_paid);
+
+			$this->db->query("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
 		}
 
 		function branch_p_list($project_id = '')
@@ -822,6 +858,8 @@
 				$this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			}
 */
+			$this->update_planned_cost($workorder['id']); // at project
+
 			if($this->db->transaction_commit())
 			{
 				if ($old_status != $workorder['status'])

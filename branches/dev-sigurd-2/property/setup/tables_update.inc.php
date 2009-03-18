@@ -3045,7 +3045,7 @@
 
 	/**
 	* Update property version from 0.9.17.552 to 0.9.17.553
-	* Org unit at accounting
+	* 
 	*/
 
 	$test[] = '0.9.17.552';
@@ -3072,7 +3072,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','tenant_id', array('type' => 'int','precision' => 4,'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','contact_phone', array('type' => 'varchar','precision' => 20,'nullable' => True));
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','planned_cost', array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','planned_cost', array('type' => 'int','precision' => 4,'nullable' => True, 'default' => '0'));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_s_agreement_budget', array(
@@ -3098,6 +3098,25 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.553';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.553 to 0.9.17.554
+	* 
+	*/
+
+	$test[] = '0.9.17.553';
+	function property_upgrade0_9_17_553()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','paid_percent', array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.554';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

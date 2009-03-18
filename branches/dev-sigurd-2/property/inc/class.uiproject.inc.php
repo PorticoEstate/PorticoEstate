@@ -1149,6 +1149,7 @@
 			}
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
+			$values['planned_cost']  = number_format($values['planned_cost'], 0, ',', ' ');
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
@@ -1259,6 +1260,8 @@
 				'lang_reserve_remainder'			=> lang('reserve remainder'),
 				'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
 				'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
+				'lang_planned_cost'					=> lang('planned cost'),
+				'value_planned_cost'				=> $values['planned_cost'],
 				'location_data'						=> $location_data,
 				'location_type'						=> 'form',
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
