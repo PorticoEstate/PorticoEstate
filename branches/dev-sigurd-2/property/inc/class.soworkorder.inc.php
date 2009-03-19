@@ -604,6 +604,36 @@
 			$this->db->query("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
 		}
 
+		function update_actual_cost($workorder_id)
+		{
+			$this->db->query("SELECT godkjentbelop, dimd FROM fm_ecobilagoverf WHERE pmwrkord_code = {$workorder_id}",__LINE__,__FILE__);
+			$cost = array();
+			while ($this->db->next_record())
+			{
+				$cost[] = array
+				(
+					'godkjentbelop' => $this->db->f('godkjentbelop'),
+					'dimd' => $this->db->f('dimd'),
+				);
+			}
+			$act_mtrl_cost = 0;
+			$act_vendor_cost = 0;
+			foreach ($cost as $entry)
+			{
+				if($entry['dimd'] % 2 == 0)
+				{
+					$act_mtrl_cost = $act_mtrl_cost + $entry['godkjentbelop'];
+				}
+				else
+				{
+					$act_vendor_cost = $act_vendor_cost + $entry['godkjentbelop'];				
+				}
+			}
+
+			$this->db->query("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");			
+
+		}
+
 		function branch_p_list($project_id = '')
 		{
 			$project_id = (int) $project_id;

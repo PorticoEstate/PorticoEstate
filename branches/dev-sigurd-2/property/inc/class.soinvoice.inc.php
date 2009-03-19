@@ -654,10 +654,13 @@
 
 			if (isset($update_paid_percent) AND is_array($update_paid_percent))
 			{
+				$workorder = CreateObject('property.soworkorder');
 				foreach ($update_paid_percent as $workorder_id => $paid_percent)
 				{
 					$paid_percent = (int) $paid_percent;
 					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
+	
+					$workorder->update_planned_cost($workorder_id);
 				}
 			}
 			
