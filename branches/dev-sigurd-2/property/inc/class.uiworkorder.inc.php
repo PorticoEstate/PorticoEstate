@@ -519,11 +519,12 @@
 			for ($i=0;$i<$uicols_count;$i++)
 			{
 
-				//all colums should be have formatter
+				//all colums should have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
+					$datatable['headers']['header'][$i]['className']		= $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
