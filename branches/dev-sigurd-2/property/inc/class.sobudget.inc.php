@@ -522,8 +522,7 @@
 //_debug_array($allrows);
 			$ordermethod = '';
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
-		//	$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
-		//	$filtermethod = "WHERE fm_workorder.vendor_id > 0";
+			$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
 
 			$start_date = mktime(1, 1, 1, 1, 1, $year);
 			$end_date = mktime  (23, 59, 59, 12, 31, $year);
@@ -563,21 +562,13 @@
 			{
 				$b_account_field = 'category';
 			}
-/*
-			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id"
-				. " FROM fm_workorder"
-				. " $this->join fm_b_account ON fm_workorder.account_id =fm_b_account.id "
-				. " $this->join fm_project ON  fm_workorder.project_id =fm_project.id "
-				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id ";
-*/
-			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id"
-				. " FROM fm_workorder"
-				. " $this->join fm_b_account ON fm_workorder.account_id =fm_b_account.id "
-				. " $this->join fm_project ON  fm_workorder.project_id =fm_project.id "
-				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id ";
 
+			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id"
+				. " FROM fm_workorder"
+				. " $this->join fm_b_account ON fm_workorder.account_id =fm_b_account.id "
+				. " $this->join fm_project ON  fm_workorder.project_id =fm_project.id "
+				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id ";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
