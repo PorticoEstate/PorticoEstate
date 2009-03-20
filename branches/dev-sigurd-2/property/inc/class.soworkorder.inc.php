@@ -499,6 +499,7 @@
 
 		function read_single($workorder_id = 0)
 		{
+//			$this->update_planned_cost_global();
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
@@ -568,40 +569,77 @@
 			return $budget;
 		}
 
-		function update_planned_cost($workorder_id)
+		function update_planned_cost($project_id)
 		{
-			$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}");
-			$this->db->next_record();
-			$project_id = $this->db->f('project_id');
-
-			$this->db->query("SELECT paid_percent, act_mtrl_cost, act_vendor_cost, calculation, budget FROM fm_workorder WHERE project_id={$project_id}");
+			$this->db->query("SELECT paid_percent, act_mtrl_cost, act_vendor_cost, combined_cost, budget FROM fm_workorder WHERE project_id={$project_id}");
 			$workorders = array();
 			while ($this->db->next_record())
 			{
 				$workorders[] = array
 				(
-				//	'paid'			=> $this->db->f('paid') //0-ordered/1-invoice received but not paid / 2 - paid
+					'paid'			=> $this->db->f('paid'), //0-ordered/1-invoice received but not paid / 2 - paid
 					'paid_percent'	=> $this->db->f('paid_percent')/100,
 					'actual_cost'	=> $this->db->f('act_mtrl_cost') + $this->db->f('act_vendor_cost'),
-					'cost'			=> abs($this->db->f('calculation')) > 0 ? $this->db->f('calculation') : $this->db->f('budget'),
+					'cost'			=> abs($this->db->f('combined_cost')) > 0 ? $this->db->f('combined_cost') : $this->db->f('budget'),
 				);
 			}
-
-			$this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}");
-			$this->db->next_record();
-
-			$project_sum = $this->db->f('budget') + $this->db->f('reserve');
 
 			$orded_minus_paid = 0;
 
 			foreach($workorders as $workorder)
 			{
-				$orded_minus_paid = $orded_minus_paid + $workorder['cost'] - ((1- $workorder['paid_percent'])*$workorder['actual_cost']);
+				if(!$workorder['paid_percent'] == 1 && $workorder['paid_percent'] == 2)
+				{
+					$orded_minus_paid = $orded_minus_paid + $workorder['cost'] - ((1- $workorder['paid_percent'])*$workorder['actual_cost']);
+				}
+				else
+				{
+					$orded_minus_paid = $orded_minus_paid + $workorder['cost'];
+				}
 			}
 
-			$project_planned_cost = round($orded_minus_paid);
+            $this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}"); 
+            $this->db->next_record(); 
+            $project_sum = $this->db->f('budget') + $this->db->f('reserve'); 
 
+			$project_planned_cost = round($orded_minus_paid - $project_sum);
+
+_debug_array("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
 			$this->db->query("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
+		}
+
+		function update_actual_cost_global()
+		{
+			set_time_limit(1800);
+			$this->db->query("SELECT id FROM fm_workorder ORDER BY id ASC",__LINE__,__FILE__);
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = $this->db->f('id');
+			}
+//_debug_array($workorders);die();
+			
+			foreach ($workorders as $workorder_id)
+			{
+				$this->update_actual_cost($workorder_id);
+			}
+		}
+
+		function update_planned_cost_global()
+		{
+			set_time_limit(3600);
+			$this->db->query("SELECT id FROM fm_project ORDER BY id ASC",__LINE__,__FILE__);
+			$projects = array();
+			while ($this->db->next_record())
+			{
+				$projects[] = $this->db->f('id');
+			}
+//_debug_array($projects);die();
+			
+			foreach ($projects as $project_id)
+			{
+				$this->update_planned_cost($project_id);
+			}
 		}
 
 		function update_actual_cost($workorder_id)
@@ -629,7 +667,7 @@
 					$act_vendor_cost = $act_vendor_cost + $entry['godkjentbelop'];				
 				}
 			}
-
+_debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");
 			$this->db->query("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");			
 
 		}
@@ -688,7 +726,7 @@
 
 				if(!$address)
 				{
-					$address = $this->db->db_addslashes($project['location_name']);
+					$address = $this->db->db_addslashes($workorder['location_name']);
 				}
 				$cols[] = 'address';
 				$vals[] = $address;
@@ -871,7 +909,7 @@
 
 				if(!isset($address) || !$address)
 				{
-					$address = $this->db->db_addslashes($project['location_name']);
+					$address = $this->db->db_addslashes($workorder['location_name']);
 				}
 
 				$value_set['address'] = $address;
@@ -888,7 +926,7 @@
 				$this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			}
 */
-			$this->update_planned_cost($workorder['id']); // at project
+			$this->update_planned_cost($workorder['project_id']); // at project
 
 			if($this->db->transaction_commit())
 			{

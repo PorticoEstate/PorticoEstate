@@ -660,7 +660,10 @@
 					$paid_percent = (int) $paid_percent;
 					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
 	
-					$workorder->update_planned_cost($workorder_id);
+					$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}");
+					$this->db->next_record();
+					$project_id = $this->db->f('project_id');
+					$workorder->update_planned_cost($project_id);
 				}
 			}
 			

@@ -499,7 +499,9 @@
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';//($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					
+					$datatable['headers']['header'][$i]['className']		= $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;

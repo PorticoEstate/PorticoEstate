@@ -130,8 +130,9 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
-
-
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
 				$uicols['input_type'][]		= 'text';
@@ -141,6 +142,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",$entity_table.name as name";
 				$cols_return[] 				= 'name';
@@ -151,6 +154,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",account_lid as coordinator";
 				$cols_return[] 				= 'coordinator';
@@ -161,6 +166,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",(fm_project.budget + fm_project.reserve) as budget";
 				$cols_return[] 				= 'budget';
@@ -171,6 +178,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -181,6 +190,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -191,7 +202,20 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
+				$cols .= ',planned_cost';
+				$cols_return[] = 'planned_cost';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'planned_cost';
+				$uicols['descr'][]			= lang('planned cost');
+				$uicols['statustext'][]		= lang('ordered minus paid');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols.= ",$entity_table.user_id";
 
@@ -277,7 +301,7 @@
 				$where= 'AND';
 			}
 
-			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve';
+			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve,planned_cost';
 
 			if ($filter=='all')
 			{
