@@ -160,7 +160,6 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-
 		<script language="JavaScript">
 			self.name="first_Window";
 			function tenant_lookup()
@@ -169,8 +168,11 @@
 			}
 		</script>
 
+		<div class="yui-navset" id="edit_tabview">
+			<div class="yui-content">
+
+
 		<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
-		<div align="left">
 		<form name="form" method="post" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" width="79%" align="left">
 			<xsl:choose>
@@ -325,65 +327,11 @@
 			</tr>
 
 			<tr>
-				<!--xsl:choose>
-					<xsl:when test="sum_workorder_budget=''">
-						<td class="th_text">
-							<xsl:value-of select="lang_no_workorders"/>
-						</td>
-					</xsl:when>
-					<xsl:otherwise-->
-					<td colspan="2">
-					<table width="80%" cellpadding="2" cellspacing="2" align="left">
-						<!-- xsl:apply-templates select="table_header_workorder"/>
-						<xsl:apply-templates select="workorder_budget"/>
-						<tr class="th">
-							<td class="th_text" align="right">
-								<xsl:value-of select="lang_sum"/>
-							</td>
-							<td class="th_text"  align="right">
-								<xsl:value-of select="sum_workorder_budget"/>
-							</td>
-							<td class="th_text"  align="right">
-								<xsl:value-of select="sum_workorder_calculation"/>
-							</td>
-							<td>
-							</td>
-							<td>
-							</td>
-							<td>
-							</td>
-						</tr-->
-						<div id="paging_0"> </div>
-						<div id="datatable-container_0"></div>
-						<div id="footer"> </div>
-
-						<script>
-							var property_js = <xsl:value-of select="property_js" />;
-							var base_java_url = <xsl:value-of select="base_java_url" />;
-							var datatable = new Array();
-							var myColumnDefs = new Array();
-
-							<xsl:for-each select="datatable">
-								datatable[<xsl:value-of select="name"/>] = [
-								{
-									values			:	<xsl:value-of select="values"/>,
-									total_records	: 	<xsl:value-of select="total_records"/>,
-									edit_action		:   <xsl:value-of select="edit_action"/>,
-									is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-									footer			:	<xsl:value-of select="footer"/>
-								}
-								]
-							</xsl:for-each>
-
-							<xsl:for-each select="myColumnDefs">
-								myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-							</xsl:for-each>
-						</script>
-					</table>
-					</td>
-					<!-- /xsl:otherwise>
-				</xsl:choose-->
+			<td colspan ='2'>
+			   <div id="datatable-container_0"></div>
+			</td>
 			</tr>
+
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -537,6 +485,30 @@
 			</tr>
 		</table>
 		</form>
+
+				<script>
+					var property_js = <xsl:value-of select="property_js" />;
+					var base_java_url = <xsl:value-of select="base_java_url" />;
+					var datatable = new Array();
+					var myColumnDefs = new Array();
+
+					<xsl:for-each select="datatable">
+						datatable[<xsl:value-of select="name"/>] = [
+						{
+							values			:	<xsl:value-of select="values"/>,
+							total_records	: 	<xsl:value-of select="total_records"/>,
+							is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+							footer			:	<xsl:value-of select="footer"/>,
+							edit_action		:	<xsl:value-of select="edit_action"/>
+						}
+						]
+					</xsl:for-each>
+
+					<xsl:for-each select="myColumnDefs">
+						myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+					</xsl:for-each>
+				</script>
+			</div>
 		</div>
 	</xsl:template>
 
@@ -927,3 +899,4 @@
 
 			</tr>
 	</xsl:template>
+
