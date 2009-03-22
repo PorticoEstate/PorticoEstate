@@ -455,6 +455,8 @@
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
+					'ecodimb'				=> $this->db->f('ecodimb'),
+					'b_account_id'			=> $this->db->f('account_id'),
 					'power_meter'			=> $this->get_power_meter($this->db->f('location_code'))
 				);
 			}
@@ -569,7 +571,8 @@
 
 			$this->db->transaction_begin();
 			$id = $this->next_project_id();
-			$values= array(
+			$values= array
+			(
 				$id,
 				$project['project_group'],
 				$project['name'],
@@ -589,12 +592,15 @@
 				$project['key_fetch'],
 				$project['other_branch'],
 				$project['key_responsible'],
-				$this->account);
+				$this->account,
+				$project['ecodimb'],
+				$project['b_account_id'],
+			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -772,7 +778,9 @@
 				'other_branch'		=> $project['other_branch'],
 				'key_responsible'	=> $project['key_responsible'],
 				'location_code'		=> $project['location_code'],
-				'address'			=> $address
+				'address'			=> $address,
+				'ecodimb'			=> $project['ecodimb'],
+				'account_id'		=> $project['b_account_id']
 				);
 
 			$value_set	= $this->bocommon->validate_db_update($value_set);

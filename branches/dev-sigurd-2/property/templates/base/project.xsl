@@ -390,6 +390,18 @@
 				</td>
 			</tr>
 
+			<xsl:choose>
+				<xsl:when test="ecodimb_data!=''">
+					<xsl:call-template name="ecodimb_form"/>
+				</xsl:when>
+			</xsl:choose>
+
+			<xsl:choose>
+				<xsl:when test="b_account_data!=''">
+					<xsl:call-template name="b_account_form"/>
+				</xsl:when>
+			</xsl:choose>
+
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_budget"/>

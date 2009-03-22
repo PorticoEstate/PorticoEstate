@@ -170,6 +170,15 @@
      </select>
     </td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_budget_at_project_level}.</td>
+    <td>
+     <select name="newsettings[budget_at_project]">
+      <option value="" {selected_budget_at_project_}>NO</option>
+      <option value="1" {selected_budget_at_project_1}>YES</option>
+     </select>
+    </td>
+   </tr>
 
 <!--
 groupnotification

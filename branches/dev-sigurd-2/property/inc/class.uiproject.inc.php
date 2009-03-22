@@ -727,6 +727,9 @@
 			$values						= phpgw::get_var('values');
 			$add_request				= phpgw::get_var('add_request');
 			$values['project_group']	= phpgw::get_var('project_group');
+			$values['ecodimb']			= phpgw::get_var('ecodimb');
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
 			$datatable = array();
 
@@ -1071,6 +1074,22 @@
 						'entity_data'	=> (isset($values['p'])?$values['p']:'')
 						));
 
+			$b_account_data = array();
+			$ecodimb_data = array();
+
+			if(isset($config->config_data['budget_at_project']) && $config->config_data['budget_at_project'])
+			{
+				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $values['b_account_id'],
+						'b_account_name'	=> $values['b_account_name']));
+
+
+
+				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
+						'ecodimb'			=> $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			}
+
 			if(isset($values['contact_phone']))
 			{
 				for ($i=0;$i<count($location_data['location']);$i++)
@@ -1213,6 +1232,8 @@
 
 			$data = array
 			(
+				'b_account_data'					=> $b_account_data,
+				'ecodimb_data'						=> $ecodimb_data,
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,

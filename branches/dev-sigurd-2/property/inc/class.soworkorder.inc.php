@@ -519,8 +519,9 @@
 
 		function read_single($workorder_id = 0)
 		{
-		//	$this->update_planned_cost_global();
 		//	$this->update_actual_cost_global();
+		//	$this->update_planned_cost_global();
+
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
@@ -566,6 +567,7 @@
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
+					'cat_id'				=> $this->db->f('category'),
 					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
 				);
 			}
@@ -790,7 +792,8 @@ _debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vend
 				$workorder['workorder_num'] = $id;
 			}
 
-			$values= array(
+			$values= array
+			(
 				$id,
 				$workorder['workorder_num'],
 				$workorder['project_id'],
@@ -811,12 +814,14 @@ _debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vend
 				$workorder['vendor_id'],
 				$workorder['charge_tenant'],
 				$this->account,
-				$workorder['ecodimb']);
-
+				$workorder['ecodimb'],
+				$workorder['cat_id']
+			);
+				
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -905,23 +910,25 @@ _debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vend
 			}
 
 
-			$value_set=array(
+			$value_set=array
+			(
 				'title'			=> $workorder['title'],
 				'status'		=> $workorder['status'],
-				'start_date'		=> $workorder['start_date'],
+				'start_date'	=> $workorder['start_date'],
 				'end_date'		=> $workorder['end_date'],
 				'descr'			=> $workorder['descr'],
 				'budget'		=> (int)$workorder['budget'],
 				'combined_cost'	=> $combined_cost,
-				'key_deliver'		=> $workorder['key_deliver'],
+				'key_deliver'	=> $workorder['key_deliver'],
 				'key_fetch'		=> $workorder['key_fetch'],
-				'account_id'		=> $workorder['b_account_id'],
-				'rig_addition'		=> $workorder['addition_rs'],
+				'account_id'	=> $workorder['b_account_id'],
+				'rig_addition'	=> $workorder['addition_rs'],
 				'addition'		=> $workorder['addition_percentage'],
-				'charge_tenant'		=> $workorder['charge_tenant'],
+				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
-				'ecodimb'		=> $workorder['ecodimb']
-				);
+				'ecodimb'		=> $workorder['ecodimb'],
+				'category'		=> $workorder['cat_id']
+			);
 
 			if($workorder['status'] == 'closed')
 			{

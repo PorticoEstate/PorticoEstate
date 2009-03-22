@@ -398,20 +398,6 @@
 					<xsl:value-of select="value_project_name"/>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<xsl:value-of select="lang_category"/>
-				</td>
-				<xsl:for-each select="cat_list" >
-					<xsl:choose>
-						<xsl:when test="selected='selected'">
-							<td>
-								<xsl:value-of select="name"/>
-							</td>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:for-each>
-			</tr>
 			<xsl:choose>
 				<xsl:when test="location_template_type='form'">
 					<xsl:call-template name="location_form"/>
@@ -627,6 +613,32 @@
 				<xsl:call-template name="vendor_form"/>
 				<xsl:call-template name="ecodimb_form"/>
 				<xsl:call-template name="b_account_form"/>
+
+<!--
+			<tr>
+				<td>
+					<xsl:value-of select="lang_category"/>
+				</td>
+				<xsl:for-each select="cat_list" >
+					<xsl:choose>
+						<xsl:when test="selected='selected'">
+							<td>
+								<xsl:value-of select="name"/>
+							</td>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
+-->
+			<tr>
+				<td>
+					<xsl:value-of select="lang_cat_sub"/>
+				</td>
+				<td>
+					<xsl:call-template name="cat_sub_select"/>
+				</td>
+			</tr>
+	
 
 			<tr>
 				<td valign="top">

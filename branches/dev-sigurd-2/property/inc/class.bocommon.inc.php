@@ -686,7 +686,7 @@
 				$b_account_data	= $b_account_object->read_single($data['b_account_id']);
 				$b_account['value_b_account_name']	= $b_account_data['descr'];
 			}
-
+			$b_account['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
 //_debug_array($b_account);
 			return $b_account;
 		}
@@ -746,8 +746,8 @@
 			$ecodimb['value_ecodimb']				= $data['ecodimb'];
 			$ecodimb['value_ecodimb_descr']			= $data['ecodimb_descr'];
 			$ecodimb['ecodimb_url']					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ecodimb'));
-			$ecodimb['lang_select_ecodimb_help']	= lang('click to select dimd');
-			$ecodimb['lang_ecodimb']				= lang('dimd');
+			$ecodimb['lang_select_ecodimb_help']	= lang('click to select dimb');
+			$ecodimb['lang_ecodimb']				= lang('dimb');
 			if($data['ecodimb'] && (!isset($data['ecodimb_descr']) || !$data['ecodimb_descr']))
 			{
 				$ecodimb_object					= CreateObject('property.socategory');
@@ -755,6 +755,7 @@
 				$ecodimb_data					= $ecodimb_object->read_single(array('id'=> $data['ecodimb']));
 				$ecodimb['value_ecodimb_descr']	= $ecodimb_data['descr'];
 			}
+			$ecodimb['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
 
 			return $ecodimb;
 		}

@@ -3112,7 +3112,20 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','paid_percent', array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0));
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_workorder');
+
+		if(!isset($metadata['paid_percent']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','paid_percent', array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0));
+		}
+
+		if(!isset($metadata['category']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','category', array('type' => 'int','precision' => 4,'nullable' => True));
+		}
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','account_id', array('type' => 'varchar','precision' => '20','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','ecodimb', array('type' => 'int','precision' => 4,'nullable' => True));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

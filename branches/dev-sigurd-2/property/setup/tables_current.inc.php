@@ -1101,7 +1101,9 @@
 				'other_branch' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'key_responsible' => array('type' => 'int','precision' => '4','nullable' => True),
 				'project_group' => array('type' => 'int','precision' => '4','nullable' => True),
-				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True, 'default' => '0')
+				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True, 'default' => '0'),
+				'account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
