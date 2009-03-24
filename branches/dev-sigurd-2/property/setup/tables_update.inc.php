@@ -3134,4 +3134,23 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.553 to 0.9.17.554
+	* 
+	*/
+
+	$test[] = '0.9.17.554';
+	function property_upgrade0_9_17_554()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_responsibility_contact','ecodimb', array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.555';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 
