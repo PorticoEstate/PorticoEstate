@@ -121,7 +121,7 @@
 			$this->acl_location		= '.location.' . $this->type_id;
 			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
 			
-			if(isset($_REQUEST['query']) && !$query)
+			if(isset($_REQUEST['query']) && !$query && !isset($_REQUEST['block_query']))
 			{
 				$this->location_code = '';
 			}
