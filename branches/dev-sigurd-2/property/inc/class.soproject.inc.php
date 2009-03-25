@@ -895,6 +895,8 @@
 				$historylog->add('RM',$project['id'],$project['remark']);
 			}
 
+ 			execMethod('property.soworkorder.update_planned_cost', $project['id']);
+ 			
 			$receipt['id'] = $project['id'];
 			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));
 
