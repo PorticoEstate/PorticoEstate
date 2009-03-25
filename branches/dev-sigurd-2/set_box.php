@@ -105,5 +105,3 @@
 
 	Header('Location: '.$GLOBALS['phpgw']->link('/home.php'));
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>
-
