@@ -1198,6 +1198,11 @@
 		public function get_grants_type($app = '', $location = '', $mask = 0)
 		{
 			$grants = array();
+			$accounts = array();
+			if(!$this->_account_id)
+			{
+				return $accounts;
+			}
 
 			if ( !$app )
 			{
@@ -1216,7 +1221,6 @@
 			$acct_ids[] = $this->_account_id;
 
 			$rights = 0;
-			$accounts = array();
 
 			$ids = implode(',', $acct_ids);
 			$sql = 'SELECT acl_account, acl_grantor, acl_rights'
