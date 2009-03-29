@@ -193,7 +193,7 @@
 			foreach ( $totalacl as $user_id => $rights )
 			{
 				$user_checked[] = $user_id;
-				$this->acl->set_account_id($user_id, true);
+				$this->acl->set_account_id($user_id, true, $this->acl_app, $this->location, $account_type = 'accounts');
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -272,10 +272,12 @@
 			if($type == 'groups')
 			{
 				$check_account_type = array('accounts');
+				$acl_account_type = 'accounts';
 			}
 			else
 			{
 				$check_account_type = array('groups','accounts');
+				$acl_account_type = 'both';
 			}
 
 			$grantor = -1;
@@ -322,7 +324,7 @@
 						$user_list[$j]['initials']			= $this->so->get_initials($account->id);
 					}
 
-					$this->acl->set_account_id($account->id, true);
+					$this->acl->set_account_id($account->id, true, $this->acl_app, $this->location, $acl_account_type);
 
 					$count_right=count($right);
 

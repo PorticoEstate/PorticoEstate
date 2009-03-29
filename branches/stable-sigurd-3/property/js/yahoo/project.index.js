@@ -40,6 +40,17 @@
 		date_search : 1 //if search has link "Data search"
 	}
 
+	/********************************************************************************/
+	this.myFormatNum2 = function(Data)
+	{
+		return  YAHOO.util.Number.format(Data, {decimalPlaces:0, decimalSeparator:"", thousandsSeparator:" "});
+	}				
+	/********************************************************************************/
+	var myFormatCount2 = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = myFormatNum2(oData);
+	}	
+
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')

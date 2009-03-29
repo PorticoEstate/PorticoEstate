@@ -485,7 +485,8 @@
 				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
 				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'paid_percent' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0)
  			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1100,7 +1101,9 @@
 				'other_branch' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'key_responsible' => array('type' => 'int','precision' => '4','nullable' => True),
 				'project_group' => array('type' => 'int','precision' => '4','nullable' => True),
-				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True)
+				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True, 'default' => '0'),
+				'account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1970,7 +1973,8 @@
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'remark' => array('type' => 'text','nullable' => True),
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'remark' => array('type' => 'text','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(

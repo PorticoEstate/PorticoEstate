@@ -1236,12 +1236,12 @@
 					return false;
 				}
 			}
-
+/*
 			$GLOBALS['phpgw']->acl->set_account_id($this->_account_id);
 			$GLOBALS['phpgw']->accounts->set_account($this->_account_id);
 			$GLOBALS['phpgw']->preferences->set_account_id($this->_account_id);
 			$GLOBALS['phpgw']->applications->set_account_id($this->_account_id);
-
+*/
 			if (! $this->_account_lid)
 			{
 				if(is_object($GLOBALS['phpgw']->log))

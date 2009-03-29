@@ -699,7 +699,7 @@
 				'footer'		=> 0
 			);
 
-
+//_debug_array($project_values['workorder_budget']);die();
 
 			$myColumnDefs[0] = array
        		(

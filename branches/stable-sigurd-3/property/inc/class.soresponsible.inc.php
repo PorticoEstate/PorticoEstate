@@ -342,6 +342,7 @@
 					'p_num'				=> $this->db->f('p_num', true),
 					'p_entity_id'		=> $this->db->f('p_entity_id'),
 					'p_cat_id'			=> $this->db->f('p_cat_id'),
+					'ecodimb'			=> $this->db->f('ecodimb'),
 					'remark'			=> $this->db->f('remark', true),
 				);
 			}
@@ -367,12 +368,13 @@
 			(
 				(int) $values['responsibility_id'],
 				(int) $values['contact_id'],
-				implode('-', $values['location']),
+				@implode('-', $values['location']),
 				$values['active_from'],
 				$values['active_to'],
 				isset($values['extra']['p_num']) ? $values['extra']['p_num'] : '',
 				isset($values['extra']['p_entity_id']) ? $values['extra']['p_entity_id'] : '',
 				isset($values['extra']['p_cat_id']) ? $values['extra']['p_cat_id'] : '',
+				$values['ecodimb'],
 				$values['remark'],
 				$this->account,
 				time()
@@ -383,7 +385,7 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("INSERT INTO fm_responsibility_contact (responsibility_id, contact_id,"
-				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, remark, created_by, created_on)"
+				." location_code, active_from, active_to, p_num, p_entity_id, p_cat_id, ecodimb, remark, created_by, created_on)"
 				." VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())
@@ -413,11 +415,12 @@
 
 			$orig = $this->read_single_contact($values['id']);
 
-			if(isset($values['location']) &&(implode('-', $values['location']) != $orig['location_code'])
+			if(isset($values['location']) &&(@implode('-', $values['location']) != $orig['location_code'])
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
 				|| $values['extra']['p_num'] != $orig['p_num']
-				|| $values['remark'] != $orig['remark'])
+				|| $values['remark'] != $orig['remark']
+				|| $values['ecodimb'] != $orig['ecodimb'])
 			{
 				$receipt = $this->add_contact($values);
 				
@@ -427,6 +430,7 @@
 
 					$value_set['expired_by']	= $this->account;
 					$value_set['expired_on']	= time();
+					$value_set['ecodimb']		= $values['ecodimb'];
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -494,6 +498,7 @@
 				'expired_by'		=> $this->db->f('expired_by'),
 				'expired_on'		=> $this->db->f('expired_on'),
 				'priority'			=> $this->db->f('priority'), // FIXME - evaluate the need for this one
+				'ecodimb'			=> $this->db->f('ecodimb')
 			);
 
 			return $values;
@@ -525,13 +530,18 @@
 		{
 			$location_filter = array();
 
-			if(!isset($values['location']) || !is_array($values['location']))
+			if((!isset($values['location']) || !is_array($values['location'])) || !isset($values['ecodimb']) || !$values['ecodimb'])
 			{
 				return 0;
 			}
 			
 			$item_filter = '';
-			if(isset($values['extra']) && is_array($values['extra']))
+			
+			if(isset($values['ecodimb']) && $values['ecodimb'])
+			{
+				$item_filter =   " WHERE ecodimb = '{$values['ecodimb']}'";
+			}
+			elseif(isset($values['extra']) && is_array($values['extra']))
 			{
 				$location_code = implode('-', $values['location']);
 

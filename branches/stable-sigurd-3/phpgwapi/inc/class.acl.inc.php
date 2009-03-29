@@ -147,9 +147,12 @@
 
 			$this->_like		=& $this->_db->like;
 			$this->_join		=& $this->_db->join;
-			$this->_left_join	=& $this->_db->left_join;			
-
-			$this->set_account_id($account_id);
+			$this->_left_join	=& $this->_db->left_join;		
+			
+			if($account_id)
+			{
+				$this->set_account_id($account_id);
+			}
 		}
 
 		/**
@@ -161,7 +164,7 @@
 		 *
 		 * @return null
 		 */
-		public function set_account_id($account_id = 0, $read_repo = false)
+		public function set_account_id($account_id = 0, $read_repo = false, $appname = '', $location = '', $account_type = 'accounts')
 		{
 			$this->_account_id = (int) $account_id;
 
@@ -172,7 +175,15 @@
 
 			if ( $read_repo )
 			{
-				$this->_read_repository();
+				$app_id		 = 0;
+				$location_id = 0;
+				if($location)
+				{
+					$app_id			= $GLOBALS['phpgw']->applications->name2id($appname);
+					$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+				}
+
+				$this->_read_repository($account_type, $app_id, $location_id);
 			}
 		}
 
@@ -318,7 +329,8 @@
 							unset($this->_data[$this->_account_id][$app_id][$location_id][$idx]);
 							if(!count($this->_data[$this->_account_id][$app_id][$location_id]))
 							{
-								unset($this->_data[$this->_account_id][$app_id][$location_id]);
+						//		unset($this->_data[$this->_account_id][$app_id][$location_id]);
+								$this->_data[$this->_account_id][$app_id][$location_id] = array();
 							}
 						}
 					}
@@ -622,7 +634,7 @@
 		*
 		* @return integer Access rights in bitmask form
 		*/
-		public function get_rights($location, $appname = '', $grantor = -1, $mask = 0, $account_type = 'both')
+		public function get_rights($location, $appname = '', $grantor = -1, $mask = 0, $account_type = 'both', $required)
 		{
 			// For XML-RPC, change this once its working correctly for passing parameters (jengo)
 			if (is_array($location))
@@ -669,6 +681,9 @@
 					{
 						$this->account_type = $values['account_type'];
 						$rights |= $values['rights'];
+						//stop looking when found
+						if ($rights & $required)
+						return $rights;
 					}
 				}
 			}
@@ -718,7 +733,7 @@
 				foreach ( $account_type as $entry )
 				{
 					$this->_data[$this->_account_id] = array();
-					$rights = $this->get_rights($location, $appname, $grantor, $mask, $entry);
+					$rights = $this->get_rights($location, $appname, $grantor, $mask, $entry, $required);
 					if ( !!($rights & $required) )
 					{
 						break;
@@ -727,7 +742,7 @@
 			}
 			else
 			{
-				$rights = $this->get_rights($location, $appname, $grantor, $mask, 'both');
+				$rights = $this->get_rights($location, $appname, $grantor, $mask, 'both', $required);
 			}
 			return !!($rights & $required);
 		}
@@ -1405,7 +1420,7 @@
 				$this->set_account_id($this->_account_id, false);
 			}
 
-			if(!$app_id)
+			if(!$app_id && $account_type != 'accounts')
 			{
 				$data = phpgwapi_cache::user_get('phpgwapi', 'acl_data', $this->_account_id);
 				if ( !is_null($data) )
@@ -1414,7 +1429,7 @@
 					return; // nothing more to do
 				}
 			}
-			else
+			elseif($account_type != 'accounts')
 			{
 				$data = phpgwapi_cache::user_get('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_account_id);
 				if ( !is_null($data) )
@@ -1433,17 +1448,20 @@
 				default:
 					$this->_read_repository_sql($account_type, $app_id, $location_id);
 			}
-			if(!$app_id)
+			if($account_type != 'accounts')
 			{
-				$data = phpgwapi_cache::user_set('phpgwapi', 'acl_data', $this->_data[$this->_account_id], $this->_account_id);
-			}
-			else
-			{
-if(!isset($this->_data[$this->_account_id][$app_id][$location_id]))
-{
-				throw new Exception("user_set ({$app_id}, {$location_id}) not set");
-}
-				$data = phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);			
+				if(!$app_id && $this->_data[$this->_account_id])
+				{
+					phpgwapi_cache::user_set('phpgwapi', 'acl_data', $this->_data[$this->_account_id], $this->_account_id);
+				}
+				else
+				{
+					if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
+					{
+//						throw new Exception("user_set ({$app_id}, {$location_id}) not set");
+						phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);			
+					}
+				}
 			}
 		}
 

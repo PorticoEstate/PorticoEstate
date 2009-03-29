@@ -130,8 +130,9 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
-
-
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
 				$uicols['input_type'][]		= 'text';
@@ -141,6 +142,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",$entity_table.name as name";
 				$cols_return[] 				= 'name';
@@ -151,6 +154,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",account_lid as coordinator";
 				$cols_return[] 				= 'coordinator';
@@ -161,6 +166,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols.= ",(fm_project.budget + fm_project.reserve) as budget";
 				$cols_return[] 				= 'budget';
@@ -171,6 +178,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -181,6 +190,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -191,7 +202,20 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
+				$cols .= ',planned_cost';
+				$cols_return[] = 'planned_cost';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'planned_cost';
+				$uicols['descr'][]			= lang('planned cost');
+				$uicols['statustext'][]		= lang('ordered minus paid');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols.= ",$entity_table.user_id";
 
@@ -277,7 +301,7 @@
 				$where= 'AND';
 			}
 
-			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve';
+			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve,planned_cost';
 
 			if ($filter=='all')
 			{
@@ -416,6 +440,7 @@
 					'descr'					=> $this->db->f('descr', true),
 					'status'				=> $this->db->f('status'),
 					'budget'				=> (int)$this->db->f('budget'),
+					'planned_cost'			=> (int)$this->db->f('planned_cost'),
 					'reserve'				=> (int)$this->db->f('reserve'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'user_id'				=> $this->db->f('user_id'),
@@ -430,6 +455,8 @@
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
+					'ecodimb'				=> $this->db->f('ecodimb'),
+					'b_account_id'			=> $this->db->f('account_id'),
 					'power_meter'			=> $this->get_power_meter($this->db->f('location_code'))
 				);
 			}
@@ -544,7 +571,8 @@
 
 			$this->db->transaction_begin();
 			$id = $this->next_project_id();
-			$values= array(
+			$values= array
+			(
 				$id,
 				$project['project_group'],
 				$project['name'],
@@ -564,12 +592,15 @@
 				$project['key_fetch'],
 				$project['other_branch'],
 				$project['key_responsible'],
-				$this->account);
+				$this->account,
+				$project['ecodimb'],
+				$project['b_account_id'],
+			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -747,7 +778,9 @@
 				'other_branch'		=> $project['other_branch'],
 				'key_responsible'	=> $project['key_responsible'],
 				'location_code'		=> $project['location_code'],
-				'address'			=> $address
+				'address'			=> $address,
+				'ecodimb'			=> $project['ecodimb'],
+				'account_id'		=> $project['b_account_id']
 				);
 
 			$value_set	= $this->bocommon->validate_db_update($value_set);
@@ -862,6 +895,8 @@
 				$historylog->add('RM',$project['id'],$project['remark']);
 			}
 
+ 			execMethod('property.soworkorder.update_planned_cost', $project['id']);
+ 			
 			$receipt['id'] = $project['id'];
 			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));
 

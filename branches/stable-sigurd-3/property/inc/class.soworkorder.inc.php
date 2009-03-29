@@ -156,6 +156,8 @@
 				$uicols['name'][]			= 'project_id';
 				$uicols['descr'][]			= lang('Project');
 				$uicols['statustext'][]		= lang('Project ID');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",fm_workorder.id as workorder_id";
 				$cols_return[] 				= 'workorder_id';
@@ -163,6 +165,8 @@
 				$uicols['name'][]			= 'workorder_id';
 				$uicols['descr'][]			= lang('Workorder');
 				$uicols['statustext'][]		= lang('Workorder ID');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",fm_workorder.title as title";
 				$cols_return[] 				= 'title';
@@ -170,6 +174,8 @@
 				$uicols['name'][]			= 'title';
 				$uicols['descr'][]			= lang('Title');
 				$uicols['statustext'][]		= lang('Workorder title');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",fm_workorder.status as status";
 				$cols_return[] 				= 'status';
@@ -177,6 +183,8 @@
 				$uicols['name'][]			= 'status';
 				$uicols['descr'][]			= lang('Status');
 				$uicols['statustext'][]		= lang('Workorder status');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",fm_workorder.entry_date as entry_date";
 				$cols_return[] 				= 'entry_date';
@@ -184,6 +192,8 @@
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('Entry date');
 				$uicols['statustext'][]		= lang('Workorder entry date');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",phpgw_accounts.account_lid as user_lid";
 				$cols_return[] 				= 'user_lid';
@@ -191,6 +201,8 @@
 				$uicols['name'][]			= 'user_lid';
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('Workorder User');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ',fm_workorder.vendor_id';
 				$cols_return[] = 'vendor_id';
@@ -198,6 +210,8 @@
 				$uicols['name'][]			= 'vendor_id';
 				$uicols['descr'][]			= lang('Vendor ID');
 				$uicols['statustext'][]		= lang('Vendor ID');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ",fm_project.user_id as project_owner";
 
@@ -210,6 +224,8 @@
 				$uicols['name'][]			= 'org_name';
 				$uicols['descr'][]			= lang('Vendor name');
 				$uicols['statustext'][]		= lang('Vendor name');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols .= ',fm_workorder.combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -217,6 +233,8 @@
 				$uicols['name'][]			= 'combined_cost';
 				$uicols['descr'][]			= lang('Cost');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$cols .= ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -224,6 +242,8 @@
 				$uicols['name'][]			= 'actual_cost';
 				$uicols['descr'][]			= lang('Actual cost');
 				$uicols['statustext'][]		= lang('Actual cost - paid so far');
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
 
 				$joinmethod .= " $this->left_join  fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
@@ -271,7 +291,7 @@
 			}
 			else
 			{
-				$cols .= $entity_table . '.location_code';
+				$cols .= ",{$entity_table}.location_code";
 			}
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
@@ -499,6 +519,9 @@
 
 		function read_single($workorder_id = 0)
 		{
+		//	$this->update_actual_cost_global();
+		//	$this->update_planned_cost_global();
+
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
@@ -544,6 +567,7 @@
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
+					'cat_id'				=> $this->db->f('category'),
 					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
 				);
 			}
@@ -556,7 +580,7 @@
 		function project_budget_from_workorder($project_id = '')
 		{
 			$project_id = (int) $project_id;
-			$this->db->query("select budget, id as workorder_id from fm_workorder where project_id={$project_id}");
+			$this->db->query("select budget, id as workorder_id from fm_workorder WHERE project_id={$project_id}");
 			$budget = array();
 			while ($this->db->next_record())
 			{
@@ -566,6 +590,128 @@
 					);
 			}
 			return $budget;
+		}
+
+		/**
+		* planned cost start out as the project budget - and reflect the amount yet to be spent on the project
+		* When an order is placed  - the "planned cost" is reduced with expected cost for that order.
+		* When an invoice is paid -  the "planned cost" is reduced with actual cost for that order (replace the expected cost).
+		*
+		* @param integer $project_id the project in question
+		*
+		* @return void
+		*/
+
+		function update_planned_cost($project_id)
+		{
+			$this->db->query("SELECT paid, paid_percent, act_mtrl_cost, act_vendor_cost, combined_cost, budget FROM fm_workorder WHERE project_id={$project_id}");
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = array
+				(
+					'paid'			=> $this->db->f('paid'), //0-cancelled /1-invoice received but not paid / 2 - paid
+					'paid_percent'	=> $this->db->f('paid_percent')/100,
+					'actual_cost'	=> $this->db->f('act_mtrl_cost') + $this->db->f('act_vendor_cost'),
+					'cost'			=> abs($this->db->f('combined_cost')) > 0 ? $this->db->f('combined_cost') : $this->db->f('budget'),
+				);
+			}
+
+			$orded_or_paid = 0;
+
+			foreach($workorders as $workorder)
+			{
+				if($workorder['paid'] == 0 || $workorder['paid'] == 1)
+				{
+					$orded_or_paid = $orded_or_paid + $workorder['cost'];
+				}
+				else
+				{
+					if(!$workorder['paid_percent'])
+					{
+						$workorder['paid_percent'] = 1;
+					}
+					$orded_or_paid = $orded_or_paid + ($workorder['actual_cost']/$workorder['paid_percent']);
+				}
+			}
+
+            $this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}"); 
+            $this->db->next_record(); 
+            $project_sum = $this->db->f('budget') + $this->db->f('reserve'); 
+
+			$project_planned_cost = round($project_sum - $orded_or_paid);
+
+			if($project_planned_cost < 0)
+			{
+				$project_planned_cost = 0;			
+			}
+
+//_debug_array("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
+			$this->db->query("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
+		}
+
+		function update_actual_cost_global()
+		{
+			set_time_limit(1800);
+			$this->db->query("SELECT id FROM fm_workorder ORDER BY id ASC",__LINE__,__FILE__);
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = $this->db->f('id');
+			}
+//_debug_array($workorders);die();
+			
+			foreach ($workorders as $workorder_id)
+			{
+				$this->update_actual_cost($workorder_id);
+			}
+		}
+
+		function update_planned_cost_global()
+		{
+			set_time_limit(3600);
+			$this->db->query("SELECT id FROM fm_project ORDER BY id ASC",__LINE__,__FILE__);
+			$projects = array();
+			while ($this->db->next_record())
+			{
+				$projects[] = $this->db->f('id');
+			}
+//_debug_array($projects);die();
+			
+			foreach ($projects as $project_id)
+			{
+				$this->update_planned_cost($project_id);
+			}
+		}
+
+		function update_actual_cost($workorder_id)
+		{
+			$this->db->query("SELECT godkjentbelop, dimd FROM fm_ecobilagoverf WHERE pmwrkord_code = {$workorder_id}",__LINE__,__FILE__);
+			$cost = array();
+			while ($this->db->next_record())
+			{
+				$cost[] = array
+				(
+					'godkjentbelop' => $this->db->f('godkjentbelop'),
+					'dimd' => $this->db->f('dimd'),
+				);
+			}
+			$act_mtrl_cost = 0;
+			$act_vendor_cost = 0;
+			foreach ($cost as $entry)
+			{
+				if($entry['dimd'] % 2 == 0)
+				{
+					$act_mtrl_cost = $act_mtrl_cost + $entry['godkjentbelop'];
+				}
+				else
+				{
+					$act_vendor_cost = $act_vendor_cost + $entry['godkjentbelop'];				
+				}
+			}
+//_debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");
+			$this->db->query("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");			
+
 		}
 
 		function branch_p_list($project_id = '')
@@ -622,7 +768,7 @@
 
 				if(!$address)
 				{
-					$address = $this->db->db_addslashes($project['location_name']);
+					$address = $this->db->db_addslashes($workorder['location_name']);
 				}
 				$cols[] = 'address';
 				$vals[] = $address;
@@ -646,7 +792,8 @@
 				$workorder['workorder_num'] = $id;
 			}
 
-			$values= array(
+			$values= array
+			(
 				$id,
 				$workorder['workorder_num'],
 				$workorder['project_id'],
@@ -667,12 +814,14 @@
 				$workorder['vendor_id'],
 				$workorder['charge_tenant'],
 				$this->account,
-				$workorder['ecodimb']);
-
+				$workorder['ecodimb'],
+				$workorder['cat_id']
+			);
+				
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -761,27 +910,30 @@
 			}
 
 
-			$value_set=array(
+			$value_set=array
+			(
 				'title'			=> $workorder['title'],
 				'status'		=> $workorder['status'],
-				'start_date'		=> $workorder['start_date'],
+				'start_date'	=> $workorder['start_date'],
 				'end_date'		=> $workorder['end_date'],
 				'descr'			=> $workorder['descr'],
 				'budget'		=> (int)$workorder['budget'],
 				'combined_cost'	=> $combined_cost,
-				'key_deliver'		=> $workorder['key_deliver'],
+				'key_deliver'	=> $workorder['key_deliver'],
 				'key_fetch'		=> $workorder['key_fetch'],
-				'account_id'		=> $workorder['b_account_id'],
-				'rig_addition'		=> $workorder['addition_rs'],
+				'account_id'	=> $workorder['b_account_id'],
+				'rig_addition'	=> $workorder['addition_rs'],
 				'addition'		=> $workorder['addition_percentage'],
-				'charge_tenant'		=> $workorder['charge_tenant'],
+				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
-				'ecodimb'		=> $workorder['ecodimb']
-				);
+				'ecodimb'		=> $workorder['ecodimb'],
+				'category'		=> $workorder['cat_id']
+			);
 
 			if($workorder['status'] == 'closed')
 			{
 				$value_set['paid'] = $paid = (isset($paid)?$paid:0);
+				$value_set['paid_percent'] = 100;
 			}
 
 			if (isset($workorder['extra']) && is_array($workorder['extra']))
@@ -805,7 +957,7 @@
 
 				if(!isset($address) || !$address)
 				{
-					$address = $this->db->db_addslashes($project['location_name']);
+					$address = $this->db->db_addslashes($workorder['location_name']);
 				}
 
 				$value_set['address'] = $address;
@@ -822,6 +974,8 @@
 				$this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			}
 */
+			$this->update_planned_cost($workorder['project_id']); // at project
+
 			if($this->db->transaction_commit())
 			{
 				if ($old_status != $workorder['status'])

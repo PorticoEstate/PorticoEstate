@@ -262,7 +262,7 @@
 				{
 					if(isset($users_at_location[$user_id]) && $users_at_location[$user_id])
 					{
-						$this->acl->set_account_id($user_id, true);
+						$this->acl->set_account_id($user_id, true, $this->acl_app, $this->location, 'accounts'); 
 						$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 						$this->acl->save_repository($this->acl_app, $this->location);
 					}
@@ -321,10 +321,12 @@
 			if($type == 'groups')
 			{
 				$check_account_type = array('accounts');
+				$acl_account_type = 'accounts';
 			}
 			else
 			{
 				$check_account_type = array('groups','accounts');
+				$acl_account_type = 'both';
 			}
 
 			$grantor = -1;
@@ -361,7 +363,7 @@
 					$user_list[$j]['account_firstname'] = $account->firstname;
 					$user_list[$j]['account_lastname'] 	= $account->lastname;
 
-					$this->acl->set_account_id($account->id, true);
+					$this->acl->set_account_id($account->id, true, $this->acl_app, $this->location, $acl_account_type);
 
 					$count_right=count($right);
 					for ( $i = 0; $i < $count_right; ++$i )

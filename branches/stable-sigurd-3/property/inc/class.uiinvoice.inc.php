@@ -1239,6 +1239,8 @@
 				array(
 					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
+					'col_name'=>paid_percent,	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+				array(
 					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
 					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
@@ -1264,6 +1266,7 @@
 			//---- llena DATATABLE-ROWS con los valores del READ
 			if (isset($content) && is_array($content))
 			{
+				$workorders = array();
 				foreach($content as $invoices)
 				{
 					for ($i=0;$i<count($uicols);$i++)
@@ -1283,7 +1286,7 @@
 							{
 								//nothing
 							}
-							elseif($invoices['paid']== "")
+							elseif($invoices['paid']== ""  && !array_key_exists($invoices['workorder_id'], $workorders))
 							{
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][".$j."]' id='values[close_order_orig][".$j."]'  class='myValuesForPHP '  type='hidden' value='".$invoices['closed']."'/>";
 								if($invoices['closed']== 1)
@@ -1306,6 +1309,21 @@
 						}
 						elseif(($i == 2))
 						{
+							if($invoices['workorder_id'] == "")
+							{
+								//nothing
+							}
+							elseif(!array_key_exists($invoices['workorder_id'], $workorders))
+							{
+								if(!$invoices['paid_percent'])
+								{
+									$invoices['paid_percent'] = 100;
+								}
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[paid_percent][".$j."]' id='values[paid_percent][".$j."]'  class='myValuesForPHP'  type='text' size='3' maxlength='3' value='".$invoices['paid_percent']."'/>";
+							}
+						}
+						elseif(($i == 3))
+						{
 							if($invoices['charge_tenant'] == 1)
 							{
 								if($invoices['claim_issued'] == '')
@@ -1323,12 +1341,12 @@
 							}
 
 						}
-						elseif(($i == 3))
+						elseif(($i == 4))
 						{
 							$json_row[$uicols[$i]['col_name']]  .= $invoices['invoice_id'];
 						}
 
-						elseif(($i == 4))
+						elseif(($i == 5))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1340,12 +1358,12 @@
 							}
 						}
 
-						elseif(($i == 5))
+						elseif(($i == 6))
 						{
 							$json_row[$uicols[$i]['col_name']]  .= $invoices['amount'];
 						}
 
-						elseif(($i == 6))
+						elseif(($i == 7))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1356,7 +1374,7 @@
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
 							}
 						}
-						elseif(($i == 7))
+						elseif(($i == 8))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1383,7 +1401,7 @@
 
 							}
 						}
-						elseif(($i == 8))
+						elseif(($i == 9))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1394,7 +1412,7 @@
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
 							}
 						}
-						elseif(($i == 9))
+						elseif(($i == 10))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1421,7 +1439,7 @@
 
 							}
 						}
-						elseif(($i == 10))
+						elseif(($i == 11))
 						{
 							if($invoices['remark'] == true)
 							{
@@ -1437,12 +1455,17 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						elseif($i == 11)
+						elseif($i == 12)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
-						}
-						
+						}					
 					}
+
+					if($invoices['workorder_id'])
+					{
+						$workorders[$invoices['workorder_id']] = true;
+					}
+
 					$datatable['rows']['row'][] = $json_row;
 					$j++;
 				}

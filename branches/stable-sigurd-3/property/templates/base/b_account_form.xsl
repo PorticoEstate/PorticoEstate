@@ -13,26 +13,38 @@
 			}		
 		</script>
 
+		<xsl:choose>
+			<xsl:when test="disabled='1'">
+				<tr>
+					<td valign="top">
+						<xsl:value-of select="lang_b_account"/>
+					</td>
+					<td>
+						<input size="9" type="text" value="{value_b_account_id}" readonly="readonly"></input>
+						<input  size="30" type="text" value="{value_b_account_name}" readonly="readonly"></input>
+						<input size="9" type="hidden" name="b_account_id" value="{value_b_account_id}" readonly="readonly"></input>
+						<input  size="30" type="hidden" name="b_account_name" value="{value_b_account_name}" readonly="readonly"></input>
+					</td>
+				</tr>
+			</xsl:when>
+			<xsl:otherwise>
 			<tr>
 				<td valign="top">
 					<a href="javascript:b_account_lookup()" onMouseover="window.status='{lang_select_b_account_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_b_account"/></a>
 				</td>
 				<td>
 					<input size="9" type="text" name="b_account_id" value="{value_b_account_id}" >
-					<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_select_b_account_help"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_select_b_account_help"/>
 						</xsl:attribute>
 					</input>
-				<input  size="30" type="text" name="b_account_name" value="{value_b_account_name}"  onClick="b_account_lookup();" readonly="readonly"> 
-					<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_select_b_account_help"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input  size="30" type="text" name="b_account_name" value="{value_b_account_name}"  onClick="b_account_lookup();" readonly="readonly"> 
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_select_b_account_help"/>
 						</xsl:attribute>
 					</input>
 				</td>
 			</tr>
-
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>

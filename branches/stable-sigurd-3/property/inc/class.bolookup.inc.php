@@ -174,10 +174,6 @@
 			return $persons;
 		}
 
-
-
-
-
 		function read_vendor()
 		{
 			$vendor = $this->so->read_vendor(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
@@ -190,7 +186,7 @@
 		function read_b_account()
 		{
 			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id));
+											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $b_account;

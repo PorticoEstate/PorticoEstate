@@ -519,11 +519,12 @@
 			for ($i=0;$i<$uicols_count;$i++)
 			{
 
-				//all colums should be have formatter
+				//all colums should have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
+					$datatable['headers']['header'][$i]['className']		= $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -1066,14 +1067,17 @@
 						'vendor_name'		=> $values['vendor_name']));
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name']));
+						'b_account_id'		=> $project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id'],
+						'b_account_name'	=> $values['b_account_name'],
+						'disabled'			=> !!$project['b_account_id']));
 
-
-
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
-						'ecodimb'			=> $values['ecodimb'],
-						'ecodimb_descr'		=> $values['ecodimb_descr']));
+			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
+					(
+						'ecodimb'			=> $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
+						'ecodimb_descr'		=> $values['ecodimb_descr'],
+						'disabled'			=> !!$project['ecodimb']
+					)
+			);
 			
 
 
@@ -1183,6 +1187,12 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true)))
 			);
 			
+
+
+			$catetory = $this->cats->return_single($project['cat_id']);
+			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
+			$cat_sub = array_merge($catetory,$cat_sub);			
+
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
@@ -1262,7 +1272,6 @@
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 				'lang_year'				=> lang('Year'),
-				'lang_category'				=> lang('category'),
 				'lang_save'				=> lang('save'),
 				'lang_done'				=> lang('done'),
 				'lang_title'				=> lang('Title'),
@@ -1292,11 +1301,16 @@
 
 				'lang_done_statustext'			=> lang('Back to the list'),
 				'lang_save_statustext'			=> lang('Save the workorder'),
-				'lang_no_cat'				=> lang('Select category'),
-				'lang_cat_statustext'			=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
-				'value_cat_id'				=> (isset($values['cat_id'])?$values['cat_id']:''),
-				'cat_list'					=> $categories['cat_list'],
+			//	'lang_no_cat'				=> lang('Select category'),
+			//	'lang_cat_statustext'			=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
+			//	'select_name'				=> 'values[cat_id]',
+			//	'value_cat_id'				=> (isset($values['cat_id'])?$values['cat_id']:''),
+			//	'cat_list'					=> $categories['cat_list'],
+
+				'lang_cat_sub'				=> lang('category'),
+				'cat_sub_list'				=> $this->bocommon->select_list($values['cat_id'] ? $values['cat_id']: $project['cat_id'], $cat_sub),
+				'cat_sub_name'				=> 'values[cat_id]',
+				'lang_cat_sub_statustext'	=> lang('select sub category'),
 
 				'sum_workorder_budget'			=> (isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:''),
 				'workorder_budget'			=> (isset($values['workorder_budget'])?$values['workorder_budget']:''),
@@ -1352,7 +1366,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','files'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder','files','cat_sub_select'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
 			phpgwapi_yui::load_widget('dragdrop');
