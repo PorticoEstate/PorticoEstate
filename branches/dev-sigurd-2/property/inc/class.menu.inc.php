@@ -489,7 +489,7 @@
 
 			$menus['navigation'] = array();
 
-			$acl->set_account_id($GLOBALS['phpgw_info']['user']['account_id'], true);
+//			$acl->set_account_id($GLOBALS['phpgw_info']['user']['account_id'], true);
 			if ( $acl->check('.location', PHPGW_ACL_READ, 'property') )
 			{
 				$children = array();
