@@ -297,12 +297,18 @@
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " location_id = {$location_id}";
 			$contacts = CreateObject('phpgwapi.contacts');
-
+//_debug_array($values);
+			$location = array();
 			$j=0;
 			foreach ($values as $row)
 			{
 				foreach ($row as $field => $data)
 				{
+					if($field == 'location_code')
+					{
+						$location = split('-',$data['value']);
+					}
+
 					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'])
 					{
 						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$data['attrib_id']. "  AND id=" . $data['value'];
@@ -312,15 +318,15 @@
 					}
 					else if($data['datatype']=='AB' && $data['value'])
 					{
-						$contact_data	= $contacts->read_single_entry($data['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$ret[$j][$field] =  $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+						$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
+						$ret[$j][$field] =  $contact_data[0]['fn'];
 					}
 					else if($data['datatype']=='VENDOR' && $data['value'])
 					{
 						$sql="SELECT org_name FROM fm_vendor where id={$data['value']}";
 						$this->_db->query($sql);
 						$this->_db->next_record();
-						$ret[$j][$field] =  $this->_db->f('org_name');
+						$ret[$j][$field] =  $this->_db->f('org_name',true);
 					}
 					else if($data['datatype']=='CH' && $data['value'])
 					{
@@ -358,15 +364,19 @@
 					}
 					else
 					{
-						$ret[$j][$field] =  $data['value'];
-						if($field == 'location_code')
+						$ret[$j][$field] =  stripslashes($data['value']);
+					}
+
+					if($location)
+					{
+						if(!$location_count)
 						{
-							$location = split('-',$data['value']);
-							for ($m=0;$m < $location_count ; $m++)
-							{
-								$ret[$j]['loc' . ($m+1)] = $location[$m];
-								$ret[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m + 1)));
-							}
+							$location_count = count($location);
+						}
+						for ($m=0;$m < $location_count ; $m++)
+						{
+							$ret[$j]['loc' . ($m+1)] = $location[$m];
+							$ret[$j]['query_location']['loc' . ($m+1)]=implode('-', array_slice($location, 0, ($m + 1)));
 						}
 					}
 				}

@@ -1553,7 +1553,9 @@
 						$uicols['input_type'][] 	= 'hidden';
 					}
 				}
-			} else {
+			}
+			else
+			{
 
 					$uicols['name'][] 	= 'num';
 					$uicols['descr'][] 	= 'ID';
@@ -1570,7 +1572,16 @@
 					{
 						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= ($entity_entry[$uicols['name'][$i]] == null ? '' : $entity_entry[$uicols['name'][$i]]);
 						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+
+						if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $entity_entry[$uicols['name'][$i]])
+						{
+							$datatable['rows']['row'][$j]['column'][$i]['format']	= 'link';
+							$datatable['rows']['row'][$j]['column'][$i]['value']	= lang('link');
+							$datatable['rows']['row'][$j]['column'][$i]['link']		= $entity_entry[$uicols['name'][$i]];
+							$datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+						}
 					}
+
 					/*for ($i=0;$i<count($input_name);$i++)
 					{
 						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 	= $entity_entry[$input_name[$i]];

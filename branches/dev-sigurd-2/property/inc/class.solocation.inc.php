@@ -661,18 +661,18 @@
 			$values = array();
 			if(!$dry_run)
 			{
-					$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-					$this->db->next_record();
-					$this->total_records = $this->db->f(0);
+				$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records = $this->db->f(0);
 
-					if(!$allrows)
-					{
-						$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-					}
-					else
-					{
-						$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-					}
+				if(!$allrows)
+				{
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
 
 				$j=0;
 
@@ -688,7 +688,7 @@
 						(
 							'value'		=> $this->db->f($field),
 							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> $uicols['attib_id'][$key]
+							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
 						);
 					}
 					$j++;				

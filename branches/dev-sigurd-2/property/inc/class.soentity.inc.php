@@ -47,8 +47,8 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = clone($GLOBALS['phpgw']->db);
-			$this->db2          = clone($this->db);
+			$this->custom 		= createObject('property.custom_fields');
+			$this->db           = & $GLOBALS['phpgw']->db;
 
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
@@ -142,23 +142,41 @@
 				$cols_return		= array();
 				$uicols				= array();
 				$cols				= $entity_table . '.*';
-				$cols_return[]		= 'location_code';
 
-				$cols_return[] 			= 'num';
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'num';
-				$uicols['descr'][]		= lang('ID');
-				$uicols['statustext'][]		= lang('ID');
-
-				$cols_return[] 			= 'id';
+				$cols_return[]				= 'location_code';
 				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]		= 'id';
-				$uicols['descr'][]		= false;
+				$uicols['name'][]			= 'location_code';
+				$uicols['descr'][]			= 'dummy';
+				$uicols['statustext'][]		= 'dummy';
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+
+				$cols_return[] 				= 'num';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'num';
+				$uicols['descr'][]			= lang('ID');
+				$uicols['statustext'][]		= lang('ID');
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+
+				$cols_return[] 				= 'id';
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'id';
+				$uicols['descr'][]			= false;
 				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+
 				if($lookup)
 				{
 					$cols .= ',num as entity_num_' . $entity_id;
 					$cols_return[] = 'entity_num_' . $entity_id;
+					$uicols['input_type'][]		= 'hidden';
+					$uicols['name'][]			= 'entity_num_' . $entity_id;
+					$uicols['descr'][]			= 'dummy';
+					$uicols['statustext'][]		= 'dummy';
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
 				}
 
 				$cols .= ", {$entity_table}.user_id";
@@ -167,6 +185,9 @@
 				$uicols['name'][]			= 'user_id';
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('User');
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= 'user_id';
+
 				$cols_return_extra[]= array
 								(
 									'name'		=> 'user_id',
@@ -222,6 +243,14 @@
 					$uicols['descr'][]			= $this->db->f('input_text');
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['cols_return_extra'][$i] = array
+					(
+						'name'	=> $this->db->f('column_name'),
+						'datatype'	=> $this->db->f('datatype'),
+						'attrib_id'	=> $this->db->f('id')					
+					);
+					
+					
 					$cols_return_extra[]= array(
 						'name'	=> $this->db->f('column_name'),
 						'datatype'	=> $this->db->f('datatype'),
@@ -235,7 +264,14 @@
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('entry date');
 				$uicols['statustext'][]		= lang('entry date' );
-				$uicols['datatype'][$i]		= 'timestamp';
+				$uicols['datatype'][]		= 'timestamp';
+				$uicols['cols_return_extra'][$i] = array
+				(
+					'name'		=> 'entry_date',
+					'datatype'	=> 'timestamp',
+				);
+
+
 				$cols_return_extra[]= array(
 					'name'	=> 'entry_date',
 					'datatype'	=> 'timestamp',
@@ -391,104 +427,46 @@
 			}
 
 			$j=0;
-			$n=count($cols_return);
-//_debug_array($cols_return);
-			$contacts			= CreateObject('phpgwapi.contacts');
-
-			$entity_list = array();
+			$cols_return = $uicols['name'];
+			$dataset = array();
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<$n;$i++)
+				foreach($cols_return as $key => $field)
 				{
-					$entity_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$entity_list[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
-					if($lookup)
-					{
-						$entity_list[$j]['entity_cat_name_' . $entity_id] = $category['name'];
-						$entity_list[$j]['entity_id_' . $entity_id] = $entity_id;
-						$entity_list[$j]['cat_id_' . $entity_id] = $cat_id;
-					}
+					$dataset[$j][$field] = array
+					(
+						'value'		=> $this->db->f($field),
+						'datatype'	=> $uicols['datatype'][$key],
+						'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+					);
 				}
-
-				if(isset($cols_return_extra) && is_array($cols_return_extra))
+				if($lookup)
 				{
-					for ($i=0;$i<count($cols_return_extra);$i++)
-					{
-						$value = $this->db->f($cols_return_extra[$i]['name'], true);
-
-						if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
-						{
-							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
-						}
-						else if($cols_return_extra[$i]['datatype']=='AB' && $value)
-						{
-							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-							$entity_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-						}
-						else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
-						{
-							$sql="SELECT org_name FROM fm_vendor where id=$value";
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$entity_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-						}
-						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
-						{
-							$ch= unserialize($value);
-
-							if (isset($ch) AND is_array($ch))
-							{
-								for ($k=0;$k<count($ch);$k++)
-								{
-									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-									$this->db2->query($sql);
-									while ($this->db2->next_record())
-									{
-										$ch_value[]=$this->db2->f('value');
-									}
-								}
-								$entity_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-								unset($ch_value);
-							}
-						}
-						else if($cols_return_extra[$i]['datatype']=='D' && $value)
-						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
-						}
-						else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
-						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
-						}
-						else if($cols_return_extra[$i]['datatype']=='link' && $value)
-						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
-						}
-						else if($cols_return_extra[$i]['datatype']=='user_id' && $value)
-						{
-							$entity_list[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->get($value)->__toString();
-						}
-						else
-						{
-							$entity_list[$j][$cols_return_extra[$i]['name']] = $value;
-						}
-					}
+					$dataset[$j]["entity_cat_name_{$entity_id}"] = array
+					(
+						'value'		=> $category['name'],
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+					$dataset[$j]["entity_id_{$entity_id}"] = array
+					(
+						'value'		=> $entity_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+					$dataset[$j]["cat_id_{$entity_id}"] = array
+					(
+						'value'		=> $cat_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
 				}
-
-				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
-				for ($m=0;$m<count($location);$m++)
-				{
-					$entity_list[$j]['loc' . ($m+1)] = $location[$m];
-					$entity_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$j++;
+				$j++;				
 			}
-//_debug_array($entity_list);
-			return $entity_list;
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
 		}
 
 		function read_single($data,$values = array())
