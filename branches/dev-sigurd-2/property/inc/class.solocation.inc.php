@@ -48,6 +48,8 @@
 			{
 				$this->bocommon = $bocommon;
 			}
+			$this->custom 		= createObject('property.custom_fields');
+
 			$this->db           = clone($GLOBALS['phpgw']->db);
 			$this->db2          = clone($this->db);
 			$this->socommon		= & $this->bocommon->socommon;
@@ -240,10 +242,11 @@
 
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
-			$choice_table = 'phpgw_cust_choice';
+
+//			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
-			$attribute_choice_filter = " location_id = {$location_id}";
+//			$attribute_choice_filter = " location_id = {$location_id}";
 
 			if(!$sql)
 			{
@@ -677,94 +680,28 @@
 
 			$j=0;
 			$location_count 	= $type_id-1;
-			//$contacts		= CreateObject('phpgwapi.contacts');
 			$location_list		= array();
 
+			$cols_return = $uicols['name'];
+			$dataset = array();
 			while ($this->db->next_record())
 			{
-				foreach ($cols_return as $col)
+				foreach($cols_return as $key => $field)
 				{
-					$location_list[$j][$col] = $this->db->f($col,true);
+					$dataset[$j][$field] = array
+					(
+						'value'		=> $this->db->f($field),
+						'datatype'	=> $uicols['datatype'][$key],
+						'attrib_id'	=> $uicols['attib_id'][$key]
+					);
 				}
-
-				if(isset($cols_return_extra) && is_array($cols_return_extra))
-				{
-					foreach($cols_return_extra as $col_extra)
-					{
-						$value = $this->db->f($col_extra['name'], true);
-
-						if(($col_extra['datatype']=='R' || $col_extra['datatype']=='LB') && $value)
-						{
-					//		$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $value;
-							$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $value;
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$location_list[$j][$col_extra['name']] = $this->db2->f('value');
-						}
-						else if($col_extra['datatype']=='AB' && $value)
-						{
-							$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-							$location_list[$j][$col_extra['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-						}
-						else if($col_extra['datatype']=='VENDOR' && $value)
-						{
-							$sql="SELECT org_name FROM fm_vendor where id=$value";
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$location_list[$j][$col_extra['name']] = $this->db2->f('org_name');
-						}
-						else if($col_extra['datatype']=='CH' && $value)
-						{
-							$ch= unserialize($value);
-
-							if (isset($ch) AND is_array($ch))
-							{
-								for ($k=0;$k<count($ch);$k++)
-								{
-			//						$sql="SELECT value FROM fm_location_choice where type_id=$type_id AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $ch[$k];
-									$sql="SELECT value FROM $choice_table WHERE $attribute_choice_filter AND attrib_id=" .$col_extra['attrib_id']. "  AND id=" . $ch[$k];
-									$this->db2->query($sql);
-									while ($this->db2->next_record())
-									{
-										$ch_value[]=$this->db2->f('value');
-									}
-								}
-								$location_list[$j][$col_extra['name']] = @implode(",", $ch_value);
-								unset($ch_value);
-							}
-						}
-						else if($col_extra['datatype']=='D' && $value)
-						{
-							$location_list[$j][$col_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
-						}
-						else if($col_extra['datatype']=='timestamp' && $value)
-						{
-							$location_list[$j][$col_extra['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
-						}
-						else if($col_extra['datatype']=='link' && $value)
-						{
-							$location_list[$j][$col_extra['name']]= phpgw::safe_redirect($value);
-						}
-						else
-						{
-							$location_list[$j][$col_extra['name']] = $value;
-						}
-					}
-					unset($value);
-				}
-
-				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
-				for ($m=0;$m<$location_count;$m++)
-				{
-					$location_list[$j]['loc' . ($m+1)] = $location[$m];
-					$location_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$j++;
+				$j++;				
 			}
 
-			return $location_list;
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
+
 		}
 
 		function generate_sql($type_id='',$cols='',$cols_return='',$uicols='',$read_single='')

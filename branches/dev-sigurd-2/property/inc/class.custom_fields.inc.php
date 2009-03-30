@@ -113,8 +113,10 @@
 				{
 					if($attributes['value'])
 					{
-						$contact_data				= $contacts->read_single_entry($attributes['value'],array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$attributes['contact_name']	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
+						$contact_data					= $contacts->read_single_entry($attributes['value'],array('fn','tel_work','email'));
+						$attributes['contact_name']		= $contact_data[0]['fn'];
+						$attributes['contact_email']	= $contact_data[0]['email'];
+						$attributes['contact_tel']		= $contact_data[0]['tel_work'];
 					}
 
 					$insert_record_values[]			= $attributes['name'];
@@ -301,8 +303,6 @@
 			{
 				foreach ($row as $field => $data)
 				{
-//					$ret[$j][$field] = $this->custom->translate_value($entry, $location_id);
-
 					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'])
 					{
 						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$data['attrib_id']. "  AND id=" . $data['value'];
