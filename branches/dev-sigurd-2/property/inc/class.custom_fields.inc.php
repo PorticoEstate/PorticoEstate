@@ -291,7 +291,7 @@
 			return $data;
 		}
 
-		function translate_value($values, $location_id)
+		function translate_value($values, $location_id, $location_count = 0)
 		{
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
@@ -359,11 +359,19 @@
 					else
 					{
 						$ret[$j][$field] =  $data['value'];
+						if($field == 'location_code')
+						{
+							$location = split('-',$data['value']);
+							for ($m=0;$m < $location_count ; $m++)
+							{
+								$ret[$j]['loc' . ($m+1)] = $location[$m];
+								$ret[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m + 1)));
+							}
+						}
 					}
 				}
 				$j++;
 			}
 			return $ret;
 		}
-
 	}

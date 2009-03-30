@@ -50,13 +50,12 @@
 			}
 			$this->custom 		= createObject('property.custom_fields');
 
-			$this->db           = clone($GLOBALS['phpgw']->db);
-			$this->db2          = clone($this->db);
+			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->socommon		= & $this->bocommon->socommon;
 
-			$this->join			= & $this->socommon->join;
-			$this->left_join	= & $this->socommon->left_join;
-			$this->like			= & $this->socommon->like;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read_entity_to_link($location_code)
@@ -659,6 +658,7 @@
 
 //echo $sql; die();
 			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			$values = array();
 			if(!$dry_run)
 			{
 					$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
@@ -673,35 +673,30 @@
 					{
 						$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 					}
-					$contacts		= CreateObject('phpgwapi.contacts');
 
-			}
+				$j=0;
 
+				$location_count 	= $type_id-1;
 
-			$j=0;
-			$location_count 	= $type_id-1;
-			$location_list		= array();
-
-			$cols_return = $uicols['name'];
-			$dataset = array();
-			while ($this->db->next_record())
-			{
-				foreach($cols_return as $key => $field)
+				$cols_return = $uicols['name'];
+				$dataset = array();
+				while ($this->db->next_record())
 				{
-					$dataset[$j][$field] = array
-					(
-						'value'		=> $this->db->f($field),
-						'datatype'	=> $uicols['datatype'][$key],
-						'attrib_id'	=> $uicols['attib_id'][$key]
-					);
+					foreach($cols_return as $key => $field)
+					{
+						$dataset[$j][$field] = array
+						(
+							'value'		=> $this->db->f($field),
+							'datatype'	=> $uicols['datatype'][$key],
+							'attrib_id'	=> $uicols['attib_id'][$key]
+						);
+					}
+					$j++;				
 				}
-				$j++;				
+
+				$values = $this->custom->translate_value($dataset, $location_id, $location_count);
 			}
-
-			$values = $this->custom->translate_value($dataset, $location_id);
-
 			return $values;
-
 		}
 
 		function generate_sql($type_id='',$cols='',$cols_return='',$uicols='',$read_single='')
@@ -1419,84 +1414,37 @@
 			$this->uicols['descr'][] = lang('exp date');
 
 
-			$attrib[] = array(
-				'column_name' => 'exp_date',
-				'input_text' => 'exp date',
-				'datatype' => 'D'
+			$attrib[] = array
+			(
+				'column_name'	=> 'exp_date',
+				'input_text'	=> 'exp date',
+				'datatype'		=> 'D',
+				'attrib_id'		=> 0
 			);
 
 			$sql = "SELECT $table.*, $table_category.descr as category FROM $table $this->left_join $table_category ON $table.category =$table_category.id WHERE location_code='$location_code' ORDER BY exp_date DESC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$j=0;
+			$cols_return = $uicols['name'];
+			$dataset = array();
 			while ($this->db->next_record())
 			{
-				for ($i=0; $i<count($attrib); $i++)
+				foreach($attrib as $key => $field)
 				{
-					$location[$j][$attrib[$i]['column_name']]=$this->db->f($attrib[$i]['column_name']);
-
-					$value = $this->db->f($attrib[$i]['column_name']);
-					if(($attrib[$i]['datatype']=='R' || $attrib[$i]['datatype']=='LB') && $value)
-					{
-
-						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$attrib[$i]['attrib_id']. "  AND id=" . $value;
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$location[$j][$attrib[$i]['column_name']] = $this->db2->f('value');
-					}
-					else if($attrib[$i]['datatype']=='AB' && $value)
-					{
-						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$location[$j][$attrib[$i]['column_name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-					else if($attrib[$i]['datatype']=='VENDOR' && $value)
-					{
-						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$location[$j][$attrib[$i]['column_name']] = $this->db2->f('org_name');
-					}
-					else if($attrib[$i]['datatype']=='CH' && $value)
-					{
-						$ch= unserialize($value);
-						if (isset($ch) AND is_array($ch))
-						{
-							for ($k=0;$k<count($ch);$k++)
-							{
-								$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$attrib[$i]['attrib_id']. "  AND id=" . $ch[$k];
-								$this->db2->query($sql);
-								while ($this->db2->next_record())
-								{
-									$ch_value[]=$this->db2->f('value');
-								}
-							}
-							$location[$j][$attrib[$i]['column_name']] = @implode(",", $ch_value);
-							unset($ch_value);
-						}
-					}
-					else if($attrib[$i]['datatype']=='D' && $value)
-					{
-						$location[$j][$attrib[$i]['column_name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
-					}
-					else if($attrib[$i]['datatype']=='link' && $value)
-					{
-						$location_list[$j][$attrib[$i]['name']]= phpgw::safe_redirect($value);
-					}
-					else if($attrib[$i]['column_name']=='entry_date' && $value)
-					{
-						$location[$j][$attrib[$i]['column_name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
-					}
-					else
-					{
-						$location_list[$j][$attrib[$i]['name']] = $value;
-					}
-
-					unset($value);
+					$dataset[$j][$field['column_name']] = array
+					(
+						'value'		=> $this->db->f($field['column_name']),
+						'datatype'	=> $field['datatype'],
+						'attrib_id'	=> $field['attib_id']
+					);
 				}
-				$j++;
+				$j++;				
 			}
 
-			return $location;
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
 		}
 
 		function get_tenant_location($tenant_id='')
