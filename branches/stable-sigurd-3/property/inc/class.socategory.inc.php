@@ -138,7 +138,7 @@
 
 			$cols_return = $uicols['name'];
 			$j=0;
-			$n=count($cols_return);
+//			$n=count($cols_return);
 
 			$dataset = array();
 			while ($this->_db->next_record())
