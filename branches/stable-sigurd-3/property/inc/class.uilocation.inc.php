@@ -1259,7 +1259,7 @@
 
 			phpgwapi_yui::tabview_setup('location_edit_tabview');
 			$tabs = array();
-			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$tabs['general']	= array('label' => $location_types[($type_id-1)]['name'], 'link' => '#general');
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1283,6 +1283,7 @@
 
 				$location = ".location.{$type_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
+//_debug_array($attributes_groups);die();
 
 				$attributes = array();
 				foreach ($attributes_groups as $group)

@@ -271,8 +271,9 @@
 				}
 			}
 
-			$filter_location = isset($data['filter_location']) ? $data['filter_location'] : '';
-			$location_link		= "menuaction:'property.uilocation.index',lookup:1,location_code:'{$filter_location}',block_query:1";
+			$filter_location	= isset($data['filter_location']) ? $data['filter_location'] : '';
+			$block_query 		= !!$filter_location;
+			$location_link		= "menuaction:'property.uilocation.index',lookup:1,location_code:'{$filter_location}',block_query:'{$block_query}'";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -500,7 +501,7 @@
 					$lookup_functions[] = array
 					(
 						'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:1",
+						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:'{$block_query}'",
 						'action'	=> 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 					);
 
