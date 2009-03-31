@@ -186,12 +186,12 @@
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('User');
 				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= 'user_id';
+				$uicols['datatype'][]		= 'user';
 
 				$cols_return_extra[]= array
 								(
 									'name'		=> 'user_id',
-									'datatype'	=> 'user_id'
+									'datatype'	=> 'user'
 								);
 
 				// Don't work with LDAP - where phpgw_accounts is empty
