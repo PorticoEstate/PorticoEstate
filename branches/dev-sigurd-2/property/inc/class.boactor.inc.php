@@ -61,7 +61,7 @@
 		{
 			$this->so 			= CreateObject('property.soactor');
 			$this->bocommon 	= & $this->so->bocommon;
-			$this->custom 		= createObject('property.custom_fields');
+			$this->custom 		= & $this->so->custom;
 
 			if ($session)
 			{

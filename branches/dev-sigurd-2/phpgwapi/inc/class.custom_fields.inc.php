@@ -112,7 +112,9 @@
 				'AB'	=> lang('Contact'),
 				'VENDOR'=> lang('Vendor'),
 				'email'	=> lang('Email'),
-				'link'	=> lang('Link')
+				'link'	=> lang('Link'),
+				'pwd' 	=> lang('password'),
+				'user' 	=> 'phpgw_user'
 			);
 
 			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
@@ -1528,7 +1530,9 @@
 				'AB'		=> 'int',
 				'VENDOR'	=> 'int',
 				'email'		=> 'varchar',
-				'link'		=> 'varchar'
+				'link'		=> 'varchar',
+				'pwd' 		=> 'varchar',
+				'user' 		=> 'int'
 			);
 
 			if ( !isset($datatype_text[$datatype]) )
@@ -1556,7 +1560,9 @@
 				'AB'		=> 4,
 				'VENDOR'	=> 4,
 				'email'		=> 64,
-				'link'		=> 255
+				'link'		=> 255,
+				'pwd' 		=> 32,
+				'user' 		=> 4
 			);
 
 			if ( !isset($datatype_precision[$datatype]) )

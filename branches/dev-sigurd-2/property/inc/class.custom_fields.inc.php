@@ -358,9 +358,13 @@
 					{
 						$ret[$j][$field] =  phpgw::safe_redirect($data['value']);
 					}
-					else if($data['datatype']=='user_id' && $data['value'])
+					else if($data['datatype']=='user' && $data['value'])
 					{
 						$ret[$j][$field] =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
+					}
+					else if($data['datatype']=='pwd' && $data['value'])
+					{
+						$ret[$j][$field] =   lang('yes');
 					}
 					else
 					{
