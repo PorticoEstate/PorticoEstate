@@ -3143,7 +3143,8 @@
 	function property_upgrade0_9_17_554()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache');
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cache_user');		
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_responsibility_contact','ecodimb', array('type' => 'int','precision' => 4,'nullable' => True));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

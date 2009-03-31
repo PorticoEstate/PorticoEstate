@@ -40,12 +40,12 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           = clone($GLOBALS['phpgw']->db);
-			$this->db2          = clone($this->db);
+			$this->custom 		= createObject('property.custom_fields');
+			$this->db           = & $GLOBALS['phpgw']->db;
 
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read($data)
@@ -74,6 +74,8 @@
 
 			if(!$sql)
 			{
+				$cols_return = array();
+				$uicols = array();
 				$cols = $entity_table . ".*,$category_table.descr as category";
 
 				$cols_return[] 				= 'id';
@@ -81,24 +83,32 @@
 				$uicols['name'][]			= 'id';
 				$uicols['descr'][]			= lang('ID');
 				$uicols['statustext'][]		= lang('ID');
+				$uicols['datatype'][]		= false;
+				$uicols['attib_id'][]		= false;
 
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'id';
 				$uicols['descr'][]			= false;
 				$uicols['statustext'][]		= false;
+				$uicols['datatype'][]		= false;
+				$uicols['attib_id'][]		= false;
 
 				$cols_return[] 				= 'category';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'category';
 				$uicols['descr'][]			= lang('category');
 				$uicols['statustext'][]		= lang('category');
+				$uicols['datatype'][]		= false;
+				$uicols['attib_id'][]		= false;
 
 				$cols_return[] 				= 'entry_date';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('entry date');
 				$uicols['statustext'][]		= lang('entry date');
+				$uicols['datatype'][]		= false;
+				$uicols['attib_id'][]		= false;
 
 				$paranthesis .='(';
 
@@ -119,8 +129,6 @@
 				$cols_return					= $this->bocommon->fm_cache('cols_return_actor_' . $this->role);
 			}
 
-			$i	= count($uicols['name']);
-
 			$user_columns=isset($GLOBALS['phpgw_info']['user']['preferences']['property']['actor_columns_' . $this->role])?$GLOBALS['phpgw_info']['user']['preferences']['property']['actor_columns_' . $this->role]:'';
 			$user_column_filter = '';
 			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
@@ -130,26 +138,18 @@
 
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 
-
 			while ($this->db->next_record())
 			{
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= $this->db->f('column_name');
 				$uicols['descr'][]			= $this->db->f('input_text');
 				$uicols['statustext'][]		= $this->db->f('statustext');
-				$uicols['datatype'][$i]		= $this->db->f('datatype');
-				$cols_return_extra[]= array(
-					'name'	=> $this->db->f('column_name'),
-					'datatype'	=> $this->db->f('datatype'),
-					'attrib_id'	=> $this->db->f('id')
-				);
-
-				$i++;
+				$uicols['datatype'][]		= $this->db->f('datatype');
+				$uicols['attib_id'][]		= $this->db->f('id');
 			}
 
 			$this->uicols	= $uicols;
 
-//_debug_array($cols_return_extra);
 			if ($order)
 			{
 				$ordermethod = " order by $entity_table.$order $sort";
@@ -205,8 +205,7 @@
 			$_querymethod = array();
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 			//	$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
 				$where= 'AND';
@@ -241,6 +240,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 //echo $sql;
+			$values = array();
 
 			if(!$dry_run)
 			{
@@ -256,89 +256,29 @@
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 
-				$contacts			= CreateObject('phpgwapi.contacts');
-			}
+				$cols_return = $uicols['name'];
+				$j=0;
 
-			$j=0;
-			$n=count($cols_return);
-			$actor_list = array();
-			while ($this->db->next_record())
-			{
-				for ($i=0;$i<$n;$i++)
+				$dataset = array();
+				while ($this->db->next_record())
 				{
-					$actor_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$actor_list[$j]['grants'] = (int)$grants[$this->db->f('owner_id')];
+					foreach($cols_return as $key => $field)
+					{
+						$dataset[$j][$field] = array
+						(
+							'value'		=> $this->db->f($field),
+							'datatype'	=> $uicols['datatype'][$key],
+							'attrib_id'	=> $uicols['attib_id'][$key]
+						);
+					}
+					$j++;				
 				}
 
-				for ($i=0;$i<count($cols_return_extra);$i++)
-				{
-					$value='';
-					$value=$this->db->f($cols_return_extra[$i]['name']);
+				$values = $this->custom->translate_value($dataset, $location_id);
 
-					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
-					{
-						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$actor_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
-					}
-					else if($cols_return_extra[$i]['datatype']=='AB' && $value)
-					{
-						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$actor_list[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-
-/*						$sql="SELECT org_name FROM phpgw_addressbook where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$actor_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-*/
-					}
-					else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
-					{
-						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$this->db2->query($sql);
-						$this->db2->next_record();
-						$actor_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-					}
-					else if($cols_return_extra[$i]['datatype']=='CH' && $value)
-					{
-						$ch= unserialize($value);
-
-						if (isset($ch) AND is_array($ch))
-						{
-							for ($k=0;$k<count($ch);$k++)
-							{
-								$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-								$this->db2->query($sql);
-								while ($this->db2->next_record())
-								{
-									$ch_value[]=$this->db2->f('value');
-								}
-							}
-							$actor_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-							unset($ch_value);
-						}
-					}
-					else if($cols_return_extra[$i]['datatype']=='D' && $value)
-					{
-						$actor_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
-					}
-					else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
-					{
-						$actor_list[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
-					}
-					else if($cols_return_extra[$i]['datatype']=='link' && $value)
-					{
-						$actor_list[$j][$cols_return_extra[$i]['name']]= phpgw::safe_redirect($value);
-					}
-					else
-					{
-						$actor_list[$j][$cols_return_extra[$i]['name']]=$value;
-					}
-				}
-				$j++;
+				return $values;
 			}
-			return $actor_list;
+			return $values;
 		}
 
 		function read_single($actor_id, $values = array())

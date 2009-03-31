@@ -87,7 +87,7 @@
 		{
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->custom 		= createObject('property.custom_fields');
+			$this->custom 		= & $this->so->custom;
 
 			if ($session)
 			{
