@@ -1079,7 +1079,7 @@
 			$acl_location		= phpgw::get_var('acl_location');
 			$custom_function_id	= phpgw::get_var('custom_function_id', 'int');
 			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
-			
+
 			// JSON code delete
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -2557,19 +2557,21 @@
 
 			$custom_function_list = $this->bo->read_custom_function($entity_id,$cat_id);
 			$uicols['name'][0]	= 'name';
-			$uicols['descr'][0]	= lang('Name');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Descr');
-			$uicols['name'][2]	= 'active';
-			$uicols['descr'][2]	= lang('Active');
-			$uicols['name'][3]	= 'group_sort';
-			$uicols['descr'][3]	= lang('sorting');
-			$uicols['name'][4]	= 'up';
-			$uicols['descr'][4]	= lang('up');
-			$uicols['name'][5]	= 'down';
-			$uicols['descr'][5]	= lang('down');
-			$uicols['name'][6]	= 'id';
-			$uicols['descr'][6]	= lang('id');
+			$uicols['descr'][0]	= '';//FIXME
+			$uicols['name'][1]	= 'id';
+			$uicols['descr'][1]	= lang('id');
+			$uicols['name'][2]	= 'descr';
+			$uicols['descr'][2]	= lang('Descr');
+			$uicols['name'][3]	= 'active';
+			$uicols['descr'][3]	= lang('Active');
+			$uicols['name'][4]	= 'sorting';
+			$uicols['descr'][4]	= lang('sorting');
+			$uicols['name'][5]	= 'up';
+			$uicols['descr'][5]	= lang('up');
+			$uicols['name'][6]	= 'down';
+			$uicols['descr'][6]	= lang('down');
+			$uicols['name'][7]	= 'file_name';
+			$uicols['descr'][7]	= lang('Name');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -2585,23 +2587,23 @@
 							$datatable['rows']['row'][$j]['column'][$k]['value']			= $custom_entry[$uicols['name'][$k]];
 						}
 
-						/*if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
+						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=> 'up', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
 							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
 						}
 
 						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute_group', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
+							$url = '"'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_custom_function', 'resort'=> 'down', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'id'=> $custom_entry['id'], 'allrows'=> $this->allrows, 'type' => $this->type)).'"';
 							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.')';
-						}*/
+						}
 					}
 					$j++;
 				}
@@ -2627,7 +2629,7 @@
 				(
 					array
 					(
-						'name'		=> 'group_id',
+						'name'		=> 'custom_function_id',
 						'source'	=> 'id'
 					),
 				)
@@ -2642,7 +2644,7 @@
 						(
 							'/index.php',array
 							(
-								'menuaction'		=> 'property.uiadmin_entity.edit_attrib_group',
+								'menuaction'		=> 'property.uiadmin_entity.edit_custom_function',
 								'entity_id'			=> $entity_id,
 								'cat_id'			=> $cat_id,
 								'type' 				=> $this->type
@@ -2664,7 +2666,8 @@
 								'menuaction'		=> 'property.uiadmin_entity.delete',
 								'entity_id'			=> $entity_id,
 								'cat_id'			=> $cat_id,
-								'type' 				=> $this->type
+								'type' 				=> $this->type,
+								'acl_location'		=> ".{$this->type}.{$entity_id}.{$cat_id}"
 							)
 						),
 						'parameters'	=> $parameters2
