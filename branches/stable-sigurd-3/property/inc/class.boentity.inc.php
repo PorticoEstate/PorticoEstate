@@ -87,7 +87,6 @@
 		{
 			$this->solocation 	= CreateObject('property.solocation');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->custom 		= & $this->so->custom;
 
 			if ($session)
 			{
@@ -114,6 +113,7 @@
 			
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
 			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
+			$this->custom 					= & $this->so->custom;
 			$this->soadmin_entity->type		= $this->type;
 			$this->soadmin_entity->type_app	= $this->type_app;
 			$this->so->type					= $this->type;

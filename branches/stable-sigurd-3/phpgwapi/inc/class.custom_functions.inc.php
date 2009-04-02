@@ -159,7 +159,7 @@
 		 */
 		public function delete($appname, $location, $function_id)
 		{
-			$location_id = $GLOBALS['phpgw']->location->get_id($appname, $location);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			$function_id = (int) $function_id;
 
 			$this->_db->transaction_begin();
@@ -184,7 +184,7 @@
 			if ( $max_sort > $custom_sort )
 			{
 				$sql = 'UPDATE phpgw_cust_function SET custom_sort = (custom_sort - 1)'
-					. " WHERE location_id = {$loc_id} AND custom_sort > {$custom_sort}";
+					. " WHERE location_id = {$location_id} AND custom_sort > {$custom_sort}";
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
