@@ -634,7 +634,7 @@
 		*
 		* @return integer Access rights in bitmask form
 		*/
-		public function get_rights($location, $appname = '', $grantor = -1, $mask = 0, $account_type = 'both', $required)
+		public function get_rights($location, $appname = '', $grantor = -1, $mask = 0, $account_type = 'both', $required = '')
 		{
 			// For XML-RPC, change this once its working correctly for passing parameters (jengo)
 			if (is_array($location))
