@@ -25,14 +25,14 @@
 FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.64"
 
-LIBXMLTAR="libxml2-2.6.30.tar.gz"
-LIBXML="libxml2-2.6.30"
+LIBXMLTAR="libxml2-2.7.3.tar.gz"
+LIBXML="libxml2-2.7.3"
 
-LIBXSLTAR="libxslt-1.1.22.tar.gz"
-LIBXSL="libxslt-1.1.22"
+LIBXSLTAR="libxslt-1.1.24.tar.gz"
+LIBXSL="libxslt-1.1.24"
 
-IMAPTAR="imap-2006k.tar.Z"
-IMAP="imap-2006k"
+IMAPTAR="imap-2007e.tar.Z"
+IMAP="imap-2007e"
 
 PHP_PREFIX="/usr/local"
 
@@ -41,24 +41,24 @@ PHP_PREFIX="/usr/local"
 #  * 
 #  * @var               string APACHE, APACHETAR
 #  */
-APACHETAR="httpd-2.2.9.tar.gz"
-APACHE="httpd-2.2.9"
+APACHETAR="httpd-2.2.11.tar.gz"
+APACHE="httpd-2.2.11"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
 #  * 
 #  * @var               string PHP, PHPTAR
 #  */
-PHPTAR="php-5.2.6.tar.bz2"
-PHP="php-5.2.6"
+PHPTAR="php-5.2.9.tar.bz2"
+PHP="php-5.2.9"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
 #  * 
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  */
-EACCELERATORTAR="eaccelerator-0.9.5.2.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.5.2"
+EACCELERATORTAR="eaccelerator-0.9.5.3.tar.bz2"
+EACCELERATOR="eaccelerator-0.9.5.3"
 
 # clean up from previous
 
