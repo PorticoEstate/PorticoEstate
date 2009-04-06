@@ -238,4 +238,20 @@
 				return False;
 			}
 		}
+
+		public function add_code($namespace, $code)
+		{
+
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+				. '<script type="text/javascript">' ."\n"
+				. '//<[CDATA[' ."\n"
+				. '/**' ."\n"
+				. '/**' ."\n"
+				. '* TODO Document function so others understand it' ."\n"
+				. '*/' ."\n"
+				. $code ."\n"
+				. '//]]' ."\n"
+				. "</script>\n";
+
+		}
 	}

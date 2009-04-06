@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id$
+ 	* @version $Id: class.bocategory.inc.php 2530 2009-03-08 19:53:28Z sigurd $
 	*/
 
 	/**
@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 
-	class property_bocategory
+	class property_boevent
 	{
 		var $start;
 		var $query;
@@ -41,31 +41,11 @@
 		var $order;
 		var $cat_id;
 		var $location_info = array();
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
-
+	
 		function __construct($session=false)
 		{
-			$this->so 			= CreateObject('property.socategory');
-			$this->socommon 	= CreateObject('property.socommon');
-			$this->custom 		= & $this->so->custom;
+	//		$this->so 			= CreateObject('property.socategory');
+			$this->custom 		= CreateObject('property.custom_fields');//& $this->so->custom;
 
 			if ($session)
 			{
@@ -91,7 +71,7 @@
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
 
-			$this->location_info = $this->so->get_location_info($type, $type_id);
+			//$this->location_info = $this->so->get_location_info($type, $type_id);
 
 		}
 

@@ -201,6 +201,20 @@
 						}
 					}
 				}
+				else if($attributes['datatype'] == 'event')
+				{
+					if($attributes['value'])
+					{
+//						$attributes['user_name']= $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uievent.edit'));
+
+					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
 				{
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);

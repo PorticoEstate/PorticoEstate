@@ -21,7 +21,7 @@
 	* @package phpgwapi
 	* @subpackage gui
 	*/
-	class phpgwapi_calendar
+	class phpgwapi_jscal
 	{
 
 		public static function input($id, $date, $format = 'input', $title = null)
@@ -32,8 +32,8 @@
 				$title = 'Select a date';
 			}
 			$title = lang($title);
-			$datels = self::get_translated_dates();
-			$date_pos = self::_get_date_pos();
+			$datels = self::_get_translated_dates();
+			$date_pos = self::_get_date_pos($date_format);
 
 			$range_sep = '-';
 			switch ( substr($date_format, 1, 1) )
@@ -56,7 +56,7 @@
 			$date_selected = date(str_replace('M', 'm', $date_format), $date);
 
 
-			$namespace = phpgwapi_yui::import_widget('calendar');
+			$namespace = phpgwapi_yui::load_widget('calendar');
 			$code = <<<JS
 			YAHOO.namespace('{$namespace}');
 
@@ -66,11 +66,11 @@
 				YAHOO.$namespace.$id.cfg.setProperty('DATE_FIELD_DELIMITER', '.');
 
 				YAHOO.$namespace.$id.cfg.setProperty('MDY_DAY_POSITION', {$date_pos['d']});
-				YAHOO.$namespace.$id.cfg.setProperty('MDY_MONTH_POSITION', {$date_post['m']});
+				YAHOO.$namespace.$id.cfg.setProperty('MDY_MONTH_POSITION', {$date_pos['m']});
 				YAHOO.$namespace.$id.cfg.setProperty('MDY_YEAR_POSITION', {$date_pos['y']});
 
 				YAHOO.$namespace.$id.cfg.setProperty('MD_DAY_POSITION', {$date_pos['d']});
-				YAHOO.$namespace.$id.cfg.setProperty('MD_MONTH_POSITION', {$date_post['m']});
+				YAHOO.$namespace.$id.cfg.setProperty('MD_MONTH_POSITION', {$date_pos['m']});
 
 				YAHOO.$namespace.$id.cfg.setProperty('MONTHS_SHORT',   ['{$datels['months'][1]}', '{$datels['months'][2]}', '{$datels['months'][3]}', '{$datels['months'][4]}', '{$datels['months'][5]}', '{$datels['months'][6]}', '{$datels['months'][7]}', '{$datels['months'][8]}', '{$datels['months'][9]}', '{$datels['months'][10]}', '{$datels['months'][11]}', '{$datels['months'][12]}']);
 				YAHOO.$namespace.$id.cfg.setProperty('MONTHS_LONG',    ['{$datels['monthl'][1]}', '{$datels['monthl'][2]}', '{$datels['monthl'][3]}', '{$datels['monthl'][4]}', '{$datels['monthl'][5]}', '{$datels['monthl'][6]}', '{$datels['monthl'][7]}', '{$datels['monthl'][8]}', '{$datels['monthl'][9]}', '{$datels['monthl'][10]}', '{$datels['monthl'][11]}', '{$datels['monthl'][12]}']);
@@ -116,7 +116,7 @@ HTML;
 						switch ( $pos )
 						{
 							case 'd':
-								$html .= phpgwapi_sbox2::
+								$html .= phpgwapi_sbox::getDays($name, $selected = null);
 						}
 					}
 
@@ -129,7 +129,7 @@ HTML;
 
 			}
 
-			$img = $GLOBALS['phpgw']->common->image('phpgwapi', 'calendar', 'png', false)
+			$img = $GLOBALS['phpgw']->common->image('phpgwapi', 'calendar', 'png', false);
 			$alt = lang('date selector trigger');
 
 
@@ -193,7 +193,7 @@ HTML;
 		/**
 		* Get the positions of the components of the date
 		*/
-		private static get_date_pos()
+		private static function get_date_pos()
 		{
 			static $positions = null;
 			if ( !is_null($positions) )
@@ -229,7 +229,7 @@ HTML;
 			return $positions;
 		}
 
-		private static function get_translated_dates()
+		private static function _get_translated_dates()
 		{
 			static $datels = null;
 			if ( is_null($datels) )
@@ -238,75 +238,102 @@ HTML;
 				(
 					'months'	=> array
 					(
-						'Jan'	=> lang('Jan'),
-						'Feb'	=> lang('Feb'),
-						'Mar'	=> lang('Mar'),
-						'Apr'	=> lang('Apr'),
-						'May'	=> lang('May'),
-						'Jun'	=> lang('Jun'),
-						'Jul'	=> lang('Jul'),
-						'Aug'	=> lang('Aug'),
-						'Sep'	=> lang('Sep'),
-						'Oct'	=> lang('Oct'),
-						'Nov'	=> lang('Nov'),
-						'Dec'	=> lang('Dec')
+						'1'	=> lang('Jan'),
+						'2'	=> lang('Feb'),
+						'3'	=> lang('Mar'),
+						'4'	=> lang('Apr'),
+						'5'	=> lang('May'),
+						'6'	=> lang('Jun'),
+						'7'	=> lang('Jul'),
+						'8'	=> lang('Aug'),
+						'9'	=> lang('Sep'),
+						'10'	=> lang('Oct'),
+						'11'	=> lang('Nov'),
+						'12'	=> lang('Dec')
 					),
 					'monthl'	=> array
 					(
-						'Jan'	=> lang('January'),
-						'Feb'	=> lang('Febuary'),
-						'Mar'	=> lang('March'),
-						'Apr'	=> lang('April'),
-						'May'	=> lang('May'),
-						'Jun'	=> lang('June'),
-						'Jul'	=> lang('July'),
-						'Aug'	=> lang('August'),
-						'Sep'	=> lang('September'),
-						'Oct'	=> lang('October'),
-						'Nov'	=> lang('November'),
-						'Dec'	=> lang('December')
+						'1'	=> lang('January'),
+						'2'	=> lang('Febuary'),
+						'3'	=> lang('March'),
+						'4'	=> lang('April'),
+						'5'	=> lang('May'),
+						'6'	=> lang('June'),
+						'7'	=> lang('July'),
+						'8'	=> lang('August'),
+						'9'	=> lang('September'),
+						'10'	=> lang('October'),
+						'11'	=> lang('November'),
+						'12'	=> lang('December')
 					),
 					'days'	=> array
 					(
-						'Sun'	=> lang('Su'),
-						'Mon'	=> lang('Mo'),
-						'Tue'	=> lang('Tu'),
-						'Wed'	=> lang('We'),
-						'Thu'	=> lang('Th'),
-						'Fri'	=> lang('Fr'),
-						'Sat'	=> lang('Sa'),
-						'Sun'	=> lang('Su'),
+						'1'	=> lang('Su'),
+						'2'	=> lang('Mo'),
+						'3'	=> lang('Tu'),
+						'4'	=> lang('We'),
+						'5'	=> lang('Th'),
+						'6'	=> lang('Fr'),
+						'7'	=> lang('Sa')
 					),
 					'daym'	=> array
 					(
-						'Sun'	=> lang('Sun'),
-						'Mon'	=> lang('Mon'),
-						'Tue'	=> lang('Tue'),
-						'Wed'	=> lang('Wed'),
-						'Thu'	=> lang('Thu'),
-						'Fri'	=> lang('Fri'),
-						'Sat'	=> lang('Sat'),
-						'Sun'	=> lang('Sun'),
+						'1'	=> lang('Sun'),
+						'2'	=> lang('Mon'),
+						'3'	=> lang('Tue'),
+						'4'	=> lang('Wed'),
+						'5'	=> lang('Thu'),
+						'6'	=> lang('Fri'),
+						'7'	=> lang('Sat')
 					),
 					'dayl'	=> array
 					(
-						'Sun'	=> lang('Sunday'),
-						'Mon'	=> lang('Monday'),
-						'Tue'	=> lang('Tuesday'),
-						'Wed'	=> lang('Wednesday'),
-						'Thu'	=> lang('Thursday'),
-						'Fri'	=> lang('Friday'),
-						'Sat'	=> lang('Saturday'),
-						'Sun'	=> lang('Sunday'),
+						'1'	=> lang('Sunday'),
+						'2'	=> lang('Monday'),
+						'3'	=> lang('Tuesday'),
+						'4'	=> lang('Wednesday'),
+						'5'	=> lang('Thursday'),
+						'6'	=> lang('Friday'),
+						'7'	=> lang('Saturday')
 					)
 				);
 
-				foreach ( $dayls['days'] as $day => $native )
+				foreach ( $datels['dayl'] as $day => $native )
 				{
-					$dayls['day1'][$day] = substr($native, 0, 1);
+					$datels['day1'][$day] = substr($native, 0, 1);
 				}
 			}
 			return $datels;
 		}
+
+
+		private static function _get_date_pos($dateformat)
+		{
+			$dateformat = strtolower($dateformat);
+			$sep = '/';
+			$dlarr[strpos($dateformat,'y')] = 'y';
+			$dlarr[strpos($dateformat,'m')] = 'm';
+			$dlarr[strpos($dateformat,'d')] = 'd';
+			ksort($dlarr);
+			$i = 1;
+			$date_pos = array();
+			foreach ($dlarr as $entry)
+			{
+				$date_pos[$entry] = $i;
+				$i++;
+			}
+			return $date_pos;
+		}
+
+		/**
+		* Add an event listener to the trigger icon - used for XSLT
+		*
+		* @access private
+		* @param string $name the element ID
+		*/
+		function _input_modern($id)
+		{
+			$GLOBALS['phpgw']->js->add_event('load', "Calendar.setup({inputField : '$id', button : '{$id}-trigger'});");
+		}
+
 	}
-?>
