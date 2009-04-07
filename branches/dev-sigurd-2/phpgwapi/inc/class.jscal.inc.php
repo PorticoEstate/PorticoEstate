@@ -27,6 +27,11 @@
 		public static function input($id, $date, $format = 'input', $title = null)
 		{
 			$date_format =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(!$date)
+			{
+				$date = $GLOBALS['phpgw']->common->show_date(time(),$date_format);
+			}
+			
 			if ( !$title )
 			{
 				$title = 'Select a date';
@@ -53,8 +58,7 @@
 			}
 			
 
-			$date_selected = date(str_replace('M', 'm', $date_format), $date);
-
+			$date_selected = $date;//date(str_replace('M', 'm', $date_format), $date);
 
 			$namespace = phpgwapi_yui::load_widget('calendar');
 			$code = <<<JS
@@ -105,7 +109,7 @@ JS;
 
 HTML;
 
-			$date_str = date(str_replace('M', 'm', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']), $date);
+			$date_str =  $date;//date(str_replace('M', 'm', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']), $date);
 
 			switch ( $format )
 			{
@@ -129,7 +133,7 @@ HTML;
 
 			}
 
-			$img = $GLOBALS['phpgw']->common->image('phpgwapi', 'calendar', 'png', false);
+			$img = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$alt = lang('date selector trigger');
 
 

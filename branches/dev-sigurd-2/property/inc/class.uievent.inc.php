@@ -573,7 +573,7 @@
 	//		$GLOBALS['phpgw']->jscal->add_listener('values_end_date');
 
 
-			$GLOBALS['phpgw']->jscal->input('values_start_date', $date, $format = 'input', lang('start date'));
+			$start_date = $GLOBALS['phpgw']->jscal->input('values_start_date', $date, $format = 'input', lang('start date'));
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -582,6 +582,7 @@
 				'lang_start_date_statustext'	=> lang('Select the estimated end date for the event'),
 				'lang_start_date'				=> lang('event start date'),
 				'value_start_date'				=> $values['start_date'],
+				'start_date'					=> $start_date,
 
 				'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
 				'lang_end_date'					=> lang('event end date'),

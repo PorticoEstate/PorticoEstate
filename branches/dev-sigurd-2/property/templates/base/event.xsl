@@ -58,6 +58,11 @@
 					<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of disable-output-escaping="yes" select="start_date"/>
+				</td>
+			</tr>
 
 
 </table>
