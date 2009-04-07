@@ -46,6 +46,8 @@
 		{
 	//		$this->so 			= CreateObject('property.socategory');
 			$this->custom 		= CreateObject('property.custom_fields');//& $this->so->custom;
+	//		$this->bocommon 	= CreateObject('property.bocommon');
+			$this->sbox 		= CreateObject('phpgwapi.sbox');
 
 			if ($session)
 			{
@@ -162,5 +164,60 @@
 		{
 			$this->so->delete($id);
 		}
-	}
 
+		public function get_rpt_type_list($selected='')
+		{
+			$rpt_type = array
+			(
+				0	=> 'None',
+				1	=> 'Daily',
+				2	=> 'Weekly',
+				3	=> 'Monthly (by day)',
+				4	=> 'Monthly (by date)',
+				5	=> 'Yearly'
+			);
+
+
+			return $this->sbox->getArrayItem('values[rpt_type]', $selected, $rpt_type);
+		}
+
+		public function get_rpt_day_list($selected=array())
+		{
+			$rpt_day = array
+			(
+				1		=> 'Sunday',
+				2		=> 'Monday',
+				4		=> 'Tuesday',
+				8		=> 'Wednesday',
+				16		=> 'Thursday',
+				32		=> 'Friday',
+				64		=> 'Saturday'
+			);
+
+			$title = lang('(for weekly)');
+			$i = 0; $boxes = '';
+			foreach ($rpt_day as $mask => $name)
+			{
+				$boxes .= '<input type="checkbox" title = "' . $title . '"name="values[rpt_day][]" value="'.$mask.'"'.(isset($selected[$mask]) && $selected[$mask] & $mask ? ' checked' : '').'></input> '.lang($name)."\n";
+				if (++$i == 5) $boxes .= '<br />';
+			}
+			return $boxes;
+		}
+
+		public function get_responsible($selected = '')
+		{
+			$responsible = CreateObject('property.soresponsible');
+			
+			$location = '.invoice.dimb';//phpgw::get_var('location');
+			$values = $responsible->read_type(array('start' => 0, 'query' =>'', 'sort' => '',
+												'order' => '', 'location' => $location, 'allrows'=>true,
+												'filter' => ''));
+
+			$list = array(0 => lang('none'));
+			foreach($values as $entry)
+			{
+				$list[$entry['id']] = $entry['name'];
+			}
+			return $this->sbox->getArrayItem('values[responsible]', $selected, $list, true);
+		}
+	}

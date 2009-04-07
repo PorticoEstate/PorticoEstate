@@ -486,7 +486,7 @@ HTML;
 
 			if (!is_array($selected))
 			{
-				$key = array($selected);
+				$selected = array($selected);
 			}
 
 			foreach ( $options as $value => $option )
@@ -495,7 +495,7 @@ HTML;
 				$option = $no_lang ? $option : lang($option);
 
 				$html .= <<<HTML
-					<option value="{$value}"{$selected}>{$option}<option>
+					<option value="{$value}"{$selected}>{$option}</option>
 
 HTML;
 			}

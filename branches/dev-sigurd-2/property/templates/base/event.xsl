@@ -21,124 +21,100 @@
 			</xsl:when>
 		</xsl:choose>
 
-		<div class="yui-navset" id="general_edit_tabview">
-
+		<div class="yui-navset" id="general_edit_tabview" align="left">
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form method="post" action="{$form_action}">
-
-	<table cellpadding="2" cellspacing="2" width="79%" align="center">
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_start_date"/>
-				</td>
-				<td>
-					<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_start_date_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-
-					<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_end_date"/>
-				</td>
-				<td>
-					<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_end_date_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-					<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of disable-output-escaping="yes" select="start_date"/>
-				</td>
-			</tr>
-
-
-</table>
-
-
-
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">		
 				<div id="general">
-		<table cellpadding="2" cellspacing="2" width="79%" align="center">
-			<xsl:choose>
-				<xsl:when test="id_type != 'auto'">
-					<tr>
-						<td valign="top">
-							<xsl:value-of select="lang_id"/>
-						</td>
-						<td>
-							<xsl:choose>
-								<xsl:when test="value_id != ''">
-									<xsl:value-of select="value_id"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="text" name="values[id]" value="{value_id}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_id_text"/>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>	
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
+					<table cellpadding="2" cellspacing="2" width="79%" align="center">
+						<xsl:choose>
+							<xsl:when test="value_id != ''">
+								<tr>
+									<td valign="top">
+										<xsl:value-of select="lang_id"/>
+									</td>
+									<td>
+										<xsl:value-of select="value_id"/>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>	
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_start_date"/>
+							</td>
+							<td>
+								<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_start_date_statustext"/>
+									</xsl:attribute>
+								</input>
+								<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_responsible"/>
+							</td>
+							<td>
+								<xsl:value-of disable-output-escaping="yes" select="responsible"/>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_action"/>
+							</td>
+						</tr>
 
-					<xsl:choose>
-						<xsl:when test="value_id != ''">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_id"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_id"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>	
-				</xsl:otherwise>
-			</xsl:choose>
+					</table>
+				</div>
+				<div id="repeat">
+					<table cellpadding="2" cellspacing="2" width="79%" align="center">
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_end_date"/>
+							</td>
+							<td>
+								<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_end_date_statustext"/>
+									</xsl:attribute>
+								</input>
+								<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_rpt_type"/>
+							</td>
+							<td>
+								<xsl:value-of disable-output-escaping="yes" select="rpt_type"/>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_rpt_day"/>
+							</td>
+							<td>
+								<xsl:value-of disable-output-escaping="yes" select="rpt_day"/>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_interval"/>
+							</td>
+							<td>
+								<input type="text" id="values_interval" name="values[interval]" size="4" value="{value_interval}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_interval_statustext"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>			
+					</table>
+				</div>
 
-		<xsl:for-each select="fields" >
-			<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-			<tr>
-				<td align="left" width="19%" valign="top" title="{descr}">
-					<xsl:value-of select="descr"/>
-				</td>
-				<td align="left">
-					<xsl:choose>
-						<xsl:when test="type='text'">
-							<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" wrap="virtual">
-								<xsl:value-of select="value"/>		
-							</textarea>
-						</xsl:when>
-						<xsl:when test="type='varchar'">
-							<input type="text" name="values[{name}]" value="{value}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="title">
-									<xsl:value-of select="descr"/>
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-					</xsl:choose>
-				</td>
-			</tr>
-		</xsl:for-each>
-		</table>
-		</div>
-		<xsl:call-template name="attributes_values"/>
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td valign="bottom">

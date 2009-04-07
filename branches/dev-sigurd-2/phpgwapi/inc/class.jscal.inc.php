@@ -58,11 +58,12 @@
 			}
 			
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			$date_selected = $date;//date(str_replace('M', 'm', $date_format), $date);
 
 			$namespace = phpgwapi_yui::load_widget('calendar');
 			$code = <<<JS
-			YAHOO.namespace('{$namespace}');
+			YAHOO.namespace('{$namespace}.{$id}');
 
 			YAHOO.$namespace.$id.init = function()
 			{

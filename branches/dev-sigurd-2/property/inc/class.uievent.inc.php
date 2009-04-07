@@ -414,7 +414,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+	//		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$type		= phpgw::get_var('type');
@@ -530,63 +530,47 @@
 
 			$tabs = array();
 
-			if (isset($values['attributes']) && is_array($values['attributes']))
-			{
-				foreach ($values['attributes'] as & $attribute)
-				{
-					if($attribute['history'] == true)
-					{
-						$link_history_data = array
-						(
-							'menuaction'	=> 'property.uiactor.attrib_history',
-							'attrib_id'	=> $attribute['id'],
-							'actor_id'	=> $actor_id,
-							'role'		=> $this->role,
-							'edit'		=> true
-						);
+			phpgwapi_yui::tabview_setup('general_edit_tabview');
+			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+			$tabs['repeat']	= array('label' => lang('repeat'), 'link' => '#repeat');
 
-						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
-					}
-				}
-
-				phpgwapi_yui::tabview_setup('general_edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-
-				$attributes_groups = $this->custom->get_attribute_groups('property', $this->acl_location, $values['attributes']);
-
-				$attributes = array();
-				foreach ($attributes_groups as $group)
-				{
-					if(isset($group['attributes']))
-					{
-						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-						$group['link'] = str_replace(' ', '_', $group['name']);
-						$attributes[] = $group;
-					}
-				}
-				unset($attributes_groups);
-				unset($values['attributes']);
-			}
-
-
-	//		$GLOBALS['phpgw']->jscal->add_listener('values_start_date');
-	//		$GLOBALS['phpgw']->jscal->add_listener('values_end_date');
-
-
+/*
+			$GLOBALS['phpgw']->jscal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jscal->add_listener('values_end_date');
 			$start_date = $GLOBALS['phpgw']->jscal->input('values_start_date', $date, $format = 'input', lang('start date'));
+*/
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_start_date');
+			$jscal->add_listener('values_end_date');
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
-				'lang_start_date_statustext'	=> lang('Select the estimated end date for the event'),
-				'lang_start_date'				=> lang('event start date'),
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
+
+				'lang_start_date_statustext'	=> lang('Select the date for the event'),
+				'lang_start_date'				=> lang('date'),
 				'value_start_date'				=> $values['start_date'],
-				'start_date'					=> $start_date,
+	//			'start_date'					=> $start_date,
 
 				'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
-				'lang_end_date'					=> lang('event end date'),
+				'lang_end_date'					=> lang('end date'),
 				'value_end_date'				=> $values['end_date'],
+				'rpt_type'						=> $this->bo->get_rpt_type_list(isset($values['rpt_type']) ? $values['rpt_type'] : ''),
+				'lang_rpt_type'					=> lang('repeat type'),
+				
+				'rpt_day'						=> $this->bo->get_rpt_day_list(isset($values['rpt_day']) ? $values['rpt_day'] : ''),
+				'lang_rpt_day'					=> lang('repeat day'),
+
+				'lang_interval'					=> lang('interval'),
+				'value_interval'				=> isset($values['interval']) ? $values['interval'] : 0,
+				'lang_interval_statustext'		=> lang('interval'),
+				
+				'lang_responsible'				=> lang('responsible'),
+				'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
+				'lang_action'					=> lang('action on event'),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
