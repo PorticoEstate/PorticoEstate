@@ -715,7 +715,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
+					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{

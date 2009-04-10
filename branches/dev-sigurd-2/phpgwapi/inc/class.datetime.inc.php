@@ -846,7 +846,7 @@
 		*/
 		public static function date_to_timestamp($date = array())
 		{
-			if ( !count($date) )
+			if ( !$date )
 			{
 				return 0;
 			}

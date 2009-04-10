@@ -9,7 +9,7 @@
 	* @package phpgroupware
 	* @subpackage property
 	* @category core
- 	* @version $Id: class.uiresponsible.inc.php 732 2008-02-10 16:21:14Z sigurd $
+ 	* @version $Id: class.soresponsible.inc.php 2566 2009-03-30 12:58:43Z sigurd $
 	*/
 
 	/*
@@ -602,5 +602,27 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('account_id');
+		}
+
+		/**
+		* Get the user_id for a particular responsibility
+		*
+		* @param integer $person_id the ID of the given contact
+		*
+		* @return user_id
+		*/
+
+		public function get_responsible_user_id($responsibility_id)
+		{
+			$responsibility_id = (int)$responsibility_id;
+			$now = time();
+			$sql = "SELECT contact_id FROM fm_responsibility_contact"
+			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+			 . " AND active = 1 AND active_from < {$now} AND active_to > {$now} AND expired_on IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record(); 
+			$contact_id = $this->db->f('contact_id');
+			return $this->get_contact_user_id($contact_id);
 		}
 	}

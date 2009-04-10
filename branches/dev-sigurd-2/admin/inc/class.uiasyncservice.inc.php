@@ -104,6 +104,10 @@
 					{
 						echo '<p><b>'.lang('Error: %1 not found or other error !!!',$async->crontab)."</b></p>\n";
 					}
+					else
+					{
+						$asyncservice = 'cron';
+					}
 				}
 
 				if ( $asyncservice )
@@ -117,6 +121,11 @@
 						$config->save_repository();
 						unset($config);
 						$GLOBALS['phpgw_info']['server']['asyncservice'] = $asyncservice;
+					}
+
+					if(($asyncservice == 'off' || $asyncservice == 'fallback') && !$install)
+					{
+						$async->uninstall();
 					}
 				}
 			}

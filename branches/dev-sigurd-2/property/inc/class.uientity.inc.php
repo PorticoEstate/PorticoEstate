@@ -875,6 +875,7 @@
 				}
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
 			}
 			else
 			{

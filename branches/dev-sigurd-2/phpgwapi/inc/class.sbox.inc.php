@@ -484,18 +484,27 @@ HTML;
 
 HTML;
 
+			$check = array();
+
 			if (!is_array($selected))
 			{
-				$selected = array($selected);
+				$check[$selected] = true;	
+			}
+			else
+			{
+				foreach ($selected as $sel)
+				{
+					$check[$sel] = true;
+				}
 			}
 
 			foreach ( $options as $value => $option )
 			{
-				$selected = isset( $selected[$value] ) ? ' selected' : '';
+				$check2 = isset( $check[$value] ) ? ' selected' : '';
 				$option = $no_lang ? $option : lang($option);
 
 				$html .= <<<HTML
-					<option value="{$value}"{$selected}>{$option}</option>
+					<option value="{$value}"{$check2}>{$option}</option>
 
 HTML;
 			}

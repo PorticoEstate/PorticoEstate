@@ -62,10 +62,6 @@
 		 * @param ????  $view_only ????
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
-		 *
-		 * @internal this is a UI related method - WTF was it doing in an API logic class?
-		 * this is property specific code and so has been moved there!
-		 * this code needs some serious attention
 		 */
 		public function prepare($values, $appname, $location, $view_only='')
 		{
@@ -203,16 +199,34 @@
 				}
 				else if($attributes['datatype'] == 'event')
 				{
-					if($attributes['value'])
+					// If the record is not saved - issue a warning
+					$attributes['item_id']			= isset($values['id']) ? $values['id'] : '';
+					$attributes['warning']			= isset($values['id']) ? '' : lang('Warning: the record has to be saved in order to plan an event');
+					
+					if(isset($attributes['value']) && $attributes['value'])
 					{
-//						$attributes['user_name']= $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
-					}
+						$event = execMethod('property.soevent.read_single', $attributes['value']);
+						$attributes['descr']			= $event['descr'];
 
+						$id = "property{$location}::{$values['id']}::{$attributes['id']}";
+						$job = execMethod('phpgwapi.asyncservice.read', $id);
+
+						$attributes['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
+						$attributes['lang_next_run']	= lang('next run');
+						unset($event);
+						unset($id);
+						unset($job);
+					}
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uievent.edit'));
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
+						'menuaction'	=> $this->_appname.'.uievent.edit',
+						'location'		=> $location,
+						'attrib_id'		=> $attributes['id'],
+						'item_id'		=> isset($values['id']) ? $values['id'] : '',
+						'id'			=> isset($attributes['value']) && $attributes['value'] ? $attributes['value'] : ''));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
@@ -252,7 +266,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
+					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{

@@ -409,66 +409,56 @@
 
 		function edit()
 		{
-			if(!$this->acl_add)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
-			}
-
-	//		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-			$type		= phpgw::get_var('type');
-			$type_id	= phpgw::get_var('type_id', 'int');
-			$id			= phpgw::get_var('id');
+			if(!$this->acl_add)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$location	= phpgw::get_var('location');
+			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$item_id	= phpgw::get_var('item_id', 'int');
+			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 
-			$values_attribute  = phpgw::get_var('values_attribute');
 		
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
+//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('event','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
 			$receipt = array();
 
 			if (is_array($values))
 			{
-				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
-				
-				if(is_array($insert_record_values))
-				{
-					foreach($insert_record_values as $field)
-					{
-						$values['extra'][$field] = 	phpgw::get_var($field);
-					}
-				}
+				$values['location_id']	=  $GLOBALS['phpgw']->locations->get_id('property', $location);
+				$values['attrib_id']	=  $attrib_id;
+				$values['item_id']		=  $item_id;
+				$attrib = $this->custom->get('property', $location, $attrib_id);
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!$id && !$values['id'] && $this->location_info['id']['type'] !='auto')
+					if(!isset($values['descr']) || !$values['descr'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter an id!'));									
+						$receipt['error'][]=array('msg'=>lang('Please enter a description'));									
 					}
-
-					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))
+					if(!isset($values['responsible']) || !$values['responsible'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
-						unset($values['id']);
+						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
 					}
-
-					if(isset($values_attribute) && is_array($values_attribute))
+					if(!isset($values['action']) || !$values['action'])
 					{
-						foreach ($values_attribute as $attribute )
-						{
-							if($attribute['nullable'] != 1 && !$attribute['value'])
-							{
-								$receipt['error'][]=array('msg'=>lang('Please enter value for event %1', $attribute['input_text']));
-							}
-						}
+						$receipt['error'][]=array('msg'=>lang('Please select an action'));									
 					}
-
+					
+/*					if(isset($values['repeat_day']))
+					{
+						$values['interval'] = 0;
+					}
+*/
 					if($id)
 					{
 						$values['id']=$id;
-						$action='edit';
 					}
 					else
 					{
@@ -477,13 +467,16 @@
 
 					if(!$receipt['error'])
 					{
-						$receipt = $this->bo->save($values,$action,$values_attribute);
+						$receipt = $this->bo->save($values,$action);
+
+						$js = "opener.document.form.{$attrib['column_name']}.value = '{$receipt['id']}';\n";
+						$js .= "opener.document.form.{$attrib['column_name']}_descr.value = '{$values['descr']}';\n";
 
 						if (isset($values['save']) && $values['save'])
 						{
-							$GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$type}_{$type_id}", $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uievent.index', 'type'=> $type,	'type_id' => $type_id));
+							$js .= "window.close();";
 						}
+						$GLOBALS['phpgw']->js->add_event('load', $js);
 						$id = $receipt['id'];
 					}
 					else
@@ -493,39 +486,45 @@
 					}
 					
 				}
+				else if ((isset($values['delete']) && $values['delete']))
+				{
+						$attrib = $this->custom->get('property', $location, $attrib_id);
+						$js = "opener.document.form.{$attrib['column_name']}.value = '';\n";
+						$js .= "opener.document.form.{$attrib['column_name']}_descr.value = '';\n";
+						if($this->delete($id))
+						{
+							$GLOBALS['phpgw']->js->add_event('load', $js);
+							unset($values);
+							unset($id);
+						}
+				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uievent.index', 'type'=> $type,	'type_id' => $type_id));
+					$GLOBALS['phpgw']->js->add_event('load', "window.close();");
 				}
+				unset($js);
+				unset($attrib);
 			}
 
 			if ($id)
 			{
-				$values = $this->bo->read_single(array('id' => $id));
-				$function_msg = $this->location_info['edit_msg'];
-				$action='edit';
+				$values = $this->bo->read_single($id);
+				$function_msg = lang('edit event');
 			}
 			else
 			{
-				$values = $this->bo->read_single();
-				$function_msg = $this->location_info['add_msg'];
-				$action='add';
+				$function_msg = lang('add event');
 			}
-
-			/* Preserve attribute values from post */
-			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
-			{
-				$values = $this->custom->preserve_attribute_values($values,$values_attribute);
-			}
-
 
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uievent.edit',
-				'id'			=> $id,
-				'type'			=> $type,
-				'type_id'		=> $type_id
+				'location'		=> $location,
+				'attrib_id'		=> $attrib_id,
+				'item_id'		=> $item_id,
+				'id'			=> $id
 			);
+
 //_debug_array($link_data);
 
 			$tabs = array();
@@ -558,11 +557,11 @@
 				'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
 				'lang_end_date'					=> lang('end date'),
 				'value_end_date'				=> $values['end_date'],
-				'rpt_type'						=> $this->bo->get_rpt_type_list(isset($values['rpt_type']) ? $values['rpt_type'] : ''),
-				'lang_rpt_type'					=> lang('repeat type'),
+				'repeat_type'						=> $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
+				'lang_repeat_type'					=> lang('repeat type'),
 				
-				'rpt_day'						=> $this->bo->get_rpt_day_list(isset($values['rpt_day']) ? $values['rpt_day'] : ''),
-				'lang_rpt_day'					=> lang('repeat day'),
+				'repeat_day'						=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
+				'lang_repeat_day'					=> lang('repeat day'),
 
 				'lang_interval'					=> lang('interval'),
 				'value_interval'				=> isset($values['interval']) ? $values['interval'] : 0,
@@ -570,7 +569,9 @@
 				
 				'lang_responsible'				=> lang('responsible'),
 				'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
+
 				'lang_action'					=> lang('action on event'),
+				'action'						=> $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -581,17 +582,20 @@
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),
 				'value_id'						=> isset($values['id']) ? $values['id'] : '',
+
+				'lang_next_run'					=> lang('next run'),
+				'value_next_run'				=> isset($values['next']) ? $values['next'] : '',				
 				'value_descr'					=> $values['descr'],
-				'lang_id_text'					=> lang('Enter the ID'),
 				'lang_descr_text'				=> lang('Enter a description of the record'),
-				'lang_done_text'				=> lang('Back to the list'),
 				'lang_save_text'				=> lang('Save the record'),
 				'lang_apply_statustext'			=> lang('Apply the values'),
 				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
 				'lang_save_statustext'			=> lang('Save the actor and return back to the list'),
 
-				'attributes_group'				=> $attributes,
-				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
+				'lang_delete'					=> lang('delete'),
+				'lang_delete_text'				=> lang('delete the record'),
+				'lang_delete_statustext'		=> lang('delete the record'),
+
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
@@ -603,20 +607,15 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
-		function delete()
+		function delete($id)
 		{
 			if(!$this->acl_delete)
 			{
-				return lang('no access');
+				$this->bocommon->no_access();
+				return;
 			}
 
-			$id	= phpgw::get_var('id');
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$this->bo->delete($id);
-				return lang('id %1 has been deleted', $id);
-			}
+			return $this->bo->delete($id);
 		}
 	}
 

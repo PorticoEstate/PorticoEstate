@@ -3154,4 +3154,65 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.554 to 0.9.17.555
+	* Scheduling capabilities by custom fields and asyncservice
+	* 
+	*/
+
+	$test[] = '0.9.17.555';
+	function property_upgrade0_9_17_555()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_action', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' =>  array('type' => 'varchar','precision' => 100,'nullable' => False),
+					'action' =>  array('type' => 'varchar','precision' => 100,'nullable' => False),
+					'data' => array('type' => 'text','nullable' => True),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'location_item_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'attrib_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => true),
+					'responsible_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'action_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'descr' => array('type' => 'text','nullable' => True),
+					'start_date' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'end_date' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'repeat_type' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'repeat_day' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'interval' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('location_id', 'location1_item_id', 'attrib_id')
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.556';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 

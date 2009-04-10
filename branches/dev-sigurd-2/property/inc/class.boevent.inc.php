@@ -27,6 +27,11 @@
  	* @version $Id: class.bocategory.inc.php 2530 2009-03-08 19:53:28Z sigurd $
 	*/
 
+	/*
+	 * Import the datetime class for date processing
+	 */
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -44,10 +49,11 @@
 	
 		function __construct($session=false)
 		{
-	//		$this->so 			= CreateObject('property.socategory');
+			$this->so 			= CreateObject('property.soevent');
 			$this->custom 		= CreateObject('property.custom_fields');//& $this->so->custom;
 	//		$this->bocommon 	= CreateObject('property.bocommon');
 			$this->sbox 		= CreateObject('phpgwapi.sbox');
+			$this->asyncservice = CreateObject('phpgwapi.asyncservice');
 
 			if ($session)
 			{
@@ -100,11 +106,6 @@
 			$this->allrows	= $data['allrows'];
 		}
 
-		public function get_location_info($type,$type_id)
-		{
-			return $this->so->get_location_info($type,$type_id);
-		}
-
 		public function read()
 		{
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
@@ -116,53 +117,213 @@
 			return $values;
 		}
 
-		public function read_single($data=array())
+		public function read_single($id)
 		{
-			$custom_fields = false;
-			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values = $this->so->read_single($id);
+			if($values)
 			{
-				$custom_fields = true;
-				$values = array();
-				$values['attributes'] = $this->custom->find('property', $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
+				$values['end_date']		= $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat);
+				if($values['rpt_day'])
+				{
+					$rpt_day = array
+					(
+						1		=> 'Sunday',
+						2		=> 'Monday',
+						4		=> 'Tuesday',
+						8		=> 'Wednesday',
+						16		=> 'Thursday',
+						32		=> 'Friday',
+						64		=> 'Saturday'
+					);
+
+					foreach ($rpt_day as $mask => $name)
+					{
+						if($mask & $values['rpt_day'])
+						{
+							$values['repeat_day'][$mask] = $name;
+						}
+					}
+				}
+
+				$location	= phpgw::get_var('location');
+				$job_id = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
+				$job = execMethod('phpgwapi.asyncservice.read', $job_id);
+
+				$values['next'] = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'],$dateformat);
 			}
 
-			if(isset($data['id']) && $data['id'])
-			{
-				$values = $this->so->read_single($data, $values);
-			}
-			if($custom_fields)
-			{
-				$values = $this->custom->prepare($values, 'property',$this->location_info['acl_location'], $data['view']);
-			}
 			return $values;
 		}
 
-		public function save($data,$action='',$values_attribute = array())
+		public function save($data)
 		{
-			if(is_array($values_attribute))
-			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
-			}
+			$data['start_date'] = phpgwapi_datetime::date_to_timestamp($data['start_date']);
+			$data['end_date'] = phpgwapi_datetime::date_to_timestamp($data['end_date']);
 
-			if ($action=='edit')
+			if (isset($data['id']) && $data['id'] > 0 && $this->so->read_single($data['id']))
 			{
-				if ($data['id'] != '')
-				{
-
-					$receipt = $this->so->edit($data,$values_attribute);
-				}
+				$receipt = $this->so->edit($data);
 			}
 			else
 			{
-				$receipt = $this->so->add($data,$values_attribute);
+				$receipt = $this->so->add($data);
 			}
+
+			$action_object		= CreateObject('property.socategory');
+			$action_object->get_location_info('event_action',false);
+			$action	= $action_object->read_single(array('id'=> $data['action']),$values = array());
+
+			$rpt_day = array
+			(
+				1		=> 0, //'Sunday',
+				2		=> 1, //'Monday',
+				4		=> 2, //'Tuesday',
+				8		=> 3, //'Wednesday',
+				16		=> 4, //'Thursday',
+				32		=> 5, //'Friday',
+				64		=> 6  //'Saturday'
+			);
+
+			$repeat_day = array();
+			if ($data['repeat_day'])
+			{
+				foreach ($data['repeat_day'] as $day)
+				{
+					if (isset($rpt_day[$day]))
+					{
+						$repeat_day[] = $rpt_day[$day];
+					}
+				}
+				$repeat_day = implode(',', $repeat_day);
+			}
+
+			if(!isset($data['repeat_type']) || !$data['repeat_type'])
+			{
+				$times = $data['start_date'];
+			}
+			else
+			{
+				$dow = $rpt_day[$data['repeat_day'][0]];
+				switch($data['repeat_type'])
+				{
+					case '0':
+						$times = $data['start_date'];
+						break;
+					case '1': //'Daily'
+						if($data['interval'])
+						{
+							$times = array('day' => "*/{$data['interval']}");
+						}
+						else
+						{
+							$times = array('day' => "*/1");
+						}
+						break;
+					case '2': //'Weekly'
+						if($data['interval'])
+						{
+							$day = $data['interval'] * 7;
+							$times = array('day' => "*/{$day}");
+						}
+						else
+						{
+							$times = array('day' => "*/7");
+						}
+						if ($data['repeat_day'])
+						{
+							$times['dow'] = $repeat_day;
+						}
+						break;
+					case '3': //'Monthly (by day)'
+						if( !isset($data['repeat_day']) || !is_array($data['repeat_day']) )
+						{
+							$dow = 1;
+						}
+						
+						if($data['interval'])
+						{
+							$times = array('month' => "*/{$data['interval']}", 'dow' => $dow);
+						}
+						else
+						{
+							$times = array('month' => "*/1", 'dow' => $dow);
+						}
+						break;
+					case '4': //'Monthly (by date)'
+						if($data['interval'])
+						{
+							$times = array('month' => "*/{$data['interval']}", 'day' => 1);
+						}
+						else
+						{
+							$times = array('day' => 1);
+						}
+						break;
+					case '5': //'Yearly'
+						$month = date(n, $data['start_date']);
+						if($data['interval'])
+						{
+							$times = array('year' => "*/{$data['interval']}", 'month' => $month);
+						}
+						else
+						{
+							$times = array('month' => $month);
+						}
+						break;
+					default:
+						$times = $data['start_date'];
+						break;
+				}
+
+
+			}
+/*
+		@param integer|array $times Unix timestamp or array('min','hour','dow','day','month','year') 
+		with execution time. Repeated events are possible to schedule by setting the array only partly, eg. 
+		array('day' => 1) for first day in each month 0am or
+		array('min' => '* /5', 'hour' => '9-17') for every 5mins in the time from 9am to 5pm.
+*/
+
+			$account_id = execMethod('property.soresponsible.get_responsible_user_id', $data['responsible']);
+
+			$timer_data = array
+			(
+				'start'		=> $data['start_date'],
+				'enabled'	=> true,
+				'owner'		=> $account_id
+			);
+				
+			if($data['end_date'])
+			{
+				$timer_data['end'] = $data['end_date'];
+			}
+
+			if($action['data'])
+			{
+//				eval('$action_data = ' . $action['data'] .';');
+//				$timer_data = array_merge($timer_data, $action_data);
+			}
+
+			$location	= phpgw::get_var('location');
+
+			$id = "property{$location}::{$data['item_id']}::{$data['attrib_id']}";
+
+			$this->asyncservice->cancel_timer($id);
+			$this->asyncservice->set_timer($times, $id, $action['action'], $timer_data, $account_id);
 
 			return $receipt;
 		}
 
 		public function delete($id)
 		{
-			$this->so->delete($id);
+			$values = $this->read_single($id);
+			$location	= phpgw::get_var('location');
+			$job_id = "property{$location}::{$values['location_item_id']}::{$values['attrib_id']}";
+			$job = execMethod('phpgwapi.asyncservice.cancel_timer', $job_id);
+
+			return $this->so->delete($id);
 		}
 
 		public function get_rpt_type_list($selected='')
@@ -178,7 +339,7 @@
 			);
 
 
-			return $this->sbox->getArrayItem('values[rpt_type]', $selected, $rpt_type);
+			return $this->sbox->getArrayItem('values[repeat_type]', $selected, $rpt_type);
 		}
 
 		public function get_rpt_day_list($selected=array())
@@ -198,7 +359,7 @@
 			$i = 0; $boxes = '';
 			foreach ($rpt_day as $mask => $name)
 			{
-				$boxes .= '<input type="checkbox" title = "' . $title . '"name="values[rpt_day][]" value="'.$mask.'"'.(isset($selected[$mask]) && $selected[$mask] & $mask ? ' checked' : '').'></input> '.lang($name)."\n";
+				$boxes .= '<input type="checkbox" title = "' . $title . '"name="values[repeat_day][]" value="'.$mask.'"'.(isset($selected[$mask]) && $selected[$mask] ? ' checked' : '').'></input> '.lang($name)."\n";
 				if (++$i == 5) $boxes .= '<br />';
 			}
 			return $boxes;
@@ -218,6 +379,21 @@
 			{
 				$list[$entry['id']] = $entry['name'];
 			}
+
 			return $this->sbox->getArrayItem('values[responsible]', $selected, $list, true);
+		}
+
+		public function get_action($selected = '')
+		{
+			$action_object					= CreateObject('property.socategory');
+			$action_object->get_location_info('event_action',false);
+			$values					= $action_object->read(array('allrows'=> true));
+
+			$list = array(0 => lang('none'));
+			foreach($values as $entry)
+			{
+				$list[$entry['id']] = $entry['name'];
+			}
+			return $this->sbox->getArrayItem('values[action]', $selected, $list, true);
 		}
 	}

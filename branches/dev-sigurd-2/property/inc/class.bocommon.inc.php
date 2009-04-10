@@ -1856,7 +1856,7 @@
 				{
 					foreach ($insert_record['extra'] as $key => $column)
 					{
-						if(isset($_POST[$key]) && $_POST[$key])
+						if(isset($_POST[$key]))
 						{
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}

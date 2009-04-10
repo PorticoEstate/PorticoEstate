@@ -9,12 +9,7 @@
 	</xsl:template>
 
 <!-- add / edit  -->
-	<xsl:template match="edit">
-		<script language="JavaScript">
-			self.name="first_Window";
-			<xsl:value-of select="lookup_functions"/>
-		</script>
-	
+	<xsl:template match="edit">	
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
@@ -38,8 +33,26 @@
 										<xsl:value-of select="value_id"/>
 									</td>
 								</tr>
+								<tr>
+									<td valign="top">
+										<xsl:value-of select="lang_next_run"/>
+									</td>
+									<td>
+										<xsl:value-of select="value_next_run"/>
+									</td>
+								</tr>
 							</xsl:when>
 						</xsl:choose>	
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="lang_descr"/>
+							</td>
+							<td>
+								<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]" wrap="virtual">
+									<xsl:value-of select="value_descr"/>		
+								</textarea>
+							</td>
+						</tr>
 						<tr>
 							<td valign="top">
 								<xsl:value-of select="lang_start_date"/>
@@ -65,6 +78,9 @@
 							<td valign="top">
 								<xsl:value-of select="lang_action"/>
 							</td>
+							<td>
+								<xsl:value-of disable-output-escaping="yes" select="action"/>
+							</td>
 						</tr>
 
 					</table>
@@ -86,18 +102,18 @@
 						</tr>
 						<tr>
 							<td valign="top">
-								<xsl:value-of select="lang_rpt_type"/>
+								<xsl:value-of select="lang_repeat_type"/>
 							</td>
 							<td>
-								<xsl:value-of disable-output-escaping="yes" select="rpt_type"/>
+								<xsl:value-of disable-output-escaping="yes" select="repeat_type"/>
 							</td>
 						</tr>
 						<tr>
 							<td valign="top">
-								<xsl:value-of select="lang_rpt_day"/>
+								<xsl:value-of select="lang_repeat_day"/>
 							</td>
 							<td>
-								<xsl:value-of disable-output-escaping="yes" select="rpt_day"/>
+								<xsl:value-of disable-output-escaping="yes" select="repeat_day"/>
 							</td>
 						</tr>
 						<tr>
@@ -115,32 +131,43 @@
 					</table>
 				</div>
 
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr height="50">
-				<td valign="bottom">
-					<input type="submit" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_save_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td valign="bottom">
-					<input type="submit" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_apply_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td align="right" valign="bottom">
-					<input type="submit" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-								<xsl:value-of select="lang_cancel_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
-		</table>
-		</div>
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<tr height="50">
+						<td valign="bottom">
+							<input type="submit" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_save_statustext"/>
+								</xsl:attribute>
+							</input>
+						</td>
+						<td valign="bottom">
+							<input type="submit" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_apply_statustext"/>
+								</xsl:attribute>
+							</input>
+						</td>
+						<td align="right" valign="bottom">
+							<input type="submit" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+										<xsl:value-of select="lang_cancel_statustext"/>
+								</xsl:attribute>
+							</input>
+						</td>
+						<xsl:choose>
+							<xsl:when test="value_id != ''">
+								<td align="right" valign="bottom">
+									<input type="submit" name="values[delete]" value="{lang_delete}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_delete_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</xsl:when>
+						</xsl:choose>	
+					</tr>
+				</table>
+			</div>
 		</form>
 		</div>
 	</xsl:template>
