@@ -3198,6 +3198,7 @@
 					'repeat_type' => array('type' => 'int','precision' => 4,'nullable' => true),
 					'repeat_day' => array('type' => 'int','precision' => 4,'nullable' => true),
 					'interval' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'enabled' => array('type' => 'int','precision' => 2,'nullable' => true),
 					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
@@ -3206,6 +3207,27 @@
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array('location_id', 'location1_item_id', 'attrib_id')
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_responsibility');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
+					'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+					'cat_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
 			)
 		);
 

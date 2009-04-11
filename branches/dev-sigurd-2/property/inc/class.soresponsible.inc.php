@@ -41,6 +41,7 @@
 		var $db;
 		var $account;
 		var $acl_location;
+		var $appname = 'property';
 
 		/**
 		* @var the total number of records for a search
@@ -86,7 +87,7 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " order by fm_responsibility.$order $sort";
 			}
 			else
 			{
@@ -96,18 +97,26 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
+/*
 			if(is_array($filter) && $location)
 			{
 				$filtermethod .= " $where cat_id IN (" . implode(',', $filter) . ')';
 				$where = 'AND';
 			}
+*/
+			if($location)
+			{
+				$filtermethod .= " $where fm_responsibility.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
+				$where = 'AND';
+			}
+
 			$querymethod = '';
 			if($query)
 			{
-				$querymethod = "$where (name $this->like '%$query%' OR descr $this->like '%$query%')";
+				$querymethod = "$where (fm_responsibility.name $this->like '%$query%' OR fm_responsibility.descr $this->like '%$query%')";
 			}
 
-			$sql = "SELECT * FROM fm_responsibility $filtermethod $querymethod";
+			$sql = "SELECT fm_responsibility.*, phpgw_locations.name as location FROM fm_responsibility $this->join phpgw_locations ON fm_responsibility.location_id = phpgw_locations.location_id $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -131,6 +140,7 @@
 					'name'			=> $this->db->f('name', true),
 					'descr'			=> $this->db->f('descr', true),
 					'active'		=> $this->db->f('active'),
+					'location'		=> $this->db->f('location'),
 					'cat_id'		=> $this->db->f('cat_id'),
 					'created_by'	=> $this->db->f('created_by'),
 					'created_on'	=> $this->db->f('created_on'),
@@ -158,6 +168,7 @@
 			(
 				$values['name'],
 				$values['descr'],
+				$GLOBALS['phpgw']->locations->get_id($this->appname, $values['location']),
 				(int) $values['cat_id'],
 				isset($values['active']) ? !!$values['active'] : '',
 				$this->account,
@@ -168,7 +179,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO fm_responsibility (name, descr, cat_id, active, created_by, created_on) "
+			$this->db->query("INSERT INTO fm_responsibility (name, descr,location_id, cat_id, active, created_by, created_on) "
 				. "VALUES ($insert_values)", __LINE__, __FILE__);
 
 			if($this->db->transaction_commit())

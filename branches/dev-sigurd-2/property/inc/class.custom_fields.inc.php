@@ -207,6 +207,8 @@
 					{
 						$event = execMethod('property.soevent.read_single', $attributes['value']);
 						$attributes['descr']			= $event['descr'];
+						$attributes['enabled']			= $event['enabled'] ? lang('yes') : lang('no');
+						$attributes['lang_enabled']		= lang('enabled');
 
 						$id = "property{$location}::{$values['id']}::{$attributes['id']}";
 						$job = execMethod('phpgwapi.asyncservice.read', $id);

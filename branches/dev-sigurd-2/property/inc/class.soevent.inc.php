@@ -125,6 +125,7 @@
 					'repeat_type'		=> $this->_db->f('repeat_type'),
 					'rpt_day'			=> $this->_db->f('repeat_day'),
 					'interval'			=> $this->_db->f('interval'),
+					'enabled'			=> $this->_db->f('enabled'),
 					'user_id'			=> $this->_db->f('user_id'),
 					'entry_date'		=> $this->_db->f('entry_date'),
 					'modified_date'		=> $this->_db->f('modified_date'),
@@ -156,6 +157,7 @@
 				'repeat_type',
 				'repeat_day',
 				'interval',
+				'enabled',
 				'user_id',
 				'entry_date'
 			);
@@ -182,6 +184,7 @@
 				$data['repeat_type'],				
 				$repeat_day,
 				$data['interval'],
+				$data['enabled'],
 				$this->account,
 				time()
 			);
@@ -233,6 +236,7 @@
 				'repeat_type'		=> $data['repeat_type'],
 				'repeat_day'		=> $repeat_day,
 				'interval'			=> $data['interval'],
+				'enabled'			=> $data['enabled'],
 				'modified_date'		=> time()
 			);
 

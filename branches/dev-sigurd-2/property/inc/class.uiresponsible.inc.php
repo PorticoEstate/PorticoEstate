@@ -262,10 +262,10 @@
 			$responsible_info = $this->bo->read_type();
 																							
 			$uicols = array (
-				'input_type'	=>	array(hidden,text,text,text,text,hidden,text,text,hidden),
-				'name'			=>	array(id,name,descr,category,created_by,created_on,app_name,active,loc),
-				'formatter'		=>	array('','','','','','','','',''),
-				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('supervisor'),'',lang('location'),lang('active'),'')
+				'input_type'	=>	array(hidden,text,text,text,text,hidden,text,text,hidden,hidden),
+				'name'			=>	array(id,name,descr,category,created_by,created_on,app_name,active,loc,location),
+				'formatter'		=>	array('','','','','','','','','',''),
+				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('supervisor'),'',lang('location'),lang('active'),'','')
 			);
 
 			$j=0;
@@ -349,6 +349,11 @@
 							'name'		=> 'type_id',
 							'source'	=> 'id'
 						),
+						array
+						(
+							'name'		=> 'location',
+							'source'	=> 'location'
+						)
 					)
 				);
 				
@@ -364,7 +369,7 @@
 						array
 						(
 							'name'		=> 'location',
-							'source'	=> 'loc'
+							'source'	=> 'location'
 						),						
 					)
 				);
@@ -376,7 +381,8 @@
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uiresponsible.edit_type'
+											'menuaction'	=> 'property.uiresponsible.edit_type',
+//											'location'		=> $this->location
 										)),
 						'parameters'	=> $parameters3
 					);
@@ -565,6 +571,11 @@
 				return;
 			}
 
+			if(!$GLOBALS['phpgw']->locations->get_id('property', $this->location))
+			{
+				$receipt['error'][]=array('msg'=>lang('not a valid location!'));
+			}
+
 			$id		= phpgw::get_var('id', 'int');
 			$values	= phpgw::get_var('values', 'string', 'POST');
 
@@ -580,9 +591,10 @@
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
+					$values['location'] = $this->location;
 					if(!$values['cat_id'] || $values['cat_id'] == 'none')
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a category!'));
+			//			$receipt['error'][]=array('msg'=>lang('Please select a category!'));
 					}
 					if(!$values['name'])
 					{
@@ -674,7 +686,7 @@
 														)),
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$this->location}::{$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_type' => $data));
 		}
 
@@ -1096,12 +1108,12 @@
 				. " var strURL = phpGWLink('index.php', oArgs);\n"
 				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
 				. '}'."\r\n"
-				. 'function lookup_responsibility()' ."\r\n"
-				. "{\r\n"
-				. ' var oArgs = {' . $lookup_link_responsibility . "};\n"
-				. " var strURL = phpGWLink('index.php', oArgs);\n"
-				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
-				. '}'."\r\n"
+//				. 'function lookup_responsibility()' ."\r\n"
+//				. "{\r\n"
+//				. ' var oArgs = {' . $lookup_link_responsibility . "};\n"
+//				. " var strURL = phpGWLink('index.php', oArgs);\n"
+//				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+//				. '}'."\r\n"
 				. '//]]' ."\n"
 				. "</script>\n";
 
@@ -1115,6 +1127,8 @@
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_active_from');
 			$jscal->add_listener('values_active_to');
+			
+			$type = $this->bo->read_single_type($type_id);
 
 			$data = array
 			(
@@ -1126,9 +1140,9 @@
 				'lang_remark'					=> lang('remark'),
 
 				'lang_responsibility'			=> lang('responsibility'),
-				'lang_responsibility_status_text'=> lang('click to select responsibility'),
-				'value_responsibility_id'		=> isset($values['responsibility_id']) ? $values['responsibility_id'] : '',
-				'value_responsibility_name'		=> isset($values['responsibility_name']) ? $values['responsibility_name'] : '',
+				'lang_responsibility_status_text'=> lang('responsibility'),
+				'value_responsibility_id'		=> $type_id,
+				'value_responsibility_name'		=> $type['name'],
 
 				'lang_contact'					=> lang('contact'),
 				'lang_contact_status_text'		=> lang('click to select contact'),

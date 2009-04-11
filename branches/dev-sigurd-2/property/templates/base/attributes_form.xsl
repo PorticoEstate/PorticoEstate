@@ -259,6 +259,13 @@
 																	</tr>
 																</xsl:when>
 															</xsl:choose>
+															<tr>
+																<td>
+																	<xsl:value-of select="lang_enabled"/>
+																	<xsl:text>: </xsl:text>
+																	<xsl:value-of select="enabled"/>
+																</td>
+															</tr>
 														</table>
 													</xsl:otherwise>
 												</xsl:choose>

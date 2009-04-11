@@ -83,6 +83,31 @@
 							</td>
 						</tr>
 
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_enabled"/>
+				</td>
+				<td>
+					<xsl:choose>
+						<xsl:when test="value_enabled = '1'">
+							<input type="checkbox" name="values[enabled]" value="1" checked="checked" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_enabled_on_statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+						<xsl:otherwise>
+							<input type="checkbox" name="values[enabled]" value="1" onMouseout="window.status='';return true;">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_enabled_off_statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+			</tr>
+
+
 					</table>
 				</div>
 				<div id="repeat">

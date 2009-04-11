@@ -514,6 +514,7 @@
 			else
 			{
 				$function_msg = lang('add event');
+				$values['enabled'] = true;
 			}
 
 			$link_data = array
@@ -554,14 +555,16 @@
 				'value_start_date'				=> $values['start_date'],
 	//			'start_date'					=> $start_date,
 
+				'value_enabled'					=> isset($values['enabled']) ? $values['enabled'] : '',
+				'lang_enabled'					=> lang('enabled'),
 				'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
 				'lang_end_date'					=> lang('end date'),
 				'value_end_date'				=> $values['end_date'],
-				'repeat_type'						=> $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
-				'lang_repeat_type'					=> lang('repeat type'),
+				'repeat_type'					=> $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
+				'lang_repeat_type'				=> lang('repeat type'),
 				
-				'repeat_day'						=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
-				'lang_repeat_day'					=> lang('repeat day'),
+				'repeat_day'					=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
+				'lang_repeat_day'				=> lang('repeat day'),
 
 				'lang_interval'					=> lang('interval'),
 				'value_interval'				=> isset($values['interval']) ? $values['interval'] : 0,

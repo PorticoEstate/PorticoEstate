@@ -276,15 +276,7 @@
 						$times = $data['start_date'];
 						break;
 				}
-
-
 			}
-/*
-		@param integer|array $times Unix timestamp or array('min','hour','dow','day','month','year') 
-		with execution time. Repeated events are possible to schedule by setting the array only partly, eg. 
-		array('day' => 1) for first day in each month 0am or
-		array('min' => '* /5', 'hour' => '9-17') for every 5mins in the time from 9am to 5pm.
-*/
 
 			$account_id = execMethod('property.soresponsible.get_responsible_user_id', $data['responsible']);
 
@@ -292,7 +284,8 @@
 			(
 				'start'		=> $data['start_date'],
 				'enabled'	=> true,
-				'owner'		=> $account_id
+				'owner'		=> $account_id,
+				'enabled'	=> !! $data['enabled']
 			);
 				
 			if($data['end_date'])
@@ -302,8 +295,9 @@
 
 			if($action['data'])
 			{
-//				eval('$action_data = ' . $action['data'] .';');
-//				$timer_data = array_merge($timer_data, $action_data);
+				str_replace(";", '', $action['data']);
+				eval('$action_data = ' . htmlspecialchars_decode($action['data']) . ';');
+				$timer_data = array_merge($timer_data, $action_data);
 			}
 
 			$location	= phpgw::get_var('location');
@@ -369,7 +363,7 @@
 		{
 			$responsible = CreateObject('property.soresponsible');
 			
-			$location = '.invoice.dimb';//phpgw::get_var('location');
+			$location = phpgw::get_var('location');
 			$values = $responsible->read_type(array('start' => 0, 'query' =>'', 'sort' => '',
 												'order' => '', 'location' => $location, 'allrows'=>true,
 												'filter' => ''));
