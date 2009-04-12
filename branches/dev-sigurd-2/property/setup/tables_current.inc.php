@@ -1087,7 +1087,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('location_id', 'location1_item_id', 'attrib_id')
+			'uc' => array('location_id', 'location_item_id', 'attrib_id')
 		),
 		'fm_request_condition_type' => array(
 			'fd' => array(
