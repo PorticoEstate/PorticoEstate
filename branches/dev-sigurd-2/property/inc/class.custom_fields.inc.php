@@ -329,6 +329,7 @@
 			$contacts = CreateObject('phpgwapi.contacts');
 //_debug_array($values);
 			$location = array();
+			$ret = array();
 			$j=0;
 			foreach ($values as $row)
 			{
