@@ -200,9 +200,19 @@
 				else if($attributes['datatype'] == 'event')
 				{
 					// If the record is not saved - issue a warning
-					$attributes['item_id']			= isset($values['id']) ? $values['id'] : '';
-					$attributes['warning']			= isset($values['id']) ? '' : lang('Warning: the record has to be saved in order to plan an event');
-					
+					if(isset($values['id']) || $values['id'])
+					{
+						$attributes['item_id'] = $values['id'];
+					}
+					else if(isset($values['location_code']) || $values['location_code'])
+					{
+						$attributes['item_id'] = execMethod('property.solocation.get_item_id', $values['location_code']);
+					}
+					else
+					{
+						$attributes['warning']			= isset($values['id']) ? '' : lang('Warning: the record has to be saved in order to plan an event');
+					}
+
 					if(isset($attributes['value']) && $attributes['value'])
 					{
 						$event = execMethod('property.soevent.read_single', $attributes['value']);
