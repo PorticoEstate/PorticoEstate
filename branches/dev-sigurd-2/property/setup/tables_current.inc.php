@@ -1089,6 +1089,20 @@
 			'ix' => array(),
 			'uc' => array('location_id', 'location_item_id', 'attrib_id')
 		),
+		'fm_event_exception' => array(
+			'fd' => array(
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'exception_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('event_id', 'exception_time'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_request_condition_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),

@@ -278,6 +278,8 @@
 				}
 			}
 
+			//$times['min']= '*'; // for testing the  - every minute
+
 			$account_id = execMethod('property.soresponsible.get_responsible_user_id', $data['responsible']);
 
 			$timer_data = array
@@ -285,7 +287,8 @@
 				'start'		=> $data['start_date'],
 				'enabled'	=> true,
 				'owner'		=> $account_id,
-				'enabled'	=> !! $data['enabled']
+				'enabled'	=> !! $data['enabled'],
+				'action'	=> $action['action']
 			);
 				
 			if($data['end_date'])
@@ -303,11 +306,31 @@
 			$location	= phpgw::get_var('location');
 
 			$id = "property{$location}::{$data['item_id']}::{$data['attrib_id']}";
+			$timer_data['id'] = $id;
 
 			$this->asyncservice->cancel_timer($id);
-			$this->asyncservice->set_timer($times, $id, $action['action'], $timer_data, $account_id);
+			$this->asyncservice->set_timer($times, $id, 'property.boevent.action', $timer_data, $account_id);
 
 			return $receipt;
+		}
+
+		public function action($data)
+		{
+			$parts = explode('::',$data['id']);
+			$id = end($parts);
+
+			if($data['enabled'] && !$this->so->check_event_exception($id,$data['time']))
+			{
+				$message = execMethod($data['action'], $data);
+
+				$this->so->cron_log(array
+					(
+						'cron'		=> true // or false for manual...
+						'action'	=> $data['action'],
+						'message'	=> $message
+					)
+				);
+			}
 		}
 
 		public function delete($id)

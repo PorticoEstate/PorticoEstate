@@ -3135,7 +3135,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.553 to 0.9.17.554
+	* Update property version from 0.9.17.554 to 0.9.17.555
 	* 
 	*/
 
@@ -3155,7 +3155,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.554 to 0.9.17.555
+	* Update property version from 0.9.17.555 to 0.9.17.556
 	* Scheduling capabilities by custom fields and asyncservice
 	* 
 	*/
@@ -3234,6 +3234,39 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.556';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.556 to 0.9.17.557
+	* Scheduling capabilities by custom fields and asyncservice
+	* 
+	*/
+
+	$test[] = '0.9.17.556';
+	function property_upgrade0_9_17_556()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_exception', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'exception_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('event_id', 'exception_time'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.557';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

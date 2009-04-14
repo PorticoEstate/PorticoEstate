@@ -258,6 +258,32 @@
 			return $receipt;
 		}
 
+		function check_event_exception($event_id, $time)
+		{
+			$event_id = (int) $event_id;
+			$time = (int) $time;
+			$sql = "SELECT event_id FROM fm_event_exception WHERE event_id = {$event_id} AND exception_time = {$time}";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
+			return !!$this->_db->f('id');
+		}
+
+		function cron_log($data)
+		{
+			$insert_values= array(
+				!!$data['cron'], // or manual...
+				date($this->_db->datetime_format()),
+				$data['action'],
+				$data['message']
+				);
+
+			$insert_values	= $this->_db->validate_insert($insert_values);
+
+			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+					. "VALUES ($insert_values)";
+			$this->db->query($sql,__LINE__,__FILE__);
+		}
+
 		function delete($id)
 		{
 			$receipt = array();
