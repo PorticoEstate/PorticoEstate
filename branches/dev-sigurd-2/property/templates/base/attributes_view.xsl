@@ -1,4 +1,4 @@
-<!-- $Id: attributes_view.xsl,v 1.2 2006/02/06 22:47:37 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template match="attributes_view">
 		<xsl:variable name="lang_attribute_statustext"><xsl:value-of select="lang_attribute_statustext"/></xsl:variable>

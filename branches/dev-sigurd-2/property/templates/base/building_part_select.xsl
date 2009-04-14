@@ -1,4 +1,4 @@
-<!-- $Id: building_part_select.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="building_part_select">
 	<xsl:variable name="lang_building_part_statustext"><xsl:value-of select="lang_building_part_statustext"/></xsl:variable>

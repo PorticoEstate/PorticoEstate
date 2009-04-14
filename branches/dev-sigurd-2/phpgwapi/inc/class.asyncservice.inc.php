@@ -402,7 +402,8 @@
 
 						if ($GLOBALS['phpgw']->session->account_id = $job['account_id'])
 						{
-							$GLOBALS['phpgw']->session->account_lid = $GLOBALS['phpgw']->accounts->id2name($job['account_id']);
+							$GLOBALS['phpgw']->session->set_account_id($job['account_id']);
+							$GLOBALS['phpgw']->session->account_lid = $GLOBALS['phpgw']->accounts->id2lid($job['account_id']);
 							$GLOBALS['phpgw']->session->account_domain = $domain;
 							$GLOBALS['phpgw']->session->read_repositories(False,False);
 							$GLOBALS['phpgw_info']['user']  = $GLOBALS['phpgw']->session->user;

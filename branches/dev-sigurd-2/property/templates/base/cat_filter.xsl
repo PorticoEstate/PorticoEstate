@@ -1,4 +1,4 @@
-<!-- $Id: cat_filter.xsl,v 1.2 2006/04/17 11:36:05 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="cat_filter">
 		<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>

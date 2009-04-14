@@ -1,4 +1,4 @@
-<!-- $Id: choice.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="choice">
 			<table cellpadding="2" cellspacing="2" width="80%" align="left">

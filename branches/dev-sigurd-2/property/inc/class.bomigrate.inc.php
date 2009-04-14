@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uimigrate.inc.php 732 2008-02-10 16:21:14Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/*

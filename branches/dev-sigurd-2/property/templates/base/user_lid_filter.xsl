@@ -1,4 +1,4 @@
-<!-- $Id: user_lid_filter.xsl,v 1.2 2007/03/22 10:35:28 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="user_lid_filter">
 		<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>

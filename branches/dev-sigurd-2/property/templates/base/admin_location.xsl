@@ -1,4 +1,4 @@
-<!-- $Id: admin_location.xsl,v 1.4 2006/11/24 10:11:50 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

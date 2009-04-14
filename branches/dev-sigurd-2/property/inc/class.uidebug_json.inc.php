@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage project
- 	* @version $Id: class.uidebug_json.inc.php 1973 2008-12-18 23:18:49Z cesar $
+ 	* @version $Id$
 	*/
 
 	//phpgw::import_class('phpgwapi.yui');

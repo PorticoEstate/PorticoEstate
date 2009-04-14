@@ -9,7 +9,7 @@
 	* @package phpgroupware
 	* @subpackage property
 	* @category core
- 	* @version $Id: class.uiresponsible.inc.php 732 2008-02-10 16:21:14Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/*

@@ -9,7 +9,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
-	 * @version $Id: class.custom_fields.inc.php 1114 2008-06-02 18:15:22Z sigurd $
+	 * @version $Id$
 	 */
 
 	/*

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.uievent.inc.php 2530 2009-03-08 19:53:28Z sigurd $
+ 	* @version $Id$
 	*/
 	phpgw::import_class('phpgwapi.yui');
 

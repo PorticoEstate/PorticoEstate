@@ -6,7 +6,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage sessions
-	* @version $Id: class.sessions_db.inc.php 682 2008-02-01 12:19:55Z dave $
+	* @version $Id$
 	* @link http://php.net/session_set_save_handler
 	*/
 

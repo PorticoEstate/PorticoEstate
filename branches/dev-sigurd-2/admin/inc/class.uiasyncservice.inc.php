@@ -227,7 +227,7 @@
 			
 		}
 		
-		private function test($to)
+		public function test($to)
 		{
 			if (!is_object($GLOBALS['phpgw']->send))
 			{

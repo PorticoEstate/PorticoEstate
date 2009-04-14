@@ -28,6 +28,10 @@
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
 	$db_type = $GLOBALS['phpgw_domain'][$_GET['domain']]['db_type'];
+	if($db_type == 'postgres')
+	{
+		$db_type = 'pgsql';
+	}
 	if (!extension_loaded($db_type) && !dl($db_type.'.so'))
 	{
 		echo "Extension '$db_type' is not loaded and can't be loaded via dl('$db_type.so') !!!\n";

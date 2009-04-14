@@ -1,4 +1,4 @@
-<!-- $Id: wo_hour_cat_select.xsl,v 1.1 2005/11/10 13:10:46 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="wo_hour_cat_select">
 			<select name="wo_hour_cat_id" onMouseout="window.status='';return true;">

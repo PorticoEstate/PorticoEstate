@@ -1,4 +1,4 @@
-<!-- $Id: gab.xsl,v 1.7 2006/12/15 20:16:44 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>
