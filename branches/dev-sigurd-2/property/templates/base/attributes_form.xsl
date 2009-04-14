@@ -3,6 +3,7 @@
 		<xsl:apply-templates select="attributes_values"/>
 	</xsl:template>
 
+
 	<xsl:template name="attributes_values">
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
