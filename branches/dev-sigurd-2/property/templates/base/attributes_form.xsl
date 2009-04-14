@@ -1,5 +1,4 @@
-<!-- $Id: attributes_form.xsl 18358 2007-11-27 04:43:37Z skwashd $ -->
-
+<!-- $Id$ -->
 	<xsl:template name="attributes_form">
 		<xsl:apply-templates select="attributes_values"/>
 	</xsl:template>
@@ -257,15 +256,15 @@
 																			<xsl:value-of select="next"/>
 																		</td>
 																	</tr>
+																	<tr>
+																		<td>
+																			<xsl:value-of select="lang_enabled"/>
+																			<xsl:text>: </xsl:text>
+																			<xsl:value-of select="enabled"/>
+																		</td>
+																	</tr>
 																</xsl:when>
 															</xsl:choose>
-															<tr>
-																<td>
-																	<xsl:value-of select="lang_enabled"/>
-																	<xsl:text>: </xsl:text>
-																	<xsl:value-of select="enabled"/>
-																</td>
-															</tr>
 														</table>
 													</xsl:otherwise>
 												</xsl:choose>
