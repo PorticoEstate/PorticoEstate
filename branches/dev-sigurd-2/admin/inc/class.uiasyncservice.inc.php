@@ -85,7 +85,7 @@
 				if ( $test )
 				{
 					$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences();
-					if (!$async->set_timer($times,'test','admin.uiasyncservice.test',$prefs['email']['address']))
+					if (!$async->set_timer($times,'test','admin.uiasyncservice.test',array('to' => $prefs['email']['address'])))
 					{
 						echo '<p><b>'.lang("Error setting timer, wrong syntax or maybe there's one already running !!!")."</b></p>\n";
 					}
@@ -227,13 +227,15 @@
 			
 		}
 		
-		public function test($to)
+		public function test($data)
 		{
+			$to = $data['to'];
+			$from = $GLOBALS['phpgw']->preferences->values['email'];
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 			}
-			$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject='Asynchronous timed services','Greatings from cron ;-)');
+			$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject='Asynchronous timed services', 'Greatings from cron ;-)', '', '', '', $from);
 
 			if (!$returncode)	// not nice, but better than failing silently
 			{

@@ -400,7 +400,7 @@
 						$lang   = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 						unset($GLOBALS['phpgw_info']['user']);
 
-						if ($GLOBALS['phpgw']->session->account_id = $job['account_id'])
+						if ($job['account_id'])
 						{
 							$GLOBALS['phpgw']->session->set_account_id($job['account_id']);
 							$GLOBALS['phpgw']->session->account_lid = $GLOBALS['phpgw']->accounts->id2lid($job['account_id']);
