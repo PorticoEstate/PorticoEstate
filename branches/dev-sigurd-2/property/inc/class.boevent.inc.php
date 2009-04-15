@@ -325,7 +325,7 @@
 
 				$this->so->cron_log(array
 					(
-						'cron'		=> true // or false for manual...
+						'cron'		=> true, // or false for manual...
 						'action'	=> $data['action'],
 						'message'	=> $message
 					)
