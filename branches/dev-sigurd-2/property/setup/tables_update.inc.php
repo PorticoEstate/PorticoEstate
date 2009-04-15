@@ -3164,7 +3164,7 @@
 	function property_upgrade0_9_17_555()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+/*		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_event_action', array(
 				'fd' => array(
 					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
@@ -3182,7 +3182,7 @@
 				'uc' => array()
 			)
 		);
-
+*/
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_event', array(
 				'fd' => array(
@@ -3197,7 +3197,7 @@
 					'end_date' => array('type' => 'int','precision' => 4,'nullable' => true),
 					'repeat_type' => array('type' => 'int','precision' => 4,'nullable' => true),
 					'repeat_day' => array('type' => 'int','precision' => 4,'nullable' => true),
-					'interval' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'repeat_interval' => array('type' => 'int','precision' => 4,'nullable' => true),
 					'enabled' => array('type' => 'int','precision' => 2,'nullable' => true),
 					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
@@ -3270,4 +3270,28 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.557 to 0.9.17.558
+	* Rename reserved fieldname (mysql)
+	* 
+	*/
+
+	$test[] = '0.9.17.557';
+	function property_upgrade0_9_17_557()
+	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_event');
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		if(isset($metadata['interval']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_event','interval','repeat_interval');
+		}
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.558';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 

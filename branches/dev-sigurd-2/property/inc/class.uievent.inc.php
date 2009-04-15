@@ -453,7 +453,7 @@
 					
 /*					if(isset($values['repeat_day']))
 					{
-						$values['interval'] = 0;
+						$values['repeat_interval'] = 0;
 					}
 */
 					if($id)
@@ -566,9 +566,9 @@
 				'repeat_day'					=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
 				'lang_repeat_day'				=> lang('repeat day'),
 
-				'lang_interval'					=> lang('interval'),
-				'value_interval'				=> isset($values['interval']) ? $values['interval'] : 0,
-				'lang_interval_statustext'		=> lang('interval'),
+				'lang_repeat_interval'			=> lang('interval'),
+				'value_repeat_interval'			=> isset($values['repeat_interval']) ? $values['repeat_interval'] : 0,
+				'lang_repeat_interval_statustext'=> lang('interval'),
 				
 				'lang_responsible'				=> lang('responsible'),
 				'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),

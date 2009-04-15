@@ -16,10 +16,10 @@
 				'config_name' => array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'config_value' => array('type' => 'text')
 			),
-			'pk' => array(),
+			'pk' => array('config_app','config_name'),
 			'fk' => array(),
-			'ix' => array('config_app','config_name'),
-			'uc' => array('config_name')
+			'ix' => array(),
+			'uc' => array()
 		),
 		'phpgw_applications' => array(
 			'fd' => array(
@@ -359,9 +359,9 @@
 				'modified_on' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => False)
 			),
-			'pk' => array(),
+			'pk' => array('person_id'),
 			'fk' => array(),
-			'ix' => array('person_id'),
+			'ix' => array(array('first_name'),array('last_name')),
 			'uc' => array()
 		),
 		'phpgw_contact_org' => array(

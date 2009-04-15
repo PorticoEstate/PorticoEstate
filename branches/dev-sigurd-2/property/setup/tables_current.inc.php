@@ -1078,7 +1078,7 @@
 				'end_date' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'repeat_type' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'repeat_day' => array('type' => 'int','precision' => 4,'nullable' => true),
-				'interval' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'repeat_interval' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'enabled' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),

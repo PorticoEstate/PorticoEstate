@@ -143,12 +143,12 @@
 						</tr>
 						<tr>
 							<td valign="top">
-								<xsl:value-of select="lang_interval"/>
+								<xsl:value-of select="lang_repeat_interval"/>
 							</td>
 							<td>
-								<input type="text" id="values_interval" name="values[interval]" size="4" value="{value_interval}">
+								<input type="text" id="values_repeat_interval" name="values[repeat_interval]" size="4" value="{value_repeat_interval}">
 									<xsl:attribute name="title">
-										<xsl:value-of select="lang_interval_statustext"/>
+										<xsl:value-of select="lang_repeat_interval_statustext"/>
 									</xsl:attribute>
 								</input>
 							</td>

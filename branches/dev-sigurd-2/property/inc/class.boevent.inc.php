@@ -212,9 +212,9 @@
 						$times = $data['start_date'];
 						break;
 					case '1': //'Daily'
-						if($data['interval'])
+						if($data['repeat_interval'])
 						{
-							$times = array('day' => "*/{$data['interval']}");
+							$times = array('day' => "*/{$data['repeat_interval']}");
 						}
 						else
 						{
@@ -222,9 +222,9 @@
 						}
 						break;
 					case '2': //'Weekly'
-						if($data['interval'])
+						if($data['repeat_interval'])
 						{
-							$day = $data['interval'] * 7;
+							$day = $data['repeat_interval'] * 7;
 							$times = array('day' => "*/{$day}");
 						}
 						else
@@ -242,9 +242,9 @@
 							$dow = 1;
 						}
 						
-						if($data['interval'])
+						if($data['repeat_interval'])
 						{
-							$times = array('month' => "*/{$data['interval']}", 'dow' => $dow);
+							$times = array('month' => "*/{$data['repeat_interval']}", 'dow' => $dow);
 						}
 						else
 						{
@@ -252,9 +252,9 @@
 						}
 						break;
 					case '4': //'Monthly (by date)'
-						if($data['interval'])
+						if($data['repeat_interval'])
 						{
-							$times = array('month' => "*/{$data['interval']}", 'day' => 1);
+							$times = array('month' => "*/{$data['repeat_interval']}", 'day' => 1);
 						}
 						else
 						{
@@ -263,9 +263,9 @@
 						break;
 					case '5': //'Yearly'
 						$month = date(n, $data['start_date']);
-						if($data['interval'])
+						if($data['repeat_interval'])
 						{
-							$times = array('year' => "*/{$data['interval']}", 'month' => $month);
+							$times = array('year' => "*/{$data['repeat_interval']}", 'month' => $month);
 						}
 						else
 						{

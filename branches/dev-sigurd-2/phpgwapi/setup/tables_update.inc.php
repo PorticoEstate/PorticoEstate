@@ -2343,7 +2343,7 @@
 
 	$test[] = '0.9.17.519';
 	/**
-	* Replace the primary key of the phpgw_cache_user table
+	* Add attribute group
 	*
 	* @return string the new version number
 	*/
@@ -2393,6 +2393,125 @@
 		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.520';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.520';
+	/**
+	* Add primary key to phpgw_contact_person and phpgw_config
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_520()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$persons = array();
+		$sql = 'SELECT * FROM phpgw_contact_person';
+		$db->query($sql, __LINE__, __FILE__);
+		while ( $db->next_record() )
+		{
+			$persons[] = array
+			(
+				'person_id'			=> $db->f('person_id'),
+				'first_name'		=> $db->f('first_name', true),
+				'last_name'			=> $db->f('last_name', true),
+				'middle_name'		=> $db->f('middle_name', true),
+				'prefix'			=> $db->f('prefix', true),
+				'suffix'			=> $db->f('suffix', true),
+				'birthday'			=> $db->f('birthday', true),
+				'pubkey'			=> $db->f('pubkey', true),
+				'title'				=> $db->f('title', true),
+				'department'		=> $db->f('department', true),
+				'initials'			=> $db->f('initials', true),
+				'sound'				=> $db->f('sound', true),
+				'active'			=> $db->f('active'),
+				'created_on'		=> $db->f('created_on'),
+				'created_by'		=> $db->f('created_by'),
+				'modified_on'		=> $db->f('modified_on'),
+				'modified_by'		=> $db->f('modified_by')
+			);
+		}
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_contact_person');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_contact_person', array(
+				'fd' => array(
+					'person_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'first_name' => array('type' => 'varchar','precision' => '64','nullable' => False),
+					'last_name' => array('type' => 'varchar','precision' => '64','nullable' => False),
+					'middle_name' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'prefix' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'suffix' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'birthday' => array('type' => 'varchar','precision' => '32','nullable' => True),
+					'pubkey' => array('type' => 'text','nullable' => True),
+					'title' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'department' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'initials' => array('type' => 'varchar','precision' => '10','nullable' => True),
+					'sound' => array('type' => 'varchar','precision' => '64','nullable' => True),
+					'active' => array('type' => 'char','precision' => 1,'nullable' => True,'default' => 'Y'),
+					'created_on' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'modified_on' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => False)
+				),
+				'pk' => array('person_id'),
+				'fk' => array(),
+				'ix' => array(array('first_name'),array('last_name')),
+				'uc' => array()
+			)
+		);
+
+		foreach ( $persons as $person )
+		{
+			$sql = 'INSERT INTO phpgw_contact_person(' . implode(',', array_keys($person)) . ') '
+				 . ' VALUES (' . $db->validate_insert($person) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+		unset($persons);
+
+		$config = array();
+		$sql = 'SELECT * FROM phpgw_config';
+		$db->query($sql, __LINE__, __FILE__);
+		while ( $db->next_record() )
+		{
+			$config[] = array
+			(
+				'config_app'		=> $db->f('config_app', true),
+				'config_name'		=> $db->f('config_name', true),
+				'config_value'		=> $db->f('config_value', true)
+			);
+		}
+
+		// New PK so drop the table
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_config');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config', array(
+				'fd' => array(
+					'config_app' => array('type' => 'varchar','precision' => 50),
+					'config_name' => array('type' => 'varchar','precision' => 255,'nullable' => False),
+					'config_value' => array('type' => 'text')
+				),
+				'pk' => array('config_app','config_name'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		foreach ( $config as $entry )
+		{
+			$sql = 'INSERT INTO phpgw_config(' . implode(',', array_keys($entry)) . ') '
+				 . ' VALUES (' . $db->validate_insert($entry) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+		unset($config);
+
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.521';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
