@@ -2413,26 +2413,29 @@
 		$db->query($sql, __LINE__, __FILE__);
 		while ( $db->next_record() )
 		{
-			$persons[] = array
-			(
-				'person_id'			=> $db->f('person_id'),
-				'first_name'		=> $db->f('first_name', true),
-				'last_name'			=> $db->f('last_name', true),
-				'middle_name'		=> $db->f('middle_name', true),
-				'prefix'			=> $db->f('prefix', true),
-				'suffix'			=> $db->f('suffix', true),
-				'birthday'			=> $db->f('birthday', true),
-				'pubkey'			=> $db->f('pubkey', true),
-				'title'				=> $db->f('title', true),
-				'department'		=> $db->f('department', true),
-				'initials'			=> $db->f('initials', true),
-				'sound'				=> $db->f('sound', true),
-				'active'			=> $db->f('active'),
-				'created_on'		=> $db->f('created_on'),
-				'created_by'		=> $db->f('created_by'),
-				'modified_on'		=> $db->f('modified_on'),
-				'modified_by'		=> $db->f('modified_by')
-			);
+			if($db->f('first_name'))
+			{
+				$persons[] = array
+				(
+					'person_id'			=> $db->f('person_id'),
+					'first_name'		=> $db->f('first_name', true),
+					'last_name'			=> $db->f('last_name', true),
+					'middle_name'		=> $db->f('middle_name', true),
+					'prefix'			=> $db->f('prefix', true),
+					'suffix'			=> $db->f('suffix', true),
+					'birthday'			=> $db->f('birthday', true),
+					'pubkey'			=> $db->f('pubkey', true),
+					'title'				=> $db->f('title', true),
+					'department'		=> $db->f('department', true),
+					'initials'			=> $db->f('initials', true),
+					'sound'				=> $db->f('sound', true),
+					'active'			=> $db->f('active'),
+					'created_on'		=> $db->f('created_on'),
+					'created_by'		=> $db->f('created_by'),
+					'modified_on'		=> $db->f('modified_on'),
+					'modified_by'		=> $db->f('modified_by')
+				);
+			}
 		}
 
 		// New PK so drop the table
