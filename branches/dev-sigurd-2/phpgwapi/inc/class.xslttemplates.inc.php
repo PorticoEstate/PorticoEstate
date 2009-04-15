@@ -351,6 +351,7 @@ XSLT;
 
 			// Configure the transformer
 			$proc = new XSLTProcessor;
+			$proc->registerPHPFunctions();
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
 			$html =  trim($proc->transformToXML($xml));
