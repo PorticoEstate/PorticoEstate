@@ -808,7 +808,7 @@
 				$receipt['error'][] = array('msg'=> 'group: '.$group_name);
 				$receipt['error'][] = array('msg'=> 'err_code: '.$this->send->err['code']);
 				$receipt['error'][] = array('msg'=> 'err_msg: '. htmlspecialchars($this->send->err['msg']));
-				$receipt['error'][] = array('msg'=> 'err_desc: '. $GLOBALS['phpgw']->err['desc']);
+				$receipt['error'][] = array('msg'=> 'err_desc: '. $this->send->err['desc']);
 			}
 
 //_debug_array($receipt);

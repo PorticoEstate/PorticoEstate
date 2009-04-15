@@ -281,7 +281,7 @@
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql,__LINE__,__FILE__);
 		}
 
 		function delete($id)
