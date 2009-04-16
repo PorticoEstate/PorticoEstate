@@ -3164,7 +3164,7 @@
 	function property_upgrade0_9_17_555()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-/*		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_event_action', array(
 				'fd' => array(
 					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
@@ -3182,7 +3182,7 @@
 				'uc' => array()
 			)
 		);
-*/
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_event', array(
 				'fd' => array(
@@ -3293,5 +3293,3 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-
-
