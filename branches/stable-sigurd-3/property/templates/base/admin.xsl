@@ -880,7 +880,7 @@
 					<xsl:value-of select="lang_email"/>
 				</td>
 				<td>
-					<input type="hidden" name="filter" value="{value_user_id}"></input>
+					<input type="hidden" name="user_id" value="{value_user_id}"></input>
 					<input type="hidden" name="values[old_email]" value="{value_old_email}"></input>
 					<input type="text" size = "30" name="values[email]" value="{value_email}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
