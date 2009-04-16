@@ -77,9 +77,13 @@
 		*
 		* @param int $account_id the account id - 0 = current user's id
 		*/
-		public function set_account_id($account_id = 0)
+		public function set_account_id($account_id = 0, $read_repo = false)
 		{
 			$this->account_id = get_account_id($account_id);
+			if ( $read_repo )
+			{
+				$this->read_repository();
+			}
 		}
 
 		/*
