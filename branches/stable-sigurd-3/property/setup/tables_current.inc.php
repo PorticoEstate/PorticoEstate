@@ -1049,6 +1049,60 @@
 			'fk' => array(),
 			'uc' => array()
 		),
+		'fm_event_action' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'name' =>  array('type' => 'varchar','precision' => 100,'nullable' => False),
+				'action' =>  array('type' => 'varchar','precision' => 100,'nullable' => False),
+				'data' => array('type' => 'text','nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			),
+		'fm_event' =>array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_item_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => true),
+				'responsible_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'action_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'descr' => array('type' => 'text','nullable' => True),
+				'start_date' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'end_date' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'repeat_type' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'repeat_day' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'repeat_interval' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'enabled' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('location_id', 'location_item_id', 'attrib_id')
+		),
+		'fm_event_exception' => array(
+			'fd' => array(
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'exception_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('event_id', 'exception_time'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_request_condition_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -1946,14 +2000,13 @@
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 			),
 			'pk' => array('id'),
-			'fk' => array(
-				'phpgw_categories' => array('cat_id' => 'cat_id')
-			),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),

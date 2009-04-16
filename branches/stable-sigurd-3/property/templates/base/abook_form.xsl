@@ -1,4 +1,4 @@
-<!-- $Id: abook_form.xsl,v 1.3 2006/12/27 20:52:13 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="abook_form">
 		<xsl:apply-templates select="abook_data"/>

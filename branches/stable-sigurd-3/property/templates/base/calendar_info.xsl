@@ -1,4 +1,4 @@
-<!-- $Id: calendar_info.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="calendar_info">
 		<xsl:apply-templates select="cal_info"/>

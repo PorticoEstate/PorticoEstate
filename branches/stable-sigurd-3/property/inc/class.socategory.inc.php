@@ -816,6 +816,55 @@
 						'menu_selection'	=> 'admin::property::async'
 					);
 					break;
+
+				case 'event_action':
+
+					$info = array
+					(
+						'table' 			=> 'fm_event_action',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'action',
+								'descr' => lang('action'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'data',
+								'descr' => lang('data'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('event action'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::event_action',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
@@ -954,6 +1003,18 @@
 			}
 
 
+			if(isset($this->location_info['default']) && is_array($this->location_info['default']))
+			{
+				foreach ($this->location_info['default'] as $field => $default)
+				{
+					if(isset($default['add']))
+					{
+						$cols[] = $field;
+						eval('$vals[] = ' . $default['add'] .';');
+					}
+				}
+			}
+
 			$this->_db->transaction_begin();
 
 			if($this->location_info['id']['type']!='auto')
@@ -1024,6 +1085,17 @@
 			foreach($this->location_info['fields'] as $field)
 			{
 				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
+			}
+
+			if(isset($this->location_info['default']) && is_array($this->location_info['default']))
+			{
+				foreach ($this->location_info['default'] as $field => $default)
+				{
+					if(isset($default['edit']))
+					{
+						eval('$value_set[$field] = ' . $default['edit'] .';');
+					}
+				}
 			}
 
 			$value_set	= $this->_db->validate_update($value_set);

@@ -1,4 +1,4 @@
-<!-- $Id: abook_view.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="abook_view">
 		<xsl:apply-templates select="abook_data"/>

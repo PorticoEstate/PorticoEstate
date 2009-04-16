@@ -1,4 +1,4 @@
-<!-- $Id: wo_hour_cat_filter.xsl,v 1.1 2005/09/12 08:19:02 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="wo_hour_cat_filter">
 		<xsl:variable name="select_action"><xsl:value-of select="select_action"/></xsl:variable>

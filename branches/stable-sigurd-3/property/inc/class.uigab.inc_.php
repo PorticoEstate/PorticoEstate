@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id: class.uigab.inc.php 1969 2008-12-16 20:45:00Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

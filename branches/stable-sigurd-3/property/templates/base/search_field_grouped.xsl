@@ -1,4 +1,4 @@
-<!-- $Id: search_field_grouped.xsl,v 1.1 2005/11/08 15:19:37 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="search_field_grouped">
 		<xsl:variable name="query"><xsl:value-of select="query"/></xsl:variable>

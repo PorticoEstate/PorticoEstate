@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgroupware
 	* @subpackage phpgwapi
-	* @version $Id: class.acl.inc.php 682 2008-02-01 12:19:55Z dave $
+	* @version $Id$
 	*/
 
 	/*

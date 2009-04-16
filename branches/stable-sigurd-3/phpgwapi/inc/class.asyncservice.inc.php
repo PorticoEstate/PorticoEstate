@@ -400,9 +400,10 @@
 						$lang   = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 						unset($GLOBALS['phpgw_info']['user']);
 
-						if ($GLOBALS['phpgw']->session->account_id = $job['account_id'])
+						if ($job['account_id'])
 						{
-							$GLOBALS['phpgw']->session->account_lid = $GLOBALS['phpgw']->accounts->id2name($job['account_id']);
+							$GLOBALS['phpgw']->session->set_account_id($job['account_id']);
+							$GLOBALS['phpgw']->session->account_lid = $GLOBALS['phpgw']->accounts->id2lid($job['account_id']);
 							$GLOBALS['phpgw']->session->account_domain = $domain;
 							$GLOBALS['phpgw']->session->read_repositories(False,False);
 							$GLOBALS['phpgw_info']['user']  = $GLOBALS['phpgw']->session->user;
@@ -432,6 +433,9 @@
 						{ // update async data field, it could be changed during ExecMethod()
 							$job['data'] = $updated_jobs[$id]['data'];
 						}
+						// TK 20.11.06 write job to get 'next' and alarm updated
+						$job['data']['time'] = $job['next'];
+						$this->write($job);
 					}
 					else	// no further runs
 					{
@@ -549,7 +553,7 @@
 			{
 				$binarys = array(
 					'php'  => '/usr/bin/php',
-					'php4' => '/usr/bin/php4',		// this is for debian
+					'php5' => '/usr/bin/php5',		// this is for debian
 					'crontab' => '/usr/bin/crontab'
 				);
 				foreach ($binarys as $name => $path)
@@ -573,9 +577,9 @@
 					}
 					//echo "<p>$name = '".$this->$name."'</p>\n";
 				}
-				if ($this->php4[0] == '/')	// we found a php4 binary
+				if ($this->php5[0] == '/')	// we found a php5 binary
 				{
-					$this->php = $this->php4;
+					$this->php = $this->php5;
 				}
 			}
 
@@ -665,6 +669,37 @@
 					fwrite($crontab,$cronline);		// preserv the other lines
 				}
 				@pclose($crontab);
+			}
+			return $this->installed();
+		}
+
+		/**
+		* UnInstalls asyncservices as cron-job
+		*
+		* @return integer|array|boolean The times asyncservices are run or False if they are not installed or 0 if crontab not found
+		* @internal Not implemented for Windows, always returns 0
+		*/
+		function uninstall()
+		{
+			if ($this->only_fallback) {
+				return 0;
+			}
+			$this->installed();	// find other installed cronlines
+
+			if(isset($this->other_cronlines) && $this->other_cronlines)
+			{
+				if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -" 2>&1','w')) !== False)
+				{
+					foreach ($this->other_cronlines as $cronline)
+					{
+						fwrite($crontab,$cronline);		// preserv the other lines
+					}
+					@pclose($crontab);
+				}
+			}
+			else
+			{
+				system('crontab -r');
 			}
 			return $this->installed();
 		}

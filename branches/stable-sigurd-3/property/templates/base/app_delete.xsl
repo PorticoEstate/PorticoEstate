@@ -1,4 +1,4 @@
-<!-- $Id: app_delete.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_delete">
 		<xsl:apply-templates select="delete"/>

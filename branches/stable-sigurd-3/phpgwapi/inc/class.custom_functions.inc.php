@@ -8,7 +8,7 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
-	 * @version $Id: class.custom_fields.inc.php 1114 2008-06-02 18:15:22Z sigurd $
+	 * @version $Id$
 	 */
 
 	/*

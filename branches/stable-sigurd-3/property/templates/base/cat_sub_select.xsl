@@ -1,4 +1,4 @@
-<!-- $Id: status_select.xsl,v 1.2 2005/11/08 22:39:11 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="cat_sub_select">
 	<xsl:variable name="lang_cat_sub_statustext"><xsl:value-of select="lang_cat_sub_statustext"/></xsl:variable>

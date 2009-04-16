@@ -445,6 +445,11 @@
 						'text'	=> lang('Async services'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index') )
 					),
+					'event_action'	=> array
+					(
+						'text'	=> lang('event action'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'event_action') )
+					),
 					'list_functions'	=> array
 					(
 						'text'	=> lang('Admin custom functions'),

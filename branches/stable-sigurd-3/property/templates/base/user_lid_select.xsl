@@ -1,4 +1,4 @@
-<!-- $Id: user_lid_select.xsl,v 1.2 2007/03/22 10:35:28 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="user_lid_select">
 	<xsl:variable name="lang_user_statustext"><xsl:value-of select="lang_user_statustext"/></xsl:variable>

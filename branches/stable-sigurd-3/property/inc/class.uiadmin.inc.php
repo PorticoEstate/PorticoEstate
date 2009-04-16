@@ -666,15 +666,15 @@
 				return;
 			}
 
+			$user_id	= phpgw::get_var('user_id', 'int');
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin'));
 
 			$values		= phpgw::get_var('values');
 
 			if ($values['save'])
 			{
-				// this should use the contacts backend in the API - each account is already linked to a contact
-				$GLOBALS['phpgw']->preferences->account_id=$this->filter;
-				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
 
 				if ($values['old_email'] != $values['email'])
 				{
@@ -714,9 +714,9 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 
-			if($this->filter)
+			if($user_id)
 			{
-				$prefs = $this->bocommon->create_preferences('property',$this->filter);
+				$prefs = $this->bocommon->create_preferences('property',$user_id);
 			}
 
 			$cats		= CreateObject('phpgwapi.categories');
@@ -800,10 +800,10 @@
 
 
 				'lang_user_statustext'			=> lang('Select the user to edit email'),
-				'select_user_name'				=> 'filter',
+				'select_user_name'				=> 'user_id',
 				'lang_no_user'					=> lang('No user'),
-				'value_user_id'					=> $this->filter,
-				'user_list'						=> $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'value_user_id'					=> $user_id,
+				'user_list'						=> $this->bocommon->get_user_list('filter',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 				'group_list_tts'				=> $groups_tts,
 				'account_list_tts'				=> $accounts_tts,
 				'lang_group_select'				=> lang('Default group TTS'),

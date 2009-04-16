@@ -417,6 +417,8 @@
 
 		function CreateTable($oProc, &$aTables, $sTableName, $aTableDef)
 		{
+			global $DEBUG;
+
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				/* create sequence first since it will be needed for default */
@@ -426,6 +428,9 @@
 				}
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+				if($DEBUG) { echo '<br>CREATE TABLE STATEMENT: ' ; var_dump($query); }
+
 				return !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
 			}
 

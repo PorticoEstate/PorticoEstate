@@ -49,7 +49,7 @@
 		/**
 		* @var array $datatype_text the translated end user field types
 		*/
-		protected $datatype_text = array();
+		public $datatype_text = array();
 
 		/**
 		 * @var string $_appname the name of the current application
@@ -114,7 +114,8 @@
 				'email'	=> lang('Email'),
 				'link'	=> lang('Link'),
 				'pwd' 	=> lang('password'),
-				'user' 	=> 'phpgw_user'
+				'user' 	=> 'phpgw_user',
+				'event'	=> lang('event')
 			);
 
 			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
@@ -301,6 +302,7 @@
 				case 'LB':
 				case 'AB':
 				case 'VENDOR':
+				case 'event':
 					if ( $attrib['history'] )
 					{
 						$receipt['error'][] = array('msg' => lang('History not allowed for this datatype'));
@@ -615,6 +617,7 @@
 				case 'LB':
 				case 'AB':
 				case 'VENDOR':
+				case 'event':
 					if ( $attrib['history'] )
 					{
 						$this->receipt['error'][] = array('msg'	=> lang('History not allowed for this datatype'));
@@ -1532,7 +1535,8 @@
 				'email'		=> 'varchar',
 				'link'		=> 'varchar',
 				'pwd' 		=> 'varchar',
-				'user' 		=> 'int'
+				'user' 		=> 'int',
+				'event'		=> 'int'
 			);
 
 			if ( !isset($datatype_text[$datatype]) )
@@ -1562,7 +1566,8 @@
 				'email'		=> 64,
 				'link'		=> 255,
 				'pwd' 		=> 32,
-				'user' 		=> 4
+				'user' 		=> 4,
+				'event'		=> 4
 			);
 
 			if ( !isset($datatype_precision[$datatype]) )

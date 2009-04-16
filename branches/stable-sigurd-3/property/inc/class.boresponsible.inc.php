@@ -9,7 +9,7 @@
 	* @package phpgroupware
 	* @subpackage property
 	* @category core
- 	* @version $Id: class.uiresponsible.inc.php 732 2008-02-10 16:21:14Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/*
@@ -167,14 +167,16 @@
 												'filter' => $filter));
 			$this->total_records = $this->so->total_records;
 			
-			foreach($values as & $value)
+			if($value['cat_id'])
 			{
-				$category = $this->cats->return_single($value['cat_id']);
-				$value['category']		= $category[0]['name'];
-				$value['app_name']		= $category[0]['app_name'];
-				$value['created_by']	= $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
-				$value['created_on']	= $GLOBALS['phpgw']->common->show_date($value['created_on'], $this->dateformat);
-			
+				foreach($values as & $value)
+				{
+					$category = $this->cats->return_single($value['cat_id']);
+					$value['category']		= $category[0]['name'];
+					$value['app_name']		= $category[0]['app_name'];
+					$value['created_by']	= $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
+					$value['created_on']	= $GLOBALS['phpgw']->common->show_date($value['created_on'], $this->dateformat);
+				}
 			}
 
 			return $values;

@@ -1189,7 +1189,8 @@ HTML;
 		{
 			if (!$t || (substr(php_uname(), 0, 7) == "Windows" && intval($t) <= 0))
 			{
-				$t = phpgwapi_datetime::gmtnow();
+				return ''; // return nothing if not valid input
+//				$t = phpgwapi_datetime::gmtnow();
 			}
 
 			//  + (date('I') == 1?3600:0)

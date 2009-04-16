@@ -1,4 +1,4 @@
-<!-- $Id: date_search.xsl,v 1.2 2007/01/04 14:36:16 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:apply-templates select="date_search"/>

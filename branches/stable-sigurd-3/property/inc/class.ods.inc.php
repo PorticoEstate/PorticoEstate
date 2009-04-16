@@ -8,7 +8,7 @@
 	 * @package phpgroupware
 	 * @subpackage property
 	 * @category utilities
- 	 * @version $Id: $
+ 	 * @version $Id$
 	 */
 
 	/*

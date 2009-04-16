@@ -1,4 +1,4 @@
-<!-- $Id: entity.xsl,v 1.17 2007/10/13 20:29:15 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

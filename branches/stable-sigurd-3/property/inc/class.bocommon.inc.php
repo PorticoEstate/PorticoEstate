@@ -1447,43 +1447,19 @@
 
 		function select_datatype($selected='', $sub_module = '')
 		{
-			$datatypes[0]['id']= 'V';
-			$datatypes[0]['name']= lang('varchar');
-			$datatypes[1]['id']= 'C';
-			$datatypes[1]['name']= lang('Character');
-			$datatypes[2]['id']= 'I';
-			$datatypes[2]['name']= lang('Integer');
-			$datatypes[3]['id']= 'N';
-			$datatypes[3]['name']= lang('Decimal');
-			$datatypes[4]['id']= 'D';
-			$datatypes[4]['name']= lang('Date');
-			$datatypes[5]['id']= 'T';
-			$datatypes[5]['name']= lang('Memo');
-			$datatypes[6]['id']= 'R';
-			$datatypes[6]['name']= lang('Multiple radio');
-			$datatypes[7]['id']= 'CH';
-			$datatypes[7]['name']= lang('Multiple Checkbox');
-			$datatypes[8]['id']= 'LB';
-			$datatypes[8]['name']= lang('ListBox');
-			$datatypes[9]['id']= 'AB';
-			$datatypes[9]['name']= lang('Contact');
-			$datatypes[10]['id']= 'VENDOR';
-			$datatypes[10]['name']= lang('Vendor');
-			$datatypes[11]['id']= 'email';
-			$datatypes[11]['name']= lang('Email');
-			$datatypes[12]['id']= 'link';
-			$datatypes[12]['name']= lang('Link');
 
-			if($sub_module == 'actor')
+			$custom 		= createObject('phpgwapi.custom_fields');
+
+			foreach( $custom->datatype_text as $key => $name)
 			{
-				$datatypes[13]['id']= 'pwd';
-				$datatypes[13]['name']= lang('Password');
-				$datatypes[14]['id']= 'user';
-				$datatypes[14]['name']= lang('phpgw user');
+				$datatypes[] = array
+				(
+					'id'	=> $key,
+					'name'	=> $name,
+				);
 			}
 
 			return $this->select_list($selected,$datatypes);
-
 		}
 
 		function select_nullable($selected='')
@@ -1880,7 +1856,7 @@
 				{
 					foreach ($insert_record['extra'] as $key => $column)
 					{
-						if(isset($_POST[$key]) && $_POST[$key])
+						if(isset($_POST[$key]))
 						{
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}

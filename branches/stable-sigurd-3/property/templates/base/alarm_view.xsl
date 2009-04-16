@@ -1,4 +1,4 @@
-<!-- $Id: alarm_view.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="alarm_view">
 		<xsl:apply-templates select="alarm_data"/>

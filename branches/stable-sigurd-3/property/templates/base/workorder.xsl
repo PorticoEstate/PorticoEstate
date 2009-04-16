@@ -1,4 +1,4 @@
-<!-- $Id: workorder.xsl,v 1.13 2007/03/25 10:28:21 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

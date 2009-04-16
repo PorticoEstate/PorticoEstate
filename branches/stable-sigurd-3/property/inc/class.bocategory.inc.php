@@ -157,6 +157,11 @@
 
 		public function save($data,$action='',$values_attribute = array())
 		{
+			if(is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
+
 			if ($action=='edit')
 			{
 				if ($data['id'] != '')

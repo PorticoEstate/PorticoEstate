@@ -9,7 +9,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
-	 * @version $Id: class.custom_fields.inc.php 1114 2008-06-02 18:15:22Z sigurd $
+	 * @version $Id$
 	 */
 
 	/*
@@ -62,10 +62,6 @@
 		 * @param ????  $view_only ????
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
-		 *
-		 * @internal this is a UI related method - WTF was it doing in an API logic class?
-		 * this is property specific code and so has been moved there!
-		 * this code needs some serious attention
 		 */
 		public function prepare($values, $appname, $location, $view_only='')
 		{
@@ -201,6 +197,50 @@
 						}
 					}
 				}
+				else if($attributes['datatype'] == 'event')
+				{
+					// If the record is not saved - issue a warning
+					if(isset($values['id']) || $values['id'])
+					{
+						$attributes['item_id'] = $values['id'];
+					}
+					else if(isset($values['location_code']) || $values['location_code'])
+					{
+						$attributes['item_id'] = execMethod('property.solocation.get_item_id', $values['location_code']);
+					}
+					else
+					{
+						$attributes['warning']			= isset($values['id']) ? '' : lang('Warning: the record has to be saved in order to plan an event');
+					}
+
+					if(isset($attributes['value']) && $attributes['value'])
+					{
+						$event = execMethod('property.soevent.read_single', $attributes['value']);
+						$attributes['descr']			= $event['descr'];
+						$attributes['enabled']			= $event['enabled'] ? lang('yes') : lang('no');
+						$attributes['lang_enabled']		= lang('enabled');
+
+						$id = "property{$location}::{$values['id']}::{$attributes['id']}";
+						$job = execMethod('phpgwapi.asyncservice.read', $id);
+
+						$attributes['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
+						$attributes['lang_next_run']	= lang('next run');
+						unset($event);
+						unset($id);
+						unset($job);
+					}
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
+						'menuaction'	=> $this->_appname.'.uievent.edit',
+						'location'		=> $location,
+						'attrib_id'		=> $attributes['id'],
+						'item_id'		=> isset($values['id']) ? $values['id'] : '',
+						'id'			=> isset($attributes['value']) && $attributes['value'] ? $attributes['value'] : ''));
+
+					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
 				{
 					$entity['attributes'][$i]['value'] = stripslashes($entity['attributes'][$i]['value']);
@@ -238,7 +278,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR')
+					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
@@ -299,6 +339,7 @@
 			$contacts = CreateObject('phpgwapi.contacts');
 //_debug_array($values);
 			$location = array();
+			$ret = array();
 			$j=0;
 			foreach ($values as $row)
 			{

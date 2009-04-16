@@ -10,7 +10,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgwapi
 	* @subpackage utility
-	* @version $Id: class.accounts_.inc.php 779 2008-02-26 09:53:55Z dave $
+	* @version $Id$
 	*/
 
 	/*

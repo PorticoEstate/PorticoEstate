@@ -177,8 +177,12 @@
 			<tr>
 				<td class="th_text" align="left">
 					<xsl:value-of select="location_name"/>
-					<xsl:text>::</xsl:text>
-					<xsl:value-of select="category_name"/>
+					<xsl:choose>
+						<xsl:when test="category_name != ''">
+							<xsl:text>::</xsl:text>
+							<xsl:value-of select="category_name"/>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:text>::</xsl:text>
 					<xsl:value-of select="type_name"/>
 				</td>
@@ -508,12 +512,12 @@
 					<xsl:value-of select="lang_responsibility"/>
 				</td>
 				<td>
-					<input type="text" name="responsibility_id" value="{value_responsibility_id}" onClick="lookup_responsibility()" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
+					<input type="text" name="responsibility_id" value="{value_responsibility_id}" readonly="readonly" size="5" onMouseout="window.status='';return true;" >
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_responsibility_status_text"/>
 						</xsl:attribute>
 					</input>
-					<input  size="30" type="text" name="responsibility_name" value="{value_responsibility_name}"  onClick="lookup_responsibility()" readonly="readonly"> 
+					<input  size="30" type="text" name="responsibility_name" value="{value_responsibility_name}" readonly="readonly"> 
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_responsibility_status_text"/>
 						</xsl:attribute>

@@ -1,4 +1,4 @@
-<!-- $Id: dim_d_select.xsl,v 1.1 2005/01/17 10:03:18 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="dim_d_select">
 	<xsl:variable name="lang_dim_d_statustext"><xsl:value-of select="lang_dim_d_statustext"/></xsl:variable>

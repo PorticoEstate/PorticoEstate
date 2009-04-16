@@ -1,4 +1,4 @@
-<!-- $Id: lookup.xsl,v 1.2 2006/10/31 14:14:05 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

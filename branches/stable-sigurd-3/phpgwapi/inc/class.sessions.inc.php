@@ -10,7 +10,7 @@
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgroupware
 	* @subpackage phpgwapi
-	* @version $Id: class.sessions_php.inc.php 682 2008-02-01 12:19:55Z dave $
+	* @version $Id$
 	*/
 
 	/*
@@ -807,6 +807,17 @@
 
 			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
 					$this->_cookie_domain, $secure, true);
+		}
+
+
+		/**
+		* Set the current user id
+		*
+		* @param int $account_id the account id - 0 = current user's id
+		*/
+		public function set_account_id($account_id = 0)
+		{
+			$this->_account_id = get_account_id($account_id);
 		}
 
 		/**

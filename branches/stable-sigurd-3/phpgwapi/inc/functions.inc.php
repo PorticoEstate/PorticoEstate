@@ -520,7 +520,7 @@ HTML;
 	{
 		if (! $GLOBALS['phpgw']->session->verify())
 		{
-			if ( phpgw::get_var('menuaction', 'string', 'GET') )
+			if ( phpgw::get_var('menuaction', 'string', 'GET')  && phpgw::get_var('phpgw_return_as', 'string') != 'json')
 			{
 				unset($_GET['click_history']);
 				unset($_GET['sessionid']);

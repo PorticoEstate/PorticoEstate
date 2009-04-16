@@ -1468,5 +1468,10 @@
 			}
 		}
 
+		function get_item_id($location_code )
+		{
+			$this->db->query("SELECT id FROM fm_locations WHERE location_code='{$location_code}'",__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('id');
+		}
 	}
-

@@ -1,4 +1,4 @@
-<!-- $Id: tenant_view.xsl,v 1.2 2006/02/14 14:45:50 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="tenant_view">
 		<xsl:apply-templates select="tenant_data"/>

@@ -1,4 +1,4 @@
-<!-- $Id: tts.xsl,v 1.20 2007/10/13 10:02:54 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

@@ -1,4 +1,4 @@
-<!-- $Id: ifc.xsl,v 1.1 2007/01/02 15:05:49 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

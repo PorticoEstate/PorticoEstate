@@ -1,4 +1,4 @@
-<!-- $Id: select_location.xsl,v 1.1 2006/03/03 17:48:40 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="select_location">
 		<xsl:variable name="select_name_location"><xsl:value-of select="select_name_location"/></xsl:variable>

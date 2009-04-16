@@ -1,4 +1,4 @@
-<!-- $Id: wo_hour.xsl,v 1.10 2006/12/22 14:43:54 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>
