@@ -532,7 +532,18 @@ HTML;
 			{
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
-			$GLOBALS['phpgw']->redirect_link('/login.php', $cd_array );
+
+			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
+			{
+				header('Content-Type: application/json'); 
+				echo json_encode(array('sessionExpired'=>true));
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/login.php', $cd_array );
+			}
 		}
 
 		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
