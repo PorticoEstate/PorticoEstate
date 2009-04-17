@@ -803,7 +803,7 @@
 				'select_user_name'				=> 'user_id',
 				'lang_no_user'					=> lang('No user'),
 				'value_user_id'					=> $user_id,
-				'user_list'						=> $this->bocommon->get_user_list('filter',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+				'user_list'						=> $this->bocommon->get_user_list('filter',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1, true),
 				'group_list_tts'				=> $groups_tts,
 				'account_list_tts'				=> $accounts_tts,
 				'lang_group_select'				=> lang('Default group TTS'),

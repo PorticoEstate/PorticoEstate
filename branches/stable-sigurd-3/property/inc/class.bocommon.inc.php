@@ -269,7 +269,7 @@
 		}
 
 
-		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='', $order='', $query='',$offset='')
+		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='', $order='', $query='',$offset='', $enabled = false)
 		{
 			switch($format)
 			{
@@ -302,16 +302,20 @@
 
 			$accounts = & $GLOBALS['phpgw']->accounts;
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
+
 			unset($accounts);
 			if (is_array($users))
 			{
 				foreach($users as $user)
 				{
-					$all_users[] = array
-					(
-						'user_id'	=> $user->id,
-						'name'		=> $user->__toString(),
-					);
+					if (($enabled && $user->enabled) || !$enabled)
+					{
+						$all_users[] = array
+						(
+							'user_id'	=> $user->id,
+							'name'		=> $user->__toString(),
+						);
+					}
 				}
 			}
 

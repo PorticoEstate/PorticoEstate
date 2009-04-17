@@ -319,6 +319,11 @@
 //				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 			}
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 			$location_table = 'fm_project';
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
 			{
@@ -475,20 +480,13 @@
 			
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 		
-			if($dry_run)
+			if(!$allrows)
 			{
-				return array();
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$count_cols_return=count($cols_return);

@@ -1328,7 +1328,9 @@
 							{
 								if($invoices['claim_issued'] == '')
 								{
-									$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$invoices['project_id']."'>".lang('Claim')."</a>";
+									$_workorder = execMethod('property.soworkorder.read_single', $invoices['workorder_id']);
+									$json_row[$uicols[$i]['col_name']] .= " <a target='_blank' href='".$invoices['link_claim'].'&project_id='.$_workorder['project_id']."'>".lang('Claim')."</a>";
+									unset($_workorder);
 								}
 								else
 								{

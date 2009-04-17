@@ -143,6 +143,31 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+			/*
+			* FIXME:
+			* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
+			* Should be fixed in the js if possible.
+			*/
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
+				if($json_get == 1)
+				{
+					$json = phpgwapi_cache::session_get('property', 'workorder_index_json');
+					if($json && is_array($json))
+					{
+						phpgwapi_cache::session_clear('property', 'workorder_index_json');
+						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 2);
+						return $json;
+					}
+				}
+			}
+			else
+			{
+				phpgwapi_cache::session_clear('property', 'workorder_index_json_get');
+			}
+
 			$allrows  = phpgw::get_var('allrows', 'bool');
 
 			$lookup = ''; //Fix this
@@ -627,6 +652,18 @@
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+
+				/*
+				* FIXME:
+				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
+				* Should be fixed in the js if possible.
+				*/
+				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
+				if(!$json_get)
+				{
+						phpgwapi_cache::session_set('property', 'workorder_index_json',$json);
+						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 1);
 				}
 
 	    		return $json;

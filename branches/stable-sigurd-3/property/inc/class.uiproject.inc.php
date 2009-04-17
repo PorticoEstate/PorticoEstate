@@ -119,6 +119,31 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.stop', 'perm'=>1,'acl_location'=> $this->acl_location));
 			}
 
+			/*
+			* FIXME:
+			* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about a second
+			* Should be fixed in the js if possible.
+			*/
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
+				if($json_get == 1)
+				{
+					$json = phpgwapi_cache::session_get('property', 'project_index_json');
+					if($json && is_array($json))
+					{
+						phpgwapi_cache::session_clear('property', 'project_index_json');
+						phpgwapi_cache::session_set('property', 'project_index_json_get', 2);
+						return $json;
+					}
+				}
+			}
+			else
+			{
+				phpgwapi_cache::session_clear('property', 'project_index_json_get');
+			}
+
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			$from 			= phpgw::get_var('from');
 			$start_date 	= urldecode(phpgw::get_var('start_date'));
@@ -641,6 +666,18 @@
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
+				}
+		
+				/*
+				* FIXME:
+				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about a second
+				* Should be fixed in the js if possible.
+				*/
+				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
+				if(!$json_get)
+				{
+						phpgwapi_cache::session_set('property', 'project_index_json',$json);
+						phpgwapi_cache::session_set('property', 'project_index_json_get', 1);
 				}
 
 	    		return $json;
