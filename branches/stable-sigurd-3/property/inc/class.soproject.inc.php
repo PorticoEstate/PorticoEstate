@@ -729,21 +729,6 @@
 			$historylog	= CreateObject('property.historylog','project');
 			$receipt = array();
 
-			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
-			{
-				$vals[]	= "$input_name = '$value'";
-			}
-
-			while (is_array($project['extra']) && list($input_name,$value) = each($project['extra']))
-			{
-				$vals[]	= "$input_name = '$value'";
-			}
-
-			if($vals)
-			{
-				$vals	= "," . implode(",",$vals);
-			}
-
 			if($project['street_name'])
 			{
 				$address[]= $project['street_name'];
@@ -780,7 +765,17 @@
 				'account_id'		=> $project['b_account_id']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
+			{
+				$value_set[$input_name] = $value;
+			}
+
+			while (is_array($project['extra']) && list($input_name,$value) = each($project['extra']))
+			{
+				$value_set[$input_name] = $value;
+			}
+
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
