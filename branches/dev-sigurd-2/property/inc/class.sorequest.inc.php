@@ -542,20 +542,6 @@
 		function edit($request)
 		{
 			$receipt = array();
-			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
-			{
-				$vals[]	= "$input_name = '$value'";
-			}
-
-			while (is_array($request['extra']) && list($input_name,$value) = each($request['extra']))
-			{
-				$vals[]	= "$input_name = '$value'";
-			}
-
-			if($vals)
-			{
-				$vals	= "," . implode(",",$vals);
-			}
 
 			if($request['street_name'])
 			{
@@ -569,11 +555,9 @@
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
 
-
 			$request['descr'] = $this->db->db_addslashes($request['descr']);
 			$request['name'] = $this->db->db_addslashes($request['name']);
 			$request['title'] = $this->db->db_addslashes($request['title']);
-//_debug_array($request);
 
 			$value_set=array(
 				'status'		=> $request['status'],
@@ -588,7 +572,17 @@
 				'authorities_demands' => $request['authorities_demands']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
+			{
+				$value_set[$input_name] = $value;
+			}
+
+			while (is_array($request['extra']) && list($input_name,$value) = each($request['extra']))
+			{
+				$value_set[$input_name] = $value;
+			}
+
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
@@ -599,7 +593,7 @@
 			$old_category = $this->db->f('category');
 			$old_coordinator = $this->db->f('coordinator');
 
-			$this->db->query("UPDATE fm_request set $value_set $vals WHERE id= '" . $request['id'] ."'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_request set $value_set WHERE id= '" . $request['id'] ."'",__LINE__,__FILE__);
 
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='" . $request['id'] . "'",__LINE__,__FILE__);
 			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))

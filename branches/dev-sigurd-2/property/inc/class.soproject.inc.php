@@ -787,7 +787,7 @@
 			$old_budget = (int)$this->db->f('budget');
 			$old_reserve = (int)$this->db->f('reserve');
 
-			$this->db->query("UPDATE fm_project SET $value_set $vals WHERE id= {$project['id']}",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_project SET $value_set WHERE id= {$project['id']}",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
 			{
