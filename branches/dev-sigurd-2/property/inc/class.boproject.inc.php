@@ -52,14 +52,12 @@
 
 		function property_boproject($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject('property.soproject');
-			$this->bocommon 	= & $this->so->bocommon;
-			$this->solocation 	= CreateObject('property.solocation', $this->bocommon);
+			$this->so 					= CreateObject('property.soproject');
+			$this->bocommon 			= & $this->so->bocommon;
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.project';
 			$this->cats->supress_info	= true;
-			$this->interlink 	= & $this->so->interlink;
+			$this->interlink 			= & $this->so->interlink;
 
 			if ($session)
 			{
@@ -278,7 +276,7 @@
 
 			if($project['location_code'])
 			{
-				$project['location_data'] =$this->solocation->read_single($project['location_code']);
+				$project['location_data'] = execMethod('property.solocation.read_single', $project['location_code']);
 			}
 
 			if($project['tenant_id']>0)
@@ -324,7 +322,7 @@
 
 			if($project['location_code'])
 			{
-				$project['location_data'] =$this->solocation->read_single($project['location_code']);
+				$project['location_data'] = execMethod('property.solocation.read_single', $project['location_code']);
 			}
 
 			if($project['tenant_id']>0)

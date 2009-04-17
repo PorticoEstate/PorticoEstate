@@ -34,7 +34,6 @@
 
 	class property_soproject
 	{
-
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -42,7 +41,6 @@
 			$this->interlink 	= CreateObject('property.interlink');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->db2 			= clone($this->db);
 			$this->join			= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
@@ -262,6 +260,11 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -366,21 +369,14 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			if($dry_run)
+			$sql .= " $group_method";
+			if(!$allrows)
 			{
-				return array();
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				$sql .= " $group_method";
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$project_list = array();
@@ -456,9 +452,10 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
 					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_id'),
-					'power_meter'			=> $this->get_power_meter($this->db->f('location_code'))
+					'b_account_id'			=> $this->db->f('account_id')
 				);
+				$location_code = $this->db->f('location_code');
+				$project['power_meter']		= $this->get_power_meter($location_code);
 			}
 //_debug_array($project);
 			return $project;
@@ -471,11 +468,11 @@
 				return false;
 			}
 
-			$this->db2->query("SELECT ext_meter_id as power_meter FROM $meter_table where location_code='$location_code' and category='1'",__LINE__,__FILE__);
+			$this->db->query("SELECT ext_meter_id as power_meter FROM $meter_table where location_code='$location_code' and category='1'",__LINE__,__FILE__);
 
-			$this->db2->next_record();
+			$this->db->next_record();
 
-			return $this->db2->f('power_meter');
+			return $this->db->f('power_meter');
 		}
 
 		function project_workorder_data($project_id = '')
@@ -504,10 +501,10 @@
 		function branch_p_list($project_id = '')
 		{
 			$selected = array();
-			$this->db2->query("SELECT branch_id from fm_projectbranch WHERE project_id=" .  (int)$project_id ,__LINE__,__FILE__);
-			while ($this->db2->next_record())
+			$this->db->query("SELECT branch_id from fm_projectbranch WHERE project_id=" .  (int)$project_id ,__LINE__,__FILE__);
+			while ($this->db->next_record())
 			{
-				$selected[] = array('branch_id' => $this->db2->f('branch_id'));
+				$selected[] = array('branch_id' => $this->db->f('branch_id'));
 			}
 			return $selected;
 		}

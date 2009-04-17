@@ -449,8 +449,15 @@
 
 				$dry_run = true;
 				}
-				//$ticket_list = $this->bo->read($start_date,$end_date,false,$dry_run);
-				$ticket_list = $this->bo->read($start_date,$end_date);
+
+				if($dry_run)
+				{
+					$ticket_list = array();
+				}
+				else
+				{
+					$ticket_list = $this->bo->read($start_date,$end_date);
+				}
 				//$uicols = $this->bo->uicols;
 				$uicols = array();
 				//$uicols['name'][0] = 'color';

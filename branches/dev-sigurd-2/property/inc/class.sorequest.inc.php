@@ -41,8 +41,8 @@
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 			$this->interlink 	= CreateObject('property.interlink');
 		}
 
@@ -377,9 +377,10 @@
 					'p_num'					=> $this->db->f('p_num'),
 					'p_entity_id'			=> $this->db->f('p_entity_id'),
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
-					'contact_phone'			=> $this->db->f('contact_phone', true),
-					'power_meter'			=> $this->soproject->get_power_meter($this->db->f('location_code'))
+					'contact_phone'			=> $this->db->f('contact_phone', true)
 				);
+				$location_code = $this->db->f('location_code');
+				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
 			}
 
 			return $request;
