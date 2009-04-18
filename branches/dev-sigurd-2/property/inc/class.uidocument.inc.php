@@ -956,10 +956,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				$json ['toolbar_height'] = 40;
 				if(isset($location_data) && is_array($location_data))
 				{
+					$json ['toolbar_height'] = $json ['toolbar_height'] + (count($datatable['locdata']) * 10);
 					$json ['current_consult'] = $datatable['locdata'];
 				}
+				
 	    		return $json;
 			}
 			//-------------------- JSON CODE ----------------------
