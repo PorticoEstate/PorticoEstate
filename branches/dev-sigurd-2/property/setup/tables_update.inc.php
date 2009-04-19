@@ -1452,7 +1452,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("delete from phpgw_acl where acl_appname = 'property' AND acl_location !='run' ");
 		
-		$db2 = clone($GLOBALS['phpgw_setup']->oProc->m_odb);	
+		$db2 = clone($GLOBALS['phpgw_setup']->oProc->m_odb);
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_acl_location ");
 		while($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
@@ -1667,7 +1667,7 @@
 		unset($fm_tenant2);
 				
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','phpgw_account_id', array('type' => 'int','precision' => '4','nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','account_status', array('type' => 'int','precision' => '4','nullable' => True,'default' => '1'));		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','account_status', array('type' => 'int','precision' => '4','nullable' => True,'default' => '1'));
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT max(id) as id, max(attrib_sort) as attrib_sort FROM fm_tenant_attribute");
 		
@@ -1760,7 +1760,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' ."' WHERE id = '1'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:2:{i:1;s:1:"1";i:2;s:1:"2";}' ."' WHERE id = '2'");
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}' ."' WHERE id = '3'");
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' ."' WHERE id = '4'");		
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' ."' WHERE id = '4'");
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.534';
@@ -2458,7 +2458,7 @@
 		foreach ($categories as $old => $values)
 		{
 			$cat_id = $cats->add($values);
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET cat_id = $cat_id WHERE cat_id = $old");		
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET cat_id = $cat_id WHERE cat_id = $old");
 		}
 
 		$cats->set_appname('property.project');
@@ -2479,7 +2479,7 @@
 		{
 			$cat_id = $cats->add($values);
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET category = $cat_id WHERE category = $old");
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = $cat_id WHERE category = $old");		
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = $cat_id WHERE category = $old");
 		}
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_tts_category');
@@ -2880,7 +2880,7 @@
 		foreach ($categories as $old => $values)
 		{
 			$cat_id = $cats->add($values);
-			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_document SET category = $cat_id WHERE category = $old");		
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_document SET category = $cat_id WHERE category = $old");
 		}
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_document_category');
@@ -2981,7 +2981,7 @@
 		{
 			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
 			$GLOBALS['setup_info']['property']['currentver'] = $next_version;
-			return $GLOBALS['setup_info']['property']['currentver'];		
+			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 
 
@@ -3144,7 +3144,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache');
-		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cache_user');		
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cache_user');
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_responsibility_contact','ecodimb', array('type' => 'int','precision' => 4,'nullable' => True));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -3290,6 +3290,31 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.558';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.558 to 0.9.17.559
+	* change the priority for the helpdest (from 10-1 to 1-3)
+	* 
+	*/
+
+	$test[] = '0.9.17.558';
+	function property_upgrade0_9_17_558()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 11 WHERE priority IN (8,9,10)");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 12 WHERE priority IN (4,5,6,7)");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 13 WHERE priority IN (1,2,3)");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 1 WHERE priority = 11");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 2 WHERE priority = 12");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET priority = 3 WHERE priority = 13");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.559';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

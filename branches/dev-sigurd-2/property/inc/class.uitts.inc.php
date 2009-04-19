@@ -239,6 +239,7 @@
 				$this->status_id		= $default_status;
 			}
 
+/*
 			$bgcolor_array[1]	= '#dadada';
 			$bgcolor_array[2]	= '#dad0d0';
 			$bgcolor_array[3]	= '#dacaca';
@@ -249,8 +250,10 @@
 			$bgcolor_array[8]	= '#da9090';
 			$bgcolor_array[9]	= '#da8a8a';
 			$bgcolor_array[10]	= '#da7a7a';
-
-
+*/
+			$bgcolor_array[1]	= '#da7a7a';
+			$bgcolor_array[2]	= '#dababa';
+			$bgcolor_array[3]	= '#dadada';
 
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			$from 			= phpgw::get_var('from');
@@ -707,7 +710,8 @@
 	    		);
 
 				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+	    		{
 	    			foreach( $datatable['rows']['row'] as $row )
 	    			{
 		    			$json_row = array();
@@ -717,51 +721,34 @@
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
 		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
+		    				}
+		    				else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
 
-		    					if($column['name'] == 'priority')
-		    					{
-									switch($column['value'])
-									{
-										case 1:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[1].";'>".$column['value']."</div>";
-											break;
-										case 2:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[2].";'>".$column['value']."</div>";
-											break;
-										case 3:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[3].";'>".$column['value']."</div>";
-											break;
-										case 4:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[4].";'>".$column['value']."</div>";
-											break;
-										case 5:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[5].";'>".$column['value']."</div>";
-											break;
-										case 6:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[6].";'>".$column['value']."</div>";
-											break;
-										case 7:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[7].";'>".$column['value']."</div>";
-											break;
-										case 8:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[8].";'>".$column['value']."</div>";
-											break;
-										case 9:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[9].";'>".$column['value']."</div>";
-											break;
-										case 10:
-											$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[10].";'>".$column['value']."</div>";
-											break;
-									}
+		    				if($column['name'] == 'priority')
+		    				{
+			    				$_value = $column['value'];//str_repeat("||", abs(6 - 2*$column['value'])) . $column['value'];
+			    				$json_row[$column['name']] = $_value;
+								switch($column['value'])
+								{
+									case 1:
+										$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[1].";'>".$_value."</div>";
+										break;
+									case 2:
+										$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[2].";'>".$_value."</div>";
+										break;
+									case 3:
+										$json_row[$column['name']] = "<div style='background-color:".$bgcolor_array[3].";'>".$_value."</div>";
+										break;
+								}
+								unset($_value);
 
-		    					}
+		    				}
 
 		    			}
 		    			$json['records'][] = $json_row;
@@ -841,16 +828,9 @@
 				$this->status_id	= $default_status;
 			}
 
-			$bgcolor['1']	= '#dadada';
-			$bgcolor['2']	= '#dad0d0';
-			$bgcolor['3']	= '#dacaca';
-			$bgcolor['4']	= '#dac0c0';
-			$bgcolor['5']	= '#dababa';
-			$bgcolor['6']	= '#dab0b0';
-			$bgcolor['7']	= '#daaaaa';
-			$bgcolor['8']	= '#da9090';
-			$bgcolor['9']	= '#da8a8a';
-			$bgcolor['10']	= '#da7a7a';
+			$bgcolor_array[1]	= '#da7a7a';
+			$bgcolor_array[2]	= '#dababa';
+			$bgcolor_array[3]	= '#dadada';
 
 
 			$ticket_list = $this->bo->read($start_date,$end_date);
@@ -1147,6 +1127,11 @@
 
 			$values		= phpgw::get_var('values');
 
+			if ((isset($values['cancel']) && $values['cancel']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
+			}
+
 //------------------- start ticket from other location
 			$bypass 		= phpgw::get_var('bypass', 'bool');
 			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
@@ -1195,7 +1180,7 @@
 					);
 			}
 //_debug_array($insert_record);
-			if (isset($values['save']))
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
@@ -1241,7 +1226,7 @@
 //------------ files
 					$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
 
-					if($values['file_name'])
+					if($values['file_name'] && $receipt['id'])
 					{
 						$bofiles	= CreateObject('property.bofiles');
 						$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $values['file_name'];
@@ -1271,7 +1256,15 @@
 //--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
+
+					if ((isset($values['save']) && $values['save']))
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view', 'id' => $receipt['id'], 'tab' =>'details'));					
+					}
 				}
 				else
 				{
@@ -1356,15 +1349,15 @@
 				'priority_list'				=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index')),
 				'lang_subject'				=> lang('Subject'),
 				'lang_subject_statustext'		=> lang('Enter the subject of this ticket'),
 
 				'lang_details'				=> lang('Details'),
 				'lang_details_statustext'		=> lang('Enter the details of this ticket'),
 				'lang_category'				=> lang('category'),
-				'lang_save'				=> lang('save'),
-				'lang_done'				=> lang('done'),
+				'lang_save'					=> lang('save'),
+				'lang_cancel'				=> lang('cancel'),
+				'lang_apply'					=> lang('apply'),
 				'value_details'				=> (isset($values['details'])?$values['details']:''),
 				'value_subject'				=> (isset($values['subject'])?$values['subject']:''),
 
@@ -1374,11 +1367,12 @@
 				'lang_datetitle'			=> lang('Select date'),
 				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
-				'lang_done_statustext'			=> lang('Back to the ticket list'),
+				'lang_cancel_statustext'			=> lang('Back to the ticket list'),
 				'lang_save_statustext'			=> lang('Save the ticket'),
-				'lang_no_cat'				=> lang('no category'),
+				'lang_apply_statustext'			=> lang('Apply the values'),
+				'lang_no_cat'					=> lang('no category'),
 				'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
-				'lang_part_of_town'			=> lang('Part of town'),
+				'lang_part_of_town'				=> lang('Part of town'),
 				'lang_no_part_of_town'			=> lang('No part of town'),
 				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 
@@ -1643,7 +1637,9 @@
 
 			$id = phpgw::get_var('id', 'int', 'GET');
 			$values = phpgw::get_var('values');
-			$receipt = '';
+
+			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
+			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files'));
 
@@ -1654,6 +1650,10 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>4, 'acl_location'=> $this->acl_location));
 				}
 
+				if(isset($values['takeover']) && $values['takeover'])
+				{
+					$values['assignedto'] = $this->account;
+				}
 				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= $this->acl_location;
 				$receipt = $so2->update_ticket($values,$id);
@@ -1941,6 +1941,9 @@
 				'lang_no_group'				=> lang('No group'),
 				'group_list'				=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
 				'select_group_name'			=> 'values[group_id]',
+
+				'lang_takeover'				=> (isset($values['assignedto']) && $values['assignedto'] != $this->account)  || (!isset($values['assignedto']) || !$values['assignedto']) ? lang('take over') : '',
+				'lang_takeover_statustext'	=> lang('Take over the assignment for this ticket'),
 
 				'lang_priority'				=> lang('Priority'),
 				'value_priority'			=> $ticket['priority'],
@@ -2287,6 +2290,11 @@
 
 		protected function _generate_tabs($history='')
 		{
+			if(!$tab = phpgw::get_var('tab'))
+			{
+				$tab = 'location';
+			}
+
 			$tabs = array
 			(
 				'location'		=> array('label' => lang('location'), 'link' => '#location'),
@@ -2300,7 +2308,7 @@
 
 			phpgwapi_yui::tabview_setup('ticket_tabview');
 
-			return  phpgwapi_yui::tabview_generate($tabs, 'location');
+			return  phpgwapi_yui::tabview_generate($tabs, $tab);
 		}
 
 	}

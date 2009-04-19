@@ -233,17 +233,17 @@
 
 		function get_priority_list($selected='')
 		{
-			if(!$selected && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']))
+			if(!$selected)
 			{
-				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'];
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : 3;
 			}
 
-			$priority_comment[1]=' - '.lang('Lowest');
-			$priority_comment[5]=' - '.lang('Medium');
-			$priority_comment[10]=' - '.lang('Highest');
+			$priority_comment[3]=' - '.lang('Lowest');
+			$priority_comment[2]=' - '.lang('Medium');
+			$priority_comment[1]=' - '.lang('Highest');
 
 			$priorities = array();
-			for ($i=1; $i<=10; $i++)
+			for ($i=1; $i<=3; $i++)
 			{
 				$priorities[$i]['id'] =$i;
 				$priorities[$i]['name'] =$i . (isset($priority_comment[$i])?$priority_comment[$i]:'');
@@ -563,7 +563,7 @@
 
 			if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'] && isset($ticket['send_mail']) && $ticket['send_mail'])
 			{
-				$receipt = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
+				$receipt_mail = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
 			}
 
 			$criteria = array
@@ -590,6 +590,10 @@
 				}
 			}
 
+			if(isset($receipt_mail) && is_array($receipt_mail))
+			{
+				$receipt = array_merge($receipt, $receipt_mail);
+			}
 			return $receipt;
 		}
 
