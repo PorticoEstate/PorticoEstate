@@ -233,17 +233,20 @@
 
 		function get_priority_list($selected='')
 		{
+
+			$prioritylevels = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
+
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : 3;
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : $prioritylevels;
 			}
 
-			$priority_comment[3]=' - '.lang('Lowest');
-			$priority_comment[2]=' - '.lang('Medium');
+			$priority_comment[$prioritylevels]=' - '.lang('Lowest');
+//			$priority_comment[2]=' - '.lang('Medium');
 			$priority_comment[1]=' - '.lang('Highest');
 
 			$priorities = array();
-			for ($i=1; $i<=3; $i++)
+			for ($i=1; $i<= $prioritylevels; $i++)
 			{
 				$priorities[$i]['id'] =$i;
 				$priorities[$i]['name'] =$i . (isset($priority_comment[$i])?$priority_comment[$i]:'');
