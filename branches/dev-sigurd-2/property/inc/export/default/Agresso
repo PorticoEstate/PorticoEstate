@@ -80,7 +80,7 @@
 
 		function log_error($batchid,$error_desr)
 		{
-			$tid=date($this->datetimeformat);
+			$tid=date($this->soXport->datetimeformat);
 	    		$sql= "insert into fm_ecologg (batchid,ecobilagid,status,melding,tid) values ('$batchid',NULL,0,'$error_desr','$tid')";
 			$this->db->query($sql,__LINE__,__FILE__);
 	    	}
@@ -370,7 +370,7 @@
 			return $receipt;
 		}
 		
-		function errorhandler($error_desr)
+		function errorhandler($batchid,$error_desr)
 		{
 			$this->db->transaction_abort();
 
@@ -530,14 +530,13 @@
 			$BilagId = 'NULL';
 	
 			//Bestem filnavn
-			
-			$this->db->transaction_begin();
+
 
 			$Filnavn = $this->LagFilnavn($batchid,$pre_transfer);
 			if (!$Filnavn)
 			{
-				$message='LagFilnavn'.lang('Alle loepenr for filnavn er i bruk!');
-				$this->errorhandler($message);
+				$message='LagFilnavn: Alle loepenr for filnavn er i bruk';
+				$this->errorhandler($batchid,$message);
 				return $message;
 			}
 
@@ -553,6 +552,8 @@
 			}
 			
 			//Velg ut alle hoved bilag som skal overføres
+
+			$this->db->transaction_begin();
 
 			$oRsBilag=$this->soXport->hoved_bilag($periode,$pre_transfer);
 									
@@ -589,7 +590,7 @@
 				{
 					 //Ikke lovlig
 					$message = lang('Avvik mellom fakturabelop og godkjent belop pa splittet faktura!');
-					$this->errorhandler($message);
+					$this->errorhandler($batchid,$message);
 					return $message;
 				}
 		
@@ -669,14 +670,14 @@
 				if(!$vendor_info['org_nr'])
 				{
 					$message = 'mangler org_nr for reskontronr: ' . $oRsBilag[$k]['spvend_code'];
-					$this->errorhandler($message);
+					$this->errorhandler($batchid,$message);
 					return $message;
 				}
 
 				if(!$vendor_info['konto_nr'])
 				{
 					$message = 'mangler konto for reskontronr: ' . $oRsBilag[$k]['spvend_code'];
-					$this->errorhandler($message);
+					$this->errorhandler($batchid,$message);
 					return $message;
 				}
 
