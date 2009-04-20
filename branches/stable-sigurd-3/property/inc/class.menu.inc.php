@@ -333,6 +333,11 @@
 						'text'	=> lang('Ticket Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
 					),
+					'ticket_status'	=> array
+					(
+						'text'	=> lang('Ticket status'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'ticket_status') )
+					),
 					'tenant'	=> array
 					(
 						'text'	=> lang('Tenant'),

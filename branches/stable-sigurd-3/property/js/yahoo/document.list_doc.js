@@ -49,7 +49,7 @@
 	*/
 	this.create_table_info_invoice_sub = function()
 	{
-		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = "60px";
+		YAHOO.util.Dom.getElementsByClassName('toolbar','div')[0].style.height = values_ds.toolbar_height + 'px';//"60px";
 		div_message = YAHOO.util.Dom.getElementsByClassName('field','div')[0];
 		newTable = document.createElement('table');
 		newDiv = document.createElement("div");

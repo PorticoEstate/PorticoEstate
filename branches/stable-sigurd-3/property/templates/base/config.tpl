@@ -125,6 +125,16 @@
     </td>
    </tr>
    <tr class="row_on">
+    <td>{lang_priority_levels_(TTS)}.</td>
+    <td>
+     <select name="newsettings[prioritylevels]">
+      <option value="" {selected_prioritylevels_}>3</option>
+      <option value="4" {selected_prioritylevels_4}>4</option>
+      <option value="5" {selected_prioritylevels_5}>5</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
     <td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
     <td>
      <select name="newsettings[workorder_approval]">
@@ -133,17 +143,17 @@
      </select>
     </td>
    </tr>
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_meter_table}:</td>
     <td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
    </tr>
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_email_addresses_(comma-separated)_to_be_notified_about_tenant_claim_(empty_for_no_notify)}:</td>
     <td>
      <input name="newsettings[tenant_claim_notify_mails]" value="{value_tenant_claim_notify_mails}" size="40">
     </td>
    </tr>
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Receive_workorder_status_by_SMS}.</td>
     <td>
      <select name="newsettings[wo_status_sms]">
@@ -152,7 +162,7 @@
      </select>
     </td>
    </tr>
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_Use_ACL_for_accessing_location_based_information}.</td>
     <td>
      <select name="newsettings[acl_at_location]">
@@ -161,7 +171,7 @@
      </select>
     </td>
    </tr>
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Use_location_at_workorder}.</td>
     <td>
      <select name="newsettings[location_at_workorder]">

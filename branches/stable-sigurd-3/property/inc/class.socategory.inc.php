@@ -865,6 +865,36 @@
 
 					break;
 
+				case 'ticket_status':
+
+					$info = array
+					(
+						'table' 			=> 'fm_tts_status',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('event action'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::ticket_status'
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
