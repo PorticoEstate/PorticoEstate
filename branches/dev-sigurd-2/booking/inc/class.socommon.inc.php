@@ -108,7 +108,7 @@
 				$like_clauses = array();
 				foreach($this->fields as $field => $params)
 				{
-					if($params['query'])
+					if($params['query'] && $params['type'] !== 'int')
 					{
 						$table = $params['join'] ? $params['join']['table'].'_'.$params['join']['column'] : $this->table_name;
 						$column = $params['join'] ? $params['join']['column'] : $field;
