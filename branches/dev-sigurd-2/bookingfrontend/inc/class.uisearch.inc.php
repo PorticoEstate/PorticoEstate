@@ -19,9 +19,11 @@
 		
 		function index()
 		{
-			$search = array();
 			$searchterm = phpgw::get_var('searchterm');
-			$search['results'] = $this->bo->search($searchterm);
+			$search = array(
+				'results'    => $this->bo->search($searchterm),
+				'searchterm' => $searchterm,
+			);
 			self::render_template('search', array('search' => $search));
 		}
 		
