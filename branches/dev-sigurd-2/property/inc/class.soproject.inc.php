@@ -107,6 +107,7 @@
 				$end_date = (isset($data['end_date'])?$data['end_date']:'');
 				$allrows = (isset($data['allrows'])?$data['allrows']:'');
 				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
+				$district_id	= (isset($data['district_id'])?$data['district_id']:'');
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 
@@ -301,6 +302,12 @@
 			if($wo_hour_cat_id)
 			{
 				$filtermethod .= " $where fm_wo_hours_category.id=$wo_hour_cat_id ";
+				$where= 'AND';
+			}
+
+			if($district_id)
+			{
+				$filtermethod .= " {$where} fm_part_of_town.district_id = {$district_id}";
 				$where= 'AND';
 			}
 

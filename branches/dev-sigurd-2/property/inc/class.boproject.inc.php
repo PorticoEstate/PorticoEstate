@@ -72,7 +72,9 @@
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$status_id	= phpgw::get_var('status_id');
+			$user_id	= phpgw::get_var('user_id', 'int');
 			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
+			$district_id	= phpgw::get_var('district_id', 'int');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : $this->query;
@@ -81,7 +83,9 @@
 			$this->filter			= isset($filter) && $filter ? $filter : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
-			$this->wo_hour_cat_id	= isset($vendor_id) && $wo_hour_cat_id ? $wo_hour_cat_id : '';
+			$this->user_id			= isset($user_id) && $user_id ? $user_id : '';
+			$this->wo_hour_cat_id	= isset($wo_hour_cat_id) && $wo_hour_cat_id ? $wo_hour_cat_id : '';
+			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
 		}
 
 		function save_sessiondata($data)
@@ -103,7 +107,9 @@
 			$this->order			= isset($data['order'])?$data['order']:'';
 			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
 			$this->status_id		= isset($data['status_id'])?$data['status_id']:'';
+			$this->user_id			= isset($data['user_id'])?$data['user_id']:'';
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
+			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
 		function select_status_list($format='',$selected='')
@@ -179,7 +185,8 @@
 
 			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],'dry_run' => $data['dry_run']));
+											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],'dry_run' => $data['dry_run'],
+											'district_id' => $this->district_id));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
