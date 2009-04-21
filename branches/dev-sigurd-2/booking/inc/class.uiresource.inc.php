@@ -80,7 +80,7 @@
 
 		public function index_json()
 		{
-			return $this->bo->populateGridData("booking.uiresource.show");
+			return $this->bo->populate_grid_data("booking.uiresource.show");
 		}
 
 		public function add()
@@ -101,7 +101,7 @@
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('autocomplete');
-			$activity_data = $this->bo->fetchActivities();
+			$activity_data = $this->bo->fetch_activities();
 			$lang['activity'] = lang('Activity');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');
@@ -128,7 +128,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$activity_data = $this->bo->fetchActivities();
+			$activity_data = $this->bo->fetch_activities();
 			$lang['activity'] = lang('Activity');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');
@@ -148,7 +148,7 @@
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id']));
-			$resource['activity'] = $this->bo->getActivityName($resource['activity_id']);
+			$resource['activity'] = $this->bo->get_activity_name($resource['activity_id']);
 			$data = array(
 				'resource'	=>	$resource
 			);
