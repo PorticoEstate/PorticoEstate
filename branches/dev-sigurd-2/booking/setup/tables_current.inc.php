@@ -223,6 +223,61 @@
 			),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'bb_application' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => False),
+				'contact_name' => array('type' => 'text', 'nullable' => False),
+				'contact_email' => array('type' => 'text', 'nullable' => False),
+				'contact_phone' => array('type' => 'text', 'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_activity' => array('activity_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_application_resource' => array(
+			'fd' => array(
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+			),
+			'pk' => array('application_id', 'resource_id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_resource' => array('resource_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_application_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'text', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_application_date' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'from_' => array('type' => 'text', 'nullable' => False),
+				'to_' => array('type' => 'text', 'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id')),
+			'ix' => array(),
+			'uc' => array('application_id', 'from_', 'to_')
 		)
 	);
 ?>

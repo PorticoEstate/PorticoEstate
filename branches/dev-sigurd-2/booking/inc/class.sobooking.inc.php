@@ -9,7 +9,6 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'id'			=> array('type' => 'int'),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'group_name'	=> array('type' => 'string',
 						  'query' => true,

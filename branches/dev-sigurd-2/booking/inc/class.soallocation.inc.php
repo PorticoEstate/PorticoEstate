@@ -8,7 +8,6 @@
 			parent::__construct('bb_allocation', 
 				array(
 					'id'			=> array('type' => 'int'),
-					'id'			=> array('type' => 'int'),
 					'organization_id'		=> array('type' => 'int', 'required' => true),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,
