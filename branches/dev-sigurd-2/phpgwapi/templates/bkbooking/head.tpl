@@ -39,6 +39,6 @@
 <div class="yui-skin-sam">
 
 <ul id="sidebar">
-    <li><a href="">Sök</a></li>
+    <li><a href="index.php?menuaction=bookingfrontend.uisearch.index">Sök</a></li>
     <li><a href="">Hjälp</a></li>
 </ul>
