@@ -46,6 +46,10 @@ ul.pathway li {
 }
 ul.pathway li:first-child { background: none; padding-left: 0;}
 
+dl.form, dl.form-col {
+    margin: 1em 1em 1em 0;
+}
+
 dl.form dt, dl.form-col dt {
     font-style: italic;
     font-weight: bolder;
@@ -69,6 +73,15 @@ dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
 dl.form dd .autocomplete,
 dl.form-col dd .autocomplete {
     padding-bottom: 2em;
+}
+
+dl.form dt.heading, dl.form-col dt.heading {
+    color: #448;
+    font-weight: normal;
+    font-size: 110%;
+    margin-top: 1.4em;
+    margin-bottom: .6em;
+    border-bottom: 1px solid #aaa;
 }
 
 dl.proplist,

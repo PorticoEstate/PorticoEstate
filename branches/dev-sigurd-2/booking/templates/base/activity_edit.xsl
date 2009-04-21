@@ -9,21 +9,27 @@
             <dt><label for="field_name"><xsl:value-of select="lang/name" /></label></dt>
             <dd>
                 <input id="field_name" name="name" type="text">
-                    <xsl:attribute name="value"><xsl:value-of select="booking/name"/></xsl:attribute>
+                    <xsl:attribute name="value"><xsl:value-of select="activity/name"/></xsl:attribute>
                 </input>
             </dd>
             
             <dt><label for="field_description"><xsl:value-of select="lang/description" /></label></dt>
             <dd>
-                <textarea cols="5" rows="5" id="field_description" name="description"><xsl:value-of select="booking/description"/></textarea>
+                <textarea cols="5" rows="5" id="field_description" name="description">
+                   <xsl:value-of select="activity/description"/>
+                </textarea>
             </dd>
-            <dt><label for="parent_id"><xsl:value-of select="lang/parent" /></label></dt>
+
+            <dt><label for="field_parent_id"><xsl:value-of select="lang/parent" /></label></dt>
             <dd>
                 <div class="autocomplete">
                 <select name="parent_id" id="field_parent_id">
-                <option value="0" selected="selected"><xsl:value-of select="lang/novalue" /></option>
+                <option value="0"><xsl:value-of select="lang/novalue" /></option>
                 <xsl:for-each select="dropdown/results">
                 				<option>
+								<xsl:if test="../../activity/parent_id = id">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
                 				<xsl:attribute name="value">
                 				<xsl:value-of select="id"/>
                 				</xsl:attribute>
@@ -42,14 +48,14 @@
             <input type="submit">
 				<xsl:attribute name="value"><xsl:value-of select="lang/create"/></xsl:attribute>
 			</input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>
-                <xsl:value-of select="lang/cancel" />
-            </a>
         </div>
+			<div class="form-buttons">
+<a class="button">
+            <xsl:attribute name="href"><xsl:value-of select="activity/cancel_link"></xsl:value-of></xsl:attribute>
+            <xsl:value-of select="lang/cancel" />
+        </a>			
+			</div>        
+        
     </form>
     </div>
-    <script type="text/javascript">
-        YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
-    </script>
 </xsl:template>

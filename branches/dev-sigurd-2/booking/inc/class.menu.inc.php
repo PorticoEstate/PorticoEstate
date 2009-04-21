@@ -31,6 +31,12 @@
 				// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibooking.applications') ),
 				//                     'image'	=> array('property', 'location'),
 				// ),
+				'applications' => array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Applications', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiapplication.index') ),
+				                    'image'	=> array('property', 'location'),
+				),
 				'allocations' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Allocations', array(), true),
@@ -106,7 +112,7 @@
 					'activity'	=> array
 					(
 						'text'	=> lang('Activity'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivities.index', 'appname' => 'booking') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
 					),
 					'audience'	=> array
 					(
