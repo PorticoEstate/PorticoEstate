@@ -179,6 +179,16 @@
 			$start_date 	= urldecode($this->start_date);
 			$end_date 		= urldecode($this->end_date);
 
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+
+			if ($default_district && !$second_display && !$this->district_id)
+			{
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
+			}
+
+
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -202,7 +212,8 @@
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 									'b_group'			=> $this->b_group,
-									'paid'				=> $this->paid
+									'paid'				=> $this->paid,
+				 	                'district_id'        	=> $this->district_id
 
 	    				));
 	    		$datatable['config']['allow_allrows'] = false;
@@ -212,28 +223,34 @@
 	    											."query:'{$this->query}',"
  	                        						."search_vendor:'{$this->search_vendor}',"
 						 	                        ."lookup:'{$lookup}',"
+  	                        						."district_id: '{$this->district_id}',"
  	                        						."start_date:'{$start_date}',"
 						 	                        ."end_date:'{$end_date}',"
 						 	                        ."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
 						 	                        ."filter:'{$this->filter}',"
 						 	                        ."status_id:'{$this->status_id}',"
+						 	                        ."second_display:1,"
 						 	                        ."cat_id:'{$this->cat_id}'";
 
-				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
 
-				$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
+				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
 				$default_value = array ('id'=>'','name'=> lang('no status'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-		        $values_combo_box[2] =  $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
-		 		$default_value = array ('id'=>'','name'=> lang('no hour category'));
 				array_unshift ($values_combo_box[2],$default_value);
 
-				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
-				$default_value = array ('id'=>'','name'=>lang('no user'));
+		        $values_combo_box[3] =  $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+		 		$default_value = array ('id'=>'','name'=> lang('no hour category'));
 				array_unshift ($values_combo_box[3],$default_value);
+
+				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[4],$default_value);
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -249,18 +266,27 @@
 									'start_date'		=> $start_date,
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
-									'paid'			=> $this->paid,
+									'paid'				=> $this->paid,
+				 	                'district_id'       => $this->district_id,
 								)
 							),
 						'fields'	=> array(
                                     	'field' => array(
+				                                        array( //boton 	DISTRICT
+				                                            'id' => 'btn_district_id',
+				                                            'name' => 'district_id',
+				                                            'value'	=> lang('district'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
+				                                        ),
 			                                        array( //boton 	CATEGORY
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 1
+			                                            'tab_index' => 2
 			                                        ),
 			                                        array( //boton 	STATUS
 			                                            'id' => 'btn_status_id',
@@ -268,7 +294,7 @@
 			                                            'value'	=> lang('Status'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 2
+			                                            'tab_index' => 3
 			                                        ),
 			                                        array( //boton 	HOUR CATEGORY
 			                                            'id' => 'btn_wo_hour_cat_id',
@@ -276,7 +302,7 @@
 			                                            'value'	=> lang('Hour category'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 3
+			                                            'tab_index' => 4
 			                                        ),
 			                                        array( //boton 	USER
 			                                            'id' => 'btn_user_id',
@@ -284,26 +310,26 @@
 			                                            'value'	=> lang('User'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 4
+			                                            'tab_index' => 5
 			                                        ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
 						                                'value'	=> lang('download'),
-						                                'tab_index' => 10
+						                                'tab_index' => 11
 						                            ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',
 						                                'value'	=> lang('add'),
-						                                'tab_index' => 9
+						                                'tab_index' => 10
 						                            ),
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
 			                                            'name' => 'search',
 			                                            'value'    => lang('search'),
 			                                            'type' => 'button',
-			                                            'tab_index' => 8
+			                                            'tab_index' => 9
 			                                        ),
 			   										array( // TEXT IMPUT
 			                                            'name'     => 'query',
@@ -312,7 +338,7 @@
 			                                            'type' => 'text',
 			                                            'onkeypress' => 'return pulsar(event)',
 			                                            'size'    => 18,
-			                                            'tab_index' => 7
+			                                            'tab_index' => 8
 			                                        ),
 			   										array( // TEXT IMPUT
 			                                            'name'     => 'search_vendor',
@@ -321,7 +347,7 @@
 			                                            'type' => 'text',
 			                                            'onkeypress' => 'return pulsar(event)',
 			                                            'size'    => 6,
-			                                            'tab_index' => 6
+			                                            'tab_index' => 7
 			                                        ),
 			                                        array(
 						                                'type'	=> 'hidden',
@@ -343,25 +369,29 @@
 	                                                           array(
 	                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 	                                                     'value' => lang('Date search'),
-	                                                     'tab_index' => 5
+	                                                     'tab_index' => 6
                                                     )
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      ),
-							                                array( //div values  combo_box_1
+							                                array( //div values  combo_box_0
+																	'id' => 'values_combo_box_0',
+																	'value'	=> $this->bocommon->select2String($values_combo_box[0])
+						                                      ),
+					                                        array( //div values  combo_box_1
 							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      ),
-															 array( //div values  combo_box_2
+							                                array( //div values  combo_box_2
 							                                            'id' => 'values_combo_box_2',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
 							                                      ),
-							                                array( //div values  combo_box_3
+															 array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+							                                      ),
+							                                array( //div values  combo_box_4
+							                                            'id' => 'values_combo_box_4',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[4])
 							                                      )
 		                       								)
 												)

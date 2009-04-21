@@ -207,7 +207,11 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-			//	$filtermethod .= " $where $entity_table.id ='" . (int)$query . "'";
+				if(ctype_digit($query))
+				{
+					$_querymethod[]= "$entity_table.id =" . (int)$query;
+				}
+
 				$where= 'AND';
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
@@ -222,7 +226,7 @@
 					{
 						if(ctype_digit($query))
 						{
-							$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . intval($query);
+							$_querymethod[]= "$entity_table." . $this->db->f('column_name') . '=' . (int)$query;
 						}
 					}
 					else:
