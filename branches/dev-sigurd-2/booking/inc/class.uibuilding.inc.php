@@ -178,29 +178,7 @@
 
 		public function schedule()
 		{
-			$date = new DateTime(phpgw::get_var('date'));
-			// Make sure $from is a monday
-			if($date->format('w') != 1)
-			{
-				$date->modify('last monday');
-			}
-			$prev_date = clone $date;
-			$next_date = clone $date;
-			$prev_date->modify('-1 week');
-			$next_date->modify('+1 week');
-			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
-			$building['date'] = $date->format('Y-m-d');
-			$building['week'] = intval($date->format('W'));
-			$building['year'] = intval($date->format('Y'));
-			$building['prev_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id'], 'date'=> $prev_date->format('Y-m-d')));
-			$building['next_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id'], 'date'=> $next_date->format('Y-m-d')));
-			for($i = 0; $i < 7; $i++)
-			{
-				$building['days'][] = array('label' => $date->format('l').'<br/>'.$date->format('M d'), 'key' => $date->format('D'));
-				$date->modify('+1 day');
-			}
+			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uibuilding");
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building));
 		}

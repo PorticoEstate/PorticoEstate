@@ -158,31 +158,8 @@
 
 		public function schedule()
 		{
-			$date = new DateTime(phpgw::get_var('date'));
-			// Make sure $from is a monday
-			if($date->format('w') != 1)
-			{
-				$date->modify('last monday');
-			}
-			$prev_date = clone $date;
-			$next_date = clone $date;
-			$prev_date->modify('-1 week');
-			$next_date->modify('+1 week');
-			self::add_javascript('booking', 'booking', 'schedule.js');
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['building_id']));
-			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
-			$resource['date'] = $date->format('Y-m-d');
-			$resource['week'] = intval($date->format('W'));
-			$resource['year'] = intval($date->format('Y'));
-			$resource['prev_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id'], 'date'=> $prev_date->format('Y-m-d')));
-			$resource['next_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id'], 'date'=> $next_date->format('Y-m-d')));
-			for($i = 0; $i < 7; $i++)
-			{
-				$resource['days'][] = array('label' => $date->format('l').'<br/>'.$date->format('M d'), 'key' => $date->format('D'));
-				$date->modify('+1 day');
-			}
+			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'booking.uibuilding', 'booking.uiresource');
+
 			$lang['resource_schedule'] = lang('Resource schedule');
 			$lang['prev_week'] = lang('Previous week');
 			$lang['next_week'] = lang('Next week');
@@ -190,6 +167,8 @@
 			$lang['buildings'] = lang('Buildings');
 			$lang['schedule'] = lang('Schedule');
 			$lang['time'] = lang('Time');
+
+			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('resource_schedule', array('resource' => $resource, 'lang' => $lang));
 		}
 	}
