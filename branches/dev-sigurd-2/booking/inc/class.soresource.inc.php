@@ -17,7 +17,14 @@
 							'fkey' 		=> 'building_id',
 							'key' 		=> 'id',
 							'column' 	=> 'name'
-						)),
+					)),
+					'activity_name'	=> array('type' => 'string',
+						  'join' 		=> array(
+							'table' 	=> 'bb_activity',
+							'fkey' 		=> 'activity_id',
+							'key' 		=> 'id',
+							'column' 	=> 'name'
+					)),
 					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
 					'activity_id'			=> array('type' => 'int', 'query' => true, 'required' => false)
 				)

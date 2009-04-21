@@ -16,6 +16,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boresource');
+			$this->activity_bo = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -65,11 +66,7 @@
 							'label' => lang('Building name')
 						),
 						array(
-							'key' => 'description',
-							'label' => lang('Description')
-						),
-						array(
-							'key' => 'activity_id',
+							'key' => 'activity_name',
 							'label' => lang('Activity')
 						)
 					)
@@ -101,7 +98,7 @@
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('autocomplete');
-			$activity_data = $this->bo->fetch_activities();
+			$activity_data = $this->activity_bo->fetch_activities();
 			$lang['activity'] = lang('Activity');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');
@@ -128,7 +125,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$activity_data = $this->bo->fetch_activities();
+			$activity_data = $this->activity_bo->fetch_activities();
 			$lang['activity'] = lang('Activity');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');
@@ -148,7 +145,6 @@
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id']));
-			$resource['activity'] = $this->bo->get_activity_name($resource['activity_id']);
 			$data = array(
 				'resource'	=>	$resource
 			);

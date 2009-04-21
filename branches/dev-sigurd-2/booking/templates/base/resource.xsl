@@ -30,7 +30,7 @@
             <dt>Description</dt>
             <dd><xsl:value-of select="resource/description"/></dd>
             <dt>Activity</dt>
-            <dd><xsl:value-of select="resource/activity"/></dd>
+            <dd><xsl:value-of select="resource/activity_name"/></dd>
         </dl>
 
         <a class="button">
