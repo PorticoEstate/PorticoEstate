@@ -74,19 +74,7 @@
 
 		public function index_json()
 		{
-			$resources = $this->bo->read();
-			foreach($resources['results'] as &$resource)
-			{
-				$resource['link'] = $this->link(array('menuaction' => 'booking.uiequipment.show', 'id' => $resource['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $resources['total_records'], 
-					"Result" => $resources['results']
-				)
-			);
-			return $data;
+			return $this->bo->populate_json_data("booking.uiequipment");
 		}
 
 		public function add()
