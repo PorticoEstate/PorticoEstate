@@ -13,10 +13,6 @@
 		
 		function search($searchterm)
 		{
-			
-			
-			
-			
 			$bui_result = $this->sobuilding->read(array("query"=>$searchterm));
 			foreach($bui_result['results'] as &$bui)
 			{
@@ -45,8 +41,6 @@
 				#echo("</pre>");
 			
 			return $final_array;
-			
-			
-			
 		}
 	}
+
