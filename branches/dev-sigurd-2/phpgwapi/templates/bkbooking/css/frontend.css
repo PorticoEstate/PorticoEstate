@@ -187,3 +187,11 @@ div.color3 { background: #fcc;}
 div.color4 { background: #ffb;}
 div.color5 { background: #bff;}
 div.color6 { background: #fbf;}
+
+dl.contactinfo {}
+dl.contactinfo dt {
+  margin-left: 1em;
+}
+dl.contactinfo dd {
+  margin-left: 2em;
+}
