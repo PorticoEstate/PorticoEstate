@@ -144,3 +144,7 @@ dl.proplist-col dd.address {
 #schedule_container .color4 { background: #ffb;}
 #schedule_container .color5 { background: #bff;}
 #schedule_container .color6 { background: #fbf;}
+
+#boundary-table td, #boundary-table th { 
+    padding: .1em .2em;
+}

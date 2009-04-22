@@ -263,6 +263,11 @@
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
 			$season['season_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
+			$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+			foreach($boundaries as &$boundary)
+			{
+				$boundary['wday_name'] = lang($weekdays[$boundary['wday'] - 1]);
+			}
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
