@@ -7,7 +7,7 @@
 				<div style="margin-bottom: 2em;border: 0px solid #000000;"><span style="font-size: 10px;margin-right: 2em;"><xsl:value-of select="type"/></span>
 					<a class="Tillbaka">
 						<xsl:attribute name="href"><xsl:value-of select="start"/></xsl:attribute>
-						<xsl:value-of select="php:function('lang', 'Back')" />
+						<xsl:value-of select="php:function('lang', 'Building index')" />
 					</a>
 					<h2><xsl:value-of select="name"/></h2>
 
