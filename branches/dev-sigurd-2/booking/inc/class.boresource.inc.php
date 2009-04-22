@@ -25,7 +25,7 @@
 			return $data;
 		}
 
-		public function get_schedule($id, $buildingmodule, $resourcemodule)
+		public function get_schedule($id, $buildingmodule, $resourcemodule, $search = null)
 		{
 			$date = new DateTime(phpgw::get_var('date'));
 			// Make sure $from is a monday
@@ -38,7 +38,12 @@
 			$prev_date->modify('-1 week');
 			$next_date->modify('+1 week');
 			$resource = $this->read_single($id);
-			$resource['buildings_link'] = self::link(array('menuaction' => $buildingmodule . '.index'));
+            if ($search) {
+                $resource['buildings_link'] = self::link(array('menuaction' => $search, "type" => "building"));
+            }
+            else {
+                $resource['buildings_link'] = self::link(array('menuaction' => $buildingmodule . '.index'));
+            }
 			$resource['building_link'] = self::link(array('menuaction' => $buildingmodule . '.show', 'id' => $resource['building_id']));
 			$resource['resource_link'] = self::link(array('menuaction' => $resourcemodule . '.show', 'id' => $resource['id']));
 			$resource['date'] = $date->format('Y-m-d');
