@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
 
-	<h3><xsl:value-of select="php:function('lang', 'Application')"/> <xsl:value-of select="application/id"/></h3>
+	<h3><xsl:value-of select="php:function('lang', 'Application')"/> (<xsl:value-of select="application/id"/>)</h3>
 	<xsl:call-template name="msgbox"/>
 
 	<form action="" method="POST">

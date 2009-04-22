@@ -52,13 +52,29 @@
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'organization_name',
-							'label' => lang('Organization'),
+							'key' => 'id',
+							'label' => lang('ID'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'season_name',
-							'label' => lang('Season')
+							'key' => 'status',
+							'label' => lang('Status')
+						),
+						array(
+							'key' => 'activity_name',
+							'label' => lang('Activity')
+						),
+						array(
+							'key' => 'contact_name',
+							'label' => lang('Contact')
+						),
+						array(
+							'key' => 'created',
+							'label' => lang('Created')
+						),
+						array(
+							'key' => 'modified',
+							'label' => lang('Last modified')
 						),
 						array(
 							'key' => 'link',

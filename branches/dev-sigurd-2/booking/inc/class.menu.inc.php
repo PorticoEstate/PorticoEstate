@@ -35,19 +35,21 @@
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Applications', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiapplication.index') ),
-				                    'image'	=> array('property', 'location'),
-				),
-				'allocations' => array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Allocations', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiallocation.index') ),
-				                    'image'	=> array('property', 'location'),
-				),
-				'bookings' => array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Bookings', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibooking.index') ),
-				                    'image'	=> array('property', 'location'),
+                    'image'	=> array('property', 'location'),
+					'children' => array(
+						'allocations' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Allocations', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiallocation.index') ),
+						                    'image'	=> array('property', 'location'),
+						),
+						'bookings' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Bookings', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibooking.index') ),
+						                    'image'	=> array('property', 'location'),
+						),
+					)
 				),
 				'buildings' => array
 				(
