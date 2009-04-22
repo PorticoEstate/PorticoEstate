@@ -31,7 +31,6 @@
 			$resource['building_link']  = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.index'));
 			$resource['schedule_link']  = self::link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $resource['id']));
-			$resource['activity']       = $this->bo->get_activity_name($resource['activity_id']);
 			$data = array(
 				'resource'	=>	$resource
 			);
