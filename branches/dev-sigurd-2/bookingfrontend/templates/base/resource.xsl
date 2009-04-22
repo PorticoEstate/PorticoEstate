@@ -13,11 +13,14 @@
 					<xsl:value-of select="resource/building_name"/>
 				</a>
 			</li>
-			<li><xsl:value-of select="php:function('lang', 'Resources')" /></li>
+            <li>
+                <a>
+					<xsl:attribute name="href"><xsl:value-of select="resource/resources_link"/></xsl:attribute>
+                    <xsl:value-of select="php:function('lang', 'Resources')" />
+                </a>
+            </li>
 			<li>
-				<a href="">
-					<xsl:value-of select="resource/name"/>
-				</a>
+                <xsl:value-of select="resource/name"/>
 			</li>
 		</ul>
 

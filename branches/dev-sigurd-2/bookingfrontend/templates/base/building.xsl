@@ -55,7 +55,7 @@
 var building_id = <xsl:value-of select="id"/>;
 	<![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
-	var url = 'index.php?menuaction=bookingfrontend.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+	var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
 	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
 	YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 });
