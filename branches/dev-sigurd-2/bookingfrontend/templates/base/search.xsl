@@ -21,7 +21,7 @@
 
     <div id="result">
       <h5>
-        <u><strong>Hittade <xsl:value-of select="search/results/total_records_sum" /> resultat </strong></u>
+        <u><strong><xsl:value-of select="php:function('lang', 'Hittade %1 resultat', search/results/total_records_sum)" /></strong></u>
       </h5>
       <br />
       <br />
