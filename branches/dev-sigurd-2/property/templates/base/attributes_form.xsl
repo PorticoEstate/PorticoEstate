@@ -227,7 +227,7 @@
 											</xsl:when>
 											<xsl:when test="datatype='event'">
 												<xsl:choose>
-													<xsl:when test="item_id=''">
+													<xsl:when test="warning!=''">
 														<xsl:value-of select="warning"/>
 													</xsl:when>
 													<xsl:otherwise>

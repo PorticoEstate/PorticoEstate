@@ -1385,7 +1385,7 @@
 				'msgbox_data'					=> (isset($msgbox_data)?$GLOBALS['phpgw']->common->msgbox($msgbox_data):''),
 
 				'street_link'					=> "menuaction:'" . 'property'.".uilookup.street'",
-				'lang_street'					=> lang('Street'),
+				'lang_street'					=> lang('Address'),
 				'lang_select_street_help'		=> lang('Select the street name'),
 				'lang_street_num_statustext'	=> lang('Enter the street number'),
 				'value_street_id'				=> (isset($values['street_id'])?$values['street_id']:''),
