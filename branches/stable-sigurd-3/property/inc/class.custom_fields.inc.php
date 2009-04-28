@@ -210,7 +210,7 @@
 					}
 					else
 					{
-						$attributes['warning']			= isset($values['id']) ? '' : lang('Warning: the record has to be saved in order to plan an event');
+						$attributes['warning']			= lang('Warning: the record has to be saved in order to plan an event');
 					}
 
 					if(isset($attributes['value']) && $attributes['value'])
@@ -234,7 +234,7 @@
 						'menuaction'	=> $this->_appname.'.uievent.edit',
 						'location'		=> $location,
 						'attrib_id'		=> $attributes['id'],
-						'item_id'		=> isset($values['id']) ? $values['id'] : '',
+						'item_id'		=> isset($attributes['item_id']) ? $attributes['item_id'] : '',
 						'id'			=> isset($attributes['value']) && $attributes['value'] ? $attributes['value'] : ''));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';

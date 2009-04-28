@@ -107,6 +107,7 @@ add property	property	no	legg til prosjekt
 add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
 addressmasters	common	no	AddresseMaster
+address	property	no	Addresse
 adds a new project - then a new workorder	property	no	legger til nytt prosjekt - så arbeidsordre
 adds a new workorder to an existing project	property	no	legger til ny arbeidsordre til eksisterende prosjekt
 add selected request to project	property	no	Legg valgte tiltak til prosjektet
@@ -354,6 +355,7 @@ custom function id	property	no	Egendefinert funksjons ID
 custom functions	property	no	Egendefinert funksjoner
 custom functions for the entity category	property	no	Egendefinert funksjoner for entitet-kategori
 custom queries	property	no	Egendefinerte spørringer
+daily	property	no	Daglig
 data	property	no	data
 datatype	property	no	datatype
 datatype type not chosen!	property	no	datatype er ikke valgt
@@ -575,6 +577,7 @@ enable link from location detail	property	no	Aktiver link fra detaljer for areal
 enables help message for this attribute	property	no	Hjelpetekst for denne attributten
 enable start project from this category	property	no	Aktiviser mulighet for å starte prosjekt herfra
 end	property	no	slutt
+end date	property	no	sluttdato
 enter additional remarks to the description - if any	property	no	gi en merknad - om noen
 enter a descr for the custom function	property	no	Angi en beskrivelse av egendefinert funksjon
 enter a description for prerequisitions for this activity - if any	property	no	gi en beskrivelse av nødvendige grunnlagsarbeid - om noen - for denne aktiviteten
@@ -805,6 +808,7 @@ insert the date for the acquisition	property	no	angi dato for anskaffelsen
 insert the date for the initial value	property	no	angi dato for initiell verdi
 insert the value at the start-date as a positive amount	property	no	angi verdie ved startdatoen som en positiv verdi
 integer	property	no	heltall
+interval	property	no	intervall
 investment	property	no	investering
 investment added !	property	no	Investering er lagt til
 investment history	property	no	Investerings historie
@@ -946,6 +950,8 @@ minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
 month	property	no	Måned
+Monthly (by day)	property	no	Månedldig (dag)
+Monthly (by date)	property	no	Månedldig (dato)
 muliple checkbox	property	no	Flervalgs avkrysningsknapp
 muliple radio	property	no	Flervalgs radioknapp
 multiple checkbox	property	no	Flervalgs avkrysningsknapp
@@ -1165,6 +1171,9 @@ rental agreement categories	property	no	Leieavtale kategorier
 rental agreement item attributes	property	no	Attributter for utleie - detaljer
 rental type	property	no	Utleietype
 re-opened	property	no	gjenåpnet
+repeat	property	no	serie
+repeat type	property	no	type serie
+repeat day	property	no	gjenta dag
 request	property	no	behov
 request %1 has been edited	property	no	anmodning %1 er oppdater
 request %1 has been saved	property	no	anmodning %1 er lagret
@@ -1659,7 +1668,9 @@ voucher id	property	no	Bilags nr
 voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert
+Warning: the record has to be saved in order to plan an event	property	no	NB! posten må lagres før hendelse kan planlegges
 w_cost	property	no	Arbeidskostnad
+weekly	property	no	Ukentlig
 weight for prioritising	property	no	Vekting av prioritering
 what is the current status of this document ?	property	no	hva er status for dette dokumentet ?
 what is the current status of this equipment ?	property	no	hva er status for dette utstyret ?
@@ -1688,6 +1699,7 @@ workorder user	property	no	Bruker
 write off	property	no	avskrivning
 write off period	property	no	avskrivningsperiode
 year	property	no	År
+yearly	property	no	Årlig
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet

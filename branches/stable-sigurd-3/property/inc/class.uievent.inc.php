@@ -573,14 +573,14 @@
 				'lang_responsible'				=> lang('responsible'),
 				'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
 
-				'lang_action'					=> lang('action on event'),
+				'lang_action'					=> lang('action'),
 				'action'						=> $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uievent.index', 'type'=> $type, 'type_id'=> $type_id)),
 				'lang_id'						=> lang('ID'),
-				'lang_descr'					=> lang('Descr'),
+				'lang_descr'					=> lang('Description'),
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),

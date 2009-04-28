@@ -44,13 +44,13 @@
 		if(flag_particular_setting=='init')
 		{
 			//eliminate "no category" option because is necesary have a category in the  PHP query
-			delete oMenuButton_0.getMenu().itemData[0];
+	//		delete oMenuButton_0.getMenu().itemData[0];
 			//correcting it. now look for value 
-			index = locate_in_array_options(0,"value",path_values.cat_id);
+	//		index = locate_in_array_options(0,"value",path_values.cat_id);
 			//only change LABEL, because value (cat_id) is include un URL (PHP use redirect)
-			oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
-			oMenuButton_0.focus();
-
+	//		oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+	//		oMenuButton_0.focus();
+			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
