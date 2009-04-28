@@ -1057,7 +1057,7 @@
 
 				if($location_code)
 				{
-					$values['location_data'] = $this->bolocation->read_single($location_code,array());
+					$values['location_data'] = $this->bolocation->read_single($location_code,array('view' => true));
 				}
 			}
 

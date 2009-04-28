@@ -299,7 +299,7 @@
 																					              (
 																					               'menuaction' => 'property.uis_agreement.columns',
 																								   'role'		=> $this->role
-																					              ))."','','width=300,height=600')",
+																					              ))."','','width=300,height=600,scrollbars=1')",
 															'value' => lang('columns'),
 															'tab_index' => 9
 														)

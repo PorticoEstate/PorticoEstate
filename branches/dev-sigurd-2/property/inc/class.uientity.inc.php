@@ -290,18 +290,18 @@
 				$arr_filter_hide = array();
 
 				////// ---- CATEGORY filter----------------------
-				$values_combo_box[0]  = $this->bo->select_category_list($group_filters,$this->cat_id);
+/*				$values_combo_box[0]  = $this->bo->select_category_list($group_filters,$this->cat_id);
 				if(count($values_combo_box[0]))
 				{
 					$default_value = array ('id'=>'','name'=> lang('no category'));
 					array_unshift ($values_combo_box[0],$default_value);
-					$arr_filter_hide[0] = 0;
+					$arr_filter_hide[0] = 1;
 				}
 				else
 				{
 					$arr_filter_hide[0] = 1;
 				}
-
+*/
 				//// ---- DISTRICT filter----------------------
 				if($this->cat_id)
 				{
@@ -372,14 +372,14 @@
 											  )),
 						'fields'  => array(
 							  'field' => array(
-												array( //boton 	CATEGORY
+										/*		array( //boton 	CATEGORY
 													'id'   => 'btn_cat_id',
 													'name' => 'cat_id',
 													'value'=> lang('Category'),
 													'type' => 'button',
 													'style' => 'filter',
 													'tab_index' => 1
-												),
+												),*/
 												array( //boton 	DISTINT
 													'id'   => 'btn_district_id',
 													'name' => 'district_id',
@@ -412,7 +412,7 @@
 															   'menuaction' => 'property.uientity.columns',
 															   'entity_id'  => $this->entity_id,
 															   'cat_id'	 => $this->cat_id
-															  ))."','link','width=300,height=600')",
+															  ))."','link','width=300,height=600,scrollbars=1')",
 													 'value' => lang('columns'),
 													 'tab_index' => 10
 												),

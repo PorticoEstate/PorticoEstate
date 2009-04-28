@@ -40,7 +40,8 @@
   	{
 	    if(flag_particular_setting=='init')
 	    {
-	      oMenuButton_0.focus();
+			YAHOO.util.Dom.get(textImput[0].id).focus();
+//			oMenuButton_0.focus();
 	    }
 	    else if(flag_particular_setting=='update')
 	    {

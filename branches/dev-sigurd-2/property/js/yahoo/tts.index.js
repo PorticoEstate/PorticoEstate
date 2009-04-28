@@ -67,7 +67,8 @@
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
 			}
-			oMenuButton_0.focus();
+//			oMenuButton_0.focus();
+			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
