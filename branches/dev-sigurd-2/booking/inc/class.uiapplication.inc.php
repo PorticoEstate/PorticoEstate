@@ -130,7 +130,9 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
-			$application['id'] = $id;
+			$building_info = $this->bo->so->get_building_info($id);
+			$application['building_id'] = $building_info['id'];
+			$application['building_name'] = $building_info['name'];
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
