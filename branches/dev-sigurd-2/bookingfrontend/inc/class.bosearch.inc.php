@@ -29,6 +29,7 @@
                 foreach($org_result['results'] as &$org)
                 {
                     $org['type'] = "organization";
+                    $org['description'] = nl2br(strip_tags($org['description']));
                     $org['link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $org['id']));
                 }
             }

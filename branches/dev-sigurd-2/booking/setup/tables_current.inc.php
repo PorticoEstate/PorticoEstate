@@ -31,7 +31,10 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False)
+				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -92,7 +92,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = extract_values($_POST, array('name', 'homepage'));
+				$organization = extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description'));
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
@@ -101,28 +101,15 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$lang['title'] = lang('New Organization');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			self::render_template('organization_new', array('organization' => $organization, 'lang' => $lang));
+			$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.index',));
+
+			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
+			self::add_javascript('yahoo', 'yahoo-dom-event', 'yahoo-dom-event.js');
+			self::add_javascript('yahoo', 'element', 'element-min.js');
+			self::add_javascript('yahoo', 'container', 'container_core-min.js');
+			self::add_javascript('yahoo', 'editor', 'simpleeditor-min.js');
+
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Create"));
 		}
 
 		public function edit()
@@ -134,7 +121,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage')));
+				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description')));
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
@@ -144,28 +131,15 @@
 			}
 			$this->flash_form_errors($errors);
 			$this->flash_form_errors($errors);
-			$lang['title'] = lang('Edit Organization');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			self::render_template('organization_edit', array('organization' => $organization, 'lang' => $lang));
+			$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $id));
+
+			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
+			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
+			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
+			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
+			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save"));
 		}
 		
 		public function show()

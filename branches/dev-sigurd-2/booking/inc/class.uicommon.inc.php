@@ -85,7 +85,7 @@
 
 		public function add_javascript($app, $pkg, $name)
 		{
-  			$GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
+  			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
 		}
 
         public function set_active_menu($item)

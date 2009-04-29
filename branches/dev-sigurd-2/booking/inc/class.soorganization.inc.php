@@ -7,9 +7,12 @@
 		{
 			parent::__construct('bb_organization', 
 				array(
-					'id'		=> array('type' => 'int'),
-					'name'		=> array('type' => 'string', 'required' => True, 'query' => True),
-					'homepage'	=> array('type' => 'string', 'required' => True, 'qyery' => True)
+					'id'			=> array('type' => 'int'),
+					'name'			=> array('type' => 'string', 'required' => True, 'query' => True),
+					'homepage'		=> array('type' => 'string', 'required' => True, 'query' => True),
+					'phone'			=> array('type' => 'string'),
+					'email'			=> array('type' => 'string'),
+					'description'	=> array('type' => 'string'),
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
