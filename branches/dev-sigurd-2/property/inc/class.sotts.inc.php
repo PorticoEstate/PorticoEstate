@@ -34,6 +34,8 @@
 
 	class property_sotts
 	{
+		var $uicols_related = array();
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -241,11 +243,11 @@
 			
 			foreach ($tickets as &$ticket)
 			{
-				$this->db->query("SELECT count(*) FROM fm_tts_views where id={$ticket['id']}"
-					. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
+				$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
+					. " AND account_id='{$this->account}'",__LINE__,__FILE__);
 				$this->db->next_record();
 
-				if(! $this->db->f(0))
+				if(! $this->db->f('hits'))
 				{
 					$ticket['new_ticket'] = true;
 				}
@@ -273,9 +275,9 @@
 			}
 
 			$entity[$i]['type']='.project';
-			$uicols[]	= lang('project');
+			$uicols[]	= 'project';
 
-			$this->uicols	= $uicols;
+			$this->uicols_related	= $uicols;
 			return $entity;
 		}
 
