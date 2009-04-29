@@ -140,11 +140,11 @@
 
 			if($check_payments)
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,loc" . $j . "_name,owner ";
+				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
 			}
 			else
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, loc" . $j . "_name as address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,loc" . $j . "_name,owner ";
+				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,address,owner ";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
