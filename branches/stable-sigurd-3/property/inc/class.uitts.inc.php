@@ -456,30 +456,35 @@
 			{
 				$ticket_list = $this->bo->read($start_date,$end_date);
 			}
-			//$uicols = $this->bo->uicols;
+			$this->bo->get_origin_entity_type();
+			$uicols_related = $this->bo->uicols_related;
+//_debug_array($uicols_related);
 			$uicols = array();
+			$i = 0;
 			//$uicols['name'][0] = 'color';
-			$uicols['name'][0] = 'priority';
-			$uicols['name'][1] = 'new_ticket';
-			$uicols['name'][2] = 'id';
-			$uicols['name'][3] = 'bgcolor';
-			$uicols['name'][4] = 'subject';
-			$uicols['name'][5] = 'location_code';
-			$uicols['name'][6] = 'address';
-			$uicols['name'][7] = 'user';
-			$uicols['name'][8] = 'assignedto';
-			$uicols['name'][9] = 'timestampopened';
-			$uicols['name'][10] = 'besiktigelse';
-			$uicols['name'][11] = 'project';
+			$uicols['name'][$i++] = 'priority';
+			$uicols['name'][$i++] = 'id';
+			$uicols['name'][$i++] = 'bgcolor';
+			$uicols['name'][$i++] = 'subject';
+			$uicols['name'][$i++] = 'location_code';
+			$uicols['name'][$i++] = 'address';
+//			$uicols['name'][$i++] = 'user';
+			$uicols['name'][$i++] = 'assignedto';
+			$uicols['name'][$i++] = 'timestampopened';
 
-			$uicols['name'][12] = 'finnish_date';
-			$uicols['name'][13] = 'delay';
-			$uicols['name'][14] = 'status';
+			foreach($uicols_related as $related)
+			{
+				$uicols['name'][$i++] = $related;			
+			}
 
-			$uicols['name'][15] = 'child_date';
-			$uicols['name'][16] = 'link_view';
-			$uicols['name'][17] = 'lang_view_statustext';
-			$uicols['name'][18] = 'text_view';
+			$uicols['name'][$i++] = 'finnish_date';
+			$uicols['name'][$i++] = 'delay';
+			$uicols['name'][$i++] = 'status';
+
+			$uicols['name'][$i++] = 'child_date';
+			$uicols['name'][$i++] = 'link_view';
+			$uicols['name'][$i++] = 'lang_view_statustext';
+			$uicols['name'][$i++] = 'text_view';
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -540,28 +545,24 @@
 									'menuaction'	=> 'property.uitts.view',
 									'id'			=> $ticket['id']
 								));
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]] .  $ticket['new_ticket'];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
 						}
-						if($uicols['name'][$k] == 'project')
+
+						$n = 0;
+						foreach($uicols_related as $related)
 						{
-							$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['link']		=	$GLOBALS['phpgw']->link('/index.php',array
-								(
-									'menuaction'	=> 'property.uiproject.view',
-									'id'			=> $ticket['child_date'][1]['date_info'][0]['target_id']
-								));
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['child_date'][1]['date_info'][0]['entry_date'];
-							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-						}
-						if($uicols['name'][$k] == 'besiktigelse')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['link']		=	$ticket['child_date'][0]['date_info'][0]['link'];
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['child_date'][0]['date_info'][0]['entry_date'];
-							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							if($uicols['name'][$k] == $related)
+							{
+								$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
+								$datatable['rows']['row'][$j]['column'][$k]['link']		= $ticket['child_date'][$n]['date_info'][0]['link'];
+								$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['child_date'][$n]['date_info'][0]['entry_date'];
+								$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+							}
+							$n++;
 						}
 					}
+
 					$j++;
 				}
 			}

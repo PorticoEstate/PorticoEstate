@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $acl_location;
+		var $uicols_related = array();
 
 		var $public_functions = array
 		(
@@ -262,6 +263,13 @@
 		}
 
 
+		function get_origin_entity_type()
+		{
+			$related = $this->so->get_origin_entity_type();
+			$this->uicols_related = $this->so->uicols_related;
+			return $related;
+		}
+
 		function read($start_date='',$end_date='', $external='',$dry_run = '')
 		{
 			$interlink 	= CreateObject('property.interlink');
@@ -275,13 +283,13 @@
 			$this->total_records = $this->so->total_records;
 			if(!$external)
 			{
-				$entity	= $this->so->get_origin_entity_type();
-				$this->uicols=$this->so->uicols;
+				$entity	= $this->get_origin_entity_type();
+//				$this->uicols_related = $this->so->uicols_related;
 			}
 			else
 			{
 				$entity[0]['type']='.project';
-				$this->uicols[]	= lang('project');
+				$this->uicols_related	= array('project');
 			}
 
 			foreach ($tickets as & $ticket)
@@ -318,7 +326,7 @@
 				}
 				if ($ticket['new_ticket'])
 				{
-					$ticket['new_ticket'] = lang('New');
+					$ticket['new_ticket'] = '*';
 				}
 
 				if(isset($entity) && is_array($entity))
@@ -329,7 +337,7 @@
 					}
 				}
 			}
-//_debug_array($tickets);
+
 			return $tickets;
 		}
 
