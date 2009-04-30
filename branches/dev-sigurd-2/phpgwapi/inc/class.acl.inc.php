@@ -348,15 +348,30 @@
 		*
 		* @return array Array with ACL records
 		*/
-		public function save_repository($unused = null, $ignored = null)
+		public function save_repository($appname, $location)
 		{
+			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
+			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
 			$acct_id = (int) $this->_account_id;
 			$locations =& $GLOBALS['phpgw']->locations;
+			$subs = array();
+			$sub_delete = '';
+
+			if( $this->enable_inheritance )
+			{
+				$subs = $locations->get_subs($appname, $location);
+				if($subs)
+				{
+					$sub_delete = ' AND location_id IN (' . implode(',', array_keys($subs)) . ')';
+				}
+			}
+			unset($subs);
 
 			$this->_db->transaction_begin();
 
 			$sql = 'DELETE FROM phpgw_acl'
-					. " WHERE acl_account = {$acct_id}";
+					. " WHERE acl_account = {$acct_id} AND location_id = {$location_id}{$sub_delete}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			if ( !isset($this->_data[$acct_id])
@@ -398,6 +413,7 @@
 					if( $this->enable_inheritance )
 					{
 						$subs = $locations->get_subs($location_info['appname'], $location_info['location']);
+
 						foreach ( array_keys($subs) as $sub )
 						{
 							if ( !isset($new_data[$sub][$entry['grantor']][$entry['type']]) )
@@ -460,41 +476,54 @@
 
 
 			/*remove duplicates*/
-/*
+
 			$sql = "SELECT * FROM phpgw_acl WHERE acl_account = {$acct_id}"
 			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
 			$this->_db->query($sql,__LINE__,__FILE__);
 
+			$test = array();
+
 			while($this->_db->next_record())
 			{
-				$unique_data[]= array
-				(
-					1	=> array
+				$_acl_account	= $this->_db->f('acl_account');
+				$_acl_rights	= $this->_db->f('acl_rights');
+				$_acl_grantor	= $this->_db->f('acl_grantor');
+				$_acl_type		= $this->_db->f('acl_type');
+				$_location_id	= $this->_db->f('location_id');
+
+				//avoid doubled set of rights
+				if(!$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id])
+				{
+					$unique_data[]= array
 					(
-						'value'	=> $this->_db->f('acl_account'),
-						'type'	=> PDO::PARAM_INT
-					),
-					2	=> array
-					(
-						'value'	=> $this->_db->f('acl_rights'),
-						'type'	=>	PDO::PARAM_INT
-					),
-					3	=> array
-					(
-						'value'	=> $this->_db->f('acl_grantor'),
-						'type'	=> PDO::PARAM_INT
-					),
-					4	=> array
-					(
-						'value'	=> $this->_db->f('acl_type'),
-						'type'	=>	PDO::PARAM_INT
-					),
-					5	=> array
-					(
-						'value'	=> $this->_db->f('location_id'),
-						'type'	=> PDO::PARAM_INT
-					),								
-				);
+						1	=> array
+						(
+							'value'	=> $_acl_account,
+							'type'	=> PDO::PARAM_INT
+						),
+						2	=> array
+						(
+							'value'	=> $_acl_rights,
+							'type'	=>	PDO::PARAM_INT
+						),
+						3	=> array
+						(
+							'value'	=> $_acl_grantor,
+							'type'	=> PDO::PARAM_INT
+						),
+						4	=> array
+						(
+							'value'	=> $_acl_type,
+							'type'	=>	PDO::PARAM_INT
+						),
+						5	=> array
+						(
+							'value'	=> $_location_id,
+							'type'	=> PDO::PARAM_INT
+						),								
+					);
+				}
+				$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
 			}
 
 			$sql = 'DELETE FROM phpgw_acl'
@@ -506,7 +535,7 @@
 
 			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
 			unset($unique_data);
-
+/*
 			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
 			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
 */
