@@ -408,20 +408,20 @@
 						/*
 							FIXME The inheritence model should be handled in the check
 						*/
-					}
 
-					if( $this->enable_inheritance )
-					{
-						$subs = $locations->get_subs($location_info['appname'], $location_info['location']);
-
-						foreach ( array_keys($subs) as $sub )
+						if( $this->enable_inheritance )
 						{
-							if ( !isset($new_data[$sub][$entry['grantor']][$entry['type']]) )
-							{
-								$new_data[$sub][$entry['grantor']][$entry['type']] = 0;
-							}
+							$subs = $locations->get_subs($location_info['appname'], $location_info['location']);
 
-							$new_data[$sub][$entry['grantor']][$entry['type']] |= $entry['rights'];
+							foreach ( array_keys($subs) as $sub )
+							{
+								if ( !isset($new_data[$sub][$entry['grantor']][$entry['type']]) )
+								{
+									$new_data[$sub][$entry['grantor']][$entry['type']] = 0;
+								}
+
+								$new_data[$sub][$entry['grantor']][$entry['type']] |= $entry['rights'];
+							}
 						}
 					}
 				}
