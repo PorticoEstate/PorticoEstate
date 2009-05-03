@@ -39,26 +39,22 @@
 		public function __construct()
 		{
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->soadmin_location	= CreateObject('property.soadmin_location');
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
-
-		//	$this->saveto			= '/mnt/filer2/VaktPC_filer';
-		//	$this->saveto			= '/tmp';
-		//	$this->export_method = 'csv';
-		//	$this->export_method = 'excel';
- 		//	$this->export_method = 'xml';
- 		//	$this->dateformat = 'd/m/Y';
- 			
- 			$config = CreateObject('phpgwapi.config', 'catch');
- 			$config->read();
- 			$this->pickup_path = $config->config_data['pickup_path'];
 		}
 
 		function pre_run($data='')
 		{
-			if($data['enabled']==1)
+			//$data['scheme'] has to be given
+			if(!isset($data['scheme']) || !$data['scheme'])
+			{
+				throw new Exception("catch scheme to import not defined");
+			}
+
+			phpgwapi_cache::session_set('catch', 'data', $data);
+
+			if(isset($data['enabled']) && $data['enabled']==1)
 			{
 				$confirm	= true;
 				$cron		= true;
@@ -67,6 +63,7 @@
 			{
 				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
+				$cron = false;
 			}
 
 			if ($confirm)
@@ -82,13 +79,13 @@
 
 		function confirm($execute='')
 		{
+			$data = phpgwapi_cache::session_get('catch', 'data');
 			$link_data = array
 			(
 				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
+				'data'		=> urlencode(serialize($data)),
 				'execute'	=> $execute,
 			);
-
 
 			if(!$execute)
 			{
@@ -153,6 +150,26 @@
 		function import_ppc()
 		{
 			//do the actual import
+
+			$scheme = phpgwapi_cache::session_get('catch', 'scheme');
+
+ 			$config = CreateObject('catch.soconfig');
+ 			$config->read_repository();
+ 			$this->pickup_path = $config->config_data[$scheme]['pickup_path'];
+ 			$target = $config->config_data[$scheme]['target'];
+ 			$target_table = 'fm_catch_' . str_replace('.', '_', $target);
+
+			$metadata = $this->db->metadata($target_table);
+			if(!$metadata)
+			{
+				throw new Exception(lang('no valid target'));
+			}
+			
+			foreach($metadata as $field => $field_info)
+			{
+_debug_array($field);			
+			}
+
 			$xmlparse = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('UTF-8');
 

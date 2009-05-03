@@ -356,8 +356,8 @@
 				(
 					'name'						=> $entry['name'],
 					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'], 'id'=> $entry['value_id'])),
-					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
 					'lang_edit_config_text'		=> lang('edit the config'),
 					'text_edit'					=> lang('edit'),
 					'text_delete'				=> lang('delete'),
@@ -851,14 +851,13 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'catch.uiconfig.index',
-				'type_id'		=> $type_id
+				'menuaction'	=> 'catch.uiconfig.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_type($type_id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
@@ -895,15 +894,14 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'catch.uiconfig.index',
-				'type_id'	=> $type_id,
-				'attrib_id'	=> $attrib_id
+				'menuaction'	=> 'catch.uiconfig.list_attrib',
+				'type_id'	=> $type_id
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_attrib($type_id,$attrib_id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
@@ -911,7 +909,7 @@
 			$data = array
 			(
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_type','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_attrib','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
 				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
 				'lang_yes'					=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -951,7 +949,7 @@
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_value($type_id,$attrib_id,$id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
@@ -959,7 +957,7 @@
 			$data = array
 			(
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_type', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id, 'id'=> $id)),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_value', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id, 'id'=> $id)),
 				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
 				'lang_yes'					=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),

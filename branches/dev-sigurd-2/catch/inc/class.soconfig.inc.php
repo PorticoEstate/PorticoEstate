@@ -159,6 +159,67 @@
 			$receipt['message'][]=array('msg'=>lang('config type has been saved'));
 			$receipt['type_id']= $values['type_id'];
 
+			$attrib_id = $this->db->next_id('fm_catch_config_attrib',array('type_id'=>$values['type_id']));
+			$insert_values = array();
+			$attrib_values[] = array
+			(
+				$values['type_id'],
+				$attrib_id,
+				'text',
+				'pickup_catalog',
+				lang('where to drop the files from the external system'),
+			);
+			$attrib_id ++;
+
+			$attrib_values[] = array
+			(
+				$values['type_id'],
+				$attrib_id,
+				'listbox',
+				'target',
+				lang('where to import the data'),
+			);
+
+			foreach ($attrib_values as $insert_values)
+			{
+				$insert_values	= $this->db->validate_insert($insert_values);
+				$this->db->query("INSERT INTO fm_catch_config_attrib (type_id,id,input_type,name,descr) "
+					. "VALUES ($insert_values)",__LINE__,__FILE__);			
+			}
+
+			$choice_id = $this->db->next_id('fm_catch_config_choice' ,array('type_id'=> $values['type_id'], 'attrib_id' => $attrib_id));
+
+			$this->db->query("SELECT entity_id, id, name FROM fm_catch_category",__LINE__,__FILE__);
+
+			$target_info = array();
+			while ($this->db->next_record())
+			{
+				$target_info[] = array
+				(
+					'entity_id'	=> $this->db->f('entity_id'),
+					'cat_id'	=> $this->db->f('id'),
+					'name'		=> $this->db->f('name'),
+				);
+			}
+
+			foreach ($target_info as $target)
+			{
+				$values_insert = array
+				(
+					$values['type_id'],
+					$attrib_id,
+					$choice_id,
+					"{$target['entity_id']}.{$target['cat_id']}"//$target['name']
+				);
+
+				$values_insert	= $this->db->validate_insert($values_insert);
+
+				$this->db->query("INSERT INTO fm_catch_config_choice (type_id,attrib_id,id,value) "
+				. "VALUES ($values_insert)",__LINE__,__FILE__);
+				
+				$choice_id++;
+			}
+
 			$this->db->transaction_commit();
 
 			return $receipt;
