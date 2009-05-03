@@ -26,15 +26,11 @@
 
 		public function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('hrm.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
-
-			$this->left_join		= $this->bocommon->left_join;
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 		}
 
 		function read($data)
@@ -434,8 +430,8 @@
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -612,7 +608,7 @@
 				$this->account
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 
 			$this->db->query("INSERT INTO $table (name,descr,job_parent,job_level,entry_date,owner) "
@@ -672,7 +668,7 @@
 			$value_set['job_parent']		= intval($values['parent_id']);
 			$value_set['job_level']		= $level;
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 
@@ -850,7 +846,7 @@
 				$value_sort
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 
 			$this->db->query("INSERT INTO $table (job_id,name,descr,task_parent,task_level,entry_date,owner,value_sort) "
@@ -911,7 +907,7 @@
 			$value_set['task_parent']		= intval($values['parent_id']);
 			$value_set['task_level']		= $level;
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 
@@ -1035,7 +1031,7 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 			$values['name'] = $this->db->db_addslashes($values['name']);
 
-			$values['quali_type_id'] = $this->bocommon->next_id('phpgw_hrm_quali_type');
+			$values['quali_type_id'] = $this->db->next_id('phpgw_hrm_quali_type');
 
 			$insert_values=array(
 				$values['quali_type_id'],
@@ -1045,7 +1041,7 @@
 				$this->account
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 			$this->db->query("INSERT INTO phpgw_hrm_quali_type (id,name,descr,entry_date,type_owner) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
@@ -1063,7 +1059,7 @@
 			$value_set['descr'] = $this->db->db_addslashes($values['descr']);
 			$value_set['name'] = $this->db->db_addslashes($values['name']);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE phpgw_hrm_quali_type set $value_set WHERE id=" . $values['quali_type_id'],__LINE__,__FILE__);
 
@@ -1114,7 +1110,7 @@
 				$value_sort
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$this->db->query("INSERT INTO phpgw_hrm_quali (job_id,quali_type_id,category,skill_id,experience_id,entry_date,quali_owner,remark,value_sort) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
@@ -1154,7 +1150,7 @@
 			$value_set['experience_id']		= $values['experience_id'];
 			$value_set['remark'] 			= $this->db->db_addslashes($values['remark']);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$table='phpgw_hrm_quali';
 
