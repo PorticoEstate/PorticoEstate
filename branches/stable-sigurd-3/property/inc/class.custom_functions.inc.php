@@ -65,7 +65,8 @@
 			}
 			else
 			{
-				$data = unserialize(urldecode($_GET['data']));
+				$data = unserialize(urldecode(phpgw::get_var('data')));
+
 				$data = phpgw::clean_value($data);
 				if(!isset($data['function']))
 				{

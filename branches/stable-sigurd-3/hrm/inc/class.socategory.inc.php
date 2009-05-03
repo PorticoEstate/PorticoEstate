@@ -20,13 +20,10 @@
 	{
 		public function __construct()
 		{
-		//	$this->currentapp	= 'hrm';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('hrm.bocommon');
-			$this->db			= $this->bocommon->new_db();
-
-			$this->join			=& $this->bocommon->join;
-			$this->like			=& $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
 		}
 
 		function read($data)
@@ -67,8 +64,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where id $this->like '%$query%' or descr $this->like '%$query%'";
 			}

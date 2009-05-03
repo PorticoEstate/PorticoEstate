@@ -46,61 +46,12 @@
 			$this->left_join = " LEFT JOIN ";
 		}
 
-		function fm_cache($name='',$value='')
-		{
-			if($value)
-			{
-				$value = serialize($value);
-				$this->db->query("INSERT INTO fm_cache (name,value)VALUES ('$name','$value')",__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query("SELECT value FROM fm_cache where name='$name'");
-				$this->db->next_record();
-				$value= unserialize($this->db->f('value'));
-				return $value;
-			}
-		}
-
 		function create_preferences($app='',$user_id='')
 		{
 				$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
 				$this->db->next_record();
 				$value= unserialize($this->db->f('preference_value'));
 				return $value;
-		}
-
-
-		function next_id($table='',$key='')
-		{
-			if(is_array($key))
-			{
-				while (is_array($key) && list($column,$value) = each($key))
-				{
-					if($value)
-					{
-						$condition[] = $column . '=' . $value;
-					}
-				}
-
-				$where=' WHERE ' . implode(" AND ", $condition);
-			}
-
-			$this->db->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
-			$this->db->next_record();
-			$next_id = $this->db->f('maximum')+1;
-			return "$next_id";
-		}
-
-		function new_db()
-		{
-			$db = CreateObject('phpgwapi.db');
-			$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
-			$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
-			$db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
-			$db->User = $GLOBALS['phpgw_info']['server']['db_user'];
-			$db->Password = $GLOBALS['phpgw_info']['server']['db_pass'];
-			return $db;
 		}
 
 	}

@@ -26,12 +26,12 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	$setup_info['catch']['name']      = 'catch';
-	$setup_info['catch']['version']   = '0.9.17.001';
-	$setup_info['catch']['app_order'] = 20;
-	$setup_info['catch']['enable']    = 1;
-	$setup_info['catch']['globals_checked']    = True;
-	$setup_info['catch']['app_group']	= 'office';
+	$setup_info['catch']['name']			= 'catch';
+	$setup_info['catch']['version']			= '0.9.17.502';
+	$setup_info['catch']['app_order']		= 20;
+	$setup_info['catch']['enable']			= 1;
+	$setup_info['catch']['globals_checked']	= True;
+	$setup_info['catch']['app_group']		= 'office';
 
 	$setup_info['catch']['author'] = array
 	(
@@ -60,8 +60,11 @@
 		'fm_catch_category',
 		'fm_catch_lookup',
 		'fm_catch_history',
+		'fm_catch_config_type',
+		'fm_catch_config_attrib',
+		'fm_catch_config_choice',
+		'fm_catch_config_value'
 	);
-
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['catch']['hooks'] = array

@@ -87,5 +87,53 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'fm_catch_config_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_catch_config_attrib' => array(
+			'fd' => array(
+				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+			),
+			'pk' => array('type_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_catch_config_choice' => array(
+			'fd' => array(
+				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 50,'nullable' => False)
+			),
+			'pk' => array('type_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('type_id','attrib_id','value')
+		),
+		'fm_catch_config_value' => array(
+			'fd' => array(
+				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 200,'nullable' => False)
+			),
+			'pk' => array('type_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('type_id','attrib_id','value')
 		)
 	);

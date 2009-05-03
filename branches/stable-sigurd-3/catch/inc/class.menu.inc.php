@@ -97,10 +97,10 @@
 
 				$menus['admin'] = array
 				(
-					'index'	=> array
+					'config'	=> array
 					(
-						'text'	=> lang('Configuration'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'catch') )
+						'text'	=> lang('config'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index'))
 					),
 					'entity'	=> array
 					(

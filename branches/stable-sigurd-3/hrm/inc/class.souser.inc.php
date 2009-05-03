@@ -24,16 +24,12 @@
 
 		public function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon	= CreateObject('hrm.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-
-			$this->acl		= CreateObject('phpgwapi.acl');
-			$this->grants		= $this->acl->get_grants('hrm','.user');
-			$this->left_join	=& $this->bocommon->left_join;
-			$this->join			=& $this->bocommon->join;
-			$this->like			=& $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('hrm','.user');
 		}
 
 		function read($data)
@@ -157,7 +153,7 @@
 			$values['new_place_address'] = $this->db->db_addslashes($values['new_place_address']);
 			$values['new_place_town'] = $this->db->db_addslashes($values['new_place_town']);
 			$values['new_place_descr'] = $this->db->db_addslashes($values['new_place_descr']);
-			$values['place_id'] = $this->bocommon->next_id('phpgw_hrm_training_place');
+			$values['place_id'] = $this->db->next_id('phpgw_hrm_training_place');
 
 			$insert_values=array(
 				$values['place_id'],
@@ -168,7 +164,7 @@
 				$values['new_place_remark'],
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 			$this->db->query("INSERT INTO phpgw_hrm_training_place (id,name,address,zip,town, remark) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
@@ -187,7 +183,7 @@
 				$values['place_id'] = $this->add_place($values);
 			}
 
-			$training_id = $this->bocommon->next_id('phpgw_hrm_training');
+			$training_id = $this->db->next_id('phpgw_hrm_training');
 
 			$insert_values=array(
 				$training_id,
@@ -204,7 +200,7 @@
 				$this->account
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$this->db->query("INSERT INTO phpgw_hrm_training (id,user_id,category,title,start_date,end_date,reference,skill,place_id,descr,entry_date,owner) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
@@ -235,7 +231,7 @@
 			$value_set['skill']			= $values['skill'];
 			$value_set['place_id']		= $values['place_id'];
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$table='phpgw_hrm_training';
 

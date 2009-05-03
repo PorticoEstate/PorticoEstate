@@ -18,23 +18,16 @@
 
 	class hrm_soplace
 	{
-		var $grants;
 		var $db;
-		var $db2;
 		var $account;
 
 		function hrm_soplace()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('hrm.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db();
-
-			$this->grants	= $GLOBALS['phpgw']->acl->get_grants('hrm');
-			$this->left_join		= $this->bocommon->left_join;
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
+			$this->join 		= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 		}
 
 		function read($data)
@@ -77,8 +70,8 @@
 
 			$sql = "SELECT * FROM $table $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -152,7 +145,7 @@
 			$values['address'] = $this->db->db_addslashes($values['address']);
 			$values['town'] = $this->db->db_addslashes($values['town']);
 			$values['remark'] = $this->db->db_addslashes($values['remark']);
-			$values['place_id'] = $this->bocommon->next_id('phpgw_hrm_training_place');
+			$values['place_id'] = $this->db->next_id('phpgw_hrm_training_place');
 
 			$insert_values=array(
 				$values['place_id'],
@@ -163,7 +156,7 @@
 				$values['remark'],
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 			$this->db->query("INSERT INTO phpgw_hrm_training_place (id,name,address,zip,town, remark) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
@@ -185,7 +178,7 @@
 			$value_set['remark']		= $this->db->db_addslashes($values['remark']);
 			$value_set['town']			= $this->db->db_addslashes($values['town']);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 
 			$this->db->query("UPDATE phpgw_hrm_training_place set $value_set WHERE id=" . $values['place_id'],__LINE__,__FILE__);
