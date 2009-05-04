@@ -78,21 +78,39 @@
 			{
 				foreach($this->fields as $field => $params)
 				{
-					$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
-				}
-				foreach($this->fields as $field => $params)
-				{
 					if($params['manytomany'])
 					{
-						$column = $params['manytomany']['column'];
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];
-						$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
-						$row[$field] = array();
-						while ($this->db->next_record())
+						if(is_array($params['manytomany']['column']))
 						{
-							$row[$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+							$column = join(',', $params['manytomany']['column']);
+							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$row[$field] = array();
+							while ($this->db->next_record())
+							{
+								$data = array();
+								foreach($params['manytomany']['column'] as $col)
+								{
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+								}
+								$row[$field][] = $data;
+							}
 						}
+						else
+						{
+							$column = $params['manytomany']['column'];
+							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$row[$field] = array();
+							while ($this->db->next_record())
+							{
+								$row[$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+							}
+						}
+					}
+					else
+					{
+						$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
 					}
 				}
 				return $row;
@@ -202,17 +220,37 @@
     			{
     				if($params['manytomany'])
     				{
-    					$column = $params['manytomany']['column'];
     					$table = $params['manytomany']['table'];
     					$key = $params['manytomany']['key'];
     					$ids = join(',', array_keys($id_map));
-    					$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-    					$row[$field] = array();
-    					while ($this->db->next_record())
-    					{
-    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
-    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
-    					}
+						if(is_array($params['manytomany']['column']))
+						{
+							$colnames = join(',', $params['manytomany']['column']);
+	    					$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
+	    					$row[$field] = array();
+	    					while ($this->db->next_record())
+	    					{
+	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
+								$data = array();
+								foreach($params['manytomany']['column'] as $col)
+								{
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+								}
+								$row[$field][] = $data;
+	    						$results[$id_map[$id]][$field][] = $data;
+	    					}
+						}
+						else
+						{
+	    					$column = $params['manytomany']['column'];
+	    					$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
+	    					$row[$field] = array();
+	    					while ($this->db->next_record())
+	    					{
+	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
+	    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+	    					}
+						}
     				}
     			}
 		    }
@@ -241,13 +279,30 @@
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
 				{
-					$column = $params['manytomany']['column'];
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
-					foreach($entry[$field] as $v)
+					if(is_array($params['manytomany']['column']))
 					{
-						$v = $this->_marshal($v, $params['type']);
-						$this->db->query("INSERT INTO $table ($column, $key) VALUES($v, $id)", __LINE__, __FILE__);
+						$colnames = join(',', $params['manytomany']['column']);
+						foreach($entry[$field] as $v)
+						{
+							$data = array();
+							foreach($params['manytomany']['column'] as $col)
+							{
+								$data[] = $this->_marshal($v[$col], $params['type']);
+							}
+							$v = join(',', $data);
+							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
+						}
+					}
+					else
+					{
+						$colname = $params['manytomany']['column'];
+						foreach($entry[$field] as $v)
+						{
+							$v = $this->_marshal($v, $params['type']);
+							$this->db->query("INSERT INTO $table ($key, $colname) VALUES($id, $v)", __LINE__, __FILE__);
+						}
 					}
 				}
 			}
@@ -275,14 +330,31 @@
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
 				{
-					$column = $params['manytomany']['column'];
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
 					$this->db->query("DELETE FROM $table WHERE $key=$id", __LINE__, __FILE__);
-					foreach($entry[$field] as $v)
+					if(is_array($params['manytomany']['column']))
 					{
-						$v = $this->_marshal($v, $params['type']);
-						$this->db->query("INSERT INTO $table ($column, $key) VALUES($v, $id)", __LINE__, __FILE__);
+						$colnames = join(',', $params['manytomany']['column']);
+						foreach($entry[$field] as $v)
+						{
+							$data = array();
+							foreach($params['manytomany']['column'] as $col)
+							{
+								$data[] = $this->_marshal($v[$col], $params['type']);
+							}
+							$v = join(',', $data);
+							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
+						}
+					}
+					else
+					{
+						$colname = $params['manytomany']['column'];
+						foreach($entry[$field] as $v)
+						{
+							$v = $this->_marshal($v, $params['type']);
+							$this->db->query("INSERT INTO $table ($key, $colname) VALUES($id, $v)", __LINE__, __FILE__);
+						}
 					}
 				}
 			}
