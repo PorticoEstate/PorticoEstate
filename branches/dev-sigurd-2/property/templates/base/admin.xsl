@@ -57,7 +57,7 @@
 				<td valign="top" align="left">
 					<xsl:value-of select="lang_enable_inheritance"/>
 					<xsl:text>: </xsl:text>
-					<input type="checkbox" name="enable_inheritance" value="true" title="{lang_enable_inheritance_statustext}" style="cursor:help"></input>
+					<input type="checkbox" name="enable_inheritance" value="true" title="{lang_enable_inheritance_statustext}"></input>
 				</td>
 			</tr>
 			<tr class="th">
@@ -938,7 +938,7 @@
 				</td>
 				<td align="left">
 					<input type="hidden" name="values[old_default_tts_category]" value="{value_old_default_tts_category}"></input>
-					<select name="values[default_tts_category]" class="forms" title="{lang_default_tts_category_statustext}" style="cursor:help">
+					<select name="values[default_tts_category]" class="forms" title="{lang_default_tts_category_statustext}">
 						<option value=""><xsl:value-of select="lang_no_cat"/></option>
 						<xsl:apply-templates select="tts_category"/>
 					</select>
