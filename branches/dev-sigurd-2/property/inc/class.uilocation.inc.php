@@ -954,16 +954,12 @@
 							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 						}
 
-						if($attribute['datatype'] == 'I' && isset($attribute['value']) && !ctype_digit($attribute['value']))
+						if($attribute['datatype'] == 'I' && isset($attribute['value']) && $attribute['value'] && !ctype_digit($attribute['value']))
 						{
 							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));
 						}
-
-
-
 					}
 				}
-
 
 				if (isset($insert_record['extra']) && array_search('street_id',$insert_record['extra']) && (!isset($values['street_id']) || !$values['street_id']))
 				{
