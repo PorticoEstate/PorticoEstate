@@ -646,9 +646,15 @@
 
 				while (list($id,$entry) = each($update_status))
 				{
-					$historylog_workorder->add($entry,$id,$status_code[$entry]);
-					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'$status_code[$entry]'" . "where id=$id");
-					$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+					$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->next_record();
+					switch ( $this->db->f('type') )
+					{
+						case 'workorder':
+						$historylog_workorder->add($entry,$id,$status_code[$entry]);
+						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'$status_code[$entry]'" . "where id=$id");
+						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+					}
 				}
 			}
 
@@ -660,10 +666,17 @@
 					$paid_percent = (int) $paid_percent;
 					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
 	
-					$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}");
+					$this->db->query("SELECT type FROM fm_orders WHERE id={$workorder_id}",__LINE__,__FILE__);
 					$this->db->next_record();
-					$project_id = $this->db->f('project_id');
-					$workorder->update_planned_cost($project_id);
+					switch ( $this->db->f('type') )
+					{
+						case 'workorder':
+							$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}",__LINE__,__FILE__);
+							$this->db->next_record();
+							$project_id = $this->db->f('project_id');
+							$workorder->update_planned_cost($project_id);
+							break;
+					}
 				}
 			}
 			
