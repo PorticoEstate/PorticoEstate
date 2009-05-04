@@ -343,15 +343,30 @@
 		/**
 		* Save repository in database
 		*
-		* @param string $unused  This parameter is unused it is only for backwards compatibility
-		* @param string $ignored This parameter is also ignored it is only for backwards compatibility
+		* @param string $appname  used for a spesific location
+		* @param string $location used for a spesific location
 		*
 		* @return array Array with ACL records
 		*/
-		public function save_repository($appname, $location)
+		public function save_repository($appname = '', $location = '')
 		{
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			if($appname)
+			{
+				$_locations[] = $location_id;
+			}
+			else
+			{
+				foreach ($this->_data[$this->_account_id] as $_app => $_location)
+				{
+					foreach ($_location as $location_id => $dummy)
+					{
+						$_locations[] = $location_id;
+					}
+				}
+			}
 
 			$acct_id = (int) $this->_account_id;
 			$locations =& $GLOBALS['phpgw']->locations;
@@ -360,18 +375,31 @@
 
 			if( $this->enable_inheritance )
 			{
-				$subs = $locations->get_subs($appname, $location);
-				if($subs)
+				foreach ($_locations as $location_id)
 				{
-					$sub_delete = ' AND location_id IN (' . implode(',', array_keys($subs)) . ')';
+					$location_info = $locations->get_name($location_id);
+					$_subs = $locations->get_subs($location_info['appname'], $location_info['location']);
+					if($_subs)
+					{
+						$subs = array_merge($subs, array_keys($_subs));
+					}
 				}
 			}
+			
+			if($subs)
+			{
+				$_locations = array_merge($_locations, $subs);
+				$_locations = array_unique($_locations);
+			}
+			$sql_delete_location = ' AND location_id IN (' . implode(',', $_locations) . ')';
 			unset($subs);
+			unset($_locations);
 
 			$this->_db->transaction_begin();
 
 			$sql = 'DELETE FROM phpgw_acl'
-					. " WHERE acl_account = {$acct_id} AND location_id = {$location_id}{$sub_delete}";
+					. " WHERE acl_account = {$acct_id} {$sql_delete_location}";
+
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			if ( !isset($this->_data[$acct_id])
@@ -492,7 +520,7 @@
 				$_location_id	= $this->_db->f('location_id');
 
 				//avoid doubled set of rights
-				if(!$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id])
+		//		if(!$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id])
 				{
 					$unique_data[]= array
 					(
@@ -523,7 +551,7 @@
 						),								
 					);
 				}
-				$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
+		//		$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
 			}
 
 			$sql = 'DELETE FROM phpgw_acl'

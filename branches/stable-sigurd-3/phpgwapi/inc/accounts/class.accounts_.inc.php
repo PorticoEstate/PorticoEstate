@@ -336,7 +336,7 @@
 				$this->_cache_account($account);
 
 				$aclobj =& $GLOBALS['phpgw']->acl;
-				$aclobj->set_account_id($account->id);
+				$aclobj->set_account_id($account->id, true);
 				foreach ( $acls as $acl )
 				{
 					$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
@@ -682,9 +682,9 @@
 			//FIXME need permissions here
 
 			$aclobj =& $GLOBALS['phpgw']->acl;
-			$aclobj->set_account_id($user->id);
+			$aclobj->set_account_id($user->id, true);
 			$aclobj->delete_repository('preferences', 'changepassword', $user->id);
-			$aclobj->set_account_id($user->id); //reread the current repository
+			$aclobj->set_account_id($user->id, true); //reread the current repository
 			foreach ( $acls as $acl )
 			{
 				$aclobj->add($acl['appname'], $acl['location'], $acl['rights']);
