@@ -10,7 +10,7 @@
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
-					<option><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
 					<xsl:for-each select="activities">
 						<option>
 							<xsl:if test="../application/activity_id = id">
@@ -49,23 +49,24 @@
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '3. When?')" /></dt>
-			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-			<dd>
-				<div class="datetime-picker">
-				<input id="field_from" name="from_" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="application/from_"/></xsl:attribute>
-				</input>
-				</div>
-			</dd>
-			<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-			<dd>
-				<div class="datetime-picker">
-				<input id="field_to" name="to_" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="application/to_"/></xsl:attribute>
-				</input>
-				</div>
-			</dd>
-			<dt><a href="#">Add another date</a></dt>
+			<div id="dates-container">
+				<xsl:for-each select="application/dates"><div class="date-container">
+					<a href="#" class="close-btn">-</a>
+					<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+					<dd class="datetime-picker">
+						<input id="field_from" name="from_[]" type="text">
+							<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
+						</input>
+					</dd>
+					<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+					<dd class="datetime-picker">
+						<input id="field_to" name="to_[]" type="text">
+							<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
+						</input>
+					</dd>
+				</div></xsl:for-each>
+			</div>
+			<dt><a href="#" id="add-date-link">Add another date</a></dt>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></dt>

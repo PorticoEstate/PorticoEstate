@@ -110,6 +110,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$application = extract_values($_POST, $this->fields);
+				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$errors = $this->bo->validate($application);
 				if(!$errors)
 				{
@@ -126,6 +127,11 @@
 			self::render_template('application_new', array('application' => $application, 'activities' => $activities));
 		}
 
+		private function _combine_dates($from_, $to_)
+		{
+			return array('from_' => $from_, 'to_' => $to_);
+		}
+
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -139,6 +145,7 @@
 				array_set_default($_POST, 'resources', array());
 				$application = array_merge($application, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($application);
+				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($application);

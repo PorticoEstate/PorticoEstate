@@ -148,3 +148,20 @@ dl.proplist-col dd.address {
 #boundary-table td, #boundary-table th { 
     padding: .1em .2em;
 }
+
+.date-container {
+    margin-bottom: .8em;
+    white-space: nowrap;
+}
+
+.date-container .close-btn {
+    display: block;
+    float: right;
+    border: none;
+    text-decoration: none;
+    background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
+    width: 25px;
+    height: 15px;
+    cursor: pointer;
+    color: white;
+}

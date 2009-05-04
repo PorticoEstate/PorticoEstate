@@ -100,6 +100,9 @@ YAHOO.booking.setupDatePickers = function() {
 }
 
 YAHOO.booking.setupDatePickerHelper = function(field, args) {
+	if(field._converted)
+		return;
+	field._converted = true;
 	var date = args[0];
 	var time = args[1];
 	var Dom = YAHOO.util.Dom;

@@ -20,6 +20,12 @@
 					'contact_name'	=> array('type' => 'string'),
 					'contact_email'	=> array('type' => 'string'),
 					'contact_phone'	=> array('type' => 'string'),
+					'dates' => array('type' => 'timestamp', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_application_date',
+							'key' => 'application_id',
+							'column' => array('from_', 'to_')
+					)),
 					'comments' => array('type' => 'int',
 						  'manytomany' => array(
 							'table' => 'bb_application_comment',
