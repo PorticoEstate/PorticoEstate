@@ -1273,18 +1273,21 @@
 
 			$td_count = 0;
 			$ColumnDefs_data = array();
-			foreach($uicols['input_type'] as $key => $input_type)
+			if(isset($uicols['input_type']) && $uicols['input_type'])
 			{
-				if($input_type != 'hidden')
+				foreach($uicols['input_type'] as $key => $input_type)
 				{
-					$ColumnDefs_data[] = array
-					(
-						'key'			=> $uicols['name'][$key],
-						'label'			=> $uicols['descr'][$key],
-						'sortable'		=> true,
-						'resizeable'	=> true
-					);
-					$td_count ++;
+					if($input_type != 'hidden')
+					{
+						$ColumnDefs_data[] = array
+						(
+							'key'			=> $uicols['name'][$key],
+							'label'			=> $uicols['descr'][$key],
+							'sortable'		=> true,
+							'resizeable'	=> true
+						);
+						$td_count ++;
+					}
 				}
 			}
 
@@ -1343,10 +1346,13 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 			);
 
-			$content_budget = $this->bo->get_budget($id);
-			foreach($content_budget as & $b_entry)
+			if($id)
 			{
-				$b_entry['delete_year'] = '<input type="checkbox" name="values[delete_b_year][]" value="'.$b_entry['year'].'" title="'.lang('Check to delete year').'">';				
+				$content_budget = $this->bo->get_budget($id);
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['delete_year'] = '<input type="checkbox" name="values[delete_b_year][]" value="'.$b_entry['year'].'" title="'.lang('Check to delete year').'">';				
+				}
 			}
 
 			$datavalues[3] = array

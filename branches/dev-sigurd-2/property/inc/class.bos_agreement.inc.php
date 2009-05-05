@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $role;
 		var $member_id;
+		var $uicols = array();
 
 		/**
 		* @var object $custom reference to custom fields object
@@ -438,9 +439,16 @@
 			$historylog->delete_single_record($data['history_id']);
 		}
 
-		function get_year_list($agreement_id)
+		function get_year_list($agreement_id = '')
 		{
-			$list = $this->so->get_year_filter_list($agreement_id);
+			if($agreement_id)
+			{
+				$list = $this->so->get_year_filter_list($agreement_id);
+			}
+			else
+			{
+				$list = array();
+			}
 			$year = date('Y');
 			$limit = $year + 4;
 			
