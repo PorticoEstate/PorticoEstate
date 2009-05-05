@@ -37,6 +37,7 @@
 	class property_sos_agreement
 	{
 		var $role;
+		var $uicols = array();
 
 		function __construct()
 		{
@@ -1125,7 +1126,7 @@
 			return $next_id;
 		}
 
-		function get_year_filter_list($agreement_id)
+		function get_year_filter_list($agreement_id = 0)
 		{
 			$table = 'fm_s_agreement_budget';
 			$sql = "SELECT year FROM $table WHERE agreement_id = {$agreement_id} group by year ORDER BY year ASC";
@@ -1141,7 +1142,7 @@
 			return $values;
 		}
 
-		function get_budget($agreement_id)
+		function get_budget($agreement_id = 0)
 		{
 			$values = array();
 
