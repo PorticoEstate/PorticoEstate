@@ -297,11 +297,16 @@
 		{
 			$year_list = $this->so->get_year_filter_list();
 
+			if(!$year_list)
+			{
+				$year_list = array(array('id' =>date('Y'), 'name' =>date('Y')));
+			}
+			$k = date('Y') - $year_list[0]['id'] + 5;
 			$j = count($year_list);
-			for ($i=0; $i < 4; $i++)
+			for ($i=0; $i < $k; $i++)
 			{
 				// FIXME
-				if($year_list[$j-1]['id'] < date('Y') + 3)
+			//	if($year_list[$j-1]['id'] < date('Y') + 3)
 				{
 					$year_list[$j+$i]['id'] = $year_list[$j+$i-1]['id'] + 1;
 					$year_list[$j+$i]['name'] = $year_list[$j+$i-1]['id'] + 1;
