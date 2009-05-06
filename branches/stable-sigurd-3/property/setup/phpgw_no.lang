@@ -9,7 +9,7 @@ about	property	no	Om
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap
-accounting dim b	property	no	Regnskap dim b
+accounting dim b	property	no	Kostnadssted
 accounting dim d	property	no	Regnskap dim d
 accounting tax	property	no	Regnskap skatter
 accounting voucher category	property	no	Regnskap kategorier faktura
@@ -329,7 +329,7 @@ contact	property	no	Kontakt
 contact phone	property	no	kontakt telefon
 contacts	common	no	Kontakter
 content	property	no	innhold
-contractual obligations	property	no	forpliktelser
+contractual obligations	property	no	regnskap
 conversion	property	no	format
 coordination	property	no	Koordinering
 coordinator	property	no	Koordinator
@@ -462,7 +462,10 @@ difference	property	no	Differanse
 dim a	property	no	Dim A
 dim a is missing	property	no	Dim A mangler
 dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i :
-dim b	property	no	Dim B
+dim b	property	no	Kostnadssted
+dimb	property	no	Kostnadssted
+dimb roles	property	no	Roller kostnadssted
+no dimb	property	no	K Ikke valgt
 dim d	property	no	Dim D
 directory created	property	no	katalog er opprettet
 disable	property	no	Deaktiver
@@ -889,7 +892,7 @@ list invoice	property	no	List bilag
 list location attribute	property	no	List lokaliserings attributter
 list location standard	property	no	List lokaliserings standard
 list meter	property	no	List måler
-list obligations	property	no	Oversikt forpliktelser
+list obligations	property	no	Oversikt regnskap
 list paid invoice	property	no	List betalte bilag
 list pricebook	property	no	list prisbok
 list pricebook per vendor	property	no	List prisbok pr leverandør
@@ -980,7 +983,7 @@ no change type	property	no	Ingen endringstype
 no conversion type could be located.	property	no	Format filter ble ikke funnet
 no custom function	property	no	Ingen egendfinert funksjon
 no datatype	property	no	Datatype ikke valgt
-no dim b	property	no	Dim B ikke valgt
+no dim b	property	no	Kostnadssted ikke valgt
 no dim d	property	no	Dim D ikke valgt
 no district	property	no	Distrikt ikke valgt
 no document type	property	no	Ingen dokument-type
@@ -1019,7 +1022,7 @@ nullable	property	no	Kan være NULL
 nullable not chosen!	property	no	Nullable ikke valgt
 num	property	no	Num
 number	property	no	Nummer
-obligations	property	no	forpliktelser
+obligations	property	no	Regnskap
 of	property	no	av
 old value	property	no	opprinnelig verdi
 only private	property	no	Bare privat
@@ -1057,6 +1060,7 @@ phone	property	no	Telefon
 php configuration	common	no	php konfigurasjon
 phpinfo	common	no	phpinformasjon
 plain	property	no	Vanlig
+planned cost	property	no	Planlagt
 pleace select a location - or an equipment !	property	no	velg en lokalisering - eller et utstyr
 please choose a conversion type	property	no	Velg eksport type
 please choose a conversion type from the list	property	no	velg eksport type fra listen
@@ -1141,7 +1145,8 @@ project %1 has been saved	property	no	prosjekt %1 er lagret
 project budget	property	no	Prosjekt budsjett
 project categories	property	no	Prosjekt kategorier
 project coordinator	property	no	Prosjekt ansvarlig
-project end date	property	no	prosjekt sluttdato
+project end date	property	no	Prosjekt sluttdato
+project group	property	no	Prosjekt gruppe
 project id	property	no	Prosjekt ID
 project info	property	no	Prosjekt info.
 project name	property	no	Prosjekt navn
@@ -1343,7 +1348,7 @@ select the coordinator the request belongs to. to do not use a category select n
 select the customer by clicking this link	property	no	Velg kunde
 select the date for the first value	property	no	angi dato for første verdi
 select the date for the update	property	no	angi dato for oppdatering
-select the dim b for this invoice. to do not use dim b -  select no dim b	property	no	velg DIM B for bilag. For ikke å bruke DIM B - velg DIMB IKKE VALGT
+select the dim b for this invoice. to do not use dim b -  select no dim b	property	no	velg Kostnadssted for bilag. For ikke å bruke Kostnadssted - velg Kostnadssted IKKE VALGT
 select the dim d for this activity. to do not use dim d -  select no dim d	property	no	velg DIM D for bilag. For ikke å bruke DIM D - velg DIMD IKKE VALGT
 select the district the part of town belongs to.	property	no	Velg hvilke distrikt denne bydelen tilhører
 select the district the selection belongs to. to do not use a district select no district	property	no	velg distrikt utvalget tilhører. For ikke å bruke distrikt velg DISTRIKT IKKE VALGT

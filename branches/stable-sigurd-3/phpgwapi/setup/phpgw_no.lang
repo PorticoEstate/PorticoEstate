@@ -9,7 +9,7 @@ administration	common	no	Administrasjon
 april	common	no	April
 are you sure you want to delete this entry ?	common	no	Er du sikker du vil slette denne entry ?
 august	common	no	August
-cancel	common	no	Avbryt
+cancel	common	no	Avslutt
 change	common	no	Endre
 charset	common	no	utf-8
 clear	common	no	Clear
@@ -22,7 +22,7 @@ date	common	no	Dato
 december	common	no	Desember
 delete	common	no	Slett
 domain name for mail-address, eg. %1	common	no	Domene-navnet for E-Postadressen, %1
-done	common	no	Avbryt
+done	common	no	Avslutt
 e-mail	common	no	E-Post
 email-address of the user, eg. %1	common	no	E-Postadressen til brukeren, %1
 edit	common	no	Editer
