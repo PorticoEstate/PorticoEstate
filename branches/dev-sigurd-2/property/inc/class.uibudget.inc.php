@@ -152,11 +152,8 @@
  	                        						."revision:'{$this->revision}'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
-  				if(count($values_combo_box[0]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no year'));
-					array_unshift ($values_combo_box[0],$default_value);
-				}
+				$default_value = array ('id'=>'','name'=>lang('no year'));
+				array_unshift ($values_combo_box[0],$default_value);
 				
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision);
 				$default_value = array ('id'=>'','name'=>lang('no revision')); 
@@ -193,12 +190,8 @@
 				array_unshift ($values_combo_box[4]['cat_list'],$default_value);
 
 				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
-			  	if(count($values_combo_box[5]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no dimb'));
-					array_unshift ($values_combo_box[5],$default_value);
-				}
-
+				$default_value = array ('id'=>'','name'=>lang('no dimb'));
+				array_unshift ($values_combo_box[5],$default_value);
 
 				$datatable['actions']['form'] = array(
 					array(

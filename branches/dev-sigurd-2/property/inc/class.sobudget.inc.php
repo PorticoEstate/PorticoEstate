@@ -754,6 +754,7 @@
 			$sql = "SELECT id FROM fm_b_account_category order by id asc";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$group_list = array();
 			while ($this->db->next_record())
 			{
 				$group_list[] = array
@@ -769,6 +770,7 @@
 		function get_revision_list($year='',$basis = '')
 		{
 			$table = $basis?'fm_budget_basis':'fm_budget';
+			$revision_list = array();
 
 			if(!$year)
 			{
@@ -804,6 +806,7 @@
 			$sql = "SELECT year FROM $table group by year ORDER BY year ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$year_list = array();
 			while ($this->db->next_record())
 			{
 				$year_list[] = array
@@ -830,6 +833,7 @@
 			$sql = "SELECT revision FROM $table WHERE year =". (int)$year . "  group by revision";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$revision_list = array();
 			while ($this->db->next_record())
 			{
 				$revision_list[] = array
@@ -854,6 +858,7 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$grouping_list = array();
 			while ($this->db->next_record())
 			{
 				$grouping_list[] = array
@@ -871,6 +876,7 @@
 			$sql = "SELECT year FROM $table group by year order by year asc";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$year_list = array();
 			while ($this->db->next_record())
 			{
 				$year_list[] = array
@@ -915,7 +921,7 @@
 			$this->db->transaction_commit();
 		}
 
-		function distribute($values,$receipt='')
+		function distribute($values,$receipt = array())
 		{
 			$year_condition = 'year in (' . implode(",",$values['distribute_year']). ')';
 

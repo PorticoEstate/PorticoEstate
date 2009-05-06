@@ -577,27 +577,6 @@
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
 					break;
-				case 'ecoorg_unit':
-					$info = array
-					(
-						'table' => 'fm_ecoorg_unit',
-						'id'				=> array('name' => 'id', 'type' => 'int'),
-						'fields'			=> array
-						(
-							array
-							(
-								'name' => 'descr',
-								'descr' => lang('descr'),
-								'type' => 'varchar'
-							)
-						),
-						'edit_msg'	=> lang('edit unit'),
-						'add_msg'	=> lang('add unit'),
-						'name'		=> lang('Accounting organisation unit'),
-						'acl_location' => '.invoice.org_unit',
-						'menu_selection' => 'admin::property::accounting::org_unit'
-					);
-					break;
 //-------- ID type varchar
 				case 'workorder_status':
 					$info = array
