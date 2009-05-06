@@ -7,8 +7,12 @@
 		{
 			parent::__construct('bb_application', 
 				array(
-					'id'			=> array('type' => 'int'),
+					'id'		=> array('type' => 'int'),
+					'status'	=> array('type' => 'string', 'required' => true),
+					'created'	=> array('type' => 'timestamp'),
+					'modified'	=> array('type' => 'timestamp'),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
+					'status'	=> array('type' => 'string', 'required' => true),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',
@@ -20,6 +24,18 @@
 					'contact_name'	=> array('type' => 'string'),
 					'contact_email'	=> array('type' => 'string'),
 					'contact_phone'	=> array('type' => 'string'),
+					'audience' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_application_targetaudience',
+							'key' => 'application_id',
+							'column' => 'targetaudience_id'
+					)),
+					'agegroups' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_application_agegroup',
+							'key' => 'application_id',
+							'column' => array('agegroup_id', 'male', 'female')
+					)),
 					'dates' => array('type' => 'timestamp', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_application_date',

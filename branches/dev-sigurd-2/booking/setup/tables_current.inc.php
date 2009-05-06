@@ -230,6 +230,9 @@
 		'bb_application' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'status' => array('type' => 'text', 'nullable'=> False),
+				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
+				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
@@ -273,14 +276,40 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'from_' => array('type' => 'text', 'nullable' => False),
-				'to_' => array('type' => 'text', 'nullable' => False)
+				'from_' => array('type' => 'timestamp', 'nullable' => False),
+				'to_' => array('type' => 'timestamp', 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_application' => array('application_id' => 'id')),
 			'ix' => array(),
 			'uc' => array('application_id', 'from_', 'to_')
+		),
+		'bb_application_targetaudience' => array(
+			'fd' => array(
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'targetaudience_id' => array('type' => 'int','precision' => '4','nullable' => False)
+			),
+			'pk' => array('application_id', 'targetaudience_id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_targetaudience' => array('targetaudience_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_application_agegroup' => array(
+			'fd' => array(
+				'application_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('application_id', 'agegroup_id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_agegroup' => array('agegroup_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
 ?>

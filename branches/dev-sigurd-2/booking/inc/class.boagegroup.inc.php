@@ -8,4 +8,9 @@
 			parent::__construct();
 			$this->so = CreateObject('booking.soagegroup');
 		}
+		
+		function fetch_age_groups()
+		{
+			return $this->so->read(array('filters'=>array('active'=>'1')));
+		}
 	}

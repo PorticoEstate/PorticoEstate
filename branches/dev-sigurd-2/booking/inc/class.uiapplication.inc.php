@@ -16,8 +16,10 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->agegroup_bo = CreateObject('booking.boagegroup');
+			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications');
-			$this->fields = array('description', 'resources', 'activity_id', 'building_id', 'building_name', 'contact_name', 'contact_email', 'contact_phone');
+			$this->fields = array('description', 'resources', 'activity_id', 'building_id', 'building_name', 'contact_name', 'contact_email', 'contact_phone', 'audience');
 		}
 		
 		public function index()
@@ -61,20 +63,20 @@
 							'label' => lang('Status')
 						),
 						array(
+							'key' => 'created',
+							'label' => lang('Created')
+						),
+						array(
+							'key' => 'modified',
+							'label' => lang('last modified')
+						),
+						array(
 							'key' => 'activity_name',
 							'label' => lang('Activity')
 						),
 						array(
 							'key' => 'contact_name',
 							'label' => lang('Contact')
-						),
-						array(
-							'key' => 'created',
-							'label' => lang('Created')
-						),
-						array(
-							'key' => 'modified',
-							'label' => lang('Last modified')
 						),
 						array(
 							'key' => 'link',
@@ -103,6 +105,50 @@
 			return $data;
 		}
 
+		private function _combine_dates($from_, $to_)
+		{
+			return array('from_' => $from_, 'to_' => $to_);
+		}
+
+		// Extract agegroup info from _POST into $application
+		public function _extract_agegroup_data($application)
+		{
+			foreach($_POST['male'] as $group_id => $num)
+			{
+				$found = false;
+				foreach($application['agegroups'] as &$group)
+				{
+					if($group['agegroup_id'] == $group_id)
+					{
+						$group['male'] = $num;
+						$found = true;
+						break;
+					}
+				}
+				if(!$found)
+				{
+					$application['agegroups'][] = array('agegroup_id' => $group_id, 'male' => $num, 'female' => 0);
+				}
+			}
+			foreach($_POST['female'] as $group_id => $num)
+			{
+				$found = false;
+				foreach($application['agegroups'] as &$group)
+				{
+					if($group['agegroup_id'] == $group_id)
+					{
+						$group['female'] = $num;
+						$found = true;
+						break;
+					}
+				}
+				if(!$found)
+				{
+					$application['agegroups'][] = array('agegroup_id' => $group_id, 'female' => $num, 'male' => 0);
+				}
+			}
+		}
+
 		public function add()
 		{
 			$errors = array();
@@ -110,7 +156,12 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$application = extract_values($_POST, $this->fields);
+				$application['agegroups'] = array();
+				self::_extract_agegroup_data(&$application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['status'] = 'NEW';
+				$application['created'] = 'now';
+				$application['modified'] = 'now';
 				$errors = $this->bo->validate($application);
 				if(!$errors)
 				{
@@ -124,13 +175,13 @@
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			self::render_template('application_new', array('application' => $application, 'activities' => $activities));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-		private function _combine_dates($from_, $to_)
-		{
-			return array('from_' => $from_, 'to_' => $to_);
-		}
 
 		public function edit()
 		{
@@ -144,6 +195,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$application = array_merge($application, extract_values($_POST, $this->fields));
+				self::_extract_agegroup_data(&$application);
 				$errors = $this->bo->validate($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)
@@ -158,7 +210,11 @@
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			self::render_template('application_edit', array('application' => $application, 'activities' => $activities));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 		
 		public function show()

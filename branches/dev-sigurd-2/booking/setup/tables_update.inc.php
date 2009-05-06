@@ -1,4 +1,53 @@
 <?php
+	$test[] = '0.1.27';
+	function booking_upgrade0_1_27()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_date");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_resource");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application");
+		# END Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN status text NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN created timestamp DEFAULT 'now' NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN modified timestamp DEFAULT 'now' NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application_date ALTER COLUMN from_ TYPE timestamp USING from_::timestamp");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application_date ALTER COLUMN to_ TYPE timestamp USING to_::timestamp");
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_application_targetaudience', array(
+				'fd' => array(
+					'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'targetaudience_id' => array('type' => 'int','precision' => '4','nullable' => False)
+				),
+				'pk' => array('application_id', 'targetaudience_id'),
+				'fk' => array(
+					'bb_application' => array('application_id' => 'id'),
+					'bb_targetaudience' => array('targetaudience_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+		));
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_application_agegroup', array(
+				'fd' => array(
+					'application_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+					'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+					'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
+					'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				),
+				'pk' => array('application_id', 'agegroup_id'),
+				'fk' => array(
+					'bb_application' => array('application_id' => 'id'),
+					'bb_agegroup' => array('agegroup_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+		));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.28';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 	$test[] = '0.1.26';
 	function booking_upgrade0_1_26()
 	{

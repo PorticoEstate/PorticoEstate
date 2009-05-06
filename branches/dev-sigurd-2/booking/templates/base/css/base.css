@@ -165,3 +165,10 @@ dl.proplist-col dd.address {
     cursor: pointer;
     color: white;
 }
+
+#agegroup {
+    background: #eee;
+}
+#agegroup, #agegroup td, #agegroup th { width: 1%; }
+#agegroup td, #agegroup th { padding: .1em .3em;}
+#agegroup td input { width: 3em; }
