@@ -978,18 +978,18 @@
 			{
 				if ($old_status != $workorder['status'])
 				{
-					$historylog->add('S',$workorder['id'],$workorder['status']);
+					$historylog->add('S',$workorder['id'],$workorder['status'], $old_status);
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $workorder['status'];
 				}
 				elseif($workorder['confirm_status'])
 				{
-					$historylog->add('SC',$workorder['id'],$workorder['status']);
+					$historylog->add('SC',$workorder['id'],$workorder['status'], $old_status);
 					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $workorder['status'];
 				}
 
 				if ($old_budget != $workorder['budget'])
 				{
-					$historylog->add('B', $workorder['id'], $workorder['budget']);
+					$historylog->add('B', $workorder['id'], $workorder['budget'], $old_budget);
 				}
 
 				if ($workorder['remark'])

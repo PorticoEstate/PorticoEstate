@@ -356,7 +356,7 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 			$i=0;
-			while (is_array($history_array) && list(,$value) = each($history_array))
+			foreach ($history_array as $value) 
 			{
 
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
@@ -399,23 +399,46 @@
 					{
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
+					if (! $value['old_value'])
+					{
+						$record_history[$i]['value_old_value']	= '';
+					}
+					else
+					{
+						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
+					}
 				}
 				else if ($value['status'] == 'C' || $value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
+					if (! $value['old_value'])
+					{
+						$record_history[$i]['value_old_value']	= '';
+					}
+					else
+					{
+						$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
+					}
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
 					$category 								= $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value']	= $category[0]['name'];
+					if($value['old_value'])
+					{
+						$category 								= $this->cats->return_single($value['old_value']);
+						$record_history[$i]['value_old_value']	= $category[0]['name'];
+					}
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
+					$record_history[$i]['value_old_value']	= $value['old_value'];
 				}
 				else if ($value['status'] != 'B' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	= $value['new_value'];
+					$record_history[$i]['value_new_value']	=number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	=number_format($value['old_value'], 0, ',', ' ');
 				}
 				else
 				{

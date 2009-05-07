@@ -1295,7 +1295,7 @@
        			'name'		=> "1",
        			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
 									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('Calculation'),sortable=>true,resizeable=>true),
+									       			array(key => value_action,label=>lang('action'),sortable=>true,resizeable=>true),
 									       			array(key => value_old_value,label=>lang('old value'),	sortable=>true,resizeable=>true),
 		       				       					array(key => value_new_value,label=>lang('new value'),sortable=>true,resizeable=>true)))
 			);

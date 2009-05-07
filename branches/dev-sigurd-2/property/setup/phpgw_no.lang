@@ -1512,7 +1512,7 @@ tenant claim is not issued for project in voucher %1	property	no	Krav mot leieta
 tenant global categories	property	no	Leietaker globale kategorier
 tenant_id	property	no	Leietaker ID
 tenant phone	property	no	Leietaker tlf
-tender chapter	property	no	Anbud kapittel
+tender chapter	property	no	Beskrivelse kapittel
 termination date	property	no	oppsigelse dato
 test cron	property	no	Test cron
 text	property	no	Tekst
@@ -1639,7 +1639,7 @@ view project	property	no	vis prosjekt
 view property	property	no	vis eiendom
 view request	property	no	vis anmodning
 view template detail	property	no	vis mal-detaljer
-view tender	property	no	Vis anbud
+view tender	property	no	Vis beskrivelse
 view the apartment	property	no	vis leilighet
 view the attrib	property	no	vis attributt
 view the budget account	property	no	Vis budsjettkonto
@@ -1647,7 +1647,7 @@ view the building	property	no	vis bygning
 view the category	property	no	Vis kategorien
 view the claim	property	no	Vis kravet
 view the complete workorder	property	no	vis komplett arbeidsordre
-view the complete workorder as a tender for bidding	property	no	vis komplett arbeidsordre som anbud
+view the complete workorder as a tender for bidding	property	no	vis komplett arbeidsordre som beskrivelse
 view the document	property	no	vis dokument
 view the entity	property	no	Vis entiteten
 view the entrance	property	no	vis inngang
