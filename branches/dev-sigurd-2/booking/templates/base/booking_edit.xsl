@@ -1,4 +1,4 @@
-<xsl:template match="data" class="foo">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
 
     <h3><xsl:value-of select="lang/title" /></h3>
@@ -63,6 +63,47 @@
                 </div>
             </dd>
         </dl>
+		<dl class="form-col">
+			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
+			<dd>
+				<ul>
+					<xsl:for-each select="audience">
+						<li>
+							<input type="checkbox" name="audience[]">
+								<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+								<xsl:if test="../booking/audience=id">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+							</input>
+							<label><xsl:value-of select="name"/></label>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</dd>
+			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
+			<dd>
+				<table id="agegroup">
+					<xsl:for-each select="agegroups">
+						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+						<tr>
+							<th><xsl:value-of select="name"/></th>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../booking/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../booking/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</table>
+			</dd>
+		</dl>
         <div class="form-buttons">
             <input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="lang/save"/></xsl:attribute>

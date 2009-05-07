@@ -17,12 +17,14 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bobooking');
+			$this->agegroup_bo = CreateObject('booking.boagegroup');
+			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::bookings');
 			$this->fields = array('name', 'resources',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
-			                      'from_', 'to_');
+			                      'from_', 'to_', 'audience');
 		}
 		
 		public function index()
@@ -147,7 +149,10 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$booking = extract_values($_POST, $this->fields);
+				array_set_default($booking, 'audience', array());
+				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
+				$this->agegroup_bo->extract_form_data(&$booking);
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
@@ -181,9 +186,14 @@
 			$lang['create'] = lang('Create');
 			$lang['cancel'] = lang('Cancel');
 			$lang['edit'] = lang('Edit');
+			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
-			self::render_template('booking_new', array('booking' => $booking, 'lang' => $lang));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('booking_new', array('booking' => $booking, 'lang' => $lang, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		public function edit()
@@ -196,6 +206,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
+				$this->agegroup_bo->extract_form_data(&$booking);
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
@@ -230,7 +241,11 @@
 			$lang['edit'] = lang('Edit');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
-			self::render_template('booking_edit', array('booking' => $booking, 'lang' => $lang));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('booking_edit', array('booking' => $booking, 'lang' => $lang, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 		
 		public function show()
@@ -244,26 +259,6 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$booking['resource_ids'] = $resource_ids;
-			$lang['title'] = lang('Bookings');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			self::render_template('booking', array('booking' => $booking, 'lang' => $lang));
+			self::render_template('booking', array('booking' => $booking));
 		}
 	}

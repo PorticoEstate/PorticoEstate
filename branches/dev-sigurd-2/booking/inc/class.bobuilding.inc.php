@@ -8,6 +8,7 @@
 			parent::__construct();
 			$this->so = CreateObject('booking.sobuilding');
 		}
+
 		public function get_schedule($id, $module)
 		{
 			$date = new DateTime(phpgw::get_var('date'));

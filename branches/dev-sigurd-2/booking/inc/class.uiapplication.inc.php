@@ -110,45 +110,6 @@
 			return array('from_' => $from_, 'to_' => $to_);
 		}
 
-		// Extract agegroup info from _POST into $application
-		public function _extract_agegroup_data($application)
-		{
-			foreach($_POST['male'] as $group_id => $num)
-			{
-				$found = false;
-				foreach($application['agegroups'] as &$group)
-				{
-					if($group['agegroup_id'] == $group_id)
-					{
-						$group['male'] = $num;
-						$found = true;
-						break;
-					}
-				}
-				if(!$found)
-				{
-					$application['agegroups'][] = array('agegroup_id' => $group_id, 'male' => $num, 'female' => 0);
-				}
-			}
-			foreach($_POST['female'] as $group_id => $num)
-			{
-				$found = false;
-				foreach($application['agegroups'] as &$group)
-				{
-					if($group['agegroup_id'] == $group_id)
-					{
-						$group['female'] = $num;
-						$found = true;
-						break;
-					}
-				}
-				if(!$found)
-				{
-					$application['agegroups'][] = array('agegroup_id' => $group_id, 'female' => $num, 'male' => 0);
-				}
-			}
-		}
-
 		public function add()
 		{
 			$errors = array();
@@ -157,7 +118,7 @@
 				array_set_default($_POST, 'resources', array());
 				$application = extract_values($_POST, $this->fields);
 				$application['agegroups'] = array();
-				self::_extract_agegroup_data(&$application);
+				$this->agegroup_bo->extract_form_data(&$application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
@@ -195,7 +156,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$application = array_merge($application, extract_values($_POST, $this->fields));
-				self::_extract_agegroup_data(&$application);
+				$this->agegroup_bo->extract_form_data(&$application);
 				$errors = $this->bo->validate($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)

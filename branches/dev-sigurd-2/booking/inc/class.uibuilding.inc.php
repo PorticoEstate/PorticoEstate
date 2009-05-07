@@ -166,9 +166,7 @@
 		
 		public function show()
 		{
-
 			$this->check_active('booking.uibuilding.show');
-			$this->flash_form_errors($errors);
 			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));

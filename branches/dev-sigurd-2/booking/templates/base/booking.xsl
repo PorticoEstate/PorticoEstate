@@ -1,10 +1,10 @@
-<xsl:template match="data">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         <ul class="pathway">
             <li>
                 <a>
                     <xsl:attribute name="href"><xsl:value-of select="booking/bookings_link"/></xsl:attribute>
-                    <xsl:value-of select="lang/title" />
+					<xsl:value-of select="php:function('lang', 'Bookings')" />
                 </a>
             </li>
             <li><a href=""><xsl:value-of select="booking/name"/></a></li>
@@ -13,26 +13,26 @@
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist-col">
-            <dt><xsl:value-of select="lang/from" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
             <dd><xsl:value-of select="booking/from_"/></dd>
-            <dt><xsl:value-of select="lang/to" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
             <dd><xsl:value-of select="booking/to_"/></dd>
         </dl>
         <dl class="proplist-col">
-            <dt><xsl:value-of select="lang/season" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Season')" /></dt>
             <dd><xsl:value-of select="booking/season_name"/></dd>
-            <dt><xsl:value-of select="lang/group" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Group')" /></dt>
             <dd><xsl:value-of select="booking/group_name"/></dd>
         </dl>
         <dl class="proplist-col">
-            <dt><xsl:value-of select="lang/resources" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Resources')" /></dt>
             <dd><div id="resources_container"/></dd>
         </dl>
 
         <div class="clr"/>
         <a class="button">
             <xsl:attribute name="href"><xsl:value-of select="booking/edit_link"/></xsl:attribute>
-            <xsl:value-of select="lang/edit" />
+            <xsl:value-of select="php:function('lang', 'Edit')" />
         </a>
     </div>
 

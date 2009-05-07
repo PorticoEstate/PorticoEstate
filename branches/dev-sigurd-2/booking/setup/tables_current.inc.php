@@ -310,6 +310,32 @@
 				'bb_agegroup' => array('agegroup_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'bb_booking_targetaudience' => array(
+			'fd' => array(
+				'booking_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'targetaudience_id' => array('type' => 'int','precision' => '4','nullable' => False)
+			),
+			'pk' => array('booking_id', 'targetaudience_id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id'),
+				'bb_targetaudience' => array('targetaudience_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_booking_agegroup' => array(
+			'fd' => array(
+				'booking_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'agegroup_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'male' => array('type' => 'int','precision' => '4', 'nullable' => False),
+				'female' => array('type' => 'int','precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('booking_id', 'agegroup_id'),
+			'fk' => array(
+				'bb_booking' => array('booking_id' => 'id'),
+				'bb_agegroup' => array('agegroup_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
 ?>

@@ -10,6 +10,9 @@
 					'id'			=> array('type' => 'int'),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
+					'from_'		=> array('type' => 'timestamp', 'required'=> true),
+					'to_'		=> array('type' => 'timestamp', 'required'=> true),
+					'season_id'		=> array('type' => 'int', 'required' => true),
 					'group_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -25,14 +28,24 @@
 							'key' => 'id',
 							'column' => 'building_id'
 					)),
-					'season_id'		=> array('type' => 'int', 'required' => 'true'),
-					'season_name'	=> array('type' => 'string',
-						  'query' => true,
+					'season_name'	=> array('type' => 'string', 'query' => true,
 						  'join' => array(
 							'table' => 'bb_season',
 							'fkey' => 'season_id',
 							'key' => 'id',
 							'column' => 'name'
+					)),
+					'audience' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_booking_targetaudience',
+							'key' => 'booking_id',
+							'column' => 'targetaudience_id'
+					)),
+					'agegroups' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_booking_agegroup',
+							'key' => 'booking_id',
+							'column' => array('agegroup_id', 'male', 'female')
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
@@ -40,8 +53,6 @@
 							'key' => 'booking_id',
 							'column' => 'resource_id'
 					)),
-					'from_'		=> array('type' => 'string', 'required'=> true),
-					'to_'		=> array('type' => 'string', 'required'=> true)
 				)
 			);
 		}
