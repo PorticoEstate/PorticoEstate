@@ -1216,10 +1216,11 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('Action'),sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New Value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date','label' => lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user','label' => lang('User'),'Action'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action','label' => lang('Action'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			$link_to_files =(isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
