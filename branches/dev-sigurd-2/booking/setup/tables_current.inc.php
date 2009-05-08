@@ -297,6 +297,18 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_agegroup' => array( 
+			'fd' => array( 
+				'id' => array('type' => 'auto', 'nullable' => False), 
+				'name' => array('type' => 'text', 'nullable' => False), 
+				'description' => array('type' => 'text', 'nullable' => False), 
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
+			), 
+			'pk' => array('id'), 
+			'fk' => array(), 
+			'ix' => array(), 
+			'uc' => array() 
+		), 
 		'bb_application_agegroup' => array(
 			'fd' => array(
 				'application_id' => array('type' => 'int','precision' => '4', 'nullable' => False),
