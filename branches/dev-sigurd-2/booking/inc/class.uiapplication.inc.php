@@ -127,9 +127,13 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($application);
-					$this->redirect(array('menuaction' => 'booking.uiapplication.edit', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$receipt['id']));
 				}
 			}
+			array_set_default($application, 'resources', array());
+			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
+			$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
+			array_set_default($application, 'dates', $default_dates);
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
@@ -162,7 +166,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($application);
-					$this->redirect(array('menuaction' => 'booking.uiapplication.edit', 'id'=>$application['id']));
+					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$application['id']));
 				}
 			}
 			$this->flash_form_errors($errors);

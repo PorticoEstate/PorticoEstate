@@ -25,6 +25,10 @@
 		</ul>
 
         <div id="schedule_container"/>
+		<a>
+			<xsl:attribute name="href"><xsl:value-of select="building/application_link"/></xsl:attribute>
+			New application
+		</a>
     </div>
 
 <script type="text/javascript">

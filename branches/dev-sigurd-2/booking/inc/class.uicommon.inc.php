@@ -46,6 +46,7 @@
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -53,6 +54,7 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
+			$this->url_prefix = str_replace('_', '.', get_class($this));
 		}
 
 		public function link($data)
