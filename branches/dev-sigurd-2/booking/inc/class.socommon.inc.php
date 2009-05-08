@@ -184,6 +184,7 @@
 			$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
 			$results = isset($params['results']) && $params['results'] ? $data['results'] : 1000;
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : '';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
@@ -197,7 +198,7 @@
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 
-			$order = $sort ? 'ORDER BY ' . $sort : '';
+			$order = $sort ? "ORDER BY $sort $dir ": '';
 
 			$this->db->limit_query("SELECT $cols FROM $this->table_name $joins WHERE $condition $order", $start, __LINE__, __FILE__, $limit);
 			$results = array();
