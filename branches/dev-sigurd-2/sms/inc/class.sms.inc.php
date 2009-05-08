@@ -821,6 +821,7 @@
 		function setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message)
 		{
 			$message = utf8_encode($message);
+			$target_code = utf8_encode($target_code);
 			$ok = false;
 			switch ($target_code)
 			{
