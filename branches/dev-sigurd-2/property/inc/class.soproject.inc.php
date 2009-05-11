@@ -184,7 +184,7 @@
 				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'combined_cost';
-				$uicols['descr'][]			= lang('Sum	workorder');
+				$uicols['descr'][]			= lang('Sum workorder');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';

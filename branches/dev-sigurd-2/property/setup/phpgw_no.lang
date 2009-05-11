@@ -701,6 +701,7 @@ equipment id	property	no	utstyr ID
 equipment_id	property	no	utstyr ID
 equipment type	property	no	Type utstyr/anlegg
 event	property	no	Hendelse
+event action	property	no	Handling ved hendelse
 events	property	no	Hendelser
 example	property	no	Eksempel
 expand all	property	no	Vis alle
@@ -1465,6 +1466,7 @@ standard has not been edited	property	no	standard er ikke rettet
 standard id	property	no	standard ID
 standard prefix	property	no	prefiks fo standard
 start	property	no	start
+start date	property	no	start dato
 started	property	no	startet
 start project	property	no	Start prosjekt
 start this entity	property	no	Start denne entiteten
@@ -1492,7 +1494,7 @@ sum deviation	property	no	Sum avvik
 summary	property	no	Sammendrag
 sum of calculation	property	no	Sum kalkulasjon
 sum tax	property	no	sum mva
-sum workorder	property	no	Sum Arbeidsordre
+sum workorder	property	no	Sum bestilling
 supervisor	property	no	Saksbehandler
 sync account-contact	common	no	Synkroniser Brukerer og Kontakter
 table could not be added	property	no	Tabell kunne ikke legges til i databasen
@@ -1570,6 +1572,7 @@ time created	property	no	laget tid
 times	property	no	Tider
 timestampopened	property	no	Startet
 timing	property	no	Timing
+Title		property	no	Tittel
 to	property	no	Til
 to alter the priority key	property	no	Endre nøkkel
 to date	property	no	Til dato
