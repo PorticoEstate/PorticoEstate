@@ -133,10 +133,13 @@
 			$group['id'] = $id;
 			$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
+            $group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
+            $group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
+
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name')));
+				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary')));
 				$errors = $this->bo->validate($group);
 				if(!$errors)
 				{
@@ -145,27 +148,13 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$lang['title'] = lang('New Group');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
+
+			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
+			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
+			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
+			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
+			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+
 			self::render_template('group_edit', array('group' => $group, 'lang' => $lang));
 		}
 		

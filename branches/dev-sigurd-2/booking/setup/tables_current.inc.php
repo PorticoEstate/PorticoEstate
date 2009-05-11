@@ -58,12 +58,32 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'contact_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => False,),
+				'contact_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_organization' => array('organization_id' => 'id')
+				'bb_organization' => array('organization_id' => 'id'),
+				'bb_contact_person' => array('contact_primary' => 'id',),
+				'bb_contact_person' => array('contact_secondary' => 'id',),
 			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_contact_person' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'ssn' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
