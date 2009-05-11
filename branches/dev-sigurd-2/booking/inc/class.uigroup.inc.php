@@ -155,6 +155,8 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
+            self::add_javascript('booking', 'booking', 'group_new.js');
+
 			self::render_template('group_edit', array('group' => $group, 'lang' => $lang));
 		}
 		
