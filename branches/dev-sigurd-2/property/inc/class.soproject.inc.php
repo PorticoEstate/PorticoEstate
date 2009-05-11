@@ -97,7 +97,7 @@
 			if(is_array($data))
 			{
 				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter	= $data['filter']?$data['filter']:'all';
+				$filter	= $data['filter']?(int)$data['filter']:0;
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
 				$order = (isset($data['order'])?$data['order']:'');
@@ -313,24 +313,23 @@
 
 			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve,planned_cost';
 
-			if ($filter=='all')
-			{
-				if (is_array($this->grants))
-				{
-					$grants = $this->grants;
-					while (list($user) = each($grants))
-					{
-						$public_user_list[] = $user;
-					}
-					reset($public_user_list);
-					$filtermethod .= " $where (fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
 
-					$where= 'AND';
-				}
-			}
-			else
+			if (is_array($this->grants))
 			{
-				$filtermethod .= " $where fm_project.user_id=$filter ";
+				$grants = $this->grants;
+				while (list($user) = each($grants))
+				{
+					$public_user_list[] = $user;
+				}
+				reset($public_user_list);
+				$filtermethod .= " $where (fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
+
+				$where= 'AND';
+			}
+
+			if ($filter)
+			{
+				$filtermethod .= " $where fm_project.user_id={$filter}";
 				$where= 'AND';
 			}
 

@@ -3318,3 +3318,22 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.559 to 0.9.17.560
+	* Add location to the budget.basis
+	* 
+	*/
+
+	$test[] = '0.9.17.559';
+	function property_upgrade0_9_17_559()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw']->locations->add('.budget.basis', 'Basis for high level lazy budgeting', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.560';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
