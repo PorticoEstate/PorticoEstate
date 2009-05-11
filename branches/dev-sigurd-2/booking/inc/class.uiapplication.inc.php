@@ -132,8 +132,11 @@
 			}
 			array_set_default($application, 'resources', array());
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
-			$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
-			array_set_default($application, 'dates', $default_dates);
+			if(phpgw::get_var('from_', 'GET'))
+			{
+				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
+				array_set_default($application, 'dates', $default_dates);
+			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));

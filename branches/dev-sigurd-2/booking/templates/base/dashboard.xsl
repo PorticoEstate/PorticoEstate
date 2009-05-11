@@ -1,19 +1,21 @@
-<xsl:template match="data">
-    <h3>Recent applications</h3>
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<div id="content">
+	    <h3><xsl:value-of select="php:function('lang', 'Active applications')" /></h3>
     
-    <div class="datatable-container">
-        <table width="100%" class="datatable" cellpadding="2" cellspacing="2" align="center">
-            <tr>
-                <th>Foo</th>
-                <th>Bar</th>
-            </tr>
-            <tr>
-                <td>Foo</td>
-                <td>Bar</td>
-            </tr>
-        </table>
-    </div>
-    
-    <h3>Cancelled bookings</h3>
+	    <div id="apps_container"/>
 
+	</div>
+	<script type="text/javascript">
+		    <![CDATA[
+		YAHOO.util.Event.addListener(window, "load", function() {
+		    var url = 'index.php?menuaction=booking.uiapplication.index&phpgw_return_as=json&sort=modified&';
+		    var colDefs = [{key: 'id', label: 'ID', formatter: YAHOO.booking.formatLink, sortable: true},
+						   {key: 'status', label: 'Status', sortable: true},
+						   {key: 'modified', label: 'Modified', sortable: true},
+						   {key: 'created', label: 'Created', sortable: true}
+						];
+		    YAHOO.booking.inlineTableHelper('apps_container', url, colDefs);
+		});
+		]]>
+	</script>
 </xsl:template>

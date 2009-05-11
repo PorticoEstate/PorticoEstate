@@ -19,12 +19,12 @@
 
 			$menus['navigation'] =  array
 			(
-				// 'dashboard' => array
-				// (
-				// 	'text'	=> $GLOBALS['phpgw']->translation->translate('Dashboard', array(), true),
-				// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidashboard.index') ),
-				//                     'image'	=> array('property', 'location'),
-				// ),
+				'dashboard' => array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Dashboard', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidashboard.index') ),
+				                    'image'	=> array('property', 'location'),
+				),
 				// 'applications' => array
 				// (
 				// 	'text'	=> $GLOBALS['phpgw']->translation->translate('Applications', array(), true),
