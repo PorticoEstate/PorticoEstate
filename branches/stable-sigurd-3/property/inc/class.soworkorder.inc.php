@@ -125,7 +125,7 @@
 			if(is_array($data))
 			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= $data['filter'] ? $data['filter'] : 'all';
+				$filter			= $data['filter'] ? (int)$data['filter'] : 0;
 				$query			= isset($data['query']) ? $data['query'] : '';
 				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order			= isset($data['order']) ? $data['order'] : '';
@@ -396,23 +396,21 @@
 				$where= 'AND';
 			}
 
-			if ($filter=='all')
+			if (is_array($this->grants))
 			{
-				if (is_array($this->grants))
+				$grants = $this->grants;
+				while (list($user) = each($grants))
 				{
-					$grants = $this->grants;
-					while (list($user) = each($grants))
-					{
-						$public_user_list[] = $user;
-					}
-					reset($public_user_list);
-					$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
-					$where= 'AND';
+					$public_user_list[] = $user;
 				}
+				reset($public_user_list);
+				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
+				$where= 'AND';
 			}
-			else
+
+			if ($filter)
 			{
-				$filtermethod .= " $where fm_workorder.user_id=$filter ";
+				$filtermethod .= " $where fm_workorder.user_id={$filter}";
 				$where= 'AND';
 			}
 

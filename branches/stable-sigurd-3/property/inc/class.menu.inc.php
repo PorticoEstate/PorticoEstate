@@ -704,11 +704,6 @@
 					'image'		=> array('property', 'budget'),
 					'children'	=> array
 					(
-						'basis'		=> array
-						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.basis')),
-							'text'	=> lang('basis')
-						),
 						'budget'	=> array
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.index')),
@@ -721,6 +716,15 @@
 						)
 					)
 				);
+
+				if ( $acl->check('.budget.basis', PHPGW_ACL_READ, 'property') )
+				{
+					$menus['navigation']['budget']['children']['basis'] = array
+					(
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibudget.basis')),
+						'text'	=> lang('basis')
+					);
+				}
 			}
 
 			if ( $acl->check('.agreement', PHPGW_ACL_READ, 'property') )

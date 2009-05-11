@@ -76,6 +76,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.tenant_claim', 'Tenant claim')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.budget', 'Budet')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.budget.obligations', 'Obligations')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.budget.basis', 'Basis for high level lazy budgeting')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.ifc', 'ifc integration')");
 
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.agreement', 'Agreement',1,'fm_agreement')");
