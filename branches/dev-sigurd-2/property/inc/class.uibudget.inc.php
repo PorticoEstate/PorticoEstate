@@ -945,7 +945,7 @@
 	 	                        						."details:'{$this->details}',"
 	 	                        						."allrows:'{$this->allrows}'";
 
-				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
+				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=false);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
 				array_unshift ($values_combo_box[0],$default_value);
 				
