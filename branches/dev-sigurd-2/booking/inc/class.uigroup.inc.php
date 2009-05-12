@@ -166,6 +166,9 @@
 			$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
 			$group['edit_link'] = self::link(array('menuaction' => 'booking.uigroup.edit', 'id' => $group['id']));
+            $group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
+            $group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
+
 			$data = array(
 				'group'	=>	$group
 			);

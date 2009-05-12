@@ -8,4 +8,8 @@
 			parent::__construct();
 			$this->so = CreateObject('booking.soorganization');
 		}
+        function get_contact_info($person_id)
+        {
+         return $this->so->get_contact_info($person_id);
+        }
 	}

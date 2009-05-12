@@ -35,9 +35,14 @@
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+				'admin_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => False,),
+				'admin_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 			),
 			'pk' => array('id'),
-			'fk' => array(),
+			'fk' => array(
+				'bb_contact_person' => array('contact_primary' => 'id',),
+				'bb_contact_person' => array('contact_secondary' => 'id',),
+			),
 			'ix' => array(),
 			'uc' => array()
 		),

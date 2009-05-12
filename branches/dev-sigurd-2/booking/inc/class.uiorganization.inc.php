@@ -117,10 +117,19 @@
 			$organization = $this->bo->read_single($id);
 			$organization['id'] = $id;
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
+            $organization['admin_primary'] = $this->bo->get_contact_info($organization['admin_primary']);
+            $organization['admin_secondary'] = $this->bo->get_contact_info($organization['admin_secondary']);
+
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description')));
+				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary')));
+				if (empty($organization["admin_primary"])) {
+					unset($organization["admin_primary"]);
+				}
+				if (empty($organization["admin_secondary"])) {
+					unset($organization["admin_secondary"]);
+				}
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
@@ -146,27 +155,8 @@
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => 'booking.uiorganization.edit', 'id' => $organization['id']));
-			$lang['title'] = lang('Edit Organization');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			self::render_template('organization', array('organization' => $organization, 'lang' => $lang));
+            $organization['admin_primary'] = $this->bo->get_contact_info($organization['admin_primary']);
+            $organization['admin_secondary'] = $this->bo->get_contact_info($organization['admin_secondary']);
+			self::render_template('organization', array('organization' => $organization, ));
 		}
 	}

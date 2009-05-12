@@ -21,12 +21,27 @@
 					<xsl:value-of select="organization/homepage" />
 				</a>
 			</dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>
             <dd><xsl:value-of select="organization/email"/></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Phone')" /></dt>
             <dd><xsl:value-of select="organization/phone"/></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
             <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
+
+            <dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
+            <dd>
+                <ul>
+                    <li><xsl:value-of select="organization/admin_primary/name" /></li>
+                    <li>
+                        <xsl:if test="organization/admin_secondary/name">
+                            <xsl:value-of select="organization/admin_secondary/name" />
+                        </xsl:if>
+                    </li>
+                </ul>
+            </dd>
         </dl>
         <a class="button">
             <xsl:attribute name="href"><xsl:value-of select="organization/edit_link"></xsl:value-of></xsl:attribute>

@@ -1,4 +1,4 @@
-<xsl:template match="data">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         <ul class="pathway">
             <li>
@@ -25,8 +25,26 @@
         <dl class="proplist">
             <dt><xsl:value-of select="lang/organization" /></dt>
             <dd><xsl:value-of select="group/organization_name"/></dd>
+
             <dt><xsl:value-of select="lang/name" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
+
+            <dt><xsl:value-of select="php:function('lang', 'Contacts')" /></dt>
+            <dd>
+                <ul>
+                    <li><xsl:value-of select="group/contact_primary/name" /></li>
+                    <li>
+                        <xsl:if test="group/contact_secondary/name">
+                            <xsl:value-of select="group/contact_secondary/name" />
+                        </xsl:if>
+                    </li>
+                </ul>
+            </dd>
+
+            <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
+            <dd><xsl:value-of select="group/description" disable-output-escaping="yes"/></dd>
+
+
         </dl>
 
         <a class="button">
