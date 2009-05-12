@@ -745,6 +745,13 @@
 						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
 					}
 
+
+					if(($values['ecodimb'] ||$values['b_account_id']) && (!isset($values['budget']) || !$values['budget']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Missing budget value'));
+					}
+
+
 					if(!$values['last_name'])
 					{
 //						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
