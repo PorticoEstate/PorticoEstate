@@ -118,7 +118,7 @@
 				array_set_default($_POST, 'resources', array());
 				$application = extract_values($_POST, $this->fields);
 				$application['agegroups'] = array();
-				$this->agegroup_bo->extract_form_data(&$application);
+				$this->agegroup_bo->extract_form_data($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
@@ -163,7 +163,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$application = array_merge($application, extract_values($_POST, $this->fields));
-				$this->agegroup_bo->extract_form_data(&$application);
+				$this->agegroup_bo->extract_form_data($application);
 				$errors = $this->bo->validate($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)
