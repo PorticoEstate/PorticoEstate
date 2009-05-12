@@ -119,7 +119,7 @@
 			if($query)
 			{
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE descr $this->_like '%$query%'";
+				$querymethod = " WHERE descr $this->_like '%$query%' OR {$table}.id = '{$query}'";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";

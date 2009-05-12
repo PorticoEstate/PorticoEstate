@@ -509,7 +509,7 @@
 				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 				$year			= isset($data['year']) ? (int)$data['year'] : '';
 				$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
-				$revision		= isset($data['revision']) ? $data['revision'] : '';
+				$revision		= isset($data['revision']) ? $data['revision'] : 1;
 				$year			= isset($data['year']) ? $data['year'] : '';
 				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
 				$details		= isset($data['details']) ? $data['details'] : '';
@@ -581,7 +581,7 @@
 			}
 
 //_debug_array($obligations);
-			$this->db->query("select max(revision) as revision from fm_budget_basis where year={$year}",__LINE__,__FILE__);
+			$this->db->query("select max(revision) as revision from fm_budget where year={$year}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$revision = (int)$this->db->f('revision');
 
@@ -614,7 +614,8 @@
 			}
 			else
 			{
-				$sql = "SELECT budget_cost,b_group as b_account_field,district_id FROM fm_budget_basis WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_group,district_id";
+				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id FROM fm_budget"
+				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,fm_b_account.category,district_id";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);

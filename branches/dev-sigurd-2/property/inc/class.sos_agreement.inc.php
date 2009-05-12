@@ -879,7 +879,7 @@
 		
 		}
 
-		function edit($values,$values_attribute='')
+		function edit($values,$values_attribute = array())
 		{
 //_debug_array($values);
 //_debug_array($values_attribute);
