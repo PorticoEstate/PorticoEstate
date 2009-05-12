@@ -49,7 +49,6 @@
 			}
 			$treedata = json_encode($this->treeitem($children, null));
 						
-			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('treeview');
 			$data = array(
 				'form' => array(

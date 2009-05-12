@@ -1,10 +1,10 @@
-<xsl:template match="data">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
 		<ul class="pathway">
 			<li>
 				<a>
 					<xsl:attribute name="href"><xsl:value-of select="season/buildings_link"/></xsl:attribute>
-					<xsl:value-of select="lang/buildings" />
+					<xsl:value-of select="php:function('lang', 'Buildings')" />
 				</a>
 			</li>
 			<li>
@@ -13,7 +13,7 @@
 					<xsl:value-of select="season/building_name"/>
 				</a>
 			</li>
-			<li><xsl:value-of select="lang/season" /></li>
+			<li><xsl:value-of select="php:function('lang', 'Season')" /></li>
 			<li><a href=""><xsl:value-of select="season/name"/></a></li>
 		</ul>
 
@@ -22,14 +22,14 @@
 		<h4>Week Template</h4>
 		<div id="schedule_container"/>
 	
-		<a class="button" href="#" onclick="YAHOO.booking.dialog.newAllocation(); return false;">New allocation</a>
+		<a class="button" href="#" onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></a>
 
 		<form id="panel1" method="POST">
 			<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>
-			<div class="hd"><xsl:value-of select="lang/allocation"/></div>
+			<div class="hd"><xsl:value-of select="php:function('lang', 'Allocations')" /></div>
 			<div class="bd">
 				<dl class="form-col">
-					<dt><label for="field_org"><xsl:value-of select="lang/organization" /></label></dt>
+					<dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
 					<dd>
 					    <input type="hidden" id="field_id" name="id"/>
 						<div class="autocomplete">
@@ -38,19 +38,19 @@
 							<div id="org_container"/>
 						</div>
 					</dd>
-					<dt><label for="field_wday"><xsl:value-of select="lang/dayoftheweek" /></label></dt>
+					<dt><label for="field_wday"><xsl:value-of select="php:function('lang', 'Day of the week')" /></label></dt>
 					<dd>
 						<select id="field_wday" name="wday">
-							<option value="1"><xsl:value-of select="lang/monday"/></option>
-							<option value="2"><xsl:value-of select="lang/tuesday"/></option>
-							<option value="3"><xsl:value-of select="lang/wednesday"/></option>
-							<option value="4"><xsl:value-of select="lang/thursday"/></option>
-							<option value="5"><xsl:value-of select="lang/friday"/></option>
-							<option value="6"><xsl:value-of select="lang/saturday"/></option>
-							<option value="7"><xsl:value-of select="lang/sunday"/></option>
+							<option value="1"><xsl:value-of select="php:function('lang', 'Monday')" /></option>
+							<option value="2"><xsl:value-of select="php:function('lang', 'Tuesday')" /></option>
+							<option value="3"><xsl:value-of select="php:function('lang', 'Wednesday')" /></option>
+							<option value="4"><xsl:value-of select="php:function('lang', 'Thursday')" /></option>
+							<option value="5"><xsl:value-of select="php:function('lang', 'Friday')" /></option>
+							<option value="6"><xsl:value-of select="php:function('lang', 'Saturday')" /></option>
+							<option value="7"><xsl:value-of select="php:function('lang', 'Sunday')" /></option>
 						</select>
 					</dd>
-					<dt><label for="field_from"><xsl:value-of select="lang/from" /></label></dt>
+					<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
 					<dd>
 						<div class="time-picker">
 						<input id="field_from" name="from_" type="text">
@@ -58,7 +58,7 @@
 						</input>
 						</div>
 					</dd>
-					<dt><label for="field_to"><xsl:value-of select="lang/to" /></label></dt>
+					<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
 					<dd>
 						<div class="time-picker">
 						<input id="field_to" name="to_" type="text">
@@ -68,9 +68,9 @@
 					</dd>
 				</dl>
 				<dl class="form-col">
-					<dt><label for="field_cost"><xsl:value-of select="lang/cost" /></label></dt>
+					<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
 					<dd><input id="field_cost" name="cost" type="text"/></dd>
-					<dt><label for="field_resources"><xsl:value-of select="lang/resources" /></label></dt>
+					<dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
 					<dd>
 				    	<div id="resources-container"/>
 					</dd>
@@ -200,15 +200,15 @@ YAHOO.booking.AllocationDialog.prototype.cellFormatter = function(elCell, oRecor
 
 YAHOO.booking.updateSchedule = function() {
 	var colDefs = [
-				{key: 'time', label: '<xsl:value-of select="lang/time"/>'}, 
-				{key: 'resource', label: '<xsl:value-of select="lang/resources"/>', formatter: YAHOO.booking.scheduleResourceColFormatter},
-				{key: '1', label: '<xsl:value-of select="lang/monday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '2', label: '<xsl:value-of select="lang/tuesday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '3', label: '<xsl:value-of select="lang/wednesday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '4', label: '<xsl:value-of select="lang/thursday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '5', label: '<xsl:value-of select="lang/friday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '6', label: '<xsl:value-of select="lang/saturday"/>', formatter: YAHOO.booking.dialog.cellFormatter},
-				{key: '7', label: '<xsl:value-of select="lang/sunday"/>', formatter: YAHOO.booking.dialog.cellFormatter}
+				{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'}, 
+				{key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: YAHOO.booking.scheduleResourceColFormatter},
+				{key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '3', label: '<xsl:value-of select="php:function('lang', 'Wednesday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '4', label: '<xsl:value-of select="php:function('lang', 'Thursday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '5', label: '<xsl:value-of select="php:function('lang', 'Friday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '6', label: '<xsl:value-of select="php:function('lang', 'Saturday')" />', formatter: YAHOO.booking.dialog.cellFormatter},
+				{key: '7', label: '<xsl:value-of select="php:function('lang', 'Sunday')" />', formatter: YAHOO.booking.dialog.cellFormatter}
 	];
 
 	YAHOO.booking.inlineTableHelper('schedule_container', weekUrl, colDefs, {

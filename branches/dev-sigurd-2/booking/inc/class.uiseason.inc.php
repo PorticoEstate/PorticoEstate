@@ -223,33 +223,6 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$season['resource_ids'] = $resource_ids;
-			$lang['title'] = lang('New Season');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			$lang['status'] = lang('Status');
-			$lang['planning'] = lang('Planning');
-			$lang['published'] = lang('Published');
-			$lang['archived'] = lang('Archived');
-			$lang['boundaries'] = lang('Boundaries');
-			$lang['wtemplate'] = lang('Week template');
 			self::render_template('season', array('season' => $season, 'lang' => $lang));
 		}
 
@@ -295,28 +268,8 @@
 			$season['get_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 
-			$lang['allocation'] = lang('Allocation');
-			$lang['organization'] = lang('Organization');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['dayoftheweek'] = lang('Day of the week');
-			$lang['cost'] = lang('Cost');
-			$lang['season'] = lang('Season');
-			$lang['time'] = lang('Time');
-			$lang['resources'] = lang('Resources');
-			$lang['buildings'] = lang('Buildings');
-			$lang['monday'] = lang('Monday');
-			$lang['tuesday'] = lang('Tuesday');
-			$lang['wednesday'] = lang('Wednesday');
-			$lang['thursday'] = lang('Thursday');
-			$lang['friday'] = lang('Friday');
-			$lang['saturday'] = lang('Saturday');
-			$lang['sunday'] = lang('Sunday');
-			$lang['add'] = lang('Add');
-			$lang['cancel'] = lang('Cancel');
-			$lang['add_allocation'] = lang('Add template allocation');
 			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('season_wtemplate', array('season' => $season, 'lang' => $lang));
+			self::render_template('season_wtemplate', array('season' => $season));
 		}
 
 		public function wtemplate_json()
