@@ -6,9 +6,8 @@
 		public $public_functions = array
 		(
 			'index'			=>	true,
-			'add'			=>	true,
 			'show'			=>	true,
-			'edit'			=>	true
+			'edit'			=>	true,
 		);
 
 		public function __construct()
@@ -33,7 +32,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New group'),
-								'href' => self::link(array('menuaction' => 'booking.uigroup.add'))
+								'href' => self::link(array('menuaction' => 'booking.uigroup.edit'))
 							),
 							array('type' => 'text', 
 								'name' => 'query'
@@ -85,56 +84,19 @@
 			return $data;
 		}
 
-		public function add()
-		{
-			$errors = array();
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
-				$group = extract_values($_POST, array('name', 'organization_id', 'organization_name'));
-				$errors = $this->bo->validate($group);
-				if(!$errors)
-				{
-					$receipt = $this->bo->add($group);
-					$this->redirect(array('menuaction' => 'booking.uigroup.show', 'id'=>$receipt['id']));
-				}
-			}
-			$this->flash_form_errors($errors);
-			$lang['title'] = lang('New Group');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			self::add_javascript('booking', 'booking', 'group_new.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('autocomplete');
-			self::render_template('group_new', array('group' => $group, 'lang' => $lang));
-		}
-
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
-			$group = $this->bo->read_single($id);
-			$group['id'] = $id;
-			$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
-			$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
-            $group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
-            $group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
+			if ($id) {
+				$group = $this->bo->read_single($id);
+				$group['id'] = $id;
+				$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
+				$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
+				$group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
+				$group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
+			} else {
+				$group = array();
+			}
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -143,8 +105,12 @@
 				$errors = $this->bo->validate($group);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($group);
-					$this->redirect(array('menuaction' => 'booking.uigroup.show', 'id'=>$group['id']));
+					if ($id) {
+						$receipt = $this->bo->update($group);
+					} else {
+						$receipt = $this->bo->add($group);
+					}
+					$this->redirect(array('menuaction' => 'booking.uigroup.show', 'id'=>$receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
