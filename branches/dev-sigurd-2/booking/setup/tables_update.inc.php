@@ -1,5 +1,37 @@
 <?php
+	$test[] = '0.1.33';
+	function booking_upgrade0_1_33()
+	{
+		$documentOwners = array('building', 'resource');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		foreach($documentOwners as $owner)
+		{
+			$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				"bb_document_$owner", array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => false),
+						'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+						'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+						'description' => array('type' => 'text', 'nullable' => true),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						"bb_$owner" => array('owner_id' => 'id'),
+					),
+					'ix' => array(),
+					'uc' => array()
+			));
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.34';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
 	$test[] = '0.1.32';
 	function booking_upgrade0_1_32()
 	{
@@ -15,7 +47,7 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
-
+	
 	$test[] = '0.1.31';
 	function booking_upgrade0_1_31()
 	{

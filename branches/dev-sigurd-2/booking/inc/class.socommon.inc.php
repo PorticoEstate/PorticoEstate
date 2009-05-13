@@ -1,5 +1,5 @@
 <?php
-	class booking_socommon
+	abstract class booking_socommon
 	{
 		public function __construct($table_name, $fields)
 		{

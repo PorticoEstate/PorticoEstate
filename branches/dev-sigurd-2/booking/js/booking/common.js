@@ -35,6 +35,26 @@ YAHOO.booking.formatLink = function(elCell, oRecord, oColumn, oData) {
 	elCell.innerHTML = '<a href="' + link + '">' + name + '</a>'; 
 };
 
+YAHOO.booking.formatGenericLink = function() {
+	links = [];
+	nOfLinks = arguments.length;
+	
+	for (var i=0; i < nOfLinks; i++) { links[i] = arguments[i]; }
+	
+	return function(elCell, oRecord, oColumn, oData)
+	{
+		nOfLinks = links.length;
+		data = oRecord.getData(oColumn.key);
+		
+		linksHtml = '';
+		for (var i=0; i < nOfLinks; i++) {
+			linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+		}
+		
+		elCell.innerHTML = linksHtml;
+	}
+};
+
 YAHOO.booking.autocompleteHelper = function(url, field, hidden, container) {
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;

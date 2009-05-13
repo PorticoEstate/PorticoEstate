@@ -58,6 +58,12 @@
                     'image'	=> array('property', 'location'),
 					'children' => array
 					(
+						'documents' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Documents', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidocument_building.index') ),
+		                    'image'	=> array('property', 'documentation'),
+						),
 						'resources' => array
 						(
 							'text'	=> $GLOBALS['phpgw']->translation->translate('Resources', array(), true),
@@ -70,8 +76,14 @@
 									'text'	=> $GLOBALS['phpgw']->translation->translate('Equipment', array(), true),
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiequipment.index') ),
 									'image'	=> array('property', 'location'),
+								),
+								'documents' => array
+								(
+									'text'	=> $GLOBALS['phpgw']->translation->translate('Documents', array(), true),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidocument_resource.index') ),
+				                    'image'	=> array('property', 'documentation'),
 								)
-					)
+							)
 						)
 					)
 				),

@@ -61,26 +61,29 @@
 
 <xsl:template name="datasource-definition">
 	<script>
-      	<xsl:if test="source">
-            YAHOO.booking.dataSourceUrl = '<xsl:value-of select="source"/>';
-        </xsl:if>
-		YAHOO.booking.columnDefs = [
-			<xsl:for-each select="//datatable/field">
-				{
-					key: "<xsl:value-of select="key"/>",
-					<xsl:if test="label">
-					label: "<xsl:value-of select="label"/>",
-				    </xsl:if>
-					sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-					<xsl:if test="hidden">
-					hidden: true,
-				    </xsl:if>
-					<xsl:if test="formatter">
-					formatter: <xsl:value-of select="formatter"/>,
-				    </xsl:if>
-					className: "<xsl:value-of select="className"/>"
-				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-			</xsl:for-each>
-		];
+		YAHOO.booking.setupDatasource = function() {
+			<xsl:if test="source">
+	            YAHOO.booking.dataSourceUrl = '<xsl:value-of select="source"/>';
+	        </xsl:if>
+
+			YAHOO.booking.columnDefs = [
+				<xsl:for-each select="//datatable/field">
+					{
+						key: "<xsl:value-of select="key"/>",
+						<xsl:if test="label">
+						label: "<xsl:value-of select="label"/>",
+					    </xsl:if>
+						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+						<xsl:if test="hidden">
+						hidden: true,
+					    </xsl:if>
+						<xsl:if test="formatter">
+						formatter: <xsl:value-of select="formatter"/>,
+					    </xsl:if>
+						className: "<xsl:value-of select="className"/>"
+					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+				</xsl:for-each>
+			];
+		}
 	</script>
 </xsl:template>

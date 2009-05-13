@@ -15,6 +15,9 @@ YAHOO.booking.setupToolbar = function() {
 
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.booking.setupToolbar();
+	
+	YAHOO.booking.setupDatasource();
+
     var baseUrl = YAHOO.booking.dataSourceUrl;
     if(baseUrl[baseUrl.length - 1] != '&') {
         baseUrl += '&';

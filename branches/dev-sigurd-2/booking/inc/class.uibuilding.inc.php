@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uidocument_building');
 
 	class booking_uibuilding extends booking_uicommon
 	{
@@ -171,6 +172,7 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
+			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			self::render_template('building', array('building' => $building));
 		}
 
