@@ -108,6 +108,12 @@
 				// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicost.index') ),
 				//                     'image'	=> array('property', 'location'),
 				// )
+				'contacts' => array
+				(
+				 	'text'  => $GLOBALS['phpgw']->translation->translate('Contacts', array(), true),
+					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uicontactperson.index') ),
+					'image' => array('property', 'location'),
+				),
 			);
 				$menus['admin'] = array
 				(

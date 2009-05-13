@@ -57,7 +57,7 @@
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 		}
 
-		public function link($data)
+		public static function link($data)
 		{
 			return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
