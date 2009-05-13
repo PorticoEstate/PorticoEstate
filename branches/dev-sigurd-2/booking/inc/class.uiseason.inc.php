@@ -12,7 +12,8 @@
 			'boundaries'	=>	true,
 			'wtemplate'		=>	true,
 			'wtemplate_json'		=>	true,
-			'wtemplate_alloc_json'		=>	true
+			'wtemplate_alloc_json'		=>	true,
+			'generate'		=>	true
 		);
 
 		public function __construct()
@@ -181,31 +182,6 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
-			$lang['title'] = lang('New Season');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			$lang['status'] = lang('Status');
-			$lang['planning'] = lang('Planning');
-			$lang['published'] = lang('Published');
-			$lang['archived'] = lang('Archived');
 			self::render_template('season_edit', array('season' => $season, 'lang' => $lang));
 		}
 		
@@ -267,6 +243,7 @@
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['get_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
+			$season['generate_url'] = self::link(array('menuaction' => 'booking.uiseason.generate', 'id' => $season['id']));
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('season_wtemplate', array('season' => $season));
@@ -305,4 +282,27 @@
 			$alloc = $this->bo->wtemplate_alloc_read_single($id);
 			return $alloc;
 		}
+
+		public function generate()
+		{
+			$season_id = intval(phpgw::get_var('id', 'GET'));
+			$season = $this->bo->read_single($season_id);
+			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
+			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));
+			$result = array();
+			$step = 1;
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
+				$from_ = phpgw::get_var('from_', 'POST');
+				$to_ = phpgw::get_var('to_', 'POST');
+				$result = $this->bo->generate_allocation($season_id, 
+														 new DateTime($from_),
+														 new DateTime($to_),
+														 $step == 3);
+			}
+			self::render_template('season_generate', array('season' => $season, 'result'=>$result, 'step' => $step, 'from_' => $from_, 'to_' => $to_));
+		}
+
 	}

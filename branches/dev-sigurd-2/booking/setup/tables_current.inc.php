@@ -130,12 +130,14 @@
 				'group_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
+				'allocation_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_group' => array('group_id' => 'id'),
-				'bb_season' => array('season_id' => 'id')),
+				'bb_season' => array('season_id' => 'id'),
+				'bb_allocation' => array('allocation_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -230,6 +232,7 @@
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
+				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
 				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
 			),
 			'pk' => array('id'),

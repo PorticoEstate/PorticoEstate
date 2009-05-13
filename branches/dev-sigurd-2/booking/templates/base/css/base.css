@@ -172,3 +172,13 @@ dl.proplist-col dd.address {
 #agegroup, #agegroup td, #agegroup th { width: 1%; }
 #agegroup td, #agegroup th { padding: .1em .3em;}
 #agegroup td input { width: 3em; }
+
+
+div.allocation-list
+{
+    width: 30em;
+    height: 10em;
+    border: 1px solid #555;
+    padding: .4em;
+    overflow: auto;
+}

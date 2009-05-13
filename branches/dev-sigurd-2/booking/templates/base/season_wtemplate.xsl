@@ -19,10 +19,16 @@
 
 		<xsl:call-template name="msgbox"/>
 
-		<h4>Week Template</h4>
+		<h4><xsl:value-of select="php:function('lang', 'Week Template')" /></h4>
 		<div id="schedule_container"/>
 	
 		<a class="button" href="#" onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></a>
+		<br/>
+		<a class="button">
+			<xsl:attribute name="href"><xsl:value-of select="season/generate_url"/></xsl:attribute>
+			<xsl:value-of select="php:function('lang', 'Generate allocations')" />
+		</a>
+
 
 		<form id="panel1" method="POST">
 			<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>

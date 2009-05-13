@@ -9,9 +9,48 @@
 		{
 			parent::__construct();
 			$this->so = CreateObject('booking.soseason');
+			$this->bo_allocation = CreateObject('booking.boallocation');
 			$this->so_boundary = new booking_soseason_boundary();
 			$this->so_resource = CreateObject('booking.soresource');
 			$this->so_wtemplate_alloc = new booking_sowtemplate_alloc();
+		}
+
+		function generate_allocation($season_id, $date, $to, $write=false)
+		{
+			$valid = array();
+			$invalid = array();
+			do
+			{
+				$wday = $date->format('N');
+				$tallocations = $this->so_wtemplate_alloc->read(array('filters'=>array('season_id'=>$season_id, 'wday'=>$wday), 'sort'=>'from_'));
+				foreach($tallocations['results'] as $talloc)
+				{
+				
+					$allocation = extract_values($talloc, array('season_id', 'organization_id', 'cost', 'resources', 'organization_name'));
+					$allocation['from_'] = $date->format("Y-m-d").' '.$talloc['from_'];
+					$allocation['to_'] = $date->format("Y-m-d").' '.$talloc['to_'];
+					if(!$this->bo_allocation->validate($allocation))
+						$valid[] = $allocation;
+					else
+						$invalid[] = $allocation;
+				}
+				if($date->format('Y-m-d') == $to->format('Y-m-d'))
+				{
+					if($write)
+					{
+						$this->so->db->transaction_begin();
+						foreach($valid as $alloc)
+						{
+							$this->bo_allocation->add($alloc);
+						}
+						$this->so->db->transaction_commit();
+					}
+					return array('valid' => $valid, 'invalid'=>$invalid);
+				}
+				$date->modify('+1 day');
+			}
+			while(true);
+
 		}
 
 		function validate_boundary($boundary)

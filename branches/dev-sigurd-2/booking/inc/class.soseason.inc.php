@@ -10,6 +10,9 @@
 					'id'			=> array('type' => 'int'),
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
+					'status'		=> array('type' => 'string', 'required'=> true),
+					'from_'		=> array('type' => 'date', 'required'=> true),
+					'to_'		=> array('type' => 'date', 'required'=> true),
 					'building_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -23,10 +26,7 @@
 							'table' => 'bb_season_resource',
 							'key' => 'season_id',
 							'column' => 'resource_id'
-					)),
-					'status'		=> array('type' => 'string', 'required'=> true),
-					'from_'		=> array('type' => 'date', 'required'=> true),
-					'to_'		=> array('type' => 'date', 'required'=> true)
+					))
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

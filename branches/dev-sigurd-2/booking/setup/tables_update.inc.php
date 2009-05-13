@@ -1,4 +1,24 @@
 <?php
+
+	$test[] = '0.1.34';
+	function booking_upgrade0_1_34()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_allocation_resource");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_allocation");
+		# END Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN cost decimal(10,2) NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN allocation_id integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD CONSTRAINT bb_booking_allocation_id_fkey FOREIGN KEY (allocation_id) REFERENCES bb_allocation(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.35';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 	$test[] = '0.1.33';
 	function booking_upgrade0_1_33()
 	{

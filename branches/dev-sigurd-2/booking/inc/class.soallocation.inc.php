@@ -9,6 +9,10 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'organization_id'		=> array('type' => 'int', 'required' => true),
+					'season_id'		=> array('type' => 'int', 'required' => 'true'),
+					'from_'		=> array('type' => 'string', 'required'=> true),
+					'to_'		=> array('type' => 'string', 'required'=> true),
+					'cost'			=> array('type' => 'decimal', 'required' => true),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -24,7 +28,6 @@
 							'key' => 'id',
 							'column' => 'building_id'
 					)),
-					'season_id'		=> array('type' => 'int', 'required' => 'true'),
 					'season_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -39,26 +42,47 @@
 							'key' => 'allocation_id',
 							'column' => 'resource_id'
 					)),
-					'from_'		=> array('type' => 'string', 'required'=> true),
-					'to_'		=> array('type' => 'string', 'required'=> true)
 				)
 			);
 		}
 
 		function validate($entity)
 		{
+			$allocation_id = $entity['id'] || -1;
 			$errors = parent::validate($entity);
 			// FIXME: Validate: Season contains all resources
 			// FIXME: Validate: Season from <= date, season to >= date
 			// Make sure to_ > from_
-			if(!$errors)
+			$from_ = new DateTime($entity['from_']);
+			$to_ = new DateTime($entity['to_']);
+			$start = $from_->format('Y-m-d H:i');
+			$end = $to_->format('Y-m-d H:i');
+			if($from_ > $to_)
 			{
-				$from_ = date_parse($entity['from_']);
-				$to_ = date_parse($entity['to_']);
-				if($from_ > $to_)
-				{
-					$errors['from_'] = 'Invalid from date';
-				}
+				$errors['from_'] = 'Invalid from date';
+			}
+			$rids = join(',', array_map("intval", $entity['resources']));
+			// Check if we overlap with any existing allocation
+			$this->db->query("SELECT a.id FROM bb_allocation a 
+								WHERE a.id<>$allocation_id AND 
+								a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
+								((a.from_ >= '$start' AND a.from_ < '$end') OR 
+					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
+					 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				$errors['allocation'] = lang('Overlaps with existing allocation');
+			}
+			// Check if we overlap with any existing booking
+			$this->db->query("SELECT b.id FROM bb_booking b 
+								WHERE b.allocation_id<>$allocation_id AND 
+								b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
+								((b.from_ >= '$start' AND b.from_ < '$end') OR 
+					 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
+					 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				$errors['booking'] = lang('Overlaps with existing booking');
 			}
 			return $errors;
 		}
