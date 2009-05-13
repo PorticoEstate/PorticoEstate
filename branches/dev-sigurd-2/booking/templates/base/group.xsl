@@ -4,7 +4,7 @@
             <li>
                 <a>
                     <xsl:attribute name="href"><xsl:value-of select="group/organizations_link"/></xsl:attribute>
-                    <xsl:value-of select="lang/organization" />
+                    <xsl:value-of select="php:function('lang', 'Organization')" />
                 </a>
             </li>
             <li>
@@ -13,7 +13,7 @@
                     <xsl:value-of select="group/organization_name"/>
                 </a>
             </li>
-            <li><xsl:value-of select="lang/group" /></li>
+            <li><xsl:value-of select="php:function('lang', 'Group')" /></li>
             <li>
                 <a href="">
                     <xsl:value-of select="group/name"/>
@@ -23,10 +23,10 @@
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist">
-            <dt><xsl:value-of select="lang/organization" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>
             <dd><xsl:value-of select="group/organization_name"/></dd>
 
-            <dt><xsl:value-of select="lang/name" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
 
             <dt><xsl:value-of select="php:function('lang', 'Contacts')" /></dt>
@@ -49,7 +49,7 @@
 
         <a class="button">
             <xsl:attribute name="href"><xsl:value-of select="group/edit_link"/></xsl:attribute>
-            <xsl:value-of select="lang/edit" />
+            <xsl:value-of select="php:function('lang', 'Edit')" />
         </a>
     </div>
 </xsl:template>
