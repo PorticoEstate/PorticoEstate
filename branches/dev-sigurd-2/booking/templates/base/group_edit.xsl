@@ -44,7 +44,10 @@
                 <div id="organization_container"/>
             </div>
             </dd>
-            <dt><label for="field_contact_primary"><xsl:value-of select="php:function('lang', 'Primary contact')" /></label></dt>
+            <dt>
+                <label for="field_contact_primary"><xsl:value-of select="php:function('lang', 'Primary contact')" /></label><br />
+                <a href="#" onclick="return createContact();">(<xsl:value-of select="php:function('lang', 'Create a new contact')" />)</a>
+            </dt>
             <dd>
                 <div class="autocomplete">
                     <input id="field_contact_primary" name="contact_primary" type="hidden">
@@ -85,6 +88,8 @@
         </div>
     </form>
     </div>
+
+    <xsl:call-template name="contactpersonmagic" />
 
 <script type="text/javascript">
 <![CDATA[

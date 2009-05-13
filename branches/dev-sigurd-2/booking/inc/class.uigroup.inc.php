@@ -123,6 +123,8 @@
 
             self::add_javascript('booking', 'booking', 'group_new.js');
 
+			self::add_template_file("contactperson_fields");
+			self::add_template_file("contactperson_magic");
 			self::render_template('group_edit', array('group' => $group, 'lang' => $lang));
 		}
 		

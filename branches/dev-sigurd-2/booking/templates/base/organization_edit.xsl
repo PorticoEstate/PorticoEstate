@@ -31,7 +31,10 @@
                 </input>
             </dd>
 
-            <dt><label for="field_admin_primary"><xsl:value-of select="php:function('lang', 'Primary Admin')" /></label></dt>
+            <dt>
+                <label for="field_admin_primary"><xsl:value-of select="php:function('lang', 'Primary Admin')" /></label><br />
+                <a href="#" onclick="return createContact();">(<xsl:value-of select="php:function('lang', 'Create a new contact')" />)</a>
+            </dt>
             <dd>
                 <div class="autocomplete">
                     <input id="field_admin_primary" name="admin_primary" type="hidden">
@@ -62,6 +65,7 @@
                 <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
             </dd>
         </dl>
+
 <script type="text/javascript">
 <![CDATA[
 var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
@@ -98,6 +102,9 @@ YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uicontactperson.i
         </div>
     </form>
     </div>
+
+    <xsl:call-template name="contactpersonmagic" />
+
 </xsl:template>
 
 

@@ -121,6 +121,7 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
+			self::add_template_file("contactperson_fields");
 			self::render_template('contactperson_edit', array('person' => $person,));
 		}
 
