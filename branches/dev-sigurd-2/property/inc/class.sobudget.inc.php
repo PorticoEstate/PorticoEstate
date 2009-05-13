@@ -590,6 +590,8 @@
 			$where = 'AND';
 			if ($grouping > 0)
 			{	
+				$filtermethod = " $where fm_b_account.category='$grouping' ";
+/*
 				if (!$details)
 				{
 					$filtermethod = " $where b_group='$grouping' ";
@@ -597,8 +599,9 @@
 				}
 				else
 				{
-					$filtermethod = " $where fm_b_account.category='$grouping' ";			
+					$filtermethod = " $where fm_b_account.category='$grouping' ";
 				}
+*/
 			}
 
 			if ($district_id > 0)
@@ -615,9 +618,9 @@
 			else
 			{
 				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id FROM fm_budget"
-				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,fm_b_account.category,district_id";
+				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY fm_b_account.category,district_id";
 			}
-
+//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$budget_cost = array();
@@ -657,7 +660,6 @@
 			$end_date = date($this->db->date_format(),mktime(2,0,0,12,31,$year));
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as $b_account_field, district_id, sum(godkjentbelop) as actual_cost FROM fm_ecobilagoverf"
-				. " $this->join fm_project ON fm_ecobilagoverf.project_id =fm_project.id"
 				. " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
@@ -752,7 +754,7 @@
 
 		function get_b_group_list()
 		{
-			$sql = "SELECT id FROM fm_b_account_category order by id asc";
+			$sql = "SELECT DISTINCT fm_b_account.category as id FROM fm_budget $this->join fm_b_account ON (fm_budget.b_account_id = fm_b_account.id) ORDER BY id asc";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$group_list = array();

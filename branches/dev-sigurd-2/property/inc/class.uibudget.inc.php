@@ -1062,7 +1062,7 @@
 				array(
 					'col_name'=>obligation_ex,	'visible'=>false,	'label'=>''					,'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>obligation,		'visible'=>true,	'label'=>lang('obligations'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+					'col_name'=>obligation,		'visible'=>true,	'label'=>lang('sum orders'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
 				array(
 					'col_name'=>link_obligation,'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
