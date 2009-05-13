@@ -14,6 +14,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocontactperson');
+			self::set_active_menu('booking::contacts');
 		}
         public function index()
         {
