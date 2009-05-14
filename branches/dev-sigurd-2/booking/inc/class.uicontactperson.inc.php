@@ -10,11 +10,14 @@
 			'edit'          => true,
 		);
 
+		protected $module;
+
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocontactperson');
 			self::set_active_menu('booking::contacts');
+			$this->module = "booking";
 		}
         public function index()
         {
@@ -110,7 +113,7 @@
 					} else {
 						$receipt = $this->bo->add($person);
 					}
-					$this->redirect(array('menuaction' => 'booking.uicontactperson.show', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => $this->module . '.uicontactperson.show', 'id'=>$receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);

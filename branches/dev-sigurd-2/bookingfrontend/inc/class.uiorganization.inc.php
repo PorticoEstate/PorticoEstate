@@ -1,23 +1,43 @@
 <?php
-	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uiorganization');
 
-	class bookingfrontend_uiorganization extends booking_uicommon
+	class bookingfrontend_uiorganization extends booking_uiorganization
 	{
 		public $public_functions = array
 			(
 			 'show'			=>	true,
+			 'edit'         =>  true,
+			 'index'        =>  true,
 			);
+		protected $module;
 
 		public function __construct()
 		{
-			parent::__construct();
+			booking_uicommon::__construct();
 			$this->bo = CreateObject('booking.boorganization');
+			$this->module = "bookingfrontend";
 		}
+		protected function indexing()
+		{
+			return parent::index_json();
+		}
+
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$results = $this->bo->get_groups($organization["id"]);
 			$organization["groups"] = $results["results"];
-			self::render_template('organization', array('organization' => $organization));
+
+			$edit_self_link   = self::link(array('menuaction' => 'bookingfrontend.uiorganization.edit', 'id' => $organization['id']));
+			$edit_groups_link = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit',));
+
+			$loggedin = (int) true; // FIXME: Some sort of authentication!
+
+			self::render_template('organization', array(
+				'organization'     => $organization,
+				'loggedin'         => $loggedin,
+				'edit_self_link'   => $link,
+				'edit_groups_link' => $edit_groups_link,
+			));
 		}
 	}

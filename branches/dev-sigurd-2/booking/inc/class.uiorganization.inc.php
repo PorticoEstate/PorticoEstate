@@ -12,12 +12,14 @@
 			'show'			=>	true,
 			'datatable'		=>	true,
 		);
+		protected $module;
 
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
+			$this->module = "booking";
 		}
 		
 		public function index()
@@ -127,12 +129,18 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($organization);
-					$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+					if ($this->module == "bookingfrontend") {
+						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', "id" => $receipt["id"]));
+					} else {
+						$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
 			$this->flash_form_errors($errors);
-			$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $id));
+			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $id));
+
+			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
 
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
@@ -143,7 +151,7 @@
 			self::add_template_file("contactperson_fields");
 			self::add_template_file("contactperson_magic");
 
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save"));
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link));
 		}
 		
 		public function show()

@@ -1,6 +1,14 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         <h2><xsl:value-of select="organization/name"/></h2>
+		<xsl:if test="loggedin &gt; 0">
+			<span class="loggedin">(<a>
+				<xsl:attribute name="href">
+					<xsl:value-of select="edit_self_link" />
+				</xsl:attribute>
+				Edit
+			</a>)</span>
+		</xsl:if>
         <dl class="proplist description">
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
             <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
@@ -24,6 +32,14 @@
         </dl>
 
         <h3><xsl:value-of select="php:function('lang', 'Groups')" /></h3>
+		<xsl:if test="loggedin &gt; 0">
+			<span class="loggedin">(<a>
+				<xsl:attribute name="href">
+					<xsl:value-of select="edit_groups_link" />
+				</xsl:attribute>
+                Create new
+			</a>)</span>
+		</xsl:if>
         <table class="groups fancyTable">
             <thead>
                 <tr>

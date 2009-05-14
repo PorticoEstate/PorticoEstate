@@ -67,6 +67,7 @@
         </dl>
 
 <script type="text/javascript">
+ var endpoint = '<xsl:value-of select="module" />';
 <![CDATA[
 var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
     height: '300px',
@@ -78,13 +79,13 @@ var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
 descEdit.render();
 
 // Autocomplete primary admin
-YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uicontactperson.index&phpgw_return_as=json&', 
+YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uicontactperson.index&phpgw_return_as=json&', 
     'field_admin_primary_name',
     'field_admin_primary',
     'primary_admin_container'
 );
 // Autocomplete secondary contact
-YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uicontactperson.index&phpgw_return_as=json&', 
+YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uicontactperson.index&phpgw_return_as=json&', 
     'field_admin_secondary_name',
     'field_admin_secondary',
     'secondary_admin_container'

@@ -10,11 +10,14 @@
 			'edit'			=>	true,
 		);
 
+        protected $module;
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bogroup');
 			self::set_active_menu('booking::groups');
+
+            $this->module = "booking";
 		}
 		
 		public function index()
@@ -80,8 +83,8 @@
 			if ($id) {
 				$group = $this->bo->read_single($id);
 				$group['id'] = $id;
-				$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
-				$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
+				$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
+				$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
 				$group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
 				$group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
 			} else {
@@ -100,7 +103,7 @@
 					} else {
 						$receipt = $this->bo->add($group);
 					}
-					$this->redirect(array('menuaction' => 'booking.uigroup.show', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => $this->module . '.uigroup.show', 'id'=>$receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -111,19 +114,18 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
-            self::add_javascript('booking', 'booking', 'group_new.js');
 
 			self::add_template_file("contactperson_fields");
 			self::add_template_file("contactperson_magic");
-			self::render_template('group_edit', array('group' => $group, 'lang' => $lang));
+			self::render_template('group_edit', array('group' => $group, 'module' => $this->module));
 		}
 		
 		public function show()
 		{
 			$group = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			$group['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
-			$group['organization_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $group['organization_id']));
-			$group['edit_link'] = self::link(array('menuaction' => 'booking.uigroup.edit', 'id' => $group['id']));
+			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
+			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
+			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit', 'id' => $group['id']));
             $group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
             $group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
 
