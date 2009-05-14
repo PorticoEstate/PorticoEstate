@@ -27,15 +27,24 @@
 
 		<table id="boundary-table">
 			<thead>
-				<tr><th><xsl:value-of select="php:function('lang', 'Week day')" /></th>
-				<th><xsl:value-of select="php:function('lang', 'From')" /></th>
-				<th><xsl:value-of select="php:function('lang', 'To')" /></th></tr>
+				<tr>
+					<th><xsl:value-of select="php:function('lang', 'Week day')" /></th>
+					<th><xsl:value-of select="php:function('lang', 'From')" /></th>
+					<th><xsl:value-of select="php:function('lang', 'To')" /></th>
+					<th />
+				</tr>
 			</thead>
 			<xsl:for-each select="boundaries">
 				<tr>
 					<td><xsl:value-of select="wday_name"/></td>
 					<td><xsl:value-of select="from_"/></td>
 					<td><xsl:value-of select="to_"/></td>
+					<td>
+						<a href="">
+							<xsl:attribute name="href"><xsl:value-of select="delete_link"/></xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Delete')" />
+						</a>
+					</td>
 				</tr>
 			</xsl:for-each>
 			<tbody>
@@ -77,10 +86,12 @@
 			</dd>
 		</dl>
 		<div class="form-buttons">
-			<input type="submit" value="Add"/>
+			<input type="submit">
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
+			</input>
 			<a class="cancel">
 				<xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-				Cancel
+				<xsl:value-of select="php:function('lang', 'Cancel')"/>
 			</a>
 		</div>
 	</form>

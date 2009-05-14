@@ -10,6 +10,7 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'boundaries'	=>	true,
+			'delete_boundary'	=>	true,
 			'wtemplate'		=>	true,
 			'wtemplate_json'		=>	true,
 			'wtemplate_alloc_json'		=>	true,
@@ -206,6 +207,7 @@
 			foreach($boundaries as &$boundary)
 			{
 				$boundary['wday_name'] = lang($weekdays[$boundary['wday'] - 1]);
+				$boundary['delete_link'] = self::link(array('menuaction' => 'booking.uiseason.delete_boundary', 'id' => $boundary['id']));
 			}
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -222,6 +224,15 @@
 			$this->flash_form_errors($errors);
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season_id));
 			self::render_template('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries, 'season' => $season));
+		}
+
+		public function delete_boundary()
+		{
+			$boundary_id = intval(phpgw::get_var('id', 'GET'));
+			$boundary = $this->bo->so_boundary->read_single($boundary_id);
+			$season_id = $boundary['season_id'];
+			$this->bo->so_boundary->delete($boundary_id);
+			$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id'=>$season_id));
 		}
 
 		public function wtemplate()
