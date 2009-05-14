@@ -114,20 +114,12 @@
 			
 			$groups = $this->bo->read(array('filters' => "active=1"));
 			
-			
 			foreach($groups['results'] as &$audience)
 			{
 				$audience['link'] = $this->link(array('menuaction' => 'booking.uiaudience.edit', 'id' => $audience['id']));
 				$audience['active'] = $audience['active'] ? lang('Active') : lang('Inactive');
 			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $groups['total_records'], 
-					"Result" => $groups['results']
-				)
-			);
-			return $data;
+			return $this->yui_results($audience);
 		}
 
 		public function add()

@@ -101,18 +101,8 @@
 		public function index_json()
 		{
 			$resources = $this->bo->read();
-			foreach($resources['results'] as &$resource)
-			{
-				$resource['link'] = $this->link(array('menuaction' => 'booking.uiactivity.show', 'id' => $resource['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $resources['total_records'], 
-					"Result" => $resources['results']
-				)
-			);
-			return $data;
+			array_walk($resources["results"], array($this, "_add_links"), "booking.uiactivity.show");
+			return $this->yui_results($resources);
 		}
 
 		public function add()

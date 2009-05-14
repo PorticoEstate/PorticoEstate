@@ -95,14 +95,7 @@
 				$agegroup['link'] = $this->link(array('menuaction' => 'booking.uiagegroup.edit', 'id' => $agegroup['id']));
 				$agegroup['active'] = $agegroup['active'] ? lang('Active') : lang('Inactive');
 			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $groups['total_records'], 
-					"Result" => $groups['results']
-				)
-			);
-			return $data;
+			return $this->yui_results($groups);
 		}
 
 		public function add()

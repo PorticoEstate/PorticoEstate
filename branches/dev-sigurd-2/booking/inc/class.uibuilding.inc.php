@@ -115,13 +115,7 @@
 				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
-			$data = array(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $buildings['total_records'], 
-					"Result" => $buildings['results']
-				)
-			);
-			return $data;
+			return $this->yui_results($buildings);
 		}
 
 		public function add()

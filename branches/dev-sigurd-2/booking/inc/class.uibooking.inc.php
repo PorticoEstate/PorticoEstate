@@ -92,18 +92,8 @@
 		public function index_json()
 		{
 			$bookings = $this->bo->read();
-			foreach($bookings['results'] as &$booking)
-			{
-				$booking['link'] = $this->link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $bookings['total_records'], 
-					"Result" => $bookings['results']
-				)
-			);
-			return $data;
+			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
+			return $this->yui_results($bookings);
 		}
 
 		public function building_schedule()

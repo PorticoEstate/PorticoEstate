@@ -91,18 +91,8 @@
 		public function index_json()
 		{
 			$applications = $this->bo->read();
-			foreach($applications['results'] as &$application)
-			{
-				$application['link'] = $this->link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $applications['total_records'], 
-					"Result" => $applications['results']
-				)
-			);
-			return $data;
+			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.edit");
+			return $this->yui_results($applications);
 		}
 
 		private function _combine_dates($from_, $to_)

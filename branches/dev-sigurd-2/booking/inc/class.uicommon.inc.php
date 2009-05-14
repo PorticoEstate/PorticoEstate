@@ -172,6 +172,33 @@
 			readfile($file_path, false);
 			exit;
 		}
+
+		// Add link key to a result array
+		public function _add_links(&$value, $key, $menuaction)
+		{
+			// FIXME: Fugly workaround
+			// I cannot figure out why this variable isn't set, but it is needed 
+			// by the ->link() method, otherwise we wind up in the phpgroupware 
+			// errorhandler which does lot of weird things and breaks the output
+			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url'])) {
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
+			}
+
+			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
+		}
+
+		// Build a YUI result style array
+		public function yui_results($results)
+		{
+            return array
+			(   
+				'ResultSet' => array(
+					'totalResultsAvailable' => $results['total_records'], 
+					'Result' => $results['results']
+				)   
+			);  
+
+		}
         	
         public function check_active($url)
 		{

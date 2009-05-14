@@ -91,18 +91,8 @@
 		public function index_json()
 		{
 			$seasons = $this->bo->read();
-			foreach($seasons['results'] as &$season)
-			{
-				$season['link'] = $this->link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $seasons['total_records'], 
-					"Result" => $seasons['results']
-				)
-			);
-			return $data;
+			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
+			return $this->yui_results($seasons);
 		}
 
 		public function add()

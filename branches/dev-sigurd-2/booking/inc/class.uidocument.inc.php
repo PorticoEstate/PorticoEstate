@@ -200,13 +200,7 @@
 					$this->get_owner_typed_link('delete', array('id' => $document['id'])),
 				);
 			}
-			$data = array(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $documents['total_records'], 
-					"Result" => $documents['results']
-				)
-			);
-			return $data;
+			return $this->yui_results($documents);
 		}
 		
 		protected function get_document_categories()

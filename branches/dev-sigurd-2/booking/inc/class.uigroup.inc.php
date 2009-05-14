@@ -70,18 +70,8 @@
 		public function index_json()
 		{
 			$groups = $this->bo->read();
-			foreach($groups['results'] as &$group)
-			{
-				$group['link'] = $this->link(array('menuaction' => 'booking.uigroup.show', 'id' => $group['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $groups['total_records'], 
-					"Result" => $groups['results']
-				)
-			);
-			return $data;
+			array_walk($groups["results"], array($this, "_add_links"), "booking.uigroup.show");
+			return $this->yui_results($groups);
 		}
 
 		public function edit()

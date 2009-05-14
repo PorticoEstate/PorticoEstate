@@ -73,18 +73,8 @@
 		public function index_json()
 		{
 			$organizations = $this->bo->read();
-			foreach($organizations['results'] as &$organization)
-			{
-				$organization['link'] = $this->link(array('menuaction' => 'booking.uiorganization.show', 'id' => $organization['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $organizations['total_records'], 
-					"Result" => $organizations['results']
-				)
-			);
-			return $data;
+			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+			return $this->yui_results($organizations);
 		}
 
 		public function add()

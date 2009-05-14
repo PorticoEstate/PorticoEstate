@@ -84,18 +84,8 @@
 		public function index_json()
 		{
 			$allocations = $this->bo->read();
-			foreach($allocations['results'] as &$allocation)
-			{
-				$allocation['link'] = $this->link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
-			}
-			$data = array
-			(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $allocations['total_records'], 
-					"Result" => $allocations['results']
-				)
-			);
-			return $data;
+			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
+			return $this->yui_results($allocations);
 		}
 
 		public function add()
