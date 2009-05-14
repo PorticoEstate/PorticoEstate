@@ -124,6 +124,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = extract_values($_POST, $this->fields);
+				$building['active'] = true;
 				$errors = $this->bo->validate($building);
 				if(!$errors)
 				{

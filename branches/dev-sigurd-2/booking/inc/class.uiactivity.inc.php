@@ -21,9 +21,12 @@
 		function treeitem($children, $parent_id)
 		{
 			$nodes = array();
-			foreach($children[$parent_id] as $activity)
+			if(is_array($children[$parent_id]))
 			{
-				$nodes[] = array("type"=>"text", "href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 'id' => $activity['id'])), "target" => "_self", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
+				foreach($children[$parent_id] as $activity)
+				{
+					$nodes[] = array("type"=>"text", "href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 'id' => $activity['id'])), "target" => "_self", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
+				}
 			}
 			return $nodes;
 		}
