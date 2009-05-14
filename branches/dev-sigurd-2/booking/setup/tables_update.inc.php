@@ -1,5 +1,52 @@
 <?php
+	$test[] = '0.1.35';
+	function booking_upgrade0_1_35()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+	
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_permission_building', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('subject_id' => 'account_id'),
+					'bb_building' => array('object_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_permission_resource', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('subject_id' => 'account_id'),
+					'bb_resource' => array('object_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.36';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
 	$test[] = '0.1.34';
 	function booking_upgrade0_1_34()
 	{

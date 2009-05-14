@@ -64,6 +64,11 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidocument_building.index') ),
 		                    'image'	=> array('property', 'documentation'),
 						),
+						'permissions' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Permissions', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_building.index') ),
+						),
 						'resources' => array
 						(
 							'text'	=> $GLOBALS['phpgw']->translation->translate('Resources', array(), true),
@@ -82,7 +87,12 @@
 									'text'	=> $GLOBALS['phpgw']->translation->translate('Documents', array(), true),
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidocument_resource.index') ),
 				                    'image'	=> array('property', 'documentation'),
-								)
+								),
+								'permissions' => array
+								(
+									'text'	=> $GLOBALS['phpgw']->translation->translate('Permissions', array(), true),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_resource.index') ),
+								),
 							)
 						)
 					)

@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('booking.uicommon');
 	phpgw::import_class('booking.uidocument_resource');
+	phpgw::import_class('booking.uipermission_resource');
 
 	class booking_uiresource extends booking_uicommon
 	{
@@ -147,6 +148,7 @@
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['schedule_link'] = self::link(array('menuaction' => 'booking.uiresource.schedule', 'id' => $resource['id']));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
+			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
 			$data = array(
 				'resource'	=>	$resource
 			);

@@ -407,5 +407,35 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_permission_building' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+				'bb_building' => array('object_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_permission_resource' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+				'bb_resource' => array('object_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
 	);
 ?>

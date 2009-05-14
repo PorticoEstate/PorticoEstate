@@ -44,7 +44,7 @@
         </a>
         
 
-        <h4>Equipment</h4>
+        <h4><xsl:value-of select="php:function('lang', 'Equipment')" /></h4>
         <div id="equipment_container"/>
 		
 		<h4><xsl:value-of select="php:function('lang', 'Documents')" /></h4>
@@ -52,6 +52,13 @@
 		<a class='button'>
 			<xsl:attribute name="href"><xsl:value-of select="resource/add_document_link"/></xsl:attribute>
 			<xsl:value-of select="php:function('lang', 'Add Document')" />
+		</a>
+		
+		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+        <div id="permissions_container"/>
+		<a class='button'>
+			<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
+			<xsl:value-of select="php:function('lang', 'Add Permission')" />
 		</a>
     </div>
 
@@ -66,6 +73,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var url = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
 	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}, {key: 'category', label: 'Category'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
+	
+	var url = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
+	var colDefs = [{key: 'subject_name', label: 'Account'}, {key: 'role', label: 'Role'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+	YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
 });
 ]]>
 </script>
