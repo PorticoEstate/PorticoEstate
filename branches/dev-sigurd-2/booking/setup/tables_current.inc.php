@@ -1,8 +1,23 @@
 <?php
 	$phpgw_baseline = array(
+		'bb_activity' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => FALSE),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => TRUE),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => FALSE),
+				'description' => array('type' => 'varchar','precision' => '10000','nullable' => FALSE),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_activity' => array('parent_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_building' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
@@ -66,11 +81,13 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_building' => array('building_id' => 'id')
-			),
+				'bb_building' => array('building_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -193,20 +210,6 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_resource' => array('resource_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_activity' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => FALSE),
-				'parent_id' => array('type' => 'int','precision' => '4','nullable' => TRUE),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => FALSE),
-				'description' => array('type' => 'varchar','precision' => '10000','nullable' => FALSE),
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				'bb_activity' => array('parent_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
