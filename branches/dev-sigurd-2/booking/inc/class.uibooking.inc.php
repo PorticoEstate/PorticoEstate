@@ -152,7 +152,7 @@
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
-				$this->agegroup_bo->extract_form_data(&$booking);
+				$this->agegroup_bo->extract_form_data($booking);
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
@@ -206,7 +206,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
-				$this->agegroup_bo->extract_form_data(&$booking);
+				$this->agegroup_bo->extract_form_data($booking);
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
