@@ -4,9 +4,9 @@
 	class bookingfrontend_uiorganization extends booking_uicommon
 	{
 		public $public_functions = array
-		(
-			'show'			=>	true,
-		);
+			(
+			 'show'			=>	true,
+			);
 
 		public function __construct()
 		{
@@ -16,6 +16,8 @@
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$results = $this->bo->get_groups($organization["id"]);
+			$organization["groups"] = $results["results"];
 			self::render_template('organization', array('organization' => $organization));
 		}
 	}

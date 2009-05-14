@@ -10,6 +10,9 @@
 		}
         function get_contact_info($person_id)
         {
-         return $this->so->get_contact_info($person_id);
+            return $this->so->get_contact_info($person_id);
+        }
+        function get_groups($organization_id) {
+            return $this->so->get_groups($organization_id);
         }
 	}
