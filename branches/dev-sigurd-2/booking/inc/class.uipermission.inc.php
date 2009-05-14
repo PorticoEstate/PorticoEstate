@@ -13,7 +13,6 @@
 				'show'				=> true,
 				'add'				=> true,
 				'edit'				=> true,
-				'download'			=> true,
 				'delete'			=> true,
 			);
 		
@@ -23,11 +22,10 @@
 			
 			$this->set_business_object();
 			
-			//'name' is not in fields as it will always be generated from the uploaded filename
 			$this->fields = array('subject_id', 'object_id', 'role');
 		}
 		
-		protected function set_business_object(booking_bodocument $bo = null)
+		protected function set_business_object(booking_bopermission $bo = null)
 		{
 			$this->bo = is_null($bo) ? $this->create_business_object() : $bo;
 		}

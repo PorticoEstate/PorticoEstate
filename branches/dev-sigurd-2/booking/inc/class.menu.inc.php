@@ -139,6 +139,11 @@
 			);
 				$menus['admin'] = array
 				(
+					'permissions'	=> array
+					(
+						'text'	=> lang('Root Permissions'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+					),
 					'activity'	=> array
 					(
 						'text'	=> lang('Activity'),

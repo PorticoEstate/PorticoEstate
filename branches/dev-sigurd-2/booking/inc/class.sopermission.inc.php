@@ -4,14 +4,13 @@
 	abstract class booking_sopermission extends booking_socommon
 	{
 		const ROLE_ADMIN = 'admin';
+		const ROLE_MANAGER = 'manager';
 		const ROLE_CASE_OFFICER = 'case_officer';
-		const ROLE_BASIC = 'basic';
 		
 		protected 
 			$default_roles = array(
-			   self::ROLE_ADMIN,
+			   self::ROLE_MANAGER,
 			   self::ROLE_CASE_OFFICER,
-			   self::ROLE_BASIC,
 			);
 		
 		protected $object_type = null;

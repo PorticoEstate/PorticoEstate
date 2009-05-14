@@ -1,4 +1,32 @@
 <?php
+
+	$test[] = '0.1.36';
+	function booking_upgrade0_1_36()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+	
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_permission_root', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('subject_id' => 'account_id'),
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.37';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 	$test[] = '0.1.35';
 	function booking_upgrade0_1_35()
 	{
