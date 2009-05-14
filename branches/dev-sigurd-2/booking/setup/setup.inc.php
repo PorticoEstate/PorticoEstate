@@ -7,6 +7,7 @@
 	$setup_info['booking']['tables'] = array 
 	(
 		'bb_building', 
+		'bb_contact_person',
 		'bb_organization', 
 		'bb_resource', 
 		'bb_season', 
@@ -28,11 +29,9 @@
 		'bb_agegroup', 
 		'bb_application_agegroup', 
 		'bb_application_targetaudience', 
-		'bb_booking_targetaudience', 
 		'bb_booking_agegroup', 
 		'bb_targetaudience',
 		'bb_booking_targetaudience', 
-		'bb_booking_agegroup',
 		'bb_document_building',
 		'bb_document_resource',
 		'bb_permission_building',

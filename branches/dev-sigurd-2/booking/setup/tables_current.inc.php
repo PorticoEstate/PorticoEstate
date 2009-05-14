@@ -27,6 +27,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_contact_person' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'ssn' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_organization' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -40,8 +55,8 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_contact_person' => array('contact_primary' => 'id',),
-				'bb_contact_person' => array('contact_secondary' => 'id',),
+				'bb_contact_person' => array('admin_primary' => 'id',),
+				'bb_contact_person' => array('admin_secondary' => 'id',),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -77,21 +92,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'bb_contact_person' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'ssn' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
-				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
-				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'bb_season' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -120,6 +120,22 @@
 			'fk' => array(
 				'bb_season' => array('season_id' => 'id')
 			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_allocation' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'from_' => array('type' => 'timestamp','nullable' => False),
+				'to_' => array('type' => 'timestamp','nullable' => False),
+				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_organization' => array('organization_id' => 'id'),
+				'bb_season' => array('season_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -223,22 +239,6 @@
 				'bb_wtemplate_alloc' => array('allocation_id' => 'id'),
 				'bb_resource' => array('resource_id' => 'id')
 			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_allocation' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => False),
-				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'from_' => array('type' => 'timestamp','nullable' => False),
-				'to_' => array('type' => 'timestamp','nullable' => False),
-				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
-				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				'bb_organization' => array('organization_id' => 'id'),
-				'bb_season' => array('season_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
