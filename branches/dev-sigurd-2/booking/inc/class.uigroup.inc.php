@@ -80,7 +80,8 @@
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
-			if ($id) {
+			if ($id)
+			{
 				$group = $this->bo->read_single($id);
 				$group['id'] = $id;
 				$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
@@ -95,10 +96,19 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary')));
+				if (empty($group["contact_primary"]))
+				{
+					unset($group["contact_primary"]);
+				}
+				if (empty($group["contact_secondary"]))
+				{
+					unset($group["contact_secondary"]);
+				}
 				$errors = $this->bo->validate($group);
 				if(!$errors)
 				{
-					if ($id) {
+					if ($id)
+					{
 						$receipt = $this->bo->update($group);
 					} else {
 						$receipt = $this->bo->add($group);
@@ -107,6 +117,8 @@
 				}
 			}
 			$this->flash_form_errors($errors);
+
+			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
 
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
@@ -117,7 +129,7 @@
 
 			self::add_template_file("contactperson_fields");
 			self::add_template_file("contactperson_magic");
-			self::render_template('group_edit', array('group' => $group, 'module' => $this->module));
+			self::render_template('group_edit', array('group' => $group, 'module' => $this->module, 'contact_form_link' => $contact_form_link));
 		}
 		
 		public function show()

@@ -11,7 +11,7 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'name'			=> array('type' => 'string', 'required' => True, 'query' => True),
-					'homepage'		=> array('type' => 'string', 'required' => True, 'query' => True),
+					'homepage'		=> array('type' => 'string', 'required' => False, 'query' => True),
 					'phone'			=> array('type' => 'string'),
 					'email'			=> array('type' => 'string'),
 					'description'	=> array('type' => 'string'),

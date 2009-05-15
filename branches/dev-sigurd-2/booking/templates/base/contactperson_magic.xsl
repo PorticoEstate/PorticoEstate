@@ -2,7 +2,7 @@
     <div id="contactpersonform" style="visibility:hidden;">
         <div class="hd"><xsl:value-of select="php:function('lang', 'New contact')" /></div>
         <div class="bd">
-            <form action="/index.php?menuaction=booking.uicontactperson.edit" method="POST">
+            <form method="POST">
 				<xsl:attribute name="action"><xsl:value-of select="contact_form_link" /></xsl:attribute>
                 <xsl:call-template name="contactpersonfields" />
             </form>
