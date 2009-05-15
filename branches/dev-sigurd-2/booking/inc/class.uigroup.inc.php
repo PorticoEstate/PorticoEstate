@@ -144,6 +144,9 @@
 			$data = array(
 				'group'	=>	$group
 			);
-			self::render_template('group', array('group' => $group, ));
+			$loggedin = (int) true; // FIXME: Some sort of authentication!
+			$edit_self_link   = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit', 'id' => $group['id']));
+
+			self::render_template('group', array('group' => $group, 'loggedin' => $loggedin, 'edit_self_link' => $edit_self_link));
 		}
 	}

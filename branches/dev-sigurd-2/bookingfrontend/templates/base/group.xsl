@@ -22,6 +22,15 @@
         </ul>
         <xsl:call-template name="msgbox"/>
 
+        <xsl:if test="loggedin &gt; 0">
+            <span class="loggedin"><a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="edit_self_link" />
+                </xsl:attribute>
+                <img src="/phpgwapi/templates/base/images/edit.png" />
+            </a></span>
+        </xsl:if>
+
         <dl class="proplist">
             <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>
             <dd><xsl:value-of select="group/organization_name"/></dd>

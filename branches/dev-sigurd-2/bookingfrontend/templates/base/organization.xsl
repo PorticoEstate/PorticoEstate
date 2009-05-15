@@ -57,7 +57,14 @@
                     <xsl:sort select="name" order="ascending"/>
                     <tr>
                         <td><xsl:value-of select="id" /></td>
-                        <td><xsl:value-of select="name" /></td>
+                        <td>
+                            <a>
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="link" />	
+                                </xsl:attribute>
+                                <xsl:value-of select="name" />
+                            </a>
+                        </td>
                         <td><xsl:value-of select="description" /></td>
                         <td><xsl:value-of select="cp/name" /></td>
                         <td><xsl:value-of select="cs/name" /></td>

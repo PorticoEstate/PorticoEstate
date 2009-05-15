@@ -26,6 +26,7 @@
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$results = $this->bo->get_groups($organization["id"]);
+			array_walk($results["results"], array($this, "_add_links"), "bookingfrontend.uigroup.show");
 			$organization["groups"] = $results["results"];
 
 			$edit_self_link   = self::link(array('menuaction' => 'bookingfrontend.uiorganization.edit', 'id' => $organization['id']));
