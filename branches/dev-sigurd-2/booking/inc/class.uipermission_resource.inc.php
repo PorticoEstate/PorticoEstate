@@ -6,7 +6,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			#self::set_active_menu('booking::buildings::resources::documents');
+			self::set_active_menu('booking::buildings::resources::permissions');
 		}
 		
 		protected function get_parent_pathway(array $forDocumentData)
