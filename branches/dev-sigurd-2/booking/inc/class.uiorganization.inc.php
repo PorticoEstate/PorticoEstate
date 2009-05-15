@@ -84,7 +84,13 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description'));
+				$organization = extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary'));
+				if (empty($organization["admin_primary"])) {
+					unset($organization["admin_primary"]);
+				}
+				if (empty($organization["admin_secondary"])) {
+					unset($organization["admin_secondary"]);
+				}
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
