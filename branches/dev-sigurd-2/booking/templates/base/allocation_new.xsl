@@ -56,6 +56,12 @@
                 </input>
                 </div>
             </dd>
+            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
+            <dd>
+                <input id="field_cost" name="cost" type="text">
+                    <xsl:attribute name="value"><xsl:value-of select="allocation/cost"/></xsl:attribute>
+                </input>
+            </dd>
         </dl>
         <div class="form-buttons">
             <input type="submit">

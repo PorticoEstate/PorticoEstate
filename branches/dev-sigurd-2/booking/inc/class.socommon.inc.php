@@ -370,7 +370,7 @@
 			foreach($this->fields as $field => $params)
 			{
 				$v = trim($entity[$field]);
-				if($params['required'] && (!isset($v) || empty($v)))
+				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
 					$errors[$field] = "Field $field is required";
 				}

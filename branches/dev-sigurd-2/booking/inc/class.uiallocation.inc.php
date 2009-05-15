@@ -16,7 +16,7 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boallocation');
 			self::set_active_menu('booking::allocations');
-			$this->fields = array('resources',
+			$this->fields = array('resources', 'cost',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
@@ -104,8 +104,10 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
+			array_set_default($allocation, 'resources', array());
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
+			array_set_default($allocation, 'cost', '0');
 			self::render_template('allocation_new', array('allocation' => $allocation));
 		}
 

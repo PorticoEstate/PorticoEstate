@@ -74,29 +74,32 @@
 			{
 				$errors['from_'] = 'Invalid from date';
 			}
-			$rids = join(',', array_map("intval", $entity['resources']));
-			// Check if we overlap with any existing allocation
-			$this->db->query("SELECT a.id FROM bb_allocation a 
-								WHERE a.id<>$allocation_id AND 
-								a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
-								((a.from_ >= '$start' AND a.from_ < '$end') OR 
-					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
-					 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
-			if($this->db->next_record())
+			if($entity['resources'])
 			{
-				$errors['allocation'] = lang('Overlaps with existing allocation');
-			}
+				$rids = join(',', array_map("intval", $entity['resources']));
+				// Check if we overlap with any existing allocation
+				$this->db->query("SELECT a.id FROM bb_allocation a 
+									WHERE a.id<>$allocation_id AND 
+									a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
+									((a.from_ >= '$start' AND a.from_ < '$end') OR 
+						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
+						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					$errors['allocation'] = lang('Overlaps with existing allocation');
+				}
 			
-			// Check if we overlap with any existing booking
-			$this->db->query("SELECT b.id FROM bb_booking b 
-								WHERE b.id<>$booking_id AND 
-								b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
-								((b.from_ >= '$start' AND b.from_ < '$end') OR 
-					 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
-					 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
-			if($this->db->next_record())
-			{
-				$errors['booking'] = lang('Overlaps with existing booking2');
+				// Check if we overlap with any existing booking
+				$this->db->query("SELECT b.id FROM bb_booking b 
+									WHERE b.id<>$booking_id AND 
+									b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
+									((b.from_ >= '$start' AND b.from_ < '$end') OR 
+						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
+						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					$errors['booking'] = lang('Overlaps with existing booking2');
+				}
 			}
 			return $errors;
 		}
