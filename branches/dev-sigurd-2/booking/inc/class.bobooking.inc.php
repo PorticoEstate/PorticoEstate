@@ -9,6 +9,7 @@
 		{
 			parent::__construct();
 			$this->so = CreateObject('booking.sobooking');
+			$this->allocation_so = CreateObject('booking.soallocation');
 			$this->resource_so = CreateObject('booking.soresource');
 		}
 
@@ -32,10 +33,19 @@
 			}
 			$to = clone $from;
 			$to->modify('+7 days');
+			$allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations = $allocations['results'];
+			foreach($allocations as &$allocation)
+			{
+				$allocation['name'] = $allocation['organization_name'];
+			}
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
 			$bookings = $bookings['results'];
+			$bookings = array_merge($allocations, $bookings);
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
+			$resource_ids = array_merge($this->so->resource_ids_for_allocations($allocation_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids)));
 			$resources = $resources['results'];
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
@@ -64,9 +74,17 @@
 			$to = clone $from;
 			$to->modify('+7 days');
 			$resource = $this->resource_so->read_single($resource_id);
+			$allocation_ids = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
+			$allocations = $this->allocation_so->read(array('filters'=> array('id' => $allocation_ids)));
+			$allocations = $allocations['results'];
+			foreach($allocations as &$allocation)
+			{
+				$allocation['name'] = $allocation['organization_name'];
+			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
 			$bookings = $bookings['results'];
+			$bookings = array_merge($allocations, $bookings);
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, array($resource));
 			return array('total_records'=>count($results), 'results'=>$results);

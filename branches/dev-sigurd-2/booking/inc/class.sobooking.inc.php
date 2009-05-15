@@ -120,6 +120,36 @@
 			return $results;
 		}
 
+		function resource_ids_for_allocations($allocations)
+		{
+			if(!$allocations)
+			{
+				return array();
+			}
+			$ids = join(',', array_map("intval", $allocations));
+			$results = array();
+			$this->db->query("SELECT resource_id FROM bb_allocation_resource WHERE allocation_id IN ($ids)", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+			}
+			return $results;
+		}
+
+		function allocation_ids_for_building($building_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+			$building_id = intval($building_id);
+			$results = array();
+			$this->db->query("SELECT bb_allocation.id AS id FROM bb_allocation JOIN bb_season ON (bb_allocation.season_id=bb_season.id) WHERE bb_season.building_id=$building_id AND ((bb_allocation.from_ >= '$start' AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start' AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+			}
+			return $results;
+		}
+
 		function booking_ids_for_building($building_id, $start, $end)
 		{
 			$start = $start->format('Y-m-d H:i');
@@ -127,6 +157,20 @@
 			$building_id = intval($building_id);
 			$results = array();
 			$this->db->query("SELECT bb_booking.id AS id FROM bb_booking JOIN bb_season ON (bb_booking.season_id=bb_season.id) WHERE bb_season.building_id=$building_id AND ((bb_booking.from_ >= '$start' AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start' AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start' AND bb_booking.to_ > '$end'))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+			}
+			return $results;
+		}
+
+		function allocation_ids_for_resource($resource_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+			$resource_id = intval($resource_id);
+			$results = array();
+			$this->db->query("SELECT id FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id=$resource_id) WHERE ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
