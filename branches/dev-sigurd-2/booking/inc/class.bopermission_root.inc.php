@@ -8,4 +8,9 @@
 			parent::__construct();
 			$this->so = CreateObject('booking.sopermission_root');
 		}
+		
+		public function get_roles()
+		{
+			return	$this->so->get_roles();
+		}
 	}

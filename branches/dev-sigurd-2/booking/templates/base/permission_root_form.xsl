@@ -26,6 +26,27 @@
 					<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
 				</input>
 			</xsl:if>
+			
+			<!-- Role -->
+			<dt>
+				<label for="field_role"><xsl:value-of select="php:function('lang', 'Role')" /></label>
+			</dt>
+			<dd>
+				<xsl:value-of select="node()"/>
+				<select name='role' id='field_role'>
+					<option value=''><xsl:value-of select="php:function('lang', 'Select role...')" /></option>
+					<xsl:for-each select="available_roles/*">
+						<option>
+							<xsl:if test="../../role = local-name()">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+
+							<xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
+							<xsl:value-of select="php:function('lang', string(node()))"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</dd>
 
 			<!-- Subject -->
 			<dt>

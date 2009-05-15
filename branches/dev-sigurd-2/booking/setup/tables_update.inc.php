@@ -1,5 +1,23 @@
 <?php
 
+	$test[] = '0.1.37';
+	function booking_upgrade0_1_37()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_permission_root");
+		# END Evil
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_permission_root ADD COLUMN \"role\" character varying(255) NOT NULL");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.38';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 	$test[] = '0.1.36';
 	function booking_upgrade0_1_36()
 	{

@@ -1,8 +1,14 @@
 <?php
 	phpgw::import_class('booking.socommon');
+	phpgw::import_class('booking.sopermission');
 	
 	class booking_sopermission_root extends booking_socommon
 	{
+		protected 
+			$default_roles = array(
+			   booking_sopermission::ROLE_MANAGER,
+			   booking_sopermission::ROLE_CASE_OFFICER,
+			);
 		
 		function __construct()
 		{
@@ -10,6 +16,7 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'subject_id'	=> array('type' => 'int', 'required' => true),
+					'role'			=> array('type' => 'string', 'required' => true, 'query' => true),
 					'subject_name'	=> array(
 						'type' => 'string',
 						'query' => true,
@@ -24,5 +31,10 @@
 			);
 		
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+		}
+		
+		public function get_roles()
+		{
+			return $this->default_roles;
 		}
 	}

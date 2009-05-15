@@ -19,7 +19,7 @@
 			
 			$this->set_business_object();
 			
-			$this->fields = array('subject_id');
+			$this->fields = array('subject_id', 'role');
 			
 			self::set_active_menu('admin::booking::permissions');
 		}
@@ -98,6 +98,11 @@
 							'sortable' => true,
 						),
 						array(
+							'key' => 'role',
+							'label' => lang('Role'),
+							'sortable' => true,
+						),
+						array(
 							'key' => 'actions',
 							'label' => lang('Actions'),
 							'sortable' => false,
@@ -139,8 +144,16 @@
 			return booking_account_ui_utils::yui_accounts();
 		}
 		
+		protected function get_available_roles()
+		{
+			$roles = array();
+			foreach($this->bo->get_roles() as $role) { $roles[$role] = self::humanize($role); }
+			return $roles;
+		}
+		
 		protected function add_default_display_data(&$permission_data)
 		{
+			$permission_data['available_roles'] 	= $this->get_available_roles();
 			$permission_data['permissions_link'] 	= $this->generate_link('index');
 			$permission_data['cancel_link'] 		= $this->generate_link('index');
 		}

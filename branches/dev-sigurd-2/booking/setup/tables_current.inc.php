@@ -444,6 +444,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 			),
 			'pk' => array('id'),
 			'fk' => array(
