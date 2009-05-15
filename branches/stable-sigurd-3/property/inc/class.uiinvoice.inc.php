@@ -1731,7 +1731,8 @@
 														."sub:'{$this->sub}',"
 														."query:'{$this->query}',"
 														."start:'{$this->start}',"
-														."filter:'{$this->filter}'"
+														."filter:'{$this->filter}',"
+														."b_account_class:'{$b_account_class}'"
 														;
 
 				$values_combo_box[0]  = $this->bo->select_category('',$this->cat_id);
