@@ -45,14 +45,6 @@
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			if($_SESSION['showall'])
-			{
-				$active_botton = lang('Show only active');
-			}else{
-				$active_botton = lang('Show all');
-			}
-			
-						
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -73,7 +65,7 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => $active_botton,
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => 'booking.uibuilding.active'))
 							),
 						)

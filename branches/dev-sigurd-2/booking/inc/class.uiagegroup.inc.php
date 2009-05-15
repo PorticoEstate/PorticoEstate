@@ -8,6 +8,7 @@
 			'index'			=>	true,
 			'add'			=>	true,
 			'show'			=>	true,
+			'active'		=>	true,
 			'edit'			=>	true
 		);
 
@@ -17,7 +18,18 @@
 			$this->bo = CreateObject('booking.boagegroup');
 			self::set_active_menu('booking::settings::agegroup');
 		}
-		
+
+		public function active()
+		{
+			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			{
+				$this->bo->unset_show_all_objects();
+			}else{
+				$this->bo->show_all_objects();
+			}
+			$this->redirect(array('menuaction' => 'booking.uiagegroup.index'));
+		}
+				
 		function treeitem($children, $parent_id)
 		{
 			$nodes = array();
@@ -45,7 +57,7 @@
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('New agegroup group'),
+								'value' => lang('New Age Group'),
 								'href' => self::link(array('menuaction' => 'booking.uiagegroup.add'))
 							),
 							array('type' => 'text', 
@@ -56,6 +68,11 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => 'booking.uiagegroup.active'))
+							),
 						)
 					),
 				),
@@ -64,12 +81,8 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('agegroup Title'),
+							'label' => lang('Name'),
 							'formatter' => 'YAHOO.booking.formatLink'
-						),
-						array(
-							'key' => 'description',
-							'label' => lang('Description')
 						),
 						array(
 							'key' => 'active',
@@ -103,37 +116,18 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if(!$_POST['active'])
-				{
-					$_POST['active'] = 0;
-				}
-				$resource = extract_values($_POST, array('name', 'description', 'active'));
-				$errors = $this->bo->validate($resource);
+				$agegroup = extract_values($_POST, array('name', 'description'));
+				$agegroup['active'] = true;
+				$errors = $this->bo->validate($agegroup);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($resource);
+					$receipt = $this->bo->add($agegroup);
 					$this->redirect(array('menuaction' => 'booking.uiagegroup.index', 'id'=>$receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
 			
-				/**
-				 * Translation
-				 **/
-					$lang['title'] = lang('New agegroup');
-					$lang['activity'] = lang('agegroup');
-					$lang['name'] = lang('agegroup Title');
-					$lang['description'] = lang('Description');
-					$lang['resource'] = lang('Resource');
-					$lang['create'] = lang('Create');
-					$lang['active'] = lang('Active');
-					$lang['inactive'] = lang('Inactive');
-					$lang['buildings'] = lang('Buildings');
-					$lang['resources'] = lang('Resources');
-					$lang['agegroup'] = lang('agegroup');
-					$lang['parent'] = lang('Parent agegroup');
-					$lang['novalue'] = lang('No Parent');
-			self::render_template('agegroup_new', array('resource' => $resource, 'lang' => $lang));
+			self::render_template('agegroup_new', array('agegroup' => $agegroup));
 		}
 
 		public function edit()
