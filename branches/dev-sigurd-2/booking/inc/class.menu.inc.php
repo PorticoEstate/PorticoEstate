@@ -94,7 +94,21 @@
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_resource.index') ),
 								),
 							)
-						)
+						),
+						'seasons' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Seasons', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiseason.index') ),
+		                    'image'	=> array('property', 'location'),
+							'children' => array
+							(
+								'permissions' => array
+								(
+									'text'	=> $GLOBALS['phpgw']->translation->translate('Permissions', array(), true),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_season.index') ),
+								),
+							),
+						),
 					)
 				),
 				// 'events' => array
@@ -117,20 +131,6 @@
 		                    'image'	=> array('property', 'location'),
 						)
 					)
-				),
-				'seasons' => array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Seasons', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiseason.index') ),
-                    'image'	=> array('property', 'location'),
-					'children' => array
-					(
-						'permissions' => array
-						(
-							'text'	=> $GLOBALS['phpgw']->translation->translate('Permissions', array(), true),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_season.index') ),
-						),
-					),
 				),
 				// 'costs' => array
 				// (

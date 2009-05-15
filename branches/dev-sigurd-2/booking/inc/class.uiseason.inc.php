@@ -22,7 +22,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boseason');
-			self::set_active_menu('booking::seasons');
+			self::set_active_menu('booking::buildings::seasons');
 			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
 			$this->wtemplate_alloc_fields = array('id', 'organization_id', 'wday', 'cost', 'from_', 'to_', 'resources');
