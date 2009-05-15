@@ -46,11 +46,32 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+				//category
+				index = locate_in_array_options(0,"value",path_values.cat_id);
+				if(index)
+				{
+					oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+				}
+				//district
+				index = locate_in_array_options(1,"value",path_values.district_id);
+				if(index)
+				{
+					oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+				}
+				//account_class
+				index = locate_in_array_options(2,"value",path_values.b_account_class);
+				if(index)
+				{
+					oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+				}
+
 				//locate (asign ID) to datatable
 				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 				tableYUI.setAttribute("id","tableYUI");
 
 				YAHOO.util.Dom.get("start_date-trigger").focus();
+		// really needed?
+				onSearchClick();
 			}
 			else if(flag_particular_setting=='update')
 			{
