@@ -103,7 +103,7 @@
 			self::add_template_file("contactperson_fields");
 			self::add_template_file("contactperson_magic");
 
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Create"));
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Create", 'module' => $this->module));
 		}
 
 		public function edit()
