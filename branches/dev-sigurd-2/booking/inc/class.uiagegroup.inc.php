@@ -15,7 +15,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boagegroup');
-			self::set_active_menu('booking::agegroup');
+			self::set_active_menu('booking::settings::agegroup');
 		}
 		
 		function treeitem($children, $parent_id)

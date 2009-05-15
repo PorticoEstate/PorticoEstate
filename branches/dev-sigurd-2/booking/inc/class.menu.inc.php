@@ -10,7 +10,7 @@
 				'booking' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Booking', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibuilding.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidashboard.index') ),
                     'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
@@ -144,30 +144,58 @@
 					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uicontactperson.index') ),
 					'image' => array('property', 'location'),
 				),
-			);
-				$menus['admin'] = array
+				'settings' => array
 				(
-					'permissions'	=> array
+					'text'	=> lang('Settings'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking')),
+					'children' => array
 					(
-						'text'	=> lang('Root Permissions'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
-					),
-					'activity'	=> array
-					(
-						'text'	=> lang('Activity'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
-					),
-					'audience'	=> array
-					(
-						'text'	=> lang('Audience'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
-					),
-					'agegroup'	=> array
-					(
-						'text'	=> lang('Agegroup'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
+						'permissions'	=> array
+						(
+							'text'	=> lang('Root Permissions'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+						),
+						'activity'	=> array
+						(
+							'text'	=> lang('Activity'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
+						),
+						'audience'	=> array
+						(
+							'text'	=> lang('Audience'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
+						),
+						'agegroup'	=> array
+						(
+							'text'	=> lang('Agegroup'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
+						)
 					)
-				);
+				),
+			);
+				// $menus['admin'] = array
+				// (
+				// 	'permissions'	=> array
+				// 	(
+				// 		'text'	=> lang('Root Permissions'),
+				// 		'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+				// 	),
+				// 	'activity'	=> array
+				// 	(
+				// 		'text'	=> lang('Activity'),
+				// 		'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
+				// 	),
+				// 	'audience'	=> array
+				// 	(
+				// 		'text'	=> lang('Audience'),
+				// 		'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
+				// 	),
+				// 	'agegroup'	=> array
+				// 	(
+				// 		'text'	=> lang('Agegroup'),
+				// 		'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
+				// 	)
+				// );
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			return $menus;

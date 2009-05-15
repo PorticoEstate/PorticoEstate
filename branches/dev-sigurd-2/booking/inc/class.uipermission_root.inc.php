@@ -21,7 +21,7 @@
 			
 			$this->fields = array('subject_id', 'role');
 			
-			self::set_active_menu('admin::booking::permissions');
+			self::set_active_menu('booking::settings::permissions');
 		}
 		
 		protected function set_business_object(booking_bopermission_root $bo = null)
