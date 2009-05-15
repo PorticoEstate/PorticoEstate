@@ -36,7 +36,7 @@
 			self::render_template('organization', array(
 				'organization'     => $organization,
 				'loggedin'         => $loggedin,
-				'edit_self_link'   => $link,
+				'edit_self_link'   => $edit_self_link,
 				'edit_groups_link' => $edit_groups_link,
 			));
 		}
