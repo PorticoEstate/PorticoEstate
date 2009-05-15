@@ -45,7 +45,7 @@
 		'bb_contact_person' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'ssn' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
+				'ssn' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True,),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
