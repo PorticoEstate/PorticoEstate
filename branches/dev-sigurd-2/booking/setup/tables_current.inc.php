@@ -440,6 +440,21 @@
 			'ix' => array(),
 			'uc' => array(),
 		),
+		'bb_permission_season' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+				'bb_season' => array('object_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
 		'bb_permission_root' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),

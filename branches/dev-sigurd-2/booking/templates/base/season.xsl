@@ -50,17 +50,31 @@
             <xsl:attribute name="href"><xsl:value-of select="season/wtemplate_link"></xsl:value-of></xsl:attribute>
             <xsl:value-of select="php:function('lang', 'Week template')" />
         </a>
+
+		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+	    <div id="permissions_container"/>
+		<a class='button'>
+			<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
+			<xsl:value-of select="php:function('lang', 'Add Permission')" />
+		</a>
     </div>
 
-<script type="text/javascript">
-    var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
-YAHOO.util.Event.addListener(window, "load", function() {
-    <![CDATA[
-    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-	]]>
-    var colDefs = [{key: 'name', label: '<xsl:value-of select="php:function('lang', 'Name')" />', formatter: YAHOO.booking.formatLink}];
-    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
-});
-</script>
+
+
+	<script type="text/javascript">
+		var season_id = <xsl:value-of select="season/id"/>;
+	    var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
+	YAHOO.util.Event.addListener(window, "load", function() {
+	    <![CDATA[
+	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+	        ]]>
+	    var colDefs = [{key: 'name', label: '<xsl:value-of select="php:function('lang', 'Name')" />', formatter: YAHOO.booking.formatLink}];
+	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
+	
+		<![CDATA[ var url = 'index.php?menuaction=booking.uipermission_season.index&sort=name&filter_object_id=' + season_id + '&phpgw_return_as=json&'; ]]>
+		var colDefs = [{key: 'subject_name', label: 'Account'}, {key: 'role', label: 'Role'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+		YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
+	});
+	</script>
 
 </xsl:template>

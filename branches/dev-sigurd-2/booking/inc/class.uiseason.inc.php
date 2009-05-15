@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uipermission_season');
 
 	class booking_uiseason extends booking_uicommon
 	{
@@ -184,6 +185,7 @@
 			$season['edit_link'] = self::link(array('menuaction' => 'booking.uiseason.edit', 'id' => $season['id']));
 			$season['boundaries_link'] = self::link(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season['id']));
 			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));
+			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('season', $season['id'], 'add');
 			$resource_ids = '';
 			foreach($season['resources'] as $res)
 			{
