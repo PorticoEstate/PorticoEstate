@@ -8,6 +8,7 @@
 			'index'			=>	true,
 			'add'			=>	true,
 			'show'			=>	true,
+			'active'		=>	true,
 			'edit'			=>	true
 		);
 
@@ -16,6 +17,17 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::settings::audience');
+		}
+		
+		public function active()
+		{
+			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			{
+				$this->bo->unset_show_all_objects();
+			}else{
+				$this->bo->show_all_objects();
+			}
+			$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
 		}
 		
 		function treeitem($children, $parent_id)
@@ -72,11 +84,9 @@
 								'value' => lang('Search')
 							),
 							array(
-								'type' => 'checkbox',
-								'name' => 'showall',
-								'value' => lang('Show all'),
-								'text' => (" [ ".lang('Show all')." ] "),
-								'onClick' => ("window.location='".$sessionLink."'")
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => 'booking.uiaudience.active'))
 							),
 						)
 					),
@@ -94,10 +104,6 @@
 							'label' => lang('Description')
 						),
 						array(
-							'key' => 'active',
-							'label' => lang('Active')
-						),
-						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -112,14 +118,14 @@
 		public function index_json()
 		{
 			
-			$groups = $this->bo->read(array('filters' => "active=1"));
+			$groups = $this->bo->read();
 			
 			foreach($groups['results'] as &$audience)
 			{
 				$audience['link'] = $this->link(array('menuaction' => 'booking.uiaudience.edit', 'id' => $audience['id']));
 				$audience['active'] = $audience['active'] ? lang('Active') : lang('Inactive');
 			}
-			return $this->yui_results($audience);
+			return $this->yui_results($groups);
 		}
 
 		public function add()
