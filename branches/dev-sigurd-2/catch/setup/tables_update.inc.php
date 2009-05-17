@@ -98,7 +98,7 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.502';
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.503';
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
