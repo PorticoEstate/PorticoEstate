@@ -96,11 +96,11 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary')));
-				if (empty($group["contact_primary"]))
+				if (empty($group["contact_primary"]) || empty($_POST["contact_primary_name"]))
 				{
 					unset($group["contact_primary"]);
 				}
-				if (empty($group["contact_secondary"]))
+				if (empty($group["contact_secondary"]) || empty($_POST["contact_secondary_name"]))
 				{
 					unset($group["contact_secondary"]);
 				}

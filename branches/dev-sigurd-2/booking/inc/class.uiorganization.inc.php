@@ -126,10 +126,10 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary')));
-				if (empty($organization["admin_primary"])) {
+				if (empty($organization["admin_primary"]) || empty($_POST["admin_primary_name"])) {
 					unset($organization["admin_primary"]);
 				}
-				if (empty($organization["admin_secondary"])) {
+				if (empty($organization["admin_secondary"]) || empty($_POST["admin_secondary_name"])) {
 					unset($organization["admin_secondary"]);
 				}
 				$errors = $this->bo->validate($organization);
