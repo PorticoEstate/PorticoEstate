@@ -1,0 +1,90 @@
+current activities	booking	no	Aktiviteter
+successfully created (%1) allocations:	booking	no	(%1) tildelningar lages
+activity	booking	no	Aktivitet
+age group	booking	no	Aldersgruppe
+number of participants	booking	no	Antall deltakere
+cancel	booking	no	Avbryt
+description	booking	no	Beskrivelse
+picture	booking	no	Bild
+bookings	booking	no	Bookings
+account	booking	no	Bruker
+city	booking	no	By
+booking district	booking	no	Bydel
+buildings	booking	no	Bygg/anlegg
+bygning	booking	no	Bygg/anlegg
+building name	booking	no	Bygg/anlegg
+building	booking	no	Bygg/anlegg
+allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
+filnavn	booking	no	Dokument
+surname	booking	no	Etternavn
+preview	booking	no	forhåndsvisning
+name	booking	no	Fornavn
+social security number	booking	no	Fødselnummer
+street	booking	no	Gate
+group	booking	no	Gruppe
+go back to the template week	booking	no	Gå tilbake til ukeplan
+actions	booking	no	Handling
+homepage	booking	no	Hjemmeside
+hms document	booking	no	HMS dokument
+parent aktivity	booking	no	Hodekategori
+inactivate	booking	no	Inaktivera
+no records found	booking	no	Inget funnet!
+settings	booking	no	Innstillinger
+building schedule	booking	no	Kalender
+category	booking	no	Kategori
+primary admin	booking	no	Kontaktperson 1
+secondary admin	booking	no	Kontaktperson 2
+generate allocations	booking	no	Lag tildelning
+generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
+create	booking	no	Lagre
+submit	booking	no	Lagre
+add boundary	booking	no	Legg til rammetid
+add permission	booking	no	Legg til rettighet
+target audience	booking	no	Malgruppe
+audience	booking	no	Målgruppe
+new activity	booking	no	Ny aktivitet
+new age group	booking	no	Ny aldersgruppe
+new booking	booking	no	Ny booking
+new group	booking	no	Ny gruppe
+new contact	booking	no	Ny kontakt
+new audience group	booking	no	Ny målgruppe
+new organization	booking	no	Ny organisajon
+new resource	booking	no	Ny Ressurs
+new season	booking	no	Ny sesong
+new allocation	booking	no	Ny tildelning
+new document	booking	no	Nya dokumenter
+new building	booking	no	Nytt bygg/anlegg
+new equipment	booking	no	Nytt utstyr
+organization	booking	no	Organisasjon
+organizations	booking	no	Organisasjoner
+zip code	booking	no	Postnummer
+cost	booking	no	Pris
+price list	booking	no	Prisliste
+boundaries	booking	no	Rammetid
+edit	booking	no	Rediger
+editer	booking	no	Rediger
+edit agegroup group	booking	no	Rediger aldersgruppe
+edit Audience group	booking	no	Rediger målgruppe
+edit organization	booking	no	Rediger organisasjon
+resource	booking	no	Ressurs
+resource name	booking	no	Ressurs
+resource schedule	booking	no	Ressurs kalender
+resources	booking	no	Ressurser
+role	booking	no	Rolle
+season name	booking	no	Sesong
+seasons	booking	no	Sesonger
+season	booking	no	Sesong
+show only active	booking	no	Skjul
+drawing	booking	no	Tegning
+allocation	booking	no	Tildelning
+allocations	booking	no	Tildelningar
+allocations that can be created (%1)	booking	no	Tildelningar som kan lages
+week day	booking	no	Ukedag
+day of the week	booking	no	Ukedag
+week template	booking	no	Ukeplan
+equipment name	booking	no	Utstyr
+equipment	booking	no	Utstyr
+select a building first	booking	no	Valg bygg/anlegg først
+choose file	booking	no	Valg dokument
+no parents	booking	no	Ingen foreldre
+parent id	booking	no	Hodekategori
