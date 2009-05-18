@@ -35,7 +35,7 @@
 
 <script type="text/javascript">
 <![CDATA[
-var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
+var descEdit = new YAHOO.widget.SimpleEditor('contact-field-description', {
     height: '300px',
     width: '522px',
     dompath: true,

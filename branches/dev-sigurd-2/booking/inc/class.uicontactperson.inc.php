@@ -74,7 +74,12 @@
         }
         public function index_json()
         {   
-            $persons = $this->bo->read();
+			if ($id = intval(phpgw::get_var('id', 'GET'))) {
+				$person = $this->bo->read_single($id);
+				return $this->yui_results(array("totalResultsAvailable" => 1, "results" => $person));
+			}
+
+			$persons = $this->bo->read();
 			array_walk($persons["results"], array($this, "_add_links"), "booking.uicontactperson.show");
 			return $this->yui_results($persons);
         }
@@ -121,6 +126,7 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
 			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
+			self::add_javascript('yahoo', 'yahoo/dom', 'dom-min.js');
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 

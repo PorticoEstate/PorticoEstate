@@ -24,59 +24,82 @@
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">
-        <dl class="form">
-            <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
-            <dd>
-                <input name="name" type="text">
-                     <xsl:attribute name="value"><xsl:value-of select="group/name"/></xsl:attribute>
-                </input>
-            </dd>
+        <ul>
+            <li style="display: inline; float: left;">
+                <dl class="form">
+                    <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+                    <dd>
+                        <input name="name" type="text">
+                            <xsl:attribute name="value"><xsl:value-of select="group/name"/></xsl:attribute>
+                        </input>
+                    </dd>
 
-            <dt><label for="field_organization"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
-            <dd>
-                <div class="autocomplete">
-                <input id="field_organization_id" name="organization_id" type="hidden">
-                    <xsl:attribute name="value"><xsl:value-of select="group/organization_id"/></xsl:attribute>
-                </input>
-                <input name="organization_name" type="text" id="field_organization_name" >
-                    <xsl:attribute name="value"><xsl:value-of select="group/organization_name"/></xsl:attribute>
-                </input>
-                <div id="organization_container"/>
-            </div>
-            </dd>
-            <dt>
-                <label for="field_contact_primary"><xsl:value-of select="php:function('lang', 'Primary contact')" /></label><br />
-                <a href="#" onclick="return createContact();">(<xsl:value-of select="php:function('lang', 'Create a new contact')" />)</a>
-            </dt>
-            <dd>
-                <div class="autocomplete">
-                    <input id="field_contact_primary" name="contact_primary" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="group/contact_primary/id"/></xsl:attribute>
-                    </input>
-                    <input name="contact_primary_name" type="text" id="field_contact_primary_name" >
-                        <xsl:attribute name="value"><xsl:value-of select="group/contact_primary/name"/></xsl:attribute>
-                    </input>
-                    <div id="primary_contact_container"/>
-                </div>
-            </dd>
-            <dt><label for="field_contact_secondary"><xsl:value-of select="php:function('lang', 'Secondary contact')" /></label></dt>
-            <dd>
-                <div class="autocomplete">
-                    <input id="field_contact_secondary" name="contact_secondary" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="group/contact_secondary/id"/></xsl:attribute>
-                    </input>
-                    <input name="contact_secondary_name" type="text" id="field_contact_secondary_name" >
-                        <xsl:attribute name="value"><xsl:value-of select="group/contact_secondary/name"/></xsl:attribute>
-                    </input>
-                    <div id="secondary_contact_container"/>
-                </div>
-            </dd>
+                    <dt><label for="field_organization"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
+                    <dd>
+                        <div class="autocomplete">
+                            <input id="field_organization_id" name="organization_id" type="hidden">
+                                <xsl:attribute name="value"><xsl:value-of select="group/organization_id"/></xsl:attribute>
+                            </input>
+                            <input name="organization_name" type="text" id="field_organization_name" >
+                                <xsl:attribute name="value"><xsl:value-of select="group/organization_name"/></xsl:attribute>
+                            </input>
+                            <div id="organization_container"/>
+                        </div>
+                    </dd>
 
-            <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
-            <dd class="yui-skin-sam">
-                <textarea id="field-description" name="description" type="text"><xsl:value-of select="group/description"/></textarea>
-            </dd>
-        </dl>
+                    <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
+                    <dd class="yui-skin-sam">
+                        <textarea id="field-description" name="description" type="text"><xsl:value-of select="group/description"/></textarea>
+                    </dd>
+                </dl>
+            </li>
+            <li style="display: inline; float: left;">
+                <dl class="form">
+                    <dt>
+                        <label for="field_contact_primary"><xsl:value-of select="php:function('lang', 'Primary contact')" /></label><br />
+                        <a href="#" onclick="return createContact();">(<xsl:value-of select="php:function('lang', 'Create a new contact')" />)</a>
+                    </dt>
+                    <dd>
+                        <ul>
+                            <li style="float: left">
+                                <div class="autocomplete">
+                                    <input id="field_contact_primary" name="contact_primary" type="hidden">
+                                        <xsl:attribute name="value"><xsl:value-of select="group/contact_primary/id"/></xsl:attribute>
+                                    </input>
+                                    <input name="contact_primary_name" type="text" id="field_contact_primary_name" >
+                                        <xsl:attribute name="value"><xsl:value-of select="group/contact_primary/name"/></xsl:attribute>
+                                    </input>
+                                    <div id="primary_contact_container"/>
+                                </div>
+                            </li>
+                            <li style="float: left; margin-left: 10px">
+                                <a href="#" onclick="return editContact('field_contact_primary');">Edit</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+                    <dt><label for="field_contact_secondary"><xsl:value-of select="php:function('lang', 'Secondary contact')" /></label></dt>
+                    <dd>
+                        <ul>
+                            <li style="float: left">
+                                <div class="autocomplete">
+                                    <input id="field_contact_secondary" name="contact_secondary" type="hidden">
+                                        <xsl:attribute name="value"><xsl:value-of select="group/contact_secondary/id"/></xsl:attribute>
+                                    </input>
+                                    <input name="contact_secondary_name" type="text" id="field_contact_secondary_name" >
+                                        <xsl:attribute name="value"><xsl:value-of select="group/contact_secondary/name"/></xsl:attribute>
+                                    </input>
+                                    <div id="secondary_contact_container"/>
+                                </div>
+                            </li>
+                            <li style="float: left; margin-left: 10px">
+                                <a href="#" onclick="return editContact('field_contact_secondary');">Edit</a>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
         <div class="form-buttons">
             <input type="submit">
                 <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>
