@@ -15,4 +15,16 @@
 			);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
+
+		function validate($entity)
+		{
+			$errors = parent::validate($entity);
+
+			if($entity['id'] && $entity['parent_id'] == $entity['id'])
+			{
+				$errors['parent_id'] = 'Invalid parent activity';
+			}
+			return $errors;
+		}
+
 	}
