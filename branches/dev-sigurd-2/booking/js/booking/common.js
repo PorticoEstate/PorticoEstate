@@ -249,3 +249,10 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupDatePickers();
 });
+var showIfNotEmpty = function(event, fieldname) {
+    if (document.getElementById(fieldname).value.length > 1) {
+        YAHOO.util.Dom.replaceClass(fieldname + "_edit", "hideit", "showit");
+    } else {
+        YAHOO.util.Dom.replaceClass(fieldname + "_edit", "showit", "hideit");
+    }
+}

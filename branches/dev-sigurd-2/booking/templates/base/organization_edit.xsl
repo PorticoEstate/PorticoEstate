@@ -58,7 +58,7 @@
                                     <div id="primary_admin_container"/>
                                 </div>
                             </li>
-                            <li style="float: left; margin-left: 10px">
+                            <li style="float: left; margin-left: 10px" id="field_admin_primary_name_edit" class="showit">
                                 <a href="#" onclick="return editContact('field_admin_primary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
@@ -79,7 +79,7 @@
                                     <div id="secondary_admin_container"/>
                                 </div>
                             </li>
-                            <li style="float: left; margin-left: 10px">
+                            <li style="float: left; margin-left: 10px" id="field_admin_secondary_name_edit" class="showit">
                                 <a href="#" onclick="return editContact('field_admin_secondary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
@@ -113,6 +113,13 @@ YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uicontac
     'field_admin_secondary',
     'secondary_admin_container'
 );
+
+
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get("field_admin_primary_name"), "change", showIfNotEmpty, "field_admin_primary_name"); 
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get("field_admin_secondary_name"), "change", showIfNotEmpty, "field_admin_secondary_name"); 
+
+showIfNotEmpty(null, "field_admin_primary_name"); 
+showIfNotEmpty(null, "field_admin_secondary_name"); 
 ]]>
 </script>
         <div class="form-buttons">

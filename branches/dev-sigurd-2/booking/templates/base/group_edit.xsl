@@ -72,7 +72,7 @@
                                     <div id="primary_contact_container"/>
                                 </div>
                             </li>
-                            <li style="float: left; margin-left: 10px">
+                            <li style="float: left; margin-left: 10px" class="showit" id="field_contact_primary_name_edit">
                                 <a href="#" onclick="return editContact('field_contact_primary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
@@ -92,7 +92,7 @@
                                     <div id="secondary_contact_container"/>
                                 </div>
                             </li>
-                            <li style="float: left; margin-left: 10px">
+                            <li style="float: left; margin-left: 10px" class="showit" id="field_contact_secondary_name_edit">
                                 <a href="#" onclick="return editContact('field_contact_secondary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
@@ -143,6 +143,11 @@ YAHOO.booking.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiorgani
     'field_organization_id',
     'organization_container'
 );
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get("field_contact_primary_name"), "change", showIfNotEmpty, "field_contact_primary_name"); 
+YAHOO.util.Event.addListener(YAHOO.util.Dom.get("field_contact_secondary_name"), "change", showIfNotEmpty, "field_contact_secondary_name"); 
+
+showIfNotEmpty(null, "field_contact_primary_name"); 
+showIfNotEmpty(null, "field_contact_secondary_name"); 
 ]]>
 </script>
 </xsl:template>
