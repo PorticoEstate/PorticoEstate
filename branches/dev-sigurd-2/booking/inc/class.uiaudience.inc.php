@@ -133,82 +133,43 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if(!$_POST['active'])
-				{
-					$_POST['active'] = 0;
-				}
-				$resource = extract_values($_POST, array('name', 'description', 'active'));
-				$errors = $this->bo->validate($resource);
+				$audience = extract_values($_POST, array('name', 'description'));
+				$audience['active'] = 1;
+				$errors = $this->bo->validate($audience);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($resource);
-					$this->redirect(array('menuaction' => 'booking.uiaudience.index', 'id'=>$receipt['id']));
+					$receipt = $this->bo->add($audience);
+					$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
 				}
 			}
 			$this->flash_form_errors($errors);
-			
-				/**
-				 * Translation
-				 **/
-					$lang['title'] = lang('New Audience');
-					$lang['activity'] = lang('Audience');
-					$lang['name'] = lang('Audience Title');
-					$lang['description'] = lang('Description');
-					$lang['resource'] = lang('Resource');
-					$lang['create'] = lang('Create');
-					$lang['active'] = lang('Active');
-					$lang['inactive'] = lang('Inactive');
-					$lang['buildings'] = lang('Buildings');
-					$lang['resources'] = lang('Resources');
-					$lang['audience'] = lang('audience');
-					$lang['parent'] = lang('Parent Audience');
-					$lang['novalue'] = lang('No Parent');
-			self::render_template('audience_new', array('resource' => $resource, 'lang' => $lang));
+			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
+			self::render_template('audience_new', array('audience' => $audience));
 		}
 
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
-			$resource = $this->bo->read_single($id);
-			$resource['id'] = $id;
-			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiaudience.show', 'id' => $resource['id']));
-			$resource['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-			$resource['audience_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
-			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$audience = $this->bo->read_single($id);
+			$audience['id'] = $id;
+			$audience['resource_link'] = self::link(array('menuaction' => 'booking.uiaudience.show', 'id' => $audience['id']));
+			$audience['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
+			$audience['audience_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
+			$audience['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$resource = array_merge($resource, extract_values($_POST, array('name', 'description', 'active')));
-				$errors = $this->bo->validate($resource);
+				$audience = array_merge($audience, extract_values($_POST, array('name', 'description', 'active')));
+				$errors = $this->bo->validate($audience);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($resource);
-					$this->redirect(array('menuaction' => 'booking.uiaudience.index', 'id'=>$resource['id']));
+					$audience = $this->bo->update($audience);
+					$this->redirect(array('menuaction' => 'booking.uiaudience.index', 'id'=>$audience['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
-			
-				/**
-				 * Translation
-				 **/
-					$lang['title'] = lang('Edit Audience group');
-					$lang['name'] = lang('Name');
-					$lang['description'] = lang('Description');
-					$lang['resource'] = lang('Resource');
-					$lang['create'] = lang('Create');
-					$lang['buildings'] = lang('Buildings');
-					$lang['resources'] = lang('Resources');
-					$lang['audience'] = lang('audience');
-					$lang['active'] = lang('Active');
-					$lang['inactive'] = lang('Inactive');
-					$lang['save'] = lang('Save');
-					$lang['audience'] = lang('audience');
-					$lang['parent'] = lang('Set new parent');
-					$lang['novalue'] = lang('No Parent');
-					$lang['current_parent'] = lang('Current Parent');
-					$lang['cancel'] = lang('Cancel');
-					$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
-			self::render_template('audience_edit', array('resource' => $resource, 'lang' => $lang));
+			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
+			self::render_template('audience_edit', array('audience' => $audience));
 		}
 		
 		public function show()

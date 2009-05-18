@@ -160,12 +160,16 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Filename'),
+							'label' => lang('Document name'),
 							'formatter' => 'YAHOO.booking.formatLink',
 						),
 						array(
 							'key' => 'owner_name',
 							'label' => lang($this->get_document_owner_type()),
+						),
+						array(
+							'key' => 'description',
+							'label' => lang('Description'),
 						),
 						array(
 							'key' => 'category',

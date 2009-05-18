@@ -44,10 +44,18 @@
                     <xsl:attribute name="value"><xsl:value-of select="building/homepage"/></xsl:attribute>
                 </input>
             </dd>
-            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Address')"/></label></dt>
+            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
             <dd>
-                <textarea id="field_address" name="address"><xsl:value-of select="building/address"/></textarea>
+                <input id="field_address" name="address" type="text">
+                    <xsl:attribute name="value"><xsl:value-of select="building/address"/></xsl:attribute>
+				</input>
             </dd>
+            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
+            <dd><input type="text"/></dd>
+            <dt><label><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
+            <dd><input type="text"/></dd>
+            <dt><label><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
+            <dd><input type="text"/></dd>
         </dl>
         <div class="clr"/>
         <div class="form-buttons">
@@ -56,7 +64,7 @@
 			</input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="building/cancel_link"/></xsl:attribute>
-                Cancel
+                <xsl:value-of select="php:function('lang', 'Cancel')"/>
             </a>
         </div>
     </form>

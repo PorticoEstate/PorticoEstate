@@ -126,20 +126,9 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$lang['title'] = lang('New Activity');
-			$lang['activity'] = lang('Activity');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['resource'] = lang('Resource');
-			$lang['create'] = lang('Create');
-			$lang['buildings'] = lang('Buildings');
-			$lang['resources'] = lang('Resources');
-			$lang['activities'] = lang('activities');
-			$lang['parent'] = lang('Parent Aktivity');
-			$lang['novalue'] = lang('No Parent');
-	
 			$dropdown = $this->bo->read();
-			self::render_template('activity_new', array('activity' => $activity, 'lang' => $lang, 'dropdown' => $dropdown));
+			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
+			self::render_template('activity_new', array('activity' => $activity, 'dropdown' => $dropdown));
 		}
 
 		public function edit()
@@ -169,20 +158,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$lang['title'] = lang('New activity');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['resource'] = lang('Resource');
-			$lang['create'] = lang('Create');
-			$lang['buildings'] = lang('Buildings');
-			$lang['resources'] = lang('Resources');
-			$lang['activities'] = lang('activities');
-			$lang['save'] = lang('Save');
-			$lang['activities'] = lang('activities');
-			$lang['parent'] = lang('Parent activity');
-			$lang['novalue'] = lang('No Parent');
-			$lang['cancel'] = lang('Cancel');
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-			self::render_template('activity_edit', array('activity' => $activity, 'lang' => $lang, 'parent' => $parent_activity, 'dropdown' => $dropdown));
+			self::render_template('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'dropdown' => $dropdown));
 		}
 	}

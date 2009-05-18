@@ -20,16 +20,20 @@
     	<xsl:call-template name="msgbox"/>
 
     	<form action="" method="POST" enctype='multipart/form-data'>
-	        
-			<dl class="form-col">
+			<dl class="form">
+				<xsl:if test="document/id">
+					<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit document')" /></dt>
+				</xsl:if>
+				<xsl:if test="not(document/id)">
+					<dt class="heading"><xsl:value-of select="php:function('lang', 'Upload document')" /></dt>
+				</xsl:if>
 				<xsl:if test="document/id">
 					<!-- An update, add id column -->
 					<input name='field_id' type='hidden'>
 						<xsl:attribute name="value"><xsl:value-of select="document/id"/></xsl:attribute>
 					</input>
 				</xsl:if>
-            
-				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Filename')" /></label></dt>
+				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Document')" /></label></dt>
 	            <dd>
 	                <input name="name" id='field_name'>
 						<xsl:attribute name="value"><xsl:value-of select="document/name"/></xsl:attribute>
@@ -45,6 +49,8 @@
 						</xsl:if>
 	                </input>
 	            </dd>
+			</dl>
+			<dl class="form-col">
 
 	            <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 	            <dd>
@@ -108,7 +114,7 @@
 			</input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="document/cancel_link"/></xsl:attribute>
-                <xsl:text>Cancel</xsl:text>
+				<xsl:value-of select="php:function('lang', 'Cancel')" />
             </a>
         </div>
     	</form>

@@ -1,26 +1,26 @@
-<xsl:template match="data" class="foo">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
-	<h3><xsl:value-of select="lang/title" /></h3>
+	<h3><xsl:value-of select="php:function('lang', 'New activity')" /></h3>
 	<xsl:call-template name="msgbox"/>
 	<form action="" method="POST">
 	
 		<dl class="form-col">
-			<dt><label for="field_name"><xsl:value-of select="lang/name" /></label></dt>
+			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<input id="field_name" name="name" type="text">
 					<xsl:attribute name="value"><xsl:value-of select="activity/name"/></xsl:attribute>
 				</input>
 			</dd>
 			
-			<dt><label for="field_description"><xsl:value-of select="lang/description" /></label></dt>
+			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
 				<textarea cols="5" rows="5" id="field_description" name="description"><xsl:value-of select="activity/description"/></textarea>
 			</dd>
-			<dt><label for="parent_id"><xsl:value-of select="lang/parent" /></label></dt>
+			<dt><label for="parent_id"><xsl:value-of select="php:function('lang', 'Parent activity')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
 				<select name="parent_id" id="field_parent_id">
-				<option value="0"><xsl:value-of select="lang/novalue" /></option>
+				<option value="0"><xsl:value-of select="php:function('lang', 'No Parent')" /></option>
 				<xsl:for-each select="dropdown/results">
 					<option>
 						<xsl:if test="../../activity/parent_id = id">
@@ -40,11 +40,11 @@
 
 		<div class="form-buttons">
 			<input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="lang/create"/></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')" /></xsl:attribute>
 			</input>
 			<a class="cancel">
 				<xsl:attribute name="href"><xsl:value-of select="activity/cancel_link"/></xsl:attribute>
-				<xsl:value-of select="lang/cancel" />
+				<xsl:value-of select="php:function('lang', 'Cancel')" />
 			</a>
 		</div>
 	</form>

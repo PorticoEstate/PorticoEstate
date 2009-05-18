@@ -76,16 +76,24 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Name'),
+							'label' => lang('Building'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'homepage',
-							'label' => lang('Homepage'),
+							'key' => 'address',
+							'label' => lang('Street'),
 						),
 						array(
-							'key' => 'active',
-							'label' => lang('Status'),
+							'key' => 'zip_code',
+							'label' => lang('Zip code'),
+						),
+						array(
+							'key' => 'city',
+							'label' => lang('City'),
+						),
+						array(
+							'key' => 'area',
+							'label' => lang('Area'),
 						),
 						array(
 							'key' => 'link',

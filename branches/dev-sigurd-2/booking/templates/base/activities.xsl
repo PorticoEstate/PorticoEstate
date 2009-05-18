@@ -1,5 +1,4 @@
-
-<xsl:template match="data">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 <div style="padding: 2em;">
             <a class="add" style="text-decoration: none;font-size: 14px;">
                 <xsl:attribute name="href"><xsl:value-of select="navi/add"/></xsl:attribute>
@@ -8,7 +7,7 @@
 </div>
 <div style="padding: 0 2em">
 
-<h3>Current Activities</h3>
+<h3><xsl:value-of select="php:function('lang', 'Current Activities')" /></h3>
 
 <script type="text/javascript">
 YAHOO.util.Event.addListener(window, "load", function() {

@@ -101,11 +101,8 @@
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
-			$lang['activity'] = lang('Activity');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			self::render_template('resource_new', array('resource' => $resource, 'activitydata' => $activity_data, 'lang' => $lang));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
+			self::render_template('resource_new', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
 
 		public function edit()
@@ -128,16 +125,11 @@
 			}
 			$this->flash_form_errors($errors);
 			$activity_data = $this->activity_bo->fetch_activities();
-			$lang['activity'] = lang('Activity');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['save'] = lang('Save');
 			foreach($activity_data['results'] as $acKey => $acValue)
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
-			self::render_template('resource_edit', array('resource' => $resource, 'activitydata' => $activity_data, 'lang' => $lang));
+			self::render_template('resource_edit', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
 		
 		public function show()

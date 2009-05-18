@@ -73,16 +73,15 @@
             <dd class="address"><xsl:value-of select="building/address"/></dd>
         </dl>
         <div class="clr"/>
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="building/edit_link"/></xsl:attribute>
+        <button style="margin-right: .4em">
+            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/edit_link"/>"</xsl:attribute>
             
                     <xsl:value-of select="php:function('lang', 'Edit')" />
-        </a>
-        <br/>
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="building/schedule_link"/></xsl:attribute>
+        </button>
+        <button>
+            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/schedule_link"/>"</xsl:attribute>
             <xsl:value-of select="php:function('lang', 'Building schedule')" />
-        </a>
+        </button>
         
         <h4><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h4>
         <div id="resources_container"/>
