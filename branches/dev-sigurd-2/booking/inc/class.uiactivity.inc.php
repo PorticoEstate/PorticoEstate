@@ -157,6 +157,10 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$activity = array_merge($activity, extract_values($_POST, array('name', 'description', 'parent_id')));
+				if ( $_POST['parent_id'] == 0 )
+				{
+					$_POST['parent_id'] = null;
+				}
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{
