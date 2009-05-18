@@ -28,17 +28,34 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		var div = document.createElement('div');
 		div.className = 'date-container';
 		container.appendChild(div);
-		
-		div.innerHTML = '							\
-			<a href="#" class="close-btn">-</a>		\
-			<dt><label>From</label</dt>				\
-			<dd class="datetime-picker">			\
-				<input type="text" name="from_[]">	\
-			</dd>									\
-			<dt><label>To</label</dt>				\
-			<dd class="datetime-picker">			\
-				<input type="text" name="to_[]">	\
-			</dd>';
+
+		div.innerHTML = '							' +
+'			<a href="#" class="close-btn">-</a>		' +
+'			<div><label>From</label></div>				' +
+'			<div class="datetime-picker">			' +
+'				<input type="text" name="from_[]">	' +
+'			</div>									' +
+'			<div><label>To</label></div>				' +
+'			<div class="datetime-picker">			' +
+'				<input type="text" name="to_[]">	' +
+'			</div>';
+// 		div.innerHTML ='<div>' + 
+// 		'<a href="#" class="close-btn">-</a>' + 
+// 		'<div><label>From</label></div>' +
+// '			<div class="datetime-picker">			' +
+// '				<input type="text" name="from_[]">	' +
+// '			</div>									' +
+// 		'</div>';
+// 		div.innerHTML = '							' +
+// '<div>			<a href="#" class="close-btn">-</a>		' +
+// '			<dt><label>From</label></dt>				' +
+// '			<dd class="datetime-picker">			' +
+// '				<input type="text" name="from_[]">	' +
+// '			</dd>									' +
+// '			<dt><label>To</label></dt>				' +
+// '			<dd class="datetime-picker">			' +
+// '				<input type="text" name="to_[]">	' +
+// '			</dd>';
 		var a = div.getElementsByTagName('a')[0];
 		a.onclick = removeDateRow;
 		YAHOO.booking.setupDatePickers();

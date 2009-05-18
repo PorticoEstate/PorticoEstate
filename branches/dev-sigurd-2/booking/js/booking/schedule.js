@@ -22,6 +22,9 @@ YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, text) 
 		else
 			elCell.innerHTML = text;
 	}
+	else {
+		elCell.innerHTML = '...';
+	}
 };
 
 YAHOO.booking.scheduleRowFormatter = function(elTr, oRecord) { 

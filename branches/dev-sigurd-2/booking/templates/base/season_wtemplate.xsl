@@ -178,7 +178,14 @@ YAHOO.booking.AllocationDialog.prototype.updateForm = function (alloc) {
     }
     for(var i=0; i< resources.length; i++) {
         res = resources[i];
-        res.checked = alloc.resources.indexOf(res.value*1) != -1;
+		res.checked = false;
+		for (var j=0; j < alloc.resources.length; j++) {
+			if((alloc.resources[j] * 1) == (res.value * 1)) {
+				res.checked = true;
+				break;
+			}
+		}
+        /*res.checked = alloc.resources.indexOf(res.value*1) != -1;*/
     }
 }
 ]]>
@@ -194,7 +201,7 @@ YAHOO.booking.AllocationDialog.prototype.cellFormatter = function(elCell, oRecor
 	YAHOO.booking.scheduleColorFormatter(elCell, oRecord, oColumn, text);
 	var id = oRecord.getData(oColumn.field +'_id');
 	if(id)
-		elCell.ondblclick = function () { YAHOO.booking.dialog.editAllocation(id); };
+		elCell.onclick = function () { YAHOO.booking.dialog.editAllocation(id); };
 	else {
 	    var resource_id = oRecord.getData('resource_id')*1;
 	    var from_ = oRecord.getData('_from');

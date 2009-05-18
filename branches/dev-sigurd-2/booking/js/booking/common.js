@@ -3,7 +3,8 @@ YAHOO.namespace('booking');
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
 	var d = string.match(new RegExp(regexp));
-	date = new Date(d[2] || 0, (d[4]||1)-1, d[6]||0);
+	var year = d[2] ? (d[2] * 1 - 1900) : 0;
+	date = new Date(year, (d[4]||1)-1, d[6]||0);
 	if(d[9])
 		date.setHours(d[9]);
 	if(d[10])
@@ -101,7 +102,14 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
 	};
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
-		var checked = selection.indexOf(oData * 1) != -1 ? 'checked="checked"' : '';
+		var checked = '';
+		for(var i =0; i< selection.length; i++) {
+			if((selection[i] * 1) == (oData * 1)) {
+				var checked = 'checked="checked"';
+			}
+		}
+		// alert(selection.length);
+		// var checked = (selection.indexOf(oData * 1) != -1) ? 'checked="checked"' : '';
 		elCell.innerHTML = '<input type="' + type + '" name="' + name + '" value="' + oData + '" ' + checked + '/>'; 
 	};
 	var colDefs = [
@@ -137,11 +145,14 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	});
 	if(!date)
 		oButton.setStyle('display', 'none');
-	oButton._input.type = 'hidden';
-	oButton._date = new Date(0, 0, 0);
+	//oButton._input.setAttribute('type', 'hidden');
+	oButton._input.style.display = 'none';
 	if(oButton._input.value) {
 		oButton._date = parseISO8601(oButton._input.value);
 	}
+	else
+		oButton._date = new Date(-1, 4, 18);
+//		oButton._date = new Date(109, 4, 18);
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
 		oButton._update();
@@ -158,7 +169,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		var minutes = minutes  < 10 ? '0' + minutes : '' + minutes;
 		var dateValue = year + '-' + month + '-' + day;
 		var timeValue = hours + ':' + minutes;
-		if(year == 1899) {
+		if(year == 1899 || year == -1) {
 			this.set('label', 'Choose a date');
 		} else {
 			this.set('label', dateValue);
@@ -196,6 +207,8 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oCalendar.selectEvent.subscribe(function (p_sType, p_aArgs) {
 			if (p_aArgs) {
 				var aDate = p_aArgs[0][0];
+				alert(aDate[0]);
+//				var year = aDate[0] > 100 ? aDate[0] - 1900 : aDate[0];
 				this._date.setYear(aDate[0]);
 				this._date.setMonth(aDate[1]-1);
 				this._date.setDate(aDate[2]);
