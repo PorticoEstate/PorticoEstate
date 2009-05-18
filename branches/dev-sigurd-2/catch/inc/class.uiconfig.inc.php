@@ -260,22 +260,12 @@
 
 			$data = array
 			(
-
 				'value_name'					=> $values['name'],
 				'value_descr'					=> $values['descr'],
-				'lang_name'						=> lang('name'),
-				'lang_descr'					=> lang('descr'),
-
+				'schema_list'					=> $this->bo->get_schema_list(isset($values['schema']) ? $values['schema'] : ''),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'						=> lang('ID'),
-				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),
 				'value_id'						=> $type_id,
-				'lang_done_status_text'			=> lang('Back to the list'),
-				'lang_save_status_text'			=> lang('Save the training'),
-				'lang_apply'					=> lang('apply'),
-				'lang_apply_status_text'		=> lang('Apply the values'),
 			);
 
 			$appname		= lang('config');
@@ -412,9 +402,8 @@
 
 			$table_add[] = array
 			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add a value'),
 				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_attrib', 'type_id'=> $type_id)),
+				'cancel_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index')),
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);

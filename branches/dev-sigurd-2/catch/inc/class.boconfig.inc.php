@@ -267,6 +267,30 @@
 			return $category_list;
 		}
 
+		public function get_schema_list($selected='')
+		{
+			$schema_list = array();
+			$entity			= CreateObject('property.soadmin_entity');
+			$entity_list 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
+			foreach($entity_list as $entry)
+			{
+				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id'], 'type' => 'catch'));
+				foreach($cat_list as $category)
+				{
+					$schema_list[] = array
+					(
+						$id	= "{$entry['id']}.{$category['id']}",
+						'id'	=> $id,
+						'name'	=> "{$id} {$category['name']}"
+					);
+				}
+			}
+
+			$schema_list = $this->bocommon->select_list($selected, $schema_list);
+
+			return $schema_list;
+		}
+
 
 /*		function select_conf_list($selected='')
 		{
