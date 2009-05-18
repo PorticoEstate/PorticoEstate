@@ -39,7 +39,7 @@
 							),
 							array(
 								'type' => 'text',
-								'name' => 'q'
+								'name' => 'query'
 							),
 							array(
 								'type' => 'submit',
