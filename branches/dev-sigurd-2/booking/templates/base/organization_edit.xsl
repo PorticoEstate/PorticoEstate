@@ -5,14 +5,16 @@
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">
-        <ul>
-            <li style="display: inline; float: left;">
-                <dl class="form">
+                <dl class="form-col">
                     <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
                     <dd>
                         <input id="inputs" name="name" type="text">
                             <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
                         </input>
+                    </dd>
+                    <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
+                    <dd>
+                        <input type="text"/>
                     </dd>
                     <dt><label for="field_homepage"><xsl:value-of select="php:function('lang', 'Homepage')" /></label></dt>
                     <dd>
@@ -33,14 +35,6 @@
                         </input>
                     </dd>
 
-                    <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
-                    <dd class="yui-skin-sam">
-                        <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
-                    </dd>
-                </dl>
-            </li>
-            <li style="display: inline; float: left;">
-                <dl class="form">
                     <dt>
                         <label for="field_admin_primary"><xsl:value-of select="php:function('lang', 'Primary Admin')" /></label><br />
                         <a href="#" onclick="return createContact();">(<xsl:value-of select="php:function('lang', 'Create a new contact')" />)</a>
@@ -85,9 +79,28 @@
                         </ul>
                     </dd>
 
+
+                    <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
+                    <dd class="yui-skin-sam">
+                        <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
+                    </dd>
                 </dl>
-            </li>
-        </ul>
+                <dl class="form-col">
+		            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
+		            <dd>
+		                <input id="field_address" name="address" type="text">
+		                    <xsl:attribute name="value"><xsl:value-of select="building/address"/></xsl:attribute>
+						</input>
+		            </dd>
+		            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
+		            <dd><input type="text"/></dd>
+		            <dt><label><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
+		            <dd><input type="text"/></dd>
+		            <dt><label><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
+		            <dd><input type="text"/></dd>
+
+
+                </dl>
 
 <script type="text/javascript">
 var endpoint = '<xsl:value-of select="module" />';

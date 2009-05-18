@@ -66,11 +66,11 @@
 						),
 						array(
 							'key' => 'building_name',
-							'label' => lang('Building name')
+							'label' => lang('Building')
 						),
 						array(
-							'key' => 'status',
-							'label' => lang('Status')
+							'key' => 'resource_list',
+							'label' => lang('Resources')
 						),
 						array(
 							'key' => 'from_',
@@ -83,7 +83,11 @@
 						array(
 							'key' => 'link',
 							'hidden' => true
-						)
+						),
+						array(
+							'key' => 'status',
+							'label' => lang('Status')
+						),
 					)
 				)
 			);

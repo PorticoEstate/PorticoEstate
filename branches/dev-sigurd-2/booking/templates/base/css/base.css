@@ -106,6 +106,9 @@ dl.form-col {
     clear: both;
     padding-top: 2em;
 }
+.form-buttons button {
+    margin-right: .5em;
+}
 .form-buttons .cancel {
     margin-left: .6em;
 }

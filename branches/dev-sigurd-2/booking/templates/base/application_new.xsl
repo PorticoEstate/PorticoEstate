@@ -91,6 +91,8 @@
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
 			<dd>
 				<table id="agegroup">
+					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
 					<xsl:for-each select="agegroups">
 						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 						<tr>

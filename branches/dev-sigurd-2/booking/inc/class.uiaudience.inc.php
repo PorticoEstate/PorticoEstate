@@ -96,7 +96,7 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Audience Title'),
+							'label' => lang('Target Audience'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(

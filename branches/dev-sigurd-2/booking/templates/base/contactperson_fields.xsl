@@ -1,9 +1,15 @@
 <xsl:template name="contactpersonfields" xmlns:php="http://php.net/xsl">
     <dl class="form">
-        <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+        <dt><label for="field_name"><xsl:value-of select="php:function('lang', 'First name')" /></label></dt>
         <dd>
             <input id="contact-field-name" name="name" type="text">
                     <xsl:attribute name="value"><xsl:value-of select="person/name"/></xsl:attribute>
+            </input>
+        </dd>
+
+        <dt><label><xsl:value-of select="php:function('lang', 'Surname')" /></label></dt>
+        <dd>
+            <input type="text">
             </input>
         </dd>
 

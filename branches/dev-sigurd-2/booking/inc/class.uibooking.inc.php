@@ -68,6 +68,10 @@
 							'label' => lang('Group')
 						),
 						array(
+							'key' => 'building_name',
+							'label' => lang('Building')
+						),
+						array(
 							'key' => 'season_name',
 							'label' => lang('Season')
 						),

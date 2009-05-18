@@ -72,17 +72,17 @@
                     <xsl:value-of select="php:function('lang', 'Address')" /></dt>
             <dd class="address"><xsl:value-of select="building/address"/></dd>
         </dl>
-        <div class="clr"/>
-        <button style="margin-right: .4em">
-            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/edit_link"/>"</xsl:attribute>
+        <div class="form-buttons">
+			<button>
+	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/edit_link"/>"</xsl:attribute>
             
-                    <xsl:value-of select="php:function('lang', 'Edit')" />
-        </button>
-        <button>
-            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/schedule_link"/>"</xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Building schedule')" />
-        </button>
-        
+	                    <xsl:value-of select="php:function('lang', 'Edit')" />
+	        </button>
+	        <button>
+	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/schedule_link"/>"</xsl:attribute>
+	            <xsl:value-of select="php:function('lang', 'Building schedule')" />
+	        </button>
+    	</div>
         <h4><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h4>
         <div id="resources_container"/>
 
@@ -114,7 +114,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'subject_name', label: 'Account'}, {key: 'role', label: 'Role'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+]]>
+	var colDefs = [{key: 'subject_name', label: '<xsl:value-of select="php:function('lang', 'Account')" />'}, {key: 'role', label: '<xsl:value-of select="php:function('lang', 'Role')" />'}, {key: 'actions', label: '<xsl:value-of select="php:function('lang', 'Actions')" />', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+    <![CDATA[
 	YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
 });
 

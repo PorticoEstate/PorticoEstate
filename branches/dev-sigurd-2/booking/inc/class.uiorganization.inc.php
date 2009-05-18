@@ -56,11 +56,24 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Name'),
+							'label' => lang('Organization'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'homepage'
+							'key' => 'org_number',
+							'label' => lang('Organization number')
+						),
+						array(
+							'key' => 'primary_contact_name',
+							'label' => lang('Primary contact')
+						),
+						array(
+							'key' => 'phone',
+							'label' => lang('Phone')
+						),
+						array(
+							'key' => 'mail',
+							'label' => lang('Email')
 						),
 						array(
 							'key' => 'link',

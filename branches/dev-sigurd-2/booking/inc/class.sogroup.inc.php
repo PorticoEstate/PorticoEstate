@@ -12,7 +12,7 @@
 					'organization_id'	=> array('type' => 'int', 'required' => true),
 					'description'    => array('type' => 'description', 'query' => true, 'required' => false,),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'contact_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => false,),
+					'contact_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => false, 'required'=>true),
 					'contact_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,

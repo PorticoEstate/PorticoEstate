@@ -15,7 +15,7 @@
 					'phone'			=> array('type' => 'string'),
 					'email'			=> array('type' => 'string'),
 					'description'	=> array('type' => 'string'),
-                    'admin_primary' => array('type' => 'int',),
+                    'admin_primary' => array('type' => 'int', 'required'=>true),
                     'admin_secondary' => array('type' => 'int',),
 				)
 			);

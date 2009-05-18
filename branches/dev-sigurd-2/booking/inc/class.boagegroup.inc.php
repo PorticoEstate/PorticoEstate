@@ -15,7 +15,7 @@
 		}
 
 		// Extract agegroup info from _POST into $data
-		public function extract_form_data($data)
+		public function extract_form_data(&$data)
 		{
 			foreach($_POST['male'] as $group_id => $num)
 			{

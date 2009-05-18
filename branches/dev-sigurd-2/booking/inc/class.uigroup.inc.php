@@ -53,12 +53,24 @@
 					'field' => array(
 						array(
 							'key' => 'organization_name',
-							'label' => lang('Organization name')
+							'label' => lang('Organization')
 						),
 						array(
 							'key' => 'name',
-							'label' => lang('Group Name'),
+							'label' => lang('Group'),
 							'formatter' => 'YAHOO.booking.formatLink'
+						),
+						array(
+							'key' => 'primary_contact_name',
+							'label' => lang('Primary contact'),
+						),
+						array(
+							'key' => 'primary_contact_phone',
+							'label' => lang('Phone'),
+						),
+						array(
+							'key' => 'primary_contact_email',
+							'label' => lang('Email'),
 						),
 						array(
 							'key' => 'link',

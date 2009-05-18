@@ -112,6 +112,7 @@
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

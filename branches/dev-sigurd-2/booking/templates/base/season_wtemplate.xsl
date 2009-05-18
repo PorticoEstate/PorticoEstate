@@ -19,16 +19,19 @@
 
 		<xsl:call-template name="msgbox"/>
 
-		<h4><xsl:value-of select="php:function('lang', 'Week Template')" /></h4>
+        <dl class="form">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Week Template')" /></dt>
+		</dl>
+
 		<div id="schedule_container"/>
 	
-		<a class="button" href="#" onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></a>
-		<br/>
-		<a class="button">
-			<xsl:attribute name="href"><xsl:value-of select="season/generate_url"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Generate allocations')" />
-		</a>
-
+		<div class="form-buttons">
+			<button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
+			<button>
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Generate allocations')" />
+			</button>
+		</div>
 
 		<form id="panel1" method="POST">
 			<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>
@@ -112,8 +115,8 @@ YAHOO.booking.AllocationDialog = function(container) {
 	YAHOO.booking.checkboxTableHelper('resources-container', resourceUrl, 'resources[]');
 	YAHOO.booking.autocompleteHelper(orgUrl, 'field_org_name', 'field_org_id', 'org_container');
 
-	var myButtons = [{text:"Submit", handler: this.submit, isDefault:true},
-                  	 {text:"Cancel", handler: this.hide}];
+	var myButtons = [{text:"<xsl:value-of select="php:function('lang', 'Save')" />", handler: this.submit, isDefault:true},
+                  	 {text:"<xsl:value-of select="php:function('lang', 'Cancel')" />", handler: this.hide}];
 	this.cfg.queueProperty("buttons", myButtons);
 	this.callback.success = this.onSuccess;
 	this.callback.failure = this.onFailure;

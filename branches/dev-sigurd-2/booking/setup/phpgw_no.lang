@@ -28,7 +28,7 @@ homepage	booking	no	Hjemmeside
 hms document	booking	no	HMS dokument
 parent aktivity	booking	no	Hodekategori
 inactivate	booking	no	Inaktivera
-no records found	booking	no	Inget funnet!
+no records found.	booking	no	Inget funnet!
 settings	booking	no	Innstillinger
 building schedule	booking	no	Kalender
 category	booking	no	Kategori
@@ -88,3 +88,15 @@ select a building first	booking	no	Valg bygg/anlegg først
 choose file	booking	no	Valg dokument
 no parents	booking	no	Ingen foreldre
 parent id	booking	no	Hodekategori
+telephone	booking	no	Telefon
+other	booking	no	Annet
+chose file	booking	no	Valg fil
+select category...	booking	no	Valg en kategori...
+upload document	booking	no	Laste opp dokument
+organization number	booking	no	Organisasjon nummer
+planning	booking	no	Planlegging
+archived	booking	no	Arkivert
+published	booking	no	Publisert
+choose a date	booking	no	Velg en dato
+male	booking	no	Mann
+female	booking	no	Kvinne

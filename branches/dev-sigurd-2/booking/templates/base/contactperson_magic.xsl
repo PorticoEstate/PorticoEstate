@@ -24,7 +24,7 @@ var handleFailure = function(o) {
 
 YAHOO.booking.contactpersonform = new YAHOO.widget.Dialog("contactpersonform", 
 {
-    width : "30em",
+    width : "40em",
     fixedcenter : true,
     visible : false, 
     effect: [

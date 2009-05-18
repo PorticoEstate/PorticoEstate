@@ -22,7 +22,7 @@
 		<xsl:if test="step = 1">
 	    <form action="" method="POST">
 	        <dl class="form">
-				<dt class="heading"><xsl:value-of select="php:function('lang', 'Generate Allocations from week template (1/2)')" /></dt>
+				<dt class="heading"><xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (1/2)</dt>
 			</dl>
 	        <dl class="form-col">
 	            <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
@@ -46,7 +46,7 @@
 	        </dl>
 	        <div class="form-buttons">
 	            <input type="submit" name="calculate">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Calculate')" /></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Preview')" /></xsl:attribute>
 				</input>
 	            <a class="cancel">
 	                <xsl:attribute name="href"><xsl:value-of select="season/wtemplate_link"/></xsl:attribute>
@@ -64,7 +64,7 @@
 				<xsl:attribute name="value"><xsl:value-of select="to_" /></xsl:attribute>
 			</input>
 	        <dl class="form">
-				<dt class="heading"><xsl:value-of select="php:function('lang', 'Generate Allocations from week template (2/2)')" /></dt>
+				<dt class="heading"><xsl:value-of select="php:function('lang', 'Generate Allocations from week template')" /> (2/2)</dt>
 			</dl>
 			<h4><xsl:value-of select="php:function('lang', 'Allocations that can be created (%1)', count(result/valid[from_]))" /></h4>
 			<div class="allocation-list">

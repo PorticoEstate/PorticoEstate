@@ -54,14 +54,24 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Name'),
+							'label' => lang('First name'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'homepage',
+							'key' => 'surname',
+							'label' => lang('Surname'),
 						),
 						array(
-							'key' => 'email',
+							'key' => 'organization',
+							'label' => lang('Organization')
+						),
+						array(
+							'key' => 'phone',
+							'label' => lang('Phone')
+						),
+						array(
+							'key' => 'mail',
+							'label' => lang('Email')
 						),
 						array(
 							'key' => 'link',
