@@ -207,9 +207,8 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oCalendar.selectEvent.subscribe(function (p_sType, p_aArgs) {
 			if (p_aArgs) {
 				var aDate = p_aArgs[0][0];
-				alert(aDate[0]);
 //				var year = aDate[0] > 100 ? aDate[0] - 1900 : aDate[0];
-				this._date.setYear(aDate[0]);
+				this._date.setYear(aDate[0] - 1900);
 				this._date.setMonth(aDate[1]-1);
 				this._date.setDate(aDate[2]);
 				this._update();
