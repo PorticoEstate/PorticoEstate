@@ -59,7 +59,7 @@
                                 </div>
                             </li>
                             <li style="float: left; margin-left: 10px">
-                                <a href="#" onclick="return editContact('field_admin_primary');">Edit</a>
+                                <a href="#" onclick="return editContact('field_admin_primary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
 
@@ -80,7 +80,7 @@
                                 </div>
                             </li>
                             <li style="float: left; margin-left: 10px">
-                                <a href="#" onclick="return editContact('field_admin_secondary');">Edit</a>
+                                <a href="#" onclick="return editContact('field_admin_secondary');"><xsl:value-of select="php:function('lang', 'Edit')" /></a>
                             </li>
                         </ul>
                     </dd>
