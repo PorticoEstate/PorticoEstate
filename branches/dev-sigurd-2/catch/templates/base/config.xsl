@@ -14,7 +14,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template match="list_type">
+	<xsl:template match="list_type" xmlns:php="http://php.net/xsl">
 		<xsl:choose>
 			<xsl:when test="menu != ''">
 				<xsl:apply-templates select="menu"/> 
@@ -50,11 +50,14 @@
 		</table>
 	</xsl:template>
 
-	<xsl:template match="table_header">
+	<xsl:template match="table_header" xmlns:php="http://php.net/xsl">
 		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="left">
 				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+			</td>
+			<td class="th_text" width="5%" align="left">
+				<xsl:value-of select="php:function('lang', 'schema')" />
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_attribute"/>
@@ -93,6 +96,9 @@
 
 				<td align="left">
 					<xsl:value-of select="name"/>
+				</td>
+				<td align="left">
+					<xsl:value-of select="schema"/>
 				</td>
 				<td align="center">
 					<xsl:variable name="link_attribute"><xsl:value-of select="link_attribute"/></xsl:variable>
@@ -673,11 +679,9 @@
 				<td>
 				<xsl:choose>
 					<xsl:when test="choice_list = ''">
-						<input type="text" size="20" name="values[value]" value="{value_value}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_value_status_text"/>
-								<xsl:text>'; return true;</xsl:text>
+						<input type="text" size="60" name="values[value]" value="{value_value}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_value_status_text"/>
 							</xsl:attribute>
 						</input>
 					</xsl:when>

@@ -27,7 +27,7 @@
 	 */
 
 	$setup_info['catch']['name']			= 'catch';
-	$setup_info['catch']['version']			= '0.9.17.503';
+	$setup_info['catch']['version']			= '0.9.17.504';
 	$setup_info['catch']['app_order']		= 20;
 	$setup_info['catch']['enable']			= 1;
 	$setup_info['catch']['globals_checked']	= True;
@@ -62,8 +62,7 @@
 		'fm_catch_history',
 		'fm_catch_config_type',
 		'fm_catch_config_attrib',
-		'fm_catch_config_choice',
-		'fm_catch_config_value'
+		'fm_catch_config_choice'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

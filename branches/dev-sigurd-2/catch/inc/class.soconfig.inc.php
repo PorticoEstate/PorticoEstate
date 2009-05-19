@@ -109,7 +109,8 @@
 				(
 					'id'	=> $this->db->f('id'),
 					'name'	=> $this->db->f('name', true),
-					'descr'	=> $this->db->f('descr', true)
+					'descr'	=> $this->db->f('descr', true),
+					'schema'	=> $this->db->f('schema')
 				);
 			}
 
@@ -130,7 +131,8 @@
 				(
 					'id'		=> $id,
 					'name'		=> $this->db->f('name', true),
-					'descr'		=> $this->db->f('descr', true)
+					'descr'		=> $this->db->f('descr', true),
+					'schema'	=> $this->db->f('schema')
 				);
 			}
 			return $values;
@@ -140,6 +142,25 @@
 		function add_type($values)
 		{
 			$receipt = array();
+	
+			$files_dir = isset($GLOBALS['phpgw_info']['server']['files_dir']) && $GLOBALS['phpgw_info']['server']['files_dir'] ? $GLOBALS['phpgw_info']['server']['files_dir'] : '';
+			$createcatalog = !!$files_dir;
+			$schema_dir = '';
+			if($files_dir)
+			{
+				$schema_dir = "{$files_dir}/catch/pickup/{$values['schema']}";
+				if( !is_dir($schema_dir))
+				{
+					$createcatalog = @mkdir($schema_dir, 0770, true);
+				}
+			}
+
+			if(!$createcatalog)
+			{
+				$receipt['error'][]=array('msg'=>lang('unable to create pickup catalog'));
+			}
+			
+
 			$this->db->transaction_begin();
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
@@ -150,10 +171,11 @@
 				$values['type_id'],
 				$values['name'],
 				$values['descr'],
+				$values['schema']
 				);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
-			$this->db->query("INSERT INTO fm_catch_config_type (id,name,descr) "
+			$this->db->query("INSERT INTO fm_catch_config_type (id,name,descr,schema) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
 			$receipt['message'][]=array('msg'=>lang('config type has been saved'));
@@ -168,6 +190,7 @@
 				'text',
 				'pickup_catalog',
 				lang('where to drop the files from the external system'),
+				$schema_dir
 			);
 			$attrib_id ++;
 
@@ -175,49 +198,17 @@
 			(
 				$values['type_id'],
 				$attrib_id,
-				'listbox',
+				'text',
 				'target',
 				lang('where to import the data'),
+				$values['schema']
 			);
 
 			foreach ($attrib_values as $insert_values)
 			{
 				$insert_values	= $this->db->validate_insert($insert_values);
-				$this->db->query("INSERT INTO fm_catch_config_attrib (type_id,id,input_type,name,descr) "
+				$this->db->query("INSERT INTO fm_catch_config_attrib (type_id,id,input_type,name,descr,value) "
 					. "VALUES ($insert_values)",__LINE__,__FILE__);			
-			}
-
-			$choice_id = $this->db->next_id('fm_catch_config_choice' ,array('type_id'=> $values['type_id'], 'attrib_id' => $attrib_id));
-
-			$this->db->query("SELECT entity_id, id, name FROM fm_catch_category",__LINE__,__FILE__);
-
-			$target_info = array();
-			while ($this->db->next_record())
-			{
-				$target_info[] = array
-				(
-					'entity_id'	=> $this->db->f('entity_id'),
-					'cat_id'	=> $this->db->f('id'),
-					'name'		=> $this->db->f('name'),
-				);
-			}
-
-			foreach ($target_info as $target)
-			{
-				$values_insert = array
-				(
-					$values['type_id'],
-					$attrib_id,
-					$choice_id,
-					"{$target['entity_id']}.{$target['cat_id']}"//$target['name']
-				);
-
-				$values_insert	= $this->db->validate_insert($values_insert);
-
-				$this->db->query("INSERT INTO fm_catch_config_choice (type_id,attrib_id,id,value) "
-				. "VALUES ($values_insert)",__LINE__,__FILE__);
-				
-				$choice_id++;
 			}
 
 			$this->db->transaction_commit();
@@ -247,11 +238,11 @@
 
 		function delete_type($id)
 		{
+			$id = (int)$id;
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_catch_config_value WHERE type_id =' . intval($type_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM fm_catch_config_choice WHERE type_id =' . intval($type_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM fm_catch_config_attrib WHERE type_id =' . intval($type_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM fm_catch_config_type WHERE id='  . intval($id),__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_catch_config_choice WHERE type_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_catch_config_attrib WHERE type_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_catch_config_type WHERE id= {$id}",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 
@@ -264,7 +255,7 @@
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order		= isset($data['order']) ? $data['order'] : '';
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
-				$type_id	= isset($data['type_id']) && $data['type_id'] ? $data['type_id'] : 0;
+				$type_id	= isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
 			}
 
 			if ($order)
@@ -277,9 +268,6 @@
 				$ordermethod = ' ORDER BY name ASC';
 			}
 
-			$attrib_table = 'fm_catch_config_attrib';
-			$value_table = 'fm_catch_config_value';
-
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -287,7 +275,7 @@
 				$querymethod = " AND name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT * , {$value_table}.id as value_id FROM {$attrib_table} {$this->left_join} {$value_table} ON ({$attrib_table}.type_id = {$value_table}.type_id AND {$attrib_table}.id = {$value_table}.attrib_id )WHERE {$attrib_table}.type_id = '{$type_id}' {$querymethod}";
+			$sql = "SELECT *  FROM fm_catch_config_attrib WHERE type_id = {$type_id} {$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -306,9 +294,8 @@
 			{
 				$config_info[] = array
 				(
-					'id'		=> $this->db->f(1),
+					'id'		=> $this->db->f('id'),
 					'type_id'	=> $this->db->f('type_id'),
-					'value_id'	=> $this->db->f('value_id'),
 					'name'		=> $this->db->f('name', true),
 					'value'		=> $this->db->f('value', true)
 				);
@@ -327,10 +314,11 @@
 			$values =array();
 			if ($this->db->next_record())
 			{
-				$values['id']		= $id;
+				$values['id']			= $id;
 				$values['input_type']	= $this->db->f('input_type');
-				$values['name']		= stripslashes($this->db->f('name'));
-				$values['descr']	= stripslashes($this->db->f('descr'));
+				$values['name']			= $this->db->f('name', true);
+				$values['descr']		= $this->db->f('descr', true);
+				$values['value']		= $this->db->f('value', true);
 				if($this->db->f('input_type')=='listbox')
 				{
 					$values['choice'] = $this->read_attrib_choice($type_id,$id);
@@ -439,7 +427,6 @@
 		function delete_attrib($type_id,$id)
 		{
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_catch_config_value WHERE type_id =' . intval($type_id) . ' AND attrib_id=' . intval($id),__LINE__,__FILE__);
 			$this->db->query('DELETE FROM fm_catch_config_choice WHERE type_id =' . intval($type_id) . ' AND attrib_id=' . intval($id),__LINE__,__FILE__);
 			$this->db->query('DELETE FROM fm_catch_config_attrib WHERE type_id =' . intval($type_id) . ' AND id=' . intval($id),__LINE__,__FILE__);
 			$this->db->transaction_commit();
@@ -469,7 +456,7 @@
 				$ordermethod = ' ORDER BY value ASC';
 			}
 
-			$table = 'fm_catch_config_value';
+			$table = 'fm_catch_config_attrib';
 
 			if($query)
 			{
@@ -497,7 +484,6 @@
 			{
 				$config_info[] = array
 				(
-					'id'		=> $this->db->f('id'),
 					'type_id'	=> $type_id,
 					'attrib_id'	=> $attrib_id,
 					'value'		=> $this->db->f('value', true)
@@ -508,9 +494,9 @@
 		}
 
 
-		function read_single_value($type_id,$attrib_id,$id)
+		function read_single_value($type_id,$attrib_id)
 		{
-			$sql = 'SELECT * FROM fm_catch_config_value WHERE type_id =' . intval($type_id) . ' AND attrib_id=' . intval($attrib_id) . ' AND id=' . intval($id);
+			$sql = 'SELECT * FROM fm_catch_config_attrib WHERE type_id =' . (int)$type_id . ' AND id=' . (int)$attrib_id;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -519,7 +505,8 @@
 			{
 				$values = array
 				(
-					'id'		=> $id,
+					'type_id'	=> $type_id,
+					'attrib_id'	=> $attrib_id,					
 					'value'		=> $this->db->f('value', true)
 				);
 			}
@@ -529,29 +516,7 @@
 
 		function add_value($values)
 		{
-			$receipt = array();
-			$this->db->transaction_begin();
-
-			$values['value'] = $this->db->db_addslashes($values['value']);
-			$id = $this->db->next_id('fm_catch_config_value',array('type_id'=>$values['type_id'],'attrib_id'=>$values['attrib_id']));
-
-			$insert_values=array(
-				$values['type_id'],
-				$values['attrib_id'],
-				$id,
-				$values['value']
-				);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-			$this->db->query("INSERT INTO fm_catch_config_value (type_id,attrib_id,id,value) "
-				. "VALUES ($insert_values)",__LINE__,__FILE__);
-
-			$receipt['message'][]=array('msg'=>lang('config value has been saved'));
-			$receipt['attrib_id']= $values['attrib_id'];
-
-			$this->db->transaction_commit();
-
-			return $receipt;
+			return $this->edit_value($values);
 		}
 
 		function edit_value($values)
@@ -559,14 +524,14 @@
 			$receipt = array();
 			if(!isset($values['value']) || !$values['value'])
 			{
-				$this->delete_value($values['type_id'],$values['attrib_id'],$values['id']);
+				$this->delete_value($values['type_id'],$values['attrib_id']);
 			}
 			else
 			{
 				$this->db->transaction_begin();
 				$value_set['value']	= $this->db->db_addslashes($values['value']);
 				$value_set	= $this->db->validate_update($value_set);
-				$this->db->query("UPDATE fm_catch_config_value set $value_set WHERE type_id =" . $values['type_id'] . " AND attrib_id=" . $values['attrib_id'] . " AND id=" . $values['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_catch_config_attrib SET $value_set WHERE type_id =" . (int)$values['type_id'] . " AND id=" . (int)$values['attrib_id'],__LINE__,__FILE__);
 				$this->db->transaction_commit();
 			}
 
@@ -576,10 +541,10 @@
 			return $receipt;
 		}
 
-		function delete_value($type_id,$attrib_id,$id)
+		function delete_value($type_id,$attrib_id)
 		{
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_catch_config_value WHERE type_id =' . intval($type_id) . ' AND attrib_id=' . intval($attrib_id) . ' AND id=' . intval($id),__LINE__,__FILE__);
+			$this->db->query('UPDATE fm_catch_config_attrib SET value = NULL WHERE type_id =' . (int)$type_id . ' AND id=' . (int)$attrib_id, __LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 

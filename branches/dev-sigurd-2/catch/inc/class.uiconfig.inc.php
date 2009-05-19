@@ -92,6 +92,7 @@
 				$content[] = array
 				(
 					'name'						=> $entry['name'],
+					'schema'					=> $entry['schema'],
 					'link_attribute'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.list_attrib', 'type_id'=> $entry['id'])),
 					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_type', 'type_id'=> $entry['id'])),
 					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_type', 'type_id'=> $entry['id'])),
@@ -208,6 +209,10 @@
 					if(!$values['name'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
+					}
+					if(!$values['schema'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a schema !'));
 					}
 
 					if($type_id)
@@ -345,7 +350,7 @@
 				$content[] = array
 				(
 					'name'						=> $entry['name'],
-					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'], 'id'=> $entry['value_id'])),
+					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
 					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
 					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
 					'lang_edit_config_text'		=> lang('edit the config'),
@@ -715,7 +720,6 @@
 
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
-			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
@@ -757,11 +761,11 @@
 			}
 
 
-			if ($id)
+			if ($attrib_id)
 			{
 				if(!$receipt['error'])
 				{
-					$values = $this->bo->read_single_value($type_id,$attrib_id,$id);
+					$values = $this->bo->read_single_value($type_id,$attrib_id);
 				}
 				$function_msg	= lang('edit value');
 				$action			= 'edit';
@@ -776,8 +780,7 @@
 			(
 				'menuaction'	=> 'catch.uiconfig.edit_value',
 				'type_id'		=> $type_id,
-				'attrib_id'		=> $attrib_id,
-				'id'			=> $id
+				'attrib_id'		=> $attrib_id
 			);
 
 			$type = $this->bo->read_single_type($type_id);
@@ -924,7 +927,6 @@
 
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
-			$id			= phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
@@ -932,7 +934,6 @@
 				'menuaction'	=> 'catch.uiconfig.index',
 				'type_id'		=> $type_id,
 				'attrib_id'		=> $attrib_id,
-				'id'			=> $id
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -946,7 +947,7 @@
 			$data = array
 			(
 				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_value', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id, 'id'=> $id)),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_value', 'type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
 				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
 				'lang_yes'					=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),

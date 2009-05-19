@@ -82,6 +82,17 @@
 			$config_info = $this->so->read_type(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
+
+			$entity			= CreateObject('property.soadmin_entity');
+			$entity->type = 'catch';
+
+			foreach ($config_info as & $entry)
+			{
+				list($entity_id, $cat_id) = split('[.]', $entry['schema']);
+				$category = $entity->read_single_category($entity_id, $cat_id);
+				$entry['schema'] = "{$entry['schema']} {$category['name']}";
+			}
+			reset($config_info);
 			return $config_info;
 		}
 
@@ -90,7 +101,6 @@
 			$values =$this->so->read_single_type($id);
 			return $values;
 		}
-
 
 		function save_type($values,$action='')
 		{
@@ -172,9 +182,9 @@
 			return $config_info;
 		}
 
-		function read_single_value($type_id,$attrib_id,$id)
+		function read_single_value($type_id,$attrib_id)
 		{
-			$values =$this->so->read_single_value($type_id,$attrib_id,$id);
+			$values =$this->so->read_single_value($type_id,$attrib_id);
 
 			return $values;
 		}
@@ -201,9 +211,9 @@
 			return $receipt;
 		}
 
-		function delete_value($type_id,$attrib_id,$id)
+		function delete_value($type_id,$attrib_id)
 		{
-			$this->so->delete_value($type_id,$attrib_id,$id);
+			$this->so->delete_value($type_id,$attrib_id);
 		}
 
 
