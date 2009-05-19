@@ -86,6 +86,14 @@
 		{
 			$groups = $this->bo->read();
 			array_walk($groups["results"], array($this, "_add_links"), "booking.uigroup.show");
+			foreach($groups["results"] as &$group) {
+				$person = $this->bo->get_contact_info($group["contact_primary"]);
+				$group += array(
+							"primary_contact_name"  => $person["name"],
+							"primary_contact_phone" => $person["phone"],
+							"primary_contact_email" => $person["email"],
+				);
+			}
 			return $this->yui_results($groups);
 		}
 
