@@ -11,7 +11,7 @@
 		public function __construct()
 		{
             parent::__construct();
-			self::set_active_menu('booking::frontpage');
+			self::set_active_menu('rental::frontpage');
 		}
 
 		public function index()

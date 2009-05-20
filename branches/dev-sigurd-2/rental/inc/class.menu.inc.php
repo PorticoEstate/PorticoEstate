@@ -1,4 +1,5 @@
 <?php
+
 	class rental_menu
 	{
 		function get_menu()
@@ -19,36 +20,30 @@
 
 			$menus['navigation'] =  array
 			(
-				 'frontpage' => array
-				 (
-				 	'text'	=> $GLOBALS['phpgw']->translation->translate('Frontpage', array(), true),
-				 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uifrontpage.index') ),
-					'image'	=> array('property', 'location'),
-				 ),
-				'contract' => array
+				'contracts' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Contract', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Contracts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontract.index') ),
                     'image'	=> array('property', 'location'),
-					'children' => array(
+					/*'children' => array(
 						'tenant' => array
 						(
 							'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontractcenant.index') ),
 							'image'	=> array('property', 'location'),
 						)
-					)
+					)*/
 				),
-				'rentalobject' => array
+				'rentalcomposites' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Rental object', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uirentalobject.index') ),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Rental composites', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uirentalcomposites.index') ),
                     'image'	=> array('property', 'location')
 				),
-				'tenant' => array
+				'tenants' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uitenant.index') ),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Tenants', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uitenants.index') ),
                     'image'	=> array('property', 'location')
 				),
 				'economy' => array
@@ -57,10 +52,10 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uieconomy.index') ),
                     'image'	=> array('property', 'location'),
 				),
-				'report' => array
+				'reports' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Report', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uireport.index') ),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Reports', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uireports.index') ),
                     'image'	=> array('property', 'location'),
 				)
 			);
