@@ -21,7 +21,9 @@
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
-			),
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'rental_unit', array(
 				'fd' => array(
 					'composite_id' => 		array('type' => 'int', 'nullable' => false),
