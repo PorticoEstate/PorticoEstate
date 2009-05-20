@@ -14,8 +14,8 @@
             </dd>
             <dt><label for="field_name"><xsl:value-of select="lang/description"/></label></dt>
             <dd>
-                <textarea id="inputs" name="description" cols="5" rows="5">
-                    <xsl:attribute name="value"><xsl:value-of select="resource/description"/></xsl:attribute>
+                <textarea id="field_name" name="description" cols="5" rows="5">
+                    <xsl:value-of select="resource/description"/>
                 </textarea>
             </dd>
             <dt><label for="field_building"><xsl:value-of select="lang/resource"/></label></dt>

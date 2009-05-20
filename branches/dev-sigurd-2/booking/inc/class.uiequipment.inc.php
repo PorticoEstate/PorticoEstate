@@ -14,6 +14,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.boequipment');
 			self::set_active_menu('booking::equipment');
 		}
@@ -86,8 +89,12 @@
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($resource);
-					$this->redirect(array('menuaction' => 'booking.uiequipment.show', 'id'=>$receipt['id']));
+					try {
+						$receipt = $this->bo->add($resource);
+						$this->redirect(array('menuaction' => 'booking.uiequipment.show', 'id'=>$receipt['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -133,11 +140,18 @@
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($resource);
-					$this->redirect(array('menuaction' => 'booking.uiequipment.show', 'id'=>$resource['id']));
+					try {
+						$receipt = $this->bo->update($resource);
+						$this->redirect(array('menuaction' => 'booking.uiequipment.show', 'id'=>$resource['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
+			self::add_javascript('booking', 'booking', 'equipment_new.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('autocomplete');
 			
 				/**
 				 * Translation

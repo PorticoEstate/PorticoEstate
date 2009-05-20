@@ -4,7 +4,7 @@
 	phpgw::import_class('booking.uipermission_building');
 
 	class booking_uibuilding extends booking_uicommon
-	{
+	{	
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -18,6 +18,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array('name', 'homepage', 'description', 'email', 'phone', 'address');
@@ -36,9 +39,7 @@
 		
 		
 		public function index()
-		{
-			
-			
+		{	
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
@@ -49,11 +50,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New building'),
-								'href' => self::link(array('menuaction' => 'booking.uibuilding.add'))
-							),
 							array(
 								'type' => 'text', 
 								'name' => 'query'
@@ -102,7 +98,15 @@
 					)
 				)
 			);
-						
+			
+			if ($this->bo->allow_write()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New building'),
+					'href' => self::link(array('menuaction' => 'booking.uibuilding.add'))
+				));
+			}
+
 			self::render_template('datatable', $data);
 		}
 
@@ -150,6 +154,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = array_merge($building, extract_values($_POST, $this->fields));
+				
 				$errors = $this->bo->validate($building);
 				if(!$errors)
 				{

@@ -17,6 +17,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::resources');
@@ -85,6 +88,7 @@
 		public function add()
 		{
 			$errors = array();
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = extract_values($_POST, array('name', 'building_id', 'building_name','description','activity_id'));
@@ -92,8 +96,12 @@
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($resource);
-					$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id'=>$receipt['id']));
+					try {
+						$receipt = $this->bo->add($resource);
+						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id'=>$receipt['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -125,6 +133,9 @@
 				}
 			}
 			$this->flash_form_errors($errors);
+			self::add_javascript('booking', 'booking', 'resource_new.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach($activity_data['results'] as $acKey => $acValue)
 			{

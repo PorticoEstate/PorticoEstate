@@ -1,6 +1,9 @@
 <?php
 	abstract class booking_socommon
 	{
+		protected
+			$cols;
+		
 		public function __construct($table_name, $fields)
 		{
 			$this->table_name = $table_name;
@@ -8,6 +11,25 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
+		}
+		
+		public function get_columns()
+		{
+			if (!isset($this->cols))
+			{
+				$this->cols = array();
+				
+				foreach($this->fields as $field => $params)
+				{
+					if($params['join'] || $params['manytomany'])
+					{
+						continue;
+					}
+					$this->cols[] = $field;
+				}
+			}
+			
+			return $this->cols;
 		}
 
 		public function _get_cols_and_joins()

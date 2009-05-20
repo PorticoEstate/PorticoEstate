@@ -20,6 +20,8 @@
 		{
 			parent::__construct();
 			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->set_business_object();
 			
 			//'name' is not in fields as it will always be generated from the uploaded filename
@@ -199,10 +201,12 @@
 				$document['link'] = $this->get_owner_typed_link('download', array('id' => $document['id']));
 				$document['category'] = lang(self::humanize($document['category']));
 				#$document['active'] = $document['active'] ? lang('Active') : lang('Inactive');
-				$document['actions'] = array(
-					$this->get_owner_typed_link('edit', array('id' => $document['id'])),
-					$this->get_owner_typed_link('delete', array('id' => $document['id'])),
-				);
+				
+				$document_actions = array();
+				if ($this->bo->allow_write($document))  $document_actions[] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+				if ($this->bo->allow_delete($document)) $document_actions[] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+				
+				$document['actions'] = $document_actions;
 			}
 			return $this->yui_results($documents);
 		}
@@ -227,7 +231,6 @@
 		
 		public function show()
 		{
-			#$this->check_active('booking.uidocument_building.show');
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
@@ -246,9 +249,14 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($document);
-					$this->redirect_to_parent_if_inline();
-					$this->redirect($this->get_owner_typed_link_params('index'));
+					try {
+						$receipt = $this->bo->add($document);
+						$this->redirect_to_parent_if_inline();
+						$this->redirect($this->get_owner_typed_link_params('index'));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
+
 				}
 			}
 			
@@ -279,10 +287,13 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($document);
-					
-					$this->redirect_to_parent_if_inline();
-					$this->redirect($this->get_owner_typed_link_params('index'));
+					try {
+						$receipt = $this->bo->update($document);	
+						$this->redirect_to_parent_if_inline();
+						$this->redirect($this->get_owner_typed_link_params('index'));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			

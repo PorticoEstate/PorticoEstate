@@ -47,6 +47,8 @@
 						<xsl:if test="document/id">
 							<xsl:attribute name="disabled" value="disabled"/>
 						</xsl:if>
+						
+						<xsl:attribute name='title'><xsl:value-of select="document/name"/></xsl:attribute>
 	                </input>
 	            </dd>
 			</dl>

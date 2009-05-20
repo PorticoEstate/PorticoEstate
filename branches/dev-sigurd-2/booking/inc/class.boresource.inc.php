@@ -1,12 +1,76 @@
 <?php
-	phpgw::import_class('booking.bocommon');
+	phpgw::import_class('booking.bocommon_authorized');
 	
-	class booking_boresource extends booking_bocommon
+	class booking_boresource extends booking_bocommon_authorized
 	{
+		protected
+			$building_bo;
+		
 		function __construct()
 		{
 			parent::__construct();
 			$this->so = CreateObject('booking.soresource');
+			$this->building_bo = CreateObject('booking.bobuilding');
+		}
+		
+		protected function include_subject_parent_roles(array $for_object)
+		{
+			$parent_roles = null;
+			
+			if (!is_null($for_object))
+			{
+				if (!isset($for_object['building_id']))
+				{
+					throw new InvalidArgumentException('Cannot initialize object parent roles unless building_id is provided');
+				}
+				
+				$parent_building = $this->building_bo->read_single($for_object['building_id']);
+				$parent_roles['building'] = $this->building_bo->get_subject_roles($parent_building);
+			}
+			
+			return $parent_roles;
+		}
+		
+		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
+		{
+			return array_merge(
+				array
+				(
+					booking_sopermission::ROLE_MANAGER => array
+					(
+						'write' => array_fill_keys(array('name', 'description', 'activity_id'), true),
+					),
+					booking_sopermission::ROLE_CASE_OFFICER => array
+					(
+						'write' => array_fill_keys(array('name', 'description', 'activity_id'), true),
+					),
+					'parent_role_permissions' => array
+					(
+						'building' => array
+						(
+							booking_sopermission::ROLE_MANAGER => array(
+								'write' => true,
+								'create' => true,
+							),
+						),
+					),
+					'global' => array
+					(
+						booking_sopermission::ROLE_MANAGER => array
+						(
+							'write' => true,
+							'delete' => true,
+							'create' => true
+						),
+					),
+				),
+				$defaultPermissions
+			);
+		}
+		
+		protected function get_collection_role_permissions($defaultPermissions)
+		{
+			return $defaultPermissions;
 		}
 		
 		public function populate_grid_data($menuaction)

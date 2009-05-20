@@ -1,6 +1,6 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
-
+	
 	/**
 	 * Cherry pick selected values into a new array
 	 * 
@@ -33,6 +33,9 @@
 	{
 		protected	
 			$filesArray;
+			
+		protected static 
+			$old_exception_handler;
 		
 		public function __construct()
 		{
@@ -58,6 +61,28 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 			$this->url_prefix = str_replace('_', '.', get_class($this));
+		}
+		
+		public static function encoding()
+		{
+			return 'UTF-8';
+		}
+		
+		public static function process_booking_unauthorized_exceptions()
+		{
+			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+		}
+		
+		public static function handle_booking_unauthorized_exception(Exception $e)
+		{
+			if ($e instanceof booking_unauthorized_exception)
+			{
+				$message = htmlentities('HTTP/1.0 401 Unauthorized - '.$e->getMessage(), null, self::encoding());
+				header($message);
+				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
+			} else {
+				call_user_func(self::$old_exception_handler, $e);
+			}
 		}
 
 		public static function link($data)

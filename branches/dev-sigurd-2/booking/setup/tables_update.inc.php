@@ -1,5 +1,39 @@
 <?php
+	$test[] = '0.1.40';
+	function booking_upgrade0_1_40()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_permission_building');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_permission_resource');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_permission_season');
+		# END Evil
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_permission', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'role' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('subject_id' => 'account_id'),
+				),
+				'ix' => array(array('object_id', 'object_type'), array('object_type')),
+				'uc' => array(),
+			)
+		);
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.41';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 	
 	$test[] = '0.1.39';
 	function booking_upgrade0_1_39()

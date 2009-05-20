@@ -49,7 +49,10 @@ YAHOO.booking.formatGenericLink = function() {
 		
 		linksHtml = '';
 		for (var i=0; i < nOfLinks; i++) {
-			linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+			if (data[i])
+			{
+				linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+			}
 		}
 		
 		elCell.innerHTML = linksHtml;

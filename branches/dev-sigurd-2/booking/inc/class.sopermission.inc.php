@@ -3,6 +3,7 @@
 	
 	abstract class booking_sopermission extends booking_socommon
 	{
+		const ROLE_DEFAULT = 'default';
 		const ROLE_ADMIN = 'admin';
 		const ROLE_MANAGER = 'manager';
 		const ROLE_CASE_OFFICER = 'case_officer';
@@ -19,11 +20,12 @@
 		{
 			$this->object_type = substr(get_class($this), 21);
 			
-			parent::__construct(sprintf('bb_permission_%s', $this->get_object_type()), 
+			parent::__construct('bb_permission', 
 				array(
 					'id'			=> array('type' => 'int'),
 					'subject_id'	=> array('type' => 'int', 'required' => true),
 					'object_id'		=> array('type' => 'int', 'required' => true),
+					'object_type'   => array('type' => 'string'),
 					'role'			=> array('type' => 'string', 'required' => true, 'query' => true),
 					'object_name'	=> array(
 						'type' => 'string',
@@ -48,6 +50,24 @@
 				)
 			);
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+		}
+		
+		function read($params)
+		{
+			$params['filters']['object_type'] = $this->get_object_type();
+			return parent::read($params);
+		}
+		
+		function add($entry)
+		{
+			$entry['object_type'] = $this->get_object_type();
+			return parent::add($entry);
+		}
+		
+		function update($entry)
+		{
+			$entry['object_type'] = $this->get_object_type();
+			return parent::update($entry);
 		}
 		
 		public function get_roles()

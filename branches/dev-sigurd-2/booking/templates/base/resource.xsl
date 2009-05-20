@@ -34,10 +34,12 @@
         </dl>
 
 		<div class="form-buttons">
-	        <button>
-	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/edit_link"/>"</xsl:attribute>
-	            <xsl:value-of select="php:function('lang', 'Edit')" />
-	        </button>
+			<xsl:if test="resource/permission/write">
+		        <button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/edit_link"/>"</xsl:attribute>
+		            <xsl:value-of select="php:function('lang', 'Edit')" />
+		        </button>
+			</xsl:if>
 	        <button>
 	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="resource/schedule_link"/>"</xsl:attribute>
 	            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
@@ -51,15 +53,19 @@
         <div id="documents_container"/>
 		<a class='button'>
 			<xsl:attribute name="href"><xsl:value-of select="resource/add_document_link"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Add Document')" />
+			<xsl:if test="resource/permission/write">
+				<xsl:value-of select="php:function('lang', 'Add Document')" />
+			</xsl:if>
 		</a>
 		
-		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
-        <div id="permissions_container"/>
-		<a class='button'>
-			<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Add Permission')" />
-		</a>
+		<xsl:if test="resource/permission/write">
+			<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+	        <div id="permissions_container"/>
+			<a class='button'>
+				<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Add Permission')" />
+			</a>
+		</xsl:if>
     </div>
 
 <script type="text/javascript">

@@ -42,10 +42,12 @@
             <dt><xsl:value-of select="resource/description-field"/></dt>
             <dd><xsl:value-of select="resource/description"/></dd>
         </dl>
-
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="resource/edit_link"/></xsl:attribute>
-            <xsl:value-of select="resource/edit-link"/>
-        </a>
+		
+		<xsl:if test="resource/permission/write">
+			<a class="button">
+	            <xsl:attribute name="href"><xsl:value-of select="resource/edit_link"/></xsl:attribute>
+	            <xsl:value-of select="resource/edit-link"/>
+	        </a>
+		</xsl:if>
     </div>
 </xsl:template>

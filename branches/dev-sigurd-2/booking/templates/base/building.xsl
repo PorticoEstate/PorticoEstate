@@ -16,39 +16,41 @@
         </ul>
 
         <xsl:call-template name="msgbox"/>
-	<xsl:if test="building/active=0">
-		<div id="inactive">
-		<form method='POST' action=''>
-		<xsl:value-of select="php:function('lang', 'This object has been inactivated')" />
-		<input type="hidden" name="activate_id">
-		<xsl:attribute name="value"><xsl:value-of select="building/id"/></xsl:attribute>
-		</input>
-		<input type="hidden" name="status" value="1" />
-		<input type="hidden" name="menuaction" value="booking.uibuilding.show" />
-		<input type="submit" name="submit" id="activate-button">
-		<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Re-activate')"/></xsl:attribute>
-		</input>
-		</form>
-		</div>
-	</xsl:if>
-	<xsl:if test="building/active=1">
-		<div id="active">
-		<form method='POST' action=''>
-		<input type="hidden" name="activate_id">
-		<xsl:attribute name="value"><xsl:value-of select="building/id"/></xsl:attribute>
-		</input>
-		<input type="hidden" name="status" value="0" />
-		<input type="hidden" name="menuaction" value="booking.uibuilding.show" />
-		<input type="submit" name="submit" id="inactivate-button">
-		<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Inactivate')"/></xsl:attribute>
-		</input>
-		</form>
-		</div>
-	</xsl:if>
-        <h4>
-                    <xsl:value-of select="php:function('lang', 'Description')" /></h4>
-        <div class="description"><xsl:value-of select="building/description"/></div>
 
+		<xsl:if test="building/permission/write/active">
+			<xsl:if test="building/active=0">
+				<div id="inactive">
+				<form method='POST' action=''>
+				<xsl:value-of select="php:function('lang', 'This object has been inactivated')" />
+				<input type="hidden" name="activate_id">
+				<xsl:attribute name="value"><xsl:value-of select="building/id"/></xsl:attribute>
+				</input>
+				<input type="hidden" name="status" value="1" />
+				<input type="hidden" name="menuaction" value="booking.uibuilding.show" />
+				<input type="submit" name="submit" id="activate-button">
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Re-activate')"/></xsl:attribute>
+				</input>
+				</form>
+				</div>
+			</xsl:if>
+			<xsl:if test="building/active=1">
+				<div id="active">
+				<form method='POST' action=''>
+				<input type="hidden" name="activate_id">
+				<xsl:attribute name="value"><xsl:value-of select="building/id"/></xsl:attribute>
+				</input>
+				<input type="hidden" name="status" value="0" />
+				<input type="hidden" name="menuaction" value="booking.uibuilding.show" />
+				<input type="submit" name="submit" id="inactivate-button">
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Inactivate')"/></xsl:attribute>
+				</input>
+				</form>
+				</div>
+			</xsl:if>
+		</xsl:if>
+		
+        <h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+        <div class="description"><xsl:value-of select="building/description"/></div>
 
         <dl class="proplist-col">
             <dt>
@@ -72,17 +74,20 @@
                     <xsl:value-of select="php:function('lang', 'Address')" /></dt>
             <dd class="address"><xsl:value-of select="building/address"/></dd>
         </dl>
+
         <div class="form-buttons">
-			<button>
-	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/edit_link"/>"</xsl:attribute>
-            
-	                    <xsl:value-of select="php:function('lang', 'Edit')" />
-	        </button>
+			<xsl:if test="building/permission/write">
+				<button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/edit_link"/>"</xsl:attribute>
+	          		<xsl:value-of select="php:function('lang', 'Edit')" />
+		        </button>
+			</xsl:if>
 	        <button>
 	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="building/schedule_link"/>"</xsl:attribute>
 	            <xsl:value-of select="php:function('lang', 'Building schedule')" />
 	        </button>
     	</div>
+
         <h4><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h4>
         <div id="resources_container"/>
 
@@ -90,15 +95,19 @@
         <div id="documents_container"/>
 		<a class='button'>
 			<xsl:attribute name="href"><xsl:value-of select="building/add_document_link"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Add Document')" />
+			<xsl:if test="building/permission/write">
+				<xsl:value-of select="php:function('lang', 'Add Document')" />
+			</xsl:if>
 		</a>
 		
-		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
-        <div id="permissions_container"/>
-		<a class='button'>
-			<xsl:attribute name="href"><xsl:value-of select="building/add_permission_link"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Add Permission')" />
-		</a>
+		<xsl:if test="building/permission/write">
+			<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+	        <div id="permissions_container"/>
+			<a class='button'>
+				<xsl:attribute name="href"><xsl:value-of select="building/add_permission_link"/></xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Add Permission')" />
+			</a>
+		</xsl:if>
     </div>
 
 <script type="text/javascript">

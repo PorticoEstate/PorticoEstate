@@ -1,7 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
 
-   <h3><xsl:value-of select="php:function('lang', 'Edit Resource')" /></h3>
+   	<h3><xsl:value-of select="php:function('lang', 'Edit Resource')" /></h3>
+
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST" id="form">
@@ -15,11 +16,16 @@
             <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
             <dd>
                 <div class="autocomplete">
-                <input id="field_building_id" name="building_id" type="hidden">
-                    <xsl:attribute name="value"><xsl:value-of select="resource/building_id"/></xsl:attribute>
-                </input>
+				<xsl:if test="resource/permission/write/building_id">
+	                <input id="field_building_id" name="building_id" type="hidden">
+	                    <xsl:attribute name="value"><xsl:value-of select="resource/building_id"/></xsl:attribute>
+	                </input>
+				</xsl:if>
                 <input id="field_building_name" name="building_name" type="text">
                     <xsl:attribute name="value"><xsl:value-of select="resource/building_name"/></xsl:attribute>
+					<xsl:if test="not(resource/permission/write/building_id)">
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</xsl:if>
                 </input>
                 <div id="building_container"/>
             </div>
@@ -47,7 +53,7 @@
         </dl>
         <div class="form-buttons">
             <input type="submit" id="button" >
-                    <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Update')"/></xsl:attribute>
             </input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="resource/cancel_link"></xsl:value-of></xsl:attribute>

@@ -1,6 +1,6 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.1.40';
+	$setup_info['booking']['version'] = '0.1.41';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
@@ -34,10 +34,8 @@
 		'bb_booking_targetaudience', 
 		'bb_document_building',
 		'bb_document_resource',
-		'bb_permission_building',
-		'bb_permission_resource',
+		'bb_permission',
 		'bb_permission_root',
-		'bb_permission_season',
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';
