@@ -26,8 +26,8 @@
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'rental_unit', array(
 				'fd' => array(
-					'composite_id' => 		array('type' => 'int', 'precision' => '50', 'nullable' => false),
-					'location_id' => 		array('type' => 'int', 'precision' => '50', 'nullable' => false)
+					'composite_id' => 		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'location_id' => 		array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
 				'pk' => array('composite_id','location_id'),
 				'fk' => array(
