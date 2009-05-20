@@ -14,44 +14,36 @@
  	 */
 
 	$phpgw_baseline = array(
-		
-		'bk_rental_composite' => array(
-			'fd' => array(
-				'rental_composite_id' =>	array('type' => 'auto', 'nullable' => false),
-				'name' =>					array('type' => 'varchar','precision' => '45','nullable' => false),
-				'description' => 			array('type' => 'text','precision' => '1000','nullable' => false, 'default'=>''),
-				
-				'is_active' =>	 			array('type' => 'varchar','precision' => '1000','nullable' => false, 'default'=>'')
-				//'area' => 					array('type' => 'int','precision' => '1000','nullable' => false, 'default'=>0),
-				//'account' => 				array('type' => '','precision' => '1000','nullable' => false, 'default'=>'')
-			),
-			'pk' => array('rental_composite_id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
+		'rental_composite', array(
+				'fd' => array(
+					'composite_id' => 		array('type' => 'auto', 'nullable' => false),
+					'name' => 				array('type' => 'varchar','precision' => '45','nullable' => false),
+					'description' => 		array('type' => 'text'),
+					'is_active' => 			array('type' => 'bool','nullable' => false,'default' => 'true'),
+					'address_1' =>			array('type' => 'varchar','precision' => '255'),
+					'address_2' =>			array('type' => 'varchar','precision' => '255'),
+					'house_number' =>		array('type' => 'varchar','precision' => '255'),
+					'postcode' =>			array('type' => 'varchar','precision' => '255'),
+					'place' =>				array('type' => 'varchar','precision' => '255'),
+					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+				),
+				'pk' => array('composite_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
 		),
-		
-		'bk_rental_units' => array(
-			'fd' => array(
-				'rental_composite_id' => 	array('type' => 'int', 'nullable' => false),
-				'property_id' => 			array('type' => 'varchar', 'precision' => '20', 'nullable' => false)
-			),
-			'pk' => array('rental_composite_id'),
-			'fk' => array(
-				'bk_rental_composite' => array( 'rental_composite_id' => 'rental_compisite_id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		
-		'bk_rental_contracts' => array(
-			'fd' => array(
-				'rental_contract_id' =>		array()
-			),
-			'pk' => array('rental_contract_id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
+		'rental_unit', array(
+				'fd' => array(
+					'composite_id' => 		array('type' => 'int', 'nullable' => false),
+					'location_id' => 		array('type' => 'int', 'nullable' => false)
+				),
+				'pk' => array('composite_id','location_id'),
+				'fk' => array(
+					'rental_composite' => array( 'composite_id' => 'composite_id'),
+					'fm_locations' => array( 'location_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
 		)
 	);
 ?>
