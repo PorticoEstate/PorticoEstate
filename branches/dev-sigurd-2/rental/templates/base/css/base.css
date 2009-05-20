@@ -1,0 +1,186 @@
+#content {
+    margin: 2em 1em;
+}
+.clr { clear: both;}
+
+#inactive {
+				background-color: #ff5555;
+				width: 10em;
+				padding: 1em;
+				border: 0.2em dotted #000000;
+				letter-spacing: 2px;
+}
+#active {
+				background-color: #ffffff;
+				width: 10em;
+				padding: 1em;
+				border: 0em dotted #000000;
+				letter-spacing: 2px;
+}
+
+#inactivate-button {
+				border: 1px solid #000000;
+				margin-top: 1em;
+				padding: 0.1em;
+				background-color: #ffffff;
+				}
+
+#activate-button {
+				border: 1px solid #000000;
+				margin-top: 1em;
+				padding: 0.1em;
+				background-color: #ffffff;
+				}
+
+ul.pathway {
+    font-weight: bolder;
+    margin: 1em 0;
+    font-size: 110%;
+}
+ul.pathway li a { color: #000; text-decoration: none;}
+ul.pathway li a:hover { color: #008; }
+ul.pathway li { 
+    display: inline;
+    background: url(../images/pathwaysep.png) no-repeat 0% 50%;
+    padding-left: 16px;
+}
+ul.pathway li:first-child { background: none; padding-left: 0;}
+
+dl.form, dl.form-col {
+    margin: 1em 1em 1em 0;
+}
+
+dl.form dt, dl.form-col dt {
+    font-style: italic;
+    font-weight: bolder;
+    margin: .5em 0 .1em 0;
+    color: #002;
+}
+dl.form dd textarea,
+dl.form-col dd textarea {
+    width: 15em;
+    height: 6em;
+}
+dl.form dd textarea.full-width,
+dl.form-col dd textarea.full-width {
+    width: 33em;
+    height: 10em;
+}
+dl.form dd input[type="text"],  dl.form dd .autocomplete,
+dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
+    width: 15em;
+}
+dl.form dd .autocomplete,
+dl.form-col dd .autocomplete {
+    padding-bottom: 2em;
+}
+
+dl.form dt.heading, dl.form-col dt.heading {
+    color: #448;
+    font-weight: normal;
+    font-size: 110%;
+    margin-top: 1.4em;
+    margin-bottom: .6em;
+    border-bottom: 1px solid #aaa;
+}
+
+dl.proplist,
+dl.proplist-col {
+    margin: 1em 0;
+}
+dl.proplist dt,
+dl.proplist-col dt { 
+    font-style: italic; 
+    font-weight: bolder; 
+    font-size: 90%; 
+    margin: .8em 0 .1em 0;
+}
+
+dl.proplist-col,
+dl.form-col {
+    width: 18em;
+    float: left;
+}
+
+.form-buttons {
+    clear: both;
+    padding-top: 2em;
+}
+.form-buttons button {
+    margin-right: .5em;
+}
+.form-buttons .cancel {
+    margin-left: .6em;
+}
+
+.date-picker .container,
+.datetime-picker .container { 
+    display:none; 
+    position:absolute; z-index:1;
+}
+#toolbar {
+    width: 100%;
+    background-color: #eee;
+    border: 1px solid #bbb;
+    margin-bottom: 1em;
+    padding: .3em;
+}
+#toolbar input[type="text"] {
+    vertical-align: text-bottom;
+    font-size: 120%;
+    margin: auto .25em;
+}
+
+dl.proplist dd.address,
+dl.proplist-col dd.address {
+    white-space: pre;
+}
+#week-selector { margin: 1em 0;}
+#week-selector li { display: inline; padding-right: .5em;}
+
+#schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
+#schedule_container tr td:first-child { background: #eee; }
+#schedule_container tr.time td { border-top: 1px solid #444;}
+#schedule_container .color1 { background: #ccf;}
+#schedule_container .color2 { background: #cfc;}
+#schedule_container .color3 { background: #fcc;}
+#schedule_container .color4 { background: #ffb;}
+#schedule_container .color5 { background: #bff;}
+#schedule_container .color6 { background: #fbf;}
+
+#boundary-table td, #boundary-table th { 
+    padding: .1em .2em;
+}
+
+.date-container {
+    margin-bottom: .8em;
+    white-space: nowrap;
+}
+
+.date-container .close-btn {
+    display: block;
+    float: right;
+    border: none;
+    text-decoration: none;
+    background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
+    width: 25px;
+    height: 15px;
+    cursor: pointer;
+    color: white;
+}
+
+div.allocation-list
+{
+    width: 30em;
+    height: 10em;
+    border: 1px solid #555;
+    padding: .4em;
+    overflow: auto;
+}
+
+.showit {
+	visibility: visible;
+}
+.hideit {
+	visibility: hidden;
+}
