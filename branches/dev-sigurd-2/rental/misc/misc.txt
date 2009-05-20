@@ -1,0 +1,3 @@
+Initial install:
+INSERT INTO phpgw_applications (app_name, app_order, app_version, app_enabled, app_tables)
+	VALUES('rental', 50, '0.0.1', 1, '');
