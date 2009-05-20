@@ -46,12 +46,12 @@
 
 		function pre_run($data='')
 		{
-			//$data['scheme'] has to be given
-			if(!isset($data['scheme']) || !$data['scheme'])
+			//$data['schema'] has to be given
+	/*		if(!isset($data['schema']) || !$data['schema'])
 			{
-				throw new Exception("catch scheme to import not defined");
+				throw new Exception("catch schema to import not defined");
 			}
-
+*/
 			phpgwapi_cache::session_set('catch', 'data', $data);
 
 			if(isset($data['enabled']) && $data['enabled']==1)
@@ -150,35 +150,93 @@
 		function import_ppc()
 		{
 			//do the actual import
-
-			$scheme = phpgwapi_cache::session_get('catch', 'scheme');
+			
+			$valid_attachment = array
+			(
+				'jpg' => true
+			);
 
  			$config = CreateObject('catch.soconfig');
  			$config->read_repository();
- 			$this->pickup_path = $config->config_data[$scheme]['pickup_path'];
- 			$target = $config->config_data[$scheme]['target'];
- 			$target_table = 'fm_catch_' . str_replace('.', '_', $target);
+			$entity	= CreateObject('property.soentity');
+			$entity->type = 'catch';
+			$bofiles	= CreateObject('property.bofiles');
 
-			$metadata = $this->db->metadata($target_table);
-			if(!$metadata)
-			{
-				throw new Exception(lang('no valid target'));
-			}
+ 			foreach($config->config_data as $config_data)
+ 			{
+ 				$this->pickup_path = $config_data['pickup_path'];
+ 				$target = $config_data['target'];
+ 				$target_table = "fm_catch_{$target}";
+				list($entity_id, $cat_id) = split('[_]', $target);
+				$this->category_dir = "catch_{$entity_id}_{$cat_id}";
+
+				$metadata = $this->db->metadata($target_table);
+				if(!$metadata)
+				{
+					throw new Exception(lang('no valid target'));
+				}
 			
-			foreach($metadata as $field => $field_info)
-			{
-_debug_array($field);			
-			}
+				$xmlparse = CreateObject('property.XmlToArray');
+				$xmlparse->setEncoding('UTF-8');
 
-			$xmlparse = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('UTF-8');
+				$file_list = $this->get_files();
 
-			$file_list = $this->get_files();
+				foreach ($file_list as $file)
+				{
+					$var_result = $xmlparse->parseFile($file);
+					$var_result = array_change_key_case($var_result, CASE_LOWER);
 
-			foreach ($file_list as $file)
-			{
-				$var_result = $xmlparse->parseFile($file);
-				_debug_array($var_result);
+					//data
+					$insert_values	= array();
+					$cols			= array();
+					foreach($metadata as $field => $field_info)
+					{
+						if(isset($var_result[$field]))
+						{
+							$insert_values[] = utf8_encode($var_result[$field]);
+							$cols[]			 = $field;
+						}
+					}
+					if($cols)
+					{
+						$cols[]	= 'entry_date';
+						$insert_values[] = time();
+						$id = $entity->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
+						$num = $entity->generate_num($entity_id, $cat_id, $id);
+						$user_id = 6; // FIXME
+
+						$insert_values	= $this->db->validate_insert($insert_values);
+						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
+						. "VALUES ($id, $num, $user_id, $insert_values)",__LINE__,__FILE__);
+					}
+					//attachment
+					foreach($var_result as $field => $data)
+					{
+						$pathinfo = pathinfo($data);
+						if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
+						{
+							$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$id}/{$data}";
+							$bofiles->create_document_dir("{$this->category_dir}/{$id}");
+							$bofiles->vfs->override_acl = 1;
+
+							if(!$bofiles->vfs->cp (array (
+								'from'	=> "{$this->pickup_path}/{$data}",
+								'to'	=> $to_file,
+								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							{
+								$this->receipt['error'][]=array('msg'=>lang('Failed to upload file %1 on id %2',$data, $num));
+							}
+							$bofiles->vfs->override_acl = 0;
+
+							_debug_array($data);
+						}
+					}
+					
+				//	_debug_array($to_file);
+					_debug_array($receipt);
+					
+					// TODO: move $file and attachments to $this->pickup_path/imported
+				}
 			}
 		}
 

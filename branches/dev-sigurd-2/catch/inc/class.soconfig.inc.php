@@ -36,11 +36,8 @@
 
 		function read_repository()
 		{
-			$sql = "SELECT fm_catch_config_type.name as type, value as config_value, fm_catch_config_attrib.name as config_name "
-				. " FROM fm_catch_config_value $this->join fm_catch_config_attrib ON "
-				. " fm_catch_config_value.attrib_id = fm_catch_config_attrib.id AND "
-				. " fm_catch_config_value.type_id = fm_catch_config_attrib.type_id"
-				. " $this->join fm_catch_config_type ON  fm_catch_config_value.type_id = fm_catch_config_type.id";
+			$sql = "SELECT fm_catch_config_type.name as type, value as config_value, fm_catch_config_attrib.name as config_name"
+				. " FROM fm_catch_config_attrib $this->join fm_catch_config_type ON fm_catch_config_attrib.type_id = fm_catch_config_type.id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
@@ -151,7 +148,7 @@
 				$schema_dir = "{$files_dir}/catch/pickup/{$values['schema']}";
 				if( !is_dir($schema_dir))
 				{
-					$createcatalog = @mkdir($schema_dir, 0770, true);
+					$createcatalog = @mkdir("{$schema_dir}/imported", 0770, true);
 				}
 			}
 
@@ -188,7 +185,7 @@
 				$values['type_id'],
 				$attrib_id,
 				'text',
-				'pickup_catalog',
+				'pickup_path',
 				lang('where to drop the files from the external system'),
 				$schema_dir
 			);

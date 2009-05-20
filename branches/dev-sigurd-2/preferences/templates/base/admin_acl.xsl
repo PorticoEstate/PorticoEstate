@@ -57,7 +57,7 @@
 				<td valign="top" align="left">
 					<xsl:value-of select="lang_enable_inheritance"/>
 					<xsl:text>: </xsl:text>
-					<input type="checkbox" name="enable_inheritance" value="true" title="{lang_enable_inheritance_statustext}" style="cursor:help"></input>
+					<input type="checkbox" name="enable_inheritance" value="true" title="{lang_enable_inheritance_statustext}"></input>
 				</td>
 			</tr>
 			<tr class="th">
@@ -93,11 +93,9 @@
 					<input type="hidden" name="location" value="{$location}" />
 					<input type="hidden" name="processed" value="{$processed}" />
 
-					<input type="submit" name="set_permission" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="set_permission" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
 					</input>
 
@@ -109,11 +107,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_done_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>
@@ -703,11 +699,9 @@
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -718,11 +712,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_done_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>
@@ -761,11 +753,9 @@
 				<td>
 					<input type="hidden" name="filter" value="{value_user_id}" />
 					<input type="hidden" name="values[old_email]" value="{value_old_email}" />
-					<input type="text" size = "30" name="values[email]" value="{value_email}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_email_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="text" size = "30" name="values[email]" value="{value_email}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_email_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -776,11 +766,9 @@
 				</td>
 				<td>
 					<input type="hidden" name="values[old_phone]" value="{value_old_phone}" />
-					<input type="text" size = "30" name="values[phone]" value="{value_phone}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<input type="text" size = "30" name="values[phone]" value="{value_phone}">
+						<xsl:attribute name="title">
 								<xsl:value-of select="lang_phone_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -792,7 +780,7 @@
 				<td align="left">
 					<input type="hidden" name="values[old_approval_from]" value="{value_old_approval_from}" />
 					<xsl:variable name="lang_approval_from_statustext"><xsl:value-of select="lang_approval_from_statustext"/></xsl:variable>
-					<select name="values[approval_from]" class="forms" onMouseover="window.status='{$lang_approval_from_statustext}'; return true;" onMouseout="window.status='';return true;">
+					<select name="values[approval_from]" class="forms" title="{$lang_approval_from_statustext}">
 						<option value=""><xsl:value-of select="lang_no_user"/></option>
 						<xsl:apply-templates select="approval_from"/>
 					</select>
@@ -805,7 +793,7 @@
 				<td align="left">
 					<input type="hidden" name="values[old_default_vendor_category]" value="{value_old_default_vendor_category}" />
 					<xsl:variable name="lang_default_vendor_category_statustext"><xsl:value-of select="lang_default_vendor_category_statustext"/></xsl:variable>
-					<select name="values[default_vendor_category]" class="forms" onMouseover="window.status='{$lang_default_vendor_category_statustext}'; return true;" onMouseout="window.status='';return true;">
+					<select name="values[default_vendor_category]" class="forms" title="{$lang_default_vendor_category_statustext}">
 						<option value=""><xsl:value-of select="lang_no_cat"/></option>
 						<xsl:apply-templates select="vendor_category"/>
 					</select>
@@ -814,11 +802,9 @@
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit"  name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit"  name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -830,11 +816,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_done_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>

@@ -29,7 +29,6 @@
 		var $public_functions = array
 		(
 			'index'				=> True,
-			'view_type'			=> True,
 			'edit_type'			=> True,
 			'delete_type'		=> True,
 			'list_attrib'		=> True,
@@ -87,7 +86,7 @@
 
 			$config_info = $this->bo->read_type();
 
-			while (is_array($config_info) && list(,$entry) = each($config_info))
+			foreach ($config_info as $entry)
 			{
 				$content[] = array
 				(
@@ -96,10 +95,7 @@
 					'link_attribute'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.list_attrib', 'type_id'=> $entry['id'])),
 					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.edit_type', 'type_id'=> $entry['id'])),
 					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.delete_type', 'type_id'=> $entry['id'])),
-					'link_view'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.view_type', 'type_id'=> $entry['id'])),
-					'lang_view_config_text'		=> lang('view the config'),
 					'lang_edit_config_text'		=> lang('edit the config'),
-					'text_view'					=> lang('view'),
 					'text_edit'					=> lang('edit'),
 					'text_delete'				=> lang('delete'),
 					'text_attribute'			=> lang('attributes'),
@@ -123,11 +119,6 @@
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
-				'lang_name'			=> lang('name'),
-				'lang_delete'		=> lang('delete'),
-				'lang_edit'			=> lang('edit'),
-				'lang_view'			=> lang('view'),
-				'lang_attribute'	=> lang('attribute'),
 			);
 
 			if(!$this->allrows)
@@ -268,6 +259,7 @@
 				'value_name'					=> $values['name'],
 				'value_descr'					=> $values['descr'],
 				'schema_list'					=> $this->bo->get_schema_list(isset($values['schema']) ? $values['schema'] : ''),
+				'schema_text'					=> isset($values['schema_text']) ? $values['schema_text'] : '',
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'value_id'						=> $type_id,
@@ -277,48 +269,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('catch') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_type' => $data));
-		}
-
-		function view_type()
-		{
-			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
-			{
-				$this->bocommon->no_access();
-				return;
-			}
-
-			$type_id	= phpgw::get_var('type_id', 'int');
-			$values		= phpgw::get_var('values');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
-
-			if ($type_id)
-			{
-				$values			= $this->bo->read_single_type($type_id);
-				$function_msg	= lang('view type');
-			}
-			else
-			{
-				return;
-			}
-
-
-			$data = array
-			(
-				'value_name'			=> $values['name'],
-				'value_descr'			=> $values['descr'],
-				'lang_id'				=> lang('Type ID'),
-				'lang_name'				=> lang('name'),
-				'lang_descr'			=> lang('descr'),
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index')),
-				'lang_cancel'			=> lang('cancel'),
-				'value_id'				=> $type_id,
-			);
-
-			$appname		= lang('config');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('catch') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_type' => $data));
 		}
 
 		function list_attrib()

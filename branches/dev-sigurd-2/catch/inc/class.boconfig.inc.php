@@ -88,7 +88,7 @@
 
 			foreach ($config_info as & $entry)
 			{
-				list($entity_id, $cat_id) = split('[.]', $entry['schema']);
+				list($entity_id, $cat_id) = split('[_]', $entry['schema']);
 				$category = $entity->read_single_category($entity_id, $cat_id);
 				$entry['schema'] = "{$entry['schema']} {$category['name']}";
 			}
@@ -98,7 +98,12 @@
 
 		function read_single_type($id)
 		{
-			$values =$this->so->read_single_type($id);
+			$values 				= $this->so->read_single_type($id);
+			$entity					= CreateObject('property.soadmin_entity');
+			$entity->type 			= 'catch';
+			list($entity_id, $cat_id) = split('[_]', $values['schema']);
+			$category				= $entity->read_single_category($entity_id, $cat_id);
+			$values['schema_text']	= "{$values['schema']} {$category['name']}";
 			return $values;
 		}
 
@@ -280,6 +285,8 @@
 		public function get_schema_list($selected='')
 		{
 			$schema_list = array();
+			$config_info = $this->so->read_type(array('allrows'=>true));
+
 			$entity			= CreateObject('property.soadmin_entity');
 			$entity_list 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
 			foreach($entity_list as $entry)
@@ -287,12 +294,25 @@
 				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id'], 'type' => 'catch'));
 				foreach($cat_list as $category)
 				{
-					$schema_list[] = array
-					(
-						$id	= "{$entry['id']}.{$category['id']}",
-						'id'	=> $id,
-						'name'	=> "{$id} {$category['name']}"
-					);
+					$skip = false;
+					$schema = "{$entry['id']}_{$category['id']}";
+					foreach ($config_info as $existing)
+					{
+						if($existing['schema'] == $schema)
+						{
+							$skip = true;
+							break;
+						}
+					}
+
+					if(!$skip)
+					{
+						$schema_list[] = array
+						(
+							'id'	=> $schema,
+							'name'	=> "{$schema} {$category['name']}"
+						);
+					}
 				}
 			}
 

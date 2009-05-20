@@ -128,6 +128,8 @@
 			$sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
@@ -405,7 +407,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//echo $sql;
+//_debug_array($sql);
 			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f(0);
