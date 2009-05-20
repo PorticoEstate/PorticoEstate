@@ -11,7 +11,7 @@
 	//	'phpgw_rental_bill',										// A sent bill tied to a contract
 	//	'phpgw_rental_contract_tenant',					// Link table between tenants and contracts
 	//	'phpgw_rental_contract_metadata_item',	// Custom field storage for contracts
-		'rental_unit',										// Link table between property register and rental objects or composites
+		'rental_unit'										// Link table between property register and rental objects or composites
 	//	'phpgw_rental_comment',									// Comments to rental composites and tenants
 		// Admin tables
 	//	'phpgw_rental_contract_status',

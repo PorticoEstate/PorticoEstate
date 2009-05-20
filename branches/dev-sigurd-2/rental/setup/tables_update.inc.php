@@ -15,7 +15,7 @@
 					'house_number' =>		array('type' => 'varchar','precision' => '255'),
 					'postcode' =>			array('type' => 'varchar','precision' => '255'),
 					'place' =>				array('type' => 'varchar','precision' => '255'),
-					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false')
 				),
 				'pk' => array('composite_id'),
 				'fk' => array(),
@@ -26,13 +26,14 @@
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'rental_unit', array(
 				'fd' => array(
-					'composite_id' => 		array('type' => 'int', 'nullable' => false),
-					'location_id' => 		array('type' => 'int', 'nullable' => false)
+					'composite_id' => 		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'location_id' => 		array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
 				'pk' => array('composite_id','location_id'),
 				'fk' => array(
 					'rental_composite' => array( 'composite_id' => 'composite_id'),
 					'fm_locations' => array( 'location_id' => 'id')
+				
 				),
 				'ix' => array(),
 				'uc' => array()
