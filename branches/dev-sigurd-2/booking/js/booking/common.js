@@ -3,7 +3,7 @@ YAHOO.namespace('booking');
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
 	var d = string.match(new RegExp(regexp));
-	var year = d[2] ? (d[2] * 1 - 1900) : 0;
+	var year = d[2] ? (d[2] * 1) : 0;
 	date = new Date(year, (d[4]||1)-1, d[6]||0);
 	if(d[9])
 		date.setHours(d[9]);
@@ -154,14 +154,14 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oButton._date = parseISO8601(oButton._input.value);
 	}
 	else
-		oButton._date = new Date(-1, 4, 18);
+		oButton._date = new Date(1, 1, 1);
 //		oButton._date = new Date(109, 4, 18);
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
 		oButton._update();
 	}
 	oButton._update = function() {
-		var year = this._date.getYear() + 1900;
+		var year = this._date.getFullYear();
 		var month = this._date.getMonth() + 1;
 		var day = this._date.getDate();
 		var hours = this._date.getHours();
@@ -172,7 +172,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		var minutes = minutes  < 10 ? '0' + minutes : '' + minutes;
 		var dateValue = year + '-' + month + '-' + day;
 		var timeValue = hours + ':' + minutes;
-		if(year == 1899 || year == -1) {
+		if(year == 1901) {
 			this.set('label', 'Choose a date');
 		} else {
 			this.set('label', dateValue);
@@ -181,9 +181,9 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this._hours.set('label', hours);
 			this._minutes.set('label', minutes);
 		}
-		if(year != 1899 && date && time)
+		if(year != 1 && date && time)
 			this._input.value = dateValue + ' ' + timeValue;
-		else if (year != 1899 && date)
+		else if (year != 1 && date)
 			this._input.value = dateValue;
 		else if(!date && time)
 			this._input.value = timeValue;
@@ -192,7 +192,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	oButton.on("click", function () {
 		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id);
 		oCalendar._button = this;
-		if(this._date.getYear() == -1) {
+		if(this._date.getFullYear() == 1901) {
 			var d = new Date();
 			oCalendar.cfg.setProperty("pagedate", (d.getMonth()+1) + "/" + d.getFullYear());
 		} else {
@@ -210,8 +210,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oCalendar.selectEvent.subscribe(function (p_sType, p_aArgs) {
 			if (p_aArgs) {
 				var aDate = p_aArgs[0][0];
-//				var year = aDate[0] > 100 ? aDate[0] - 1900 : aDate[0];
-				this._date.setYear(aDate[0] - 1900);
+				this._date.setFullYear(aDate[0]);
 				this._date.setMonth(aDate[1]-1);
 				this._date.setDate(aDate[2]);
 				this._update();
