@@ -60,6 +60,7 @@
 		'bb_organization' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
@@ -79,6 +80,7 @@
 		'bb_resource' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
@@ -94,6 +96,7 @@
 		'bb_group' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
@@ -112,6 +115,7 @@
 		'bb_season' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'status' => array('type' => 'varchar','precision' => '10','nullable' => False),
@@ -143,6 +147,7 @@
 		'bb_allocation' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
@@ -159,6 +164,7 @@
 		'bb_booking' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'group_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
@@ -261,6 +267,7 @@
 		'bb_application' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'status' => array('type' => 'text', 'nullable'=> False),
 				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),

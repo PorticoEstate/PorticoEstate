@@ -1,7 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
 
-    <h3><xsl:value-of select="php:function('lang', 'New allocation')"/></h3>
+	<dl class="form">
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'New allocation')"/></dt>
+	</dl>
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">

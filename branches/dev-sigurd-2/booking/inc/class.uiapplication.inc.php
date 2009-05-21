@@ -9,6 +9,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -19,7 +20,10 @@
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications');
-			$this->fields = array('description', 'resources', 'activity_id', 'building_id', 'building_name', 'contact_name', 'contact_email', 'contact_phone', 'audience');
+			$this->fields = array('description', 'resources', 'activity_id', 
+								  'building_id', 'building_name', 'contact_name', 
+								  'contact_email', 'contact_phone', 'audience',
+								  'active');
 		}
 		
 		public function index()
@@ -46,6 +50,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),

@@ -8,6 +8,7 @@
 			parent::__construct('bb_booking', 
 				array(
 					'id'			=> array('type' => 'int'),
+					'active'		=> array('type' => 'int', 'required'=>true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),

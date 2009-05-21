@@ -1,7 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
 
-    <h3><xsl:value-of select="php:function('lang', 'Edit allocation')" /></h3>
+	<dl class="form">
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit allocation')"/></dt>
+	</dl>
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">
@@ -17,6 +19,23 @@
                     </input>
                     <div id="building_container"/>
                 </div>
+            </dd>
+            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+            <dd>
+                <select id="field_active" name="active">
+                    <option value="1">
+                    	<xsl:if test="allocation/active=1">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Active')"/>
+                    </option>
+                    <option value="0">
+                    	<xsl:if test="allocation/active=0">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
+                    </option>
+                </select>
             </dd>
             <dt><label for="field_season"><xsl:value-of select="php:function('lang', 'Season')" /></label></dt>
             <dd>

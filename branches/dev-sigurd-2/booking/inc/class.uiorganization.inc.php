@@ -11,6 +11,7 @@
 			'edit'			=>	true,
 			'show'			=>	true,
 			'datatable'		=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 		protected $module;
 
@@ -20,6 +21,7 @@
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
+			$this->fields = array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary', 'active');
 		}
 		
 		public function index()
@@ -47,6 +49,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -97,7 +104,8 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary'));
+				$organization = extract_values($_POST, $this->fields);
+				$organization['active'] = '1';
 				if (empty($organization["admin_primary"])) {
 					unset($organization["admin_primary"]);
 				}
@@ -123,7 +131,7 @@
 			self::add_template_file("contactperson_fields");
 			self::add_template_file("contactperson_magic");
 
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Create", 'module' => $this->module));
+			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module));
 		}
 
 		public function edit()
@@ -138,7 +146,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$organization = array_merge($organization, extract_values($_POST, array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary')));
+				$organization = array_merge($organization, extract_values($_POST, $this->fields));
 				if (empty($organization["admin_primary"]) || empty($_POST["admin_primary_name"])) {
 					unset($organization["admin_primary"]);
 				}

@@ -280,7 +280,20 @@
 
 			return is_null($key) ? $this->filesArray : (isset($this->filesArray[$key]) ? $this->filesArray[$key] : array());
 		}
+
+		public function toggle_show_inactive()
+		{
+			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
+			{
+				$this->bo->unset_show_all_objects();
+			}else{
+				$this->bo->show_all_objects();
+			}
+			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
+		}
 		
+
+
 		static protected function fix_php_files_array($data)
 		{
 			$fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');

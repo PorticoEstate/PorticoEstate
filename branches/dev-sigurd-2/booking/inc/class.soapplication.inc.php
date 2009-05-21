@@ -8,6 +8,7 @@
 			parent::__construct('bb_application', 
 				array(
 					'id'		=> array('type' => 'int'),
+					'active'	=> array('type' => 'int'),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),

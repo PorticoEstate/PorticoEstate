@@ -1,7 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         
-    <h3><xsl:value-of select="php:function('lang', 'Edit Organization')" /></h3>
+	<dl class="form">
+    	<dt class="heading">
+			<xsl:if test="new_form">
+				<xsl:value-of select="php:function('lang', 'New Organization')" />
+			</xsl:if>
+			<xsl:if test="not(new_form)">
+				<xsl:value-of select="php:function('lang', 'Edit Organization')" />
+			</xsl:if>
+		</dt>
+	</dl>
+	
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">
@@ -99,7 +109,25 @@
 		            <dt><label><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
 		            <dd><input type="text"/></dd>
 
-
+					<xsl:if test="not(new_form)">
+			            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+			            <dd>
+			                <select id="field_active" name="active">
+			                    <option value="1">
+			                    	<xsl:if test="organization/active=1">
+			                    		<xsl:attribute name="selected">checked</xsl:attribute>
+			                    	</xsl:if>
+			                        <xsl:value-of select="php:function('lang', 'Active')"/>
+			                    </option>
+			                    <option value="0">
+			                    	<xsl:if test="organization/active=0">
+			                    		<xsl:attribute name="selected">checked</xsl:attribute>
+			                    	</xsl:if>
+			                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
+			                    </option>
+			                </select>
+			            </dd>
+					</xsl:if>
                 </dl>
 
 <script type="text/javascript">
@@ -137,7 +165,12 @@ showIfNotEmpty(null, "field_admin_secondary_name");
 </script>
         <div class="form-buttons">
             <input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="save_or_create_text"/></xsl:attribute>
+				<xsl:if test="new_form">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')" /></xsl:attribute>
+				</xsl:if>
+				<xsl:if test="not(new_form)">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')" /></xsl:attribute>
+				</xsl:if>
 			</input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="organization/cancel_link"/></xsl:attribute>

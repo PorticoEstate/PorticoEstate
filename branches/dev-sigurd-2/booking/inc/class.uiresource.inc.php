@@ -11,7 +11,8 @@
 			'add'			=>	true,
 			'edit'			=>	true,
 			'show'			=>	true,
-			'schedule'		=>	true
+			'schedule'		=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -22,6 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -49,6 +51,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -91,8 +98,8 @@
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$resource = extract_values($_POST, array('name', 'building_id', 'building_name','description','activity_id'));
-
+				$resource = extract_values($_POST, $this->fields);
+				$resource['active'] = '1';
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{
@@ -124,7 +131,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$resource = array_merge($resource, extract_values($_POST, array('name', 'building_id', 'building_name','description','activity_id')));
+				$resource = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{

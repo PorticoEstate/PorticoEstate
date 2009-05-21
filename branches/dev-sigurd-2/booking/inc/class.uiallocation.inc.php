@@ -9,6 +9,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -20,7 +21,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
-			                      'from_', 'to_');
+			                      'from_', 'to_', 'active');
 		}
 		
 		public function index()
@@ -47,6 +48,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -95,6 +101,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$allocation = extract_values($_POST, $this->fields);
+				$allocation['active'] = '1';
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
 				{

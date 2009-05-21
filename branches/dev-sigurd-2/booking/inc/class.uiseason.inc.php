@@ -15,7 +15,8 @@
 			'wtemplate'		=>	true,
 			'wtemplate_json'		=>	true,
 			'wtemplate_alloc_json'		=>	true,
-			'generate'		=>	true
+			'generate'		=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -23,7 +24,7 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boseason');
 			self::set_active_menu('booking::buildings::seasons');
-			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources');
+			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources', 'active');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
 			$this->wtemplate_alloc_fields = array('id', 'organization_id', 'wday', 'cost', 'from_', 'to_', 'resources');
 		}
@@ -52,6 +53,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -107,6 +113,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$season = extract_values($_POST, $this->fields);
+				$season['active'] = '1';
 				array_set_default($_POST, 'resources', array());
 				$errors = $this->bo->validate($season);
 				if(!$errors)
@@ -123,33 +130,9 @@
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
+			array_set_default($season, 'resources', array());
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
-			$lang['title'] = lang('New Season');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['organization'] = lang('Organization');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
-			$lang['status'] = lang('Status');
-			$lang['planning'] = lang('Planning');
-			$lang['published'] = lang('Published');
-			$lang['archived'] = lang('Archived');
 			self::render_template('season_new', array('season' => $season, 'lang' => $lang));
 		}
 

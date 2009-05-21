@@ -10,7 +10,8 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'building_schedule' =>  true,
-			'resource_schedule' =>  true
+			'resource_schedule' =>  true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -24,7 +25,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
-			                      'from_', 'to_', 'audience');
+			                      'from_', 'to_', 'audience', 'active');
 		}
 		
 		public function index()
@@ -51,6 +52,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -143,6 +149,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$booking = extract_values($_POST, $this->fields);
+				$booking['active'] = '1';
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
@@ -160,26 +167,6 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('paginator');
-			$lang['title'] = lang('Add Booking');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
@@ -187,7 +174,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			self::render_template('booking_new', array('booking' => $booking, 'lang' => $lang, 'agegroups' => $agegroups, 'audience' => $audience));
+			self::render_template('booking_new', array('booking' => $booking, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		public function edit()
@@ -213,33 +200,13 @@
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
-			$lang['title'] = lang('Edit Booking');
-			$lang['buildings'] = lang('Buildings');
-			$lang['name'] = lang('Name');
-			$lang['description'] = lang('Description');
-			$lang['building'] = lang('Building');
-			$lang['group'] = lang('Group');
-			$lang['from'] = lang('From');
-			$lang['to'] = lang('To');
-			$lang['season'] = lang('Season');
-			$lang['date'] = lang('Date');
-			$lang['resources'] = lang('Resources');
-			$lang['select-building-first'] = lang('Select a building first');
-			$lang['telephone'] = lang('Telephone');
-			$lang['email'] = lang('Email');
-			$lang['homepage'] = lang('Homepage');
-			$lang['address'] = lang('Address');
-			$lang['save'] = lang('Save');
-			$lang['create'] = lang('Create');
-			$lang['cancel'] = lang('Cancel');
-			$lang['edit'] = lang('Edit');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			self::render_template('booking_edit', array('booking' => $booking, 'lang' => $lang, 'agegroups' => $agegroups, 'audience' => $audience));
+			self::render_template('booking_edit', array('booking' => $booking, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 		
 		public function show()

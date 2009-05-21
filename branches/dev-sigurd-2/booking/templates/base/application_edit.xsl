@@ -6,6 +6,25 @@
 
 	<form action="" method="POST">
 		<dl class="form">
+            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+            <dd>
+                <select id="field_active" name="active">
+                    <option value="1">
+                    	<xsl:if test="application/active=1">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Active')"/>
+                    </option>
+                    <option value="0">
+                    	<xsl:if test="application/active=0">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
+                    </option>
+                </select>
+            </dd>
+		</dl>
+		<dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>

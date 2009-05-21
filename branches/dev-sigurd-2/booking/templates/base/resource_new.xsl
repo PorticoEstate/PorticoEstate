@@ -1,7 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
 
-   <h3><xsl:value-of select="php:function('lang', 'New Resource')" /></h3>
+	<dl class="form">
+		<dt class="heading"><xsl:value-of select="php:function('lang', 'New Resource')" /></dt>
+	</dl>
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST" id="form">
@@ -24,8 +26,7 @@
                 <div id="building_container"/>
             </div>
             </dd>
-            
-                        <dt><label for="field_active_id"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+            <dt><label for="field_active_id"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
             <dd>
                 <select id="field_activity_id" name="activity_id">
                 <xsl:for-each select="activitydata/results">

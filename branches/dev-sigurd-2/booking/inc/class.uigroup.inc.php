@@ -8,6 +8,7 @@
 			'index'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
         protected $module;
@@ -44,6 +45,11 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -115,7 +121,11 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary')));
+				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary', 'active')));
+				if (!isset($group["active"]))
+				{
+					$group['active'] = '1';
+				}
 				if (empty($group["contact_primary"]) || empty($_POST["contact_primary_name"]))
 				{
 					unset($group["contact_primary"]);

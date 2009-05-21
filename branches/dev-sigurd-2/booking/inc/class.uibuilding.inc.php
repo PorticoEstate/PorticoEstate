@@ -88,8 +88,8 @@
 							'label' => lang('City'),
 						),
 						array(
-							'key' => 'area',
-							'label' => lang('Area'),
+							'key' => 'district',
+							'label' => lang('District'),
 						),
 						array(
 							'key' => 'link',

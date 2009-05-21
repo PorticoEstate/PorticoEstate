@@ -155,7 +155,6 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	}
 	else
 		oButton._date = new Date(1, 1, 1);
-//		oButton._date = new Date(109, 4, 18);
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
 		oButton._update();
@@ -181,9 +180,9 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this._hours.set('label', hours);
 			this._minutes.set('label', minutes);
 		}
-		if(year != 1 && date && time)
+		if(year != 1901 && date && time)
 			this._input.value = dateValue + ' ' + timeValue;
-		else if (year != 1 && date)
+		else if (year != 1901 && date)
 			this._input.value = dateValue;
 		else if(!date && time)
 			this._input.value = timeValue;

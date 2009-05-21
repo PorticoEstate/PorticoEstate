@@ -8,6 +8,7 @@
 			parent::__construct('bb_allocation', 
 				array(
 					'id'			=> array('type' => 'int'),
+					'active'		=> array('type' => 'int', 'required' => true),
 					'organization_id'		=> array('type' => 'int', 'required' => true),
 					'season_id'		=> array('type' => 'int', 'required' => 'true'),
 					'from_'		=> array('type' => 'string', 'required'=> true),
@@ -48,7 +49,7 @@
 
 		function validate($entity)
 		{
-			$allocation_id = $entity['id'] || -1;
+			$allocation_id = $entity['id'] ? $entity['id'] : -1;
 			$errors = parent::validate($entity);
 			// FIXME: Validate: Season contains all resources
 			// FIXME: Validate: Season from <= date, season to >= date

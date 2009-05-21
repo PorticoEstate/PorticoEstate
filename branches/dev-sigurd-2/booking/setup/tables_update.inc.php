@@ -1,4 +1,23 @@
 <?php
+	$test[] = '0.1.41';
+	function booking_upgrade0_1_41()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_group ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_season ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN active int not null DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN active int not null DEFAULT 1");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.42';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
 	$test[] = '0.1.40';
 	function booking_upgrade0_1_40()
 	{

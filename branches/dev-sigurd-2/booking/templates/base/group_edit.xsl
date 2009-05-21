@@ -1,25 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
-        <ul class="pathway">
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="group/organizations_link"/></xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Organization')" />
-                </a>
-            </li>
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="group/organization_link"/></xsl:attribute>
-                    <xsl:value-of select="group/organization_name"/>
-                </a>
-            </li>
-            <li><xsl:value-of select="php:function('lang', 'Group')" /></li>
-            <li>
-                <a href="">
-                    <xsl:value-of select="group/name"/>
-                </a>
-            </li>
-        </ul>
+
+	<dl class="form">
+    	<dt class="heading">
+			<xsl:if test="not(group/id)">
+				<xsl:value-of select="php:function('lang', 'New Group')" />
+			</xsl:if>
+			<xsl:if test="group/id">
+				<xsl:value-of select="php:function('lang', 'Edit Group')" />
+			</xsl:if>
+		</dt>
+	</dl>
 
     <xsl:call-template name="msgbox"/>
 
@@ -46,6 +37,26 @@
                             <div id="organization_container"/>
                         </div>
                     </dd>
+
+					<xsl:if test="group/id">
+			            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+			            <dd>
+			                <select id="field_active" name="active">
+			                    <option value="1">
+			                    	<xsl:if test="group/active=1">
+			                    		<xsl:attribute name="selected">checked</xsl:attribute>
+			                    	</xsl:if>
+			                        <xsl:value-of select="php:function('lang', 'Active')"/>
+			                    </option>
+			                    <option value="0">
+			                    	<xsl:if test="group/active=0">
+			                    		<xsl:attribute name="selected">checked</xsl:attribute>
+			                    	</xsl:if>
+			                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
+			                    </option>
+			                </select>
+			            </dd>
+					</xsl:if>
 
                     <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
                     <dd class="yui-skin-sam">
@@ -102,7 +113,14 @@
         </ul>
         <div class="form-buttons">
             <input type="submit">
-                <xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>
+                <xsl:attribute name="value">
+					<xsl:if test="not(group/id)">
+						<xsl:value-of select="php:function('lang', 'Add')" />
+					</xsl:if>
+					<xsl:if test="group/id">
+						<xsl:value-of select="php:function('lang', 'Save')" />
+					</xsl:if>
+				</xsl:attribute>
 			</input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>

@@ -9,6 +9,7 @@
 			parent::__construct('bb_group', 
 				array(
 					'id'			=> array('type' => 'int'),
+					'active'		=> array('type' => 'int', 'required' => true),
 					'organization_id'	=> array('type' => 'int', 'required' => true),
 					'description'    => array('type' => 'description', 'query' => true, 'required' => false,),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
