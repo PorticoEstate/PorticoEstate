@@ -20,11 +20,28 @@
     <form action="" method="POST">
         <dl class="form">
             <dt><label for="field_name">
-                    <xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+                    <xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
             <dd>
                 <input name="name" type="text">
                     <xsl:attribute id="field_name" name="value"><xsl:value-of select="building/name"/></xsl:attribute>
                 </input>
+            </dd>
+            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+            <dd>
+                <select id="field_active" name="active">
+                    <option value="1">
+                    	<xsl:if test="building/active=1">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Active')"/>
+                    </option>
+                    <option value="0">
+                    	<xsl:if test="building/active=0">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
+                    </option>
+                </select>
             </dd>
             <dt><label for="field_description">
                     <xsl:value-of select="php:function('lang', 'Description')" /></label></dt>

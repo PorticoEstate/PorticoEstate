@@ -12,7 +12,8 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
-			'schedule'		=>	true
+			'schedule'		=>	true,
+			'toggle_show_inactive'	=>	true,
 		);
 
 		public function __construct()
@@ -23,21 +24,9 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'phone', 'address');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'phone', 'address', 'active');
 		}
-		
-		public function active()
-		{
-			if(isset($_SESSION['showall']) && !empty($_SESSION['showall']))
-			{
-				$this->bo->unset_show_all_objects();
-			}else{
-				$this->bo->show_all_objects();
-			}
-			$this->redirect(array('menuaction' => 'booking.uibuilding.index'));
-		}
-		
-		
+				
 		public function index()
 		{	
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -62,7 +51,7 @@
 							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => 'booking.uibuilding.active'))
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -128,7 +117,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = extract_values($_POST, $this->fields);
-				$building['active'] = true;
+				$building['active'] = '1';
 				$errors = $this->bo->validate($building);
 				if(!$errors)
 				{
