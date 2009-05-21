@@ -14,7 +14,7 @@
  	 */
 
 	$phpgw_baseline = array(
-		'rental_composite', array(
+		'rental_composite' => array(
 				'fd' => array(
 					'composite_id' => 		array('type' => 'auto', 'nullable' => false),
 					'name' => 				array('type' => 'varchar','precision' => '45','nullable' => false),
@@ -32,10 +32,10 @@
 				'ix' => array(),
 				'uc' => array()
 		),
-		'rental_unit', array(
+		'rental_unit' => array(
 				'fd' => array(
-					'composite_id' => 		array('type' => 'int', 'nullable' => false),
-					'location_id' => 		array('type' => 'int', 'nullable' => false)
+					'composite_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('composite_id','location_id'),
 				'fk' => array(
@@ -46,4 +46,3 @@
 				'uc' => array()
 		)
 	);
-?>
