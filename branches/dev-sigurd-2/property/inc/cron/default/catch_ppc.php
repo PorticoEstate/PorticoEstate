@@ -38,7 +38,6 @@
 
 		public function __construct()
 		{
-			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
@@ -46,12 +45,6 @@
 
 		function pre_run($data='')
 		{
-			//$data['schema'] has to be given
-	/*		if(!isset($data['schema']) || !$data['schema'])
-			{
-				throw new Exception("catch schema to import not defined");
-			}
-*/
 			phpgwapi_cache::session_set('catch', 'data', $data);
 
 			if(isset($data['enabled']) && $data['enabled']==1)
@@ -97,7 +90,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$data = array
 			(
@@ -131,16 +124,16 @@
 				$this->confirm($execute=false);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$insert_values= array(
 				$cron,
-				date($this->bocommon->datetimeformat),
+				date($this->db->datetime_format()),
 				$this->function_name,
 				implode(',',(array_keys($msgbox_data)))
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
@@ -160,7 +153,11 @@
  			$config->read_repository();
 			$entity	= CreateObject('property.soentity');
 			$entity->type = 'catch';
+			$admin_entity = CreateObject('property.soadmin_entity');
+			$admin_entity->type = 'catch';
+
 			$bofiles	= CreateObject('property.bofiles');
+
 
  			foreach($config->config_data as $config_data)
  			{
@@ -169,6 +166,8 @@
  				$target_table = "fm_catch_{$target}";
 				list($entity_id, $cat_id) = split('[_]', $target);
 				$this->category_dir = "catch_{$entity_id}_{$cat_id}";
+				$category			= $admin_entity->read_single_category($entity_id, $cat_id);
+				$schema_text		= "{$target} {$category['name']}";
 
 				$metadata = $this->db->metadata($target_table);
 				if(!$metadata)
@@ -180,7 +179,7 @@
 				$xmlparse->setEncoding('UTF-8');
 
 				$file_list = $this->get_files();
-
+ 				$i = 0;
 				foreach ($file_list as $file)
 				{
 					$var_result = $xmlparse->parseFile($file);
@@ -197,7 +196,7 @@
 							$cols[]			 = $field;
 						}
 					}
-					if($cols)
+					if($cols) // something to import
 					{
 						$cols[]	= 'entry_date';
 						$insert_values[] = time();
@@ -208,35 +207,36 @@
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
 						. "VALUES ($id, $num, $user_id, $insert_values)",__LINE__,__FILE__);
-					}
-					//attachment
-					foreach($var_result as $field => $data)
-					{
-						$pathinfo = pathinfo($data);
-						if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
+
+						//attachment
+						foreach($var_result as $field => $data)
 						{
-							$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$id}/{$data}";
-							$bofiles->create_document_dir("{$this->category_dir}/{$id}");
-							$bofiles->vfs->override_acl = 1;
-
-							if(!$bofiles->vfs->cp (array (
-								'from'	=> "{$this->pickup_path}/{$data}",
-								'to'	=> $to_file,
-								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							$pathinfo = pathinfo($data);
+							if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
 							{
-								$this->receipt['error'][]=array('msg'=>lang('Failed to upload file %1 on id %2',$data, $num));
-							}
-							$bofiles->vfs->override_acl = 0;
+								$to_file = "{$bofiles->fakebase}/{$this->category_dir}/dummy/{$id}/{$field}_{$data}"; // the dummy is for being consistant with the entity-code that relies on loc1
+								$bofiles->create_document_dir("{$this->category_dir}/dummy/{$id}");
+								$bofiles->vfs->override_acl = 1;
 
-							_debug_array($data);
+								if(!$bofiles->vfs->cp (array (
+									'from'	=> "{$this->pickup_path}/{$data}",
+									'to'	=> $to_file,
+									'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+								{
+									$this->receipt['error'][]=array('msg'=>lang('Failed to upload file %1 on id %2', $data, $num));
+								}
+								$bofiles->vfs->override_acl = 0;
+								// move attachment
+								rename("{$this->pickup_path}/{$data}", "{$this->pickup_path}/imported/{$data}");
+							}
 						}
 					}
-					
-				//	_debug_array($to_file);
-					_debug_array($receipt);
-					
-					// TODO: move $file and attachments to $this->pickup_path/imported
+					// move file
+					$_file = basename($file);
+					rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
+					$i++;
 				}
+				$this->receipt['message'][]=array('msg'=>lang('%1 records imported to %2', $i, $schema_text));
 			}
 		}
 

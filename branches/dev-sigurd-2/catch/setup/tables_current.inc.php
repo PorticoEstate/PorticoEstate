@@ -93,7 +93,7 @@
 				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
-				'schema' => array('type' => 'varchar', 'precision' => 10,'nullable' => true)
+				'schema' => array('type' => 'varchar', 'precision' => 10,'nullable' => false)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

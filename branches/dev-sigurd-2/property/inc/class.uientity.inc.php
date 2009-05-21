@@ -212,7 +212,7 @@
 			}
 
 			$file_name	= urldecode(phpgw::get_var('file_name'));
-			$loc1 		= phpgw::get_var('loc1');
+			$loc1 		= phpgw::get_var('loc1', 'string', 'REQUEST', 'dummy');
 			$id 		= phpgw::get_var('id', 'int');
 
 			$bofiles	= CreateObject('property.bofiles');
@@ -982,16 +982,17 @@
 					$id = $receipt['id'];
 					$function_msg = lang('edit entity');
 //--------------files
+					$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
 					$bofiles	= CreateObject('property.bofiles');
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
-						$bofiles->delete_file("/{$this->category_dir}/{$values['location']['loc1']}/{$id}/", $values);
+						$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
 					}
 
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
 						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$values['location']['loc1']}/{$id}/{$values['file_name']}";
+						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$values['file_name']}";
 
 						if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
 								'string' => $to_file,
@@ -1004,7 +1005,7 @@
 
 					if(isset($values['file_name']) && $values['file_name'])
 					{
-						$bofiles->create_document_dir("{$this->category_dir}/{$values['location']['loc1']}/{$id}");
+						$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if(!$bofiles->vfs->cp (array (
@@ -1016,6 +1017,7 @@
 						}
 						$bofiles->vfs->override_acl = 0;
 					}
+					unset($loc1);
 //-------------end files
 
 					if (isset($values['save']) && $values['save'])
@@ -1169,7 +1171,7 @@
 				'p_entity_id'		=> $this->entity_id,
 				'p_cat_id'			=> $this->cat_id,
 				'tenant_id'			=> $values['tenant_id'],
-				'origin'			=> ".entity.{$this->entity_id}.{$this->cat_id}",
+				'origin'			=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
 				'origin_id'			=> $id
 			);
 
@@ -1182,7 +1184,7 @@
 				'p_entity_id'		=> $this->entity_id,
 				'p_cat_id'			=> $this->cat_id,
 				'tenant_id'			=> $values['tenant_id'],
-				'origin'			=> ".entity.{$this->entity_id}.{$this->cat_id}",
+				'origin'			=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
 				'origin_id'			=> $id
 			);
 
@@ -1261,8 +1263,8 @@
 			
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';			
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}									
 
 			$datavalues[0] = array

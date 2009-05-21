@@ -167,19 +167,20 @@
 
 		public function get_location_name($location)
 		{
-			if(substr($location,1,6)=='entity')
+			$location = ltrim($location, '.');
+			list($type, $entity_id, $cat_id) = split('[.]', $location);
+			$this->boadmin_entity->type = $type;
+			switch( $type )
 			{
-				$type		= explode(".",$location);
-				$entity_id	= $type[2];
-				$cat_id		= $type[3];
-
-				$entity_category = $this->boadmin_entity->read_single_category($entity_id,$cat_id);
-				return $entity_category['name'];
+				case 'entity':
+				case 'catch':
+					$entity_category = $this->boadmin_entity->read_single_category($entity_id,$cat_id);
+					$location_name =  $entity_category['name'];					
+					break;
+				default:
+					$location_name = lang($location);
 			}
-			else
-			{
-				return lang($location);
-			}
+			return $location_name;
 		}
 		/**
 		* Get relation of the interlink
@@ -218,6 +219,20 @@
 				$link =	array
 				(
 					'menuaction'	=> 'property.uientity.view',
+					'entity_id'		=> $entity_id,
+					'cat_id'		=> $cat_id,
+					'id'			=> $id
+				);
+			}
+			else if( substr($type, 1, 5) == 'catch' )
+			{
+				$type		= explode('.',$type);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+				$link =	array
+				(
+					'menuaction'	=> 'property.uientity.view',
+					'type'			=> 'catch',
 					'entity_id'		=> $entity_id,
 					'cat_id'		=> $cat_id,
 					'id'			=> $id

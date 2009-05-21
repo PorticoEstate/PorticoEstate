@@ -321,8 +321,11 @@
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
+			
+			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
+
 			$values['files'] = $vfs->ls (array(
-			     'string' => "/property/{$this->category_dir}/{$values['location_data']['loc1']}/{$data['id']}",
+			     'string' => "/property/{$this->category_dir}/{$loc1}/{$data['id']}",
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;

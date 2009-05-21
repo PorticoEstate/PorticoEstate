@@ -32,11 +32,11 @@
 						<xsl:choose>
 							<xsl:when test="//link_to_files!=''">
 								<xsl:variable name="link_to_file"><xsl:value-of select="//link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="file_name"/></xsl:variable>
-								<a href="{$link_to_file}" target="_blank" title="{//lang_view_file_statustext}" style="cursor:help"><xsl:value-of select="name"/></a>
+								<a href="{$link_to_file}" target="_blank" title="{//lang_view_file_statustext}"><xsl:value-of select="name"/></a>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="link_view_file"><xsl:value-of select="//link_view_file"/>&amp;file_name=<xsl:value-of select="file_name"/></xsl:variable>
-								<a href="{$link_view_file}" target="_blank" title="{//lang_view_file_statustext}" style="cursor:help"><xsl:value-of select="name"/></a>
+								<a href="{$link_view_file}" target="_blank" title="{//lang_view_file_statustext}"><xsl:value-of select="name"/></a>
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:text> </xsl:text>
@@ -89,11 +89,11 @@
 								<xsl:choose>
 									<xsl:when test="//link_to_files!=''">
 										<xsl:variable name="link_to_file"><xsl:value-of select="//link_to_files"/>/<xsl:value-of select="directory"/>/<xsl:value-of select="file_name"/></xsl:variable>
-										<a href="{$link_to_file}" target="_blank" title="{//lang_view_file_statustext}" style="cursor:help"><xsl:value-of select="name"/></a>
+										<a href="{$link_to_file}" target="_blank" title="{//lang_view_file_statustext}"><xsl:value-of select="name"/></a>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:variable name="link_view_file"><xsl:value-of select="//link_view_file"/>&amp;file_name=<xsl:value-of select="file_name"/></xsl:variable>
-										<a href="{$link_view_file}" target="_blank" title="{//lang_view_file_statustext}" style="cursor:help"><xsl:value-of select="name"/></a>
+										<a href="{$link_view_file}" target="_blank" title="{//lang_view_file_statustext}"><xsl:value-of select="name"/></a>
 									</xsl:otherwise>
 								</xsl:choose>
 								<xsl:text> </xsl:text>

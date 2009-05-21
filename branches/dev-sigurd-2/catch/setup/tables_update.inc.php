@@ -109,7 +109,7 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_config_attrib','value',array('type' => 'varchar','precision' => 1000,'nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_config_type','schema',array('type' => 'varchar','precision' => ,'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_config_type','schema',array('type' => 'varchar','precision' => 10,'nullable' => false));
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_catch_config_value');
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

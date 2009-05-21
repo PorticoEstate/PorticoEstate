@@ -148,15 +148,13 @@
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
 					<tr>
-						<td title="{lang_copy_project_statustext}" style="cursor:help">
+						<td title="{lang_copy_project_statustext}">
 							<xsl:value-of select="lang_copy_project"/>
 						</td>
 						<td>
-							<input type="checkbox" name="values[copy_project]" value="True"  onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_copy_project_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<input type="checkbox" name="values[copy_project]" value="True">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_copy_project_statustext"/>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -173,7 +171,7 @@
 
 					<tr>
 						<td valign="top">
-							<a href="{link_select_request}"  title="{lang_select_request_statustext}" style ="cursor:help"><xsl:value-of select="lang_select_request"/></a>
+							<a href="{link_select_request}"  title="{lang_select_request_statustext}"><xsl:value-of select="lang_select_request"/></a>
 						</td>
 					</tr>
 
@@ -190,7 +188,7 @@
 							<tr>
 
 							<td class="th_text"  align="left" >
-								<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+								<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
 								<xsl:text> </xsl:text>
 
 								<xsl:choose>
@@ -198,9 +196,6 @@
 									<input type="checkbox" name="values[delete_request][]" value="{id}"  onMouseout="window.status='';return true;">
 										<xsl:attribute name="title">
 											<xsl:value-of select="//lang_delete_request_statustext"/>
-										</xsl:attribute>
-										<xsl:attribute name="style">
-											<xsl:text>cursor:help</xsl:text>
 										</xsl:attribute>
 									</input>
 									</xsl:when>
@@ -224,7 +219,7 @@
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>
@@ -916,7 +911,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
