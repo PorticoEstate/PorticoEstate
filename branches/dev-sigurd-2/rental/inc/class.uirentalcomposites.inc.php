@@ -23,9 +23,11 @@
 
 		public function index_json()
 		{
-			$bookings = $this->bo->read();
-			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
-			return $this->yui_results($bookings);
+			$compositeArray = $this->bo->read();
+//			var_dump($compositeArray);
+//			var_dump($this);
+			// TODO: Use this to add links: array_walk($compositeArray["results"], array($this, "_add_links"), "booking.uibooking.show");
+			return $this->yui_results($compositeArray);
 		}
 
 		/**
@@ -66,13 +68,19 @@
 					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
 				// XXX: Make  the keys match the keys from the database
 					'field' => array(
+// TODO: The prototype displays 'Nummer'. Why? Do we need it?
 						array(
-							'key' => 'number',
+							'key' => 'composite_id',
 							'label' => lang('Number'),
-							'formatter' => 'YAHOO.rental.formatLink'
+// TODO: Add link:							'formatter' => 'YAHOO.rental.formatLink'
+						),
+// TODO: This one isn't in the prototype:						
+						array(
+							'key' => 'name',
+							'label' => lang('Navn')
 						),
 						array(
-							'key' => 'address1',
+							'key' => 'address_1',
 							'label' => lang('Address')
 						),
 						array(

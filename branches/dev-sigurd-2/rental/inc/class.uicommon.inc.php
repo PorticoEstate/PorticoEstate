@@ -118,5 +118,19 @@
 				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
 			}
 		}
+
+		// Build a YUI result style array
+		public function yui_results($results)
+		{
+            return array
+			(   
+				'ResultSet' => array(
+					'totalResultsAvailable' => $results['total_records'], 
+					'Result' => $results['results']
+				)   
+			);  
+
+		}
+		
 	}
 ?>
