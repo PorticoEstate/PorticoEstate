@@ -104,6 +104,10 @@
 					$this->collection_roles = $roles;
 				}
 				
+				if (is_array($parent_roles = $this->include_subject_parent_roles())) {
+					$this->collection_roles['_parent_roles'] = $parent_roles;
+				}
+				
 				return $this->collection_roles;
 				
 			} else {
@@ -142,7 +146,13 @@
 			}	
 		}
 		
-		protected function include_subject_parent_roles(array $for_object) { }
+		/**
+		 * If $for_object is provided then return only the parent roles for that specific object.
+		 * If $for_object == null then provide all distinct roles from all parent objects
+		 *
+		 * @param array $for_object (optional)
+		 */
+		protected function include_subject_parent_roles(array $for_object = null) { }
 		
 		protected function get_subject_global_roles() {
 			if (is_null($this->subject_global_roles))
@@ -326,7 +336,7 @@
 				return $permission;
 			}
 			
-			throw new booking_unauthorized_exception($operation, sprintf('Unauthorized to %s %s %s', $operation, get_class($this), is_null($object) ? 'collection' : 'object'));
+			throw new booking_unauthorized_exception($operation, sprintf('Operation \'%s\' was denied on %s %s', $operation, get_class($this), is_null($object) ? 'collection' : 'object'));
 		}
 		
 		protected function _compute_permissions(array $entity, $roles, $role_permissions)
@@ -387,7 +397,8 @@
 		public function is_authorized($operation, $object = null)
 		{
 			try {
-				return $this->authorize($operation, $object);
+				$this->authorize($operation, $object);
+				return true;
 			} catch (booking_unauthorized_exception $e) {
 				return false;
 			}
@@ -401,7 +412,8 @@
 		
 		public function allow_read($object = null) {
 			try {
-				return $this->authorize_read($object);
+				$this->authorize_read($object);
+				return true;
 			} catch (booking_unauthorized_exception $e) { }
 			
 			return false;
@@ -415,7 +427,8 @@
 		
 		public function allow_create($object = null) {
 			try {
-				return $this->authorize_create($object);
+				$this->authorize_create($object);
+				return true;
 			} catch (booking_unauthorized_exception $e) { }
 			
 			return false;
@@ -447,51 +460,43 @@
 		 */
 		public function allow_delete($object = null) {
 			try {
-				return $this->authorize_delete($object);
+				$this->authorize_delete($object);
+				return true;
 			} catch (booking_unauthorized_exception $e) { }
 			
 			return false;
 		}
 		
 		/**
-		 * @param mixed $object Either an array or the id of the entity to be deleted
+		 * @param mixed $object Either an array of the entity or the id of the entity to be written to
 		 */
 		public function authorize_write($object = null)
 		{
-			$object_id = isset($object['id']) ? $object['id'] : null;
+			$object_id = $object;
 			
-			//if (is_array($object)) {
-			//$object_id = ;
-				
-			if (is_array($object) && !$object_id)
-			{
+			if (is_array($object)) {
+				$object_id = isset($object['id']) ? $object['id'] : null;
+			}
+			
+			if (!$object_id) {
 				throw new InvalidArgumentException('Cannot authorize operation \'write\' unless an object id is provided');
 			}
 			
-				// $filtered_object = array();
-				// foreach($this->get_columns() as $col) {
-				// 	if (isset($object[$col])) {
-				// 		$filtered_object[$col] = $object[$col];
-				// 	}
-				// }
-				// $object = $filtered_object;
-			//}
-			
-			if (is_array($object)) {
+			$persisted_object = parent::read_single($object_id);			
+			$allowed_fields = $this->authorize('write', $persisted_object);	
 				
-				$old_object = parent::read_single($object_id);
+			$transient_object = is_array($object) ? $object : $persisted_object;
 				
-				$allowed_fields = $this->authorize('write', $old_object);
+			//$allowed_fields is an array that contains the names of the 
+			//fields that the role gave us permission to write to.
+			if (is_array($transient_object)) {
 				$allowed_object = array();
-				
-				//$allowed_fields is an array that contains the names of the 
-				//fields that the role gave us permission to write to.
 				if (is_array($allowed_fields)) {
 					foreach($this->get_columns() as $field) {
 						if (isset($allowed_fields[$field])) {
-							$allowed_object[$field] = $object[$field];
-						} elseif(isset($old_object[$field])) {
-							$allowed_object[$field] = $old_object[$field];
+							$allowed_object[$field] = $transient_object[$field];
+						} elseif(isset($persisted_object[$field])) {
+							$allowed_object[$field] = $persisted_object[$field];
 						}
 					}
 				}
@@ -499,7 +504,7 @@
 				return $allowed_object;
 			}
 			
-			return $object;
+			return $persisted_object; //No change allowed, so return the already persisted object
 		}
 		
 		/**

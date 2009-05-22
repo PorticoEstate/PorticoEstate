@@ -33,11 +33,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New equipment'),
-								'href' => self::link(array('menuaction' => 'booking.uiequipment.add'))
-							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -72,6 +67,16 @@
 					)
 				)
 			);
+			
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New equipment'),
+					'href' => self::link(array('menuaction' => 'booking.uiequipment.add'))
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 
@@ -129,10 +134,9 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$resource = $this->bo->read_single($id);
 			$resource['id'] = $id;
-			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiequipment.show', 'id' => $resource['id']));
-			$resource['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-			$resource['equipment_link'] = self::link(array('menuaction' => 'booking.uiequipment.index'));
-			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			
+			$this->add_breadcrumbs($resource);
+			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -168,14 +172,21 @@
 			self::render_template('equipment_edit', array('resource' => $resource, 'lang' => $lang));
 		}
 		
+		private function add_breadcrumbs(array &$resource)
+		{
+			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$resource['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
+			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['resource_id']));
+			$resource['equipment_link'] = self::link(array('menuaction' => 'booking.uiequipment.index'));
+		}
+		
 		public function show()
 		{
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiequipment.edit', 'id' => $resource['id']));
-			$resource['resource_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
-			$resource['equipment_link'] = self::link(array('menuaction' => 'booking.uiequipment.index'));
-			$resource['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
+
+			$this->add_breadcrumbs($resource);
+			
 			$resource['name-field'] = lang('Name');
 			$resource['description-field'] = lang('Description');
 			$resource['resource-field'] = lang('Resource');

@@ -10,11 +10,15 @@
 			$this->resource_bo = CreateObject('booking.boresource');
 		}
 		
-		protected function include_subject_parent_roles(array $for_object)
+		/**
+		 * @see bocommon_authorized
+		 */
+		protected function include_subject_parent_roles(array $for_object = null)
 		{
 			$parent_roles = null;
+			$parent_resource = null;
 			
-			if (!is_null($for_object))
+			if (is_array($for_object))
 			{
 				if (!isset($for_object['resource_id']))
 				{
@@ -22,12 +26,19 @@
 				}
 				
 				$parent_resource = $this->resource_bo->read_single($for_object['resource_id']);
-				$parent_roles['resource'] = $this->resource_bo->get_subject_roles($parent_resource);
 			}
+			
+			//Note that a null value for $parent_resource is acceptable. That only signifies
+			//that any roles specified for any resource are returned rather than the roles 
+			//for a specific resource
+			$parent_roles['resource'] = $this->resource_bo->get_subject_roles($parent_resource);
 			
 			return $parent_roles;
 		}
 		
+		/**
+		 * @see bocommon_authorized
+		 */
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
 			return array_merge(
@@ -74,9 +85,43 @@
 			);
 		}
 		
+		/**
+		 * @see bocommon_authorized
+		 */
 		protected function get_collection_role_permissions($defaultPermissions)
 		{
-			return $defaultPermissions;
+			return array_merge(
+				array
+				(
+					'parent_role_permissions' => array
+					(
+						'resource' => array
+						(
+							booking_sopermission::ROLE_MANAGER => array(
+								'create' => true,
+							),
+							'parent_role_permissions' => array
+							(
+								'building' => array
+								(
+									booking_sopermission::ROLE_MANAGER => array(
+										'create' => true,
+										'delete' => true,
+									),
+								),
+							),
+						),
+					),
+					'global' => array
+					(
+						booking_sopermission::ROLE_MANAGER => array
+						(
+							'create' => true
+						)
+					),
+				),
+				$defaultPermissions
+			);
 		}
 		
 		public function populate_json_data($module) {

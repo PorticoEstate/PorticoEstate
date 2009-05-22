@@ -88,7 +88,7 @@
 				)
 			);
 			
-			if ($this->bo->allow_write()) {
+			if ($this->bo->allow_create()) {
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type' => 'link',
 					'value' => lang('New building'),

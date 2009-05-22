@@ -22,7 +22,7 @@
 			
 			$this->set_business_object();
 			
-			$this->fields = array('subject_id', 'object_id', 'role');
+			$this->fields = array('subject_id', 'subject_name', 'object_id', 'object_name', 'role');
 		}
 		
 		protected function set_business_object(booking_bopermission $bo = null)

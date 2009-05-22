@@ -136,11 +136,6 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'link',
-								'value' => lang('New document'),
-								'href' => $this->get_owner_typed_link('add')
-							),
-							array(
 								'type' => 'text', 
 								'name' => 'query'
 							),
@@ -189,6 +184,15 @@
 					)
 				)
 			);
+			
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New document'),
+					'href' => $this->get_owner_typed_link('add')
+			 	));
+			}	
 			
 			self::render_template('datatable', $data);
 		}

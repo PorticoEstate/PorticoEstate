@@ -24,15 +24,17 @@
 		</dl>
 
 		<div id="schedule_container"/>
-	
-		<div class="form-buttons">
-			<button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
-			<button>
-				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Generate allocations')" />
-			</button>
-		</div>
-
+		
+		<xsl:if test="season/permission/write">	
+			<div class="form-buttons">
+				<button onclick="YAHOO.booking.dialog.newAllocation(); return false;"><xsl:value-of select="php:function('lang', 'New allocation')" /></button>
+				<button>
+					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'Generate allocations')" />
+				</button>
+			</div>
+		</xsl:if>
+		
 		<form id="panel1" method="POST">
 			<xsl:attribute name="action"><xsl:value-of select="season/post_url"/></xsl:attribute>
 			<div class="hd"><xsl:value-of select="php:function('lang', 'Allocations')" /></div>
@@ -238,5 +240,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.updateSchedule();
 });
 </script>
+
+<xsl:if test="not(season/permission/write)">
+	<script type="text/javascript">
+		YAHOO.booking.AllocationDialog.prototype.newAllocation = function() { }
+		YAHOO.booking.AllocationDialog.prototype.editAllocation = function (id) { }
+	</script>
+</xsl:if>
 
 </xsl:template>

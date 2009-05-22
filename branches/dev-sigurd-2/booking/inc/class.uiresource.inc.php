@@ -39,11 +39,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New resource'),
-								'href' => self::link(array('menuaction' => 'booking.uiresource.add'))
-							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -68,7 +63,6 @@
 							'label' => lang('Resource Name'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
-						
 						array(
 							'key' => 'link',
 							'hidden' => true
@@ -84,6 +78,15 @@
 					)
 				)
 			);
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New resource'),
+					'href' => self::link(array('menuaction' => 'booking.uiresource.add'))
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 

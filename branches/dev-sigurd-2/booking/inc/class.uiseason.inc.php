@@ -22,6 +22,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.boseason');
 			self::set_active_menu('booking::buildings::seasons');
 			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources', 'active');
@@ -41,11 +44,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New season'),
-								'href' => self::link(array('menuaction' => 'booking.uiseason.add'))
-							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -97,6 +95,15 @@
 					)
 				)
 			);
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New season'),
+					'href' => self::link(array('menuaction' => 'booking.uiseason.add'))
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 
@@ -172,7 +179,7 @@
 			$season['edit_link'] = self::link(array('menuaction' => 'booking.uiseason.edit', 'id' => $season['id']));
 			$season['boundaries_link'] = self::link(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season['id']));
 			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));
-			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('season', $season['id'], 'add');
+			$season['add_permission_link'] = booking_uipermission::generate_inline_link('season', $season['id'], 'add');
 			$resource_ids = '';
 			foreach($season['resources'] as $res)
 			{
@@ -186,6 +193,7 @@
 		{
 			$season_id = intval(phpgw::get_var('id', 'GET'));
 			$season = $this->bo->read_single($season_id);
+			
 			$boundaries = $this->bo->get_boundaries($season_id);
 			$boundaries = $boundaries['results'];
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -218,9 +226,9 @@
 		public function delete_boundary()
 		{
 			$boundary_id = intval(phpgw::get_var('id', 'GET'));
-			$boundary = $this->bo->so_boundary->read_single($boundary_id);
+			$boundary = $this->bo->read_boundary($boundary_id);
 			$season_id = $boundary['season_id'];
-			$this->bo->so_boundary->delete($boundary_id);
+			$this->bo->delete_boundary($boundary);
 			$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id'=>$season_id));
 		}
 
@@ -277,6 +285,9 @@
 		{
 			$season_id = intval(phpgw::get_var('id', 'GET'));
 			$season = $this->bo->read_single($season_id);
+			
+			$this->bo->authorize_write($season);
+			
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
 			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));

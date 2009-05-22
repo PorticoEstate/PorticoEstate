@@ -3,4 +3,5 @@
 	
 	class booking_bopermission_season extends booking_bopermission
 	{
+		
 	}

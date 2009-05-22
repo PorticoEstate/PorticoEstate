@@ -36,10 +36,12 @@
             <dd><div id="resources_container"/></dd>
         </dl>
         <div class="form-buttons">
-	        <button>
-	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link">"</xsl:value-of>"</xsl:attribute>
-	            <xsl:value-of select="php:function('lang', 'Edit')" />
-	        </button>
+			<xsl:if test="season/permission/write">
+				<button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/edit_link">"</xsl:value-of>"</xsl:attribute>
+		            <xsl:value-of select="php:function('lang', 'Edit')" />
+		        </button>
+			</xsl:if>
 	        <button>
 	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/boundaries_link">"</xsl:value-of>"</xsl:attribute>
 	            <xsl:value-of select="php:function('lang', 'Boundaries')" />
@@ -49,15 +51,15 @@
 	            <xsl:value-of select="php:function('lang', 'Week template')" />
 	        </button>
 		</div>
-		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
-	    <div id="permissions_container"/>
-		<a class='button'>
-			<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'Add Permission')" />
-		</a>
+		<xsl:if test="season/permission/write">
+			<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+		    <div id="permissions_container"/>
+			<a class='button'>
+				<xsl:attribute name="href"><xsl:value-of select="season/add_permission_link"/></xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Add Permission')" />
+			</a>
+		</xsl:if>
     </div>
-
-
 
 	<script type="text/javascript">
 		var season_id = <xsl:value-of select="season/id"/>;
