@@ -286,7 +286,7 @@
 			return $entity;
 		}
 
-		function read_single($data)
+		function read_single($data, $values = array())
 		{
 			$values['attributes'] = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['id']) && $data['id'])

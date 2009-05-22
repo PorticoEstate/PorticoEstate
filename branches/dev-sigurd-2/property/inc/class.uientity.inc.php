@@ -864,7 +864,7 @@
 			if($_POST && !$bypass)
 			{
 				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,'property');
+				$insert_record_entity	= $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location,$this->type_app[$this->type]);
 
 				if(is_array($insert_record_entity))
 				{
@@ -875,7 +875,6 @@
 				}
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
-
 			}
 			else
 			{
@@ -958,12 +957,11 @@
 					$receipt['error'][]=array('msg'=>lang('Please select entity type !'));
 					$error_id=true;
 				}
-
 				if(isset($values_attribute) && is_array($values_attribute))
 				{
 					foreach ($values_attribute as $attribute )
 					{
-						if($attribute['nullable'] != 1 && !$attribute['value'])
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 						{
 							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 						}
@@ -1052,7 +1050,7 @@
 			{
 				if($this->cat_id)
 				{
-					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id));
+					$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id),$values);
 				}
 
 			}

@@ -106,7 +106,7 @@
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
 				'value' => array('type' => 'varchar', 'precision' => 1000,'nullable' => False)
 			),
 			'pk' => array('type_id','id'),
@@ -126,4 +126,31 @@
 			'ix' => array(),
 			'uc' => array('type_id','attrib_id','value')
 		),
+		'fm_catch_1_1' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'num' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'unitid' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'user_' => array('type' => 'int','precision' => '4','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('num')
+		),
+		'fm_catch_2_1' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'num' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => '4','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('num')
+		),
+
 	);
