@@ -253,7 +253,8 @@
 						'text'			=> lang('Categories'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.category'
+									'menuaction'	=> 'property.uiadmin_entity.category',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -264,7 +265,8 @@
 						'text'			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.edit'
+									'menuaction'	=> 'property.uiadmin_entity.edit',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters
 					);
@@ -276,7 +278,8 @@
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.delete'
+									'menuaction'	=> 'property.uiadmin_entity.delete',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -287,7 +290,8 @@
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'property.uiadmin_entity.edit'
+						'menuaction'	=> 'property.uiadmin_entity.edit',
+						'type'			=> $this->type
 					)));
 
 			unset($parameters);
@@ -611,7 +615,8 @@
 						'text'			=> lang('attribute groups'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.list_attribute_group'
+									'menuaction'	=> 'property.uiadmin_entity.list_attribute_group',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -622,7 +627,8 @@
 						'text'			=> lang('Attributes'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.list_attribute'
+									'menuaction'	=> 'property.uiadmin_entity.list_attribute',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -633,7 +639,8 @@
 						'text'			=> lang('Custom functions'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.list_custom_function'
+									'menuaction'	=> 'property.uiadmin_entity.list_custom_function',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -644,7 +651,8 @@
 						'text'			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.edit_category'
+									'menuaction'	=> 'property.uiadmin_entity.edit_category',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters
 					);
@@ -656,7 +664,8 @@
 						'confirm_msg'	=> lang('do you really want to delete this entry'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uiadmin_entity.delete'
+									'menuaction'	=> 'property.uiadmin_entity.delete',
+									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
 					);
@@ -668,7 +677,8 @@
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uiadmin_entity.edit_category',
-							'entity_id'	=> $entity_id
+							'entity_id'		=> $entity_id,
+							'type'			=> $this->type
 						)),
 					'parameters'	=> $parameters3
 					);

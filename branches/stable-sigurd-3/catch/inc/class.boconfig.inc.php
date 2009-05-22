@@ -82,15 +82,30 @@
 			$config_info = $this->so->read_type(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
+
+			$entity			= CreateObject('property.soadmin_entity');
+			$entity->type = 'catch';
+
+			foreach ($config_info as & $entry)
+			{
+				list($entity_id, $cat_id) = split('[_]', $entry['schema']);
+				$category = $entity->read_single_category($entity_id, $cat_id);
+				$entry['schema'] = "{$entry['schema']} {$category['name']}";
+			}
+			reset($config_info);
 			return $config_info;
 		}
 
 		function read_single_type($id)
 		{
-			$values =$this->so->read_single_type($id);
+			$values 				= $this->so->read_single_type($id);
+			$entity					= CreateObject('property.soadmin_entity');
+			$entity->type 			= 'catch';
+			list($entity_id, $cat_id) = split('[_]', $values['schema']);
+			$category				= $entity->read_single_category($entity_id, $cat_id);
+			$values['schema_text']	= "{$values['schema']} {$category['name']}";
 			return $values;
 		}
-
 
 		function save_type($values,$action='')
 		{
@@ -172,9 +187,9 @@
 			return $config_info;
 		}
 
-		function read_single_value($type_id,$attrib_id,$id)
+		function read_single_value($type_id,$attrib_id)
 		{
-			$values =$this->so->read_single_value($type_id,$attrib_id,$id);
+			$values =$this->so->read_single_value($type_id,$attrib_id);
 
 			return $values;
 		}
@@ -201,9 +216,9 @@
 			return $receipt;
 		}
 
-		function delete_value($type_id,$attrib_id,$id)
+		function delete_value($type_id,$attrib_id)
 		{
-			$this->so->delete_value($type_id,$attrib_id,$id);
+			$this->so->delete_value($type_id,$attrib_id);
 		}
 
 
@@ -265,6 +280,49 @@
 			}
 
 			return $category_list;
+		}
+
+		public function get_schema_list($selected='')
+		{
+			$schema_list = array();
+			$config_info = $this->so->read_type(array('allrows'=>true));
+
+			$entity			= CreateObject('property.soadmin_entity');
+			$entity_list 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
+			foreach($entity_list as $entry)
+			{
+				if($entry['id'] == 1) //reserved for users and devices: config information
+				{
+					continue;
+				}
+				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id'], 'type' => 'catch'));
+				foreach($cat_list as $category)
+				{
+					$skip = false;
+					$schema = "{$entry['id']}_{$category['id']}";
+					foreach ($config_info as $existing)
+					{
+						if($existing['schema'] == $schema)
+						{
+							$skip = true;
+							break;
+						}
+					}
+
+					if(!$skip)
+					{
+						$schema_list[] = array
+						(
+							'id'	=> $schema,
+							'name'	=> "{$schema} {$category['name']}"
+						);
+					}
+				}
+			}
+
+			$schema_list = $this->bocommon->select_list($selected, $schema_list);
+
+			return $schema_list;
 		}
 
 

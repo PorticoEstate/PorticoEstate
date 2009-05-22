@@ -569,10 +569,22 @@
 */
 			$this->_db->transaction_commit();
 
+			$accts =& $GLOBALS['phpgw']->accounts;
+			$accounts = array();
+			if ( $accts->get_type($this->_account_id) == phpgwapi_account::TYPE_GROUP )
+			{
+				$accounts = $accts->get_members($this->_account_id);
+			}
+
+			$accounts[] = $this->_account_id;
+
 			$clear_cache = array_keys($clear_cache);
 			foreach($clear_cache as $location_id)
 			{
-				$this->_delete_cache($this->_account_id, $location_id);
+				foreach($accounts as $account_id)
+				{
+					$this->_delete_cache($account_id, $location_id);
+				}
 			}
 
 	//		$this->remove_duplicates($acct_id);

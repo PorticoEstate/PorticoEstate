@@ -97,16 +97,16 @@
 
 				$menus['admin'] = array
 				(
-					'config'	=> array
-					(
-						'text'	=> lang('config'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index'))
-					),
 					'entity'	=> array
 					(
 						'text'	=> lang('Admin entity'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index', 'type' => 'catch') ),
 						'children' => $admin_children_entity
+					),
+					'config'	=> array
+					(
+						'text'	=> lang('config'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'catch.uiconfig.index'))
 					),
 					'categories'	=> array
 					(

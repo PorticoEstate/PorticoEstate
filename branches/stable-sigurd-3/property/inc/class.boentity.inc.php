@@ -286,7 +286,7 @@
 			return $entity;
 		}
 
-		function read_single($data)
+		function read_single($data, $values = array())
 		{
 			$values['attributes'] = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 0, '', 'ASC', 'attrib_sort', true, true);
 			if(isset($data['id']) && $data['id'])
@@ -321,8 +321,11 @@
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
+			
+			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
+
 			$values['files'] = $vfs->ls (array(
-			     'string' => "/property/{$this->category_dir}/{$values['location_data']['loc1']}/{$data['id']}",
+			     'string' => "/property/{$this->category_dir}/{$loc1}/{$data['id']}",
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;

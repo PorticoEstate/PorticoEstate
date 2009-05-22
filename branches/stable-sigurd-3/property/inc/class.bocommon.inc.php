@@ -1742,6 +1742,7 @@
 		*/
 		public function preserve_attribute_values($values, $values_attributes)
 		{
+
 			if ( !is_array($values_attributes ) )
 			{
 				return array();
@@ -1751,12 +1752,13 @@
 			{
 				foreach ( $values['attributes'] as &$val_attrib )
 				{
+
 					if ( $val_attrib['id'] != $attribute['attrib_id'] )
 					{
 						continue;
 					}
 
-					if( !isset($attribute['value']) )
+					if( !isset($attribute['value']) && !isset($values['extra'][$val_attrib['name']]))
 					{
 						continue;
 					}
@@ -1784,6 +1786,10 @@
 								$choice['checked'] = 'checked';
 							}
 						}
+					}
+					else if (isset($values['extra'][$val_attrib['name']]))
+					{
+						$val_attrib['value'] =$values['extra'][$val_attrib['name']];
 					}
 					else
 					{

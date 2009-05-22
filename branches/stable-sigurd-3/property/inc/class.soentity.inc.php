@@ -128,6 +128,8 @@
 			$sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+
 			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
@@ -405,7 +407,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//echo $sql;
+//_debug_array($sql);
 			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f(0);
@@ -550,6 +552,9 @@
 
 		function add($values,$values_attribute,$entity_id,$cat_id)
 		{
+			$cols = array();
+			$vals = array();
+
 			if(isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]= $values['street_name'];
@@ -559,9 +564,20 @@
 
 			if(!isset($address) || !$address)
 			{
-				$address = $this->db->db_addslashes($values['location_name']);
+				$address = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
+				if($address)
+				{
+					$cols[] = 'address';
+					$vals[] = $address;
+				}
 			}
 
+			if (isset($values['location_code']) && $values['location_code'])
+			{
+				$cols[] = 'location_code';
+				$vals[] = $values['location_code'];			
+			}
+			
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				foreach ($values['location'] as $input_name => $value)
@@ -619,12 +635,10 @@
 			$values['id'] = $this->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
 			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
 
-			$this->db->query("INSERT INTO $table (id,num,address,location_code,entry_date,user_id $cols) "
+			$this->db->query("INSERT INTO $table (id,num,entry_date,user_id $cols) "
 				. "VALUES ("
 				. $values['id']. ",'"
-				. $num . "','"
-				. $address. "','"
-				. $values['location_code']. "',"
+				. $num . "',"
 				. time() . ","
 				. $this->account. " $vals)",__LINE__,__FILE__);
 
@@ -665,7 +679,10 @@
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)
 		{
-			$receipt = array();
+			$receipt	= array();
+			$value_set	= array();
+			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
+
 			if(isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]= $values['street_name'];
@@ -675,21 +692,29 @@
 
 			if(!isset($address) || !$address)
 			{
-				$address = $values['location_name'];
+				$address = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
+				if($address)
+				{
+					$value_set['address'] = $address;
+				}
 			}
 
-			$value_set=array(
-				'location_code'	=> $values['location_code'],
-				'address'	=> $this->db->db_addslashes($address)
-				);
+			if (isset($values['location_code']) && $values['location_code'])
+			{
+					$value_set['location_code'] = $values['location_code'];
+			}
 
 			$admin_location	= CreateObject('property.soadmin_location');
 			$admin_location->read(false);
 
 			// Delete old values for location - in case of moving up in the hierarchy
+			$metadata = $this->db->metadata($table);
 			for ($i = 1;$i < $admin_location->total_records + 1; $i++)
 			{
-				$value_set["loc{$i}"]	= false;
+				if(isset($metadata["loc{$i}"]))
+				{
+					$value_set["loc{$i}"]	= false;
+				}
 			}
 
 			if(isset($values['location']) && is_array($values['location']))
@@ -708,14 +733,11 @@
 				}
 			}
 
-//_debug_array($values_attribute);
-			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
-
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
+					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='user' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
@@ -757,7 +779,7 @@
 			}
 
 //_debug_array($history_set);
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
