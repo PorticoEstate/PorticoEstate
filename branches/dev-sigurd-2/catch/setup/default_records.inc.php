@@ -75,6 +75,6 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id,
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr) VALUES (2, 1, 'Shema type 1', 'Shema type 1')");
 
 $location_id = $GLOBALS['phpgw']->locations->get_id('catch', '.catch.1.1');
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'unitid', 'UnitID', 'UnitID for device', 'V', NULL, 1, NULL, 50, NULL, NULL, 'False')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'user_', 'User', 'System user', 'user', NULL, 2, NULL, NULL, NULL, NULL, 'False')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'unitid', 'UnitID', 'UnitID for device', 'V', 1, 1, NULL, 50, NULL, NULL, 'False')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 2, 'user_', 'User', 'System user', 'user', 1, 2, NULL, NULL, NULL, NULL, 'False')");
 
