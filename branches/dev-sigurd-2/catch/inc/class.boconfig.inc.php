@@ -291,6 +291,10 @@
 			$entity_list 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
 			foreach($entity_list as $entry)
 			{
+				if($entry['id'] == 1) //reserved for users and devices: config information
+				{
+					continue;
+				}
 				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id'], 'type' => 'catch'));
 				foreach($cat_list as $category)
 				{

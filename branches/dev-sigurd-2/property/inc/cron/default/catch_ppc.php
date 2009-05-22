@@ -117,7 +117,14 @@
 		function execute($cron='')
 		{
 
-			$this->import_ppc();
+			try
+			{
+				$this->import_ppc();
+			}
+			catch(Exception $e)
+			{
+				$this->receipt['error'][]=array('msg'=>$e->getMessage());
+			}
 
 			if(!$cron)
 			{
@@ -184,7 +191,7 @@
 				{
 					$var_result = $xmlparse->parseFile($file);
 					$var_result = array_change_key_case($var_result, CASE_LOWER);
-
+//_debug_array($var_result);
 					//data
 					$insert_values	= array();
 					$cols			= array();
@@ -202,7 +209,13 @@
 						$insert_values[] = time();
 						$id = $entity->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
 						$num = $entity->generate_num($entity_id, $cat_id, $id);
-						$user_id = 6; // FIXME
+						$this->db->query("SELECT * FROM fm_catch_1_1 WHERE unitid ='{$var_result['unitid']}'",__LINE__,__FILE__);
+						$this->db->next_record();
+						$user_id = $this->db->f('user_');
+						if(!$user_id)
+						{
+							throw new Exception(lang('no valid user for this UnitID: %1', $var_result['unitid']));
+						}
 
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
@@ -230,11 +243,11 @@
 								rename("{$this->pickup_path}/{$data}", "{$this->pickup_path}/imported/{$data}");
 							}
 						}
+						// move file
+						$_file = basename($file);
+						rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
+						$i++;
 					}
-					// move file
-					$_file = basename($file);
-					rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
-					$i++;
 				}
 				$this->receipt['message'][]=array('msg'=>lang('%1 records imported to %2', $i, $schema_text));
 			}

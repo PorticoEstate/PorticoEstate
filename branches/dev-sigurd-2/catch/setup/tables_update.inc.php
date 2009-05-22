@@ -179,7 +179,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch (id, name, descr) VALUES (2, 'Shema type 1', 'Shema type 1')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr) VALUES (1, 1, 'Users and devices', 'Users and devices')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr) VALUES (2, 1, 'Shema type 1', 'Shema type 1')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr, fileupload) VALUES (2, 1, 'Shema type 1', 'Shema type 1', 1)");
 
 		$location_id = $GLOBALS['phpgw']->locations->get_id('catch', '.catch.1.1');
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'unitid', 'UnitID', 'UnitID for device', 'V', 1, 1, NULL, 50, NULL, NULL, 'False')");
