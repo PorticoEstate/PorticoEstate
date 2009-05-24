@@ -198,7 +198,6 @@
 			$condition = $this->_get_conditions($query, $filters);
 
 			// Calculate total number of records
-//var_dump("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition");
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');

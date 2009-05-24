@@ -5,3 +5,8 @@ INSERT INTO phpgw_applications (app_name, app_order, app_version, app_enabled, a
 Blocked, too many attempts:
 select * from phpgw_access_log;
 delete from phpgw_access_log where li >= 1242770785;
+
+Query for getting info about composites:
+bergen_demo=> select distinct on(rental_composite.composite_id) * from rental_composite
+	join rental_unit on (rental_composite.composite_id = rental_unit.composite_id)
+	join fm_locations on (rental_unit.location_id = fm_locations.id)

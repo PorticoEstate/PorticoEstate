@@ -35,7 +35,8 @@
 		'rental_unit' => array(
 				'fd' => array(
 					'composite_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'location_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'loc1' => 				array('type' => 'varchar', 'precision' => 50, 'nullable' => false, 'default' => '-1') // We need a default value as this table probably already contains data
 				),
 				'pk' => array('composite_id','location_id'),
 				'fk' => array(

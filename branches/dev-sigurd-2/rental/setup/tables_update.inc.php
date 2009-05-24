@@ -45,4 +45,18 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+	
+	$test[] = '0.0.2';
+	function rental_upgrade0_0_2()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_unit ADD COLUMN loc1 VARCHAR(50) NOT NULL DEFAULT '-1'"); // We need a default value as this table probably already contains data
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.3';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+	
+		
 ?>
