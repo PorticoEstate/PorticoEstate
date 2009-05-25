@@ -17,6 +17,11 @@ class rental_sorentalcomposites extends rental_socommon
 					'gab_id' => array('type' => 'string')
 		));
 	}
+	
+	function read_single($id)
+	{
+		return $this->read(array('query' => 'composite_id = ' . $id));
+	}
 
 	/**
 	 * We override the parent method to hook in more specialized queries for
@@ -43,7 +48,7 @@ class rental_sorentalcomposites extends rental_socommon
 		$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
 		$condition = $this->_get_conditions($query, $filters);
-		
+
 		// Calculate total number of records
 		$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();

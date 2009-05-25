@@ -107,7 +107,18 @@
 		 */
 		public function show()
 		{
-			
+			$composite_id = phpgw::get_var('id');
+			$composites = $this->bo->read_single($composite_id);
+
+			// TODO: Get single record from read_single()
+			$composite = null;
+			foreach ($composites['results'] as $db_composite) {
+				if ($db_composite['composite_id'] == $composite_id) {
+					$composite = $db_composite;
+				}
+			}
+
+			self::render_template('rentalcomposites', $composite);
 		}
 	}
 ?>
