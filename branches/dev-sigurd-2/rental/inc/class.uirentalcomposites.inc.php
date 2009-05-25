@@ -5,7 +5,8 @@
 	{
 		public $public_functions = array
 		(
-			'index'	=> true
+			'index'	=> true,
+			'show' => true
 		);
 
 		public function __construct()
@@ -18,10 +19,20 @@
 		public function index_json()
 		{
 			$compositeArray = $this->bo->read();
+			
+			array_walk($compositeArray['results'], array($this, '_add_actions'), 'rental.uirentalcomposites.show');
+			
 			// TODO: Use this to add links: array_walk($compositeArray["results"], array($this, "_add_links"), "booking.uibooking.show");
 			return $this->yui_results($compositeArray);
 		}
 
+		public function _add_actions(&$value, $key, $menuaction)
+		{
+			$value['actions'] = array(
+				"show" => self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id']))
+			);
+		}
+		
 		/**
 		 * Frontpage for the rental composites. Displays the list of all rental composites.
 		 * 
@@ -60,6 +71,14 @@
 					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'actions',
+							'hidden' => true
+						),
+						array(
+							'key' => 'composite_id',
+							'hidden' => true
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Name'),
 							'sortable' => true
@@ -78,8 +97,17 @@
 					)
 				)
 			);
+			
 			self::render_template('datatable', $data);
 		}						
 
+		/**
+		 * Show details for a single rental composite
+		 * 
+		 */
+		public function show()
+		{
+			
+		}
 	}
 ?>

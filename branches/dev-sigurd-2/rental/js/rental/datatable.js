@@ -62,5 +62,36 @@ YAHOO.util.Event.addListener(window, "load", function() {
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});
-    }); 
+    });
+    
+    myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+    
+    YAHOO.example.ContextMenu = function() {
+        var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+          var task = p_aArgs[1];
+          if(task) {
+            /* Extract which TR element triggered the context menu */
+            var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
+            
+            if(elRow) {
+              switch(task.groupIndex) {
+              case 0: /* View */
+                var oRecord = p_myDataTable.getRecord(elRow);
+              	var recordId = oRecord.getData().composite_id;
+              	window.location = oRecord.getData().actions.show;
+              	break;
+              }
+            }
+          }
+        };
+
+        var myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
+        
+        myContextMenu.addItem("Vis");
+        // Render the ContextMenu instance to the parent container of the DataTable
+        myContextMenu.render("datatable-container");
+        myContextMenu.clickEvent.subscribe(onContextMenuClick, myDataTable);
+    }();
+
 });
