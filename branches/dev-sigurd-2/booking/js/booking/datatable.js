@@ -15,21 +15,21 @@ YAHOO.booking.setupToolbar = function() {
 
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.booking.setupToolbar();
-	
 	YAHOO.booking.setupDatasource();
 
-    var baseUrl = YAHOO.booking.dataSourceUrl;
-    if(baseUrl[baseUrl.length - 1] != '&') {
-        baseUrl += '&';
-    }
-    var myDataSource = new YAHOO.util.DataSource(baseUrl);
-
-    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-    myDataSource.connXhrMode = "queueRequests";
     var fields = [];
     for(var i=0; i < YAHOO.booking.columnDefs.length; i++) {
         fields.push(YAHOO.booking.columnDefs[i].key);
     }
+    var baseUrl = YAHOO.booking.dataSourceUrl;
+    if(baseUrl[baseUrl.length - 1] != '&') {
+        baseUrl += '&';
+    }
+	baseUrl += 'sort=' + fields[0] + '&';
+    var myDataSource = new YAHOO.util.DataSource(baseUrl);
+
+    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+    myDataSource.connXhrMode = "queueRequests";
     myDataSource.responseSchema = {
         resultsList: "ResultSet.Result",
         fields: fields,
@@ -49,7 +49,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         YAHOO.booking.columnDefs, myDataSource, {
             paginator: pag,
             dynamicData: true
-     //       ,sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
+           ,sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
     });
     myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
