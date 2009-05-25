@@ -963,9 +963,9 @@
 			return $values;
 		}
 
-		function add($location='',$values_attribute='',$type_id='')
+		function add($location,$values_attribute = array(),$type_id='')
 		{
-			while (is_array($location) && list($input_name,$value) = each($location))
+			foreach ($location as $input_name => $value)
 			{
 				if($value)
 				{
@@ -1009,6 +1009,18 @@
 
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been saved',$location['location_code']));
+
+			$GLOBALS['phpgw']->config->read();
+			// Keep it at level 1 for the moment
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'] && $type_id == 1)
+			{
+				$acl_location = ".location.{$type_id}." . str_replace("-",'.',$location['location_code']);
+				if(!$GLOBALS['phpgw']->locations->get_id('property', $acl_location))
+				{
+					$GLOBALS['phpgw']->locations->add($acl_location, $location["loc{$type_id}_name"], 'property');
+				}
+			}
+
 			return $receipt;
 		}
 
@@ -1241,6 +1253,32 @@
 				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
 
 				$receipt['message'][]=array('msg'=>lang('location %1 added at level %2', $location['location_code'], $location['level']));
+			}
+
+// Check ACL-location - currently only level 1
+			$GLOBALS['phpgw']->config->read();
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+			{
+				$level = 1;
+				$acl_locations = array();
+				$this->db->query("SELECT location_code, loc{$level}_name FROM fm_location{$level}");
+				while($this->db->next_record())
+				{
+					$acl_locations[] = array
+					(
+						'id'	=> ".location.{$level}." . str_replace("-",'.',$this->db->f('location_code')),
+						'name'	=> $this->db->f("loc{$level}_name", true)
+					);
+				}
+
+				foreach($acl_locations as $acl_location)
+				{
+					if(!$GLOBALS['phpgw']->locations->get_id('property', $acl_location['id']))
+					{
+						$GLOBALS['phpgw']->locations->add($acl_location['id'], $acl_location['name'], 'property');
+						$receipt['message'][]=array('msg'=>lang('%1 added as ACL-location %2', $acl_location['name'], $acl_location['id']));
+					}
+				}
 			}
 
 			if( $this->db->transaction_commit() )
