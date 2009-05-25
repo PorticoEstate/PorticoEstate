@@ -62,7 +62,7 @@
 		{
 			return $this->so->read($entity);
 		}
-
+		
 		function validate($entity)
 		{
 			return $this->so->validate($entity);

@@ -430,7 +430,7 @@
 				'phpgw_accounts' => array('subject_id' => 'account_id'),
 			),
 			'ix' => array(array('object_id', 'object_type'), array('object_type')),
-			'uc' => array(),
+			'uc' => array('subject_id', 'role', 'object_type', 'object_id'),
 		),
 		'bb_permission_root' => array(
 			'fd' => array(
@@ -443,7 +443,7 @@
 				'phpgw_accounts' => array('subject_id' => 'account_id'),
 			),
 			'ix' => array(),
-			'uc' => array(),
+			'uc' => array('subject_id', 'role'),
 		),
 	);
 ?>

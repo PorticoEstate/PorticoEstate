@@ -385,6 +385,33 @@
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;
 		}
+		
+		/**
+		 * Validate uniqueness of record
+		 *
+		 * @param array $entity
+		 * @param $unique_fields*
+		 * @return boolean
+		 */
+		public function validate_uniqueness()
+		{
+			$args = func_get_args();
+			$entity = array_shift($args);
+			$filters = array();
+			foreach($args as $unique_field) {
+				if (isset($entity[$unique_field])) $filters[$unique_field] = $entity[$unique_field];
+			}
+			
+			$duplicates = $this->read(array('filters' => $filters, 'results' => 1));
+			
+			if ($duplicates['total_records'] == 0) return true;
+			
+			if (isset($entity['id']) && $duplicates['total_records'] == 1 && $duplicates['results'][0]['id'] == $entity['id']) {
+				return true;
+			}
+			
+			return false;
+		}
 
 		function validate($entity)
 		{

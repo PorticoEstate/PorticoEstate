@@ -19,7 +19,7 @@
 			
 			$this->set_business_object();
 			
-			$this->fields = array('subject_id', 'role');
+			$this->fields = array('subject_id', 'subject_name', 'role');
 			
 			self::set_active_menu('booking::settings::permissions');
 		}

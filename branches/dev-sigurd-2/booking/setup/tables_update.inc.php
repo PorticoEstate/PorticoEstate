@@ -1,4 +1,17 @@
 <?php
+	$test[] = '0.1.42';
+	function booking_upgrade0_1_42()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_permission ADD CONSTRAINT bb_permission_subject_id_key UNIQUE (subject_id, role, object_type, object_id)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_permission_root ADD CONSTRAINT bb_permission_root_subject_id_key UNIQUE (subject_id, role)");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.43';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 	$test[] = '0.1.41';
 	function booking_upgrade0_1_41()
 	{
