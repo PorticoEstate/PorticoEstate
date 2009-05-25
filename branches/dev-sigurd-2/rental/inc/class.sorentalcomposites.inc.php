@@ -13,7 +13,8 @@ class rental_sorentalcomposites extends rental_socommon
 					'has_custom_address' => array('type' => 'bool'),
 					'address_1'	=> array('type' => 'string'),
 					'house_number' => array('type' => 'int'),
-					'adresse1' => array('type' => 'string')
+					'adresse1' => array('type' => 'string'),
+					'gab_id' => array('type' => 'string')
 		));
 	}
 
@@ -51,23 +52,20 @@ class rental_sorentalcomposites extends rental_socommon
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
 		// We interpret 'Eiendomsnavn' as the name of the composite object and not loc1_name or loc2_name. TODO: Is this okay?
-		// TODO: Where can we get 'Gårds-/bruksnummer' from?
-		// TODO: What is 'Type' in the prototype?
 		// TODO: Should we ask for and let the address field on fm_location2 override the address found fm_location1? Do we know that the nothing higher than level 2 locations are rented? (The same question goes for the name of the location if we are to use it.)
 		// XXX: The address ordering doesn't take custom addresses in consideration.
 		$distinct = 'distinct on(rental_composite.composite_id)';
-		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1';
-		$from = $this->table_name;
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1)';
+		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
 
 		if($order != '') // ORDER should be used
 		{
 			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
-			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $from $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $this->table_name $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
 		}
 		else
 		{
-			$this->db->limit_query("SELECT $distinct $cols FROM $from $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT $distinct $cols FROM $this->table_name $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
 		}
 		$results = array();
 		while ($this->db->next_record())
@@ -81,20 +79,9 @@ class rental_sorentalcomposites extends rental_socommon
 			{
 				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
 			}
+			$row['gab_id'] = substr($row['gab_id'],4,5).' / '.substr($row['gab_id'],9,4);
 			$results[] = $row;
 		}
-		if(count($results) > 0)
-		{
-    		foreach($results as $id => $result)
-    		{
-    		    $id_map[$result['id']] = $id;
-    		    
-    		}
-    		foreach($this->fields as $field => $params)
-    		{
-    			
-    		}
-	    }
 		return array(
 			'total_records' => $total_records,
 			'results'		=> $results

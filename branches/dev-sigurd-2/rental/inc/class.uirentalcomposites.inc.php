@@ -58,16 +58,22 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
-				// XXX: Make  the keys match the keys from the database
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Name')
+							'label' => lang('Name'),
+							'sortable' => true
 // TODO: Add link:							'formatter' => 'YAHOO.rental.formatLink'
 						),
 						array(
 							'key' => 'adresse1',
-							'label' => lang('Address')
+							'label' => lang('Address'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'gab_id',
+							'label' => lang('Property id'), // 'Gårds-/bruksnummer'
+							'sortable' => true
 						)
 					)
 				)

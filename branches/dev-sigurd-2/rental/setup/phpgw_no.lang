@@ -1,4 +1,5 @@
 Address	rental	no	Adresse
 Name	rental	no	Navn
 Number	rental	no	Nummer
+Property id	rental	no	Gårds-/bruksnummer
 Property name	rental	no	Eiendomsnavn
