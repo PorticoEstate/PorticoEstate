@@ -20,36 +20,46 @@
 		{
 			$this->object_type = substr(get_class($this), 21);
 			
-			parent::__construct('bb_permission', 
-				array(
-					'id'			=> array('type' => 'int'),
-					'subject_id'	=> array('type' => 'int', 'required' => true),
-					'object_id'		=> array('type' => 'int', 'required' => true),
-					'object_type'   => array('type' => 'string'),
-					'role'			=> array('type' => 'string', 'required' => true, 'query' => true),
-					'object_name'	=> array(
-						'type' => 'string',
-						'query' => true,
-						'join' => array(
-							'table' => sprintf('bb_%s', $this->get_object_type()),
-							'fkey' => 'object_id',
-							'key' => 'id',
-							'column' => 'name'
-						)
-					),
-					'subject_name'	=> array(
-						'type' => 'string',
-						'query' => true,
-						'join' => array(
-							'table' => 'phpgw_accounts',
-							'fkey' => 'subject_id',
-							'key' => 'account_id',
-							'column' => 'account_lid'
-						)
+			$table_def =  array(
+				'id'			=> array('type' => 'int'),
+				'subject_id'	=> array('type' => 'int', 'required' => true),
+				'object_id'		=> array('type' => 'int', 'required' => true),
+				'object_type'   => array('type' => 'string'),
+				'role'			=> array('type' => 'string', 'required' => true, 'query' => true),
+				'subject_name'	=> array(
+					'type' => 'string',
+					'query' => true,
+					'join' => array(
+						'table' => 'phpgw_accounts',
+						'fkey' => 'subject_id',
+						'key' => 'account_id',
+						'column' => 'account_lid'
 					)
 				)
 			);
+			
+			if (is_array($object_relations = $this->build_object_relations())) {
+				$table_def = array_merge($table_def, $object_relations);
+			}
+			
+			parent::__construct('bb_permission', $table_def);
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+		}
+		
+		protected function build_object_relations()
+		{
+			return array(
+				'object_name'	=> array(
+					'type' => 'string',
+					'query' => true,
+					'join' => array(
+						'table' => sprintf('bb_%s', $this->get_object_type()),
+						'fkey' => 'object_id',
+						'key' => 'id',
+						'column' => 'name'
+					)
+				)
+			);
 		}
 		
 		function read($params)

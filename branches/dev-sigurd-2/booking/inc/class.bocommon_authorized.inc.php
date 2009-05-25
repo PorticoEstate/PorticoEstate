@@ -32,6 +32,7 @@
 		protected $allow_all_permissions;
 		
 		function __construct() {
+			parent::__construct();
 			$this->sopermission = $this->create_permission_storage();
 		}
 		
@@ -250,7 +251,7 @@
 			foreach($roles as $role)
 			{
 				$roleName = $role['role'];
-				if (isset($permissions[$roleName]) && isset($permissions[$roleName][$operation]) && false !== ($permission = $permissions[$roleName][$operation]))
+				if (isset($permissions[$roleName]) && isset($permissions[$roleName][$operation]) && false != ($permission = $permissions[$roleName][$operation]))
 				{	
 					return ($operation == 'write' && $permission === true) ? $all_permissions['write'] : $permission;
 				}
@@ -268,7 +269,7 @@
 				unset($roles['_parent_roles']);
 			}
 			
-			if (false !== $permission = $this->check_authorization($roles, $permissions, $operation, $object = null, $options))
+			if (false != $permission = $this->check_authorization($roles, $permissions, $operation, $object, $options))
 			{
 				return $permission;
 			}
@@ -283,7 +284,7 @@
 						throw new LogicException(sprintf('Missing parent role permissions for "%s"', $key));
 					}
 					
-					if (false !== $permission = $this->check_authorization_recursive($roles, $parent_role_permissions[$key], $operation, $object, $options)) {
+					if (false != $permission = $this->check_authorization_recursive($roles, $parent_role_permissions[$key], $operation, $object, $options)) {
 						return $permission;
 					}
 				}
@@ -354,7 +355,7 @@
 			
 			foreach ($roles as $role) {
 				$role_name = $role['role'];
-				if (isset($role_permissions[$role_name]) && false !== $current_role_permissions = $role_permissions[$role_name]) {
+				if (isset($role_permissions[$role_name]) && false != $current_role_permissions = $role_permissions[$role_name]) {
 					$current_role_permissions['write'] === true AND $current_role_permissions['write'] = $all_permissions['write'];
 					$permissions = array_merge($permissions, $current_role_permissions);
 				}

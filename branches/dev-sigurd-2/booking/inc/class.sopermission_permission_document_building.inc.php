@@ -1,7 +1,7 @@
 <?php
-	phpgw::import_class('booking.bopermission');
+	phpgw::import_class('booking.sopermission_permission');
 	
-	class booking_bopermission_resource extends booking_bopermission
+	class booking_sopermission_permission_document_building extends booking_sopermission_permission
 	{
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{

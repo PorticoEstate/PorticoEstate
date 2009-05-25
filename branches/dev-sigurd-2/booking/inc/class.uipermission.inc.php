@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.account_ui_utils');
 
 	abstract class booking_uipermission extends booking_uicommon
 	{
@@ -19,6 +20,8 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
 			
 			$this->set_business_object();
 			
@@ -133,11 +136,6 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'type' => 'link',
-								'value' => lang('New Permission'),
-								'href' => $this->get_object_typed_link('add')
-							),
-							array(
 								'type' => 'text', 
 								'name' => 'query'
 							),
@@ -182,6 +180,14 @@
 				)
 			);
 			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
+					'href' => $this->get_object_typed_link('add')
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 
@@ -193,10 +199,12 @@
 				$permission['link'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
 				$permission['role'] = lang(self::humanize($permission['role']));
 				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
-				$permission['actions'] = array(
-					$this->get_object_typed_link('edit', array('id' => $permission['id'])),
-					$this->get_object_typed_link('delete', array('id' => $permission['id'])),
-				);
+				
+				$permission_actions = array();
+				if ($this->bo->allow_write($permission))  $permission_actions[] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+				if ($this->bo->allow_delete($permission)) $permission_actions[] = $this->get_object_typed_link('delete', array('id' => $permission['id']));
+				
+				$permission['actions'] = $permission_actions;
 			}
 			$data = array(
 				'ResultSet' => array(
@@ -209,33 +217,8 @@
 		
 		public function index_accounts()
 		{
-			$query = phpgw::get_var('query'); 
-			
-			$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'lid', '', $query, 20);
-			$x = 0;
-			
-			$result = array();
-			
-			foreach($account_info as $account)
-			{
-				$firstname = $account->firstname;
-				$lastname = $account->lastname;
-				$lastname AND $firstname .= ' ';
-				$result[] = array(
-					'name' => sprintf('%s (%s%s)', $account->lid, $firstname, $lastname),
-					'id' => $account->id,
-				);
-			}
-			
-			$data = array(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $GLOBALS['phpgw']->accounts->total, 
-					"Result" => $result
-				)
-			);
-			return $data;
+			return booking_account_ui_utils::yui_accounts();
 		}
-		
 		
 		protected function get_available_roles()
 		{
@@ -275,9 +258,13 @@
 				$errors = $this->bo->validate($permission);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($permission);
-					$this->redirect_to_parent_if_inline();
-					$this->redirect($this->get_object_typed_link_params('index'));
+					try {
+						$receipt = $this->bo->add($permission);
+						$this->redirect_to_parent_if_inline();
+						$this->redirect($this->get_object_typed_link_params('index'));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			}
 			
@@ -308,10 +295,13 @@
 				$errors = $this->bo->validate($permission);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($permission);
-					
-					$this->redirect_to_parent_if_inline();
-					$this->redirect($this->get_object_typed_link_params('index'));
+					try {
+						$receipt = $this->bo->update($permission);
+						$this->redirect_to_parent_if_inline();
+						$this->redirect($this->get_object_typed_link_params('index'));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			
