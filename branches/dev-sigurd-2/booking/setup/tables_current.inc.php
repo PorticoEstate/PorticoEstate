@@ -115,6 +115,7 @@
 		'bb_season' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'officer_id' => array('type' => 'int', 'precision'=> '4', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
@@ -124,7 +125,8 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_building' => array('building_id' => 'id')
+				'bb_building' => array('building_id' => 'id'),
+				'phpgw_accounts' => array('officer_id' => 'account_id'),
 			),
 			'ix' => array(),
 			'uc' => array()

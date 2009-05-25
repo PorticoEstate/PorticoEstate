@@ -48,8 +48,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 
         YAHOO.booking.columnDefs, myDataSource, {
             paginator: pag,
-            dynamicData: true
-           ,sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
+            dynamicData: true,
+            sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
     });
     myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;

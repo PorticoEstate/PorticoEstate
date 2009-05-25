@@ -27,7 +27,7 @@
 			
 			$this->bo = CreateObject('booking.boseason');
 			self::set_active_menu('booking::buildings::seasons');
-			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources', 'active');
+			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources', 'active', 'officer_id', 'officer_name');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
 			$this->wtemplate_alloc_fields = array('id', 'organization_id', 'wday', 'cost', 'from_', 'to_', 'resources');
 		}
@@ -77,6 +77,10 @@
 							'label' => lang('Resources')
 						),
 						array(
+							'key' => 'officer_name',
+							'label' => lang('Officer')
+						),
+						array(
 							'key' => 'from_',
 							'label' => lang('From')
 						),
@@ -117,6 +121,7 @@
 		public function add()
 		{
 			$errors = array();
+			$season = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$season = extract_values($_POST, $this->fields);
@@ -131,6 +136,8 @@
 			} else {
 				// Initialize the array with empty data
 				$season = array("resources" => array());
+				$season['officer_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+				$season['officer_name'] = $GLOBALS['phpgw_info']['user']['account_lid'];
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'season.js');
@@ -149,7 +156,6 @@
 			$season = $this->bo->read_single($id);
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
-			$season['id'] = $id;
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

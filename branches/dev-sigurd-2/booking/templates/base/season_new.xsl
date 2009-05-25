@@ -25,6 +25,18 @@
                     <div id="building_container"/>
                 </div>
             </dd>
+            <dt><label for="field_officer"><xsl:value-of select="php:function('lang', 'Case officer')" /></label></dt>
+            <dd>
+                <div class="autocomplete">
+                    <input id="field_officer_id" name="officer_id" type="hidden">
+                        <xsl:attribute name="value"><xsl:value-of select="season/officer_id"/></xsl:attribute>
+                    </input>
+                    <input id="field_officer_name" name="officer_name" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="season/officer_name"/></xsl:attribute>
+                    </input>
+                    <div id="officer_container"/>
+                </div>
+            </dd>
             <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
             <dd>
                     <div id="resources-container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>

@@ -13,6 +13,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
     ac.itemSelectEvent.subscribe(function(sType, aArgs) {
         populateResourceTable(aArgs[2].id, []);
     });
+
+	YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uipermission_root.index_accounts&phpgw_return_as=json&', 
+	                                     'field_officer_name', 'field_officer_id', 'officer_container');
 });
 
 

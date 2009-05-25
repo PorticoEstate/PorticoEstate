@@ -20,6 +20,8 @@
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist-col">
+            <dt><xsl:value-of select="php:function('lang', 'Case officer')" /></dt>
+            <dd><xsl:value-of select="season/officer_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
             <dd><xsl:value-of select="season/from_"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>

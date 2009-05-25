@@ -8,6 +8,7 @@
 			parent::__construct('bb_season', 
 				array(
 					'id'			=> array('type' => 'int'),
+					'officer_id'	=> array('type' => 'int', 'required' => true),
 					'active'		=> array('type' => 'int', 'required' => true),
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
@@ -22,6 +23,16 @@
 							'key' => 'id',
 							'column' => 'name'
 					)),
+					'officer_name'	=> array(
+						'type' => 'string',
+						'query' => true,
+						'join' => array(
+							'table' => 'phpgw_accounts',
+							'fkey' => 'officer_id',
+							'key' => 'account_id',
+							'column' => 'account_lid'
+						)
+					),
 					'resources'	=> array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_season_resource',
