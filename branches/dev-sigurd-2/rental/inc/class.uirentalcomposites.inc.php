@@ -60,11 +60,45 @@
 								'name' => 'query'
 							),
 							array(
+								'id' => 'radio_search_options',
+								'name' => 'search_option',
+								'value'	=> 'name',
+								'type' => 'radio',
+								'text' => lang('Name')
+							),
+							array(
+								'id' => 'radio_search_options',
+								'name' => 'search_option',
+								'value'	=> 'address',
+								'type' => 'radio',
+								'text' => lang('Address')
+							),
+							array(
+								'id' => 'radio_search_options',
+								'name' => 'search_option',
+								'value'	=> 'gab',
+								'type' => 'radio',
+								'text' => lang('GAB')
+							),
+							array(
+								'id' => 'radio_search_options',
+								'name' => 'search_option',
+								'value'	=> 'property_name',
+								'type' => 'radio',
+								'text' => lang('Property name')
+							),
+							array(
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-						)
+							)
+						),
+						'hidden_value' => array(
+                              array( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $this->bo->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+                               )	                                
+		                )
 					),
 				),
 				'datatable' => array(
