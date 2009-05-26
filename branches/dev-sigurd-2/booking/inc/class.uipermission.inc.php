@@ -212,6 +212,16 @@
 					"Result" => $permissions['results']
 				)
 			);
+			
+			$actions = array();
+			
+			if ($this->bo->allow_create())
+			{
+				$actions['add'] = array('text' => lang('Add Permission'), 'href' => $this->get_object_typed_link('add'));
+			}
+			
+			$data['Actions'] = $actions;
+			
 			return $data;
 		}
 		

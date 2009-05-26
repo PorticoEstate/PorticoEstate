@@ -85,9 +85,24 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
+		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
 	};
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, options);
+	
+	myDataTable.doBeforeLoadData = function(nothing, data) {
+		if (!data.meta.actions) return data;
+		
+		actions = data.meta.actions;
+		
+		for (var key in actions) {
+			var actionLink = document.createElement('a');
+			actionLink.href = actions[key].href.replace(/&amp;/gi, '&');
+			actionLink.innerHTML = actions[key].text;
+			YAHOO.util.Dom.insertAfter(actionLink, container);
+		};
+		
+		return data;
+	}
 }
 
 YAHOO.booking.radioTableHelper = function(container, url, name, selection) {

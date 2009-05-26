@@ -58,14 +58,8 @@
 			</xsl:if>
 		</a>
 		
-		<xsl:if test="resource/permission/write">
-			<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
-	        <div id="permissions_container"/>
-			<a class='button'>
-				<xsl:attribute name="href"><xsl:value-of select="resource/add_permission_link"/></xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Add Permission')" />
-			</a>
-		</xsl:if>
+		<h4><xsl:value-of select="php:function('lang', 'Permissions')" /></h4>
+        <div id="permissions_container"/>
     </div>
 
 <script type="text/javascript">
