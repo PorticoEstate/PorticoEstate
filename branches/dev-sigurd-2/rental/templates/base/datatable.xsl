@@ -25,21 +25,46 @@
 
 <xsl:template match="toolbar">
     <div id="toolbar">
-        <xsl:for-each select="item">
-        <label>
-        <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-        <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-        </label>
-            <input id="innertoolbar">
-        		<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
-        		<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-        		<xsl:attribute name="onClick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
-        		<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
-        		<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
-            </input>
-        </xsl:for-each>
+        <xsl:for-each select="*">
+	        	<xsl:if test="control = 'input'">
+					<label>
+				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+				    </label>
+				    <input>
+			        	<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+			    		<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
+			    		<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+			    		<xsl:attribute name="onClick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
+			    		<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
+			    		<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
+				    </input>
+				</xsl:if>
+				<xsl:if test="control = 'select'">
+					<label>
+				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+				    </label>
+				    <select>
+					<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+					<xsl:attribute name="class">yui-button yui-menu-button yui-skin-sam yui-split-button yui-button-hover button</xsl:attribute>
+					<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+			   		<xsl:for-each select="keys">
+			   			<xsl:variable name="p" select="position()" />
+			   			<option>
+			   				<xsl:attribute name="value"><xsl:value-of select="text()"/></xsl:attribute>
+			   				<xsl:value-of select="../values[$p]"/>
+			   			</option>
+			   		</xsl:for-each>
+			   		</select>
+				</xsl:if>
+        </xsl:for-each> 
     </div>
 </xsl:template>
+
+
+
+
 
 <xsl:template match="form">
 	<form id="queryForm">
