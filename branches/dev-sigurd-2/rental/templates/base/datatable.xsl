@@ -67,7 +67,9 @@
 				</xsl:if>
 			</div>
         </xsl:for-each> 
-    </tr></table></div>
+    </tr></table>
+    <span id="dt-options"><a id="dt-options-link" href="#">Velg kolonner</a></span>
+    </div>
 </xsl:template>
 
 <xsl:template match="form">
@@ -90,6 +92,11 @@
 <xsl:template match="datatable">
 	<div class="datatable">
 		<div id="paginator"/>
+	    <div id="columnshowhide"></div>
+		<div id="dt-dlg">
+		    <div class="hd">Velg hvilke kolonner du ønsker å se:</div>
+		    <div id="dt-dlg-picker" class="bd"></div>
+		</div>
     	<div id="datatable-container"/>
   		<xsl:call-template name="datasource-definition" />
   	</div>
@@ -101,6 +108,9 @@
 			<xsl:if test="source">
 	            YAHOO.rental.dataSourceUrl = '<xsl:value-of select="source"/>';
 	        </xsl:if>
+			<xsl:if test="columns">
+	            YAHOO.rental.storeColumnsUrl = '<xsl:value-of select="columns"/>';
+	        </xsl:if>
 
 			YAHOO.rental.columnDefs = [
 				<xsl:for-each select="//datatable/field">
@@ -111,7 +121,7 @@
 					    </xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
-						hidden: true,
+						hidden: <xsl:value-of select="hidden"/>,
 					    </xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
