@@ -130,8 +130,12 @@
 				$errors = $this->bo->validate($season);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($season);
-					$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id'=>$receipt['id']));
+					try {
+						$receipt = $this->bo->add($season);
+						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id'=>$receipt['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			} else {
 				// Initialize the array with empty data
@@ -164,8 +168,12 @@
 				$errors = $this->bo->validate($season);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($season);
-					$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id'=>$season['id']));
+					try {
+						$receipt = $this->bo->update($season);
+						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id'=>$season['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);

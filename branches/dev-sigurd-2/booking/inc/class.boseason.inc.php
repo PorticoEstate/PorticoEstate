@@ -48,6 +48,7 @@
 				(
 					booking_sopermission::ROLE_MANAGER => array(
 						'write' => true,
+						'create' => true,
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array(
 						'write' => true,
@@ -58,6 +59,7 @@
 						(
 							booking_sopermission::ROLE_MANAGER => array(
 								'write' => true,
+								'create' => true,
 							),
 							booking_sopermission::ROLE_CASE_OFFICER => array(
 								'write' => true,
