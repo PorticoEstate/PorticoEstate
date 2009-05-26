@@ -25,6 +25,68 @@ class rental_sorentalcomposites extends rental_socommon
 		));
 	}
 	
+	function _get_conditions($query, $filters,$search_option)
+		{	
+			$clauses = array('1=1');
+			if($query)
+			{
+				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
+				$like_clauses = array();
+				switch($search_option){
+					case "id":
+						$like_clauses[] = "rental_composite.composite_id = $query";
+					case "name":
+						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
+						break;
+					case "address":
+						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
+						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
+						break;
+					case "gab":
+						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+						break;
+					case "all":
+						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
+						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
+						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
+						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+				}
+				
+				if(count($like_clauses))
+				{
+					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+				}
+			}
+			foreach($filters as $key => $val)
+			{
+				if($this->fields[$key])
+				{
+					$table = $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+					if(is_array($val) && count($val) == 0)
+					{
+					    $clauses[] = '1=0';
+				    }
+					else if(is_array($val))
+					{
+						$vals = array();
+						foreach($val as $v) {
+							$vals[] = $this->_marshal($v, $this->fields[$key]['type']);
+						}
+						$clauses[] = "({$table}.{$key} IN (" . join(',', $vals) . '))';
+					}
+					else if($val == null)
+					{
+						$clauses[] = "{$table}.{$key} IS NULL";
+					}
+					else
+					{
+						$clauses[] = "{$table}.{$key}=" . $this->_marshal($val, $this->fields[$key]['type']);
+					}
+				}
+			}
+			return join(' AND ', $clauses);
+		}
+
 	/**
 	 * We override the parent method to hook in more specialized queries for
 	 * this part of the system. (The DISTINCT JOIN and FROM handling in the common class
@@ -47,12 +109,18 @@ class rental_sorentalcomposites extends rental_socommon
 		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 		$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : '';
 		$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
+		$search_option = isset($params['search_option']) && $params['search_option'] ? $params['search_option'] : null;
 		$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
-		$condition = $this->_get_conditions($query, $filters);
-
+		$condition = $this->_get_conditions($query, $filters,$search_option);
+		
+		$tables = "rental_composite";
+		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
+		$distinct = 'distinct on(rental_composite.composite_id)';
+		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		
 		// Calculate total number of records
-		$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->query("SELECT count(1) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');
 
@@ -61,20 +129,19 @@ class rental_sorentalcomposites extends rental_socommon
 		// We interpret 'Eiendomsnavn' as the name of the composite object and not loc1_name or loc2_name. TODO: Is this okay?
 		// TODO: Should we ask for and let the address field on fm_location2 override the address found fm_location1? Do we know that the nothing higher than level 2 locations are rented? (The same question goes for the name of the location if we are to use it.)
 		// XXX: The address ordering doesn't take custom addresses in consideration.
-		$distinct = 'distinct on(rental_composite.composite_id)';
-		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
-
+		
 		if($order != '') // ORDER should be used
 		{
 			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
-			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $this->table_name $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
 		}
 		else
 		{
-			$this->db->limit_query("SELECT $distinct $cols FROM $this->table_name $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
 		}
+		
 		$results = array();
+		
 		while ($this->db->next_record())
 		{
 			$row = array();
