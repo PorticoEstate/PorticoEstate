@@ -23,10 +23,13 @@
   	</func:result>
 </func:function>
 
-<xsl:template match="toolbar">
-    <div id="toolbar">
+<xsl:template name="toolbar">
+    <div id="toolbar"><table class="toolbartable"><tr>
+    	<td class="toolbarlabel"><label><b><xsl:value-of select="./label"/></b></label></td>
         <xsl:for-each select="*">
+        	<div class="toolbarelement">
 	        	<xsl:if test="control = 'input'">
+	        		<td class="toolbarcol">
 					<label>
 				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
 				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
@@ -38,33 +41,34 @@
 			    		<xsl:attribute name="onClick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
 			    		<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
 			    		<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
+			    		<!-- <xsl:attribute name="class">yui-button yui-menu-button yui-skin-sam yui-split-button yui-button-hover button</xsl:attribute> -->
 				    </input>
+				    </td>
 				</xsl:if>
 				<xsl:if test="control = 'select'">
+					<td class="toolbarcol">
 					<label>
 				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
 				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 				    </label>
 				    <select>
 					<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
-					<xsl:attribute name="class">yui-button yui-menu-button yui-skin-sam yui-split-button yui-button-hover button</xsl:attribute>
 					<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
 			   		<xsl:for-each select="keys">
 			   			<xsl:variable name="p" select="position()" />
 			   			<option>
 			   				<xsl:attribute name="value"><xsl:value-of select="text()"/></xsl:attribute>
+			   				<xsl:if test="text() = ../default"><xsl:attribute name="default"/></xsl:if>
 			   				<xsl:value-of select="../values[$p]"/>
 			   			</option>
 			   		</xsl:for-each>
 			   		</select>
+			   		</td>
 				</xsl:if>
+			</div>
         </xsl:for-each> 
-    </div>
+    </tr></table></div>
 </xsl:template>
-
-
-
-
 
 <xsl:template match="form">
 	<form id="queryForm">
@@ -75,7 +79,11 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:apply-templates select="toolbar"/>
+        <xsl:for-each select="*">
+        	<xsl:if test="toolbar">
+        		<xsl:call-template name="toolbar"/>
+        	</xsl:if>
+        </xsl:for-each>
 	</form>
 </xsl:template>
 
