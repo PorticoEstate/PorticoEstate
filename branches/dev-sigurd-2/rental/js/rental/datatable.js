@@ -80,7 +80,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	          case 0: /* View */
 	            var oRecord = p_myDataTable.getRecord(elRow);
 	          	var recordId = oRecord.getData().composite_id;
-	          	window.location = oRecord.getData().actions.show;
+	          	window.location = oRecord.getData().actions.edit;
 	          	break;
 	          }
 	        }

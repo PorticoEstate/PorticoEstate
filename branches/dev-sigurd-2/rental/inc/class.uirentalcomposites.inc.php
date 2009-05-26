@@ -6,7 +6,7 @@
 		public $public_functions = array
 		(
 			'index'	=> true,
-			'show' => true
+			'edit' => true
 		);
 
 		public function __construct()
@@ -20,7 +20,7 @@
 		{
 			$compositeArray = $this->bo->read();
 			
-			array_walk($compositeArray['results'], array($this, '_add_actions'), 'rental.uirentalcomposites.show');
+			array_walk($compositeArray['results'], array($this, '_add_actions'), 'rental.uirentalcomposites.edit');
 			
 			// TODO: Use this to add links: array_walk($compositeArray["results"], array($this, "_add_links"), "booking.uibooking.show");
 			return $this->yui_results($compositeArray);
@@ -33,7 +33,7 @@
 		{
 			$value['actions'] = array(
 				// Remove &amp; from the link before storing it since it will be used in a Javascript forward
-				'show' => html_entity_decode(self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id'])))
+				'edit' => html_entity_decode(self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id'])))
 			);
 		}
 		
@@ -137,7 +137,7 @@
 		 * Show details for a single rental composite
 		 * 
 		 */
-		public function show()
+		public function edit()
 		{
 			phpgwapi_yui::load_widget('tabview');
 			
@@ -162,7 +162,7 @@
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'data')
 				);
 
-				self::render_template('rentalcomposites', $data);
+				self::render_template('rentalcomposite_edit', $data);
 			}
 		}
 	}
