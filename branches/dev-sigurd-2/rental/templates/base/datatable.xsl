@@ -1,3 +1,11 @@
+<!--
+	Function
+	phpgw:conditional( expression $test, mixed $true, mixed $false )
+	Evaluates test expression and returns the contents in the true variable if
+	the expression is true and the contents of the false variable if its false
+
+	Returns mixed
+-->
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>
@@ -14,13 +22,6 @@
 		</xsl:choose>
   	</func:result>
 </func:function>
-
-<xsl:template match="data">
-    <xsl:apply-templates select="form" />
-    <xsl:apply-templates select="toolbar"/>
-    <xsl:apply-templates select="paging"/>
-    <xsl:apply-templates select="datatable"/>
-</xsl:template>
 
 <xsl:template match="toolbar">
     <div id="toolbar">
@@ -54,7 +55,13 @@
 </xsl:template>
 
 <xsl:template match="datatable">
-    <div id="paginator"/>
+	<div id="paginator">
+	</div>
+	<div>
+	<script>
+	alert(pag == null);
+	</script>
+	</div>
     <div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
 </xsl:template>

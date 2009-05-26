@@ -3,6 +3,7 @@
 
 	class rental_uirentalcomposites extends rental_uicommon
 	{
+		
 		public $public_functions = array
 		(
 			'index'	=> true,
@@ -47,6 +48,7 @@
 			{
 				return $this->index_json();
 			}
+			
 			self::add_javascript('rental', 'rental', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -103,18 +105,17 @@
 					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'actions',
+							'key' => 'composite_id',
 							'hidden' => true
 						),
 						array(
-							'key' => 'composite_id',
+							'key' => 'actions',
 							'hidden' => true
 						),
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
 							'sortable' => true
-// TODO: Add link:							'formatter' => 'YAHOO.rental.formatLink'
 						),
 						array(
 							'key' => 'adresse1',

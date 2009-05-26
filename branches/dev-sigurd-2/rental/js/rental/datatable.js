@@ -34,14 +34,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
         resultsList: "ResultSet.Result",
         fields: fields,
         metaFields : {
-            totalResultsAvailable: "ResultSet.totalResultsAvailable"
+    		totalRecords: "ResultSet.totalRecords"
         }
     };
     var pag = new YAHOO.widget.Paginator({
-        rowsPerPage: 10,
-        alwaysVisible: false,
-        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
-        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        rowsPerPage: 5,
+        alwaysVisible: true,
+		template			: "{RowsPerPageDropdown} items per page.{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}.",
+		pageReportTemplate	: "Showing items {startRecord} - {endRecord} of {totalRecords}.",
         containers: ['paginator']
     });
     pag.render();
@@ -52,7 +52,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
      //       ,sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
     });
     myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
-        oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+    	oPayload.totalRecords = oResponse.meta.totalRecords;
         return oPayload;
     }
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){

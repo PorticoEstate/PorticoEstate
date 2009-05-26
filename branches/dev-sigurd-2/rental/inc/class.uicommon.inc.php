@@ -125,7 +125,7 @@
             return array
 			(   
 				'ResultSet' => array(
-					'totalResultsAvailable' => $results['total_records'], 
+					'totalRecords' => $results['total_records'], 
 					'Result' => $results['results']
 				)   
 			);  

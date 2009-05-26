@@ -82,7 +82,7 @@ YAHOO.rental.inlineTableHelper = function(container, url, colDefs, options) {
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
+		metaFields : { totalResultsAvailable: "totalRecords" }
 	};
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, options);
 }
@@ -99,7 +99,7 @@ YAHOO.rental.checkboxTableHelper = function(container, url, name, selection, typ
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
+		metaFields : { totalResultsAvailable: "totalRecords" }
 	};
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
 		var checked = '';
