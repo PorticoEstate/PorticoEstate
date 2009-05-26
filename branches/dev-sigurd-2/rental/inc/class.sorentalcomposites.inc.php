@@ -18,11 +18,6 @@ class rental_sorentalcomposites extends rental_socommon
 		));
 	}
 	
-	function read_single($id)
-	{
-		return $this->read(array('query' => 'composite_id = ' . $id));
-	}
-
 	/**
 	 * We override the parent method to hook in more specialized queries for
 	 * this part of the system. (The DISTINCT JOIN and FROM handling in the common class
@@ -91,6 +86,35 @@ class rental_sorentalcomposites extends rental_socommon
 			'total_records' => $total_records,
 			'results'		=> $results
 		);
+	}
+	
+	/*
+	 * Get single rental composite record by the given composite_id
+	 */
+	function read_single($id)
+	{
+		$distinct = 'distinct on(rental_composite.composite_id)';
+		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
+		
+		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.composite_id=$id", __LINE__, __FILE__);
+		
+		$row = array();
+		
+		while ($this->db->next_record())
+		{
+			foreach($this->fields as $field => $fparams)
+			{
+     		$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+			}
+			if($row['has_custom_address'] == '1') // There's a custom address
+			{
+				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
+			}
+			$row['gab_id'] = substr($row['gab_id'],4,5).' / '.substr($row['gab_id'],9,4);
+		}
+		
+		return $row;
 	}
 }
 ?>

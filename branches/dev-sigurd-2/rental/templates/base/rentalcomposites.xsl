@@ -3,17 +3,19 @@
     
 		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
-			<dd><xsl:value-of select="name"/></dd>
+			<dd><xsl:value-of select="data/name"/></dd>
 			<dt><xsl:value-of select="php:function('lang', 'GAB')" /></dt>
-			<dd><xsl:value-of select="gab_id"/></dd>
+			<dd><xsl:value-of select="data/gab_id"/></dd>
 		</dl>
 		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'Address')" /></dt>
 			<dd>
-				<xsl:value-of select="adresse1"/><br />
-				<xsl:value-of select="address_2"/>
+				<xsl:value-of select="data/adresse1"/><br />
+				<xsl:value-of select="data/address_2"/>
 			</dd>
 		</dl>
+
+		<xsl:value-of select="tabs" disable-output-escaping="yes" />
 		
 		<!--
     <div class="datatable-container">

@@ -26,10 +26,14 @@
 			return $this->yui_results($compositeArray);
 		}
 
+		/*
+		 * Add action links for the context menu of the list item
+		 */
 		public function _add_actions(&$value, $key, $menuaction)
 		{
 			$value['actions'] = array(
-				"show" => self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id']))
+				// Remove &amp; from the link before storing it since it will be used in a Javascript forward
+				'show' => html_entity_decode(self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id'])))
 			);
 		}
 		
@@ -135,18 +139,31 @@
 		 */
 		public function show()
 		{
+			phpgwapi_yui::load_widget('tabview');
+			
 			$composite_id = phpgw::get_var('id');
-			$composites = $this->bo->read_single($composite_id);
+			// TODO: How to check for valid input here?
+			if ($composite_id) {
+				$composite = $this->bo->read_single($composite_id);
 
-			// TODO: Get single record from read_single()
-			$composite = null;
-			foreach ($composites['results'] as $db_composite) {
-				if ($db_composite['composite_id'] == $composite_id) {
-					$composite = $db_composite;
-				}
+				$tabs = array
+				(
+					'details'	=> array('label' => lang('details'), 'link' => '#details'),
+					'elements'	=> array('label' => lang('elements'), 'link' => '#elements'),
+					'contracts'	=> array('label' => lang('contracts'), 'link' => '#contracts'),
+					'documents'	=> array('label' => lang('documents'), 'link' => '#documents')
+				);
+				
+				phpgwapi_yui::tabview_setup('composite_edit_tabview');
+				
+				$data = array
+				(
+					'data' 	=> $composite,
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'data')
+				);
+
+				self::render_template('rentalcomposites', $data);
 			}
-
-			self::render_template('rentalcomposites', $composite);
 		}
 	}
 ?>
