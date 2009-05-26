@@ -93,12 +93,6 @@
 								'value' => lang('Search')
 							)
 						),
-						'hidden_value' => array(
-                              array( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bo->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
-                               )	                                
-		                )
 					),
 				),
 				'datatable' => array(
