@@ -197,3 +197,20 @@ div.allocation-list
 .datatable{
 	margin-left: 20px;
 }
+
+dl.rental-description {
+	width: 70%;
+}
+dl.rental-description dt {
+	width: 100%;
+	float:left;
+	font-weight:bold;
+}
+dl.rental-description dd {
+	width: 100%;
+	border: 1px solid #ccc;
+	float: left;
+	background-color: white;
+	height: 100px;
+	overflow-y: scroll;
+}
