@@ -122,9 +122,19 @@ dl.form-col {
     width: 100%;
     background-color: #eee;
     border: 1px solid #bbb;
-    margin-bottom: 1em;
+    margin-bottom: 0em;
     padding: .3em;
 }
+
+.toolbarelement {
+	vertical-align:middle;
+	}
+td.toolbarlabel {
+	width: 10em;
+	}
+td.toolbarcol {
+	padding-left: 1em;
+	}
 #toolbar input[type="text"] {
     vertical-align: text-bottom;
     font-size: 120%;
