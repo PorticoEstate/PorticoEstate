@@ -198,6 +198,29 @@ div.allocation-list
 	margin-left: 20px;
 }
 
+/* Styles for this the column selector */
+#dt-columnselector {width:45em;margin:0 auto;}
+#dt-options {margin-left:5px;}
+#dt-dlg {visibility:hidden;border:1px solid #808080;background-color:#E3E3E3;}
+#dt-dlg .hd {font-weight:bold;padding:1em;background:none;background-color:#E3E3E3;border-bottom:0;}
+#dt-dlg .ft {text-align:right;padding:.5em;background-color:#E3E3E3;}
+#dt-dlg .bd {height:15em;margin:0 1em;overflow:auto;border:1px solid black;background-color:white;}
+#dt-dlg .dt-dlg-pickercol {clear:both;padding:.5em 1em 3em;border-bottom:1px solid gray;}
+#dt-dlg .dt-dlg-pickerkey {float:left;}
+#dt-dlg .dt-dlg-pickerbtns {float:right;}
+/* Container workarounds for Mac Gecko scrollbar issues */
+.yui-panel-container.hide-scrollbars #dt-dlg .bd {
+    /* Hide scrollbars by default for Gecko on OS X */
+    overflow: hidden;
+}
+.yui-panel-container.show-scrollbars #dt-dlg .bd {
+    /* Show scrollbars for Gecko on OS X when the Panel is visible  */
+    overflow: auto;
+}
+#dt-dlg_c .underlay {overflow:hidden;}
+.inprogress {position:absolute;} /* transitional progressive enhancement state */
+}
+
 dl.rental-description {
 	width: 70%;
 }
