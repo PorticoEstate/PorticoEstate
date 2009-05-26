@@ -65,6 +65,13 @@
 					 			'name' => 'name',
 								'value' => lang('New rental composite'),
 								'href' => self::link(array('menuaction' => 'rental.uirentalcomposites.add'))
+						),
+						'control5' => array(
+				 			'control' => 'input',
+							'id' => 'dt-options-link',
+							'type' => 'button',
+							'value' => lang('Select columns'),
+							'href' => '#'
 						)
 					),
 					'toolbar2' => array(
@@ -139,33 +146,6 @@
 							'label' => lang('Property id'), // 'Gårds-/bruksnummer'
 							'sortable' => true,
 							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('gab_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
-					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
-						'field' => array(
-							array(
-								'key' => 'composite_id',
-								'label' => lang('Number'),
-								'sortable' => true
-							),
-							array(
-								'key' => 'actions',
-								'hidden' => true
-							),
-							array(
-								'key' => 'name',
-								'label' => lang('Name'),
-								'sortable' => true
-							),
-							array(
-								'key' => 'adresse1',
-								'label' => lang('Address'),
-								'sortable' => false
-							),
-							array(
-								'key' => 'gab_id',
-								'label' => lang('Property id'), // 'Gårds-/bruksnummer'
-								'sortable' => true
->>>>>>> .r2827
 						)
 					)
 				)

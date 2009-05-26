@@ -1,5 +1,7 @@
 Address	rental	no	Adresse
 GAB	rental	no GAB
+Filters	rental	no	Filtre
+Functions	rental	no	Funksjoner
 Name	rental	no	Navn
 Number	rental	no	Nummer
 Property id	rental	no	Gårds-/bruksnummer
@@ -7,3 +9,5 @@ Property name	rental	no	Eiendomsnavn
 rental	rental	no	utleie
 Rental	rental	no	Utleie
 Rental composites	rental	no Leieobjekter
+Search options	rental	no	Søkevalg
+Select columns	rental	no	Velg kolonner

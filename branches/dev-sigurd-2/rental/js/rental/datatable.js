@@ -47,7 +47,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		previousPageLinkLabel: '&lt;&nbsp;Forrige',
 		nextPageLinkLabel: 'Neste&nbsp;&gt;',
 		lastPageLinkLabel: 'Siste&nbsp;&gt;&gt;',
-		template			: "{RowsPerPageDropdown}elementer per side.{CurrentPageReport}<br/>&nbsp;&nbsp;{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}.",
+		template			: "{RowsPerPageDropdown}elementer per side.{CurrentPageReport}<br/>&nbsp;&nbsp;{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
 		pageReportTemplate	: "Viser fra {startRecord} til {endRecord} av totalt {totalRecords}.",
 		containers: ['paginator']
     });

@@ -67,9 +67,7 @@
 				</xsl:if>
 			</div>
         </xsl:for-each> 
-    </tr></table>
-    <span id="dt-options"><a id="dt-options-link" href="#">Velg kolonner</a></span>
-    </div>
+    </tr></table></div>
 </xsl:template>
 
 <xsl:template match="form">
