@@ -6,8 +6,9 @@
 		
 		public $public_functions = array
 		(
-			'index'	=> true,
-			'edit' => true
+			'index'		=> true,
+			'edit'		=> true,
+			'columns'	=> true,
 		);
 
 		public function __construct()
@@ -22,8 +23,6 @@
 			$compositeArray = $this->bo->read();
 			
 			array_walk($compositeArray['results'], array($this, '_add_actions'), 'rental.uirentalcomposites.edit');
-			
-			// TODO: Use this to add links: array_walk($compositeArray["results"], array($this, "_add_links"), "booking.uibooking.show");
 			return $this->yui_results($compositeArray);
 		}
 
@@ -52,7 +51,8 @@
 			self::add_javascript('rental', 'rental', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			// XXX: Change the 'toolbar' for this module - it's only kept like it is as an example on how we can do it 
+			// User stored columns:
+			$columnArray = $GLOBALS['phpgw_info']['user']['preferences']['rental']['rental_columns_rentalcomposites'];
 			$data = array(
 				'form' => array(
 					'toolbar1' => array(
@@ -107,6 +107,38 @@
 						)
 						)
 					),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
+					'columns' => self::link(array('menuaction' => 'rental.uirentalcomposites.columns', 'phpgw_return_as' => 'json')), // URL to store select columns
+					'field' => array(
+						array(
+							'key' => 'composite_id',
+							'label' => lang('Number'),
+							'sortable' => true,
+							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('composite_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
+						),
+						array(
+							'key' => 'actions',
+							'label' => 'unselectable', // To hide it from the column selector
+							'hidden' => true
+						),
+						array(
+							'key' => 'name',
+							'label' => lang('Name'),
+							'sortable' => true,
+							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
+						),
+						array(
+							'key' => 'adresse1',
+							'label' => lang('Address'),
+							'sortable' => false,
+							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('adresse1', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
+						),
+						array(
+							'key' => 'gab_id',
+							'label' => lang('Property id'), // 'Gårds-/bruksnummer'
+							'sortable' => true,
+							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('gab_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 					'datatable' => array(
 						'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
 						'field' => array(
@@ -133,11 +165,13 @@
 								'key' => 'gab_id',
 								'label' => lang('Property id'), // 'Gårds-/bruksnummer'
 								'sortable' => true
+>>>>>>> .r2827
 						)
 					)
 				)
 			);
-			
+//			var_dump((!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))));
+//			var_dump($columnArray);
 			self::render_template('datatable', $data);
 		}						
 
@@ -169,6 +203,21 @@
 				);
 
 				self::render_template('rentalcomposite_edit', $data);
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		function columns()
+		{
+			$values = phpgw::get_var('values');
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
+				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->add('rental','rental_columns_rentalcomposites',$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}
 	}
