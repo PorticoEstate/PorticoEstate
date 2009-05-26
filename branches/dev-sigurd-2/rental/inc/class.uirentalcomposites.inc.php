@@ -55,15 +55,21 @@
 			// XXX: Change the 'toolbar' for this module - it's only kept like it is as an example on how we can do it 
 			$data = array(
 				'form' => array(
-					'toolbar' => array(
-					 	'control1' => array(
+					'toolbar1' => array(
+						'toolbar' => true,
+						'label' => lang('Functions'),
+						'control1' => array(
 					 			'control' => 'input',
 					 			'id' => 'ctrl_add_rental_composite',
-								'type' => 'link',
+								'type' => 'button',
 					 			'name' => 'name',
 								'value' => lang('New rental composite'),
 								'href' => self::link(array('menuaction' => 'rental.uirentalcomposites.add'))
-							), 
+						)
+					),
+					'toolbar2' => array(
+						'toolbar' => true,
+						'label' => lang('Search options'),
 						'control2' => array(
 								'control' => 'input',
 								'id' => 'ctrl_search_query',
@@ -76,6 +82,7 @@
 								'name' => 'search_option',
 								'keys' => array('all','id','name','address','gab'),
 								'values' => array(lang('All'),lang('Id'),lang('Name'),lang('Address'),lang('GAB')),
+								'default' => 'all',
 								'text' => '',
 							),
 						'control4' => array(
@@ -85,34 +92,47 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							)
-						),
 					),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'composite_id',
-							'label' => lang('Number'),
-							'sortable' => true
-						),
-						array(
-							'key' => 'actions',
-							'hidden' => true
-						),
-						array(
-							'key' => 'name',
-							'label' => lang('Name'),
-							'sortable' => true
-						),
-						array(
-							'key' => 'adresse1',
-							'label' => lang('Address'),
-							'sortable' => false
-						),
-						array(
-							'key' => 'gab_id',
-							'label' => lang('Property id'), // 'Gårds-/bruksnummer'
-							'sortable' => true
+					'toolbar3' => array(
+						'toolbar' => true,
+						'label' => lang('Filters'),
+						'control1' => array(
+					 			'control' => 'select',
+					 			'id' => 'ctrl_toggle_active_rental_composites',
+								'name' => 'is_active',
+								'keys' => array('active','non_active','both'),
+								'values' => array(lang('Active'),lang('Not active'),lang('Both')),
+								'default' => 'active',
+								'text' => '',
+						)
+						)
+					),
+					'datatable' => array(
+						'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
+						'field' => array(
+							array(
+								'key' => 'composite_id',
+								'label' => lang('Number'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'actions',
+								'hidden' => true
+							),
+							array(
+								'key' => 'name',
+								'label' => lang('Name'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'adresse1',
+								'label' => lang('Address'),
+								'sortable' => false
+							),
+							array(
+								'key' => 'gab_id',
+								'label' => lang('Property id'), // 'Gårds-/bruksnummer'
+								'sortable' => true
 						)
 					)
 				)
