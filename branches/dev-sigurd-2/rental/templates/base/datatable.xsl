@@ -55,15 +55,11 @@
 </xsl:template>
 
 <xsl:template match="datatable">
-	<div id="paginator">
-	</div>
-	<div>
-	<script>
-	alert(pag == null);
-	</script>
-	</div>
-    <div id="datatable-container"/>
-  	<xsl:call-template name="datasource-definition" />
+	<div class="datatable">
+		<div id="paginator"/>
+    	<div id="datatable-container"/>
+  		<xsl:call-template name="datasource-definition" />
+  	</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition">

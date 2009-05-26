@@ -38,11 +38,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
         }
     };
     var pag = new YAHOO.widget.Paginator({
-        rowsPerPage: 5,
+        rowsPerPage: 25,
         alwaysVisible: true,
-		template			: "{RowsPerPageDropdown} items per page.{CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}.",
-		pageReportTemplate	: "Showing items {startRecord} - {endRecord} of {totalRecords}.",
-        containers: ['paginator']
+        rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
+        // XXX: Where should we get the lang values from?
+	firstPageLinkLabel: '&lt;&lt;&nbsp;F&oslash;rste',
+	previousPageLinkLabel: '&lt;&nbsp;Forrige',
+	nextPageLinkLabel: 'Neste&nbsp;&gt;',
+	lastPageLinkLabel: 'Siste&nbsp;&gt;&gt;',
+	template			: "{RowsPerPageDropdown}elementer per side.{CurrentPageReport}<br/>&nbsp;&nbsp;{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}.",
+	pageReportTemplate	: "Viser fra {startRecord} til {endRecord} av totalt {totalRecords}.",
+	containers: ['paginator']
     });
     pag.render();
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 

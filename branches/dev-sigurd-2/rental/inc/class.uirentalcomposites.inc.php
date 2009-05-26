@@ -106,7 +106,8 @@
 					'field' => array(
 						array(
 							'key' => 'composite_id',
-							'hidden' => true
+							'label' => lang('Number'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'actions',

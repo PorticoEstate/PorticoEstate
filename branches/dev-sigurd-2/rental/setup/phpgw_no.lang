@@ -1,5 +1,7 @@
 Address	rental	no	Adresse
+GAB	rental	no GAB
 Name	rental	no	Navn
 Number	rental	no	Nummer
 Property id	rental	no	Gårds-/bruksnummer
 Property name	rental	no	Eiendomsnavn
+Rental composites	rental	no Leieobjekter
