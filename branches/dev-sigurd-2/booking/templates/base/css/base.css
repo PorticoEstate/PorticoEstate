@@ -75,7 +75,8 @@ dl.form-col dd .autocomplete {
     padding-bottom: 2em;
 }
 
-dl.form dt.heading, dl.form-col dt.heading {
+dl.form dt.heading, dl.form-col dt.heading, 
+dl.proplist dt.heading, dl.proplist-col dt.heading {
     color: #448;
     font-weight: normal;
     font-size: 110%;
@@ -84,9 +85,11 @@ dl.form dt.heading, dl.form-col dt.heading {
     border-bottom: 1px solid #aaa;
 }
 
+dl.proplist { clear: both;}
 dl.proplist,
 dl.proplist-col {
     margin: 1em 0;
+    padding-right: .5em;
 }
 dl.proplist dt,
 dl.proplist-col dt { 

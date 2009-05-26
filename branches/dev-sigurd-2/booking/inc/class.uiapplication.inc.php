@@ -100,7 +100,7 @@
 		public function index_json()
 		{
 			$applications = $this->bo->read();
-			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.edit");
+			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
 		}
 
@@ -186,15 +186,37 @@
 		
 		public function show()
 		{
-			$application = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$id = intval(phpgw::get_var('id', 'GET'));
+			$application = $this->bo->read_single($id);
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['status'])
+			{
+				$application['status'] = $_POST['status'];
+				$receipt = $this->bo->update($application);
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
+			}
+			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
+			{
+				$application['comments'][] = array('time'=> 'now', 'author'=>'foo', 'comment'=>$_POST['comment']);
+				$receipt = $this->bo->update($application);
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
+			}
+			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
+			$building_info = $this->bo->so->get_building_info($id);
+			$application['building_id'] = $building_info['id'];
+			$application['building_name'] = $building_info['name'];
 			$resource_ids = '';
 			foreach($application['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$application['resource_ids'] = $resource_ids;
-			self::render_template('application', array('application' => $application));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups));
 		}
 	}

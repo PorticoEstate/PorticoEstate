@@ -104,5 +104,38 @@
 			</div>
 		</form>
 	</xsl:if>
+
+
+			<form action="" method="POST">
+			<dl class="form">
+				<dt class="heading"><xsl:value-of select="php:function('lang', 'Copy boundaries')" /></dt>
+				<input type="search"/>
+				<input type="submit">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Search')"/></xsl:attribute>
+				</input>
+				<div id="foo_container"/>
+				<input type="submit">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Clone boundaries')"/></xsl:attribute>
+				</input>
+			</dl>
+			<div class="form-buttons">
+				<input type="submit">
+					<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Add')"/></xsl:attribute>
+				</input>
+				<a class="cancel">
+					<xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'Cancel')"/>
+				</a>
+			</div>
+		</form>
+
+<script type="text/javascript">
+    <![CDATA[
+YAHOO.util.Event.addListener(window, "load", function() {
+    var url = 'index.php?menuaction=booking.uiseason.index&sort=name&phpgw_return_as=json&';
+]]>
+	YAHOO.booking.radioTableHelper('foo_container', url, 'foo');
+});
+</script>
 	</div>
 </xsl:template>

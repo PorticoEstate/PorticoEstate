@@ -43,11 +43,11 @@
 							'key' => 'application_id',
 							'column' => array('from_', 'to_')
 					)),
-					'comments' => array('type' => 'int',
+					'comments' => array('type' => 'string',
 						  'manytomany' => array(
 							'table' => 'bb_application_comment',
-							'key' => 'id',
-							'column' => 'application_id'
+							'key' => 'application_id',
+							'column' => array('time', 'author', 'comment')
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
