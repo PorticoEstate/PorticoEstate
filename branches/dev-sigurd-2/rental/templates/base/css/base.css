@@ -184,3 +184,6 @@ div.allocation-list
 .hideit {
 	visibility: hidden;
 }
+.datatable{
+	margin-left: 20px;
+}
