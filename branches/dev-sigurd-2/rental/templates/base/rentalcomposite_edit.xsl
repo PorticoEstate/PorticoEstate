@@ -1,3 +1,5 @@
+<xsl:preserve-space elements="data"/>
+
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <h3><xsl:value-of select="php:function('lang', 'Showing')" />: <xsl:value-of select="data/name"/></h3>
 
@@ -21,11 +23,8 @@
 							<xsl:if test="data/adresse2!=''">
 								<br /><xsl:value-of select="data/adresse2"/>
 							</xsl:if>
-							<xsl:if test="data/postnummer!=''">
-								<br /><xsl:value-of select="data/postnummer"/>
-							</xsl:if>
-							<xsl:if test="data/poststed!=''">
-								<br /><xsl:value-of select="data/poststed"/>
+							<xsl:if test="data/postnummer != ''">
+								<br /><xsl:value-of select="data/postnummer"/>&#160;<xsl:value-of select="data/poststed"/>
 							</xsl:if>
 						</dd>
 					</dl>
