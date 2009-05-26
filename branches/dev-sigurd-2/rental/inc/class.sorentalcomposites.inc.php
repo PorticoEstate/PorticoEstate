@@ -120,7 +120,7 @@ class rental_sorentalcomposites extends rental_socommon
 		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
 		
 		// Calculate total number of records
-		$this->db->query("SELECT count(1) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->query("SELECT COUNT(distinct rental_composite.composite_id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');
 
