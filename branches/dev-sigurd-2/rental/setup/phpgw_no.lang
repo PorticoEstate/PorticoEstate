@@ -4,4 +4,6 @@ Name	rental	no	Navn
 Number	rental	no	Nummer
 Property id	rental	no	Gårds-/bruksnummer
 Property name	rental	no	Eiendomsnavn
+rental	rental	no	utleie
+Rental	rental	no	Utleie
 Rental composites	rental	no Leieobjekter
