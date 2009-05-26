@@ -31,6 +31,18 @@
 
             <dt><xsl:value-of select="php:function('lang', 'Phone')" /></dt>
             <dd><xsl:value-of select="organization/phone"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
+            <dd><xsl:value-of select="organization/street"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
+            <dd><xsl:value-of select="organization/zip_code"/></dd>
+
+			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+            <dd><xsl:value-of select="organization/city"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
+            <dd><xsl:value-of select="organization/district"/></dd>
         </dl>
 
         <h3><xsl:value-of select="php:function('lang', 'Groups')" /></h3>

@@ -3,6 +3,8 @@
 
 	class booking_uiorganization extends booking_uicommon
 	{
+		protected $fields;
+		
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -21,7 +23,7 @@
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 'description', 'admin_primary', 'admin_secondary', 'active');
+			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'admin_primary', 'admin_secondary', 'active');
 		}
 		
 		public function index()

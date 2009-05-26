@@ -96,18 +96,17 @@
                     </dd>
                 </dl>
                 <dl class="form-col">
-		            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
-		            <dd>
-		                <input id="field_address" name="address" type="text">
-		                    <xsl:attribute name="value"><xsl:value-of select="building/address"/></xsl:attribute>
-						</input>
-		            </dd>
-		            <dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
-		            <dd><input type="text"/></dd>
-		            <dt><label><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
-		            <dd><input type="text"/></dd>
-		            <dt><label><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
-		            <dd><input type="text"/></dd>
+		            <dt><label for="field_street"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
+		            <dd><input id="field_street" name="street" type="text" value="{organization/street}"/></dd>
+
+					<dt><label for="field_zip_code"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
+		            <dd><input type="text" name="zip_code" id="field_zip_code" value="{organization/zip_code}"/></dd>
+		            
+					<dt><label for="field_city"><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
+		            <dd><input type="text" name="city" id="field_city" value="{organization/city}"/></dd>
+		            
+					<dt><label for='field_district'><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
+		            <dd><input type="text" name="district" id="field_district" value="{organization/district}"/></dd>
 
 					<xsl:if test="not(new_form)">
 			            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>

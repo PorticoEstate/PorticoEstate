@@ -13,7 +13,7 @@
 
 		public function __construct()
 		{
-			booking_uicommon::__construct();
+			parent::__construct();
 			$this->bo = CreateObject('booking.boorganization');
 			$this->module = "bookingfrontend";
 		}

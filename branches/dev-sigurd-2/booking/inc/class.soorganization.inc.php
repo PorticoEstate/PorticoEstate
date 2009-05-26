@@ -7,6 +7,7 @@
 	{
 		function __construct()
 		{
+
 			parent::__construct('bb_organization', 
 				array(
 					'id'			=> array('type' => 'int'),
@@ -15,6 +16,10 @@
 					'phone'			=> array('type' => 'string'),
 					'email'			=> array('type' => 'string'),
 					'description'	=> array('type' => 'string'),
+					'street' 		=> array('type' => 'string'),
+					'zip_code' 		=> array('type' => 'string'),
+					'district' 		=> array('type' => 'string'),
+					'city' 			=> array('type' => 'string'),
                     'active'		=> array('type' => 'int', 'required'=>true),
                     'admin_primary' => array('type' => 'int', 'required'=>true),
                     'admin_secondary' => array('type' => 'int',),

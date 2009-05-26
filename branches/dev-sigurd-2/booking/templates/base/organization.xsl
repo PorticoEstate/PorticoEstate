@@ -13,7 +13,7 @@
                 </a>
             </li>
         </ul>
-        <dl class="proplist">
+        <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
             <dd>
 				<a>
@@ -43,9 +43,25 @@
                 </ul>
             </dd>
         </dl>
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="organization/edit_link"></xsl:value-of></xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Edit')" />
-        </a>
+
+		<dl class="proplist-col">
+			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
+            <dd><xsl:value-of select="organization/street"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
+            <dd><xsl:value-of select="organization/zip_code"/></dd>
+
+			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+            <dd><xsl:value-of select="organization/city"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
+            <dd><xsl:value-of select="organization/district"/></dd>
+		</dl>
+		
+		<div class="form-buttons">
+			<button onclick="window.location.href='{organization/edit_link}'">
+	            <xsl:value-of select="php:function('lang', 'Edit')" />
+	        </button>
+		</div>
     </div>
 </xsl:template>

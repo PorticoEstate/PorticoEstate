@@ -1132,3 +1132,21 @@
 		}
 	}
 	
+	# Important!!! Append new upgrade functions to the end of this this
+	$test[] = '0.1.44';
+	function booking_upgrade0_1_44()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN street character varying(255) NOT NULL DEFAULT ''");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN zip_code character varying(255) NOT NULL DEFAULT ''");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN city character varying(255) NOT NULL DEFAULT ''");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN district character varying(255) NOT NULL DEFAULT ''");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.45';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	

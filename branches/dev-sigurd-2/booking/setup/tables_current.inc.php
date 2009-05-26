@@ -22,7 +22,10 @@
 				'homepage' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
-				'address' => array('type' => 'varchar','precision' => '250','nullable' => False, 'default'=>''),
+				'street' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
+				'zip_code' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
+				'district' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
+				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>'')
 			),
 			'pk' => array('id'),
