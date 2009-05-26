@@ -56,51 +56,37 @@
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
+					 	'control1' => array(
+					 			'control' => 'input',
+					 			'id' => 'ctrl_add_rental_composite',
 								'type' => 'link',
-								'value' => lang('New booking'),
-								'href' => self::link(array('menuaction' => 'booking.uibooking.add'))
-							),
-							array('type' => 'text', 
+					 			'name' => 'name',
+								'value' => lang('New rental composite'),
+								'href' => self::link(array('menuaction' => 'rental.uirentalcomposites.add'))
+							), 
+						'control2' => array(
+								'control' => 'input',
+								'id' => 'ctrl_search_query',
+								'type' => 'text', 
 								'name' => 'query'
 							),
-							array(
-								'id' => 'radio_search_options',
+						'control3' => array(
+								'control' => 'select',
+								'id' => 'ctrl_search_option',
 								'name' => 'search_option',
-								'value'	=> 'name',
-								'type' => 'radio',
-								'text' => lang('Name')
+								'keys' => array('all','id','name','address','gab'),
+								'values' => array(lang('All'),lang('Id'),lang('Name'),lang('Address'),lang('GAB')),
+								'text' => '',
 							),
-							array(
-								'id' => 'radio_search_options',
-								'name' => 'search_option',
-								'value'	=> 'address',
-								'type' => 'radio',
-								'text' => lang('Address')
-							),
-							array(
-								'id' => 'radio_search_options',
-								'name' => 'search_option',
-								'value'	=> 'gab',
-								'type' => 'radio',
-								'text' => lang('GAB')
-							),
-							array(
-								'id' => 'radio_search_options',
-								'name' => 'search_option',
-								'value'	=> 'property_name',
-								'type' => 'radio',
-								'text' => lang('Property name')
-							),
-							array(
+						'control4' => array(
+								'control' => 'input',
+								'id' => 'ctrl_search_button',
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
 							)
 						),
 					),
-				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
