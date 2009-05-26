@@ -9,11 +9,18 @@ class rental_sorentalcomposites extends rental_socommon
 		array
 		(
 					'composite_id'	=> array('type' => 'int'),
-					'name'	=> array('type' => 'string'),
+					'description' => array('type' => 'string'),
+ 					'name'	=> array('type' => 'string'),
 					'has_custom_address' => array('type' => 'bool'),
 					'address_1'	=> array('type' => 'string'),
+					'address_2'	=> array('type' => 'string'),
 					'house_number' => array('type' => 'int'),
+					'postcode' => array('type' => 'string'),
+					'place' => array('type' => 'string'),
 					'adresse1' => array('type' => 'string'),
+					'adresse2' => array('type' => 'string'),
+					'postnummer' => array('type' => 'int'),
+					'poststed' => array('type' => 'string'),
 					'gab_id' => array('type' => 'string')
 		));
 	}
@@ -94,7 +101,7 @@ class rental_sorentalcomposites extends rental_socommon
 	function read_single($id)
 	{
 		$distinct = 'distinct on(rental_composite.composite_id)';
-		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
 		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
 		
 		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.composite_id=$id", __LINE__, __FILE__);
@@ -110,9 +117,51 @@ class rental_sorentalcomposites extends rental_socommon
 			if($row['has_custom_address'] == '1') // There's a custom address
 			{
 				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
+				$row['adresse2'] = $row['address_2'];
+				$row['postnummer'] = $row['postcode'];
+				$row['poststed'] = $row['place'];
 			}
 			$row['gab_id'] = substr($row['gab_id'],4,5).' / '.substr($row['gab_id'],9,4);
 		}
+		
+		$row['units'] = array();
+		
+		// Get all rental units belonging to this composite object
+		$this->db->query("SELECT fm_locations.* FROM rental_unit JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) WHERE composite_id = {$id}");
+		
+		$units = array();
+		while ($this->db->next_record()) {
+			$level = $this->_unmarshal($this->db->f('level', true), 'int');
+			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
+			$units[] = array('level' => $level, 'location_code' => $location_code);
+		}
+		
+		$area = 0;
+		
+		// Go through each rental unit (location) that belongs to this composite and add up their areas
+		foreach ($units as $unit) {
+			$sql = '';
+			$area_column = 'bta';
+			
+			// Properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
+			if ($unit['level'] == 1) {
+				$sql = "SELECT * FROM fm_location2 WHERE loc1 LIKE '{$unit['location_code']}'";
+			} else {
+				$sql = "SELECT * FROM fm_location{$unit['level']} WHERE location_code LIKE '{$unit['location_code']}'";
+			}
+			
+			// On level 5 the area columns have different names
+			if ($unit['level'] == 5) {
+				$area_column = 'bruksareal';
+			}
+			
+			$this->db->query($sql);
+			while ($this->db->next_record()) {
+				$area += $this->_unmarshal($this->db->f($area_column, true), 'float');
+			}
+		}
+		
+		$row['area'] = $area;
 		
 		return $row;
 	}

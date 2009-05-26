@@ -13,10 +13,20 @@
 						<dd><xsl:value-of select="data/gab_id"/></dd>
 					</dl>
 					<dl class="proplist-col">
+						<dt><xsl:value-of select="php:function('lang', 'Area')" /></dt>
+						<dd><xsl:value-of select="data/area"/> m<sup>2</sup></dd>
 						<dt><xsl:value-of select="php:function('lang', 'Address')" /></dt>
 						<dd>
-							<xsl:value-of select="data/adresse1"/><br />
-							<xsl:value-of select="data/address_2"/>
+							<xsl:value-of select="data/adresse1"/>
+							<xsl:if test="data/adresse2!=''">
+								<br /><xsl:value-of select="data/adresse2"/>
+							</xsl:if>
+							<xsl:if test="data/postnummer!=''">
+								<br /><xsl:value-of select="data/postnummer"/>
+							</xsl:if>
+							<xsl:if test="data/poststed!=''">
+								<br /><xsl:value-of select="data/poststed"/>
+							</xsl:if>
 						</dd>
 					</dl>
 				</div>
