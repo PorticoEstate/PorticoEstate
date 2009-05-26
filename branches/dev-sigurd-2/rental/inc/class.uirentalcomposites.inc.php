@@ -140,26 +140,24 @@
 		public function edit()
 		{
 			phpgwapi_yui::load_widget('tabview');
-			
+
 			$composite_id = phpgw::get_var('id');
 			// TODO: How to check for valid input here?
 			if ($composite_id) {
 				$composite = $this->bo->read_single($composite_id);
-
-				$tabs = array
-				(
-					'details'	=> array('label' => lang('details'), 'link' => '#details'),
-					'elements'	=> array('label' => lang('elements'), 'link' => '#elements'),
-					'contracts'	=> array('label' => lang('contracts'), 'link' => '#contracts'),
-					'documents'	=> array('label' => lang('documents'), 'link' => '#documents')
-				);
+				
+				$tabs = array();
+				
+				foreach(array('details', 'elements', 'contracts', 'document') as $tab) {
+					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
+				}
 				
 				phpgwapi_yui::tabview_setup('composite_edit_tabview');
-				
+
 				$data = array
 				(
 					'data' 	=> $composite,
-					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'data')
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'details')
 				);
 
 				self::render_template('rentalcomposite_edit', $data);
