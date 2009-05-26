@@ -30,6 +30,7 @@
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
 			$query = phpgw::get_var('query');
+			$search_option = phpgw::get_var('search_option');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
 			$filters = array();
@@ -48,6 +49,7 @@
 				'start' => $start,
 				'results' => $results,
 				'query'	=> $query,
+				'search_option' => $search_option,
 				'sort'	=> $sort,
 				'dir'	=> $dir,
 				'filters' => $filters
