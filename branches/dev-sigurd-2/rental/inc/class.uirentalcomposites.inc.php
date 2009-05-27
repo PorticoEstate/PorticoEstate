@@ -111,8 +111,8 @@
 								'name' => 'is_active',
 								'keys' => array('active','non_active','both'),
 								'values' => array(lang('Active'),lang('Not active'),lang('Both')),
-								'default' => 'active',
-								'text' => '',
+								'default' => 'both',
+								'text' => ''
 						)
 						)
 					),
