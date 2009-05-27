@@ -4,7 +4,7 @@ Area	rental	no	Areal
 Both	rental	no	Begge
 Contracts	rental	no	Kontrakter
 Documents	rental	no	Dokumenter
-Eleements	rental	no	Elementer
+Elements	rental	no	Elementer
 GAB	rental	no	GAB
 Filters	rental	no	Filtre
 Functions	rental	no	Funksjoner
@@ -12,7 +12,10 @@ Inactive	rental	no	Inaktiv
 Is active	rental	no	Er utleibar
 Name	rental	no	Navn
 New rental composite	rental	no	Nytt leieobjekt
+Not active	rental	no	Inaktiv
 Number	rental	no	Nummer
+Place	rental	no	Poststed
+Post code	rental	no	Postnummer
 Property id	rental	no	Gårds-/bruksnummer
 Property name	rental	no	Eiendomsnavn
 rental	rental	no	utleie
