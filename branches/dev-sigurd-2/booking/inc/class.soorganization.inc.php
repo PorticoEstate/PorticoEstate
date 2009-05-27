@@ -21,13 +21,22 @@
 					'district' 		=> array('type' => 'string'),
 					'city' 			=> array('type' => 'string'),
                     'active'		=> array('type' => 'int', 'required'=>true),
-                    'admin_primary' => array('type' => 'int', 'required'=>true),
-                    'admin_secondary' => array('type' => 'int',),
+					'contacts'		  => array('type' => 'string',
+						'manytomany' => array(
+							'table' => 'bb_organization_contact',
+							'key' => 'organization_id',
+							'column' => array('name',
+							                  'ssn', 
+							                  'email',
+							                  'phone')
+						)
+					),
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
-        function get_contact_info($person_id)
+		
+		function get_contact_info($person_id)
         {
             static $person = null;
             static $cache = array();
@@ -41,6 +50,7 @@
 
             return $cache[$person_id];
         }
+
         function get_groups($organization_id)
         {
             static $groups = null;

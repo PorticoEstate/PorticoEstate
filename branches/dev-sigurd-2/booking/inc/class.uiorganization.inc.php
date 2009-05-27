@@ -23,7 +23,7 @@
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'admin_primary', 'admin_secondary', 'active');
+			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'contacts', 'active');
 		}
 		
 		public function index()
@@ -108,12 +108,7 @@
 			{
 				$organization = extract_values($_POST, $this->fields);
 				$organization['active'] = '1';
-				if (empty($organization["admin_primary"])) {
-					unset($organization["admin_primary"]);
-				}
-				if (empty($organization["admin_secondary"])) {
-					unset($organization["admin_secondary"]);
-				}
+				
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
@@ -130,31 +125,21 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
-			self::add_template_file("contactperson_fields");
-			self::add_template_file("contactperson_magic");
-
 			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module));
 		}
 
 		public function edit()
-		{
+		{	
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$organization = $this->bo->read_single($id);
 			$organization['id'] = $id;
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
-            $organization['admin_primary'] = $this->bo->get_contact_info($organization['admin_primary']);
-            $organization['admin_secondary'] = $this->bo->get_contact_info($organization['admin_secondary']);
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$organization = array_merge($organization, extract_values($_POST, $this->fields));
-				if (empty($organization["admin_primary"]) || empty($_POST["admin_primary_name"])) {
-					unset($organization["admin_primary"]);
-				}
-				if (empty($organization["admin_secondary"]) || empty($_POST["admin_secondary_name"])) {
-					unset($organization["admin_secondary"]);
-				}
+
 				$errors = $this->bo->validate($organization);
 				if(!$errors)
 				{
@@ -179,9 +164,6 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
-			self::add_template_file("contactperson_fields");
-			self::add_template_file("contactperson_magic");
-
 			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link));
 		}
 		
@@ -190,8 +172,6 @@
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => 'booking.uiorganization.edit', 'id' => $organization['id']));
-            $organization['admin_primary'] = $this->bo->get_contact_info($organization['admin_primary']);
-            $organization['admin_secondary'] = $this->bo->get_contact_info($organization['admin_secondary']);
 			self::render_template('organization', array('organization' => $organization, ));
 		}
 	}

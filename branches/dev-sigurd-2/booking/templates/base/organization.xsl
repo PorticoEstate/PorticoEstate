@@ -31,17 +31,20 @@
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
             <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
 
+			<xsl:if test="count(organization/contacts/*) &gt; 0">
             <dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
-            <dd>
-                <ul>
-                    <li><xsl:value-of select="organization/admin_primary/name" /></li>
-                    <li>
-                        <xsl:if test="organization/admin_secondary/name">
-                            <xsl:value-of select="organization/admin_secondary/name" />
-                        </xsl:if>
-                    </li>
-                </ul>
-            </dd>
+	            <dd>
+	                <ul>
+						<xsl:if test="organization/contacts[1]">
+							<li><xsl:value-of select="organization/contacts[1]/name"/></li>
+						</xsl:if>
+					
+	                    <xsl:if test="organization/contacts[2]">
+	                    	<li><xsl:value-of select="organization/contacts[2]/name"/></li>
+						</xsl:if>
+	                </ul>
+	            </dd>
+			</xsl:if>
         </dl>
 
 		<dl class="proplist-col">

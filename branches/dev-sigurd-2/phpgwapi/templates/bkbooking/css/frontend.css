@@ -96,11 +96,14 @@ ol#result .details .moreInfo {
 }
 
 dl.form {}
+
 dl.form dt {
-    float: left;
-    clear: left;
-    width: 9em;
+    font-style: italic;
+    font-weight: bolder;
+    margin: .5em 0 .1em 0;
+    color: #002;
 }
+
 dl.form dt label { font-size: 90%; color: #733; font-style: italic;}
 dl.form dd {
     float: left;

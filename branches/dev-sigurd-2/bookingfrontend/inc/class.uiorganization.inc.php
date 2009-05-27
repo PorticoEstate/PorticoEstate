@@ -14,7 +14,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->bo = CreateObject('booking.boorganization');
 			$this->module = "bookingfrontend";
 		}
 		protected function indexing()
