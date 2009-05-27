@@ -1132,7 +1132,6 @@
 		}
 	}
 	
-	# Important!!! Append new upgrade functions to the end of this this
 	$test[] = '0.1.44';
 	function booking_upgrade0_1_44()
 	{	
@@ -1150,3 +1149,26 @@
 		}
 	}
 	
+	$test[] = '0.1.45';
+	function booking_upgrade0_1_45()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_resource");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_date");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_comment");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_agegroup");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application_targetaudience");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_application");
+		# END Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application_comment ALTER COLUMN time TYPE timestamp USING time::timestamp");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN secret TEXT NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN owner_id int NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD CONSTRAINT bb_application_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES phpgw_accounts(account_id)");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.46';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

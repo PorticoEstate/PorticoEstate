@@ -109,19 +109,29 @@
 			return array('from_' => $from_, 'to_' => $to_);
 		}
 
+		private function generate_secret($length = 10)
+		{
+			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
+		}
+
 		public function add()
 		{
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+				array_set_default($_POST, 'from_', array());
+				array_set_default($_POST, 'to_', array());
 				$application = extract_values($_POST, $this->fields);
 				$application['agegroups'] = array();
 				$this->agegroup_bo->extract_form_data($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['active'] = '1';
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
 				$application['modified'] = 'now';
+				$application['secret'] = $this->generate_secret();
+				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 				$errors = $this->bo->validate($application);
 				if(!$errors)
 				{
@@ -197,7 +207,9 @@
 			}
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
 			{
-				$application['comments'][] = array('time'=> 'now', 'author'=>'foo', 'comment'=>$_POST['comment']);
+				$application['comments'][] = array('time'=> 'now', 
+												   'author'=>$GLOBALS['phpgw_info']['user']['fullname'], 
+												   'comment'=>$_POST['comment']);
 				$receipt = $this->bo->update($application);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}

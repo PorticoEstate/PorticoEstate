@@ -10,10 +10,19 @@
 					'id'		=> array('type' => 'int'),
 					'active'	=> array('type' => 'int'),
 					'status'	=> array('type' => 'string', 'required' => true),
+					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),
+					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
+					'owner_name'	=> array('type' => 'string',
+						  'join' 		=> array(
+							'table' 	=> 'phpgw_accounts',
+							'fkey' 		=> 'owner_id',
+							'key' 		=> 'account_id',
+							'column' 	=> 'account_lid'
+					)),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',

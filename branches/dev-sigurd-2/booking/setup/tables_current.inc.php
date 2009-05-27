@@ -280,11 +280,15 @@
 				'description' => array('type' => 'text', 'nullable' => False),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
 				'contact_email' => array('type' => 'text', 'nullable' => False),
-				'contact_phone' => array('type' => 'text', 'nullable' => False)
+				'contact_phone' => array('type' => 'text', 'nullable' => False),
+				'secret' => array('type' => 'text', 'nullable' => False),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_activity' => array('activity_id' => 'id')),
+				'bb_activity' => array('activity_id' => 'id'),
+				'phpgw_accounts' => array('owner_id' => 'account_id'),
+			),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -305,7 +309,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'time' => array('type' => 'text', 'nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False),
 				'author' => array('type' => 'text', 'nullable' => False),
 				'comment' => array('type' => 'text', 'nullable' => False)
 			),

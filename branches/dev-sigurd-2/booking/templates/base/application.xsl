@@ -83,7 +83,7 @@
 
 		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
-			<xsl:for-each select="application/comments">
+			<xsl:for-each select="application/comments[author]">
 				<dt>
 					<xsl:value-of select="time"/>: <xsl:value-of select="author"/>
 				</dt>
