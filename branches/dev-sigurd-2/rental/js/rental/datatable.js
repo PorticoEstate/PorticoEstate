@@ -75,6 +75,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
     myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
     
+		// Show record on row click
+		myDataTable.subscribe("rowClickEvent", function(e) {
+			YAHOO.util.Event.stopEvent(e);
+			var elRow = myDataTable.getTrEl(e.target);
+			if(elRow) {
+        var oRecord = myDataTable.getRecord(elRow);
+      	var recordId = oRecord.getData().composite_id;
+      	window.location = oRecord.getData().actions.view;
+			}
+		});
+		
     YAHOO.example.ContextMenu = function() {
 	    var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
 	      var task = p_aArgs[1];
