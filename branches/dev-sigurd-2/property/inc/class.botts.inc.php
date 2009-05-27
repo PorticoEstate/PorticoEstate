@@ -310,7 +310,7 @@
 					$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 				}
 
-				$ticket['timestampopened'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
+				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
 
 				if($ticket['finnish_date2'])
 				{
@@ -400,7 +400,7 @@
 
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
-			$ticket['timestampopened'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
+			$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 			// Figure out when it was opened and last closed
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','ASC',$id);
@@ -641,7 +641,7 @@
 			}
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
-			$timestampopened = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
+			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 
 			if($ticket['status']=='X')
 			{
@@ -691,7 +691,7 @@
 			$body  = '';
 	//		$body .= lang('Ticket').' #'.$id."\n";
 			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
-			$body .= lang('Date Opened').': '.$timestampopened."\n";
+			$body .= lang('Date Opened').': '.$entry_date."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
 //			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
 			$body .= lang('Location').': '. $ticket['location_code'] ."\n";

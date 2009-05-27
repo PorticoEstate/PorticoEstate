@@ -693,7 +693,8 @@ entrance	property	no	inngang
 entrance has been edited	property	no	inngang er rettet
 entrance has been saved	property	no	inngang er lagret
 entrance id	property	no	inngang ID
-entry date	property	no	Entry date
+entry date	property	no	Dato
+entry_date	property	no	Dato
 equipment	property	no	Utstyr
 equipment %1 has been edited	property	no	utstyr %1 er rettet
 equipment %1 has been saved	property	no	utstyr %1 er lagret
