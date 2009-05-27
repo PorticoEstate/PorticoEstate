@@ -7,6 +7,7 @@
 		public $public_functions = array
 		(
 			'index'		=> true,
+			'view'		=> true,
 			'edit'		=> true,
 			'columns'	=> true,
 		);
@@ -22,18 +23,19 @@
 		{
 			$compositeArray = $this->bo->read();
 			
-			array_walk($compositeArray['results'], array($this, '_add_actions'), 'rental.uirentalcomposites.edit');
+			array_walk($compositeArray['results'], array($this, '_add_actions'));
 			return $this->yui_results($compositeArray);
 		}
 
 		/*
 		 * Add action links for the context menu of the list item
 		 */
-		public function _add_actions(&$value, $key, $menuaction)
+		public function _add_actions(&$value, $key)
 		{
 			$value['actions'] = array(
 				// Remove &amp; from the link before storing it since it will be used in a Javascript forward
-				'edit' => html_entity_decode(self::link(array('menuaction' => $menuaction, 'id' => $value['composite_id'])))
+				'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uirentalcomposites.view', 'id' => $value['composite_id']))),
+				'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uirentalcomposites.edit', 'id' => $value['composite_id'])))
 			);
 		}
 		
@@ -159,6 +161,37 @@
 		 * Show details for a single rental composite
 		 * 
 		 */
+		public function view()
+		{
+			phpgwapi_yui::load_widget('tabview');
+
+			$composite_id = phpgw::get_var('id');
+			// TODO: How to check for valid input here?
+			if ($composite_id) {
+				$composite = $this->bo->read_single($composite_id);
+				
+				$tabs = array();
+				
+				foreach(array('details', 'elements', 'contracts', 'document') as $tab) {
+					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
+				}
+				
+				phpgwapi_yui::tabview_setup('composite_edit_tabview');
+
+				$data = array
+				(
+					'data' 	=> $composite,
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'details')
+				);
+
+				self::render_template('rentalcomposite_view', $data);
+			}
+		}
+		
+		/**
+		 * Edit details for a single rental composite
+		 * 
+		 */
 		public function edit()
 		{
 			phpgwapi_yui::load_widget('tabview');
@@ -181,6 +214,29 @@
 					'data' 	=> $composite,
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'details')
 				);
+				
+				$errors = array();
+				if($_SERVER['REQUEST_METHOD'] == 'POST')
+				{
+					$composite = array_merge($composite, extract_values($_POST, array('name', 'gab_id', 'address_1', 'house_number', 'address_2', 'postcode', 'place', 'is_active', 'description')));
+					$composite['is_active'] = $composite['is_active'] == 'on' ? true : false;
+
+					if (isset($composite['address_1']) && trim($composite['address_1']) != '') {
+						$composite['has_custom_address'] = '1';
+					} else {
+						$composite['has_custom_address'] = '0';
+					}
+
+					$errors = $this->bo->validate($composite);
+					
+					if(!$errors)
+					{
+						$receipt = $this->bo->update($composite);
+						$this->redirect(array('menuaction' => 'rental.uirentalcomposites.index'));
+					}
+				}
+				$this->flash_form_errors($errors);
+				$activity['cancel_link'] = self::link(array('menuaction' => 'rental.uirentalcomposites.index'));
 
 				self::render_template('rentalcomposite_edit', $data);
 			}

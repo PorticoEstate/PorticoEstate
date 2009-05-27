@@ -87,6 +87,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	          case 0: /* View */
 	            var oRecord = p_myDataTable.getRecord(elRow);
 	          	var recordId = oRecord.getData().composite_id;
+	          	window.location = oRecord.getData().actions.view;
+	          	break;
+	          case 1: /* Edit */
+	            var oRecord = p_myDataTable.getRecord(elRow);
+	          	var recordId = oRecord.getData().composite_id;
 	          	window.location = oRecord.getData().actions.edit;
 	          	break;
 	          }
@@ -96,7 +101,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    
 	    var myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 	    
-	    myContextMenu.addItem("Vis");
+	    
+	    myContextMenu.addItems([[
+        { text: "Vis" , onclick: { fn: onContextMenuClick, obj: "view" } }],[
+        { text: "Redigér", onclick: { fn: onContextMenuClick, obj: "edit" }}]
+        ]);
+
 	    // Render the ContextMenu instance to the parent container of the DataTable
 	    myContextMenu.render("datatable-container");
 	    myContextMenu.clickEvent.subscribe(onContextMenuClick, myDataTable);

@@ -1,6 +1,34 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
 
+	/**
+	 * Cherry pick selected values into a new array
+	 * 
+	 * @param array $array    input array
+	 * @param array $keys     array of keys to pick
+	 *
+	 * @return array containg values from $array for the keys in $keys.
+	 */
+	
+
+	function extract_values($array, $keys)
+	{
+		$result = array();
+		foreach($keys as $key)
+		{
+			if(in_array($key, array_keys($array)))
+			{
+				$result[$key] = $array[$key];
+			}
+		}
+		return $result;
+	}
+	
+	function array_set_default(&$array, $key, $value)
+	{
+		if(!isset($array[$key])) $array[$key] = $value;
+	}
+	
 	class rental_uicommon
 	{
 		public function __construct()
