@@ -33,14 +33,10 @@
 			$search_option = phpgw::get_var('search_option');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
-			$filters = array();
-			foreach($this->so->fields as $field => $params)
-			{
-				if(phpgw::get_var("filter_$field"))
-				{
-					$filters[$field] = phpgw::get_var("filter_$field");
-				}
-			}
+			$filters['is_active'] = phpgw::get_var('is_active');
+			
+			
+			
 			if(!isset($_SESSION['showall']))
 			{
 				$filters['active'] = "1";
