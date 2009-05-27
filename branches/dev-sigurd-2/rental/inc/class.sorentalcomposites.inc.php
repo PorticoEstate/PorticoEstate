@@ -31,11 +31,13 @@ class rental_sorentalcomposites extends rental_socommon
 			$clauses = array('1=1');
 			if($query)
 			{
+				
 				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
 				$like_clauses = array();
 				switch($search_option){
 					case "id":
 						$like_clauses[] = "rental_composite.composite_id = $query";
+						break;
 					case "name":
 						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
 						break;
@@ -51,40 +53,37 @@ class rental_sorentalcomposites extends rental_socommon
 						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
 						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
 						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+						break;
 				}
+				
+				
+				
 				
 				if(count($like_clauses))
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
+				
+				
 			}
-			foreach($filters as $key => $val)
-			{
-				if($this->fields[$key])
+			
+			$filter_clauses = array();
+			switch($filters['is_active']){
+				case "active":
+					$filter_clauses[] = "rental_composite.is_active = TRUE";
+					break;
+				case "non_active":
+					$filter_clauses[] = "rental_composite.is_active = FALSE";
+					break;
+				case "both":
+					break;
+			}
+				
+			if(count($filter_clauses))
 				{
-					$table = $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
-					if(is_array($val) && count($val) == 0)
-					{
-					    $clauses[] = '1=0';
-				    }
-					else if(is_array($val))
-					{
-						$vals = array();
-						foreach($val as $v) {
-							$vals[] = $this->_marshal($v, $this->fields[$key]['type']);
-						}
-						$clauses[] = "({$table}.{$key} IN (" . join(',', $vals) . '))';
-					}
-					else if($val == null)
-					{
-						$clauses[] = "{$table}.{$key} IS NULL";
-					}
-					else
-					{
-						$clauses[] = "{$table}.{$key}=" . $this->_marshal($val, $this->fields[$key]['type']);
-					}
+					$clauses[] = join(' AND ', $filter_clauses);
 				}
-			}
+			
 			return join(' AND ', $clauses);
 		}
 
