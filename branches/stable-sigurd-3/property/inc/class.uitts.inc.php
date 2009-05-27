@@ -161,7 +161,7 @@
 						'address',
 						'user',
 						'assignedto',
-						'timestampopened'
+						'entry_date'
 						);
 
 			while (is_array($name_temp) && list($name_entry,) = each($name_temp))
@@ -470,8 +470,8 @@
 			$uicols['name'][$i++] = 'address';
 //			$uicols['name'][$i++] = 'user';
 			$uicols['name'][$i++] = 'assignedto';
-			$uicols['name'][$i++] = 'timestampopened';
-
+			$uicols['name'][$i++] = 'entry_date';
+			$uicols['name'][$i++] = 'status';
 			foreach($uicols_related as $related)
 			{
 				$uicols['name'][$i++] = $related;			
@@ -479,7 +479,6 @@
 
 			$uicols['name'][$i++] = 'finnish_date';
 			$uicols['name'][$i++] = 'delay';
-			$uicols['name'][$i++] = 'status';
 
 			$uicols['name'][$i++] = 'child_date';
 			$uicols['name'][$i++] = 'link_view';
@@ -537,7 +536,7 @@
 							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]];
 						}
-						if($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'timestampopened')
+						if($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'entry_date')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
 							$datatable['rows']['row'][$j]['column'][$k]['link']		=	$GLOBALS['phpgw']->link('/index.php',array
@@ -641,7 +640,7 @@
 					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user')
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
@@ -670,7 +669,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order'] 			= 'timestampopened'; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= 'entry_date'; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
 			}
 			else
@@ -845,7 +844,7 @@
 					'subject'				=> $ticket['subject'],
 					'location_code'			=> $ticket['location_code'],
 					'address'				=> $ticket['address'],
-					'date'					=> $ticket['timestampopened'],
+					'date'					=> $ticket['entry_date'],
 					'finnish_date'			=> $ticket['finnish_date'],
 					'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
 					'user'					=> $ticket['user'],
@@ -1957,7 +1956,7 @@
 
 				'lang_new_note'				=> lang('New Note'),
 				'lang_opendate'				=> lang('Open Date'),
-				'value_opendate'			=> $ticket['timestampopened'],
+				'value_opendate'			=> $ticket['entry_date'],
 
 				'lang_assignedfrom'			=> lang('Assigned from'),
 				'value_assignedfrom'			=> $ticket['user_name'],
@@ -2237,7 +2236,7 @@
 
 				'lang_new_note'					=> lang('New Note'),
 				'lang_opendate'					=> lang('Open Date'),
-				'value_opendate'				=> $ticket['timestampopened'],
+				'value_opendate'				=> $ticket['entry_date'],
 
 				'lang_assignedfrom'				=> lang('Assigned from'),
 				'value_assignedfrom'			=> $ticket['user_name'],

@@ -25,7 +25,7 @@
 
 	var toolTips =
 	[
-		{name:'status', title:'', description:'',ColumnDescription:'status'},
+		{name:'status', title:'Status', description:'',ColumnDescription:'status'},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
 
