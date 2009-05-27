@@ -54,6 +54,7 @@
 				    <select>
 					<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
 					<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+					<xsl:attribute name="onchange"><xsl:value-of select="phpgw:conditional(not(onchange), '', onchange)"/></xsl:attribute>
 			   		<xsl:for-each select="keys">
 			   			<xsl:variable name="p" select="position()" />
 			   			<option>
