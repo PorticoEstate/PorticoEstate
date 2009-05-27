@@ -96,15 +96,11 @@
 			return $object_so->read_single($object_id);
 		}
 		
-		function validate($entity)
+		protected function doValidate($entity, booking_errorstack $errors)
 		{
-			$errors = parent::validate($entity);
-			if (count($errors) > 0) return $errors;
 			if (!$this->validate_uniqueness($entity, 'subject_id', 'role', 'object_type', 'object_id'))
 			{
 				$errors['global'] = lang('Permission already exists');
 			}
-			
-			return $errors;
 		}
 	}

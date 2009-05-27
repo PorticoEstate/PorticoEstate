@@ -92,11 +92,10 @@
 			return $parent_so->read_single($owner_id);
 		}
 		
-		function validate($document)
+		protected function doValidate($document, booking_errorstack $errors)
 		{
 			require_once(dirname(__FILE__).'/vendor/symfony/validator/bootstrap.php');
 			
-			$errors = array();
 			$this->newFile = null;
 			
 			if (!$document['id'])
@@ -110,21 +109,17 @@
 					}
 				} catch (sfValidatorError $e) {
 					if ($e->getCode() == 'required') {
-						$errors['name'] =lang('Missing file for document');
-						return $errors;
+						$errors['name'] = lang('Missing file for document');
+						return;
 					}
 					throw $e;
 				}
 			}
 			
-			$errors = parent::validate($document);
-			
-			if (!isset($errors['category']) && !in_array($document['category'], $this->defaultCategories))
+			if (!in_array($document['category'], $this->defaultCategories))
 			{
 				$errors['category'] = 'Invalid category';
 			}
-			
-			return $errors;
 		}
 		
 		function add($document)

@@ -148,9 +148,8 @@
 			);
 		}
 
-		function validate($entity)
+		protected function doValidate($entity, booking_errorstack $errors)
 		{
-			$errors = parent::validate($entity);
 			// Make sure the template allocation doesn't overlap with any
 			// other existing template allocation
 			if($entity['to_'] <= $entity['from_']) {
@@ -179,7 +178,6 @@
 				$errors['overlaps'] = lang("This allocation overlaps another allocation");
 			}
 			// FIXME: Make sure the allocation is inside all season/day boundaries
-			return $errors;
 		}
 
 	}

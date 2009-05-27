@@ -412,10 +412,16 @@
 			
 			return false;
 		}
+		
+		public function create_error_stack($errors = array())
+		{
+			return CreateObject('booking.errorstack', $errors);
+		}
 
 		function validate($entity)
 		{
-			$errors = array();
+			$errors = $this->create_error_stack();
+			
 			foreach($this->fields as $field => $params)
 			{
 				$v = trim($entity[$field]);
@@ -431,7 +437,17 @@
 					}
 				}
 			}
-			return $errors;
+			
+			$this->doValidate($entity, $errors);
+			
+			return $errors->getArrayCopy();
+		}
+		
+		/**
+		 * Implement in subclasses to perform custom validation.
+		 */
+		protected function doValidate($entity, booking_errorstack $errors)
+		{
 		}
 
 		function delete($id)

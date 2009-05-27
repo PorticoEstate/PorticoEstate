@@ -63,9 +63,23 @@
 			return $this->so->read($entity);
 		}
 		
+		public function create_error_stack($errors = array())
+		{
+			return $this->so->create_error_stack($errors);
+		}
+		
 		function validate($entity)
 		{
-			return $this->so->validate($entity);
+			$error_stack = $this->create_error_stack($this->so->validate($entity));
+			$this->doValidate($entity, $error_stack);
+			return $error_stack->getArrayCopy();
+		}
+		
+		/**
+		 * Implement in subclasses to perform custom validation.
+		 */
+		protected function doValidate($entity, booking_errorstack $error_stack)
+		{
 		}
 
 		function update($entity)

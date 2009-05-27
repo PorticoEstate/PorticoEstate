@@ -47,10 +47,10 @@
 			);
 		}
 
-		function validate($entity)
+		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			$allocation_id = $entity['id'] ? $entity['id'] : -1;
-			$errors = parent::validate($entity);
+
 			// FIXME: Validate: Season contains all resources
 			// FIXME: Validate: Season from <= date, season to >= date
 			// Make sure to_ > from_
@@ -88,6 +88,5 @@
 					$errors['booking'] = lang('Overlaps with existing booking');
 				}
 			}
-			return $errors;
 		}
 	}

@@ -100,12 +100,15 @@
 			$this->flash_msgs[$msg] = $type == 'success';
 		}
 
+		public function create_error_stack($errors = array())
+		{
+			return CreateObject('booking.errorstack', $errors);
+		}
+
 		public function flash_form_errors($errors)
 		{
-			foreach($errors as $field => $msg)
-			{
-				$this->flash_msgs[$msg] = false;
-			}
+			$error_stack = $this->create_error_stack($errors);
+			$this->flash_msgs = $error_stack->to_flash_error_msgs();
 		}
 
 		public function add_stylesheet($path)
