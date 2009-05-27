@@ -71,6 +71,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
         }});
     });
     
+    YAHOO.util.Event.addListener('ctrl_toggle_active_rental_composites', "change", function(e){
+        YAHOO.util.Event.stopEvent(e);
+        var qs = YAHOO.rental.serializeForm('queryForm');
+        myDataSource.liveData = baseUrl + qs + '&';
+        myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+            myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
+        }});
+    });
+    
     // Highlight rows on mouseover
     myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
