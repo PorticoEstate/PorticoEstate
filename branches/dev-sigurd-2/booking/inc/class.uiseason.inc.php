@@ -195,9 +195,14 @@
 			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));
 			$season['add_permission_link'] = booking_uipermission::generate_inline_link('season', $season['id'], 'add');
 			$resource_ids = '';
-			foreach($season['resources'] as $res)
-			{
-				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
+			
+			if (count($season['resources']) == 0) {
+				$resource_ids = 'filter_id=-1'; //No resources to display, so set filter that returns nothing
+			} else {
+				foreach($season['resources'] as $res)
+				{
+					$resource_ids = $resource_ids . '&filter_id[]=' . $res;
+				}
 			}
 			$season['resource_ids'] = $resource_ids;
 			self::render_template('season', array('season' => $season, 'lang' => $lang));

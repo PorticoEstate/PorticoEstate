@@ -1,4 +1,6 @@
 <?php
+	require_once(dirname(__FILE__).'/vendor/symfony/validator/bootstrap.php');
+
 	abstract class booking_socommon
 	{
 		protected
@@ -21,10 +23,7 @@
 				
 				foreach($this->fields as $field => $params)
 				{
-					if($params['join'] || $params['manytomany'])
-					{
-						continue;
-					}
+					if($params['join']) { continue; }
 					$this->cols[] = $field;
 				}
 			}
@@ -104,16 +103,30 @@
 					{
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];
+						
 						if(is_array($params['manytomany']['column']))
-						{
-							$column = join(',', $params['manytomany']['column']);
+						{	
+							$column = array();
+							foreach($params['manytomany']['column'] as $fieldOrInt => $paramsOrFieldName) {
+								$column[] = is_array($paramsOrFieldName) ? $fieldOrInt : $paramsOrFieldName;
+							}
+							$column = join(',', $column);
+							
 							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
 							while ($this->db->next_record())
 							{
 								$data = array();
-								foreach($params['manytomany']['column'] as $col)
+								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
+									if (is_array($paramsOrCol)) {
+										$col = $intOrCol;
+										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+									} else {
+										$col = $paramsOrCol;
+										$type = $params['type'];
+									}
+									
 									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
 								}
 								$row[$field][] = $data;
@@ -248,16 +261,29 @@
     					$ids = join(',', array_keys($id_map));
 						if(is_array($params['manytomany']['column']))
 						{
-							$colnames = join(',', $params['manytomany']['column']);
+							$colnames = array();
+							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+								$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
+							}
+							$colnames = join(',', $colnames);
+							
 	    					$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
 	    					$row[$field] = array();
 	    					while ($this->db->next_record())
 	    					{
 	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
 								$data = array();
-								foreach($params['manytomany']['column'] as $col)
-								{
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+								{	
+									if (is_array($paramsOrCol)) {
+										$col = $intOrCol;
+										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+									} else {
+										$col = $paramsOrCol;
+										$type = $params['type'];
+									}
+										
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type);
 								}
 								$row[$field][] = $data;
 	    						$results[$id_map[$id]][$field][] = $data;
@@ -304,6 +330,7 @@
 				{
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
+					
 					if(is_array($params['manytomany']['column']))
 					{
 						$colnames = join(',', $params['manytomany']['column']);
@@ -356,15 +383,29 @@
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
 					$this->db->query("DELETE FROM $table WHERE $key=$id", __LINE__, __FILE__);
+					
 					if(is_array($params['manytomany']['column']))
 					{
-						$colnames = join(',', $params['manytomany']['column']);
+						$colnames = array();
+						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+							$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
+						}
+						$colnames = join(',', $colnames);
+						
 						foreach($entry[$field] as $v)
 						{
 							$data = array();
-							foreach($params['manytomany']['column'] as $col)
+							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 							{
-								$data[] = $this->_marshal($v[$col], $params['type']);
+								if (is_array($paramsOrCol)) {
+									$col = $intOrCol;
+									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+								} else {
+									$col = $paramsOrCol;
+									$type = $params['type'];
+								}
+								
+								$data[] = $this->_marshal($v[$col], $type);
 							}
 							$v = join(',', $data);
 							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
@@ -417,29 +458,63 @@
 		{
 			return CreateObject('booking.errorstack', $errors);
 		}
-
-		function validate($entity)
-		{
-			$errors = $this->create_error_stack();
-			
-			foreach($this->fields as $field => $params)
+		
+		private function _validate($entity, array $fields, booking_errorstack $errors, $field_prefix = '')
+		{	
+			foreach($fields as $field => $params)
 			{
+				if (!is_array($params)) { continue; }
+				
 				$v = trim($entity[$field]);
+				$empty = false;
+				
+				if(isset($params['manytomany']) && isset($params['manytomany']['column']) && isset($entity[$field]))
+				{
+					$sub_entity_count = 0; 
+					foreach($entity[$field] as $sub_entity)
+					{
+						$this->_validate(
+							(array)$sub_entity, 
+							(array)$params['manytomany']['column'], 
+							$errors, 
+							sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", $sub_entity_count++)
+						);
+					}
+					continue;
+				}
+				
+				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
+				
 				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
-					$errors[$field] = "Field $field is required";
+					$errors[$error_key] = "Field $error_key is required";
+					$empty = true;
 				}
 				if($params['type'] == 'date' && !empty($entity[$field]))
 				{
 					$date = date_parse($entity[$field]);
 					if(!$date || count($date['errors']) > 0) {
-						$errors[$field] = "Field {$field}: Invalid format";
+						$errors[$error_key] = "Field {$error_key}: Invalid format";
+					}
+				}
+				
+				if (!$empty && $params['sf_validator'])
+				{
+					try {
+						$params['sf_validator']->setOption('required', false);
+						$params['sf_validator']->clean($entity[$field]);
+					} catch (sfValidatorError $e) {
+						$errors[$error_key] = lang(strtr($e->getMessage(), array('%field%' => $error_key)));
 					}
 				}
 			}
-			
+		}
+
+		function validate($entity)
+		{
+			$errors = $this->create_error_stack();
+			$this->_validate($entity, $this->fields, $errors);
 			$this->doValidate($entity, $errors);
-			
 			return $errors->getArrayCopy();
 		}
 		

@@ -22,15 +22,7 @@ class booking_errorstack extends ArrayObject
 		if (!isset($this[$index])) {
 			parent::offsetSet($index, array($newval));
 		} else {
-			$data = $this[$index][] = $newval;
+			parent::offsetSet($index, ($this[$index][] = $data));
 		}
 	}
 }
-
-// $es = new booking_boerrorstack();
-// $es['field'] = 'f once';
-// $es['field'] = 'f twice';
-// 
-// $es['other'] = 'o once';
-// 
-// var_export($es->to_flash_error_msgs());

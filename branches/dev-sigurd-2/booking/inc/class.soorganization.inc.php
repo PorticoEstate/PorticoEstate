@@ -4,30 +4,29 @@
 	phpgw::import_class('booking.sogroup');
 	
 	class booking_soorganization extends booking_socommon
-	{
+	{	
 		function __construct()
 		{
-
 			parent::__construct('bb_organization', 
 				array(
 					'id'			=> array('type' => 'int'),
 					'name'			=> array('type' => 'string', 'required' => True, 'query' => True),
 					'homepage'		=> array('type' => 'string', 'required' => False, 'query' => True),
 					'phone'			=> array('type' => 'string'),
-					'email'			=> array('type' => 'string'),
+					'email'			=> array('type' => 'string', 'sf_validator' => new sfValidatorEmail(array(), array('invalid' => '%field% is invalid'))),
 					'description'	=> array('type' => 'string'),
 					'street' 		=> array('type' => 'string'),
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string'),
 					'city' 			=> array('type' => 'string'),
                     'active'		=> array('type' => 'int', 'required'=>true),
-					'contacts'		  => array('type' => 'string',
+					'contacts'		=> array('type' => 'string',
 						'manytomany' => array(
 							'table' => 'bb_organization_contact',
 							'key' => 'organization_id',
 							'column' => array('name',
-							                  'ssn', 
-							                  'email',
+							                  'ssn' => array('sf_validator' => new sfValidatorNorwegianSSN()), 
+							                  'email' => array('sf_validator' => new sfValidatorEmail(array(), array('invalid' => '%field% contains an invalid email'))),
 							                  'phone')
 						)
 					),

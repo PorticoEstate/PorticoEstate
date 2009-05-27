@@ -26,6 +26,7 @@ require_once($basedir.'/sfValidatorPass.class.php');
 require_once($basedir.'/sfValidatorRegex.class.php');
 require_once($basedir.'/sfValidatorEmail.class.php');
 require_once($basedir.'/sfValidatorUrl.class.php');
+require_once($basedir.'/sfValidatorNorwegianSSN.class.php');
 
 require_once($basedir.'/sfValidatorDate.class.php');
 require_once($basedir.'/sfValidatorDateRange.class.php');
