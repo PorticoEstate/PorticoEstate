@@ -1,13 +1,23 @@
 Address	rental	no	Adresse
-GAB	rental	no GAB
+Active	rental	no Aktiv
+Area	rental	no	Areal
+Both	rental	no	Begge
+Contracts	rental	no	Kontrakter
+Documents	rental	no	Dokumenter
+Eleements	rental	no	Elementer
+GAB	rental	no	GAB
 Filters	rental	no	Filtre
 Functions	rental	no	Funksjoner
+Inactive	rental	no	Inaktiv
+Is active	rental	no	Er utleibar
 Name	rental	no	Navn
+New rental composite	rental	no	Nytt leieobjekt
 Number	rental	no	Nummer
 Property id	rental	no	Gårds-/bruksnummer
 Property name	rental	no	Eiendomsnavn
 rental	rental	no	utleie
 Rental	rental	no	Utleie
-Rental composites	rental	no Leieobjekter
+Rental composites	rental	no	Leieobjekter
 Search options	rental	no	Søkevalg
 Select columns	rental	no	Velg kolonner
+Showing	rental	no	Viser
