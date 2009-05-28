@@ -30,7 +30,7 @@
         	<div class="toolbarelement">
 	        	<xsl:if test="control = 'input'">
 	        		<td class="toolbarcol">
-					<label>
+					<label class="toolbar_element_label">
 				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
 				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 				    </label>
@@ -47,7 +47,7 @@
 				</xsl:if>
 				<xsl:if test="control = 'select'">
 					<td class="toolbarcol">
-					<label>
+					<label class="toolbar_element_label">
 				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
 				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 				    </label>
