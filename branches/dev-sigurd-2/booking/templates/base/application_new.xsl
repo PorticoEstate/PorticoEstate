@@ -24,7 +24,7 @@
 			</dd>
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
-				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
+				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
 			</dd>
 		</dl>
 		<div class="clr"/>
@@ -125,8 +125,8 @@
 			</dd>
 			<dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>
 			<dd>
-				<input id="field_contact_email" name="contact_email" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
+				<input id="field_contact_email" name="contact_mail" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="application/contact_mail"/></xsl:attribute>
 				</input>
 			</dd>
 			<dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>

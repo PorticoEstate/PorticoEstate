@@ -50,6 +50,12 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibooking.index') ),
 						                    'image'	=> array('property', 'location'),
 						),
+						'events' => array
+						(
+							'text'	=> lang('Events'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uievent.index') ),
+						                    'image'	=> array('property', 'location'),
+						),
 					)
 				),
 				'buildings' => array

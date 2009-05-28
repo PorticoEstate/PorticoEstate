@@ -10,6 +10,7 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
+			'status_check'	=>	true,
 		);
 
 		public function __construct()
@@ -193,7 +194,12 @@
 			$audience = $audience['results'];
 			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
-		
+
+		public function status_check()
+		{
+			return array();
+		}
+
 		public function show()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));

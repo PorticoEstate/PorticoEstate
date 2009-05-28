@@ -16,7 +16,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boallocation');
-			self::set_active_menu('booking::allocations');
+			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 

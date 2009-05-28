@@ -129,6 +129,7 @@
 			</xsl:if>
 			<dd><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 		</dl>
+		<div id="foo-container"/>
     </div>
 
 <script type="text/javascript">
@@ -139,6 +140,21 @@ YAHOO.util.Event.addListener(window, "load", function() {
 ]]>
     var colDefs = [{key: 'name', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: YAHOO.booking.formatLink}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
+
+	var onMenuItemClick = function (p_sType, p_aArgs, p_oItem) {
+		var sText = p_oItem.cfg.getProperty("text");
+		alert("[MenuItem Properties] text: " + sText + ", value: " + p_oItem.value);
+   		oMenuButton5.set("label", sText);			
+	};
+	var aMenuButton5Menu = [
+		{ text: "One", value: 1, onclick: { fn: onMenuItemClick } },
+		{ text: "Two", value: 2, onclick: { fn: onMenuItemClick } },
+		{ text: "Three", value: 3, onclick: { fn: onMenuItemClick } }
+	];
+	//	Instantiate a Menu Button using the array of YAHOO.widget.MenuItem 
+	//	configuration properties as the value for the "menu"  
+	//	configuration attribute.
+	var oMenuButton5 = new YAHOO.widget.Button({ type: "menu", label: "One", name: "mymenubutton", menu: aMenuButton5Menu, container: 'foo-container' });
 });
 </script>
 

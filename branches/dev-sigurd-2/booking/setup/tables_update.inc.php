@@ -1239,3 +1239,51 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.48';
+	function booking_upgrade0_1_48()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'active' => array('type' => 'int','precision' => '4','nullable' => False, 'default'=>'1'),
+					'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'description' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'from_' => array('type' => 'timestamp', 'nullable' => false),
+					'to_' => array('type' => 'timestamp', 'nullable' => false),
+					'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+					'contact_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'contact_email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'contact_phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_activity' => array('activity_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_resource', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				),
+				'pk' => array('event_id', 'resource_id'),
+				'fk' => array(
+					'bb_event' => array('event_id' => 'id'),
+					'bb_resource' => array('resource_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.49';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

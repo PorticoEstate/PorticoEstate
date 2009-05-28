@@ -476,5 +476,38 @@
 			'ix' => array(),
 			'uc' => array(),
 		),
+		'bb_event' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int','precision' => '4','nullable' => False, 'default'=>'1'),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'description' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'from_' => array('type' => 'timestamp', 'nullable' => false),
+				'to_' => array('type' => 'timestamp', 'nullable' => false),
+				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+				'contact_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'contact_email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'contact_phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_activity' => array('activity_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_event_resource' => array(
+			'fd' => array(
+				'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+			),
+			'pk' => array('event_id', 'resource_id'),
+			'fk' => array(
+				'bb_event' => array('event_id' => 'id'),
+				'bb_resource' => array('resource_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		)
 	);
 ?>

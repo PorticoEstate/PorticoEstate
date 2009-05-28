@@ -20,7 +20,7 @@
 			$this->bo = CreateObject('booking.bobooking');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
-			self::set_active_menu('booking::bookings');
+			self::set_active_menu('booking::applications::bookings');
 			$this->fields = array('name', 'resources',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
