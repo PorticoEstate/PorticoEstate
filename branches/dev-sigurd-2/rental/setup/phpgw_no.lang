@@ -1,26 +1,27 @@
-Address	rental	no	Adresse
-Active	rental	no Aktiv
-Area	rental	no	Areal
-Both	rental	no	Begge
-Contracts	rental	no	Kontrakter
-Documents	rental	no	Dokumenter
-Elements	rental	no	Elementer
-GAB	rental	no	GAB
-Filters	rental	no	Filtre
-Functions	rental	no	Funksjoner
-Inactive	rental	no	Inaktiv
-Is active	rental	no	Er utleibar
-Name	rental	no	Navn
-New rental composite	rental	no	Nytt leieobjekt
-Not active	rental	no	Inaktiv
-Number	rental	no	Nummer
-Place	rental	no	Poststed
-Post code	rental	no	Postnummer
-Property id	rental	no	Gårds-/bruksnummer
-Property name	rental	no	Eiendomsnavn
-rental	rental	no	utleie
-Rental	rental	no	Utleie
-Rental composites	rental	no	Leieobjekter
-Search options	rental	no	Søkevalg
-Select columns	rental	no	Velg kolonner
-Showing	rental	no	Viser
+rental_rc_all	rental	no	Alle
+rental_rc_serial	rental	no	Løpenummer
+rental_rc_name	rental	no	Navn
+rental_rc_address	rental	no	Adresse
+rental_rc_gab	rental	no	GAB
+rental_rc_land_title	rental	no	Gnr/Bnr
+rental_rc_search_options	rental	no	Søkevalg
+rental_rc_search	rental	no	Søk
+rental_rc_property_id	rental	no	BKB Identifikator
+rental_rc_available	rental	no	Tilgjengelig
+rental_rc_not_available	rental	no	Ikke tilgjengelig
+rental_rc_availibility	rental	no	Tilgjengelighet
+rental_rc_search_for	rental	no	Søk etter
+rental_rc_search_where	rental	no	i
+rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
+rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
+rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
+rental_rc_toolbar_functions	rental	no	Funksjoner
+rental_rc_toolbar_filters	rental	no	Filtre
+rental_rc_description	rental	no	Beskrivelse
+rental_rc_available?	rental	no	Kan leies ut?
+rental_rc_area	rental	no	Brutto areal
+rental_rc_rental_composite	rental	no	Leieobjekt
+rental_rc_details	rental	no	Detajer
+rental_rc_elements	rental	no	Elementer
+rental_rc_contracts	rental	no	Kontrakter
+rental_rc_documents	rental	no	Dokumenter
