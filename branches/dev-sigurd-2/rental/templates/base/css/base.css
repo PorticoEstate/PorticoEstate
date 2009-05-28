@@ -135,8 +135,13 @@ td.toolbarlabel {
 td.toolbarcol {
 	padding-left: 1em;
 	}
+	
+label.toolbar_element_label {
+	padding-left: .25em;
+	padding-right: .50em;
+	vertical-align: middle;
+	}
 #toolbar input[type="text"] {
-    vertical-align: text-bottom;
     font-size: 120%;
     margin: auto .25em;
 }
