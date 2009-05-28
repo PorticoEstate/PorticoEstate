@@ -59,60 +59,61 @@
 				'form' => array(
 					'toolbar1' => array(
 						'toolbar' => true,
-						'label' => lang('Functions'),
+						'label' => lang('rental_rc_toolbar_functions'),
 						'control1' => array(
 					 			'control' => 'input',
 					 			'id' => 'ctrl_add_rental_composite',
 								'type' => 'button',
 					 			'name' => 'name',
-								'value' => lang('New rental composite'),
+								'value' => lang('rental_rc_toolbar_functions_new_rc'),
 								'href' => self::link(array('menuaction' => 'rental.uirentalcomposites.add'))
 						),
 						'control5' => array(
 				 			'control' => 'input',
 							'id' => 'dt-options-link',
 							'type' => 'button',
-							'value' => lang('Select columns'),
+							'value' => lang('rental_rc_toolbar_functions_select_columns'),
 							'href' => '#'
 						)
 					),
 					'toolbar2' => array(
 						'toolbar' => true,
-						'label' => lang('Search options'),
+						'label' => lang('rental_rc_search_options'),
 						'control2' => array(
 								'control' => 'input',
 								'id' => 'ctrl_search_query',
 								'type' => 'text', 
-								'name' => 'query'
+								'name' => 'query',
+								'text' => lang('rental_rc_search_for')
 							),
 						'control3' => array(
 								'control' => 'select',
 								'id' => 'ctrl_search_option',
 								'name' => 'search_option',
-								'keys' => array('all','id','name','address','gab'),
-								'values' => array(lang('All'),lang('Id'),lang('Name'),lang('Address'),lang('GAB')),
+								'keys' => array('all','id','name','address','gab','ident','property_id'),
+								'values' => array(lang('rental_rc_all'),lang('rental_rc_serial'),lang('rental_rc_name'),lang('rental_rc_address'),lang('rental_rc_gab'),lang('rental_rc_land_title'),lang('rental_rc_property_id')),
 								'default' => 'all',
-								'text' => '',
+								'text' => lang('rental_rc_search_where')
 							),
 						'control4' => array(
 								'control' => 'input',
 								'id' => 'ctrl_search_button',
 								'type' => 'submit',
 								'name' => 'search',
-								'value' => lang('Search')
+								'value' => lang('rental_rc_search')
 							)
 					),
 					'toolbar3' => array(
 						'toolbar' => true,
-						'label' => lang('Filters'),
+						'label' => lang('rental_rc_toolbar_filters'),
 						'control1' => array(
 					 			'control' => 'select',
 					 			'id' => 'ctrl_toggle_active_rental_composites',
 								'name' => 'is_active',
 								'keys' => array('active','non_active','both'),
-								'values' => array(lang('Active'),lang('Not active'),lang('Both')),
+								'values' => array(lang('rental_rc_available'),lang('rental_rc_not_available'),lang('rental_rc_all')),
 								'default' => 'both',
-								'text' => ''
+								'text' => lang('rental_rc_availibility')
 						)
 						)
 					),
@@ -122,7 +123,7 @@
 					'field' => array(
 						array(
 							'key' => 'composite_id',
-							'label' => lang('Number'),
+							'label' => lang('rental_rc_serial'),
 							'sortable' => true,
 							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('composite_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 						),
@@ -133,19 +134,19 @@
 						),
 						array(
 							'key' => 'name',
-							'label' => lang('Name'),
+							'label' => lang('rental_rc_name'),
 							'sortable' => true,
 							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 						),
 						array(
 							'key' => 'adresse1',
-							'label' => lang('Address'),
+							'label' => lang('rental_rc_address'),
 							'sortable' => false,
 							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('adresse1', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 						),
 						array(
 							'key' => 'gab_id',
-							'label' => lang('Property id'), // 'Gårds-/bruksnummer'
+							'label' => lang('rental_rc_propertyident'), // 'Gårds-/bruksnummer'
 							'sortable' => true,
 							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('gab_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 						)
@@ -172,7 +173,7 @@
 				
 				$tabs = array();
 				
-				foreach(array('details', 'elements', 'contracts', 'document') as $tab) {
+				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts', 'rental_rc_documents') as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
@@ -203,7 +204,7 @@
 				
 				$tabs = array();
 				
-				foreach(array('details', 'elements', 'contracts', 'document') as $tab) {
+				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts', 'rental_rc_documents') as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
