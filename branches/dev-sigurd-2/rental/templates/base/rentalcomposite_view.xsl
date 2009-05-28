@@ -1,7 +1,7 @@
 <xsl:preserve-space elements="data"/>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <h3><xsl:value-of select="php:function('lang', 'Showing')" />: <xsl:value-of select="data/name"/></h3>
+    <h3><xsl:value-of select="php:function('lang', 'rental_rc_rental_composite')" />: <xsl:value-of select="data/name"/></h3>
 
 		<div id="composite_edit_tabview" class="yui-navset">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -9,9 +9,9 @@
 				
 				<div id="details">
 					<dl class="proplist-col">
-						<dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_name')" /></dt>
 						<dd><xsl:value-of select="data/name"/></dd>
-						<dt><xsl:value-of select="php:function('lang', 'Address')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_address')" /></dt>
 						<dd>
 							<xsl:choose>
 									<xsl:when test="data/has_custom_address = '1'">
@@ -36,13 +36,13 @@
 						</dd>
 					</dl>
 					<dl class="proplist-col">
-						<dt><xsl:value-of select="php:function('lang', 'Number')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_serial')" /></dt>
 						<dd><xsl:value-of select="data/composite_id"/></dd>
-						<dt><xsl:value-of select="php:function('lang', 'Area')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area')" /></dt>
 						<dd><xsl:value-of select="data/area"/> m<sup>2</sup></dd>
-						<dt><xsl:value-of select="php:function('lang', 'Property id')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_propertyident')" /></dt>
 						<dd><xsl:value-of select="data/gab_id"/></dd>
-						<dt><xsl:value-of select="php:function('lang', 'Is active')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_available?')" /></dt>
 						<dd>
 							<xsl:choose>
 								<xsl:when test="data/is_active = 1"><xsl:value-of select="php:function('lang', 'Yes')" /></xsl:when>
@@ -52,7 +52,7 @@
 					</dl>
 					
 					<dl class="rental-description">
-						<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_description')" /></dt>
 						<dd><xsl:value-of select="data/description"/></dd>
 					</dl>
 				</div>
