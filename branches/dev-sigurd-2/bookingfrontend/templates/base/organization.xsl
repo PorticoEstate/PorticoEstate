@@ -78,8 +78,8 @@
                             </a>
                         </td>
                         <td><xsl:value-of select="description" /></td>
-                        <td><xsl:value-of select="cp/name" /></td>
-                        <td><xsl:value-of select="cs/name" /></td>
+						<td><xsl:if test="contacts[1]"><xsl:value-of select="contacts[1]/name"/></xsl:if></td>
+						<td><xsl:if test="contacts[2]"><xsl:value-of select="contacts[2]/name"/></xsl:if></td>
                     </tr>
                 </xsl:for-each>
             </tbody>

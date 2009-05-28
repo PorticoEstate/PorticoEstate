@@ -69,14 +69,9 @@
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
-				'admin_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
-				'admin_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 			),
 			'pk' => array('id'),
-			'fk' => array(
-				'bb_contact_person' => array('admin_primary' => 'id',),
-				'bb_contact_person' => array('admin_secondary' => 'id',),
-			),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -103,14 +98,10 @@
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'contact_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => False,),
-				'contact_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
-				'bb_contact_person' => array('contact_primary' => 'id',),
-				'bb_contact_person' => array('contact_secondary' => 'id',),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -468,6 +459,21 @@
 				'bb_organization' => array('organization_id' => 'id'),
 			),
 			'ix' => array('ssn'),
+			'uc' => array(),
+		),
+		'bb_group_contact' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_group' => array('group_id' => 'id'),
+			),
+			'ix' => array(),
 			'uc' => array(),
 		),
 	);

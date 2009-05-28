@@ -13,8 +13,6 @@
 					'organization_id'	=> array('type' => 'int', 'required' => true),
 					'description'    => array('type' => 'description', 'query' => true, 'required' => false,),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'contact_primary' => array('type' => 'int', 'precision' => '4', 'nullable' => false, 'required'=>true),
-					'contact_secondary' => array('type' => 'int', 'precision' => '4', 'nullable' => True,),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -22,18 +20,42 @@
 							'fkey' => 'organization_id',
 							'key' => 'id',
 							'column' => 'name'
-						))
+						)),
+					'contacts'		=> array('type' => 'string',
+						'manytomany' => array(
+							'table' => 'bb_group_contact',
+							'key' => 'group_id',
+							'column' => array('name',
+							                  'email' => array('sf_validator' => new sfValidatorEmail(array(), array('invalid' => '%field% contains an invalid email'))),
+							                  'phone')
+						)
+					),
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
-        function get_contact_info($person_id)
-        {
-            static $person = null;
-            if ($person === null) {
-                $person = new booking_socontactperson();
-            }
-            return $person->read_single($person_id);
-        }
+
+		/**
+		 * Removes any extra contacts from entity if such exists (only two contacts allowed per group).
+		 */
+		protected function trim_contacts(&$entity)
+		{
+			if (isset($entity['contacts']) && is_array($entity['contacts']) && count($entity['contacts']) > 2)
+			{	
+				$entity['contacts'] = array($entity['contacts'][0], $entity['contacts'][1]);
+			}
+			
+			return $entity;
+		}
+
+		function add($entity)
+		{
+			return parent::add($this->trim_contacts($entity));
+		}
+		
+		function update($entity)
+		{
+			return parent::update($this->trim_contacts($entity));
+		}
 	}
 

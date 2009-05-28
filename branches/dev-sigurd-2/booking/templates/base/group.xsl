@@ -29,17 +29,20 @@
             <dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
 
-            <dt><xsl:value-of select="php:function('lang', 'Contacts')" /></dt>
-            <dd>
-                <ul>
-                    <li><xsl:value-of select="group/contact_primary/name" /></li>
-                    <li>
-                        <xsl:if test="group/contact_secondary/name">
-                            <xsl:value-of select="group/contact_secondary/name" />
-                        </xsl:if>
-                    </li>
-                </ul>
-            </dd>
+			<xsl:if test="count(group/contacts/*) &gt; 0">
+            	<dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
+	            <dd>
+	                <ul>
+						<xsl:if test="group/contacts[1]">
+							<li><xsl:value-of select="group/contacts[1]/name"/></li>
+						</xsl:if>
+					
+	                    <xsl:if test="group/contacts[2]">
+	                    	<li><xsl:value-of select="group/contacts[2]/name"/></li>
+						</xsl:if>
+	                </ul>
+	            </dd>
+			</xsl:if>
 
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
             <dd><xsl:value-of select="group/description" disable-output-escaping="yes"/></dd>

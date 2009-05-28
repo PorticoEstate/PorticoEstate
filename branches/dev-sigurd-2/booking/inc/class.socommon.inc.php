@@ -333,13 +333,26 @@
 					
 					if(is_array($params['manytomany']['column']))
 					{
-						$colnames = join(',', $params['manytomany']['column']);
+						$colnames = array();
+						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
+							$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
+						}
+						$colnames = join(',', $colnames);
+						
 						foreach($entry[$field] as $v)
 						{
 							$data = array();
-							foreach($params['manytomany']['column'] as $col)
+							foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 							{
-								$data[] = $this->_marshal($v[$col], $params['type']);
+								if (is_array($paramsOrCol)) {
+									$col = $intOrCol;
+									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+								} else {
+									$col = $paramsOrCol;
+									$type = $params['type'];
+								}
+								
+								$data[] = $this->_marshal($v[$col], $type);
 							}
 							$v = join(',', $data);
 							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);

@@ -32,7 +32,7 @@
             <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
 
 			<xsl:if test="count(organization/contacts/*) &gt; 0">
-            <dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
+            	<dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
 	            <dd>
 	                <ul>
 						<xsl:if test="organization/contacts[1]">

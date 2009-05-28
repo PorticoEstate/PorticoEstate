@@ -93,11 +93,10 @@
 			$groups = $this->bo->read();
 			array_walk($groups["results"], array($this, "_add_links"), "booking.uigroup.show");
 			foreach($groups["results"] as &$group) {
-				$person = $this->bo->get_contact_info($group["contact_primary"]);
 				$group += array(
-							"primary_contact_name"  => $person["name"],
-							"primary_contact_phone" => $person["phone"],
-							"primary_contact_email" => $person["email"],
+							"primary_contact_name"  => (@$person['contacts'][0]["name"])  ? $person['contacts'][0]["name"] : '',
+							"primary_contact_phone" => (@$person['contacts'][0]["phone"]) ? $person['contacts'][0]["phone"] : '',
+							"primary_contact_email" => (@$person['contacts'][0]["email"]) ? $person['contacts'][0]["email"] : '',
 				);
 			}
 			return $this->yui_results($groups);
@@ -112,8 +111,6 @@
 				$group['id'] = $id;
 				$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 				$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
-				$group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
-				$group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
 			} else {
 				$group = array();
 			}
@@ -121,19 +118,12 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contact_primary', 'contact_secondary', 'active')));
+				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contacts', 'active')));
 				if (!isset($group["active"]))
 				{
 					$group['active'] = '1';
 				}
-				if (empty($group["contact_primary"]) || empty($_POST["contact_primary_name"]))
-				{
-					unset($group["contact_primary"]);
-				}
-				if (empty($group["contact_secondary"]) || empty($_POST["contact_secondary_name"]))
-				{
-					unset($group["contact_secondary"]);
-				}
+				
 				$errors = $this->bo->validate($group);
 				if(!$errors)
 				{
@@ -147,8 +137,9 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-
-			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
+			
+			$group['cancel_link'] = $id ? self::link(array('menuaction' => $this->module . '.uigroup.show', 'id'=> $id)) :
+										  self::link(array('menuaction' => $this->module . '.uigroup.index'));
 
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
@@ -156,10 +147,7 @@
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 
-
-			self::add_template_file("contactperson_fields");
-			self::add_template_file("contactperson_magic");
-			self::render_template('group_edit', array('group' => $group, 'module' => $this->module, 'contact_form_link' => $contact_form_link));
+			self::render_template('group_edit', array('group' => $group, 'module' => $this->module));
 		}
 		
 		public function show()
@@ -168,9 +156,7 @@
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
 			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit', 'id' => $group['id']));
-            $group['contact_primary'] = $this->bo->get_contact_info($group['contact_primary']);
-            $group['contact_secondary'] = $this->bo->get_contact_info($group['contact_secondary']);
-
+			
 			$data = array(
 				'group'	=>	$group
 			);

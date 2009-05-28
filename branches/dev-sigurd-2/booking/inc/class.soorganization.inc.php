@@ -34,21 +34,6 @@
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
-		
-		function get_contact_info($person_id)
-        {
-            static $person = null;
-            static $cache = array();
-
-            if ($person === null) {
-                $person = new booking_socontactperson();
-            }
-            if (!isset($cache[$person_id])) {
-                $cache[$person_id] = $person->read_single($person_id);
-            }
-
-            return $cache[$person_id];
-        }
 
         function get_groups($organization_id)
         {
@@ -57,10 +42,6 @@
                 $groups = new booking_sogroup();
             }
             $results = $groups->read(array("filters" => array("organization_id" => $organization_id)));
-            foreach($results["results"] as &$result) {
-                $result["cp"] = $this->get_contact_info($result["contact_primary"]);
-                $result["cs"] = $this->get_contact_info($result["contact_secondary"]);
-            }
             return $results;
         }
 	}

@@ -1206,3 +1206,36 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.47';
+	function booking_upgrade0_1_47()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_group DROP COLUMN contact_primary");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_group DROP COLUMN contact_secondary");
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_group_contact', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+					'group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_group' => array('group_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.48';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
