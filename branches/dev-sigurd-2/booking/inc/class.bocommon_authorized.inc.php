@@ -485,8 +485,13 @@
 			
 			$persisted_object = parent::read_single($object_id);			
 			$allowed_fields = $this->authorize('write', $persisted_object);	
-				
-			$transient_object = is_array($object) ? $object : $persisted_object;
+			
+			if (is_array($object)) {
+				$transient_object = $object;
+				$this->authorize('write', $transient_object);	
+			} else {
+				$transient_object = $persisted_object;
+			}
 				
 			//$allowed_fields is an array that contains the names of the 
 			//fields that the role gave us permission to write to.
