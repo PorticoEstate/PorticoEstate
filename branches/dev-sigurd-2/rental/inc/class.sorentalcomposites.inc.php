@@ -46,17 +46,24 @@ class rental_sorentalcomposites extends rental_socommon
 						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
 						break;
 					case "gab":
+						$like_pattern = str_replace('/','',$like_pattern);
 						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
 						break;
+					case "ident":
+						$like_pattern = str_replace('/','',$like_pattern);
+						$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
+						break;
+					case "property_id":
+						$like_clauses[] = "fm_locations.location_code = $like_pattern";
 					case "all":
 						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
 						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
 						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
 						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+						$like_pattern = str_replace('/','',$like_pattern);
+						$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
 						break;
 				}
-				
-				
 				
 				
 				if(count($like_clauses))
@@ -115,7 +122,7 @@ class rental_sorentalcomposites extends rental_socommon
 		$condition = $this->_get_conditions($query, $filters,$search_option);
 		
 		$tables = "rental_composite";
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
+		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		$distinct = 'distinct on(rental_composite.composite_id)';
 		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
 		
@@ -153,7 +160,7 @@ class rental_sorentalcomposites extends rental_socommon
 			{
 				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
 			}
-			$row['gab_id'] = substr($row['gab_id'],4,5).' / '.substr($row['gab_id'],9,4);
+			$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
 			$results[] = $row;
 		}
 		return array(
@@ -169,7 +176,7 @@ class rental_sorentalcomposites extends rental_socommon
 	{
 		$distinct = 'distinct on(rental_composite.composite_id)';
 		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.description, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.is_active, rental_composite.postcode, rental_composite.place, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1)';
+		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		
 		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.composite_id=$id", __LINE__, __FILE__);
 		
@@ -190,7 +197,7 @@ class rental_sorentalcomposites extends rental_socommon
 				$row['poststed'] = $row['place'];
 			}
 			*/
-			$row['gab_id'] = substr($row['gab_id'],4,5).' / '.substr($row['gab_id'],9,4);
+			$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
 		}
 		
 		$row['units'] = array();
