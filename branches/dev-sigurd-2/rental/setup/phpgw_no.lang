@@ -25,3 +25,8 @@ rental_rc_details	rental	no	Detajer
 rental_rc_elements	rental	no	Elementer
 rental_rc_contracts	rental	no	Kontrakter
 rental_rc_documents	rental	no	Dokumenter
+rental_rc_house_number	rental	no	Husnummer
+rental_rc_post_code	rental	no	Postnummer
+rental_rc_post_place	rental	no	Sted
+rental_rc_save	rental	no	Lagre
+rental_rc_cancel	rental	no	Avbryt
