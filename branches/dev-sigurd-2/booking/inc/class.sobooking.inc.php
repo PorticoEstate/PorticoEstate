@@ -77,6 +77,17 @@
 			if($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
+				// Check if we overlap with any existing event
+				$this->db->query("SELECT e.id FROM bb_event e 
+									WHERE e.active = 1 AND 
+									e.id IN (SELECT event_id FROM bb_event_resource WHERE resource_id IN ($rids)) AND
+									((e.from_ >= '$start' AND e.from_ < '$end') OR 
+						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR 
+						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					$errors['event'] = lang('Overlaps with existing event');
+				}
 				// Check if we overlap with any existing allocation
 				$this->db->query("SELECT a.id FROM bb_allocation a 
 									WHERE a.active = 1 AND a.id<>$allocation_id AND 
