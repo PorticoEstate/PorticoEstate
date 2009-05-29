@@ -119,3 +119,18 @@
 			</td>
 		</tr>
 	</xsl:template>
+
+	<xsl:template name="jasper_upload" xmlns:php="http://php.net/xsl">
+		<tr>
+			<td valign="top">
+				<xsl:value-of select="php:function('lang', 'jasper upload')"/>
+			</td>
+			<td>
+				<input type="file" name="jasperfile" size="40">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'upload a jasper definition file')"/>
+					</xsl:attribute>
+				</input>
+			</td>
+		</tr>
+	</xsl:template>

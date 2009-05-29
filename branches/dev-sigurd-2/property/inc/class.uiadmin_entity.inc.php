@@ -1056,7 +1056,7 @@
 				'lang_tracking_statustext'			=> lang('If this entity type is to be tracket in ticket list'),
 				'lang_fileupload'					=> lang('Enable file upload'),
 				'value_fileupload'					=> $values['fileupload'],
-				'lang_fileupload_statustext'		=> lang('If files can be uploaded for this category'),
+				'value_jasperupload'				=> $values['jasperupload'],
 				'lang_loc_link'						=> lang('Link from location'),
 				'value_loc_link'					=> $values['loc_link'],
 				'lang_loc_link_statustext'			=> lang('Enable link from location detail'),
@@ -1065,7 +1065,8 @@
 				'lang_start_project_statustext'		=> lang('Enable start project from this category'),
 				'lang_start_ticket'					=> lang('Start ticket'),
 				'value_start_ticket'				=> $values['start_ticket'],
-				'lang_start_ticket_statustext'		=> lang('Enable start ticket from this category')
+				'lang_start_ticket_statustext'		=> lang('Enable start ticket from this category'),
+				'jasperupload'						=> true
 			);
 
 			$appname = lang('entity');

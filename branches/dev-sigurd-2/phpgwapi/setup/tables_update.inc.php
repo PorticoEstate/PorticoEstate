@@ -2518,3 +2518,29 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.521';
+
+	/**
+	* Allow 50 characters in column-name for custom attributes.
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_521()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute', 'column_name', array
+		(
+			'type'		=> 'varchar',
+			'precision' => '50',
+			'nullable'	=> false
+		));
+
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.522';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

@@ -418,6 +418,30 @@
 		</table>
 		</div>
 
+		<div id="jasper">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			  
+			<xsl:choose>
+				<xsl:when test="files!=''">
+					<tr>
+						<td align="left" valign="top">
+							<xsl:value-of select="//lang_files"/>
+						</td>
+						<td>
+							<div id="datatable-container_1"></div>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+		
+			<xsl:choose>
+				<xsl:when test="cat_list='' and jasperupload = 1">
+					<xsl:call-template name="jasper_upload"/>
+				</xsl:when>
+			</xsl:choose>
+		</table>
+		</div>
+
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td colspan="2" align = "center">

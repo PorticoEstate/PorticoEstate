@@ -345,7 +345,7 @@
 	</xsl:template>
 
 <!-- add / edit  -->
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div align="left">
 		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -593,20 +593,43 @@
 						<td>
 							<xsl:choose>
 									<xsl:when test="value_fileupload = 1">
-										<input type="checkbox" name="values[fileupload]" value="1" checked="checked" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_fileupload_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
+										<input type="checkbox" name="values[fileupload]" value="1" checked="checked">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
 											</xsl:attribute>
 										</input>
 									</xsl:when>
 									<xsl:otherwise>
-										<input type="checkbox" name="values[fileupload]" value="1" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_fileupload_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
+										<input type="checkbox" name="values[fileupload]" value="1">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
+											</xsl:attribute>
+										</input>
+									</xsl:otherwise>
+							</xsl:choose>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="jasperupload != ''">
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'jasper upload')"/>
+						</td>
+						<td>
+							<xsl:choose>
+									<xsl:when test="value_jasperupload = 1">
+										<input type="checkbox" name="values[jasperupload]" value="1" checked="checked">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'allow to upload definition of jasper reports')"/>
+											</xsl:attribute>
+										</input>
+									</xsl:when>
+									<xsl:otherwise>
+										<input type="checkbox" name="values[jasperupload]" value="1">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'allow to upload definition of jasper reports')"/>
 											</xsl:attribute>
 										</input>
 									</xsl:otherwise>
@@ -1177,7 +1200,7 @@
 					<xsl:value-of select="lang_column_name"/>
 				</td>
 				<td>
-					<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="20" onMouseout="window.status='';return true;">
+					<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="50" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_column_name_statustext"/>

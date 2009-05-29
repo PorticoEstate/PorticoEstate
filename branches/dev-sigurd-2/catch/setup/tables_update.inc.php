@@ -223,3 +223,18 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.505';
+	function catch_upgrade0_9_17_505()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','jasperupload',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.506';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+

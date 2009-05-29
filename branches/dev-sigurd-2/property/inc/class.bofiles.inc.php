@@ -179,7 +179,7 @@
 		* @return null
 		*/
 
-		function view_file($type = '', $file = '')
+		function view_file($type = '', $file = '', $jasper = '')
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -218,10 +218,16 @@
 
 				$this->vfs->override_acl = 0;
 
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
-
-				echo $document;
+				if(!$jasper)
+				{
+					$browser = CreateObject('phpgwapi.browser');
+					$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
+					echo $document;
+				}
+				else
+				{
+					//Execute the jasper report
+				}
 			}
 		}
 
