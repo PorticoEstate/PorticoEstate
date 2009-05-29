@@ -3350,7 +3350,6 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','jasperupload',array('type' => 'int','precision' => 2,'nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','jasperupload',array('type' => 'int','precision' => 2,'nullable' => True));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
