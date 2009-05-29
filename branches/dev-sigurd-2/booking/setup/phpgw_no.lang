@@ -1,102 +1,132 @@
-current activities	booking	no	Aktiviteter
-successfully created (%1) allocations:	booking	no	(%1) tildelningar lages
-activity	booking	no	Aktivitet
-age group	booking	no	Aldersgruppe
-number of participants	booking	no	Antall deltakere
-cancel	booking	no	Avbryt
-description	booking	no	Beskrivelse
-picture	booking	no	Bild
-bookings	booking	no	Bookings
-account	booking	no	Bruker
-city	booking	no	By
-booking district	booking	no	Bydel
-buildings	booking	no	Bygg/anlegg
-bygning	booking	no	Bygg/anlegg
-building name	booking	no	Bygg/anlegg
-building	booking	no	Bygg/anlegg
-allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
-filnavn	booking	no	Dokument
-surname	booking	no	Etternavn
-preview	booking	no	forhåndsvisning
-name	booking	no	Fornavn
-social security number	booking	no	Fødselnummer
-street	booking	no	Gate
-group	booking	no	Gruppe
-go back to the template week	booking	no	Gå tilbake til ukeplan
-actions	booking	no	Handling
-homepage	booking	no	Hjemmeside
-hms document	booking	no	HMS dokument
-parent aktivity	booking	no	Hodekategori
-inactivate	booking	no	Inaktivera
-no records found.	booking	no	Inget funnet!
-settings	booking	no	Innstillinger
-building schedule	booking	no	Kalender
-category	booking	no	Kategori
-primary admin	booking	no	Kontaktperson 1
-secondary admin	booking	no	Kontaktperson 2
-generate allocations	booking	no	Lag tildelning
-generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
-create	booking	no	Lagre
-submit	booking	no	Lagre
-add boundary	booking	no	Legg til rammetid
-add permission	booking	no	Legg til rettighet
-target audience	booking	no	Malgruppe
-audience	booking	no	Målgruppe
-new activity	booking	no	Ny aktivitet
-new age group	booking	no	Ny aldersgruppe
-new booking	booking	no	Ny booking
-new group	booking	no	Ny gruppe
-new contact	booking	no	Ny kontakt
-new audience group	booking	no	Ny målgruppe
-new organization	booking	no	Ny organisajon
-new resource	booking	no	Ny Ressurs
-new season	booking	no	Ny sesong
-new allocation	booking	no	Ny tildelning
-new document	booking	no	Nya dokumenter
-new building	booking	no	Nytt bygg/anlegg
-new equipment	booking	no	Nytt utstyr
-organization	booking	no	Organisasjon
-organizations	booking	no	Organisasjoner
-zip code	booking	no	Postnummer
-cost	booking	no	Pris
-price list	booking	no	Prisliste
-boundaries	booking	no	Rammetid
-edit	booking	no	Rediger
-editer	booking	no	Rediger
-edit agegroup group	booking	no	Rediger aldersgruppe
-edit Audience group	booking	no	Rediger målgruppe
-edit organization	booking	no	Rediger organisasjon
-resource	booking	no	Ressurs
-resource name	booking	no	Ressurs
-resource schedule	booking	no	Ressurs kalender
-resources	booking	no	Ressurser
-role	booking	no	Rolle
-season name	booking	no	Sesong
-seasons	booking	no	Sesonger
-season	booking	no	Sesong
-show only active	booking	no	Skjul
-drawing	booking	no	Tegning
-allocation	booking	no	Tildelning
-allocations	booking	no	Tildelningar
-allocations that can be created (%1)	booking	no	Tildelningar som kan lages
-week day	booking	no	Ukedag
-day of the week	booking	no	Ukedag
-week template	booking	no	Ukeplan
-equipment name	booking	no	Utstyr
-equipment	booking	no	Utstyr
-select a building first	booking	no	Valg bygg/anlegg først
-choose file	booking	no	Valg dokument
-no parents	booking	no	Ingen foreldre
-parent id	booking	no	Hodekategori
-telephone	booking	no	Telefon
-other	booking	no	Annet
-chose file	booking	no	Valg fil
-select category...	booking	no	Valg en kategori...
-upload document	booking	no	Laste opp dokument
-organization number	booking	no	Organisasjon nummer
-planning	booking	no	Planlegging
-archived	booking	no	Arkivert
-published	booking	no	Publisert
-choose a date	booking	no	Velg en dato
-male	booking	no	Mann
-female	booking	no	Kvinne
+"current activities"	"booking"	"no"	"Aktiviteter"
+"-- select an activity --"	"booking"	"no"	"Valg en aktivitet"
+"1. why?"	"booking"	"no"	"1. Hvorfor?"
+"2. where?"	"booking"	"no"	"2. Hvor?"
+"3. when?"	"booking"	"no"	"3. Når?"
+"4. who?"	"booking"	"no"	"4. Hvem?"
+"account"	"booking"	"no"	"Bruker"
+"actions"	"booking"	"no"	"Handling"
+"active applications"	"booking"	"no"	"Aktive applikasjoner"
+"activity"	"booking"	"no"	"Aktivitet"
+"add another date"	"booking"	"no"	"Legg til dato"
+"add boundary"	"booking"	"no"	"Legg til rammetid"
+"add new event"	"booking"	"no"	"Legg til hendelse"
+"add permission"	"booking"	"no"	"Legg til rettighet"
+"age group"	"booking"	"no"	"Aldersgruppe"
+"allocation"	"booking"	"no"	"Tildelning"
+"allocations"	"booking"	"no"	"Tildelningar"
+"allocations colliding with existing bookings or allocations (%1)"	"booking"	"no"	"Dobbel-booking som IKKE lagres"
+"allocations that can be created (%1)"	"booking"	"no"	"Tildelningar som kan lages"
+"archived"	"booking"	"no"	"Arkivert"
+"audience"	"booking"	"no"	"Målgruppe"
+"bookable resources"	"booking"	"no"	"Bokningsbare ressurser"
+"booking"	"booking"	"no"	"Booking"
+"booking district"	"booking"	"no"	"Bydel"
+"booking name"	"booking"	"no"	"Navnet på booking"
+"bookings"	"booking"	"no"	"Bookings"
+"boundaries"	"booking"	"no"	"Rammetid"
+"building"	"booking"	"no"	"Bygg/anlegg"
+"building name"	"booking"	"no"	"Bygg/anlegg"
+"building schedule"	"booking"	"no"	"Kalender"
+"buildings"	"booking"	"no"	"Bygg/anlegg"
+"bygning"	"booking"	"no"	"Bygg/anlegg"
+"cancel"	"booking"	"no"	"Avbryt"
+"case officer"	"booking"	"no"	"Saksbehandler"
+"category"	"booking"	"no"	"Kategori"
+"choose a date"	"booking"	"no"	"Velg en dato"
+"choose file"	"booking"	"no"	"Valg dokument"
+"city"	"booking"	"no"	"By"
+"contact information"	"booking"	"no"	"Kontaktinformasjon "
+"cost"	"booking"	"no"	"Pris"
+"create"	"booking"	"no"	"Lagre"
+"dashboard"	"booking"	"no"	"Skrivbord"
+"day of the week"	"booking"	"no"	"Ukedag"
+"description"	"booking"	"no"	"Beskrivelse"
+"drawing"	"booking"	"no"	"Tegning"
+"edit"	"booking"	"no"	"Rediger"
+"edit agegroup group"	"booking"	"no"	"Rediger aldersgruppe"
+"edit allocation"	"booking"	"no"	"Rediger tildeling"
+"edit Audience group"	"booking"	"no"	"Rediger målgruppe"
+"edit booking"	"booking"	"no"	"Rediger booking"
+"edit organization"	"booking"	"no"	"Rediger organisasjon"
+"editer"	"booking"	"no"	"Rediger"
+"equipment"	"booking"	"no"	"Utstyr"
+"equipment name"	"booking"	"no"	"Utstyr"
+"event"	"booking"	"no"	"Hendelse"
+"events"	"booking"	"no"	"hendelser"
+"female"	"booking"	"no"	"Kvinne"
+"filnavn"	"booking"	"no"	"Dokument"
+"generate allocations"	"booking"	"no"	"Lag tildelning"
+"generate allocations from week template"	"booking"	"no"	"Lag tildelningar fra ukeplan"
+"go back to the template week"	"booking"	"no"	"Gå tilbake til ukeplan"
+"group"	"booking"	"no"	"Gruppe"
+"hms document"	"booking"	"no"	"HMS dokument"
+"homepage"	"booking"	"no"	"Hjemmeside"
+"inactivate"	"booking"	"no"	"Inaktivera"
+"inactive"	"booking"	"no"	"Inaktiv"
+"invoice information"	"booking"	"no"	"Faktura informasjon "
+"male"	"booking"	"no"	"Mann"
+"name"	"booking"	"no"	"Fornavn"
+"new activity"	"booking"	"no"	"Ny aktivitet"
+"new age group"	"booking"	"no"	"Ny aldersgruppe"
+"new allocation"	"booking"	"no"	"Ny tildelning"
+"new application"	"booking"	"no"	"Nya applikasjoner"
+"new audience group"	"booking"	"no"	"Ny målgruppe"
+"new booking"	"booking"	"no"	"Ny booking"
+"new building"	"booking"	"no"	"Nytt bygg/anlegg"
+"new building permission"	"booking"	"no"	"Nye rettigheter bygg/anlegg"
+"new contact"	"booking"	"no"	"Ny kontakt"
+"new document"	"booking"	"no"	"Nya dokumenter"
+"new equipment"	"booking"	"no"	"Nytt utstyr"
+"new group"	"booking"	"no"	"Ny gruppe"
+"new organization"	"booking"	"no"	"Ny organisajon"
+"new resource"	"booking"	"no"	"Ny Ressurs"
+"new root permission"	"booking"	"no"	"systemrettigheter"
+"new season"	"booking"	"no"	"Ny sesong"
+"new season permission"	"booking"	"no"	"Nye rettigheter sesong"
+"no parents"	"booking"	"no"	"Ingen foreldre"
+"no records found."	"booking"	"no"	"Inget funnet!"
+"number of participants"	"booking"	"no"	"Antall deltakere"
+"organization"	"booking"	"no"	"Organisasjon"
+"organization number"	"booking"	"no"	"Organisasjon nummer"
+"organizations"	"booking"	"no"	"Organisasjoner"
+"other"	"booking"	"no"	"Annet"
+"parent activity"	"booking"	"no"	"Hodekategori"
+"parent id"	"booking"	"no"	"Hodekategori"
+"picture"	"booking"	"no"	"Bild"
+"planning"	"booking"	"no"	"Planlegging"
+"preview"	"booking"	"no"	"forhåndsvisning"
+"price list"	"booking"	"no"	"Prisliste"
+"primary admin"	"booking"	"no"	"Kontaktperson 1"
+"published"	"booking"	"no"	"Publisert"
+"resource"	"booking"	"no"	"Ressurs"
+"resource name"	"booking"	"no"	"Ressurs"
+"resource schedule"	"booking"	"no"	"Ressurs kalender"
+"resources"	"booking"	"no"	"Ressurser"
+"role"	"booking"	"no"	"Rolle"
+"root permissions"	"booking"	"no"	"Root permissions"
+"season"	"booking"	"no"	"Sesong"
+"season name"	"booking"	"no"	"Sesong"
+"seasons"	"booking"	"no"	"Sesonger"
+"secondary admin"	"booking"	"no"	"Kontaktperson 2"
+"select a building first"	"booking"	"no"	"Valg bygg/anlegg først"
+"select category..."	"booking"	"no"	"Velg en kategori..."
+"select role..."	"booking"	"no"	"Velg rolle..."
+"settings"	"booking"	"no"	"Innstillinger"
+"show only active"	"booking"	"no"	"Skjul"
+"social security number"	"booking"	"no"	"Fødselnummer"
+"street"	"booking"	"no"	"Gate"
+"submit"	"booking"	"no"	"Lagre"
+"successfully created (%1) allocations:"	"booking"	"no"	"(%1) tildelningar lages"
+"surname"	"booking"	"no"	"Etternavn"
+"target audience"	"booking"	"no"	"Malgruppe"
+"telephone"	"booking"	"no"	"Telefon"
+"terms and conditions"	"booking"	"no"	"Juridiske betingelser"
+"upload document"	"booking"	"no"	"Laste opp dokument"
+"week day"	"booking"	"no"	"Ukedag"
+"week template"	"booking"	"no"	"Ukeplan"
+"zip code"	"booking"	"no"	"Postnummer"
+"admin 1"	"booking"	"no"	"Administrator 1"
+"admin 2"	"booking"	"no"	"Administrator 2"
+"contact 1"	"booking"	"no"	"Kontakt 1"
+"contact 2"	"booking"	"no"	"Kontakt 2"
