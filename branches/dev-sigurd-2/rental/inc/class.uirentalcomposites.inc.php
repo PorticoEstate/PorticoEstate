@@ -160,40 +160,26 @@
 
 		/**
 		 * Show details for a single rental composite
-		 * 
 		 */
-		public function view()
-		{
-			phpgwapi_yui::load_widget('tabview');
-
-			$composite_id = phpgw::get_var('id');
-			// TODO: How to check for valid input here?
-			if ($composite_id) {
-				$composite = $this->bo->read_single($composite_id);
-				
-				$tabs = array();
-				
-				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts', 'rental_rc_documents') as $tab) {
-					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
-				}
-				
-				phpgwapi_yui::tabview_setup('composite_edit_tabview');
-
-				$data = array
-				(
-					'data' 	=> $composite,
-					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'details')
-				);
-
-				self::render_template('rentalcomposite_view', $data);
-			}
+		public function view() {
+			// TODO: authorization check?
+			$this -> viewedit(false);
 		}
 		
 		/**
 		 * Edit details for a single rental composite
-		 * 
 		 */
-		public function edit()
+		public function edit(){
+			// TODO: authorization check 
+			$this -> viewedit(true);
+		}
+		
+		
+		/**
+		 * Handling details 
+		 * @param $access true renders fields editable, false renders fields disabled
+		 */
+		function viewedit($access)
 		{
 			phpgwapi_yui::load_widget('tabview');
 
@@ -213,7 +199,8 @@
 				$data = array
 				(
 					'data' 	=> $composite,
-					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'details')
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'rental_rc_details'),
+					'access' => $access
 				);
 				
 				$errors = array();
