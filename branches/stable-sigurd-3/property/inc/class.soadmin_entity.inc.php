@@ -242,6 +242,7 @@
 				$category['loc_link']	= $this->db->f('loc_link');
 				$category['start_project']	= $this->db->f('start_project');
 				$category['start_ticket']	= $this->db->f('start_ticket');
+				$category['jasperupload']	= $this->db->f('jasperupload');
 			}
 			return $category;
 		}
@@ -333,12 +334,13 @@
 				$values['fileupload'],
 				$values['loc_link'],
 				$values['start_project'],
-				$values['start_ticket']
+				$values['start_ticket'],
+				$values['jasperupload']
 				);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket) "
+			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
@@ -493,7 +495,8 @@
 					'fileupload'	=> $entity['fileupload'],
 					'loc_link'		=> $entity['loc_link'],
 					'start_project'	=> $entity['start_project'],
-					'start_ticket'	=> $entity['start_ticket']
+					'start_ticket'	=> $entity['start_ticket'],
+					'jasperupload'	=> $entity['jasperupload']
 					);
 
 				$value_set	= $this->db->validate_update($value_set);

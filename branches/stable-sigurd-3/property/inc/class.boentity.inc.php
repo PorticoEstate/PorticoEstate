@@ -324,17 +324,34 @@
 			
 			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
 
-			$values['files'] = $vfs->ls (array(
+			$files = $vfs->ls (array(
 			     'string' => "/property/{$this->category_dir}/{$loc1}/{$data['id']}",
 			     'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
-			if(!isset($values['files'][0]['file_id']) || !$values['files'][0]['file_id'])
+			$values['jasperfiles']	= array();
+			$values['files']		= array();
+			foreach ($files as $file)
 			{
-				unset($values['files']);
+				if (strpos($file['file_name'], 'jasper::'))// check for jasper
+				{
+					$values['jasperfiles'][] = array
+					(
+						'file_name'	=> $file['file_name'],
+						'name' 		=> $file['name']
+					);
+				}
+				else
+				{
+					$values['files'][] = array
+					(
+						'file_name'	=> $file['file_name'],
+						'name' 		=> $file['name']
+					);
+				}
 			}
-
+			
 			$interlink 	= CreateObject('property.interlink');
 			$values['origin'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'origin');
 			$values['target'] = $interlink->get_relation($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['id'], 'target');

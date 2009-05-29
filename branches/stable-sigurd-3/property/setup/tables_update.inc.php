@@ -3337,3 +3337,25 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.560 to 0.9.17.561
+	* Add ability to upload jasper reports
+	* 
+	*/
+
+	$test[] = '0.9.17.560';
+	function property_upgrade0_9_17_560()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','jasperupload',array('type' => 'int','precision' => 2,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','jasperupload',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.561';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

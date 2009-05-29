@@ -214,9 +214,10 @@
 			$file_name	= urldecode(phpgw::get_var('file_name'));
 			$loc1 		= phpgw::get_var('loc1', 'string', 'REQUEST', 'dummy');
 			$id 		= phpgw::get_var('id', 'int');
+			$jasper		= phpgw::get_var('jasper', 'bool');
 
 			$bofiles	= CreateObject('property.bofiles');
-			$bofiles->view_file("{$this->category_dir}/{$loc1}");
+			$bofiles->view_file("{$this->category_dir}/{$loc1}", '', $jasper);
 		}
 
 		function index()
@@ -980,35 +981,77 @@
 					$id = $receipt['id'];
 					$function_msg = lang('edit entity');
 //--------------files
-					$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
+					$loc1 = isset($values['location']['loc1']) && $values['location']['loc1'] ? $values['location']['loc1'] : 'dummy';
 					$bofiles	= CreateObject('property.bofiles');
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
 					}
 
+					if(isset($values['file_jasperaction']) && is_array($values['file_jasperaction']))
+					{
+						$values['file_action'] = $values['file_jasperaction'];
+						$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
+					}
+
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
-						$values['file_name']=str_replace (' ','_',$_FILES['file']['name']);
-						$to_file = "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$values['file_name']}";
+						$file_name = str_replace (' ','_',$_FILES['file']['name']);
+						$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
 
-						if((!isset($values['document_name_orig']) || !$values['document_name_orig']) && $bofiles->vfs->file_exists(array(
+						if ($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
 								'relatives' => Array(RELATIVE_NONE)
 							)))
 						{
 							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
 						}
+						else
+						{
+							$files[] = array
+							(
+								'from_file'	=> $_FILES['file']['tmp_name'],
+								'to_file'	=> $to_file
+							);
+						}
+
+						unset($to_file);
+						unset($file_name);
 					}
 
-					if(isset($values['file_name']) && $values['file_name'])
+					if(isset($_FILES['jasperfile']['name']) && $_FILES['jasperfile']['name'])
+					{
+						$file_name = 'jasper::' . str_replace (' ','_',$_FILES['jasperfile']['name']);
+						$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
+
+						if($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+						else
+						{
+							$files[] = array
+							(
+								'from_file'	=> $_FILES['jasperfile']['tmp_name'],
+								'to_file'	=> $to_file
+							);
+						}
+
+						unset($to_file);
+						unset($file_name);
+					}
+
+					foreach ($files as $file)
 					{
 						$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if(!$bofiles->vfs->cp (array (
-							'from'	=> $_FILES['file']['tmp_name'],
-							'to'	=> $to_file,
+							'from'	=> $file['from_file'],
+							'to'	=> $file['to_file'],
 							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 						{
 							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
@@ -1016,6 +1059,8 @@
 						$bofiles->vfs->override_acl = 0;
 					}
 					unset($loc1);
+					unset($files);
+					unset($file);					
 //-------------end files
 
 					if (isset($values['save']) && $values['save'])
@@ -1138,15 +1183,6 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$link_file_data = array
-			(
-				'menuaction'	=> 'property.uientity.view_file',
-				'loc1'			=> $values['location_data']['loc1'],
-				'id'			=> $id,
-				'cat_id'		=> $this->cat_id,
-				'entity_id'		=> $this->entity_id,
-				'type'			=> $this->type
-			);
 
 	//		$config->read();
 	//		$link_to_files = $config->config_data['files_url'];
@@ -1254,14 +1290,27 @@
 				{
 					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
 				}
+
+				if($category['jasperupload'])
+				{
+					$tabs['jasper']	= array('label' => lang('jasper reports'), 'link' => '#jasper');
+				}
 			}
 
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uientity.view_file',
+				'loc1'			=> $values['location_data']['loc1'],
+				'id'			=> $id,
+				'cat_id'		=> $this->cat_id,
+				'entity_id'		=> $this->entity_id,
+				'type'			=> $this->type
+			);
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 			
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}									
 
@@ -1281,6 +1330,31 @@
        			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 			);
+
+			$link_file_data['file_name']	= $values['jasperfiles'][$z]['file_name'];
+			$link_file_data['jasper']		= true;
+			for($z=0; $z<count($values['jasperfiles']); $z++)
+			{
+				$content_jasperfiles[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'" target="_blank" title="'.lang('click to view file').'">'.$values['jasperfiles'][$z]['name'].'</a>';			
+				$content_jasperfiles[$z]['delete_file'] = '<input type="checkbox" name="values[file_jasperaction][]" value="'.$values['jasperfiles'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+			}									
+
+			$datavalues[1] = array
+			(
+					'name'					=> "1",
+					'values' 				=> json_encode($content_jasperfiles),
+					'total_records'			=> count($content_jasperfiles),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$myColumnDefs[1] = array
+       		(
+       			'name'		=> "1",
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),sortable=>false,resizeable=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+			);
 			
 			$data = array
 			(
@@ -1296,6 +1370,7 @@
 				'lang_start_ticket'			=> lang('start ticket'),
 				'ticket_link'					=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 				'fileupload'					=> $category['fileupload'],
+				'jasperupload'					=> $category['jasperupload'],
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 		//		'link_to_files'					=> $link_to_files,
 				'files'							=> isset($values['files'])?$values['files']:'',

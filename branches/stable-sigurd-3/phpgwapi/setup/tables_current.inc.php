@@ -541,7 +541,7 @@
 				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
 				'group_id' => array('type' => 'int','precision' => 2,'nullable' => true, 'default' => 0),
 				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
-				'column_name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
+				'column_name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
 				'input_text' => array('type' => 'varchar','precision' => 50,'nullable' => false),
 				'statustext' => array('type' => 'varchar','precision' => '150','nullable' => false),
 				'datatype' => array('type' => 'varchar','precision' => '10','nullable' => false),
