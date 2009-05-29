@@ -85,13 +85,52 @@
                 </input>
                 </div>
             </dd>
-            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
-            <dd>
-                <input id="field_cost" name="cost" type="text">
-                    <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
-                </input>
-            </dd>
         </dl>
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'Who')" /></dt>
+			<dt><label><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
+			<dd>
+				<ul>
+					<xsl:for-each select="audience">
+						<li>
+							<input type="checkbox" name="audience[]">
+								<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+								<xsl:if test="../event/audience=id">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+							</input>
+							<label><xsl:value-of select="name"/></label>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</dd>
+			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
+			<dd>
+				<table id="agegroup">
+					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
+					<xsl:for-each select="agegroups">
+						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+						<tr>
+							<th><xsl:value-of select="name"/></th>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</table>
+			</dd>
+		</dl>
+		<div class="clr"/>
         <dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></dt>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
@@ -112,6 +151,12 @@
 					<xsl:attribute name="value"><xsl:value-of select="event/contact_phone"/></xsl:attribute>
 				</input>
 			</dd>
+            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
+            <dd>
+                <input id="field_cost" name="cost" type="text">
+                    <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
+                </input>
+            </dd>
         </dl>
         <div class="form-buttons">
             <input type="submit">

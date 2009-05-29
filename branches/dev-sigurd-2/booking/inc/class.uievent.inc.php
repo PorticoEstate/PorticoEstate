@@ -16,12 +16,14 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boevent');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->agegroup_bo = CreateObject('booking.boagegroup');
+			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'description',
 								  'resources', 'cost',
 								  'building_id', 'building_name', 
 								  'contact_name', 'contact_email', 'contact_phone',
-			                      'from_', 'to_', 'active');
+			                      'from_', 'to_', 'active', 'audience');
 		}
 		
 		public function index()
@@ -110,6 +112,9 @@
 				array_set_default($_POST, 'resources', array());
 				$event = extract_values($_POST, $this->fields);
 				$event['active'] = '1';
+				array_set_default($event, 'audience', array());
+				array_set_default($event, 'agegroups', array());
+				$this->agegroup_bo->extract_form_data($event);
 				$errors = $this->bo->validate($event);
 				if(!$errors)
 				{
@@ -125,7 +130,11 @@
 			array_set_default($event, 'cost', '0');
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			self::render_template('event_new', array('event' => $event, 'activities' => $activities));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		public function edit()
@@ -140,6 +149,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$event = array_merge($event, extract_values($_POST, $this->fields));
+				$this->agegroup_bo->extract_form_data($event);
 				$errors = $this->bo->validate($event);
 				if(!$errors)
 				{
@@ -153,7 +163,11 @@
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			self::render_template('event_edit', array('event' => $event, 'activities' => $activities));
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$audience = $this->audience_bo->fetch_target_audience();
+			$audience = $audience['results'];
+			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 	}

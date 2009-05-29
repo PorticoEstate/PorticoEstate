@@ -24,6 +24,18 @@
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
+					'audience' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_event_targetaudience',
+							'key' => 'event_id',
+							'column' => 'targetaudience_id'
+					)),
+					'agegroups' => array('type' => 'int', 'required' => true,
+						  'manytomany' => array(
+							'table' => 'bb_event_agegroup',
+							'key' => 'event_id',
+							'column' => array('agegroup_id', 'male', 'female')
+					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_event_resource',
