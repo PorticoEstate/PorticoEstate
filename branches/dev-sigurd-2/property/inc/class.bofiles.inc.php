@@ -210,23 +210,62 @@
 						'nofiles'		=> true
 					));
 
-				$this->vfs->override_acl = 1;
-
-				$document = $this->vfs->read(array(
-					'string' 	=> $file,
-					'relatives' => array(RELATIVE_NONE)));
-
-				$this->vfs->override_acl = 0;
 
 				if(!$jasper)
 				{
+					$this->vfs->override_acl = 1;
+
+					$document = $this->vfs->read(array(
+						'string' 	=> $file,
+						'relatives' => array(RELATIVE_NONE)));
+
+					$this->vfs->override_acl = 0;
+
 					$browser = CreateObject('phpgwapi.browser');
 					$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
 					echo $document;
 				}
-				else
+				else //Execute the jasper report
 				{
-					//Execute the jasper report
+					//class_path
+					$dirname = PHPGW_API_INC . '/inc/jasper/lib';
+
+					$file_list = array();
+					$file_list[] = PHPGW_API_INC . '/inc/jasper/bin';
+					$dir = new DirectoryIterator($dirname); 
+					if ( is_object($dir) )
+					{
+						foreach ( $dir as $_file )
+						{
+							if ( $_file->isDot()
+								|| !$_file->isFile()
+								|| !$_file->isReadable()
+								|| mime_content_type($_file->getPathname()) == 'text/xml')
+							{
+								continue;
+							}
+
+							$file_list[] = (string) "{$dirname}/{$_file}";
+						}
+					}
+					
+					if (stristr(PHP_OS, 'WIN')) 
+					{ 
+						$sep = ';';// Win 
+					}
+					else
+					{ 
+						$sep = ':';// Other
+					}
+
+					$class_path = implode($sep, $file_list);
+					$type = 'pdf';
+					$select_criteria = '//Record';
+					$template = "{$this->rootdir}/{$file}";
+
+						  //java -Djava.awt.headless=true -cp "$CLASSPATH" XmlJasperInterface -opdf -f../templates/tilstand.jasper -x"/FacilitySurvey/Record" < ./tilstand.xml > report.pdf
+					$cmd = "java -Djava.awt.headless=true -cp {$class_path} XmlJasperInterface -o{$type} -f{$template} -x{$select_criteria} < " . PHPGW_SERVER_ROOT . "catch/test_data/jasper/tilstand.xml";
+
 				}
 			}
 		}

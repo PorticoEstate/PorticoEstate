@@ -994,6 +994,7 @@
 						$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
 					}
 
+					$files = array();
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
 						$file_name = str_replace (' ','_',$_FILES['file']['name']);
