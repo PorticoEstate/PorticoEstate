@@ -191,7 +191,6 @@
 				$id        = phpgw::get_var('id', 'int');
 				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
-
 			// prevent path traversal
 			if ( preg_match('/\.\./', $file) )
 			{
@@ -210,6 +209,7 @@
 						'nofiles'		=> true
 					));
 
+				$browser = CreateObject('phpgwapi.browser');
 
 				if(!$jasper)
 				{
@@ -221,17 +221,17 @@
 
 					$this->vfs->override_acl = 0;
 
-					$browser = CreateObject('phpgwapi.browser');
 					$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
 					echo $document;
 				}
 				else //Execute the jasper report
 				{
 					//class_path
-					$dirname = PHPGW_API_INC . '/inc/jasper/lib';
-
+				//	$dirname = PHPGW_API_INC . '/jasper/lib';
+					$dirname = 'phpgwapi/inc/jasper/lib';
 					$file_list = array();
-					$file_list[] = PHPGW_API_INC . '/inc/jasper/bin';
+				//	$file_list[] = PHPGW_API_INC . '/jasper/bin';
+					$file_list[] = 'phpgwapi/inc/jasper/bin';
 					$dir = new DirectoryIterator($dirname); 
 					if ( is_object($dir) )
 					{
@@ -263,9 +263,11 @@
 					$select_criteria = '//Record';
 					$template = "{$this->rootdir}/{$file}";
 
-						  //java -Djava.awt.headless=true -cp "$CLASSPATH" XmlJasperInterface -opdf -f../templates/tilstand.jasper -x"/FacilitySurvey/Record" < ./tilstand.xml > report.pdf
-					$cmd = "java -Djava.awt.headless=true -cp {$class_path} XmlJasperInterface -o{$type} -f{$template} -x{$select_criteria} < " . PHPGW_SERVER_ROOT . "catch/test_data/jasper/tilstand.xml";
+					$cmd = "java -Djava.awt.headless=true -cp {$class_path} XmlJasperInterface -o{$type} -f{$template} -x{$select_criteria} < " . PHPGW_SERVER_ROOT . "/catch/test_data/jasper/tilstand.xml";
 
+					$browser->content_header('report.pdf','application/pdf');
+
+					passthru($cmd);
 				}
 			}
 		}
