@@ -219,7 +219,7 @@
 			$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
 			$results = isset($params['results']) && $params['results'] ? $data['results'] : 1000;
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : '';
+			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'desc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 

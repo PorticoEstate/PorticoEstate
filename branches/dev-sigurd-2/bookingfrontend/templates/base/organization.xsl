@@ -46,44 +46,32 @@
         </dl>
 
         <h3><xsl:value-of select="php:function('lang', 'Groups')" /></h3>
-		<xsl:if test="loggedin &gt; 0">
-			<span class="loggedin">(<a>
-				<xsl:attribute name="href">
-					<xsl:value-of select="edit_groups_link" />
-				</xsl:attribute>
-                Create new
-			</a>)</span>
-		</xsl:if>
-        <table class="groups fancyTable">
-            <thead>
-                <tr>
-                    <th><xsl:value-of select="php:function('lang', 'Group ID')" /></th>
-                    <th><xsl:value-of select="php:function('lang', 'Group name')" /></th>
-                    <th><xsl:value-of select="php:function('lang', 'Activity type')" /></th>
-                    <th><xsl:value-of select="php:function('lang', 'Primary contact')" /></th>
-                    <th><xsl:value-of select="php:function('lang', 'Secondary contact')" /></th>
-                </tr>
-            </thead>
-            <tbody>
-                <xsl:for-each select="organization/groups">
-                    <xsl:sort select="name" order="ascending"/>
-                    <tr>
-                        <td><xsl:value-of select="id" /></td>
-                        <td>
-                            <a>
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="link" />	
-                                </xsl:attribute>
-                                <xsl:value-of select="name" />
-                            </a>
-                        </td>
-                        <td><xsl:value-of select="description" /></td>
-						<td><xsl:if test="contacts[1]"><xsl:value-of select="contacts[1]/name"/></xsl:if></td>
-						<td><xsl:if test="contacts[2]"><xsl:value-of select="contacts[2]/name"/></xsl:if></td>
-                    </tr>
-                </xsl:for-each>
-            </tbody>
-        </table>
-
+        <div id="groups_container"/>
     </div>
+	
+	<script type="text/javascript">
+	var organization_id = <xsl:value-of select="organization/id"/>;
+	var lang = new Object();
+	lang.name = '<xsl:value-of select="php:function('lang', 'Name')"/>';
+	lang.primary_contact_name = '<xsl:value-of select="php:function('lang', 'Primary contact')"/>';
+	lang.primary_contact_phone = '<xsl:value-of select="php:function('lang', 'Phone')"/>';
+	lang.primary_contact_mail = '<xsl:value-of select="php:function('lang', 'Email')"/>';
+	
+	<![CDATA[
+	YAHOO.util.Event.addListener(window, "load", function() {
+		var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
+		var colDefs = [
+			{key: 'name', label: lang.name, formatter: YAHOO.booking.formatLink},
+			/*{key: 'primary_contact_name', label: lang.primary_contact_name},
+			{key: 'primary_contact_phone', label: lang.primary_contact_phone},
+			{key: 'primary_contact_email', label: lang.primary_contact_mail},*/
+		];
+		YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
+	});
+	]]>
+	</script>
+
 </xsl:template>
+
+
+

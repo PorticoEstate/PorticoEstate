@@ -21,6 +21,82 @@
             $this->module = "booking";
 		}
 		
+		public function link_to_parent_params($action = 'show', $params = array())
+		{
+			return array_merge(array('menuaction' => sprintf($this->module.'.ui%s.%s', $this->get_current_parent_type(), $action), 'id' => $this->get_parent_id()), $params);
+		}
+		
+		public function link_to_parent($action = 'show', $params = array())
+		{
+			return $this->link($this->link_to_parent_params($action, $params));
+		}
+		
+		public function get_current_parent_type()
+		{
+			if (!$this->is_inline()) { return null; }
+			$parts = explode('_', key($a = $this->get_inline_params()));
+			return $parts[1];
+		}
+		
+		public function get_parent_id()
+		{
+			$inlineParams = $this->get_inline_params();
+			return $inlineParams['filter_organization_id'];
+		}
+		
+		public function get_parent_if_inline()
+		{
+			if (!$this->is_inline()) return null;
+			return CreateObject('booking.bo'.$this->get_current_parent_type())->read_single($this->get_parent_id());
+		}
+		
+		public function redirect_to_parent_if_inline()
+		{
+			if ($this->is_inline())
+			{
+				$this->redirect($this->link_to_parent_params());
+			}
+			
+			return false;
+		}
+		
+		public function link_to($action, $params = array())
+		{
+			return $this->link($this->link_to_params($action, $params));
+		}
+		
+		public function link_to_params($action, $params = array())
+		{
+			if (isset($params['ui'])) {
+				$ui = $params['ui'];
+				unset($params['ui']);
+			} else {
+				$ui = 'group';
+				$this->apply_inline_params($params);
+			}
+			
+			$action = sprintf($this->module.'.ui%s.%s', $ui, $action);
+			return array_merge(array('menuaction' => $action), $params);
+		}
+		
+		public function apply_inline_params(&$params)
+		{
+			if($this->is_inline()) {
+				$params['filter_organization_id'] = intval(phpgw::get_var('filter_organization_id'));
+			}
+			return $params;
+		}
+		
+		public function get_inline_params()
+		{
+			return array('filter_organization_id' => intval(phpgw::get_var('filter_organization_id', 'any', false)));
+		}
+		
+		public function is_inline()
+		{
+			return false != phpgw::get_var('filter_organization_id', 'any', false);
+		}
+		
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -91,15 +167,25 @@
 		public function index_json()
 		{
 			$groups = $this->bo->read();
-			array_walk($groups["results"], array($this, "_add_links"), "booking.uigroup.show");
+			array_walk($groups["results"], array($this, "_add_links"), $this->module.".uigroup.show");
 			foreach($groups["results"] as &$group) {
-				$group += array(
-							"primary_contact_name"  => (@$person['contacts'][0]["name"])  ? $person['contacts'][0]["name"] : '',
-							"primary_contact_phone" => (@$person['contacts'][0]["phone"]) ? $person['contacts'][0]["phone"] : '',
-							"primary_contact_email" => (@$person['contacts'][0]["email"]) ? $person['contacts'][0]["email"] : '',
-				);
+				
+				$contact = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
+				
+				if ($contact) {
+					$group += array(
+								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
 			}
-			return $this->yui_results($groups);
+			
+			$results = $this->yui_results($groups);
+			
+			$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
+			
+			return $results;
 		}
 
 		public function edit()
@@ -109,11 +195,28 @@
 			{
 				$group = $this->bo->read_single($id);
 				$group['id'] = $id;
-				$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
-				$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show', 'id' => $group['organization_id']));
+				$group['organization_link'] = $this->link_to('show', array('ui' => 'organization', 'id' => $group['organization_id']));
+				
+				$group['cancel_link'] = $this->link_to('show', array('id' => $id));
+				
+				if ($this->is_inline())
+				{
+					$group['cancel_link'] = $this->link_to_parent();
+				}
+					
 			} else {
 				$group = array();
+				$group['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
+				
+				if ($this->is_inline())
+				{
+					$group['organization_link'] = $this->link_to_parent();
+					$group['cancel_link'] = $this->link_to_parent();
+					$this->apply_inline_params($group);
+				}
 			}
+
+			$group['organizations_link'] = $this->link_to('index', array('ui' => 'organization'));
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -133,13 +236,18 @@
 					} else {
 						$receipt = $this->bo->add($group);
 					}
-					$this->redirect(array('menuaction' => $this->module . '.uigroup.show', 'id'=>$receipt['id']));
+					
+					$this->redirect_to_parent_if_inline();
+					$this->redirect($this->link_to_params('show', array('id'=>$receipt['id'])));
 				}
 			}
 			$this->flash_form_errors($errors);
 			
-			$group['cancel_link'] = $id ? self::link(array('menuaction' => $this->module . '.uigroup.show', 'id'=> $id)) :
-										  self::link(array('menuaction' => $this->module . '.uigroup.index'));
+			if (is_array($parent_entity = $this->get_parent_if_inline()))
+			{
+				$group[$this->get_current_parent_type().'_id'] = $parent_entity['id'];
+				$group[$this->get_current_parent_type().'_name'] = $parent_entity['name'];
+			}
 
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');

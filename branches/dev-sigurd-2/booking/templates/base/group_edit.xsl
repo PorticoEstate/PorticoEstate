@@ -23,7 +23,11 @@
 			<dd>
 			    <div class="autocomplete">
 			        <input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}"/>
-			        <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}"/>
+			        <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
+						<xsl:if test="group/filter_organization_id">
+							<xsl:attribute name='disabled'>disabled</xsl:attribute>
+						</xsl:if>
+					</input>
 			        <div id="organization_container"/>
 			    </div>
 			</dd>
