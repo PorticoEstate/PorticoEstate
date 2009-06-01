@@ -4,7 +4,8 @@
 	abstract class booking_uidocument extends booking_uicommon
 	{
 		protected
-			$documentOwnerType = null;
+			$documentOwnerType = null,
+			$module;
 		
 		public 
 			$public_functions = array(
@@ -26,6 +27,8 @@
 			
 			//'name' is not in fields as it will always be generated from the uploaded filename
 			$this->fields = array('category', 'description', 'owner_id', 'owner_name');
+			
+			$this->module = 'booking';
 		}
 		
 		protected function set_business_object(booking_bodocument $bo = null)
@@ -46,14 +49,23 @@
 		
 		protected function set_document_owner_type($type = null)
 		{
-			is_null($type) AND $type = substr(get_class($this), 19);
+			if (is_null($type)) {
+				$class = get_class($this);
+				$r = new ReflectionObject($this);
+				while(__CLASS__ != ($current_class = $r->getParentClass()->getName())) {
+					$class =  $current_class;
+					$r = $r->getParentClass();
+				}
+				$type = substr($class, 19);
+			}
+			
 			$this->documentOwnerType = $type;
 		}
 		
 		public function get_parent_url_link_params()
 		{
 			$inlineParams = $this->get_inline_params();
-			return array('menuaction' => sprintf('booking.ui%s.show', $this->get_document_owner_type()), 'id' => $inlineParams['filter_owner_id']);
+			return array('menuaction' => sprintf($this->module.'.ui%s.show', $this->get_document_owner_type()), 'id' => $inlineParams['filter_owner_id']);
 		}
 		
 		public function redirect_to_parent_if_inline()
@@ -68,7 +80,7 @@
 		
 		public function get_owner_typed_link_params($action, $params = array())
 		{
-			$action = sprintf('booking.uidocument_%s.%s', $this->get_document_owner_type(), $action);
+			$action = sprintf($this->module.'.uidocument_%s.%s', $this->get_document_owner_type(), $action);
 			return array_merge(array('menuaction' => $action), $this->apply_inline_params($params));
 		}
 		
@@ -213,6 +225,17 @@
 				$document['actions'] = $document_actions;
 			}
 			return $this->yui_results($documents);
+		}
+		
+		public function index_images()
+		{
+			$images = $this->bo->read_images();
+			
+			foreach($images['results'] as &$image) {
+				$image['src'] = $this->get_owner_typed_link('download', array('id' => $image['id']));
+			}
+			
+			return $this->yui_results($images);
 		}
 		
 		protected function get_document_categories()

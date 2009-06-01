@@ -27,31 +27,36 @@
 
 		function read()
 		{
+			return $this->so->read($this->build_default_read_params());
+		}
+		
+		protected function build_default_read_params()
+		{
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
 			$query = phpgw::get_var('query');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
+			
 			$filters = array();
-			foreach($this->so->fields as $field => $params)
-			{
-				if(phpgw::get_var("filter_$field"))
-				{
+			foreach($this->so->fields as $field => $params) {
+				if(phpgw::get_var("filter_$field")) {
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
 			}
-			if(!isset($_SESSION['showall']))
-			{
+			
+			if(!isset($_SESSION['showall'])) {
 				$filters['active'] = "1";
-			}		
-			return $this->so->read(array(
+			}
+			
+			return array(
 				'start' => $start,
 				'results' => $results,
 				'query'	=> $query,
 				'sort'	=> $sort,
 				'dir'	=> $dir,
 				'filters' => $filters
-			));
+			);
 		}
 
 		function add($entity)

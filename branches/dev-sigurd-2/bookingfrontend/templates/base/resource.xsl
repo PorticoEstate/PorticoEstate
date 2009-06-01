@@ -58,10 +58,14 @@
 			<xsl:value-of select="php:function('lang', 'Resource schedule')" />
 		</a>
 
-
-		<h4><xsl:value-of select="php:function('lang', 'Equipment')" /></h4>
+		<h3><xsl:value-of select="php:function('lang', 'Equipment')" /></h3>
 		<div id="equipment_container"/>
-
+		
+		<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
+		<div id="documents_container"/>
+		
+		<h3><xsl:value-of select="php:function('lang', 'Images')" /></h3>
+		<div id="images_container"/>
 	</div>
 
 	<script type="text/javascript">
@@ -71,6 +75,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	var url = 'index.php?menuaction=bookingfrontend.uiequipment.index&sort=name&filter_resource_id=' + resource_id + '&phpgw_return_as=json&';
 	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
 	YAHOO.booking.inlineTableHelper('equipment_container', url, colDefs);
+	
+	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}, {key: 'category', label: 'Category'}];
+	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
+	
+	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
+	YAHOO.booking.inlineImages('images_container', url);
 });
 ]]>
 	</script>

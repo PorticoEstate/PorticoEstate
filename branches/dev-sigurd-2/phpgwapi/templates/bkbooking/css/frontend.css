@@ -198,3 +198,6 @@ dl.contactinfo dt {
 dl.contactinfo dd {
   margin-left: 2em;
 }
+
+/*dl.proplist.images dd img { max-width: 300px;}*/
+dl.proplist.images dl { margin-bottom: 1.5em;}

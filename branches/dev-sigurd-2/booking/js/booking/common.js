@@ -105,6 +105,33 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 	}
 }
 
+YAHOO.booking.inlineImages = function(container, url, options)
+{
+	options = options || {};
+	var myDataSource = new YAHOO.util.DataSource(url);
+	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+	myDataSource.connXhrMode = "queueRequests";
+	myDataSource.responseSchema = {
+		resultsList: "ResultSet.Result",
+		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
+	};
+	
+	myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+		var dlImages = new YAHOO.util.Element(document.createElement('dl'));
+		dlImages.addClass('proplist images');
+		
+        for(var key in oResponse.results) { 
+			var imgEl = dlImages.appendChild(document.createElement('dd')).appendChild(document.createElement('img'));
+			var captionEl = dlImages.appendChild(document.createElement('dl'));
+			imgEl.src = oResponse.results[key].src.replace(/&amp;/gi, '&');
+			captionEl.appendChild(document.createTextNode(oResponse.results[key].description));
+		}
+		
+		new YAHOO.util.Element(container).appendChild(dlImages);
+    }});
+}
+
+
 YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
 	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, 'radio')
 }

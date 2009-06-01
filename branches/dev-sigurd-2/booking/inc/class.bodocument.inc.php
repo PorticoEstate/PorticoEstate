@@ -127,4 +127,9 @@
 		{
 			return $this->so->read_parent($owner_id);
 		}
+		
+		public function read_images()
+		{
+			return $this->so->read_images($this->build_default_read_params());
+		}
 	}

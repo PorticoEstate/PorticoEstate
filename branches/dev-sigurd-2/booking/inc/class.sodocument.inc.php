@@ -28,7 +28,7 @@
 			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), 
 				array(
 					'id'			=> array('type' => 'int'),
-					'name'			=> array('type' => 'string', 'required' => true, 'query' => true),
+					'name'			=> array('type' => 'string', 'query' => true),
 					'owner_id'		=> array('type' => 'int', 'required' => true),
 					'category'		=> array('type' => 'string', 'required' => true),
 					'description'	=> array('type' => 'string', 'required' => false),
@@ -156,5 +156,60 @@
 			}
 			
 			return false;
+		}
+		
+		function has_results(&$result)
+		{
+			return is_array($result) && isset($result['total_records']) && $result['total_records'] > 0 && isset($result['results']);
+		}
+		
+		function read($params)
+		{
+			$result = parent::read($params);
+			
+			if ($this->has_results($result)) {
+				foreach($result['results'] as &$record) {
+					$record['is_image'] = $this->is_image($record);
+				}
+			}
+			
+			return $result;
+		}
+		
+		public function is_image(array &$entity)
+		{
+			if ($entity['category'] != self::CATEGORY_PICTURE) { return false; }
+			
+			switch ($this->get_file_extension($entity)) {
+				case 'png':
+				case 'gif':
+				case 'jpg':
+				case 'jpeg':
+					return true;
+			}
+			
+			return false;
+		}
+		
+		public function read_images($params = array())
+		{
+			if (!isset($params['filters'])) { $params['filters'] = array(); }
+			$params['filters']['category'] = booking_sodocument::CATEGORY_PICTURE;
+			
+			$documents = $this->read($params);
+			$images = array('results' => array(), 'total_records' => 0);
+			foreach($documents['results'] as &$document) {
+				if ($document['is_image']) {
+					$images['results'][] = $document;
+					$images['total_records']++;
+				} 
+			}
+			
+			return $images;
+		}
+		
+		public function get_file_extension(array &$entity)
+		{
+			return (false === $pos = strrpos($entity['name'], '.')) ? false : substr($entity['name'], $pos+1);
 		}
 	}
