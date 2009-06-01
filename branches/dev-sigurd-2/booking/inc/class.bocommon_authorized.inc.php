@@ -5,7 +5,7 @@
 
 	abstract class booking_bocommon_authorized extends booking_bocommon
 	{
-		const ADMIN_GROUP = 'Admin';
+		const ADMIN_GROUP = 'Admins';
 		
 		protected 
 			$sopermission,
@@ -69,10 +69,9 @@
 				$this->account_is_admin = false;
 				
 				$memberships = $this->current_account_memberships();
-		
 				while($memberships && list($index,$group_info) = each($memberships))
 				{
-					if ($group_info->firstname == self::ADMIN_GROUP)
+					if ($group_info->lid == self::ADMIN_GROUP)
 					{
 						$this->account_is_admin = true;
 						break;
