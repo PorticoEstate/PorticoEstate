@@ -219,7 +219,7 @@
 
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
-						. "VALUES ($id, $num, $user_id, $insert_values)",__LINE__,__FILE__);
+						. "VALUES ($id, '$num', $user_id, $insert_values)",__LINE__,__FILE__);
 
 						//attachment
 						foreach($var_result as $field => $data)
@@ -247,6 +247,31 @@
 						$_file = basename($file);
 						rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
 						$i++;
+
+						// finishing
+						$criteria = array
+						(
+							'appname'	=> 'catch',
+							'location'	=> '.catch.' . str_replace('_','.',$target),
+							'allrows'	=> true
+						);
+
+						$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+						foreach ( $custom_functions as $entry )
+						{
+							// prevent path traversal
+							if ( preg_match('/\.\./', $entry['file_name']) )
+							{
+								continue;
+							}
+
+							$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+							if ( $entry['active'] && is_file($file) )
+							{
+								require_once $file;
+							}
+						}
 					}
 				}
 				$this->receipt['message'][]=array('msg'=>lang('%1 records imported to %2', $i, $schema_text));
