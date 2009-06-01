@@ -7,42 +7,60 @@
 						<xsl:attribute name="href">
 							<xsl:value-of select="edit_self_link" />
 						</xsl:attribute>
-						<img src="/phpgwapi/templates/base/images/edit.png" />
+						<img src="phpgwapi/templates/base/images/edit.png" />
 				</a></span>
 			</xsl:if>
 		</h2>
-        <dl class="proplist description">
-            <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-            <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
-        </dl>
+		
+		<xsl:if test="description and normalize-space(description)">
+			<dl class="proplist description">
+	            <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
+	            <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
+	        </dl>
+		</xsl:if>
 
         <h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
         <dl class="proplist contactinfo">
-            <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
-            <dd>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="organization/homepage" /></xsl:attribute>
-                    <xsl:value-of select="organization/homepage" />
-                </a>
-            </dd>
-
-            <dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>
-            <dd><xsl:value-of select="organization/email"/></dd>
-
-            <dt><xsl:value-of select="php:function('lang', 'Phone')" /></dt>
-            <dd><xsl:value-of select="organization/phone"/></dd>
+	
+			<xsl:if test="organization/homepage and normalize-space(organization/homepage)">		
+	            <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
+	            <dd>
+	                <a href="{organization/homepage}">
+	                    <xsl:value-of select="organization/homepage" />
+	                </a>
+	            </dd>
+			</xsl:if>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
-            <dd><xsl:value-of select="organization/street"/></dd>
-			
-			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
-            <dd><xsl:value-of select="organization/zip_code"/></dd>
+			<xsl:if test="organization/email and normalize-space(organization/email)">
+				<dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>
+	            <dd><xsl:value-of select="organization/email"/></dd>
+			</xsl:if>
 
-			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
-            <dd><xsl:value-of select="organization/city"/></dd>
+			<xsl:if test="organization/phone and normalize-space(organization/phone)">
+			    <dt><xsl:value-of select="php:function('lang', 'Phone')" /></dt>
+	            <dd><xsl:value-of select="organization/phone"/></dd>	
+			</xsl:if>
+
+			<xsl:if test="organization/street and normalize-space(organization/street)">
+				<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
+	            <dd><xsl:value-of select="organization/street"/></dd>
+			</xsl:if>
 			
-			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
-            <dd><xsl:value-of select="organization/district"/></dd>
+			<xsl:if test="organization/zip_code and normalize-space(organization/zip_code)">
+				<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
+	            <dd><xsl:value-of select="organization/zip_code"/></dd>
+			</xsl:if>
+
+			<xsl:if test="organization/city and normalize-space(organization/city)">
+				<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+	            <dd><xsl:value-of select="organization/city"/></dd>	
+			</xsl:if>
+
+			<xsl:if test="organization/district and normalize-space(organization/district)">
+				<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
+	            <dd><xsl:value-of select="organization/district"/></dd>
+			</xsl:if>
+
         </dl>
 
         <h3><xsl:value-of select="php:function('lang', 'Groups')" /></h3>

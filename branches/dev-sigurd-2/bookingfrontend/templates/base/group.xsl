@@ -19,7 +19,7 @@
 		                <xsl:attribute name="href">
 		                    <xsl:value-of select="edit_self_link" />
 		                </xsl:attribute>
-		                <img src="/phpgwapi/templates/base/images/edit.png" />
+		                <img src="phpgwapi/templates/base/images/edit.png" />
 		            </a></span>
 		        </xsl:if>
 	        </ul>
@@ -32,9 +32,11 @@
 
             <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>
             <dd><xsl:value-of select="group/organization_name"/></dd>
-
-			<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-	        <dd><xsl:value-of select="group/description" disable-output-escaping="yes"/></dd>
+			
+			<xsl:if test="group/description and normalize-space(group/description)">
+				<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
+		        <dd><xsl:value-of select="group/description" disable-output-escaping="yes"/></dd>
+			</xsl:if>
 			
 			<xsl:for-each select="group/contacts">
 				<xsl:if test="normalize-space(.)">
