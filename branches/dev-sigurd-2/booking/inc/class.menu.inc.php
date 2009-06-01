@@ -145,12 +145,6 @@
 				// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicost.index') ),
 				//                     'image'	=> array('property', 'location'),
 				// )
-				'contacts' => array
-				(
-				 	'text'  => lang('Contacts'),
-					'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uicontactperson.index') ),
-					'image' => array('property', 'location'),
-				),
 				'settings' => array
 				(
 					'text'	=> lang('Settings'),
