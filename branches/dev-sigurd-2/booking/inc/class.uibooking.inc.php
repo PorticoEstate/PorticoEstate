@@ -18,10 +18,11 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bobooking');
+			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications::bookings');
-			$this->fields = array('name', 'resources',
+			$this->fields = array('activity_id', 'resources',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
@@ -65,8 +66,8 @@
 					'source' => self::link(array('menuaction' => 'booking.uibooking.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Booking Name'),
+							'key' => 'activity_name',
+							'label' => lang('Activity'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
@@ -163,10 +164,6 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'booking.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
-			phpgwapi_yui::load_widget('paginator');
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
@@ -174,7 +171,9 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			self::render_template('booking_new', array('booking' => $booking, 'agegroups' => $agegroups, 'audience' => $audience));
+			$activities = $this->activity_bo->fetch_activities();
+			$activities = $activities['results'];
+			self::render_template('booking_new', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
 		public function edit()
@@ -197,16 +196,15 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'booking.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('calendar');
-			phpgwapi_yui::load_widget('autocomplete');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			self::render_template('booking_edit', array('booking' => $booking, 'agegroups' => $agegroups, 'audience' => $audience));
+			$activities = $this->activity_bo->fetch_activities();
+			$activities = $activities['results'];
+			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 		
 		public function show()

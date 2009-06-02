@@ -1,20 +1,10 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
 		<ul class="pathway">
-			<li>
-				<a>
-					<xsl:attribute name="href"><xsl:value-of select="season/buildings_link"/></xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Buildings')" />
-				</a>
-			</li>
-			<li>
-				<a>
-					<xsl:attribute name="href"><xsl:value-of select="season/building_link"/></xsl:attribute>
-					<xsl:value-of select="season/building_name"/>
-				</a>
-			</li>
+			<li><a href="{season/buildings_link}"><xsl:value-of select="php:function('lang', 'Buildings')" /></a></li>
+			<li><a href="{season/building_link}"><xsl:value-of select="season/building_name"/></a></li>
 			<li><xsl:value-of select="php:function('lang', 'Season')" /></li>
-			<li><a href=""><xsl:value-of select="season/name"/></a></li>
+			<li><a href="{season/season_link}"><xsl:value-of select="season/name"/></a></li>
 		</ul>
 
 		<xsl:call-template name="msgbox"/>

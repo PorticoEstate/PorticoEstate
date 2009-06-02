@@ -9,11 +9,19 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required'=>true),
-					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
+					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),
 					'to_'		=> array('type' => 'timestamp', 'required'=> true),
 					'season_id'		=> array('type' => 'int', 'required' => true),
+					'activity_name'	=> array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_activity',
+							'fkey' => 'activity_id',
+							'key' => 'id',
+							'column' => 'name'
+					)),
 					'group_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(

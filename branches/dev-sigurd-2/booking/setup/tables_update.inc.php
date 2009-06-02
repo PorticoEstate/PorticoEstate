@@ -1326,3 +1326,23 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.50';
+	function booking_upgrade0_1_50()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking DROP COLUMN name");
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_booking_resource");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_booking_targetaudience");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_booking_agegroup");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_booking");
+		# END Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN activity_id integer NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD CONSTRAINT bb_booking_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES bb_activity(id)");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.51';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -161,7 +161,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'group_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
@@ -172,7 +172,8 @@
 			'fk' => array(
 				'bb_group' => array('group_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
-				'bb_allocation' => array('allocation_id' => 'id')),
+				'bb_allocation' => array('allocation_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),

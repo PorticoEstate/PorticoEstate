@@ -264,6 +264,7 @@
 		{
 			$season_id = intval(phpgw::get_var('id', 'GET'));
 			$season = $this->bo->read_single($season_id);
+			$season['season_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season_id));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));

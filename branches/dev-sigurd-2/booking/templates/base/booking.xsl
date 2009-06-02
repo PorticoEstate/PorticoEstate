@@ -1,13 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         <ul class="pathway">
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="booking/bookings_link"/></xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Bookings')" />
-                </a>
-            </li>
-            <li><a href=""><xsl:value-of select="booking/name"/></a></li>
+            <li><a href="{booking/bookings_link}"><xsl:value-of select="php:function('lang', 'Bookings')" /></a></li>
+            <li><a href="">#<xsl:value-of select="booking/id"/> (<xsl:value-of select="booking/activity_name"/>)</a></li>
         </ul>
 
         <xsl:call-template name="msgbox"/>
