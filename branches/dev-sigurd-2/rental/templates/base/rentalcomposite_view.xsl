@@ -38,8 +38,10 @@
 					<dl class="proplist-col">
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_serial')" /></dt>
 						<dd><xsl:value-of select="data/composite_id"/></dd>
-						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area')" /></dt>
-						<dd><xsl:value-of select="data/area"/> m<sup>2</sup></dd>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_gros')" /></dt>
+						<dd><xsl:value-of select="data/area_gros"/> m<sup>2</sup></dd>
+						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_net')" /></dt>
+						<dd><xsl:value-of select="data/area_net"/> m<sup>2</sup></dd>
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_propertyident')" /></dt>
 						<dd><xsl:value-of select="data/gab_id"/></dd>
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_available?')" /></dt>

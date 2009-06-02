@@ -212,12 +212,14 @@ class rental_sorentalcomposites extends rental_socommon
 			$units[] = array('level' => $level, 'location_code' => $location_code);
 		}
 		
-		$area = 0;
+		$area_gros = 0;
+		$area_net = 0;
 		
 		// Go through each rental unit (location) that belongs to this composite and add up their areas
 		foreach ($units as $unit) {
 			$sql = '';
-			$area_column = 'bta';
+			$area_column_gros = 'bta';
+			$area_column_net = 'bra';
 			
 			// Properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
 			if ($unit['level'] == 1) {
@@ -228,16 +230,18 @@ class rental_sorentalcomposites extends rental_socommon
 			
 			// On level 5 the area columns have different names
 			if ($unit['level'] == 5) {
-				$area_column = 'bruksareal';
+				$area_column_gros = 'bruksareal';
+				$area_column_net = 'bruttoareal';
 			}
 			
 			$this->db->query($sql);
 			while ($this->db->next_record()) {
-				$area += $this->_unmarshal($this->db->f($area_column, true), 'float');
+				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
 			}
 		}
-		
-		$row['area'] = $area;
+		$row['area_gros'] = $area_gros;
+		$row['area_net'] = $area_net;
 		
 		return $row;
 	}

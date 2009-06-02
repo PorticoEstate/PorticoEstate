@@ -19,7 +19,9 @@ rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_filters	rental	no	Filtre
 rental_rc_description	rental	no	Beskrivelse
 rental_rc_available?	rental	no	Kan leies ut?
-rental_rc_area	rental	no	Brutto areal
+rental_rc_area	rental	no	Areal
+rental_rc_area_gros	rental	no	Bruttoareal
+rental_rc_area_net	rental	no	Nettoareal
 rental_rc_rental_composite	rental	no	Leieobjekt
 rental_rc_details	rental	no	Detajer
 rental_rc_elements	rental	no	Elementer
