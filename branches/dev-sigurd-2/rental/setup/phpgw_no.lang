@@ -1,34 +1,37 @@
-rental_rc_all	rental	no	Alle
-rental_rc_serial	rental	no	Løpenummer
-rental_rc_name	rental	no	Navn
+rental_rc_add_area	rental	no	Legg til areal
+rental_rc_added_areas	rental	no	Inkludert areal
 rental_rc_address	rental	no	Adresse
-rental_rc_gab	rental	no	GAB
-rental_rc_land_title	rental	no	Gnr/Bnr
-rental_rc_search_options	rental	no	Søkevalg
-rental_rc_search	rental	no	Søk
-rental_rc_property_id	rental	no	BKB Identifikator
-rental_rc_available	rental	no	Tilgjengelig
-rental_rc_not_available	rental	no	Ikke tilgjengelig
-rental_rc_availibility	rental	no	Tilgjengelighet
-rental_rc_search_for	rental	no	Søk etter
-rental_rc_search_where	rental	no	i
-rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
-rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
-rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
-rental_rc_toolbar_functions	rental	no	Funksjoner
-rental_rc_toolbar_filters	rental	no	Filtre
-rental_rc_description	rental	no	Beskrivelse
-rental_rc_available?	rental	no	Kan leies ut?
+rental_rc_all	rental	no	Alle
 rental_rc_area	rental	no	Areal
 rental_rc_area_gros	rental	no	Bruttoareal
 rental_rc_area_net	rental	no	Nettoareal
-rental_rc_rental_composite	rental	no	Leieobjekt
-rental_rc_details	rental	no	Detajer
-rental_rc_elements	rental	no	Elementer
+rental_rc_availibility	rental	no	Tilgjengelighet
+rental_rc_available	rental	no	Tilgjengelig
+rental_rc_available?	rental	no	Kan leies ut?
+rental_rc_cancel	rental	no	Avbryt
 rental_rc_contracts	rental	no	Kontrakter
+rental_rc_description	rental	no	Beskrivelse
+rental_rc_details	rental	no	Detajer
 rental_rc_documents	rental	no	Dokumenter
+rental_rc_elements	rental	no	Elementer
+rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
+rental_rc_id	rental	no	ID
+rental_rc_land_title	rental	no	Gnr/Bnr
+rental_rc_name	rental	no	Navn
+rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_post_code	rental	no	Postnummer
 rental_rc_post_place	rental	no	Sted
+rental_rc_property_id	rental	no	BKB Identifikator
+rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
+rental_rc_rental_composite	rental	no	Leieobjekt
 rental_rc_save	rental	no	Lagre
-rental_rc_cancel	rental	no	Avbryt
+rental_rc_search	rental	no	Søk
+rental_rc_search_for	rental	no	Søk etter
+rental_rc_search_options	rental	no	Søkevalg
+rental_rc_search_where	rental	no	i
+rental_rc_serial	rental	no	Løpenummer
+rental_rc_toolbar_filters	rental	no	Filtre
+rental_rc_toolbar_functions	rental	no	Funksjoner
+rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
+rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner

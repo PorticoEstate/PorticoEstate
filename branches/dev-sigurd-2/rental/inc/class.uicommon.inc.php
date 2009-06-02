@@ -150,14 +150,13 @@
 		// Build a YUI result style array
 		public function yui_results($results)
 		{
-            return array
+             return array
 			(   
 				'ResultSet' => array(
 					'totalRecords' => $results['total_records'], 
 					'Result' => $results['results']
 				)   
 			);  
-
 		}
 		
 	}

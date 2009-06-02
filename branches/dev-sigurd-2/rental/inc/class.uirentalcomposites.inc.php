@@ -9,7 +9,7 @@
 			'index'		=> true,
 			'view'		=> true,
 			'edit'		=> true,
-			'columns'	=> true,
+			'columns'	=> true
 		);
 
 		public function __construct()
@@ -19,12 +19,19 @@
 			self::set_active_menu('rental::rentalcomposites');
 		}
 
-		public function index_json()
+		protected function index_json()
 		{
 			$compositeArray = $this->bo->read();
 			
 			array_walk($compositeArray['results'], array($this, '_add_actions'));
 			return $this->yui_results($compositeArray);
+		}
+
+		protected function view_json($composite_id)
+		{
+			$composite = $this->bo->read_single($composite_id);
+			//var_dump($composite);
+			return $this->yui_results($composite);
 		}
 
 		/*
@@ -153,8 +160,6 @@
 					)
 				)
 			);
-//			var_dump((!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))));
-//			var_dump($columnArray);
 			self::render_template('datatable', $data);
 		}						
 
@@ -163,7 +168,7 @@
 		 */
 		public function view() {
 			// TODO: authorization check?
-			$this -> viewedit(false);
+			return $this -> viewedit(false);
 		}
 		
 		/**
@@ -171,7 +176,7 @@
 		 */
 		public function edit(){
 			// TODO: authorization check 
-			$this -> viewedit(true);
+			return $this -> viewedit(true);
 		}
 		
 		
@@ -179,13 +184,19 @@
 		 * Handling details 
 		 * @param $access true renders fields editable, false renders fields disabled
 		 */
-		function viewedit($access)
+		protected function viewedit($access)
 		{
-			phpgwapi_yui::load_widget('tabview');
 
-			$composite_id = phpgw::get_var('id');
+			$composite_id = (int)phpgw::get_var('id');
 			// TODO: How to check for valid input here?
-			if ($composite_id) {
+			if ($composite_id > 0) {
+				if(phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return $this->view_json($composite_id);
+				}
+				self::add_javascript('rental', 'rental', 'datatable.js');
+				phpgwapi_yui::load_widget('datatable');
+				phpgwapi_yui::load_widget('tabview');
 				$composite = $this->bo->read_single($composite_id);
 				
 				$tabs = array();
@@ -200,7 +211,17 @@
 				(
 					'data' 	=> $composite,
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'rental_rc_details'),
-					'access' => $access
+					'access' => $access,
+					'datatable' => array(
+						'source' => self::link(array('menuaction' => 'rental.uirentalcomposites.view', 'phpgw_return_as' => 'json', 'id' => $composite_id)),
+						'field' => array(
+							array(
+								'key' => 'location_code',
+								'label' => lang('rental_rc_id'),
+								'sortable' => true
+							)
+						)
+					)
 				);
 				
 				$errors = array();
@@ -229,9 +250,11 @@
 				self::render_template('rentalcomposite_edit', $data);
 			}
 		}
-		
+				
 		/**
-		 * 
+		 * Stores which columns that should be displayed in index(). The data
+		 * is stored per user.
+		 *  
 		 */
 		function columns()
 		{

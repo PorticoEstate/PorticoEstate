@@ -200,7 +200,7 @@ class rental_sorentalcomposites extends rental_socommon
 			$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
 		}
 		
-		$row['units'] = array();
+		$row['results'] = array();
 		
 		// Get all rental units belonging to this composite object
 		$this->db->query("SELECT fm_locations.* FROM rental_unit JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) WHERE composite_id = {$id}");
@@ -216,32 +216,56 @@ class rental_sorentalcomposites extends rental_socommon
 		$area_net = 0;
 		
 		// Go through each rental unit (location) that belongs to this composite and add up their areas
-		foreach ($units as $unit) {
+		foreach ($units as $unit)
+		{
 			$sql = '';
 			$area_column_gros = 'bta';
 			$area_column_net = 'bra';
+			$current_unit = &$row['results'][]; 
+			$current_unit['location_code'] = $unit['location_code'];
 			
 			// Properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
-			if ($unit['level'] == 1) {
+			if ($unit['level'] == 1)
+			{
+				// We need to get location name from fm_location1
+				$this->db->query('SELECT loc1_name, adresse1 FROM fm_location1 WHERE location_code = \''.$unit['location_code'].'\'');
+				if($this->db->next_record())
+				{
+					$current_unit['name'] = $this->_unmarshal($this->db->f('loc1_name', true), 'string');
+					if(!$row['has_custom_address']) // No custom address
+					{
+						$current_unit['address'] = 	$this->_unmarshal($this->db->f('adresse1', true), 'string');
+					}
+				}
 				$sql = "SELECT * FROM fm_location2 WHERE loc1 LIKE '{$unit['location_code']}'";
-			} else {
-				$sql = "SELECT * FROM fm_location{$unit['level']} WHERE location_code LIKE '{$unit['location_code']}'";
+			} 
+			else 
+			{
+				// XXX: RS: Continue here
+				$sql = "SELECT * FROM fm_location{$unit['level']} JOIN fm_location2 ON (fm_location{$unit['level']}.loc2 = fm_location2.location_code) WHERE location_code LIKE '{$unit['location_code']}'";
 			}
 			
 			// On level 5 the area columns have different names
-			if ($unit['level'] == 5) {
+			if ($unit['level'] == 5)
+			{
 				$area_column_gros = 'bruksareal';
 				$area_column_net = 'bruttoareal';
 			}
 			
 			$this->db->query($sql);
-			while ($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
 				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
+				if ($unit['level'] != 1) // We haven't already got a name
+				{
+					$current_unit['name'] = $this->_unmarshal($this->db->f('loc'.$unit['level'].'_name', true), 'string');
+				}
 			}
 		}
 		$row['area_gros'] = $area_gros;
 		$row['area_net'] = $area_net;
+		$row['total_records'] = count($row['results']);
 		
 		return $row;
 	}
