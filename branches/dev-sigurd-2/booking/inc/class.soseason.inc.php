@@ -177,7 +177,20 @@
 			{
 				$errors['overlaps'] = lang("This allocation overlaps another allocation");
 			}
-			// FIXME: Make sure the allocation is inside all season/day boundaries
+			$this->db->query(
+					"SELECT 1 FROM bb_season_boundary " .
+					"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_}",
+					__LINE__, __FILE__);
+			if(!$this->db->next_record())
+			{
+				$errors['overlaps'] = lang("This allocation is outside season boundaries");
+			}
 		}
 
+		function delete($id)
+		{
+			$this->db->query("DELETE FROM bb_wtemplate_alloc_resource WHERE allocation_id=" . intval($id), __LINE__, __FILE__);
+			$this->db->query("DELETE FROM bb_wtemplate_alloc WHERE id=" . intval($id), __LINE__, __FILE__);
+		}
+		
 	}
