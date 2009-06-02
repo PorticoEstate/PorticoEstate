@@ -176,6 +176,12 @@
 			return $this->so_wtemplate_alloc->add($alloc);
 		}
 
+		function delete_wtemplate_alloc($alloc)
+		{
+			$this->authorize_write($alloc['season_id']);
+			return $this->so_wtemplate_alloc->delete($alloc['id']);
+		}
+
 		function update_wtemplate_alloc($alloc)
 		{
 			$this->authorize_write($alloc['season_id']);

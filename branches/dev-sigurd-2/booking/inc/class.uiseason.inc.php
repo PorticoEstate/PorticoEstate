@@ -12,6 +12,7 @@
 			'edit'			=>	true,
 			'boundaries'	=>	true,
 			'delete_boundary'	=>	true,
+			'delete_wtemplate_alloc'	=>	true,
 			'wtemplate'		=>	true,
 			'wtemplate_json'		=>	true,
 			'wtemplate_alloc_json'		=>	true,
@@ -251,6 +252,14 @@
 			$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id'=>$season_id));
 		}
 
+		public function delete_wtemplate_alloc()
+		{
+			$allocation_id = intval(phpgw::get_var('id', 'POST'));
+			$alloc = $this->bo->so_wtemplate_alloc->read_single($allocation_id);
+			$this->bo->delete_wtemplate_alloc($alloc);
+			return 1;
+		}
+
 		public function wtemplate()
 		{
 			$season_id = intval(phpgw::get_var('id', 'GET'));
@@ -261,7 +270,7 @@
 			$season['get_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['generate_url'] = self::link(array('menuaction' => 'booking.uiseason.generate', 'id' => $season['id']));
-
+			$season['delete_wtemplate_alloc_url'] = self::link(array('menuaction' => 'booking.uiseason.delete_wtemplate_alloc', 'phpgw_return_as'=>'json'));
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('season_wtemplate', array('season' => $season));
 		}

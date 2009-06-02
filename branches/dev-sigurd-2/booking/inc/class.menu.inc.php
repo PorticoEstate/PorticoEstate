@@ -168,7 +168,7 @@
 						),
 						'agegroup'	=> array
 						(
-							'text'	=> lang('Agegroup'),
+							'text'	=> lang('Age group'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
 						)
 					)

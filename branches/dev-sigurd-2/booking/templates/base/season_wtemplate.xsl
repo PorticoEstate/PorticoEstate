@@ -118,6 +118,7 @@ YAHOO.booking.AllocationDialog = function(container) {
 	YAHOO.booking.autocompleteHelper(orgUrl, 'field_org_name', 'field_org_id', 'org_container');
 
 	var myButtons = [{text:"<xsl:value-of select="php:function('lang', 'Save')" />", handler: this.submit, isDefault:true},
+                  	 {text:"<xsl:value-of select="php:function('lang', 'Delete')" />", handler: this.delete},
                   	 {text:"<xsl:value-of select="php:function('lang', 'Cancel')" />", handler: this.hide}];
 	this.cfg.queueProperty("buttons", myButtons);
 	this.callback.success = this.onSuccess;
@@ -126,6 +127,21 @@ YAHOO.booking.AllocationDialog = function(container) {
 	this.render();
 };
 YAHOO.lang.extend(YAHOO.booking.AllocationDialog, YAHOO.widget.Dialog); 
+
+YAHOO.booking.AllocationDialog.prototype.delete = function (e) {
+	var postData = 'id=' + YAHOO.booking.currentAlloc;
+	var url = '<xsl:value-of select="season/delete_wtemplate_alloc_url"/>';
+	YAHOO.util.Connect.asyncRequest('POST', url, 
+	{
+		success: function(o) {
+			YAHOO.booking.updateSchedule();
+			var panel = o.argument;
+	        panel.hide();
+		},
+		failure: function(o) {alert('nay' + o)},
+		argument: this
+	}, postData);
+}
 
 YAHOO.booking.AllocationDialog.prototype.onFailure = function (o) {
 	alert('Operation failed');
@@ -148,6 +164,7 @@ YAHOO.booking.AllocationDialog.prototype.onSuccess = function (o) {
 }
 
 YAHOO.booking.AllocationDialog.prototype.editAllocation = function (id) {
+	YAHOO.booking.currentAlloc = id;
 	var url = '<xsl:value-of select="season/get_url"/>';
 <![CDATA[
 	url += '&id=' + id;

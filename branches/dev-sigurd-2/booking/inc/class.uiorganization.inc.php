@@ -74,7 +74,7 @@
 						),
 						array(
 							'key' => 'primary_contact_name',
-							'label' => lang('Primary contact')
+							'label' => lang('Admin 1')
 						),
 						array(
 							'key' => 'phone',
