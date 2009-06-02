@@ -9,6 +9,22 @@
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
+		
+		public function get_columns()
+		{
+			if (!isset($this->cols))
+			{
+				$this->cols = array();
+				
+				foreach($this->fields as $field => $params)
+				{
+					if($params['join']) { continue; }
+					$this->cols[] = $field;
+				}
+			}
+			
+			return $this->cols;
+		}
 
 		public function _get_cols_and_joins()
 		{

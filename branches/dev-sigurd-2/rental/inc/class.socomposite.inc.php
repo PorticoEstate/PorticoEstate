@@ -1,14 +1,14 @@
 <?php
 phpgw::import_class('rental.socommon');
 
-class rental_sorentalcomposites extends rental_socommon
+class rental_socomposite extends rental_socommon
 {
 	function __construct()
 	{
 		parent::__construct('rental_composite',
 		array
 		(
-					'composite_id'	=> array('type' => 'int'),
+					'id'	=> array('type' => 'int'),
 					'description' => array('type' => 'string'),
 					'is_active' => array('type', 'bool'),
  					'name'	=> array('type' => 'string'),
@@ -36,7 +36,7 @@ class rental_sorentalcomposites extends rental_socommon
 				$like_clauses = array();
 				switch($search_option){
 					case "id":
-						$like_clauses[] = "rental_composite.composite_id = $query";
+						$like_clauses[] = "rental_composite.id = $query";
 						break;
 					case "name":
 						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
@@ -122,12 +122,12 @@ class rental_sorentalcomposites extends rental_socommon
 		$condition = $this->_get_conditions($query, $filters,$search_option);
 		
 		$tables = "rental_composite";
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
-		$distinct = 'distinct on(rental_composite.composite_id)';
-		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		$joins = 'JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$distinct = 'distinct on(rental_composite.id)';
+		$cols = 'rental_composite.id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
 		
 		// Calculate total number of records
-		$this->db->query("SELECT COUNT(distinct rental_composite.composite_id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->query("SELECT COUNT(distinct rental_composite.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');
 
@@ -174,11 +174,11 @@ class rental_sorentalcomposites extends rental_socommon
 	 */
 	function read_single($id)
 	{
-		$distinct = 'distinct on(rental_composite.composite_id)';
-		$cols = 'rental_composite.composite_id, rental_composite.name, rental_composite.description, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.is_active, rental_composite.postcode, rental_composite.place, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
-		$joins = 'JOIN rental_unit ON (rental_composite.composite_id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$distinct = 'distinct on(rental_composite.id)';
+		$cols = 'rental_composite.id, rental_composite.name, rental_composite.description, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.is_active, rental_composite.postcode, rental_composite.place, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
+		$joins = 'JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		
-		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.composite_id=$id", __LINE__, __FILE__);
+		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.id=$id", __LINE__, __FILE__);
 		
 		$row = array();
 		
@@ -272,16 +272,16 @@ class rental_sorentalcomposites extends rental_socommon
 	
 	function update($entry)
 	{
-		$id = intval($entry['composite_id']);
+		$id = intval($entry['id']);
 		$cols = array();
 		$values = array();
-		$fields = array('composite_id', 'description', 'is_active', 'name', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'has_custom_address');
+		$fields = array('id', 'description', 'is_active', 'name', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'has_custom_address');
 		
 		foreach($fields as $field)
 		{
 			$params = $this->fields[$field];
 			
-			if($field == 'composite_id' || $params['join'] || $params['manytomany'])
+			if($field == 'id' || $params['join'] || $params['manytomany'])
 			{
 				continue;
 			}
@@ -289,7 +289,7 @@ class rental_sorentalcomposites extends rental_socommon
 		}
 		
 		$cols = join(',', $cols);
-		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE composite_id=$id", __LINE__,__FILE__);
+		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));

@@ -37,7 +37,7 @@
 				'rentalcomposites' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Rental composites', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uirentalcomposites.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.index') ),
                     'image'	=> array('property', 'location')
 				),
 				'tenants' => array

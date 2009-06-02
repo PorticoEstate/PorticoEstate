@@ -31,10 +31,12 @@
 	
 	class rental_uicommon
 	{
+		protected static $old_exception_handler;
+			
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			self::set_active_menu('booking');
+			self::set_active_menu('rental');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -53,6 +55,23 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
+		}
+		
+		public static function process_rental_unauthorized_exceptions()
+		{
+			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_rental_unauthorized_exception'));
+		}
+		
+		public static function handle_rental_unauthorized_exception(Exception $e)
+		{
+			if ($e instanceof rental_unauthorized_exception)
+			{
+				$message = htmlentities('HTTP/1.0 401 Unauthorized - '.$e->getMessage(), null, self::encoding());
+				header($message);
+				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
+			} else {
+				call_user_func(self::$old_exception_handler, $e);
+			}
 		}
 
 		public function link($data)

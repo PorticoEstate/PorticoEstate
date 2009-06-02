@@ -106,7 +106,7 @@
 						
 						<dl class="proplist-col">
 							<dt><xsl:value-of select="php:function('lang', 'rental_rc_serial')" /></dt>
-							<dd><xsl:value-of select="data/composite_id"/></dd>
+							<dd><xsl:value-of select="data/id"/></dd>
 							<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_gros')" /></dt>
 							<dd><xsl:value-of select="data/area_gros"/> m<sup>2</sup></dd>
 							<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_net')" /></dt>
@@ -171,7 +171,20 @@
 				</div>
 				
 				<div id="documents">
-					<p>dokumenter</p>
+					<div id="documents_container"/>
+					
+					<script type="text/javascript">
+						var  composite_id = <xsl:value-of select="data/id"/>;
+						    <![CDATA[
+						YAHOO.util.Event.addListener(window, "load", function() {
+							var url = 'index.php?menuaction=rental.uidocument_composite.index&sort=name&filter_owner_id=' + composite_id + '&phpgw_return_as=json&';
+							var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.rental.formatLink}, {key: 'category', label: 'Category'}, {key: 'actions', label: 'Actions', formatter: YAHOO.rental.formatGenericLink('Edit', 'Delete')}];
+							YAHOO.rental.inlineTableHelper('documents_container', url, colDefs);
+						});
+						
+						]]>
+					</script>
+					
 				</div>
 			</div>
 		</div>
