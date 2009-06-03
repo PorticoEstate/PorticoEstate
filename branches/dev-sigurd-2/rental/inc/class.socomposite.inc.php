@@ -122,7 +122,7 @@ class rental_socomposite extends rental_socommon
 		$condition = $this->_get_conditions($query, $filters,$search_option);
 		
 		$tables = "rental_composite";
-		$joins = 'JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		$distinct = 'distinct on(rental_composite.id)';
 		$cols = 'rental_composite.id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
 		
@@ -176,7 +176,7 @@ class rental_socomposite extends rental_socommon
 	{
 		$distinct = 'distinct on(rental_composite.id)';
 		$cols = 'rental_composite.id, rental_composite.name, rental_composite.description, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.is_active, rental_composite.postcode, rental_composite.place, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
-		$joins = 'JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		
 		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.id=$id", __LINE__, __FILE__);
 		
@@ -293,6 +293,14 @@ class rental_socomposite extends rental_socommon
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+		return $receipt;
+	}
+	
+	function add($entry)
+	{
+		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$entry')";
+		$result = $this->db->query($q);
+		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');;
 		return $receipt;
 	}
 }
