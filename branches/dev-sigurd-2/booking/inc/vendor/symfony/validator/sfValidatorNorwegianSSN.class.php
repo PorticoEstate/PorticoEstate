@@ -21,6 +21,8 @@ class sfValidatorNorwegianSSN extends sfValidatorRegex
 	}
 	
   /**
+   * Valid format for a norwegian SSN is DDMMYY\d\d\d\d\d
+   *
    * @see sfValidatorRegex
    */
   protected function configure($options = array(), $messages = array())
