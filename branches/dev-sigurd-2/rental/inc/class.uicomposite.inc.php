@@ -31,7 +31,11 @@
 
 		protected function view_json($composite_id)
 		{
-			$composite = $this->bo->read_single($composite_id);
+			$params = array
+			(
+				'id' => $composite_id
+			);
+			$composite = $this->bo->read_single($params);
 			//var_dump($composite);
 			return $this->yui_results($composite);
 		}
@@ -292,6 +296,37 @@
 							array(
 								'key' => 'location_code',
 								'label' => lang('rental_rc_id'),
+								'sortable' => true
+							),
+							// $names_to_look_for_array).", {$address_column}, name, fm_location{$unit['level']}.{$area_column_gros}, fm_location{$unit['level']}.{$area_column_net}
+							array(
+								'key' => 'loc1_name',
+								'label' => lang('rental_rc_property'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc2_name',
+								'label' => lang('rental_rc_building'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc3_name',
+								'label' => lang('rental_rc_section'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'address',
+								'label' => lang('rental_rc_address'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'area_gros',
+								'label' => lang('rental_rc_area_gros'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'area_net',
+								'label' => lang('rental_rc_area_net'),
 								'sortable' => true
 							)
 						)
