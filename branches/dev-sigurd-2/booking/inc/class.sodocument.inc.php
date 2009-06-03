@@ -93,14 +93,12 @@
 		}
 		
 		protected function doValidate($document, booking_errorstack $errors)
-		{
-			require_once(dirname(__FILE__).'/vendor/symfony/validator/bootstrap.php');
-			
+		{	
 			$this->newFile = null;
 			
 			if (!$document['id'])
 			{
-				$fileValidator = new sfValidatorFile();
+				$fileValidator = createObject('booking.sfValidatorFile');
 				$files = $document['files'];
 				unset($document['files']);
 				try {

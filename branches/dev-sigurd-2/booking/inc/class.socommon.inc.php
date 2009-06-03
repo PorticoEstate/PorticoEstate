@@ -1,6 +1,4 @@
 <?php
-	require_once(dirname(__FILE__).'/vendor/symfony/validator/bootstrap.php');
-
 	abstract class booking_socommon
 	{
 		protected

@@ -26,7 +26,7 @@
 							'table' => 'bb_group_contact',
 							'key' => 'group_id',
 							'column' => array('name',
-							                  'email' => array('sf_validator' => new sfValidatorEmail(array(), array('invalid' => '%field% contains an invalid email'))),
+							                  'email' => array('sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% contains an invalid email'))),
 							                  'phone')
 						)
 					),

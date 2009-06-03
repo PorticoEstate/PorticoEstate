@@ -15,7 +15,7 @@
 					'to_'		=> array('type' => 'string', 'required'=> true),
 					'cost'		=> array('type' => 'decimal', 'required' => true),
 					'contact_name' => array('type' => 'string', 'required'=> true),
-					'contact_email' => array('type' => 'string', 'sf_validator' => new sfValidatorEmail(array(), array('invalid' => '%field% is invalid'))),
+					'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone' => array('type' => 'string'),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
