@@ -144,15 +144,24 @@
 						</dl>
 						
 						<div class="form-buttons">
-							<xsl:if test="access = 1">
-								<input type="submit">	
-									<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_save')"/></xsl:attribute>
-								</input>
-								<a class="cancel">
-								<xsl:attribute name="href"><xsl:value-of select="cancel_link"></xsl:value-of></xsl:attribute>
-			       					<xsl:value-of select="php:function('lang', 'rental_rc_cancel')"/>
-			       				 </a>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="access = 1">
+									<input type="submit">	
+										<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_save')"/></xsl:attribute>
+									</input>
+									<a class="cancel">
+									<xsl:attribute name="href"><xsl:value-of select="cancel_link"></xsl:value-of></xsl:attribute>
+				       					<xsl:value-of select="php:function('lang', 'rental_rc_cancel')"/>
+				       				 </a>
+				       			</xsl:when>
+				       			<xsl:otherwise>
+				       				<a class="cancel">
+									<xsl:attribute name="href"><xsl:value-of select="cancel_link"></xsl:value-of></xsl:attribute>
+				       					<xsl:value-of select="php:function('lang', 'rental_rc_back')"/>
+				       				 </a>
+				       			</xsl:otherwise>
+							</xsl:choose>
+							
 						</div>
 					</form>
 				</div>
