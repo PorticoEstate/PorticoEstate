@@ -11,6 +11,7 @@
 			'view'		=> true,
 			'edit'		=> true,
 			'columns'	=> true,
+			'add'		=> true
 		);
 
 		public function __construct()
@@ -66,17 +67,27 @@
 			$columnArray = $GLOBALS['phpgw_info']['user']['preferences']['rental']['rental_columns_composite'];
 			$data = array(
 				'form' => array(
-					'toolbar1' => array(
+					'toolbar4' => array(
 						'toolbar' => true,
-						'label' => lang('rental_rc_toolbar_functions'),
+						'label' => lang('rental_rc_toolbar_new'),
+						'control6' => array(
+					 			'control' => 'input',
+					 			'id' => 'ctrl_add_rental_composite_name',
+								'type' => 'text',
+					 			'name' => 'rental_composite_name',
+								'text' => lang('rental_rc_name')
+						),
 						'control1' => array(
 					 			'control' => 'input',
 					 			'id' => 'ctrl_add_rental_composite',
 								'type' => 'button',
 					 			'name' => 'name',
 								'value' => lang('rental_rc_toolbar_functions_new_rc'),
-								'href' => self::link(array('menuaction' => 'rental.uicomposite.add'))
 						),
+					),
+					'toolbar1' => array(
+						'toolbar' => true,
+						'label' => lang('rental_rc_toolbar_functions'),
 						'control5' => array(
 				 			'control' => 'input',
 							'id' => 'dt-options-link',
@@ -172,7 +183,8 @@
 		 */
 		public function view() {
 			// TODO: authorization check?
-			return $this -> viewedit(false);
+			$composite_id = (int)phpgw::get_var('id');
+			return $this -> viewedit(false, $composite_id);
 		}
 		
 		/**
@@ -180,7 +192,14 @@
 		 */
 		public function edit(){
 			// TODO: authorization check 
-			return $this -> viewedit(true);
+			$composite_id = (int)phpgw::get_var('id');
+			return $this -> viewedit(true, $composite_id);
+		}
+		
+		public function add()
+		{
+			$receipt = $this->bo->add(phpgw::get_var('rental_composite_name'));
+			return $this -> viewedit(true,$receipt['id']);			
 		}
 		
 		
@@ -188,11 +207,9 @@
 		 * Handling details 
 		 * @param $access true renders fields editable, false renders fields disabled
 		 */
-		protected function viewedit($access)
+		protected function viewedit($access, $composite_id)
 		{
 			phpgwapi_yui::load_widget('tabview');
-
-			$composite_id = (int)phpgw::get_var('id');
 			// TODO: How to check for valid input here?
 			if ($composite_id > 0) {
 				if(phpgw::get_var('phpgw_return_as') == 'json')
@@ -327,5 +344,7 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}
+		
+		
 	}
 ?>
