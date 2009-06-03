@@ -295,7 +295,8 @@
 								'sortable' => true
 							)
 						)
-					)
+					),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
 				);
 				
 				$errors = array();
