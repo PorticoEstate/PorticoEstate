@@ -70,6 +70,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});
     });
+
+    YAHOO.util.Event.addListener('ctrl_add_rental_composite', "click", function(e){    	
+    	YAHOO.util.Event.stopEvent(e);
+    	newName = document.getElementById('ctrl_add_rental_composite_name').value;
+        window.location = "index.php?menuaction=rental.uicomposite.add&rental_composite_name=" + newName;
+    	});
     
     YAHOO.util.Event.addListener('ctrl_toggle_active_rental_composites', "change", function(e){
         YAHOO.util.Event.stopEvent(e);
@@ -131,6 +137,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    myContextMenu.render("datatable-container");
 	    myContextMenu.clickEvent.subscribe(onContextMenuClick, myDataTable);
     }();
+    
+    
     
     // Shows dialog, creating one when necessary
     var newCols = true;
@@ -229,5 +237,4 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	
 	// Hook up the SimpleDialog to the link
 	YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);
-
 });
