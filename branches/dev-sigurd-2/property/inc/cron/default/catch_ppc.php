@@ -191,7 +191,7 @@
 				{
 					$var_result = $xmlparse->parseFile($file);
 					$var_result = array_change_key_case($var_result, CASE_LOWER);
-//_debug_array($var_result);
+
 					//data
 					$insert_values	= array();
 					$cols			= array();
@@ -199,10 +199,21 @@
 					{
 						if(isset($var_result[$field]))
 						{
-							$insert_values[] = utf8_encode($var_result[$field]);
+							switch ( $field_info->type )
+							{
+								case 'numeric':
+									$insert_values[] =  str_replace(',','.',$var_result[$field]);
+									break;
+								case 'timestamp':
+									$insert_values[] =  date($this->db->date_format(), strtotime($var_result[$field]));
+									break;
+								default:
+									$insert_values[] = utf8_encode($var_result[$field]);
+							}
 							$cols[]			 = $field;
 						}
 					}
+
 					if($cols) // something to import
 					{
 						$cols[]	= 'entry_date';
@@ -297,8 +308,10 @@
 					if ( $file->isDot()
 						|| !$file->isFile()
 						|| !$file->isReadable()
-						|| mime_content_type($file->getPathname()) != 'text/xml')
-					{
+						//|| mime_content_type($file->getPathname()) != 'text/xml')
+						//|| finfo_file( finfo_open(FILEINFO_MIME, '/usr/share/file/magic'), $file->getPathname() ) != 'text/xml')
+						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+ 					{
 						continue;
 					}
 
