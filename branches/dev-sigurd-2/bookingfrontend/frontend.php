@@ -19,6 +19,14 @@
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 	$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 
+	$continue = trim(phpgw::get_var('continue', 'string', ''));
+	
+	if (!empty($continue))
+	{
+		header('Location: '. urldecode($continue));
+		exit;
+	}
+
 	$forward = phpgw::get_var('phpgw_forward', 'int');
 
 	if($forward)
