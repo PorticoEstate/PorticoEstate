@@ -170,8 +170,8 @@
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
-			$organization['edit_link'] = self::link(array('menuaction' => 'booking.uiorganization.edit', 'id' => $organization['id']));
-			self::render_template('organization', array('organization' => $organization, ));
+			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
+			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
+			self::render_template('organization', array('organization' => $organization));
 		}
 	}

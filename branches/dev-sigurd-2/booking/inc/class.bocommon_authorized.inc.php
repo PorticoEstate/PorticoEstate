@@ -52,6 +52,11 @@
 			return $this->so->get_columns();
 		}
 		
+		protected function current_app()
+		{
+			return $GLOBALS['phpgw_info']['flags']['currentapp'];
+		}
+		
 		protected function current_account_id()
 		{
 			return get_account_id();
@@ -98,8 +103,8 @@
 			if (is_null($for_object)) {
 				if (!$this->collection_roles)
 				{
-					$roles = array_merge($initial_roles, $this->sopermission->read(array('filters' => array('subject_id' => $this->current_account_id()))));
-					$roles = $roles['total_records'] > 0 ? $roles['results'] : array();
+					$roles = $this->sopermission->read(array('filters' => array('subject_id' => $this->current_account_id())));
+					$roles = $initial_roles + ($roles['total_records'] > 0 ? $roles['results'] : array());
 					$roles[] = $default_role;
 					$this->collection_roles = $roles;
 				}
@@ -117,13 +122,14 @@
 				if (!isset($this->subject_roles[$key])) {
 					if (isset($for_object['id'])) {  
 						//An id = Edit or read existing object, a candidate for subject object roles.
-						$roles = array_merge($initial_roles, $this->sopermission->read(array('filters' => array('object_id' => $for_object['id'], 'subject_id' => $this->current_account_id()))));
-						$roles = $roles['total_records'] > 0 ? $roles['results'] : array();
+						$roles = $this->sopermission->read(array('filters' => array('object_id' => $for_object['id'], 'subject_id' => $this->current_account_id())));
+						$roles = $initial_roles + ($roles['total_records'] > 0 ? $roles['results'] : array());
 					} else {
-						//No id = Create operation, no possible roles for this subject and object as
+						//No id = Create operation: no possible roles for this subject and object as
 						//the object does not exist at this stage. But since there could be parent roles 
-						//affecting authorization for this operation, we continue on without defining any subject roles.
-						$roles = array();
+						//affecting authorization for this operation, we continue on without defining any
+						//subject roles here.
+						$roles = $initial_roles + array();
 					}
 					
 					$roles[] = $default_role;
@@ -134,7 +140,7 @@
 				//Parent roles must be retrieved every time since the object's parent may have changed
 				//since the last time we read the object. No need to worry performancewise here since 
 				//the parent(s) will also have cached their permissions (so long as you retrieve parent
-			    //permissions using this method too which is recommended).
+			    //permissions using this method too).
 				if (is_array($parent_roles = $this->include_subject_parent_roles($for_object)))
 				{
 					$this->subject_roles[$key]['_parent_roles'] = $parent_roles;
@@ -148,7 +154,7 @@
 		
 		/**
 		 * If $for_object is provided then return only the parent roles for that specific object.
-		 * If $for_object == null then provide all distinct roles from all parent objects
+		 * If $for_object == null then provide all distinct roles from all parent objects.
 		 *
 		 * @param array $for_object (optional)
 		 */
@@ -476,40 +482,42 @@
 			
 			if (is_array($object)) {
 				$object_id = isset($object['id']) ? $object['id'] : null;
-			}
 			
-			if (!$object_id) {
-				throw new InvalidArgumentException('Cannot authorize operation \'write\' unless an object id is provided');
-			}
+				if (!$object_id) {
+					throw new InvalidArgumentException('Cannot authorize operation \'write\' unless an object id is provided');
+				}
 			
-			$persisted_object = parent::read_single($object_id);			
-			$allowed_fields = $this->authorize('write', $persisted_object);	
+				$persisted_object = parent::read_single($object_id);			
+				$allowed_fields = $this->authorize('write', $persisted_object);	
 			
-			if (is_array($object)) {
-				$transient_object = $object;
-				$this->authorize('write', $transient_object);	
-			} else {
-				$transient_object = $persisted_object;
-			}
-				
-			//$allowed_fields is an array that contains the names of the 
-			//fields that the role gave us permission to write to.
-			if (is_array($transient_object)) {
-				$allowed_object = array();
-				if (is_array($allowed_fields)) {
-					foreach($this->get_columns() as $field) {
-						if (isset($allowed_fields[$field])) {
-							$allowed_object[$field] = $transient_object[$field];
-						} elseif(isset($persisted_object[$field])) {
-							$allowed_object[$field] = $persisted_object[$field];
-						}
-					}
+				if (is_array($object)) {
+					$transient_object = $object;
+					$this->authorize('write', $transient_object);	
+				} else {
+					$transient_object = $persisted_object;
 				}
 				
-				return $allowed_object;
-			}
+				//$allowed_fields is an array that contains the names of the 
+				//fields that the role gave us permission to write to.
+				if (is_array($transient_object)) {
+					$allowed_object = array();
+					if (is_array($allowed_fields)) {
+						foreach($this->get_columns() as $field) {
+							if (isset($allowed_fields[$field])) {
+								$allowed_object[$field] = $transient_object[$field];
+							} elseif(isset($persisted_object[$field])) {
+								$allowed_object[$field] = $persisted_object[$field];
+							}
+						}
+					}
+				
+					return $allowed_object;
+				}
 			
-			return $persisted_object; //No change allowed, so return the already persisted object
+				return $persisted_object; //No change allowed, so return the already persisted object
+			} else {
+				$this->authorize('write', $object);
+			}
 		}
 		
 		/**

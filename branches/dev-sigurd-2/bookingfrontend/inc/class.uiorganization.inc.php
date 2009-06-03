@@ -16,28 +16,23 @@
 			parent::__construct();
 			$this->module = "bookingfrontend";
 		}
+		
 		protected function indexing()
 		{
 			return parent::index_json();
 		}
-
+		
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			$results = $this->bo->get_groups($organization["id"]);
-			array_walk($results["results"], array($this, "_add_links"), "bookingfrontend.uigroup.show");
-			$organization["groups"] = $results["results"];
-
-			$edit_self_link   = self::link(array('menuaction' => 'bookingfrontend.uiorganization.edit', 'id' => $organization['id']));
-			$edit_groups_link = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit',));
-
-			$loggedin = (int) true; // FIXME: Some sort of authentication!
-
-			self::render_template('organization', array(
-				'organization'     => $organization,
-				'loggedin'         => $loggedin,
-				'edit_self_link'   => $edit_self_link,
-				'edit_groups_link' => $edit_groups_link,
-			));
+			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
+			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
+			
+			$bouser = CreateObject('bookingfrontend.bouser');
+			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
+			$organization['login_link'] = 'bookingfrontend/login.php'.$auth_forward;
+			$organization['logoff_link'] = 'bookingfrontend/logoff.php'.$auth_forward;
+			if ($bouser->is_organization_admin()) $organization['logged_on'] = true;
+			self::render_template('organization', array('organization' => $organization));
 		}
 	}

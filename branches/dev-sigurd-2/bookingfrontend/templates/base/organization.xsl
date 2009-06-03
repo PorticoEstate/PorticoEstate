@@ -1,14 +1,22 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
+		<ul id="metanav">
+			<xsl:choose>
+				<xsl:when test="organization/logged_on">
+					<a href="{organization/logoff_link}"><xsl:value-of select="php:function('lang', 'Log off')" /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{organization/login_link}"><xsl:value-of select="php:function('lang', 'Log on')" /></a>
+				</xsl:otherwise>
+			</xsl:choose>
+	    </ul>
+		
 		<h2>
 			<xsl:value-of select="organization/name"/>
-			<xsl:if test="loggedin &gt; 0">
-				<span class="loggedin"><a>
-						<xsl:attribute name="href">
-							<xsl:value-of select="edit_self_link" />
-						</xsl:attribute>
-						<img src="phpgwapi/templates/base/images/edit.png" />
-				</a></span>
+			<xsl:if test="organization/permission/write">
+				<span class="loggedin">
+					<a href="{organization/edit_link}"><img src="phpgwapi/templates/base/images/edit.png" /></a>
+				</span>
 			</xsl:if>
 		</h2>
 		
@@ -68,25 +76,25 @@
     </div>
 	
 	<script type="text/javascript">
-	var organization_id = <xsl:value-of select="organization/id"/>;
-	var lang = new Object();
-	lang.name = '<xsl:value-of select="php:function('lang', 'Name')"/>';
-	lang.primary_contact_name = '<xsl:value-of select="php:function('lang', 'Primary contact')"/>';
-	lang.primary_contact_phone = '<xsl:value-of select="php:function('lang', 'Phone')"/>';
-	lang.primary_contact_mail = '<xsl:value-of select="php:function('lang', 'Email')"/>';
+		var organization_id = <xsl:value-of select="organization/id"/>;
+		var lang = new Object();
+		lang.name = '<xsl:value-of select="php:function('lang', 'Name')"/>';
+		lang.primary_contact_name = '<xsl:value-of select="php:function('lang', 'Primary contact')"/>';
+		lang.primary_contact_phone = '<xsl:value-of select="php:function('lang', 'Phone')"/>';
+		lang.primary_contact_mail = '<xsl:value-of select="php:function('lang', 'Email')"/>';
 	
-	<![CDATA[
-	YAHOO.util.Event.addListener(window, "load", function() {
-		var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
-		var colDefs = [
-			{key: 'name', label: lang.name, formatter: YAHOO.booking.formatLink},
-			/*{key: 'primary_contact_name', label: lang.primary_contact_name},
-			{key: 'primary_contact_phone', label: lang.primary_contact_phone},
-			{key: 'primary_contact_email', label: lang.primary_contact_mail},*/
-		];
-		YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
-	});
-	]]>
+		<![CDATA[
+		YAHOO.util.Event.addListener(window, "load", function() {
+			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
+			var colDefs = [
+				{key: 'name', label: lang.name, formatter: YAHOO.booking.formatLink},
+				/*{key: 'primary_contact_name', label: lang.primary_contact_name},
+				{key: 'primary_contact_phone', label: lang.primary_contact_phone},
+				{key: 'primary_contact_email', label: lang.primary_contact_mail},*/
+			];
+			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
+		});
+		]]>
 	</script>
 
 </xsl:template>

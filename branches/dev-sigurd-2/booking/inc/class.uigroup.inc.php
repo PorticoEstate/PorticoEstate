@@ -183,7 +183,11 @@
 			
 			$results = $this->yui_results($groups);
 			
-			$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
+			if (is_array($parent_entity = $this->get_parent_if_inline())) {
+				if ($this->bo->allow_create(array($this->get_current_parent_type().'_id' => $parent_entity['id']))) {
+					$results['Actions']['add'] = array('text' => lang('Add Group'), 'href' => $this->link_to('edit'));
+				}
+			}
 			
 			return $results;
 		}

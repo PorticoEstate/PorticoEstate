@@ -86,38 +86,42 @@
 		</dl>
 
 		<div style='clear:left; padding:0; margin:0'/>
+		
+		<xsl:if test='new_form or organization/permission/write/contacts'>
+		
+			<dl class="form-col" style='margin-top:0'>
+				<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 1')" /></dt>
+			
+				<dt><label for="field_admin_name_1"><xsl:value-of select="php:function('lang', 'Name')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}'/></dd>
+			
+				<dt><label for="field_admin_ssn_1"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_ssn_1' name="contacts[0][ssn]" value='{organization/contacts[1]/ssn}'/></dd>
+			
+				<dt><label for="field_admin_email_1"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}'/></dd>
+			
+				<dt><label for="field_admin_phone_1"><xsl:value-of select="php:function('lang', 'Phone')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_phone_1' name="contacts[0][phone]" value='{organization/contacts[1]/phone}'/></dd>
+			</dl>
 
-		<dl class="form-col" style='margin-top:0'>
-			<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 1')" /></dt>
+			<dl class="form-col" style='margin-top:0'>
+				<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 2')" /></dt>
 			
-			<dt><label for="field_admin_name_1"><xsl:value-of select="php:function('lang', 'Name')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}'/></dd>
+				<dt><label for="field_admin_name_2"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+				<dd><input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}'/></dd>
 			
-			<dt><label for="field_admin_ssn_1"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_ssn_1' name="contacts[0][ssn]" value='{organization/contacts[1]/ssn}'/></dd>
+				<dt><label for="field_admin_ssn_2"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_ssn_2' name="contacts[1][ssn]" value='{organization/contacts[2]/ssn}'/></dd>
 			
-			<dt><label for="field_admin_email_1"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}'/></dd>
+				<dt><label for="field_admin_email_2"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}'/></dd>
 			
-			<dt><label for="field_admin_phone_1"><xsl:value-of select="php:function('lang', 'Phone')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_phone_1' name="contacts[0][phone]" value='{organization/contacts[1]/phone}'/></dd>
-		</dl>
-
-		<dl class="form-col" style='margin-top:0'>
-			<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 2')" /></dt>
-			
-			<dt><label for="field_admin_name_2"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
-			<dd><input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}'/></dd>
-			
-			<dt><label for="field_admin_ssn_2"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_ssn_2' name="contacts[1][ssn]" value='{organization/contacts[2]/ssn}'/></dd>
-			
-			<dt><label for="field_admin_email_2"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}'/></dd>
-			
-			<dt><label for="field_admin_phone_2"><xsl:value-of select="php:function('lang', 'Phone')" /></label><br /></dt>
-			<dd><input type='text' id='field_admin_phone_2' name="contacts[1][phone]" value='{organization/contacts[2]/phone}'/></dd>
-		</dl>
+				<dt><label for="field_admin_phone_2"><xsl:value-of select="php:function('lang', 'Phone')" /></label><br /></dt>
+				<dd><input type='text' id='field_admin_phone_2' name="contacts[1][phone]" value='{organization/contacts[2]/phone}'/></dd>
+			</dl>
+		
+		</xsl:if>
 
 <script type="text/javascript">
 var endpoint = '<xsl:value-of select="module" />';

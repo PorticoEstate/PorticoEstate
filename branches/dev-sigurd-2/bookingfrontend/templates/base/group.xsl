@@ -1,5 +1,16 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
+		<ul id="metanav">
+			<xsl:choose>
+				<xsl:when test="group/logged_on">
+					<a href="{group/logoff_link}"><xsl:value-of select="php:function('lang', 'Log off')" /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{group/login_link}"><xsl:value-of select="php:function('lang', 'Log on')" /></a>
+				</xsl:otherwise>
+			</xsl:choose>
+	    </ul>
+	
 		<h3>
 	        <ul class="pathway">
 	            <li>
@@ -14,13 +25,10 @@
 	                    <xsl:value-of select="group/name"/>
 	                </a>
 	            </li>
-		        <xsl:if test="loggedin &gt; 0">
-		            <span class="loggedin"><a>
-		                <xsl:attribute name="href">
-		                    <xsl:value-of select="edit_self_link" />
-		                </xsl:attribute>
-		                <img src="phpgwapi/templates/base/images/edit.png" />
-		            </a></span>
+		        <xsl:if test="group/permission/write">
+		            <span class="loggedin">
+						<a href="{edit_self_link}"><img src="phpgwapi/templates/base/images/edit.png" /></a>
+					</span>
 		        </xsl:if>
 	        </ul>
 		</h3>
