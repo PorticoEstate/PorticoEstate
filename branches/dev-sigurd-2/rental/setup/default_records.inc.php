@@ -15,6 +15,7 @@ $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Bystasjo
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Åsane senter','')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Byporten','')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Ukjent sted','')");
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Lots of levels','A rental composite that consists of areas from all levels.')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,1,'2711')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,2,'2712')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,6,'2717')");
@@ -31,3 +32,8 @@ $oProc->query("INSERT INTO rental_unit VALUES (6,515,'2104')"); // Level 2
 $oProc->query("INSERT INTO rental_unit VALUES (7,1421,'1101')"); // Level 3
 $oProc->query("INSERT INTO rental_unit VALUES (8,1389,'3409')"); // Level 4
 $oProc->query("INSERT INTO rental_unit VALUES (9,1391,'3409')"); // Level 5
+$oProc->query("INSERT INTO rental_unit VALUES (10,1,'2711')"); // Level 1
+$oProc->query("INSERT INTO rental_unit VALUES (10,515,'2104')"); // Level 2
+$oProc->query("INSERT INTO rental_unit VALUES (10,1421,'1101')"); // Level 3
+$oProc->query("INSERT INTO rental_unit VALUES (10,1389,'3409')"); // Level 4
+$oProc->query("INSERT INTO rental_unit VALUES (10,1391,'3409')"); // Level 5
