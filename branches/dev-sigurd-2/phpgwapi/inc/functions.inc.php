@@ -290,7 +290,7 @@ HTML;
 	/* Make sure the header.inc.php is current. */
 	if ($GLOBALS['phpgw_info']['server']['versions']['header'] < $GLOBALS['phpgw_info']['server']['versions']['current_header'])
 	{
-		$setup_dir = preg_replace("/{$_SERVER['PHP_SELF']}/", 'index.php', 'setup/');
+		$setup_dir = str_replace(array('login.php','index.php'), 'setup/', $_SERVER['PHP_SELF']);
 		$msg = lang('You need to port your settings to the new header.inc.php version. <a href="%1">Run setup now!</a>',  $setup_dir);
 		die("<div class=\"error\">{$msg}</div>");
 	}

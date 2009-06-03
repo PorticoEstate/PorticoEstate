@@ -189,7 +189,7 @@
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.28';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.29';
 	
 	/**
 	 * The purpose of this function is to reanimate dead guest sessions in the frontend.
