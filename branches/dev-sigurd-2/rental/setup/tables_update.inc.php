@@ -119,7 +119,7 @@
 		);
 		
 		// Change column name composite_id to just id
-		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE table RENAME COLUMN composite_id TO id");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_composite RENAME COLUMN composite_id TO id");
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

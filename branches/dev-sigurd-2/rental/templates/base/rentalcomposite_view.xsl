@@ -37,7 +37,7 @@
 					</dl>
 					<dl class="proplist-col">
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_serial')" /></dt>
-						<dd><xsl:value-of select="data/composite_id"/></dd>
+						<dd><xsl:value-of select="data/id"/></dd>
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_gros')" /></dt>
 						<dd><xsl:value-of select="data/area_gros"/> m<sup>2</sup></dd>
 						<dt><xsl:value-of select="php:function('lang', 'rental_rc_area_net')" /></dt>

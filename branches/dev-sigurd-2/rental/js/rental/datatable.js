@@ -90,7 +90,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			var elRow = myDataTable.getTrEl(e.target);
 			if(elRow) {
         var oRecord = myDataTable.getRecord(elRow);
-      	var recordId = oRecord.getData().composite_id;
+      	var recordId = oRecord.getData().id;
       	window.location = oRecord.getData().actions.view;
 			}
 		});
@@ -106,12 +106,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	          switch(task.groupIndex) {
 	          case 0: /* View */
 	            var oRecord = p_myDataTable.getRecord(elRow);
-	          	var recordId = oRecord.getData().composite_id;
+	          	var recordId = oRecord.getData().id;
 	          	window.location = oRecord.getData().actions.view;
 	          	break;
 	          case 1: /* Edit */
 	            var oRecord = p_myDataTable.getRecord(elRow);
-	          	var recordId = oRecord.getData().composite_id;
+	          	var recordId = oRecord.getData().id;
 	          	window.location = oRecord.getData().actions.edit;
 	          	break;
 	          }

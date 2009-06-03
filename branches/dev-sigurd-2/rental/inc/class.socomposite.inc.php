@@ -170,7 +170,7 @@ class rental_socomposite extends rental_socommon
 	}
 	
 	/*
-	 * Get single rental composite record by the given composite_id
+	 * Get single rental composite record by the given composite id
 	 */
 	function read_single($id)
 	{

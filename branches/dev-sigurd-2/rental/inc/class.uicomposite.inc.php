@@ -131,10 +131,10 @@
 					'columns' => self::link(array('menuaction' => 'rental.uicomposite.columns', 'phpgw_return_as' => 'json')), // URL to store select columns
 					'field' => array(
 						array(
-							'key' => 'composite_id',
+							'key' => 'id',
 							'label' => lang('rental_rc_serial'),
 							'sortable' => true,
-							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('composite_id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
+							'hidden' => (!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('id', $columnArray))) // Not hidden if setting isn't set or if the user has selected the column earlier
 						),
 						array(
 							'key' => 'actions',
@@ -323,7 +323,7 @@
 			{
 				$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
 				$GLOBALS['phpgw']->preferences->read();
-				$GLOBALS['phpgw']->preferences->add('rental','rental_columns_rentalcomposites',$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add('rental','rental_columns_composite',$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}

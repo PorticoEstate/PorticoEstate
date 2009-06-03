@@ -16,7 +16,7 @@
 	$phpgw_baseline = array(
 		'rental_composite' => array(
 				'fd' => array(
-					'id' => 		array('type' => 'auto', 'nullable' => false),
+					'id' => 				array('type' => 'auto', 'nullable' => false),
 					'name' => 				array('type' => 'varchar','precision' => '45','nullable' => false),
 					'description' => 		array('type' => 'text'),
 					'is_active' => 			array('type' => 'bool','nullable' => false,'default' => 'true'),
