@@ -191,7 +191,7 @@
 				{
 					$var_result = $xmlparse->parseFile($file);
 					$var_result = array_change_key_case($var_result, CASE_LOWER);
-//_debug_array($var_result);
+
 					//data
 					$insert_values	= array();
 					$cols			= array();
@@ -199,10 +199,21 @@
 					{
 						if(isset($var_result[$field]))
 						{
-							$insert_values[] = utf8_encode($var_result[$field]);
+							switch ( $field_info->type )
+							{
+								case 'numeric':
+									$insert_values[] =  str_replace(',','.',$var_result[$field]);
+									break;
+								case 'timestamp':
+									$insert_values[] =  date($this->db->date_format(), strtotime($var_result[$field]));
+									break;
+								default:
+									$insert_values[] = utf8_encode($var_result[$field]);
+							}
 							$cols[]			 = $field;
 						}
 					}
+
 					if($cols) // something to import
 					{
 						$cols[]	= 'entry_date';
@@ -219,7 +230,7 @@
 
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
-						. "VALUES ($id, $num, $user_id, $insert_values)",__LINE__,__FILE__);
+						. "VALUES ($id, '$num', $user_id, $insert_values)",__LINE__,__FILE__);
 
 						//attachment
 						foreach($var_result as $field => $data)
@@ -247,6 +258,31 @@
 						$_file = basename($file);
 						rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
 						$i++;
+
+						// finishing
+						$criteria = array
+						(
+							'appname'	=> 'catch',
+							'location'	=> '.catch.' . str_replace('_','.',$target),
+							'allrows'	=> true
+						);
+
+						$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+						foreach ( $custom_functions as $entry )
+						{
+							// prevent path traversal
+							if ( preg_match('/\.\./', $entry['file_name']) )
+							{
+								continue;
+							}
+
+							$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+							if ( $entry['active'] && is_file($file) )
+							{
+								require_once $file;
+							}
+						}
 					}
 				}
 				$this->receipt['message'][]=array('msg'=>lang('%1 records imported to %2', $i, $schema_text));
@@ -272,8 +308,10 @@
 					if ( $file->isDot()
 						|| !$file->isFile()
 						|| !$file->isReadable()
-						|| mime_content_type($file->getPathname()) != 'text/xml')
-					{
+						//|| mime_content_type($file->getPathname()) != 'text/xml')
+						//|| finfo_file( finfo_open(FILEINFO_MIME, '/usr/share/file/magic'), $file->getPathname() ) != 'text/xml')
+						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+ 					{
 						continue;
 					}
 

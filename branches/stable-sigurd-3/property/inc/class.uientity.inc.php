@@ -994,6 +994,7 @@
 						$bofiles->delete_file("/{$this->category_dir}/{$loc1}/{$id}/", $values);
 					}
 
+					$files = array();
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
 						$file_name = str_replace (' ','_',$_FILES['file']['name']);
@@ -1310,7 +1311,7 @@
 			
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}									
 
@@ -1331,10 +1332,10 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 			);
 
-			$link_file_data['file_name']	= $values['jasperfiles'][$z]['file_name'];
 			$link_file_data['jasper']		= true;
 			for($z=0; $z<count($values['jasperfiles']); $z++)
 			{
+				$link_file_data['file_name']	= $values['jasperfiles'][$z]['name'];
 				$content_jasperfiles[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'" target="_blank" title="'.lang('click to view file').'">'.$values['jasperfiles'][$z]['name'].'</a>';			
 				$content_jasperfiles[$z]['delete_file'] = '<input type="checkbox" name="values[file_jasperaction][]" value="'.$values['jasperfiles'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}									

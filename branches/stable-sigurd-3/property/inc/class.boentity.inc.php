@@ -334,11 +334,10 @@
 			$values['files']		= array();
 			foreach ($files as $file)
 			{
-				if (strpos($file['file_name'], 'jasper::'))// check for jasper
+				if (strpos($file['name'], 'jasper::')===0)// check for jasper
 				{
 					$values['jasperfiles'][] = array
 					(
-						'file_name'	=> $file['file_name'],
 						'name' 		=> $file['name']
 					);
 				}
@@ -346,7 +345,6 @@
 				{
 					$values['files'][] = array
 					(
-						'file_name'	=> $file['file_name'],
 						'name' 		=> $file['name']
 					);
 				}
