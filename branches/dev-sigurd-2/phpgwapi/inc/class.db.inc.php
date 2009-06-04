@@ -690,7 +690,14 @@
 				{
 					if ( is_numeric($value) )
 					{
-						$value_entry[]= "{$field}={$value}";
+						if((strlen($value) > 1 && strpos($value,'0') === 0))
+						{
+							$value_entry[]= "{$field}='{$value}'";
+						}
+						else
+						{
+							$value_entry[]= "{$field}={$value}";
+						}
 					}
 					else
 					{

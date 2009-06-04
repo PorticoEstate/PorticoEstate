@@ -61,6 +61,21 @@
 		}
 
 		/**
+		 * Set the account id used for cron jobs where there is no user-session
+		 *
+		 * @param integer $account_id the account id to use - 0 = current user
+		 *
+		 * @return null
+		 */
+		public function set_account_id($account_id = 0)
+		{
+			if($account_id)
+			{
+				$this->vfs->working_id = $account_id;
+			}
+		}
+
+		/**
 		* Create catalog - starting with fakebase
 		*
 		* @param string $type part of path pointing to end target

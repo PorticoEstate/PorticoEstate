@@ -1780,7 +1780,7 @@
 						return False;
 					}
 				}
-				elseif (!@mkdir ($p->real_full_path, 0770))
+				elseif (!mkdir ($p->real_full_path, 0770))
 				{
 					return False;
 				}

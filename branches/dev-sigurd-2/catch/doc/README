@@ -11,6 +11,9 @@ Some information on how to make it work.
 * The import prosess kan run as cron job or from within the property-admin-section:
  1) as cron (modify to your environment):
    /usr/local/bin/php -q /_path_to_phpgroupware_/property/inc/cron/cron.php <domain> catch_ppc
+   
+   IMPORTANT!!  - the cron job has to be run by the apache user in order to organise attachments
+   
  2) from admin->property->admin async services:
  	add a function:
  	  name: property.custom_functions.index
