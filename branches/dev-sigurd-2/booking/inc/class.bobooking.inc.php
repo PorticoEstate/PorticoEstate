@@ -2,6 +2,19 @@
 	phpgw::import_class('booking.bocommon');
 	
 	require_once "schedule.php";
+
+function array_minus($a, $b)
+{
+	$b = array_flip($b);
+	$c = array();
+	foreach($a as $x)
+	{
+		if(!array_key_exists($x, $b))
+		$c[] = $x;
+	}
+	return $c;
+}
+
 	
 	class booking_bobooking extends booking_bocommon
 	{
@@ -43,6 +56,11 @@
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
 			$bookings = $bookings['results'];
+			foreach($bookings as &$booking)
+			{
+				$booking['name'] = $booking['group_name'];
+			}
+			$allocations = $this->split_allocations($allocations, $bookings);
 			$bookings = array_merge($allocations, $bookings);
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
 			$resource_ids = array_merge($this->so->resource_ids_for_allocations($allocation_ids));
@@ -84,10 +102,63 @@
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
 			$bookings = $bookings['results'];
+			foreach($bookings as &$booking)
+			{
+				$booking['name'] = $booking['group_name'];
+			}
+			$allocations = $this->split_allocations($allocations, $bookings);
 			$bookings = array_merge($allocations, $bookings);
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, array($resource));
 			return array('total_records'=>count($results), 'results'=>$results);
+		}
+
+		function split_allocations($allocations, $all_bookings)
+		{
+			function get_from2($a) {return $a['from_'];};
+			function get_to2($a) {return $a['to_'];};
+			$new_allocations = array();
+			foreach($allocations as $allocation)
+			{
+				// $ Find all associated bookings
+				$bookings = array();
+				foreach($all_bookings as $b)
+				{
+					if($b['allocation_id'] == $allocation['id'])
+						$bookings[] = $b;
+				}
+				if(count($bookings) == 0)
+				{
+					continue;
+				}
+				$times = array($allocation['from_'], $allocation['to_']);
+				$times = array_merge(array_map("get_from2", $bookings), $times);
+				$times = array_merge(array_map("get_to2", $bookings), $times);
+				$times = array_unique($times);
+				sort($times);
+				while(count($times) >= 2)
+				{
+					$from_ = $times[0];
+					$to_ = $times[1];
+					$resources = $allocation['resources'];
+					$used = array();
+					foreach($all_bookings as $b)
+					{
+						
+						if(($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+							$resources = array_minus($resources, $b['resources']);
+					}
+					if($resources)
+					{
+						$a = $allocation;
+						$a['from_'] = $times[0];
+						$a['to_'] = $times[1];
+						$new_allocations[] = $a;
+					}
+					array_shift($times);
+				}
+			}
+			return $new_allocations;
 		}
 
 		/**
