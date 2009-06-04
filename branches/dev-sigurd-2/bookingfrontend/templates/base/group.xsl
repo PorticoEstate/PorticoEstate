@@ -13,18 +13,10 @@
 	
 		<h3>
 	        <ul class="pathway">
-	            <li>
-	                <a>
-	                    <xsl:attribute name="href"><xsl:value-of select="group/organization_link"/></xsl:attribute>
-	                    <xsl:value-of select="group/organization_name"/>
-	                </a>
-	            </li>
+	            <li><a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a></li>
 	            <li><xsl:value-of select="php:function('lang', 'Group')" /></li>
-	            <li>
-	                <a href="">
-	                    <xsl:value-of select="group/name"/>
-	                </a>
-	            </li>
+	            <li><xsl:value-of select="group/name"/></li>
+	
 		        <xsl:if test="group/permission/write">
 		            <span class="loggedin">
 						<a href="{edit_self_link}"><img src="phpgwapi/templates/base/images/edit.png" /></a>
@@ -35,7 +27,7 @@
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist">
-            <dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
+            <dt><xsl:value-of select="php:function('lang', 'Group')" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
 
             <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>

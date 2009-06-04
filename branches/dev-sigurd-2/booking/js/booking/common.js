@@ -120,14 +120,22 @@ YAHOO.booking.inlineImages = function(container, url, options)
 		var dlImages = new YAHOO.util.Element(document.createElement('dl'));
 		dlImages.addClass('proplist images');
 		
+		var displayContainer = false;
+		
         for(var key in oResponse.results) { 
+			displayContainer = true;
 			var imgEl = dlImages.appendChild(document.createElement('dd')).appendChild(document.createElement('img'));
 			var captionEl = dlImages.appendChild(document.createElement('dl'));
 			imgEl.src = oResponse.results[key].src.replace(/&amp;/gi, '&');
 			captionEl.appendChild(document.createTextNode(oResponse.results[key].description));
 		}
 		
-		new YAHOO.util.Element(container).appendChild(dlImages);
+		if (displayContainer)
+		{
+			new YAHOO.util.Element(container).appendChild(dlImages);
+		} else {
+			new YAHOO.util.Element(container).setStyle('display', 'none');
+		}
     }});
 }
 

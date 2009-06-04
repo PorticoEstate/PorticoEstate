@@ -20,12 +20,13 @@
 		function index()
 		{
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', null));
+			$type = phpgw::get_var('type', 'GET', null);
 			$search = null;
 			
-			if (strlen($searchterm))
+			if (strlen($searchterm) || $type)
 			{
 				$search = array(
-					'results'    => strlen($searchterm) ? $this->bo->search($searchterm) : array('total_records_sum' => 0),
+					'results'    => $this->bo->search($searchterm),
 					'searchterm' => $searchterm,
 				);
 			}

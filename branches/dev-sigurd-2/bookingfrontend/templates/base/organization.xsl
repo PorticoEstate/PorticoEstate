@@ -11,6 +11,11 @@
 			</xsl:choose>
 	    </ul>
 		
+		<br/>
+		<button onclick="window.location.href='{organization/start}'">
+            <xsl:value-of select="php:function('lang', 'Organization index')" />
+        </button>
+		
 		<h2>
 			<xsl:value-of select="organization/name"/>
 			<xsl:if test="organization/permission/write">
@@ -77,20 +82,13 @@
 	
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
-		var lang = new Object();
-		lang.name = '<xsl:value-of select="php:function('lang', 'Name')"/>';
-		lang.primary_contact_name = '<xsl:value-of select="php:function('lang', 'Primary contact')"/>';
-		lang.primary_contact_phone = '<xsl:value-of select="php:function('lang', 'Phone')"/>';
-		lang.primary_contact_mail = '<xsl:value-of select="php:function('lang', 'Email')"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'Group')"/>;
 	
 		<![CDATA[
 		YAHOO.util.Event.addListener(window, "load", function() {
 			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
 			var colDefs = [
-				{key: 'name', label: lang.name, formatter: YAHOO.booking.formatLink},
-				/*{key: 'primary_contact_name', label: lang.primary_contact_name},
-				{key: 'primary_contact_phone', label: lang.primary_contact_phone},
-				{key: 'primary_contact_email', label: lang.primary_contact_mail},*/
+				{key: 'name', label: lang['Group'], formatter: YAHOO.booking.formatLink},
 			];
 			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
 		});

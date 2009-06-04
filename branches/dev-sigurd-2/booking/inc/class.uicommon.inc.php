@@ -9,8 +9,6 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	
-
 	function extract_values($array, $keys)
 	{
 		$result = array();
@@ -27,6 +25,17 @@
 	function array_set_default(&$array, $key, $value)
 	{
 		if(!isset($array[$key])) $array[$key] = $value;
+	}
+	
+	/**
+	 * Generates a javascript translator object/hash for the specified fields.
+	 */
+	function js_lang()
+	{
+		$keys = func_get_args();
+		$strings = array();
+		foreach($keys as $key) { $strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key); }
+		return json_encode($strings);
 	}
 	
 	abstract class booking_uicommon

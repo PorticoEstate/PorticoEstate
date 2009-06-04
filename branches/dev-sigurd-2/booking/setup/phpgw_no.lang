@@ -56,6 +56,7 @@ event	booking	no	Hendelse
 events	booking	no	hendelser
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
+document Name	booking	no	Dokument
 generate allocations	booking	no	Lag tildelning
 generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
@@ -130,3 +131,8 @@ admin 1	booking	no	Administrator 1
 admin 2	booking	no	Administrator 2
 contact 1	booking	no	Kontakt 1
 contact 2	booking	no	Kontakt 2
+document	booking	no	Dokument
+documents	booking	no	Dokument
+images	booking	no	Bilder
+building index	booking	no	Se alle bygninger/anlegninger
+organization index	booking	no	Se alle organisasjoner

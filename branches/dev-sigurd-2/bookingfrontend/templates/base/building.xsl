@@ -1,11 +1,10 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
 		<xsl:for-each select="search/results">
-			<span style="font-size: 10px;margin-right: 2em;"><xsl:value-of select="type"/></span>
-			<a class="Tillbaka">
-				<xsl:attribute name="href"><xsl:value-of select="start"/></xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Building index')" />
-			</a>
+			<br/>
+			<button onclick="window.location.href='{start}'">
+	            <xsl:value-of select="php:function('lang', 'Building index')" />
+	        </button>
 
 			<h2><xsl:value-of select="name"/></h2>
 			
@@ -48,21 +47,24 @@
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
 				
-				<h3><xsl:value-of select="php:function('lang', 'Images')" /></h3>
-				<div id="images_container"/>
+				<div id="images_container">
+					<h3><xsl:value-of id='image_header' select="php:function('lang', 'Images')" /></h3>
+				</div>
 			</dl>
 			
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Resource Name', 'Document Name', 'category', 'Activity')"/>;
 				<![CDATA[
+				
 				YAHOO.util.Event.addListener(window, "load", function() {
 				var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
+				var colDefs = [{key: 'name', label: lang['Resource Name'], formatter: YAHOO.booking.formatLink}, {key: 'activity_name', label: lang['Activity']}];
 				YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 				});
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}, {key: 'category', label: 'Category'}];
+				var colDefs = [{key: 'name', label: lang['Document Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang.category}];
 				YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';

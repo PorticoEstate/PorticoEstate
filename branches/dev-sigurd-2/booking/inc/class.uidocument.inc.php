@@ -169,7 +169,7 @@
 					'field' => array(
 						array(
 							'key' => 'name',
-							'label' => lang('Document name'),
+							'label' => lang('Document Name'),
 							'formatter' => 'YAHOO.booking.formatLink',
 						),
 						array(
