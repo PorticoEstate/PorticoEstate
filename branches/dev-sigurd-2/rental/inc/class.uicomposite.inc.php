@@ -203,7 +203,7 @@
 		public function add()
 		{
 			$receipt = $this->bo->add(phpgw::get_var('rental_composite_name'));
-			return $this -> viewedit(true,$receipt['id']);			
+			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$receipt['id']);			
 		}
 		
 		
@@ -223,7 +223,8 @@
 				self::add_javascript('rental', 'rental', 'datatable.js');
 				phpgwapi_yui::load_widget('datatable');
 				phpgwapi_yui::load_widget('tabview');
-				$composite = $this->bo->read_single($composite_id);
+				$params['id'] = $composite_id;
+				$composite = $this->bo->read_single($params);
 				
 				$tabs = array();
 				
@@ -331,7 +332,8 @@
 							)
 						)
 					),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index')),
+					'submit_link' => self::link(array('menuaction' => 'rental.uicomposite.edit'))
 				);
 				
 				$errors = array();
@@ -355,7 +357,6 @@
 					}
 				}
 				$this->flash_form_errors($errors);
-				$activity['cancel_link'] = self::link(array('menuaction' => 'rental.uicomposite.index'));
 
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 				phpgwapi_yui::load_widget('treeview');
