@@ -61,6 +61,10 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 			$this->url_prefix = str_replace('_', '.', get_class($this));
+			
+			if ($this->current_app() == 'bookingfrontend') {
+				$GLOBALS['phpgw']->translation->add_app('booking');
+			}
 		}
 		
 		public static function encoding()
@@ -83,6 +87,11 @@
 			} else {
 				call_user_func(self::$old_exception_handler, $e);
 			}
+		}
+		
+		protected function current_app()
+		{
+			return $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		public static function link($data)
