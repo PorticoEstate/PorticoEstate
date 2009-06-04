@@ -60,6 +60,7 @@ input#search {
     width: 20em;
 }
 div.hint {
+	margin-top: 0.4em;
     font-size: 90%;
     color: #444;
 }
@@ -75,24 +76,28 @@ ol#result .header {
     background-color: #eee;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-    padding: .1em .4em;
+    padding: .1em 0em .25em .4em
 }
 ol#result .details {
 }
 ol#result .details h4 {
-    margin: 0;
+    margin: 0.2em 0 0 0;
     font-weight: normal;
     font-style: italic;
     color: #888;
 }
 ol#result .details .col {
-    padding: .2em;
-    float: left;
-    width: 30%;
-    border: 1px solid #eee;
+    padding: 0em 0.2em 0.4em 0.2em;
+    /*float: left;*/
+    width: 50%;
+    /*border: 1px solid #eee;*/
 }
 ol#result .details .moreInfo {
     margin-top: .4em;
+}
+
+ol#result li:last-child {
+	border-bottom: 1px solid #ccc;
 }
 
 dl.form {}

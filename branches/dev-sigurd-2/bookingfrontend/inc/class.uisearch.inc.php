@@ -19,12 +19,20 @@
 		
 		function index()
 		{
-			$searchterm = phpgw::get_var('searchterm');
-			$search = array(
-				'results'    => $this->bo->search($searchterm),
-				'searchterm' => $searchterm,
-			);
-			self::render_template('search', array('search' => $search));
+			$searchterm = trim(phpgw::get_var('searchterm', 'string', null));
+			$search = null;
+			
+			if (strlen($searchterm))
+			{
+				$search = array(
+					'results'    => strlen($searchterm) ? $this->bo->search($searchterm) : array('total_records_sum' => 0),
+					'searchterm' => $searchterm,
+				);
+			}
+			
+			$params = is_null($search) ? array() : array('search' => $search);
+
+			self::render_template('search', $params);
 		}
 		
 		
