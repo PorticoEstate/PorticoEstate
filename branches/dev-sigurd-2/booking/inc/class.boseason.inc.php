@@ -117,9 +117,11 @@
 				{
 				
 					$allocation = extract_values($talloc, array('season_id', 'organization_id', 'cost', 'resources', 'organization_name'));
+					$allocation['active'] = '1';
 					$allocation['from_'] = $date->format("Y-m-d").' '.$talloc['from_'];
 					$allocation['to_'] = $date->format("Y-m-d").' '.$talloc['to_'];
-					if(!$this->bo_allocation->validate($allocation))
+					$errors = $this->bo_allocation->validate($allocation);
+					if(!$errors)
 						$valid[] = $allocation;
 					else
 						$invalid[] = $allocation;
