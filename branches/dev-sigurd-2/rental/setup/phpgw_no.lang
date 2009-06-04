@@ -11,6 +11,7 @@ rental_rc_all	rental	no	Alle
 rental_rc_area	rental	no	Areal
 rental_rc_area_gros	rental	no	Bruttoareal
 rental_rc_area_net	rental	no	Nettoareal
+rental_rc_area_not_found	rental	no	Kunne ikke finne detaljer om arealet
 rental_rc_availibility	rental	no	Tilgjengelighet
 rental_rc_available	rental	no	Tilgjengelig
 rental_rc_available?	rental	no	Kan leies ut?
@@ -35,6 +36,7 @@ rental_rc_property_id	rental	no	BKB Identifikator
 rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
 rental_rc_rental_composite	rental	no	Leieobjekt
 rental_rc_save	rental	no	Lagre
+rental_rc_section	rental	no	Seksjon
 rental_rc_search	rental	no	Søk
 rental_rc_search_for	rental	no	Søk etter
 rental_rc_search_options	rental	no	Søkevalg
@@ -46,6 +48,3 @@ rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
 rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Lag nytt leieobjekt
-
-
-
