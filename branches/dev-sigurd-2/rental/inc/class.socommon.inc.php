@@ -74,6 +74,12 @@
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
+		/**
+		 * Unmarchal database values according to type
+		 * @param $value the field value
+		 * @param $type	a string dictating value type
+		 * @return the php value
+		 */
 		function _unmarshal($value, $type)
 		{
 			if($value === null || $value == 'NULL')
@@ -87,6 +93,10 @@
 			return $value;
 		}
 
+		/**
+		 * Read a single rental composite based on id
+
+		 */
 		function read_single($id)
 		{
 			$id = intval($id);

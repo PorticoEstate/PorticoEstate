@@ -166,14 +166,19 @@
 			}
 		}
 
-		// Build a YUI result style array
-		public function yui_results($results)
+		/**
+		 * Build a YUI result of the composite data
+		 * 
+		 * @param $composite_data	the composite data
+		 * @return YUI result { ResultSet => { totalRecords => ?, Result => ?}
+		 */
+		public function yui_results($composite_data,$field_total = 'total_records', $field_results = 'results')
 		{
              return array
 			(   
 				'ResultSet' => array(
-					'totalRecords' => $results['total_records'], 
-					'Result' => $results['results']
+					'totalRecords' => $composite_data[$field_total], 
+					'Result' => $composite_data[$field_results]
 				)   
 			);  
 		}

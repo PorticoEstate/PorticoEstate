@@ -23,6 +23,30 @@
   	</func:result>
 </func:function>
 
+<xsl:template match="/">
+	<xsl:apply-templates select="//form"/>
+	<div id="rental_user_error"></div>
+	<div id="rental_user_message"></div>
+	<xsl:apply-templates select="//datatable" />
+</xsl:template>
+
+<xsl:template match="form">
+	<form id="queryForm">
+		<xsl:attribute name="method">
+			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
+		</xsl:attribute>
+
+		<xsl:attribute name="action">
+			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
+		</xsl:attribute>
+        <xsl:for-each select="*">
+        	<xsl:if test="./toolbar">
+        		<xsl:call-template name="toolbar"/>
+        	</xsl:if>
+        </xsl:for-each>
+	</form>
+</xsl:template>
+
 <xsl:template name="toolbar">
     <div id="toolbar"><table class="toolbartable"><tr>
     	<td class="toolbarlabel"><label><b><xsl:value-of select="./label"/></b></label></td>
@@ -71,24 +95,7 @@
     </tr></table></div>
 </xsl:template>
 
-<xsl:template match="form">
-	<form id="queryForm">
-		<xsl:attribute name="method">
-			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
-		</xsl:attribute>
-
-		<xsl:attribute name="action">
-			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
-		</xsl:attribute>
-        <xsl:for-each select="*">
-        	<xsl:if test="toolbar">
-        		<xsl:call-template name="toolbar"/>
-        	</xsl:if>
-        </xsl:for-each>
-	</form>
-</xsl:template>
-
-<xsl:template match="datatable">
+<xsl:template match="datatable" name="datatable">
 	<div class="datatable">
 		<div id="paginator"/>
 	    <div id="columnshowhide"></div>

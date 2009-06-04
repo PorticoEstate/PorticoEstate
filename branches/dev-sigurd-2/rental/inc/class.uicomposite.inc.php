@@ -11,7 +11,8 @@
 			'view'		=> true,
 			'edit'		=> true,
 			'columns'	=> true,
-			'add'		=> true
+			'add'		=> true,
+			'query'		=> true
 		);
 
 		public function __construct()
@@ -21,23 +22,33 @@
 			self::set_active_menu('rental::composite');
 		}
 
-		protected function index_json()
-		{
-			$compositeArray = $this->bo->read();
-			
-			array_walk($compositeArray['results'], array($this, '_add_actions'));
-			return $this->yui_results($compositeArray);
-		}
-
-		protected function view_json($composite_id)
-		{
-			$params = array
-			(
-				'id' => $composite_id
-			);
-			$composite = $this->bo->read_single($params);
-			//var_dump($composite);
-			return $this->yui_results($composite);
+		/**
+		 * Return a JSON result of rental composite related data
+		 * 
+		 * @param $composite_id  rental composite id
+		 * @param $type	type of details
+		 * @param $field_total the field name that holds the total number of records
+		 * @param $field_result the field name that holds the query result
+		 * @return 
+		 */
+		protected function json_query($composite_id = null, $type = 'index', $field_total = 'total_records', $field_results = 'results')
+		{	
+			switch($type)
+			{
+				case 'index':
+					$composite_data = $this->bo->read();
+					array_walk($composite_data[$field_results], array($this, '_add_actions'));
+					return $this->yui_results($composite_data, $field_total, $field_results);
+				case 'details':
+					$composite_data = $this->bo->read_single(array('id' => $composite_id));
+					return $this->yui_results($composite_data, $field_total, $field_results);
+				case 'available_areas':
+					$composite_data = $this->bo->read_single(array('id' => $composite_id));
+					return $this->yui_results($composite_data, $field_total, $field_results);
+				case 'included_areas':
+					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id));
+					return $this->yui_results($composite_data, $field_total, $field_results);
+			}
 		}
 
 		/*
@@ -61,7 +72,7 @@
 		{			
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->index_json();
+				return $this->json_query();
 			}
 			
 			self::add_javascript('rental', 'rental', 'datatable.js');
@@ -179,6 +190,7 @@
 			);
 //			var_dump((!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))));
 //			var_dump($columnArray);
+			//var_dump($data);
 			self::render_template('datatable', $data);
 		}						
 
@@ -206,6 +218,17 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$receipt['id']);			
 		}
 		
+		public function query()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$id = phpgw::get_var('id');
+				$type = phpgw::get_var('type');
+				//var_dump($id);
+				//var_dump($type);
+				return $this->json_query($id,$type);
+			}
+		} 
 		
 		/**
 		 * Handling details 
@@ -216,10 +239,14 @@
 			phpgwapi_yui::load_widget('tabview');
 			// TODO: How to check for valid input here?
 			if ($composite_id > 0) {
+				
+				// Return a json view of this rental composite
 				if(phpgw::get_var('phpgw_return_as') == 'json')
 				{
-					return $this->view_json($composite_id);
+					return $this->json_query($composite_id,'details');
 				}
+				//... else ...
+				
 				self::add_javascript('rental', 'rental', 'datatable.js');
 				phpgwapi_yui::load_widget('datatable');
 				phpgwapi_yui::load_widget('tabview');
@@ -234,7 +261,6 @@
 				
 				phpgwapi_yui::tabview_setup('composite_edit_tabview');
 
-				
 				$documents = array();
 				if($location_code)
 				{
@@ -287,19 +313,18 @@
 				
 				$data = array
 				(
-					'data' 	=> $composite,
+					'composite' 	=> $composite,
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'rental_rc_details'),
 					'documents' => $documents,
 					'access' => $access,
-					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'rental.uicomposite.view', 'phpgw_return_as' => 'json', 'id' => $composite_id)),
+					'datatable_included_areas' => array(
+						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
 						'field' => array(
 							array(
 								'key' => 'location_code',
 								'label' => lang('rental_rc_id'),
 								'sortable' => true
 							),
-							// $names_to_look_for_array).", {$address_column}, name, fm_location{$unit['level']}.{$area_column_gros}, fm_location{$unit['level']}.{$area_column_net}
 							array(
 								'key' => 'loc1_name',
 								'label' => lang('rental_rc_property'),
@@ -332,9 +357,50 @@
 							)
 						)
 					),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index')),
-					'submit_link' => self::link(array('menuaction' => 'rental.uicomposite.edit'))
+					'datatable_available_areas' => array(
+						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
+						'field' => array(
+							array(
+								'key' => 'location_code',
+								'label' => lang('rental_rc_id'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc1_name',
+								'label' => lang('rental_rc_property'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc2_name',
+								'label' => lang('rental_rc_building'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc3_name',
+								'label' => lang('rental_rc_section'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'address',
+								'label' => lang('rental_rc_address'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'area_gros',
+								'label' => lang('rental_rc_area_gros'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'area_net',
+								'label' => lang('rental_rc_area_net'),
+								'sortable' => true
+							)
+						)
+					),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
 				);
+				
+				//var_dump($data);
 				
 				$errors = array();
 				if($_SERVER['REQUEST_METHOD'] == 'POST')
