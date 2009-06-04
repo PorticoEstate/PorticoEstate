@@ -22,7 +22,7 @@
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications::bookings');
-			$this->fields = array('activity_id', 'resources',
+			$this->fields = array('allocation_id', 'activity_id', 'resources',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 

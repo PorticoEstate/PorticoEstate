@@ -9,6 +9,7 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required'=>true),
+					'allocation_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),
@@ -117,7 +118,24 @@
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$errors['booking'] = lang('Overlaps with existing booking2');
+					$errors['booking'] = lang('Overlaps with existing booking');
+				}
+				if($allocation_id != -1)
+				{
+					$this->db->query("SELECT a.id FROM bb_allocation a 
+										WHERE a.active = 1 AND a.id = $allocation_id AND 
+										(a.from_ <= '$start' AND a.to_ >= '$end')", __LINE__, __FILE__);
+					if(!$this->db->next_record())
+					{
+						$errors['booking'] = lang("This booking is outside the organization's allocated time");
+					}
+					$this->db->query("SELECT count(1) FROM bb_allocation_resource 
+									WHERE allocation_id = $allocation_id AND resource_id IN ($rids)", __LINE__, __FILE__);
+					$this->db->next_record();
+					if($this->db->f('count', true) != count($entity['resources']))
+					{
+						$errors['booking'] = lang("The booking uses resources not in the containing allocation");
+					}
 				}
 			}
 		}
