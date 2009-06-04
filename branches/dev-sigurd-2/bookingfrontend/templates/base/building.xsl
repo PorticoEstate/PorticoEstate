@@ -14,9 +14,6 @@
 					<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 					<dd disable-output-escaping="yes"><xsl:value-of select="description"/></dd>
 				</dl>
-
-				<dt><xsl:value-of select="php:function('lang', 'Activities')" /></dt>
-				<!-- Nothing here yet? -->
 				
 				<h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
 				<dl class="contactinfo">
