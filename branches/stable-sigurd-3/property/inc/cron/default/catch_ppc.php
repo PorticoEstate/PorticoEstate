@@ -208,7 +208,7 @@
 									$insert_values[] =  date($this->db->date_format(), strtotime($var_result[$field]));
 									break;
 								default:
-									$insert_values[] = utf8_encode($var_result[$field]);
+									$insert_values[] = utf8_encode(trim($var_result[$field]));
 							}
 							$cols[]			 = $field;
 						}
@@ -228,6 +228,10 @@
 							throw new Exception(lang('no valid user for this UnitID: %1', $var_result['unitid']));
 						}
 
+						$bofiles->set_account_id($user_id);
+						$GLOBALS['phpgw_info']['user']['account_id'] = $user_id; // needed for the vfs::mkdir()
+						$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+
 						$insert_values	= $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
 						. "VALUES ($id, '$num', $user_id, $insert_values)",__LINE__,__FILE__);
@@ -236,10 +240,12 @@
 						foreach($var_result as $field => $data)
 						{
 							$pathinfo = pathinfo($data);
-							if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
+//							if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
+							if(is_file("{$this->pickup_path}/{$data}"))
 							{
 								$to_file = "{$bofiles->fakebase}/{$this->category_dir}/dummy/{$id}/{$field}_{$data}"; // the dummy is for being consistant with the entity-code that relies on loc1
 								$bofiles->create_document_dir("{$this->category_dir}/dummy/{$id}");
+
 								$bofiles->vfs->override_acl = 1;
 
 								if(!$bofiles->vfs->cp (array (
