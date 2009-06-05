@@ -88,7 +88,7 @@
 		YAHOO.util.Event.addListener(window, "load", function() {
 			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
 			var colDefs = [
-				{key: 'name', label: lang['Group'], formatter: YAHOO.booking.formatLink},
+				{key: 'name', label: 'Group', formatter: YAHOO.booking.formatLink}, {key: 'link', 'hidden': true}
 			];
 			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
 		});
