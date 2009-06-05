@@ -482,7 +482,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int','precision' => '4','nullable' => False, 'default'=>'1'),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'description' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'description' => array('type' => 'text', 'nullable' => false, 'default'=>''),
 				'from_' => array('type' => 'timestamp', 'nullable' => false),
 				'to_' => array('type' => 'timestamp', 'nullable' => false),
 				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
