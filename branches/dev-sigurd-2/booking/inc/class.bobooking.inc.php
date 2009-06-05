@@ -52,6 +52,7 @@ function array_minus($a, $b)
 			foreach($allocations as &$allocation)
 			{
 				$allocation['name'] = $allocation['organization_name'];
+				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
@@ -59,6 +60,7 @@ function array_minus($a, $b)
 			foreach($bookings as &$booking)
 			{
 				$booking['name'] = $booking['group_name'];
+				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
 			$bookings = array_merge($allocations, $bookings);
@@ -98,6 +100,7 @@ function array_minus($a, $b)
 			foreach($allocations as &$allocation)
 			{
 				$allocation['name'] = $allocation['organization_name'];
+				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
@@ -105,6 +108,7 @@ function array_minus($a, $b)
 			foreach($bookings as &$booking)
 			{
 				$booking['name'] = $booking['group_name'];
+				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
 			$bookings = array_merge($allocations, $bookings);
@@ -113,6 +117,10 @@ function array_minus($a, $b)
 			return array('total_records'=>count($results), 'results'=>$results);
 		}
 
+		/**
+		 * Split allocations overlapped by bookings into multiple allocations
+		 * to avoid overlaps
+		 */
 		function split_allocations($allocations, $all_bookings)
 		{
 			function get_from2($a) {return $a['from_'];};

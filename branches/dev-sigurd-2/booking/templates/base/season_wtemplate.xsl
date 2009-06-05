@@ -108,7 +108,7 @@ YAHOO.booking.AllocationDialog = function(container) {
 	YAHOO.booking.autocompleteHelper(orgUrl, 'field_org_name', 'field_org_id', 'org_container');
 
 	var myButtons = [{text:"<xsl:value-of select="php:function('lang', 'Save')" />", handler: this.submit, isDefault:true},
-                  	 {text:"<xsl:value-of select="php:function('lang', 'Delete')" />", handler: this.delete},
+                  	 {text:"<xsl:value-of select="php:function('lang', 'Delete')" />", handler: this._delete},
                   	 {text:"<xsl:value-of select="php:function('lang', 'Cancel')" />", handler: this.hide}];
 	this.cfg.queueProperty("buttons", myButtons);
 	this.callback.success = this.onSuccess;
@@ -118,7 +118,7 @@ YAHOO.booking.AllocationDialog = function(container) {
 };
 YAHOO.lang.extend(YAHOO.booking.AllocationDialog, YAHOO.widget.Dialog); 
 
-YAHOO.booking.AllocationDialog.prototype.delete = function (e) {
+YAHOO.booking.AllocationDialog.prototype._delete = function (e) {
 	var postData = 'id=' + YAHOO.booking.currentAlloc;
 	var url = '<xsl:value-of select="season/delete_wtemplate_alloc_url"/>';
 	YAHOO.util.Connect.asyncRequest('POST', url, 

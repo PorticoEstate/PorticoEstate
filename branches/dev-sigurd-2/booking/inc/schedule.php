@@ -64,8 +64,7 @@ function build_schedule_table($bookings, $resources)
 					if(in_array($res['id'], $booking['resources']))
 					{
 						$empty = false;
-						$row[$booking['wday']] = $booking['name'];
-						$row[$booking['wday'].'_id'] = $booking['id'];
+						$row[$booking['wday']] = $booking;
 					}
 				}
 				if(!$empty) {

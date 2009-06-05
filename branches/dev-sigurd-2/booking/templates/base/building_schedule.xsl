@@ -37,7 +37,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     var colDefs = [{key: 'time', label: '<xsl:value-of select="building/year"/>' + '<br/><xsl:value-of select="php:function('lang', 'Time')"/>'}, 
                    {key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resource')"/>', formatter: YAHOO.booking.scheduleResourceColFormatter},
 			<xsl:for-each select="building/days">
-				{key: '<xsl:value-of select="key"/>', label: '<xsl:value-of select="label"/>', formatter: YAHOO.booking.scheduleColorFormatter},
+				{key: '<xsl:value-of select="key"/>', label: '<xsl:value-of select="label"/>', formatter: YAHOO.booking.backendScheduleColorFormatter},
 			</xsl:for-each>{hidden: true}];
     YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
         formatRow: YAHOO.booking.scheduleRowFormatter
