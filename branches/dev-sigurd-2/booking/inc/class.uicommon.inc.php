@@ -211,7 +211,7 @@
 			
 			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined. 
 			//However, in reality (where most of us live), UAs pick one of the two values that it understands. 
-			header("Content-Disposition: attachment; filename*=utf-8''{$options['utf8_filename']}; filename={$options['latin1_filename']}");
+			header("Content-Disposition: attachment; filename={$options['latin1_filename']}");
 			#header("Content-Description: {$options['filename']}");
 			header("Content-Type: $file_type");
 			
