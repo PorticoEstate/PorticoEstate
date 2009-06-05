@@ -629,6 +629,11 @@
 				$cols	= "," . implode(",", $cols);
 				$vals	= "," . $this->bocommon->validate_db_insert($vals);
 			}
+			else
+			{
+				$cols = '';
+				$vals = '';
+			}
 
 			$table = "fm_{$this->type}_{$entity_id}_$cat_id";
 			$this->db->transaction_begin();

@@ -150,12 +150,6 @@
 		function import_ppc()
 		{
 			//do the actual import
-			
-			$valid_attachment = array
-			(
-				'jpg' => true
-			);
-
  			$config = CreateObject('catch.soconfig');
  			$config->read_repository();
 			$entity	= CreateObject('property.soentity');
@@ -165,8 +159,7 @@
 
 			$bofiles	= CreateObject('property.bofiles');
 
-
- 			foreach($config->config_data as $config_data)
+			foreach($config->config_data as $config_data)
  			{
  				$this->pickup_path = $config_data['pickup_path'];
  				$target = $config_data['target'];
@@ -191,31 +184,67 @@
 				{
 					$var_result = $xmlparse->parseFile($file);
 					$var_result = array_change_key_case($var_result, CASE_LOWER);
-
+				
 					//data
 					$insert_values	= array();
-					$cols			= array();
+					$cols		= array();
+					$val_errors	= array();
+
 					foreach($metadata as $field => $field_info)
 					{
-						if(isset($var_result[$field]))
+						// If field is missing from file jump to next
+						if(!isset($var_result[$field]))
 						{
-							switch ( $field_info->type )
-							{
-								case 'numeric':
-									$insert_values[] =  str_replace(',','.',$var_result[$field]);
-									break;
-								case 'timestamp':
-									$insert_values[] =  date($this->db->date_format(), strtotime($var_result[$field]));
-									break;
-								default:
-									$insert_values[] = utf8_encode(trim($var_result[$field]));
-							}
-							$cols[]			 = $field;
+							continue;
 						}
+
+						$insert_value = trim($var_result[$field]);
+						switch ( $field_info->type )
+						{
+							case 'string':
+							case 'varchar':
+								$max_length = intval($field_info->max_length);
+								$input_length = strlen( $insert_value );
+
+								if( $input_length > $max_length ) {
+									$val_errors[] = lang('Input for field "%1" is %2 characters, max for field is %3 (%4)', 
+										$field_info->name, $input_length, $max_length, $file);
+								}
+								break;
+							case 'int2':
+							case 'int4':
+								// Check if input starts with - (optional) and then only
+								// contains numbers
+								if( preg_match('@^[-]?[0-9]+$@', $insert_value) !== 1 )
+								{
+									$val_errors[] = lang('Input for field "%1" is "%2", but should be int (%3)',
+										$field_info->name, $insert_value, $file);
+								}
+								break;
+							case 'numeric':
+								$insert_value = str_replace( ',', '.', $insert_value);
+								$insert_value = floatval($insert_value);
+								break;
+							case 'timestamp':
+								$insert_value = date( $this->db->date_format(), strtotime( $insert_value ) );
+								break;
+						}
+						$insert_values[] = utf8_encode($insert_value);
+						$cols[]	= $field;
+					}
+
+					// Raise exception if we have validation errors
+					if( count( $val_errors ) > 0 )
+					{
+						throw new Exception( implode("<br>", $val_errors) );						
 					}
 
 					if($cols) // something to import
 					{
+						$movefiles = array();
+
+						$this->db->transaction_begin();
+
 						$cols[]	= 'entry_date';
 						$insert_values[] = time();
 						$id = $entity->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
@@ -239,8 +268,6 @@
 						//attachment
 						foreach($var_result as $field => $data)
 						{
-							$pathinfo = pathinfo($data);
-//							if(isset($pathinfo['extension']) && $valid_attachment[$pathinfo['extension']] && is_file("{$this->pickup_path}/{$data}"))
 							if(is_file("{$this->pickup_path}/{$data}"))
 							{
 								$to_file = "{$bofiles->fakebase}/{$this->category_dir}/dummy/{$id}/{$field}_{$data}"; // the dummy is for being consistant with the entity-code that relies on loc1
@@ -257,12 +284,13 @@
 								}
 								$bofiles->vfs->override_acl = 0;
 								// move attachment
-								rename("{$this->pickup_path}/{$data}", "{$this->pickup_path}/imported/{$data}");
+								$movefiles["{$this->pickup_path}/{$data}"] = "{$this->pickup_path}/imported/{$data}";
 							}
 						}
 						// move file
 						$_file = basename($file);
-						rename("{$this->pickup_path}/{$_file}", "{$this->pickup_path}/imported/{$_file}");
+						$movefiles["{$this->pickup_path}/{$_file}"] = "{$this->pickup_path}/imported/{$_file}";
+
 						$i++;
 
 						// finishing
@@ -288,6 +316,21 @@
 							{
 								require_once $file;
 							}
+						}
+						
+						$ok = false;
+						if($this->db->transaction_commit())
+						{
+							foreach ($movefiles as $movefrom => $moveto)
+							{
+								$ok = @rename($movefrom, $moveto);
+							}
+						}
+						if(!$ok)
+						{
+							$this->db->query("DELETE FROM $target_table WHERE id =" . (int)$id,__LINE__,__FILE__);
+							$i--;
+							$this->receipt['error'][]=array('msg'=>lang('There was a problem moving the file(s), imported records are reverted'));
 						}
 					}
 				}
