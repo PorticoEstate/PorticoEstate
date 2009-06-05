@@ -10,7 +10,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	    </ul>
-		
 		<br/>
 		<button onclick="window.location.href='{organization/start}'">
             <xsl:value-of select="php:function('lang', 'Organization index')" />

@@ -9,11 +9,12 @@ div#wrapper {}
 ul#metanav {
     float: right;
     list-style-type: none;
-    margin: .4em 1em 0 0;
+	padding-top: 10px;
 }
 ul#sidebar {
     float: left;
-    padding-left: 10px;
+    padding-left: 17px;
+	padding-top: 10px;
     margin-left: 0;
 }
 ul#sidebar li {
@@ -52,7 +53,7 @@ ul.nav li:first-child:before { display: none; }
 
 form#search {
     text-align: center;
-    margin-top: 5em;
+    padding-top: 5em;
 }
 input#search {
     font-size: 120%;

@@ -1,6 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
   <div id="content">
-
     <form action="" method="GET" id="search">
       <input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
       <xsl:choose>

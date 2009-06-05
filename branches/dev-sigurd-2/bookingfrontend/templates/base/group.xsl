@@ -10,6 +10,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	    </ul>
+		
+		<div style='margin:0; padding: 0; line-height:0'><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></div>
 	
 		<h3>
 	        <ul class="pathway">
