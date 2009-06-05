@@ -93,7 +93,9 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'navbar_config' => $_navbar_config
+		'navbar_config' => $_navbar_config,
+		'lbl_search'   	=> lang('Search'),
+		'lbl_help'   	=> lang('Help'),
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
