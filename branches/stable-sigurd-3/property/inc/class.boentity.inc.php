@@ -415,7 +415,8 @@
 					continue;
 				}
 
-				$file = PHPGW_APP_INC . "/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
 				if ( $entry['active'] && is_file($file) )
 				{
 					require_once $file;

@@ -173,13 +173,13 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, '.catch.1', 'User config', 1)");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.catch.1.1', 'Users and devices', 1, 1, 'fm_catch_1_1')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant) VALUES ({$app_id}, '.catch.2', 'Shema category', 1)");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.catch.2.1', 'Shema type 1', 1, 1, 'fm_catch_2_1')");
+//		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.catch.2.1', 'Shema type 1', 1, 1, 'fm_catch_2_1')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch (id, name, descr) VALUES (1, 'Users and devices', 'Users and devices')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch (id, name, descr) VALUES (2, 'Shema type 1', 'Shema type 1')");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr) VALUES (1, 1, 'Users and devices', 'Users and devices')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr, fileupload) VALUES (2, 1, 'Shema type 1', 'Shema type 1', 1)");
+//		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_catch_category (entity_id, id, name, descr, fileupload) VALUES (2, 1, 'Shema type 1', 'Shema type 1', 1)");
 
 		$location_id = $GLOBALS['phpgw']->locations->get_id('catch', '.catch.1.1');
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable) VALUES ($location_id, 1, 'unitid', 'UnitID', 'UnitID for device', 'V', 1, 1, NULL, 50, NULL, NULL, 'False')");
@@ -201,7 +201,7 @@
 				'uc' => array('num')
 			)
 		);
-
+/*
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_catch_2_1',  array(
 				'fd' => array(
@@ -216,7 +216,7 @@
 				'uc' => array('num')
 			)
 		);
-
+*/
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.505';
@@ -234,6 +234,33 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.506';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.506';
+	function catch_upgrade0_9_17_506()
+	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_catch_2_1');
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		if(!isset($metadata['loc1']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','p_num', array('type' => 'varchar','precision' => '15','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','p_entity_id', array('type' => 'int','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','p_cat_id', array('type' => 'int','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','location_code', array('type' => 'varchar','precision' => '25','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','loc1', array('type' => 'varchar','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','loc2', array('type' => 'varchar','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','loc3', array('type' => 'varchar','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','loc4', array('type' => 'varchar','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','loc5', array('type' => 'varchar','precision' => '4','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_2_1','address', array('type' => 'varchar','precision' => '150','nullable' => True));
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.507';
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
