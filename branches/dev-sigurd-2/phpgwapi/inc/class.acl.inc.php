@@ -58,6 +58,11 @@
 		protected $_data = array();
 
 		/**
+		* @var array $_clear_cache Array with locations to clear from cache
+		*/
+		protected $_clear_cache = array();
+
+		/**
 		* @var object $_db Database connection
 		*/
 		protected $_db;
@@ -271,6 +276,7 @@
 			{
 				return $this->_data;
 			}
+			$this->_clear_cache[$location_id] = true;
 
 			if ( !isset($this->_data[$this->_account_id]) || !is_array($this->_data[$this->_account_id]) )
 			{
@@ -318,6 +324,7 @@
 
 			foreach ($locations as $location_id )
 			{
+				$this->_clear_cache[$location_id] = true;
 				if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
 				{
 					foreach ( $this->_data[$this->_account_id][$app_id][$location_id] as $idx => $value )
@@ -415,12 +422,10 @@
 			}
 
 			$new_data = array();
-			$clear_cache    = array(); 
 			foreach ( $this->_data[$acct_id] as $app => $loc )
 			{
 				foreach ( $loc as $location_id => $at_location )
 				{
-					$clear_cache[$location_id] = true;
 					$location_info = $locations->get_name($location_id);
 					foreach ($at_location as $entry)
 					{
@@ -569,22 +574,10 @@
 */
 			$this->_db->transaction_commit();
 
-			$accts =& $GLOBALS['phpgw']->accounts;
-			$accounts = array();
-			if ( $accts->get_type($this->_account_id) == phpgwapi_account::TYPE_GROUP )
-			{
-				$accounts = $accts->get_members($this->_account_id);
-			}
-
-			$accounts[] = $this->_account_id;
-
-			$clear_cache = array_keys($clear_cache);
+			$clear_cache = array_keys($this->_clear_cache);
 			foreach($clear_cache as $location_id)
 			{
-				foreach($accounts as $account_id)
-				{
-					$this->_delete_cache($account_id, $location_id);
-				}
+				$this->_delete_cache($this->_account_id, $location_id);
 			}
 
 	//		$this->remove_duplicates($acct_id);
@@ -1459,22 +1452,20 @@
 		*/
 		protected function _delete_cache($account_id, $location_id)
 		{
-			$accounts = array($account_id);
-			if($GLOBALS['phpgw']->accounts->get_type($account_id) == 'g')
+			$accounts = array();
+			if($GLOBALS['phpgw']->accounts->get_type($account_id) == phpgwapi_account::TYPE_GROUP)
 			{
-				$members = $GLOBALS['phpgw']->accounts->member($account_id);
-				foreach($members as $entry)
-				{
-					$accounts[] = $entry['account_id'];
-				}
+				$accounts = $GLOBALS['phpgw']->accounts->get_members($account_id);
 			}
+			$accounts[] = $account_id;
+
+			$sql = "SELECT app_id FROM phpgw_locations WHERE location_id = {$location_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$app_id	= $this->_db->f('app_id');
 
 			foreach($accounts as $id)
 			{
-				$sql = "SELECT app_id FROM phpgw_locations WHERE location_id = {$location_id}";
-				$this->_db->query($sql, __LINE__, __FILE__);
-				$this->_db->next_record();
-				$app_id	= $this->_db->f('app_id');
 				phpgwapi_cache::user_clear('phpgwapi', "acl_data_{$app_id}_{$location_id}", $id);
 			}
 		}
