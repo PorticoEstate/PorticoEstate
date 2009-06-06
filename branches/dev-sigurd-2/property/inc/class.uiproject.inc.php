@@ -86,6 +86,7 @@
 			$this->wo_hour_cat_id	= $this->bo->wo_hour_cat_id;
 			$this->district_id		= $this->bo->district_id;
 			$this->user_id			= $this->bo->user_id;
+			$this->criteria_id		= $this->bo->criteria_id;
 		}
 
 		function save_sessiondata()
@@ -101,7 +102,8 @@
 				'status_id'	=> $this->status_id,
 				'wo_hour_cat_id'=> $this->wo_hour_cat_id,
 				'district_id'	=> $this->district_id,
-				'user_id'		=> $this->user_id
+				'user_id'		=> $this->user_id,
+				'criteria_id'	=> $this->criteria_id
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -178,7 +180,8 @@
  	                'cat_id'        		=> $this->cat_id,
  	                'status_id'        		=> $this->status_id,
 					'wo_hour_cat_id'		=> $this->wo_hour_cat_id,
-					'user_id'				=> $this->user_id
+					'user_id'				=> $this->user_id,
+					'criteria_id'			=> $this->criteria_id
    				));
 
    				$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.index',"
@@ -191,6 +194,7 @@
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
 						 	                        ."user_id:'{$this->user_id}',"
+						 	                        ."criteria_id:'{$this->criteria_id}',"
 						 	                        ."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
 						 	                        ."second_display:1,"
 			                						."status_id:'{$this->status_id}'";
@@ -235,6 +239,10 @@
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
+
+				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				array_unshift ($values_combo_box[5],$default_value);
 
 				$datatable['actions']['form'] = array(
 				array(
@@ -289,24 +297,32 @@
 				                                            'style' => 'filter',
 				                                            'tab_index' => 5
 				                                        ),
+				                                        array( //boton 	search criteria
+				                                            'id' => 'btn_criteria_id',
+				                                            'name' => 'criteria_id',
+				                                            'value'	=> lang('search criteria'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 6
+				                                        ),
 														array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_export',
 							                                'value'	=> lang('download'),
-							                                'tab_index' => 10
+							                                'tab_index' => 11
 							                            ),
 														array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
 							                                'value'	=> lang('add'),
-							                                'tab_index' => 9
+							                                'tab_index' => 10
 							                            ),
 				                                        array( //boton     SEARCH
 				                                            'id' => 'btn_search',
 				                                            'name' => 'search',
 				                                            'value'    => lang('search'),
 				                                            'type' => 'button',
-				                                            'tab_index' => 8
+				                                            'tab_index' => 9
 				                                        ),
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
@@ -315,7 +331,7 @@
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
 				                                            'size'    => 28,
-				                                            'tab_index' => 7
+				                                            'tab_index' => 8
 				                                        ),
 				                                        array( //hidden start_date
 		                                                    'type' => 'hidden',
@@ -337,7 +353,7 @@
 		                                                           array(
 		                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 		                                                     'value' => lang('Date search'),
-		                                                     'tab_index' => 6
+		                                                     'tab_index' => 7
 	                                                    ),
 				                                // FIXME test on lightbox for date search
 				                                /*
@@ -370,6 +386,10 @@
 								                                array( //div values  combo_box_4
 								                                            'id' => 'values_combo_box_4',
 								                                            'value'	=> $this->bocommon->select2String($values_combo_box[4])
+								                                      ),
+								                                array( //div values  combo_box_5
+								                                            'id' => 'values_combo_box_5',
+								                                            'value'	=> $this->bocommon->select2String($values_combo_box[5])
 								                                      )
 			                       								)
 										)
@@ -569,7 +589,7 @@
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
 
-					if($uicols['name'][$i]=='project_id' || $uicols['name'][$i]=='address')
+					if($uicols['name'][$i]=='project_id' || $uicols['name'][$i]=='address' || $uicols['name'][$i]=='project_group')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];

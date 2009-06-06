@@ -109,6 +109,8 @@
 				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
 				$district_id	= (isset($data['district_id'])?$data['district_id']:'');
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
+				
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
@@ -131,6 +133,18 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+
+				$cols .= ", project_group";
+				$cols_return[] 				= 'project_group';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'project_group';
+				$uicols['descr'][]			= lang('group');
+				$uicols['statustext'][]		= lang('Project group');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= 'rightClasss';
 				
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
@@ -311,7 +325,9 @@
 				$where= 'AND';
 			}
 
-			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,fm_project.budget,fm_project.reserve,planned_cost';
+			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,'
+				. 'fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
+				. 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
 
 
 			if (is_array($this->grants))
@@ -351,15 +367,54 @@
 				}
 				else
 				{
-					$querymethod = " $where (fm_project.name $this->like '%$query%' or fm_project.address $this->like '%$query%' or fm_project.location_code $this->like '%$query%' or fm_project.id =" . (int)$query .')';
+
+					$matchtypes = array
+					(
+						'exact' => '=',
+						'like'	=> $this->like						
+					);
+					
+					if(count($criteria) > 1)
+					{
+						$_querymethod = array();
+						foreach($criteria as $field_info)
+						{
+							if($field_info['type'] == int)
+							{
+								$_query = (int) $query;
+							}
+							else
+							{
+								$_query = $query;
+							}
+
+							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
+						}
+
+						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						unset($_querymethod);
+					}
+					else
+					{
+						if($criteria[0]['type'] == int)
+						{
+							$_query = (int) $query;
+						}
+						else
+						{
+							$_query = $query;
+						}
+
+						$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
+					}
 				}
 			}
 			else
 			{
 				$querymethod = '';
 			}
-
 			$sql .= " $filtermethod $querymethod";
+
 //echo substr($sql,strripos($sql,'from'));
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
