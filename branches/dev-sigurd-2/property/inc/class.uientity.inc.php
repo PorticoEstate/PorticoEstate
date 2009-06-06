@@ -410,9 +410,10 @@
 													'id'  => 'btn_columns',
 													'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
 														   array(
-															   'menuaction' => 'property.uientity.columns',
-															   'entity_id'  => $this->entity_id,
-															   'cat_id'	 => $this->cat_id
+																'menuaction'	=> 'property.uientity.columns',
+																'entity_id'		=> $this->entity_id,
+																'cat_id'		=> $this->cat_id,
+   												   				'type'			=> $this->type
 															  ))."','link','width=300,height=600,scrollbars=1')",
 													 'value' => lang('columns'),
 													 'tab_index' => 10
