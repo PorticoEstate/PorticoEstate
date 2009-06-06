@@ -109,8 +109,7 @@
 				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
 				$district_id	= (isset($data['district_id'])?$data['district_id']:'');
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
-				
+				$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
 			}
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);

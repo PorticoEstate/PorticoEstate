@@ -46,6 +46,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
+		var $criteria_id;
 
 		var $public_functions = array
 		(
@@ -83,7 +84,6 @@
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
-			$this->search_vendor		= $this->bo->search_vendor;
 			$this->wo_hour_cat_id		= $this->bo->wo_hour_cat_id;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
@@ -91,6 +91,7 @@
 			$this->paid					= $this->bo->paid;
 			$this->b_account			= $this->bo->b_account;
 			$this->district_id			= $this->bo->district_id;
+			$this->criteria_id			= $this->bo->criteria_id;
 		}
 
 		function save_sessiondata()
@@ -103,7 +104,6 @@
 				'order'				=> $this->order,
 				'filter'			=> $this->filter,
 				'cat_id'			=> $this->cat_id,
-				'search_vendor'		=> $this->search_vendor,
 				'status_id'			=> $this->status_id,
 				'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 				'start_date'		=> $this->start_date,
@@ -112,6 +112,7 @@
 				'paid'				=> $this->paid,
 				'b_account'			=> $this->b_account,
 				'district_id'		=> $this->district_id,
+				'criteria_id'		=> $this->criteria_id
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -207,13 +208,13 @@
 									'status_id'			=> $this->status_id,
 									'filter'			=> $this->filter,
 									'query'				=> $this->query,
-									'search_vendor'		=> $this->search_vendor,
 									'start_date'		=> $start_date,
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 									'b_group'			=> $this->b_group,
 									'paid'				=> $this->paid,
-				 	                'district_id'        	=> $this->district_id
+				 	                'district_id'		=> $this->district_id,
+									'criteria_id'		=> $this->criteria_id
 
 	    				));
 	    		$datatable['config']['allow_allrows'] = false;
@@ -221,7 +222,6 @@
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiworkorder.index',"
 
 	    											."query:'{$this->query}',"
- 	                        						."search_vendor:'{$this->search_vendor}',"
 						 	                        ."lookup:'{$lookup}',"
   	                        						."district_id: '{$this->district_id}',"
  	                        						."start_date:'{$start_date}',"
@@ -230,6 +230,7 @@
 						 	                        ."filter:'{$this->filter}',"
 						 	                        ."status_id:'{$this->status_id}',"
 						 	                        ."second_display:1,"
+						 	                        ."criteria_id:'{$this->criteria_id}',"
 						 	                        ."cat_id:'{$this->cat_id}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
@@ -252,6 +253,10 @@
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
+				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				array_unshift ($values_combo_box[5],$default_value);
+
 				$datatable['actions']['form'] = array(
 					array(
 						'action'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -261,9 +266,7 @@
 									'cat_id'			=> $this->cat_id,
 									'status_id'			=> $this->status_id,
 									'filter'			=> $this->filter,
-									'query'				=> $this->query,
-									'search_vendor'		=> $this->search_vendor,
-									'start_date'		=> $start_date,
+									'query'				=> $this->query,									'start_date'		=> $start_date,
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 									'paid'				=> $this->paid,
@@ -312,6 +315,14 @@
 			                                            'style' => 'filter',
 			                                            'tab_index' => 5
 			                                        ),
+			                                        array( //boton 	search criteria
+			                                            'id' => 'btn_criteria_id',
+			                                            'name' => 'criteria_id',
+			                                            'value'	=> lang('search criteria'),
+			                                            'type' => 'button',
+			                                            'style' => 'filter',
+			                                            'tab_index' => 6
+			                                        ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
@@ -340,15 +351,6 @@
 			                                            'size'    => 18,
 			                                            'tab_index' => 8
 			                                        ),
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'search_vendor',
-			                                            'id'     => 'txt_search_vendor',
-			                                            'value'    => '',
-			                                            'type' => 'text',
-			                                            'onkeypress' => 'return pulsar(event)',
-			                                            'size'    => 6,
-			                                            'tab_index' => 7
-			                                        ),
 			                                        array(
 						                                'type'	=> 'hidden',
 						                            	'id'	=> 'start_date',
@@ -369,7 +371,7 @@
 	                                                           array(
 	                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 	                                                     'value' => lang('Date search'),
-	                                                     'tab_index' => 6
+	                                                     'tab_index' => 7
                                                     )
 		                           				),
 		                       		'hidden_value' => array(
@@ -392,7 +394,12 @@
 							                                array( //div values  combo_box_4
 							                                            'id' => 'values_combo_box_4',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[4])
+							                                      ),
+							                                array( //div values  combo_box_5
+							                                            'id' => 'values_combo_box_5',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[5])
 							                                      )
+
 		                       								)
 												)
 										  )

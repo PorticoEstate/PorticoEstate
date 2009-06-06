@@ -72,7 +72,6 @@
 			$filter			= phpgw::get_var('filter', 'int');
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$status_id		= phpgw::get_var('status_id');
-			$search_vendor	= phpgw::get_var('search_vendor');
 			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
 			$start_date		= phpgw::get_var('start_date');
 			$end_date		= phpgw::get_var('end_date');
@@ -80,8 +79,10 @@
 			$paid			= phpgw::get_var('paid', 'bool');
 			$b_account		= phpgw::get_var('b_account');
 			$district_id	= phpgw::get_var('district_id', 'int');
+			$criteria_id	= phpgw::get_var('criteria_id', 'int');
 
 			$this->start			= $start ? $start : 0;
+			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			if(array_key_exists('b_account',$_POST) || array_key_exists('b_account',$_GET) )
 			{
@@ -124,10 +125,6 @@
 			{
 				$this->status_id = $status_id;
 			}
-			if(array_key_exists('search_vendor',$_POST)  || array_key_exists('search_vendor',$_GET))
-			{
-				$this->search_vendor = $search_vendor;
-			}
 			if(array_key_exists('wo_hour_cat_id',$_POST)  || array_key_exists('wo_hour_cat_id',$_GET))
 			{
 				$this->wo_hour_cat_id = $wo_hour_cat_id;
@@ -152,7 +149,6 @@
 			$this->sort				= isset($data['sort']) ? $data['sort']: '';
 			$this->order			= isset($data['order']) ? $data['order']: '';
 			$this->cat_id			= isset($data['cat_id']) ? $data['cat_id']: '';
-			$this->search_vendor	= isset($data['search_vendor']) ? $data['search_vendor']: '';
 			$this->status_id		= isset($data['status_id']) ? $data['status_id']: '';
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id']: '';
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
@@ -161,6 +157,7 @@
 			$this->paid				= isset($data['paid']) ? $data['paid']: '';
 			$this->b_account		= isset($data['b_account']) ? $data['b_account']: '';
 			$this->district_id		= isset($data['district_id']) ? $data['district_id']: '';
+			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
 		}
 
 		function save_sessiondata($data)
@@ -229,6 +226,108 @@
 			return $this->bocommon->select_list($selected,$key_location_entries);
 		}
 
+		function get_criteria_list($selected='')
+		{
+			$criteria = array
+			(
+				array
+				(
+					'id'	=> '1',
+					'name'	=> lang('project group')
+				),
+				array
+				(
+					'id'	=> '2',
+					'name'	=> lang('address')
+				),
+				array
+				(
+					'id'	=> '3',
+					'name'	=> lang('location code')
+				),
+				array
+				(
+					'id'	=> '4',
+					'name'	=> lang('title')
+				),
+				array
+				(
+					'id'	=> '5',
+					'name'	=> lang('vendor')
+				),
+				array
+				(
+					'id'	=> '6',
+					'name'	=> lang('vendor id')
+				),
+			);
+			return $this->bocommon->select_list($selected,$criteria);
+		}
+
+
+		function get_criteria($id='')
+		{
+			$criteria = array();
+			$criteria[1] = array
+			(
+				'field'		=> 'project_group',
+				'type'		=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+			$criteria[2] = array
+			(
+				'field'	=> 'fm_project.address',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'",
+			);
+			$criteria[3] = array
+			(
+				'field'	=> 'fm_project.location_code',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'",
+				'back' => "%'"
+			);
+			$criteria[4] = array
+			(
+				'field'	=> 'fm_workorder.title',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'"
+			);
+			$criteria[5] = array
+			(
+				'field'	=> 'fm_vendor.org_name',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'"
+			);
+			$criteria[6] = array
+			(
+				'field'	=> 'fm_vendor.id',
+				'type'	=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+
+			if($id)
+			{
+				return array($criteria[$id]);
+			}
+			else
+			{
+				return $criteria;
+			}			
+		}
+
+
 		function read($data = array())
 		{
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
@@ -237,10 +336,10 @@
 	
 			$workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
-											'search_vendor' => $this->search_vendor,'wo_hour_cat_id' => $this->wo_hour_cat_id,
+											'wo_hour_cat_id' => $this->wo_hour_cat_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
 											'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
-											'district_id' => $this->district_id,'dry_run'=>$data['dry_run']));
+											'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
 			
 			$this->total_records = $this->so->total_records;
 

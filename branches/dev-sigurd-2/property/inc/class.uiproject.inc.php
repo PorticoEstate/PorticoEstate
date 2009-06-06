@@ -47,6 +47,7 @@
 		var $sub;
 		var $currentapp;
 		var $district_id;
+		var $criteria_id;
 
 		var $public_functions = array
 		(

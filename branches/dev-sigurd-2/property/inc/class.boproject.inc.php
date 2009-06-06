@@ -191,6 +191,11 @@
 					'id'	=> '3',
 					'name'	=> lang('location code')
 				),
+				array
+				(
+					'id'	=> '4',
+					'name'	=> lang('title')
+				),
 			);
 			return $this->bocommon->select_list($selected,$criteria);
 		}
@@ -221,6 +226,14 @@
 				'type'	=> 'varchar',
 				'matchtype' => 'like',
 				'front' => "'",
+				'back' => "%'"
+			);
+			$criteria[4] = array
+			(
+				'field'	=> 'fm_project.name',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
 				'back' => "%'"
 			);
 
