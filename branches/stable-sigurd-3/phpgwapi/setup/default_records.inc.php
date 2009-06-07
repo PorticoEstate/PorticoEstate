@@ -311,3 +311,4 @@
 	}
 
 	$GLOBALS['phpgw']->locations->add('changepassword', 'allow user to change password', 'preferences', false);
+	$GLOBALS['phpgw']->locations->add('anonymous', 'allow anonymous sessions for public modules', 'phpgwapi', false);

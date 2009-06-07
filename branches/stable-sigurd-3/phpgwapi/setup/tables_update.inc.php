@@ -2520,7 +2520,6 @@
 	}
 
 	$test[] = '0.9.17.521';
-
 	/**
 	* Allow 50 characters in column-name for custom attributes.
 	*
@@ -2541,6 +2540,25 @@
 		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.522';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.522';
+	/**
+	* Restore support for anonymous sessions.
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_522()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('anonymous', 'allow anonymous sessions for public modules', 'phpgwapi', false);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.523';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}

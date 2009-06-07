@@ -684,6 +684,7 @@
 			$aclobj =& $GLOBALS['phpgw']->acl;
 			$aclobj->set_account_id($user->id, true);
 			$aclobj->delete_repository('preferences', 'changepassword', $user->id);
+			$aclobj->delete_repository('phpgwapi', 'anonymous', $user->id);
 			$aclobj->set_account_id($user->id, true); //reread the current repository
 			foreach ( $acls as $acl )
 			{
