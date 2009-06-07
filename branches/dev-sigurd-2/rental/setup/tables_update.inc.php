@@ -127,5 +127,99 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.0.4';
+	function rental_upgrade0_0_4()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_contract_status', array(
+				'fd' => array(
+					'id' => 			array('type' => 'auto', 'nullable' => false),
+					'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'description' => 	array('type' => 'text')
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_contract_type', array(
+				'fd' => array(
+					'id' => 			array('type' => 'auto', 'nullable' => false),
+					'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'description' => 	array('type' => 'text')
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_billing_term', array(
+				'fd' => array(
+					'id' => 			array('type' => 'auto', 'nullable' => false),
+					'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'runs_a_year' => 	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_contract', array(
+				'fd' => array(
+					'id' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'date_start' => 	array('type' => 'date'),
+					'date_end' => 		array('type' => 'date'),
+					'billing_start' => 	array('type' => 'date'),
+					'status_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+						'rental_contract_status' => array('status_id' => 'id'),
+						'rental_contract_type' => array('type_id' => 'id'),
+						'rental_billing_term' => array('term_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_contract_composite', array(
+				'fd' => array(
+					'id' => 			array('type' => 'auto', 'nullable' => false),
+					'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'composite_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+						'rental_contract' => array('contract_id' => 'id'),
+						'rental_composite' => array('composite_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.5';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
 	
 ?>

@@ -1,10 +1,11 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';
-	$setup_info['rental']['version'] = '0.0.4';
+	$setup_info['rental']['version'] = '0.0.5';
 	$setup_info['rental']['app_order'] = 51;
 	$setup_info['rental']['tables'] = array(
-	//	'rental_tenant',									// Tenants
-	//	'rental_contract',								// Contracts, has tenants and a rental object
+	//	'rental_tenant',								// Tenants
+		'rental_contract',								// Contracts, has tenants and a rental object
+		'rental_contract_composite',					// Connection between contracts and composites
 		'rental_composite',								// Rental object, an aggregation of rental units or areas
 	//	'rental_contract_price_item',			// Price items from the price book tied to a contract
 	//	'rental_bill_price_item',					// Price items from the price book tied to a past bill
@@ -15,11 +16,11 @@
 	//	'rental_comment',									// Comments to rental composites and tenants
 		'rental_permission',
 		'rental_permission_root',
-		'rental_document_composite'
+		'rental_document_composite',
 		// Admin tables
-	//	'rental_contract_status',
-	//	'rental_billing_term',
-	//	'rental_contract_type',
+		'rental_contract_status',
+		'rental_billing_term',
+		'rental_contract_type'
 	//	'rental_price_item',
 	//	'rental_tenant_type',
 	//	'rental_custom_field_type',

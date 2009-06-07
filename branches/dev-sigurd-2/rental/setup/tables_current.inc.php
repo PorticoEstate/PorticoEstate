@@ -89,4 +89,76 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		// Describes different contract statuses like 'running', 'ended', etc. These are manually set on the contract by the user.
+		'rental_contract_status' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'auto', 'nullable' => false),
+				'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'description' => 	array('type' => 'text')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		// Describes different contract types
+		'rental_contract_type' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'auto', 'nullable' => false),
+				'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'description' => 	array('type' => 'text')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		// Describes different billing terms like '14 days', 'Monthly', etc.
+		'rental_billing_term' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'auto', 'nullable' => false),
+				'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'runs_a_year' => 	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		// A contract
+		'rental_contract' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'date_start' => 	array('type' => 'date'),
+				'date_end' => 		array('type' => 'date'),
+				'billing_start' => 	array('type' => 'date'),
+				'status_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'rental_contract_status' => array('status_id' => 'id'),
+					'rental_contract_type' => array('type_id' => 'id'),
+					'rental_billing_term' => array('term_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		// The connection between a contract and a composite. A composite can belong to several contracts (if they aren't active at the same time) and a contract can contain several composites.
+		'rental_contract_composite' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'auto', 'nullable' => false),
+				'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'composite_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'rental_contract' => array('contract_id' => 'id'),
+					'rental_composite' => array('composite_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		)
 	);
