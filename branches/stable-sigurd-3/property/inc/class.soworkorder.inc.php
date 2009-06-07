@@ -131,7 +131,6 @@
 				$order			= isset($data['order']) ? $data['order'] : '';
 				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 0;
-				$search_vendor	= isset($data['search_vendor']) ? $data['search_vendor'] : '';
 				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
 				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
 				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
@@ -141,6 +140,7 @@
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 			}
 
 			$GLOBALS['phpgw']->config->read();
@@ -404,7 +404,7 @@
 					$public_user_list[] = $user;
 				}
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
+				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . ")";
 				$where= 'AND';
 			}
 
@@ -432,32 +432,52 @@
 				}
 				else
 				{
-					if (ctype_digit($query))
+					$matchtypes = array
+					(
+						'exact' => '=',
+						'like'	=> $this->like						
+					);
+					
+					if(count($criteria) > 1)
 					{
-							$querymethod = " $where fm_workorder.id ={$query}";
+						$_querymethod = array();
+						foreach($criteria as $field_info)
+						{
+							if($field_info['type'] == int)
+							{
+								$_query = (int) $query;
+							}
+							else
+							{
+								$_query = $query;
+							}
+
+							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
+						}
+
+						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						unset($_querymethod);
 					}
 					else
 					{
-						$querymethod = " $where (fm_workorder.title $this->like '%$query%' OR fm_workorder.descr $this->like '%$query%' OR {$location_table}.address $this->like '%$query%' OR {$location_table}.location_code $this->like '%$query%')";
+						if($criteria[0]['type'] == int)
+						{
+							$_query = (int) $query;
+						}
+						else
+						{
+							$_query = $query;
+						}
+
+						$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
 					}
+
 				}
 				$where= 'AND';
 			}
+			$querymethod .= ')';
 
-			$querymethod_vendor = '';
-			if($search_vendor)
-			{
-				if((int)$search_vendor>0)
-				{
-					$querymethod_vendor = " $where fm_workorder.vendor_id=" .(int)$search_vendor ;
-				}
-				else
-				{
-					$querymethod_vendor = " $where  fm_vendor.org_name $this->like '%$search_vendor%'";
-				}
-			}
-
-			$sql .= " $filtermethod $querymethod $querymethod_vendor";
+			$sql .= " $filtermethod $querymethod";
 
 //_debug_array($sql);
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')

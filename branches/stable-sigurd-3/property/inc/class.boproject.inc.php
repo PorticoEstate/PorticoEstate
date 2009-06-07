@@ -75,6 +75,7 @@
 			$user_id	= phpgw::get_var('user_id', 'int');
 			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
 			$district_id	= phpgw::get_var('district_id', 'int');
+			$criteria_id	= phpgw::get_var('criteria_id', 'int');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : $this->query;
@@ -86,6 +87,7 @@
 			$this->user_id			= isset($user_id) && $user_id ? $user_id : '';
 			$this->wo_hour_cat_id	= isset($wo_hour_cat_id) && $wo_hour_cat_id ? $wo_hour_cat_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
+			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 		}
 
 		function save_sessiondata($data)
@@ -110,6 +112,7 @@
 			$this->user_id			= isset($data['user_id'])?$data['user_id']:'';
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
+			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
 		}
 
 		function select_status_list($format='',$selected='')
@@ -169,6 +172,82 @@
 			return $branch_list;
 		}
 
+		function get_criteria_list($selected='')
+		{
+			$criteria = array
+			(
+				array
+				(
+					'id'	=> '1',
+					'name'	=> lang('project group')
+				),
+				array
+				(
+					'id'	=> '2',
+					'name'	=> lang('address')
+				),
+				array
+				(
+					'id'	=> '3',
+					'name'	=> lang('location code')
+				),
+				array
+				(
+					'id'	=> '4',
+					'name'	=> lang('title')
+				),
+			);
+			return $this->bocommon->select_list($selected,$criteria);
+		}
+
+
+		function get_criteria($id='')
+		{
+			$criteria = array();
+			$criteria[1] = array
+			(
+				'field'		=> 'project_group',
+				'type'		=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+			$criteria[2] = array
+			(
+				'field'	=> 'fm_project.address',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'",
+			);
+			$criteria[3] = array
+			(
+				'field'	=> 'fm_project.location_code',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'",
+				'back' => "%'"
+			);
+			$criteria[4] = array
+			(
+				'field'	=> 'fm_project.name',
+				'type'	=> 'varchar',
+				'matchtype' => 'like',
+				'front' => "'%",
+				'back' => "%'"
+			);
+
+			if($id)
+			{
+				return array($criteria[$id]);
+			}
+			else
+			{
+				return $criteria;
+			}			
+		}
+
+
 
 		function select_key_location_list($selected='')
 		{
@@ -186,7 +265,7 @@
 			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],'dry_run' => $data['dry_run'],
-											'district_id' => $this->district_id));
+											'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id)));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

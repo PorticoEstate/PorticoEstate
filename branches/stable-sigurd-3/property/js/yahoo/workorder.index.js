@@ -1,14 +1,14 @@
 //--------------------------------------------------------
 // Declaration of workorder.index vars
-//--------------------------------------------------------
-	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
+//--------------------------------------------------------	//define SelectButton
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
  	var selectsButtons = [
 	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
 	{order:1, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
 	{order:2, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
 	{order:3, var_URL:'wo_hour_cat_id',name:'btn_wo_hour_cat_id',style:'partOFTownbutton',dependiente:''},
-	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
+	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''},
+	{order:5, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
 	]
 
 	// define buttons
@@ -21,12 +21,12 @@
 
 	// define Text buttons
 	var textImput = [
-	{order:0, name:'query',	id:'txt_query'},
-	{order:1, name:'search_vendor',	id:'txt_search_vendor'}
+	{order:0, name:'query',	id:'txt_query'}
 	]
 
 	var toolTips =
 	[
+		{name:'vendor_id', title:'', description:'',ColumnDescription:'org_name'},
 	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''}
 	]
 
@@ -88,6 +88,13 @@
 			if(index)
 			{
 				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+			}
+
+			//criteria
+			index = locate_in_array_options(5,"value",path_values.criteria_id);
+			if(index)
+			{
+				oMenuButton_5.set("label", ("<em>" + array_options[5][index][1] + "</em>"));
 			}
 
 			//focus initial
