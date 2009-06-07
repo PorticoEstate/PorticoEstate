@@ -659,8 +659,7 @@
 	    			'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array(),
-					'lang_vendor'		=> lang(vendor)
+					'records'			=> array()
 	    		);
 
 				// values for datatable
