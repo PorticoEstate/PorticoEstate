@@ -404,7 +404,7 @@
 					$public_user_list[] = $user;
 				}
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
+				$filtermethod .= " $where (fm_project.access='public' AND fm_project.user_id IN(" . implode(',',$public_user_list) . ")";
 				$where= 'AND';
 			}
 
@@ -475,6 +475,7 @@
 				}
 				$where= 'AND';
 			}
+			$querymethod .= ')';
 
 			$sql .= " $filtermethod $querymethod";
 

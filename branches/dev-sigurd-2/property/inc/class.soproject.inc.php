@@ -337,7 +337,7 @@
 					$public_user_list[] = $user;
 				}
 				reset($public_user_list);
-				$filtermethod .= " $where (fm_project.user_id IN(" . implode(',',$public_user_list) . "))";
+				$filtermethod .= " $where (fm_project.user_id IN(" . implode(',',$public_user_list) . ")";
 
 				$where= 'AND';
 			}
@@ -354,7 +354,7 @@
 				$where= 'AND';
 			}
 
-
+			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -408,10 +408,9 @@
 					}
 				}
 			}
-			else
-			{
-				$querymethod = '';
-			}
+
+			$querymethod .= ')';
+
 			$sql .= " $filtermethod $querymethod";
 
 //echo substr($sql,strripos($sql,'from'));

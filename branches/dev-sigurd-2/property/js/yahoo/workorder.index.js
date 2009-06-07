@@ -1,7 +1,6 @@
 //--------------------------------------------------------
 // Declaration of workorder.index vars
-//--------------------------------------------------------
-	//define SelectButton
+//--------------------------------------------------------	//define SelectButton
  	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
  	var selectsButtons = [
 	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
@@ -27,6 +26,7 @@
 
 	var toolTips =
 	[
+		{name:'vendor_id', title:'', description:'',ColumnDescription:'org_name'},
 	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''}
 	]
 
