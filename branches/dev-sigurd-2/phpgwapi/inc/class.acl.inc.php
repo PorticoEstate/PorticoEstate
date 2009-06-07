@@ -360,6 +360,7 @@
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
+			$_locations = array();
 			if($appname)
 			{
 				$_locations[] = $location_id;
@@ -375,6 +376,10 @@
 				}
 			}
 
+			if( !$_locations )
+			{
+				return; //nothing more to do here.
+			}
 			$acct_id = (int) $this->_account_id;
 			$locations =& $GLOBALS['phpgw']->locations;
 			$subs = array();

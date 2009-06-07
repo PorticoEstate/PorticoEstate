@@ -320,8 +320,17 @@
 					'rights'	=> 1
 				);
 			}
+			if ( $values['anonymous'] )
+			{
+				$acls[] = array
+				(
+					'appname' 	=> 'phpgwapi',
+					'location'	=> 'anonymous',
+					'rights'	=> 1
+				);
+			}
 
-			$apps = array_keys($values['account_permissions']);
+			$apps = $values['account_permissions'] ? array_keys($values['account_permissions']) : array();
 
 			unset($values['account_groups'], $values['account_permissions']);
 
@@ -349,7 +358,6 @@
 
 			if ( $user->id )
 			{
-
 				if ( $GLOBALS['phpgw']->accounts->update_user($user, $groups, $acls, $apps) )
 				{
 					return $user->id;
