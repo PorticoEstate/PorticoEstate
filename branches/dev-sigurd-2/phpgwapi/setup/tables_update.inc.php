@@ -2520,7 +2520,6 @@
 	}
 
 	$test[] = '0.9.17.521';
-
 	/**
 	* Allow 50 characters in column-name for custom attributes.
 	*
@@ -2546,9 +2545,8 @@
 	}
 
 	$test[] = '0.9.17.522';
-
 	/**
-	* Allow 50 characters in column-name for custom attributes.
+	* Restore support for anonymous sessions.
 	*
 	* @return string the new version number
 	*/
