@@ -225,7 +225,7 @@ HTML;
 	*/
 	function prepare_navbar(&$navbar)
 	{
-		if ( isset($navbar['admin']) )
+		if ( isset($navbar['admin']) && is_array($navbar['admin']) )
 		{
 			$navbar['admin']['children'] = execMethod('phpgwapi.menu.get', 'admin');
 		}
