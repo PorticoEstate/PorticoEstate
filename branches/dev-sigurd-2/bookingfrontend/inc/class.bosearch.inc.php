@@ -21,7 +21,7 @@
                 foreach($bui_result['results'] as &$bui)
                 {
                     $bui['type'] = "building";
-                    $bui['link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $bui['id']));
+                    $bui['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $bui['id']));
                 }
             }
             if (!$type || $type == "organization") {
@@ -30,7 +30,7 @@
                 {
                     $org['type'] = "organization";
                     $org['description'] = nl2br(strip_tags($org['description']));
-                    $org['link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $org['id']));
+                    $org['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $org['id']));
                 }
             }
             if(!$type || $type == "resource") {
@@ -38,7 +38,7 @@
                 foreach($res_result['results'] as &$res)
                 {
                     $res['type'] = "resource";
-                    $res['link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $res['id']));
+                    $res['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $res['id']));
                 }
             }
 			$final_array = array_merge_recursive($bui_result, $org_result, $res_result);

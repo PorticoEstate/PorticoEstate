@@ -1,25 +1,73 @@
 <?php
-# TESTING
-	$currentapp='bookingfrontend';
+	/**
+	* phpGroupWare - property: a Facilities Management System.
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package property
+ 	* @version $Id: index.php 977 2008-05-11 08:38:25Z sigurd $
+	*/
 
-	$GLOBALS['phpgw_info']['flags'] = array(
-		'noheader'   	=> true,
-		'nonavbar'   	=> true,
-		'currentapp'	=> $currentapp
-		);
+	/**
+	 * Start page
+	 *
+	 * This script will check if there is defined a startpage in the users
+	 * preferences - and then forward the user to this page
+	 */
 
-	include('../header.inc.php');
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'noheader'		=> true,
+		'nonavbar'		=> true,
+		'currentapp'	=> 'bookingfrontend'
+	);
 
-	$start_page=(isset($GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page'])?$GLOBALS['phpgw_info']['user']['preferences'][$currentapp]['default_start_page']:'');
+	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+	include_once('../header.inc.php');
 
-	if ($start_page)
+	if (isset($_GET['menuaction']))
 	{
-		$start_page =array('menuaction'=> $currentapp.'.ui'.$start_page.'.index');
+		list($app,$class,$method) = explode('.',$_GET['menuaction']);
 	}
 	else
 	{
-		$start_page = array('menuaction'=> $currentapp.'.uibookingfrontend.index');
+		$app = 'bookingfrontend';
+		$class = 'uisearch';
+		$method = 'index';
 	}
 
-	$GLOBALS['phpgw']->redirect_link('/index.php',$start_page);
-?>
+	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
+	if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+		 // deprecated
+		|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+	{
+		// comply with RFC 4627
+		header('Content-Type: application/json'); 
+		$return_data = $GLOBALS[$class]->$method();
+		echo json_encode($return_data);
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+		$GLOBALS['phpgw']->common->phpgw_exit();
+	}
+	else
+	{
+		$GLOBALS[$class]->$method();	
+		$GLOBALS['phpgw']->common->phpgw_footer();
+	}

@@ -105,12 +105,12 @@
 
 		public static function link($data)
 		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
+			return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
 		}
 
 		public function redirect($link_data)
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+			$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
 		}
 
 		public function flash($msg, $type='success')
