@@ -90,41 +90,40 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
 		}
 	},this);
     
-    YAHOO.example.ContextMenu = function() {
-	    var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
-	      var task = p_aArgs[1];
-	      if(task) {
-	        /* Extract which TR element triggered the context menu */
-	        var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
-	        
-	        if(elRow) {
-	          switch(task.groupIndex) {
-	          case 0: /* View */
-	            var oRecord = p_myDataTable.getRecord(elRow);
-	          	var recordId = oRecord.getData().id;
-	          	window.location = oRecord.getData().actions.view;
-	          	break;
-	          case 1: /* Edit */
-	            var oRecord = p_myDataTable.getRecord(elRow);
-	          	var recordId = oRecord.getData().id;
-	          	window.location = oRecord.getData().actions.edit;
-	          	break;
-	          }
-	        }
-	      }
-	    };
-	    
-	    this.contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.dataTable.getTbodyEl()});
-	    
-	    contextMenu.addItems([[
-        { text: "Vis" , onclick: { fn: onContextMenuClick, obj: "view" } }],[
-        { text: "Redigér", onclick: { fn: onContextMenuClick, obj: "edit" }}]
-        ]);
 
-	    // Render the ContextMenu instance to the parent container of the DataTable
-	    contextMenu.render(this.dataSourceObject.containerName);
-	    contextMenu.clickEvent.subscribe(onContextMenuClick, this.dataTable);
+    var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
+      var task = p_aArgs[1];
+      if(task) {
+        /* Extract which TR element triggered the context menu */
+        var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
+        
+        if(elRow) {
+          switch(task.groupIndex) {
+          case 0: /* View */
+            var oRecord = p_myDataTable.getRecord(elRow);
+          	var recordId = oRecord.getData().id;
+          	window.location = oRecord.getData().actions.view;
+          	break;
+          case 1: /* Edit */
+            var oRecord = p_myDataTable.getRecord(elRow);
+          	var recordId = oRecord.getData().id;
+          	window.location = oRecord.getData().actions.edit;
+          	break;
+          }
+        }
+      }
     };
+    
+    this.contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.dataTable.getTbodyEl()});
+    
+    this.contextMenu.addItems([[
+	    { text: "Vis" , onclick: { fn: onContextMenuClick, obj: "view" } }],[
+	    { text: "Redigér", onclick: { fn: onContextMenuClick, obj: "edit" }}]
+    ]);
+
+    // Render the ContextMenu instance to the parent container of the DataTable
+    this.contextMenu.render(this.dataSourceObject.containerName);
+    this.contextMenu.clickEvent.subscribe(onContextMenuClick, this.dataTable);
    
 }
 
