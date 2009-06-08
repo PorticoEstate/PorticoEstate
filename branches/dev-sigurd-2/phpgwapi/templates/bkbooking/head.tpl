@@ -29,6 +29,7 @@
     	<!-- END javascript -->
 
 	</head>
+<body>
     <div id="wrapper">
     <div id="header">
         <!-- <ul id="metanav">
