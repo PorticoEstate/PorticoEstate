@@ -135,10 +135,6 @@ function array_minus($a, $b)
 					if($b['allocation_id'] == $allocation['id'])
 						$bookings[] = $b;
 				}
-				if(count($bookings) == 0)
-				{
-					continue;
-				}
 				$times = array($allocation['from_'], $allocation['to_']);
 				$times = array_merge(array_map("get_from2", $bookings), $times);
 				$times = array_merge(array_map("get_to2", $bookings), $times);

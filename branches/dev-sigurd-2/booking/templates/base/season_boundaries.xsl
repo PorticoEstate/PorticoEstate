@@ -106,7 +106,7 @@
 	</xsl:if>
 
 
-			<form action="" method="POST">
+			<!-- <form action="" method="POST">
 			<dl class="form">
 				<dt class="heading"><xsl:value-of select="php:function('lang', 'Copy boundaries')" /></dt>
 				<input type="search"/>
@@ -127,7 +127,7 @@
 					<xsl:value-of select="php:function('lang', 'Cancel')"/>
 				</a>
 			</div>
-		</form>
+		</form> -->
 
 <script type="text/javascript">
     <![CDATA[
