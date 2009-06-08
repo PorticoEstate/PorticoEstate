@@ -53,5 +53,29 @@
 				$defaultPermissions
 			);
 		}
+		
+		/**
+		 * Returns the contracts for the specified composite.
+		 * 
+		 * @param $params array with paramters for the query.
+		 * @return array with contract data.
+		 */
+		public function get_contracts($params)
+		{
+			return $this->so->get_contracts($params);
+		}
+		
+		/**
+		 * Returns array of available contract statuses
+		 * @return array(
+		 * 	'id' => id of status,
+		 *  'status' => textual presentation of status
+		 * )
+		 */
+		public function get_contract_status_array()
+		{
+			return $this->so->get_contract_status_array();
+		}
+		
 	}
 ?>

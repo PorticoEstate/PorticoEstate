@@ -48,6 +48,9 @@
 				case 'included_areas':
 					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id));
 					return $this->yui_results($composite_data, $field_total, $field_results);
+				case 'contracts':
+					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
+					return $this->yui_results($composite_data, $field_total, $field_results);
 			}
 		}
 
@@ -150,8 +153,8 @@
 								'default' => 'both',
 								'text' => lang('rental_rc_availibility')
 						)
-						)
-					),
+					)
+				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'rental.uicomposite.index', 'phpgw_return_as' => 'json')),
 					'columns' => self::link(array('menuaction' => 'rental.uicomposite.columns', 'phpgw_return_as' => 'json')), // URL to store select columns
@@ -192,7 +195,7 @@
 //			var_dump($columnArray);
 			//var_dump($data);
 			self::render_template('datatable', $data);
-		}						
+		}
 
 		/**
 		 * Show details for a single rental composite
@@ -252,6 +255,7 @@
 				phpgwapi_yui::load_widget('tabview');
 				$params['id'] = $composite_id;
 				$composite = $this->bo->read_single($params);
+				$contract_status_array = $this->bo->get_contract_status_array();
 				
 				$tabs = array();
 				
@@ -395,6 +399,62 @@
 							array(
 								'key' => 'area_net',
 								'label' => lang('rental_rc_area_net'),
+								'sortable' => true
+							)
+						)
+					),
+					// Contracts containing this composite
+					'datatable_contracts' => array(
+						'datatable' => true,
+						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'contracts')),
+						'form' => array(
+							'toolbar_contracts_1' => array(
+								'toolbar' => true,
+								'label' => lang('rental_rc_toolbar_filters'),
+								'control1' => array(
+							 			'control' => 'select',
+							 			'id' => 'ctrl_toggle_contract_date',
+										'name' => 'contract_date',
+										'keys' => array('active', 'all', 'not_started', 'ended'),
+										'values' => array(lang('rental_rc_active'), lang('rental_rc_all'), lang('rental_rc_not_started'), lang('rental_rc_ended')),
+										'default' => 'active',
+										'text' => lang('rental_rc_contract_date')
+								),
+								'control2' => array(
+							 			'control' => 'select',
+							 			'id' => 'ctrl_toggle_contract_status',
+										'name' => 'contract_status',
+										'keys' => array_merge(array('-1'), array_keys($contract_status_array)),
+										'values' => array_merge(array(lang('rental_rc_contract_all')), $contract_status_array),
+										'default' => '-1',
+										'text' => lang('rental_rc_contract_status')
+								)
+							)
+						),
+						'field' => array(
+							array(
+								'key' => 'id',
+								'label' => lang('rental_rc_id'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'date_start',
+								'label' => lang('rental_rc_date_start'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'date_end',
+								'label' => lang('rental_rc_date_end'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'tentant',
+								'label' => lang('rental_rc_tenant'),
+								'sortable' => false
+							),
+							array(
+								'key' => 'title',
+								'label' => lang('rental_rc_contract_status'),
 								'sortable' => true
 							)
 						)

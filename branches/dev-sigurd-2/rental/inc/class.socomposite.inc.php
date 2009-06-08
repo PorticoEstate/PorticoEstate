@@ -22,7 +22,9 @@ class rental_socomposite extends rental_socommon
 					'adresse2' => array('type' => 'string'),
 					'postnummer' => array('type' => 'int'),
 					'poststed' => array('type' => 'string'),
-					'gab_id' => array('type' => 'string')
+					'gab_id' => array('type' => 'string'),
+					'date_from' => array('type' => 'date'),
+					'date_to' => array('type' => 'date')
 		));
 	}
 	
@@ -424,6 +426,103 @@ class rental_socomposite extends rental_socommon
 			'total_records' => $total_records,
 			'results'		=> $results
 		);
+	}
+	
+	/**
+	 * Returns all contracts for a specified composite.
+	 * 
+	 * @param $params array with parameters for the query
+	 * @return array with 'total_records' and 'results'.
+	 */
+	public function get_contracts($params)
+	{
+		// Params
+		$id = (int)$params['id'];		
+		$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+		$limit = isset($params['results']) && $params['results'] ? (int)$data['results'] : 1000;
+		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+		$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : null;
+		$contract_status = isset($params['contract_status']) && $params['contract_status'] ? (int)$params['contract_status'] : null;
+		$contract_date = isset($params['contract_date']) && $params['contract_date'] ? $params['contract_date'] : null;
+		
+		// Default return data:
+		$total_records = 0;
+		$results = array();
+		
+		if($id > 0) // Valid id
+		{
+			$tables = 'rental_contract';
+			$joins = 'JOIN rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id) JOIN rental_contract_status ON (rental_contract.status_id = rental_contract_status.id)';
+			$condition = 'rental_contract_composite.composite_id = '.$id;
+			if($contract_status != null && $contract_status > 0){
+				$condition .= ' AND rental_contract.status_id = '.$contract_status;
+			}
+			$current_date = date('Y-m-d');
+			switch($contract_date)
+			{
+				case 'all':
+					/* no-op */
+					break;
+				case 'not_started':
+					$condition .= " AND rental_contract.date_start > '{$current_date}'";  
+					break;
+				case 'ended':
+					$condition .= " AND rental_contract.date_end < '{$current_date}'";  
+					break;
+				case 'active':
+				default:
+					$condition .= " AND (rental_contract.date_start <= '{$current_date}' AND rental_contract.date_end >= '{$current_date}')";  
+					break;
+			}
+			
+			$order = '';
+			
+			if($sort != null) // We should sort results
+			{
+				$order = 'ORDER BY '.$sort.' '.($dir == 'desc' ? 'desc' : 'asc');
+			}
+			
+			$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__, $limit);
+			$this->db->next_record();
+			$total_records = (int)$this->db->f('count');
+			
+			$sql = "SELECT rental_contract.id, date_start, date_end, title FROM {$tables} {$joins} WHERE {$condition} {$order}";
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			while($this->db->next_record())
+			{
+				$row = array();
+	     		$row['id'] = $this->_unmarshal($this->db->f('id', true), 'string');
+	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->_unmarshal($this->db->f('date_start', true), 'date')));
+	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->_unmarshal($this->db->f('date_end', true), 'date')));
+	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that table is ready
+	     		$row['title'] = $this->_unmarshal($this->db->f('title', true), 'string');
+				$results[] = $row;
+			}
+		}
+		
+		return array(
+			'total_records' => $total_records,
+			'results'		=> $results
+		);
+	}
+	
+	/**
+	 * Returns array of available contract statuses
+	 * @return array
+	 * (
+	 * 	id of status => textual presentation of status
+	 * )
+	 */
+	public function get_contract_status_array()
+	{
+		$contract_status_array = array();
+		$sql = 'SELECT id, title FROM rental_contract_status';
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record())
+		{
+			$contract_status_array[$this->_unmarshal($this->db->f('id', true), 'int')] = $this->_unmarshal($this->db->f('title', true), 'string');
+		}
+		return $contract_status_array;
 	}
 	
 	function update($entry)

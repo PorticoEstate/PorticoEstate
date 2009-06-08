@@ -4,6 +4,7 @@ rental_menu_rc	rental	no	Utleieobjekter
 rental_menu_rental	rental	no	Utleie
 rental_menu_tenants	rental	no	Leietakere
 rental_menu_reports	rental	no	Rapporter
+rental_rc_active	rental	no	Aktiv
 rental_rc_add_area	rental	no	Legg til areal
 rental_rc_added_areas	rental	no	Inkludert areal
 rental_rc_address	rental	no	Adresse
@@ -18,17 +19,25 @@ rental_rc_available?	rental	no	Kan leies ut?
 rental_rc_back	rental	no	Tilbake
 rental_rc_building	rental	no	Bygning
 rental_rc_cancel	rental	no	Avbryt
+rental_rc_contract_all	rental	no	Alle
+rental_rc_contract_date	rental	no	Dato
+rental_rc_contract_status	rental	no	Status
 rental_rc_contracts	rental	no	Kontrakter
+rental_rc_contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
+rental_rc_date_end	rental	no	Slutt-dato
+rental_rc_date_start	rental	no	Start-dato
 rental_rc_description	rental	no	Beskrivelse
 rental_rc_details	rental	no	Detajer
 rental_rc_documents	rental	no	Dokumenter
 rental_rc_elements	rental	no	Elementer
+rental_rc_ended	rental	no	Avsluttet
 rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
 rental_rc_id	rental	no	ID
 rental_rc_land_title	rental	no	Gnr/Bnr
 rental_rc_name	rental	no	Navn
 rental_rc_not_available	rental	no	Ikke tilgjengelig
+rental_rc_not_started	rental	no	Ikke startet
 rental_rc_post_code	rental	no	Postnummer
 rental_rc_post_place	rental	no	Sted
 rental_rc_property	rental	no	Eiendom
@@ -43,6 +52,7 @@ rental_rc_search_options	rental	no	Søkevalg
 rental_rc_search_where	rental	no	i
 rental_rc_section	rental	no	Seksjon
 rental_rc_serial	rental	no	Løpenummer
+rental_rc_tenant	rental	no	Leietaker
 rental_rc_toolbar_filters	rental	no	Filtre
 rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt

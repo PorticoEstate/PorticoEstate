@@ -37,3 +37,35 @@ $oProc->query("INSERT INTO rental_unit VALUES (10,515,'2104')"); // Level 2
 $oProc->query("INSERT INTO rental_unit VALUES (10,1421,'1101')"); // Level 3
 $oProc->query("INSERT INTO rental_unit VALUES (10,1389,'3409')"); // Level 4
 $oProc->query("INSERT INTO rental_unit VALUES (10,1391,'3409')"); // Level 5
+$oProc->query("INSERT INTO rental_contract_status VALUES (1,'Under planlegging','Kontrakter som ikke er fullførte, men som er under planlegging.')");
+$oProc->query("INSERT INTO rental_contract_status VALUES (2,'Løpende','Kontrakter som er aktive.')");
+$oProc->query("INSERT INTO rental_contract_status VALUES (3,'Under oppsigelse','Kontrakter som er løpende, men også under oppsigelse.')");
+$oProc->query("INSERT INTO rental_contract_status VALUES (4,'Avsluttet','Kontrakter som ikke lenger er løpende.')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (1,'Innleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (2,'Internleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (3,'Eksternleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (4,'Investeringskontrakt','')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (1,'Årlig','1')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (2,'Månedlig','12')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (3,'Halvår','12')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (4,'14. dag','12')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000001','2009-01-01','2009-09-21','2009-01-15',2,3,2,'9710.13.8282')");
+$oProc->query("INSERT INTO rental_contract VALUES ('INT00000001','2009-01-01','2020-12-12','2009-01-15',2,2,2,'9710.13.8283')");
+$oProc->query("INSERT INTO rental_contract VALUES ('INN00000001','2008-01-01','2028-01-15','2008-01-15',2,1,2,'9710.13.8284')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000002','2009-10-01','2029-10-15','2009-10-15',2,3,2,'9710.13.8285')");
+$oProc->query("INSERT INTO rental_contract VALUES ('INV00000001','2009-09-21','2029-09-15','2009-09-15',2,4,2,'9710.13.8286')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000003','2009-02-03','2029-02-15','2009-02-15',2,3,2,'9710.13.8287')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000004','2009-08-12','2029-08-15','2009-08-15',2,3,2,'9710.13.8289')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000005','2009-06-16','2029-06-15','2009-06-16',2,3,2,'9710.13.8228')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000006','2009-06-01','2029-06-15','2009-06-15',2,3,2,'9710.13.8282')");
+$oProc->query("INSERT INTO rental_contract VALUES ('EKS00000007','2004-02-01','2024-02-02','2004-02-15',2,3,2,'3416.12.23289')");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (1,'EKS00000001',1)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (2,'INT00000001',2)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (3,'INN00000001',3)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (4,'EKS00000002',4)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (5,'INV00000001',5)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (6,'EKS00000003',6)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (7,'EKS00000004',7)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (8,'EKS00000005',8)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (9,'EKS00000006',9)");
+$oProc->query("INSERT INTO rental_contract_composite VALUES (10,'EKS00000007',10)");

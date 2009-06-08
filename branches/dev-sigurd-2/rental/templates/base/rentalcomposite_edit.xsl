@@ -41,16 +41,22 @@
 					<div id="datatable-container">
 						<xsl:apply-templates select="data/datatable_included_areas" />
 					</div>
-				</div>				  	
+				</div>
 				<h4><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h4>
 				<div class="datatable">
 					<div id="datatable-container2">
 					    <xsl:apply-templates select="data/datatable_available_areas" />
 					</div>
-				</div>	
+				</div>
 			</div>
 			<div id="contracts">
-				<p>kontrakter</p>
+				<xsl:call-template name="form" />
+				<h4><xsl:value-of select="php:function('lang', 'rental_rc_contracts_containing_this_composite')" /></h4>
+				<div class="datatable">
+					<div id="datatable-container-contracts">
+					    <xsl:apply-templates select="data/datatable_contracts" />
+					</div>
+				</div>
 			</div>
 			<div id="documents">
 				<div id="documents_container">					
@@ -205,6 +211,71 @@
 	</div>
 </xsl:template>
 
+<xsl:template name="form">
+	<form id="queryForm">
+		<xsl:attribute name="method">
+			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
+		</xsl:attribute>
+
+		<xsl:attribute name="action">
+			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
+		</xsl:attribute>
+        <xsl:for-each select="data//form//*">
+        	<xsl:if test="./toolbar">
+        		<xsl:call-template name="toolbar"/>
+        	</xsl:if>
+        </xsl:for-each>
+	</form>
+</xsl:template>
+
+<xsl:template name="toolbar">
+    <div id="toolbar"><table class="toolbartable"><tr>
+    	<td class="toolbarlabel"><label><b><xsl:value-of select="./label"/></b></label></td>
+        <xsl:for-each select="*">
+        	<div class="toolbarelement">
+	        	<xsl:if test="control = 'input'">
+	        		<td class="toolbarcol">
+					<label class="toolbar_element_label">
+				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+				    </label>
+				    <input>
+			        	<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+			    		<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
+			    		<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+			    		<xsl:attribute name="onClick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
+			    		<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
+			    		<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
+			    		<!-- <xsl:attribute name="class">yui-button yui-menu-button yui-skin-sam yui-split-button yui-button-hover button</xsl:attribute> -->
+				    </input>
+				    </td>
+				</xsl:if>
+				<xsl:if test="control = 'select'">
+					<td class="toolbarcol">
+					<label class="toolbar_element_label">
+				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+				    </label>
+				    <select>
+					<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
+					<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+					<xsl:attribute name="onchange"><xsl:value-of select="phpgw:conditional(not(onchange), '', onchange)"/></xsl:attribute>
+			   		<xsl:for-each select="keys">
+			   			<xsl:variable name="p" select="position()" />
+			   			<option>
+			   				<xsl:attribute name="value"><xsl:value-of select="text()"/></xsl:attribute>
+			   				<xsl:if test="text() = ../default"><xsl:attribute name="default"/></xsl:if>
+			   				<xsl:value-of select="../values[$p]"/>
+			   			</option>
+			   		</xsl:for-each>
+			   		</select>
+			   		</td>
+				</xsl:if>
+			</div>
+        </xsl:for-each> 
+    </tr></table></div>
+</xsl:template>
+
 <xsl:template match="datatable_included_areas" >
 	<xsl:call-template name="datasource-definition" >
 		<xsl:with-param name="number">1</xsl:with-param>
@@ -220,6 +291,15 @@
 		<xsl:with-param name="form">queryForm</xsl:with-param>
 		<xsl:with-param name="filters">queryForm</xsl:with-param>
 		<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template match="datatable_contracts" >
+	<xsl:call-template name="datasource-definition">
+		<xsl:with-param name="number">3</xsl:with-param>
+		<xsl:with-param name="form">queryForm</xsl:with-param>
+		<xsl:with-param name="filters">queryForm</xsl:with-param>
+		<xsl:with-param name="container_name">datatable-container-contracts</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
 
