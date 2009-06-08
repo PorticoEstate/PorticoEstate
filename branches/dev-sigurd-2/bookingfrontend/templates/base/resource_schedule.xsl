@@ -31,6 +31,9 @@
 		</ul>
 
 		<div id="schedule_container"/>
+		<a href="{resource/application_link}">
+			<xsl:value-of select="php:function('lang', 'New booking application')"/>
+		</a>
 	</div>
 
 <script type="text/javascript">

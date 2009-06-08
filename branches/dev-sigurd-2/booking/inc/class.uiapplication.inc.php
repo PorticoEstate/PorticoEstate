@@ -137,7 +137,9 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($application);
-					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$receipt['id']));
+					$application['id'] = $receipt['id'];
+					$this->bo->send_notification($application, true);
+					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
 			array_set_default($application, 'resources', array());
@@ -179,6 +181,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($application);
+					$this->bo->send_notification($application);
 					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$application['id']));
 				}
 			}
@@ -209,6 +212,7 @@
 			{
 				$application['status'] = $_POST['status'];
 				$receipt = $this->bo->update($application);
+				$this->bo->send_notification($application);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
@@ -217,6 +221,7 @@
 												   'author'=>$GLOBALS['phpgw_info']['user']['fullname'], 
 												   'comment'=>$_POST['comment']);
 				$receipt = $this->bo->update($application);
+				$this->bo->send_notification($application);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));

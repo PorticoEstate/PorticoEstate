@@ -22,7 +22,10 @@
 		
 		public function link($data)
 		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			else
+				return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
 		function read()

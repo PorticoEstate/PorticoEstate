@@ -55,19 +55,30 @@
 	}
 
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
-	if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
-		 // deprecated
-		|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+
+
+	if ( !$invalid_data 
+		&& is_object($GLOBALS[$class])
+		&& isset($GLOBALS[$class]->public_functions) 
+		&& is_array($GLOBALS[$class]->public_functions) 
+		&& isset($GLOBALS[$class]->public_functions[$method])
+		&& $GLOBALS[$class]->public_functions[$method] )
+
 	{
-		// comply with RFC 4627
-		header('Content-Type: application/json'); 
-		$return_data = $GLOBALS[$class]->$method();
-		echo json_encode($return_data);
-		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-		$GLOBALS['phpgw']->common->phpgw_exit();
-	}
-	else
-	{
-		$GLOBALS[$class]->$method();	
-		$GLOBALS['phpgw']->common->phpgw_footer();
+		if ( phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
+			 // deprecated
+			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+		{
+			// comply with RFC 4627
+			header('Content-Type: application/json'); 
+			$return_data = $GLOBALS[$class]->$method();
+			echo json_encode($return_data);
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+		else
+		{
+			$GLOBALS[$class]->$method();	
+			$GLOBALS['phpgw']->common->phpgw_footer();
+		}
 	}
