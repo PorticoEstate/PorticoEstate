@@ -289,13 +289,14 @@
 				{
 					$entry['ticket'] = array
 										(
-											'url' 	=> $GLOBALS['phpgw']->link('/index.php', array
-														(
-															'menuaction'	=> 'property.uitts.view',
-															'id'			=> $origin[0]['data'][0]['id']
-														)
-													),
-											'text'	=> $origin[0]['data'][0]['id']
+											'url' 			=> $GLOBALS['phpgw']->link('/index.php', array
+																(
+																	'menuaction'	=> 'property.uitts.view',
+																	'id'			=> $origin[0]['data'][0]['id']
+																)
+															),
+											'text'			=> $origin[0]['data'][0]['id'],
+											'statustext'	=> $origin[0]['data'][0]['statustext'],											
 										);
 				}
 			}

@@ -57,9 +57,9 @@
 			$this->soadmin_entity->type_app		= & $this->boadmin_entity->type_app;
 
 
-//			$this->_like 			=& $this->db->like;
-//			$this->_join 			=& $this->db->join;
-//			$this->_left_join		=& $this->db->left_join;
+//			$this->_like 			=& $this->_db->like;
+			$this->_join 			=& $this->_db->join;
+//			$this->_left_join		=& $this->_db->left_join;
 		}
 
 		/**
@@ -253,23 +253,35 @@
 
 		public function get_relation_info($linkend_location, $id)
 		{
-			$link = array();
 			$type = $linkend_location['location'];
 			if($type == '.ticket')
 			{
-				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
+				$this->_db->query("SELECT status FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				$status_code = $this->_db->f('status');
+
+				static $status_text;
+				if(!$status_text)
+				{
+					$status_text = execMethod('property.botts.get_status_text');
+				}
+				return lang($status_text[$status_code]);
 			}
 			else if($type == '.project.workorder')
 			{
-				$link = array('menuaction' => 'property.uiworkorder.view', 'id' => $id);
+				$this->_db->query("SELECT fm_workorder_status.descr as status FROM fm_workorder {$this->_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder.id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				return $this->_db->f('status');
 			}
 			else if($type == '.project.request')
 			{
-				$link = array('menuaction' => 'property.uirequest.view', 'id' => $id);
+				$this->_db->query("SELECT fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}",__LINE__,__FILE__);				
+				$this->_db->next_record();
+				return $this->_db->f('status');
 			}
 			else if($type == '.project')
 			{		
-				$this->_db->query("SELECT status from fm_project WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT fm_workorder_status.descr as status FROM fm_project {$this->_join} fm_workorder_status ON fm_project.status = fm_workorder_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
 				$this->_db->next_record();
 				return $this->_db->f('status');
 			}
@@ -278,29 +290,15 @@
 				$type		= explode('.',$type);
 				$entity_id	= $type[2];
 				$cat_id		= $type[3];
-				$link =	array
-				(
-					'menuaction'	=> 'property.uientity.view',
-					'entity_id'		=> $entity_id,
-					'cat_id'		=> $cat_id,
-					'id'			=> $id
-				);
+// Not set
 			}
 			else if( substr($type, 1, 5) == 'catch' )
 			{
 				$type		= explode('.',$type);
 				$entity_id	= $type[2];
 				$cat_id		= $type[3];
-				$link =	array
-				(
-					'menuaction'	=> 'property.uientity.view',
-					'type'			=> 'catch',
-					'entity_id'		=> $entity_id,
-					'cat_id'		=> $cat_id,
-					'id'			=> $id
-				);
+// Not set
 			}
-
 		}
 
 		/**

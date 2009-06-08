@@ -188,7 +188,7 @@
 							<tr>
 
 							<td class="th_text"  align="left" >
-								<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+								<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 								<xsl:text> </xsl:text>
 
 								<xsl:choose>
@@ -219,7 +219,7 @@
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>
@@ -911,7 +911,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>

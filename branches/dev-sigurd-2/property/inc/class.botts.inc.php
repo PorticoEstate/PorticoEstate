@@ -205,7 +205,7 @@
 			return $status;
 		}
 
-		function _get_status_text()
+		function get_status_text()
 		{
 			$status_text = array(
 				'R' => 'Re-opened',
@@ -413,7 +413,7 @@
 				$ticket['timestampclosed']= $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 			}
 
-			$status_text = $this->_get_status_text();
+			$status_text = $this->get_status_text();
 
 			$ticket['status_name'] = lang($status_text[$ticket['status']]);
 			$ticket['user_lid']=$GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
@@ -468,7 +468,7 @@
 		{
 			$history_array = $this->historylog->return_array(array('C','O'),array(),'','',$id);
 
-			$status_text = $this->_get_status_text();
+			$status_text = $this->get_status_text();
 			$record_history = array();
 			$i=0;
 			if (is_array($history_array))
@@ -653,7 +653,7 @@
 			$m=count($history_2)-1;
 			$ticket['status']=$history_2[$m]['status'];
 
-		//	$status = $this->_get_status_text();
+		//	$status = $this->get_status_text();
 
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 

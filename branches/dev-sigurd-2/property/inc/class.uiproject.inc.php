@@ -408,6 +408,7 @@
 			$j = 0;
 			if (isset($project_list) AND is_array($project_list))
 			{
+				$lang_search = lang('search');
 				foreach($project_list as $project_entry)
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
@@ -420,7 +421,7 @@
 							if(isset($project_entry['query_location'][$uicols['name'][$k]]) && $project_entry['query_location'][$uicols['name'][$k]])
 							{
 								$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-								$datatable['rows']['row'][$j]['column'][$k]['statustext']		= lang('search');
+								$datatable['rows']['row'][$j]['column'][$k]['statustext']		= $lang_search;
 								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['java_link']		= true;
@@ -429,10 +430,12 @@
 							}
 							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $project_entry[$uicols['name'][$k]])
 							{
-									$datatable['rows']['row'][$j]['column'][$k]['value']	= $project_entry[$uicols['name'][$k]]['text'];
-									$datatable['rows']['row'][$j]['column'][$k]['link']		= $project_entry[$uicols['name'][$k]]['url'];
-									$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
-									$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
+									$datatable['rows']['row'][$j]['column'][$k]['value']		= $project_entry[$uicols['name'][$k]]['text'];
+									$datatable['rows']['row'][$j]['column'][$k]['link']			= $project_entry[$uicols['name'][$k]]['url'];
+									$datatable['rows']['row'][$j]['column'][$k]['target']		= '_blank';
+									$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
+									$datatable['rows']['row'][$j]['column'][$k]['statustext']	= $project_entry[$uicols['name'][$k]]['statustext'];
+									
 							}
 						}
 
@@ -710,7 +713,7 @@
 		    				}
 		    				elseif(isset($column['format']) && $column['format']== "link")
 		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' title='{$column['statustext']}'>" .$column['value']."</a>";
 		    				}else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
@@ -1323,7 +1326,7 @@
 
 			//----------------------------------------------datatable settings--------
 
-
+_debug_array($values['origin']);
 			$data = array
 			(
 				'b_account_data'					=> $b_account_data,
