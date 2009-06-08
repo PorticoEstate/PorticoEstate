@@ -42,11 +42,11 @@
 				case 'details':
 					$composite_data = $this->bo->read_single(array('id' => $composite_id));
 					return $this->yui_results($composite_data, $field_total, $field_results);
-				case 'available_areas':
-					$composite_data = $this->bo->read_single(array('id' => $composite_id));
-					return $this->yui_results($composite_data, $field_total, $field_results);
 				case 'included_areas':
-					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id));
+					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
+					return $this->yui_results($composite_data, $field_total, $field_results);
+				case 'available_areas':
+					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
 					return $this->yui_results($composite_data, $field_total, $field_results);
 				case 'contracts':
 					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
@@ -323,7 +323,7 @@
 					'access' => $access,
 					'datatable_included_areas' => array(
 						'datatable' => true,
-						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
+						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'included_areas')),
 						'field' => array(
 							array(
 								'key' => 'location_code',

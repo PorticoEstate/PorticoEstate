@@ -170,7 +170,7 @@ class rental_socomposite extends rental_socommon
 			'results'		=> $results
 		);
 	}
-	
+
 	
 	/**
 	 * Read single rental composite record
@@ -180,17 +180,18 @@ class rental_socomposite extends rental_socommon
 	 */
 	function read_single($params)
 	{
-		//Build and execute query to select a single rental cmposite based on id
-		$cols = 'rental_composite.id, rental_composite.name, rental_composite.description, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.is_active, rental_composite.postcode, rental_composite.place, fm_location1.adresse1, fm_location1.adresse2, fm_location1.postnummer, fm_location1.poststed, fm_gab_location.gab_id';
-		$distinct = 'distinct on(rental_composite.id)';
-		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
 		$id = (int)$params['id'];
-		$this->db->query("SELECT $cols FROM {$this->table_name} $joins WHERE rental_composite.id=$id", __LINE__, __FILE__);
-
-		//Return array
+		// First we get all the data we have about the composite
+		// We only ask for one row because we're only using the address data from the first area (something like an educated guess of the address and gab code)
+		// TODO: Is it safe for us to use left join like this? (There have been examples of location codes missing in the gab table)
+		$sql = "SELECT distinct(rental_composite.id), name, description, has_custom_address, address_1, house_number, is_active, postcode, place, fm_locations.location_code, level, adresse1, adresse2, postnummer, poststed, gab_id FROM {$this->table_name} LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) LEFT JOIN fm_gab_location ON (fm_locations.location_code = fm_gab_location.location_code) WHERE rental_composite.id={$id}";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+//		die($sql);
+		
+		// Return array
 		$row = array();
 		
-		//Traverse single record in result set and add actual value to fields
+		// Traverse single record in result set and add actual value to fields
 		$this->db->next_record();
 		foreach($this->fields as $field => $fparams)
 		{
@@ -198,10 +199,10 @@ class rental_socomposite extends rental_socommon
 		}
 		//... alter gab_id to contain slashes
 		$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
-		$row['results'] = array();
 		
-		// Execute query to select all rental units belonging to this rental composite. Add values for level and location coce to unit tabe
-		$this->db->query("SELECT fm_locations.* FROM rental_unit JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) WHERE composite_id = {$id}");
+		// Second we find all areas that belongs to composite
+		$this->db->query("SELECT level, location_code FROM fm_locations {$this->join} rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id = {$id}");
+		// ..and store them in an array
 		$units = array();
 		while ($this->db->next_record()) {
 			$level = $this->_unmarshal($this->db->f('level', true), 'int');
@@ -213,8 +214,71 @@ class rental_socomposite extends rental_socommon
 		$area_gros = 0;
 		$area_net = 0;
 		
-		// Go through each rental unit (location) that belongs to this composite and add up their areas
-		foreach ($units as $unit)
+		foreach ($units as $unit) // Goes through each rental unit (location) that belongs to this composite and add up their areas
+		{
+			// Column names mostly used for the areas:
+			$area_column_gros = 'bta';
+			$area_column_net = 'bra';
+			
+			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
+			if ($unit['level'] == 1)
+			{
+				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location2 WHERE fm_location2.loc1 = '{$unit['location_code']}'";
+			} 
+			else // ... not level 1
+			{
+				// ... on level 5 the area columns have different names..
+				if ($unit['level'] == 5)
+				{
+					$area_column_gros = 'bruksareal';
+					$area_column_net = 'bruttoareal';
+				}
+				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location{$unit['level']} WHERE fm_location{$unit['level']}.location_code = '{$unit['location_code']}'";
+			}
+
+			$this->db->query($sql);
+			while($this->db->next_record())
+			{
+				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
+			}
+		} // end foreach
+		
+		$row['area_gros'] = $area_gros;
+		$row['area_net'] = $area_net;
+		
+		return $row;
+	}
+	
+	/**
+	 * Gets all areas that have been added to a composite
+	 * 
+	 * @param	params	array( (id=?) AND ordering information )
+	 * @return	rows	array( (fieldname=fieldvalue) AND accumulated areas AND total number of included areas)
+	 */
+	function get_included_rental_units($params)
+	{
+		// TODO: Implement paging and sorting
+		$id = (int)$params['id'];
+		// First we get ids for all areas for specified composite id
+		$sql = 'SELECT level, location_code FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id ='.$id;
+		$this->db->query($sql, __LINE__, __FILE__);
+//		die($sql);
+		
+		$unit_array = array();
+		while ($this->db->next_record())
+		{
+			$level = $this->_unmarshal($this->db->f('level', true), 'int');
+			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
+			$unit_array[] = array('level' => $level, 'location_code' => $location_code);
+		}
+		
+		//Return array
+		$row = array();
+		$row['results'] = array();
+		
+		// Go through each rental unit (location) that belongs to this composite and extract as much data as possible
+		foreach ($unit_array as $unit)
 		{
 			$sql = '';
 			$area_column_gros = 'bta';
@@ -259,41 +323,17 @@ class rental_socomposite extends rental_socommon
 				}
 				$sql = 'SELECT '.implode(', ', $names_to_look_for_array).", {$address_column}, name, fm_location{$unit['level']}.{$area_column_gros}, fm_location{$unit['level']}.{$area_column_net} FROM fm_location{$unit['level']} ".implode(' ', $joins)." JOIN fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) WHERE fm_location{$unit['level']}.location_code = '{$unit['location_code']}'";
 			}
-			// XXX: Roy: Continue here: Implement paging and ordering
-			//
-			// Areas included ordering
-			//
-			$area_included_order = '';
-			if(is_array($params['area_included']) && isset($params['area_included']['sort']) && $params['area_included']['sort'] != '') // Sort is set
-			{
-				$area_included_sort_direction = (isset($params['area_included']['sort_direction']) && $params['area_included']['sort_direction'] == 'desc' )? 'desc' : 'asc';
-				$sort_field = $params['area_included']['sort'];
-				// We have to map some of the columns to the correct database field
-				switch ($sort_field)
-				{
-					case 'address':
-						$sort_field = $address_column;
-						break;
-					case 'area_gros':
-						$sort_field = $area_column_gros;
-						break;
-					case 'area_net':
-						$sort_field = $area_column_net;
-						break;
-					case 'part_of_town':
-						$sort_field = 'name';
-						break;
-				}
-				$sql .= ' ORDER BY '.$sort_field.' '.$area_included_sort_direction;
-			}
+
+			$area_gros = 0;
+			$area_net = 0;
 			
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
 				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
 				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
-				$current_unit['area_gros'] = (int)$area_column_gros; 
-				$current_unit['area_net'] = (int)$area_column_net; 
+				$current_unit['area_gros'] = (int)$area_gros; 
+				$current_unit['area_net'] = (int)$area_net; 
 				for($i = 1; $i <= $unit['level'] && $i <= 3; $i++) // Runs through all levels containing names
 				{
 					$current_unit['loc'.$i.'_name'] = $this->_unmarshal($this->db->f('loc'.$i.'_name', true), 'string');
@@ -302,12 +342,11 @@ class rental_socomposite extends rental_socommon
 				$current_unit['part_of_town'] = $this->_unmarshal($this->db->f('name', true), 'string');
 			}
 		}
-		$row['area_gros'] = $area_gros;
-		$row['area_net'] = $area_net;
 		$row['total_records'] = count($row['results']);
 		
 		return $row;
 	}
+	
 	/**
 	 * 
 	 * @param $params
@@ -336,6 +375,8 @@ class rental_socomposite extends rental_socommon
 		foreach ($units as $unit)
 		{
 			$sql = '';
+			$area_column_gros = 'bta';
+			$area_column_net = 'bra';
 			$address_column = 'adresse';
 			$current_unit = &$results[];  
 			$current_unit['location_code'] = $unit['location_code'];
@@ -376,41 +417,16 @@ class rental_socomposite extends rental_socommon
 				}
 				$sql = 'SELECT '.implode(', ', $names_to_look_for_array).", {$address_column}, name, fm_location{$unit['level']}.{$area_column_gros}, fm_location{$unit['level']}.{$area_column_net} FROM fm_location{$unit['level']} ".implode(' ', $joins)." JOIN fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) WHERE fm_location{$unit['level']}.location_code = '{$unit['location_code']}'";
 			}
-			// XXX: Roy: Continue here: Implement paging and ordering
-			//
-			// Areas included ordering
-			//
-			$area_included_order = '';
-			if(is_array($params['area_included']) && isset($params['area_included']['sort']) && $params['area_included']['sort'] != '') // Sort is set
-			{
-				$area_included_sort_direction = (isset($params['area_included']['sort_direction']) && $params['area_included']['sort_direction'] == 'desc' )? 'desc' : 'asc';
-				$sort_field = $params['area_included']['sort'];
-				// We have to map some of the columns to the correct database field
-				switch ($sort_field)
-				{
-					case 'address':
-						$sort_field = $address_column;
-						break;
-					case 'area_gros':
-						$sort_field = $area_column_gros;
-						break;
-					case 'area_net':
-						$sort_field = $area_column_net;
-						break;
-					case 'part_of_town':
-						$sort_field = 'name';
-						break;
-				}
-				$sql .= ' ORDER BY '.$sort_field.' '.$area_included_sort_direction;
-			}
+			
+			$area_gros = $area_net = 0;
 			
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
 				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
 				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
-				$current_unit['area_gros'] = (int)$area_column_gros; 
-				$current_unit['area_net'] = (int)$area_column_net; 
+				$current_unit['area_gros'] = (int)$area_gros; 
+				$current_unit['area_net'] = (int)$area_net; 
 				for($i = 1; $i <= $unit['level'] && $i <= 3; $i++) // Runs through all levels containing names
 				{
 					$current_unit['loc'.$i.'_name'] = $this->_unmarshal($this->db->f('loc'.$i.'_name', true), 'string');

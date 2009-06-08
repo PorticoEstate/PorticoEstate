@@ -54,6 +54,16 @@
 			);
 		}
 		
+		public function get_included_rental_units($params)
+		{
+			return $this->so->get_included_rental_units($params);
+		}
+		
+		public function get_available_rental_units($params)
+		{
+			return $this->so->get_available_rental_units($params);
+		}
+		
 		/**
 		 * Returns the contracts for the specified composite.
 		 * 

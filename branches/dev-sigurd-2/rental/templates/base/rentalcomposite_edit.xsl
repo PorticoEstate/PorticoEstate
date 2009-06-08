@@ -98,13 +98,14 @@
 					<xsl:if test="adresse2 != ''">
 						<br /><xsl:value-of select="adresse2"/>
 					</xsl:if>
-					<xsl:if test="postnummer != ''">
+					<br />
+					<xsl:if test="postnummer != '0'">
 						<br /><xsl:value-of select="postnummer"/>&#160;<xsl:value-of select="poststed"/>
 					</xsl:if>
 				</dd>
 				
 				<dt>
-					<label for="address_1"><xsl:value-of select="php:function('lang', 'rental_rc_address')" /></label>
+					<label for="address_1"><xsl:value-of select="php:function('lang', 'rental_rc_overridden_address')" /></label>
 					/ <label for="house_number"><xsl:value-of select="php:function('lang', 'rental_rc_house_number')" /></label>
 				</dt>
 				<dd>
@@ -120,16 +121,7 @@
 						</xsl:if>
 						<xsl:attribute name="value"><xsl:value-of select="house_number"/></xsl:attribute>
 					</input>
-				</dd>
-				<dd>
-					<input type="text" name="address_2" id="address_2">
-						<xsl:if test="../access = 0">
-							<xsl:attribute name="disabled" value="true"/>
-						</xsl:if>
-						<xsl:attribute name="value"><xsl:value-of select="address_2"/></xsl:attribute>
-					</input>
-				</dd>
-				
+				</dd>				
 				<dt>
 					<label for="postcode"><xsl:value-of select="php:function('lang', 'rental_rc_post_code')" /></label> / <label for="place"><xsl:value-of select="php:function('lang', 'rental_rc_post_place')" /></label>
 				</dt>
