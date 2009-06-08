@@ -491,11 +491,14 @@
 							sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", $sub_entity_count++)
 						);
 					}
+					if($params['required'] && $sub_entity_count == 0)
+					{
+						$errors[$field] = "Field $field is required";
+					}
 					continue;
 				}
 				
 				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
-				
 				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
 					$errors[$error_key] = "Field $error_key is required";
