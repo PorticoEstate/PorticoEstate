@@ -207,3 +207,11 @@ dl.contactinfo dd {
 
 /*dl.proplist.images dd img { max-width: 300px;}*/
 dl.proplist.images dl { margin-bottom: 1.5em;}
+
+#agegroup {
+    background: #eee;
+    white-space: nowrap;
+}
+#agegroup, #agegroup td, #agegroup th { width: 1%; }
+#agegroup td, #agegroup th { padding: .1em .3em;}
+#agegroup td input { width: 3em; }

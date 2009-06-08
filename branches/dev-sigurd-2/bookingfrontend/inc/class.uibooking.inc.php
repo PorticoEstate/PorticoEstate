@@ -102,7 +102,7 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$groups = $this->group_bo->read();
+			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
 			self::render_template('booking_new', array('booking' => $booking, 'activities' => $activities,  'agegroups' => $agegroups, 'audience' => $audience, 'groups' => $groups));
 		}
