@@ -29,9 +29,24 @@
 						<dd><xsl:value-of select="phone"/></dd>
 					</xsl:if>
 					
-					<xsl:if test="address and normalize-space(address)">
-						<dt><xsl:value-of select="php:function('lang', 'Address')" /></dt>
-						<dd class="address"><xsl:value-of select="address"/></dd>
+					<xsl:if test="street and normalize-space(street)">
+						<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
+						<dd><xsl:value-of select="street"/></dd>
+					</xsl:if>
+
+					<xsl:if test="zip_code and normalize-space(zip_code)">
+						<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
+						<dd><xsl:value-of select="zip_code"/></dd>
+					</xsl:if>
+
+					<xsl:if test="city and normalize-space(city)">
+						<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+						<dd><xsl:value-of select="city"/></dd>	
+					</xsl:if>
+
+					<xsl:if test="district and normalize-space(district)">
+						<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
+						<dd><xsl:value-of select="district"/></dd>
 					</xsl:if>
 				</dl>
 				

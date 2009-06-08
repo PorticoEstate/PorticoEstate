@@ -33,14 +33,22 @@
                 <xsl:attribute name="href">mailto:<xsl:value-of select="building/email"/></xsl:attribute>
                 <xsl:value-of select="building/email"/></a>
             </dd>
+
+			<dt><xsl:value-of select="php:function('lang', 'Telephone')" /></dt>
+            <dd><xsl:value-of select="building/phone"/></dd>
         </dl>
         <dl class="proplist-col">
-            <dt>
-                    <xsl:value-of select="php:function('lang', 'Telephone')" /></dt>
-            <dd><xsl:value-of select="building/phone"/></dd>
-            <dt>
-                    <xsl:value-of select="php:function('lang', 'Address')" /></dt>
-            <dd class="address"><xsl:value-of select="building/address"/></dd>
+			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
+            <dd><xsl:value-of select="building/street"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
+            <dd><xsl:value-of select="building/zip_code"/></dd>
+
+			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+            <dd><xsl:value-of select="building/city"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
+            <dd><xsl:value-of select="building/district"/></dd>
         </dl>
 
         <div class="form-buttons">
