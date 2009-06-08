@@ -7,6 +7,7 @@
     <xsl:call-template name="msgbox"/>
 
     <form action="" method="POST">
+		<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
         <dl class="form-col">
             <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
             <dd>
