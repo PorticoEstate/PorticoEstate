@@ -105,12 +105,18 @@
 
 		public static function link($data)
 		{
-			return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			else
+				return $GLOBALS['phpgw']->link('index.php', $data);
 		}
 
 		public function redirect($link_data)
 		{
-			$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
+			else
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
 		public function flash($msg, $type='success')
