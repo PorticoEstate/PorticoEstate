@@ -577,20 +577,12 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicategory.index', 'type'=> $type, 'type_id'=> $type_id)),
-				'lang_id'						=> lang('ID'),
 				'lang_descr'					=> lang('Descr'),
 				'lang_save'						=> lang('save'),
 				'lang_cancel'					=> lang('cancel'),
 				'lang_apply'					=> lang('apply'),
 				'value_id'						=> isset($values['id']) ? $values['id'] : '',
 				'value_descr'					=> $values['descr'],
-				'lang_id_text'					=> lang('Enter the ID'),
-				'lang_descr_text'				=> lang('Enter a description of the record'),
-				'lang_done_text'				=> lang('Back to the list'),
-				'lang_save_text'				=> lang('Save the record'),
-				'lang_apply_statustext'			=> lang('Apply the values'),
-				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
-				'lang_save_statustext'			=> lang('Save the actor and return back to the list'),
 
 				'attributes_group'				=> $attributes,
 				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
@@ -600,7 +592,7 @@
 				'id_type'						=> $this->location_info['id']['type'],
 				'fields'						=> $this->location_info['fields']
 			);
-//_debug_array($this->location_info['fields']);die();
+
 			$appname	=  $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";

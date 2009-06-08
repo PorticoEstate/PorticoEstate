@@ -246,6 +246,7 @@ category has not been saved	property	no	Kategori er IKKE lagret
 category id	property	no	Kategori ID
 change main screen message	common	no	Endre melding - hovedside
 change status	property	no	Endre status
+change to	property	no	Endre til
 change type	property	no	Endrings type
 chapter	property	no	Kapittel
 char	property	no	Karakter

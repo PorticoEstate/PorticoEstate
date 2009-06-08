@@ -592,17 +592,22 @@
 				);
 			}
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']
+				&& $this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array(
-					'my_name' 		=> 'status',
-					'statustext' 	=> lang('Set new status'),
-					'text' 			=> lang('change status'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				
+				foreach ($status as $status_code => $status_info)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 		=> 'status',
+						'statustext' 	=> $status_info['status'],
+						'text' 			=> lang('change to') . ':  ' .$status_info['status'],
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
 									'menuaction'		=> 'property.uitts.index',
 									'edit_status'		=> true,
-									'new_status'		=> $new_status,
+									'new_status'		=> $status_code,
 									'second_display'	=> true,
 									'sort'				=> $this->sort,
 									'order'				=> $this->order,
@@ -613,8 +618,9 @@
 									'district_id'		=> $this->district_id,
 									'allrows'			=> $this->allrows
 									)),
-					'parameters'	=> $parameters
-				);
+						'parameters'	=> $parameters
+					);
+				}
 			}
 
 			if($this->acl_add)

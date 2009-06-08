@@ -3358,3 +3358,23 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.560 to 0.9.17.561
+	* Add variants of closed-status for tickets
+	* 
+	*/
+
+	$test[] = '0.9.17.561';
+	function property_upgrade0_9_17_561()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','closed',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.562';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

@@ -863,7 +863,13 @@
 								'name' => 'color',
 								'descr' => lang('color'),
 								'type' => 'varchar'
-							)
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							),
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),

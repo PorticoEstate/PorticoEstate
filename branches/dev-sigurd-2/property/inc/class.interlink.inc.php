@@ -114,6 +114,7 @@
 				foreach ($entry['data'] as &$data)
 				{
 					$data['link'] = $this->get_relation_link($linkend_location, $data['id']);
+					$data['statustext'] = $this->get_relation_info($linkend_location, $data['id']);
 				}
 			}
 			return $relation;
@@ -239,6 +240,67 @@
 				);
 			}
 			return $GLOBALS['phpgw']->link('/index.php',$link);	
+		}
+
+		/**
+		* Get additional info of the linked item
+		*
+		* @param array   $linkend_location the location
+		* @param integer $id			   the id of the referenced item
+		*
+		* @return string info of the linked item
+		*/
+
+		public function get_relation_info($linkend_location, $id)
+		{
+			$link = array();
+			$type = $linkend_location['location'];
+			if($type == '.ticket')
+			{
+				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
+			}
+			else if($type == '.project.workorder')
+			{
+				$link = array('menuaction' => 'property.uiworkorder.view', 'id' => $id);
+			}
+			else if($type == '.project.request')
+			{
+				$link = array('menuaction' => 'property.uirequest.view', 'id' => $id);
+			}
+			else if($type == '.project')
+			{		
+				$this->_db->query("SELECT status from fm_project WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				return $this->_db->f('status');
+			}
+			else if( substr($type, 1, 6) == 'entity' )
+			{
+				$type		= explode('.',$type);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+				$link =	array
+				(
+					'menuaction'	=> 'property.uientity.view',
+					'entity_id'		=> $entity_id,
+					'cat_id'		=> $cat_id,
+					'id'			=> $id
+				);
+			}
+			else if( substr($type, 1, 5) == 'catch' )
+			{
+				$type		= explode('.',$type);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+				$link =	array
+				(
+					'menuaction'	=> 'property.uientity.view',
+					'type'			=> 'catch',
+					'entity_id'		=> $entity_id,
+					'cat_id'		=> $cat_id,
+					'id'			=> $id
+				);
+			}
+
 		}
 
 		/**
