@@ -65,7 +65,7 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'address',
+							'key' => 'street',
 							'label' => lang('Street'),
 						),
 						array(
