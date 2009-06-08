@@ -17,6 +17,8 @@
 			parent::__construct();
 			$this->group_bo = CreateObject('booking.bogroup');
 			$this->allocation_bo = CreateObject('booking.boallocation');
+			$this->season_bo = CreateObject('booking.boseason');
+			$this->building_bo = CreateObject('booking.bobuilding');
 		}
 
 		public function building_schedule()
@@ -62,18 +64,17 @@
 			$booking = array();
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['allocation_id'] = phpgw::get_var('allocation_id', 'int', 'GET');
+			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
 			$booking['from_'] = phpgw::get_var('from_', 'str', 'GET');
 			$booking['to_'] = phpgw::get_var('to_', 'str', 'GET');
-			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
-			if(phpgw::get_var('allocation_id', 'int', 'GET'))
+			if($booking['allocation_id'])
 			{
-				$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
-				$allocation = $this->allocation_bo->read_single($allocation_id);
-				$booking['season_id'] = $allocation['season_id'];
-				$booking['from_'] = $allocation['from_'];
-				$booking['to_'] = $allocation['to_'];
-				$booking['resources'] = $allocation['resources'];
-				$booking['allocation_id'] = $allocation_id;
+				$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+				$season = $this->season_bo->read_single($allocation['season_id']);
+				$building = $this->building_bo->read_single($season['building_id']);
+				$booking['season_id'] = $season['id'];
+				$booking['building_id'] = $building['id'];
+				$booking['building_name'] = $building['name'];
 			}
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -87,7 +88,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibooking.edit', 'id'=>$receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
