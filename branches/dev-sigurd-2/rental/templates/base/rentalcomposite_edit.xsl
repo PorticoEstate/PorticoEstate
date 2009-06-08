@@ -23,8 +23,11 @@
   	</func:result>
 </func:function>
 
-
 <xsl:template match="phpgw" xmlns:php="http://php.net/xsl">
+	<script>
+		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
+	</script>
+	
 	<div id="rental_user_error"></div>
 	<div id="rental_user_message"></div>
 	<h3><xsl:value-of select="php:function('lang', 'rental_rc_rental_composite')" />: <xsl:value-of select="data/composite/name"/></h3>
@@ -41,7 +44,7 @@
 				</div>				  	
 				<h4><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h4>
 				<div class="datatable">
-					<div id="datatable-container">
+					<div id="datatable-container2">
 					    <xsl:apply-templates select="data/datatable_available_areas" />
 					</div>
 				</div>	
@@ -203,21 +206,35 @@
 </xsl:template>
 
 <xsl:template match="datatable_included_areas" >
-	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="datasource-definition" >
+		<xsl:with-param name="number">1</xsl:with-param>
+		<xsl:with-param name="form">queryForm</xsl:with-param>
+		<xsl:with-param name="filters">queryForm</xsl:with-param>
+		<xsl:with-param name="container_name">datatable-container</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match="datatable_available_areas" >
-	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="datasource-definition">
+		<xsl:with-param name="number">2</xsl:with-param>
+		<xsl:with-param name="form">queryForm</xsl:with-param>
+		<xsl:with-param name="filters">queryForm</xsl:with-param>
+		<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
-<xsl:template name="datasource-definition" >
+<xsl:template name="datasource-definition">
+	<xsl:param name="number">1</xsl:param>
+	<xsl:param name="form"></xsl:param>
+	<xsl:param name="filters"></xsl:param>
+	<xsl:param name="container_name"></xsl:param>
 	<script>
-		YAHOO.rental.setupDatasource = function() {
+		YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
 			<xsl:if test="source">
-	            YAHOO.rental.dataSourceUrl = '<xsl:value-of select="source"/>';
+	            this.dataSourceURL = '<xsl:value-of select="source"/>';
 	        </xsl:if>
 
-			YAHOO.rental.columnDefs = [
+			this.columnDefs = [
 				<xsl:for-each select="field">
 					{
 						key: "<xsl:value-of select="key"/>",
@@ -235,6 +252,10 @@
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
 			];
+			
+			this.formBinding = '<xsl:value-of select="$form"/>';
+			this.filterBinding = '<xsl:value-of select="$filters"/>';
+			this.containerName = '<xsl:value-of select="$container_name"/>';
 		}
 	</script>
 </xsl:template>

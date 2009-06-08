@@ -24,6 +24,9 @@
 </func:function>
 
 <xsl:template match="/">
+	<script>
+		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
+	</script>
 	<xsl:apply-templates select="//form"/>
 	<div id="rental_user_error"></div>
 	<div id="rental_user_message"></div>
@@ -104,22 +107,28 @@
 		    <div id="dt-dlg-picker" class="bd"></div>
 		</div>
     	<div id="datatable-container"/>
-  		<xsl:call-template name="datasource-definition" />
+  		<xsl:call-template name="datasource-definition">
+  			<xsl:with-param name="number">1</xsl:with-param>
+  			<xsl:with-param name="form">queryForm</xsl:with-param>
+  			<xsl:with-param name="filters">ctrl_toggle_active_rental_composites</xsl:with-param>
+  			<xsl:with-param name="container_name">datatable-container</xsl:with-param>
+  		</xsl:call-template>>
   	</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition">
+	<xsl:param name="number">1</xsl:param>
+	<xsl:param name="form"></xsl:param>
+	<xsl:param name="filters"></xsl:param>
+	<xsl:param name="container_name"></xsl:param>
 	<script>
-		YAHOO.rental.setupDatasource = function() {
+		YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
 			<xsl:if test="source">
-	            YAHOO.rental.dataSourceUrl = '<xsl:value-of select="source"/>';
-	        </xsl:if>
-			<xsl:if test="columns">
-	            YAHOO.rental.storeColumnsUrl = '<xsl:value-of select="columns"/>';
+	            this.dataSourceURL = '<xsl:value-of select="source"/>';
 	        </xsl:if>
 
-			YAHOO.rental.columnDefs = [
-				<xsl:for-each select="//datatable/field">
+			this.columnDefs = [
+				<xsl:for-each select="field">
 					{
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
@@ -136,6 +145,10 @@
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
 			];
+			
+			this.formBinding = '<xsl:value-of select="$form"/>';
+			this.filterBinding = '<xsl:value-of select="$filters"/>';
+			this.containerName = '<xsl:value-of select="$container_name"/>'
 		}
 	</script>
 </xsl:template>

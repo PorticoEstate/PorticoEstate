@@ -318,6 +318,7 @@
 					'documents' => $documents,
 					'access' => $access,
 					'datatable_included_areas' => array(
+						'datatable' => true,
 						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
 						'field' => array(
 							array(
@@ -358,6 +359,7 @@
 						)
 					),
 					'datatable_available_areas' => array(
+						'datatable' => true,
 						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
 						'field' => array(
 							array(
