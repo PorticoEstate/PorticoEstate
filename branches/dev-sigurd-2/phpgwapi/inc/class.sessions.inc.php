@@ -31,7 +31,14 @@
 	/**
 	* Set the session name to something unique for phpgw
 	*/
-	session_name('phpgwsessid');
+	if ( $GLOBALS['phpgw_info']['flags']['session_name'] )
+	{
+		session_name($GLOBALS['phpgw_info']['flags']['session_name']);
+	}
+	else
+	{
+		session_name('sessionphpgwsessid');
+	}
 
 	/*
 	 * Include the db session handler if required
