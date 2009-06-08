@@ -51,7 +51,7 @@
 
 		function select_status_list()
 		{
-			$this->db->query("SELECT id, descr FROM fm_workorder_status ORDER BY id ");
+			$this->db->query("SELECT id, descr FROM fm_project_status ORDER BY id ");
 
 			$i = 0;
 			while ($this->db->next_record())

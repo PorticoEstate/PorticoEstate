@@ -3378,3 +3378,49 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.560 to 0.9.17.561
+	* Separate project status from workorder status
+	* 
+	*/
+
+	$test[] = '0.9.17.562';
+	function property_upgrade0_9_17_562()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_status', array(
+				'fd' => array(
+					'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_workorder_status");
+		$status = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$status[] = array
+			(
+				'id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr')
+			);
+		}
+		
+		foreach($status as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO fm_project_status (' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')');
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.563';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

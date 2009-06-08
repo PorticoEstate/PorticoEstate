@@ -1125,6 +1125,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_project_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_project' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),

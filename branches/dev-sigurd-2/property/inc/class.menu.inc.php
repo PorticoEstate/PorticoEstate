@@ -397,6 +397,11 @@
 						'text'	=> lang('Workorders status'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'workorder_status') )
 					),
+					'project_status'	=> array
+					(
+						'text'	=> lang('project status'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'project_status') )
+					),
 					'project_group'	=> array
 					(
 						'text'	=> lang('project group'),

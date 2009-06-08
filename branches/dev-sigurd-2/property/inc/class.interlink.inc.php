@@ -281,7 +281,7 @@
 			}
 			else if($type == '.project')
 			{		
-				$this->_db->query("SELECT fm_workorder_status.descr as status FROM fm_project {$this->_join} fm_workorder_status ON fm_project.status = fm_workorder_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT fm_project_status.descr as status FROM fm_project {$this->_join} fm_project_status ON fm_project.status = fm_project_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
 				$this->_db->next_record();
 				return $this->_db->f('status');
 			}
@@ -290,7 +290,23 @@
 				$type		= explode('.',$type);
 				$entity_id	= $type[2];
 				$cat_id		= $type[3];
-// Not set
+				$metadata = $this->_db->metadata("fm_entity_{$entity_id}_{$cat_id}");
+				if(isset($metadata['status']))
+				{
+					$sql = "SELECT status FROM fm_entity_{$entity_id}_{$cat_id} WHERE id = {$id}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					$status_id = $this->_db->f('status');
+					$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+
+					$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
+					. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
+					. " AND phpgw_cust_attribute.id = phpgw_cust_choice.attrib_id WHERE phpgw_cust_attribute.column_name = 'status'"
+					. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					return $this->_db->f('status');
+				}
 			}
 			else if( substr($type, 1, 5) == 'catch' )
 			{

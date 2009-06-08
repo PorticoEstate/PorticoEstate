@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.562';
+	$setup_info['property']['version']		= '0.9.17.563';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -119,6 +119,7 @@
 		'fm_template_hours',
 		'fm_chapter',
 		'fm_ns3420',
+		'fm_project_status',
 		'fm_project',
 		'fm_projectbranch',
 		'fm_project_group',

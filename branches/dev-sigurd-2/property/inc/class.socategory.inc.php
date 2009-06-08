@@ -578,6 +578,27 @@
 					);
 					break;
 //-------- ID type varchar
+				case 'project_status':
+					$info = array
+					(
+						'table' 			=> 'fm_project_status',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('project status'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::project_status'
+					);
+					break;
 				case 'workorder_status':
 					$info = array
 					(
