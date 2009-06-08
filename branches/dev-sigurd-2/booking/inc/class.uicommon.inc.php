@@ -108,7 +108,7 @@
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
 			else
-				return $GLOBALS['phpgw']->link('index.php', $data);
+				return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
 		public function redirect($link_data)
