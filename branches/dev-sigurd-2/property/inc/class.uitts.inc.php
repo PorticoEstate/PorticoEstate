@@ -558,7 +558,9 @@
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['link']		= $ticket['child_date'][$n]['date_info'][0]['link'];
 								$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['child_date'][$n]['date_info'][0]['entry_date'];
+								$datatable['rows']['row'][$j]['column'][$k]['statustext']	= $ticket['child_date'][$n]['statustext'];
 								$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+								
 							}
 							$n++;
 						}
@@ -723,7 +725,7 @@
 		    				}
 		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' title = '{$column['statustext']}'>" .$column['value']."</a>";
 		    				}
 		    				else
 		    				{

@@ -296,7 +296,7 @@
 					$sql = "SELECT status FROM fm_entity_{$entity_id}_{$cat_id} WHERE id = {$id}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
-					$status_id = $this->_db->f('status');
+					$status_id = (int)$this->_db->f('status');
 					$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 
 					$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
