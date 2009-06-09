@@ -314,7 +314,7 @@
 
 				if($ticket['finnish_date2'])
 				{
-					$ticket['delay']=($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600);
+					$ticket['delay'] = round($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600);
 					$ticket['finnish_date']=$ticket['finnish_date2'];
 				}
 				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'],$this->dateformat):'');

@@ -253,6 +253,7 @@
 
 		public function get_relation_info($linkend_location, $id)
 		{
+			$id = (int)$id;
 			$type = $linkend_location['location'];
 			if($type == '.ticket')
 			{
