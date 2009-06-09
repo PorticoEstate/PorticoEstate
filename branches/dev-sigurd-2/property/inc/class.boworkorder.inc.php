@@ -238,26 +238,37 @@
 				array
 				(
 					'id'	=> '2',
-					'name'	=> lang('address')
+					'name'	=> lang('project id')
 				),
 				array
 				(
 					'id'	=> '3',
-					'name'	=> lang('location code')
+					'name'	=> lang('workorder id')
 				),
 				array
 				(
 					'id'	=> '4',
-					'name'	=> lang('title')
+					'name'	=> lang('address')
 				),
+
 				array
 				(
 					'id'	=> '5',
-					'name'	=> lang('vendor')
+					'name'	=> lang('location code')
 				),
 				array
 				(
 					'id'	=> '6',
+					'name'	=> lang('title')
+				),
+				array
+				(
+					'id'	=> '7',
+					'name'	=> lang('vendor')
+				),
+				array
+				(
+					'id'	=> '8',
 					'name'	=> lang('vendor id')
 				),
 			);
@@ -278,13 +289,29 @@
 			);
 			$criteria[2] = array
 			(
+				'field'		=> 'fm_project.id',
+				'type'		=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+			$criteria[3] = array
+			(
+				'field'		=> 'fm_workorder.id',
+				'type'		=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+			$criteria[4] = array
+			(
 				'field'	=> 'fm_project.address',
 				'type'	=> 'varchar',
 				'matchtype' => 'like',
 				'front' => "'%",
 				'back' => "%'",
 			);
-			$criteria[3] = array
+			$criteria[5] = array
 			(
 				'field'	=> 'fm_project.location_code',
 				'type'	=> 'varchar',
@@ -292,7 +319,7 @@
 				'front' => "'",
 				'back' => "%'"
 			);
-			$criteria[4] = array
+			$criteria[6] = array
 			(
 				'field'	=> 'fm_workorder.title',
 				'type'	=> 'varchar',
@@ -300,7 +327,7 @@
 				'front' => "'%",
 				'back' => "%'"
 			);
-			$criteria[5] = array
+			$criteria[7] = array
 			(
 				'field'	=> 'fm_vendor.org_name',
 				'type'	=> 'varchar',
@@ -308,7 +335,7 @@
 				'front' => "'%",
 				'back' => "%'"
 			);
-			$criteria[6] = array
+			$criteria[8] = array
 			(
 				'field'	=> 'fm_vendor.id',
 				'type'	=> 'int',
