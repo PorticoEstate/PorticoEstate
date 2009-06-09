@@ -158,6 +158,9 @@
 			if($entity['cost'] < 0) {
 				$errors['cost'] = 'COST needs to be non-negative';
 			}
+			if(!$entity['resources']) {
+				return;
+			}
 			$id = $this->_marshal($entity['id'] ? $entity['id'] : -1, 'int');
 			$from_ = $this->_marshal($entity['from_'], 'time');
 			$to_ = $this->_marshal($entity['to_'], 'time');
@@ -171,7 +174,9 @@
 					"      ar1.resource_id IN $resources AND ".
 					"      a1.season_id = $season_id AND ".
 					"      a1.wday = $wday AND ".
-					"      (a1.from_ <= {$to_}) AND ({$from_} <= a1.to_)",
+					"     ((a1.from_ >= $from_ AND a1.from_ < $to_) OR ".
+					"	   (a1.to_ > $from_ AND a1.to_ <= $to_) OR ".
+					"	   (a1.from_ < $from_ AND a1.to_ > $to_)) ",
 					__LINE__, __FILE__);
 			if($this->db->next_record())
 			{
