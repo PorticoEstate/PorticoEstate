@@ -102,7 +102,7 @@ parent activity	booking	no	Overordnet kategori
 parent id	booking	no	Overordnet id
 picture	booking	no	Bilde
 planning	booking	no	Planlegging
-preview	booking	no	forhåndsvisning
+preview	booking	no	Forhåndsvisning
 price list	booking	no	Prisliste
 primary admin	booking	no	Kontaktperson 1
 published	booking	no	Publisert
@@ -142,3 +142,21 @@ more info	booking	no	Mer informasjon
 next week	booking	no	Neste uke
 previous week	booking	no	Forige uke
 new booking application	booking	no	Ny søknad
+no description yet	booking	no	Beskrivelse saknes
+Found (%1) results	booking	no	(%1) treffer
+contact	booking	no	Kontakt
+from	booking	no	Fra
+to	booking	no	Til
+when	booking	no	Når
+where	booking	no	Hvor
+who	booking	no	Hvem
+why	booking	no	Hvorfor
+phone	booking	no	Telefon
+district	booking	no	Bydel
+document name	booking	no	Dokumentnavn
+document	booking	no	Dokument
+status	booking	no	Status
+primary contact	booking	no	Kontaktperson 1
+last modified	booking	no	Senest oppdateret
+id	booking	no	ID
+permissions	booking	no	Rettigheter
