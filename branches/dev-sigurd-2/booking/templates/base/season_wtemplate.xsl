@@ -211,7 +211,7 @@ YAHOO.booking.AllocationDialog.prototype.newAllocation = function (wday, from_, 
 
 YAHOO.booking.AllocationDialog.prototype.cellFormatter = function(elCell, oRecord, oColumn, text) { 
 	YAHOO.booking.scheduleColorFormatter(elCell, oRecord, oColumn, text);
-	var id = oRecord.getData(oColumn.field).id;
+	var id = oRecord.getData(oColumn.field) ? oRecord.getData(oColumn.field).id : null;
 	if(id)
 		elCell.onclick = function () { YAHOO.booking.dialog.editAllocation(id); };
 	else {
