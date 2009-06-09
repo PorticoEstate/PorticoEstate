@@ -117,18 +117,18 @@
 			{
 				if(count($entry) > 1)
 				{
-					$ix_temp[] = 'array(' . implode(",",$entry) . ')';
+					$ix_temp[] = "array('" . implode("','",$entry) . "')";
 				}
 				else
 				{
-					$ix_temp[] = "array({$entry})";
+					$ix_temp[] = "array('{$entry}')";
 				}
 			}
 			$GLOBALS['setup_tpl']->set_var('ixs', implode(",",$ix_temp));
 		}
 		elseif($ix && !empty($ix))
 		{
-			$GLOBALS['setup_tpl']->set_var('ixs', $ix[0]);
+			$GLOBALS['setup_tpl']->set_var('ixs', "'{$ix[0]}'");
 		}
 		else
 		{
