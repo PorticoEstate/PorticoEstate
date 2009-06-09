@@ -1,13 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="content">
-		<xsl:for-each select="search/results">
-			<br/>
-			<button onclick="window.location.href='{start}'">
-	            <xsl:value-of select="php:function('lang', 'Building index')" />
-	        </button>
+		<ul class="pathway">
+			<li>
+				<xsl:value-of select="php:function('lang', 'Buildings')" />
+			</li>
+			<li>
+				<a href="{resource/building_link}">
+					<xsl:value-of select="building/name"/>
+				</a>
+			</li>
+		</ul>
 
-			<h2><xsl:value-of select="name"/></h2>
-			
+		<xsl:for-each select="building">
 			<dl class="proplist">
 				<dl class="proplist description">
 					<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
@@ -52,13 +56,11 @@
 				
 				<h3><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h3>
 				<div id="resources_container"/>
-				<div>
-					<a>
-						<xsl:attribute name="href"><xsl:value-of select="schedule_link"/></xsl:attribute>
-						<xsl:value-of select="php:function('lang', 'View booking schedule for this building')" />
-					</a>
-				</div>
-			
+
+		        <button onclick="window.location.href='{schedule_link}'">
+		            <xsl:value-of select="php:function('lang', 'Building schedule')" />
+		        </button>
+
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
 				

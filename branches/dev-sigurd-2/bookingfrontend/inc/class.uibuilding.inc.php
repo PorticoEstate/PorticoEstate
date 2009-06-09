@@ -24,7 +24,7 @@
 			$building                  = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
 			$building['start']         = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "building"));
-			self::render_template('building', array('search' => array("results" => $building)));
+			self::render_template('building', array("building" => $building));
 		}
 		
 	}

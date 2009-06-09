@@ -2,20 +2,15 @@
 	<div id="content">
 		<ul class="pathway">
 			<li>
-				<a>
-					<xsl:attribute name="href"><xsl:value-of select="resource/buildings_link"/></xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Buildings')" />
-				</a>
+				<xsl:value-of select="php:function('lang', 'Buildings')" />
 			</li>
 			<li>
-				<a>
-					<xsl:attribute name="href"><xsl:value-of select="resource/building_link"/></xsl:attribute>
+				<a href="{resource/building_link}">
 					<xsl:value-of select="resource/building_name"/>
 				</a>
 			</li>
             <li>
-                <a>
-					<xsl:attribute name="href"><xsl:value-of select="resource/resources_link"/></xsl:attribute>
+                <a href="{resource/resources_link}">
                     <xsl:value-of select="php:function('lang', 'Resources')" />
                 </a>
             </li>
