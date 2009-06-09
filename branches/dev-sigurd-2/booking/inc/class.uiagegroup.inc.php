@@ -15,7 +15,11 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.boagegroup');
+			
 			self::set_active_menu('booking::settings::agegroup');
 		}
 
@@ -38,7 +42,6 @@
 				$nodes[] = array("type"=>"text", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
 			}
 			return $nodes;
-			
 		}
 		
 		public function index()
@@ -95,8 +98,21 @@
 					)
 				)
 			);
-					$navi['add'] = self::link(array('menuaction' => 'booking.uiagegroup.add'));
-					$lang['add'] = lang('Add agegroup');
+	
+			if (!$this->bo->allow_create()) {
+				//Remove new button
+				unset($data['form']['toolbar']['item'][0]);
+			}
+			
+			if (!$this->bo->allow_write())
+			{
+				//Remove link to edit
+				unset($data['datatable']['field'][0]['formatter']);
+				unset($data['datatable']['field'][2]); 
+			}
+			
+			self::render_template('datatable', $data);
+	
 			self::render_template('datatable', $data);
 		}
 

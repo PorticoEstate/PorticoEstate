@@ -453,7 +453,12 @@
 		 * @param mixed $object Either an array or the id of the entity to be deleted
 		 */
 		public function authorize_delete($object = null)
-		{
+		{	
+			if (is_null($object)) {
+				$this->authorize('delete');
+				return;
+			}
+			
 			$object_id = (is_array($object) && isset($object['id'])) ? $object['id'] : $object;
 			
 			if (!$object_id)
