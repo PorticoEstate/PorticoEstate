@@ -45,9 +45,10 @@
 			'add'		=> true,
 			'add2'		=> true,
 			'delete'	=> true,
-			'download'		=> true,
+			'download'	=> true,
 			'download2'	=> true,
-			'view_file'	=> true
+			'view_file'	=> true,
+			'edit_status'=> true
 		);
 
 		public function __construct()
@@ -190,6 +191,21 @@
 			$this->bocommon->download($list,$name,$descr);
 		}
 
+		function edit_status()
+		{
+			if(!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$new_status = phpgw::get_var('new_status', 'string', 'GET');
+			$id 		= phpgw::get_var('id', 'int');
+			$so2		= CreateObject('property.sotts2');
+			$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
+			$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
+			return "id ".$id." ".lang('Status has been changed');
+		}
+
 		function index()
 		{
 			if($this->tenant_id)
@@ -205,20 +221,6 @@
 			$this->save_sessiondata();
 
 			$dry_run=false;
-
-			if(phpgw::get_var('edit_status', 'bool', 'GET'))
-			{
-				if(!$this->acl_edit)
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=> 4, 'acl_location'=> $this->acl_location));
-				}
-
-				$new_status = phpgw::get_var('new_status', 'string', 'GET');
-				$id 		= phpgw::get_var('id', 'int');
-				$so2		= CreateObject('property.sotts2');
-				$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
-				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-			}
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
@@ -603,9 +605,10 @@
 						'my_name' 		=> 'status',
 						'statustext' 	=> $status_info['status'],
 						'text' 			=> lang('change to') . ':  ' .$status_info['status'],
+						'confirm_msg'	=> lang('do you really want to change the status to %1',$status_info['status']),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'		=> 'property.uitts.index',
+									'menuaction'		=> 'property.uitts.edit_status',
 									'edit_status'		=> true,
 									'new_status'		=> $status_code,
 									'second_display'	=> true,
@@ -616,7 +619,8 @@
 									'user_filter'		=> $this->user_filter,
 									'query'				=> $this->query,
 									'district_id'		=> $this->district_id,
-									'allrows'			=> $this->allrows
+									'allrows'			=> $this->allrows,
+									'delete'			=> 'dummy'// FIXME to trigger the json in property.js.
 									)),
 						'parameters'	=> $parameters
 					);
