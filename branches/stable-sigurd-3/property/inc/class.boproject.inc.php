@@ -184,16 +184,21 @@
 				array
 				(
 					'id'	=> '2',
-					'name'	=> lang('address')
+					'name'	=> lang('project id')
 				),
 				array
 				(
 					'id'	=> '3',
-					'name'	=> lang('location code')
+					'name'	=> lang('address')
 				),
 				array
 				(
 					'id'	=> '4',
+					'name'	=> lang('location code')
+				),
+				array
+				(
+					'id'	=> '5',
 					'name'	=> lang('title')
 				),
 			);
@@ -214,13 +219,21 @@
 			);
 			$criteria[2] = array
 			(
+				'field'		=> 'fm_project.id',
+				'type'		=> 'int',
+				'matchtype' => 'exact',
+				'front' => '',
+				'back' => ''
+			);
+			$criteria[3] = array
+			(
 				'field'	=> 'fm_project.address',
 				'type'	=> 'varchar',
 				'matchtype' => 'like',
 				'front' => "'%",
 				'back' => "%'",
 			);
-			$criteria[3] = array
+			$criteria[4] = array
 			(
 				'field'	=> 'fm_project.location_code',
 				'type'	=> 'varchar',
@@ -228,7 +241,7 @@
 				'front' => "'",
 				'back' => "%'"
 			);
-			$criteria[4] = array
+			$criteria[5] = array
 			(
 				'field'	=> 'fm_project.name',
 				'type'	=> 'varchar',
@@ -246,8 +259,6 @@
 				return $criteria;
 			}			
 		}
-
-
 
 		function select_key_location_list($selected='')
 		{
@@ -289,13 +300,14 @@
 				{
 					$entry['ticket'] = array
 										(
-											'url' 	=> $GLOBALS['phpgw']->link('/index.php', array
-														(
-															'menuaction'	=> 'property.uitts.view',
-															'id'			=> $origin[0]['data'][0]['id']
-														)
-													),
-											'text'	=> $origin[0]['data'][0]['id']
+											'url' 			=> $GLOBALS['phpgw']->link('/index.php', array
+																(
+																	'menuaction'	=> 'property.uitts.view',
+																	'id'			=> $origin[0]['data'][0]['id']
+																)
+															),
+											'text'			=> $origin[0]['data'][0]['id'],
+											'statustext'	=> $origin[0]['data'][0]['statustext'],											
 										);
 				}
 			}

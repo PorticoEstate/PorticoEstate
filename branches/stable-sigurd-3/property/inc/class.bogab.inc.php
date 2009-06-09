@@ -135,7 +135,7 @@
 		}
 
 
-		function read($loc1='',$gaards_nr='',$bruksnr='',$feste_nr='',$seksjons_nr='',$address='',$check_payments = '',$allrows='')
+		function read($location_code='',$gaards_nr='',$bruksnr='',$feste_nr='',$seksjons_nr='',$address='',$check_payments = '',$allrows='')
 		{
 			if($allrows)
 			{
@@ -143,7 +143,7 @@
 			}
 
 			$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
-											'cat_id' => $this->cat_id,'loc1' => $loc1,
+											'cat_id' => $this->cat_id,'location_code' => $location_code,
 											'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
 											'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
 			$this->total_records = $this->so->total_records;

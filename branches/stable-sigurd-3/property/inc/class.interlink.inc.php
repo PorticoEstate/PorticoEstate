@@ -57,9 +57,9 @@
 			$this->soadmin_entity->type_app		= & $this->boadmin_entity->type_app;
 
 
-//			$this->_like 			=& $this->db->like;
-//			$this->_join 			=& $this->db->join;
-//			$this->_left_join		=& $this->db->left_join;
+//			$this->_like 			=& $this->_db->like;
+			$this->_join 			=& $this->_db->join;
+//			$this->_left_join		=& $this->_db->left_join;
 		}
 
 		/**
@@ -114,6 +114,7 @@
 				foreach ($entry['data'] as &$data)
 				{
 					$data['link'] = $this->get_relation_link($linkend_location, $data['id']);
+					$data['statustext'] = $this->get_relation_info($linkend_location, $data['id']);
 				}
 			}
 			return $relation;
@@ -239,6 +240,82 @@
 				);
 			}
 			return $GLOBALS['phpgw']->link('/index.php',$link);	
+		}
+
+		/**
+		* Get additional info of the linked item
+		*
+		* @param array   $linkend_location the location
+		* @param integer $id			   the id of the referenced item
+		*
+		* @return string info of the linked item
+		*/
+
+		public function get_relation_info($linkend_location, $id)
+		{
+			$id = (int)$id;
+			$type = $linkend_location['location'];
+			if($type == '.ticket')
+			{
+				$this->_db->query("SELECT status FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				$status_code = $this->_db->f('status');
+
+				static $status_text;
+				if(!$status_text)
+				{
+					$status_text = execMethod('property.botts.get_status_text');
+				}
+				return lang($status_text[$status_code]);
+			}
+			else if($type == '.project.workorder')
+			{
+				$this->_db->query("SELECT fm_workorder_status.descr as status FROM fm_workorder {$this->_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder.id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				return $this->_db->f('status');
+			}
+			else if($type == '.project.request')
+			{
+				$this->_db->query("SELECT fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}",__LINE__,__FILE__);				
+				$this->_db->next_record();
+				return $this->_db->f('status');
+			}
+			else if($type == '.project')
+			{		
+				$this->_db->query("SELECT fm_project_status.descr as status FROM fm_project {$this->_join} fm_project_status ON fm_project.status = fm_project_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->_db->next_record();
+				return $this->_db->f('status');
+			}
+			else if( substr($type, 1, 6) == 'entity' )
+			{
+				$type		= explode('.',$type);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+				$metadata = $this->_db->metadata("fm_entity_{$entity_id}_{$cat_id}");
+				if(isset($metadata['status']))
+				{
+					$sql = "SELECT status FROM fm_entity_{$entity_id}_{$cat_id} WHERE id = {$id}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					$status_id = (int)$this->_db->f('status');
+					$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+
+					$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
+					. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
+					. " AND phpgw_cust_attribute.id = phpgw_cust_choice.attrib_id WHERE phpgw_cust_attribute.column_name = 'status'"
+					. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					$this->_db->next_record();
+					return $this->_db->f('status');
+				}
+			}
+			else if( substr($type, 1, 5) == 'catch' )
+			{
+				$type		= explode('.',$type);
+				$entity_id	= $type[2];
+				$cat_id		= $type[3];
+// Not set
+			}
 		}
 
 		/**

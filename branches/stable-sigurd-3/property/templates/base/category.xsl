@@ -9,7 +9,7 @@
 	</xsl:template>
 
 <!-- add / edit  -->
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<script language="JavaScript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
@@ -43,7 +43,7 @@
 								<xsl:otherwise>
 									<input type="text" name="values[id]" value="{value_id}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="title">
-											<xsl:value-of select="lang_id_text"/>
+											<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 										</xsl:attribute>
 									</input>
 								</xsl:otherwise>
@@ -57,7 +57,7 @@
 						<xsl:when test="value_id != ''">
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_id"/>
+									<xsl:value-of select="php:function('lang', 'id')"/>
 								</td>
 								<td>
 									<xsl:value-of select="value_id"/>
@@ -88,6 +88,24 @@
 								</xsl:attribute>
 							</input>
 						</xsl:when>
+						<xsl:when test="type='checkbox'">
+							<xsl:choose>
+								<xsl:when test="value = 1">
+									<input type="checkbox" name="values[{name}]" value="1" checked="checked">
+										<xsl:attribute name="title">
+												<xsl:value-of select="descr"/>
+										</xsl:attribute>
+									</input>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="values[{name}]" value="1">
+										<xsl:attribute name="title">
+												<xsl:value-of select="descr"/>
+										</xsl:attribute>
+									</input>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
 					</xsl:choose>
 				</td>
 			</tr>
@@ -100,21 +118,21 @@
 				<td valign="bottom">
 					<input type="submit" name="values[save]" value="{lang_save}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_save_statustext"/>
+							<xsl:value-of select="php:function('lang', 'Save the record and return to the list')"/>
 						</xsl:attribute>
 					</input>
 				</td>
 				<td valign="bottom">
 					<input type="submit" name="values[apply]" value="{lang_apply}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_apply_statustext"/>
+							<xsl:value-of select="php:function('lang', 'Apply the values')"/>
 						</xsl:attribute>
 					</input>
 				</td>
 				<td align="right" valign="bottom">
 					<input type="submit" name="values[cancel]" value="{lang_cancel}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
-								<xsl:value-of select="lang_cancel_statustext"/>
+							<xsl:value-of select="php:function('lang', 'Leave the record untouched and return to the list')"/>
 						</xsl:attribute>
 					</input>
 				</td>

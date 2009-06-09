@@ -205,7 +205,7 @@
 			return $status;
 		}
 
-		function _get_status_text()
+		function get_status_text()
 		{
 			$status_text = array(
 				'R' => 'Re-opened',
@@ -314,7 +314,7 @@
 
 				if($ticket['finnish_date2'])
 				{
-					$ticket['delay']=($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600);
+					$ticket['delay'] = round($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600);
 					$ticket['finnish_date']=$ticket['finnish_date2'];
 				}
 				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'],$this->dateformat):'');
@@ -334,10 +334,13 @@
 					for ($j=0;$j<count($entity);$j++)
 					{
 						$ticket['child_date'][$j] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
+						if($ticket['child_date'][$j]['date_info'])
+						{
+							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
+						}
 					}
 				}
 			}
-
 			return $tickets;
 		}
 
@@ -413,7 +416,7 @@
 				$ticket['timestampclosed']= $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 			}
 
-			$status_text = $this->_get_status_text();
+			$status_text = $this->get_status_text();
 
 			$ticket['status_name'] = lang($status_text[$ticket['status']]);
 			$ticket['user_lid']=$GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
@@ -468,7 +471,7 @@
 		{
 			$history_array = $this->historylog->return_array(array('C','O'),array(),'','',$id);
 
-			$status_text = $this->_get_status_text();
+			$status_text = $this->get_status_text();
 			$record_history = array();
 			$i=0;
 			if (is_array($history_array))
@@ -653,7 +656,7 @@
 			$m=count($history_2)-1;
 			$ticket['status']=$history_2[$m]['status'];
 
-		//	$status = $this->_get_status_text();
+		//	$status = $this->get_status_text();
 
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 

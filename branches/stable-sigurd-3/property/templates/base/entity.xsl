@@ -271,7 +271,7 @@
 						<xsl:value-of select="name"/>
 					</td>
 					<td class="th_text">
-						<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+						<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 					</td>
 				</tr>
 			</xsl:for-each>
@@ -344,7 +344,7 @@
 							<tr>
 		
 							<td class="th_text"  align="left" >
-								<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+								<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 							</td>
 							</tr>
 							</xsl:for-each>
@@ -364,7 +364,7 @@
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>
@@ -552,7 +552,7 @@
 						<xsl:for-each select="data">
 							<tr>
 								<td class="th_text"  align="left" >
-									<a href="{link}"  title="{//lang_origin_statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+									<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 									<xsl:text> </xsl:text>
 								</td>
 							</tr>
@@ -685,7 +685,7 @@
 									<xsl:for-each select="data">
 										<tr>
 											<td class="th_text"  align="left" >
-												<a href="{link}"  title="{//lang_target_statustext}" style ="cursor:help"><xsl:value-of select="type"/><xsl:text> #</xsl:text> <xsl:value-of select="id"/></a>
+												<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="type"/><xsl:text> #</xsl:text> <xsl:value-of select="id"/></a>
 												<xsl:text> </xsl:text>
 											</td>
 										</tr>

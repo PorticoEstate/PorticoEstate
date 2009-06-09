@@ -796,7 +796,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'color' => array('type' => 'varchar','precision' => '10','nullable' => True)
+				'color' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1120,6 +1121,16 @@
 				'branch_id' => array('type' => 'int','precision' => '4','nullable' => False)
 			),
 			'pk' => array('project_id','branch_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_project_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+			),
+			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

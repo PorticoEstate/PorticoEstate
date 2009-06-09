@@ -815,7 +815,7 @@
 							<xsl:for-each select="data">
 								<tr>
 									<td class="th_text"  align="left" >
-										<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="id"/></a>
+										<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 										<xsl:text> </xsl:text>
 									</td>
 								</tr>
@@ -890,7 +890,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
@@ -1290,7 +1290,7 @@
 					</td>
 						<td class="th_text"  align="left" >
 						<xsl:for-each select="data">
-							<a href="{link}"  title="{//lang_origin_statustext}"><xsl:value-of select="id"/></a>
+							<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</td>
@@ -1308,7 +1308,7 @@
 					<xsl:for-each select="link_info" >
 						<xsl:variable name="link_entity_origin"><xsl:value-of select="link"/>&amp;id=<xsl:value-of select="id"/></xsl:variable>
 						<xsl:variable name="lang_entity_statustext"><xsl:value-of select="entry_date"/></xsl:variable>
-						<a href="{$link_entity_origin}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
+						<a href="{$link_entity_origin}" title="{statustext}" onMouseout="window.status='';return true;"><xsl:value-of select="id"/></a>
 						<xsl:text> </xsl:text>
 					</xsl:for-each>
 				</td>

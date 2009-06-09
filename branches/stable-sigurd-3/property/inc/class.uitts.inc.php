@@ -45,9 +45,10 @@
 			'add'		=> true,
 			'add2'		=> true,
 			'delete'	=> true,
-			'download'		=> true,
+			'download'	=> true,
 			'download2'	=> true,
-			'view_file'	=> true
+			'view_file'	=> true,
+			'edit_status'=> true
 		);
 
 		public function __construct()
@@ -190,6 +191,21 @@
 			$this->bocommon->download($list,$name,$descr);
 		}
 
+		function edit_status()
+		{
+			if(!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$new_status = phpgw::get_var('new_status', 'string', 'GET');
+			$id 		= phpgw::get_var('id', 'int');
+			$so2		= CreateObject('property.sotts2');
+			$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
+			$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
+			return "id ".$id." ".lang('Status has been changed');
+		}
+
 		function index()
 		{
 			if($this->tenant_id)
@@ -205,20 +221,6 @@
 			$this->save_sessiondata();
 
 			$dry_run=false;
-
-			if(phpgw::get_var('edit_status', 'bool', 'GET'))
-			{
-				if(!$this->acl_edit)
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=> 4, 'acl_location'=> $this->acl_location));
-				}
-
-				$new_status = phpgw::get_var('new_status', 'string', 'GET');
-				$id 		= phpgw::get_var('id', 'int');
-				$so2		= CreateObject('property.sotts2');
-				$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
-				$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-			}
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 
@@ -556,7 +558,9 @@
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['link']		= $ticket['child_date'][$n]['date_info'][0]['link'];
 								$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['child_date'][$n]['date_info'][0]['entry_date'];
+								$datatable['rows']['row'][$j]['column'][$k]['statustext']	= $ticket['child_date'][$n]['statustext'];
 								$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
+								
 							}
 							$n++;
 						}
@@ -592,17 +596,23 @@
 				);
 			}
 
-			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
+				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']
+				&& $this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array(
-					'my_name' 		=> 'status',
-					'statustext' 	=> lang('Set new status'),
-					'text' 			=> lang('change status'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				
+				foreach ($status as $status_code => $status_info)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 		=> 'status',
+						'statustext' 	=> $status_info['status'],
+						'text' 			=> lang('change to') . ':  ' .$status_info['status'],
+						'confirm_msg'	=> lang('do you really want to change the status to %1',$status_info['status']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'		=> 'property.uitts.index',
+									'menuaction'		=> 'property.uitts.edit_status',
 									'edit_status'		=> true,
-									'new_status'		=> $new_status,
+									'new_status'		=> $status_code,
 									'second_display'	=> true,
 									'sort'				=> $this->sort,
 									'order'				=> $this->order,
@@ -611,10 +621,12 @@
 									'user_filter'		=> $this->user_filter,
 									'query'				=> $this->query,
 									'district_id'		=> $this->district_id,
-									'allrows'			=> $this->allrows
+									'allrows'			=> $this->allrows,
+									'delete'			=> 'dummy'// FIXME to trigger the json in property.js.
 									)),
-					'parameters'	=> $parameters
-				);
+						'parameters'	=> $parameters
+					);
+				}
 			}
 
 			if($this->acl_add)
@@ -713,7 +725,7 @@
 		    				}
 		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."' title = '{$column['statustext']}'>" .$column['value']."</a>";
 		    				}
 		    				else
 		    				{

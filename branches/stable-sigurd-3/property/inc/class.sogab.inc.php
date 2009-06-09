@@ -59,7 +59,7 @@
 				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order			= isset($data['order']) ? $data['order'] : '';
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$loc1 			= isset($data['loc1']) ? $data['loc1'] : '';
+				$location_code 	= isset($data['location_code']) ? $data['location_code'] : '';
 				$gaards_nr		= isset($data['gaards_nr'])? (int)$data['gaards_nr'] : '';
 				$bruksnr		= isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
 				$feste_nr		= isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
@@ -92,9 +92,9 @@
 				$filtermethod .= " $where fm_gab_location.address $this->like '%$address%' ";
 				$where = 'AND';
 			}
-			if ($loc1)
+			if ($location_code)
 			{
-				$filtermethod .= " $where fm_gab_location.loc1='$loc1' ";
+				$filtermethod .= " $where fm_gab_location.location_code $this->like '$location_code%' ";
 				$where = 'AND';
 			}
 

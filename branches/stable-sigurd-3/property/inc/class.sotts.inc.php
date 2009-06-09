@@ -140,7 +140,18 @@
 			}
 			else if($status_id == 'O')
 			{
-				$filtermethod .= " $where (fm_tts_tickets.status='O' OR fm_tts_tickets.status $this->like 'C%')";
+				$open = '';
+				$this->db->query('SELECT * from fm_tts_status',__LINE__,__FILE__);
+
+				while ($this->db->next_record())
+				{
+					if( ! $this->db->f('closed'))
+					{
+						$open .= "OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
+					}
+				}
+
+				$filtermethod .= " $where (fm_tts_tickets.status='O' {$open})";
 				$where = 'AND';
 			}
 			else if($status_id == 'all')
