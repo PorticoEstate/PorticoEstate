@@ -143,7 +143,7 @@ next week	booking	no	Neste uke
 previous week	booking	no	Forige uke
 new booking application	booking	no	Ny søknad
 no description yet	booking	no	Beskrivelse saknes
-found (%1) results	booking	no	(%1) treffer
+found %1 results	booking	no	%1 treffer
 contact	booking	no	Kontakt
 from	booking	no	Fra
 to	booking	no	Til
@@ -161,3 +161,4 @@ last modified	booking	no	Senest oppdateret
 id	booking	no	ID
 permissions	booking	no	Rettigheter
 week	booking	no	Uke
+schedule	booking	no	Ukeplan
