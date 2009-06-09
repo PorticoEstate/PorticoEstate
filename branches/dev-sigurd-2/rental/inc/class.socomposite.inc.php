@@ -258,10 +258,30 @@ class rental_socomposite extends rental_socommon
 	 */
 	function get_included_rental_units($params)
 	{
-		// TODO: Implement paging and sorting
+		// TODO: Do we need a paginator for all the units?
 		$id = (int)$params['id'];
-		// First we get ids for all areas for specified composite id
-		$sql = 'SELECT level, location_code FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id ='.$id;
+		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+		$dir = isset($params['dir']) && $params['dir'] ? ($params['dir'] == 'desc' ? 'desc' : 'asc') : 'asc'; // We set asc as direction unless specifically told otherwise
+		
+		//Return array
+		$row = array();
+		$row['results'] = array();
+		
+		// First we find the number of areas available in total
+		$sql = 'SELECT COUNT(fm_locations.location_code) AS count FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id;
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		if($this->db->next_record())
+		{
+			$row['total_records'] = $this->_unmarshal($this->db->f('count', true), 'int');
+		}
+		
+		$order = '';
+		if($sort != null && $sort != '') // We should ask for a ordered resultset 
+		{
+			$order = ' ORDER BY '.$sort.' '.$dir;
+		}
+		// Second we get ids for all areas for specified composite id
+		$sql = 'SELECT level, fm_locations.location_code FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id.$order;
 		$this->db->query($sql, __LINE__, __FILE__);
 //		die($sql);
 		
@@ -272,10 +292,6 @@ class rental_socomposite extends rental_socommon
 			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
 			$unit_array[] = array('level' => $level, 'location_code' => $location_code);
 		}
-		
-		//Return array
-		$row = array();
-		$row['results'] = array();
 		
 		// Go through each rental unit (location) that belongs to this composite and extract as much data as possible
 		foreach ($unit_array as $unit)
@@ -342,7 +358,6 @@ class rental_socomposite extends rental_socommon
 				$current_unit['part_of_town'] = $this->_unmarshal($this->db->f('name', true), 'string');
 			}
 		}
-		$row['total_records'] = count($row['results']);
 		
 		return $row;
 	}

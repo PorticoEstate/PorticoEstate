@@ -338,27 +338,27 @@
 							array(
 								'key' => 'loc2_name',
 								'label' => lang('rental_rc_building'),
-								'sortable' => true
+								'sortable' => false // We are unable to stort on this location as we never have a fully overview of all locations on this level
 							),
 							array(
 								'key' => 'loc3_name',
 								'label' => lang('rental_rc_section'),
-								'sortable' => true
+								'sortable' => false // We are unable to stort on this location as we never have a fully overview of all locations on this level
 							),
 							array(
 								'key' => 'address',
 								'label' => lang('rental_rc_address'),
-								'sortable' => true
+								'sortable' => false // We are unable to sort on addresses as this value can come from different tables
 							),
 							array(
 								'key' => 'area_gros',
 								'label' => lang('rental_rc_area_gros'),
-								'sortable' => true
+								'sortable' => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
 							),
 							array(
 								'key' => 'area_net',
 								'label' => lang('rental_rc_area_net'),
-								'sortable' => true
+								'sortable' => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
 							)
 						)
 					),
