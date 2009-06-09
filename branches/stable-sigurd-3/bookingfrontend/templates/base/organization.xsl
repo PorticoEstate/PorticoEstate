@@ -37,15 +37,13 @@
 			<xsl:if test="organization/homepage and normalize-space(organization/homepage)">		
 	            <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
 	            <dd>
-	                <a href="{organization/homepage}">
-	                    <xsl:value-of select="organization/homepage" />
-	                </a>
+	                <a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
 	            </dd>
 			</xsl:if>
 			
 			<xsl:if test="organization/email and normalize-space(organization/email)">
 				<dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>
-	            <dd><xsl:value-of select="organization/email"/></dd>
+	            <dd><a href="mailto:{organization/email}"><xsl:value-of select="organization/email"/></a></dd>
 			</xsl:if>
 
 			<xsl:if test="organization/phone and normalize-space(organization/phone)">

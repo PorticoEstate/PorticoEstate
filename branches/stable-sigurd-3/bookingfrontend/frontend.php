@@ -8,10 +8,13 @@
 		'noheader'   		 		 => true,
 		'nonavbar'   				 => true,
 	);
+	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+
 	if(file_exists('../header.inc.php'))
 	{
 		include_once('../header.inc.php');
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
+
 	}
 	$login = "bookingguest";
 	$passwd = "bkbooking";
@@ -45,5 +48,5 @@
 
 	$GLOBALS['phpgw']->hooks->process('login');
 
-	$GLOBALS['phpgw']->redirect_link('/index.php', $extra_vars);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $extra_vars);
 	exit;

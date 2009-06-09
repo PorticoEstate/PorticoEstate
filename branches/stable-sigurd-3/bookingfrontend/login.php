@@ -22,12 +22,7 @@
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 	$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 	
-	$frontend_user = CreateObject('bookingfrontend.bouser');
-	
-	if (!$frontend_user->log_in()) 
-	{
-		die('Invalid user');
-	}
+	$GLOBALS['phpgw']->hooks->process('login');
 
 	$forward = phpgw::get_var('phpgw_forward', 'int');
 
