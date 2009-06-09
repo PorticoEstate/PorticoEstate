@@ -98,7 +98,7 @@
     </tr></table></div>
 </xsl:template>
 
-<xsl:template match="datatable" name="datatable">
+<xsl:template match="datatable" name="datatable" xmlns:php="http://php.net/xsl">
 	<div class="datatable">
 		<div id="paginator"/>
 	    <div id="columnshowhide"></div>
@@ -112,7 +112,15 @@
   			<xsl:with-param name="form">queryForm</xsl:with-param>
   			<xsl:with-param name="filters">ctrl_toggle_active_rental_composites</xsl:with-param>
   			<xsl:with-param name="container_name">datatable-container</xsl:with-param>
-  		</xsl:call-template>>
+  			<xsl:with-param name="context_menu_labels">
+				['<xsl:value-of select="php:function('lang', 'rental_cm_show')"/>',
+				'<xsl:value-of select="php:function('lang', 'rental_cm_edit')"/>']
+			</xsl:with-param>
+			<xsl:with-param name="context_menu_actions">
+					['view',
+					'edit']	
+			</xsl:with-param>
+  		</xsl:call-template>
   	</div>
 </xsl:template>
 
@@ -121,6 +129,8 @@
 	<xsl:param name="form"></xsl:param>
 	<xsl:param name="filters"></xsl:param>
 	<xsl:param name="container_name"></xsl:param>
+	<xsl:param name="context_menu_labels">[]</xsl:param>
+	<xsl:param name="context_menu_actions">[]</xsl:param>
 	<script>
 		YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
 			<xsl:if test="source">
@@ -148,7 +158,10 @@
 			
 			this.formBinding = '<xsl:value-of select="$form"/>';
 			this.filterBinding = '<xsl:value-of select="$filters"/>';
-			this.containerName = '<xsl:value-of select="$container_name"/>'
+			this.containerName = '<xsl:value-of select="$container_name"/>';
+			this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>';
+			this.contextMenuLabels = <xsl:value-of select="$context_menu_labels"/>;
+			this.contextMenuActions = <xsl:value-of select="$context_menu_actions"/>;
 		}
 	</script>
 </xsl:template>
