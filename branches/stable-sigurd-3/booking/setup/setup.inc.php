@@ -1,6 +1,6 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.1.52';
+	$setup_info['booking']['version'] = '0.1.53';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
@@ -9,18 +9,18 @@
 		'bb_building', 
 		'bb_contact_person',
 		'bb_organization', 
-		'bb_activity',
 		'bb_resource', 
 		'bb_season', 
 		'bb_season_boundary', 
 		'bb_group', 
-		'bb_allocation',
 		'bb_booking', 
 		'bb_booking_resource', 
 		'bb_season_resource', 
 		'bb_equipment', 
+		'bb_activity', 
 		'bb_wtemplate_alloc', 
 		'bb_wtemplate_alloc_resource', 
+		'bb_allocation', 
 		'bb_allocation_resource', 
 		'bb_application', 
 		'bb_application_resource', 
@@ -28,9 +28,9 @@
 		'bb_application_date', 
 		'bb_agegroup', 
 		'bb_application_agegroup', 
-		'bb_targetaudience',
 		'bb_application_targetaudience', 
 		'bb_booking_agegroup', 
+		'bb_targetaudience',
 		'bb_booking_targetaudience', 
 		'bb_document_building',
 		'bb_document_resource',

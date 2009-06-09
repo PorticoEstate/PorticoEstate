@@ -16,14 +16,11 @@
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
             <dd>
-				<a>
-					<xsl:attribute name="href"><xsl:value-of select="organization/homepage" /></xsl:attribute>
-					<xsl:value-of select="organization/homepage" />
-				</a>
+				<a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
 			</dd>
 
             <dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>
-            <dd><xsl:value-of select="organization/email"/></dd>
+            <dd><a href="mailto:{organization/email}"><xsl:value-of select="organization/email"/></a></dd>
 
             <dt><xsl:value-of select="php:function('lang', 'Phone')" /></dt>
             <dd><xsl:value-of select="organization/phone"/></dd>

@@ -17,6 +17,8 @@
 		{
 			parent::__construct();
 			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->set_business_object();
 			
 			$this->fields = array('subject_id', 'subject_name', 'role');
@@ -115,6 +117,14 @@
 					)
 				)
 			);
+			
+			if (!$this->bo->allow_delete()) {
+				unset($data['datatable']['field'][2]); //Delete action
+			}
+			
+			if (!$this->bo->allow_create()) {
+				unset($data['form']['toolbar']['item'][0]); //New button
+			}
 			
 			self::render_template('datatable', $data);
 		}

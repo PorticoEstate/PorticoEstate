@@ -17,6 +17,7 @@ allocation	booking	no	Tildelning
 allocations	booking	no	Tildelningar
 allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
 allocations that can be created (%1)	booking	no	Tildelningar som kan lages
+application	booking	no	Söknad
 archived	booking	no	Arkivert
 audience	booking	no	Målgruppe
 bookable resources	booking	no	Bokningsbare ressurser
@@ -56,6 +57,7 @@ event	booking	no	Hendelse
 events	booking	no	hendelser
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
+Found %1 results	booking	no	Hittade %s resultat
 document Name	booking	no	Dokument
 generate allocations	booking	no	Lag tildelning
 generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
@@ -67,7 +69,8 @@ inactivate	booking	no	Inaktivera
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Faktura informasjon 
 male	booking	no	Mann
-name	booking	no	Fornavn
+more info	booking	no	Mer information
+name	booking	no	Navn
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
 new allocation	booking	no	Ny tildelning
@@ -87,6 +90,7 @@ new season	booking	no	Ny sesong
 new season permission	booking	no	Nye rettigheter sesong
 no parents	booking	no	Ingen foreldre
 no records found.	booking	no	Inget funnet!
+no description yet	booking	no	Ingen beskrivelse
 number of participants	booking	no	Antall deltakere
 organization	booking	no	Organisasjon
 organization number	booking	no	Organisasjon nummer

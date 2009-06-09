@@ -49,6 +49,8 @@
 					'write' 	=> true,
 					'create' 	=> true,
 				);
+				
+				$defaultPermissions['parent_role_permissions']['organization'] = array();
 			}
 			
 			if ($this->current_app() == 'bookingfrontend') {

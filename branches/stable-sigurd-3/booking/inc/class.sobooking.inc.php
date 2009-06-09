@@ -200,6 +200,20 @@
 			return $results;
 		}
 
+		function event_ids_for_building($building_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+			$building_id = intval($building_id);
+			$results = array();
+			$this->db->query("SELECT DISTINCT(bb_event.id) AS id FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id IN(SELECT id FROM bb_resource WHERE building_id=$building_id)) WHERE ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end') OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end') OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+			}
+			return $results;
+		}
+
 		function allocation_ids_for_resource($resource_id, $start, $end)
 		{
 			$start = $start->format('Y-m-d H:i');
@@ -221,6 +235,20 @@
 			$resource_id = intval($resource_id);
 			$results = array();
 			$this->db->query("SELECT id FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+			}
+			return $results;
+		}
+
+		function event_ids_for_resource($resource_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+			$resource_id = intval($resource_id);
+			$results = array();
+			$this->db->query("SELECT id FROM bb_event JOIN bb_event_resource ON (event_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');

@@ -14,7 +14,11 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.boactivity');
+			
 			self::set_active_menu('booking::settings::activity');
 		}
 		
@@ -25,7 +29,13 @@
 			{
 				foreach($children[$parent_id] as $activity)
 				{
-					$nodes[] = array("type"=>"text", "href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 'id' => $activity['id'])), "target" => "_self", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
+					$node = array("type"=>"text", "href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 'id' => $activity['id'])), "target" => "_self", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
+					
+					if (!$this->bo->allow_write($activity)) {
+						unset($node['href']);
+					}
+					
+					$nodes[] = $node;
 				}
 			}
 			return $nodes;
@@ -96,8 +106,13 @@
 					)
 				)
 			);
-			$navi['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
-			$lang['add'] = lang('Add Activity');
+			
+			if ($this->bo->allow_create())
+			{
+				$navi['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
+				$lang['add'] = lang('Add Activity');
+			}
+
 			self::render_template('activities', array('data' => $data, 'treedata' => $treedata, 'navi' => $navi, 'lang' => $lang));
 		}
 

@@ -345,42 +345,42 @@
 			throw new booking_unauthorized_exception($operation, sprintf('Operation \'%s\' was denied on %s %s', $operation, get_class($this), is_null($object) ? 'collection' : 'object'));
 		}
 		
-		protected function _compute_permissions(array $entity, $roles, $role_permissions)
+		protected function _compute_permissions(array $entity, $roles, $role_permissions, $initial_grants = array())
 		{
 			$all_permissions = $this->allow_all_permissions();
-			
-			$permissions = array();
-			
+
+			$grants = $initial_grants;
+
 			$parent_roles = null;
-			
+
 			if (isset($roles['_parent_roles'])) {
 				$parent_roles = $roles['_parent_roles'];
 				unset($roles['_parent_roles']);
 			}
-			
+
 			foreach ($roles as $role) {
 				$role_name = $role['role'];
 				if (isset($role_permissions[$role_name]) && false != $current_role_permissions = $role_permissions[$role_name]) {
 					$current_role_permissions['write'] === true AND $current_role_permissions['write'] = $all_permissions['write'];
-					$permissions = array_merge($permissions, $current_role_permissions);
+					$grants = array_merge($grants, $current_role_permissions);
 				}
 			}
-			
+
 			if (is_array($parent_roles)) {
 				if (!isset($role_permissions['parent_role_permissions']) || !is_array($parent_role_permissions = $role_permissions['parent_role_permissions'])) {
 					throw new LogicException('Missing parent role permissions definition');
 				}
-				
+
 				foreach($parent_roles as $key => $roles) {
 					if (!isset($parent_role_permissions[$key])) {
 						throw new LogicException(sprintf('Missing parent role permissions for "%s"', $key));
 					}
-					
-					$permissions = array_merge($this->_compute_permissions($entity, $roles, $parent_role_permissions[$key]), $permissions);
+
+					$grants = array_merge($this->_compute_permissions($entity, $roles, $parent_role_permissions[$key]), $grants);
 				}
 			}
-			
-			return $permissions;
+
+			return $grants;
 		}
 		
 		public function get_permissions(array $entity)
@@ -390,7 +390,16 @@
 				return $this->allow_all_permissions();
 			}
 			
-			return $this->_compute_permissions($entity, $this->get_subject_roles($entity), $this->object_role_permissions($entity));
+			$grants = array();
+			$object_role_permissions = $this->object_role_permissions($entity);
+			
+			$grants = $this->_compute_permissions($entity, $this->get_subject_roles($entity), $object_role_permissions, $grants);
+			
+			if (isset($object_role_permissions['global'])) {
+				$grants = $this->_compute_permissions($entity, $this->get_subject_global_roles(), $object_role_permissions, $grants);
+			}
+			
+			return $grants;
 		}
 		
 		public function add_permission_data(array $entity)
@@ -444,7 +453,12 @@
 		 * @param mixed $object Either an array or the id of the entity to be deleted
 		 */
 		public function authorize_delete($object = null)
-		{
+		{	
+			if (is_null($object)) {
+				$this->authorize('delete');
+				return;
+			}
+			
 			$object_id = (is_array($object) && isset($object['id'])) ? $object['id'] : $object;
 			
 			if (!$object_id)

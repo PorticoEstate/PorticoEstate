@@ -83,7 +83,9 @@
 		
 		public static function process_booking_unauthorized_exceptions()
 		{
-			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+			if (!self::$old_exception_handler) {
+				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+			}
 		}
 		
 		public static function handle_booking_unauthorized_exception(Exception $e)
@@ -105,12 +107,18 @@
 
 		public static function link($data)
 		{
-			return $GLOBALS['phpgw']->link('/index.php', $data);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
+			else
+				return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
 		public function redirect($link_data)
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
+			else
+				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
 		}
 
 		public function flash($msg, $type='success')

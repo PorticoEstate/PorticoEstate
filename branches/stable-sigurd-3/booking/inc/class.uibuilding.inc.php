@@ -24,7 +24,7 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'phone', 'address', 'active');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active');
 		}
 				
 		public function index()
@@ -65,7 +65,7 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'address',
+							'key' => 'street',
 							'label' => lang('Street'),
 						),
 						array(

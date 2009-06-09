@@ -76,11 +76,12 @@
 			</dd>
         </dl>
         <div class="clr"/>
-        <button>
-            <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Edit')" />
-        </button>
-
+		<xsl:if test="application/edit_link">
+	        <button>
+	            <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
+	            <xsl:value-of select="php:function('lang', 'Edit')" />
+	        </button>
+		</xsl:if>
 		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">
@@ -101,6 +102,7 @@
 			</dd>
         </dl>
 
+		<xsl:if test="application/edit_link">
 		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Actions')" /></dt>
 			<xsl:if test="application/status!='REJECTED'">
@@ -129,7 +131,7 @@
 			</xsl:if>
 			<dd><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 		</dl>
-		<div id="foo-container"/>
+		</xsl:if>
     </div>
 
 <script type="text/javascript">

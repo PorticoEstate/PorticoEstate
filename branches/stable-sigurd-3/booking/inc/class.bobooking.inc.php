@@ -24,6 +24,7 @@ function array_minus($a, $b)
 			$this->so = CreateObject('booking.sobooking');
 			$this->allocation_so = CreateObject('booking.soallocation');
 			$this->resource_so = CreateObject('booking.soresource');
+			$this->event_so = CreateObject('booking.soevent');
 		}
 
 		/**
@@ -63,7 +64,19 @@ function array_minus($a, $b)
 				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
+
+			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $events['results'];
+			foreach($events as &$event)
+			{
+				$event['name'] = $event['description'];
+				$event['type'] = 'event';
+			}
 			$bookings = array_merge($allocations, $bookings);
+			$bookings = $this->_remove_event_conflicts($bookings, $events);
+			$bookings = array_merge($events, $bookings);
+
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
 			$resource_ids = array_merge($this->so->resource_ids_for_allocations($allocation_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids)));
@@ -111,7 +124,19 @@ function array_minus($a, $b)
 				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
+
+			$event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
+			$events = $this->event_so->read(array('filters'=> array('id' => $event_ids)));
+			$events = $events['results'];
+			foreach($events as &$event)
+			{
+				$event['name'] = $event['description'];
+				$event['type'] = 'event';
+			}
 			$bookings = array_merge($allocations, $bookings);
+			$bookings = $this->_remove_event_conflicts($bookings, $events);
+			$bookings = array_merge($events, $bookings);
+			
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, array($resource));
 			return array('total_records'=>count($results), 'results'=>$results);
@@ -134,10 +159,6 @@ function array_minus($a, $b)
 				{
 					if($b['allocation_id'] == $allocation['id'])
 						$bookings[] = $b;
-				}
-				if(count($bookings) == 0)
-				{
-					continue;
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
 				$times = array_merge(array_map("get_from2", $bookings), $times);
@@ -225,4 +246,27 @@ function array_minus($a, $b)
 			}
 			return $new_bookings;
 		}
+
+		function _remove_event_conflicts($bookings, $events)
+		{
+			$new_bookings = array();
+			foreach($bookings as $b)
+			{
+				$keep = true;
+				foreach($events as $e)
+				{
+					if(($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
+					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
+					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_']))
+					{
+						$keep = false;
+						break;
+					}
+				}
+				if($keep)
+					$new_bookings[] = $b;
+			}
+			return $new_bookings;
+		}
+
 	}

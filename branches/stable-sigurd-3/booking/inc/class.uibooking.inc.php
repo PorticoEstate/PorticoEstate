@@ -186,6 +186,7 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
+				$booking['allocation_id'] = $booking['allocation_id'] ? $booking['allocation_id'] : null;
 				$this->agegroup_bo->extract_form_data($booking);
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
