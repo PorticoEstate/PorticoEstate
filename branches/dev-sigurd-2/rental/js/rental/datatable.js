@@ -90,36 +90,45 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
 		}
 	},this);
     
-
-    var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
-      var task = p_aArgs[1];
-      if(task) {
-        /* Extract which TR element triggered the context menu */
-        var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
-        
-        if(elRow) {
-          switch(task.groupIndex) {
-          case 0: /* View */
-            var oRecord = p_myDataTable.getRecord(elRow);
-          	var recordId = oRecord.getData().id;
-          	window.location = oRecord.getData().actions.view;
-          	break;
-          case 1: /* Edit */
-            var oRecord = p_myDataTable.getRecord(elRow);
-          	var recordId = oRecord.getData().id;
-          	window.location = oRecord.getData().actions.edit;
-          	break;
-          }
-        }
-      }
+    //Create context menu with a given name and put a trigger on the table's TBODY element
+    this.contextMenu = new YAHOO.widget.ContextMenu(this.dataSourceObject.contextMenuName, {trigger:this.dataTable.getTbodyEl()});
+    
+    /*
+     * Function for handing context menu clicks
+     * @param	eventString	String representing the name of the event that was fired
+     * @param	args	Array of arguments sent when the event was fired
+     * @param	sourceTable	The table representing the context menu that fired the event
+     */
+    var onContextMenuClick = function(eventString, args, sourceTable) {
+    	var task = args[1];
+    	//alert(task);
+    	//alert(sourceTable)
+    	if(sourceTable instanceof YAHOO.widget.DataTable) {
+    		//alert(sourceTable)
+    		/*... fetch the table row (<tr>) tat generated this event */
+	        var tableRow = sourceTable.getTrEl(this.contextEventTarget);
+    		//alert(tableRow);
+	        var tableRecord = sourceTable.getRecord(tableRow);
+	        //console.log(tableRecord);
+	        //alert(sourceTable.contextMenuActions[task.index]);
+	        console.log(tableRecord.getData().actions);
+	        console.log(tableRecord.getData().address);
+	       // console.log(temp);
+	        window.location = eval("tableRecord.getData().actions." + sourceTable.contextMenuActions[task.index]);
+	        //alert('er du her');
+      }	
     };
+    console.log(this.dataTable);
+    this.dataTable.contextMenuActions = this.dataSourceObject.contextMenuActions;
     
-    this.contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:this.dataTable.getTbodyEl()});
-    
-    this.contextMenu.addItems([[
-	    { text: "Vis" , onclick: { fn: onContextMenuClick, obj: "view" } }],[
-	    { text: "Redigér", onclick: { fn: onContextMenuClick, obj: "edit" }}]
-    ]);
+    /* Add items to context menu 
+     * fn: Function
+     * obj: Object to pass back to the handler
+     */
+    for(var i=0; i<this.dataSourceObject.contextMenuLabels.length; i++)
+    {
+    	this.contextMenu.addItem({text: this.dataSourceObject.contextMenuLabels[i], onclick: {fn: onContextMenuClick}},0);
+    }
 
     // Render the ContextMenu instance to the parent container of the DataTable
     this.contextMenu.render(this.dataSourceObject.containerName);
