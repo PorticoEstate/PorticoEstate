@@ -17,6 +17,7 @@ allocation	booking	no	Tildelning
 allocations	booking	no	Tildelningar
 allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
 allocations that can be created (%1)	booking	no	Tildelningar som kan lages
+application	booking	no	Söknad
 archived	booking	no	Arkivert
 audience	booking	no	Målgruppe
 bookable resources	booking	no	Bokningsbare ressurser
@@ -67,7 +68,7 @@ inactivate	booking	no	Inaktivera
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Faktura informasjon 
 male	booking	no	Mann
-name	booking	no	Fornavn
+name	booking	no	Navn
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
 new allocation	booking	no	Ny tildelning

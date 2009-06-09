@@ -16,7 +16,7 @@
 
 	<form action="" method="POST">
 		<dl class="form-col">
-			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
 			<dd>
 			    <input id="inputs" name="name" type="text">
 			        <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
