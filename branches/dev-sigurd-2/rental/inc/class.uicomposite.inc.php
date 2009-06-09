@@ -37,34 +37,51 @@
 			{
 				case 'index':
 					$composite_data = $this->bo->read();
-					array_walk($composite_data[$field_results], array($this, '_add_actions'));
-					return $this->yui_results($composite_data, $field_total, $field_results);
+					break;
 				case 'details':
 					$composite_data = $this->bo->read_single(array('id' => $composite_id));
-					return $this->yui_results($composite_data, $field_total, $field_results);
+					break;
 				case 'included_areas':
 					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
-					return $this->yui_results($composite_data, $field_total, $field_results);
+					break;
 				case 'available_areas':
 					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
-					return $this->yui_results($composite_data, $field_total, $field_results);
+					break;
 				case 'contracts':
 					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
-					return $this->yui_results($composite_data, $field_total, $field_results);
+					break;
+				
 			}
+			array_walk($composite_data[$field_results], array($this, '_add_actions'), array($composite_id,$type));
+			//var_dump($composite_data[$field_results]);
+			return $this->yui_results($composite_data, $field_total, $field_results);
 		}
 
 		/*
 		 * Add action links for the context menu of the list item
 		 */
-		public function _add_actions(&$value, $key)
+		public function _add_actions(&$value, $key, $params)
 		{
-			// TODO: Should check permissions
-			$value['actions'] = array(
-				// Remove &amp; from the link before storing it since it will be used in a Javascript forward
-				'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id']))),
-				'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])))
-			);
+			switch($params[1])
+			{
+				case 'index':
+					$value['actions'] = array(
+						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id']))),
+						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])))
+					);
+					break;
+				case 'included_areas':
+					$value['actions'] = array(
+						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0])))
+					);
+					break;
+				case 'available_areas':
+					$value['actions'] = array(
+						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0])))
+					);
+					break;
+			}
+			
 		}
 		
 		/**
@@ -156,7 +173,7 @@
 					)
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'rental.uicomposite.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json')),
 					'columns' => self::link(array('menuaction' => 'rental.uicomposite.columns', 'phpgw_return_as' => 'json')), // URL to store select columns
 					'field' => array(
 						array(
@@ -225,11 +242,18 @@
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$id = phpgw::get_var('id');
-				$type = phpgw::get_var('type');
-				//var_dump($id);
-				//var_dump($type);
-				return $this->json_query($id,$type);
+				if(phpgw::get_var('id') && $type = phpgw::get_var('type'))
+				{
+					$id = phpgw::get_var('id');
+					$type = phpgw::get_var('type');
+					return $this->json_query($id,$type);	
+				} 
+				else 
+				{
+					return $this->json_query();
+				}
+				
+				
 			}
 		} 
 		
