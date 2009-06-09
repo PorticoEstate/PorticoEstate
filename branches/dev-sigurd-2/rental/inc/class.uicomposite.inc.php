@@ -365,6 +365,21 @@
 					'datatable_available_areas' => array(
 						'datatable' => true,
 						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'available_areas')),
+						'form' => array(
+							'toolbar_areas_1' => array(
+								'toolbar' => true,
+								'label' => lang('rental_rc_toolbar_filters'),
+								'control1' => array(
+							 			'control' => 'select',
+							 			'id' => 'ctrl_toggle_contract_date',
+										'name' => 'contract_date',
+										'keys' => array('1', '2', '3', '4', '5'), // Location level
+										'values' => array(lang('rental_rc_property'), lang('rental_rc_building'), lang('rental_rc_floor'), lang('rental_rc_section'), lang('rental_rc_room')),
+										'default' => '1',
+										'text' => lang('rental_rc_level')
+								)
+							)
+						),
 						'field' => array(
 							array(
 								'key' => 'location_code',

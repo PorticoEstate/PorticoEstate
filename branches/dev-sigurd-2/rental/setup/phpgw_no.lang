@@ -31,6 +31,7 @@ rental_rc_details	rental	no	Detajer
 rental_rc_documents	rental	no	Dokumenter
 rental_rc_elements	rental	no	Elementer
 rental_rc_ended	rental	no	Avsluttet
+rental_rc_floor	rental	no	Etasje
 rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
 rental_rc_id	rental	no	ID
@@ -46,6 +47,7 @@ rental_rc_property	rental	no	Eiendom
 rental_rc_property_id	rental	no	BKB Identifikator
 rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
 rental_rc_rental_composite	rental	no	Leieobjekt
+rental_rc_room	rental	no Rom
 rental_rc_save	rental	no	Lagre
 rental_rc_section	rental	no	Seksjon
 rental_rc_search	rental	no	Søk
