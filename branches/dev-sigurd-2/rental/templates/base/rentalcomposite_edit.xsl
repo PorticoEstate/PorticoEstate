@@ -262,6 +262,12 @@
 				<xsl:with-param name="form">queryForm</xsl:with-param>
 				<xsl:with-param name="filters">queryForm</xsl:with-param>
 				<xsl:with-param name="container_name">datatable-container</xsl:with-param>
+				<xsl:with-param name="context_menu_labels">
+					['<xsl:value-of select="php:function('lang', 'rental_cm_remove')"/>']
+				</xsl:with-param>
+				<xsl:with-param name="context_menu_actions">
+					['remove_unit']
+				</xsl:with-param>
 			</xsl:call-template>
 		</div>
 	</div>
@@ -277,6 +283,12 @@
 				<xsl:with-param name="form">queryForm</xsl:with-param>
 				<xsl:with-param name="filters">queryForm</xsl:with-param>
 				<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
+				<xsl:with-param name="context_menu_labels">
+					['<xsl:value-of select="php:function('lang', 'rental_cm_add')"/>']
+				</xsl:with-param>
+				<xsl:with-param name="context_menu_actions">
+					['add_unit']
+				</xsl:with-param>
 			</xsl:call-template>
 		</div>
 	</div>
@@ -302,6 +314,8 @@
 	<xsl:param name="form"></xsl:param>
 	<xsl:param name="filters"></xsl:param>
 	<xsl:param name="container_name"></xsl:param>
+	<xsl:param name="context_menu_labels">[]</xsl:param>
+	<xsl:param name="context_menu_actions">[]</xsl:param>
 	<script>
 		YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
 			<xsl:if test="source">
@@ -330,6 +344,9 @@
 			this.formBinding = '<xsl:value-of select="$form"/>';
 			this.filterBinding = '<xsl:value-of select="$filters"/>';
 			this.containerName = '<xsl:value-of select="$container_name"/>';
+			this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>'
+			this.contextMenuLabels = <xsl:value-of select="$context_menu_labels"/>;
+			this.contextMenuActions = <xsl:value-of select="$context_menu_actions"/>;
 		}
 	</script>
 </xsl:template>
