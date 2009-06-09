@@ -83,7 +83,9 @@
 		
 		public static function process_booking_unauthorized_exceptions()
 		{
-			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+			if (!self::$old_exception_handler) {
+				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+			}
 		}
 		
 		public static function handle_booking_unauthorized_exception(Exception $e)
