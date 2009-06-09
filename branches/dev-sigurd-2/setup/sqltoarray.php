@@ -101,7 +101,7 @@
 
 		if (count($fk) > 1)
 		{
-			$GLOBALS['setup_tpl']->set_var('fks', "\n\t\t\t\t'" . implode(",\n\t\t\t\t'",$fk) );
+			$GLOBALS['setup_tpl']->set_var('fks', "\n\t\t\t\t" . implode(",\n\t\t\t\t",$fk) );
 		}
 		elseif($fk && !empty($fk))
 		{
