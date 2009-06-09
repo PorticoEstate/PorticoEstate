@@ -6,9 +6,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			
-			self::process_booking_unauthorized_exceptions();
-			
 			self::set_active_menu('booking::buildings::documents');
 		}
 		
