@@ -35,6 +35,7 @@ rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
 rental_rc_id	rental	no	ID
 rental_rc_land_title	rental	no	Gnr/Bnr
+rental_rc_level	rental	no	Nivå
 rental_rc_name	rental	no	Navn
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet

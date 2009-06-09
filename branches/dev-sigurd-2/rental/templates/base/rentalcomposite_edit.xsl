@@ -36,27 +36,11 @@
 		<div class="yui-content">
 			<xsl:apply-templates select="data/composite"/>
 			<div id="elements">
-				<h4><xsl:value-of select="php:function('lang', 'rental_rc_added_areas')" /></h4>
-				<div class="datatable">
-					<div id="datatable-container">
-						<xsl:apply-templates select="data/datatable_included_areas" />
-					</div>
-				</div>
-				<h4><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h4>
-				<div class="datatable">
-					<div id="datatable-container2">
-					    <xsl:apply-templates select="data/datatable_available_areas" />
-					</div>
-				</div>
+				<xsl:apply-templates select="data/datatable_included_areas" />
+			    <xsl:apply-templates select="data/datatable_available_areas" />
 			</div>
 			<div id="contracts">
-				<xsl:call-template name="form" />
-				<h4><xsl:value-of select="php:function('lang', 'rental_rc_contracts_containing_this_composite')" /></h4>
-				<div class="datatable">
-					<div id="datatable-container-contracts">
-					    <xsl:apply-templates select="data/datatable_contracts" />
-					</div>
-				</div>
+			    <xsl:apply-templates select="data/datatable_contracts" />
 			</div>
 			<div id="documents">
 				<div id="documents_container">					
@@ -203,7 +187,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template name="form">
+<xsl:template match="form">
 	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
@@ -212,7 +196,7 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:for-each select="data//form//*">
+        <xsl:for-each select="*">
         	<xsl:if test="./toolbar">
         		<xsl:call-template name="toolbar"/>
         	</xsl:if>
@@ -268,31 +252,49 @@
     </tr></table></div>
 </xsl:template>
 
-<xsl:template match="datatable_included_areas" >
-	<xsl:call-template name="datasource-definition" >
-		<xsl:with-param name="number">1</xsl:with-param>
-		<xsl:with-param name="form">queryForm</xsl:with-param>
-		<xsl:with-param name="filters">queryForm</xsl:with-param>
-		<xsl:with-param name="container_name">datatable-container</xsl:with-param>
-	</xsl:call-template>
+<xsl:template match="datatable_included_areas" xmlns:php="http://php.net/xsl">
+	<h4><xsl:value-of select="php:function('lang', 'rental_rc_added_areas')" /></h4>
+	<xsl:apply-templates select="form" />
+	<div class="datatable">
+		<div id="datatable-container">
+			<xsl:call-template name="datasource-definition" >
+				<xsl:with-param name="number">1</xsl:with-param>
+				<xsl:with-param name="form">queryForm</xsl:with-param>
+				<xsl:with-param name="filters">queryForm</xsl:with-param>
+				<xsl:with-param name="container_name">datatable-container</xsl:with-param>
+			</xsl:call-template>
+		</div>
+	</div>
 </xsl:template>
 
-<xsl:template match="datatable_available_areas" >
-	<xsl:call-template name="datasource-definition">
-		<xsl:with-param name="number">2</xsl:with-param>
-		<xsl:with-param name="form">queryForm</xsl:with-param>
-		<xsl:with-param name="filters">queryForm</xsl:with-param>
-		<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
-	</xsl:call-template>
+<xsl:template match="datatable_available_areas" xmlns:php="http://php.net/xsl">
+	<h4><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h4>
+	<xsl:apply-templates select="form" />
+	<div class="datatable">
+		<div id="datatable-container2">
+			<xsl:call-template name="datasource-definition">
+				<xsl:with-param name="number">2</xsl:with-param>
+				<xsl:with-param name="form">queryForm</xsl:with-param>
+				<xsl:with-param name="filters">queryForm</xsl:with-param>
+				<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
+			</xsl:call-template>
+		</div>
+	</div>
 </xsl:template>
 
-<xsl:template match="datatable_contracts" >
-	<xsl:call-template name="datasource-definition">
-		<xsl:with-param name="number">3</xsl:with-param>
-		<xsl:with-param name="form">queryForm</xsl:with-param>
-		<xsl:with-param name="filters">queryForm</xsl:with-param>
-		<xsl:with-param name="container_name">datatable-container-contracts</xsl:with-param>
-	</xsl:call-template>
+<xsl:template match="datatable_contracts" xmlns:php="http://php.net/xsl">
+	<h4><xsl:value-of select="php:function('lang', 'rental_rc_contracts_containing_this_composite')" /></h4>
+	<xsl:apply-templates select="form" />
+	<div class="datatable">
+		<div id="datatable-container-contracts">
+			<xsl:call-template name="datasource-definition">
+				<xsl:with-param name="number">3</xsl:with-param>
+				<xsl:with-param name="form">queryForm</xsl:with-param>
+				<xsl:with-param name="filters">queryForm</xsl:with-param>
+				<xsl:with-param name="container_name">datatable-container-contracts</xsl:with-param>
+			</xsl:call-template>
+		</div>
+	</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition">
