@@ -83,12 +83,12 @@
 		                    'image'	=> array('property', 'location'),
 							'children' => array
 							(
-								'equipment' => array
-								(
-									'text'	=> lang('Equipment'),
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiequipment.index') ),
-									'image'	=> array('property', 'location'),
-								),
+								// 'equipment' => array
+								// (
+								// 	'text'	=> lang('Equipment'),
+								// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiequipment.index') ),
+								// 	'image'	=> array('property', 'location'),
+								// ),
 								'documents' => array
 								(
 									'text'	=> lang('Documents'),
