@@ -31,7 +31,14 @@
 	/**
 	* Set the session name to something unique for phpgw
 	*/
-	session_name('phpgwsessid');
+	if ( $GLOBALS['phpgw_info']['flags']['session_name'] )
+	{
+		session_name($GLOBALS['phpgw_info']['flags']['session_name']);
+	}
+	else
+	{
+		session_name('sessionphpgwsessid');
+	}
 
 	/*
 	 * Include the db session handler if required
@@ -1501,7 +1508,7 @@
 				$webserver_url = '/';
 			}
 
-			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
+			//session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
 		}
 

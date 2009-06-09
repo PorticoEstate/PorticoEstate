@@ -166,6 +166,9 @@
 				case 'timestamp':
 					$sTranslated = "'type' => 'timestamp'";
 					break;
+				case 'time':
+					$sTranslated = "'type' => 'time'";
+					break;
 				case 'varchar':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
