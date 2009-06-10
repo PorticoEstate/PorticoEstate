@@ -47,7 +47,7 @@
 					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
 					break;
 				case 'available_areas':
-					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
+					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'level' => phpgw::get_var('level')));
 					break;
 				case 'contracts':
 					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
@@ -402,8 +402,8 @@
 								'label' => lang('rental_rc_toolbar_filters'),
 								'control1' => array(
 							 			'control' => 'select',
-							 			'id' => 'ctrl_toggle_contract_date',
-										'name' => 'contract_date',
+							 			'id' => 'ctrl_toggle_level',
+										'name' => 'level',
 										'keys' => array('1', '2', '3', '4', '5'), // Location level
 										'values' => array(lang('rental_rc_property'), lang('rental_rc_building'), lang('rental_rc_floor'), lang('rental_rc_section'), lang('rental_rc_room')),
 										'default' => '1',
@@ -429,7 +429,17 @@
 							),
 							array(
 								'key' => 'loc3_name',
+								'label' => lang('rental_rc_floor'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc4_name',
 								'label' => lang('rental_rc_section'),
+								'sortable' => true
+							),
+							array(
+								'key' => 'loc5_name',
+								'label' => lang('rental_rc_room'),
 								'sortable' => true
 							),
 							array(
@@ -440,12 +450,12 @@
 							array(
 								'key' => 'area_gros',
 								'label' => lang('rental_rc_area_gros'),
-								'sortable' => true
+								'sortable' => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
 							),
 							array(
 								'key' => 'area_net',
 								'label' => lang('rental_rc_area_net'),
-								'sortable' => true
+								'sortable'  => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
 							)
 						)
 					),
