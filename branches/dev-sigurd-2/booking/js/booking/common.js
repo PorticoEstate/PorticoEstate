@@ -10,7 +10,7 @@ parseISO8601 = function (string) {
 	if(d[10])
 		date.setMinutes(d[10]);
 	return date;
-}
+};
 
 
 YAHOO.booking.serializeForm = function(formID) {
@@ -28,7 +28,7 @@ YAHOO.booking.serializeForm = function(formID) {
 		}
 	}
 	return values.join('&');
-}
+};
 
 YAHOO.booking.formatLink = function(elCell, oRecord, oColumn, oData) { 
 	var name = oRecord.getData(oColumn.key);
@@ -56,7 +56,7 @@ YAHOO.booking.formatGenericLink = function() {
 		}
 		
 		elCell.innerHTML = linksHtml;
-	}
+	};
 };
 
 YAHOO.booking.autocompleteHelper = function(url, field, hidden, container) {
@@ -76,7 +76,7 @@ YAHOO.booking.autocompleteHelper = function(url, field, hidden, container) {
 		YAHOO.util.Dom.get(hidden).value = aArgs[2].id;
 	});
 	return ac;
-}
+};
 
 YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 	options = options || {};
@@ -102,8 +102,8 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 		};
 		
 		return data;
-	}
-}
+	};
+};
 
 YAHOO.booking.inlineImages = function(container, url, options)
 {
@@ -137,12 +137,12 @@ YAHOO.booking.inlineImages = function(container, url, options)
 			new YAHOO.util.Element(container).setStyle('display', 'none');
 		}
     }});
-}
+};
 
 
 YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
-	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, 'radio')
-}
+	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, 'radio');
+};
 
 YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, type) {
 	type = type || 'checkbox';
@@ -172,13 +172,13 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, {
 	   sortedBy: {key: 'name', dir: YAHOO.widget.DataTable.CLASS_ASC}
 	});
-}
+};
 
 YAHOO.booking.setupDatePickers = function() {
 	YAHOO.util.Dom.getElementsByClassName('date-picker', null, null, YAHOO.booking.setupDatePickerHelper, [true, false]);
 	YAHOO.util.Dom.getElementsByClassName('time-picker', null, null, YAHOO.booking.setupDatePickerHelper, [false, true]);
 	YAHOO.util.Dom.getElementsByClassName('datetime-picker', null, null, YAHOO.booking.setupDatePickerHelper, [true, true]);
-}
+};
 
 YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	if(field._converted)
@@ -208,7 +208,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
 		oButton._update();
-	}
+	};
 	oButton._update = function() {
 		var year = this._date.getFullYear();
 		var month = this._date.getMonth() + 1;
@@ -236,7 +236,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this._input.value = dateValue;
 		else if(!date && time)
 			this._input.value = timeValue;
-	}
+	};
 
 	oButton.on("click", function () {
 		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id);
@@ -293,7 +293,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		}, oButton, true);
 	}
 	oButton._update.apply(oButton);
-}
+};
 
 // Executed on all booking.uicommon-based pages
 YAHOO.util.Event.addListener(window, "load", function() {
@@ -305,4 +305,17 @@ var showIfNotEmpty = function(event, fieldname) {
     } else {
         YAHOO.util.Dom.replaceClass(fieldname + "_edit", "showit", "hideit");
     }
-}
+};
+
+YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
+	options = YAHOO.lang.merge({width:522, height:300}, (options || {}));
+	var descEdit = new YAHOO.widget.SimpleEditor(textarea_id, {
+	    height: options.height+'px',
+	    width: options.width+'px',
+	    dompath: true,
+	    animate: true,
+		handleSubmit: true
+	});
+	descEdit.render();
+	return descEdit;
+};

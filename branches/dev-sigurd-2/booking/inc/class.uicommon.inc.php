@@ -321,7 +321,11 @@
 			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
 		}
 		
-
+		public function use_yui_editor()
+		{
+			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
+			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+		}
 
 		static protected function fix_php_files_array($data)
 		{

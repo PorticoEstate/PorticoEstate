@@ -253,11 +253,7 @@
 				$group[$this->get_current_parent_type().'_name'] = $parent_entity['name'];
 			}
 
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
-			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
-			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+			$this->use_yui_editor();
 
 			self::render_template('group_edit', array('group' => $group, 'module' => $this->module));
 		}

@@ -128,7 +128,8 @@
 			$this->flash_form_errors($errors);
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			self::render_template('building_new', array('building' => $building));
+			$this->use_yui_editor();
+			self::render_template('building_form', array('building' => $building, 'new_form' => true));
 		}
 
 		public function edit()
@@ -152,7 +153,8 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::render_template('building_edit', array('building' => $building));
+			$this->use_yui_editor();
+			self::render_template('building_form', array('building' => $building));
 		}
 		
 		public function show()
