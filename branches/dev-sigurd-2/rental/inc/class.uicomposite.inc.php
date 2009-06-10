@@ -575,9 +575,9 @@
 			if ($composite != null) {
 				$this->bo->remove_unit($composite_id, $location_id);
 			}
-			return;
 			
 			// TODO: return sensible status, error if applicable
+			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id);
 		}
 				
 		/**

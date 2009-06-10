@@ -90,7 +90,6 @@
 		public function remove_unit($composite_id, $location_id)
 		{
 		if ($this->has_unit($composite_id, $location_id)) {
-			print_r("removing");
 				$this->so->remove_unit($composite_id, $location_id);
 			}
 			return false;

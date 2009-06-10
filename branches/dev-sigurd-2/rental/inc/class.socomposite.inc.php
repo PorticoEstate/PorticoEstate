@@ -656,7 +656,6 @@ class rental_socomposite extends rental_socommon
 	function remove_unit($composite_id, $location_id)
 	{
 		$q = "DELETE FROM rental_unit WHERE composite_id = $composite_id AND location_id = $location_id";
-		print_r($q);
 		$result = $this->db->query($q);
 	}
 }
