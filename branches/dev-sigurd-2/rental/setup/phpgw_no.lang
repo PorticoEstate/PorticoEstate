@@ -31,7 +31,7 @@ rental_rc_contracts_containing_this_composite	rental	no	Kontrakter knyttet til d
 rental_rc_date_end	rental	no	Slutt-dato
 rental_rc_date_start	rental	no	Start-dato
 rental_rc_description	rental	no	Beskrivelse
-rental_rc_details	rental	no	Detajer
+rental_rc_details	rental	no	Detaljer
 rental_rc_documents	rental	no	Dokumenter
 rental_rc_elements	rental	no	Elementer
 rental_rc_ended	rental	no	Avsluttet
