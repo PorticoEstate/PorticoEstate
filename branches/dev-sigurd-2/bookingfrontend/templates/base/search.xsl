@@ -1,4 +1,20 @@
+<xsl:template name="strip-tags">
+	<xsl:param name="text"/>
+	<xsl:choose>
+		<xsl:when test="contains($text, '&lt;')">
+			<xsl:value-of select="substring-before($text, '&lt;')"/>
+			<xsl:call-template name="strip-tags">
+				<xsl:with-param name="text" select="concat(' ', substring-after($text, '&gt;'))"/>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$text"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	
   <div id="content">
     <form action="" method="GET" id="search">
       <input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
@@ -36,14 +52,20 @@
 	                  <dl>
 	                    <dt><h4><xsl:value-of select="php:function('lang', 'Description')" /></h4></dt>
 	                    <dd class="description">
+							<xsl:variable name="tag_stripped_description">
+								<xsl:call-template name="strip-tags">
+									<xsl:with-param name="text" select="description"/>
+								</xsl:call-template>
+							</xsl:variable>
+							
 	                      <xsl:choose>
-	                        <xsl:when test="string-length(description) &gt; 1">
+	                        <xsl:when test="string-length($tag_stripped_description) &gt; 1">
 	                          <xsl:choose>
-	                            <xsl:when test="string-length(description) &gt; 100">
-	                              <xsl:value-of select="substring(description, 0, 97)"/>...
+	                            <xsl:when test="string-length($tag_stripped_description) &gt; 100">
+								  <xsl:value-of select="substring($tag_stripped_description, 0, 97)"/>...
 	                            </xsl:when>
 	                            <xsl:otherwise>
-	                              <xsl:value-of select="description" disable-output-escaping="yes"/>
+	                              <xsl:value-of select="$tag_stripped_description"/>
 	                            </xsl:otherwise>
 	                          </xsl:choose>
 	                        </xsl:when>

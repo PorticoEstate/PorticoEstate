@@ -120,7 +120,8 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
-			self::render_template('resource_new', array('resource' => $resource, 'activitydata' => $activity_data));
+			$this->use_yui_editor();
+			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
 		}
 
 		public function edit()
@@ -151,7 +152,8 @@
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
-			self::render_template('resource_edit', array('resource' => $resource, 'activitydata' => $activity_data));
+			$this->use_yui_editor();
+			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data));
 		}
 		
 		public function show()
