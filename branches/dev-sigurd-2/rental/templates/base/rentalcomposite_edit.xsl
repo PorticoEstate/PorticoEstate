@@ -344,7 +344,7 @@
 			this.formBinding = '<xsl:value-of select="$form"/>';
 			this.filterBinding = '<xsl:value-of select="$filters"/>';
 			this.containerName = '<xsl:value-of select="$container_name"/>';
-			this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>'
+			this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>';
 			this.contextMenuLabels = <xsl:value-of select="$context_menu_labels"/>;
 			this.contextMenuActions = <xsl:value-of select="$context_menu_actions"/>;
 		}
