@@ -157,7 +157,7 @@ document name	booking	no	Dokumentnavn
 document	booking	no	Dokument
 status	booking	no	Status
 primary contact	booking	no	Kontaktperson 1
-last modified	booking	no	Senest oppdateret
+last modified	booking	no	Sist endret
 id	booking	no	ID
 permissions	booking	no	Rettigheter
 week	booking	no	Uke
