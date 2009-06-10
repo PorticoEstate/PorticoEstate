@@ -90,6 +90,7 @@
 		public function remove_unit($composite_id, $location_id)
 		{
 		if ($this->has_unit($composite_id, $location_id)) {
+			print_r("removing");
 				$this->so->remove_unit($composite_id, $location_id);
 			}
 			return false;
@@ -106,8 +107,8 @@
 		{
 			// Get all rental units for this composite
 			$units = $this->get_included_rental_units(array('id' => $composite_id));
-			
-			foreach ($units as $unit) {
+
+			foreach ($units['results'] as $unit) {
 				if ($unit['location_id'] == $location_id) {
 					// We found our unit
 					return true;

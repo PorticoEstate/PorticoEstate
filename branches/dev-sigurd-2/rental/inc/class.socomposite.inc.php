@@ -281,7 +281,7 @@ class rental_socomposite extends rental_socommon
 			$order = ' ORDER BY '.$sort.' '.$dir;
 		}
 		// Second we get ids for all areas for specified composite id
-		$sql = 'SELECT level, fm_locations.location_code FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id.$order;
+		$sql = 'SELECT level, fm_locations.location_code, fm_locations.id AS location_id FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id.$order;
 		$this->db->query($sql, __LINE__, __FILE__);
 //		die($sql);
 		
@@ -290,7 +290,8 @@ class rental_socomposite extends rental_socommon
 		{
 			$level = $this->_unmarshal($this->db->f('level', true), 'int');
 			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
-			$unit_array[] = array('level' => $level, 'location_code' => $location_code);
+			$location_id = $this->_unmarshal($this->db->f('location_id', true), 'int');
+			$unit_array[] = array('level' => $level, 'location_code' => $location_code, 'location_id' => $location_id);
 		}
 		
 		// Go through each rental unit (location) that belongs to this composite and extract as much data as possible
@@ -302,7 +303,9 @@ class rental_socomposite extends rental_socommon
 			$address_column = 'adresse';
 			$current_unit = &$row['results'][]; //..  
 			$current_unit['location_code'] = $unit['location_code'];
+			$current_unit['location_id'] = $unit['location_id'];
 			$current_unit['loc1_name'] = lang(rental_rc_area_not_found);
+			
 			
 			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
 			if ($unit['level'] == 1)
@@ -596,9 +599,10 @@ class rental_socomposite extends rental_socommon
 		$result = $this->db->query($q);
 	}
 	
-	function remove_unit($composite_id, $location_id, $loc1)
+	function remove_unit($composite_id, $location_id)
 	{
-		$q = "DELETE FROM rental_unit WHERE composite_id = $composite_id AND location_id = $location_id AND loc1 LIKE '$loc1'";
+		$q = "DELETE FROM rental_unit WHERE composite_id = $composite_id AND location_id = $location_id";
+		print_r($q);
 		$result = $this->db->query($q);
 	}
 }

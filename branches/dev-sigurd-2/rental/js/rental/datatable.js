@@ -114,6 +114,7 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
 	        //console.log(tableRecord.getData().actions);
 	        //console.log(tableRecord.getData().address);
 	        console.log(tableRecord.getData().actions);
+	        console.log(tableRecord);
 	       // console.log(temp);
 	        window.location = eval("tableRecord.getData().actions." + sourceTable.contextMenuActions[task.index]);
 	        //alert('er du her');

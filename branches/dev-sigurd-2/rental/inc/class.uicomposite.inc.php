@@ -74,7 +74,7 @@
 					break;
 				case 'included_areas':
 					$value['actions'] = array(
-						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0])))
+						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])))
 					);
 					break;
 				case 'available_areas':
@@ -543,7 +543,7 @@
 		{
 			// TODO: authorization check 
 			$composite_id = (int)phpgw::get_var('id');
-			$composite = $this->bo->read_single($composite_id);
+			$composite = $this->bo->read_single(array('id' => $composite_id));
 			
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
@@ -558,15 +558,14 @@
 		{
 			// TODO: authorization check 
 			$composite_id = (int)phpgw::get_var('id');
-			print_r($composite_id);
-			$composite = $this->bo->read_single($composite_id);
-			print_r($composite);
-			return;
+			$composite = $this->bo->read_single(array('id' => $composite_id));
+
 			$location_id = (int)phpgw::get_var('location_id');
-			
+						
 			if ($composite != null) {
 				$this->bo->remove_unit($composite_id, $location_id);
 			}
+			return;
 			
 			// TODO: return sensible status, error if applicable
 		}
