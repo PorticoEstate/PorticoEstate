@@ -37,7 +37,9 @@
 			<xsl:apply-templates select="data/composite"/>
 			<div id="elements">
 				<xsl:apply-templates select="data/datatable_included_areas" />
-			    <xsl:apply-templates select="data/datatable_available_areas" />
+				<xsl:if test="//access = 1">
+	    			<xsl:apply-templates select="data/datatable_available_areas" />
+	    		</xsl:if>
 			</div>
 			<div id="contracts">
 			    <xsl:apply-templates select="data/datatable_contracts" />
@@ -263,10 +265,24 @@
 				<xsl:with-param name="filters">queryForm</xsl:with-param>
 				<xsl:with-param name="container_name">datatable-container</xsl:with-param>
 				<xsl:with-param name="context_menu_labels">
-					['<xsl:value-of select="php:function('lang', 'rental_cm_remove')"/>']
+					<xsl:choose>
+						<xsl:when test="../access = 1">
+							['<xsl:value-of select="php:function('lang', 'rental_cm_remove')"/>']
+						</xsl:when>
+						<xsl:otherwise>
+							[]
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:with-param>
 				<xsl:with-param name="context_menu_actions">
-					['remove_unit']
+					<xsl:choose>
+						<xsl:when test="../access = 1">
+							['remove_unit']
+						</xsl:when>
+						<xsl:otherwise>
+							[]
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:with-param>
 			</xsl:call-template>
 		</div>
