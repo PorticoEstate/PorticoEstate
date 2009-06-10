@@ -341,10 +341,15 @@
 					}
 				}
 				
+				$active_tab = phpgw::get_var('active_tab');
+				if (($active_tab == null) || ($active_tab == '')) {
+					$active_tab = 'rental_rc_details';
+				}
+				
 				$data = array
 				(
 					'composite' 	=> $composite,
-					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, 'rental_rc_details'),
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 					'documents' => $documents,
 					'access' => $access,
 					'datatable_included_areas' => array(
@@ -567,7 +572,9 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'#rental_rc_elements');
+			//$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
+			// TODO: Need proper redirect here, phpgw
+			header('Location: ' . '/pe/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
 		}
 		
 		function remove_unit()
@@ -583,7 +590,8 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'#rental_rc_elements');
+			// TODO: Need proper redirect here, phpgw
+			header('Location: ' . '/pe/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
 		}
 				
 		/**
