@@ -162,3 +162,13 @@ id	booking	no	ID
 permissions	booking	no	Rettigheter
 week	booking	no	Uke
 schedule	booking	no	Ukeplan
+add comment	booking	no	Legg til komentar
+history and comments (%1)	booking	no	Historikk (%1)
+add a comment	booking	no	Legg til en komentar
+reject application	booking	no	Avslå søknad
+accept application	booking	no	Godta søknaden
+modified	booking	no	Endred
+new	booking	no	Ny
+accepted	booking	no	Akseptered
+rejected	booking	no	Avvist
+cancelled	booking	no	Avbestilling
