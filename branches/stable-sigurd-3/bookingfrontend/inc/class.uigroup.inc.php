@@ -32,8 +32,8 @@
 			
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$auth_forward = "?redirect_menuaction={$this->module}.uigroup.show&redirect_id={$group['id']}";
-			$group['login_link'] = 'bookingfrontend/login.php'.$auth_forward;
-			$group['logoff_link'] = 'bookingfrontend/logoff.php'.$auth_forward;
+			$group['login_link'] = 'login.php'.$auth_forward;
+			$group['logoff_link'] = 'logoff.php'.$auth_forward;
 			if ($bouser->is_organization_admin()) $group['logged_on'] = true;
 
 			self::render_template('group', array('group' => $group, 'loggedin' => $loggedin, 'edit_self_link' => $edit_self_link));
