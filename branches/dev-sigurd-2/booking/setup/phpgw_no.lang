@@ -142,7 +142,7 @@ more info	booking	no	Mer informasjon
 next week	booking	no	Neste uke
 previous week	booking	no	Forige uke
 new booking application	booking	no	Ny søknad
-no description yet	booking	no	Beskrivelse saknes
+no description yet	booking	no	Beskrivelse manglar
 found %1 results	booking	no	%1 treffer
 contact	booking	no	Kontakt
 from	booking	no	Fra
@@ -167,8 +167,8 @@ history and comments (%1)	booking	no	Historikk (%1)
 add a comment	booking	no	Legg til en komentar
 reject application	booking	no	Avslå søknad
 accept application	booking	no	Godta søknaden
-modified	booking	no	Endred
+modified	booking	no	Endret
 new	booking	no	Ny
-accepted	booking	no	Akseptered
+accepted	booking	no	Akseptert
 rejected	booking	no	Avvist
-cancelled	booking	no	Avbestilling
+cancelled	booking	no	Avbestilt
