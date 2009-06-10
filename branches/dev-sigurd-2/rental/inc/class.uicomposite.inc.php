@@ -79,7 +79,7 @@
 					break;
 				case 'available_areas':
 					$value['actions'] = array(
-						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0])))
+						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'location_code' => $value['location_code'])))
 					);
 					break;
 			}
@@ -456,6 +456,11 @@
 								'key' => 'area_net',
 								'label' => lang('rental_rc_area_net'),
 								'sortable'  => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
+							),
+							array(
+							'key' => 'actions',
+							'label' => 'unselectable', // To hide it from the column selector
+							'hidden' => true
 							)
 						)
 					),
@@ -557,11 +562,12 @@
 			
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
-				$loc1 = (int)phpgw::get_var('loc1');
-				$this->bo->add_unit($composite_id, $unit_id, $loc1);
+				$loc1 = (int)phpgw::get_var('location_code');
+				$this->bo->add_unit($composite_id, $location_id, $loc1);
 			}
 			
 			// TODO: return sensible status, error if applicable
+			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id);
 		}
 		
 		function remove_unit()
