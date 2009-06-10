@@ -567,7 +567,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id);
+			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'#rental_rc_elements');
 		}
 		
 		function remove_unit()
@@ -583,7 +583,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id);
+			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'#rental_rc_elements');
 		}
 				
 		/**
