@@ -572,9 +572,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			//$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
-			// TODO: Need proper redirect here, phpgw
-			header('Location: ' . '/pe/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_elements'));
 		}
 		
 		function remove_unit()
@@ -590,8 +588,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			// TODO: Need proper redirect here, phpgw
-			header('Location: ' . '/pe/index.php?menuaction=rental.uicomposite.edit&id='.$composite_id.'&active_tab=rental_rc_elements');
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_elements'));
 		}
 				
 		/**
