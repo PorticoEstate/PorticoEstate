@@ -101,26 +101,13 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
      */
     var onContextMenuClick = function(eventString, args, sourceTable) {
     	var task = args[1];
-    	//alert(task);
-    	//alert(sourceTable)
     	if(sourceTable instanceof YAHOO.widget.DataTable) {
-    		//alert(sourceTable)
     		/*... fetch the table row (<tr>) tat generated this event */
 	        var tableRow = sourceTable.getTrEl(this.contextEventTarget);
-    		//alert(tableRow);
 	        var tableRecord = sourceTable.getRecord(tableRow);
-	        //console.log(tableRecord);
-	        //alert(sourceTable.contextMenuActions[task.index]);
-	        //console.log(tableRecord.getData().actions);
-	        //console.log(tableRecord.getData().address);
-	        console.log(tableRecord.getData().actions);
-	        console.log(tableRecord);
-	       // console.log(temp);
 	        window.location = eval("tableRecord.getData().actions." + sourceTable.contextMenuActions[task.index]);
-	        //alert('er du her');
       }	
     };
-    console.log(this.dataTable);
     this.dataTable.contextMenuActions = this.dataSourceObject.contextMenuActions;
     
     /* Add items to context menu 
@@ -156,7 +143,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
         });
     	pag.render();
     	var dataSourceObject = eval("new YAHOO.rental.setupDatasource" + i + "()");
-    	//	alert("new YAHOO.rental.setupDatasource" + i + "()");
     	this.wrapper = new dataSourceWrapper(dataSourceObject, pag);
     
     	
