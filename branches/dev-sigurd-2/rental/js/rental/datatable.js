@@ -111,8 +111,9 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
 	        var tableRecord = sourceTable.getRecord(tableRow);
 	        //console.log(tableRecord);
 	        //alert(sourceTable.contextMenuActions[task.index]);
+	        //console.log(tableRecord.getData().actions);
+	        //console.log(tableRecord.getData().address);
 	        console.log(tableRecord.getData().actions);
-	        console.log(tableRecord.getData().address);
 	       // console.log(temp);
 	        window.location = eval("tableRecord.getData().actions." + sourceTable.contextMenuActions[task.index]);
 	        //alert('er du her');

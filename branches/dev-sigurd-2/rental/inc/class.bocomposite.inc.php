@@ -65,6 +65,61 @@
 		}
 		
 		/**
+		 * Includes the given location_id as a rental unit as part of the composite specified by the composite id 
+		 * 
+		 * @param $composite_id the id of the composite
+		 * @param $location_id the id of the rental unit
+		 * @return true if the composite includes the given unit
+		 */
+		public function add_unit($composite_id, $location_id, $loc1)
+		{
+			if (!$this->has_unit($composite_id, $location_id)) {
+				$this->so->add_unit($composite_id, $location_id, $loc1);
+			}
+			
+			return false;
+		}
+		
+		/**
+		 * Removes the relation between the given composite and location 
+		 * 
+		 * @param $composite_id the id of the composite
+		 * @param $location_id the id of the rental unit
+		 * @return true if the composite includes the given unit
+		 */
+		public function remove_unit($composite_id, $location_id)
+		{
+		if ($this->has_unit($composite_id, $location_id)) {
+				$this->so->remove_unit($composite_id, $location_id);
+			}
+			return false;
+		}
+		
+		/**
+		 * Returns true if the composite includes the rental unit specified by the provided location_id, false otherwise. 
+		 * 
+		 * @param $composite_id the id of the composite to check
+		 * @param $location_id the id of the rental unit identified by a location
+		 * @return true if the composite includes the given unit
+		 */
+		public function has_unit($composite_id, $location_id)
+		{
+			// Get all rental units for this composite
+			$units = $this->get_included_rental_units(array('id' => $composite_id));
+			
+			foreach ($units as $unit) {
+				if ($unit['location_id'] == $location_id) {
+					// We found our unit
+					return true;
+				}
+			}
+			
+			// The given rental unit wasn't found
+			return false;
+		}
+		
+		
+		/**
 		 * Returns the contracts for the specified composite.
 		 * 
 		 * @param $params array with paramters for the query.

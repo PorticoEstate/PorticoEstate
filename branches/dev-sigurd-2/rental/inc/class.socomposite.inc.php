@@ -589,5 +589,17 @@ class rental_socomposite extends rental_socommon
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');;
 		return $receipt;
 	}
+	
+	function add_unit($composite_id, $location_id, $loc1)
+	{
+		$q = "INSERT INTO rental_unit (composite_id, location_id, loc1) VALUES ($composite_id, $location_id, '$loc1')";
+		$result = $this->db->query($q);
+	}
+	
+	function remove_unit($composite_id, $location_id, $loc1)
+	{
+		$q = "DELETE FROM rental_unit WHERE composite_id = $composite_id AND location_id = $location_id AND loc1 LIKE '$loc1'";
+		$result = $this->db->query($q);
+	}
 }
 ?>

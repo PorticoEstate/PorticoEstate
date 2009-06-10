@@ -12,6 +12,8 @@
 			'edit'		=> true,
 			'columns'	=> true,
 			'add'		=> true,
+			'add_unit' => true,
+			'remove_unit' => true,
 			'query'		=> true
 		);
 
@@ -383,6 +385,11 @@
 								'key' => 'area_net',
 								'label' => lang('rental_rc_area_net'),
 								'sortable' => false // We are unable to sort on area because this can be a mix of aggregated numbers and numbers we know directly
+							),
+							array(
+							'key' => 'actions',
+							'label' => 'unselectable', // To hide it from the column selector
+							'hidden' => true
 							)
 						)
 					),
@@ -530,6 +537,38 @@
 				
 				self::render_template('rentalcomposite_edit', $data);
 			}
+		}
+		
+		function add_unit()
+		{
+			// TODO: authorization check 
+			$composite_id = (int)phpgw::get_var('id');
+			$composite = $this->bo->read_single($composite_id);
+			
+			if (($composite) != null) {
+				$location_id = (int)phpgw::get_var('location_id');
+				$loc1 = (int)phpgw::get_var('loc1');
+				$this->bo->add_unit($composite_id, $unit_id, $loc1);
+			}
+			
+			// TODO: return sensible status, error if applicable
+		}
+		
+		function remove_unit()
+		{
+			// TODO: authorization check 
+			$composite_id = (int)phpgw::get_var('id');
+			print_r($composite_id);
+			$composite = $this->bo->read_single($composite_id);
+			print_r($composite);
+			return;
+			$location_id = (int)phpgw::get_var('location_id');
+			
+			if ($composite != null) {
+				$this->bo->remove_unit($composite_id, $location_id);
+			}
+			
+			// TODO: return sensible status, error if applicable
 		}
 				
 		/**
