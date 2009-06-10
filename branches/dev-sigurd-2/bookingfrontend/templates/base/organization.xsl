@@ -19,7 +19,7 @@
 			<xsl:value-of select="organization/name"/>
 			<xsl:if test="organization/permission/write">
 				<span class="loggedin">
-					<a href="{organization/edit_link}"><img src="phpgwapi/templates/base/images/edit.png" /></a>
+					<a href="{organization/edit_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
 				</span>
 			</xsl:if>
 		</h2>

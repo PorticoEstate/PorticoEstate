@@ -30,8 +30,8 @@
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "organization"));
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
-			$organization['login_link'] = 'bookingfrontend/login.php'.$auth_forward;
-			$organization['logoff_link'] = 'bookingfrontend/logoff.php'.$auth_forward;
+			$organization['login_link'] = 'login.php'.$auth_forward;
+			$organization['logoff_link'] = 'logoff.php'.$auth_forward;
 			if ($bouser->is_organization_admin()) $organization['logged_on'] = true;
 			self::render_template('organization', array('organization' => $organization));
 		}
