@@ -1326,7 +1326,6 @@
 
 			//----------------------------------------------datatable settings--------
 
-_debug_array($values['origin']);
 			$data = array
 			(
 				'b_account_data'					=> $b_account_data,
