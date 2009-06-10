@@ -388,7 +388,7 @@ class rental_socomposite extends rental_socommon
 		// Address
 		$address_column = $level == 1 ? 'adresse1' : 'adresse';
 		// Columns
-		$cols = 'rental_contract.id, rental_contract.date_start, rental_contract.date_end, fm_location'.$level.'.location_code, loc1_name, '.$address_column;
+		$cols = 'rental_contract.id, rental_contract.date_start, rental_contract.date_end, fm_location'.$level.'.location_code, loc1_name, fm_locations.id AS location_id, '.$address_column;
 		for($i = 2; $i <= $level; $i++)
 		{
 			$cols .= ", fm_location{$i}.loc{$i}, loc{$i}_name";
@@ -442,7 +442,7 @@ class rental_socomposite extends rental_socommon
 						$order = ' ORDER BY loc4_name '.$dir;
 					}
 					break;
-				case 'loc3_name':
+				case 'loc5_name':
 					if($level >= 5)
 					{
 						$order = ' ORDER BY loc5_name '.$dir;
@@ -466,6 +466,7 @@ class rental_socomposite extends rental_socommon
 		while ($this->db->next_record()) {
 			$unit = array();
 			$unit['location_code'] = $this->_unmarshal($this->db->f('location_code', true), 'string');
+			$unit['location_id'] = $this->_unmarshal($this->db->f('location_id', true), 'string');
 			$unit['loc1_name'] = $this->_unmarshal($this->db->f('loc1_name', true), 'string');
 			$unit['loc2_name'] = $this->_unmarshal($this->db->f('loc2_name', true), 'string');
 			$unit['loc3_name'] = $this->_unmarshal($this->db->f('loc3_name', true), 'string');

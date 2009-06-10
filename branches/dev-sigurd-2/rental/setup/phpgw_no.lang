@@ -51,7 +51,7 @@ rental_rc_property	rental	no	Eiendom
 rental_rc_property_id	rental	no	BKB Identifikator
 rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
 rental_rc_rental_composite	rental	no	Leieobjekt
-rental_rc_room	rental	no Rom
+rental_rc_room	rental	no	Rom
 rental_rc_save	rental	no	Lagre
 rental_rc_section	rental	no	Seksjon
 rental_rc_search	rental	no	Søk
