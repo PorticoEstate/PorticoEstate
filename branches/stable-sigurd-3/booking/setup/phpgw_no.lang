@@ -1,30 +1,32 @@
 current activities	booking	no	Aktiviteter
--- select an activity --	booking	no	Valg en aktivitet
+-- select an activity --	booking	no	Velg en aktivitet
 1. why?	booking	no	1. Hvorfor?
 2. where?	booking	no	2. Hvor?
 3. when?	booking	no	3. Når?
 4. who?	booking	no	4. Hvem?
 account	booking	no	Bruker
 actions	booking	no	Handling
-active applications	booking	no	Aktive applikasjoner
+active applications	booking	no	Aktive søknader
 activity	booking	no	Aktivitet
 add another date	booking	no	Legg til dato
 add boundary	booking	no	Legg til rammetid
-add new event	booking	no	Legg til hendelse
+add new event	booking	no	Legg til arrangement
 add permission	booking	no	Legg til rettighet
+admin 1	booking	no	Systemkoodinator
+admin 2	booking	no	Superbruker
 age group	booking	no	Aldersgruppe
-allocation	booking	no	Tildelning
-allocations	booking	no	Tildelningar
+agegroup	booking	no	Aldersgruppe
+allocation	booking	no	Tildeling
+allocations	booking	no	Tildelingar
 allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
-allocations that can be created (%1)	booking	no	Tildelningar som kan lages
-application	booking	no	Söknad
+allocations that can be created (%1)	booking	no	Tildelingar som kan lages
 archived	booking	no	Arkivert
 audience	booking	no	Målgruppe
-bookable resources	booking	no	Bokningsbare ressurser
+bookable resources	booking	no	Bookbare ressurser
 booking	booking	no	Booking
 booking district	booking	no	Bydel
-booking name	booking	no	Navnet på booking
-bookings	booking	no	Bookings
+booking name	booking	no	Navn på booking
+bookings	booking	no	Bookinger
 boundaries	booking	no	Rammetid
 building	booking	no	Bygg/anlegg
 building name	booking	no	Bygg/anlegg
@@ -35,8 +37,10 @@ cancel	booking	no	Avbryt
 case officer	booking	no	Saksbehandler
 category	booking	no	Kategori
 choose a date	booking	no	Velg en dato
-choose file	booking	no	Valg dokument
+choose file	booking	no	Velg dokument
 city	booking	no	By
+contact 1	booking	no	Kontakt 1
+contact 2	booking	no	Kontakt 2
 contact information	booking	no	Kontaktinformasjon 
 cost	booking	no	Pris
 create	booking	no	Lagre
@@ -53,54 +57,52 @@ edit organization	booking	no	Rediger organisasjon
 editer	booking	no	Rediger
 equipment	booking	no	Utstyr
 equipment name	booking	no	Utstyr
-event	booking	no	Hendelse
-events	booking	no	hendelser
+event	booking	no	Arrangement
+events	booking	no	Arrangementer
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
-Found %1 results	booking	no	Hittade %s resultat
-document Name	booking	no	Dokument
 generate allocations	booking	no	Lag tildelning
 generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe
 hms document	booking	no	HMS dokument
 homepage	booking	no	Hjemmeside
-inactivate	booking	no	Inaktivera
+inactivate	booking	no	Inaktivert
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Faktura informasjon 
 male	booking	no	Mann
-more info	booking	no	Mer information
 name	booking	no	Navn
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
 new allocation	booking	no	Ny tildelning
-new application	booking	no	Nya applikasjoner
+new application	booking	no	Ny søknad
 new audience group	booking	no	Ny målgruppe
 new booking	booking	no	Ny booking
 new building	booking	no	Nytt bygg/anlegg
 new building permission	booking	no	Nye rettigheter bygg/anlegg
 new contact	booking	no	Ny kontakt
-new document	booking	no	Nya dokumenter
+new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
+new event	booking	no	Ny arrangement
 new group	booking	no	Ny gruppe
 new organization	booking	no	Ny organisajon
-new resource	booking	no	Ny Ressurs
-new root permission	booking	no	systemrettigheter
+new resource	booking	no	Ny ressurs
+new root permission	booking	no	Nye systemrettigheter
 new season	booking	no	Ny sesong
 new season permission	booking	no	Nye rettigheter sesong
-no parents	booking	no	Ingen foreldre
+no parents	booking	no	Ingen overordnet
 no records found.	booking	no	Inget funnet!
-no description yet	booking	no	Ingen beskrivelse
 number of participants	booking	no	Antall deltakere
+officer	booking	no	Saksbehandler
 organization	booking	no	Organisasjon
 organization number	booking	no	Organisasjon nummer
 organizations	booking	no	Organisasjoner
 other	booking	no	Annet
-parent activity	booking	no	Hodekategori
-parent id	booking	no	Hodekategori
-picture	booking	no	Bild
+parent activity	booking	no	Overordnet kategori
+parent id	booking	no	Overordnet id
+picture	booking	no	Bilde
 planning	booking	no	Planlegging
-preview	booking	no	forhåndsvisning
+preview	booking	no	Forhåndsvisning
 price list	booking	no	Prisliste
 primary admin	booking	no	Kontaktperson 1
 published	booking	no	Publisert
@@ -109,34 +111,64 @@ resource name	booking	no	Ressurs
 resource schedule	booking	no	Ressurs kalender
 resources	booking	no	Ressurser
 role	booking	no	Rolle
-root permissions	booking	no	Root permissions
+root permissions	booking	no	Root rettigheter
 season	booking	no	Sesong
 season name	booking	no	Sesong
 seasons	booking	no	Sesonger
 secondary admin	booking	no	Kontaktperson 2
-select a building first	booking	no	Valg bygg/anlegg først
+select a building first	booking	no	Velg bygg/anlegg først
 select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
 settings	booking	no	Innstillinger
 show only active	booking	no	Skjul
-social security number	booking	no	Fødselnummer
+social security number	booking	no	Fødselsnummer (11 siffer)
 street	booking	no	Gate
 submit	booking	no	Lagre
-successfully created (%1) allocations:	booking	no	(%1) tildelningar lages
+successfully created (%1) allocations:	booking	no	(%1) tildelingar lagret
 surname	booking	no	Etternavn
-target audience	booking	no	Malgruppe
+target audience	booking	no	Målgruppe
 telephone	booking	no	Telefon
 terms and conditions	booking	no	Juridiske betingelser
-upload document	booking	no	Laste opp dokument
+upload document	booking	no	Last opp dokument
 week day	booking	no	Ukedag
 week template	booking	no	Ukeplan
+when?	booking	no	Når?
+where?	booking	no	Hvor?
+who?	booking	no	Hvem?
+why?	booking	no	Hvorfor?
 zip code	booking	no	Postnummer
-admin 1	booking	no	Administrator 1
-admin 2	booking	no	Administrator 2
-contact 1	booking	no	Kontakt 1
-contact 2	booking	no	Kontakt 2
+created	booking	no	Oprettet
+more info	booking	no	Mer informasjon
+next week	booking	no	Neste uke
+previous week	booking	no	Forige uke
+new booking application	booking	no	Ny søknad
+no description yet	booking	no	Beskrivelse saknes
+found %1 results	booking	no	%1 treffer
+contact	booking	no	Kontakt
+from	booking	no	Fra
+to	booking	no	Til
+when	booking	no	Når
+where	booking	no	Hvor
+who	booking	no	Hvem
+why	booking	no	Hvorfor
+phone	booking	no	Telefon
+district	booking	no	Bydel
+document name	booking	no	Dokumentnavn
 document	booking	no	Dokument
-documents	booking	no	Dokument
-images	booking	no	Bilder
-building index	booking	no	Alle bygninger/anlegninger
-organization index	booking	no	Alle organisasjoner
+status	booking	no	Status
+primary contact	booking	no	Kontaktperson 1
+last modified	booking	no	Sist endret
+id	booking	no	ID
+permissions	booking	no	Rettigheter
+week	booking	no	Uke
+schedule	booking	no	Ukeplan
+add comment	booking	no	Legg til komentar
+history and comments (%1)	booking	no	Historikk (%1)
+add a comment	booking	no	Legg til en komentar
+reject application	booking	no	Avslå søknad
+accept application	booking	no	Godta søknaden
+modified	booking	no	Endred
+new	booking	no	Ny
+accepted	booking	no	Akseptered
+rejected	booking	no	Avvist
+cancelled	booking	no	Avbestilling
