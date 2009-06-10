@@ -19,7 +19,7 @@
 			</li>
 		</ul>
 
-		<dl class="proplist">
+		<dl class="proplist-col main">
 			<dt><xsl:value-of select="php:function('lang', 'Resource Name')" /></dt>
 			<dd><xsl:value-of select="resource/name"/></dd>
 			
@@ -35,18 +35,20 @@
 				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
 				<dd><xsl:value-of select="resource/activity_name"/></dd>
 			</xsl:if>
+			
+			<div style='margin-top:1em'>
+		        <button onclick="window.location.href='{resource/schedule_link}'">
+		            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
+		        </button>
+			</div>
+
+			<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
+			<div id="documents_container"/>
 		</dl>
-
-        <button onclick="window.location.href='{resource/schedule_link}'">
-            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
-        </button>
-
-		<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
-		<div id="documents_container"/>
-		
-		<div id="images_container">
-			<h3><xsl:value-of select="php:function('lang', 'Images')" /></h3>
-		</div>
+		<dl class="proplist-col">	
+			<div id="images_container">
+			</div>
+		</dl>
 	</div>
 
 	<script type="text/javascript">

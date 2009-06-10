@@ -22,7 +22,7 @@ ul#sidebar li {
 }    
 ul#metanav a, ul#sidebar a { color: #700; }
 div#content {
-    margin: 0 2em 2em 180px;
+    margin: 0 2em 2em 150px;
     min-height: 500px;
 }
 div#header {
@@ -205,8 +205,23 @@ dl.contactinfo dd {
   margin-left: 2em;
 }
 
-/*dl.proplist.images dd img { max-width: 300px;}*/
-dl.proplist.images dl { margin-bottom: 1.5em;}
+/*#frontend {
+	width: 900px;
+}*/
+
+#frontend dl.proplist-col {
+	width: 300px;
+}
+
+#frontend dl.proplist-col.main {
+	width: 400px;
+}
+
+
+
+#frontend h2 { margin-bottom: 0.1em;}
+#frontend dl.proplist.images dd img { width: 300px; border:1px solid black;}
+#frontend dl.proplist.images dl { margin-bottom: 1.5em; }
 
 #agegroup {
     background: #eee;

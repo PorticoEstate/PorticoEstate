@@ -11,8 +11,8 @@
 			</li>
 		</ul>
 
-		<xsl:for-each select="building">
-			<dl class="proplist">
+		<xsl:for-each select="building">	
+			<dl class="proplist-col main">
 				<dl class="proplist description">
 					<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 					<dd disable-output-escaping="yes"><xsl:value-of select="description"/></dd>
@@ -63,10 +63,9 @@
 
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
-				
-				<div id="images_container">
-					<h3><xsl:value-of id='image_header' select="php:function('lang', 'Images')" /></h3>
-				</div>
+			</dl>
+			<dl class="proplist-col">	
+				<div id="images_container"></div>
 			</dl>
 			
 			<script type="text/javascript">
