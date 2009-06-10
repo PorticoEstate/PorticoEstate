@@ -37,7 +37,7 @@
         </ul> -->
         <div id="logo"></div>
     </div>
-<div class="yui-skin-sam">
+<div class="yui-skin-sam" id='frontend'>
   <div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
   <ul id="sidebar">
       <li><a href="index.php?menuaction=bookingfrontend.uisearch.index">{lbl_search}</a></li>
