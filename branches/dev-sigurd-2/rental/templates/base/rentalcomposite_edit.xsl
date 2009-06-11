@@ -23,6 +23,8 @@
   	</func:result>
 </func:function>
 
+<xsl:include href="rental/templates/base/datasource_definition.xsl"/>
+
 <xsl:template match="phpgw" xmlns:php="http://php.net/xsl">
 	<script>
 		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
@@ -44,7 +46,7 @@
 			<div id="contracts">
 			    <xsl:apply-templates select="data/datatable_contracts" />
 			</div>
-			<div id="documents">
+			<!--<div id="documents">
 				<div id="documents_container">					
 					<script type="text/javascript">
 						var  composite_id = <xsl:value-of select="data/id"/>;
@@ -58,6 +60,7 @@
 					</script>
 				</div>
 			</div>
+			-->
 		</div>
 	</div>		
 </xsl:template>
@@ -325,44 +328,4 @@
 	</div>
 </xsl:template>
 
-<xsl:template name="datasource-definition">
-	<xsl:param name="number">1</xsl:param>
-	<xsl:param name="form"></xsl:param>
-	<xsl:param name="filters"></xsl:param>
-	<xsl:param name="container_name"></xsl:param>
-	<xsl:param name="context_menu_labels">[]</xsl:param>
-	<xsl:param name="context_menu_actions">[]</xsl:param>
-	<script>
-		YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
-			<xsl:if test="source">
-	            this.dataSourceURL = '<xsl:value-of select="source"/>';
-	        </xsl:if>
 
-			this.columnDefs = [
-				<xsl:for-each select="field">
-					{
-						key: "<xsl:value-of select="key"/>",
-						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
-						hidden: <xsl:value-of select="hidden"/>,
-					    </xsl:if>
-						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
-						className: "<xsl:value-of select="className"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-			];
-			
-			this.formBinding = '<xsl:value-of select="$form"/>';
-			this.filterBinding = '<xsl:value-of select="$filters"/>';
-			this.containerName = '<xsl:value-of select="$container_name"/>';
-			this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>';
-			this.contextMenuLabels = <xsl:value-of select="$context_menu_labels"/>;
-			this.contextMenuActions = <xsl:value-of select="$context_menu_actions"/>;
-		}
-	</script>
-</xsl:template>
