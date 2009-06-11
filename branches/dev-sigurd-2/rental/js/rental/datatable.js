@@ -1,4 +1,8 @@
-
+/**
+ * Function for setting up the toolbar:
+ * 1. Iterate though  all elements with the tag name 'input' within a root element 'toolbar'
+ * 2. Create correct widget based on the elements type.
+ */
 YAHOO.rental.setupToolbar = function() {
     var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', 'toolbar');
     for(var i=0; i < items.length; i++) {
@@ -17,41 +21,41 @@ YAHOO.rental.setupToolbar = function() {
 /**
 * Function for wrapping datasource objects retrieved from templates. This function defines
 * a new YAHOO.util.dataSource and a new YAHOO.widget.DataTable for this data source object.
-* @param dataSourceObject	a data source object defined in template
 * 
+* @param dataSourceObject	a data source object defined in template
+* @param paginator_param	the paginator for this data source
 */
 function dataSourceWrapper(dataSourceObject_param,paginator_param){
 	this.dataSourceObject = dataSourceObject_param;
 	this.paginator = paginator_param;
+	
 	this.baseURL = this.dataSourceObject.dataSourceURL;
-	//alert(this.baseURL);
 	if(this.baseURL[length-1] != '&') {
 		this.baseURL += '&';
 	}
+	
 	this.dataSource = new YAHOO.util.DataSource(this.baseURL);
 	this.dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	this.dataSource.connXhrMode = "queueRequests";
-	
-	var fields = [];
-    for(var i=0; i < this.dataSourceObject.columnDefs.length; i++) {
-        fields.push(this.dataSourceObject.columnDefs[i].key);
-    }
-    
-    this.dataSource.responseSchema = {
+	this.dataSource.responseSchema = {
 	    resultsList: "ResultSet.Result",
 	    fields: fields,
 	    metaFields : {
 			totalRecords: "ResultSet.totalRecords"
 	    }
 	};
+	
+	var fields = [];
+    for(var i=0; i < this.dataSourceObject.columnDefs.length; i++) {
+        fields.push(this.dataSourceObject.columnDefs[i].key);
+    }
+    
     
     this.dataTable = new YAHOO.widget.DataTable(this.dataSourceObject.containerName, 
-    		this.dataSourceObject.columnDefs, this.dataSource, {
-                paginator: this.paginator,
-                dynamicData: true
-         //       ,sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
-        });
-    
+		this.dataSourceObject.columnDefs, this.dataSource, {
+            paginator: this.paginator,
+            dynamicData: true
+    });
     this.dataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
     	oPayload.totalRecords = oResponse.meta.totalRecords;
         return oPayload;
@@ -125,8 +129,17 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
    
 }
 
+
+/*
+ * When the document loads:
+ */
 YAHOO.util.Event.addListener(window, "load", function() {
-    YAHOO.rental.setupToolbar();
+	/* 
+	 * 1. Set up the toobar
+	 * 2. Iterate through the number of datatables, render paginators and call the constructor of the data source
+	 * 3. Wrap each data source in a wrapper object 
+	 */
+    YAHOO.rental.setupToolbar(); 
     for(i=1;i<YAHOO.rental.numberOfDatatables+1; i++){
     	var pag = new YAHOO.widget.Paginator({
             rowsPerPage: 25,
