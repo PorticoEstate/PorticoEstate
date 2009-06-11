@@ -133,6 +133,7 @@ dl.form-col {
     margin-bottom: 0em;
     padding-left: .3em;
     color: red;
+    font-size: larger;
 }
 
 #rental_user_message {
@@ -142,6 +143,7 @@ dl.form-col {
     margin-bottom: 0em;
     padding-left: .3em;
     color: green;
+    font-size: larger;
 }
 
 .toolbarelement {

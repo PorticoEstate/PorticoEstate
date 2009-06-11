@@ -237,7 +237,7 @@
 		public function add()
 		{
 			$receipt = $this->bo->add(phpgw::get_var('rental_composite_name'));
-			$GLOBALS['phpgw']->redirect_link('/index.php?menuaction=rental.uicomposite.edit&id='.$receipt['id']);			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));	
 		}
 		
 		public function query()
@@ -269,12 +269,18 @@
 			// TODO: How to check for valid input here?
 			if ($composite_id > 0) {
 				
+				
+				
 				// Return a json view of this rental composite
 				if(phpgw::get_var('phpgw_return_as') == 'json')
 				{
 					return $this->json_query($composite_id,'details');
 				}
 				//... else ...
+				
+				
+				$message = phpgw::get_var('message');
+				$error = phpgw::get_var('error');
 				
 				self::add_javascript('rental', 'rental', 'datatable.js');
 				phpgwapi_yui::load_widget('datatable');
@@ -352,6 +358,7 @@
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 					'documents' => $documents,
 					'access' => $access,
+					'message' => $message,
 					'datatable_included_areas' => array(
 						'datatable' => true,
 						'source' => self::link(array('menuaction' => 'rental.uicomposite.query', 'phpgw_return_as' => 'json', 'id' => $composite_id, 'type' => 'included_areas')),
@@ -589,6 +596,7 @@
 			
 			// TODO: return sensible status, error if applicable
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_elements'));
+			
 		}
 				
 		/**

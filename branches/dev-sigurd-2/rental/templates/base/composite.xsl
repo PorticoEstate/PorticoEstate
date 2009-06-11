@@ -31,8 +31,12 @@
 		YAHOO.rental.setupDatasource = new Array();
 	</script>
 	
-	<div id="rental_user_error"></div>
-	<div id="rental_user_message"></div>
+	<div id="rental_user_error">
+		<xsl:value-of select="data/error"/>
+	</div>
+	<div id="rental_user_message">
+		<xsl:value-of select="data/message"/>
+	</div>
 	<h3><xsl:value-of select="php:function('lang', 'rental_rc_rental_composite')" />: <xsl:value-of select="data/composite/name"/></h3>
 	<div id="composite_edit_tabview" class="yui-navset">
 		<xsl:value-of disable-output-escaping="yes" select="data/tabs" />

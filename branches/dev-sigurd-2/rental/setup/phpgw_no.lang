@@ -8,6 +8,7 @@ rental_menu_rc	rental	no	Utleieobjekter
 rental_menu_rental	rental	no	Utleie
 rental_menu_tenants	rental	no	Leietakere
 rental_menu_reports	rental	no	Rapporter
+rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_rc_active	rental	no	Aktiv
 rental_rc_add_area	rental	no	Legg til areal
 rental_rc_added_areas	rental	no	Inkludert areal
