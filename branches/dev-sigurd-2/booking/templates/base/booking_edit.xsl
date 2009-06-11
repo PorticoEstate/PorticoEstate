@@ -5,6 +5,7 @@
     	<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit booking')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
+	<xsl:call-template name="yui_booking_i18n"/>
 
     <form action="" method="POST">
 		<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>

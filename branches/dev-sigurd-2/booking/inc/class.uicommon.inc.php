@@ -38,6 +38,16 @@
 		return json_encode($strings);
 	}
 	
+	/**
+	 * Creates an array of translated strings.
+	 */
+	function lang_array()
+	{
+		$keys = func_get_args();
+		foreach($keys as &$key) $key = lang($key);
+		return $keys;
+	}
+	
 	abstract class booking_uicommon
 	{
 		protected	
@@ -178,17 +188,29 @@
 			print_r($this->tmpl_search_path);
 			die;
 		}
+		
+		public function add_yui_translation(&$data)
+		{
+			$this->add_template_file('yui_booking_i18n');
+			
+			$data['yui_booking_i18n'] = array(
+				'Calendar' => array(
+					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
+					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
+				),
+			);
+		}
 
         public function render_template($files, $data)
         {
-			if($this->flash_msgs)
-			{
+			if($this->flash_msgs) {
 				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
-			}
-			else
-			{
+			} else {
            		$this->add_template_file('msgbox');
 			}
+			
+			$this->add_yui_translation($data);
+			
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));

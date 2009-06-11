@@ -181,3 +181,10 @@ who?	booking	no	Hvem?
 why	booking	no	Hvorfor
 why?	booking	no	Hvorfor?
 zip code	booking	no	Postnummer
+Mo	booking	no	ma.
+Tu	booking	no	ti.
+We	booking	no	on.
+Th	booking	no	to.
+Fr	booking	no	fr.
+Sa	booking	no	lø.
+Su	booking	no	sø

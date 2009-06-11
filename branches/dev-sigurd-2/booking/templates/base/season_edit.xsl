@@ -19,7 +19,10 @@
 
 		<dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'New Season')" /></dt>
-		</dl>    <xsl:call-template name="msgbox"/>
+		</dl>    
+		
+		<xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
     <form action="" method="POST">
         <dl class="form-col">

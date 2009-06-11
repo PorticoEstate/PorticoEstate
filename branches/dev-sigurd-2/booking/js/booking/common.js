@@ -1,5 +1,16 @@
 YAHOO.namespace('booking');
 
+YAHOO.widget.Calendar.prototype.init_without_i18n = YAHOO.widget.Calendar.prototype.init;
+
+YAHOO.widget.Calendar.prototype.init_with_i18n = function(id, container, config) {
+	if (YAHOO && YAHOO.booking && YAHOO.booking.i18n && YAHOO.booking.i18n.Calendar) {
+		YAHOO.booking.i18n.Calendar(config);
+	}
+	return this.init_without_i18n(id, container, config);
+};
+
+YAHOO.widget.Calendar.prototype.init = YAHOO.widget.Calendar.prototype.init_with_i18n;
+
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
 	var d = string.match(new RegExp(regexp));
@@ -239,7 +250,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	};
 
 	oButton.on("click", function () {
-		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id);
+		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id, {START_WEEKDAY: 1});
 		oCalendar._button = this;
 		if(this._date.getFullYear() == 1901) {
 			var d = new Date();
@@ -248,6 +259,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			oCalendar.select(this._date);
 			oCalendar.cfg.setProperty("pagedate", (this._date.getMonth()+1) + "/" + this._date.getFullYear());
 		}
+		
 		oCalendar.render();
 		// Hide date picker on ESC
 		Event.on(this._calendarMenu.element, "keydown", function (p_oEvent) {
