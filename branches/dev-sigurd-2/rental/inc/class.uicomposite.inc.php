@@ -213,7 +213,7 @@
 //			var_dump((!isset($columnArray) ? false : (!is_array($columnArray) ? false : !in_array('name', $columnArray))));
 //			var_dump($columnArray);
 			//var_dump($data);
-			self::render_template('datatable', $data);
+			self::render_template('composite_list', $data);
 		}
 
 		/**
@@ -555,7 +555,7 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 				phpgwapi_yui::load_widget('treeview');
 				
-				self::render_template('rentalcomposite_edit', $data);
+				self::render_template('composite', $data);
 			}
 		}
 		
