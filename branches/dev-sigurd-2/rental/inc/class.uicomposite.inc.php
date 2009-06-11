@@ -285,7 +285,7 @@
 				
 				$tabs = array();
 				
-				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts', 'rental_rc_documents') as $tab) {
+				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts') as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
