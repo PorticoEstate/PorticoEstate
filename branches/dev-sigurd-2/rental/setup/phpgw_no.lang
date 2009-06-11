@@ -42,6 +42,7 @@ rental_rc_id	rental	no	ID
 rental_rc_land_title	rental	no	Gnr/Bnr
 rental_rc_level	rental	no	Nivå
 rental_rc_name	rental	no	Navn
+rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet
 rental_rc_overridden_address	rental	no	Overstyrt adresse

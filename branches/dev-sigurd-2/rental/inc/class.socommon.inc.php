@@ -26,7 +26,7 @@
 			return $this->cols;
 		}
 
-		public function _get_cols_and_joins()
+		public function get_cols_and_joins()
 		{
 			$cols = array();
 			$joins = array();
@@ -53,7 +53,7 @@
 			return array($cols, $joins);
 		}
 
-		function _marshal($value, $type)
+		protected function marshal($value, $type)
 		{
 			if($value === null)
 			{
@@ -67,7 +67,7 @@
 			{
 				foreach($value as $v)
 				{
-					$values[] = $this->_marshal($v, 'int');
+					$values[] = $this->marshal($v, 'int');
 				}
 				return '('.join(',', $values).')';
 			}
@@ -80,7 +80,7 @@
 		 * @param $type	a string dictating value type
 		 * @return the php value
 		 */
-		function _unmarshal($value, $type)
+		protected function unmarshal($value, $type)
 		{
 			if($value === null || $value == 'NULL')
 			{
@@ -100,7 +100,7 @@
 		function read_single($id)
 		{
 			$id = intval($id);
-			$cols_joins = $this->_get_cols_and_joins();
+			$cols_joins = $this->get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE {$this->table_name}.id=$id", __LINE__, __FILE__);
@@ -122,7 +122,7 @@
 								$data = array();
 								foreach($params['manytomany']['column'] as $col)
 								{
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+									$data[$col] = $this->unmarshal($this->db->f($col, true), $params['type']);
 								}
 								$row[$field][] = $data;
 							}
@@ -134,20 +134,20 @@
 							$row[$field] = array();
 							while ($this->db->next_record())
 							{
-								$row[$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+								$row[$field][] = $this->unmarshal($this->db->f($column, true), $params['type']);
 							}
 						}
 					}
 					else
 					{
-						$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+						$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
 					}
 				}
 				return $row;
 			}
 		}
 
-		function _get_conditions($query, $filters)
+		protected function get_conditions($query, $filters)
 		{
 			$clauses = array('1=1');
 			if($query)
@@ -181,7 +181,7 @@
 					{
 						$vals = array();
 						foreach($val as $v) {
-							$vals[] = $this->_marshal($v, $this->fields[$key]['type']);
+							$vals[] = $this->marshal($v, $this->fields[$key]['type']);
 						}
 						$clauses[] = "({$table}.{$key} IN (" . join(',', $vals) . '))';
 					}
@@ -191,7 +191,7 @@
 					}
 					else
 					{
-						$clauses[] = "{$table}.{$key}=" . $this->_marshal($val, $this->fields[$key]['type']);
+						$clauses[] = "{$table}.{$key}=" . $this->marshal($val, $this->fields[$key]['type']);
 					}
 				}
 			}
@@ -218,10 +218,10 @@
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
-			$cols_joins = $this->_get_cols_and_joins();
+			$cols_joins = $this->get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
-			$condition = $this->_get_conditions($query, $filters);
+			$condition = $this->get_conditions($query, $filters);
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
@@ -237,7 +237,7 @@
 				$row = array();
 				foreach($this->fields as $field => $fparams)
 				{
-                    $row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+                    $row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
 				}
 				$results[] = $row;
 			}
@@ -261,11 +261,11 @@
 	    					$row[$field] = array();
 	    					while ($this->db->next_record())
 	    					{
-	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
+	    					    $id = $this->unmarshal($this->db->f($key, true), 'int');
 								$data = array();
 								foreach($params['manytomany']['column'] as $col)
 								{
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+									$data[$col] = $this->unmarshal($this->db->f($col, true), $params['type']);
 								}
 								$row[$field][] = $data;
 	    						$results[$id_map[$id]][$field][] = $data;
@@ -278,8 +278,8 @@
 	    					$row[$field] = array();
 	    					while ($this->db->next_record())
 	    					{
-	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
-	    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+	    					    $id = $this->unmarshal($this->db->f($key, true), 'int');
+	    						$results[$id_map[$id]][$field][] = $this->unmarshal($this->db->f($column, true), $params['type']);
 	    					}
 						}
     				}
@@ -302,7 +302,7 @@
 					continue;
 				}
 				$cols[] = $field;
-				$values[] = $this->_marshal($entry[$field], $params['type']);
+				$values[] = $this->marshal($entry[$field], $params['type']);
 			}
 			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', $cols) . ') VALUES(' . join(',', $values) . ')', __LINE__,__FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
@@ -320,7 +320,7 @@
 							$data = array();
 							foreach($params['manytomany']['column'] as $col)
 							{
-								$data[] = $this->_marshal($v[$col], $params['type']);
+								$data[] = $this->marshal($v[$col], $params['type']);
 							}
 							$v = join(',', $data);
 							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
@@ -331,7 +331,7 @@
 						$colname = $params['manytomany']['column'];
 						foreach($entry[$field] as $v)
 						{
-							$v = $this->_marshal($v, $params['type']);
+							$v = $this->marshal($v, $params['type']);
 							$this->db->query("INSERT INTO $table ($key, $colname) VALUES($id, $v)", __LINE__, __FILE__);
 						}
 					}
@@ -353,7 +353,7 @@
 				{
 					continue;
 				}
-				$values[] = $field . "=" . $this->_marshal($entry[$field], $params['type']);
+				$values[] = $field . "=" . $this->marshal($entry[$field], $params['type']);
 			}
 			$cols = join(',', $cols);
 			$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -372,7 +372,7 @@
 							$data = array();
 							foreach($params['manytomany']['column'] as $col)
 							{
-								$data[] = $this->_marshal($v[$col], $params['type']);
+								$data[] = $this->marshal($v[$col], $params['type']);
 							}
 							$v = join(',', $data);
 							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
@@ -383,7 +383,7 @@
 						$colname = $params['manytomany']['column'];
 						foreach($entry[$field] as $v)
 						{
-							$v = $this->_marshal($v, $params['type']);
+							$v = $this->marshal($v, $params['type']);
 							$this->db->query("INSERT INTO $table ($key, $colname) VALUES($id, $v)", __LINE__, __FILE__);
 						}
 					}
@@ -424,8 +424,6 @@
 		{
 			$this->db->query("UPDATE {$this->table_name} SET active=".$active." WHERE id=".$id, __LINE__, __FILE__);
 		}
-		
-		
 		
 	}
 ?>

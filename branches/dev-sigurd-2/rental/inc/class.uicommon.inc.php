@@ -183,5 +183,22 @@
 			);  
 		}
 		
+		/**
+		 * Returns formatted version of gab id. The format of the string returned
+		 * is '[Cadastral unit number] / [Property unit number] / [Leasehold unit number] / [Section unit number]'.
+		 * 
+		 * @param $gab_id string with id to to format.
+		 * @return string formatted version of the string passed to the method,
+		 * or the same string if the one passed is of an incorrect format.
+		 */
+		public static function get_nicely_formatted_gab_id(string $gab_id)
+		{
+			if(strlen($gab_id) == 20)
+			{
+				$gab_id = substr($gab_id,4,5).' / '.substr($gab_id,9,4).' / '.substr($gab_id,13,4).' / '.substr($gab_id,17,3);
+			}
+			return $gab_id;
+		}
+		
 	}
 ?>

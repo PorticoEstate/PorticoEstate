@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.socommon');
+phpgw::import_class('rental.uicommon');
 
 class rental_socomposite extends rental_socommon
 {
@@ -28,7 +29,7 @@ class rental_socomposite extends rental_socommon
 		));
 	}
 	
-	function _get_conditions($query, $filters,$search_option)
+	protected function get_conditions($query, $filters,$search_option)
 		{	
 			$clauses = array('1=1');
 			if($query)
@@ -121,7 +122,7 @@ class rental_socomposite extends rental_socommon
 		$search_option = isset($params['search_option']) && $params['search_option'] ? $params['search_option'] : null;
 		$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
-		$condition = $this->_get_conditions($query, $filters,$search_option);
+		$condition = $this->get_conditions($query, $filters,$search_option);
 		
 		$tables = "rental_composite";
 		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
@@ -156,13 +157,17 @@ class rental_socomposite extends rental_socommon
 			$row = array();
 			foreach($this->fields as $field => $fparams)
 			{
-                    $row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+                    $row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
 			}
 			if($row['has_custom_address'] == '1') // There's a custom address
 			{
 				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
 			}
-			$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
+			if($row['name'] == null || trim($row['name']) == '') // Composite doesn't have a name
+			{
+				$row['name'] = lang('rental_rc_no_name_composite', $row['id']);
+			}
+			$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
 			$results[] = $row;
 		}
 		return array(
@@ -195,18 +200,17 @@ class rental_socomposite extends rental_socommon
 		$this->db->next_record();
 		foreach($this->fields as $field => $fparams)
 		{
-     		$row[$field] = $this->_unmarshal($this->db->f($field, true), $fparams['type']);
+     		$row[$field] = $this->unmarshal($this->db->f($field, true), $fparams['type']);
 		}
-		//... alter gab_id to contain slashes
-		$row['gab_id'] = substr($row['gab_id'],4,4).' / '.substr($row['gab_id'],8,4).' / '.substr($row['gab_id'],12,4).' / '.substr($row['gab_id'],16,4);
+		$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
 		
 		// Second we find all areas that belongs to composite
 		$this->db->query("SELECT level, location_code FROM fm_locations {$this->join} rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id = {$id}");
 		// ..and store them in an array
 		$units = array();
 		while ($this->db->next_record()) {
-			$level = $this->_unmarshal($this->db->f('level', true), 'int');
-			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
+			$level = $this->unmarshal($this->db->f('level', true), 'int');
+			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 			$units[] = array('level' => $level, 'location_code' => $location_code);
 		}
 		
@@ -239,8 +243,8 @@ class rental_socomposite extends rental_socommon
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
-				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
-				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
+				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
 			}
 		} // end foreach
 		
@@ -272,7 +276,7 @@ class rental_socomposite extends rental_socommon
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		if($this->db->next_record())
 		{
-			$row['total_records'] = $this->_unmarshal($this->db->f('count', true), 'int');
+			$row['total_records'] = $this->unmarshal($this->db->f('count', true), 'int');
 		}
 		
 		$order = '';
@@ -288,9 +292,9 @@ class rental_socomposite extends rental_socommon
 		$unit_array = array();
 		while ($this->db->next_record())
 		{
-			$level = $this->_unmarshal($this->db->f('level', true), 'int');
-			$location_code = $this->_unmarshal($this->db->f('location_code', true), 'string');
-			$location_id = $this->_unmarshal($this->db->f('location_id', true), 'int');
+			$level = $this->unmarshal($this->db->f('level', true), 'int');
+			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+			$location_id = $this->unmarshal($this->db->f('location_id', true), 'int');
 			$unit_array[] = array('level' => $level, 'location_code' => $location_code, 'location_id' => $location_id);
 		}
 		
@@ -349,16 +353,16 @@ class rental_socomposite extends rental_socommon
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
-				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
-				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
+				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
 				$current_unit['area_gros'] = (int)$area_gros; 
 				$current_unit['area_net'] = (int)$area_net; 
 				for($i = 1; $i <= $unit['level'] && $i <= 3; $i++) // Runs through all levels containing names
 				{
-					$current_unit['loc'.$i.'_name'] = $this->_unmarshal($this->db->f('loc'.$i.'_name', true), 'string');
+					$current_unit['loc'.$i.'_name'] = $this->unmarshal($this->db->f('loc'.$i.'_name', true), 'string');
 				}
-				$current_unit['address'] = $this->_unmarshal($this->db->f($address_column, true), 'string');
-				$current_unit['part_of_town'] = $this->_unmarshal($this->db->f('name', true), 'string');
+				$current_unit['address'] = $this->unmarshal($this->db->f($address_column, true), 'string');
+				$current_unit['part_of_town'] = $this->unmarshal($this->db->f('name', true), 'string');
 			}
 		}
 		
@@ -456,7 +460,7 @@ class rental_socomposite extends rental_socommon
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		if ($this->db->next_record()) 
 		{
-			$total_records = $this->_unmarshal($this->db->f('count', true), 'string');
+			$total_records = $this->unmarshal($this->db->f('count', true), 'string');
 		}
 		// Main query
 		$sql = "SELECT $cols FROM $table $joins $condition $order";
@@ -465,14 +469,14 @@ class rental_socomposite extends rental_socommon
 		$units = array();
 		while ($this->db->next_record()) {
 			$unit = array();
-			$unit['location_code'] = $this->_unmarshal($this->db->f('location_code', true), 'string');
-			$unit['location_id'] = $this->_unmarshal($this->db->f('location_id', true), 'string');
-			$unit['loc1_name'] = $this->_unmarshal($this->db->f('loc1_name', true), 'string');
-			$unit['loc2_name'] = $this->_unmarshal($this->db->f('loc2_name', true), 'string');
-			$unit['loc3_name'] = $this->_unmarshal($this->db->f('loc3_name', true), 'string');
-			$unit['loc4_name'] = $this->_unmarshal($this->db->f('loc4_name', true), 'string');
-			$unit['loc5_name'] = $this->_unmarshal($this->db->f('loc5_name', true), 'string');
-			$unit['address'] = $this->_unmarshal($this->db->f($address_column, true), 'string');
+			$unit['location_code'] = $this->unmarshal($this->db->f('location_code', true), 'string');
+			$unit['location_id'] = $this->unmarshal($this->db->f('location_id', true), 'string');
+			$unit['loc1_name'] = $this->unmarshal($this->db->f('loc1_name', true), 'string');
+			$unit['loc2_name'] = $this->unmarshal($this->db->f('loc2_name', true), 'string');
+			$unit['loc3_name'] = $this->unmarshal($this->db->f('loc3_name', true), 'string');
+			$unit['loc4_name'] = $this->unmarshal($this->db->f('loc4_name', true), 'string');
+			$unit['loc5_name'] = $this->unmarshal($this->db->f('loc5_name', true), 'string');
+			$unit['address'] = $this->unmarshal($this->db->f($address_column, true), 'string');
 			$units[] = $unit;
 		}
 		
@@ -503,8 +507,8 @@ class rental_socomposite extends rental_socommon
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
-				$area_gros += $this->_unmarshal($this->db->f($area_column_gros, true), 'float');
-				$area_net += $this->_unmarshal($this->db->f($area_column_net, true), 'float');
+				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
 			}
 			$unit['area_gros'] = (int)$area_gros; 
 			$unit['area_net'] = (int)$area_net; 
@@ -579,11 +583,11 @@ class rental_socomposite extends rental_socommon
 			while($this->db->next_record())
 			{
 				$row = array();
-	     		$row['id'] = $this->_unmarshal($this->db->f('id', true), 'string');
-	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->_unmarshal($this->db->f('date_start', true), 'date')));
-	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->_unmarshal($this->db->f('date_end', true), 'date')));
+	     		$row['id'] = $this->unmarshal($this->db->f('id', true), 'string');
+	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
+	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
 	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that table is ready
-	     		$row['title'] = $this->_unmarshal($this->db->f('title', true), 'string');
+	     		$row['title'] = $this->unmarshal($this->db->f('title', true), 'string');
 				$results[] = $row;
 			}
 		}
@@ -608,7 +612,7 @@ class rental_socomposite extends rental_socommon
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record())
 		{
-			$contract_status_array[$this->_unmarshal($this->db->f('id', true), 'int')] = $this->_unmarshal($this->db->f('title', true), 'string');
+			$contract_status_array[$this->unmarshal($this->db->f('id', true), 'int')] = $this->unmarshal($this->db->f('title', true), 'string');
 		}
 		return $contract_status_array;
 	}
@@ -628,7 +632,7 @@ class rental_socomposite extends rental_socommon
 			{
 				continue;
 			}
-			$values[] = $field . "=" . $this->_marshal($entry[$field], $params['type']);
+			$values[] = $field . "=" . $this->marshal($entry[$field], $params['type']);
 		}
 		
 		$cols = join(',', $cols);
