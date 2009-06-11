@@ -415,6 +415,7 @@ class rental_socomposite extends rental_socommon
 			.' LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)';
 		// Condition
 		$condition = " WHERE fm_location{$level}.location_code != ''";
+		$condition .= " AND rental_composite.id != {$id}";
 		// Order
 		$order = ' ORDER BY fm_location1.location_code';
 		for($i = 2; $i <= $level; $i++) 
@@ -443,7 +444,7 @@ class rental_socomposite extends rental_socommon
 				case 'loc4_name':
 					if($level >= 4)
 					{
-						$order = ' ORDER BY loc4_name '.$dir;
+						$order = ' ORDER BY loc4_name '.$dir;	
 					}
 					break;
 				case 'loc5_name':
@@ -465,7 +466,7 @@ class rental_socomposite extends rental_socommon
 		// Main query
 		$sql = "SELECT $cols FROM $table $joins $condition $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-		
+
 		$units = array();
 		while ($this->db->next_record()) {
 			$unit = array();
@@ -535,7 +536,6 @@ class rental_socomposite extends rental_socommon
 		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 		$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : null;
 		$contract_status = isset($params['contract_status']) && $params['contract_status'] ? (int)$params['contract_status'] : null;
-		$contract_date = isset($params['contract_date']) && $params['contract_date'] ? $params['contract_date'] : null;
 		
 		// Default return data:
 		$total_records = 0;
@@ -544,11 +544,8 @@ class rental_socomposite extends rental_socommon
 		if($id > 0) // Valid id
 		{
 			$tables = 'rental_contract';
-			$joins = 'JOIN rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id) JOIN rental_contract_status ON (rental_contract.status_id = rental_contract_status.id)';
+			$joins = 'JOIN rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id)';
 			$condition = 'rental_contract_composite.composite_id = '.$id;
-			if($contract_status != null && $contract_status > 0){
-				$condition .= ' AND rental_contract.status_id = '.$contract_status;
-			}
 			$current_date = date('Y-m-d');
 			switch($contract_date)
 			{
@@ -586,7 +583,7 @@ class rental_socomposite extends rental_socommon
 	     		$row['id'] = $this->unmarshal($this->db->f('id', true), 'string');
 	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
 	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
-	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that table is ready
+	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that db table is ready
 	     		$row['title'] = $this->unmarshal($this->db->f('title', true), 'string');
 				$results[] = $row;
 			}
@@ -596,25 +593,6 @@ class rental_socomposite extends rental_socommon
 			'total_records' => $total_records,
 			'results'		=> $results
 		);
-	}
-	
-	/**
-	 * Returns array of available contract statuses
-	 * @return array
-	 * (
-	 * 	id of status => textual presentation of status
-	 * )
-	 */
-	public function get_contract_status_array()
-	{
-		$contract_status_array = array();
-		$sql = 'SELECT id, title FROM rental_contract_status';
-		$this->db->query($sql, __LINE__, __FILE__);
-		while($this->db->next_record())
-		{
-			$contract_status_array[$this->unmarshal($this->db->f('id', true), 'int')] = $this->unmarshal($this->db->f('title', true), 'string');
-		}
-		return $contract_status_array;
 	}
 	
 	function update($entry)

@@ -221,5 +221,20 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.0.5';
+	function rental_upgrade0_0_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		// We no longer need a user defined status on the contract
+		$GLOBALS['phpgw_setup']->oProc->DropTable('rental_contract_status');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('rental_contract', array(), 'status_id');
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.6';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
 	
 ?>

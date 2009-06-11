@@ -1,6 +1,6 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';
-	$setup_info['rental']['version'] = '0.0.5';
+	$setup_info['rental']['version'] = '0.0.6';
 	$setup_info['rental']['app_order'] = 51;
 	$setup_info['rental']['tables'] = array(
 	//	'rental_tenant',								// Tenants
@@ -18,7 +18,6 @@
 		'rental_permission_root',
 		'rental_document_composite',
 		// Admin tables
-		'rental_contract_status',
 		'rental_billing_term',
 		'rental_contract_type'
 	//	'rental_price_item',

@@ -287,11 +287,10 @@
 				phpgwapi_yui::load_widget('tabview');
 				$params['id'] = $composite_id;
 				$composite = $this->bo->read_single($params);
-				$contract_status_array = $this->bo->get_contract_status_array();
 				
 				$tabs = array();
 				
-				foreach(array('rental_rc_details', 'rental_rc_elements', 'rental_rc_contracts') as $tab) {
+				foreach(array('rental_rc_details', 'rental_rc_area', 'rental_rc_contracts') as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
@@ -486,20 +485,11 @@
 								'label' => lang('rental_rc_toolbar_filters'),
 								'control1' => array(
 							 			'control' => 'select',
-							 			'id' => 'ctrl_toggle_contract_date',
-										'name' => 'contract_date',
+							 			'id' => 'ctrl_toggle_contract_status',
+										'name' => 'contract_status',
 										'keys' => array('active', 'all', 'not_started', 'ended'),
 										'values' => array(lang('rental_rc_active'), lang('rental_rc_all'), lang('rental_rc_not_started'), lang('rental_rc_ended')),
 										'default' => 'active',
-										'text' => lang('rental_rc_contract_date')
-								),
-								'control2' => array(
-							 			'control' => 'select',
-							 			'id' => 'ctrl_toggle_contract_status',
-										'name' => 'contract_status',
-										'keys' => array_merge(array('-1'), array_keys($contract_status_array)),
-										'values' => array_merge(array(lang('rental_rc_contract_all')), $contract_status_array),
-										'default' => '-1',
 										'text' => lang('rental_rc_contract_status')
 								)
 							)
@@ -579,7 +569,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_elements'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
 		}
 		
 		function remove_unit()
@@ -595,7 +585,7 @@
 			}
 			
 			// TODO: return sensible status, error if applicable
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_elements'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
 			
 		}
 				

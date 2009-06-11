@@ -130,17 +130,5 @@
 			return $this->so->get_contracts($params);
 		}
 		
-		/**
-		 * Returns array of available contract statuses
-		 * @return array(
-		 * 	'id' => id of status,
-		 *  'status' => textual presentation of status
-		 * )
-		 */
-		public function get_contract_status_array()
-		{
-			return $this->so->get_contract_status_array();
-		}
-		
 	}
 ?>
