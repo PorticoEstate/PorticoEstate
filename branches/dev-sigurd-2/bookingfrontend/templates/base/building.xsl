@@ -64,7 +64,7 @@
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
 			</dl>
-			<dl class="proplist-col">	
+			<dl class="proplist-col images">	
 				<div id="images_container"></div>
 			</dl>
 			

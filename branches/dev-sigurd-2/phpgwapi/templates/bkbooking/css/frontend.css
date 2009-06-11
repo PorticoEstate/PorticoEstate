@@ -217,6 +217,11 @@ dl.contactinfo dd {
 	width: 400px;
 }
 
+#frontend dl.proplist-col.images {
+	float:right;
+	clear:right;
+}
+
 
 
 #frontend h2 { margin-bottom: 0.1em;}
