@@ -11,7 +11,7 @@
 		<xsl:param name="context_menu_labels">[]</xsl:param>
 		<xsl:param name="context_menu_actions">[]</xsl:param>
 		<script>
-			YAHOO.rental.setupDatasource<xsl:value-of select="$number"/> = function() {
+			YAHOO.rental.setupDatasource.push(function() {
 				<xsl:if test="source">
 		            this.dataSourceURL = '<xsl:value-of select="source"/>';
 		        </xsl:if>
@@ -41,7 +41,7 @@
 				this.contextMenuName = 'contextMenu<xsl:value-of select="$number"/>';
 				this.contextMenuLabels = <xsl:value-of select="$context_menu_labels"/>;
 				this.contextMenuActions = <xsl:value-of select="$context_menu_actions"/>;
-			}
+			});
 		</script>
 	</xsl:template>
 	

@@ -28,6 +28,7 @@
 <xsl:template match="/">
 	<script>
 		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
+		YAHOO.rental.setupDatasource = new Array();
 	</script>
 	<xsl:apply-templates select="//form"/>
 	<div id="rental_user_error"></div>

@@ -28,6 +28,7 @@
 <xsl:template match="phpgw" xmlns:php="http://php.net/xsl">
 	<script>
 		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
+		YAHOO.rental.setupDatasource = new Array();
 	</script>
 	
 	<div id="rental_user_error"></div>

@@ -139,8 +139,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	 * 2. Iterate through the number of datatables, render paginators and call the constructor of the data source
 	 * 3. Wrap each data source in a wrapper object 
 	 */
-    YAHOO.rental.setupToolbar(); 
-    for(i=1;i<YAHOO.rental.numberOfDatatables+1; i++){
+    YAHOO.rental.setupToolbar();
+    while(YAHOO.rental.setupDatasource.length > 0){
+    	i=0;
     	var pag = new YAHOO.widget.Paginator({
             rowsPerPage: 25,
             alwaysVisible: true,
@@ -155,12 +156,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
     		containers: ['paginator']
         });
     	pag.render();
-    	var dataSourceObject = eval("new YAHOO.rental.setupDatasource" + i + "()");
-    	this.wrapper = new dataSourceWrapper(dataSourceObject, pag);
-    
     	
-        
-     // Shows dialog, creating one when necessary
+    	variableName = "YAHOO.rental.datasource" + i;
+    	i+=1;
+    	eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
+		var dataSourceObject = eval("new " + variableName + "()");
+		this.wrapper = new dataSourceWrapper(dataSourceObject, pag);
+
+	
+    
+		// Shows dialog, creating one when necessary
         var newCols = true;
         var showDlg = function(e) {
             YAHOO.util.Event.stopEvent(e);
@@ -209,6 +214,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         	}
             myDlg.show();
         };
+        
         var storeColumnsUrl = YAHOO.rental.storeColumnsUrl;
         var hideDlg = function(e) {
     		this.hide();
@@ -222,6 +228,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
            YAHOO.util.Connect.asyncRequest('POST', storeColumnsUrl, null, postData);
         };
+        
         var handleButtonClick = function(e, oSelf) {
             var sKey = this.get("name");
             if(this.get("value") === "Skjul") {
@@ -233,7 +240,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 wrapper.dataTable.showColumn(sKey);
             }
         };
-        
+    
         // Create the SimpleDialog
         YAHOO.util.Dom.removeClass("dt-dlg", "inprogress");
         var myDlg = new YAHOO.widget.SimpleDialog("dt-dlg", {
@@ -249,17 +256,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
     	myDlg.render();
 
     	//alert(wrapper.dataTable);
-        
-    	 // Nulls out myDlg to force a new one to be created
+    
+    	// Nulls out myDlg to force a new one to be created
         wrapper.dataTable.subscribe("columnReorderEvent", function(){
             newCols = true;
             YAHOO.util.Event.purgeElement("dt-dlg-picker", true);
             YAHOO.util.Dom.get("dt-dlg-picker").innerHTML = "";
         }, this, true);
-    	
+	
     	// Hook up the SimpleDialog to the link
     	YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);
-    	
+	
     }
 
     YAHOO.util.Event.addListener('ctrl_add_rental_composite', "click", function(e){    	
