@@ -15,7 +15,7 @@
 			<dl class="proplist-col main">
 				<dl class="proplist description">
 					<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-					<dd disable-output-escaping="yes"><xsl:value-of select="description"/></dd>
+					<dd><xsl:value-of select="description" disable-output-escaping="yes"/></dd>
 				</dl>
 				
 				<h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
@@ -64,7 +64,7 @@
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
 			</dl>
-			<dl class="proplist-col">	
+			<dl class="proplist-col images">	
 				<div id="images_container"></div>
 			</dl>
 			

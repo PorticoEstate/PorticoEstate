@@ -20,16 +20,14 @@
 		</ul>
 
 		<dl class="proplist-col main">
-			<dt><xsl:value-of select="php:function('lang', 'Resource Name')" /></dt>
-			<dd><xsl:value-of select="resource/name"/></dd>
-			
-			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
-			<dd><xsl:value-of select="resource/building_name"/></dd>
 			
 			<xsl:if test="resource/description and normalize-space(resource/description)">
 				<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-				<dd><xsl:value-of select="resource/description"/></dd>
+				<dd><xsl:value-of disable-output-escaping="yes" select="resource/description"/></dd>
 			</xsl:if>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
+			<dd><xsl:value-of select="resource/building_name"/></dd>
 			
 			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
 				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
@@ -45,7 +43,7 @@
 			<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 			<div id="documents_container"/>
 		</dl>
-		<dl class="proplist-col">	
+		<dl class="proplist-col images">	
 			<div id="images_container">
 			</div>
 		</dl>
