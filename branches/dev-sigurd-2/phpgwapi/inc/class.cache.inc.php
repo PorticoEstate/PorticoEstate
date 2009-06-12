@@ -147,7 +147,8 @@
 		 */
 		protected static function _value_prepare($value)
 		{
-			return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
+		//	return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
+			return $GLOBALS['phpgw']->crypto->encrypt($value);
 		}
 
 		/**

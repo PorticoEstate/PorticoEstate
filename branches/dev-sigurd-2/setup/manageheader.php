@@ -22,6 +22,34 @@
 	 * Include setup functions
 	 */
 	require_once('./inc/functions.inc.php');
+	
+	if(!isset($GLOBALS['phpgw_info']['server']['mcrypt_iv']) || !$GLOBALS['phpgw_info']['server']['mcrypt_iv'])
+	{
+
+		srand((double)microtime()*1000000);
+		$random_char = array(
+			'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
+			'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
+			'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
+			'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+		);
+
+		$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
+		for($i=0; $i < 30; ++$i)
+		{
+			$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
+		}
+	
+	}
+	//FIXME - find a common place for this one - duplicated in phpgwapi/inc/class.setup_html.inc.php
+	$_key = md5('a_setup_encryptkey');
+	$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
+	if($_POST['setting']['enable_mcrypt'] == 'True')
+	{
+		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+	}
+	
+	$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
 
 	//$GLOBALS['phpgw_info']['server']['versions']['current_header'] = $setup_info['phpgwapi']['versions']['current_header'];
 	unset($setup_info);
@@ -371,11 +399,6 @@ HTML;
 
 			}
 
-			//FIXME - find a common place for this one - duplicated in phpgwapi/inc/class.setup_html.inc.php
-			$_key = md5('a_setup_encryptkey');
-			$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
-			$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
-
 			$no_guess = false;
 			if ( is_file('../header.inc.php')
 				&& is_readable('../header.inc.php'))
@@ -432,7 +455,7 @@ HTML;
 						{
 							if ( $db == $GLOBALS['phpgw_domain'][$key]['db_type'] )
 							{
-								$selected = ' selected ';
+								$selected = ' selected';
 								$found_dbtype = true;
 							}
 							else
@@ -440,10 +463,11 @@ HTML;
 								$selected = '';
 							}
 							$dbtype_options .= <<<HTML
-								<option{$selected}value="{$db}">$db</option>
+								<option{$selected} value="{$db}">$db</option>
 
 HTML;
 						}
+
 						$setup_tpl->set_var('dbtype_options', $dbtype_options);
 
 						$setup_tpl->parse('domains','domain', true);
@@ -496,19 +520,6 @@ HTML;
 				$setup_tpl->set_var('comment_l','<!-- ');
 				$setup_tpl->set_var('comment_r',' -->');
 
-				srand((double)microtime()*1000000);
-				$random_char = array(
-					'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
-					'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
-					'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
-					'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-				);
-
-				$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
-				for($i=0; $i < 30; ++$i)
-				{
-					$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
-				}
 				$GLOBALS['phpgw_info']['server']['header_admin_password'] = '';
 				$GLOBALS['phpgw_info']['server']['db_persistent'] = false;
 				$GLOBALS['phpgw_info']['server']['sessions_type'] = 'php';

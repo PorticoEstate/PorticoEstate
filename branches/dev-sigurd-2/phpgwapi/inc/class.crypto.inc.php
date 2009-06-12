@@ -90,9 +90,9 @@
 
 		function cleanup()
 		{
-			if ($this->enabled)
+			if ($this->enabled && $this->td)
 			{
-				mcrypt_generic_deinit($this->td);
+				@mcrypt_generic_deinit($this->td);
 			}
 		}
 
@@ -131,6 +131,9 @@
 				{
 					echo '<br>' . time() . ' crypto->encrypt() found "' . gettype($data) . '". No serialization...' . "\n";
 				}
+				//FIXME - Strings are not decrypted correctly
+				$data = serialize($data);
+				$_obj = true;
 			}
 
 			/* Disable all encryption if the admin didn't set it up */

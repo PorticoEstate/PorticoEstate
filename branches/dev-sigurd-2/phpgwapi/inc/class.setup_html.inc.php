@@ -36,12 +36,6 @@
 			}
 
 			$setting = phpgw::get_var('setting', 'string', 'POST');
-			$_key = md5('a_setup_encryptkey');
-			$_iv  = $setting['mcrypt_iv'];
-			$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = $setting['enable_mcrypt'];
-
-			$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
-
 			$settings = phpgw::get_var("settings", 'string', 'POST');
 
 			foreach($domains as $k => $v)
@@ -54,7 +48,7 @@
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{
-					if( $x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass')
+					if( $setting['enable_mcrypt'] == 'True' && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
 					{
 						$y = $GLOBALS['phpgw']->crypto->encrypt($y);
 					}

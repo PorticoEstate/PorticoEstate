@@ -110,10 +110,10 @@
 			$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$crypto = createObject('phpgwapi.crypto',array($_key, $_iv));
 
-			$this->Database		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_name']); 
-			$this->Host			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']); 
-			$this->User			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']); 
-			$this->Password		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']); 
+			$this->Database		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_name']);
+			$this->Host			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']);
+			$this->User			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']);
+			$this->Password		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']);
 
 			// We do it this way to allow it to be easily extended in the future
 			switch ( $this->Type )

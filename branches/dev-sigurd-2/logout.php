@@ -25,7 +25,7 @@
 	*/
 	include_once('header.inc.php');
 
-	$sessionid = phpgw::get_var('phpgwsessid');
+	$sessionid = phpgw::get_var('sessionphpgwsessid');
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	if ($verified)
@@ -64,7 +64,7 @@
 	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 	{
-		$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
+		$GLOBALS['phpgw']->session->phpgw_setcookie('sessionphpgwsessid');
 		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 	}
 
