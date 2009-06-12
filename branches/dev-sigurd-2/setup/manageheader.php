@@ -41,15 +41,6 @@
 		}
 	
 	}
-	//FIXME - find a common place for this one - duplicated in phpgwapi/inc/class.setup_html.inc.php
-	$_key = md5('a_setup_encryptkey');
-	$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
-	if($_POST['setting']['enable_mcrypt'] == 'True')
-	{
-		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
-	}
-	
-	$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
 
 	//$GLOBALS['phpgw_info']['server']['versions']['current_header'] = $setup_info['phpgwapi']['versions']['current_header'];
 	unset($setup_info);
@@ -232,6 +223,7 @@ HTML;
 			}
 			break;
 		default:
+
 			$GLOBALS['phpgw_setup']->html->show_header($GLOBALS['phpgw_info']['setup']['HeaderFormMSG'], False, 'header');
 
 			$detected = '';
@@ -249,7 +241,6 @@ HTML;
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
-
 
 			if ( !isset($ConfigLang) || !$ConfigLang )
 			{
@@ -369,7 +360,7 @@ HTML;
 			if(extension_loaded('mcrypt') || function_exists('mcrypt_list_modes'))
 			{
 				$detected .= '<li>' . lang('You appear to have enabled support for mcrypt') . "</li>\n";
-				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+//				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
 			}
 			else
 			{
@@ -523,7 +514,7 @@ HTML;
 				$GLOBALS['phpgw_info']['server']['header_admin_password'] = '';
 				$GLOBALS['phpgw_info']['server']['db_persistent'] = false;
 				$GLOBALS['phpgw_info']['server']['sessions_type'] = 'php';
-				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
+//				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
 				$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] = false;
 				$GLOBALS['phpgw_info']['server']['domain_from_host'] = false;
 
@@ -545,8 +536,8 @@ HTML;
 
 			$setup_tpl->set_var('server_root', $GLOBALS['phpgw_info']['server']['server_root']);
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
-//			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
-			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
+			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
+//			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{

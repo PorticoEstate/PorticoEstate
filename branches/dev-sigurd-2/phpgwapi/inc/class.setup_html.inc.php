@@ -63,7 +63,11 @@
 			{
 				foreach($setting as $k => $v)
 				{
-
+					if ($k == 'HEADER_ADMIN_PASSWORD')
+					{
+						$v = $GLOBALS['phpgw']->crypto->encrypt($v);
+					}
+					
 					if( in_array( $k, array( 'server_root', 'include_root' ) )
 						&& substr(PHP_OS, 0, 3) == 'WIN' )
 					{
