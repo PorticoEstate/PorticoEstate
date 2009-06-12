@@ -22,17 +22,18 @@
         </ul>
         <xsl:call-template name="msgbox"/>
 
+		<h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
+        <div class="description"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
+
         <dl class="proplist">
-            <dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
-            <dd><xsl:value-of select="resource/building_name"/></dd>
-            <dt><xsl:value-of select="php:function('lang', 'Resource')" /></dt>
-            <dd><xsl:value-of select="resource/name"/></dd>
-            <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-            <dd><xsl:value-of select="resource/description"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
             <dd><xsl:value-of select="resource/activity_name"/></dd>
+			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
+            <dd><xsl:value-of select="resource/building_name"/></dd>
         </dl>
-
+		
+		<div class='clr'/>
+		
 		<div class="form-buttons">
 			<xsl:if test="resource/permission/write">
 		        <button>

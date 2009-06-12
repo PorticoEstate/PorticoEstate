@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfValidatorCSRFToken.class.php 7902 2008-03-15 13:17:33Z fabien $
  */
 class sfValidatorCSRFToken extends sfValidatorBase
 {

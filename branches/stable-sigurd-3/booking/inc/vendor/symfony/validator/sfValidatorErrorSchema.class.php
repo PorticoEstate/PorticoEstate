@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfValidatorErrorSchema.class.php 15393 2009-02-10 12:58:49Z fabien $
  */
 class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, Iterator, Countable
 {

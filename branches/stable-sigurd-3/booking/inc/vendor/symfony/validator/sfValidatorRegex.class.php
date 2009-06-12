@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfValidatorRegex.class.php 12081 2008-10-08 19:01:19Z fabien $
  */
 class sfValidatorRegex extends sfValidatorString
 {

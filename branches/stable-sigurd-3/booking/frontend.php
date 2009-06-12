@@ -2,7 +2,7 @@
 	/**
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
-	* @version $Id$
+	* @version $Id: frontend.php 1906 2009-02-04 14:48 DvW $
 	*/
 	$phpgw_info = array();
 	$GLOBALS['phpgw_info']['flags'] = array

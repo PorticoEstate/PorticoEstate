@@ -157,12 +157,7 @@
 
 			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
 
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
-			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
-			self::add_javascript('yahoo', 'yahoo/dom', 'dom-min.js');
-			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+			$this->use_yui_editor();
 
 			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link));
 		}
