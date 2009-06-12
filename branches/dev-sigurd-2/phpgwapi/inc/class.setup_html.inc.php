@@ -35,7 +35,15 @@
 				$domains = array();
 			}
 
+			$setting = phpgw::get_var('setting', 'string', 'POST');
+			$_key = md5('a_setup_encryptkey');
+			$_iv  = $setting['mcrypt_iv'];
+			$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = $setting['enable_mcrypt'];
+
+			$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
+
 			$settings = phpgw::get_var("settings", 'string', 'POST');
+
 			foreach($domains as $k => $v)
 			{
 				if(isset($deletedomain[$k]))
@@ -46,6 +54,10 @@
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{
+					if( $x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass')
+					{
+						$y = $GLOBALS['phpgw']->crypto->encrypt($y);
+					}
 					$GLOBALS['header_template']->set_var(strtoupper($x),$y);
 				}
 				$GLOBALS['header_template']->parse('domains','domain',True);
@@ -53,7 +65,6 @@
 
 			$GLOBALS['header_template']->set_var('domain','');
 
-			$setting = phpgw::get_var('setting', 'string', 'POST');
 			if(!empty($setting) && is_array($setting))
 			{
 				foreach($setting as $k => $v)

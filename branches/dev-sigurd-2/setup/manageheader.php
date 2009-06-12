@@ -371,6 +371,11 @@ HTML;
 
 			}
 
+			//FIXME - find a common place for this one - duplicated in phpgwapi/inc/class.setup_html.inc.php
+			$_key = md5('a_setup_encryptkey');
+			$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
+			$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
+
 			$no_guess = false;
 			if ( is_file('../header.inc.php')
 				&& is_readable('../header.inc.php'))
@@ -413,12 +418,12 @@ HTML;
 						$setup_tpl->set_var('lang_domain',lang('Domain'));
 						$setup_tpl->set_var('lang_delete',lang('Delete'));
 						$setup_tpl->set_var('db_domain',$key);
-						$setup_tpl->set_var('db_host',$GLOBALS['phpgw_domain'][$key]['db_host']);
-						$setup_tpl->set_var('db_name',$GLOBALS['phpgw_domain'][$key]['db_name']);
-						$setup_tpl->set_var('db_user',$GLOBALS['phpgw_domain'][$key]['db_user']);
-						$setup_tpl->set_var('db_pass',$GLOBALS['phpgw_domain'][$key]['db_pass']);
+						$setup_tpl->set_var('db_host',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_host']));
+						$setup_tpl->set_var('db_name',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_name']));
+						$setup_tpl->set_var('db_user',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_user']));
+						$setup_tpl->set_var('db_pass',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_pass']));
 						$setup_tpl->set_var('db_type',$GLOBALS['phpgw_domain'][$key]['db_type']);
-						$setup_tpl->set_var('config_pass',$GLOBALS['phpgw_domain'][$key]['config_passwd']);
+						$setup_tpl->set_var('config_pass',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['config_passwd']));
 
 						$selected = '';
 						$dbtype_options = '';
@@ -529,6 +534,7 @@ HTML;
 
 			$setup_tpl->set_var('server_root', $GLOBALS['phpgw_info']['server']['server_root']);
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
+//			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
 			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
