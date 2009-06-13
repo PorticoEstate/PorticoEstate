@@ -102,7 +102,7 @@
 			return pack('H'.$len, $data);
 		}
 
-		function encrypt($data)
+		function encrypt($data, $bypass = false)
 		{
 			$_obj = false;
 			if($this->debug)
@@ -137,7 +137,7 @@
 			}
 
 			/* Disable all encryption if the admin didn't set it up */
-			if ($this->enabled)
+			if ($this->enabled && !$bypass)
 			{
 				if($_obj)
 				{
@@ -175,7 +175,7 @@
 			}
 		}
 
-		function decrypt($encrypteddata)
+		function decrypt($encrypteddata, $bypass = false)
 		{
 			if($this->debug)
 			{
@@ -189,7 +189,7 @@
 			}
 
 			/* Disable all encryption if the admin didn't set it up */
-			if ($this->enabled)
+			if ($this->enabled && !$bypass)
 			{
 				$data = $this->hex2bin($encrypteddata);
 				mcrypt_generic_init ($this->td, $this->key, $this->iv);

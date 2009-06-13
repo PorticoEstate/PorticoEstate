@@ -187,7 +187,13 @@
 			elseif(!empty($HeaderPW) && $auth_type == 'Header')
 			{
 				/* Returning after login to header admin */
-				if($HeaderPW == md5($GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password'])))
+				if($HeaderPW == md5(@$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password'])))
+				{
+					setcookie('HeaderPW', $HeaderPW , $expire);
+					setcookie('ConfigLang', $ConfigLang, $expire);
+					return True;
+				}
+				else if($HeaderPW == md5(stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password'])))
 				{
 					setcookie('HeaderPW', $HeaderPW , $expire);
 					setcookie('ConfigLang', $ConfigLang, $expire);

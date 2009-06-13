@@ -145,10 +145,10 @@
 		 * @param mixed the value to store
 		 * @return value to store as a string
 		 */
-		protected static function _value_prepare($value)
+		protected static function _value_prepare($value, $bypass = false)
 		{
 		//	return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
-			return $GLOBALS['phpgw']->crypto->encrypt($value);
+			return $GLOBALS['phpgw']->crypto->encrypt($value, $bypass);
 		}
 
 		/**
@@ -157,7 +157,7 @@
 		 * @param string $str the string to process
 		 * @return mixed the unserialized string
 		 */
-		protected static function _value_return($str)
+		protected static function _value_return($str, $bypass = false)
 		{
 			if ( is_null($str) )
 			{
@@ -165,7 +165,7 @@
 			}
 
 			// crypto class unserializes the data for us
-			return $GLOBALS['phpgw']->crypto->decrypt($str);
+			return $GLOBALS['phpgw']->crypto->decrypt($str, $bypass);
 		}
 
 		/**
@@ -197,7 +197,7 @@
 			$key = self::_gen_key($module, $id);
 			if ( isset($_SESSION['phpgw_cache'][$key]) )
 			{
-				return self::_value_return($_SESSION['phpgw_cache'][$key]);
+				return self::_value_return($_SESSION['phpgw_cache'][$key], true);
 			}
 			return null;
 		}
@@ -216,7 +216,7 @@
 
 			if($data)
 			{
-				$data = self::_value_prepare($data);
+				$data = self::_value_prepare($data, true); // suhoshin is already encrypting the data
 			}
 			$_SESSION['phpgw_cache'][$key] = $data;
 			return true;
@@ -247,7 +247,7 @@
 		 * @param string $id the internal module id for the data
 		 * @return mixed the data from system wide cache
 		 */
-		public static function system_get($module, $id)
+		public static function system_get($module, $id, $bypass = false, $compress = false)
 		{
 			$key = self::_gen_key($module, $id);
 
@@ -259,7 +259,21 @@
 			{
 				$value = self::_file_get($key);
 			}
-			return self::_value_return($value);
+
+			if(!$value)
+			{
+				return false;
+			}
+
+			if(function_exists('gzcompress') && $compress)
+			{
+				$value =  gzuncompress(base64_decode($value));
+				return $value;
+			}
+			else
+			{
+				return self::_value_return($value, $bypass);
+			}
 		}
 
 		/**
@@ -270,10 +284,15 @@
 		 * @param mixed $data the data to store
 		 * @return bool was the data stored in the system wide cache?
 		 */
-		public static function system_set($module, $id, $value)
+		public static function system_set($module, $id, $value, $bypass = false, $compress = false)
 		{
 			$key = self::_gen_key($module, $id);
-			$value = self::_value_prepare($value);
+			$value = self::_value_prepare($value, $bypass);
+
+			if(function_exists('gzcompress') && $compress)
+			{
+				$value =  base64_encode(gzcompress($value, 9));
+			}
 
 			if ( $GLOBALS['phpgw']->shm->is_enabled() )
 			{
@@ -313,7 +332,7 @@
 		 * @param int $uid the user id to the data is stored for
 		 * @return mixed the data from user cache
 		 */
-		public static function user_get($module, $id, $uid)
+		public static function user_get($module, $id, $uid, $bypass = true, $compress = true)
 		{
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
@@ -325,7 +344,7 @@
 			if ( $GLOBALS['phpgw']->db->next_record() )
 			{
 				$ret = $GLOBALS['phpgw']->db->f('cache_data');
-				if(function_exists('gzcompress'))
+				if($compress && function_exists('gzcompress'))
 				{
 					$ret =  gzuncompress(base64_decode($ret));
 				}
@@ -333,7 +352,7 @@
 				{
 					$ret = stripslashes($ret);
 				}
-				$ret = self::_value_return($ret);
+				$ret = self::_value_return($ret, $bypass);
 			}
 			return $ret;
 		}
@@ -347,7 +366,7 @@
 		 * @param int $uid the user id to store the data for
 		 * @return bool was the data stored in the user cache?
 		 */
-		public static function user_set($module, $id, $value, $uid)
+		public static function user_set($module, $id, $value, $uid, $bypass = true, $compress = true)
 		{
 			$uid = (int) $uid;
 
@@ -357,8 +376,8 @@
 			}
 
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
-			$value = self::_value_prepare($value);
-			if(function_exists('gzcompress'))
+			$value = self::_value_prepare($value, $bypass);
+			if($compress && function_exists('gzcompress'))
 			{
 				$value =  base64_encode(gzcompress($value, 9));
 			}
@@ -382,5 +401,76 @@
 			}
 
 			return !!$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+		}
+
+		/**
+		 * Retreive data from the user cache
+		 *
+		 * @param string $module the module name the data belongs to
+		 * @param string $id the internal module id for the data
+		 * @param int $uid the user id to the data is stored for
+		 * @return mixed the data from user cache
+		 */
+		public static function user_get_test($module, $id, $uid, $bypass = true, $compress = false)
+		{
+			$uid = (int) $uid;
+			$key = self::_gen_key($module, "{$id}_user_{$uid}");
+
+			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			{
+				$value = self::_shm_get($key);
+			}
+			else
+			{
+				$value = self::_file_get($key);
+			}
+
+			if(!$value)
+			{
+				return false;
+			}
+
+			if(function_exists('gzcompress') && $compress)
+			{
+				$value =  gzuncompress(base64_decode($value));
+				return $value;
+			}
+			else
+			{
+				return self::_value_return($value, $bypass);
+			}
+		}
+
+		/**
+		 * Store data in the user cache
+		 *
+		 * @param string $module the module name the data belongs to
+		 * @param string $id the internal module id for the data
+		 * @param mixed $data the data to store in user cache
+		 * @param int $uid the user id to store the data for
+		 * @return bool was the data stored in the user cache?
+		 */
+		public static function user_set_test($module, $id, $value, $uid, $bypass = true, $compress = false)
+		{
+			$uid = (int) $uid;
+
+			if ($uid == 0)
+			{
+				return false;
+			}
+
+			$key = self::_gen_key($module, "{$id}_user_{$uid}");
+			$value = self::_value_prepare($value, $bypass);
+
+			if(function_exists('gzcompress') && $compress)
+			{
+				$value =  base64_encode(gzcompress($value, 9));
+			}
+
+			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			{
+				return self::_shm_set($key, $value);
+			}
+			return self::_file_set($key, $value);
 		}
 	}

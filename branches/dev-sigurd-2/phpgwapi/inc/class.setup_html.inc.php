@@ -63,7 +63,7 @@
 			{
 				foreach($setting as $k => $v)
 				{
-					if ($k == 'HEADER_ADMIN_PASSWORD')
+					if ($setting['enable_mcrypt'] == 'True' && $k == 'HEADER_ADMIN_PASSWORD')
 					{
 						$v = $GLOBALS['phpgw']->crypto->encrypt($v);
 					}
