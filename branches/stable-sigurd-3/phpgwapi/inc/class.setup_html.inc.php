@@ -35,7 +35,9 @@
 				$domains = array();
 			}
 
+			$setting = phpgw::get_var('setting', 'string', 'POST');
 			$settings = phpgw::get_var("settings", 'string', 'POST');
+
 			foreach($domains as $k => $v)
 			{
 				if(isset($deletedomain[$k]))
@@ -46,6 +48,10 @@
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{
+					if( $setting['enable_mcrypt'] == 'True' && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
+					{
+						$y = $GLOBALS['phpgw']->crypto->encrypt($y);
+					}
 					$GLOBALS['header_template']->set_var(strtoupper($x),$y);
 				}
 				$GLOBALS['header_template']->parse('domains','domain',True);
@@ -53,12 +59,15 @@
 
 			$GLOBALS['header_template']->set_var('domain','');
 
-			$setting = phpgw::get_var('setting', 'string', 'POST');
 			if(!empty($setting) && is_array($setting))
 			{
 				foreach($setting as $k => $v)
 				{
-
+					if ($setting['enable_mcrypt'] == 'True' && $k == 'HEADER_ADMIN_PASSWORD')
+					{
+						$v = $GLOBALS['phpgw']->crypto->encrypt($v);
+					}
+					
 					if( in_array( $k, array( 'server_root', 'include_root' ) )
 						&& substr(PHP_OS, 0, 3) == 'WIN' )
 					{
