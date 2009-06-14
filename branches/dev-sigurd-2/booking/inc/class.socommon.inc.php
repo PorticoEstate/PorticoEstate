@@ -29,7 +29,7 @@
 			return $this->cols;
 		}
 
-		protected function get_cols_and_joins()
+		public function _get_cols_and_joins()
 		{
 			$cols = array();
 			$joins = array();
@@ -73,7 +73,7 @@
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
-		protected function _unmarshal($value, $type)
+		function _unmarshal($value, $type)
 		{
 			if($value === null || $value == 'NULL')
 			{
@@ -89,7 +89,7 @@
 		function read_single($id)
 		{
 			$id = intval($id);
-			$cols_joins = $this->get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE {$this->table_name}.id=$id", __LINE__, __FILE__);
@@ -221,7 +221,7 @@
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
-			$cols_joins = $this->get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
