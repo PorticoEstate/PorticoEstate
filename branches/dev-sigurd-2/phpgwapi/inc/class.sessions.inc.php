@@ -1261,6 +1261,8 @@
 			$GLOBALS['phpgw']->preferences->set_account_id($this->_account_id);
 			$GLOBALS['phpgw']->applications->set_account_id($this->_account_id);
 */
+			$GLOBALS['phpgw']->translation->populate_cache();
+
 			if (! $this->_account_lid)
 			{
 				if(is_object($GLOBALS['phpgw']->log))

@@ -222,7 +222,7 @@
 			}
 
 			$newdata = @unserialize($data);
-			if($newdata)
+			if($newdata || is_array($newdata)) // Check for empty array
 			{
 				if($this->debug)
 				{
