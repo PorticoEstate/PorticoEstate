@@ -45,11 +45,7 @@
 				)
 			);
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			
-			$versionfile = $GLOBALS['phpgw']->common->get_app_dir('booking') . '/setup/setup.inc.php';
-			include $versionfile;
-			
-			$this->uploadRootDir = $setup_info['booking']['document']['upload_dir'];
+			$this->uploadRootDir = $GLOBALS['phpgw_info']['server']['files_dir'].DIRECTORY_SEPARATOR.'booking';
 		}
 		
 		public function get_categories()

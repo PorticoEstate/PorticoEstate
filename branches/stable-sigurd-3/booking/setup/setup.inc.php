@@ -71,9 +71,4 @@
 	
 	/**** Custom settings *****/
 	$x = 0;
-	/* The settings for sodocument */
-	$setup_info['booking']['document'] = array
-	(
-		'upload_dir' => '/tmp/booking_documents',
-	);
 ?>
