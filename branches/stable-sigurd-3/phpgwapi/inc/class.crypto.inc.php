@@ -90,9 +90,9 @@
 
 		function cleanup()
 		{
-			if ($this->enabled && $this->td)
+			if ($this->enabled)
 			{
-				@mcrypt_generic_deinit($this->td);
+				mcrypt_generic_deinit($this->td);
 			}
 		}
 
@@ -102,7 +102,7 @@
 			return pack('H'.$len, $data);
 		}
 
-		function encrypt($data, $bypass = false)
+		function encrypt($data)
 		{
 			$_obj = false;
 			if($this->debug)
@@ -131,13 +131,10 @@
 				{
 					echo '<br>' . time() . ' crypto->encrypt() found "' . gettype($data) . '". No serialization...' . "\n";
 				}
-				//FIXME - Strings are not decrypted correctly
-				$data = serialize($data);
-				$_obj = true;
 			}
 
 			/* Disable all encryption if the admin didn't set it up */
-			if ($this->enabled && !$bypass)
+			if ($this->enabled)
 			{
 				if($_obj)
 				{
@@ -175,7 +172,7 @@
 			}
 		}
 
-		function decrypt($encrypteddata, $bypass = false)
+		function decrypt($encrypteddata)
 		{
 			if($this->debug)
 			{
@@ -189,7 +186,7 @@
 			}
 
 			/* Disable all encryption if the admin didn't set it up */
-			if ($this->enabled && !$bypass)
+			if ($this->enabled)
 			{
 				$data = $this->hex2bin($encrypteddata);
 				mcrypt_generic_init ($this->td, $this->key, $this->iv);
@@ -222,7 +219,7 @@
 			}
 
 			$newdata = @unserialize($data);
-			if($newdata || is_array($newdata)) // Check for empty array
+			if($newdata)
 			{
 				if($this->debug)
 				{

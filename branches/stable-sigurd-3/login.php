@@ -161,7 +161,7 @@
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-//		$GLOBALS['phpgw']->translation->populate_cache(); // moved to sesssion::verify()
+		$GLOBALS['phpgw']->translation->populate_cache();
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
 	}
 

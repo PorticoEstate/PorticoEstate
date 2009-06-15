@@ -110,7 +110,7 @@
 			if(!empty($HeaderLogin) && $auth_type == 'Header')
 			{
 				/* header admin login */
-				if($FormPW == $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']))
+				if($FormPW == stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password']))
 				{
 					setcookie('HeaderPW',md5($FormPW),$expire);
 					setcookie('ConfigLang',$ConfigLang,$expire);
@@ -126,8 +126,7 @@
 			elseif(!empty($ConfigLogin) && $auth_type == 'Config')
 			{
 				/* config login */
-//				if($FormPW == stripslashes(@$GLOBALS['phpgw_domain'][$FormDomain]['config_passwd']))
-				if($FormPW == $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$FormDomain]['config_passwd']))
+				if($FormPW == stripslashes(@$GLOBALS['phpgw_domain'][$FormDomain]['config_passwd']))
 				{
 					setcookie('ConfigPW', md5($FormPW), $expire);
 					setcookie('ConfigDomain', $FormDomain, $expire);
@@ -170,7 +169,7 @@
 			elseif(!empty($ConfigPW) && $auth_type == 'Config')
 			{
 				/* Returning after login to config */
-				if($ConfigPW == md5($GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$ConfigDomain]['config_passwd'])))
+				if($ConfigPW == md5(stripslashes($GLOBALS['phpgw_domain'][$ConfigDomain]['config_passwd'])))
 				{
 					setcookie('ConfigPW', $ConfigPW,  $expire);
 					setcookie('ConfigDomain', $ConfigDomain, $expire);
@@ -187,13 +186,7 @@
 			elseif(!empty($HeaderPW) && $auth_type == 'Header')
 			{
 				/* Returning after login to header admin */
-				if($HeaderPW == md5(@$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password'])))
-				{
-					setcookie('HeaderPW', $HeaderPW , $expire);
-					setcookie('ConfigLang', $ConfigLang, $expire);
-					return True;
-				}
-				else if($HeaderPW == md5(stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password'])))
+				if($HeaderPW == md5(stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password'])))
 				{
 					setcookie('HeaderPW', $HeaderPW , $expire);
 					setcookie('ConfigLang', $ConfigLang, $expire);

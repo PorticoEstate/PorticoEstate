@@ -1135,8 +1135,7 @@
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->_account_id;
 
 			/* init the crypto object before appsession call below */
-			//$this->_key = md5($this->_sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']); //Sigurd: not good for permanent data
-			$this->_key = $GLOBALS['phpgw_info']['server']['encryptkey'];
+			$this->_key = md5($this->_sessionid . $GLOBALS['phpgw_info']['server']['encryptkey']);
 			$this->_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$GLOBALS['phpgw']->crypto->init(array($this->_key, $this->_iv));
 
@@ -1261,8 +1260,6 @@
 			$GLOBALS['phpgw']->preferences->set_account_id($this->_account_id);
 			$GLOBALS['phpgw']->applications->set_account_id($this->_account_id);
 */
-			$GLOBALS['phpgw']->translation->populate_cache();
-
 			if (! $this->_account_lid)
 			{
 				if(is_object($GLOBALS['phpgw']->log))
@@ -1511,7 +1508,7 @@
 				$webserver_url = '/';
 			}
 
-			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
+			//session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
 		}
 

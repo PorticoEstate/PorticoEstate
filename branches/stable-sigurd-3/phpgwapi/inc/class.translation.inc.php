@@ -78,7 +78,7 @@
 		*/
 		protected function reset_lang()
 		{
-			$lang = $GLOBALS['phpgw']->cache->system_get('phpgwapi', "lang_{$this->userlang}", true);
+			$lang = $GLOBALS['phpgw']->cache->system_get('phpgwapi', "lang_{$this->userlang}");
 			if ( is_array($lang) )
 			{
 				$this->lang = $lang;
@@ -165,7 +165,7 @@
 			{
 				foreach($language as $lang)
 				{
-					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang], true);
+					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang]);
 				}
 			}
 		}

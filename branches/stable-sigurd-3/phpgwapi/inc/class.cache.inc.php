@@ -145,10 +145,9 @@
 		 * @param mixed the value to store
 		 * @return value to store as a string
 		 */
-		protected static function _value_prepare($value, $bypass = false)
+		protected static function _value_prepare($value)
 		{
-		//	return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
-			return $GLOBALS['phpgw']->crypto->encrypt($value, $bypass);
+			return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
 		}
 
 		/**
@@ -157,7 +156,7 @@
 		 * @param string $str the string to process
 		 * @return mixed the unserialized string
 		 */
-		protected static function _value_return($str, $bypass = false)
+		protected static function _value_return($str)
 		{
 			if ( is_null($str) )
 			{
@@ -165,7 +164,7 @@
 			}
 
 			// crypto class unserializes the data for us
-			return $GLOBALS['phpgw']->crypto->decrypt($str, $bypass);
+			return $GLOBALS['phpgw']->crypto->decrypt($str);
 		}
 
 		/**
@@ -197,7 +196,7 @@
 			$key = self::_gen_key($module, $id);
 			if ( isset($_SESSION['phpgw_cache'][$key]) )
 			{
-				return self::_value_return($_SESSION['phpgw_cache'][$key], true);
+				return self::_value_return($_SESSION['phpgw_cache'][$key]);
 			}
 			return null;
 		}
@@ -216,7 +215,7 @@
 
 			if($data)
 			{
-				$data = self::_value_prepare($data, true); // suhoshin is already encrypting the data
+				$data = self::_value_prepare($data);
 			}
 			$_SESSION['phpgw_cache'][$key] = $data;
 			return true;
@@ -247,7 +246,7 @@
 		 * @param string $id the internal module id for the data
 		 * @return mixed the data from system wide cache
 		 */
-		public static function system_get($module, $id, $bypass = false, $compress = false)
+		public static function system_get($module, $id)
 		{
 			$key = self::_gen_key($module, $id);
 
@@ -259,21 +258,7 @@
 			{
 				$value = self::_file_get($key);
 			}
-
-			if(!$value)
-			{
-				return null;
-			}
-
-			if(function_exists('gzcompress') && $compress)
-			{
-				$value =  self::_value_return(gzuncompress(base64_decode($value)));
-				return $value;
-			}
-			else
-			{
-				return self::_value_return($value, $bypass);
-			}
+			return self::_value_return($value);
 		}
 
 		/**
@@ -284,15 +269,10 @@
 		 * @param mixed $data the data to store
 		 * @return bool was the data stored in the system wide cache?
 		 */
-		public static function system_set($module, $id, $value, $bypass = false, $compress = false)
+		public static function system_set($module, $id, $value)
 		{
 			$key = self::_gen_key($module, $id);
-			$value = self::_value_prepare($value, $bypass);
-
-			if(function_exists('gzcompress') && $compress)
-			{
-				$value =  base64_encode(gzcompress($value, 9));
-			}
+			$value = self::_value_prepare($value);
 
 			if ( $GLOBALS['phpgw']->shm->is_enabled() )
 			{
@@ -310,70 +290,6 @@
 		 * @return bool was the data deleted?
 		 */
 		public static function user_clear($module, $id, $uid)
-		{
-			$db = true;
-			if($db)
-			{
-				return self::_user_clear_db($module, $id, $uid);
-			}
-			else
-			{
-				return self::_user_clear($module, $id, $uid);			
-			}
-		}
-
-		/**
-		 * Retreive data from the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param int $uid the user id to the data is stored for
-		 * @return mixed the data from user cache
-		 */
-		public static function user_get($module, $id, $uid, $bypass = true, $compress = false)
-		{
-			$db = true;
-			if($db)
-			{
-				return self::_user_get_db($module, $id, $uid, $bypass, $compress);
-			}
-			else
-			{
-				return self::_user_get($module, $id, $uid, $bypass, $compress);
-			}
-		}
-
-		/**
-		 * Store data in the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param mixed $data the data to store in user cache
-		 * @param int $uid the user id to store the data for
-		 * @return bool was the data stored in the user cache?
-		 */
-		public static function user_set($module, $id, $value, $uid, $bypass = true, $compress = false)
-		{
-			$db = true;
-			if($db)
-			{
-				return self::_user_set_db($module, $id, $value, $uid, $bypass, $compress);
-			}
-			else
-			{
-				return self::_user_set($module, $id, $value, $uid, $bypass, $compress);
-			}
-		}
-
-		/**
-		 * Clear the data from the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param int $uid the user id the data is stored for
-		 * @return bool was the data deleted?
-		 */
-		protected static function _user_clear_db($module, $id, $uid)
 		{
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
@@ -396,7 +312,7 @@
 		 * @param int $uid the user id to the data is stored for
 		 * @return mixed the data from user cache
 		 */
-		protected static function _user_get_db($module, $id, $uid, $bypass = true, $compress = true)
+		public static function user_get($module, $id, $uid)
 		{
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
 			$uid = (int) $uid;
@@ -408,7 +324,7 @@
 			if ( $GLOBALS['phpgw']->db->next_record() )
 			{
 				$ret = $GLOBALS['phpgw']->db->f('cache_data');
-				if($compress && function_exists('gzcompress'))
+				if(function_exists('gzcompress'))
 				{
 					$ret =  gzuncompress(base64_decode($ret));
 				}
@@ -416,7 +332,7 @@
 				{
 					$ret = stripslashes($ret);
 				}
-				$ret = self::_value_return($ret, $bypass);
+				$ret = self::_value_return($ret);
 			}
 			return $ret;
 		}
@@ -430,7 +346,7 @@
 		 * @param int $uid the user id to store the data for
 		 * @return bool was the data stored in the user cache?
 		 */
-		protected static function _user_set_db($module, $id, $value, $uid, $bypass = true, $compress = true)
+		public static function user_set($module, $id, $value, $uid)
 		{
 			$uid = (int) $uid;
 
@@ -440,8 +356,8 @@
 			}
 
 			$key = $GLOBALS['phpgw']->db->db_addslashes(self::_gen_key($module, $id));
-			$value = self::_value_prepare($value, $bypass);
-			if($compress && function_exists('gzcompress'))
+			$value = self::_value_prepare($value);
+			if(function_exists('gzcompress'))
 			{
 				$value =  base64_encode(gzcompress($value, 9));
 			}
@@ -465,100 +381,5 @@
 			}
 
 			return !!$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-		}
-
-		/**
-		 * Clear the data from the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param int $uid the user id the data is stored for
-		 * @return bool was the data deleted?
-		 */
-		protected static function _user_clear($module, $id, $uid)
-		{
-			$uid = (int) $uid;
-			$module = $module . '_' . $uid;
-
-			$key = self::_gen_key($module, $id);
-
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
-			{
-				return self::_shm_clear($key);
-			}
-			return self::_file_clear($key);
-		}
-
-		/**
-		 * Retreive data from the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param int $uid the user id to the data is stored for
-		 * @return mixed the data from user cache
-		 */
-		protected static function _user_get($module, $id, $uid, $bypass = true, $compress = false)
-		{
-			$uid = (int) $uid;
-			$module = $module . '_' . $uid;
-			$key = self::_gen_key($module, $id);
-
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
-			{
-				$value = self::_shm_get($key);
-			}
-			else
-			{
-				$value = self::_file_get($key);
-			}
-
-			if(!$value)
-			{
-				return null;
-			}
-
-			if(function_exists('gzcompress') && $compress)
-			{
-				$value =  self::_value_return(gzuncompress(base64_decode($value)));
-				return $value;
-			}
-			else
-			{
-				return self::_value_return($value, $bypass);
-			}
-		}
-
-		/**
-		 * Store data in the user cache
-		 *
-		 * @param string $module the module name the data belongs to
-		 * @param string $id the internal module id for the data
-		 * @param mixed $data the data to store in user cache
-		 * @param int $uid the user id to store the data for
-		 * @return bool was the data stored in the user cache?
-		 */
-		protected static function _user_set($module, $id, $value, $uid, $bypass = true, $compress = false)
-		{
-			$uid = (int) $uid;
-
-			if ($uid == 0)
-			{
-				return false;
-			}
-
-			$module = $module . '_' . $uid;
-			$key = self::_gen_key($module, $id);
-			$value = self::_value_prepare($value, $bypass);
-
-			if(function_exists('gzcompress') && $compress)
-			{
-				$value =  base64_encode(gzcompress($value, 9));
-			}
-
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
-			{
-				return self::_shm_set($key, $value);
-			}
-			return self::_file_set($key, $value);
 		}
 	}

@@ -197,17 +197,11 @@ class egw_db
 			$db_type = $this->Type ? $this->Type : $GLOBALS['phpgw_info']['server']['db_type'];
 		}
 		$this->Type = $db_type;
-/*
+
 		$this->Database = $GLOBALS['phpgw_info']['server']['db_name']; 
 		$this->Host = $GLOBALS['phpgw_info']['server']['db_host']; 
 		$this->User = $GLOBALS['phpgw_info']['server']['db_user']; 
 		$this->Password = $GLOBALS['phpgw_info']['server']['db_pass']; 
-*/
-		$phpgw_db           = & $GLOBALS['phpgw']->db;
-		$this->Database		= & $phpgw_db->Database;
-		$this->Host			= & $phpgw_db->Host;
-		$this->User			= & $phpgw_db->User;
-		$this->Password		= & $phpgw_db->Password;
 
 		$this->query($query);
 	}

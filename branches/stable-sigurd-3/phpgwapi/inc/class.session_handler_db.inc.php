@@ -156,8 +156,7 @@
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			if ( $GLOBALS['phpgw']->db->next_record() )
 			{
-			//	return $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw']->db->f('data', true));
-				return unserialize($GLOBALS['phpgw']->db->f('data', true));
+				return $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw']->db->f('data', true));
 			}
 			return '';
 		}
@@ -172,11 +171,10 @@
 		public static function write($id, $data)
 		{
 			$db 	= & $GLOBALS['phpgw']->db;
-		//	$crypto = & $GLOBALS['phpgw']->crypto;
+			$crypto = & $GLOBALS['phpgw']->crypto;
 
 			$id   = $db->db_addslashes($id);
-		//	$data = $db->db_addslashes($crypto->encrypt($data));
-			$data = $db->db_addslashes(serialize($data));
+			$data = $db->db_addslashes($crypto->encrypt($data));
 			$ts   = time();
 
 			$db->query("SELECT session_id FROM phpgw_sessions WHERE session_id = '{$id}'", __LINE__, __FILE__);
