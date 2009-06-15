@@ -54,7 +54,7 @@
 				$to_ = date_parse($entity['to_']);
 				if($from_ > $to_)
 				{
-					$errors['from_'] = 'Invalid from date';
+					$errors['from_'] = lang('Invalid from date');
 				}
 			}
 			return $errors;
@@ -82,7 +82,7 @@
 			parent::doValidate($entity, $errors);
 			
 			if($entity['to_'] <= $entity['from_']) {
-				$errors['to'] = 'TO needs to be later than FROM';
+				$errors['to'] = lang('TO needs to be later than FROM');
 			}
 
 			$id = $this->_marshal($entity['id'] ? $entity['id'] : -1, 'int');
@@ -154,10 +154,10 @@
 			// Make sure the template allocation doesn't overlap with any
 			// other existing template allocation
 			if($entity['to_'] <= $entity['from_']) {
-				$errors['to'] = 'TO needs to be later than FROM';
+				$errors['to'] = lang('TO needs to be later than FROM');
 			}
 			if($entity['cost'] < 0) {
-				$errors['cost'] = 'COST needs to be non-negative';
+				$errors['cost'] = lang('COST needs to be non-negative');
 			}
 			if(!$entity['resources']) {
 				return;
