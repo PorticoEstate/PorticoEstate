@@ -2562,3 +2562,43 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.523';
+	/**
+	* Clean out cache and session as the scheme for compress data has been altered.
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_523()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_cache_user",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_sessions",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'temp_dir'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$temp_dir = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+
+		$dir = new DirectoryIterator($temp_dir); 
+		if ( is_object($dir) )
+		{
+			foreach ( $dir as $file )
+			{
+				if ( $file->isDot()
+					|| !$file->isFile()
+					|| !$file->isReadable()
+					|| !strpos($file->getbaseName(), 'hpgw_cache_') == 1)
+				{
+					continue;
+				}
+				unlink((string) "{$temp_dir}/{$file}");
+			}
+		}
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.524';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
