@@ -116,6 +116,11 @@
 		{
 			$seasons = $this->bo->read();
 			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
+			
+			foreach($seasons['results'] as &$season) {
+				$season['status'] = lang($season['status']);
+			}
+			
 			return $this->yui_results($seasons);
 		}
 
@@ -206,6 +211,7 @@
 				}
 			}
 			$season['resource_ids'] = $resource_ids;
+			$season['status'] = $season['status'] ? lang($season['status']) : $season['status'];
 			self::render_template('season', array('season' => $season, 'lang' => $lang));
 		}
 

@@ -147,6 +147,7 @@
         </div>
     </form>
     </div>
+	
     <script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
