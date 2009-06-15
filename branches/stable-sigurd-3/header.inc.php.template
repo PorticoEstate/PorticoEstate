@@ -6,7 +6,8 @@
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
  	* @author Dave Hall <skwashd@phpgroupware.org>
- 	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+ 	* @author Sigurd Nes <sigurdne@online.no>
+ 	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
   	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
   	* @package phpgroupware
  	* @version $Id: header.inc.php.template 18392 2008-01-26 12:45:06Z skwashd $
@@ -65,6 +66,7 @@
 	$GLOBALS['phpgw_info']['server']['header_admin_password'] = '{HEADER_ADMIN_PASSWORD}';
 
 	// phpGroupWare domain-specific db settings
+	// Note that with mcrypt enabled- the database settings are encrypted (the web-interface has to be used to produce the settings)
 	{domains}
 
 	/**
@@ -116,6 +118,14 @@
 	* It should be around 30 bytes in length.
 	*/
 	$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '{MCRYPT_IV}';
+
+	/**
+	* @global string $phpgw_info['server']['setup_mcrypt_key']
+	* This is a random string used as the encryption key for mcrypt
+	* feel free to change it when setting up phpgroupware on a clean database,
+	* but you must not change it after that point!
+	*/
+	$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '{SETUP_MCRYPT_KEY}';
 
 	/*
 		This ensures IE gets the right character set

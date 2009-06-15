@@ -47,6 +47,10 @@
     <td>{lang_mcryptivdescr}</td>
   </tr>
   <tr>
+    <td><b>{lang_setup_mcrypt_key}</b><br><input type="text" name="setting[setup_mcrypt_key]" value="{setup_mcrypt_key}" size="40"></td>
+    <td>{lang_setup_mcrypt_key_descr}</td>
+  </tr>
+  <tr>
     <td><b>{lang_domselect}</b><br>
       <select name="setting[domain_selectbox]">
         <option value="True"{domain_selectbox_yes}>True</option>

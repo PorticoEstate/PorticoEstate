@@ -22,6 +22,32 @@
 	 * Include setup functions
 	 */
 	require_once('./inc/functions.inc.php');
+	
+	srand((double)microtime()*1000000);
+	$random_char = array(
+		'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
+		'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
+		'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
+		'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+	);
+
+	if(!isset($GLOBALS['phpgw_info']['server']['mcrypt_iv']) || !$GLOBALS['phpgw_info']['server']['mcrypt_iv'])
+	{
+		$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
+		for($i=0; $i < 30; ++$i)
+		{
+			$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
+		}
+	}
+
+	if(!isset($GLOBALS['phpgw_info']['server']['setup_mcrypt_key']) || !$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'])
+	{
+		$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '';
+		for($i=0; $i < 30; ++$i)
+		{
+			$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] .= $random_char[rand(0,count($random_char)-1)];
+		}
+	}
 
 	//$GLOBALS['phpgw_info']['server']['versions']['current_header'] = $setup_info['phpgwapi']['versions']['current_header'];
 	unset($setup_info);
@@ -204,6 +230,7 @@ HTML;
 			}
 			break;
 		default:
+
 			$GLOBALS['phpgw_setup']->html->show_header($GLOBALS['phpgw_info']['setup']['HeaderFormMSG'], False, 'header');
 
 			$detected = '';
@@ -221,7 +248,6 @@ HTML;
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
-
 
 			if ( !isset($ConfigLang) || !$ConfigLang )
 			{
@@ -341,7 +367,7 @@ HTML;
 			if(extension_loaded('mcrypt') || function_exists('mcrypt_list_modes'))
 			{
 				$detected .= '<li>' . lang('You appear to have enabled support for mcrypt') . "</li>\n";
-				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+//				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
 			}
 			else
 			{
@@ -413,12 +439,12 @@ HTML;
 						$setup_tpl->set_var('lang_domain',lang('Domain'));
 						$setup_tpl->set_var('lang_delete',lang('Delete'));
 						$setup_tpl->set_var('db_domain',$key);
-						$setup_tpl->set_var('db_host',$GLOBALS['phpgw_domain'][$key]['db_host']);
-						$setup_tpl->set_var('db_name',$GLOBALS['phpgw_domain'][$key]['db_name']);
-						$setup_tpl->set_var('db_user',$GLOBALS['phpgw_domain'][$key]['db_user']);
-						$setup_tpl->set_var('db_pass',$GLOBALS['phpgw_domain'][$key]['db_pass']);
+						$setup_tpl->set_var('db_host',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_host']));
+						$setup_tpl->set_var('db_name',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_name']));
+						$setup_tpl->set_var('db_user',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_user']));
+						$setup_tpl->set_var('db_pass',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_pass']));
 						$setup_tpl->set_var('db_type',$GLOBALS['phpgw_domain'][$key]['db_type']);
-						$setup_tpl->set_var('config_pass',$GLOBALS['phpgw_domain'][$key]['config_passwd']);
+						$setup_tpl->set_var('config_pass',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['config_passwd']));
 
 						$selected = '';
 						$dbtype_options = '';
@@ -427,7 +453,7 @@ HTML;
 						{
 							if ( $db == $GLOBALS['phpgw_domain'][$key]['db_type'] )
 							{
-								$selected = ' selected ';
+								$selected = ' selected';
 								$found_dbtype = true;
 							}
 							else
@@ -435,10 +461,11 @@ HTML;
 								$selected = '';
 							}
 							$dbtype_options .= <<<HTML
-								<option{$selected}value="{$db}">$db</option>
+								<option{$selected} value="{$db}">$db</option>
 
 HTML;
 						}
+
 						$setup_tpl->set_var('dbtype_options', $dbtype_options);
 
 						$setup_tpl->parse('domains','domain', true);
@@ -491,23 +518,10 @@ HTML;
 				$setup_tpl->set_var('comment_l','<!-- ');
 				$setup_tpl->set_var('comment_r',' -->');
 
-				srand((double)microtime()*1000000);
-				$random_char = array(
-					'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
-					'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
-					'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
-					'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-				);
-
-				$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
-				for($i=0; $i < 30; ++$i)
-				{
-					$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
-				}
 				$GLOBALS['phpgw_info']['server']['header_admin_password'] = '';
 				$GLOBALS['phpgw_info']['server']['db_persistent'] = false;
 				$GLOBALS['phpgw_info']['server']['sessions_type'] = 'php';
-				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
+//				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
 				$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] = false;
 				$GLOBALS['phpgw_info']['server']['domain_from_host'] = false;
 
@@ -529,7 +543,8 @@ HTML;
 
 			$setup_tpl->set_var('server_root', $GLOBALS['phpgw_info']['server']['server_root']);
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
-			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
+			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
+//			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
@@ -567,6 +582,8 @@ HTML;
 			}
 
 			$setup_tpl->set_var('mcrypt_iv',$GLOBALS['phpgw_info']['server']['mcrypt_iv']);
+
+			$setup_tpl->set_var('setup_mcrypt_key',$GLOBALS['phpgw_info']['server']['setup_mcrypt_key']);
 
 			if ( !isset($GLOBALS['phpgw_info']['server']['setup_acl']) || !$GLOBALS['phpgw_info']['server']['setup_acl'] )
 			{
@@ -646,6 +663,10 @@ HTML;
 			$setup_tpl->set_var('lang_mcryptversiondescr',lang('Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.'));
 			$setup_tpl->set_var('lang_mcryptiv',lang('MCrypt initialization vector'));
 			$setup_tpl->set_var('lang_mcryptivdescr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+
+			$setup_tpl->set_var('lang_setup_mcrypt_key',lang('Enter some random text as encryption key for the setup encryption'));
+			$setup_tpl->set_var('lang_setup_mcrypt_key_descr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+
 			$setup_tpl->set_var('lang_domselect',lang('Domain select box on login'));
 			$setup_tpl->set_var('lang_domain_from_host', lang('Automatically detect domain from hostname'));
 			$setup_tpl->set_var('lang_note_domain_from_host', lang('Note: This option will only work if show domain select box is off.'));

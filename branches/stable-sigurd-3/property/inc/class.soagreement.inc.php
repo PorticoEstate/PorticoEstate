@@ -391,6 +391,7 @@
 				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
 				$agreement_id	= (isset($data['agreement_id'])?$data['agreement_id']:'');
 			}
+$allrows = true; // return all..
 
 			$entity_table = 'fm_activity_price_index';
 
