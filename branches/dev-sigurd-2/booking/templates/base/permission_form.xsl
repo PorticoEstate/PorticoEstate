@@ -107,7 +107,7 @@
 			</input>
 			<a class="cancel">
 				<xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-				<xsl:text>Cancel</xsl:text>
+				<xsl:text><xsl:value-of select="php:function('lang', 'Cancel')"/></xsl:text>
 			</a>
 		</div>
 	</form>

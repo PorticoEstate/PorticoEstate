@@ -54,7 +54,7 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
-						<td colspan='4'><xsl:value-of select="php:function('lang', 'No Data')"/></td>
+						<td colspan='4'><xsl:value-of select="php:function('lang', 'No Data.')"/></td>
 					</xsl:otherwise>
 				</xsl:choose>
 			</tbody>

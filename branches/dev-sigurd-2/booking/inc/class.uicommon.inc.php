@@ -198,6 +198,18 @@
 					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
 					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 				),
+				'DataTable' => array(
+					'MSG_EMPTY' => json_encode(lang('No records found.')),
+					'MSG_LOADING' => json_encode(lang("Loading...")),
+					'MSG_SORTASC' => json_encode(lang('Click to sort ascending')),
+					'MSG_SORTDESC' => json_encode(lang('Click to sort descending')),
+				),
+				'setupDatePickerHelper' => array(
+					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
+				),
+				'common' => array(
+					'LBL_NAME' => json_encode(lang('Name')),
+				),
 			);
 		}
 

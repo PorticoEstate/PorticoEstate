@@ -77,7 +77,7 @@
 			$building['next_link'] = self::link(array('menuaction' => $module .'.schedule', 'id' => $building['id'], 'date'=> $next_date->format('Y-m-d')));
 			for($i = 0; $i < 7; $i++)
 			{
-				$building['days'][] = array('label' => $date->format('l').'<br/>'.$date->format('M d'), 'key' => $date->format('D'));
+				$building['days'][] = array('label' => sprintf('%s<br/>%s %s', lang($date->format('l')), lang($date->format('M')), $date->format('d')), 'key' => $date->format('D'));
 				$date->modify('+1 day');
 			}
 			return $building;

@@ -69,7 +69,7 @@
 			</div>
 
 
-			<dt><a href="#" id="add-date-link">Add another date</a></dt>
+			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></dt>

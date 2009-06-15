@@ -110,8 +110,6 @@
 				unset($data['datatable']['field'][0]['formatter']);
 				unset($data['datatable']['field'][2]); 
 			}
-			
-			self::render_template('datatable', $data);
 	
 			self::render_template('datatable', $data);
 		}
@@ -143,6 +141,7 @@
 			}
 			$this->flash_form_errors($errors);
 			
+			$agegroup['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
 			self::render_template('agegroup_new', array('agegroup' => $agegroup));
 		}
 
@@ -168,48 +167,7 @@
 			}
 			$this->flash_form_errors($errors);
 			
-				/**
-				 * Translation
-				 **/
-					$lang['title'] = lang('Edit agegroup group');
-					$lang['name'] = lang('Name');
-					$lang['description'] = lang('Description');
-					$lang['resource'] = lang('Resource');
-					$lang['create'] = lang('Create');
-					$lang['buildings'] = lang('Buildings');
-					$lang['resources'] = lang('Resources');
-					$lang['agegroup'] = lang('agegroup');
-					$lang['active'] = lang('Active');
-					$lang['inactive'] = lang('Inactive');
-					$lang['save'] = lang('Save');
-					$lang['agegroup'] = lang('agegroup');
-					$lang['parent'] = lang('Set new parent');
-					$lang['novalue'] = lang('No Parent');
-					$lang['current_parent'] = lang('Current Parent');
-					$lang['cancel'] = lang('Cancel');
-					$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
 			self::render_template('agegroup_edit', array('resource' => $resource, 'lang' => $lang));
-		}
-		
-		public function show()
-		{
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-					$lang['title'] = lang('New agegroup');
-					$lang['name'] = lang('Name');
-					$lang['description'] = lang('Description');
-					$lang['resource'] = lang('Resource');
-					$lang['create'] = lang('Create');
-					$lang['buildings'] = lang('Buildings');
-					$lang['resources'] = lang('Resources');
-					$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiagegroup.edit', 'id' => $resource['id']));
-					$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
-					$lang['agegroup'] = lang('agegroup');
-					$lang['save'] = lang('Save');
-					$lang['edit'] = lang('Edit');
-					$lang['cancel'] = lang('Cancel');
-			$data = array(
-				'resource'	=>	$resource
-			);
-			self::render_template('agegroup', array('agegroup' => $data, 'lang' => $lang));
 		}
 	}

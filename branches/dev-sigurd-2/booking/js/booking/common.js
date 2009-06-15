@@ -1,15 +1,29 @@
 YAHOO.namespace('booking');
 
-YAHOO.widget.Calendar.prototype.init_without_i18n = YAHOO.widget.Calendar.prototype.init;
-
-YAHOO.widget.Calendar.prototype.init_with_i18n = function(id, container, config) {
-	if (YAHOO && YAHOO.booking && YAHOO.booking.i18n && YAHOO.booking.i18n.Calendar) {
-		YAHOO.booking.i18n.Calendar(config);
-	}
-	return this.init_without_i18n(id, container, config);
+YAHOO.booking.js_alias_method_chain = function(constructor_func, func_name, new_feature_name, feature_impl_func) {
+	constructor_func.prototype[func_name+'_without_'+new_feature_name] = constructor_func.prototype[func_name];
+	constructor_func.prototype[func_name+'_with_'+new_feature_name] = feature_impl_func;
+	constructor_func.prototype[func_name] = constructor_func.prototype[func_name+'_with_'+new_feature_name];
 };
 
-YAHOO.widget.Calendar.prototype.init = YAHOO.widget.Calendar.prototype.init_with_i18n;
+YAHOO.booking.lang = function(section, config) {
+	config = config || {};
+	if (YAHOO && YAHOO.booking && YAHOO.booking.i18n && YAHOO.booking.i18n[section]) {
+		YAHOO.booking.i18n[section](config);
+	}
+	return config;
+};
+
+/** Hook widgets to translations **/
+YAHOO.booking.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
+	YAHOO.booking.lang('Calendar', config);
+	return this.init_without_i18n(id, container, config);
+});
+
+YAHOO.booking.js_alias_method_chain(YAHOO.widget.DataTable, '_initConfigs', 'i18n', function(config) {
+	YAHOO.booking.lang('DataTable', config);
+	return this._initConfigs_without_i18n(config);
+});
 
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
@@ -22,7 +36,6 @@ parseISO8601 = function (string) {
 		date.setMinutes(d[10]);
 	return date;
 };
-
 
 YAHOO.booking.serializeForm = function(formID) {
 	var form = YAHOO.util.Dom.get(formID);
@@ -165,6 +178,10 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 		resultsList: "ResultSet.Result",
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
 	};
+	
+	lang = {LBL_NAME: 'Name'};
+	YAHOO.booking.lang('common', lang);
+	
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
 		var checked = '';
 		for(var i =0; i< selection.length; i++) {
@@ -178,7 +195,7 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 	};
 	var colDefs = [
 		{key: "id", label: "", formatter: checkboxFormatter},
-		{key: "name", label: "Name", sortable: true}
+		{key: "name", label: lang['LBL_NAME'], sortable: true}
 	];
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, {
 	   sortedBy: {key: 'name', dir: YAHOO.widget.DataTable.CLASS_ASC}
@@ -201,6 +218,10 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	var Event = YAHOO.util.Event;
 	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
 	var oButton = new YAHOO.widget.Button({type: "menu", id: Dom.generateId(), menu: oCalendarMenu, container: field});
+	
+	var lang = {LBL_CHOOSE_DATE: 'Choose a date'};
+	YAHOO.booking.lang('setupDatePickerHelper', lang);
+	
 	oButton._calendarMenu = oCalendarMenu;
 	oButton._input = field._input = Dom.getElementsBy(function(){return true;}, 'input', field)[0];
 	oButton.on("appendTo", function () {
@@ -233,7 +254,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		var dateValue = year + '-' + month + '-' + day;
 		var timeValue = hours + ':' + minutes;
 		if(year == 1901) {
-			this.set('label', 'Choose a date');
+			this.set('label', lang.LBL_CHOOSE_DATE);
 		} else {
 			this.set('label', dateValue);
 		}

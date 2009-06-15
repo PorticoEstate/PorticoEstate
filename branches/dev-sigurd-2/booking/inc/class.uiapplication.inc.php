@@ -101,6 +101,10 @@
 		public function index_json()
 		{
 			$applications = $this->bo->read();
+			foreach($applications['results'] as &$application)
+			{
+				$application['status'] = lang($application['status']);
+			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
 		}

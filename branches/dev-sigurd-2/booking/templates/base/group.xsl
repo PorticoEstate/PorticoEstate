@@ -21,6 +21,7 @@
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
         <dl class="proplist">
             <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>

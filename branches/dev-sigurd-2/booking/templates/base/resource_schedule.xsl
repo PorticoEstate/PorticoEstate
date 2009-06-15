@@ -23,6 +23,8 @@
 		</ul>
 
 		<xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
+		
 		<h4><xsl:value-of select="lang/resource_schedule"/></h4>
 		<ul id="week-selector">
 			<li><a><xsl:attribute name="href"><xsl:value-of select="resource/prev_link"/></xsl:attribute><xsl:value-of select="lang/prev_week"/></a></li>

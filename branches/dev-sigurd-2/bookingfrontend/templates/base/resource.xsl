@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_booking_i18n"/>
+	
 	<div id="content">
 		<ul class="pathway">
 			<li>
@@ -51,12 +53,12 @@
 
 	<script type="text/javascript">
 		var resource_id = <xsl:value-of select="resource/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Equipment Name', 'Document Name', 'category', 'Activity')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
 <![CDATA[
 	YAHOO.util.Event.addListener(window, "load", function() {
 
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: lang['Document Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['category']}];
+	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['category']}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';

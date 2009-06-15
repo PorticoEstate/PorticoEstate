@@ -19,7 +19,7 @@
 
 		<form action="" method="POST" id="form">
 			<dl class="form-col">
-				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Resource')" /></label></dt>
+				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 				<dd><input name="name" id="field_name" type="text" value="{resource/name}"/></dd>
 				
 				<dt><label for="field_activity_id"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>

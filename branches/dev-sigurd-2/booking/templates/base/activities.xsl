@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	
+<xsl:call-template name="yui_booking_i18n"/>
 
 <xsl:if test="navi/add">
 	<div style="padding: 2em;">

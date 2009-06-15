@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_booking_i18n"/>
+	
 	<div id="content">
 		<ul id="metanav">
 			<xsl:choose>
@@ -79,13 +81,13 @@
 	
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Group')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
 	
 		<![CDATA[
 		YAHOO.util.Event.addListener(window, "load", function() {
 			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
 			var colDefs = [
-				{key: 'name', label: 'Group', formatter: YAHOO.booking.formatLink}, {key: 'link', 'hidden': true}
+				{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'link', 'hidden': true}
 			];
 			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
 		});

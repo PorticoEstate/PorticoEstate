@@ -21,6 +21,7 @@
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
 		<h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
         <div class="description"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
@@ -62,17 +63,16 @@
 
 <script type="text/javascript">
 var resource_id = <xsl:value-of select="resource/id"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Edit', 'Delete', 'Account', 'Role')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
 
 	var url = 'index.php?menuaction=booking.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}, {key: 'category', label: 'Category'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=booking.uipermission_resource.index&sort=name&filter_object_id=' + resource_id + '&phpgw_return_as=json&';
-]]>
-	var colDefs = [{key: 'subject_name', label: '<xsl:value-of select="php:function('lang', 'Account')" />'}, {key: 'role', label: '<xsl:value-of select="php:function('lang', 'Role')" />'}, {key: 'actions', label: '<xsl:value-of select="php:function('lang', 'Actions')" />', formatter: YAHOO.booking.formatGenericLink('<xsl:value-of select="php:function('lang', 'Edit')" />', '<xsl:value-of select="php:function('lang', 'Delete')" />')}];
-    <![CDATA[
+	var colDefs = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
 	YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
 });
 ]]>

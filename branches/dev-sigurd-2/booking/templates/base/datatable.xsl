@@ -16,6 +16,7 @@
 </func:function>
 
 <xsl:template match="data">
+	<xsl:call-template name="yui_booking_i18n"/>
     <xsl:apply-templates select="form" />
     <xsl:apply-templates select="toolbar"/>
     <xsl:apply-templates select="paging"/>

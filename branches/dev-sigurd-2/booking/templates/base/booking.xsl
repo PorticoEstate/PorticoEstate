@@ -6,6 +6,7 @@
         </ul>
 
         <xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
@@ -33,10 +34,11 @@
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="booking/resource_ids"/>';
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-    var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
+    var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 });
 ]]>
