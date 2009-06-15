@@ -29,8 +29,13 @@
 			{
 				foreach($children[$parent_id] as $activity)
 				{
-					$node = array("type"=>"text", "href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 'id' => $activity['id'])), "target" => "_self", "label"=>$activity['name'], 'children' => $this->treeitem($children, $activity['id']));
-					
+					$node = array(
+						"type"=>"text", 
+						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 
+						                           'id' => $activity['id'])), 'target' => '_self', 
+						                           'label' => $activity['name'], 
+						                           'children' => $this->treeitem($children, $activity['id'])
+					);
 					if (!$this->bo->allow_write($activity)) {
 						unset($node['href']);
 					}
@@ -46,7 +51,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
-			$resources = $this->bo->read();
+			$resources = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
 			$children = array();
 			foreach($resources['results'] as $activity)
 			{
