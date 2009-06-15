@@ -44,9 +44,9 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function validate($entity)
+		function doValidate($entity, booking_errorstack $errors)
 		{
-			$errors = parent::validate($entity);
+			parent::doValidate($entity, $errors);
 			// Make sure to_ > from_
 			if(!$errors)
 			{
@@ -77,10 +77,10 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function validate($entity)
+		function doValidate($entity, booking_errorstack $errors)
 		{
-			$errors = parent::validate($entity);
-
+			parent::doValidate($entity, $errors);
+			
 			if($entity['to_'] <= $entity['from_']) {
 				$errors['to'] = 'TO needs to be later than FROM';
 			}
@@ -150,6 +150,7 @@
 
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
+			parent::doValidate($entity, $errors);
 			// Make sure the template allocation doesn't overlap with any
 			// other existing template allocation
 			if($entity['to_'] <= $entity['from_']) {
