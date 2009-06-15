@@ -259,8 +259,8 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this.set('label', dateValue);
 		}
 		if(time) {
-			this._hours.set('label', hours);
-			this._minutes.set('label', minutes);
+			this._hours.set('value', parseInt(hours, 10));
+			this._minutes.set('value', parseInt(minutes, 10));
 		}
 		if(year != 1901 && date && time)
 			this._input.value = dateValue + ' ' + timeValue;
@@ -302,30 +302,30 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		}, this, true);
 	});
 	if(time) {
-		var hourMenu = [{text: '00', value: 0}, {text: '01', value: 1}, {text: '02', value: 2}, {text: '03', value: 3}, {text: '04', value: 4}, {text: '05', value: 5}, {text: '06', value: 6}, {text: '07', value: 7}, {text: '08', value: 8}, {text: '09', value: 9}, {text: '10', value: 10}, {text: '11', value: 11}, {text: '12', value: 12}, {text: '13', value: 13}, {text: '14', value: 14}, {text: '15', value: 15}, {text: '16', value: 16}, {text: '17', value: 17}, {text: '18', value: 18}, {text: '19', value: 19}, {text: '20', value: 20}, {text: '21', value: 21}, {text: '22', value: 22}, {text: '23', value: 23}];
-		oButton._hours = new YAHOO.widget.Button({ 
-									type: "menu", 
-									id: Dom.generateId(), 
-									menu: hourMenu, 
-									container: field});
-		var minuteMenu = [{text: '00', value: 0}, {text: '15', value: 15}, {text: '30', value: 30}, {text: '45', value: 45}];
-		oButton._minutes = new YAHOO.widget.Button({ 
-									type: "menu", 
-									id: Dom.generateId(), 
-									menu: minuteMenu, 
-									container: field});
-		oButton._hours.getMenu().subscribe('click', function(p_sType, p_aArgs) {
-			oMenuItem = p_aArgs[1];
-			this._date.setHours(oMenuItem.value);
-			this._update();
-		}, oButton, true);
-		oButton._minutes.getMenu().subscribe('click', function(p_sType, p_aArgs) {
-			oMenuItem = p_aArgs[1];
-			this._date.setMinutes(oMenuItem.value);
-			this._update();
-		}, oButton, true);
+		oButton._hours = new YAHOO.booking.InputNumberRange({min: 0, max:23});
+		oButton._minutes = new YAHOO.booking.InputNumberRange({min: 0, max:59});
+		
+		oButton._hours.on('updateEvent', function(args) {
+			oButton._date.setHours(this.get('value'));
+			oButton._update();
+		});
+		
+		oButton._minutes.on('updateEvent', function(args) {
+			oButton._date.setMinutes(this.get('value'));
+			oButton._update();
+		});
+		
+		oButton.on("appendTo", function () {
+			var timePicker = Dom.get(field).appendChild(document.createElement('span'));
+			Dom.addClass(timePicker, 'time-picker-inputs');
+			timePicker.appendChild(document.createTextNode(' '));
+			oButton._hours.render(timePicker);
+			timePicker.appendChild(document.createTextNode(' : '));
+			oButton._minutes.render(timePicker);
+			oButton._update();
+		});
 	}
-	oButton._update.apply(oButton);
+	oButton._update();
 };
 
 // Executed on all booking.uicommon-based pages
@@ -352,3 +352,174 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 	descEdit.render();
 	return descEdit;
 };
+
+
+(function(){
+    var Dom = YAHOO.util.Dom,
+        Event = YAHOO.util.Event,
+        Panel = YAHOO.widget.Panel,
+		Lang = YAHOO.lang;
+
+	var CSS_PREFIX = 'booking_number_range_';
+ 
+	var InputNumberRange = function(oConfigs) {
+	    InputNumberRange.superclass.constructor.call(this, document.createElement('span'), oConfigs);
+	    this.createEvent('updateEvent');
+		this.refresh(['id'],true);
+	};
+
+	YAHOO.booking.InputNumberRange = InputNumberRange;
+
+	Lang.extend(InputNumberRange, YAHOO.util.Element, {
+		initAttributes: function (oConfigs) { 
+			InputNumberRange.superclass.initAttributes.call(this, oConfigs);
+			
+			var container = this.get('element');
+		
+			this.setAttributeConfig('inputEl', {
+		        readOnly: true,
+		        value: container.appendChild(document.createElement('span'))
+		    });
+	
+			this.setAttributeConfig('id', {
+		        writeOnce: true,
+		        validator: function (value) {
+		            return /^[a-zA-Z][\w0-9\-_.:]*$/.test(value);
+		        },
+		        value: Dom.generateId(),
+		        method: function (value) {
+		            this.get('inputEl').id = value;
+		        }
+		    });
+	
+			this.setAttributeConfig('value', {
+		        value: 0,
+				validator: Lang.isNumber
+		    });
+		
+			this.setAttributeConfig('input', {
+				value: null
+		    });
+		
+			this.setAttributeConfig('min', {
+				validator: Lang.isNumber,
+		        value: 100
+		    });
+		
+			this.setAttributeConfig('max', {
+				validator: Lang.isNumber,
+		        value: 0
+		    });
+		
+			this.setAttributeConfig('input_length', {
+				validator: Lang.isNumber,
+		        value: null
+		    });
+		},
+	
+		destroy: function () { 
+			var el = this.get('element');
+		    Event.purgeElement(el, true);
+		    el.parentNode.removeChild(el);
+		},
+		
+		_padValue: function(value)
+		{
+			value = value.toString('10');
+			var padding = this.get('input_length') - value.length;
+			if (padding > 0) {
+				return ((new Array(padding+1).join('0')) + value);
+			}
+			return value;
+		},
+		
+		_updateValue: function(input) {
+			var value;
+			
+			if (input.value.length > 0) {
+				value = parseInt(input.value, 10);
+			} else {
+				value = 0;
+			}
+				
+			if (isNaN(value)) { 
+				value = this.get('min');
+			}
+			
+			if (value < this.get('min')) {
+				value = this.get('min');
+			}
+			
+			if (value > this.get('max')) {
+				value = this.get('max');
+			}
+			
+			this.set('value', value);
+		},
+		
+		render: function (parentEl) {
+			parentEl = Dom.get(parentEl);
+	    
+			if (!parentEl) {
+				YAHOO.log('Missing mandatory argument in YAHOO.booking.InputNumberRange.render:  parentEl','error','Field');
+				return null;
+		    }
+		
+			var containerEl = this.get('element');
+			this.addClass(CSS_PREFIX + 'container');
+		
+			var inputEl = this.get('inputEl');
+			Dom.addClass(inputEl, CSS_PREFIX + 'input');
+		
+			this._renderInputEl(inputEl);
+		
+			parentEl.appendChild(containerEl); //Appends to document to show the component
+		},
+		
+		_fireUpdateEvent: function(oArgs, input)
+		{
+			this._updateValue(input);
+			
+			input.value = this._padValue(this.get('value'));
+			
+			this.fireEvent('updateEvent', {
+	            event: oArgs,
+	            target: input
+	        });
+		},
+		
+		_renderInputEl: function (containerEl) { 
+			var input = containerEl.appendChild(document.createElement('input'));
+		
+			if (!this.get('input_length')) {
+				this.set('input_length', this.get('max').toString().length);
+			}
+		
+			var size = this.get('input_length');
+			input.setAttribute('size', size);
+			input.setAttribute('maxlength', size);
+			
+		    input.value = this._padValue(this.get('value'));
+		
+			this.set('input', input);
+		
+		    Event.on(input,'keyup', function (oArgs) {
+		        this._updateValue(input);
+		    }, this, true);
+		
+			Event.on(input, 'change', function(oArgs) {
+				this._fireUpdateEvent(oArgs, input);
+		    }, this, true);
+			
+			oForm = input.form;
+			
+			if (oForm) {
+				Event.on(oForm, "submit", function() {
+					this._fireUpdateEvent(oArgs, input);
+				}, null, this);
+			}
+			
+		}
+	});
+
+})();

@@ -196,3 +196,9 @@ div.allocation-list
 .hideit {
 	visibility: hidden;
 }
+
+.datetime-picker .time-picker-inputs {
+	vertical-align: top;
+	position: relative;
+	top: 6px;
+}
