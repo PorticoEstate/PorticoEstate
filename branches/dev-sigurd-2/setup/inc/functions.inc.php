@@ -340,13 +340,18 @@
 
 	$GLOBALS['phpgw_info']['server']['app_images'] = 'templates/base/images';
 
-	$_key = md5('a_setup_encryptkey');
-	$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 	if($_POST['setting']['enable_mcrypt'] == 'True')
 	{
 		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+		$_iv  = $_POST['setting']['mcrypt_iv'];
+		$_key = $_POST['setting']['setup_mcrypt_key'];
 	}
-	
+	else
+	{
+		$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
+		$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];	
+	}
+
 	$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
 
 	$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', True, True);

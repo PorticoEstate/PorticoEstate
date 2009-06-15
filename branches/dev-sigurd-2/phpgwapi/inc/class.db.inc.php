@@ -106,7 +106,7 @@
 
 			$this->Type = $db_type;
 
-			$_key = md5('a_setup_encryptkey'); // FIXME
+			$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];
 			$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
 			$crypto = createObject('phpgwapi.crypto',array($_key, $_iv));
 

@@ -23,23 +23,30 @@
 	 */
 	require_once('./inc/functions.inc.php');
 	
+	srand((double)microtime()*1000000);
+	$random_char = array(
+		'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
+		'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
+		'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
+		'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+	);
+
 	if(!isset($GLOBALS['phpgw_info']['server']['mcrypt_iv']) || !$GLOBALS['phpgw_info']['server']['mcrypt_iv'])
 	{
-
-		srand((double)microtime()*1000000);
-		$random_char = array(
-			'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
-			'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
-			'w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L',
-			'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-		);
-
 		$GLOBALS['phpgw_info']['server']['mcrypt_iv'] = '';
 		for($i=0; $i < 30; ++$i)
 		{
 			$GLOBALS['phpgw_info']['server']['mcrypt_iv'] .= $random_char[rand(0,count($random_char)-1)];
 		}
-	
+	}
+
+	if(!isset($GLOBALS['phpgw_info']['server']['setup_mcrypt_key']) || !$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'])
+	{
+		$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '';
+		for($i=0; $i < 30; ++$i)
+		{
+			$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] .= $random_char[rand(0,count($random_char)-1)];
+		}
 	}
 
 	//$GLOBALS['phpgw_info']['server']['versions']['current_header'] = $setup_info['phpgwapi']['versions']['current_header'];
@@ -576,6 +583,8 @@ HTML;
 
 			$setup_tpl->set_var('mcrypt_iv',$GLOBALS['phpgw_info']['server']['mcrypt_iv']);
 
+			$setup_tpl->set_var('setup_mcrypt_key',$GLOBALS['phpgw_info']['server']['setup_mcrypt_key']);
+
 			if ( !isset($GLOBALS['phpgw_info']['server']['setup_acl']) || !$GLOBALS['phpgw_info']['server']['setup_acl'] )
 			{
 				$GLOBALS['phpgw_info']['server']['setup_acl'] = '127.0.0.1';
@@ -654,6 +663,10 @@ HTML;
 			$setup_tpl->set_var('lang_mcryptversiondescr',lang('Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.'));
 			$setup_tpl->set_var('lang_mcryptiv',lang('MCrypt initialization vector'));
 			$setup_tpl->set_var('lang_mcryptivdescr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+
+			$setup_tpl->set_var('lang_setup_mcrypt_key',lang('Enter some random text as encryption key for the setup encryption'));
+			$setup_tpl->set_var('lang_setup_mcrypt_key_descr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+
 			$setup_tpl->set_var('lang_domselect',lang('Domain select box on login'));
 			$setup_tpl->set_var('lang_domain_from_host', lang('Automatically detect domain from hostname'));
 			$setup_tpl->set_var('lang_note_domain_from_host', lang('Note: This option will only work if show domain select box is off.'));
