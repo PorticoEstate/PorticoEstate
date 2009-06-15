@@ -25,11 +25,12 @@
             <dd><div id="resources_container"/></dd>
         </dl>
 
-        <div class="clr"/>
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="booking/edit_link"/></xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Edit')" />
-        </a>
+		<div class="form-buttons">
+	        <button>
+	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="booking/edit_link"/>"</xsl:attribute>
+	            <xsl:value-of select="php:function('lang', 'Edit')" />
+	        </button>
+		</div>
     </div>
 
 <script type="text/javascript">
