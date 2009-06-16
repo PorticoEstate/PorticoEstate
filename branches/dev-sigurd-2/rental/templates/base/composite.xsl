@@ -1,71 +1,28 @@
-<!--
-	Function
-	phpgw:conditional( expression $test, mixed $true, mixed $false )
-	Evaluates test expression and returns the contents in the true variable if
-	the expression is true and the contents of the false variable if its false
+<xsl:include href="rental/templates/base/common.xsl"/>
 
-	Returns mixed
--->
-<func:function name="phpgw:conditional">
-	<xsl:param name="test"/>
-	<xsl:param name="true"/>
-	<xsl:param name="false"/>
+<xsl:template name="pageForm">
 
-	<func:result>
-		<xsl:choose>
-			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$false"/>
-			</xsl:otherwise>
-		</xsl:choose>
-  	</func:result>
-</func:function>
+</xsl:template>
 
-<xsl:include href="rental/templates/base/datasource_definition.xsl"/>
+<xsl:template name="pageContent">
+	<xsl:apply-templates select="data"/>
+</xsl:template>
 
-<xsl:template match="phpgw" xmlns:php="http://php.net/xsl">
-	<script>
-		YAHOO.rental.numberOfDatatables = <xsl:value-of select="count(//datatable)"/>;
-		YAHOO.rental.setupDatasource = new Array();
-	</script>
-	
-	<div id="rental_user_error">
-		<xsl:value-of select="data/error"/>
-	</div>
-	<div id="rental_user_message">
-		<xsl:value-of select="data/message"/>
-	</div>
-	<h3><xsl:value-of select="php:function('lang', 'rental_rc_rental_composite')" />: <xsl:value-of select="data/composite/name"/></h3>
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<h3><xsl:value-of select="php:function('lang', 'rental_rc_rental_composite')" />: <xsl:value-of select="composite/name"/></h3>
 	<div id="composite_edit_tabview" class="yui-navset">
-		<xsl:value-of disable-output-escaping="yes" select="data/tabs" />
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<xsl:apply-templates select="data/composite"/>
+			<xsl:apply-templates select="composite"/>
 			<div id="elements">
-				<xsl:apply-templates select="data/datatable_included_areas" />
-				<xsl:if test="//access = 1">
-	    			<xsl:apply-templates select="data/datatable_available_areas" />
+				<xsl:call-template name="datatable_included_areas" />
+				<xsl:if test="access = 1">
+	    			<xsl:call-template name="datatable_available_areas" />
 	    		</xsl:if>
 			</div>
 			<div id="contracts">
-			    <xsl:apply-templates select="data/datatable_contracts" />
+			    <xsl:call-template name="datatable_contracts" />
 			</div>
-			<!--<div id="documents">
-				<div id="documents_container">					
-					<script type="text/javascript">
-						var  composite_id = <xsl:value-of select="data/id"/>;
-						<![CDATA[
-							YAHOO.util.Event.addListener(window, "load", function() {
-								var url = 'index.php?menuaction=rental.uidocument_composite.index&sort=name&filter_owner_id=' + composite_id + '&phpgw_return_as=json&';
-								var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.rental.formatLink}, {key: 'category', label: 'Category'}, {key: 'actions', label: 'Actions', formatter: YAHOO.rental.formatGenericLink('Edit', 'Delete')}];
-								YAHOO.rental.inlineTableHelper('documents_container', url, colDefs);
-							});
-						]]>
-					</script>
-				</div>
-			</div>
-			-->
 		</div>
 	</div>		
 </xsl:template>
@@ -121,13 +78,13 @@
 				</dt>
 				<dd>
 					<input type="text" name="postcode" id="postcode" class="postcode">
-						<xsl:if test="../access = 0">
+						<xsl:if test="//access = 0">
 							<xsl:attribute name="disabled" value="true"/>
 						</xsl:if>
 						<xsl:attribute name="value"><xsl:value-of select="postcode"/></xsl:attribute>
 					</input>
 					<input type="text" name="place" id="place">
-						<xsl:if test="../access = 0">
+						<xsl:if test="//access = 0">
 							<xsl:attribute name="disabled" value="true"/>
 						</xsl:if>
 						<xsl:attribute name="value"><xsl:value-of select="place"/></xsl:attribute>
@@ -173,7 +130,6 @@
 					</textarea>
 				</dd>
 			</dl>
-			
 			<div class="form-buttons">
 				<xsl:choose>
 					<xsl:when test="../access = 1">
@@ -197,81 +153,14 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="form">
-	<form id="queryForm">
-		<xsl:attribute name="method">
-			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
-		</xsl:attribute>
-
-		<xsl:attribute name="action">
-			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
-		</xsl:attribute>
-        <xsl:for-each select="*">
-        	<xsl:if test="./toolbar">
-        		<xsl:call-template name="toolbar"/>
-        	</xsl:if>
-        </xsl:for-each>
-	</form>
-</xsl:template>
-
-<xsl:template name="toolbar">
-    <div id="toolbar"><table class="toolbartable"><tr>
-    	<td class="toolbarlabel"><label><b><xsl:value-of select="./label"/></b></label></td>
-        <xsl:for-each select="*">
-        	<div class="toolbarelement">
-	        	<xsl:if test="control = 'input'">
-	        		<td class="toolbarcol">
-					<label class="toolbar_element_label">
-				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
-				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-				    </label>
-				    <input>
-			        	<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
-			    		<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
-			    		<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-			    		<xsl:attribute name="onClick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
-			    		<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
-			    		<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
-			    		<!-- <xsl:attribute name="class">yui-button yui-menu-button yui-skin-sam yui-split-button yui-button-hover button</xsl:attribute> -->
-				    </input>
-				    </td>
-				</xsl:if>
-				<xsl:if test="control = 'select'">
-					<td class="toolbarcol">
-					<label class="toolbar_element_label">
-				    <xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
-				    <xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-				    </label>
-				    <select>
-					<xsl:attribute name="id"><xsl:value-of select="phpgw:conditional(not(id), '', id)"/></xsl:attribute>
-					<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
-					<xsl:attribute name="onchange"><xsl:value-of select="phpgw:conditional(not(onchange), '', onchange)"/></xsl:attribute>
-			   		<xsl:for-each select="keys">
-			   			<xsl:variable name="p" select="position()" />
-			   			<option>
-			   				<xsl:attribute name="value"><xsl:value-of select="text()"/></xsl:attribute>
-			   				<xsl:if test="text() = ../default"><xsl:attribute name="default"/></xsl:if>
-			   				<xsl:value-of select="../values[$p]"/>
-			   			</option>
-			   		</xsl:for-each>
-			   		</select>
-			   		</td>
-				</xsl:if>
-			</div>
-        </xsl:for-each> 
-    </tr></table></div>
-</xsl:template>
-
-<xsl:template match="datatable_included_areas" xmlns:php="http://php.net/xsl">
-	<h4><xsl:value-of select="php:function('lang', 'rental_rc_added_areas')" /></h4>
-	<xsl:apply-templates select="form" />
+<xsl:template name="datatable_included_areas" xmlns:php="http://php.net/xsl">
+	<h3><xsl:value-of select="php:function('lang', 'rental_rc_added_areas')" /></h3>
 	<div class="datatable">
-		<div id="datatable-container">
+		<div id="datatable-container-included-areas">
 			<xsl:call-template name="datasource-definition" >
 				<xsl:with-param name="number">1</xsl:with-param>
-				<xsl:with-param name="form">queryForm</xsl:with-param>
-				<xsl:with-param name="filters">queryForm</xsl:with-param>
-				<xsl:with-param name="container_name">datatable-container</xsl:with-param>
+				<xsl:with-param name="container_name">datatable-container-included-areas</xsl:with-param>
+				<xsl:with-param name="source">index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<xsl:value-of select="composite_id"/></xsl:with-param>
 				<xsl:with-param name="context_menu_labels">
 					<xsl:choose>
 						<xsl:when test="../access = 1">
@@ -292,43 +181,206 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:with-param>
+				<xsl:with-param name="columnDefinitions">
+					[{
+						key: "location_code",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_id')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc1_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_property')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc2_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_building')"/>"
+					},
+					{
+						key: "loc3_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_section')"/>"
+					},
+					{
+						key: "address",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_address')"/>"
+					},
+					{
+						key: "area_gros",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_gros')"/>"
+					},
+					{
+						key: "area_net",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_net')"/>"
+					},
+					{
+						key: "actions",
+						hidden: 1
+					}
+				]
+				</xsl:with-param>
 			</xsl:call-template>
 		</div>
 	</div>
 </xsl:template>
 
-<xsl:template match="datatable_available_areas" xmlns:php="http://php.net/xsl">
-	<h4><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h4>
-	<xsl:apply-templates select="form" />
+<xsl:template name="datatable_available_areas" xmlns:php="http://php.net/xsl">
+	<h3><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h3>
+	<form id="available_areas_form" method="GET">
+		<div id="datatableToolbar">
+			<table class="datatableToolbar">
+				<tr>
+					<td class="toolbarlabel">
+						<xsl:value-of select="php:function('lang', 'rental_rc_toolbar_filters')"/>
+					</td>
+					<td class="toolbarcol">
+						<label class="toolbar_element_label" for="ctrl_toggle_level"><xsl:value-of select="php:function('lang', 'rental_rc_level')"/></label>
+						<select name="level" id="ctrl_toggle_level">
+							<option value="1" default=""><xsl:value-of select="php:function('lang', 'rental_rc_property')"/></option>
+							<option value="2"><xsl:value-of select="php:function('lang', 'rental_rc_building')"/></option>
+							<option value="3"><xsl:value-of select="php:function('lang', 'rental_rc_floor')"/></option>
+							<option value="4"><xsl:value-of select="php:function('lang', 'rental_rc_section')"/></option>
+							<option value="5"><xsl:value-of select="php:function('lang', 'rental_rc_room')"/></option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
 	<div class="datatable">
-		<div id="datatable-container2">
+		<div id="datatable-container-available-areas">
 			<xsl:call-template name="datasource-definition">
 				<xsl:with-param name="number">2</xsl:with-param>
-				<xsl:with-param name="form">queryForm</xsl:with-param>
-				<xsl:with-param name="filters">queryForm</xsl:with-param>
-				<xsl:with-param name="container_name">datatable-container2</xsl:with-param>
+				<xsl:with-param name="form">available_areas_form</xsl:with-param>
+				<xsl:with-param name="filters">['ctrl_toggle_level']</xsl:with-param>
+				<xsl:with-param name="container_name">datatable-container-available-areas</xsl:with-param>
+				<xsl:with-param name="source">index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=available_areas&amp;id=<xsl:value-of select="composite_id"/></xsl:with-param>
 				<xsl:with-param name="context_menu_labels">
 					['<xsl:value-of select="php:function('lang', 'rental_cm_add')"/>']
 				</xsl:with-param>
 				<xsl:with-param name="context_menu_actions">
 					['add_unit']
 				</xsl:with-param>
+				<xsl:with-param name="columnDefinitions">
+					[{
+						key: "location_code",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_id')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc1_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_property')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc2_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_building')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc3_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_floor')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc4_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_section')"/>",
+					    sortable: true
+					},
+					{
+						key: "loc5_name",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_room')"/>",
+					    sortable: true
+					},
+					{
+						key: "address",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_address')"/>",
+					    sortable: true
+					},
+					{
+						key: "area_gros",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_gros')"/>"
+					},
+					{
+						key: "area_net",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_net')"/>"
+					},
+					{
+						key: "actions",
+						hidden: 1
+					}
+				]
+				</xsl:with-param>
 			</xsl:call-template>
 		</div>
 	</div>
 </xsl:template>
 
-<xsl:template match="datatable_contracts" xmlns:php="http://php.net/xsl">
-	<h4><xsl:value-of select="php:function('lang', 'rental_rc_contracts_containing_this_composite')" /></h4>
-	<xsl:apply-templates select="form" />
+<xsl:template name="datatable_contracts" xmlns:php="http://php.net/xsl">
+	<h3><xsl:value-of select="php:function('lang', 'rental_rc_contracts_containing_this_composite')" /></h3>
+	<form id="contracts_form" method="GET">
+		<div id="datatableToolbar">
+			<table class="datatableToolbar">
+				<tr>
+					<td class="toolbarlabel">
+						<xsl:value-of select="php:function('lang', 'rental_rc_toolbar_filters')"/>
+					</td>
+					<td class="toolbarcol">
+						<label class="toolbar_element_label" for="ctrl_toggle_contract_status"><xsl:value-of select="php:function('lang', 'rental_rc_contract_status')"/></label>
+						<select name="contract_status" id="ctrl_toggle_contract_status">
+							<option value="active" default=""><xsl:value-of select="php:function('lang', 'rental_rc_active')"/></option>
+							<option value="not_started"><xsl:value-of select="php:function('lang', 'rental_rc_not_started')"/></option>
+							<option value="both"><xsl:value-of select="php:function('lang', 'rental_rc_ended')"/></option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
 	<div class="datatable">
 		<div id="datatable-container-contracts">
 			<xsl:call-template name="datasource-definition">
 				<xsl:with-param name="number">3</xsl:with-param>
-				<xsl:with-param name="form">queryForm</xsl:with-param>
-				<xsl:with-param name="filters">queryForm</xsl:with-param>
+				<xsl:with-param name="form">contracts_form</xsl:with-param>
+				<xsl:with-param name="filters">['ctrl_toggle_contract_status']</xsl:with-param>
 				<xsl:with-param name="container_name">datatable-container-contracts</xsl:with-param>
+				<xsl:with-param name="source">index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=contracts&amp;id=<xsl:value-of select="composite_id"/></xsl:with-param>
+				<xsl:with-param name="context_menu_labels">
+					['<xsl:value-of select="php:function('lang', 'rental_cm_show')"/>',
+					'<xsl:value-of select="php:function('lang', 'rental_cm_edit')"/>']
+				</xsl:with-param>
+				<xsl:with-param name="context_menu_actions">
+						['view_contract',
+						'edit_contract']	
+				</xsl:with-param>
+				<xsl:with-param name="columnDefinitions">
+					[{
+						key: "id",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_id')"/>",
+					    sortable: true
+					},
+					{
+						key: "date_start",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_date_start')"/>",
+					    sortable: true
+					},
+					{
+						key: "date_end",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_date_end')"/>",
+					    sortable: true
+					},
+					{
+						key: "tentant",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_tenant')"/>",
+					    sortable: false
+					},
+					{
+						key: "actions",
+						hidden: true
+					}
+				]
+				</xsl:with-param>
 			</xsl:call-template>
+			
 		</div>
 	</div>
 </xsl:template>

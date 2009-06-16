@@ -1,30 +1,24 @@
-/**
- * Function for setting up the toolbar:
- * 1. Iterate though  all elements with the tag name 'input' within a root element 'toolbar'
- * 2. Create correct widget based on the elements type.
+/*
+ * Listen for events in form. Serialize all form elements. Stop
+ * the original request and send new request.
  */
-YAHOO.rental.setupToolbar = function() {
-    var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', 'toolbar');
-    for(var i=0; i < items.length; i++) {
-        var type = items[i].getAttribute('type');
-        if(type == 'link') {
-            new YAHOO.widget.Button(items[i], 
-                                    {type: 'link', 
-                                     href: items[i].getAttribute('href')});
-        }
-        else if(type == 'submit') {
-            new YAHOO.widget.Button(items[i], {type: 'submit'});
-        }
-    }
+function formListener(event){
+	YAHOO.util.Event.stopEvent(event);
+	var qs = YAHOO.rental.serializeForm(this.dataSourceObject.formBinding);
+    this.dataSource.liveData = this.baseURL + qs + '&';
+    this.dataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+    	this.dataTable.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
+    }, scope: this});
 }
 
-/**
-* Function for wrapping datasource objects retrieved from templates. This function defines
-* a new YAHOO.util.dataSource and a new YAHOO.widget.DataTable for this data source object.
-* 
-* @param dataSourceObject	a data source object defined in template
-* @param paginator_param	the paginator for this data source
-*/
+
+/*
+ * Function for wrapping datasource objects retrieved from templates. This function defines
+ * a new YAHOO.util.dataSource and a new YAHOO.widget.DataTable for this data source object.
+ * 
+ * @param dataSourceObject	a data source object defined in template
+ * @param paginator_param	the paginator for this data source
+ */
 function dataSourceWrapper(dataSourceObject_param,paginator_param){
 	this.dataSourceObject = dataSourceObject_param;
 	this.paginator = paginator_param;
@@ -61,24 +55,9 @@ function dataSourceWrapper(dataSourceObject_param,paginator_param){
         return oPayload;
     }
     
-    YAHOO.util.Event.addListener(this.dataSourceObject.formBinding,"submit", function(e,obj){
-        YAHOO.util.Event.stopEvent(e);
-        var qs = YAHOO.rental.serializeForm(obj.dataSourceObject.formBinding);
-        obj.dataSource.liveData = obj.baseURL + qs + '&';
-        obj.dataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-        	obj.dataTable.onDataReturnInitializeTable(sRequest, oResponse, obj.paginator);
-        }});
-    },this,true); 
-    
-    YAHOO.util.Event.addListener(this.dataSourceObject.filterBinding, "change", function(e,obj){
-        YAHOO.util.Event.stopEvent(e);
-        var qs = YAHOO.rental.serializeForm(obj.dataSourceObject.formBinding);
-        obj.dataSource.liveData = obj.baseURL + qs + '&';
-        obj.dataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-        	obj.dataTable.onDataReturnInitializeTable(sRequest, oResponse, obj.paginator);
-        }});
-    },this,true);
-    
+    YAHOO.util.Event.addListener(this.dataSourceObject.formBinding,'submit',formListener,this,true); 
+    YAHOO.util.Event.addListener(this.dataSourceObject.filterBinding, 'change',formListener,this,true);
+    	
     // Highlight rows on mouseover
     this.dataTable.subscribe("rowMouseoverEvent", this.dataTable.onEventHighlightRow);
     this.dataTable.subscribe("rowMouseoutEvent", this.dataTable.onEventUnhighlightRow);
@@ -139,7 +118,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	 * 2. Iterate through the number of datatables, render paginators and call the constructor of the data source
 	 * 3. Wrap each data source in a wrapper object 
 	 */
-    YAHOO.rental.setupToolbar();
+	 
     while(YAHOO.rental.setupDatasource.length > 0){
     	i=0;
     	var pag = new YAHOO.widget.Paginator({
@@ -163,8 +142,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		var dataSourceObject = eval("new " + variableName + "()");
 		this.wrapper = new dataSourceWrapper(dataSourceObject, pag);
 
-	
-    
 		// Shows dialog, creating one when necessary
         var newCols = true;
         var showDlg = function(e) {
@@ -269,11 +246,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	
     }
 
-    YAHOO.util.Event.addListener('ctrl_add_rental_composite', "click", function(e){    	
-    	YAHOO.util.Event.stopEvent(e);
-    	newName = document.getElementById('ctrl_add_rental_composite_name').value;
-        window.location = "index.php?menuaction=rental.uicomposite.add&rental_composite_name=" + newName;
-    });
+    
     
     
 });

@@ -126,6 +126,17 @@ dl.form-col {
     padding: .3em;
 }
 
+#datatableToolbar {
+	background-color: white;
+    margin-bottom: 0em;
+    padding: .3em;
+}
+
+table.datatableToolbar {
+	padding: .3em;
+	}
+
+
 #rental_user_error {
     width: 100%;
     background-color: #eee;
@@ -151,6 +162,7 @@ dl.form-col {
 	}
 td.toolbarlabel {
 	width: 10em;
+	font-weight: bold;	
 	}
 td.toolbarcol {
 	padding-left: 1em;
