@@ -192,7 +192,9 @@
 		public function add_yui_translation(&$data)
 		{
 			$this->add_template_file('yui_booking_i18n');
-			
+			$previous = lang('prev');
+			$next = lang('next');
+							
 			$data['yui_booking_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
@@ -206,6 +208,11 @@
 				),
 				'setupDatePickerHelper' => array(
 					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
+				),
+				'setupPaginator' => array(
+			        'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
+					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
+					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
 				),
 				'common' => array(
 					'LBL_NAME' => json_encode(lang('Name')),
