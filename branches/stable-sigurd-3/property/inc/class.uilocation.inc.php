@@ -834,7 +834,7 @@
 			//$this->save_sessiondata();
 		}
 
-		function edit($view = false)
+		function edit($view = '')
 		{
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
@@ -890,12 +890,12 @@
 				}
 			}
 
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
-
 			$values = array();
 			if(isset($_POST['save']) && !$view)
 			{
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$GLOBALS['phpgw']->session->appsession('insert_record','property','');
+
 				if(isset($insert_record['location']) && is_array($insert_record['location']))
 				{
 					for ($i=0; $i<count($insert_record['location']); $i++)
@@ -1104,7 +1104,7 @@
 				'lookup_tenant'	=> $lookup_tenant
 			);
 
-			$lookup_type='form';
+			$lookup_type = $view ? 'view' : 'form';
 
 			if(!$location_code && $parent)
 			{
@@ -1356,7 +1356,7 @@
 
 			$data = array
 			(
-				'view'							=> $view,
+				'edit'							=> $view ? '' : true,
 				'lang_change_type'				=> lang('Change type'),
 				'lang_no_change_type'			=> lang('No Change type'),
 				'lang_change_type_statustext'	=> lang('Type of changes'),
