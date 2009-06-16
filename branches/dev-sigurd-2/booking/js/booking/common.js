@@ -281,6 +281,8 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		if(time) {
 			this._hours.set('value', parseInt(hours, 10));
 			this._minutes.set('value', parseInt(minutes, 10));
+			this._hours.update();
+			this._minutes.update();
 		}
 		if(year != 1901 && date && time)
 			this._input.value = dateValue + ' ' + timeValue;
@@ -333,12 +335,12 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oButton._hours = new YAHOO.booking.InputNumberRange({min: 0, max:23});
 		oButton._minutes = new YAHOO.booking.InputNumberRange({min: 0, max:59});
 		
-		oButton._hours.on('updateEvent', function(args) {
+		oButton._hours.on('updateEvent', function() {
 			oButton._date.setHours(this.get('value'));
 			oButton._update(true);
 		});
 		
-		oButton._minutes.on('updateEvent', function(args) {
+		oButton._minutes.on('updateEvent', function() {
 			oButton._date.setMinutes(this.get('value'));
 			oButton._update(true);
 		});
@@ -455,28 +457,28 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 		    });
 	
 			this.setAttributeConfig('value', {
-		        value: 0,
+				value: 0,
 				validator: Lang.isNumber
-		    });
+		  });
 		
 			this.setAttributeConfig('input', {
 				value: null
-		    });
+		  });
 		
 			this.setAttributeConfig('min', {
 				validator: Lang.isNumber,
-		        value: 100
-		    });
+				value: 100
+		  });
 		
 			this.setAttributeConfig('max', {
 				validator: Lang.isNumber,
-		        value: 0
-		    });
+				value: 0
+			});
 		
 			this.setAttributeConfig('input_length', {
 				validator: Lang.isNumber,
-		        value: null
-		    });
+				value: null
+			});
 		},
 	
 		destroy: function () { 
@@ -495,7 +497,8 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			return value;
 		},
 		
-		_updateValue: function(input) {
+		_updateValue: function() {
+			var input = this.get('input');
 			var value;
 			
 			if (input.value.length > 0) {
@@ -519,13 +522,26 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			this.set('value', value);
 		},
 		
+		_fireUpdateEvent: function()
+		{
+			this._updateValue();
+			this.update();
+			
+			this.fireEvent('updateEvent');
+		},
+		
+		update: function() {
+			if (!this.get('input')) { return; }
+			this.get('input').value = this._padValue(this.get('value'));
+		},
+		
 		render: function (parentEl) {
 			parentEl = Dom.get(parentEl);
 	    
 			if (!parentEl) {
 				YAHOO.log('Missing mandatory argument in YAHOO.booking.InputNumberRange.render:  parentEl','error','Field');
 				return null;
-		    }
+		  }
 		
 			var containerEl = this.get('element');
 			this.addClass(CSS_PREFIX + 'container');
@@ -536,18 +552,6 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			this._renderInputEl(inputEl);
 		
 			parentEl.appendChild(containerEl); //Appends to document to show the component
-		},
-		
-		_fireUpdateEvent: function(oArgs, input)
-		{
-			this._updateValue(input);
-			
-			input.value = this._padValue(this.get('value'));
-			
-			this.fireEvent('updateEvent', {
-	            event: oArgs,
-	            target: input
-	        });
 		},
 		
 		_renderInputEl: function (containerEl) { 
@@ -561,23 +565,23 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			input.setAttribute('size', size);
 			input.setAttribute('maxlength', size);
 			
-		    input.value = this._padValue(this.get('value'));
+		  input.value = this._padValue(this.get('value'));
 		
 			this.set('input', input);
 		
-		    Event.on(input,'keyup', function (oArgs) {
-		        this._updateValue(input);
-		    }, this, true);
+	    Event.on(input,'keyup', function (oArgs) {
+	        this._updateValue();
+	    }, this, true);
 		
 			Event.on(input, 'change', function(oArgs) {
-				this._fireUpdateEvent(oArgs, input);
-		    }, this, true);
+				this._fireUpdateEvent();
+		  }, this, true);
 			
 			oForm = input.form;
 			
 			if (oForm) {
 				Event.on(oForm, "submit", function() {
-					this._fireUpdateEvent(oArgs, input);
+					this._fireUpdateEvent();
 				}, null, this);
 			}
 			
