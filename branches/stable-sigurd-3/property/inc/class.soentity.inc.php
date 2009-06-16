@@ -565,11 +565,12 @@
 			if(!isset($address) || !$address)
 			{
 				$address = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
-				if($address)
-				{
-					$cols[] = 'address';
-					$vals[] = $address;
-				}
+			}
+
+			if(isset($address) && $address)
+			{
+				$cols[] = 'address';
+				$vals[] = $address;
 			}
 
 			if (isset($values['location_code']) && $values['location_code'])
@@ -692,7 +693,7 @@
 			{
 				$address[]= $values['street_name'];
 				$address[]= $values['street_number'];
-				$address	= implode(" ", $address);
+				$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if(!isset($address) || !$address)
