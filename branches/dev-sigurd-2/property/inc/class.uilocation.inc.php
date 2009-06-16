@@ -874,15 +874,21 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 
-			if($view && !$this->acl_read)
+			if($view)
 			{
-				$this->bocommon->no_access();
-				return;
+				if( !$this->acl_read)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
 			}
-			else if(!$this->acl_add && !$this->acl_edit)
+			else
 			{
-				$this->bocommon->no_access();
-				return;
+				if(!$this->acl_add && !$this->acl_edit)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
 			}
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
