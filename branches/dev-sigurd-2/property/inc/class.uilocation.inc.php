@@ -835,8 +835,7 @@
 			//$this->save_sessiondata();
 		}
 
-
-		function edit()
+		function edit($view = false)
 		{
 			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
 			$change_type 		= phpgw::get_var('change_type', 'int', 'POST');
@@ -885,7 +884,7 @@
 			$GLOBALS['phpgw']->session->appsession('insert_record','property','');
 
 			$values = array();
-			if(isset($_POST['save']))
+			if(isset($_POST['save']) && !$view)
 			{
 				if(isset($insert_record['location']) && is_array($insert_record['location']))
 				{
@@ -1089,7 +1088,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uilocation.edit',
+				'menuaction'	=> $view ? 'property.uilocation.view' : 'property.uilocation.edit',
 				'location_code'	=> $location_code,
 				'type_id'	=> $type_id,
 				'lookup_tenant'	=> $lookup_tenant
@@ -1347,6 +1346,7 @@
 
 			$data = array
 			(
+				'view'							=> $view,
 				'lang_change_type'				=> lang('Change type'),
 				'lang_no_change_type'			=> lang('No Change type'),
 				'lang_change_type_statustext'	=> lang('Type of changes'),
@@ -1484,305 +1484,15 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+
 		function view()
 		{
-			$get_history 		= phpgw::get_var('get_history', 'bool', 'POST');
-			$lookup_tenant		= phpgw::get_var('lookup_tenant', 'bool');
-			$location_code 		= phpgw::get_var('location_code');
-			$location 			= explode('-',$location_code);
-
-			$type_id	 		= $this->type_id;
-
-			if($location_code)
-			{
-				$type_id = count($location);
-			}
-
-			if ( $type_id && !$lookup_tenant )
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
-			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
-			}
-
 			if(!$this->acl_read)
 			{
 				$this->bocommon->no_access();
 				return;
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_view'));
-
-			$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup', 'view' => true));
-
-			$check_history = $this->bo->check_history($location_code);
-			if($get_history)
-			{
-				$history = $this->bo->get_history($location_code);
-				$uicols = $this->bo->uicols;
-
-				$j=0;
-				if (isSet($history) && is_array($history))
-				{
-					foreach($history as $entry)
-					{
-						$k=0;
-						for ($i=0;$i<count($uicols['name']);$i++)
-						{
-							if($uicols['input_type'][$i]!='hidden')
-							{
-								$content[$j]['row'][$k]['value'] 		= $entry[$uicols['name'][$i]];
-								$content[$j]['row'][$k]['name'] 		= $uicols['name'][$i];
-								$content[$j]['row'][$k]['lookup'] 		= $lookup;
-							}
-
-							$content[$j]['hidden'][$k]['value'] 			= $entry[$uicols['name'][$i]];
-							$content[$j]['hidden'][$k]['name'] 			= $uicols['name'][$i];
-							$k++;
-						}
-						$j++;
-					}
-				}
-
-				$uicols_count	= count($uicols['descr']);
-				for ($i=0;$i<$uicols_count;$i++)
-				{
-					if($uicols['input_type'][$i]!='hidden')
-					{
-						$table_header[$i]['header'] 	= $uicols['descr'][$i];
-						$table_header[$i]['width'] 		= '5%';
-						$table_header[$i]['align'] 		= 'center';
-					}
-				}
-			}
-
-			$lookup_type='view';
-
-			$location_data=$this->bo->initiate_ui_location(array(
-						'values'		=> $values,
-						'type_id'		=> ($type_id-1),
-						'lookup_type'		=> $lookup_type
-						));
-
-			$location_types	= $this->bo->location_types;
-			$config			= $this->bo->config;
-
-			$function_msg = lang('view');
-
-			$function_msg .= ' ' .$location_types[($type_id-1)]['name'];
-
-			$j=0;
-			$additional_fields[$j]['input_text']	= $location_types[($type_id-1)]['name'];
-			$additional_fields[$j]['input_name']	= 'loc' . $type_id;
-			$additional_fields[$j]['datatype']	= 'varchar';
-			$additional_fields[$j]['value']		= $values[$additional_fields[$j]['input_name']];
-			$additional_fields[$j]['class']		= 'th_text';
-
-			$j++;
-			$additional_fields[$j]['input_text']	= lang('name');
-			$additional_fields[$j]['input_name']	= 'loc' . $type_id . '_name';
-			$additional_fields[$j]['datatype']	= 'varchar';
-			$additional_fields[$j]['value']		= $values[$additional_fields[$j]['input_name']];
-			$j++;
-
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$sep = '/';
-			$dlarr[strpos($dateformat,'Y')] = 'Y';
-			$dlarr[strpos($dateformat,'m')] = 'm';
-			$dlarr[strpos($dateformat,'d')] = 'd';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-
-			for ($j=0;$j<count($config);$j++)
-			{
-				if($config[$j]['location_type'] == $type_id)
-				{
-
-					if($config[$j]['column_name']=='street_id')
-					{
-						$edit_street=true;
-						$insert_record[]	= 'street_id';
-					}
-
-					if($config[$j]['column_name']=='tenant_id')
-					{
-						$edit_tenant=true;
-						$insert_record[]	= 'tenant_id';
-					}
-
-					if($config[$j]['column_name']=='part_of_town_id')
-					{
-						$edit_part_of_town=true;
-						$select_name_part_of_town	= 'part_of_town_id';
-						$part_of_town_list		= $this->bocommon->select_part_of_town('select',$values['part_of_town_id']);
-						$lang_town_statustext		= lang('Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN');
-						$insert_record[]		= 'part_of_town_id';
-					}
-					if($config[$j]['column_name']=='owner_id')
-					{
-						$edit_owner=true;
-						$lang_owner			= lang('Owner');
-						$owner_list			= $this->bo->get_owner_list('',$values['owner_id']);
-						$lang_select_owner		= lang('Select owner');
-						$lang_owner_statustext		= lang('Select the owner');
-						$insert_record[]		= 'owner_id';
-					}
-				}
-			}
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			$location_types = $this->soadmin_location->read(array('order'=>'id','sort'=>'ASC'));
-			foreach ($location_types as $location_type)
-			{
-				if($type_id != $location_type['id'])
-				{
-					if($type_id > $location_type['id'])
-					{
-						$entities_link[] = array
-						(
-							'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
-														'menuaction'=> 'property.uilocation.view',
-														'location_code'=>implode('-',array_slice($location, 0, $location_type['id']))
-														)
-													),
-							'lang_entity_statustext'	=> $location_type['descr'],
-							'text_entity'			=> $location_type['name'],
-						);
-					}
-					else
-					{
-						$entities_link[] = array
-						(
-							'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
-														'menuaction'=> 'property.uilocation.index',
-														'type_id'=> $location_type['id'],
-														'query'=>implode('-',array_slice($location, 0, $location_type['id']))
-														)
-													),
-							'lang_entity_statustext'	=> $location_type['descr'],
-							'text_entity'			=> $location_type['name'],
-						);
-					}
-				}
-			}
-
-			$entities= $this->bo->read_entity_to_link($location_code);
-
-			if (isset($entities) && is_array($entities))
-			{
-				foreach($entities as $entity_entry)
-				{
-					if($entity_entry['entity_link'])
-					{
-						$entities_link[] = array
-						(
-							'entity_link'			=> $entity_entry['entity_link'],
-							'lang_entity_statustext'	=> $entity_entry['descr'],
-							'text_entity'			=> $entity_entry['name'],
-						);
-					}
-					else
-					{
-						$entities_link[] = array
-						(
-							'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array(
-																'menuaction'=> 'property.uientity.index',
-																'entity_id'=> $entity_entry['entity_id'],
-																'cat_id'=> $entity_entry['cat_id'],
-																'query'=>$location_code
-																)
-															),
-							'lang_entity_statustext'	=> $entity_entry['descr'],
-							'text_entity'			=> $entity_entry['name'],
-						);
-					}
-				}
-			}
-
-			$change_type_list = $this->bo->select_change_type($values['change_type']);
-
-			$data = array
-			(
-				'lang_change_type'			=> lang('Change type'),
-				'check_history'				=> $check_history,
-				'lang_history'				=> lang('History'),
-				'lang_history_statustext'		=> lang('Fetch the history for this item'),
-				'table_header'				=> (isset($table_header)?$table_header:''),
-				'change_type_list'			=> $change_type_list,
-				'values'				=> (isset($content)?$content:''),
-
-				'lang_related_info'			=> lang('related info'),
-				'entities_link'				=> (isset($entities_link)?$entities_link:''),
-				'edit_street'				=> $edit_street,
-				'edit_tenant'				=> $edit_tenant,
-				'edit_part_of_town'			=> $edit_part_of_town,
-				'edit_owner'				=> $edit_owner,
-				'select_name_part_of_town'		=> $select_name_part_of_town,
-				'part_of_town_list'			=> $part_of_town_list,
-				'lang_town_statustext'			=> $lang_town_statustext,
-				'lang_part_of_town'			=> lang('Part of town'),
-				'lang_no_part_of_town'			=> lang('No part of town'),
-				'lang_owner'				=> $lang_owner,
-				'owner_list'				=> $owner_list,
-				'lang_select_owner'			=> $lang_select_owner,
-				'lang_owner_statustext'			=> $lang_owner_statustext,
-				'additional_fields'			=> $additional_fields,
-				'lang_street'				=> lang('Street'),
-				'lang_select_street_help'		=> lang('Select the street name'),
-				'lang_street_num_statustext'	=> lang('Enter the street number'),
-				'value_street_id'			=> $values['street_id'],
-				'value_street_name'			=> $values['street_name'],
-				'value_street_number'			=> $values['street_number'],
-
-				'attributes_view'				=> $values['attributes'],
-
-				'dateformat'				=> $dateformat,
-				'lang_dateformat' 			=> strtolower($dateformat),
-				'lang_none'				=> lang('None'),
-
-				'lang_tenant'				=> lang('tenant'),
-				'value_tenant_id'			=> $values['tenant_id'],
-				'value_last_name'			=> $values['last_name'],
-				'value_first_name'			=> $values['first_name'],
-				'lang_tenant_statustext'		=> lang('Select a tenant'),
-				'size_last_name'			=> strlen($values['last_name']),
-				'size_first_name'			=> strlen($values['first_name']),
-				'lookup_type'				=> $lookup_type,
-				'location_data'				=> $location_data,
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uilocation.index', 'type_id'=> $type_id,'lookup_tenant'=> $lookup_tenant)),
-				'lang_save'				=> lang('save'),
-				'lang_done'				=> lang('done'),
-				'lang_done_statustext'			=> lang('Back to the list'),
-				'lang_save_statustext'			=> lang('Save the location'),
-				'lang_edit'				=> lang('Edit'),
-				'edit_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uilocation.edit', 'location_code'=> $location_code, 'lookup_tenant'=> $lookup_tenant)),
-				'lang_edit_statustext'			=> lang('Edit this entry'),
-				'lang_category'				=> lang('category'),
-				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'cat_id',
-				'cat_list'					=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
-				'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-				'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
-			);
-
-			$appname					= lang('location');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+			$this->edit($view = true);
 		}
 
 		/**
