@@ -505,29 +505,28 @@
 				</xsl:when>
 			</xsl:choose>
 
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 
 			<tr height="50">
-				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+			<xsl:choose>
+				<xsl:when test="view = ''">
+					<td>
+						<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+						<input type="submit" name="save" value="{$lang_save}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_save_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
+							</xsl:attribute>
+						</input>
+					</td>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="check_history != ''">
 				<td>
 					<xsl:variable name="lang_history"><xsl:value-of select="lang_history"/></xsl:variable>
-					<input type="submit" name="get_history" value="{$lang_history}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_history_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="get_history" value="{$lang_history}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_history_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -544,11 +543,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</form>
