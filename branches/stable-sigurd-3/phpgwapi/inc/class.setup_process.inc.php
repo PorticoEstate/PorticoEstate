@@ -45,12 +45,17 @@
 			$ConfigDomain = phpgw::get_var('ConfigDomain');
 			$phpgw_domain = $GLOBALS['phpgw_domain'];
 
+			$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];
+			$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
+			$crypto = createObject('phpgwapi.crypto',array($_key, $_iv));
+
+
 			$GLOBALS['phpgw_setup']->oProc = createObject('phpgwapi.schema_proc',$phpgw_domain[$ConfigDomain]['db_type']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb           = $GLOBALS['phpgw_setup']->db;
-			$GLOBALS['phpgw_setup']->oProc->m_odb->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
-			$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $phpgw_domain[$ConfigDomain]['db_name'];
-			$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $phpgw_domain[$ConfigDomain]['db_user'];
-			$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Host     = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_host']);
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_name']);
+			$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_user']);
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_pass']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Halt_On_Error = 'yes';
 			$GLOBALS['phpgw_setup']->oProc->m_odb->connect();
 		}

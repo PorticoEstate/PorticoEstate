@@ -327,8 +327,8 @@
 
 			$status_data = array
 			(
-				'img_disabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'disabled', '.png'),
-				'img_enabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'enabled', '.png'),
+//				'img_disabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'disabled', '.png'),
+//				'img_enabled'	=> $GLOBALS['phpgw']->common->image('phpgwapi', 'enabled', '.png'),
 				'lang_disabled'	=> lang('disabled'),
 				'lang_enabled'	=> lang('enabled')
 			);
@@ -403,9 +403,10 @@
 					'lastname'					=> $account->lastname,
 
 					'status'					=> $account->enabled,
-					'status_img'				=> $account->enabled
+/*					'status_img'				=> $account->enabled
 													? $status_data['img_enabled']
 													: $status_data['img_disabled'],
+*/
 					'status_text'				=> $account->enabled
 													? $status_data['lang_enabled']
 													: $status_data['lang_disabled'],
@@ -1075,8 +1076,8 @@
 			$perms = array_keys($apps->read_account_specific());
 			if ( is_array($available_apps) && count($available_apps) )
 			{
-				$img_disabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_no', '.png', false);
-				$img_enabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_yes', '.png', false);
+	//			$img_disabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_no', '.png', false);
+	//			$img_enabled = $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_yes', '.png', false);
 
 				sort($available_apps);
 				foreach ( $available_apps as $app )
@@ -1089,8 +1090,8 @@
 					$user_data['permissions'][] = array
 					(
 						'name'	=> lang($app['name']),
-						'img'	=> $enabled ? $img_enabled : $img_disabled,
-						'alt'	=> $enabled ? $lang_enabled : $lang_disabled
+				//		'img'	=> $enabled ? $img_enabled : $img_disabled,
+				//		'alt'	=> $enabled ? $lang_enabled : $lang_disabled
 					);
 				}
 			}
