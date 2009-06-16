@@ -36,21 +36,16 @@
 	{
 		var	$function_name = 'oppdater_utgaatt_objekt';
 
-		function oppdater_utgaatt_objekt()
+		function __construct()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db				= $this->bocommon->new_db();
-			$this->db2				= $this->bocommon->new_db($this->db);
+			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->like 			= & $this->db->like;
+			$this->join 			= & $this->db->join;
+			$this->left_join 		= & $this->db->left_join;
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
-
-			$this->join				= $this->db->join;
-			$this->like				= $this->db->like;
-			$this->left_join 		= " LEFT JOIN ";
-
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
 			if($data['enabled']==1)
 			{
@@ -94,7 +89,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$data = array
 			(
@@ -166,23 +161,11 @@
 
 				$metadata = $this->db->metadata('fm_location'.($type_id-1));
 
-				if(isset($this->db->adodb))
-				{
-					$i = 0;
-					foreach($metadata as $key => $val)
-					{
-						$metadata_temp[$i]['name'] = $key;
-						$i++;
-					}
-					$metadata = $metadata_temp;
-					unset ($metadata_temp);
-				}
+				$this->db->transaction_begin();
 
 				$j=0;
 				for ($i=0; $i<count($update); $i++)
 				{
-					$this->db->transaction_begin();
-
 					$sql = "SELECT category FROM $parent_table WHERE location_code= '" . $update[$i]['location_code'] ."'";
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -194,17 +177,17 @@
 						$this->db->query($sql,__LINE__,__FILE__);
 						$this->db->next_record();
 
-						for ($k=0; $k<count($metadata); $k++)
+						foreach($metadata as $field => $val)
 						{
-							$cols[] = $metadata[$k]['name'];
-							$vals[] = $this->db->f($metadata[$k]['name']);
+							$cols[] = $field;
+							$vals[] = $this->db->f($field);
 						}
 
 						$cols[] = 'exp_date';
-						$vals[] = date($this->bocommon->datetimeformat,time());
+						$vals[] = date($this->db->datetime_format(),time());
 
 						$cols	=implode(",", $cols);
-						$vals = $this->bocommon->validate_db_insert($vals);
+						$vals = $this->db->validate_insert($vals);
 
 						$sql = "INSERT INTO fm_location" . ($type_id-1) ."_history ($cols) VALUES ($vals)";
 						$this->db->query($sql,__LINE__,__FILE__);
@@ -237,20 +220,19 @@
 				$this->confirm($execute=false);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$insert_values= array(
 				$cron,
-				date($this->bocommon->datetimeformat),
+				date($this->db->datetime_format()),
 				$this->function_name,
 				implode(',',(array_keys($msgbox_data)))
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 	}
-
