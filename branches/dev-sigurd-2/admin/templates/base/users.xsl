@@ -73,10 +73,11 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:attribute>
-			<td><xsl:value-of select="lid" /></td>
-			<td><xsl:value-of select="firstname" /></td>
-			<td><xsl:value-of select="lastname" /></td>
-			<td class="icon"><img src="{status_img}" alt="{status_text}" /></td>
+			<td align = 'center'><xsl:value-of select="lid" /></td>
+			<td align = 'center'><xsl:value-of select="firstname" /></td>
+			<td align = 'center'><xsl:value-of select="lastname" /></td>
+		<!--	<td class="icon"><img src="{status_img}" alt="{status_text}" /></td> -->
+			<td align = 'center'><xsl:value-of select="status_text"/></td>
 			<td class="action">
 				<a href="{view_url}"><xsl:value-of select="lang_view"/></a>
 			</td>
