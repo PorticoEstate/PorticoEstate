@@ -244,6 +244,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
+			$application['status'] = lang($application['status']);
 			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups));
 		}
 	}

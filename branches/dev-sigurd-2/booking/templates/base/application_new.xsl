@@ -156,5 +156,6 @@
 	</div>
 	<script type="text/javascript">
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To')"/>;
 	</script>
 </xsl:template>

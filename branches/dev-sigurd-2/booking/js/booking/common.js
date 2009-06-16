@@ -179,7 +179,7 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
 	};
 	
-	lang = {LBL_NAME: 'Name'};
+	var lang = {LBL_NAME: 'Name'};
 	YAHOO.booking.lang('common', lang);
 	
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
@@ -209,6 +209,13 @@ YAHOO.booking.setupDatePickers = function() {
 };
 
 YAHOO.booking.setupDatePickerHelper = function(field, args) {
+	if (!YAHOO.booking.setupDatePickerHelper.groups) {
+		YAHOO.booking.setupDatePickerHelper.groups = {};
+	}
+	
+	var groups = YAHOO.booking.setupDatePickerHelper.groups;
+	var Dom = YAHOO.util.Dom;
+	
 	if(field._converted)
 		return;
 	field._converted = true;
@@ -219,11 +226,24 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
 	var oButton = new YAHOO.widget.Button({type: "menu", id: Dom.generateId(), menu: oCalendarMenu, container: field});
 	
+	oButton.with_time = time;
+	oButton.with_date = date;
+	
 	var lang = {LBL_CHOOSE_DATE: 'Choose a date'};
 	YAHOO.booking.lang('setupDatePickerHelper', lang);
 	
 	oButton._calendarMenu = oCalendarMenu;
 	oButton._input = field._input = Dom.getElementsBy(function(){return true;}, 'input', field)[0];
+	
+	oButton.hasDateSection = function() { return this.with_date; };
+	oButton.hasTimeSection = function() { return this.with_time; };
+	
+	oButton.fireUpdateEvent = function() {
+		if (oButton.on_update) {
+			oButton.on_update.func.call(oButton.on_update.context, oButton);
+		}
+	};
+	
 	oButton.on("appendTo", function () {
 		this._calendarMenu.setBody(" ");
 		this._calendarMenu.body.id = Dom.generateId();
@@ -239,9 +259,9 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oButton._date = new Date(1, 1, 1);
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
-		oButton._update();
+		oButton._update(false);
 	};
-	oButton._update = function() {
+	oButton._update = function(fire_update_event) {
 		var year = this._date.getFullYear();
 		var month = this._date.getMonth() + 1;
 		var day = this._date.getDate();
@@ -268,6 +288,14 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this._input.value = dateValue;
 		else if(!date && time)
 			this._input.value = timeValue;
+		
+		if (fire_update_event) {
+			oButton.fireUpdateEvent();
+		}
+	};
+	
+	oButton.getDate = function() {
+		return this._date;
 	};
 
 	oButton.on("click", function () {
@@ -295,7 +323,7 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 				this._date.setFullYear(aDate[0]);
 				this._date.setMonth(aDate[1]-1);
 				this._date.setDate(aDate[2]);
-				this._update();
+				this._update(true);
 				//this._input.value = value;
 			}
 			this._calendarMenu.hide();
@@ -307,12 +335,12 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		
 		oButton._hours.on('updateEvent', function(args) {
 			oButton._date.setHours(this.get('value'));
-			oButton._update();
+			oButton._update(true);
 		});
 		
 		oButton._minutes.on('updateEvent', function(args) {
 			oButton._date.setMinutes(this.get('value'));
-			oButton._update();
+			oButton._update(true);
 		});
 		
 		oButton.on("appendTo", function () {
@@ -322,10 +350,44 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			oButton._hours.render(timePicker);
 			timePicker.appendChild(document.createTextNode(' : '));
 			oButton._minutes.render(timePicker);
-			oButton._update();
+			oButton._update(false);
 		});
 	}
-	oButton._update();
+	oButton._update(false);
+	
+	var id = Dom.getAttribute(oButton._input, 'id');
+	var matches = /^([a-zA-Z][\w0-9\-_.:]+)_(from|to)$/.exec(id);
+	
+	var group_name = matches ? matches[1] : false;
+	var from_to = matches ? matches[2] : false;
+	
+	if (group_name && from_to && oButton.hasDateSection()) {
+		if (!groups[group_name]) { groups[group_name] = {}; }
+		
+		groups[group_name][from_to] = oButton;
+
+		if (groups[group_name]['from'] && groups[group_name]['to']) {
+			groups[group_name]['from'].on_update = {
+				context: groups[group_name]['to'], 
+				func: function(fromDateButton) {
+					var fromDate = fromDateButton.getDate();
+					var currentYear = this._date.getFullYear();
+					
+					if (this._date.getFullYear() == 1901) {
+						this._date.setFullYear(fromDate.getFullYear());
+						this._date.setMonth(fromDate.getMonth());
+						this._date.setDate(fromDate.getDate());
+					} else if (fromDate.getFullYear() <= this._date.getFullYear() && fromDate.getMonth() <= this._date.getMonth() && fromDate.getDate() <= this._date.getDate()) {
+						//this._date.
+					}
+				
+					this._update(false);
+				}
+			};
+			
+			delete groups[group_name];
+		}
+	}
 };
 
 // Executed on all booking.uicommon-based pages
