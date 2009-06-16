@@ -117,7 +117,17 @@
 				
 			} else {
 				
-				$key = isset($for_object['id']) ? $for_object['id'] : -1;
+				if (is_array($for_object)) {
+				        $key = isset($for_object['id']) ? $for_object['id'] : -1;
+				} else {
+				        //for_object is understood to be the id of the object if not null and not array
+				        $key = $for_object;
+				        $for_object = parent::read_single($key);
+				}
+
+				if (!is_array($for_object)) {
+				        throw new LogicException('Unable to find object for permissions');
+				}
 				
 				if (!isset($this->subject_roles[$key])) {
 					if (isset($for_object['id'])) {  
@@ -209,7 +219,7 @@
 			return $this->get_collection_role_permissions($this->defaultCollectionPermissions);
 		}
 		
-		public function allow_all_permissions()
+		public function allow_all_permissions($for_operation = null)
 		{
 			if (!$this->allow_all_permissions)
 			{
@@ -221,7 +231,9 @@
 				);
 			}
 			
-			return $this->allow_all_permissions;
+			if (is_null($for_operation)) return $this->allow_all_permissions;
+			
+			return isset($this->allow_all_permissions[$for_operation]) ? $this->allow_all_permissions[$for_operation] : false;
 		}
 		
 		// public function auth_role_has_access($role, $operation, array $object)
@@ -237,6 +249,57 @@
 		protected abstract function get_object_role_permissions(array $forObject, $defaultPermissions);
 		protected abstract function get_collection_role_permissions($defaultPermissions);
 		
+		protected function compute_operation_grant_for_role(&$role, $operation, &$permissions)
+		{
+			$role_name = $role['role'];
+			if (isset($permissions[$role_name]) && isset($permissions[$role_name][$operation]) && false != ($grant = $permissions[$role_name][$operation])) {	
+				return ($operation == 'write' && $grant === true) ? $this->allow_all_permissions('write') : $grant;
+			}
+
+			return false;
+		}
+		
+		function compute_operation_grant_for_role_collection(&$role_collection, $operation, &$permissions)
+		{
+			$grants = array();
+			foreach($role_collection as $object_roles) {
+				foreach($object_roles as $role) {
+					if (false != ($grant = $this->compute_operation_grant_for_role($role, $operation, $permissions))) {	
+						$grants[] = $grant;
+					} else {
+						unset($grants);
+						return false;
+					}
+				}
+			}
+			
+			return $this->coalesce_grants($grants);
+		}
+
+		
+		protected function coalesce_grants(array $grants)
+		{
+			$coalesced_grant = count($grants) > 0 ? array_shift($grants) : false;
+			foreach($grants as $grant) {
+				if (is_array($grant)) {
+					if (is_array($coalesced_grant)) {
+						$coalesced_grant = array_merge($coalesced_grant, $grant);
+						if (count($remove_keys = array_diff_key($coalesced_grant, $grant)) > 0) {
+							foreach($remove_keys as $key) unset($coalesced_grant[$key]);
+						}
+					} else {
+						$coalesced_grant = $grant;
+					}
+				}
+			}
+			
+			if (is_array($coalesced_grant) && count($coalesced_grant) == 0) {
+				return false;
+			}
+			
+			return $coalesced_grant;
+		}
+		
 		protected function check_authorization($roles, $permissions, $operation, $object = null, $options = array())
 		{
 			$options = array_merge(
@@ -246,19 +309,15 @@
 			
 			$ns = $options['namespace'];
 			
-			if (strlen(trim($ns)) > 0)
-			{
+			if (strlen(trim($ns)) > 0) {
 				$permissions = isset($permissions[$ns]) ? $permissions[$ns] : array();
 			}
 			
 			$all_permissions = $this->allow_all_permissions();
 			
-			foreach($roles as $role)
-			{
-				$roleName = $role['role'];
-				if (isset($permissions[$roleName]) && isset($permissions[$roleName][$operation]) && false != ($permission = $permissions[$roleName][$operation]))
-				{	
-					return ($operation == 'write' && $permission === true) ? $all_permissions['write'] : $permission;
+			foreach($roles as $role) {
+				if (false != ($grant = $this->compute_operation_grant_for_role($role, $operation, $permissions))) {	
+					return $grant;
 				}
 			}
 			
@@ -289,8 +348,29 @@
 						throw new LogicException(sprintf('Missing parent role permissions for "%s"', $key));
 					}
 					
-					if (false != $permission = $this->check_authorization_recursive($roles, $parent_role_permissions[$key], $operation, $object, $options)) {
-						return $permission;
+					$current_parent_role_permissions = $parent_role_permissions[$key];
+					
+					$type = isset($current_parent_role_permissions['type']) ? $current_parent_role_permissions['type'] : 'one';
+					
+					if ($type == 'one') {
+						if (false != $permission = $this->check_authorization_recursive($roles, $current_parent_role_permissions, $operation, $object, $options)) {
+							return $permission;
+						}
+					} elseif ($type == 'many') {
+						//$roles is a collection of roles for many related objects
+						$permissions = array();
+						foreach($roles as $object_roles) {
+							if (false != $permission = $this->check_authorization_recursive($object_roles, $current_parent_role_permissions, $operation, $object, $options)) {
+								$permissions[] = $permission;
+							} else {
+								unset($permissions);
+								return false;
+							}
+						}
+						
+						return $this->coalesce_grants($permissions);
+					} else {
+						return false;
 					}
 				}
 			}
@@ -375,8 +455,25 @@
 					if (!isset($parent_role_permissions[$key])) {
 						throw new LogicException(sprintf('Missing parent role permissions for "%s"', $key));
 					}
-
-					$grants = array_merge($this->_compute_permissions($entity, $roles, $parent_role_permissions[$key]), $grants);
+					
+					$current_parent_role_permissions = $parent_role_permissions[$key];
+					
+					$type = isset($current_parent_role_permissions['type']) ? $current_parent_role_permissions['type'] : 'one';
+					
+					if ($type == 'one')
+					{
+						$grants = array_merge($this->_compute_permissions($entity, $roles, $current_parent_role_permissions), $grants);
+					} elseif($type == 'many') {
+						//$roles is a collection of roles for many related objects
+						$collected_grants = array();
+						foreach($roles as $object_roles) {
+							$collected_grants[] = $this->_compute_permissions($entity, $object_roles, $current_parent_role_permissions);
+						}
+						
+						return $this->coalesce_grants($permissions);
+					}
+					
+					
 				}
 			}
 

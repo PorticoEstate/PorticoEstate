@@ -26,10 +26,12 @@
         </dl>
 
 		<div class="form-buttons">
-	        <button>
-	            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="booking/edit_link"/>"</xsl:attribute>
-	            <xsl:value-of select="php:function('lang', 'Edit')" />
-	        </button>
+			<xsl:if test="booking/permission/write">
+				<button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="booking/edit_link"/>"</xsl:attribute>
+		            <xsl:value-of select="php:function('lang', 'Edit')" />
+		        </button>
+			</xsl:if>
 		</div>
     </div>
 

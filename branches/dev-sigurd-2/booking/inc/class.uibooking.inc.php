@@ -17,6 +17,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+			
+			self::process_booking_unauthorized_exceptions();
+			
 			$this->bo = CreateObject('booking.bobooking');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
@@ -41,11 +44,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New booking'),
-								'href' => self::link(array('menuaction' => 'booking.uibooking.add'))
-							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -97,6 +95,15 @@
 					)
 				)
 			);
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+						'type' => 'link',
+						'value' => lang('New booking'),
+						'href' => self::link(array('menuaction' => 'booking.uibooking.add'))
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 
@@ -158,8 +165,12 @@
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id']));
+					try {
+						$receipt = $this->bo->add($booking);
+						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -191,8 +202,12 @@
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($booking);
-					$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$booking['id']));
+					try {
+						$receipt = $this->bo->update($booking);
+						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$booking['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
