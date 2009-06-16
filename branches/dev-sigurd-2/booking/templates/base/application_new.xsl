@@ -25,7 +25,7 @@
 			</dd>
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
-				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
+				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
 		</dl>
 		<div class="clr"/>
