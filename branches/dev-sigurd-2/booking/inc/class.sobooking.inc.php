@@ -172,6 +172,22 @@
 			return $results;
 		}
 
+		function resource_ids_for_events($events)
+		{
+			if(!$events)
+			{
+				return array();
+			}
+			$ids = join(',', array_map("intval", $events));
+			$results = array();
+			$this->db->query("SELECT resource_id FROM bb_event_resource WHERE event_id IN ($ids)", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+			}
+			return $results;
+		}
+
 		function allocation_ids_for_building($building_id, $start, $end)
 		{
 			$start = $start->format('Y-m-d H:i');
