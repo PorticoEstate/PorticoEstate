@@ -9,6 +9,7 @@
 			$target_table = "fm_{$this->type_app[$this->type]}_{$entity_id}_{$cat_id}";
 		}
 		
+		$ids = array();
 		$this->db->query("SELECT id FROM $target_table WHERE location_code is NULL",__LINE__,__FILE__);
 		while ($this->db->next_record())
 		{
