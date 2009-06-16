@@ -575,7 +575,7 @@ class rental_socomposite extends rental_socommon
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 			
-			$sql = "SELECT rental_contract.id, date_start, date_end, title FROM {$tables} {$joins} WHERE {$condition} {$order}";
+			$sql = "SELECT rental_contract.id, date_start, date_end FROM {$tables} {$joins} WHERE {$condition} {$order}";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 			while($this->db->next_record())
 			{
@@ -584,7 +584,6 @@ class rental_socomposite extends rental_socommon
 	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
 	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
 	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that db table is ready
-	     		$row['title'] = $this->unmarshal($this->db->f('title', true), 'string');
 				$results[] = $row;
 			}
 		}
