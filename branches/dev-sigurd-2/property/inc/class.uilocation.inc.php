@@ -874,7 +874,12 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
 			}
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if($view && !$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+			else if(!$this->acl_add && !$this->acl_edit)
 			{
 				$this->bocommon->no_access();
 				return;
