@@ -613,6 +613,11 @@
 		}
 
 
+		function get_location_type()
+		{
+			return $this->select_location_type();
+		}
+
 		function select_location_type()
 		{
 			$this->db->query("SELECT * FROM fm_location_type ORDER BY id ");
