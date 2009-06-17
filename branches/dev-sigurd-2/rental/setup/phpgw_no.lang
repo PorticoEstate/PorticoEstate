@@ -46,6 +46,7 @@ rental_rc_name	rental	no	Navn
 rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet
+rental_rc_occupied	rental	no	Opptatt
 rental_rc_overridden_address	rental	no	Overstyrt adresse
 rental_rc_post_code	rental	no	Postnummer
 rental_rc_post_place	rental	no	Sted
