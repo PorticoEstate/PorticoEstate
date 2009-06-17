@@ -113,7 +113,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($organization);
-					$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+					$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -145,9 +145,9 @@
 				{
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend") {
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', "id" => $receipt["id"]));
+						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $receipt["id"]));
 					} else {
-						$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+						$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt["id"]));
 					}
 				}
 			}

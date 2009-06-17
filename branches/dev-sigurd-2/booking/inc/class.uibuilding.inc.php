@@ -122,7 +122,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($building);
-					$this->redirect(array('menuaction' => 'booking.uibuilding.index'));
+					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -149,7 +149,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($building);
-					$this->redirect(array('menuaction' => 'booking.uibuilding.index'));
+					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
