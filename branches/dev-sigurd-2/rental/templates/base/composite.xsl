@@ -305,6 +305,10 @@
 						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_net')"/>"
 					},
 					{
+						key: "occupied",
+						label: "<xsl:value-of select="php:function('lang', 'rental_rc_availibility')"/>"
+					},
+					{
 						key: "actions",
 						hidden: 1
 					}
