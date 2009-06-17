@@ -17,12 +17,14 @@ class booking_errorstack extends ArrayObject
 		return $flash_msgs;
 	}
 	
-	public function offsetSet($index, $newval)
+	public function offsetSet($field, $error)
     {
-		if (!isset($this[$index])) {
-			parent::offsetSet($index, array($newval));
+		if (!isset($this[$field])) {
+			parent::offsetSet($field, array($error));
 		} else {
-			parent::offsetSet($index, ($this[$index][] = $data));
+			$field_errors = $this[$field];
+			$field_errors[] = $error;
+			parent::offsetSet($field, $field_errors);
 		}
 	}
 }
