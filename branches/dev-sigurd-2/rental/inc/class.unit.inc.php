@@ -62,16 +62,32 @@ abstract class rental_unit
 		$this->area_gros = (int)$area_gros;
 	}
 	
+	/**
+	 * Returns an array of the contract dates registered on the unit.
+	 * 
+	 * @return array of rental_contract_date objects.
+	 */
 	public function get_contract_date_array()
 	{
 		return $this->contract_date_array;
 	}
 	
+	/**
+	 * Replaces the old set of rental_contract_date objects with a new one.
+	 * 
+	 * @param $contract_date_array array of rental_contract_date objects to add.
+	 */
 	public function set_contract_date_array(array $contract_date_array)
 	{
 		$this->contract_date_array = (array)$contract_date_array;
 	}
 	
+	/**
+	 * Adds an array of contract date to the unit. Will not add any dates already
+	 * existing for the unit.
+	 * 
+	 * @param $contract_date_array array of rental_contract_date to add.
+	 */
 	public function add_contract_date_array(array $contract_date_array)
 	{
 		if($contract_date_array == null || count($contract_date_array) == 0) // No contents in array
@@ -84,6 +100,11 @@ abstract class rental_unit
 		}
 	}
 	
+	/**
+	 * Adds an contract date to the unit. Will not add the date if it already exists.
+	 * 
+	 * @param $new_contract_date rental_contract_date to add.
+	 */
 	public function add_contract_date(rental_contract_date $new_contract_date)
 	{
 		foreach($this->contract_date_array as $contract_date)
@@ -136,6 +157,14 @@ abstract class rental_unit
 		return $this->get_spanned_date_array($occupied_date_array);
 	}
 	
+	/**
+	 * Takes an array of rental_contract_date objects sorted chronologically, 
+	 * finds any overlapping dates, and returns an array where the dates have
+	 * been spanned.
+	 *  
+	 * @param $occupied_date_array array of rental_contract_date objects to span.
+	 * @return array of rental_contract_date objects.
+	 */
 	protected function get_spanned_date_array(array $occupied_date_array)
 	{
 		$spanned_date_array = array();
@@ -163,6 +192,13 @@ abstract class rental_unit
 		return $spanned_date_array;
 	}
 	
+	/**
+	 * Tells if a unit is available for renting at some time in the future. This
+	 * is done by checking if there are any running contracts without end date.
+	 * 
+	 * @return bool with true if the unit is available for renting at some time,
+	 * false if not.
+	 */
 	public function is_available_for_renting()
 	{
 		foreach($this->contract_date_array as $contract_date) // Runs through all contract dates
@@ -175,6 +211,11 @@ abstract class rental_unit
 		return true;
 	}
 	
+	/**
+	 * Returns a string representation of this object.
+	 * 
+	 * @return string with data about the object.
+	 */
 	public function __toString() {
         return 'unit[location code:'.$this->location_code.']';
     }
