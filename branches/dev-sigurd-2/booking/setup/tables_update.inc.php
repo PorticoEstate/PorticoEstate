@@ -1393,3 +1393,20 @@
 		}
 	}
 	
+	$test[] = '0.1.54';
+	function booking_upgrade0_1_54()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ALTER COLUMN description TYPE text");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ALTER COLUMN description TYPE text");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ALTER COLUMN description TYPE text");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_group ALTER COLUMN description TYPE text");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.55';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
