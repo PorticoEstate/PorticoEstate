@@ -48,6 +48,7 @@ ul.pathway li:first-child { background: none; padding-left: 0;}
 
 dl.form, dl.form-col {
     margin: 1em 1em 1em 0;
+		padding-right: 1em;
 }
 
 dl.form dt, dl.form-col dt {

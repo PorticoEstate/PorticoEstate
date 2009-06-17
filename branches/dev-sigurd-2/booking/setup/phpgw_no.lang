@@ -181,7 +181,9 @@ who?	booking	no	Hvem?
 why	booking	no	Hvorfor
 why?	booking	no	Hvorfor?
 zip code	booking	no	Postnummer
+Edit event	booking	no	Rediger arrangement
 Showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
+Resource Type	booking	no	Type
 No records found.	booking	no	Ingen treff.
 No Data.	booking	no	Ingen treff.
 Click to sort ascending	booking	no	Klikk for å sortere stigende

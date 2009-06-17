@@ -165,11 +165,14 @@ YAHOO.booking.inlineImages = function(container, url, options)
 
 
 YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
-	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, 'radio');
+	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, {type: 'radio'});
 };
 
-YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, type) {
-	type = type || 'checkbox';
+YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, options) {
+	//debugger;
+	options = YAHOO.lang.isObject(options) ? options : {};
+	options = YAHOO.lang.merge({type: 'checkbox'}, options);
+	var type = options['type'] || 'checkbox';
 	selection = selection || [];
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -197,6 +200,13 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 		{key: "id", label: "", formatter: checkboxFormatter},
 		{key: "name", label: lang['LBL_NAME'], sortable: true}
 	];
+	
+	if (options['additional_fields'] && YAHOO.lang.isArray(options['additional_fields'])) {
+		for (var i=0; i < options['additional_fields'].length; i++) {
+			colDefs.push(options['additional_fields'][i]);
+		}
+	}
+	
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, {
 	   sortedBy: {key: 'name', dir: YAHOO.widget.DataTable.CLASS_ASC}
 	});

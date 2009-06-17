@@ -1,6 +1,6 @@
 populateResourceTable = function(building_id, selection) {
     YAHOO.booking.checkboxTableHelper('resources_container', 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
-    'resources[]', selection);
+    'resources[]', selection, {additional_fields: [{key: 'type', label: lang['Resource Type']}]});
 }
 
 removeDateRow = function() {

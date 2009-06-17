@@ -31,6 +31,9 @@
 			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
 			<dd><xsl:value-of select="resource/building_name"/></dd>
 			
+			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
+			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
+			
 			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
 				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
 				<dd><xsl:value-of select="resource/activity_name"/></dd>

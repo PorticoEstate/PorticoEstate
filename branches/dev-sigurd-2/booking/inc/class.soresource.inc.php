@@ -3,6 +3,9 @@
 	
 	class booking_soresource extends booking_socommon
 	{
+		const TYPE_LOCATION = 'Location';
+		const TYPE_EQUIPMENT = 'Equipment';
+		
 		function __construct()
 		{
 			parent::__construct('bb_resource', 
@@ -11,6 +14,7 @@
 					'active'		=> array('type' => 'int', 'required' => true),
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
+					'type'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'building_name'	=> array('type' => 'string',
 						  'query'		=> true,
 						  'join' 		=> array(
@@ -31,5 +35,18 @@
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+		}
+		
+		public static function allowed_types()
+		{
+			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT);
+		}
+		
+		function doValidate($entity, booking_errorstack $errors)
+		{
+			parent::doValidate($entity, $errors);
+			if (!isset($errors['type']) && !in_array($entity['type'], self::allowed_types(), true)) {
+				$errors['type'] = 'Invalid Resource Type';
+			}
 		}
 	}

@@ -137,11 +137,12 @@
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 ]]>
-    var colDefs = [{key: 'name', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: YAHOO.booking.formatLink}];
+    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 });
 </script>

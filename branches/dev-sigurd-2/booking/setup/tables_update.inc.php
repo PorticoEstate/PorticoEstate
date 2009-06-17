@@ -1410,3 +1410,24 @@
 		}
 	}
 	
+	$test[] = '0.1.55';
+	function booking_upgrade0_1_55()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		# BEGIN Evil
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_equipment");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_permission WHERE object_type ='equipment'");
+		# END Evil
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DROP TABLE bb_equipment");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN type character varying(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_resource SET type = 'Location'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ALTER COLUMN type SET NOT NULL");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.56';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

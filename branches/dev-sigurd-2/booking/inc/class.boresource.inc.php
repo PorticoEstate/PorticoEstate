@@ -13,6 +13,11 @@
 			$this->building_bo = CreateObject('booking.bobuilding');
 		}
 		
+		public function allowed_types()
+		{
+			return booking_soresource::allowed_types();
+		}
+		
 		/**
 		 * @see bocommon_authorized
 		 */
@@ -49,11 +54,11 @@
 				(
 					booking_sopermission::ROLE_MANAGER => array
 					(
-						'write' => array_fill_keys(array('name', 'description', 'activity_id'), true),
+						'write' => true,
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
-						'write' => array_fill_keys(array('name', 'description', 'activity_id'), true),
+						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type'), true),
 					),
 					'parent_role_permissions' => array
 					(
@@ -114,6 +119,7 @@
 			foreach($resources['results'] as &$resource)
 			{
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
+				$resource['type']		 = lang($resource['type']);
 			}
 			$data = array(
 				 'ResultSet' => array(

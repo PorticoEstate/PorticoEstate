@@ -85,6 +85,7 @@
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 			),
@@ -202,20 +203,6 @@
 			'pk' => array('season_id', 'resource_id'),
 			'fk' => array(
 				'bb_season' => array('season_id' => 'id'),
-				'bb_resource' => array('resource_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_equipment' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'description' => array('type' => 'varchar','precision' => '10000','nullable' => False),
-			),
-			'pk' => array('id'),
-			'fk' => array(
 				'bb_resource' => array('resource_id' => 'id')
 			),
 			'ix' => array(),
