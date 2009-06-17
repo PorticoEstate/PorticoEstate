@@ -57,12 +57,65 @@
 					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
 					break;
 				case 'available_areas':
-					$composite_data = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'level' => phpgw::get_var('level')));
+					$composite_data = array();
+					$composite_data[$field_total] = 100;
+					$composite_data[$field_results] = array();
+					$unit_array = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'level' => phpgw::get_var('level')));
+					foreach($unit_array as $unit)
+					{
+						$occupied_date_array = $unit->get_occupied_date_array();
+						if($occupied_date_array !== null)
+						{
+							$data = &$composite_data[$field_results][];
+							$data['location_code'] = $unit->get_location_code();
+							$data['location_id'] = $unit->get_location_id();
+							$data['loc1'] = $unit->get_location_code_property();
+							$data['address'] = $unit->get_address();
+							$data['area_net'] = $unit->get_area_net();
+							$data['area_gros'] = $unit->get_area_gros();
+							$data['loc1_name'] = $unit->get_property_name();
+							$occupied = '';
+							if(count($occupied_date_array) == 0)
+							{
+								$occupied = lang('rental_rc_available');
+							}
+							else
+							{
+								$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+								foreach($occupied_date_array as $contract_date)
+								{
+									if($occupied != '')
+									{
+										$occupied .= ', ';
+									}
+									$occupied .= ($contract_date->has_start_date() ? date($date_format, strtotime($contract_date->get_start_date())) : '').' - '.($contract_date->has_end_date() ? date($date_format, strtotime($contract_date->get_end_date())) : '');
+								}
+								$occupied = lang('rental_rc_occupied').' '.$occupied;
+							}
+							$data['occupied'] = $occupied;
+							if($unit instanceof rental_building)
+							{
+								$data['loc2_name'] = $unit->get_building_name();
+							}
+							if($unit instanceof rental_floor)
+							{
+								$data['loc3_name'] = $unit->get_floor_name();
+							}
+							if($unit instanceof rental_section)
+							{
+								$data['loc4_name'] = $unit->get_section_name();
+							}
+							if($unit instanceof rental_room)
+							{
+								$data['loc5_name'] = $unit->get_room_name();
+							}
+						}
+					}
 					break;
 				case 'contracts':
 					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
 					break;
-				
+					
 			}
 			
 			//Add action column to each row in result table
@@ -94,7 +147,7 @@
 					break;
 				case 'available_areas':
 					$value['actions'] = array(
-						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'location_code' => $value['location_code'])))
+						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])))
 					);
 					break;
 				case 'contracts':
@@ -236,7 +289,7 @@
 			
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
-				$loc1 = (int)phpgw::get_var('location_code');
+				$loc1 = (int)phpgw::get_var('loc1');
 				$this->bo->add_unit($composite_id, $location_id, $loc1);
 			}
 			

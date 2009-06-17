@@ -4,6 +4,7 @@ phpgw::import_class('rental.unit');
 class rental_property extends rental_unit
 {
 	protected $property_name;
+	protected $location_code_property;
 	
 	public function __construct(string $location_code = null, int $location_id = null, $available_for_renting = true)
 	{
@@ -18,6 +19,16 @@ class rental_property extends rental_unit
 	public function set_property_name(string $property_name)
 	{
 		$this->property_name = (string)$property_name;
+	}
+	
+	public function get_location_code_property()
+	{
+		return $this->location_code_property;
+	}
+	
+	public function set_location_code_property(int $location_code_property)
+	{
+		$this->location_code_property = (int)$location_code_property;
 	}
 	
 }

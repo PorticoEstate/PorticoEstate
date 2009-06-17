@@ -415,7 +415,7 @@ class rental_socomposite extends rental_socommon
 		// Table
 		$table = "fm_location{$level}";
 		// Columns
-		$cols = "fm_location{$level}.location_code, {$address_column}, fm_locations.id AS location_id";
+		$cols = "fm_location{$level}.location_code, {$address_column}, fm_locations.id AS location_id, fm_location1.loc1";
 		for($i = 1; $i <= $level; $i++)
 		{
 			$cols .= ", fm_location{$i}.loc{$i}, fm_location{$i}.loc{$i}_name";
@@ -465,6 +465,7 @@ class rental_socomposite extends rental_socommon
 					$unit->set_building_name($this->unmarshal($this->db->f('loc2_name', true), 'string'));
 				case 1:
 					$unit->set_property_name($this->unmarshal($this->db->f('loc1_name', true), 'string'));
+					$unit->set_location_code_property($this->unmarshal($this->db->f('loc1', true), 'string'));
 					break;
 			}
 			$unit_array[] = $unit;

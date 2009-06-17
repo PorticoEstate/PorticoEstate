@@ -61,7 +61,35 @@
 		
 		public function get_available_rental_units($params)
 		{
-			return $this->so->get_available_rental_units($params);
+			$level = (int)$params['level'];
+			// First we get all areas on the level we're currently on
+			$unit_array = $this->so->get_unit_array($level, null); // These are the elements the user expects to see
+			foreach($unit_array as $unit) // We run through each area
+			{
+				if($unit->is_available_for_renting()) // There are openings on this unit at some time
+				{
+					for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
+					{
+						if($i != $level) // Not the level we already have data for
+						{
+							$related_unit_array = $this->so->get_unit_array($i, $unit->get_location_code());
+							foreach($related_unit_array as $related_unit)
+							{
+								if($related_unit->is_available_for_renting()) // There are openings on this unit at some time
+								{
+									// We add the contract dates from the related units to see at what time it's possible to rent the unit
+									$unit->add_contract_date_array($related_unit->get_contract_date_array());
+								}
+								else // Nothing available
+								{
+									break 2; // No reason to continue
+								}
+							}
+						}
+					}
+				}
+			}
+			return $unit_array;
 		}
 		
 		/**
