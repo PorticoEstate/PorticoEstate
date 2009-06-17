@@ -48,7 +48,7 @@
 		{
 			parent::doValidate($entity, $errors);
 			// Make sure to_ > from_
-			if(!$errors)
+			if(count($errors) == 0)
 			{
 				$from_ = date_parse($entity['from_']);
 				$to_ = date_parse($entity['to_']);
@@ -185,7 +185,7 @@
 			}
 			$this->db->query(
 					"SELECT 1 FROM bb_season_boundary " .
-					"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_}",
+					"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_} AND season_id = ${season_id}",
 					__LINE__, __FILE__);
 			if(!$this->db->next_record())
 			{
