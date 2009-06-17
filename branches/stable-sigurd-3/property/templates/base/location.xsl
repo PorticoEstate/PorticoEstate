@@ -509,7 +509,7 @@
 
 			<tr height="50">
 			<xsl:choose>
-				<xsl:when test="view = ''">
+				<xsl:when test="edit != ''">
 					<td>
 						<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
 						<input type="submit" name="save" value="{$lang_save}">
