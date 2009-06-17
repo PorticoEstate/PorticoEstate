@@ -272,7 +272,7 @@
 			$default_attrib['column_name'][]= 'remark';
 			$default_attrib['type'][]='T';
 			$default_attrib['precision'][] = false;
-			$default_attrib['nullable'][] ='false';
+			$default_attrib['nullable'][] ='True';
 			$default_attrib['input_text'][] ='Remark';
 			$default_attrib['statustext'][] ='Remark';
 			$default_attrib['attrib_sort'][] =2;
@@ -288,6 +288,40 @@
 			$default_attrib['statustext'][] ='dummy';
 			$default_attrib['attrib_sort'][] ='';
 			$default_attrib['custom'][] ='';
+
+			$j++;
+			$default_attrib['id'][]= $j;
+			$default_attrib['column_name'][]= 'area_gross';
+			$default_attrib['type'][]='N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] ='True';
+			$default_attrib['input_text'][] ='gross area';
+			$default_attrib['statustext'][] ='Sum of the areas included within the outside face of the exterior walls of a building.';
+			$default_attrib['attrib_sort'][] =3;
+			$default_attrib['custom'][] =1;
+
+			$j++;
+			$default_attrib['id'][]= $j;
+			$default_attrib['column_name'][]= 'area_net';
+			$default_attrib['type'][]='N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] ='True';
+			$default_attrib['input_text'][] ='Net area';
+			$default_attrib['statustext'][] ='The wall-to-wall floor area of a room.';
+			$default_attrib['attrib_sort'][] =4;
+			$default_attrib['custom'][] =1;
+
+			$j++;
+			$default_attrib['id'][]= $j;
+			$default_attrib['column_name'][]= 'area_usable';
+			$default_attrib['type'][]='N';
+			$default_attrib['precision'][] = false;
+			$default_attrib['nullable'][] ='True';
+			$default_attrib['input_text'][] ='Usable area';
+			$default_attrib['statustext'][] ='Generally measured from "paint to paint" inside the permanent walls and to the middle of partitions separating rooms.';
+			$default_attrib['attrib_sort'][] =5;
+			$default_attrib['custom'][] =1;
+
 
 			$fd=array();
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => false);
@@ -335,6 +369,9 @@
 			$fd['remark'] = array('type' => 'text', 'nullable' => true);
 			$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['change_type'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['area_gross'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
+			$fd['area_net'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
+			$fd['area_usable'] = array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00');
 
 			$ix = array('location_code');
 			$uc = array();
