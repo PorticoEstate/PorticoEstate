@@ -335,22 +335,6 @@
 						                                'value'	=> lang('add'),
 						                                'tab_index' => 10
 						                            ),
-			                                        array( //boton     SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 9
-			                                        ),
-			   										array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//$query,
-			                                            'type' => 'text',
-			                                            'onkeypress' => 'return pulsar(event)',
-			                                            'size'    => 18,
-			                                            'tab_index' => 8
-			                                        ),
 			                                        array(
 						                                'type'	=> 'hidden',
 						                            	'id'	=> 'start_date',
@@ -371,8 +355,24 @@
 	                                                           array(
 	                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 	                                                     'value' => lang('Date search'),
-	                                                     'tab_index' => 7
-                                                    )
+	                                                     'tab_index' => 9
+                                                    ),
+			                                        array( //boton     SEARCH
+			                                            'id' => 'btn_search',
+			                                            'name' => 'search',
+			                                            'value'    => lang('search'),
+			                                            'type' => 'button',
+			                                            'tab_index' => 8
+			                                        ),
+			   										array( // TEXT IMPUT
+			                                            'name'     => 'query',
+			                                            'id'     => 'txt_query',
+			                                            'value'    => '',//$query,
+			                                            'type' => 'text',
+			                                            'onkeypress' => 'return pulsar(event)',
+			                                            'size'    => 18,
+			                                            'tab_index' => 7
+			                                        ),
 		                           				),
 		                       		'hidden_value' => array(
 							                                array( //div values  combo_box_0
@@ -442,13 +442,14 @@
 								$datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
 								$datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
 
+/*
 								if($uicols['name'][$i]=='vendor_id')
 								{
 									$datatable['rows']['row'][$j]['column'][$i]['statustext']		= $workorder['org_name'];
 									$datatable['rows']['row'][$j]['column'][$i]['overlib']		= true;
 									$datatable['rows']['row'][$j]['column'][$i]['text']			= $workorder[$uicols['name'][$i]];
 								}
-
+*/
 								if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $workorder[$uicols['name'][$i]])
 								{
 									$datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');

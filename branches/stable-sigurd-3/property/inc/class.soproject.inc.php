@@ -144,6 +144,18 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= 'rightClasss';
+
+				$cols .= ", fm_project_status.descr as status";
+				$cols_return[] 				= 'status';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'status';
+				$uicols['descr'][]			= lang('status');
+				$uicols['statustext'][]		= lang('status');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 				
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
@@ -163,6 +175,18 @@
 				$uicols['name'][]			= 'name';
 				$uicols['descr'][]			= lang('name');
 				$uicols['statustext'][]		= lang('Project name');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
+				$cols.= ",loc1_name";
+				$cols_return[] 				= 'loc1_name';
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'loc1_name';
+				$uicols['descr'][]			= lang('loc1_name');
+				$uicols['statustext'][]		= lang('loc1_name');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
@@ -231,8 +255,11 @@
 
 				$cols.= ",$entity_table.user_id";
 
-				$joinmethod = " $this->join  phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
+				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis ='(';
+
+				$joinmethod .= " $this->join fm_project_status ON ($entity_table.status = fm_project_status.id))";
+				$paranthesis .='(';
 
 				$joinmethod .= " $this->left_join fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
 				$paranthesis .='(';
@@ -324,7 +351,7 @@
 				$where= 'AND';
 			}
 
-			$group_method = ' GROUP BY fm_project.location_code,fm_project.id,fm_project.start_date,'
+			$group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.start_date,'
 				. 'fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
 				. 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
 
