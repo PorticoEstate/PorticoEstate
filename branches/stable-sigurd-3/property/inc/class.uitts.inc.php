@@ -124,7 +124,7 @@
 			$end_date 	= urldecode($this->end_date);
 
 			$this->bo->allrows = true;
-			$list = $this->bo->read($start_date,$end_date,$external);
+			$list = $this->bo->read($start_date,$end_date,$external, '', $download = true);
 
 			if (isset($list) AND is_array($list))
 			{
