@@ -270,7 +270,7 @@
 			return $related;
 		}
 
-		function read($start_date='',$end_date='', $external='',$dry_run = '')
+		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
 		{
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
@@ -334,7 +334,7 @@
 					for ($j=0;$j<count($entity);$j++)
 					{
 						$ticket['child_date'][$j] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
-						if($ticket['child_date'][$j]['date_info'])
+						if($ticket['child_date'][$j]['date_info'] && !$download)
 						{
 							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
 						}
