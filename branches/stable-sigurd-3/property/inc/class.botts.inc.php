@@ -272,6 +272,9 @@
 
 		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
 		{
+			$category_name = array();
+			$account = array();
+			
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
@@ -296,18 +299,50 @@
 			{
 				if(!$ticket['subject'])
 				{
-					$ticket['subject']= $this->get_category_name($ticket['cat_id']);
+					if(!isset($category_name[$ticket['cat_id']]))
+					{
+						$ticket['subject']= $this->get_category_name($ticket['cat_id']);
+						$category_name[$ticket['cat_id']] = $ticket['subject'];
+					}
+					else
+					{
+						$ticket['subject'] = $category_name[$ticket['cat_id']];
+					}
 				}
 
-				$ticket['user'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
-
-				if($ticket['assignedto'])
+				if(!isset($account[$ticket['user_id']]))
 				{
-					$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+					$ticket['user'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
+					$account[$ticket['user_id']] = $ticket['user'];
 				}
 				else
 				{
-					$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
+					$ticket['user'] = $account[$ticket['user_id']];
+				}
+
+				if($ticket['assignedto'])
+				{
+					if(!isset($account[$ticket['assignedto']]))
+					{
+						$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+						$account[$ticket['assignedto']] = $ticket['assignedto'];
+					}
+					else
+					{
+						$ticket['assignedto'] = $account[$ticket['assignedto']];
+					}
+				}
+				else
+				{
+					if(!isset($account[$ticket['group_id']]))
+					{
+						$ticket['assignedto'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
+						$account[$ticket['group_id']] = $ticket['assignedto'];
+					}
+					else
+					{
+						 $ticket['assignedto'] = $account[$ticket['group_id']];
+					}
 				}
 
 				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
@@ -341,6 +376,7 @@
 					}
 				}
 			}
+
 			return $tickets;
 		}
 
