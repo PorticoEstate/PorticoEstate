@@ -324,6 +324,11 @@
 			
 			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
 
+			if($this->type_app[$this->type] == 'catch')
+			{
+				$loc1 = 'dummy';
+			}
+
 			$files = $vfs->ls (array(
 			     'string' => "/property/{$this->category_dir}/{$loc1}/{$data['id']}",
 			     'relatives' => array(RELATIVE_NONE)));

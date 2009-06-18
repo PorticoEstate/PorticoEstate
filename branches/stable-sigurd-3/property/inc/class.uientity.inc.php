@@ -213,6 +213,10 @@
 
 			$file_name	= urldecode(phpgw::get_var('file_name'));
 			$loc1 		= phpgw::get_var('loc1', 'string', 'REQUEST', 'dummy');
+			if($this->type_app[$this->type] == 'catch')
+			{
+				$loc1 = 'dummy';
+			}
 			$id 		= phpgw::get_var('id', 'int');
 			$jasper		= phpgw::get_var('jasper', 'bool');
 
@@ -983,6 +987,11 @@
 					$function_msg = lang('edit entity');
 //--------------files
 					$loc1 = isset($values['location']['loc1']) && $values['location']['loc1'] ? $values['location']['loc1'] : 'dummy';
+					if($this->type_app[$this->type] == 'catch')
+					{
+						$loc1 = 'dummy';
+					}
+
 					$bofiles	= CreateObject('property.bofiles');
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
@@ -1376,6 +1385,7 @@
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 		//		'link_to_files'					=> $link_to_files,
 				'files'							=> isset($values['files'])?$values['files']:'',
+				'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_file_action'				=> lang('Delete file'),

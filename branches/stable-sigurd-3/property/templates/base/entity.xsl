@@ -422,7 +422,7 @@
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			  
 			<xsl:choose>
-				<xsl:when test="files!=''">
+				<xsl:when test="jasperfiles!=''">
 					<tr>
 						<td align="left" valign="top">
 							<xsl:value-of select="//lang_files"/>
