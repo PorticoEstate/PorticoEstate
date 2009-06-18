@@ -107,7 +107,7 @@ add property	property	no	legg til prosjekt
 add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
 addressmasters	common	no	AddresseMaster
-address	property	no	Addresse
+address	property	no	Adresse
 adds a new project - then a new workorder	property	no	legger til nytt prosjekt - så arbeidsordre
 adds a new workorder to an existing project	property	no	legger til ny arbeidsordre til eksisterende prosjekt
 add selected request to project	property	no	Legg valgte tiltak til prosjektet

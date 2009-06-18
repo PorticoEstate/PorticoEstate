@@ -28,6 +28,7 @@
 
 	var toolTips =
 	[
+		{name:'loc1', title:'', description:'',ColumnDescription:'loc1_name'},
 		{name:'btn_export', title:'download', description:'Download table to your browser', ColumnDescription:''}
 	]
 

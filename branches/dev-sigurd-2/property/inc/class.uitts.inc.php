@@ -386,22 +386,6 @@
 						                                'value'	=> lang('add'),
 						                                'tab_index' => 8
 						                            ),
-													array( //boton     SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-						                                'tab_index' => 7
-													),
-			   										array( // TEXT INPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//$query,
-														'type' => 'text',
-														'onkeypress' => 'return pulsar(event)',
-														'size'    => 28,
-						                                'tab_index' => 6
-													),
 													array( //hidden start_date
 	                                                    'type' => 'hidden',
 	                                                    'id' => 'start_date',
@@ -422,8 +406,24 @@
 		                                                       array(
 		                                                           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 		                                                'value' => lang('Date search'),
+						                                'tab_index' => 7
+	                                                ),
+													array( //boton     SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+						                                'tab_index' => 6
+													),
+			   										array( // TEXT INPUT
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//$query,
+														'type' => 'text',
+														'onkeypress' => 'return pulsar(event)',
+														'size'    => 28,
 						                                'tab_index' => 5
-	                                                )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 															array( //div values  combo_box_0

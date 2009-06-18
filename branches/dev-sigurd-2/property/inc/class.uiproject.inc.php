@@ -318,22 +318,6 @@
 							                                'value'	=> lang('add'),
 							                                'tab_index' => 10
 							                            ),
-				                                        array( //boton     SEARCH
-				                                            'id' => 'btn_search',
-				                                            'name' => 'search',
-				                                            'value'    => lang('search'),
-				                                            'type' => 'button',
-				                                            'tab_index' => 9
-				                                        ),
-				   										array( // TEXT INPUT
-				                                            'name'     => 'query',
-				                                            'id'     => 'txt_query',
-			                                                'value'    => $this->query,//'',//$query,
-				                                            'type' => 'text',
-				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28,
-				                                            'tab_index' => 8
-				                                        ),
 				                                        array( //hidden start_date
 		                                                    'type' => 'hidden',
 		                                                    'id' => 'start_date',
@@ -354,7 +338,7 @@
 		                                                           array(
 		                                                               'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 		                                                     'value' => lang('Date search'),
-		                                                     'tab_index' => 7
+		                                                     'tab_index' => 9
 	                                                    ),
 				                                // FIXME test on lightbox for date search
 				                                /*
@@ -364,8 +348,25 @@
 				                                            'value'    => lang('date search'),
 				                                            'type' => 'button',
 				                                            'tab_index' => 5
-				                                        )
+				                                        ),
 												*/
+
+				                                        array( //boton     SEARCH
+				                                            'id' => 'btn_search',
+				                                            'name' => 'search',
+				                                            'value'    => lang('search'),
+				                                            'type' => 'button',
+				                                            'tab_index' => 8
+				                                        ),
+				   										array( // TEXT INPUT
+				                                            'name'     => 'query',
+				                                            'id'     => 'txt_query',
+			                                                'value'    => $this->query,//'',//$query,
+				                                            'type' => 'text',
+				                                            'onkeypress' => 'return pulsar(event)',
+				                                            'size'    => 28,
+				                                            'tab_index' => 7
+				                                        ),
 			                           				),
 			                       		'hidden_value' => array(
 								                                array( //div values  combo_box_0
@@ -438,6 +439,11 @@
 									
 							}
 						}
+						else
+						{
+								$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
+						}
 
 						if($lookup && $k==($count_uicols_name-1))
 						{
@@ -603,6 +609,16 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'location_code';
 					}
+				}
+				else
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= '""';
+					$datatable['headers']['header'][$i]['className']		= '';
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['format'] 			= '';
 				}
 			}
 

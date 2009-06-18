@@ -26,6 +26,7 @@
 
 	var toolTips =
 	[
+		{name:'loc1', title:'', description:'',ColumnDescription:'loc1_name'},
 		{name:'vendor_id', title:'', description:'',ColumnDescription:'org_name'},
 	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''}
 	]
