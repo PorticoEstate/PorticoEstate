@@ -52,8 +52,8 @@
 			
 			function onCalendarSelect(type,args,array){
 				var firstDate = args[0][0];
-				var day = firstDate[2] + "";
-				var month = firstDate[1] + "";
+				var day = firstDate[1] + "";
+				var month = firstDate[2] + "";
 				var year = firstDate[0] + "";
 				var date = day + "/" + month + "/" + year;
 				document.getElementById(array[0]).value = formatDate('<xsl:value-of select="//dateFormat"/>',Math.round(Date.parse(date)/1000));
