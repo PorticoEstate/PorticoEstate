@@ -2580,19 +2580,22 @@
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$temp_dir = $GLOBALS['phpgw_setup']->oProc->f('config_value');
 
-		$dir = new DirectoryIterator($temp_dir); 
-		if ( is_object($dir) )
+		if($temp_dir && is_dir($temp_dir))
 		{
-			foreach ( $dir as $file )
+			$dir = new DirectoryIterator($temp_dir); 
+			if ( is_object($dir) )
 			{
-				if ( $file->isDot()
-					|| !$file->isFile()
-					|| !$file->isReadable()
-					|| !strpos($file->getbaseName(), 'hpgw_cache_') == 1)
+				foreach ( $dir as $file )
 				{
-					continue;
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| !strpos($file->getbaseName(), 'hpgw_cache_') == 1)
+					{
+						continue;
+					}
+					unlink((string) "{$temp_dir}/{$file}");
 				}
-				unlink((string) "{$temp_dir}/{$file}");
 			}
 		}
 
