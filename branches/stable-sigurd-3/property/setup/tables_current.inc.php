@@ -190,7 +190,10 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'kostra_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
+				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1'),
 			'fk' => array('fm_location1_category' => array('category' => 'id')),
@@ -213,6 +216,9 @@
 				'kostra_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp')
 			),
 			'pk' => array(),
@@ -242,7 +248,10 @@
 				'status' => array('type' => 'int','precision' => '4','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
+				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2'),
 			'fk' => array(
@@ -265,6 +274,9 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp')
 			),
 			'pk' => array(),
@@ -295,7 +307,10 @@
 				'status' => array('type' => 'int','precision' => '4','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
+				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3'),
 			'fk' => array(
@@ -319,6 +334,9 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp')
 			),
 			'pk' => array(),
@@ -354,7 +372,10 @@
 				'status' => array('type' => 'int','precision' => '4','nullable' => True),
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
+				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('loc1','loc2','loc3','loc4'),
 			'fk' => array(
@@ -382,6 +403,9 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'change_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'rental_area' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_gross' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_net' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'area_usable' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp','nullable' => True,'default' => 'current_timestamp')
 			),
 			'pk' => array(),

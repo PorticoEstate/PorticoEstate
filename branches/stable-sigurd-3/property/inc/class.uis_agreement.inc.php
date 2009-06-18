@@ -838,10 +838,8 @@
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->update($values);
-						$get_items = true;
-
 					}
-
+					$get_items = true;
 				}
 				elseif($values['delete_alarm'] && count($values['alarm'])):
 				{

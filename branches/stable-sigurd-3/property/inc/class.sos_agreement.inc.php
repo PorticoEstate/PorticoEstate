@@ -1037,19 +1037,18 @@
 
 		function update($values)
 		{
-//_debug_array($values);
 			$values['new_index']=$this->floatval($values['new_index']);
 			$this->db->transaction_begin();
 
-			while (is_array($values['select']) && list($item_id,$value) = each($values['select']))
+			if(isset($values['select']) && is_array($values['select']))
 			{
-
-				$this->db->query("UPDATE fm_s_agreement_pricing set current_index = NULL WHERE agreement_id=" . $values['agreement_id'] . ' AND item_id=' . intval($item_id));
-
-				$this->db->query("INSERT INTO fm_s_agreement_pricing (agreement_id,item_id,id,current_index,this_index,cost,index_date,entry_date,user_id)"
-					. "VALUES (" . $values['agreement_id'] . "," . $item_id ."," . ($values['id'][$item_id]+1) .",1,'" . $values['new_index'] . "','" . ($value * $values['new_index'])  . "'," . (int)$values['date'] . "," . time()
-					. "," . $this->account . ")");
-
+				foreach ($values['select'] as $item_id => $value)
+				{
+					$this->db->query("UPDATE fm_s_agreement_pricing SET current_index = NULL WHERE agreement_id=" . $values['agreement_id'] . ' AND item_id=' . (int)$item_id);
+					$this->db->query("INSERT INTO fm_s_agreement_pricing (agreement_id,item_id,id,current_index,this_index,cost,index_date,entry_date,user_id)"
+						. "VALUES (" . $values['agreement_id'] . "," . $item_id ."," . ($values['id'][$item_id]+1) .",1,'" . $values['new_index'] . "','" . ($value * $values['new_index'])  . "'," . (int)$values['date'] . "," . time()
+						. "," . $this->account . ")");
+				}
 			}
 
 			$this->db->transaction_commit();
