@@ -245,38 +245,11 @@
 					'composite' 	=> $composite,
 					'composite_id' => $composite_id,
 					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-					'documents' => $documents,
 					'access' => $editable,
 					'message' => $message,
 					'error' => $error,
 					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
-				);
-				
-				$errors = array();
-				if($_SERVER['REQUEST_METHOD'] == 'POST')
-				{
-					$composite = array_merge($composite, extract_values($_POST, array('name', 'gab_id', 'address_1', 'house_number', 'address_2', 'postcode', 'place', 'is_active', 'description')));
-					$composite['is_active'] = $composite['is_active'] == 'on' ? true : false;
-
-					if (isset($composite['address_1']) && trim($composite['address_1']) != '') {
-						$composite['has_custom_address'] = '1';
-					} else {
-						$composite['has_custom_address'] = '0';
-					}
-
-					$errors = $this->bo->validate($composite);
-					
-					if(!$errors)
-					{
-						$receipt = $this->bo->update($composite);
-						$this->redirect(array('menuaction' => 'rental.uicomposite.index'));
-					}
-				}
-				$this->flash_form_errors($errors);
-
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
-				phpgwapi_yui::load_widget('treeview');
-				
+				);				
 				self::render_template('composite', $data);
 			}
 		}
