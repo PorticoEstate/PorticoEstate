@@ -1,3 +1,26 @@
+rental_contract_all	rental	no	Alle
+rental_contract_billing_external	rental	no	Ekstern
+rental_contract_billing_internal	rental	no	Intern
+rental_contract_billing_type	rental	no	Fakturatype
+rental_contract_composite	rental	no	Leieobjekt
+rental_contract_date_end	rental	no	Til
+rental_contract_date_start	rental	no	Fra
+rental_contract_ended	rental	no	Avsluttet
+rental_contract_from	rental	no	Fra
+rental_contract_investment	rental	no	Investeringskontrakt
+rental_contract_number	rental	no	Kontraktnummer
+rental_contract_type	rental	no	Type
+rental_contract_period	rental	no	Periode
+rental_contract_rental_external	rental	no	Eksternleie
+rental_contract_rental_inn	rental	no	Innleie
+rental_contract_rental_internal	rental	no	Internleie
+rental_contract_tenant	rental	no	Leietaker
+rental_contract_to	rental	no	Til
+rental_contract_status	rental	no	Status
+rental_contract_running	rental	no	Løpende
+rental_contract_under_dismissal	rental	no	Under oppsigelse
+rental_contract_under_planning	rental	no	Under planlegging
+rental_contract_with_billing_type	rental	no	Fakturatype
 rental_cm_add	rental	no	Legg til
 rental_cm_edit	rental	no	Redigér
 rental_cm_remove	rental	no	Fjern
@@ -60,7 +83,7 @@ rental_rc_section	rental	no	Seksjon
 rental_rc_search	rental	no	Søk
 rental_rc_search_for	rental	no	Søk etter
 rental_rc_search_options	rental	no	Søkevalg
-rental_rc_search_where	rental	no	i
+rental_rc_search_where	rental	no	i 
 rental_rc_section	rental	no	Seksjon
 rental_rc_serial	rental	no	Løpenummer
 rental_rc_tenant	rental	no	Leietaker
@@ -69,3 +92,4 @@ rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
 rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Lag nytt leieobjekt
+rental_reset	rental	no	Nullstill

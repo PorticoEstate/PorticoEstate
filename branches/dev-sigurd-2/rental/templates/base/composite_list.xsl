@@ -86,8 +86,7 @@
 				},
 				{
 					key: "actions",
-					label: "unselectable",
-				    sortable: true
+					hidden: true
 				}]
   			</xsl:with-param>
   		</xsl:call-template>
