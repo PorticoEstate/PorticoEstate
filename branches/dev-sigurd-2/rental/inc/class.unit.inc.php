@@ -1,4 +1,5 @@
 <?php
+phpgw::import_class('rental.bocommon');
 phpgw::import_class('rental.contract_date');
 
 /**
@@ -7,6 +8,7 @@ phpgw::import_class('rental.contract_date');
  */
 abstract class rental_unit
 {
+	protected static $so;
 
 	protected $location_code;
 	protected $location_id;
@@ -14,12 +16,22 @@ abstract class rental_unit
 	protected $address;
 	protected $area_gros;
 	protected $area_net;
+	protected $composite_id_array;
+	
+	protected static function get_so()
+	{
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.socomposite');
+		}
+		return self::$so;
+	}
 	
 	public function __construct(string $location_code = null, int $location_id = null)
 	{
 		$this->location_code = (string)$location_code;
 		$this->location_id = (int)$location_id;
 		$this->contract_date_array = array();
+		$this->composite_id_array = array();
 	}
 	
 	public function get_location_code()
@@ -60,6 +72,24 @@ abstract class rental_unit
 	public function set_area_gros(int $area_gros)
 	{
 		$this->area_gros = (int)$area_gros;
+	}
+	
+	public function get_composite_id_array()
+	{
+		return $this->composite_id_array;
+	}
+	
+	public function add_composite_id(int $composite_id)
+	{
+		if(!$this->has_composite_id($composite_id))
+		{
+			$this->composite_id_array[] = $composite_id;
+		}
+	}
+	
+	public function has_composite_id(int $composite_id)
+	{
+		return in_array($composite_id, $this->composite_id_array);
 	}
 	
 	/**
@@ -219,6 +249,59 @@ abstract class rental_unit
 	public function __toString() {
         return 'unit[location code:'.$this->location_code.']';
     }
+    
+	/**
+	 * 
+	 * @param $type int 1-5 with type of units to return.
+	 * @return array with rental_unit objects.
+	 */
+	public static function get_available_rental_units(int $level, int $composite_id, string $avaiable_from_date = null, $start_row = 0, $num_of_rows = 25, $sort_field = 'location_code', $sort_ascending = true)
+	{
+//		var_dump($level);
+		$level = (int)$level;
+		// First we get all areas on the level we're currently on
+		$unit_array = rental_unit::get_so()->get_unit_array($level, null, 0, 10000, $sort_field, $sort_ascending); // These are the elements the user expects to see
+		$available_unit_array = array();
+		foreach($unit_array as $unit) // We run through each area
+		{
+			// XXX: Add check for $avaiable_from_date
+			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting()) // Unit doesn't already belong to speciefied composite and there are openings on this unit at some time
+			{
+				$add_unit = true; // Tells if we should add unit to list of available units
+				for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
+				{
+					if($i != $level) // Not the level we already have data for
+					{
+						$related_unit_array = rental_unit::get_so()->get_unit_array($i, $unit->get_location_code(), 0, 10000, null, true);
+						foreach($related_unit_array as $related_unit)
+						{
+							// XXX: Add check for $avaiable_from_date
+							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting()) // Unit doesn't already belong to speciefied composite and there are openings on this unit at some time
+							{
+								// We add the contract dates from the related units to see at what time it's possible to rent the unit
+								$unit->add_contract_date_array($related_unit->get_contract_date_array());
+							}
+							else // Nothing available
+							{
+								$add_unit = false;
+								break 2; // No reason to continue
+							}
+						}
+					}
+				}
+				if($add_unit) // We should add unit
+				{
+					// Unit is available for renting, so we add it to the array
+					$available_unit_array[] = $unit;
+				}
+			}
+		}
+		if(count($available_unit_array) > $num_of_rows) // We've found more units than asked for
+		{
+			$available_unit_array = array_slice($available_unit_array, (int)$start_row, $num_of_rows);
+		}
+		return $available_unit_array;
+	}
 
 }
 ?>

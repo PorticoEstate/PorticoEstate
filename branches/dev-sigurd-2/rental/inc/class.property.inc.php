@@ -26,9 +26,9 @@ class rental_property extends rental_unit
 		return $this->location_code_property;
 	}
 	
-	public function set_location_code_property(int $location_code_property)
+	public function set_location_code_property(string $location_code_property)
 	{
-		$this->location_code_property = (int)$location_code_property;
+		$this->location_code_property = (string)$location_code_property;
 	}
 	
 }

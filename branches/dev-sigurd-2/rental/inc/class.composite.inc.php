@@ -136,7 +136,7 @@ class rental_composite
 	
 	public function get_house_number() { return $this->house_number; }
 	
-public function set_place($place)
+	public function set_place($place)
 	{
 		$this->place = $place;
 	}
@@ -172,6 +172,8 @@ public function set_place($place)
 		$result .= '"name":"' . $this->get_name() . '"';
 		
 		$result .= '}';
+		
+		return $result;
 	}
 }
 ?>

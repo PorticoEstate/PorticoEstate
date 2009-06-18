@@ -58,9 +58,9 @@
 					break;
 				case 'available_areas':
 					$composite_data = array();
-					$composite_data[$field_total] = 100;
+					$composite_data[$field_total] = count(rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('date'), $composite_id, 0, 10000));
 					$composite_data[$field_results] = array();
-					$unit_array = $this->bo->get_available_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'level' => phpgw::get_var('level')));
+					$unit_array = rental_unit::get_available_rental_units((int)phpgw::get_var('level'), $composite_id, phpgw::get_var('date'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('sort'), phpgw::get_var('dir') == ' desc' ? false : true);
 					foreach($unit_array as $unit)
 					{
 						$occupied_date_array = $unit->get_occupied_date_array();

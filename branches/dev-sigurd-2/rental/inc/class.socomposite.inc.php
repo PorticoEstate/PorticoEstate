@@ -387,7 +387,7 @@ class rental_socomposite extends rental_socommon
 	 * @param $sort_ascending bool telling to sort ascending or not.
 	 * @return array of rental_unit objects.
 	 */
-	public function get_unit_array($level = 2, string $location_code_related = null, $start = 0, $num_of_hits = null, $sort_ascending = true)
+	public function get_unit_array($level = 2, string $location_code_related = null, $start = 0, $num_of_hits = 10000, $sort_field = 'location_code', $sort_ascending = true)
 	{
 		// Return array
 		$unit_array = array();
@@ -397,7 +397,7 @@ class rental_socomposite extends rental_socommon
 			$level = rental_socommon::UNIT_BUILDING; // Default level
 		}
 		// Address
-		$address_column = $level == 1 ? 'adresse1' : 'adresse';
+		$address_column = $level == rental_socommon::UNIT_PROPERTY ? 'adresse1' : 'adresse';
 		// Conditions
 		$condition_array = array();
 		// Location code
@@ -441,10 +441,19 @@ class rental_socomposite extends rental_socommon
 			$joins .= ')';
 		}
 		$joins .= ' LEFT JOIN fm_locations ON (fm_location'.$level.'.location_code = fm_locations.location_code)';
-//			.' LEFT JOIN rental_unit ON (fm_locations.id = rental_unit.location_id)'
-//			.' LEFT JOIN rental_composite ON (rental_unit.composite_id = rental_composite.id)'
-//			.' LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)'
-//			.' LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)';
+		// Order
+		$order = '';
+		if(isset($sort_field))
+		{
+			switch($sort_field)
+			{
+				case 'location_code':
+				default:
+					$sort_field = "fm_location{$level}.location_code";
+					break;
+			}
+			$order = 'ORDER BY '.$sort_field.($sort_ascending ? ' ASC' : ' DESC');
+		}
 		// Class to use for the units
 		$class = self::$unit_class_array[$level]; // Picks the correct class to instanciate
 		$sql = "SELECT $cols FROM $table $joins $condition $order";
@@ -503,6 +512,7 @@ class rental_socomposite extends rental_socommon
 			$unit->set_area_gros((int)$area_gros);
 			$unit->set_area_net((int)$area_net);  
 		}
+		// Finds belonging contracts
 		foreach ($unit_array as &$unit)
 		{
 			// Belonging contracts
@@ -517,169 +527,21 @@ class rental_socomposite extends rental_socommon
 			}
 //			var_dump($unit);
 		}
-		
-		return $unit_array;
-	}
-	
-	/**
-	 * 
-	 * @param $params
-	 * @return unknown_type
-	 */
-	function get_available_rental_units($params)
-	{
-		$id = $params['id'];
-		$level = (int)$params['level'];
-		$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
-		$limit = isset($params['results']) && $params['results'] ? $params['results'] : 25;
-		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-		$dir = isset($params['dir']) && $params['dir'] ? ($params['dir'] == 'desc' ? 'desc' : 'asc') : 'asc'; // We set asc as direction unless specifically told otherwise
-		// Table
-		$table = 'fm_location1';
-		// Level
-		if($level < 1 || $level > 5) // Invalid (or not set) level
+		// Finds belonging composites
+		foreach ($unit_array as &$unit)
 		{
-			$level = 2; // Default level
-		}
-		// Address
-		$address_column = $level == 1 ? 'adresse1' : 'adresse';
-		// Columns
-		$cols = 'rental_contract.id, rental_composite.id AS composite_id, rental_contract.date_start, rental_contract.date_end, fm_location'.$level.'.location_code, fm_location'.$level.'.loc1, loc1_name, fm_locations.id AS location_id, '.$address_column;
-		for($i = 2; $i <= $level; $i++)
-		{
-			$cols .= ", fm_location{$i}.loc{$i}, loc{$i}_name";
-		}
-		// Joins
-		$joins = '';
-		for($i = 2; $i <= $level; $i++)
-		{
-			$joins .= " LEFT JOIN fm_location{$i} ON (fm_location1.loc1 = fm_location{$i}.loc1";
-			for($j = 3; $j <= $i; $j++)
-			{
-				$joins .= ' AND fm_location'.($j - 1).'.loc'.($j - 1).' = fm_location'.$i.'.loc'.($j - 1);
-			}
-			$joins .= ')';
-		}
-		$joins .= ' LEFT JOIN fm_locations ON (fm_location'.$level.'.location_code = fm_locations.location_code)'
-			.' LEFT JOIN rental_unit ON (fm_locations.id = rental_unit.location_id)'
-			.' LEFT JOIN rental_composite ON (rental_unit.composite_id = rental_composite.id)'
-			.' LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)'
-			.' LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)';
-		// Condition
-		$condition = " WHERE fm_location{$level}.location_code != ''";
-		// Why can't we use the condition below? It clears out all rows where there aren't any composites connected to the areas:
-		//$condition .= " AND rental_composite.id != {$id}";
-		// Order
-		$order = ' ORDER BY fm_location1.location_code';
-		for($i = 2; $i <= $level; $i++) 
-		{
-			$order .= ", fm_location{$i}.loc{$i}";
-		}
-		if($sort != null) // Sorting is set
-		{
-			switch($sort)
-			{
-				case 'address':
-					$order = ' ORDER BY '.$address_column.' '.$dir;
-					break;
-				case 'loc2_name':
-					if($level >= 2)
-					{
-						$order = ' ORDER BY loc2_name '.$dir;
-					}
-					break;
-				case 'loc3_name':
-					if($level >= 3)
-					{
-						$order = ' ORDER BY loc3_name '.$dir;
-					}
-					break;
-				case 'loc4_name':
-					if($level >= 4)
-					{
-						$order = ' ORDER BY loc4_name '.$dir;	
-					}
-					break;
-				case 'loc5_name':
-					if($level >= 5)
-					{
-						$order = ' ORDER BY loc5_name '.$dir;
-					}
-					break;
-			}
-		}
-		// Count query
-		$total_records = 0;
-		$sql = "SELECT COUNT(*) AS count FROM $table $joins $condition";
-		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-		if ($this->db->next_record()) 
-		{
-			$total_records = $this->unmarshal($this->db->f('count', true), 'int');
-		}
-		// Main query
-		$sql = "SELECT $cols FROM $table $joins $condition $order";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-
-		$units = array();
-		while ($this->db->next_record()) {
-			$current_composite_id = $this->unmarshal($this->db->f('composite_id', true), 'int');
-			// TODO: How can we test for this in the sql query? The $total_records is incorrect..
-			if($current_composite_id != $id) // The area doesn't already exist in this composite
-			{
-				$unit = array();
-				$unit['location_code'] = $this->unmarshal($this->db->f('location_code', true), 'string');
-				$unit['loc1'] = $this->unmarshal($this->db->f('loc1', true), 'string');
-				$unit['location_id'] = $this->unmarshal($this->db->f('location_id', true), 'string');
-				$unit['loc1_name'] = $this->unmarshal($this->db->f('loc1_name', true), 'string');
-				$unit['loc2_name'] = $this->unmarshal($this->db->f('loc2_name', true), 'string');
-				$unit['loc3_name'] = $this->unmarshal($this->db->f('loc3_name', true), 'string');
-				$unit['loc4_name'] = $this->unmarshal($this->db->f('loc4_name', true), 'string');
-				$unit['loc5_name'] = $this->unmarshal($this->db->f('loc5_name', true), 'string');
-				$unit['address'] = $this->unmarshal($this->db->f($address_column, true), 'string');
-				$units[] = $unit;
-			}
-		}
-		
-		// Go through each rental unit (location) that belongs to this composite and add up their areas
-		foreach ($units as &$unit)
-		{
-			// TODO: Simplify this block:
-			$sql = '';
-			$area_column_gros = 'bta';
-			$area_column_net = 'bra';
-			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
-			if ($level == 1)
-			{
-				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location2 JOIN fm_location1 ON (fm_location2.loc1 = fm_location1.loc1) WHERE fm_location2.loc1 = '{$unit['location_code']}'";
-			} 
-			else // ... not level 1
-			{
-				// ... on level 5 the area columns have different names..
-				if ($level == 5)
-				{
-					$area_column_gros = 'bruksareal';
-					$area_column_net = 'bruttoareal';
-				}
-				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location{$level} WHERE fm_location{$level}.location_code = '{$unit['location_code']}'";
-			}
-			
-			$area_gros = $area_net = 0;
+			// Belonging contracts
+			$sql = "select DISTINCT rental_composite.id FROM rental_composite JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) JOIN fm_location{$level} on (fm_locations.location_code = fm_location{$level}.location_code) where fm_location{$level}.location_code = '{$unit->get_location_code()}'";
+//			var_dump($sql);
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
-				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
-				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
+				$unit->add_composite_id($this->unmarshal($this->db->f('id', true), 'float'));
 			}
-			$unit['area_gros'] = (int)$area_gros; 
-			$unit['area_net'] = (int)$area_net; 
 		}
-		
-		return array(
-			'total_records' => $total_records,
-			'results'		=> $units
-		);
+		return $unit_array;
 	}
-	
+		
 	/**
 	 * Returns all contracts for a specified composite.
 	 * 

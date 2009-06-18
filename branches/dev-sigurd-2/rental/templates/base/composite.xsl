@@ -235,8 +235,8 @@
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctrl_toggle_level"><xsl:value-of select="php:function('lang', 'rental_rc_level')"/></label>
 						<select name="level" id="ctrl_toggle_level">
-							<option value="1" default=""><xsl:value-of select="php:function('lang', 'rental_rc_property')"/></option>
-							<option value="2"><xsl:value-of select="php:function('lang', 'rental_rc_building')"/></option>
+							<option value="1"><xsl:value-of select="php:function('lang', 'rental_rc_property')"/></option>
+							<option value="2" default=""><xsl:value-of select="php:function('lang', 'rental_rc_building')"/></option>
 							<option value="3"><xsl:value-of select="php:function('lang', 'rental_rc_floor')"/></option>
 							<option value="4"><xsl:value-of select="php:function('lang', 'rental_rc_section')"/></option>
 							<option value="5"><xsl:value-of select="php:function('lang', 'rental_rc_room')"/></option>
