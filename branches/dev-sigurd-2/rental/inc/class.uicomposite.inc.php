@@ -48,10 +48,15 @@
 			switch($type)
 			{
 				case 'index':
-					$composite_data = $this->bo->read();
+					$rows = array();
+					$composites = rental_composite::get_all();
+					foreach ($composites as $composite) {
+						$rows[] = $this->get_composite_hash($composite);
+					}
+					$composite_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
 				case 'details':
-					$composite_data = $this->bo->read_single(array('id' => $composite_id));
+					$composite_data = $this->get_composite_hash(rental_composite::get($composite_id));
 					break;
 				case 'included_areas':
 					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
@@ -184,7 +189,7 @@
 		//Create new rental composite
 		public function add()
 		{
-			$receipt = $this->bo->add(phpgw::get_var('rental_composite_name'));
+			$receipt = rental_composite::add(phpgw::get_var['rental_composite_name']);
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));	
 		}
 		
@@ -222,8 +227,8 @@
 				self::add_javascript('rental', 'rental', 'rental.js');
 				phpgwapi_yui::load_widget('datatable');
 				phpgwapi_yui::load_widget('tabview');
-				$params['id'] = $composite_id;
-				$composite = $this->bo->read_single($params);
+				
+				$composite = $this->get_composite_hash(rental_composite::get($composite_id));
 				
 				$tabs = array();
 				
@@ -258,7 +263,7 @@
 		function add_unit()
 		{
 			$composite_id = (int)phpgw::get_var('id');
-			$composite = $this->bo->read_single(array('id' => $composite_id));
+			$composite = rental_composite::get($composite_id);
 			
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
@@ -273,7 +278,7 @@
 		function remove_unit()
 		{
 			$composite_id = (int)phpgw::get_var('id');
-			$composite = $this->bo->read_single(array('id' => $composite_id));
+			$composite = rental_composite::get($composite_id);
 
 			$location_id = (int)phpgw::get_var('location_id');
 						
@@ -302,6 +307,32 @@
 			}
 		}
 		
-		
+		/**
+		 * Convert a rental_composite object into a more XSL-friendly keyed array format
+		 * 
+		 * @param $composite rental_composite to be converted
+		 * @return key=>value array of composite data
+		 */
+		protected function get_composite_hash($composite)
+		{
+			return array(
+				'id' => $composite->get_id(),
+				'description' => $composite->get_description(),
+				'is_active' => $composite->is_active(),
+				'name' => $composite->get_name(),
+				'has_custom_address' => $composite->has_custom_address(),
+				'address_1' => $composite->get_custom_address_1(),
+				'address_2' => $composite->get_custom_address_2(),
+				'postcode' => $composite->get_custom_postcode(),
+				'place' => $composite->get_custom_place(),
+				'adresse1' => $composite->get_address_1(),
+				'adresse2' => $composite->get_address_2(),
+				'postnummer' => $composite->get_postcode(),
+				'poststed' => $composite->get_place(),
+				'gab_id' => $composite->get_gab_id(),
+				'area_gros' => $composite->get_area_gros(),
+				'area_net' => $composite->get_area_net()
+			);
+		}
 	}
 ?>

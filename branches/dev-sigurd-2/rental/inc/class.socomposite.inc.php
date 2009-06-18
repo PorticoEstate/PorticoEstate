@@ -7,6 +7,7 @@ phpgw::import_class('rental.floor');
 phpgw::import_class('rental.section');
 phpgw::import_class('rental.room');
 phpgw::import_class('rental.contract_date');
+phpgw::import_class('rental.composite');
 
 class rental_socomposite extends rental_socommon
 {
@@ -36,73 +37,157 @@ class rental_socomposite extends rental_socommon
 	}
 	
 	protected function get_conditions($query, $filters,$search_option)
-		{	
-			$clauses = array('1=1');
-			if($query)
+	{	
+		$clauses = array('1=1');
+		if($query)
+		{
+			
+			$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
+			$like_clauses = array();
+			switch($search_option){
+				case "id":
+					$like_clauses[] = "rental_composite.id = $query";
+					break;
+				case "name":
+					$like_clauses[] = "rental_composite.name $this->like $like_pattern";
+					break;
+				case "address":
+					$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
+					$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
+					break;
+				case "gab":
+					$like_pattern = str_replace('/','',$like_pattern);
+					$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+					break;
+				case "ident":
+					$like_pattern = str_replace('/','',$like_pattern);
+					$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
+					break;
+				case "property_id":
+					$like_clauses[] = "fm_locations.location_code = $like_pattern";
+				case "all":
+					$like_clauses[] = "rental_composite.name $this->like $like_pattern";
+					$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
+					$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
+					$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+					$like_pattern = str_replace('/','',$like_pattern);
+					$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
+					break;
+			}
+			
+			
+			if(count($like_clauses))
 			{
-				
-				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
-				$like_clauses = array();
-				switch($search_option){
-					case "id":
-						$like_clauses[] = "rental_composite.id = $query";
-						break;
-					case "name":
-						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
-						break;
-					case "address":
-						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
-						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
-						break;
-					case "gab":
-						$like_pattern = str_replace('/','',$like_pattern);
-						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
-						break;
-					case "ident":
-						$like_pattern = str_replace('/','',$like_pattern);
-						$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
-						break;
-					case "property_id":
-						$like_clauses[] = "fm_locations.location_code = $like_pattern";
-					case "all":
-						$like_clauses[] = "rental_composite.name $this->like $like_pattern";
-						$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
-						$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
-						$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
-						$like_pattern = str_replace('/','',$like_pattern);
-						$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
-						break;
-				}
-				
-				
-				if(count($like_clauses))
-				{
-					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
-				}
-				
-				
+				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
 			
-			$filter_clauses = array();
-			switch($filters['is_active']){
-				case "active":
-					$filter_clauses[] = "rental_composite.is_active = TRUE";
-					break;
-				case "non_active":
-					$filter_clauses[] = "rental_composite.is_active = FALSE";
-					break;
-				case "both":
-					break;
-			}
-				
-			if(count($filter_clauses))
-				{
-					$clauses[] = join(' AND ', $filter_clauses);
-				}
 			
-			return join(' AND ', $clauses);
 		}
+		
+		$filter_clauses = array();
+		switch($filters['is_active']){
+			case "active":
+				$filter_clauses[] = "rental_composite.is_active = TRUE";
+				break;
+			case "non_active":
+				$filter_clauses[] = "rental_composite.is_active = FALSE";
+				break;
+			case "both":
+				break;
+		}
+			
+		if(count($filter_clauses))
+			{
+				$clauses[] = join(' AND ', $filter_clauses);
+			}
+		
+		return join(' AND ', $clauses);
+	}
 
+		
+	function get_composite_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	{
+		$condition = $this->get_conditions($query, $filters,$search_option);
+		
+		$tables = "rental_composite";
+		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$distinct = 'distinct on(rental_composite.id)';
+		$cols = 'rental_composite.id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
+		
+		// Calculate total number of records
+		$this->db->query("SELECT COUNT(distinct rental_composite.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->next_record();
+		$total_records = (int)$this->db->f('count');
+
+		$order = $sort ? "ORDER BY $sort $dir ": '';
+		
+		// We interpret 'Eiendomsnavn' as the name of the composite object and not loc1_name or loc2_name. TODO: Is this okay?
+		// TODO: Should we ask for and let the address field on fm_location2 override the address found fm_location1? Do we know that the nothing higher than level 2 locations are rented? (The same question goes for the name of the location if we are to use it.)
+		// XXX: The address ordering doesn't take custom addresses in consideration.
+		
+		if($order != '') // ORDER should be used
+		{
+			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
+			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
+		}
+		else
+		{
+			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+		}
+		
+		$results = array();
+		
+		while ($this->db->next_record())
+		{
+			$row = array();
+			foreach($this->fields as $field => $fparams)
+			{
+      	$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
+			}
+			if($row['has_custom_address'] == '1') // There's a custom address
+			{
+				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
+			}
+			if($row['name'] == null || trim($row['name']) == '') // Composite doesn't have a name
+			{
+				$row['name'] = lang('rental_rc_no_name_composite', $row['id']);
+			}
+			$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
+			$results[] = $row;
+		}
+		
+		$composites = array();
+		
+		// Go through each returned row and create composite objects
+		foreach ($results as $row) {
+			$composite = new rental_composite();
+			
+			$composite->set_id($row['id']);
+			$composite->set_description($row['description']);
+			$composite->set_is_active($row['is_active']);
+			$composite->set_name($row['name']);
+			$composite->set_has_custom_address($row['has_custom_address']);
+
+			$composite->set_address_1($row['adresse1']);
+			$composite->set_address_2($row['adresse2']);
+			$composite->set_house_number($row['house_number']);
+			$composite->set_postcode($row['postnummer']);
+			$composite->set_place($row['poststed']);
+			
+			$composite->set_custom_address_1($row['address_1']);
+			$composite->set_custom_address_2($row['address_2']);
+			$composite->set_custom_house_number($row['house_number']);
+			$composite->set_custom_postcode($row['postcode']);
+			$composite->set_custom_place($row['place']);
+						
+			$composite->set_gab_id($row['gab_id']);
+
+			$composites[] = $composite;
+		}
+		
+		return $composites;
+	}
+	
 	/**
 	 * We override the parent method to hook in more specialized queries for
 	 * this part of the system. (The DISTINCT JOIN and FROM handling in the common class
@@ -182,6 +267,101 @@ class rental_socomposite extends rental_socommon
 		);
 	}
 
+	function get_single($id)
+	{
+		$id = (int)$id;
+		
+		// First we get all the data we have about the composite
+		// We only ask for one row because we're only using the address data from the first area (something like an educated guess of the address and gab code)
+		// TODO: Is it safe for us to use LEFT JOIN like this? (There have been examples of location codes missing in the gab table)
+		$sql = "SELECT distinct(rental_composite.id), name, description, has_custom_address, address_1, house_number, is_active, postcode, place, fm_locations.location_code, level, adresse1, adresse2, postnummer, poststed, gab_id FROM {$this->table_name} LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) LEFT JOIN fm_gab_location ON (fm_locations.location_code = fm_gab_location.location_code) WHERE rental_composite.id={$id}";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		
+		// Return array
+		$row = array();
+		
+		// Traverse single record in result set and add actual value to fields
+		$this->db->next_record();
+		foreach($this->fields as $field => $fparams)
+		{
+     		$row[$field] = $this->unmarshal($this->db->f($field, true), $fparams['type']);
+		}
+		$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
+		
+		// Second we find all areas that belongs to composite
+		$this->db->query("SELECT level, location_code FROM fm_locations {$this->join} rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id = {$id}");
+		// ..and store them in an array
+		$units = array();
+		while ($this->db->next_record()) {
+			$level = $this->unmarshal($this->db->f('level', true), 'int');
+			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+			$units[] = array('level' => $level, 'location_code' => $location_code);
+		}
+		
+		//Accumulated areas
+		$area_gros = 0;
+		$area_net = 0;
+		
+		foreach ($units as $unit) // Goes through each rental unit (location) that belongs to this composite and add up their areas
+		{
+			// Column names mostly used for the areas:
+			$area_column_gros = 'bta';
+			$area_column_net = 'bra';
+			
+			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
+			if ($unit['level'] == 1)
+			{
+				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location2 WHERE fm_location2.loc1 = '{$unit['location_code']}'";
+			} 
+			else // ... not level 1
+			{
+				// ... on level 5 the area columns have different names..
+				if ($unit['level'] == 5)
+				{
+					$area_column_gros = 'bruksareal';
+					$area_column_net = 'bruttoareal';
+				}
+				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location{$unit['level']} WHERE fm_location{$unit['level']}.location_code = '{$unit['location_code']}'";
+			}
+
+			$this->db->query($sql);
+			while($this->db->next_record())
+			{
+				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
+				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
+			}
+		} // end foreach
+		
+		$row['area_gros'] = $area_gros;
+		$row['area_net'] = $area_net;
+		
+		$composite = new rental_composite();
+			
+		$composite->set_id($row['id']);
+		$composite->set_description($row['description']);
+		$composite->set_is_active($row['is_active']);
+		$composite->set_name($row['name']);
+		$composite->set_has_custom_address($row['has_custom_address']);
+
+		$composite->set_address_1($row['adresse1']);
+		$composite->set_address_2($row['adresse2']);
+		$composite->set_house_number($row['house_number']);
+		$composite->set_postcode($row['postnummer']);
+		$composite->set_place($row['poststed']);
+		
+		$composite->set_custom_address_1($row['address_1']);
+		$composite->set_custom_address_2($row['address_2']);
+		$composite->set_custom_house_number($row['house_number']);
+		$composite->set_custom_postcode($row['postcode']);
+		$composite->set_custom_place($row['place']);
+					
+		$composite->set_gab_id($row['gab_id']);
+		
+		$composite->set_area_gros($row['area_gros']);
+		$composite->set_area_net($row['area_net']);
+		
+		return $composite;
+	}
 	
 	/**
 	 * Read single rental composite record
@@ -527,12 +707,14 @@ class rental_socomposite extends rental_socommon
 			}
 //			var_dump($unit);
 		}
+
 		// Finds belonging composites
 		foreach ($unit_array as &$unit)
 		{
 			// Belonging contracts
 			$sql = "select DISTINCT rental_composite.id FROM rental_composite JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) JOIN fm_location{$level} on (fm_locations.location_code = fm_location{$level}.location_code) where fm_location{$level}.location_code = '{$unit->get_location_code()}'";
 //			var_dump($sql);
+
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
