@@ -1,5 +1,5 @@
 <?php
-phpgw::import_class('rental.unit');
+include_class('rental', 'unit', 'inc/model/');
 
 class rental_property extends rental_unit
 {

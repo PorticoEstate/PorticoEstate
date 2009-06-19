@@ -1,5 +1,5 @@
 <?php
-phpgw::import_class('rental.floor');
+include_class('rental', 'floor', 'inc/model/');
 
 /**
  * A section within a floor. Inherits all properties from a floor. Typically

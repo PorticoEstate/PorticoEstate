@@ -1,5 +1,5 @@
 <?php
-phpgw::import_class('rental.property');
+include_class('rental', 'property', 'inc/model/');
 
 /**
  * A building in a property. Inherits all data from a property.

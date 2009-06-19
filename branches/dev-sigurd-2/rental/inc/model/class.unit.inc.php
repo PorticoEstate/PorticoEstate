@@ -1,6 +1,6 @@
 <?php
 phpgw::import_class('rental.bocommon');
-phpgw::import_class('rental.contract_date');
+include_class('rental', 'contract_date', 'inc/model/');
 
 /**
  * Abstract class that represents an unit (area) and its belonging data.
@@ -248,7 +248,14 @@ abstract class rental_unit
 	 */
 	public function __toString() {
         return 'unit[location code:'.$this->location_code.']';
-    }
+	}
+	
+	public static function get_units_for_composite($id, $sort = null, $dir = 'asc', $start = 0, $results = null)
+	{
+		$so = self::get_so();
+		$units = $so->get_included_rental_units($id, $sort = null, $dir = 'asc', $start = 0, $results = null);
+		return $units;
+	}
     
 	/**
 	 * 

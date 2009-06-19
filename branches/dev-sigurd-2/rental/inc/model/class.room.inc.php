@@ -1,5 +1,5 @@
 <?php
-phpgw::import_class('rental.section');
+include_class('rental', 'section', 'inc/model/');
 
 /**
  * A room within a section. Inherits all properties from a building.

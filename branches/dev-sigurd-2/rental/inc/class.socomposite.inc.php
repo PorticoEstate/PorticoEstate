@@ -1,13 +1,14 @@
 <?php
 phpgw::import_class('rental.socommon');
 phpgw::import_class('rental.uicommon');
-phpgw::import_class('rental.property');
-phpgw::import_class('rental.building');
-phpgw::import_class('rental.floor');
-phpgw::import_class('rental.section');
-phpgw::import_class('rental.room');
-phpgw::import_class('rental.contract_date');
-phpgw::import_class('rental.composite');
+
+include_class('rental', 'composite', 'inc/model/');
+include_class('rental', 'property', 'inc/model/');
+include_class('rental', 'building', 'inc/model/');
+include_class('rental', 'floor', 'inc/model/');
+include_class('rental', 'section', 'inc/model/');
+include_class('rental', 'room', 'inc/model/');
+include_class('rental', 'contract_date', 'inc/model/');
 
 class rental_socomposite extends rental_socommon
 {
@@ -306,24 +307,17 @@ class rental_socomposite extends rental_socommon
 	 * @param	params	array( (id=?) AND ordering information )
 	 * @return	rows	array( (fieldname=fieldvalue) AND accumulated areas AND total number of included areas)
 	 */
-	function get_included_rental_units($params)
+	function get_included_rental_units($id, $sort = null, $dir = 'asc', $start = 0, $results = null)
 	{
 		// TODO: Do we need a paginator for all the units?
-		$id = (int)$params['id'];
-		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-		$dir = isset($params['dir']) && $params['dir'] ? ($params['dir'] == 'desc' ? 'desc' : 'asc') : 'asc'; // We set asc as direction unless specifically told otherwise
+		$id = (int)$id;
 		
 		//Return array
-		$row = array();
-		$row['results'] = array();
+		$units = array();
 		
 		// First we find the number of areas available in total
 		$sql = 'SELECT COUNT(fm_locations.location_code) AS count FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-		if($this->db->next_record())
-		{
-			$row['total_records'] = $this->unmarshal($this->db->f('count', true), 'int');
-		}
 		
 		$order = '';
 		if($sort != null && $sort != '') // We should ask for a ordered resultset 
@@ -333,7 +327,6 @@ class rental_socomposite extends rental_socommon
 		// Second we get ids for all areas for specified composite id
 		$sql = 'SELECT level, fm_locations.location_code, fm_locations.id AS location_id FROM fm_locations JOIN rental_unit ON (fm_locations.id = rental_unit.location_id) JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) WHERE composite_id ='.$id.$order;
 		$this->db->query($sql, __LINE__, __FILE__);
-//		die($sql);
 		
 		$unit_array = array();
 		while ($this->db->next_record())
@@ -351,12 +344,7 @@ class rental_socomposite extends rental_socommon
 			$area_column_gros = 'bta';
 			$area_column_net = 'bra';
 			$address_column = 'adresse';
-			$current_unit = &$row['results'][]; //..  
-			$current_unit['location_code'] = $unit['location_code'];
-			$current_unit['location_id'] = $unit['location_id'];
-			$current_unit['loc1_name'] = lang(rental_rc_area_not_found);
-			
-			
+		
 			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
 			if ($unit['level'] == 1)
 			{
@@ -399,20 +387,39 @@ class rental_socomposite extends rental_socommon
 			$this->db->query($sql);
 			while($this->db->next_record())
 			{
+				// Create new rental_unit on correct level for each returned row
+				$class = self::$unit_class_array[$unit['level']];
+				$rental_unit = new $class($unit['location_code'], $unit['location_id']);
+				
 				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
 				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
-				$current_unit['area_gros'] = (int)$area_gros; 
-				$current_unit['area_net'] = (int)$area_net; 
-				for($i = 1; $i <= $unit['level'] && $i <= 3; $i++) // Runs through all levels containing names
+
+				$rental_unit->set_address($this->unmarshal($this->db->f($address_column, true), 'string'));
+				
+				$rental_unit->set_area_gros((int)$area_gros);
+				$rental_unit->set_area_net((int)$area_net);
+				
+				switch($unit['level'])
 				{
-					$current_unit['loc'.$i.'_name'] = $this->unmarshal($this->db->f('loc'.$i.'_name', true), 'string');
+					case 5:
+						$rental_unit->set_room_name($unit['loc5_name']);
+					case 4:
+						$rental_unit->set_section_name($unit['loc4_name']);
+					case 3:
+						$rental_unit->set_floor_name($unit['loc3_name']);
+					case 2:
+						$rental_unit->set_building_name($unit['loc2_name']);
+					case 1:
+						$rental_unit->set_property_name($unit['loc1_name']);
+						$rental_unit->set_location_code_property($unit_row['loc1']);
+						break;
 				}
-				$current_unit['address'] = $this->unmarshal($this->db->f($address_column, true), 'string');
-				$current_unit['part_of_town'] = $this->unmarshal($this->db->f('name', true), 'string');
 			}
+			
+			$units[] = $rental_unit;
 		}
-		
-		return $row;
+
+		return $units;
 	}
 	
 	/**

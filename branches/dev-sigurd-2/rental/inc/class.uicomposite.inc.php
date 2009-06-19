@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.uidocument_composite');
+	include_class('rental', 'composite', 'inc/model/');
 	
 	class rental_uicomposite extends rental_uicommon
 	{	
@@ -19,7 +20,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->bo = CreateObject('rental.bocomposite');
+			
 			self::set_active_menu('rental::composite');
 		}
 
@@ -59,7 +60,22 @@
 					$composite_data = $this->get_composite_hash(rental_composite::get($composite_id));
 					break;
 				case 'included_areas':
-					$composite_data = $this->bo->get_included_rental_units(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results')));
+					$composite = rental_composite::get($composite_id);
+					$rental_units = $composite->get_included_rental_units(phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'));
+					$composite_data = array();
+					$composite_data[$field_total] = count($rental_units);
+					$composite_data[$field_results] = array();
+					foreach ($rental_units as $unit) {
+						$composite_data[$field_results][] = array(
+							'location_code' => $unit->get_location_code(),
+							'location_id' => $unit->get_location_id(),
+							'loc1' => $unit->get_location_code_property(),
+							'address' => $unit->get_address(),
+							'area_net' => $unit->get_area_net(),
+							'area_gros' => $unit->get_area_gros(),
+							'loc1_name' => $unit->get_property_name()
+						);
+					}
 					break;
 				case 'available_areas':
 					$composite_data = array();
