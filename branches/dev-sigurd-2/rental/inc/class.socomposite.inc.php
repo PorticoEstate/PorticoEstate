@@ -104,7 +104,17 @@ class rental_socomposite extends rental_socommon
 		return join(' AND ', $clauses);
 	}
 
-		
+
+	/**
+	 * Get a list of composite objects matching the specific filters
+	 * 
+	 * @param $start search result offset
+	 * @param $results number of results to return
+	 * @param $sort field to sort by
+	 * @param $query LIKE-based query string
+	 * @param $filters array of custom filters
+	 * @return list of rental_composite objects
+	 */
 	function get_composite_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{
 		$condition = $this->get_conditions($query, $filters,$search_option);
@@ -187,86 +197,13 @@ class rental_socomposite extends rental_socommon
 		
 		return $composites;
 	}
-	
+
 	/**
-	 * We override the parent method to hook in more specialized queries for
-	 * this part of the system. (The DISTINCT JOIN and FROM handling in the common class
-	 * isn't as advanced as needed here.)
+	 * Get single rental composite
 	 * 
-	 * Return all entries matching $params. Valid parameters:
-	 *
-	 * - $params['start']: Search result offset
-	 * - $params['results']: Number of results to return
-	 * - $params['sort']: Field to sort by
-	 * - $params['query']: LIKE-based query string
-	 * - $params['filters']: Array of custom filters
-	 *
-	 * @return array('total_records'=>X, 'results'=array(...))
+	 * @param	$id	id of the rental composite to return
+	 * @return a rental_composite
 	 */
-	function read($params)
-	{
-		$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
-		$results = isset($params['results']) && $params['results'] ? $data['results'] : 1000;
-		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-		$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : '';
-		$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
-		$search_option = isset($params['search_option']) && $params['search_option'] ? $params['search_option'] : null;
-		$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-
-		$condition = $this->get_conditions($query, $filters,$search_option);
-		
-		$tables = "rental_composite";
-		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
-		$distinct = 'distinct on(rental_composite.id)';
-		$cols = 'rental_composite.id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
-		
-		// Calculate total number of records
-		$this->db->query("SELECT COUNT(distinct rental_composite.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
-		$this->db->next_record();
-		$total_records = (int)$this->db->f('count');
-
-		$order = $sort ? "ORDER BY $sort $dir ": '';
-		
-		// We interpret 'Eiendomsnavn' as the name of the composite object and not loc1_name or loc2_name. TODO: Is this okay?
-		// TODO: Should we ask for and let the address field on fm_location2 override the address found fm_location1? Do we know that the nothing higher than level 2 locations are rented? (The same question goes for the name of the location if we are to use it.)
-		// XXX: The address ordering doesn't take custom addresses in consideration.
-		
-		if($order != '') // ORDER should be used
-		{
-			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
-			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
-		}
-		else
-		{
-			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
-		}
-		
-		$results = array();
-		
-		while ($this->db->next_record())
-		{
-			$row = array();
-			foreach($this->fields as $field => $fparams)
-			{
-                    $row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
-			}
-			if($row['has_custom_address'] == '1') // There's a custom address
-			{
-				$row['adresse1'] = $row['address_1'].' '.$row['house_number'];
-			}
-			if($row['name'] == null || trim($row['name']) == '') // Composite doesn't have a name
-			{
-				$row['name'] = lang('rental_rc_no_name_composite', $row['id']);
-			}
-			$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
-			$results[] = $row;
-		}
-		return array(
-			'total_records' => $total_records,
-			'results'		=> $results
-		);
-	}
-
 	function get_single($id)
 	{
 		$id = (int)$id;
@@ -361,83 +298,6 @@ class rental_socomposite extends rental_socommon
 		$composite->set_area_net($row['area_net']);
 		
 		return $composite;
-	}
-	
-	/**
-	 * Read single rental composite record
-	 * 
-	 * @param	params	array( (id=?) AND ordering information )
-	 * @return	rows	array( (fieldname=fieldvalue) AND accumulated areas AND total number of included areas)
-	 */
-	function read_single($params)
-	{
-		$id = (int)$params['id'];
-		// First we get all the data we have about the composite
-		// We only ask for one row because we're only using the address data from the first area (something like an educated guess of the address and gab code)
-		// TODO: Is it safe for us to use LEFT JOIN like this? (There have been examples of location codes missing in the gab table)
-		$sql = "SELECT distinct(rental_composite.id), name, description, has_custom_address, address_1, house_number, is_active, postcode, place, fm_locations.location_code, level, adresse1, adresse2, postnummer, poststed, gab_id FROM {$this->table_name} LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.location_code) LEFT JOIN fm_gab_location ON (fm_locations.location_code = fm_gab_location.location_code) WHERE rental_composite.id={$id}";
-		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-//		die($sql);
-		
-		// Return array
-		$row = array();
-		
-		// Traverse single record in result set and add actual value to fields
-		$this->db->next_record();
-		foreach($this->fields as $field => $fparams)
-		{
-     		$row[$field] = $this->unmarshal($this->db->f($field, true), $fparams['type']);
-		}
-		$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
-		
-		// Second we find all areas that belongs to composite
-		$this->db->query("SELECT level, location_code FROM fm_locations {$this->join} rental_unit ON (fm_locations.id = rental_unit.location_id) WHERE composite_id = {$id}");
-		// ..and store them in an array
-		$units = array();
-		while ($this->db->next_record()) {
-			$level = $this->unmarshal($this->db->f('level', true), 'int');
-			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
-			$units[] = array('level' => $level, 'location_code' => $location_code);
-		}
-		
-		//Accumulated areas
-		$area_gros = 0;
-		$area_net = 0;
-		
-		foreach ($units as $unit) // Goes through each rental unit (location) that belongs to this composite and add up their areas
-		{
-			// Column names mostly used for the areas:
-			$area_column_gros = 'bta';
-			$area_column_net = 'bra';
-			
-			// ... properties doesn't have areas, so we check location level 2 to work out the areas of whole properties (level 1)
-			if ($unit['level'] == 1)
-			{
-				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location2 WHERE fm_location2.loc1 = '{$unit['location_code']}'";
-			} 
-			else // ... not level 1
-			{
-				// ... on level 5 the area columns have different names..
-				if ($unit['level'] == 5)
-				{
-					$area_column_gros = 'bruksareal';
-					$area_column_net = 'bruttoareal';
-				}
-				$sql = "SELECT {$area_column_gros}, {$area_column_net} FROM fm_location{$unit['level']} WHERE fm_location{$unit['level']}.location_code = '{$unit['location_code']}'";
-			}
-
-			$this->db->query($sql);
-			while($this->db->next_record())
-			{
-				$area_gros += $this->unmarshal($this->db->f($area_column_gros, true), 'float');
-				$area_net += $this->unmarshal($this->db->f($area_column_net, true), 'float');
-			}
-		} // end foreach
-		
-		$row['area_gros'] = $area_gros;
-		$row['area_net'] = $area_net;
-		
-		return $row;
 	}
 	
 	/**

@@ -189,7 +189,7 @@
 		//Create new rental composite
 		public function add()
 		{
-			$receipt = rental_composite::add(phpgw::get_var['rental_composite_name']);
+			$receipt = rental_composite::add(phpgw::get_var('rental_composite_name'));
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));	
 		}
 		
