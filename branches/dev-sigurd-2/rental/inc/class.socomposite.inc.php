@@ -9,6 +9,7 @@ include_class('rental', 'floor', 'inc/model/');
 include_class('rental', 'section', 'inc/model/');
 include_class('rental', 'room', 'inc/model/');
 include_class('rental', 'contract_date', 'inc/model/');
+include_class('rental', 'contract', 'inc/model/');
 
 class rental_socomposite extends rental_socommon
 {
@@ -597,19 +598,16 @@ class rental_socomposite extends rental_socommon
 	 * @param $params array with parameters for the query
 	 * @return array with 'total_records' and 'results'.
 	 */
-	public function get_contracts($params)
+	public function get_contracts($id, $sort = null, $dir = null, $start = 0, $limit = 1000, $contract_status = null, $date = null)
 	{
 		// Params
-		$id = (int)$params['id'];		
-		$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-		$limit = isset($params['results']) && $params['results'] ? (int)$data['results'] : 1000;
-		$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-		$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : null;
-		$contract_status = isset($params['contract_status']) && $params['contract_status'] ? (int)$params['contract_status'] : null;
-		
+		$id = (int)$id;
+				
 		// Default return data:
 		$total_records = 0;
 		$results = array();
+		
+		$contracts = array();
 		
 		if($id > 0) // Valid id
 		{
@@ -649,14 +647,21 @@ class rental_socomposite extends rental_socommon
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 			while($this->db->next_record())
 			{
-				$row = array();
-	     		$row['id'] = $this->unmarshal($this->db->f('id', true), 'string');
-	     		$row['date_start'] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
-	     		$row['date_end'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
-	     		$row['tenant'] = ''; // TODO: We have to include tenant here whenever that db table is ready
-				$results[] = $row;
+				$contract = new rental_contract($this->unmarshal($this->db->f('id', true), 'string'));
+				
+				$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
+	     	$date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
+	     	
+				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
+				
+				// TODO: include tenant here whenever that db table is ready
+				//$contract->set_tenant($tenant)
+				
+				$contracts[] = $contract;
 			}
 		}
+		
+		return $contracts;
 		
 		return array(
 			'total_records' => $total_records,

@@ -6,6 +6,7 @@
 	
 	phpgw::import_class('rental.bocommon');
 	include_class('rental', 'unit', 'inc/model/');
+	include_class('rental', 'contract', 'inc/model/');
 	
 	class rental_composite
 	{
@@ -102,9 +103,17 @@
 			if (!$this->units) {
 				$this->units = rental_unit::get_units_for_composite($this->get_id(), $sort, $dir, $start, $results);
 			}
-			
 			return $this->units; 
 		}
+
+		public function get_contracts($sort = null, $dir = 'asc', $start = 0, $results = null, $status = null, $date = null)
+		{
+			if (!$this->contracts) {
+				$this->contracts = rental_contract::get_contracts_for_composite($this->get_id(), $sort, $dir, $start, $results, $status, $date);
+			}
+			return $this->contracts;
+		}
+		
 		
 		public function set_id($id)
 		{

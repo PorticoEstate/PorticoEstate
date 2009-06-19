@@ -134,7 +134,24 @@
 					}
 					break;
 				case 'contracts':
-					$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
+					$composite = rental_composite::get($composite_id);
+					$contracts = $composite->get_contracts($composite_id, phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('contract_status'), phpgw::get_var('contract_date'));
+					$composite_data = array();
+					$composite_data[$field_total] = count($contracts);
+					$composite_data[$field_results] = array();
+					
+					foreach ($contracts as $contract) {
+						$composite_data[$field_results][] = array(
+							'id' => $contract->get_id(),
+							'date_start' => $contract->get_contract_date()->get_start_date(),
+							'date_end' => $contract->get_contract_date()->get_end_date(),
+							'billing_start_date' => $contract->get_billing_start_date(),
+							'type_id' => $contract->get_type_id(),
+							'term_id' => $contract->get_term_id(),
+							'account' => $contract->get_account()
+						);
+					}
+					//$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
 					break;
 					
 			}
