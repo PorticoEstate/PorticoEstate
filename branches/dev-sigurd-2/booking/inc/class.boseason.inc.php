@@ -169,7 +169,7 @@
 		
 		function get_boundaries($season_id)
 		{
-			return $this->so_boundary->read(array('filters'=>array('season_id'=>$season_id), 'sort'=>'wday,from_'));
+			return $this->so_boundary->read(array('filters'=>array('season_id'=>$season_id), 'sort'=>'wday,from_', 'dir' => 'asc'));
 		}
 
 		function add_wtemplate_alloc($alloc)
@@ -225,5 +225,4 @@
 		{
 			return $this->so_wtemplate_alloc->read_single($alloc_id);
 		}
-
 	}

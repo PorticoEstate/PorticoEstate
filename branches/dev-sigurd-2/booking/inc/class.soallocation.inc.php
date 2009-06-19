@@ -52,16 +52,23 @@
 			$allocation_id = $entity['id'] ? $entity['id'] : -1;
 
 			// FIXME: Validate: Season contains all resources
-			// FIXME: Validate: Season from <= date, season to >= date
-			// Make sure to_ > from_
+			
+			if (count($errors) > 0) { return; /*Basic validation failed*/ }
+			
+			if (false == (boolean)intval($entity['active'])) {
+				return; //Don't care about if allocation is within necessary boundaries if dealing with inactivated entity
+			}
+			
 			$from_ = new DateTime($entity['from_']);
 			$to_ = new DateTime($entity['to_']);
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
-			if($from_ > $to_)
-			{
+			
+			if(strtotime($start) > strtotime($end)) {
 				$errors['from_'] = 'Invalid from date';
+				return; //No need to continue validation if dates are invalid
 			}
+			
 			if($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
@@ -98,6 +105,10 @@
 				{
 					$errors['booking'] = lang('Overlaps with existing booking');
 				}
+			}
+			
+			if (!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_)) {
+				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
 		}
 	}
