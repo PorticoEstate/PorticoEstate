@@ -97,6 +97,47 @@
 			
 			return $so->add($name);
 		}
+		
+		public function add_unit($new_unit)
+		{
+			$units = $this->get_included_rental_units();
+			
+			$already_has_unit = false;
+			
+			foreach ($this->get_included_rental_units() as $unit) {
+				if ($unit->get_location_id() == $new_unit->get_location_id()) {
+					$already_has_unit == true;
+				}
+			}
+			
+			if (!$already_has_unit) {
+				$this->units[] = $new_unit;
+			}
+		}
+		
+		public function remove_unit($unit_to_remove)
+		{
+			$units = $this->get_included_rental_units();
+			
+			foreach ($this->get_included_rental_units() as $index => $unit) {
+				if ($unit->get_location_id() == $unit_to_remove->get_location_id()) {
+					unset($this->rental_units[$index]);
+				}
+			}
+		}
+		
+		public function store()
+		{
+			$so = self::get_so();
+			
+			if ($this->id) {
+				// We can assume this composite came from the database since it has an ID. Update the existing row
+				$so->update($this);
+			} else {
+				// This object does not have an ID, so will be saved as a new DB row
+				$so->add($this);
+			}
+		}
 
 		public function get_included_rental_units($sort = null, $dir = 'asc', $start = 0, $results = null)
 		{
@@ -249,6 +290,8 @@
 			$result .= '"name":"' . $this->get_name() . '"';
 			
 			$result .= '}';
+			
+			return $result;
 		}
 	}
 ?>

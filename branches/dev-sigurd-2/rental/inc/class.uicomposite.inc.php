@@ -151,7 +151,6 @@
 							'account' => $contract->get_account()
 						);
 					}
-					//$composite_data = $this->bo->get_contracts(array('id' => $composite_id, 'sort' => phpgw::get_var('sort'), 'dir' => phpgw::get_var('dir'), 'start' => phpgw::get_var('startIndex'), 'results' => phpgw::get_var('results'), 'contract_status' => phpgw::get_var('contract_status'), 'contract_date' => phpgw::get_var('contract_date')));
 					break;
 					
 			}
@@ -301,7 +300,8 @@
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
 				$loc1 = (int)phpgw::get_var('loc1');
-				$this->bo->add_unit($composite_id, $location_id, $loc1);
+				$composite->add_unit(new rental_property($loc1, $location_id));
+				$composite->store();
 			}
 			
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
@@ -316,7 +316,8 @@
 			$location_id = (int)phpgw::get_var('location_id');
 						
 			if ($composite != null) {
-				$this->bo->remove_unit($composite_id, $location_id);
+				$composite->remove_unit(new rental_property(null, $location_id));
+				$composite->store();
 			}
 			
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));

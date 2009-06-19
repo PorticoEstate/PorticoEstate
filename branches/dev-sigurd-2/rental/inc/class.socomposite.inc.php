@@ -669,37 +669,103 @@ class rental_socomposite extends rental_socommon
 		);
 	}
 	
-	function update($entry)
+	/**
+	 * Update the database values for an existing composite object. Also updates associated rental units.
+	 * 
+	 * @param $composite the composite to be updated
+	 * @return result receipt from the db operation
+	 */
+	function update($composite)
 	{
-		$id = intval($entry['id']);
+		$id = intval($composite->get_id());
 		$cols = array();
 		$values = array();
-		$fields = array('id', 'description', 'is_active', 'name', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'has_custom_address');
 		
-		foreach($fields as $field)
-		{
-			$params = $this->fields[$field];
-			
-			if($field == 'id' || $params['join'] || $params['manytomany'])
-			{
-				continue;
-			}
-			$values[] = $field . "=" . $this->marshal($entry[$field], $params['type']);
-		}
-		
+		$values = array(
+			'name = \'' . $composite->get_name() . '\'',
+			'description = \'' . $composite->get_description() . '\'',
+			'has_custom_address = ' . ($composite->has_custom_address() ? "true" : "false"),
+			'address_1 = \'' . $composite->get_address_1() . '\'',
+			'address_2 = \'' . $composite->get_address_2() . '\'',
+			'house_number = \'' . $composite->get_house_number() . '\'',
+			'postcode = \'' . $composite->get_postcode() . '\'',
+			'place = \'' . $composite->get_place() . '\''
+		);
+				
 		$cols = join(',', $cols);
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+		
+		$current_units = $this->get_included_rental_units($composite->get_id());
+		
+		// Add rental units from the composite object that aren't in the database
+		foreach ($composite->get_included_rental_units() as $unit) {
+			$has_unit = false;
+			foreach ($current_units as $current_unit) {
+				if ($unit->get_location_id() == $current_unit->get_location_id()) {
+					// This unit from the composite was found in the db
+					$has_unit = true;
+				}
+			}
+			if (!$has_unit) {
+				$this->add_unit($composite->get_id(), $unit->get_location_id(), $unit->get_location_code());
+			}
+		}
+		
+		$current_units = $this->get_included_rental_units($composite->get_id());
+		
+		// Remove rental units that are in the database but have been removed from the composite object
+		foreach ($current_units as $current_unit) {
+			$unit_is_removed = true;
+			foreach ($composite->get_included_rental_units() as $unit) {
+				if ($current_unit->get_location_id() == $unit->get_location_id()) {
+					// This unit from the db was not found on the current composite
+					$unit_is_removed = false;
+				}
+			}
+			
+			if ($unit_is_removed) {
+				$this->remove_unit($composite->get_id(), $unit->get_location_id());
+			}
+		}
+		
 		return $receipt;
 	}
 	
-	function add($entry)
+	/**
+	 * Add a new composite to the database.  Adds the new insert id to the object reference.
+	 * Also saves included rental_unit objects.
+	 * 
+	 * @param $composite the composite to be added
+	 * @return result receipt from the db operation
+	 */
+	function add(&$composite)
 	{
-		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$entry')";
+		// Build a db-friendly array of the composite object
+		$values = array(
+			'name = \'' . $composite->get_name() . '\'',
+			'description = \'' . $composite->get_description() . '\'',
+			'has_custom_address = ' . ($composite->has_custom_address() ? "true" : "false"),
+			'address_1 = \'' . $composite->get_address_1() . '\'',
+			'address_2 = \'' . $composite->get_address_2() . '\'',
+			'house_number = \'' . $composite->get_house_number() . '\'',
+			'postcode = \'' . $composite->get_postcode() . '\'',
+			'place = \'' . $composite->get_place() . '\''
+		);
+		
+		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$values')";
 		$result = $this->db->query($q);
-		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');;
+		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+		
+		$composite->set_id($receipt['id']);
+		
+		// Add rental units from the composite object
+		foreach ($composite->get_included_rental_units() as $unit) {
+			$this->add_unit($composite->get_id(), $unit->get_location_id(), $unit->get_location_code());
+		}
+		
 		return $receipt;
 	}
 	
