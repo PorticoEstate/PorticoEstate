@@ -413,10 +413,10 @@
 			$payment_date = $this->bo->payment_date;
 
 			$uicols = array (
-				'input_type'	=>	array(hidden,text,text,text,text,hidden,text,text,text,link,link),
-				'name'			=>	array(gab_id,gaards_nr,bruksnr,feste_nr,seksjons_nr,hits,owner,location_code,address,map,gab),
+				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','text','link','link'),
+				'name'			=>	array('gab_id','gaards_nr','bruksnr','feste_nr','seksjons_nr','hits','owner','location_code','address','map','gab'),
 				'formatter'		=>	array('','','','','','','','','','',''),
-				'descr'			=>	array(dummy,lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
+				'descr'			=>	array('dummy',lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
 				'className'		=> 	array('','','','','','','','','','','')
 				);
 
@@ -450,23 +450,28 @@
 								$value_gaards_nr	= substr($gab['gab_id'],4,5);
 								$value	= $value_gaards_nr;
 
-							} elseif ($uicols['name'][$i] == 'bruksnr') {
-
+							}
+							else if ($uicols['name'][$i] == 'bruksnr')
+							{
 								$value_bruks_nr		= substr($gab['gab_id'],9,4);
 								$value	= $value_bruks_nr;
 
-							} elseif ($uicols['name'][$i] == 'feste_nr') {
-
+							}
+							else if ($uicols['name'][$i] == 'feste_nr')
+							{
 								$value_feste_nr		= substr($gab['gab_id'],13,4);
 								$value	= $value_feste_nr;
 
-							} elseif ($uicols['name'][$i] == 'seksjons_nr') {
-
+							}
+							else if ($uicols['name'][$i] == 'seksjons_nr')
+							{
 								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
 								$value	= $value_seksjons_nr;
 
-							} else {
-								$value	= $gab[$uicols['name'][$i]];
+							}
+							else
+							{
+								$value	= isset($gab[$uicols['name'][$i]]) ? $gab[$uicols['name'][$i]] : '';
 						    }
 
 						    $datatable['rows']['row'][$j]['column'][$i]['value'] 			= $value;
@@ -512,7 +517,7 @@
 								$datatable['rows']['row'][$j]['column'][$i]['value']			= $gab[$uicols['name'][$i]];
 						}
 
-						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $gab[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= isset($gab[$uicols['name'][$i]]) ? $gab[$uicols['name'][$i]] : '';
 						$datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
 					}
 
@@ -522,7 +527,7 @@
 
 			// NO pop-up
 			$datatable['rowactions']['action'] = array();
-			if(!$lookup)
+//			if(!$lookup)
 			{
 				$parameters = array
 				(
@@ -649,7 +654,7 @@
 					'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array(),
-				    'headers'			=> $uicols_add['name'],
+			//	    'headers'			=> $uicols_add['name'],
 				    'headers_all'		=> $uicols['name']
 	    		);
 
@@ -660,7 +665,7 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}

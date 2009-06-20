@@ -486,7 +486,7 @@ HTML;
 	$GLOBALS['phpgw']->session		= createObject('phpgwapi.sessions');
 	$GLOBALS['phpgw']->preferences	= createObject('phpgwapi.preferences');
 	$GLOBALS['phpgw']->applications	= createObject('phpgwapi.applications');
-	print_debug('main class loaded', 'messageonly','api');
+//	print_debug('main class loaded', 'messageonly','api');
 	// This include was here before for the old error class.  I've left it in for the
 	// new log_message class with replaced error.  I'm not sure if it is needed, though. -doug
 	include_once(PHPGW_INCLUDE_ROOT.'/phpgwapi/inc/class.log_message.inc.php');
