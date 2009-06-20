@@ -10,6 +10,7 @@
 			<option value="N" {N_selected}>{lang_notice}</option>
 			<option value="I" {I_selected}>{lang_info}</option>
 			<option value="D" {D_selected}>{lang_debug}</option>
+			<option value="S" {S_selected}>{lang_strict}</option>
 		</select>
 		<noscript><input type="submit"></noscript>
    </form>

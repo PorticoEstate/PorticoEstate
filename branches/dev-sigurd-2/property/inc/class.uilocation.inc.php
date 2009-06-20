@@ -603,7 +603,7 @@
 			for ($i=0;$i<$uicols_count;$i++)
 			{
 				//all colums should be have formatter
-				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+				$datatable['headers']['header'][$i]['formatter'] = '""';//(isset($uicols['formatter'][$i]) && $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
 				if($uicols['input_type'][$i]!='hidden')
 				{

@@ -31,7 +31,7 @@
 	/**
 	* Set the session name to something unique for phpgw
 	*/
-	if ( $GLOBALS['phpgw_info']['flags']['session_name'] )
+	if ( isset($GLOBALS['phpgw_info']['flags']['session_name']) && $GLOBALS['phpgw_info']['flags']['session_name'] )
 	{
 		session_name($GLOBALS['phpgw_info']['flags']['session_name']);
 	}

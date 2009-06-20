@@ -44,10 +44,16 @@
 	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
 	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
-	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
+	{
+		$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	}
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
-	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
+	{
+		$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	}
 
 	foreach ( $stylesheets as $stylesheet )
 	{

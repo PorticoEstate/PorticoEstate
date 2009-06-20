@@ -238,12 +238,14 @@
 				'lang_info'		=> lang('info'),
 				'lang_notice'	=> lang('notice'),
 				'lang_debug'	=> lang('debug'),
+				'lang_strict'	=> 'strict',
 				'F_selected'	=> '',
 				'E_selected'	=> '',
 				'N_selected'	=> '',
 				'W_selected'	=> '',
 				'I_selected'	=> '',
-				'D_selected'	=> ''
+				'D_selected'	=> '',
+				'S_selected'	=> ''
 			);
 			
 			if ( $current_level ) 

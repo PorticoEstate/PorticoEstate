@@ -235,7 +235,6 @@
 
 			case E_NOTICE:
 			case E_USER_NOTICE:
-			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
 				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
@@ -243,6 +242,15 @@
 					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+			case E_STRICT:
+				$log_args['severity'] = 'S';
+				$log->strict($log_args);
+				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'S')
+				{
+					echo '<p>' . lang('Strict: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				}
+
 			//No default, we just ignore it, for now
 		}
 	}

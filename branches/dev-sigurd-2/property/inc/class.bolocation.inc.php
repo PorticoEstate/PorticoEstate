@@ -44,6 +44,7 @@
 		var $lookup;
 		var $use_session;
 		var $location_code;
+		var $total_records;
 
 		/**
 		* @var object $custom reference to custom fields object

@@ -322,6 +322,7 @@
 				}
 				else
 				{
+					$$parentobject = new stdClass();
 					$$parentobject->$classname = createObject($appname.'.'.$classname);
 				}
 			}
