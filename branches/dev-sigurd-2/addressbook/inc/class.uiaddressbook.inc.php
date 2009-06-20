@@ -1240,7 +1240,7 @@ class uiaddressbook
 				//$defaul_person_name='entry[current_person]';
 
 				$fields_to_search=array('contact_id', 'per_full_name');
-				$this->get_persons($fields_to_search, $fields['my_person']);
+				$this->get_persons($fields_to_search, isset($fields['my_person']) ? $fields['my_person'] : '');
 
 				return $this->many_actions_form($this->tab_persons, $all_person_name, 
 						$my_person_name, '', 'all_person_data',
@@ -1313,7 +1313,7 @@ class uiaddressbook
 	 */
 	function org_form($fields)
 	{
-		if ($fields['ispublic']=='private')
+		if (isset($fields['ispublic']) && $fields['ispublic']=='private')
 		{
 			$access_check = '<input type="checkbox" name="entry[access]" checked>';
 		}
@@ -1326,8 +1326,8 @@ class uiaddressbook
 
 		$this->template->set_var('lang_general_data', lang('Organizations Data'));
 
-		$this->set_form_fields(array(1 => array('Name', 'entry[org_name]', $fields['org_name']),
-					2 => array('Phone', 'entry[wphone]', $fields['wphone']),
+		$this->set_form_fields(array(1 => array('Name', 'entry[org_name]', isset($fields['org_name']) ? $fields['org_name'] : ''),
+					2 => array('Phone', 'entry[wphone]', isset($fields['wphone']) ? $fields['wphone'] : ''),
 					3 => array('Private', $access_check, 'special'),
 					4 => array('','','special')));
 		return $this->template->fp('out', 'tab_body_general_data');
@@ -1358,7 +1358,7 @@ class uiaddressbook
 			(
 				'comm_description' => $value['comm_description'],
 				'comm_data' => isset($fields['comm_data'][$value['comm_description']]) ? $fields['comm_data'][$value['comm_description']] : '',
-				'preferred' => $fields['preferred'] == $value['comm_description'] ? 'Y' : 'N'
+				'preferred' => isset($fields['preferred']) && $fields['preferred'] == $value['comm_description'] ? 'Y' : 'N'
 			);
 		}
 
@@ -2070,7 +2070,7 @@ class uiaddressbook
 					$entry = $this->stripslashes_from_array($entry);
 				}
 				$comms = $this->read_tab_session($this->tab_comms);
-				$entry['wphone'] = $comms['comm_data']['work phone'];
+				$entry['wphone'] = isset($comms['comm_data']['work phone']) ? $comms['comm_data']['work phone'] : '';
 				//$this->record_name = $entry['org_name'];
 				break;
 			case $this->tab_persons:
@@ -2571,7 +2571,7 @@ class uiaddressbook
 
 		$add_data = $this->entry['tmp_data'][$tab_section];
 
-		if($add_data['action'] == 'insert')
+		if(isset($add_data['action']) && $add_data['action'] == 'insert')
 		{
 			$get_query = 'get_insert_'.$tab_section;
 			$add_data['action'] = 'insert';
@@ -2963,7 +2963,7 @@ class uiaddressbook
 					$this->template->set_var('display_col',lang($field));
 					if(strpos($field, 'email'))
 					{
-						if ($GLOBALS['phpgw_info']['user']['apps']['email'])
+						if (isset($GLOBALS['phpgw_info']['user']['apps']['email']) && $GLOBALS['phpgw_info']['user']['apps']['email'])
 						{
 							$ref='<a href="'.$GLOBALS['phpgw']->link('/email/compose.php',array('to'=> urlencode($data))) .'" target="_new">';
 						}

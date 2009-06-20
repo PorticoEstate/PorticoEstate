@@ -1093,13 +1093,13 @@
 		function read_preferences($contact_type)
 		{
 			$prefs = $GLOBALS['phpgw']->preferences->read();
-			$prefs = $prefs['addressbook'];
-			if($contact_type==$this->tab_main_persons)
+			$prefs = isset($prefs['addressbook']) ? $prefs['addressbook'] : array();
+			if(isset($prefs['person_columns']) && $contact_type==$this->tab_main_persons)
 			{
 				
 				return $prefs['person_columns'];
 			}
-			elseif($contact_type==$this->tab_main_organizations)
+			elseif(isset($prefs['org_columns']) && $contact_type==$this->tab_main_organizations)
 			{
 				return $prefs['org_columns'];
 			}	

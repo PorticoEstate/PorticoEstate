@@ -715,7 +715,7 @@
 		 */
 		public function update_data($data)
 		{
-			if ( $this->get_type($data['id']) == 'g' )
+			if ( $this->get_type($data->id) == 'g' )
 			{
 				$account = new phpgwapi_group();
 			}

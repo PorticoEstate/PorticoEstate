@@ -34,6 +34,8 @@
 
 	class property_soproject
 	{
+		var $total_records = 0;
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

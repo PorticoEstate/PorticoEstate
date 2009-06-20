@@ -168,14 +168,16 @@
 
 		public function get_location_name($location)
 		{
+
 			$location = ltrim($location, '.');
-			list($type, $entity_id, $cat_id) = split('[.]', $location);
-			$this->boadmin_entity->type = $type;
-			switch( $type )
+			$parts = explode('.', $location);
+//			list($type, $entity_id, $cat_id) = split('[.]', $location);
+			$this->boadmin_entity->type = $parts[0];
+			switch( $parts[0] )
 			{
 				case 'entity':
 				case 'catch':
-					$entity_category = $this->boadmin_entity->read_single_category($entity_id,$cat_id);
+					$entity_category = $this->boadmin_entity->read_single_category($parts[1],$parts[2]);
 					$location_name =  $entity_category['name'];					
 					break;
 				default:

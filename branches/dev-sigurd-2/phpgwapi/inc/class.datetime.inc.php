@@ -776,7 +776,7 @@
 		 * @param string $formatTarget Target date format
 		 * @return string Date in target format representation
 		 */
-		function convertDate($date, $formatSource, $formatTarget)
+		public static function convertDate($date, $formatSource, $formatTarget)
 		{
 			// get format separator character
 			$formatSourceSepChar = substr($formatSource,1,1);
