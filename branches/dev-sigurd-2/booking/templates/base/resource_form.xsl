@@ -51,25 +51,25 @@
 						<div id="building_container"/>
 					</div>
 				</dd>
+			
+				<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
+				<dd>
+					<xsl:value-of select="node()"/>
+					<select name='type' id='field_type'>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select Type...')" /></option>
+						<xsl:for-each select="resource/types/*">
+							<option value="{local-name()}">
+								<xsl:if test="../../type = local-name()">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+
+								<xsl:value-of select="php:function('lang', string(node()))"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</dd>
 				
 				<xsl:if test="not(new_form)">
-					<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
-					<dd>
-						<xsl:value-of select="node()"/>
-						<select name='type' id='field_type'>
-							<option value=''><xsl:value-of select="php:function('lang', 'Select Type...')" /></option>
-							<xsl:for-each select="resource/types/*">
-								<option value="{local-name()}">
-									<xsl:if test="../../type = local-name()">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-
-									<xsl:value-of select="php:function('lang', string(node()))"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</dd>
-					
 					<dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
 					<dd>
 						<select id="field_active" name="active">

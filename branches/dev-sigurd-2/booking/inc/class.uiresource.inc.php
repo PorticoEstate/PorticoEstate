@@ -118,6 +118,10 @@
 					}
 				}
 			}
+			else
+			{
+				$resource['type'] = 'Location';
+			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_yui::load_widget('datatable');
