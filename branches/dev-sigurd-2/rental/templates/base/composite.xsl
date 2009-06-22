@@ -1,7 +1,14 @@
 <xsl:include href="rental/templates/base/common.xsl"/>
 
-<xsl:template name="pageForm">
-
+<xsl:template name="pageForm" xmlns:php="http://php.net/xsl">
+	<script>
+		YAHOO.util.Event.onDOMReady(
+			function()
+			{
+				initCalendar('available_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
+			}
+		);
+	</script>
 </xsl:template>
 
 <xsl:template name="pageContent">
@@ -241,6 +248,18 @@
 							<option value="4"><xsl:value-of select="php:function('lang', 'rental_rc_section')"/></option>
 							<option value="5"><xsl:value-of select="php:function('lang', 'rental_rc_room')"/></option>
 						</select>
+					</td>
+					<td class="toolbarcol">
+						<label class="toolbar_element_label" for="calendarPeriodFrom"><xsl:value-of select="php:function('lang', 'rental_rc_available_at')"/></label>
+						<input type="text" name="available_date" id="available_date" size="10"/>
+						<input type="hidden" name="available_date_hidden" id="available_date_hidden"/>
+						<div id="calendarPeriodFrom">
+						</div>
+					</td>
+					<td class="toolbarcol">
+						<input type="submit">	
+							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
+						</input>
 					</td>
 				</tr>
 			</table>

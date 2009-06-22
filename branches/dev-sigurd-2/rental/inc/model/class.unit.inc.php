@@ -223,19 +223,36 @@ abstract class rental_unit
 	}
 	
 	/**
-	 * Tells if a unit is available for renting at some time in the future. This
-	 * is done by checking if there are any running contracts without end date.
+	 * Tells if a unit is available for renting. If no date is specified it
+	 * tells if it's available  at some time in the future, and if a date is
+	 * specified it tells if the unit is available at that exact date. This first
+	 * of the two is done by checking if there are any running contracts without
+	 * end date.
 	 * 
-	 * @return bool with true if the unit is available for renting at some time,
-	 * false if not.
+	 * @return bool with true if the unit is available for renting at, false if
+	 * not.
 	 */
-	public function is_available_for_renting()
+	public function is_available_for_renting($avaiable_at_date = null)
 	{
-		foreach($this->contract_date_array as $contract_date) // Runs through all contract dates
+		if($avaiable_at_date == null || $avaiable_at_date == '') // Date not specified
 		{
-			if($contract_date->has_start_date() && !$contract_date->has_end_date()) // Start date is set and end date is not set - contract is running
+			foreach($this->contract_date_array as $contract_date) // Runs through all contract dates
 			{
-				return false;
+				if($contract_date->has_start_date() && !$contract_date->has_end_date()) // Start date is set and end date is not set - contract is running
+				{
+					return false;
+				}
+			}
+		}
+		else // Date specified
+		{
+			foreach($this->contract_date_array as $contract_date) // Runs through all contract dates
+			{
+				// Start date is set (contract isn't a draft) and start date is before the date we're checking for and either end date isn't set or end date is after the date we're checking for.
+				if($contract_date->has_start_date() && $contract_date->get_start_date() <= $avaiable_at_date && (!$contract_date->has_end_date() || ($contract_date->has_end_date() && $contract_date->get_end_date() > $avaiable_at_date)))
+				{
+					return false;
+				}
 			}
 		}
 		return true;
@@ -262,7 +279,7 @@ abstract class rental_unit
 	 * @param $type int 1-5 with type of units to return.
 	 * @return array with rental_unit objects.
 	 */
-	public static function get_available_rental_units(int $level, int $composite_id, string $avaiable_from_date = null, $start_row = 0, $num_of_rows = 25, $sort_field = 'location_code', $sort_ascending = true)
+	public static function get_available_rental_units(int $level, int $composite_id, string $avaiable_at_date = null, $start_row = 0, $num_of_rows = 25, $sort_field = 'location_code', $sort_ascending = true)
 	{
 //		var_dump($level);
 		$level = (int)$level;
@@ -271,8 +288,7 @@ abstract class rental_unit
 		$available_unit_array = array();
 		foreach($unit_array as $unit) // We run through each area
 		{
-			// XXX: Add check for $avaiable_from_date
-			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting()) // Unit doesn't already belong to speciefied composite and there are openings on this unit at some time
+			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to speciefied composite and there are openings on this unit at specified time
 			{
 				$add_unit = true; // Tells if we should add unit to list of available units
 				for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
@@ -282,8 +298,7 @@ abstract class rental_unit
 						$related_unit_array = rental_unit::get_so()->get_unit_array($i, $unit->get_location_code(), 0, 10000, null, true);
 						foreach($related_unit_array as $related_unit)
 						{
-							// XXX: Add check for $avaiable_from_date
-							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting()) // Unit doesn't already belong to speciefied composite and there are openings on this unit at some time
+							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to speciefied composite and there are openings on this unit at specified time
 							{
 								// We add the contract dates from the related units to see at what time it's possible to rent the unit
 								$unit->add_contract_date_array($related_unit->get_contract_date_array());

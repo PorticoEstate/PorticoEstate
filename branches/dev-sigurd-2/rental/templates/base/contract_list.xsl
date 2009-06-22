@@ -9,9 +9,6 @@
 				initCalendar('to_date', 'calendarPeriodTo', 'cal1', 'Velg dato');
 			}
 		);
-				
-		
-		
 
 		YAHOO.util.Event.addListener(
 			'ctrl_reset_button', 
@@ -22,8 +19,6 @@
 	        	window.location = 'index.php?menuaction=rental.uicontract.index';
     		}
     	);
-    	
-
 	</script>
 </xsl:template>
 
@@ -187,15 +182,22 @@
 					</td>
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="calendarPeriodFrom"><xsl:value-of select="php:function('lang', 'rental_contract_from')"/></label>
-						<input type="text" id="from_date"/>
+						<input type="text" name="from_date" id="from_date" size="10"/>
+						<input type="hidden" name="from_date_hidden" id="from_date_hidden"/>
 						<div id="calendarPeriodFrom">
 						</div>
 					</td>
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="calendarPeriodTo"><xsl:value-of select="php:function('lang', 'rental_contract_to')"/></label>
-						<input type="text" id="to_date"/>
+						<input type="text" name="to_date" id="to_date" size="10"/>
+						<input type="hidden" name="to_date_hidden" id="to_date_hidden"/>
 						<div id="calendarPeriodTo">
 						</div>
+					</td>
+					<td class="toolbarcol">
+						<input type="submit">	
+							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
+						</input>
 					</td>
 				</tr>
 			</table>

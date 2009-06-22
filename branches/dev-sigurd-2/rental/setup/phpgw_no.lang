@@ -27,7 +27,7 @@ rental_cm_remove	rental	no	Fjern
 rental_cm_show	rental	no	Vis
 rental_menu_contracts	rental	no	Kontrakter
 rental_menu_economy	rental	no	Økonomi
-rental_menu_rc	rental	no	Utleieobjekter
+rental_menu_rc	rental	no	Leieobjekter
 rental_menu_rental	rental	no	Utleie
 rental_menu_tenants	rental	no	Leietakere
 rental_menu_reports	rental	no	Rapporter
@@ -42,7 +42,9 @@ rental_rc_area_gros	rental	no	Bruttoareal
 rental_rc_area_net	rental	no	Nettoareal
 rental_rc_area_not_found	rental	no	Kunne ikke finne detaljer om arealet
 rental_rc_availibility	rental	no	Tilgjengelighet
+rental_rc_available_at	no	Ledig på dato
 rental_rc_available	rental	no	Tilgjengelig
+rental_rc_available_from	no	Tilgjengelig fra
 rental_rc_available?	rental	no	Kan leies ut?
 rental_rc_back	rental	no	Tilbake
 rental_rc_building	rental	no	Bygning
@@ -92,6 +94,7 @@ rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
 rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Lag nytt leieobjekt
+rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
 rental_tenant_account	rental	no	Reskontonummer
 rental_tenant_address	rental	no	Adresse

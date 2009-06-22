@@ -52,10 +52,23 @@
 			
 			function onCalendarSelect(type,args,array){
 				var firstDate = args[0][0];
-				var day = firstDate[1] + "";
-				var month = firstDate[2] + "";
+				var month = firstDate[1] + "";
+				var day = firstDate[2] + "";
 				var year = firstDate[0] + "";
-				var date = day + "/" + month + "/" + year;
+				var date = month + "/" + day + "/" + year;
+				var hiddenDateField = document.getElementById(array[0] + '_hidden');
+				if(hiddenDateField != null)
+				{
+					if(month &lt; 10)
+					{
+						month = '0' + month;
+					}
+					if(day &lt; 10)
+					{
+						day = '0' + day;
+					}
+					hiddenDateField.value = year + '-' + month + '-' + day;
+				}
 				document.getElementById(array[0]).value = formatDate('<xsl:value-of select="//dateFormat"/>',Math.round(Date.parse(date)/1000));
 				array[1].hide();
 			}
