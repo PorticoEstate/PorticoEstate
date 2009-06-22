@@ -93,7 +93,7 @@ rental_rc_toolbar_filters	rental	no	Filtre
 rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
 rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
-rental_rc_toolbar_new	rental	no	Lag nytt leieobjekt
+rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
 rental_tenant_account	rental	no	Reskontonummer
@@ -107,4 +107,5 @@ renta_tenant_phone	rental	no	Telefon
 rental_tenant_organisation_number	rental	no	Organisasjonsnummer
 rental_tenant_result_unit_number	rental	no	Resultatsenhet
 rental_tenant_ssn	rental	no	Personnummer
-
+rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
+rental_tenant_toolbar_new	rental	no	Opprett ny leietaker

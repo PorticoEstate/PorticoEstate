@@ -11,9 +11,33 @@
 	        	window.location = 'index.php?menuaction=rental.uitenant.index';
     		}
     	);
-    	
-
+		YAHOO.util.Event.addListener(
+			'ctrl_add_rental_tenant', 
+			'click', 
+			function(e)
+			{    	
+	    		YAHOO.util.Event.stopEvent(e);
+	        	window.location = 'index.php?menuaction=rental.uitenant.add';
+    		}
+    	);
 	</script>
+	<div id="toolbar">
+		<table class="pageToolbar">
+			<tr>
+				<td class="toolbarlabel">
+					<label><xsl:value-of select="php:function('lang', 'rental_tenant_toolbar_new')"/></label>
+				</td>
+				<td id="pageToolbarSubmit">
+					<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+					<input type="submit" name="ctrl_add_rental_tenant" id="ctrl_add_rental_tenant">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'rental_tenant_toolbar_functions_new_tenant')"/>	
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</table>
+	</div>
 </xsl:template>
 
 <xsl:template name="pageContent">

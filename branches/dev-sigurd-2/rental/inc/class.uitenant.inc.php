@@ -6,6 +6,8 @@
 	{	
 		public $public_functions = array
 		(
+			'add'		=> true,
+			'edit'		=> true,
 			'index'		=> true,
 			'query'		=> true
 		);

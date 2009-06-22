@@ -32,7 +32,7 @@
 				</td>
 			</tr>
 		</table>
-	</div> 
+	</div>
 </xsl:template>
 
 <xsl:template name="pageContent">
