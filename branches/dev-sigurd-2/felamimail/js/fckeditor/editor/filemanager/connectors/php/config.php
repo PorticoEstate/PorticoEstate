@@ -33,7 +33,7 @@ function deny_no_egw_session(&$account)
 {
 	die('Access denied!');
 }
-$GLOBALS['egw_info'] = array(
+$GLOBALS['phpgw_info'] = array(
 	'flags' => array(
 		'currentapp' => 'home',
 		'noheader' => true,
@@ -45,7 +45,7 @@ require('../../../../../../../header.inc.php');
 
 if ($GLOBALS['egw']->session->session_flags == 'N' &&	// allow only non anonymous sessions,
 	($app=$GLOBALS['egw']->session->appsession($_GET['ServerPath'],'FCKeditor')) &&	// check if path is stored in the session and
-	isset($GLOBALS['egw_info']['user']['apps'][$app]))	// user has access to the stored application (as we can only check of home above)
+	isset($GLOBALS['phpgw_info']['user']['apps'][$app]))	// user has access to the stored application (as we can only check of home above)
 {
 	$Config['UserFilesPath'] = $_GET['ServerPath'];
 	$Config['Enabled'] = true;

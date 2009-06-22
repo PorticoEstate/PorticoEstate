@@ -1482,6 +1482,11 @@
 		*/
 		protected function _phpgw_set_cookie_params()
 		{
+			if (function_exists('class_alias'))
+			{
+				$this->_cookie_domain = false; //FIXME: Sigurd june 09: PHP Version 5.3.0RC5 chokes on this one
+			}
+
 			if ( !is_null($this->_cookie_domain) )
 			{
 				return $this->_cookie_domain;

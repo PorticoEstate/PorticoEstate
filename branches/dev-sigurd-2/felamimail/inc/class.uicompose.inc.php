@@ -44,7 +44,7 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
 
-			$xajax =& new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
+			$xajax = new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
 			$xajax->waitCursorOff();
 			$xajax->registerFunction("doXMLHTTP");
 
@@ -55,7 +55,7 @@
 			if (!isset($_POST['composeid']) && !isset($_GET['composeid']))
 			{
 				// create new compose session
-				$this->bocompose   =& CreateObject('felamimail.bocompose','',$this->displayCharset);
+				$this->bocompose   = CreateObject('felamimail.bocompose','',$this->displayCharset);
 				$this->composeID = $this->bocompose->getComposeID();
 			}
 			else
@@ -65,10 +65,10 @@
 					$this->composeID = $_POST['composeid'];
 				else
 					$this->composeID = $_GET['composeid'];
-				$this->bocompose   =& CreateObject('felamimail.bocompose',$this->composeID,$this->displayCharset);
+				$this->bocompose   = CreateObject('felamimail.bocompose',$this->composeID,$this->displayCharset);
 			}
-			$this->t 		=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
-			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$this->mailPreferences  = ExecMethod('felamimail.bopreferences.getPreferences');
 
 			$this->t->set_unknowns('remove');

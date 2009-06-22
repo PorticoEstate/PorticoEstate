@@ -184,6 +184,9 @@ class egw_db
 	);									// string for sprintf for a cast (eg. 'CAST(%s AS varchar)')
 
 	var $prepared_sql = array();	// sql is the index
+	
+	var $column_definitions;
+
 
 	/**
 	* Constructor
@@ -273,7 +276,7 @@ class egw_db
 		{
 			$this->Type = $GLOBALS['phpgw_info']['server']['db_type'];
 		}
-		if (!$this->adodb)
+		if (!isset($this->adodb) || !$this->adodb)
 		{
 			$this->setupType = $php_extension = $type = $this->Type;
 
@@ -1256,7 +1259,7 @@ class egw_db
 
 		$name = trim($name);
 
-		if (!$this->adodb && !$this->connect())
+		if ((!isset($this->adodb) || !$this->adodb) && !$this->connect())
 		{
 			return False;
 		}
@@ -1371,6 +1374,7 @@ class egw_db
 	*/
 	function column_data_implode($glue,$array,$use_key=True,$only=False,$column_definitions=False)
 	{
+		$maxlength = null;
 		if (!is_array($array))	// this allows to give an SQL-string for delete or update
 		{
 			return $array;

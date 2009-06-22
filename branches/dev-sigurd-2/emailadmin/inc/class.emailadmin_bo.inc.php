@@ -223,8 +223,8 @@
 		
 				$this->profileData	= $this->getProfile($_profileID);
 			
-				$this->imapClass	=& CreateObject('emailadmin.'.$this->IMAPServerType[$this->profileData['imapType']]['classname']);
-				$this->smtpClass	=& CreateObject('emailadmin.'.$this->SMTPServerType[$this->profileData['smtpType']]['classname']);
+				$this->imapClass	= CreateObject('emailadmin.'.$this->IMAPServerType[$this->profileData['imapType']]['classname']);
+				$this->smtpClass	= CreateObject('emailadmin.'.$this->SMTPServerType[$this->profileData['smtpType']]['classname']);
 			}
 		}
 		
@@ -469,7 +469,10 @@
 				// initialize with 0 => means no group id
 				$groups = array(0);
 				// set the second entry to the users primary group
-				$group[] = $GLOBALS['phpgw_info']['user']['account_primary_group'];
+				if(isset($GLOBALS['phpgw_info']['user']['account_primary_group']))
+				{
+					$groups[] = $GLOBALS['phpgw_info']['user']['account_primary_group'];
+				}
 				$userGroups = $GLOBALS['phpgw']->accounts->membership($GLOBALS['phpgw_info']['user']['account_id']);
 				foreach((array)$userGroups as $groupInfo) {
 					$groups[] = $groupInfo->id;

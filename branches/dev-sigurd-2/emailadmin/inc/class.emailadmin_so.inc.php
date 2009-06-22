@@ -187,7 +187,7 @@
 				}
 			}
 			// retrieve primary-group settings if set
-			if (is_array($_groups) && $_groups[1] == $GLOBALS['egw_info']['user']['account_primary_group']) {
+			if (isset($GLOBALS['phpgw_info']['user']['account_primary_group']) && is_array($_groups) && $_groups[1] == $GLOBALS['phpgw_info']['user']['account_primary_group']) {
 				$this->db->select($this->table,'ea_profile_id',$this->db->expression($this->table,'(',array('ea_group'=>$_groups[1]),' and ea_active=1)'), __LINE__, __FILE__, false, 'ORDER BY ea_order', false, 1);
 				if (($data = $this->db->row(true))) {
 					$groupDefaults = $this->getProfile($data['ea_profile_id'], $this->db_cols);

@@ -55,7 +55,8 @@
 			$icServer->sieveHost	= $accountData['ic_sieve_server'];
 			$icServer->sievePort	= isset($accountData['ic_sieve_port']) ? $accountData['ic_sieve_port'] : 2000;
 
-			$ogServer =& CreateObject('emailadmin.defaultsmtp');
+//			$ogServer =& CreateObject('emailadmin.defaultsmtp');
+			$ogServer = CreateObject('emailadmin.defaultsmtp');
 			$ogServer->host		= $accountData['og_hostname'];
 			$ogServer->port		= isset($accountData['og_port']) ? $accountData['og_port'] : 25;
 			$ogServer->smtpAuth	= (bool)$accountData['og_smtpauth'];
@@ -64,7 +65,8 @@
 				$ogServer->password 	= $accountData['og_password'];
 			}
 
-			$identity =& CreateObject('emailadmin.ea_identity');
+//			$identity =& CreateObject('emailadmin.ea_identity');
+			$identity = CreateObject('emailadmin.ea_identity');
 			$identity->emailAddress	= $accountData['emailaddress'];
 			$identity->realName	= $accountData['realname'];
 			//$identity->default	= true;
@@ -86,7 +88,8 @@
 			#_debug_array($accountData);
 			foreach ($AllAccountData as $key => $accountData)
 			{
-				$icServer =& CreateObject('emailadmin.defaultimap');
+//				$icServer =& CreateObject('emailadmin.defaultimap');
+				$icServer = CreateObject('emailadmin.defaultimap');
 				$icServer->encryption	= isset($accountData['ic_encryption']) ? $accountData['ic_encryption'] : 1;
 				$icServer->host		= $accountData['ic_hostname'];
 				$icServer->port 	= isset($accountData['ic_port']) ? $accountData['ic_port'] : 143;
@@ -98,7 +101,8 @@
 				$icServer->sieveHost	= $accountData['ic_sieve_server'];
 				$icServer->sievePort	= isset($accountData['ic_sieve_port']) ? $accountData['ic_sieve_port'] : 2000;
 
-				$ogServer =& CreateObject('emailadmin.defaultsmtp');
+//				$ogServer =& CreateObject('emailadmin.defaultsmtp');
+				$ogServer = CreateObject('emailadmin.defaultsmtp');
 				$ogServer->host		= $accountData['og_hostname'];
 				$ogServer->port		= isset($accountData['og_port']) ? $accountData['og_port'] : 25;
 				$ogServer->smtpAuth	= (bool)$accountData['og_smtpauth'];
@@ -107,7 +111,8 @@
 					$ogServer->password 	= $accountData['og_password'];
 				}
 
-				$identity =& CreateObject('emailadmin.ea_identity');
+//				$identity =& CreateObject('emailadmin.ea_identity');
+				$identity = CreateObject('emailadmin.ea_identity');
 				$identity->emailAddress	= $accountData['emailaddress'];
 				$identity->realName	= $accountData['realname'];
 				//$identity->default	= true;
@@ -196,7 +201,7 @@
 					$userPrefs['move_to_trash'] 	= True;
 				if (!empty($userPrefs['sent_folder'])) 
 					$userPrefs['move_to_sent'] 	= True;
-				$userPrefs['signature']		= $userPrefs['email_sig'];
+				$userPrefs['signature']		= isset($userPrefs['email_sig']) ? $userPrefs['email_sig'] : '';
 				
 	 			unset($userPrefs['email_sig']);
  			
