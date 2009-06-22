@@ -55,6 +55,11 @@ function array_minus($a, $b)
 		 */
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
+			if ($this->current_app() == 'bookingfrontend')
+			{
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write'] = true;
+			}
 			return array_merge(
 				array
 				(
@@ -99,6 +104,12 @@ function array_minus($a, $b)
 		 */
 		protected function get_collection_role_permissions($defaultPermissions)
 		{
+			if ($this->current_app() == 'bookingfrontend')
+			{
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write'] = true;
+				return $defaultPermissions;
+			}
 			return array_merge(
 				array
 				(
