@@ -146,5 +146,50 @@
 			),
 			'ix' => array(),
 			'uc' => array()
+		),
+		// A tenant
+		'rental_tenant' => array(
+				'fd' => array(
+					'id' =>	array('type' => 'auto', 'nullable' => false),
+					'agresso_id' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'personal_identification_number' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'first_name' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'last_name' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'is_active' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'company_name' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'department' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'address_1' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'address_2' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'postal_code' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'place' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'phone' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'fax' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'email' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'url' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'post_bank_account_number' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'account_number' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'reskontro' =>	array('type' => 'varchar','precision' => '45','nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		),
+		// Tenant to contract relationship
+		'rental_contract_tenant' => array(
+			'fd' => array(
+				'id' => 			array('type' => 'auto', 'nullable' => false),
+				'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'tenant_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'rental_contract' => array('contract_id' => 'id'),
+					'rental_tenant' => array('tenant_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);

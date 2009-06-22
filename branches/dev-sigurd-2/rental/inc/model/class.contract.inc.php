@@ -26,12 +26,12 @@
 		
 		public function get_id() { return $this->id; }
 		
-		public function set_tenant($tenant)
+		public function set_tenants($tenants)
 		{
-			$this->tenant = $tenant;
+			$this->tenant = $tenants;
 		}
 		
-		public function get_tenant() { return $this->tenant; }
+		public function get_tenants() { return $this->tenants; }
 		
 		public function set_contract_date($date)
 		{
