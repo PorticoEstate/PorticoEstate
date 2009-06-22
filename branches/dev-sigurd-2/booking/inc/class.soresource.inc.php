@@ -23,7 +23,7 @@
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
-					'activity_name'	=> array('type' => 'string',
+					'activity_name'	=> array('type' => 'string', 'query' => true, 
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',
 							'fkey' 		=> 'activity_id',
@@ -31,7 +31,7 @@
 							'column' 	=> 'name'
 					)),
 					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
-					'activity_id'			=> array('type' => 'int', 'query' => true, 'required' => false)
+					'activity_id'			=> array('type' => 'int', 'required' => false)
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
