@@ -5,6 +5,7 @@
 	 */
 	
 	phpgw::import_class('rental.bocommon');
+	include_class('rental', 'contract', 'inc/model/');
 	
 	class rental_tenant
 	{
@@ -66,6 +67,18 @@
 			$so = self::get_so();
 			
 			return $so->get_single($id);
+		}
+		
+		/**
+		 * Return a list of the contracts this tenant is associated with
+		 * 
+		 * @return a list of rental_contract objects
+		 */
+		public function get_contracts()
+		{
+			$so = self::get_so();
+			
+			return rental_contract::get_contracts_for_tentant($this->get_id);
 		}
 
 		public function set_id($id)
