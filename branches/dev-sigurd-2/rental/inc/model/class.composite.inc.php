@@ -80,7 +80,7 @@
 		{
 			$so = self::get_so();
 			
-			$composites = $so->get_composite_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array());
+			$composites = $so->get_composite_array($start, $results, $sort, $dir, $query, $search_option, $filters);
 			
 			return $composites;
 		}
