@@ -43,7 +43,7 @@
 				'tenants' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_tenants', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uitenants.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uitenant.index') ),
                     'image'	=> array('property', 'location')
 				),
 				'economy' => array

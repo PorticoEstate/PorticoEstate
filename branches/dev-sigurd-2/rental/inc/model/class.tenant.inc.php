@@ -37,7 +37,7 @@
     protected $account_number;
     protected $reskontro;
 
-		public function __construct(int $id = 0)
+		public function __construct($id = 0)
 		{
 			$this->id = $id;
 		}
@@ -67,6 +67,14 @@
 			$so = self::get_so();
 			
 			return $so->get_single($id);
+		}
+		
+		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		{	
+			$so = self::get_so();
+			$tenants = $so->get_tenant_array($start, $results, $sort, $dir, $query, $search_option, $filters);
+			return $tenants;
+			
 		}
 		
 		/**
