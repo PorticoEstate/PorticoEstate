@@ -103,9 +103,10 @@ rental_tenant_external	rental	no	Eksterne leietakere
 rental_tenant_id	rental	no	ID
 rental_tenant_internal	rental	no	Interne leietakere
 rental_tenant_name	rental	no	Navn
-renta_tenant_phone	rental	no	Telefon
+rental_tenant_phone	rental	no	Telefon
 rental_tenant_organisation_number	rental	no	Organisasjonsnummer
 rental_tenant_result_unit_number	rental	no	Resultatsenhet
 rental_tenant_ssn	rental	no	Personnummer
 rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
 rental_tenant_toolbar_new	rental	no	Opprett ny leietaker
+rental_tenant_type	rental	no	Type

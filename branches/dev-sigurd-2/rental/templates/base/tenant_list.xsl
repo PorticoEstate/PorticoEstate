@@ -120,7 +120,7 @@
 					</td>
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctr_toggle_contract_type">
-							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/> 
+							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/>
 							<select name="search_option" id="ctr_toggle_contract_type">
 								<option value="all"><xsl:value-of select="php:function('lang', 'rental_tenant_all')"/></option>
 								<option value="id"><xsl:value-of select="php:function('lang', 'rental_tenant_id')"/></option>
@@ -157,7 +157,7 @@
 						<label><b>Filtre</b></label>
 					</td>
 					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_tenant_type"><xsl:value-of select="php:function('lang', 'rental_contract_status')"/></label>
+						<label class="toolbar_element_label" for="ctrl_toggle_tenant_type"><xsl:value-of select="php:function('lang', 'rental_tenant_type')"/></label>
 						<select name="tenant_type" id="ctrl_toggle_tenant_type">
 							<option value="internal"><xsl:value-of select="php:function('lang', 'rental_tenant_internal')"/></option>
 							<option value="external"><xsl:value-of select="php:function('lang', 'rental_tenant_external')"/></option>
