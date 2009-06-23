@@ -9,16 +9,10 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<h3><xsl:value-of select="php:function('lang', 'rental_common_tenant')" />: <xsl:value-of select="tenant/name"/></h3>
-	<div id="composite_edit_tabview" class="yui-navset">
+	<div id="tenant_edit_tabview" class="yui-navset">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<xsl:apply-templates select="tenant"/>
-			<div id="elements">
-				<xsl:call-template name="datatable_included_areas" />
-				<xsl:if test="access = 1">
-	    			<xsl:call-template name="datatable_available_areas" />
-	    		</xsl:if>
-			</div>
 			<div id="contracts">
 			    <xsl:call-template name="datatable_contracts" />
 			</div>
@@ -112,6 +106,13 @@
 				</dt>
 				<dd>
 					<input type="text" name="type_id" id="type_id"><xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if><xsl:attribute name="value"><xsl:value-of select="type_id"/></xsl:attribute></input>
+					<!-- TODO:
+					<select name="type_id" id="type_id">
+						<xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if>
+						<option value="internal"><xsl:value-of select="php:function('lang', 'rental_tenant_internal')"/></option>
+						<option value="external"><xsl:value-of select="php:function('lang', 'rental_tenant_external')"/></option>
+					</select>
+					 -->
 				</dd>
 				<dt>
 					<label for="post_bank_account_number"><xsl:value-of select="php:function('lang', 'rental_common_post_bank_account_number')" /></label>
@@ -157,184 +158,6 @@
 				</a>
 			</div>
 		</form>
-	</div>
-</xsl:template>
-
-<xsl:template name="datatable_included_areas" xmlns:php="http://php.net/xsl">
-	<h3><xsl:value-of select="php:function('lang', 'rental_rc_added_areas')" /></h3>
-	<div class="datatable">
-		<div id="datatable-container-included-areas">
-			<xsl:call-template name="datasource-definition" >
-				<xsl:with-param name="number">1</xsl:with-param>
-				<xsl:with-param name="container_name">datatable-container-included-areas</xsl:with-param>
-				<xsl:with-param name="source">index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<xsl:value-of select="composite_id"/></xsl:with-param>
-				<xsl:with-param name="context_menu_labels">
-					<xsl:choose>
-						<xsl:when test="../access = 1">
-							['<xsl:value-of select="php:function('lang', 'rental_cm_remove')"/>']
-						</xsl:when>
-						<xsl:otherwise>
-							[]
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-				<xsl:with-param name="context_menu_actions">
-					<xsl:choose>
-						<xsl:when test="../access = 1">
-							['remove_unit']
-						</xsl:when>
-						<xsl:otherwise>
-							[]
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-				<xsl:with-param name="columnDefinitions">
-					[{
-						key: "location_code",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_id')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc1_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_property')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc2_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_building')"/>"
-					},
-					{
-						key: "loc3_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_section')"/>"
-					},
-					{
-						key: "address",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_address')"/>"
-					},
-					{
-						key: "area_gros",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_gros')"/>"
-					},
-					{
-						key: "area_net",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_net')"/>"
-					},
-					{
-						key: "actions",
-						hidden: 1
-					}
-				]
-				</xsl:with-param>
-			</xsl:call-template>
-		</div>
-	</div>
-</xsl:template>
-
-<xsl:template name="datatable_available_areas" xmlns:php="http://php.net/xsl">
-	<h3><xsl:value-of select="php:function('lang', 'rental_rc_add_area')" /></h3>
-	<form id="available_areas_form" method="GET">
-		<div id="datatableToolbar">
-			<table class="datatableToolbar">
-				<tr>
-					<td class="toolbarlabel">
-						<xsl:value-of select="php:function('lang', 'rental_rc_toolbar_filters')"/>
-					</td>
-					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_level"><xsl:value-of select="php:function('lang', 'rental_rc_level')"/></label>
-						<select name="level" id="ctrl_toggle_level">
-							<option value="1"><xsl:value-of select="php:function('lang', 'rental_rc_property')"/></option>
-							<option value="2" default=""><xsl:value-of select="php:function('lang', 'rental_rc_building')"/></option>
-							<option value="3"><xsl:value-of select="php:function('lang', 'rental_rc_floor')"/></option>
-							<option value="4"><xsl:value-of select="php:function('lang', 'rental_rc_section')"/></option>
-							<option value="5"><xsl:value-of select="php:function('lang', 'rental_rc_room')"/></option>
-						</select>
-					</td>
-					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="calendarPeriodFrom"><xsl:value-of select="php:function('lang', 'rental_rc_available_at')"/></label>
-						<input type="text" name="available_date" id="available_date" size="10"/>
-						<input type="hidden" name="available_date_hidden" id="available_date_hidden"/>
-						<div id="calendarPeriodFrom">
-						</div>
-					</td>
-					<td class="toolbarcol">
-						<input type="submit">	
-							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
-						</input>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</form>
-	<div class="datatable">
-		<div id="datatable-container-available-areas">
-			<xsl:call-template name="datasource-definition">
-				<xsl:with-param name="number">2</xsl:with-param>
-				<xsl:with-param name="form">available_areas_form</xsl:with-param>
-				<xsl:with-param name="filters">['ctrl_toggle_level']</xsl:with-param>
-				<xsl:with-param name="container_name">datatable-container-available-areas</xsl:with-param>
-				<xsl:with-param name="source">index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=available_areas&amp;id=<xsl:value-of select="composite_id"/></xsl:with-param>
-				<xsl:with-param name="context_menu_labels">
-					['<xsl:value-of select="php:function('lang', 'rental_cm_add')"/>']
-				</xsl:with-param>
-				<xsl:with-param name="context_menu_actions">
-					['add_unit']
-				</xsl:with-param>
-				<xsl:with-param name="columnDefinitions">
-					[{
-						key: "location_code",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_id')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc1_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_property')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc2_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_building')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc3_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_floor')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc4_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_section')"/>",
-					    sortable: true
-					},
-					{
-						key: "loc5_name",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_room')"/>",
-					    sortable: true
-					},
-					{
-						key: "address",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_address')"/>",
-					    sortable: true
-					},
-					{
-						key: "area_gros",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_gros')"/>"
-					},
-					{
-						key: "area_net",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_area_net')"/>"
-					},
-					{
-						key: "occupied",
-						label: "<xsl:value-of select="php:function('lang', 'rental_rc_availibility')"/>"
-					},
-					{
-						key: "actions",
-						hidden: 1
-					}
-				]
-				</xsl:with-param>
-			</xsl:call-template>
-		</div>
 	</div>
 </xsl:template>
 
@@ -407,5 +230,3 @@
 		</div>
 	</div>
 </xsl:template>
-
-
