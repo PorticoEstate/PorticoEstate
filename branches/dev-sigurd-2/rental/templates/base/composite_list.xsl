@@ -127,16 +127,16 @@
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctrl_search_option">
 							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/>
-							<select name="search_option" id="ctrl_search_option">
-								<option value="all"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
-								<option value="id"><xsl:value-of select="php:function('lang', 'rental_rc_serial')"/></option>
-								<option value="name"><xsl:value-of select="php:function('lang', 'rental_rc_name')"/></option>
-								<option value="address"><xsl:value-of select="php:function('lang', 'rental_rc_address')"/></option>
-								<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
-								<option value="ident"><xsl:value-of select="php:function('lang', 'rental_rc_gab')"/></option>
-								<option value="property_id"><xsl:value-of select="php:function('lang', 'rental_rc_property_id')"/></option>
-							</select>
 						</label>
+						<select name="search_option" id="ctrl_search_option">
+							<option value="all"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
+							<option value="id"><xsl:value-of select="php:function('lang', 'rental_rc_serial')"/></option>
+							<option value="name"><xsl:value-of select="php:function('lang', 'rental_rc_name')"/></option>
+							<option value="address"><xsl:value-of select="php:function('lang', 'rental_rc_address')"/></option>
+							<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
+							<option value="ident"><xsl:value-of select="php:function('lang', 'rental_rc_gab')"/></option>
+							<option value="property_id"><xsl:value-of select="php:function('lang', 'rental_rc_property_id')"/></option>
+						</select>
 					</td>
 					<td class="toolbarcol" id="searchSubmitContainer">
 						<input type="submit" id="ctrl_search_button" name="ctrl_search_button">
