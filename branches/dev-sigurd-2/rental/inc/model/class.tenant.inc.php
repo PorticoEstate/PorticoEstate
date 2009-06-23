@@ -36,6 +36,8 @@
     protected $post_bank_account_number;
     protected $account_number;
     protected $reskontro;
+		
+		protected $contracts;
 
 		public function __construct($id = 0)
 		{
@@ -86,7 +88,11 @@
 		{
 			$so = self::get_so();
 			
-			return rental_contract::get_contracts_for_tentant($this->get_id);
+			if (!$this->contracts) {
+				$this->contracts = rental_contract::get_contracts_for_tentant($this->get_id);
+			}
+			
+			return $this->contracts;
 		}
 
 		public function set_id($id)
@@ -96,7 +102,7 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_($agresso_id)
+		public function set_agresso_id($agresso_id)
 		{
 			$this->agresso_id = $agresso_id;
 		}

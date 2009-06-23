@@ -72,7 +72,7 @@
 										array('tenant_type' => phpgw::get_var('tenant_type'))
 										);
 					foreach ($tenants as $tenant) {
-						$rows[] = $this->get_contract_hash($tenant);
+						$rows[] = $this->get_tenant_hash($tenant);
 					}
 					$tenant_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
@@ -143,13 +143,13 @@
 		 * @param $composite rental_composite to be converted
 		 * @return key=>value array of composite data
 		 */
-		protected function get_contract_hash($tenant)
+		protected function get_tenant_hash($tenant)
 		{
 			return array(
 				'id' => $tenant->get_id(),
-				'name' => $tenant->get_contract_date()->get_start_date(),
-				'address' => $tenant->get_contract_date()->get_end_date(),
-				'phone' => $tenant->get
+				'name' => $tenant->get_last_name() . ', ' . $tenant->get_first_name(),
+				'address' => $tenant->get_address_1() . ', ' . $tenant->get_address_2() . ', ' . $tenant->get_postal_code() . ', ' . $tenant->get_place(),
+				'phone' => $tenant->get_phone()
 			);
 		}
 	}
