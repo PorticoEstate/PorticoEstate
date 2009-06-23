@@ -173,7 +173,7 @@
 				
 				$tabs = array();
 				
-				foreach(array('rental_tenant_details', 'rental_tenant_contracts', 'rental_tenant_comments', 'rental_tenant_documents') as $tab) {
+				foreach(array('rental_tenant_details'/*, 'rental_tenant_contracts', 'rental_tenant_comments', 'rental_tenant_documents'*/) as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
@@ -212,6 +212,8 @@
 			return array(
 				'id' => $tenant->get_id(),
 				'name' => $tenant->get_last_name() . ', ' . $tenant->get_first_name(),
+				'firstname' => $tenant->get_first_name(),
+				'lastname' => $tenant->get_last_name(),
 				'address' => $tenant->get_address_1() . ', ' . $tenant->get_address_2() . ', ' . $tenant->get_postal_code() . ', ' . $tenant->get_place(),
 				'phone' => $tenant->get_phone()
 			);
