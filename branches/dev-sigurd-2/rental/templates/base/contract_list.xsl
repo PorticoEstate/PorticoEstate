@@ -73,7 +73,7 @@
 				},
 				{
 					key: "tentant",
-					label: "<xsl:value-of select="php:function('lang', 'rental_contract_tenant')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_common_tenant')"/>",
 				    sortable: false
 				},
 				{
