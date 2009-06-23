@@ -139,7 +139,8 @@
 	
 		function add()
 		{
-			parent::add(array('is_active' => true));	
+			parent::add(array('is_active' => true));
+			return $receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');	
 		}
 		
 		protected function get_conditions($query, $filters,$search_option)
