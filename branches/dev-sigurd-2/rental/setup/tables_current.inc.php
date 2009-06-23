@@ -160,6 +160,8 @@
 					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'company_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'department' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'result_unit' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'organisation_number' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'address_1' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'address_2' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'postal_code' =>	array('type' => 'varchar','precision' => '45','nullable' => true),

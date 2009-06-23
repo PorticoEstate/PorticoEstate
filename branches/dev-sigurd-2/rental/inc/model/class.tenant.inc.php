@@ -76,7 +76,6 @@
 			$so = self::get_so();
 			$tenants = $so->get_tenant_array($start, $results, $sort, $dir, $query, $search_option, $filters);
 			return $tenants;
-			
 		}
 		
 		/**

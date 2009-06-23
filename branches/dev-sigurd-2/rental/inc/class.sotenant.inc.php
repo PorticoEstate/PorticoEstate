@@ -137,10 +137,83 @@
 		return $tenants;
     }
 	
-	function add()
-	{
-		parent::add(array('is_active' => true));	
+		function add()
+		{
+			parent::add(array('is_active' => true));	
+		}
+		
+		protected function get_conditions($query, $filters,$search_option)
+		{	
+			$clauses = array('1=1');
+			if($query)
+			{
+				
+				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
+				$like_clauses = array();
+				switch($search_option){
+					case "id":
+						$like_clauses[] = "rental_tenant.id = $query";
+						break;
+					case "name":
+						$like_clauses[] = "rental_tenant.first_name $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.last_name $this->like $like_pattern";
+						break;
+					case "address":
+						$like_clauses[] = "rental_tenant.address_1 $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.address_2 $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.postal_code $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.place $this->like $like_pattern";
+						break;
+					case "ssn":
+						$like_clauses[] = "rental_tenant.personal_identification_number $this->like $like_pattern";
+						break;
+					case "result_unit_number":
+						$like_clauses[] = "rental_tenant.result_unit $this->like $like_pattern";
+					case "organisation_number":
+						$like_clauses[] = "rental_tenant.organisation_number $this->like $like_pattern";
+					case "account":
+						$like_clauses[] = "rental_tenant.reskontro = $like_pattern";
+					case "all":
+						$like_clauses[] = "rental_tenant.first_name $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.last_name $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.address_1 $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.address_2 $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.postal_code $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.place $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.personal_identification_number $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.result_unit $this->like $like_pattern";
+						$like_clauses[] = "rental_tenant.organisation_number = $like_pattern";
+						$like_clauses[] = "rental_tenant.reskontro = $like_pattern";
+						break;
+				}
+				
+				
+				if(count($like_clauses))
+				{
+					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+				}
+				
+				
+			}
+			
+			$filter_clauses = array();
+			switch($filters['is_active']){
+				case "active":
+					$filter_clauses[] = "rental_tenant.is_active = TRUE";
+					break;
+				case "non_active":
+					$filter_clauses[] = "rental_tenant.is_active = FALSE";
+					break;
+				case "both":
+					break;
+			}
+				
+			if(count($filter_clauses))
+				{
+					$clauses[] = join(' AND ', $filter_clauses);
+				}
+			
+			return join(' AND ', $clauses);
+		}
 	}
-	
-}
 ?>

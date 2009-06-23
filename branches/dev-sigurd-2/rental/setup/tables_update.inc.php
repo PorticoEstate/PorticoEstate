@@ -330,4 +330,18 @@
 		}
 	}
 	
+	$test[] = '0.0.8';
+	function rental_upgrade0_0_8()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_tenant ADD COLUMN result_unit character varying(45)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_tenant ADD COLUMN organisation_number character varying(45)");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.9';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}	
 ?>
