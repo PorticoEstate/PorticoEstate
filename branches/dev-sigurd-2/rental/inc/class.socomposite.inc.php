@@ -513,7 +513,7 @@ class rental_socomposite extends rental_socommon
 		// Class to use for the units
 		$class = self::$unit_class_array[$level]; // Picks the correct class to instanciate
 		$sql = "SELECT $cols FROM $table $joins $condition $order";
-		var_dump($sql);
+//		var_dump($sql);
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $num_of_hits);
 		while ($this->db->next_record()) {
 			$unit = new $class($this->unmarshal($this->db->f('location_code', true), 'string'), $this->unmarshal($this->db->f('location_id', true), 'string'));
@@ -740,6 +740,55 @@ class rental_socomposite extends rental_socommon
 		}
 		
 		return $receipt;
+	}
+	
+	function get_orphan_rental_units($start = 0, $limit = 25, $sort_field = 'location_code', $sort_ascending = true)
+	{
+		$unit_array = array();
+		
+		$sql = "SELECT *
+							FROM fm_locations
+							LEFT JOIN rental_unit ON
+								(fm_locations.id = rental_unit.location_id)
+							LEFT JOIN fm_location1 ON
+								(fm_locations.location_code = fm_location1.location_code AND fm_locations.level = 1)
+							LEFT JOIN fm_location2 ON
+								(fm_locations.location_code = fm_location2.location_code AND fm_locations.level = 2)
+							LEFT JOIN fm_location3 ON
+								(fm_locations.location_code = fm_location3.location_code AND fm_locations.level = 3)
+							LEFT JOIN fm_location4 ON
+								(fm_locations.location_code = fm_location4.location_code AND fm_locations.level = 4)
+							LEFT JOIN fm_location5 ON
+								(fm_locations.location_code = fm_location5.location_code AND fm_locations.level = 5)
+							WHERE rental_unit.composite_id IS NULL";
+							
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			// Create new rental_unit on correct level for each returned row
+			$level = $this->unmarshal($this->db->f('level', true), 'int');
+			$class = self::$unit_class_array[$level];
+			$unit = new $class($this->unmarshal($this->db->f('location_code', true), 'string'), $this->unmarshal($this->db->f('location_id', true), 'string'));
+			$unit->set_address($this->unmarshal($this->db->f($address_column, true), 'string'));
+			switch ($level)
+			{
+				case 5:
+					$unit->set_room_name($this->unmarshal($this->db->f('loc5_name', true), 'string'));
+				case 4:
+					$unit->set_section_name($this->unmarshal($this->db->f('loc4_name', true), 'string'));
+				case 3:
+					$unit->set_floor_name($this->unmarshal($this->db->f('loc3_name', true), 'string'));
+				case 2:
+					$unit->set_building_name($this->unmarshal($this->db->f('loc2_name', true), 'string'));
+				case 1:
+					$unit->set_property_name($this->unmarshal($this->db->f('loc1_name', true), 'string'));
+					$unit->set_location_code_property($this->unmarshal($this->db->f('loc1', true), 'string'));
+					break;
+			}
+			$unit_array[] = $unit;
+		}
+		
+		return $unit_array;
 	}
 	
 	/**

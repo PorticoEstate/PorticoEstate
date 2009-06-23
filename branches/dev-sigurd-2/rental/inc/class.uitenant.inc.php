@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'tenant', 'inc/model/');
+	include_class('rental', 'unit', 'inc/model/');
 	
 	class rental_uitenant extends rental_uicommon
 	{	
@@ -47,6 +48,8 @@
 		 */
 		protected function json_query($tenant_id = null, $type = 'index', $field_total = 'total_records', $field_results = 'results')
 		{	
+		
+		print_r(rental_unit::get_available_rental_units(1,1));
 			/*  HTTP get variables:
 			 * 
 			 * sort: column to sort

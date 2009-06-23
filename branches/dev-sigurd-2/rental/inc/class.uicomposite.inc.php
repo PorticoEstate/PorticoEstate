@@ -14,8 +14,7 @@
 			'add'		=> true,
 			'add_unit' => true,
 			'remove_unit' => true,
-			'available_units' => true,
-			'available_composites' => true,
+			'orphan_units' => true,
 			'query'		=> true
 		);
 
@@ -47,7 +46,6 @@
 			 * contract_status: filter for contract status
 			 * contract_date: filter for contract dates
 			 */
-			
 			switch($type)
 			{
 				case 'index':
@@ -154,6 +152,41 @@
 						);
 					}
 					break;
+				case 'orphan_units':
+					$composite_data = array();
+					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
+					$composite_data[$field_total] = count(rental_unit::get_orphan_rental_units(0, 100));
+					$composite_data[$field_results] = array();
+					
+					foreach($units as $unit)
+					{
+						$data = &$composite_data[$field_results][];
+						$data['location_code'] = $unit->get_location_code();
+						$data['location_id'] = $unit->get_location_id();
+						$data['loc1'] = $unit->get_location_code_property();
+						$data['address'] = $unit->get_address();
+						$data['area_net'] = $unit->get_area_net();
+						$data['area_gros'] = $unit->get_area_gros();
+						$data['loc1_name'] = $unit->get_property_name();
+
+						if($unit instanceof rental_building)
+						{
+							$data['loc2_name'] = $unit->get_building_name();
+						}
+						if($unit instanceof rental_floor)
+						{
+							$data['loc3_name'] = $unit->get_floor_name();
+						}
+						if($unit instanceof rental_section)
+						{
+							$data['loc4_name'] = $unit->get_section_name();
+						}
+						if($unit instanceof rental_room)
+						{
+							$data['loc5_name'] = $unit->get_room_name();
+						}
+					}
+					break;
 					
 			}
 			
@@ -232,7 +265,7 @@
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if(phpgw::get_var('id') && $type = phpgw::get_var('type'))
+				if((phpgw::get_var('id') && $type = phpgw::get_var('type')) || (phpgw::get_var('type') == 'orphan_units'))
 				{
 					$id = phpgw::get_var('id');
 					$type = phpgw::get_var('type');
@@ -326,23 +359,17 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
 			
 		}
-		
-		///View available composites
-		public function available_composites()
-		{			
+
+		/**
+		 * Get a list of rental units or areas that are not tied to any rental composite
+		 * 
+		 */
+		public function orphan_units()
+		{
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			self::render_template('composite_list',$data);
-		}
-		
-		///View available rental units
-		public function available_units()
-		{			
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			self::render_template('composite_list',$data);
+			self::render_template('orphan_unit_list', $data);
 		}
 				
 		/**

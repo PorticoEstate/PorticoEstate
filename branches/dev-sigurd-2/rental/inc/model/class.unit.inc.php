@@ -273,6 +273,21 @@ abstract class rental_unit
 		$units = $so->get_included_rental_units($id, $sort = null, $dir = 'asc', $start = 0, $results = null);
 		return $units;
 	}
+	
+	/** 
+	 * Get a list of all rental units that are not part of a rental_composite
+	 * 
+	 * @return 
+	 * @param object $start_row[optional]
+	 * @param object $num_of_rows[optional]
+	 * @param object $sort_field[optional]
+	 * @param object $sort_ascending[optional]
+	 */
+	public static function get_orphan_rental_units($start_row = 0, $num_of_rows = 1000, $sort_field = 'location_code', $sort_ascending = true)
+	{
+		$so = self::get_so();
+		return $so->get_orphan_rental_units($start_row, $num_of_rows, $sort_field, $sort_ascending);
+	}
     
 	/**
 	 * 
