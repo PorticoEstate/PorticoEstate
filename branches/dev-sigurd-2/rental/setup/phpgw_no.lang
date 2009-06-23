@@ -108,6 +108,7 @@ rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
 rental_tenant_account	rental	no	Reskontonummer
+rental_tenant_active	rental	no	Leietakeren er aktiv
 rental_tenant_address	rental	no	Adresse
 rental_tenant_all	rental	no	Alle
 rental_tenant_comments	rental	no	Kommentarer

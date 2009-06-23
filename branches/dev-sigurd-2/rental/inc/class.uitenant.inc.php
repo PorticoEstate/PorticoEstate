@@ -209,9 +209,29 @@
 		 */
 		protected function get_tenant_hash($tenant)
 		{
+			$name = $tenant->get_last_name();
+			if($tenant->get_first_name() != '') // Firstname is set
+			{
+				if($name != '') // There's a lastname
+				{
+					$name .= ', '; // Append comma
+				}
+				$name .= $tenant->get_first_name(); // Append firstname
+			}
+			if($tenant->get_company_name() != '') // There's a company name
+			{
+				if($name != '') // We've already got a name
+				{
+					$name .= ' (' . $tenant->get_company_name() . ')'; // Append company name in parenthesis
+				}
+				else // No name
+				{
+					$name = $tenant->get_company_name(); // Set name to company
+				}
+			}
 			return array(
 				'id' => $tenant->get_id(),
-				'name' => $tenant->get_last_name() . ', ' . $tenant->get_first_name(),
+				'name' => $name,
 				'firstname' => $tenant->get_first_name(),
 				'lastname' => $tenant->get_last_name(),
 				'address' => $tenant->get_address_1() . ', ' . $tenant->get_address_2() . ', ' . $tenant->get_postal_code() . ', ' . $tenant->get_place(),

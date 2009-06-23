@@ -131,6 +131,19 @@
 				<dd>
 					<input type="text" name="reskontro" id="reskontro"><xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if><xsl:attribute name="value"><xsl:value-of select="reskontro"/></xsl:attribute></input>
 				</dd>
+				<dt>
+					<label for="is_active"><xsl:value-of select="php:function('lang', 'rental_tenant_active')" /></label>
+				</dt>
+				<dd>
+					<input type="checkbox" name="is_active" id="is_active">
+						<xsl:if test="../access = 0">
+							<xsl:attribute name="disabled" value="true"/>
+						</xsl:if>
+						<xsl:if test="is_active = 1">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</input>
+				</dd>
 			</dl>
 			<div class="form-buttons">
 				<xsl:if test="../access = 1">
