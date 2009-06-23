@@ -10,7 +10,6 @@
 	//	'rental_contract_price_item',			// Price items from the price book tied to a contract
 	//	'rental_bill_price_item',					// Price items from the price book tied to a past bill
 	//	'rental_bill',										// A sent bill tied to a contract
-	//	'rental_contract_tenant',					// Link table between tenants and contracts
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
 		'rental_unit',										// Link table between property register and rental objects or composites
 	//	'rental_comment',									// Comments to rental composites and tenants
@@ -20,7 +19,7 @@
 		// Admin tables
 		'rental_billing_term',
 		'rental_contract_type',
-		'rental_contract_tenant'
+		'rental_contract_tenant'					// Link table between tenants and contracts
 	//	'rental_price_item',
 	//	'rental_tenant_type',
 	//	'rental_custom_field_type',
