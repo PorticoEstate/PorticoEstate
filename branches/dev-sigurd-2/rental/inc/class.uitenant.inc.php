@@ -125,6 +125,16 @@
 		}
 		
 		/**
+		 * Adds a new tenant and forwards to edit mode for it.
+		 * 
+		 */
+		public function add()
+		{
+			$receipt = rental_tenant::add();
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));
+		}
+		
+		/**
 		 * Convert a rental_contract object into a more XSL-friendly keyed array format
 		 * 
 		 * @param $composite rental_composite to be converted

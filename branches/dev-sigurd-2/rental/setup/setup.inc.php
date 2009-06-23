@@ -1,6 +1,6 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';
-	$setup_info['rental']['version'] = '0.0.7';
+	$setup_info['rental']['version'] = '0.0.8';
 	$setup_info['rental']['app_order'] = 51;
 	$setup_info['rental']['tables'] = array(
 		'rental_tenant',									// Tenants

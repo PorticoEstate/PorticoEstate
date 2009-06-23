@@ -296,5 +296,38 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.0.7';
+	function rental_upgrade0_0_7()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER agresso_id DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER personal_identification_number DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER first_name DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER last_name DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER type_id DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER is_active SET DEFAULT \'true\'');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER title DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER company_name DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER department DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER address_1 DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER address_2 DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER postal_code DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER place DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER phone DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER fax DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER email DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER url DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER post_bank_account_number DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER account_number DROP NOT NULL');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('ALTER TABLE rental_tenant ALTER reskontro DROP NOT NULL');
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.8';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
 	
 ?>

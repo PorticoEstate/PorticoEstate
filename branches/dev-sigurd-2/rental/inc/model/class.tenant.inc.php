@@ -241,5 +241,25 @@
 		}
 		
 		public function get_reskontro() { return $this->reskontro; }
+		
+		/**
+		 * Creates a new tenant.
+		 * 
+		 * @return array(
+		 * 	'id' => int with id of new tenant
+		 *	'msg' => string with any msgs that could be displayed to the user
+		 * )
+		 */
+		public static function add()
+		{
+			$receipt = array
+			(
+				'id' => -1,
+				'msg' => null
+			);
+			$receipt['id'] = self::get_so()->add();
+			return $receipt;
+		}
+		
 	}
 ?>
