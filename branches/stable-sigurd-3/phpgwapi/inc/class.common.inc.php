@@ -83,6 +83,11 @@
 
 			for($i=1;$i<6;++$i)
 			{
+				if(!isset($regs2[$i]) && !isset($regs[$i]))
+				{
+					continue;
+				}
+
 				if($debug) { echo "<br />$i: $regs[$i] - $regs2[$i]"; }
 
 				if($regs2[$i] == $regs[$i])

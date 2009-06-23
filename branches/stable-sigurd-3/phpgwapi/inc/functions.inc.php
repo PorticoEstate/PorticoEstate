@@ -235,7 +235,6 @@
 
 			case E_NOTICE:
 			case E_USER_NOTICE:
-			//case E_STRICT:
 				$log_args['severity'] = 'N';
 				$log->notice($log_args);
 				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'N')
@@ -243,6 +242,17 @@
 					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+			case E_STRICT:
+				$log_args['severity'] = 'S';
+				$log->strict($log_args);
+				if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) && $GLOBALS['phpgw_info']['server']['log_levels']['global_level'] == 'S')
+				{
+		
+		//  		Will find the messages in the log - no need to print to screen
+		//			echo '<p>' . lang('Strict: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+		//			echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				}
+
 			//No default, we just ignore it, for now
 		}
 	}
@@ -476,7 +486,7 @@ HTML;
 	$GLOBALS['phpgw']->session		= createObject('phpgwapi.sessions');
 	$GLOBALS['phpgw']->preferences	= createObject('phpgwapi.preferences');
 	$GLOBALS['phpgw']->applications	= createObject('phpgwapi.applications');
-	print_debug('main class loaded', 'messageonly','api');
+//	print_debug('main class loaded', 'messageonly','api');
 	// This include was here before for the old error class.  I've left it in for the
 	// new log_message class with replaced error.  I'm not sure if it is needed, though. -doug
 	include_once(PHPGW_INCLUDE_ROOT.'/phpgwapi/inc/class.log_message.inc.php');

@@ -1032,7 +1032,8 @@
 		* @deprecated
 		* @access private
 		*/
-		function update($id,$owner,$fields,$access='',$cat_id='',$tid='n')
+		//FIXME Sigurd: This function used to be named "update" - but that conflicts with the parent class - is it used?
+		function update_contact($id,$owner,$fields,$access='',$cat_id='',$tid='n')
 		{
 			$this->update($fields);
 			$this->criteria('contact_id', $id);

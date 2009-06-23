@@ -42,6 +42,8 @@
 		var $cat_id;
 		var $acl_location;
 		var $uicols_related = array();
+		var $start_date;
+		var $end_date;
 
 		var $public_functions = array
 		(

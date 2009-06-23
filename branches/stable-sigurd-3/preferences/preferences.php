@@ -147,7 +147,7 @@
 		$default = '';
 		if (isset($prefs[$name]) || $GLOBALS['type'] != 'user')
 		{
-			$default = $prefs[$name];
+			$default = isset($prefs[$name]) && $prefs[$name] ? $prefs[$name] : ''; 
 		}
 		
 		if ($GLOBALS['type'] == 'user')

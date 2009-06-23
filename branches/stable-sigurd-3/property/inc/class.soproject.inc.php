@@ -34,6 +34,8 @@
 
 	class property_soproject
 	{
+		var $total_records = 0;
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -571,7 +573,7 @@
 			{
 				$budget[] = array(
 					'workorder_id'		=> $this->db->f('workorder_id'),
-					'budget'			=> $this->db->f('budget'),
+					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
 					'calculation'		=> ($this->db->f('calculation')*(1+$this->db->f('addition')/100))+$this->db->f('rig_addition'),
 					'vendor_id'			=> $this->db->f('vendor_id'),

@@ -28,6 +28,7 @@
 			'debug',
 			'info',
 			'notice',
+			'strict',
 			'warn',
 			'error',
 			'fatal',
@@ -45,7 +46,8 @@
 			'W' => 3,
 			'N'	=> 4,
 			'I' => 5,
-			'D' => 6
+			'D' => 6,
+			'S'	=> 7
 		);
 
 		// these are used by the admin appliation when showing the log file.
@@ -57,16 +59,20 @@
 			'W' => 'warn',
 			'N'	=> 'notice',
 			'I' => 'info',
-			'D' => 'debug'
+			'D' => 'debug',
+			'S'	=> 'strict'
 		);
 
 		/**
 		 * Constructor
 		 */
-		/*
+		
 		public function __construct()
-		{}
-		*/
+		{
+//			date_default_timezone_set(date_default_timezone_get());
+			date_default_timezone_set('UTC');
+		}
+
 
 		function checkprefs()
 		{
@@ -172,6 +178,12 @@
 		{
 			$arg_array = func_get_args();
 			return $this->log_if_level('N',  $this->make_parms($arg_array));
+		}
+
+		function strict()
+		{
+			$arg_array = func_get_args();
+			return $this->log_if_level('S',  $this->make_parms($arg_array));
 		}
 
 		function warn()

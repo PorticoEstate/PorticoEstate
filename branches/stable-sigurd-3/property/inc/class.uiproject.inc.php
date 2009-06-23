@@ -186,14 +186,10 @@
    				));
 
    				$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.index',"
-	    											."type_id:'{$type_id}',"
 	    											."query:'{$this->query}',"
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-						 	                        ."lookup:'{$lookup}',"
- 	                        						."lookup_tenant:'{$lookup_tenant}',"
-						 	                        ."lookup_name:'{$lookup_name}',"
-						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."lookup:'{$lookup}',"						 	                        ."cat_id:'{$this->cat_id}',"
 						 	                        ."user_id:'{$this->user_id}',"
 						 	                        ."criteria_id:'{$this->criteria_id}',"
 						 	                        ."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
@@ -417,7 +413,7 @@
 						if($uicols['input_type'][$k]=='text')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= $project_entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]];
 
 							if(isset($project_entry['query_location'][$uicols['name'][$k]]) && $project_entry['query_location'][$uicols['name'][$k]])
 							{
@@ -429,7 +425,7 @@
 								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
 								$uicols['formatter'][$k] = 'myCustom';
 							}
-							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $project_entry[$uicols['name'][$k]])
+							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]])
 							{
 									$datatable['rows']['row'][$j]['column'][$k]['value']		= $project_entry[$uicols['name'][$k]]['text'];
 									$datatable['rows']['row'][$j]['column'][$k]['link']			= $project_entry[$uicols['name'][$k]]['url'];
@@ -485,7 +481,7 @@
 						);
 
 
-						if ($this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
+						if (isset($project_entry) && $this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'view',
@@ -516,7 +512,7 @@
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-						if ($this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
+						if (isset($project_entry) && $this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'edit',
@@ -549,7 +545,7 @@
 
 
 
-						if($this->acl_delete && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_DELETE))
+						if(isset($project_entry) && $this->acl_delete && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_DELETE))
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'delete',
@@ -567,7 +563,7 @@
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-						if ($this->acl_add && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_ADD))
+						if (isset($project_entry) && $this->acl_add && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_ADD))
 						{
 							$datatable['rowactions']['action'][] = array(
 												'my_name' 			=> 'add',
@@ -590,9 +586,9 @@
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';//($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';//($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 					
-					$datatable['headers']['header'][$i]['className']		= $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
+					$datatable['headers']['header'][$i]['className']		= isset($uicols['classname'][$i]) && $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -723,7 +719,7 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}

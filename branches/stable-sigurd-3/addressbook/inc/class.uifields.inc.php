@@ -469,16 +469,16 @@
 
 		function get_apply($key)
 		{
-			if((is_array($this->per_custom_fields) && is_array($this->org_custom_fields)) && 
+			if(isset($this->per_custom_fields) && (is_array($this->per_custom_fields) && isset($this->org_custom_fields) && is_array($this->org_custom_fields)) && 
 					array_key_exists($key, $this->per_custom_fields) && array_key_exists($key, $this->org_custom_fields))
 			{
 				return 'both';
 			}
-			elseif(is_array($this->per_custom_fields) && array_key_exists($key, $this->per_custom_fields))
+			elseif(isset($this->per_custom_fields) && is_array($this->per_custom_fields) && array_key_exists($key, $this->per_custom_fields))
 			{
 				return 'person';
 			}
-			elseif(is_array($this->org_custom_fields) && array_key_exists($key, $this->org_custom_fields))
+			elseif(isset($this->org_custom_fields) && is_array($this->org_custom_fields) && array_key_exists($key, $this->org_custom_fields))
 			{
 				return 'org';
 			}

@@ -44,6 +44,7 @@
 			rmdir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
 			$dh->close();
 		}
+		execMethod('phpgwapi.menu.clear');
 		$GLOBALS['phpgw']->hooks->process('logout');
 		$GLOBALS['phpgw']->session->destroy($sessionid);
 	}
@@ -58,8 +59,6 @@
 			));
 		}
 	}
-
-	execMethod('phpgwapi.menu.clear');
 
 	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 		&& $GLOBALS['phpgw_info']['server']['usecookies'] )

@@ -36,6 +36,8 @@
 	{
 
 		var $bocommon;
+		var $total_records;
+
 		function __construct($bocommon = '')
 		{
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -498,17 +500,12 @@
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
 					$uicols['exchange'][]		= $exchange;
-					$custom = array
+					$uicols['cols_return_extra'][$i] = array
 					(
 						'name'	=> $this->db->f('column_name'),
 						'datatype'	=> $this->db->f('datatype'),
 						'attrib_id'	=> $this->db->f('id')
 					);
-					
-					$cols_return_extra[]		= $custom;
-					
-					$uicols['cols_return_extra'][$i]	= $custom;
-					unset($custom);
 
 					//TODO: move alignment to ui
 					switch ($this->db->f('datatype'))
@@ -688,7 +685,7 @@
 						(
 							'value'		=> $this->db->f($field),
 							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+							'attrib_id'	=> isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id']:''
 						);
 					}
 					$j++;				

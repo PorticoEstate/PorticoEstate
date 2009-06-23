@@ -1293,13 +1293,13 @@
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($uicols['input_type'][$k]!='hidden')
+			//			if($uicols['input_type'][$k]!='hidden')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']			= $attrib_entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['value']			= isset($attrib_entry[$uicols['name'][$k]]) ? $attrib_entry[$uicols['name'][$k]] : '';
 						}
 
-						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
+						if(isset($datatable['rows']['row'][$j]['column'][$k]['name']) && $datatable['rows']['row'][$j]['column'][$k]['name'] == 'up')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'up';//$uicols['name'][$k];
@@ -1308,7 +1308,7 @@
 							$datatable['rows']['row'][$j]['column'][$k]['link']			= 'move_record('.$url.',"' . $this->allrows . '")';
 						}
 
-						if($datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
+						if(isset($datatable['rows']['row'][$j]['column'][$k]['name']) && $datatable['rows']['row'][$j]['column'][$k]['name'] == 'down')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 							$datatable['rows']['row'][$j]['column'][$k]['value']		= 'down';//$uicols['name'][$k];
@@ -1385,9 +1385,9 @@
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				if($uicols['input_type'][$i]!='hidden')
+//				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= (!isset($uicols['formatter'][$i]) || !$uicols['formatter'][$i]?  '""' : $uicols['formatter'][$i]);
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -1462,7 +1462,7 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
 		    				{
 		    					//$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}

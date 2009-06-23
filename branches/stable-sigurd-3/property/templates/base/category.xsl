@@ -33,7 +33,7 @@
 				<xsl:when test="id_type != 'auto'">
 					<tr>
 						<td valign="top">
-							<xsl:value-of select="lang_id"/>
+							<xsl:value-of select="php:function('lang', 'id')"/>
 						</td>
 						<td>
 							<xsl:choose>

@@ -289,7 +289,7 @@
 					//do nothing for now
 			}
 
-			if ( $e )
+			if ( isset($e) && $e )
 			{
 				echo 'could not connect to server';
 //				echo $e->getMessage();

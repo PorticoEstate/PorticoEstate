@@ -275,7 +275,7 @@
 
 			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],'dry_run' => $data['dry_run'],
+											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
 											'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id)));
 			$this->total_records = $this->so->total_records;
 
@@ -296,7 +296,7 @@
 			{
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
 				$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
-				if($origin[0]['location'] == '.ticket')
+				if(isset($origin[0]['location']) && $origin[0]['location'] == '.ticket')
 				{
 					$entry['ticket'] = array
 										(
