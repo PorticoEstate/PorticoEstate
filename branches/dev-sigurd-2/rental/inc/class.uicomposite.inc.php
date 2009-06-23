@@ -20,8 +20,8 @@
 
 		public function __construct()
 		{
-			parent::__construct();
-			
+			parent::__construct(); 
+			 
 			self::set_active_menu('rental::composite');
 		}
 
@@ -250,6 +250,22 @@
 		//Edit rental composite
 		public function edit(){
 			$composite_id = (int)phpgw::get_var('id');
+			if(isset($_POST['save_composite']))
+			{
+				$composite = new rental_composite($composite_id);
+				$composite->set_name(phpgw::get_var('name'));
+				$composite->set_gab_id(phpgw::get_var('gab_id'));
+				$composite->set_address_1(phpgw::get_var('address_1'));
+				$composite->set_has_custom_address($composite->get_address_1() != null && $composite->get_address_1() != '' ? true : false);
+				// XXX: Why do we have to use these functionand not the set_custom_*() ones? Does the SO layer use the incorrect functions?
+				$composite->set_house_number(phpgw::get_var('house_number'));
+				$composite->set_address_2(phpgw::get_var('address_2'));
+				$composite->set_postcode(phpgw::get_var('postcode'));
+				$composite->set_place(phpgw::get_var('place'));
+				$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+				$composite->set_description(phpgw::get_var('description'));
+				$composite->store();
+			}
 			return $this -> viewedit(true, $composite_id);
 		}
 		
