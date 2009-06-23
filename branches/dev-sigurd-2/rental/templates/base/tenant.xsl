@@ -147,7 +147,7 @@
 			</dl>
 			<div class="form-buttons">
 				<xsl:if test="../access = 1">
-					<input type="submit">	
+					<input type="submit" name="save_tenant">	
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_save')"/></xsl:attribute>
 					</input>
 				</xsl:if>
