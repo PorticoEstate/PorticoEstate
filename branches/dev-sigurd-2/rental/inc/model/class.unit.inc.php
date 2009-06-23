@@ -281,14 +281,13 @@ abstract class rental_unit
 	 */
 	public static function get_available_rental_units(int $level, int $composite_id, string $avaiable_at_date = null, $start_row = 0, $num_of_rows = 25, $sort_field = 'location_code', $sort_ascending = true)
 	{
-//		var_dump($level);
 		$level = (int)$level;
 		// First we get all areas on the level we're currently on
 		$unit_array = rental_unit::get_so()->get_unit_array($level, null, 0, 10000, $sort_field, $sort_ascending); // These are the elements the user expects to see
 		$available_unit_array = array();
 		foreach($unit_array as $unit) // We run through each area
 		{
-			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to speciefied composite and there are openings on this unit at specified time
+			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to specified composite and there are openings on this unit at specified time
 			{
 				$add_unit = true; // Tells if we should add unit to list of available units
 				for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
@@ -298,7 +297,7 @@ abstract class rental_unit
 						$related_unit_array = rental_unit::get_so()->get_unit_array($i, $unit->get_location_code(), 0, 10000, null, true);
 						foreach($related_unit_array as $related_unit)
 						{
-							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to speciefied composite and there are openings on this unit at specified time
+							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to specified composite and there are openings on this unit at specified time
 							{
 								// We add the contract dates from the related units to see at what time it's possible to rent the unit
 								$unit->add_contract_date_array($related_unit->get_contract_date_array());
