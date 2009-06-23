@@ -112,7 +112,7 @@
 		
 		///View all contracts
 		public function index()
-		{			
+		{
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -131,7 +131,74 @@
 		public function add()
 		{
 			$receipt = rental_tenant::add();
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uitenant.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_tenant')));
+		}
+		
+		/**
+		 * Displays info about a tenant.
+		 * 
+		 */
+		public function view() {
+			$tenant_id = (int)phpgw::get_var('id');
+			return $this -> viewedit(false, $tenant_id);
+		}
+		
+		/**
+		 * Edits a tenant.
+		 */
+		public function edit(){
+			$tenant_id = (int)phpgw::get_var('id');
+			return $this -> viewedit(true, $tenant_id);
+		}
+		
+		/**
+		 * View or edit tenant
+		 * 
+		 * @param $editable bool true renders fields editable, false renders fields disabled
+		 * @param $tenant_id int with the tenant id	
+		 */
+		protected function viewedit($editable = false, $tenant_id)
+		{
+			$tenant_id = (int)$tenant_id;
+			if($tenant_id > 0) // Id is set
+			{
+				$message = phpgw::get_var('message');
+				$error = phpgw::get_var('error');
+				
+				self::add_javascript('rental', 'rental', 'rental.js');
+				phpgwapi_yui::load_widget('datatable');
+				phpgwapi_yui::load_widget('tabview');
+				
+				$tenant = $this->get_tenant_hash(rental_tenant::get($tenant_id));
+				
+				$tabs = array();
+				
+				foreach(array('rental_tenant_details', 'rental_tenant_contracts', 'rental_tenant_comments', 'rental_tenant_documents') as $tab) {
+					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
+				}
+				
+				phpgwapi_yui::tabview_setup('tenant_edit_tabview');
+
+				$documents = array();
+				
+				$active_tab = phpgw::get_var('active_tab');
+				if (($active_tab == null) || ($active_tab == '')) {
+					$active_tab = 'rental_tenant_details';
+				}
+				
+				$data = array
+				(
+					'tenant' 	=> $tenant,
+					'tenant_id' => $tenant_id,
+					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+					'access' => $editable,
+					'message' => $message,
+					'error' => $error,
+					'cancel_link' => self::link(array('menuaction' => 'rental.uitenant.index')),
+					'dateFormat' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				);				
+				self::render_template('tenant', $data);
+			}
 		}
 		
 		/**
@@ -149,5 +216,6 @@
 				'phone' => $tenant->get_phone()
 			);
 		}
+
 	}
 ?>
