@@ -15,7 +15,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			//$this->bo = CreateObject('rental.bocomposite');
 			self::set_active_menu('rental::tenant');
 		}
 		
@@ -38,9 +37,9 @@
 		}
 
 		/**
-		 * Return a JSON result of rental composite related data
+		 * Return a JSON result of rental tenant related data
 		 * 
-		 * @param $composite_id  rental composite id
+		 * @param $tenant_id  rental tenant id
 		 * @param $type	type of details
 		 * @param $field_total the field name that holds the total number of records
 		 * @param $field_result the field name that holds the query result
@@ -54,7 +53,6 @@
 			 * dir: direction (ascending, descending)
 			 * startIndex: the index to start from in result
 			 * results: number of rows to return
-			 * level: (1-5) property to room
 			 * contract_status: filter for contract status
 			 * contract_date: filter for contract dates
 			 */
@@ -97,18 +95,8 @@
 			{
 				case 'index':
 					$value['actions'] = array(
-						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id']))),
-						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])))
-					);
-					break;
-				case 'included_areas':
-					$value['actions'] = array(
-						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])))
-					);
-					break;
-				case 'available_areas':
-					$value['actions'] = array(
-						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])))
+						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uitenant.view', 'id' => $value['id']))),
+						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uitenant.edit', 'id' => $value['id'])))
 					);
 					break;
 				case 'contracts':
@@ -128,7 +116,6 @@
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			//phpgwapi_yui::load_widget('calendar');
 			
 			$data = array
 			(
