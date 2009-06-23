@@ -1,0 +1,70 @@
+body { background: #fff; }
+a:link, a:visited { color: #00c; text-decoration: none;}
+.clr { clear: both;}
+
+.yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-bd {
+	background-color: #fff;
+}
+
+.ygtv-highlight .ygtv-highlight0 .ygtvlabel{
+}
+
+.ygtv-highlight .ygtv-highlight1 .ygtvlabel{
+	background-color:#ccf;
+}
+
+.ygtv-highlight .ygtv-highlight2 .ygtvlabel {
+	background-color:#ccf;
+}
+
+.yui-layout-hd h2 { color: red; margin: 0; font-size: inherit;}
+#center1 { padding: 10px; }
+#top1, #bottom1 { 
+    background: black; 
+    color: white; 
+    height: 20px; 
+    padding: 4px;
+    font-weight: bolder;
+}
+
+#schedule tr td { border-top: 1px solid #ccc; background: white;}
+#schedule tr td:first-child { background: #eee; }
+#schedule tr.time td { border-top: 1px solid #444;}
+
+.form dl dt {margin-top: .3em; margin-bottom: .2em;}
+.form dl dd { margin-left: 0;}
+
+.form label { font-style: italic; color: #004; font-size: 90%; font-weight: bolder;}
+.form dl.col { width: 20em; float: left;}
+.autocomplete input { position: static !important; width: inherit !important;}
+
+.radiolist { margin-left: 0;}
+.radiolist li { list-style-type: none; }
+.radiolist li label { margin-left: .5em;}
+
+table.form td {border: none; vertical-align: top;}
+
+div.color1 { background: #ccf;}
+div.color2 { background: #cfc;}
+div.color3 { background: #fcc;}
+div.color4 { background: #ffb;}
+div.color5 { background: #bff;}
+div.color6 { background: #fbf;}
+
+#applicationForm .log { margin-left: 0; }
+#applicationForm .log li { 
+    list-style-type: none;
+    margin-bottom: .8em;
+}
+#applicationForm .log li .date { 
+    font-style: italic;
+    font-size: 90%;
+    font-weight: bolder;
+}
+#applicationForm textarea { 
+    width: 50%;
+    height: 8em;
+}
+#applicationForm dl { margin: 0; }
+#applicationForm dl dt { font-weight: bolder; text-style: italic; font-size: 90%; }
+#applicationForm dl dd { margin: 0 0 .5em 0; }

@@ -1,0 +1,100 @@
+/* $Id: README 15562 2004-12-30 06:47:35Z skwashd $ */
+
+NOTE: Due to a conflict with the LDAP schema of QMail the
+	phpgroupware.schema file changed. The UPDATE text file
+	explains a method to update you existing phpgw-accounts
+	to use the new LDAP schema file.
+		
+NOTE: Contact backend and schema for accounts and groups
+	changed as well. Resulting .schema file for openldap is
+	located in this folder ('phpgroupware.schema').
+	phpgwcontact.schema, phpgwaccount.schema is obsolete.
+	OpenLDAP install instruction is updated. Support for OpenLDAP 1.X
+	and iPLANET is not guaranteed.
+	
+NOTE: 	We are in the process of changing the contacts backend.
+	The new contacts backend will only support LDAP contacts
+	as a read only version of the phpGroupWare contacts. The
+	change will also mean that phpGroupWare will only require
+	the inetOrgPerson schema to be loaded.  If you want to use
+	LDAP for contacts do not upgrade to 0.9.16 until further
+	advised.
+
+NOTE2: This file will be changed very soon. Most of what you see here
+       is incomplete for the 0.9.16 branch which is in testing for the ldap
+       features that are planned. 29/Oct/2003
+
+This directory contains schema files for use the with various
+LDAP servers to which we have access.  Openldap 1.X is very
+forgiving, and it is not required to load this schema in all
+cases.  Openldap 2.X is less forgiving and requires schema
+definitions for all objectclasses and attributes.
+
+
+Openldap 1.X:
+
+The following are for use with openldap 1.X:
+	phpgw.oc.conf	defines the phpgwAccount objectclass
+	phpgw.at.conf	defines our special attributes
+
+They should be copied to /etc/openldap and added to
+/etc/openldap/slapd.conf AFTER other similar include lines:
+
+include		/etc/openldap/phpgw.oc.conf
+include		/etc/openldap/phpgw.at.conf
+include		/etc/openldap/phpgwcontact.oc.conf
+include		/etc/openldap/phpgwcontact.at.conf
+
+
+Openldap 2.X:
+
+The following are for use with openldap 2.X:
+	phpgroupware.schema    defines the phpgwAccount objectclass and the attributes
+	                                                 the phpgwGroup objectclass and the attributes
+	                                                 the phpgwContact objectclass and the attributes
+
+These should be copied to /etc/openldap/schema and added to
+/etc/openldap/slapd.conf AFTER other similar include lines.  These files
+rely on core.schema and cosine.schema at least:
+
+include		/etc/openldap/schema/phpgroupware.schema
+
+The Private Enterprise Code/OID for phpgroupware is 1.3.6.1.4.1.9554,
+registered via IANA and assigned on May 16 2001.  This is registered
+under the name Clear River Technologies, LLC.
+
+
+Netscape/iPlanet:
+
+The following are for use with Netscape/iPlanet Directory Server:
+	iplanet/phpgw.at.conf	defines our special attributes for accounts
+	iplanet/phpgw.oc.conf	defines the phpgwAccount objectclass
+	iplanet/phpgwcontact.at.conf	defines our special attributes for contacts
+	iplanet/phpgwcontact.oc.conf	defines the phpgwContact objectclass
+
+They should be copied to /usr/netscape/server4/slapd-HOST/config and added to
+/usr/netscape/server4/slapd-HOST/config/slapd.conf AFTER other similar
+include lines:
+
+include		/etc/openldap/phpgw.oc.conf
+include		/etc/openldap/phpgw.at.conf
+include		/etc/openldap/phpgwcontact.oc.conf
+include		/etc/openldap/phpgwcontact.at.conf
+
+
+
+Some useful info:
+http://howtoforge.org/installing-and-configuring-openldap-on-ubuntu-intrepid-ibex
+http://www.debuntu.org/ldap-server-and-linux-ldap-clients
+
+Modify the slapd.conf file according to your needs and update the configuration of OpenLDAP:
+
+sudo /etc/init.d/slapd stop
+cd /etc/ldap
+sudo mv slapd.d slapd.d.bck
+sudo mkdir slapd.d
+sudo slaptest -f slapd.conf -F slapd.d
+sudo chown -R openldap:openldap slapd.d
+sudo /etc/init.d/slapd start
+
+

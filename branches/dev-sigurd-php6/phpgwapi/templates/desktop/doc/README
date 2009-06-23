@@ -1,0 +1,27 @@
+phpGroupWare desktop template
+Written by Dave Hall 
+
+This template started off as an attempt to show what is possible with web 
+based groupware.  Unfortunately the technology still has a bit of a way to
+go so it is now just a basic XHTML1trans/CSS2/JS template which optimises 
+screen real estate.  The layout is loosely based gnome.
+
+Please refer to the TODO file in this directory for more info on what I
+plan to do with this template set.
+
+The icons used in the template are mostly from the gnome gorilla theme, 
+developed by Jakub 'Jimmac' Steiner <jimmac@ximian.com> (they are all GPL).
+The phpGroupWare images are modified versions of images produced by ov-media.
+The title bar comes from the Crux metacity theme, by Anders Carlsson 
+<andersca@gnu.org> - Copyright 2000 Eazel Inc.  The about icon is the stock
+gnome about icon :)  There are also some random bits I found in the 
+phpGroupWare CVS tree.
+
+Requirements (client side):
+min 800x600 monitor
+Standard compliant browser or one of the following:
+* Firefox 0.8+
+* mozSuite not sure tested on 1.7.5 and it works
+* M$IE6
+* Opera 7.54
+* Konq 3.3+

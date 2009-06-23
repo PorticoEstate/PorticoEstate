@@ -1,0 +1,42 @@
+access changed	todo	en	Access changed
+add main project	todo	en	Add main project
+add sub project	todo	en	Add sub project
+adds or edits a todo item	todo	en	Adds or edits a todo item
+are you sure you want to delete this entry	todo	en	Are you sure you want to delete this entry ?
+assigned to	todo	en	Assigned to
+category changed	todo	en	Category changed
+completed	todo	en	completed
+deletes a todo item	todo	en	Deletes a todo item
+description can not exceed 8000 characters in length	todo	en	Description can not exceed 8000 characters in length !
+description changed	todo	en	Description changed
+do you also want to delete all sub projects ?	todo	en	Do you also want to delete all sub projects ?
+edit main project	todo	en	Edit main project
+edit sub project	todo	en	Edit sub project
+end date changed	todo	en	End date changed
+ending date can not be before start date	todo	en	Ending date can not be before start date !
+entry added	todo	en	Entry added
+high	todo	en	High
+low	todo	en	Low
+nobody	todo	en	Nobody
+normal	todo	en	Normal
+or: days from startdate:	todo	en	or: days from startdate:
+or: select for today:	todo	en	or: select for today:
+parent changed	todo	en	Parent changed
+parent project	todo	en	Parent Project
+please enter a title	todo	en	Please enter a title !
+returns a the total number of records in the database, must call list_todos first	todo	en	Returns a the total number of records in the database, must call list_todos first
+show todo items on main screen	todo	en	Show ToDo items on main screen
+start date changed	todo	en	Start date changed
+status changed	todo	en	Status changed
+title changed	todo	en	Title changed
+to do list	common	en	To Do List
+todo	common	en	To Do List
+todo list	common	en	To Do List
+todo preferences	todo	en	ToDo Preferences
+urgency	todo	en	Urgency
+urgency changed	todo	en	Urgency changed
+view matrix of actual month	todo	en	View matrix of actual month
+view todo item	todo	en	View todo item
+you can only enter numbers for days from now	todo	en	You can only enter numbers for days from now !
+you have entered an invalid start date	todo	en	You have entered an ending invalid date !
+you have entered an invalid end date	todo	en	You have entered an starting invalid date !

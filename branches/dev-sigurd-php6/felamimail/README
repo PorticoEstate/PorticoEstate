@@ -1,0 +1,36 @@
+Comments by Sigurd sep 2008:
+
+This version of FeLaMiMail is a backport from egroupware.
+It depends on libraries that are licensed as version 2.02 of the PHP license
+which is illegal to distribute as a part of GPL licensed code.
+
+If you still want to use this version - you have to head over to egroupware and check out egw-pear into
+felamimail/inc (nothing to install at setup).
+
+You will need to add the include_path at the top of egw-pear/NET/IMAP.php
+
+set_include_path(PHPGW_SERVER_ROOT.'/felamimail/inc/egw-pear'.PATH_SEPARATOR.get_include_path());
+
+That's it.
+------------------
+
+FeLaMiMail
+http://www.egroupware.org
+
+Author:
+-------
+Lars Kneschke	l.kneschke@metaways.de
+
+Thanks to everyone who contributed to FeLaMiMail in the past. 
+
+For example(ordered alphabetical):
+- Christian Binder
+- Randy Houlahan
+- Sebastian Ebling
+
+If you think you belong here too, please feel free to contact me.
+
+Licensing: 
+----------
+This product is distributed under the GPL.  Please read through the file
+COPYING for more information about our license.

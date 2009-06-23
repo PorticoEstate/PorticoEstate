@@ -1,0 +1,56 @@
+function treeInit() { 
+
+	var tree = new YAHOO.widget.TreeView("sidebarMenu", [ 
+		{type:"text", label:"Administration", children: [
+			{type:"text", label:"Utleie", href:"foo.php"},
+		]},
+		{type:"text", label:"Utleie", href: "utleie.php", children: [
+			{type:"text", label:"Dashboard", href:"index.php"},
+			{type:"text", label:"Kontrakter", href:"kontrakter.php", children: [
+        {type:"text", label:"Ny kontrakt steg 1", href:"kontrakt_ny1.php"},
+        {type:"text", label:"Ny kontrakt steg 2", href:"kontrakt_ny2.php"},
+        {type:"text", label:"Ny kontrakt steg 3", href:"kontrakt_ny3.php"},
+        {type:"text", label:"Ny kontrakt steg 4", href:"kontrakt_ny4.php"},
+        {type:"text", label:"Ny kontrakt steg 5", href:"kontrakt_ny5.php"},
+        {type:"text", label:"Ny kontrakt steg 6", href:"kontrakt_ny6.php"},
+        {type:"text", label:"Ny kontrakt steg 7", href:"kontrakt_ny7.php"}
+      ]},
+			{type:"text", label:"Leieobjekter", href:"leieobjekter.php", children: [
+        {type:"text", label:"Nytt leieobjekt", href:"leieobjekt_ny.php"},
+        {type:"text", label:"Ledige arealer", href:"ledige_arealer.php"}
+        ]},
+			{type:"text", label:"Leietakere", href:"leietakere.php", children: [
+        {type:"text", label:"Detaljer", href:"leietaker_vis1.php"},
+        {type:"text", label:"Kontrakter", href:"leietaker_vis2.php"},
+        {type:"text", label:"Kommentarer", href:"leietaker_vis3.php"},
+        {type:"text", label:"Dokument", href:"leietaker_vis4.php"}
+      ]},
+			{type:"text", label:"Budsjett", href:"budsjett.php", children: [
+        {type:"text", label:"Vedlikehold", href:"budsjett_vedlikehold.php"},
+        {type:"text", label:"Investering", href:"budsjett_investering.php"}
+      ]},
+      {type:"text", label:"Regnskap", href:"regnskap.php"},
+      {type:"text", label:"Rapporter", href:"rapporter.php"}
+    	]}
+    ]);
+    tree.render();
+    if(typeof(currentPage) == 'undefined') {
+        currentPage = /([^/#]+)#?\??$/.exec(window.location.href)[1];
+    }
+    var node = tree.getNodeByProperty('href', currentPage);
+    
+    // Keep the node for later
+	var node2 = node;
+	
+	while(node != null){
+		
+		node.expand();
+		node = node.parent;
+	}
+	// Fulfix :) - Well it works
+	var a = node2.getEl();
+
+	YAHOO.util.Dom.addClass(a, "selected");
+} 
+	
+YAHOO.util.Event.onDOMReady(treeInit);

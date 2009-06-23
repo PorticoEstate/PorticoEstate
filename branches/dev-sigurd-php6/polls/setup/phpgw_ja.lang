@@ -1,0 +1,27 @@
+add answer to poll	polls	ja	回答追加
+add answers	polls	ja	回答追加
+add new poll question	polls	ja	質問追加
+add questions	polls	ja	質問追加
+allow users to vote more then once	polls	ja	複数回投票を許可する
+answer	polls	ja	回答
+answer has been added to poll	polls	ja	回答を追加しました
+answer has been updated	polls	ja	回答を訂正しました
+are you sure want to delete this answer ?	polls	ja	この回答を削除してもよろしいでしょうか
+are you sure want to delete this question ?	polls	ja	この質問を削除してもよろしいでしょうか
+edit answer	polls	ja	回答訂正
+edit poll question	polls	ja	質問訂正
+enter poll question	polls	ja	質問内容
+new poll has been added.  you should now add some answers for this poll	polls	ja	質問を追加しました。質問に対する回答を追加してください
+poll question	polls	ja	質問内容
+poll settings	polls	ja	環境設定
+polls	common	ja	電子投票
+question has been updated	polls	ja	質問を訂正しました
+select current poll	polls	ja	既定の質問
+settings updated	polls	ja	設定しました
+show answers	polls	ja	回答表示
+show questions	polls	ja	質問表示
+total votes	polls	ja	投票数
+vote	polls	ja	投票
+voting booth admin	admin	ja	環境設定
+voting booth administration	polls	ja	電子投票環境設定
+which poll	polls	ja	質問選択

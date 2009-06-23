@@ -1,0 +1,112 @@
+rental_contract_all	rental	no	Alle
+rental_contract_billing_external	rental	no	Ekstern
+rental_contract_billing_internal	rental	no	Intern
+rental_contract_billing_type	rental	no	Fakturatype
+rental_contract_composite	rental	no	Leieobjekt
+rental_contract_date_end	rental	no	Til
+rental_contract_date_start	rental	no	Fra
+rental_contract_ended	rental	no	Avsluttet
+rental_contract_from	rental	no	Fra
+rental_contract_investment	rental	no	Investeringskontrakt
+rental_contract_number	rental	no	Kontraktnummer
+rental_contract_type	rental	no	Type
+rental_contract_period	rental	no	Periode
+rental_contract_rental_external	rental	no	Eksternleie
+rental_contract_rental_inn	rental	no	Innleie
+rental_contract_rental_internal	rental	no	Internleie
+rental_contract_tenant	rental	no	Leietaker
+rental_contract_to	rental	no	Til
+rental_contract_status	rental	no	Status
+rental_contract_running	rental	no	Løpende
+rental_contract_under_dismissal	rental	no	Under oppsigelse
+rental_contract_under_planning	rental	no	Under planlegging
+rental_contract_with_billing_type	rental	no	Fakturatype
+rental_cm_add	rental	no	Legg til
+rental_cm_edit	rental	no	Redigér
+rental_cm_remove	rental	no	Fjern
+rental_cm_show	rental	no	Vis
+rental_menu_contracts	rental	no	Kontrakter
+rental_menu_economy	rental	no	Økonomi
+rental_menu_rc	rental	no	Leieobjekter
+rental_menu_rental	rental	no	Utleie
+rental_menu_tenants	rental	no	Leietakere
+rental_menu_reports	rental	no	Rapporter
+rental_messages_new_composite	rental	no	Leieobjektet er opprettet
+rental_rc_active	rental	no	Aktiv
+rental_rc_add_area	rental	no	Legg til areal
+rental_rc_added_areas	rental	no	Inkludert areal
+rental_rc_address	rental	no	Adresse
+rental_rc_all	rental	no	Alle
+rental_rc_area	rental	no	Areal
+rental_rc_area_gros	rental	no	Bruttoareal
+rental_rc_area_net	rental	no	Nettoareal
+rental_rc_area_not_found	rental	no	Kunne ikke finne detaljer om arealet
+rental_rc_availibility	rental	no	Tilgjengelighet
+rental_rc_available_at	no	Ledig på dato
+rental_rc_available	rental	no	Tilgjengelig
+rental_rc_available_from	no	Tilgjengelig fra
+rental_rc_available?	rental	no	Kan leies ut?
+rental_rc_back	rental	no	Tilbake
+rental_rc_building	rental	no	Bygning
+rental_rc_cancel	rental	no	Avbryt
+rental_rc_contract_all	rental	no	Alle
+rental_rc_contract_date	rental	no	Dato
+rental_rc_contract_status	rental	no	Status
+rental_rc_contracts	rental	no	Kontrakter
+rental_rc_contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
+rental_rc_date_end	rental	no	Slutt-dato
+rental_rc_date_start	rental	no	Start-dato
+rental_rc_description	rental	no	Beskrivelse
+rental_rc_details	rental	no	Detaljer
+rental_rc_documents	rental	no	Dokumenter
+rental_rc_elements	rental	no	Elementer
+rental_rc_ended	rental	no	Avsluttet
+rental_rc_floor	rental	no	Etasje
+rental_rc_gab	rental	no	GAB
+rental_rc_house_number	rental	no	Husnummer
+rental_rc_id	rental	no	ID
+rental_rc_land_title	rental	no	Gnr/Bnr
+rental_rc_level	rental	no	Nivå
+rental_rc_name	rental	no	Navn
+rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
+rental_rc_not_available	rental	no	Ikke tilgjengelig
+rental_rc_not_started	rental	no	Ikke startet
+rental_rc_occupied	rental	no	Opptatt
+rental_rc_overridden_address	rental	no	Overstyrt adresse
+rental_rc_post_code	rental	no	Postnummer
+rental_rc_post_place	rental	no	Sted
+rental_rc_property	rental	no	Eiendom
+rental_rc_property_id	rental	no	BKB Identifikator
+rental_rc_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
+rental_rc_rental_composite	rental	no	Leieobjekt
+rental_rc_room	rental	no	Rom
+rental_rc_save	rental	no	Lagre
+rental_rc_section	rental	no	Seksjon
+rental_rc_search	rental	no	Søk
+rental_rc_search_for	rental	no	Søk etter
+rental_rc_search_options	rental	no	Søkevalg
+rental_rc_search_where	rental	no	i 
+rental_rc_section	rental	no	Seksjon
+rental_rc_serial	rental	no	Løpenummer
+rental_rc_tenant	rental	no	Leietaker
+rental_rc_toolbar_filters	rental	no	Filtre
+rental_rc_toolbar_functions	rental	no	Funksjoner
+rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
+rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
+rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
+rental_rc_update	rental	no	Oppdatér
+rental_reset	rental	no	Nullstill
+rental_tenant_account	rental	no	Reskontonummer
+rental_tenant_address	rental	no	Adresse
+rental_tenant_all	rental	no	Alle
+rental_tenant_external	rental	no	Eksterne leietakere
+rental_tenant_id	rental	no	ID
+rental_tenant_internal	rental	no	Interne leietakere
+rental_tenant_name	rental	no	Navn
+rental_tenant_phone	rental	no	Telefon
+rental_tenant_organisation_number	rental	no	Organisasjonsnummer
+rental_tenant_result_unit_number	rental	no	Resultatsenhet
+rental_tenant_ssn	rental	no	Personnummer
+rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
+rental_tenant_toolbar_new	rental	no	Opprett ny leietaker
+rental_tenant_type	rental	no	Type
