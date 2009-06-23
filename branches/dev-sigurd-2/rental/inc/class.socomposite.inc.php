@@ -175,26 +175,34 @@ class rental_socomposite extends rental_socommon
 			$composite = new rental_composite();
 			
 			$composite->set_id($row['id']);
-			$composite->set_description($row['description']);
-			$composite->set_is_active($row['is_active']);
-			$composite->set_name($row['name']);
-			$composite->set_has_custom_address($row['has_custom_address']);
-
-			$composite->set_address_1($row['adresse1']);
-			$composite->set_address_2($row['adresse2']);
-			$composite->set_house_number($row['house_number']);
-			$composite->set_postcode($row['postnummer']);
-			$composite->set_place($row['poststed']);
 			
-			$composite->set_custom_address_1($row['address_1']);
-			$composite->set_custom_address_2($row['address_2']);
-			$composite->set_custom_house_number($row['house_number']);
-			$composite->set_custom_postcode($row['postcode']);
-			$composite->set_custom_place($row['place']);
-						
-			$composite->set_gab_id($row['gab_id']);
-
-			$composites[] = $composite;
+			// If a filter was given to remove the vacant or occupied composites we check for that
+			// now.  Those that do not match the filters are not added to the final composite array.
+			if (!$filters['is_vacant'] || $filters['is_vacant'] == 'both' ||
+					($filters['is_vacant'] == 'vacant' && $composite->is_vacant()) ||
+					($filters['is_vacant'] == 'occupied' && !$composite->is_vacant())) {
+			
+				$composite->set_description($row['description']);
+				$composite->set_is_active($row['is_active']);
+				$composite->set_name($row['name']);
+				$composite->set_has_custom_address($row['has_custom_address']);
+	
+				$composite->set_address_1($row['adresse1']);
+				$composite->set_address_2($row['adresse2']);
+				$composite->set_house_number($row['house_number']);
+				$composite->set_postcode($row['postnummer']);
+				$composite->set_place($row['poststed']);
+				
+				$composite->set_custom_address_1($row['address_1']);
+				$composite->set_custom_address_2($row['address_2']);
+				$composite->set_custom_house_number($row['house_number']);
+				$composite->set_custom_postcode($row['postcode']);
+				$composite->set_custom_place($row['place']);
+							
+				$composite->set_gab_id($row['gab_id']);
+				
+				$composites[] = $composite;
+			}
 		}
 		
 		return $composites;
@@ -505,7 +513,7 @@ class rental_socomposite extends rental_socommon
 		// Class to use for the units
 		$class = self::$unit_class_array[$level]; // Picks the correct class to instanciate
 		$sql = "SELECT $cols FROM $table $joins $condition $order";
-//		var_dump($sql);
+		var_dump($sql);
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $num_of_hits);
 		while ($this->db->next_record()) {
 			$unit = new $class($this->unmarshal($this->db->f('location_code', true), 'string'), $this->unmarshal($this->db->f('location_id', true), 'string'));

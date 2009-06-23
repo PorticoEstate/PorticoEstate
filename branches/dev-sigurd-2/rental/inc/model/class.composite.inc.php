@@ -126,6 +126,10 @@
 			}
 		}
 		
+		/**
+		 * Store the composite in the database.  If the composite has no ID it is assumed to be new and
+		 * inserted for the first time.  The composite is then updated with the new insert id.
+		 */
 		public function store()
 		{
 			$so = self::get_so();
@@ -147,12 +151,48 @@
 			return $this->units; 
 		}
 
+		/**
+		 * Get the contracts associated with this composite
+		 * 
+		 * @return an array of rental_contract objects
+		 * @param object $sort[optional]
+		 * @param object $dir[optional]
+		 * @param object $start[optional]
+		 * @param object $results[optional]
+		 * @param object $status[optional]
+		 * @param object $date[optional]
+		 */
 		public function get_contracts($sort = null, $dir = 'asc', $start = 0, $results = null, $status = null, $date = null)
 		{
 			if (!$this->contracts) {
 				$this->contracts = rental_contract::get_contracts_for_composite($this->get_id(), $sort, $dir, $start, $results, $status, $date);
 			}
 			return $this->contracts;
+		}
+		
+		/**
+		 * Check if the composite is vacant at the given date.  If no date is given, today is used as the date.
+		 * 
+		 * @return true if the composite is vacant, false otherwise
+		 * @param object $date[optional]
+		 */
+		public function is_vacant($date = null)
+		{
+			if (!$date) {
+				// No date to check was specified, so check for right now
+				$date = mktime(00,00,00);
+			}
+			
+			foreach ($this->get_contracts() as $contract) {
+				$start_date = strtotime($contract->get_contract_date()->get_start_date());
+				$end_date = strtotime($contract->get_contract_date()->get_end_date());
+				
+				if (($date > $start_date) && ($date < $end_date)) {
+					return false;
+				}
+			}
+			
+			return true;
 		}
 		
 		

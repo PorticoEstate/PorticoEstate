@@ -14,6 +14,8 @@
 			'add'		=> true,
 			'add_unit' => true,
 			'remove_unit' => true,
+			'available_units' => true,
+			'available_composites' => true,
 			'query'		=> true
 		);
 
@@ -50,7 +52,7 @@
 			{
 				case 'index':
 					$rows = array();
-					$composites = rental_composite::get_all(phpgw::get_var('startIndex'),phpgw::get_var('results'),phpgw::get_var('sort'),phpgw::get_var('dir'),phpgw::get_var('query'),phpgw::get_var('search_option'),array('is_active' => phpgw::get_var('is_active')));
+					$composites = rental_composite::get_all(phpgw::get_var('startIndex'),phpgw::get_var('results'),phpgw::get_var('sort'),phpgw::get_var('dir'),phpgw::get_var('query'),phpgw::get_var('search_option'),array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy')));
 					foreach ($composites as $composite) {
 						$rows[] = $this->get_composite_hash($composite);
 					}
@@ -323,6 +325,24 @@
 			
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
 			
+		}
+		
+		///View available composites
+		public function available_composites()
+		{			
+			self::add_javascript('rental', 'rental', 'rental.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+			self::render_template('composite_list',$data);
+		}
+		
+		///View available rental units
+		public function available_units()
+		{			
+			self::add_javascript('rental', 'rental', 'rental.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+			self::render_template('composite_list',$data);
 		}
 				
 		/**

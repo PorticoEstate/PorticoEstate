@@ -38,7 +38,15 @@
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_rc', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.index') ),
-                    'image'	=> array('property', 'location')
+                    'image'	=> array('property', 'location'),
+					'children' => array(
+						'available_units' => array
+						(
+							'text'	=> $GLOBALS['phpgw']->translation->translate('Available areas', array(), true),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.available_units') ),
+							'image'	=> array('property', 'location'),
+						)
+					)
 				),
 				'tenants' => array
 				(

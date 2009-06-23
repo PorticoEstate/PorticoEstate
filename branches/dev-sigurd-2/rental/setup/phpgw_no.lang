@@ -115,3 +115,7 @@ rental_tenant_ssn	rental	no	Fødselsnummer
 rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
 rental_tenant_toolbar_new	rental	no	Opprett ny leietaker
 rental_tenant_type	rental	no	Type
+rental_rc_vacant	rental	no	Ledig
+rental_rc_occupied	rental	no	Opptatt
+rental_rc_in_operation	rental	no	I drift
+rental_rc_out_of_operation	rental	no	Ikke i drift

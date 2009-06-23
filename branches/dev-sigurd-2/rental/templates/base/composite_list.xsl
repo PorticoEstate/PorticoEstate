@@ -52,7 +52,7 @@
   		<xsl:call-template name="datasource-definition">
   			<xsl:with-param name="number">1</xsl:with-param>
   			<xsl:with-param name="form">list_form</xsl:with-param>
-  			<xsl:with-param name="filters">['ctrl_toggle_active_rental_composites']</xsl:with-param>
+  			<xsl:with-param name="filters">['ctrl_toggle_active_rental_composites', 'ctrl_toggle_occupancy_of_rental_composites']</xsl:with-param>
   			<xsl:with-param name="container_name">datatable-container</xsl:with-param>
   			<xsl:with-param name="context_menu_labels">
 				['<xsl:value-of select="php:function('lang', 'rental_cm_show')"/>',
@@ -157,8 +157,14 @@
 					<td class="toolbarcol" id="filterContainer">
 						<label class="toolbar_element_label" for="ctrl_toggle_active_rental_composites">Tilgjengelighet</label>
 						<select name="is_active" id="ctrl_toggle_active_rental_composites">
-							<option value="active"><xsl:value-of select="php:function('lang', 'rental_rc_available')"/></option>
-							<option value="non_active"><xsl:value-of select="php:function('lang', 'rental_rc_not_available')"/></option>
+							<option value="active"><xsl:value-of select="php:function('lang', 'rental_rc_in_operation')"/></option>
+							<option value="non_active"><xsl:value-of select="php:function('lang', 'rental_rc_out_of_operation')"/></option>
+							<option value="both"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
+						</select>
+						<label class="toolbar_element_label" for="ctrl_toggle_occupancy_of_rental_composites">og</label>
+						<select name="occupancy" id="ctrl_toggle_occupancy_of_rental_composites">
+							<option value="vacant"><xsl:value-of select="php:function('lang', 'rental_rc_vacant')"/></option>
+							<option value="occupied"><xsl:value-of select="php:function('lang', 'rental_rc_occupied')"/></option>
 							<option value="both"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
 						</select>
 					</td>
