@@ -1,3 +1,4 @@
+rental_common_tenant	rental	no	Leietaker
 rental_contract_all	rental	no	Alle
 rental_contract_billing_external	rental	no	Ekstern
 rental_contract_billing_internal	rental	no	Intern
@@ -89,7 +90,6 @@ rental_rc_search_options	rental	no	Søkevalg
 rental_rc_search_where	rental	no	i 
 rental_rc_section	rental	no	Seksjon
 rental_rc_serial	rental	no	Løpenummer
-rental_rc_tenant	rental	no	Leietaker
 rental_rc_toolbar_filters	rental	no	Filtre
 rental_rc_toolbar_functions	rental	no	Funksjoner
 rental_rc_toolbar_functions_new_rc	rental	no	Nytt leieobjekt
@@ -100,6 +100,10 @@ rental_reset	rental	no	Nullstill
 rental_tenant_account	rental	no	Reskontonummer
 rental_tenant_address	rental	no	Adresse
 rental_tenant_all	rental	no	Alle
+rental_tenant_comments	rental	no	Kommentarer
+rental_tenant_contracts	rental	no	Kontrakter
+rental_tenant_details	rental	no	Detaljer
+rental_tenant_documents	rental	no	Dokumenter
 rental_tenant_external	rental	no	Eksterne leietakere
 rental_tenant_id	rental	no	ID
 rental_tenant_internal	rental	no	Interne leietakere
@@ -107,7 +111,7 @@ rental_tenant_name	rental	no	Navn
 rental_tenant_phone	rental	no	Telefon
 rental_tenant_organisation_number	rental	no	Organisasjonsnummer
 rental_tenant_result_unit_number	rental	no	Resultatsenhet
-rental_tenant_ssn	rental	no	Personnummer
+rental_tenant_ssn	rental	no	Fødselsnummer
 rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
 rental_tenant_toolbar_new	rental	no	Opprett ny leietaker
 rental_tenant_type	rental	no	Type
