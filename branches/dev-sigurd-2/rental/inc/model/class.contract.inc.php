@@ -13,6 +13,7 @@
 		protected $type_id;
 		protected $term_id;
 		protected $account;
+		protected $contract_type_title;
 		
 		public function __construct(int $id)
 		{
@@ -68,6 +69,15 @@
 		
 		public function get_account() { return $this->account; }
 		
+		public function get_contract_type_title(){
+			return $this->contract_type_title;
+		}
+		
+		public function set_contract_type_title($title)
+		{
+			$this->contract_type_title = $title;
+		}
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -76,7 +86,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('rental.socomposite');
+				self::$so = CreateObject('rental.socontract');
 			}
 			
 			return self::$so;
@@ -100,6 +110,22 @@
 			$so = self::get_so();
 			return $so->get_contracts($composite_id, $sort = null, $dir = '', $start = 0, $results = 1000, $status = null, $date = null);
 		}
+		
+		
+		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+		{
+			$so = self::get_so();
+			$contracts = $so->get_contract_array($start, $results, $sort, $dir, $query, $search_option, $filters);
+			return $contracts;
+		}
+		
+		public static function get_contract_types(){
+			$so = self::get_so();
+			$contract_types = $so->get_contract_types();
+			return $contract_types;
+		}
+		
+		
 	}
 
 ?>

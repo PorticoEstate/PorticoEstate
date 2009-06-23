@@ -38,7 +38,9 @@
 			
 			function initCalendar(inputFieldID, divContainerID, tableCalendarClassName, calendarTitle) 
 			{
-				var cal = new YAHOO.widget.Calendar(tableCalendarClassName,divContainerID,{navigator:true, title:calendarTitle, close:true, start_weekday:1});
+				var cal = new YAHOO.widget.Calendar(tableCalendarClassName,divContainerID,{navigator:true, title:calendarTitle, close:true, start_weekday:1, LOCALE_WEEKDAYS:"short"});
+				cal.cfg.setProperty("MONTHS_LONG",<xsl:value-of select="php:function('lang', 'rental_common_calendar_months')"/>); 
+				cal.cfg.setProperty("WEEKDAYS_SHORT",<xsl:value-of select="php:function('lang', 'rental_common_calendar_weekdays')"/>);
 				cal.render();
 				cal.hide();
 				YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,cal,true);	
@@ -71,7 +73,11 @@
 				}
 				document.getElementById(array[0]).value = formatDate('<xsl:value-of select="//dateFormat"/>',Math.round(Date.parse(date)/1000));
 				array[1].hide();
+				document.getElementById('updateForm').click();
+				
 			}
+			
+			
 			
 		</script>
 		<div id="rental_user_error">

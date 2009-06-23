@@ -39,7 +39,7 @@
   		<xsl:call-template name="datasource-definition">
   			<xsl:with-param name="number">1</xsl:with-param>
   			<xsl:with-param name="form">list_form</xsl:with-param>
-  			<xsl:with-param name="filters">['ctrl_toggle_contract_status','ctr_toggle_contract_type','ctrl_toggle_billing_type','from_date','to_date']</xsl:with-param>
+  			<xsl:with-param name="filters">['ctrl_toggle_contract_status','ctrl_toggle_contract_type','from_date','to_date']</xsl:with-param>
   			<xsl:with-param name="container_name">datatable-container</xsl:with-param>
   			<xsl:with-param name="context_menu_labels">
 				['<xsl:value-of select="php:function('lang', 'rental_cm_show')"/>',
@@ -64,6 +64,11 @@
 				{
 					key: "date_end",
 					label: "<xsl:value-of select="php:function('lang', 'rental_contract_date_end')"/>",
+				    sortable: true
+				},
+				{
+					key: "title",
+					label: "<xsl:value-of select="php:function('lang', 'rental_contract_title')"/>",
 				    sortable: true
 				},
 				{
@@ -108,16 +113,15 @@
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctr_toggle_contract_type">
 							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/> 
-							<select name="search_option" id="ctr_toggle_contract_type">
-								<option value="all"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
-								<option value="id"><xsl:value-of select="php:function('lang', 'rental_rc_serial')"/></option>
-								<option value="name"><xsl:value-of select="php:function('lang', 'rental_rc_name')"/></option>
-								<option value="address"><xsl:value-of select="php:function('lang', 'rental_rc_address')"/></option>
-								<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
-								<option value="ident"><xsl:value-of select="php:function('lang', 'rental_rc_gab')"/></option>
-								<option value="property_id"><xsl:value-of select="php:function('lang', 'rental_rc_property_id')"/></option>
-							</select>
 						</label>
+						<select name="search_option" id="ctr_toggle_contract_type">
+							<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
+							<option value="id"><xsl:value-of select="php:function('lang', 'rental_contract_id')"/></option>
+							<option value="tenant_name"><xsl:value-of select="php:function('lang', 'rental_contract_tenant_name')"/></option>
+							<option value="composite"><xsl:value-of select="php:function('lang', 'rental_contract_composite')"/></option>
+							<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
+						</select>
+						
 					</td>
 					<td class="toolbarcol" id="searchSubmitContainer">
 						<input type="submit" id="ctrl_search_button" name="ctrl_search_button">
@@ -148,26 +152,21 @@
 							<option value="under_planning"><xsl:value-of select="php:function('lang', 'rental_contract_under_planning')"/></option>
 							<option value="running"><xsl:value-of select="php:function('lang', 'rental_contract_running')"/></option>
 							<option value="under_dismissal"><xsl:value-of select="php:function('lang', 'rental_contract_under_dismissal')"/></option>
+							<option value="fixed"><xsl:value-of select="php:function('lang', 'rental_contract_fixed')"/></option>
 							<option value="ended"><xsl:value-of select="php:function('lang', 'rental_contract_ended')"/></option>
-							<option value="all"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
+							<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
 						</select>
 					</td>
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctrl_toggle_active_rental_composites"><xsl:value-of select="php:function('lang', 'rental_contract_type')"/></label>
-						<select name="is_active" id="ctrl_toggle_active_rental_composites">
-							<option value="rental_inn"><xsl:value-of select="php:function('lang', 'rental_contract_rental_inn')"/></option>
-							<option value="rental_internal"><xsl:value-of select="php:function('lang', 'rental_contract_rental_internal')"/></option>
-							<option value="rental_external"><xsl:value-of select="php:function('lang', 'rental_contract_rental_external')"/></option>
-							<option value="investment_contract"><xsl:value-of select="php:function('lang', 'rental_contract_investment')"/></option>
-							<option value="all"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
-						</select>
-					</td>
-					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_billing_type"><xsl:value-of select="php:function('lang', 'rental_contract_billing_type')"/></label>
-						<select name="is_active" id="ctrl_toggle_billing_type">
-							<option value="internal"><xsl:value-of select="php:function('lang', 'rental_contract_billing_internal')"/></option>
-							<option value="external"><xsl:value-of select="php:function('lang', 'rental_contract_billing_external')"/></option>
-							<option value="all"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
+						<select name="contract_type" id="ctrl_toggle_contract_type">
+							<xsl:for-each select="//contractTypes/id">
+								<xsl:element name="option">
+									<xsl:attribute name="value"><xsl:value-of select="text()"/></xsl:attribute>
+									<xsl:value-of select="../title/text()"/>
+								</xsl:element>
+							</xsl:for-each>
+							<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
 						</select>
 					</td>
 				</tr>
@@ -195,7 +194,12 @@
 						</div>
 					</td>
 					<td class="toolbarcol">
-						<input type="submit">	
+						<input type="submit" id="updateForm">	
+							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
+						</input>
+					</td>
+					<td class="toolbarcol">
+						<input type="button" id="resetDates">	
 							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
 						</input>
 					</td>
