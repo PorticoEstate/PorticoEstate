@@ -81,61 +81,60 @@ class rental_sotenant extends rental_socommon
       return $tenant;
 	}
 
-/**
- * Get a list of composite objects matching the specific filters
- * 
- * @param $start search result offset
- * @param $results number of results to return
- * @param $sort field to sort by
- * @param $query LIKE-based query string
- * @param $filters array of custom filters
- * @return list of rental_tenant objects
-*/
-function get_tenant_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-{
-	$condition = $this->get_conditions($query, $filters,$search_option);
-	$this->db->limit_query("SELECT * FROM rental_tenant WHERE $condition $order", $start, __LINE__, __FILE__, $limit);
-
-	$tenants = array();
-
-	while ($this->db->next_record()) {
-        $row = array();
-		foreach($this->fields as $field => $fparams)
-		{
-			$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
+	/**
+	 * Get a list of composite objects matching the specific filters
+	 * 
+	 * @param $start search result offset
+	 * @param $results number of results to return
+	 * @param $sort field to sort by
+	 * @param $query LIKE-based query string
+	 * @param $filters array of custom filters
+	 * @return list of rental_tenant objects
+	*/
+	function get_tenant_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	{
+		$condition = $this->get_conditions($query, $filters,$search_option);
+		$this->db->limit_query("SELECT * FROM rental_tenant WHERE $condition $order", $start, __LINE__, __FILE__, $limit);
+		
+		$tenants = array();
+		
+		while ($this->db->next_record()) {
+			$row = array();
+			foreach($this->fields as $field => $fparams)
+			{
+				$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
+			}
+			
+			$tenant = new rental_tenant($row['id']);
+			
+			$tenant->set_agresso_id($row['agresso_id']);
+			$tenant->set_personal_identification_number($row['personal_identification_number']);
+			$tenant->set_first_name($row['first_name']);
+			$tenant->set_last_name($row['last_name']);
+			$tenant->set_type_id($row['type_id']);
+			$tenant->set_is_active($row['is_active']);
+			
+			$tenant->set_title($row['title']);
+			$tenant->set_company_name($row['company_name']);
+			$tenant->set_department($row['department']);
+			
+			$tenant->set_address_1($row['address_1']);
+			$tenant->set_address_2($row['address_2']);
+			$tenant->set_postal_code($row['postal_code']);
+			$tenant->set_place($row['place']);
+			
+			$tenant->set_phone($row['phone']);
+			$tenant->set_fax($row['fax']);
+			$tenant->set_email($row['email']);
+			$tenant->set_url($row['url']);
+			$tenant->set_post_bank_account_number($row['post_bank_account_number']);
+			$tenant->set_account_number($row['account_number']);
+			$tenant->set_reskontro($row['reskontro']);
+			
+			$tenants[] = $tenant;
 		}
-
-		$tenant = new rental_tenant($row['id']);
-
-		$tenant->set_agresso_id($row['agresso_id']);
-		$tenant->set_personal_identification_number($row['personal_identification_number']);
-		$tenant->set_first_name($row['first_name']);
-		$tenant->set_last_name($row['last_name']);
-		$tenant->set_type_id($row['type_id']);
-		$tenant->set_is_active($row['is_active']);
-
-		$tenant->set_title($row['title']);
-		$tenant->set_company_name($row['company_name']);
-		$tenant->set_department($row['department']);
-		
-		$tenant->set_address_1($row['address_1']);
-		$tenant->set_address_2($row['address_2']);
-		$tenant->set_postal_code($row['postal_code']);
-		$tenant->set_place($row['place']);
-		
-		$tenant->set_phone($row['phone']);
-		$tenant->set_fax($row['fax']);
-		$tenant->set_email($row['email']);
-		$tenant->set_url($row['url']);
-		$tenant->set_post_bank_account_number($row['post_bank_account_number']);
-		$tenant->set_account_number($row['account_number']);
-		$tenant->set_reskontro($row['reskontro']);
-		
-		$tenants[] = $tenant;
-      }
-
-	return $tenants;
-    }
+		return $tenants;
+	}
 
 	function add()
 	{
