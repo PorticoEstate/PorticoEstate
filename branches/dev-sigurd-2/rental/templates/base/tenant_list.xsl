@@ -90,7 +90,7 @@
 				    sortable: true
 				},
 				{
-					key: "account",
+					key: "reskontro",
 					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_account')"/>",
 				    sortable: true
 				},
@@ -121,6 +121,7 @@
 					<td class="toolbarcol">
 						<label class="toolbar_element_label" for="ctr_toggle_contract_type">
 							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/>
+							<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 							<select name="search_option" id="ctr_toggle_contract_type">
 								<option value="all"><xsl:value-of select="php:function('lang', 'rental_tenant_all')"/></option>
 								<option value="id"><xsl:value-of select="php:function('lang', 'rental_tenant_id')"/></option>

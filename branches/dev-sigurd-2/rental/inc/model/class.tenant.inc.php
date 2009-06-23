@@ -136,12 +136,12 @@ class rental_tenant
 	
 	public function get_type_id() { return $this->type_id; }
 
-	public function set_is_active($is_active)
+	public function set_is_active(bool $is_active)
 	{
-		$this->is_active = $is_active;
+		$this->is_active = (bool)$is_active;
 	}
 	
-	public function get_is_active() { return $this->is_active; }
+	public function is_active() { return $this->is_active; }
 
 	public function set_title($title)
 	{

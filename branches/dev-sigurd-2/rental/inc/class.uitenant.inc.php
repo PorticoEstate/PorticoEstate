@@ -10,7 +10,8 @@
 			'add'		=> true,
 			'edit'		=> true,
 			'index'		=> true,
-			'query'		=> true
+			'query'		=> true,
+			'view'		=> true
 		);
 
 		public function __construct()
@@ -48,7 +49,6 @@
 		 */
 		protected function json_query($tenant_id = null, $type = 'index', $field_total = 'total_records', $field_results = 'results')
 		{	
-		
 			/*  HTTP get variables:
 			 * 
 			 * sort: column to sort
@@ -141,8 +141,7 @@
 		 * 
 		 */
 		public function view() {
-			$tenant_id = (int)phpgw::get_var('id');
-			return $this -> viewedit(false, $tenant_id);
+			return $this -> viewedit(false, (int)phpgw::get_var('id'));
 		}
 		
 		/**
@@ -150,6 +149,31 @@
 		 */
 		public function edit(){
 			$tenant_id = (int)phpgw::get_var('id');
+			if(isset($_POST['save_tenant']))
+			{
+				$tenant = new rental_tenant($tenant_id);
+				$tenant->set_personal_identification_number(phpgw::get_var('personal_identification_number'));
+				$tenant->set_first_name(phpgw::get_var('firstname'));
+				$tenant->set_last_name(phpgw::get_var('lastname'));
+				$tenant->set_title(phpgw::get_var('title'));
+				$tenant->set_company_name(phpgw::get_var('company_name'));
+				$tenant->set_department(phpgw::get_var('department'));
+				$tenant->set_address_1(phpgw::get_var('address1'));
+				$tenant->set_address_2(phpgw::get_var('address2'));
+				$tenant->set_postal_code(phpgw::get_var('postal_code'));
+				$tenant->set_place(phpgw::get_var('place'));
+				$tenant->set_phone(phpgw::get_var('phone'));
+				$tenant->set_fax(phpgw::get_var('fax'));
+				$tenant->set_email(phpgw::get_var('email'));
+				$tenant->set_url(phpgw::get_var('url'));
+				$tenant->set_type_id(phpgw::get_var('type_id'));
+				$tenant->set_post_bank_account_number(phpgw::get_var('post_bank_account_number'));
+				$tenant->set_account_number(phpgw::get_var('account_number'));
+				$tenant->set_reskontro(phpgw::get_var('reskontro'));
+				$tenant->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+				$tenant->store();
+				// XXX: How to get error msgs back to user?
+			}
 			return $this -> viewedit(true, $tenant_id);
 		}
 		
@@ -175,7 +199,7 @@
 				
 				$tabs = array();
 				
-				foreach(array('rental_tenant_details'/*, 'rental_tenant_contracts', 'rental_tenant_comments', 'rental_tenant_documents'*/) as $tab) {
+				foreach(array('rental_tenant_details', 'rental_tenant_contracts', 'rental_tenant_comments', 'rental_tenant_documents') as $tab) {
 					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
 				}
 				
@@ -234,10 +258,26 @@
 			return array(
 				'id' => $tenant->get_id(),
 				'name' => $name,
+				'personal_identification_number' => $tenant->get_personal_identification_number(),
 				'firstname' => $tenant->get_first_name(),
 				'lastname' => $tenant->get_last_name(),
+				'title' => $tenant->get_title(),
+				'company_name' => $tenant->get_company_name(),
+				'department' => $tenant->get_department(),
 				'address' => $tenant->get_address_1() . ', ' . $tenant->get_address_2() . ', ' . $tenant->get_postal_code() . ', ' . $tenant->get_place(),
-				'phone' => $tenant->get_phone()
+				'address1' => $tenant->get_address_1(),
+				'address2' => $tenant->get_address_2(),
+				'postal_code' => $tenant->get_postal_code(),
+			 	'place' => $tenant->get_place(),
+				'phone' => $tenant->get_phone(),
+				'fax' => $tenant->get_fax(),
+				'email' => $tenant->get_email(),
+				'url' => $tenant->get_url(),
+				'type_id' => $tenant->get_type_id(),
+				'post_bank_account_number' => $tenant->get_post_bank_account_number(),
+				'account_number' => $tenant->get_account_number(),
+				'reskontro' => $tenant->get_reskontro(),
+				'is_active' => $tenant->is_active()
 			);
 		}
 

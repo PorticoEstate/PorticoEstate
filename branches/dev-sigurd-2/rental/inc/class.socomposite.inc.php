@@ -686,8 +686,6 @@ class rental_socomposite extends rental_socommon
 	function update($composite)
 	{
 		$id = intval($composite->get_id());
-		$cols = array();
-		$values = array();
 		
 		$values = array(
 			'name = \'' . $composite->get_name() . '\'',
@@ -700,7 +698,6 @@ class rental_socomposite extends rental_socommon
 			'place = \'' . $composite->get_place() . '\''
 		);
 				
-		$cols = join(',', $cols);
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;

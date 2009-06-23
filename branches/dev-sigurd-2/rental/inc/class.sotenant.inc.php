@@ -215,5 +215,46 @@ class rental_sotenant extends rental_socommon
 		
 		return join(' AND ', $clauses);
 	}
+	
+
+	/**
+	 * Update the database values for an existing tenant object.
+	 * 
+	 * @param $tenant the tenant to be updated
+	 * @return result receipt from the db operation
+	 */
+	function update($tenant)
+	{
+		$id = intval($tenant->get_id());
+		$values = array(
+			'personal_identification_number = \'' . $tenant->get_personal_identification_number() . '\'',
+			'first_name = \'' . $tenant->get_first_name() . '\'',
+			'last_name = \'' . $tenant->get_last_name() . '\'',
+			'title = \'' . $tenant->get_title() . '\'',
+			'company_name = \'' . $tenant->get_company_name() . '\'',
+			'department = \'' . $tenant->get_department() . '\'',
+			'address_1 = \'' . $tenant->get_address_1() . '\'',
+			'address_2 = \'' . $tenant->get_address_2() . '\'',
+			'postal_code = \'' . $tenant->get_postal_code() . '\'',
+			'place = \'' . $tenant->get_place() . '\'',
+			'phone = \'' . $tenant->get_phone() . '\'',
+			'fax = \'' . $tenant->get_fax() . '\'',
+			'email = \'' . $tenant->get_email() . '\'',
+			'url = \'' . $tenant->get_url() . '\'',
+			'type_id = \'' . $tenant->get_type_id() . '\'',
+			'post_bank_account_number = \'' . $tenant->get_post_bank_account_number() . '\'',
+			'account_number = \'' . $tenant->get_account_number() . '\'',
+			'reskontro = \'' . $tenant->get_reskontro() . '\'',
+			'is_active = \'' . ($tenant->is_active() ? 'true' : 'false') . '\''
+		);
+				
+		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		
+		$receipt['id'] = $id;
+		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+		
+		return $receipt;
+	}
+	
 }
 ?>

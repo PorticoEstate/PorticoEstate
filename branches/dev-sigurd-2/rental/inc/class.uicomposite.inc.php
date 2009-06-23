@@ -265,6 +265,7 @@
 				$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 				$composite->set_description(phpgw::get_var('description'));
 				$composite->store();
+				// XXX: How to get error msgs back to user?
 			}
 			return $this -> viewedit(true, $composite_id);
 		}
