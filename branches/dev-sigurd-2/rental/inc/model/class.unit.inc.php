@@ -288,6 +288,16 @@ abstract class rental_unit
 		$so = self::get_so();
 		return $so->get_orphan_rental_units($start_row, $num_of_rows, $sort_field, $sort_ascending);
 	}
+	
+	/**
+	 * Get a count of all the orphan rental units.
+	 * 
+	 * @return 
+	 */
+	public static function get_orphan_rental_unit_count()
+	{
+		return self::get_so()->get_orphan_rental_unit_count();
+	}
     
 	/**
 	 * 

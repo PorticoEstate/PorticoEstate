@@ -155,7 +155,7 @@
 				case 'orphan_units':
 					$composite_data = array();
 					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
-					$composite_data[$field_total] = count(rental_unit::get_orphan_rental_units(0, 100));
+					$composite_data[$field_total] = rental_unit::get_orphan_rental_unit_count();
 					$composite_data[$field_results] = array();
 					
 					foreach($units as $unit)

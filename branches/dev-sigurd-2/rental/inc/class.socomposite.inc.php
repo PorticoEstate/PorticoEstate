@@ -788,6 +788,29 @@ class rental_socomposite extends rental_socommon
 		return $unit_array;
 	}
 	
+	function get_orphan_rental_unit_count()
+	{
+		$sql = "SELECT COUNT(id) as rowcount
+							FROM fm_locations
+							LEFT JOIN rental_unit ON
+								(fm_locations.id = rental_unit.location_id)
+							LEFT JOIN fm_location1 ON
+								(fm_locations.location_code = fm_location1.location_code AND fm_locations.level = 1)
+							LEFT JOIN fm_location2 ON
+								(fm_locations.location_code = fm_location2.location_code AND fm_locations.level = 2)
+							LEFT JOIN fm_location3 ON
+								(fm_locations.location_code = fm_location3.location_code AND fm_locations.level = 3)
+							LEFT JOIN fm_location4 ON
+								(fm_locations.location_code = fm_location4.location_code AND fm_locations.level = 4)
+							LEFT JOIN fm_location5 ON
+								(fm_locations.location_code = fm_location5.location_code AND fm_locations.level = 5)
+							WHERE rental_unit.composite_id IS NULL";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		$this->db->query($sql);
+		$this->db->next_record();
+		return $this->unmarshal($this->db->f('rowcount', true), 'int');
+	}
+	
 	/**
 	 * Add a new composite to the database.  Adds the new insert id to the object reference.
 	 * Also saves included rental_unit objects.
