@@ -30,12 +30,11 @@ class rental_socontract extends rental_socommon
 		$clauses = array('1=1');
 		if($query)
 		{
-			
 			$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
 			$like_clauses = array();
 			switch($search_option){
 				case "id":
-					$like_clauses[] = "rental_contract.id LIKE '$query'";
+					$like_clauses[] = "rental_contract.id $this->like $like_pattern";
 					break;
 				case "tenant_name":
 					$like_clauses[] = "rental_tenant.name $this->like $like_pattern";
