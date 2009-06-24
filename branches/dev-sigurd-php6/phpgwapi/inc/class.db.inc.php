@@ -833,6 +833,7 @@
 		{
 			if($this->resultSet)
 			{
+				$name = utf8_encode($name);
 				if( isset($this->Record[$name]) )
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))

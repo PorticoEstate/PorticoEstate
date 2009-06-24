@@ -403,7 +403,7 @@
 				{
 					case 'string':
 					default:
-						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+						$value = utf8_decode(filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 						$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 						break;
 

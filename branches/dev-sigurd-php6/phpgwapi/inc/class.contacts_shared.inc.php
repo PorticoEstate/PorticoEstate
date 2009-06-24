@@ -594,7 +594,7 @@
 			if ($country != $GLOBALS['phpgw_info']['user']['preferences']['common']['country'])
 			{
 				$countryname = $s->get_full_name($country);
-				$a .= $t->set_var('country','&nbsp;°&nbsp;' . lang($countryname));
+				$a .= $t->set_var('country','&nbsp;Â°&nbsp;' . lang($countryname));
 			}
 
 			$a .= $t->fp('out','address_format');

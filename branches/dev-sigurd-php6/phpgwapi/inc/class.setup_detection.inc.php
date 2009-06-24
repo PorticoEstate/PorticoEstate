@@ -62,8 +62,8 @@
 				$GLOBALS['phpgw_setup']->db->query('SELECT * FROM phpgw_applications',__LINE__,__FILE__);
 				while($GLOBALS['phpgw_setup']->db->next_record())
 				{
-					$setup_info[$GLOBALS['phpgw_setup']->db->f('app_name')]['currentver'] = $GLOBALS['phpgw_setup']->db->f('app_version');
-					$setup_info[$GLOBALS['phpgw_setup']->db->f('app_name')]['enabled'] = $GLOBALS['phpgw_setup']->db->f('app_enabled');
+					$setup_info[utf8_decode($GLOBALS['phpgw_setup']->db->f('app_name'))]['currentver'] = $GLOBALS['phpgw_setup']->db->f('app_version');
+					$setup_info[utf8_decode($GLOBALS['phpgw_setup']->db->f('app_name'))]['enabled'] = $GLOBALS['phpgw_setup']->db->f('app_enabled');
 				}
 				/* This is to catch old setup installs that did not have phpgwapi listed as an app */
 				$tmp = null;
@@ -299,7 +299,6 @@
 				$setup_info = $this->get_db_versions($setup_info);
 			}
 
-			// _debug_array($setup_info);
 			if (isset($setup_info['phpgwapi']['currentver']))
 			{
 				if ( isset($setup_info['phpgwapi']['version'])

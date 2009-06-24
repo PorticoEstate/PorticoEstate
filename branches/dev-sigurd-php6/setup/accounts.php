@@ -302,11 +302,13 @@
 				'rights'	=> 1
 			);
 			
-			$group = array('username' => 'default');
-			$defaultgroupid = add_account($group, 'g', array(), $modules);
+			$group = array('username' => 'default');// FIXME Sigurd june 09:very strange - php6 chokes on this passed on
+			$test = array('username' => 'default');
 
-			$group = array('username' => 'admin');
-			$admingroupid   = add_account($group, 'g', array(), array('admin'));
+			$defaultgroupid = add_account($test, 'g', array(), $modules);
+
+			$test = array('username' => 'admin');
+			$admingroupid   = add_account($test, 'g', array(), array('admin'));
 
 			insert_default_prefs($defaultgroupid);	// set some default prefs
 

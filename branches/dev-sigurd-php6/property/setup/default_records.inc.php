@@ -195,9 +195,9 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, 
 # fm_branch
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (1, 'rør', 'rørlegger')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (1, 'roer', 'plummer')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (2, 'maler', 'maler')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (3, 'tomrer', 'Tømrer')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (3, 'tomrer', 'Tormrer')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_branch (id, num, descr) VALUES (4, 'renhold', 'Renhold')");
 
 #
@@ -317,8 +317,8 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_agreement_status (id, desc
 #
 #  fm_ns3420
 #
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet) VALUES ('D00', 'RIGGING, KLARGJØRING', 'RS')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet,tekst2) VALUES ('D20', 'RIGGING, ANLEGGSTOMT', 'RS','TILFØRSEL- OG FORSYNINGSANLEGG')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet) VALUES ('D00', 'RIGGING, KLARGJRING', 'RS')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet,tekst2) VALUES ('D20', 'RIGGING, ANLEGGSTOMT', 'RS','TILFRSEL- OG FORSYNINGSANLEGG')");
 
 #
 # Data-ark for tabell fm_idgenerator

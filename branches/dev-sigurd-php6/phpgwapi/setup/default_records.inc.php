@@ -176,12 +176,12 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id']
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'home email'" 
 			.  ")");
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'work email'" 
 			.  ")");
 	}
@@ -191,39 +191,39 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'home phone'"
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'work phone'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'voice phone'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'msg phone'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES ("
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'pager'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'bbs'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'modem'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'isdn'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'video'" 
 			.  ")");
 	}
@@ -232,11 +232,11 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'home fax'"
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'work fax'" 
 			.  ")");
 	}
@@ -245,11 +245,11 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'mobile (cell) phone'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'car phone'" 
 			.  ")");
 	}
@@ -258,23 +258,23 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'msn'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'aim'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'yahoo'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'icq'" 
 			.  ")");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES ("
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'jabber'" 
 			.  ")");				
 	}
@@ -283,7 +283,7 @@
 	for($i = 0; $i < count($comm_type_ids); $i++)
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (" 
-			. $comm_type_ids[$i]['comm_type_id'] 
+			. $comm_type_ids[$i][b'comm_type_id']
 			. ",'website'" 
 			.  ")");
 	}

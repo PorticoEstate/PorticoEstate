@@ -57,6 +57,10 @@
 		{
 			$form_domain = phpgw::get_var('FormDomain', 'string', 'POST', '');
 			$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'REQUEST', $form_domain);
+			if(!$ConfigDomain)
+			{
+				$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'COOKIE', $form_domain);
+			}
 
 			$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_type'];
 			$GLOBALS['phpgw_info']['server']['db_host']	= $GLOBALS['phpgw_domain'][$ConfigDomain]['db_host'];
@@ -89,6 +93,22 @@
 			$HeaderPW     = phpgw::get_var('HeaderPW');
 			$ConfigLang   = phpgw::get_var('ConfigLang');
 
+			if(!$ConfigDomain)
+			{
+				$ConfigDomain  = phpgw::get_var('ConfigDomain',	'string', 'COOKIE');
+			}
+			if(!$ConfigPW)
+			{
+				$ConfigPW  = phpgw::get_var('ConfigPW',	'string', 'COOKIE');
+			}
+			if(!$HeaderPW)
+			{
+				$HeaderPW  = phpgw::get_var('HeaderPW',	'string', 'COOKIE');
+			}
+			if(!$ConfigLang)
+			{
+				$ConfigLang  = phpgw::get_var('ConfigLang',	'string', 'COOKIE');
+			}
 			/*
 			if(!empty($remoteip) && !$this->checkip($remoteip))
 			{
@@ -615,8 +635,8 @@
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
 			}
-			$newa = ereg_replace('pre','.',$a);
-			$newb = ereg_replace('pre','.',$b);
+			$newa = str_replace('pre','.',$a);
+			$newb = str_replace('pre','.',$b);
 			$testa = explode('.',$newa);
 			if(@$testa[1] == '')
 			{
@@ -704,8 +724,8 @@
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
 			}
-			$newa = ereg_replace('pre','.',$a);
-			$newb = ereg_replace('pre','.',$b);
+			$newa = str_replace('pre','.',$a);
+			$newb = str_replace('pre','.',$b);
 			$testa = explode('.',$newa);
 			if( !isset($testa[3]) || $testa[3] == '')
 			{

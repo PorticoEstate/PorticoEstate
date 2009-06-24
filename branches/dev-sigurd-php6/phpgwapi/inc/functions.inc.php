@@ -316,7 +316,7 @@ HTML;
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
 
-	magic_quotes_runtime(false);
+	//magic_quotes_runtime(false);
 
 // Can't use this yet - errorlog hasn't been created.
 //	print_debug('sane environment','messageonly','api');

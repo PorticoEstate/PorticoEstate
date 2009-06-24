@@ -287,7 +287,7 @@
 		{
 			if ( strpos($entry, 'phpgw_') === 0 )
 			{
-				$z = substr($entry,6,2);
+				$z = utf8_encode(substr($entry,6,2));
 				$languages[$z]['available'] = True;
 			}
 		}
@@ -309,8 +309,9 @@
 
 		$select = '<select name="ConfigLang"' . ($onChange ? ' onChange="this.form.submit();"' : '') . '>' . "\n";
 		$languages = get_langs();
-		while(list($null,$data) = each($languages))
+		foreach($languages as $null => $data)
 		{
+
 			if($data['available'] && !empty($data['lang']))
 			{
 				$selected = '';

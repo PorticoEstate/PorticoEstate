@@ -389,7 +389,7 @@
 						throw new Exception('Group name already in use');
 					}
 				}
-				else if($GLOBALS['phpgw']->accounts->name2id($group))
+				else if($GLOBALS['phpgw']->accounts->name2id($group) > 0)
 				{
 					throw new Exception('Group name already in use');				
 				}

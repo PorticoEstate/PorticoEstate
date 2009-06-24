@@ -77,7 +77,7 @@
 	$setup_tpl->set_var('lang_cookies_must_be_enabled', lang('<b>NOTE:</b> You must have cookies enabled to use setup and header admin!') );
 	
 	// Following to ensure windows file paths are saved correctly
-	set_magic_quotes_runtime(0);
+	//set_magic_quotes_runtime(0);
 
 	$GLOBALS['phpgw_setup']->loaddb();
 
@@ -249,7 +249,7 @@
 				$setup_tpl->set_var($value, lang($newval));
 				break;
 			case 'value':
-				$newval = ereg_replace(' ','_',$newval);
+				$newval = str_replace(' ','_',$newval);
 				/* Don't show passwords in the form */
 				if(ereg('passwd',$value) || ereg('password',$value) || ereg('root_pw',$value))
 				{
@@ -282,7 +282,7 @@
 				}
 				break;
 			case 'hook':
-				$newval = ereg_replace(' ','_',$newval);
+				$newval = str_replace(' ','_',$newval);
 				$setup_tpl->set_var($value, $newval($current_config) );
 				break;
 			default:
