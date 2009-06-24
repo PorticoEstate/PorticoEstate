@@ -36,29 +36,61 @@
 		<script>
 			YAHOO.rental.setupDatasource = new Array();
 			
-			function initCalendar(inputFieldID, divContainerID, tableCalendarClassName, calendarTitle) 
+			function onClickOnInput(event)
 			{
-				var cal = new YAHOO.widget.Calendar(tableCalendarClassName,divContainerID,{navigator:true, title:calendarTitle, close:true, start_weekday:1, LOCALE_WEEKDAYS:"short"});
+				this.align();
+				this.show();
+			}
+			
+			function closeCalender(event)
+			{
+				this.hide();
+			}
+			
+			function clearCalendar(event)
+			{
+				this.clear();
+				document.getElementById(this.inputFieldID).value = '';
+				document.getElementById(this.hiddenField).value = '';
+			}
+			
+			function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField) 
+			{
+				var overlay = new YAHOO.widget.Dialog(
+					divContainerID, 
+					{	visible: false,
+						close: true
+					}
+	            );	
+				
+				var cal = new YAHOO.widget.Calendar(
+					"calendar",
+					calendarBodyId,
+					{ 	navigator:true, 
+						title:'<xsl:value-of select="php:function('lang', 'rental_calendar_title')"/>', 
+						start_weekday:1, 
+						LOCALE_WEEKDAYS:"short"}
+				);
+				
 				cal.cfg.setProperty("MONTHS_LONG",<xsl:value-of select="php:function('lang', 'rental_common_calendar_months')"/>); 
 				cal.cfg.setProperty("WEEKDAYS_SHORT",<xsl:value-of select="php:function('lang', 'rental_common_calendar_weekdays')"/>);
 				cal.render();
-				cal.hide();
-				YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,cal,true);	
-				cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,cal],false);
+				cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField],false);
+				cal.inputFieldID = inputFieldID;
+				cal.hiddenField = hiddenField;
+				
+				YAHOO.util.Event.addListener(closeButton,'click',closeCalender,overlay,true);
+				YAHOO.util.Event.addListener(clearButton,'click',clearCalendar,cal,true);
+				YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,overlay,true);		
 			}
-			
-			function onClickOnInput(event)
-			{
-				this.show();	
-			}
-			
+
 			function onCalendarSelect(type,args,array){
 				var firstDate = args[0][0];
 				var month = firstDate[1] + "";
 				var day = firstDate[2] + "";
 				var year = firstDate[0] + "";
 				var date = month + "/" + day + "/" + year;
-				var hiddenDateField = document.getElementById(array[0] + '_hidden');
+				var hiddenDateField = document.getElementById(array[2]);
 				if(hiddenDateField != null)
 				{
 					if(month &lt; 10)
@@ -73,7 +105,7 @@
 				}
 				document.getElementById(array[0]).value = formatDate('<xsl:value-of select="//dateFormat"/>',Math.round(Date.parse(date)/1000));
 				array[1].hide();
-				document.getElementById('updateForm').click();
+				document.getElementById('ctrl_search_button').click();
 				
 			}
 			

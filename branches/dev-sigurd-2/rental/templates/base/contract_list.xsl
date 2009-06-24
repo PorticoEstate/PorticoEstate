@@ -5,8 +5,23 @@
 		YAHOO.util.Event.onDOMReady(
 			function()
 			{
-				initCalendar('from_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
-				initCalendar('to_date', 'calendarPeriodTo', 'cal1', 'Velg dato');
+				initCalendar(
+					'from_date', 
+					'calendarPeriodFrom', 
+					'calendarPeriodFrom_body', 
+					'Velg dato', 
+					'calendarPeriodFromCloseButton',
+					'calendarPeriodFromClearButton',
+					'from_date_hidden'
+				);
+				initCalendar(
+					'to_date',
+					'calendarPeriodTo',
+					'calendarPeriodTo_body',
+					'Velg dato',
+					'calendarPeriodToCloseButton',
+					'calendarPeriodToClearButton',
+					'to_date_hidden');
 			}
 		);
 
@@ -140,14 +155,15 @@
 				</tr>
 			</table>
 		</div>
+		
+		
 		<div id="datatableToolbar">
 			<table class="datatableToolbar">
 				<tr>	
 					<td class="toolbarlabel">
-						<label><b>Filtre</b></label>
+						<label><b><xsl:value-of select="php:function('lang', 'rental_contract_status')"/></b></label>
 					</td>
 					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_contract_status"><xsl:value-of select="php:function('lang', 'rental_contract_status')"/></label>
 						<select name="contract_status" id="ctrl_toggle_contract_status">
 							<option value="under_planning"><xsl:value-of select="php:function('lang', 'rental_contract_under_planning')"/></option>
 							<option value="running"><xsl:value-of select="php:function('lang', 'rental_contract_running')"/></option>
@@ -158,7 +174,52 @@
 						</select>
 					</td>
 					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_active_rental_composites"><xsl:value-of select="php:function('lang', 'rental_contract_type')"/></label>
+						<label class="toolbar_element_label" for="calendarPeriodFrom"><xsl:value-of select="php:function('lang', 'rental_contract_from')"/></label>
+						<input type="text" name="from_date" id="from_date" size="10"/>
+						<input type="hidden" name="from_date_hidden" id="from_date_hidden"/>
+						<div id="calendarPeriodFrom">
+							<div id="calendarPeriodFrom_body"></div>
+							<div class="calheader">
+								<xsl:element name="button">
+									<xsl:attribute name="id">calendarPeriodFromCloseButton</xsl:attribute>
+									<xsl:value-of select="php:function('lang','rental_calendar_close')"/>
+								</xsl:element>
+								<xsl:element name="button">
+									<xsl:attribute name="id">calendarPeriodFromClearButton</xsl:attribute>
+									<xsl:value-of select="php:function('lang','rental_calendar_clear')"/>
+								</xsl:element>
+							</div>
+						</div>
+					</td>
+					<td class="toolbarcol">
+						<label class="toolbar_element_label" for="calendarPeriodTo"><xsl:value-of select="php:function('lang', 'rental_contract_to')"/></label>
+						<input type="text" name="to_date" id="to_date" size="10"/>
+						<input type="hidden" name="to_date_hidden" id="to_date_hidden"/>
+						<div id="calendarPeriodTo">
+							<div id="calendarPeriodTo_body"></div>
+							<div class="calheader">
+								<xsl:element name="button">
+									<xsl:attribute name="id">calendarPeriodToCloseButton</xsl:attribute>
+									<xsl:value-of select="php:function('lang','rental_calendar_close')"/>
+								</xsl:element>
+								<xsl:element name="button">
+									<xsl:attribute name="id">calendarPeriodToClearButton</xsl:attribute>
+									<xsl:value-of select="php:function('lang','rental_calendar_clear')"/>
+								</xsl:element>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="datatableToolbar">
+			<table class="datatableToolbar">
+				<tr>	
+					<td class="toolbarlabel">
+						<label><b>Filtre</b></label>
+					</td>
+					<td class="toolbarcol">
+						<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><xsl:value-of select="php:function('lang', 'rental_contract_type')"/></label>
 						<select name="contract_type" id="ctrl_toggle_contract_type">
 							<xsl:for-each select="//contractTypes/id">
 								<xsl:element name="option">
@@ -168,40 +229,6 @@
 							</xsl:for-each>
 							<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'rental_contract_all')"/></option>
 						</select>
-					</td>
-				</tr>
-			</table>
-		</div>
-		
-		<div id="datatableToolbar">
-			<table class="datatableToolbar">
-				<tr>	
-					<td class="toolbarlabel">
-						<label><b><xsl:value-of select="php:function('lang', 'rental_contract_period')"/></b></label>
-					</td>
-					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="calendarPeriodFrom"><xsl:value-of select="php:function('lang', 'rental_contract_from')"/></label>
-						<input type="text" name="from_date" id="from_date" size="10"/>
-						<input type="hidden" name="from_date_hidden" id="from_date_hidden"/>
-						<div id="calendarPeriodFrom">
-						</div>
-					</td>
-					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="calendarPeriodTo"><xsl:value-of select="php:function('lang', 'rental_contract_to')"/></label>
-						<input type="text" name="to_date" id="to_date" size="10"/>
-						<input type="hidden" name="to_date_hidden" id="to_date_hidden"/>
-						<div id="calendarPeriodTo">
-						</div>
-					</td>
-					<td class="toolbarcol">
-						<input type="submit" id="updateForm">	
-							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
-						</input>
-					</td>
-					<td class="toolbarcol">
-						<input type="button" id="resetDates">	
-							<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_update')"/></xsl:attribute>
-						</input>
 					</td>
 				</tr>
 			</table>

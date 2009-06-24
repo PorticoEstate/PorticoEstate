@@ -168,6 +168,11 @@ td.toolbarcol {
 	padding-left: 1em;
 	}
 	
+div.calendarButtons {
+		vertical-align:middle;
+		background-color: grey;
+	}
+	
 label.toolbar_element_label {
 	padding-left: .25em;
 	padding-right: .50em;
