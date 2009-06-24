@@ -1,3 +1,6 @@
+rental_calendar_clear	rental	no	Nullstill
+rental_calendar_close	rental	no	Lukk
+rental_calendar_title	rental	no	Velg dato
 rental_common_account_number	rental	no	Kontonummer
 rental_common_calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 rental_common_calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
