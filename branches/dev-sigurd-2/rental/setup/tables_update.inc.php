@@ -343,5 +343,24 @@
 			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.9';
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
-	}	
+	}
+	
+	$test[] = '0.0.9';
+	function rental_upgrade0_0_9()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_tenant DROP COLUMN type_id");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_contract_tenant RENAME COLUMN tenant_id TO party_id");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_tenant RENAME TO rental_party");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE rental_contract_tenant RENAME TO rental_contract_party");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.0.10';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
 ?>

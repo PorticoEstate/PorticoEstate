@@ -148,14 +148,13 @@
 			'uc' => array()
 		),
 		// A tenant
-		'rental_tenant' => array(
+		'rental_party' => array(
 				'fd' => array(
 					'id' =>	array('type' => 'auto', 'nullable' => false),
 					'agresso_id' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'personal_identification_number' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'first_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'last_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
-					'type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 					'is_active' =>	array('type' => 'bool', 'nullable' => false, 'default' => 'true'),
 					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'company_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
@@ -180,16 +179,16 @@
 				'uc' => array()
 		),
 		// Tenant to contract relationship
-		'rental_contract_tenant' => array(
+		'rental_contract_party' => array(
 			'fd' => array(
 				'id' => 			array('type' => 'auto', 'nullable' => false),
 				'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'tenant_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
 			'pk' => array('id'),
 			'fk' => array(
 					'rental_contract' => array('contract_id' => 'id'),
-					'rental_tenant' => array('tenant_id' => 'id')
+					'rental_party' => array('party_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
