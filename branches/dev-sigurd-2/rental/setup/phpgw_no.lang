@@ -14,10 +14,10 @@ rental_common_phone	rental	no	Telefon
 rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_postal_code_place	rental	no	Postnummer/-sted
 rental_common_reskontro	rental	no	Reskontronummer
-rental_common_tenant	rental	no	Leietaker
+rental_common_party	rental	no	Kontraktspartner
 rental_common_title	rental	no	Stillingstittel
 rental_common_url	rental	no	Nettsted
-rental_common_tenant_type	rental	no	Type leietaker
+rental_common_party_type	rental	no	Type kontraktspartner
 rental_common_title	rental	no	Tittel
 rental_contract_all	rental	no	Alle
 rental_contract_billing_external	rental	no	Ekstern
@@ -58,7 +58,7 @@ rental_menu_economy	rental	no	Økonomi
 rental_menu_rc	rental	no	Leieobjekter
 rental_menu_orphan_units	rental	no	Ubrukte arealer
 rental_menu_rental	rental	no	Utleie
-rental_menu_parties	rental	no	Leietakere
+rental_menu_parties	rental	no	Kontraktspartnere
 rental_menu_reports	rental	no	Rapporter
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspartner er opprettet
@@ -126,7 +126,7 @@ rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
 rental_party_account	rental	no	Reskontonummer
-rental_party_active	rental	no	Leietakeren er aktiv
+rental_party_active	rental	no	Kontraktspartneren er aktiv
 rental_party_address	rental	no	Adresse
 rental_party_all	rental	no	Alle
 rental_party_comments	rental	no	Kommentarer
