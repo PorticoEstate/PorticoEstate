@@ -8,11 +8,11 @@
 </xsl:template>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<h3><xsl:value-of select="php:function('lang', 'rental_common_tenant')" />: <xsl:value-of select="tenant/name"/></h3>
-	<div id="tenant_edit_tabview" class="yui-navset">
+	<h3><xsl:value-of select="php:function('lang', 'rental_common_party')" />: <xsl:value-of select="party/name"/></h3>
+	<div id="party_edit_tabview" class="yui-navset">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<xsl:apply-templates select="tenant"/>
+			<xsl:apply-templates select="party"/>
 			<div id="contracts">
 			    <xsl:call-template name="datatable_contracts" />
 			</div>
@@ -20,12 +20,12 @@
 	</div>		
 </xsl:template>
 
-<xsl:template match="tenant" xmlns:php="http://php.net/xsl">
+<xsl:template match="party" xmlns:php="http://php.net/xsl">
 	<div id="details">
 		<form action="#" method="post">
 			<dl class="proplist-col">
 				<dt>
-					<label for="personal_identification_number"><xsl:value-of select="php:function('lang', 'rental_tenant_ssn')" /> / <xsl:value-of select="php:function('lang', 'rental_tenant_organisation_number')" /></label>
+					<label for="personal_identification_number"><xsl:value-of select="php:function('lang', 'rental_party_ssn')" /> / <xsl:value-of select="php:function('lang', 'rental_party_organisation_number')" /></label>
 				</dt>
 				<dd>
 					<input type="text" name="personal_identification_number" id="personal_identification_number"><xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if><xsl:attribute name="value"><xsl:value-of select="personal_identification_number"/></xsl:attribute></input>
@@ -102,15 +102,15 @@
 			</dl>
 			<dl class="proplist-col">
 				<dt>
-					<label for="type_id"><xsl:value-of select="php:function('lang', 'rental_common_tenant_type')" /></label>
+					<label for="type_id"><xsl:value-of select="php:function('lang', 'rental_common_party_type')" /></label>
 				</dt>
 				<dd>
 					<input type="text" name="type_id" id="type_id"><xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if><xsl:attribute name="value"><xsl:value-of select="type_id"/></xsl:attribute></input>
 					<!-- TODO:
 					<select name="type_id" id="type_id">
 						<xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if>
-						<option value="internal"><xsl:value-of select="php:function('lang', 'rental_tenant_internal')"/></option>
-						<option value="external"><xsl:value-of select="php:function('lang', 'rental_tenant_external')"/></option>
+						<option value="internal"><xsl:value-of select="php:function('lang', 'rental_party_internal')"/></option>
+						<option value="external"><xsl:value-of select="php:function('lang', 'rental_party_external')"/></option>
 					</select>
 					 -->
 				</dd>
@@ -133,7 +133,7 @@
 					<input type="text" name="reskontro" id="reskontro"><xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if><xsl:attribute name="value"><xsl:value-of select="reskontro"/></xsl:attribute></input>
 				</dd>
 				<dt>
-					<label for="is_active"><xsl:value-of select="php:function('lang', 'rental_tenant_active')" /></label>
+					<label for="is_active"><xsl:value-of select="php:function('lang', 'rental_party_active')" /></label>
 				</dt>
 				<dd>
 					<input type="checkbox" name="is_active" id="is_active">
@@ -148,7 +148,7 @@
 			</dl>
 			<div class="form-buttons">
 				<xsl:if test="../access = 1">
-					<input type="submit" name="save_tenant">	
+					<input type="submit" name="save_party">	
 						<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'rental_rc_save')"/></xsl:attribute>
 					</input>
 				</xsl:if>
@@ -216,7 +216,7 @@
 					},
 					{
 						key: "tentant",
-						label: "<xsl:value-of select="php:function('lang', 'rental_common_tenant')"/>",
+						label: "<xsl:value-of select="php:function('lang', 'rental_common_party')"/>",
 					    sortable: false
 					},
 					{

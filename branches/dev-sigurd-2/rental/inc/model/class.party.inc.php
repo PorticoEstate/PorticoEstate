@@ -7,7 +7,7 @@
 phpgw::import_class('rental.bocommon');
 include_class('rental', 'contract', 'inc/model/');
 
-class rental_tenant
+class rental_party
 {
 	public static $so;
 
@@ -52,17 +52,17 @@ class rental_tenant
 	public static function get_so()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('rental.sotenant');
+			self::$so = CreateObject('rental.soparty');
 		}
 		
 		return self::$so;
 	}
 	
 	/**
-	 * Return a single rental_tenant object based on the provided id
+	 * Return a single rental_party object based on the provided id
 	 * 
-	 * @param $id tenant id
-	 * @return a rental_tenant
+	 * @param $id party id
+	 * @return a rental_party
 	 */
 	public static function get($id)
 	{
@@ -74,12 +74,12 @@ class rental_tenant
 	public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{	
 		$so = self::get_so();
-		$tenants = $so->get_tenant_array($start, $results, $sort, $dir, $query, $search_option, $filters);
-		return $tenants;
+		$partys = $so->get_party_array($start, $results, $sort, $dir, $query, $search_option, $filters);
+		return $partys;
 	}
 	
 	/**
-	 * Return a list of the contracts this tenant is associated with
+	 * Return a list of the contracts this party is associated with
 	 * 
 	 * @return a list of rental_contract objects
 	 */
@@ -260,10 +260,10 @@ class rental_tenant
 	}
 	
 	/**
-	 * Creates a new tenant.
+	 * Creates a new party.
 	 * 
 	 * @return array(
-	 * 	'id' => int with id of new tenant
+	 * 	'id' => int with id of new party
 	 *	'msg' => string with any msgs that could be displayed to the user
 	 * )
 	 */

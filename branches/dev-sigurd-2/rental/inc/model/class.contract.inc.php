@@ -7,13 +7,15 @@
 		public static $so;
 		
 		protected $id;
-		protected $tenant;
+		protected $parties;
 		protected $contract_date;
 		protected $billing_start_date;
 		protected $type_id;
 		protected $term_id;
 		protected $account;
 		protected $contract_type_title;
+		protected $party_name;
+		protected $composite_name;
 		
 		public function __construct(int $id)
 		{
@@ -27,12 +29,12 @@
 		
 		public function get_id() { return $this->id; }
 		
-		public function set_tenants($tenants)
+		public function set_parties($parties)
 		{
-			$this->tenant = $tenants;
+			$this->parties = $parties;
 		}
 		
-		public function get_tenants() { return $this->tenants; }
+		public function get_parties() { return $this->parties; }
 		
 		public function set_contract_date($date)
 		{
@@ -76,6 +78,24 @@
 		public function set_contract_type_title($title)
 		{
 			$this->contract_type_title = $title;
+		}
+		
+		public function get_party_name(){
+			return $this->party_name;
+		}
+		
+		public function set_party_name($name)
+		{
+			$this->party_name = $name;
+		}
+		
+		public function get_composite_name(){
+			return $this->composite_name;
+		}
+		
+		public function set_composite_name($name)
+		{
+			$this->composite_name = $name;
 		}
 		
 		/**

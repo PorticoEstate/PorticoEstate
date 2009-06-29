@@ -24,6 +24,7 @@ rental_contract_billing_external	rental	no	Ekstern
 rental_contract_billing_internal	rental	no	Intern
 rental_contract_billing_type	rental	no	Fakturatype
 rental_contract_composite	rental	no	Leieobjekt
+rental_contract_composite_name	rental	no	Navn på leieobjekt
 rental_contract_date_end	rental	no	Til
 rental_contract_date_start	rental	no	Fra
 rental_contract_ended	rental	no	Avsluttet
@@ -33,12 +34,15 @@ rental_contract_id	rental	no	Kontraksnummer
 rental_contract_investment	rental	no	Investeringskontrakt
 rental_contract_number	rental	no	Kontraktnummer
 rental_contract_type	rental	no	Type
+rental_contract_partner	rental	no	Kontraktspartner
+rental_contract_partner_name	rental	no	Navn på kontraktspartner
 rental_contract_period	rental	no	Periode
 rental_contract_rental_external	rental	no	Eksternleie
 rental_contract_rental_inn	rental	no	Innleie
 rental_contract_rental_internal	rental	no	Internleie
-rental_contract_tenant	rental	no	Leietaker
-rental_contract_tenant_name	rental	no	Navn på leietaker
+rental_contract_party	rental	no	Kontraktspartner
+rental_contract_party_name	rental	no	Navn på kontraktspartnr
+rental_contract_title	rental	no	Tittel
 rental_contract_to	rental	no	Til
 rental_contract_status	rental	no	Status
 rental_contract_running	rental	no	Løpende
@@ -54,10 +58,10 @@ rental_menu_economy	rental	no	Økonomi
 rental_menu_rc	rental	no	Leieobjekter
 rental_menu_orphan_units	rental	no	Ubrukte arealer
 rental_menu_rental	rental	no	Utleie
-rental_menu_tenants	rental	no	Leietakere
+rental_menu_parties	rental	no	Leietakere
 rental_menu_reports	rental	no	Rapporter
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
-rental_messages_new_tenant	rental	no	Leietakeren er opprettet
+rental_messages_new_party	rental	no	Kontraktspartner er opprettet
 rental_rc_active	rental	no	Aktiv
 rental_rc_add_area	rental	no	Legg til areal
 rental_rc_added_areas	rental	no	Inkludert areal
@@ -121,25 +125,25 @@ rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
-rental_tenant_account	rental	no	Reskontonummer
-rental_tenant_active	rental	no	Leietakeren er aktiv
-rental_tenant_address	rental	no	Adresse
-rental_tenant_all	rental	no	Alle
-rental_tenant_comments	rental	no	Kommentarer
-rental_tenant_contracts	rental	no	Kontrakter
-rental_tenant_details	rental	no	Detaljer
-rental_tenant_documents	rental	no	Dokumenter
-rental_tenant_external	rental	no	Eksterne leietakere
-rental_tenant_id	rental	no	ID
-rental_tenant_internal	rental	no	Interne leietakere
-rental_tenant_name	rental	no	Navn
-rental_tenant_phone	rental	no	Telefon
-rental_tenant_organisation_number	rental	no	Organisasjonsnummer
-rental_tenant_result_unit_number	rental	no	Resultatsenhet
-rental_tenant_ssn	rental	no	Fødselsnummer
-rental_tenant_toolbar_functions_new_tenant	rental	no	Ny leietaker
-rental_tenant_toolbar_new	rental	no	Opprett ny leietaker
-rental_tenant_type	rental	no	Type
+rental_party_account	rental	no	Reskontonummer
+rental_party_active	rental	no	Leietakeren er aktiv
+rental_party_address	rental	no	Adresse
+rental_party_all	rental	no	Alle
+rental_party_comments	rental	no	Kommentarer
+rental_party_contracts	rental	no	Kontrakter
+rental_party_details	rental	no	Detaljer
+rental_party_documents	rental	no	Dokumenter
+rental_party_external	rental	no	Eksterne kontrakspartnere
+rental_party_id	rental	no	ID
+rental_party_internal	rental	no	Interne kontraktspartnere
+rental_party_name	rental	no	Navn
+rental_party_phone	rental	no	Telefon
+rental_party_organisation_number	rental	no	Organisasjonsnummer
+rental_party_result_unit_number	rental	no	Resultatsenhet
+rental_party_ssn	rental	no	Fødselsnummer
+rental_party_toolbar_functions_new_party	rental	no	Ny kontraktspartner
+rental_party_toolbar_new	rental	no	Opprett ny kontraktspartner
+rental_party_type	rental	no	Type
 rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift

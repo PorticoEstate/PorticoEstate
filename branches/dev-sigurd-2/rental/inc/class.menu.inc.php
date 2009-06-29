@@ -26,9 +26,9 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontract.index') ),
                     'image'	=> array('property', 'location'),
 					/*'children' => array(
-						'tenant' => array
+						'party' => array
 						(
-							'text'	=> $GLOBALS['phpgw']->translation->translate('Tenant', array(), true),
+							'text'	=> $GLOBALS['phpgw']->translation->translate('party', array(), true),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontractcenant.index') ),
 							'image'	=> array('property', 'location'),
 						)
@@ -48,10 +48,10 @@
 						)
 					)
 				),
-				'tenants' => array
+				'parties' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_tenants', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uitenant.index') ),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_parties', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uiparty.index') ),
                     'image'	=> array('property', 'location')
 				),
 				'economy' => array

@@ -662,8 +662,8 @@ class rental_socomposite extends rental_socommon
 	     	
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
-				// TODO: include tenant here whenever that db table is ready
-				//$contract->set_tenant($tenant)
+				// TODO: include party here whenever that db table is ready
+				//$contract->set_party($party)
 				
 				$contracts[] = $contract;
 			}

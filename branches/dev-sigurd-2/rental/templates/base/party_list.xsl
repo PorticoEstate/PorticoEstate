@@ -8,16 +8,16 @@
 			function(e)
 			{    	
 	    		YAHOO.util.Event.stopEvent(e);
-	        	window.location = 'index.php?menuaction=rental.uitenant.index';
+	        	window.location = 'index.php?menuaction=rental.uiparty.index';
     		}
     	);
 		YAHOO.util.Event.addListener(
-			'ctrl_add_rental_tenant', 
+			'ctrl_add_rental_party', 
 			'click', 
 			function(e)
 			{    	
 	    		YAHOO.util.Event.stopEvent(e);
-	        	window.location = 'index.php?menuaction=rental.uitenant.add';
+	        	window.location = 'index.php?menuaction=rental.uiparty.add';
     		}
     	);
 	</script>
@@ -25,13 +25,13 @@
 		<table class="pageToolbar">
 			<tr>
 				<td class="toolbarlabel">
-					<label><xsl:value-of select="php:function('lang', 'rental_tenant_toolbar_new')"/></label>
+					<label><xsl:value-of select="php:function('lang', 'rental_party_toolbar_new')"/></label>
 				</td>
 				<td id="pageToolbarSubmit">
 					<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-					<input type="submit" name="ctrl_add_rental_tenant" id="ctrl_add_rental_tenant">
+					<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party">
 						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'rental_tenant_toolbar_functions_new_tenant')"/>	
+							<xsl:value-of select="php:function('lang', 'rental_party_toolbar_functions_new_party')"/>	
 						</xsl:attribute>
 					</input>
 				</td>
@@ -67,31 +67,31 @@
 					['view',
 					'edit']	
 			</xsl:with-param>
-			<xsl:with-param name="source">index.php?menuaction=rental.uitenant.query&amp;phpgw_return_as=json</xsl:with-param>
+			<xsl:with-param name="source">index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json</xsl:with-param>
 			<xsl:with-param name="columnDefinitions">
   				[{
 					key: "id",
-					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_id')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_party_id')"/>",
 				    sortable: true
 				},
 				{
 					key: "name",
-					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_name')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_party_name')"/>",
 				    sortable: true
 				},
 				{
 					key: "address",
-					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_address')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_party_address')"/>",
 				    sortable: true
 				},
 				{
 					key: "phone",
-					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_phone')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_party_phone')"/>",
 				    sortable: true
 				},
 				{
 					key: "reskontro",
-					label: "<xsl:value-of select="php:function('lang', 'rental_tenant_account')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_party_account')"/>",
 				    sortable: true
 				},
 				{
@@ -123,14 +123,14 @@
 							<xsl:value-of select="php:function('lang', 'rental_rc_search_where')"/>
 							<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 							<select name="search_option" id="ctr_toggle_contract_type">
-								<option value="all"><xsl:value-of select="php:function('lang', 'rental_tenant_all')"/></option>
-								<option value="id"><xsl:value-of select="php:function('lang', 'rental_tenant_id')"/></option>
-								<option value="name"><xsl:value-of select="php:function('lang', 'rental_tenant_name')"/></option>
-								<option value="address"><xsl:value-of select="php:function('lang', 'rental_tenant_address')"/></option>
-								<option value="ssn"><xsl:value-of select="php:function('lang', 'rental_tenant_ssn')"/></option>
-								<option value="result_unit_number"><xsl:value-of select="php:function('lang', 'rental_tenant_result_unit_number')"/></option>
-								<option value="organisation_number"><xsl:value-of select="php:function('lang', 'rental_tenant_organisation_number')"/></option>
-								<option value="account"><xsl:value-of select="php:function('lang', 'rental_tenant_account')"/></option>
+								<option value="all"><xsl:value-of select="php:function('lang', 'rental_party_all')"/></option>
+								<option value="id"><xsl:value-of select="php:function('lang', 'rental_party_id')"/></option>
+								<option value="name"><xsl:value-of select="php:function('lang', 'rental_party_name')"/></option>
+								<option value="address"><xsl:value-of select="php:function('lang', 'rental_party_address')"/></option>
+								<option value="ssn"><xsl:value-of select="php:function('lang', 'rental_party_ssn')"/></option>
+								<option value="result_unit_number"><xsl:value-of select="php:function('lang', 'rental_party_result_unit_number')"/></option>
+								<option value="organisation_number"><xsl:value-of select="php:function('lang', 'rental_party_organisation_number')"/></option>
+								<option value="account"><xsl:value-of select="php:function('lang', 'rental_party_account')"/></option>
 							</select>
 						</label>
 					</td>
@@ -158,11 +158,11 @@
 						<label><b>Filtre</b></label>
 					</td>
 					<td class="toolbarcol">
-						<label class="toolbar_element_label" for="ctrl_toggle_tenant_type"><xsl:value-of select="php:function('lang', 'rental_tenant_type')"/></label>
-						<select name="tenant_type" id="ctrl_toggle_tenant_type">
-							<option value="internal"><xsl:value-of select="php:function('lang', 'rental_tenant_internal')"/></option>
-							<option value="external"><xsl:value-of select="php:function('lang', 'rental_tenant_external')"/></option>
-							<option value="all"><xsl:value-of select="php:function('lang', 'rental_tenant_all')"/></option>
+						<label class="toolbar_element_label" for="ctrl_toggle_party_type"><xsl:value-of select="php:function('lang', 'rental_party_type')"/></label>
+						<select name="party_type" id="ctrl_toggle_party_type">
+							<option value="internal"><xsl:value-of select="php:function('lang', 'rental_party_internal')"/></option>
+							<option value="external"><xsl:value-of select="php:function('lang', 'rental_party_external')"/></option>
+							<option value="all"><xsl:value-of select="php:function('lang', 'rental_party_all')"/></option>
 						</select>
 					</td>
 				</tr>

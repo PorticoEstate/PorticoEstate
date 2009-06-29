@@ -93,12 +93,7 @@
 				},
 				{
 					key: "tentant",
-					label: "<xsl:value-of select="php:function('lang', 'rental_common_tenant')"/>",
-				    sortable: false
-				},
-				{
-					key: "billing_type",
-					label: "<xsl:value-of select="php:function('lang', 'rental_contract_billing_type')"/>",
+					label: "<xsl:value-of select="php:function('lang', 'rental_contract_partner')"/>",
 				    sortable: false
 				},
 				{
@@ -132,9 +127,8 @@
 						<select name="search_option" id="ctr_toggle_contract_type">
 							<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
 							<option value="id"><xsl:value-of select="php:function('lang', 'rental_contract_id')"/></option>
-							<option value="tenant_name"><xsl:value-of select="php:function('lang', 'rental_contract_tenant_name')"/></option>
-							<option value="composite"><xsl:value-of select="php:function('lang', 'rental_contract_composite')"/></option>
-							<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
+							<option value="party_name"><xsl:value-of select="php:function('lang', 'rental_contract_partner_name')"/></option>
+							<option value="composite"><xsl:value-of select="php:function('lang', 'rental_contract_composite_name')"/></option>
 						</select>
 						
 					</td>

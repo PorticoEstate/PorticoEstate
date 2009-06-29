@@ -1,13 +1,6 @@
 <?php
 phpgw::import_class('rental.socommon');
-phpgw::import_class('rental.uicommon');
 
-include_class('rental', 'composite', 'inc/model/');
-include_class('rental', 'property', 'inc/model/');
-include_class('rental', 'building', 'inc/model/');
-include_class('rental', 'floor', 'inc/model/');
-include_class('rental', 'section', 'inc/model/');
-include_class('rental', 'room', 'inc/model/');
 include_class('rental', 'contract_date', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
 
@@ -21,7 +14,11 @@ class rental_socontract extends rental_socommon
 					'id'	=> array('type' => 'int'),
 					'date_start' => array('type' => 'date'),
 					'date_end' => array('type' => 'date'),
-					'title'	=> array('type' => 'string')
+					'title'	=> array('type' => 'string'),
+					'composite_name' => array('type' => 'string'),
+					'first_name' => array('type' => 'string'),
+					'last_name' => array('type' => 'string'),
+					'company_name' => array('type' => 'string')
 		));
 	}
 	
@@ -34,24 +31,23 @@ class rental_socontract extends rental_socommon
 			$like_clauses = array();
 			switch($search_option){
 				case "id":
-					$like_clauses[] = "rental_contract.id $this->like $like_pattern";
+					$like_clauses[] = "contract.id $this->like $like_pattern";
 					break;
-				case "tenant_name":
-					$like_clauses[] = "rental_tenant.name $this->like $like_pattern";
+				case "party_name":
+					$like_clauses[] = "party.first_name $this->like $like_pattern";
+					$like_clauses[] = "party.last_name $this->like $like_pattern";
+					$like_clauses[] = "party.company_name $this->like $like_pattern";
 					break;
 				case "composite":
-					$like_clauses[] = "rental_composite.name $this->like $like_pattern";
-					$like_clauses[] = "fm_location1.adresse1 $this->like $like_pattern";
-					$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
-					$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
-					$like_pattern = str_replace('/','',$like_pattern);
-					$like_clauses[] = "substring(fm_gab_location.gab_id from 5 for 9) $this->like $like_pattern";
+					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
-				case "gab":
-					$like_pattern = str_replace('/','',$like_pattern);
-					$like_clauses[] = "fm_gab_location.gab_id $this->like $like_pattern";
+				case "all":
+					$like_clauses[] = "contract.id $this->like $like_pattern";
+					$like_clauses[] = "party.first_name $this->like $like_pattern";
+					$like_clauses[] = "party.last_name $this->like $like_pattern";
+					$like_clauses[] = "party.company_name $this->like $like_pattern";
+					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
-				
 			}
 			
 			
@@ -66,7 +62,7 @@ class rental_socontract extends rental_socommon
 		$filter_clauses = array();
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
 			$type = $filters['contract_type'];
-			$filter_clauses[] = "rental_contract.type_id = $type";
+			$filter_clauses[] = "contract.type_id = $type";
 		}
 		
 		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){
@@ -95,20 +91,20 @@ class rental_socontract extends rental_socommon
 			
 			switch($filters['contract_status']){
 				case 'under_planning':
-					$filter_clauses[] = "rental_contract.date_start > '{$start_date}'";
+					$filter_clauses[] = "contract.date_start > '{$start_date}'";
 					break;
 				case 'running':
-					$filter_clauses[] = "rental_contract.date_start < '{$start_date}' AND rental_contract.date_start = null";
+					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_start = null";
 					break;
 				case 'under_dismissal':
 					
-					$filter_clauses[] = "rental_contract.date_start < '{$start_date}' AND rental_contract.date_end > '{$dismissal_date}' AND rental_contract.date_end < '{$end_date}'";
+					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_end > '{$dismissal_date}' AND contract.date_end < '{$end_date}'";
 					break;
 				case 'fixed':
-					$filter_clauses[] = "rental_contract.date_start < '{$start_date}' AND rental_contract.date_end > '{$end_date}'";
+					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_end > '{$end_date}'";
 					break;
 				case 'ended':
-					$filter_clauses[] = "rental_contract.date_end < '{$end_date}'" ;
+					$filter_clauses[] = "contract.date_end < '{$end_date}'" ;
 					break;
 			}
 		}
@@ -148,16 +144,26 @@ class rental_socontract extends rental_socommon
 	 * @return list of rental_cotract objects
 	 */
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-	{
-		$condition = $this->get_conditions($query, $filters,$search_option);
+	{ 
+		$distinct = "DISTINCT contract.id, ";
+      	$columns_for_list = 'contract.id, contract.date_start, contract.date_end, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+      	$tables = "rental_contract contract";
+      	$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
+		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';
+		$join_composites = 		' LEFT JOIN rental_contract_composite c_c ON (contract.id = c_c.contract_id) LEFT JOIN rental_composite composite ON c_c.composite_id = composite.id';
+		$joins = $join_contract_type.$join_parties.$join_composites;
+      	$condition = $this->get_conditions($query, $filters,$search_option);
+		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
-		$tables = "rental_contract";
-		//$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
-		$joins = 'LEFT JOIN rental_contract_type ON (rental_contract_type.id = rental_contract.type_id)';
-		$cols = 'rental_contract.id, rental_contract.date_start, rental_contract.date_end, rental_contract_type.title';
+		//var_dump("SELECT  $columns_for_list FROM $tables $joins WHERE $condition");
+		//$this->db->limit_query("SELECT  $columns_for_list FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+		
+		/*$temp = 'LEFT OUTER JOIN (rental_contract_party JOIN rental_party ON (rental_contract_party.party_id = rental_party.id)) USING (id)';
+		$temp1 = 'LEFT OUTER JOIN(SELECT rental_party.first_name, rental_party.last_name FROM rental_party INNER JOIN rental_contract_party ON rental_contract_party.party_id = rental_party.id)';
+		$cols = 'rental_contract.id, rental_contract.date_start, rental_contract.date_end, rental_contract_type.title, rental';
 		
 		// Calculate total number of records
-		/*$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');*/
 		$order = $sort ? "ORDER BY $sort $dir ": '';
@@ -165,11 +171,11 @@ class rental_socontract extends rental_socommon
 		if($order != '') // ORDER should be used
 		{
 			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
-			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT * FROM (SELECT $distinct $columns_for_list FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
 		}
 		else
 		{
-			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT $distinct $columns_for_list FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
 		}
 		
 		
@@ -194,6 +200,9 @@ class rental_socontract extends rental_socommon
 			$contract = new rental_contract($row['id']);
 			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
 			$contract->set_contract_type_title($row['title']);
+			$contract->set_party_name($row['company_name'].":".$row['first_name']." ".$row['last_name']);
+			$contract->set_composite_name($row['composite_name']);
+			//var_dump($row);
 			$contracts[] = $contract;
 		}
 		return $contracts;
@@ -261,8 +270,8 @@ class rental_socontract extends rental_socommon
 	     	
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
-				// TODO: include tenant here whenever that db table is ready
-				//$contract->set_tenant($tenant)
+				// TODO: include party here whenever that db table is ready
+				//$contract->set_party($party)
 				
 				$contracts[] = $contract;
 			}

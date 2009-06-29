@@ -393,7 +393,7 @@
 					},
 					{
 						key: "tentant",
-						label: "<xsl:value-of select="php:function('lang', 'rental_common_tenant')"/>",
+						label: "<xsl:value-of select="php:function('lang', 'rental_common_party')"/>",
 					    sortable: false
 					},
 					{

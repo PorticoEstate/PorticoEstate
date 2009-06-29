@@ -153,7 +153,9 @@
 				'id' => $contract->get_id(),
 				'date_start' => $contract->get_contract_date()->get_start_date(),
 				'date_end' => $contract->get_contract_date()->get_end_date(),
-				'title'	=> $contract->get_contract_type_title()
+				'title'	=> $contract->get_contract_type_title(),
+				'composite' => $contract->get_composite_name(),
+				'party' => $contract->get_party_name()
 			);
 		}
 	}
