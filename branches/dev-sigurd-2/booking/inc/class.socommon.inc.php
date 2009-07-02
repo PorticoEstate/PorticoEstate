@@ -159,11 +159,18 @@
 				$like_clauses = array();
 				foreach($this->fields as $field => $params)
 				{
-					if($params['query'] && $params['type'] !== 'int')
+					if($params['query'])
 					{
 						$table = $params['join'] ? $params['join']['table'].'_'.$params['join']['column'] : $this->table_name;
 						$column = $params['join'] ? $params['join']['column'] : $field;
-						$like_clauses[] = "{$table}.{$column} $this->like $like_pattern";
+						if($params['type'] == 'int')
+						{
+							$like_clauses[] = "{$table}.{$column} = ". $this->db->db_addslashes($query);
+						}
+						else
+						{
+							$like_clauses[] = "{$table}.{$column} $this->like $like_pattern";
+						}
 					}
 				}
 				if(count($like_clauses))

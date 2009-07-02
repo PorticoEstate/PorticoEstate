@@ -7,7 +7,7 @@
 		{
 			parent::__construct('bb_application', 
 				array(
-					'id'		=> array('type' => 'int'),
+					'id'		=> array('type' => 'int', 'query' => true),
 					'active'	=> array('type' => 'int'),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'secret'	=> array('type' => 'string', 'required' => true),
@@ -16,7 +16,7 @@
 					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
-					'owner_name'	=> array('type' => 'string',
+					'owner_name'	=> array('type' => 'string', 'query' => true,
 						  'join' 		=> array(
 							'table' 	=> 'phpgw_accounts',
 							'fkey' 		=> 'owner_id',
@@ -31,7 +31,7 @@
 							'column' 	=> 'name'
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
-					'contact_name'	=> array('type' => 'string'),
+					'contact_name'	=> array('type' => 'string', 'query' => true),
 					'contact_email'	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
 					'audience' => array('type' => 'int', 'required' => true,

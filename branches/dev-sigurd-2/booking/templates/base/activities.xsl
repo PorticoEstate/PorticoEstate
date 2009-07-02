@@ -6,7 +6,7 @@
 	<div style="padding: 2em;">
 	    <a class="add" style="text-decoration: none;font-size: 14px;">
 	        <xsl:attribute name="href"><xsl:value-of select="navi/add"/></xsl:attribute>
-	        <xsl:value-of select="lang/add" />
+	        <xsl:value-of select="php:function('lang', 'Add Activity')" />
 	    </a>
 	</div>
 </xsl:if>
