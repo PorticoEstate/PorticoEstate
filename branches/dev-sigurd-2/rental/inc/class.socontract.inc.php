@@ -67,44 +67,30 @@ class rental_socontract extends rental_socommon
 		
 		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){
 			
-			$current_date = date('Y-m-d');
+			$status_date = date('Y-m-d');
 			$timestamp = mktime(0,0,0,date("m")+3,date("d"),date("y"));
-			
-			$start_date = $current_date;
-			$end_date = $current_date;
 			$dismissal_date = date('Y-m-d',$timestamp);
 			
-			if(isset($filters['from_date_hidden']) && $filters['from_date_hidden'] != "")
+			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
 			{
-				$start_date = $filters['from_date_hidden'];
-			}
-			
-			if(isset($filters['to_date_hidden']) && $filters['to_date_hidden'] != "")
-			{
-				$end_date = $filters['to_date_hidden'];
-				$dismissal_timestamp = strtotime(date("Y-m-d", strtotime($end_date)) . " +1 month");;
+				$status_date = $filters['status_date_hidden'];
+				$dismissal_timestamp = strtotime(date("Y-m-d", strtotime($status_date)) . " +3 month");;
 				$dismissal_date = date('Y-m-d',$dismissal_timestamp);
+				//var_dump($dismissal_date);
 			}
-//			var_dump($start_date);
-//			var_dump($end_date);
-//			var_dump($dismissal_date);
 			
 			switch($filters['contract_status']){
 				case 'under_planning':
-					$filter_clauses[] = "contract.date_start > '{$start_date}'";
+					$filter_clauses[] = "contract.date_start > '{$status_date}' OR contract.date_start IS NULL";
 					break;
-				case 'running':
-					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_start = null";
+				case 'active':
+					$filter_clauses[] = "contract.date_start <= '{$status_date}' AND ( contract.date_end >= '{$status_date}' OR contract.date_end IS NULL)";
 					break;
 				case 'under_dismissal':
-					
-					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_end > '{$dismissal_date}' AND contract.date_end < '{$end_date}'";
-					break;
-				case 'fixed':
-					$filter_clauses[] = "contract.date_start < '{$start_date}' AND contract.date_end > '{$end_date}'";
+					$filter_clauses[] = "contract.date_start <= '{$status_date}' AND contract.date_end >= '{$status_date}' AND contract.date_end <= '{$dismissal_date}'";
 					break;
 				case 'ended':
-					$filter_clauses[] = "contract.date_end < '{$end_date}'" ;
+					$filter_clauses[] = "contract.date_end < '{$status_date}'" ;
 					break;
 			}
 		}

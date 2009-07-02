@@ -8,6 +8,7 @@ rental_common_company	rental	no	Foretak
 rental_common_department	rental	no	Avdeling
 rental_common_email	renal	no	E-post
 rental_common_fax	rental	no	Faks
+rental_common_filters 	rental	no	Filtre
 rental_common_firstname	rental	no	Fornavn
 rental_common_lastname	rental	no	Etternavn
 rental_common_phone	rental	no	Telefon
@@ -20,6 +21,7 @@ rental_common_url	rental	no	Nettsted
 rental_common_party_type	rental	no	Type kontraktspartner
 rental_common_title	rental	no	Tittel
 rental_contract_all	rental	no	Alle
+rental_contract_active	rental	no	Aktive
 rental_contract_billing_external	rental	no	Ekstern
 rental_contract_billing_internal	rental	no	Intern
 rental_contract_billing_type	rental	no	Fakturatype
@@ -42,9 +44,11 @@ rental_contract_rental_inn	rental	no	Innleie
 rental_contract_rental_internal	rental	no	Internleie
 rental_contract_party	rental	no	Kontraktspartner
 rental_contract_party_name	rental	no	Navn på kontraktspartnr
+rental_contract_status	rental	no	Status
+rental_contract_status_date	rental	no	den
+rental_contract_status_before	rental	no	før
 rental_contract_title	rental	no	Tittel
 rental_contract_to	rental	no	Til
-rental_contract_status	rental	no	Status
 rental_contract_running	rental	no	Løpende
 rental_contract_under_dismissal	rental	no	Under oppsigelse
 rental_contract_under_planning	rental	no	Under planlegging

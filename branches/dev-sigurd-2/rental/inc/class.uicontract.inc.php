@@ -70,8 +70,7 @@
 										array(
 											'contract_status' => phpgw::get_var('contract_status'),
 											'contract_type' => phpgw::get_var('contract_type'),
-											'from_date_hidden' => phpgw::get_var('from_date_hidden'),
-											'to_date_hidden' => phpgw::get_var('to_date_hidden')
+											'status_date_hidden' => phpgw::get_var('status_date_hidden')
 										));
 					foreach ($contracts as $contract) {
 						$rows[] = $this->get_contract_hash($contract);
@@ -126,20 +125,14 @@
 		
 		///View all contracts
 		public function index()
-		{			
+		{	
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			//phpgwapi_yui::load_widget('calendar');
-			
-			$types = rental_contract::get_contract_types();
-			$data = array
-			(
-				'dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
-				'contractTypes'	=> $types
-			);
-			self::render_template('contract_list',$data);
+			$this->render('contract_list.php');
 		}
+		
+		
 		
 		/**
 		 * Convert a rental_contract object into a more XSL-friendly keyed array format

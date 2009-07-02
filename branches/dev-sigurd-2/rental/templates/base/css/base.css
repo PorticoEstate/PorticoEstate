@@ -1,3 +1,21 @@
+div.content {
+	margin: 2em;	
+}
+
+fieldset {
+	margin-top: 0.5em;	
+}
+
+legend {
+	font-weight: bolder;
+	margin-bottom: 0.2em;	
+}
+
+label {
+	margin-left: 0.3em;
+	margin-right: 0,3em;	
+}
+
 #content {
     margin: 2em 1em;
 }

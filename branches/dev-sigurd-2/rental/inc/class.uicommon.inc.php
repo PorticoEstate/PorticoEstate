@@ -1,6 +1,9 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
 
+	
+	
+	
 	/**
 	 * Cherry pick selected values into a new array
 	 * 
@@ -198,6 +201,33 @@
 				$gab_id = substr($gab_id,4,5).' / '.substr($gab_id,9,4).' / '.substr($gab_id,13,4).' / '.substr($gab_id,17,3);
 			}
 			return $gab_id;
+		}
+		
+		public function render($template,$local_variables = array())
+		{
+			foreach($local_variables as $name => $value)
+			{
+				$$name = $value;	
+				
+			}
+			ob_start();
+			foreach(array_reverse($this->tmpl_search_path) as $path)
+			{
+				$filename = $path . '/' . $template;
+				if (file_exists($filename))
+				{
+					include($filename);
+					break;
+					//$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
+				}
+			}
+			//include();
+			//var_dump(include_class('rental','tplcontract_ist'));
+			//var_dump(include $template);
+			//return;
+			$output = ob_get_contents();
+			ob_end_clean();
+			self::render_template('php_template',array('output' =>$output));
 		}
 		
 	}
