@@ -129,7 +129,7 @@ rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
-rental_party_account	rental	no	Reskontonummer
+rental_party_account	rental	no	Kundenummer i Agresso
 rental_party_active	rental	no	Kontraktspartneren er aktiv
 rental_party_address	rental	no	Adresse
 rental_party_all	rental	no	Alle
