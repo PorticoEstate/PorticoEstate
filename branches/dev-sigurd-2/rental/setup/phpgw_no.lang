@@ -137,16 +137,16 @@ rental_party_comments	rental	no	Kommentarer
 rental_party_contracts	rental	no	Kontrakter
 rental_party_details	rental	no	Detaljer
 rental_party_documents	rental	no	Dokumenter
-rental_party_external	rental	no	Eksterne kontrakspartnere
+rental_party_external	rental	no	Eksterne kontraksparter
 rental_party_id	rental	no	ID
-rental_party_internal	rental	no	Interne kontraktspartnere
+rental_party_internal	rental	no	Interne kontraktsparter
 rental_party_name	rental	no	Navn
 rental_party_phone	rental	no	Telefon
 rental_party_organisation_number	rental	no	Organisasjonsnummer
 rental_party_result_unit_number	rental	no	Resultatsenhet
 rental_party_ssn	rental	no	Fødselsnummer
-rental_party_toolbar_functions_new_party	rental	no	Ny kontraktspartner
-rental_party_toolbar_new	rental	no	Opprett ny kontraktspartner
+rental_party_toolbar_functions_new_party	rental	no	Ny kontraktspart
+rental_party_toolbar_new	rental	no	Opprett ny kontraktspart
 rental_party_type	rental	no	Type
 rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
