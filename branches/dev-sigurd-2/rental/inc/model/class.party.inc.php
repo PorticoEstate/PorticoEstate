@@ -278,5 +278,18 @@ class rental_party
 		return $receipt;
 	}
 	
+	/**
+	 * Get a list of all available party types
+	 * 
+	 * @return key/value array of party types linked to IDs
+	 */
+	public static function get_party_types()
+	{
+		return array(
+			'internal' => lang('rental_party_internal'),
+			'external' => lang('rental_party_external'),
+			'all' => lang('rental_party_all')
+		);
+	}
 }
 ?>

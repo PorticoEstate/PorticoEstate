@@ -111,10 +111,7 @@ class rental_socontract extends rental_socommon
 		$this->db->query($sql, __LINE__, __FILE__);
 		$results = array();
 		while($this->db->next_record()){
-			$row = array();
-			$row['id'] = $this->db->f('id', true);
-			$row['title'] = $this->db->f('title', true);
-			$results[] = $row;
+			$results[$this->db->f('id', true)] = $this->db->f('title', true);
 		}
 		return $results;
 	}

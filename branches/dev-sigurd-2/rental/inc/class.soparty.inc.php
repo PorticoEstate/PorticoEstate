@@ -94,7 +94,37 @@ class rental_soparty extends rental_socommon
 	function get_party_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{
 		$condition = $this->get_conditions($query, $filters,$search_option);
-		$this->db->limit_query("SELECT * FROM rental_party WHERE $condition $order", $start, __LINE__, __FILE__, $limit);
+		
+		// We have the option to search for party type. A party does not have a type per se
+		// but gets one or more types from the contracts it is associated to.
+		// So if this filter is set we need to do some joining to check what contracts this
+		// party is tied to.
+		if (isset($filters['party_type']) && $filters['party_type'] != 'all') {
+			// Get the type id requested
+			$type_id = $filters['party_type'];
+			
+			// Join the contracts (many to many) so we can search for contract types, only
+			// include parties that actually have contracts
+			$sql = "SELECT rental_party.*, contracts.* FROM rental_party LEFT JOIN
+								(SELECT * FROM rental_contract_party map LEFT JOIN
+								(SELECT * FROM rental_contract WHERE rental_contract.type_id = $type_id) c ON (c.id = map.contract_id)) contracts ON (rental_party.id = contracts.party_id)
+								WHERE contracts.type_id IS NOT NULL AND $condition $order";
+			
+			// Alternative, with subselect.  Test with many rows:
+			/*
+			$sql = "SELECT *
+								FROM rental_party
+								WHERE id IN 
+								(SELECT id
+									FROM rental_contract_party
+									WHERE contract_id IN (SELECT id FROM rental_contract WHERE type_id = $type_id)) AND $condition $order";
+			*/
+		} else {
+			// No type filter was set, do a normal select
+			$sql = "SELECT * FROM rental_party WHERE $condition $order";
+		}
+		
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		$parties = array();
 		

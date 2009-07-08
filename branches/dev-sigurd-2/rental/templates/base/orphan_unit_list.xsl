@@ -123,11 +123,12 @@
 							<select name="search_option" id="ctrl_search_option">
 								<option value="all"><xsl:value-of select="php:function('lang', 'rental_rc_all')"/></option>
 								<option value="id"><xsl:value-of select="php:function('lang', 'rental_rc_serial')"/></option>
-								<option value="name"><xsl:value-of select="php:function('lang', 'rental_rc_name')"/></option>
-								<option value="address"><xsl:value-of select="php:function('lang', 'rental_rc_address')"/></option>
-								<option value="gab"><xsl:value-of select="php:function('lang', 'gab')"/></option>
-								<option value="ident"><xsl:value-of select="php:function('lang', 'rental_rc_gab')"/></option>
 								<option value="property_id"><xsl:value-of select="php:function('lang', 'rental_rc_property_id')"/></option>
+								<option value="property"><xsl:value-of select="php:function('lang', 'rental_rc_name')"/></option>
+								<option value="building"><xsl:value-of select="php:function('lang', 'rental_rc_address')"/></option>
+								<option value="floor"><xsl:value-of select="php:function('lang', 'gab')"/></option>
+								<option value="section"><xsl:value-of select="php:function('lang', 'rental_rc_gab')"/></option>
+								<option value="room"><xsl:value-of select="php:function('lang', 'rental_rc_room')"/></option>
 							</select>
 						</label>
 					</td>

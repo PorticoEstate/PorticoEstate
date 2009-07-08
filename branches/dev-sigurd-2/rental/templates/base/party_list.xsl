@@ -131,6 +131,7 @@
 								<option value="result_unit_number"><xsl:value-of select="php:function('lang', 'rental_party_result_unit_number')"/></option>
 								<option value="organisation_number"><xsl:value-of select="php:function('lang', 'rental_party_organisation_number')"/></option>
 								<option value="account"><xsl:value-of select="php:function('lang', 'rental_party_account')"/></option>
+								<option value="type"><xsl:value-of select="php:function('lang', 'rental_party_type')"/></option>
 							</select>
 						</label>
 					</td>

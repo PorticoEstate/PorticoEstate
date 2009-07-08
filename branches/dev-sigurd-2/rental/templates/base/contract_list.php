@@ -144,14 +144,11 @@
 		<legend><?= lang('rental_common_filters') ?></legend>
 			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?= lang('rental_contract_type') ?></label>
 			<select name="contract_type" id="ctrl_toggle_contract_type">
-				<?php 
+				<?php
 				$types = rental_contract::get_contract_types();
-				var_dump($types);
-				foreach($types as $type)
+				foreach($types as $id => $label)
 				{
-					$id = $type['id'];
-					$title = $type['title'];
-					echo "<option value='$id'>$title</option>";	
+					?><option value="<?= $id ?>"><?= $label ?></option><?
 				}
 				?>
 				<option value="all" selected="selected"><?= lang('rental_contract_all') ?></option>
