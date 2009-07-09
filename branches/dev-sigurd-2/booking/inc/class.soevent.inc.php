@@ -60,9 +60,6 @@
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			$event_id = $entity['id'] ? $entity['id'] : -1;
-
-			// FIXME: Validate: Season contains all resources
-			// FIXME: Validate: Season from <= date, season to >= date
 			// Make sure to_ > from_
 			$from_ = new DateTime($entity['from_']);
 			$to_ = new DateTime($entity['to_']);
