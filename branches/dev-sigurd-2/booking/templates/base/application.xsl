@@ -46,6 +46,7 @@
 				<dd><xsl:value-of select="from_"/></dd>
 				<dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
 				<dd><xsl:value-of select="to_"/></dd>
+				<dt>Status <xsl:value-of select="status"/></dt>
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">

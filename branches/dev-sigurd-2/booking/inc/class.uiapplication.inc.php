@@ -207,6 +207,15 @@
 			return array();
 		}
 
+		private function check_date_availability(&$allocation)
+		{
+			foreach($allocation['dates'] as &$date)
+			{
+				$available = $this->bo->so->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
+				$date['status'] = intval($available);
+			}
+		}
+
 		public function show()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -245,6 +254,7 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$application['status'] = lang($application['status']);
+			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups));
 		}
 	}

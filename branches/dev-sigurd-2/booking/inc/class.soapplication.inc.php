@@ -78,4 +78,34 @@
 			return array('id' => $this->db->f('id', true),
 						 'name' => $this->db->f('name', true));
 		}
+		
+		/**
+		 * Check if a given timespan is available for bookings or allocations
+		 *
+		 * @param resources 
+		 * @param timespan start
+		 * @param timespan end
+		 *
+		 * @return boolean
+		 */
+		function check_timespan_availability($resources, $from_, $to_)
+		{
+			$rids = join(',', array_map("intval", $resources));
+			$nrids = count($resources);
+			$this->db->query("SELECT id FROM bb_season 
+			                  WHERE id IN (SELECT season_id 
+							               FROM bb_season_resource 
+							               WHERE resource_id IN ($rids,-1) 
+							               GROUP BY season_id 
+							               HAVING count(season_id)=$nrids)", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$season_id = $this->_unmarshal($this->db->f('id', true), 'int');
+				if (CreateObject('booking.soseason')->timespan_within_season($season_id, new DateTime($from_), new DateTime($to_)))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
