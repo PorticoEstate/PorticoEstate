@@ -238,8 +238,7 @@
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			//self::render_template('composite_list',$data);
-			echo 'here';
+			$this->render('composite_list.php');
 		}
 
 		//View rental composite

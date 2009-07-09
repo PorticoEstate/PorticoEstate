@@ -115,21 +115,13 @@
 		///View all contracts
 		public function index()
 		{
-			/*
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+			// XXX: Is dateFormat really used somewhere?
+			$data = array('dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			
-			$data = array
-			(
-				'dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
-			);
-			self::render_template('party_list',$data);
-			*/
 			self::add_javascript('rental', 'rental', 'rental.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
-			$this->render('party_list.php');
+			$this->render('party_list.php', $data);
 		}
 		
 		/**
