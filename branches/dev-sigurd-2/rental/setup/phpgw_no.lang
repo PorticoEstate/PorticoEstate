@@ -66,6 +66,8 @@ rental_menu_parties	rental	no	Kontraktsparter
 rental_menu_reports	rental	no	Rapporter
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspart er opprettet
+rental_operator_and	rental	no	og
+rental_operator_or	rental	no	eller
 rental_rc_active	rental	no	Aktiv
 rental_rc_add_area	rental	no	Legg til areal
 rental_rc_added_areas	rental	no	Inkludert areal
@@ -75,7 +77,7 @@ rental_rc_area	rental	no	Areal
 rental_rc_area_gros	rental	no	Bruttoareal
 rental_rc_area_net	rental	no	Nettoareal
 rental_rc_area_not_found	rental	no	Kunne ikke finne detaljer om arealet
-rental_rc_availibility	rental	no	Tilgjengelighet
+rental_rc_availability	rental	no	Tilgjengelighet
 rental_rc_available_at	no	Ledig på dato
 rental_rc_available	rental	no	Tilgjengelig
 rental_rc_available_from	no	Tilgjengelig fra
