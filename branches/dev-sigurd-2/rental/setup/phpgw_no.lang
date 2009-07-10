@@ -57,12 +57,14 @@ rental_cm_add	rental	no	Legg til
 rental_cm_edit	rental	no	Redigér
 rental_cm_remove	rental	no	Fjern
 rental_cm_show	rental	no	Vis
+rental_menu_contract_types	rental	no	Kontrakttyper
 rental_menu_contracts	rental	no	Kontrakter
 rental_menu_economy	rental	no	Økonomi
 rental_menu_rc	rental	no	Leieobjekter
 rental_menu_orphan_units	rental	no	Ubrukte arealer
 rental_menu_rental	rental	no	Utleie
 rental_menu_parties	rental	no	Kontraktsparter
+rental_menu_price_list	rental	no	Prisbok
 rental_menu_reports	rental	no	Rapporter
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspart er opprettet

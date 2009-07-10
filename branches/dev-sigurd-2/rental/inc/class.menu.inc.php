@@ -67,14 +67,21 @@
                     'image'	=> array('property', 'location'),
 				)
 			);
+			
 			$menus['admin'] = array
 			(
-				'admin'	=> array
+				'contract_type_list'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Admin', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadmin.index', 'appname' => 'rental') )
+					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_contract_types', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadmin.contract_type_list', 'appname' => 'rental') )
+				),
+				'price_item_list'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_price_list', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadmin.price_item_list', 'appname' => 'rental') )
 				)
 			);
+			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			return $menus;
