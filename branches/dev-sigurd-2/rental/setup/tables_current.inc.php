@@ -116,13 +116,13 @@
 		// A contract
 		'rental_contract' => array(
 			'fd' => array(
-				'id' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'id' => 			array('type' => 'auto', 'nullable' => false),
 				'date_start' => 	array('type' => 'date'),
 				'date_end' => 		array('type' => 'date'),
 				'billing_start' => 	array('type' => 'date'),
 				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -136,7 +136,7 @@
 		'rental_contract_composite' => array(
 			'fd' => array(
 				'id' => 			array('type' => 'auto', 'nullable' => false),
-				'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'composite_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
 			'pk' => array('id'),
@@ -182,7 +182,7 @@
 		'rental_contract_party' => array(
 			'fd' => array(
 				'id' => 			array('type' => 'auto', 'nullable' => false),
-				'contract_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
 			'pk' => array('id'),

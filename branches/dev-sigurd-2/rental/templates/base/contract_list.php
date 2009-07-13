@@ -39,7 +39,8 @@
 		function(e)
 		{    	
 	  	YAHOO.util.Event.stopEvent(e);
-	  	window.location = 'index.php?menuaction=rental.uicontract.add';
+	  	newType = document.getElementById('ctrl_new_contract_type').value;
+			window.location = 'index.php?menuaction=rental.uicontract.add&amp;new_contract_type=' + newType;
     }
    );
 
@@ -119,6 +120,15 @@
 	<fieldset>
 		<!-- New contract -->
 		<legend><?= lang('rental_contract_toolbar_new') ?></legend>
+		<select name="new_contract_type" id="ctrl_new_contract_type">
+			<?php 
+			$types = rental_contract::get_contract_types();
+			foreach($types as $id => $label)
+			{
+				?><option value="<?= $id ?>"><?= $label ?></option><?
+			}
+			?>
+		</select>
 		<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?= lang('rental_contract_toolbar_functions_new_contract') ?>" />
 	</fieldset>
 			

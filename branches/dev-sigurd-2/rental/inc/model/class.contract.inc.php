@@ -24,6 +24,12 @@
 			$this->id = $id;
 		}
 		
+		/**
+		 * Get the contract ID
+		 * 
+		 * @param $id
+		 * @return int
+		 */
 		public function set_id($id)
 		{
 			$this->id = $id;
@@ -45,7 +51,9 @@
 			$this->contract_date = $date;
 		}
 		
-		public function get_contract_date() { return $this->contract_date; }
+		public function get_contract_date() {
+			return $this->contract_date;
+		}
 		
 		public function set_billing_start_date($date)
 		{

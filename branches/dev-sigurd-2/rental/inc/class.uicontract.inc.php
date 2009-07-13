@@ -130,8 +130,10 @@
 		public function add()
 		{
 			$contract = new rental_contract();
+			$contract->set_type_id(phpgw::get_var('new_contract_type'));
 			$contract->store();
 			
+			// Redirect to edit
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
 		

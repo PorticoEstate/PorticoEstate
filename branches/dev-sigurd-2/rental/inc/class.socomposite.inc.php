@@ -832,7 +832,7 @@ class rental_socomposite extends rental_socommon
 			'place = \'' . $composite->get_place() . '\''
 		);
 		
-		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$values')";
+		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('" . join(',', $values) . "')";
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		

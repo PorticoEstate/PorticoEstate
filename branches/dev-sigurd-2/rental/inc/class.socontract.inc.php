@@ -106,6 +106,11 @@ class rental_socontract extends rental_socommon
 		return join(' AND ', $clauses);
 	}
 
+	/**
+	 * Get a key/value array of contract type titles keyed by their id
+	 * 
+	 * @return array
+	 */
 	function get_contract_types(){
 		$sql = "SELECT id,title FROM rental_contract_type";
 		$this->db->query($sql, __LINE__, __FILE__);
@@ -113,6 +118,24 @@ class rental_socontract extends rental_socommon
 		while($this->db->next_record()){
 			$results[$this->db->f('id', true)] = $this->db->f('title', true);
 		}
+		
+		return $results;
+	}
+	
+	/**
+	 * Get a key/value array of titles of billing term types keyed by their id
+	 * 
+	 * @return array
+	 */
+	function get_billing_terms()
+	{
+		$sql = "SELECT id, title FROM rental_billing_term";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$results = array();
+		while($this->db->next_record()){
+			$results[$this->db->f('id', true)] = $this->db->f('title', true);
+		}
+		
 		return $results;
 	}
 	
@@ -163,13 +186,13 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-      	$columns_for_list = 'contract.id, contract.date_start, contract.date_end, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
-      	$tables = "rental_contract contract";
-      	$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
+		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+		$tables = "rental_contract contract";
+		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';
 		$join_composites = 		' LEFT JOIN rental_contract_composite c_c ON (contract.id = c_c.contract_id) LEFT JOIN rental_composite composite ON c_c.composite_id = composite.id';
 		$joins = $join_contract_type.$join_parties.$join_composites;
-      	$condition = $this->get_conditions($query, $filters,$search_option);
+		$condition = $this->get_conditions($query, $filters,$search_option);
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
 		//var_dump("SELECT  $columns_for_list FROM $tables $joins WHERE $condition");
@@ -311,7 +334,7 @@ class rental_socontract extends rental_socommon
 	{
 		$sql = "SELECT rental_composite.id FROM rental_composite
 							LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
-							LEFT JOIN rental_contract ON (rental_contract_composite.contract_id LIKE rental_contract.id)
+							LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)
 							WHERE rental_contract.id LIKE '$contract_id'";
 							
 		$composites = array();
@@ -334,19 +357,22 @@ class rental_socontract extends rental_socommon
 	 * @param $contract the contract to be updated
 	 * @return result receipt from the db operation
 	 */
-	function update($contract)
+	function update(rental_contract $contract)
 	{
 		$id = intval($contract->get_id());
 		
 		// Build a db-friendly array of the contract object
 		$values = array(
-			"date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'",
-			"date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'",
 			"billing_start = '" . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date') . "'",
 			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
 			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
 			"account = '" . $this->marshal($contract->get_account(), 'string') . "'"
 		);
+		
+		if ($contract->get_contract_date()) {
+			$values[] = "date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'";
+			$values[] = "date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'";
+		}
 
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
@@ -360,22 +386,39 @@ class rental_socontract extends rental_socommon
 	 * Add a new contract to the database.  Adds the new insert id to the object reference.
 	 * 
 	 * @param $contract the contract to be added
-	 * @return result receipt from the db operation
+	 * @return array result receipt from the db operation
 	 */
-	function add(&$contract)
+	function add(rental_contract &$contract)
 	{
-		// Build a db-friendly array of the contract object
+		// These are the columns we know we have or that are nullable
+		$cols = array('type_id', 'term_id');
+		
+		// Start making a db-formatted list of values of the columns we have to have
 		$values = array(
-			"date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'",
-			"date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'",
-			"billing_start = '" . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date') . "'",
-			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
-			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
-			"account = '" . $this->marshal($contract->get_account(), 'string') . "'"
+			$this->marshal($contract->get_type_id(), 'int'),
+			$this->marshal($contract->get_term_id(), 'int')
 		);
 		
+		// Check values that can be null before trying to add them to the db-pretty list
+		if ($contract->get_account()) {
+			$cols[] = 'account';
+			$values[] = "'" . $this->marshal($contract->get_account(), 'string') . "'";
+		}
+		
+		if ($contract->get_billing_start_date()) {
+			$cols[] = 'billing_start';
+			$values[] = $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date');
+		}
+		
+		if ($contract->get_contract_date()) {
+			$cols[] = 'date_start';
+			$cols[] = 'date_end';
+			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
+			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
+		}
+		
 		// Insert the new contract
-		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$values')";
+		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		
