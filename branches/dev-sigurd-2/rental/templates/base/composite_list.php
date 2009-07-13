@@ -52,7 +52,7 @@
 	);
 </script>
 
-<form id="list_form" method="GET">		
+<form id="list_form" method="GET">
 	<fieldset>
 		<!-- Create new rental composite -->
 		<legend><?= lang('rental_rc_toolbar_new') ?></legend>

@@ -32,6 +32,16 @@
         	window.location = 'index.php?menuaction=rental.uicontract.index';
     	}
     );
+		
+	YAHOO.util.Event.addListener(
+		'ctrl_add_rental_contract', 
+		'click', 
+		function(e)
+		{    	
+	  	YAHOO.util.Event.stopEvent(e);
+	  	window.location = 'index.php?menuaction=rental.uicontract.add';
+    }
+   );
 
 	//Add listener on status change: disable on 'all', change label on other
 	YAHOO.util.Event.addListener(
@@ -105,8 +115,15 @@
 			['view','edit']	
 	);	
 </script>
-<form id="list_form" method="GET">		
+<form id="list_form" method="GET">
 	<fieldset>
+		<!-- New contract -->
+		<legend><?= lang('rental_contract_toolbar_new') ?></legend>
+		<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?= lang('rental_contract_toolbar_functions_new_contract') ?>" />
+	</fieldset>
+			
+	<fieldset>
+		<!-- Search -->
 		<legend><?= lang('rental_rc_search_options') ?></legend>
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" />
@@ -120,7 +137,9 @@
 		<input type="submit" id="ctrl_search_button" value="<?= lang('rental_rc_search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?= lang('rental_reset') ?>" />
 	</fieldset>
+	
 	<fieldset>
+		<!-- Status and date filters -->
 		<legend><?= lang('rental_contract_status') ?></legend>
 		<select name="contract_status" id="ctrl_toggle_contract_status" >
 			<option value="under_planning"><?= lang('rental_contract_under_planning') ?></option>
@@ -140,7 +159,9 @@
 			</div>
 		</div>
 	</fieldset>
+	
 	<fieldset>
+		<!-- Contract type filter -->
 		<legend><?= lang('rental_common_filters') ?></legend>
 			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?= lang('rental_contract_type') ?></label>
 			<select name="contract_type" id="ctrl_toggle_contract_type">

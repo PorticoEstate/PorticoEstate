@@ -6,6 +6,8 @@
 	{	
 		public $public_functions = array
 		(
+			'add'			=> true,
+			'add_from_composite' => true,
 			'index'		=> true,
 			'query'		=> true
 		);
@@ -122,7 +124,34 @@
 			
 		}
 		
+		/**
+		 * Create a new empty contract
+		 */
+		public function add()
+		{
+			$contract = new rental_contract();
+			$contract->store();
+			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
 		
+		/**
+		 * Create a new contract tied to the composite provided in the composite_id parameter 
+		 */
+		public function add_from_composite()
+		{
+			$contract = new rental_contract();
+			$contract->store();
+			
+			// Get the composite object the user asked for from the DB
+			$composite = rental_composite::get(phpgw::get_var('composite_id'));
+			// Add that composite to the new contract
+			$contract->add_composite($composite);
+			$contract->store();
+			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+			
 		///View all contracts
 		public function index()
 		{	
@@ -131,7 +160,6 @@
 			phpgwapi_yui::load_widget('paginator');
 			$this->render('contract_list.php');
 		}
-		
 		
 		
 		/**

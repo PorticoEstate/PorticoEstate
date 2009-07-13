@@ -117,6 +117,40 @@ class rental_socontract extends rental_socommon
 	}
 	
 	/**
+	 * Get single contract
+	 * 
+	 * @param	$id	id of the contract to return
+	 * @return a rental_contract
+	 */
+	function get_single($id)
+	{
+		$id = (int)$id;
+
+      $sql = "SELECT * FROM " . $this->table_name ." WHERE " . $this->table_name . ".id={$id}";
+
+      $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+      $contract = new rental_contract();
+
+      $this->db->next_record();
+			
+			$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
+			
+			$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
+	    $date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
+				
+			$date = new rental_contract_date($date_start, $date_end);
+			$contract->set_contract_date($date);
+			
+			$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
+			$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
+			$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
+			$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));	
+			
+      return $contract;
+	}
+	
+	/**
 	 * Get a list of contract objects matching the specific filters
 	 * 
 	 * @param $start search result offset
@@ -269,6 +303,32 @@ class rental_socontract extends rental_socommon
 	}
 	
 	/**
+	 * Get the composites belonging to a certain contract
+	 * @return A list of rental_composite objects
+	 * @param string $contract_id
+	 */
+	public function get_composites_for_contract($contract_id)
+	{
+		$sql = "SELECT rental_composite.id FROM rental_composite
+							LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
+							LEFT JOIN rental_contract ON (rental_contract_composite.contract_id LIKE rental_contract.id)
+							WHERE rental_contract.id LIKE '$contract_id'";
+							
+		$composites = array();
+		
+		$composite_so = rental_composite::get_so();
+		
+		$this->db->query($sql);
+		while($this->db->next_record())
+		{
+			$composite_id = $this->unmarshal($this->db->f('id', true), 'int');
+			$composites[] = $composite_so->get_single($composite_id);
+		}
+		
+		return $composites;
+	}
+	
+	/**
 	 * Update the database values for an existing contract object.
 	 * 
 	 * @param $contract the contract to be updated
@@ -277,58 +337,21 @@ class rental_socontract extends rental_socommon
 	function update($contract)
 	{
 		$id = intval($contract->get_id());
-		$cols = array();
-		$values = array();
 		
+		// Build a db-friendly array of the contract object
 		$values = array(
-			'name = \'' . $contract->get_name() . '\'',
-			'description = \'' . $contract->get_description() . '\'',
-			'has_custom_address = ' . ($contract->has_custom_address() ? "true" : "false"),
-			'address_1 = \'' . $contract->get_address_1() . '\'',
-			'address_2 = \'' . $contract->get_address_2() . '\'',
-			'house_number = \'' . $contract->get_house_number() . '\'',
-			'postcode = \'' . $contract->get_postcode() . '\'',
-			'place = \'' . $contract->get_place() . '\''
+			"date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'",
+			"date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'",
+			"billing_start = '" . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date') . "'",
+			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
+			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
+			"account = '" . $this->marshal($contract->get_account(), 'string') . "'"
 		);
-				
-		$cols = join(',', $cols);
+
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
-		
-		$current_units = $this->get_included_rental_units($contract->get_id());
-		
-		// Add rental units from the composite object that aren't in the database
-		foreach ($contract->get_included_rental_units() as $unit) {
-			$has_unit = false;
-			foreach ($current_units as $current_unit) {
-				if ($unit->get_location_id() == $current_unit->get_location_id()) {
-					// This unit from the composite was found in the db
-					$has_unit = true;
-				}
-			}
-			if (!$has_unit) {
-				$this->add_unit($contract->get_id(), $unit->get_location_id(), $unit->get_location_code());
-			}
-		}
-		
-		$current_units = $this->get_included_rental_units($contract->get_id());
-		
-		// Remove rental units that are in the database but have been removed from the composite object
-		foreach ($current_units as $current_unit) {
-			$unit_is_removed = true;
-			foreach ($contract->get_included_rental_units() as $unit) {
-				if ($current_unit->get_location_id() == $unit->get_location_id()) {
-					// This unit from the db was not found on the current composite
-					$unit_is_removed = false;
-				}
-			}
-			
-			if ($unit_is_removed) {
-				$this->remove_unit($contract->get_id(), $unit->get_location_id());
-			}
-		}
 		
 		return $receipt;
 	}
@@ -336,33 +359,27 @@ class rental_socontract extends rental_socommon
 	/**
 	 * Add a new contract to the database.  Adds the new insert id to the object reference.
 	 * 
-	 * @param $contract the composite to be added
+	 * @param $contract the contract to be added
 	 * @return result receipt from the db operation
 	 */
 	function add(&$contract)
 	{
-		// Build a db-friendly array of the composite object
+		// Build a db-friendly array of the contract object
 		$values = array(
-			'name = \'' . $contract->get_name() . '\'',
-			'description = \'' . $contract->get_description() . '\'',
-			'has_custom_address = ' . ($contract->has_custom_address() ? "true" : "false"),
-			'address_1 = \'' . $contract->get_address_1() . '\'',
-			'address_2 = \'' . $contract->get_address_2() . '\'',
-			'house_number = \'' . $contract->get_house_number() . '\'',
-			'postcode = \'' . $contract->get_postcode() . '\'',
-			'place = \'' . $contract->get_place() . '\''
+			"date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'",
+			"date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'",
+			"billing_start = '" . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date') . "'",
+			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
+			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
+			"account = '" . $this->marshal($contract->get_account(), 'string') . "'"
 		);
 		
+		// Insert the new contract
 		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('$values')";
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		
 		$contract->set_id($receipt['id']);
-		
-		// Add rental units from the composite object
-		foreach ($contract->get_included_rental_units() as $unit) {
-			$this->add_unit($contract->get_id(), $unit->get_location_id(), $unit->get_location_code());
-		}
 		
 		return $receipt;
 	}

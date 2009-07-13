@@ -1,8 +1,9 @@
 <?php
 
 	include_class('rental', 'contract_date', 'inc/model/');
+	include_class('rental', 'model', 'inc/model/');
 
-	class rental_contract
+	class rental_contract extends rental_model
 	{
 		public static $so;
 		
@@ -16,8 +17,9 @@
 		protected $contract_type_title;
 		protected $party_name;
 		protected $composite_name;
+		protected $composites;
 		
-		public function __construct(int $id)
+		public function __construct(int $id = null)
 		{
 			$this->id = $id;
 		}
@@ -34,7 +36,9 @@
 			$this->parties = $parties;
 		}
 		
-		public function get_parties() { return $this->parties; }
+		public function get_parties() {
+			return $this->parties;
+		}
 		
 		public function set_contract_date($date)
 		{
@@ -98,6 +102,31 @@
 			$this->composite_name = $name;
 		}
 		
+		public function set_composites($composites)
+		{
+			$this->composites = $composites;
+		}
+		
+		public function get_composites()
+		{
+			if (!$this->composites) {
+				// The list of composites are empty, so try to get them from the database
+				$so = self::get_so();
+				$this->composites = $so->get_composites_for_contract($this->get_id());
+			}
+			
+			return $this->composites;
+		}
+		
+		public function add_composite($composite)
+		{
+			if ($composite instanceof rental_composite) {
+				$composites = $this->get_composites();
+				$composites[] = $composite;
+				$this->set_composites($composites);
+			}
+		}
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -110,6 +139,12 @@
 			}
 			
 			return self::$so;
+		}
+		
+		public static function get($id)
+		{
+			$so = self::get_so();
+			return $so->get_single();
 		}
 		
 		/**

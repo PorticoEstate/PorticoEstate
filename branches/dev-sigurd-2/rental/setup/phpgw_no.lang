@@ -49,6 +49,8 @@ rental_contract_status_date	rental	no	den
 rental_contract_status_before	rental	no	før
 rental_contract_title	rental	no	Tittel
 rental_contract_to	rental	no	Til
+rental_contract_toolbar_functions_new_contract	rental	no	Opprett kontrakt
+rental_contract_toolbar_new	rental	no	Ny kontrakt
 rental_contract_running	rental	no	Løpende
 rental_contract_under_dismissal	rental	no	Under oppsigelse
 rental_contract_under_planning	rental	no	Under planlegging
