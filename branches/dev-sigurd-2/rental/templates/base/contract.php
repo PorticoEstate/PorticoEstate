@@ -4,7 +4,7 @@
 <h3><?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h3>
 
 <form action="#" method="post">
-	<div class="details" style="display:block;height:170px;">
+	<div class="details">
 		<dl class="proplist-col">
 			<dt>
 				<label for="name"><?= lang('rental_menu_contract_type') ?></label>

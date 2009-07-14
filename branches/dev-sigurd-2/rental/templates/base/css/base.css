@@ -319,3 +319,7 @@ input.postcode {
 	width: 50px;
 	float: left;
 }
+
+.yui-navset {
+	clear: both;
+}
