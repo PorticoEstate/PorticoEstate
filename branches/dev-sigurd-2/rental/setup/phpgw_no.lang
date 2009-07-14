@@ -167,7 +167,7 @@ rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift
 rental_rc_out_of_operation	rental	no	Ikke i drift
-rental_contract_type_innleie	rental no	Innleie
+rental_contract_type_innleie	rental	no	Innleie
 rental_contract_type_internleie	rental	no	Internleie
-rental_contract_type_eksternleie	rental	no Eksternleie
+rental_contract_type_eksternleie	rental	no	Eksternleie
 rental_contract_type_investeringskontrakt	rental	no	Investeringskontrakt
