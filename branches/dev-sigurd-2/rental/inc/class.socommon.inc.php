@@ -17,6 +17,7 @@
 			$this->fields = $fields;
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->like			= & $this->db->like;
+			$this->join			= & $this->db->join;
 		}
 
 		/**
