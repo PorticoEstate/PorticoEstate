@@ -125,7 +125,7 @@
 			$types = rental_contract::get_contract_types();
 			foreach($types as $id => $label)
 			{
-				?><option value="<?= $id ?>"><?= $label ?></option><?
+				?><option value="<?= $id ?>"><?= lang($label) ?></option><?
 			}
 			?>
 		</select>
@@ -179,7 +179,7 @@
 				$types = rental_contract::get_contract_types();
 				foreach($types as $id => $label)
 				{
-					?><option value="<?= $id ?>"><?= $label ?></option><?
+					?><option value="<?= $id ?>"><?= lang($label) ?></option><?
 				}
 				?>
 				<option value="all" selected="selected"><?= lang('rental_contract_all') ?></option>
