@@ -1,6 +1,41 @@
 <?php 
 	include("common.php");	
 ?>
+
+<script type="text/javascript">
+//Initiate calendar for changing status date when filtering on contract status
+YAHOO.util.Event.onDOMReady(
+	function()
+	{
+		cal_start = initCalendar(
+			'date_start', 
+			'calendarStartDate', 
+			'calendarStartDate_body', 
+			'Velg dato', 
+			'calendarStartDateCloseButton',
+			'calendarStartDateClearButton',
+			'date_start_hidden',
+			true
+		);
+
+		updateCalFromInput(cal_start, 'date_start_hidden');
+
+		cal_end = initCalendar(
+			'date_end', 
+			'calendarEndDate', 
+			'calendarEndDate_body', 
+			'Velg dato', 
+			'calendarEndDateCloseButton',
+			'calendarEndDateClearButton',
+			'date_end_hidden',
+			true
+		);
+
+		updateCalFromInput(cal_end, 'date_end_hidden');
+	}
+);
+</script>
+
 <h3><?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h3>
 
 <form action="#" method="post">
@@ -18,9 +53,20 @@
 			</dt>
 			<dd>
 				<?php
-					$start_date = $contract->get_contract_date() ? $contract->get_contract_date()->get_start_date() : '';
+					$start_date = $contract->get_contract_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
+					$start_date_yui = $contract->get_contract_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
 					if ($editable) {
-						echo '<input type="text" name="date_start" id="date_start" value="' . $start_date . '" />';
+						?>
+						<input type="text" name="date_start" id="date_start" size="10" value="<?= $start_date ?>" />
+						<input type="hidden" name="date_start_hidden" id="date_start_hidden" value="<?= $start_date_yui ?>"/>
+						<div id="calendarStartDate">
+							<div id="calendarStartDate_body"></div>
+							<div class="calheader">
+								<button id="calendarStartDateCloseButton"><?= lang('rental_calendar_close') ?></button>
+								<button id="calendarStartDateClearButton"><?= lang('rental_calendar_clear') ?></button>
+							</div>
+						</div>
+					<?
 					} else {
 						echo $start_date;
 					}
@@ -32,9 +78,20 @@
 			</dt>
 			<dd>
 				<?php
-					$end_date = $contract->get_contract_date() ? $contract->get_contract_date()->get_end_date() : '';
+					$end_date = $contract->get_contract_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
+					$end_date_yui = $contract->get_contract_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
 					if ($editable) {
-						echo '<input type="text" name="date_start" id="date_start" value="' . $end_date . '" />';
+						?>
+						<input type="text" name="date_end" id="date_end" size="10" value="<?= $end_date ?>" />
+						<input type="hidden" name="date_end_hidden" id="date_end_hidden" value="<?= $end_date_yui ?>"/>
+						<div id="calendarEndDate">
+							<div id="calendarEndDate_body"></div>
+							<div class="calheader">
+								<button id="calendarEndDateCloseButton"><?= lang('rental_calendar_close') ?></button>
+								<button id="calendarEndDateClearButton"><?= lang('rental_calendar_clear') ?></button>
+							</div>
+						</div>
+					<?
 					} else {
 						echo $end_date;
 					}

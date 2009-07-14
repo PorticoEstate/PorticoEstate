@@ -119,8 +119,8 @@
 			{
 				$contract = rental_contract::get($contract_id);
 				
-				$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime(phpgw::get_var('date_start')));
-				$date_end =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime(phpgw::get_var('date_end')));
+				$date_start =  strtotime(phpgw::get_var('date_start_hidden'));
+				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
 				

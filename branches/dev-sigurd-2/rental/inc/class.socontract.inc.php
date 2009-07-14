@@ -159,13 +159,13 @@ class rental_socontract extends rental_socommon
 			
 			$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
 			
-			$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
-	    $date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
+			$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
+	    $date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
 				
 			$date = new rental_contract_date($date_start, $date_end);
 			$contract->set_contract_date($date);
 			
-			$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date')));
+			$billing_start_date = strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
 			$contract->set_billing_start_date($billing_start_date);
 			$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 			$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));

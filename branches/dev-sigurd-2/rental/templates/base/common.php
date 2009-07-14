@@ -9,6 +9,7 @@ function onClickOnInput(event)
 
 function closeCalender(event)
 {
+	YAHOO.util.Event.stopEvent(event);
 	this.hide();
 }
 
@@ -19,7 +20,7 @@ function clearCalendar(event)
 	document.getElementById(this.hiddenField).value = '';
 }
 		
-function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField) 
+function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField,noPostOnSelect) 
 {
 	var overlay = new YAHOO.widget.Dialog(
 		divContainerID, 
@@ -40,16 +41,18 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 	cal.cfg.setProperty("MONTHS_LONG",<?= lang(rental_common_calendar_months) ?>);
 	cal.cfg.setProperty("WEEKDAYS_SHORT",<?= lang(rental_common_calendar_weekdays) ?>);
 	cal.render();
-	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField],false);
+	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
 	cal.inputFieldID = inputFieldID;
 	cal.hiddenField = hiddenField;
 	
 	YAHOO.util.Event.addListener(closeButton,'click',closeCalender,overlay,true);
 	YAHOO.util.Event.addListener(clearButton,'click',clearCalendar,cal,true);
-	YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,overlay,true);		
+	YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,overlay,true);
+
+	return cal;
 }
 
-function onCalendarSelect(type,args,array){
+function onCalendarSelect(type,args,array,noPostOnSelect){
 	var firstDate = args[0][0];
 	var month = firstDate[1] + "";
 	var day = firstDate[2] + "";
@@ -70,9 +73,38 @@ function onCalendarSelect(type,args,array){
 	}
 	document.getElementById(array[0]).value = formatDate('<?= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
-	document.getElementById('ctrl_search_button').click();
+	
+	if (!noPostOnSelect) {
+		document.getElementById('ctrl_search_button').click();
+	}
 	
 }
+
+/**
+ * Update the selected calendar date with a date from an input field
+ * Input field value must be of the format YYYY-MM-DD
+ */
+function updateCalFromInput(cal, inputId) {
+	var txtDate1 = document.getElementById(inputId);
+
+	if (txtDate1.value != "") {
+
+		var date_elements = txtDate1.value.split('-');
+		var year = date_elements[0];
+		var month = date_elements[1];
+		var day = date_elements[2];
+		
+		cal.select(month + "/" + day + "/" + year);
+		var selectedDates = cal.getSelectedDates();
+		if (selectedDates.length > 0) {
+			var firstDate = selectedDates[0];
+			cal.cfg.setProperty("pagedate", (firstDate.getMonth()+1) + "/" + firstDate.getFullYear());
+			cal.render();
+		}
+		
+	}
+}
+
 
 function setDataSource(source, columns, form, filters, container, number, contextMenuLabels, contextMenuActions) {
 	YAHOO.rental.setupDatasource.push(function() {
