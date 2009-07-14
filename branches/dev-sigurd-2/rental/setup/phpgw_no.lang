@@ -2,10 +2,13 @@ rental_calendar_clear	rental	no	Nullstill
 rental_calendar_close	rental	no	Lukk
 rental_calendar_title	rental	no	Velg dato
 rental_common_account_number	rental	no	Kontonummer
+rental_common_bill	rental	no	Faktura
 rental_common_calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 rental_common_calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 rental_common_company	rental	no	Foretak
+rental_common_contract	rental	no	Kontrakt
 rental_common_department	rental	no	Avdeling
+rental_common_details	rental	no	Detaljer
 rental_common_email	renal	no	E-post
 rental_common_fax	rental	no	Faks
 rental_common_filters 	rental	no	Filtre
@@ -16,15 +19,18 @@ rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_postal_code_place	rental	no	Postnummer/-sted
 rental_common_reskontro	rental	no	Reskontronummer
 rental_common_party	rental	no	Kontraktspart
+rental_common_showing_contract	rental	no	Viser kontrakt
 rental_common_title	rental	no	Stillingstittel
 rental_common_url	rental	no	Nettsted
 rental_common_party_type	rental	no	Type kontraktspart
+rental_common_price	rental	no	Pris
 rental_common_title	rental	no	Tittel
 rental_contract_all	rental	no	Alle
 rental_contract_active	rental	no	Aktive
 rental_contract_billing_external	rental	no	Ekstern
 rental_contract_billing_internal	rental	no	Intern
 rental_contract_billing_type	rental	no	Fakturatype
+rental_contract_billing_start	rental	no	Fakturastart
 rental_contract_composite	rental	no	Leieobjekt
 rental_contract_composite_name	rental	no	Navn på leieobjekt
 rental_contract_date_end	rental	no	Til
@@ -59,6 +65,7 @@ rental_cm_add	rental	no	Legg til
 rental_cm_edit	rental	no	Redigér
 rental_cm_remove	rental	no	Fjern
 rental_cm_show	rental	no	Vis
+rental_menu_contract_type	rental	no	Kontrakttype
 rental_menu_contract_types	rental	no	Kontrakttyper
 rental_menu_contracts	rental	no	Kontrakter
 rental_menu_economy	rental	no	Økonomi
@@ -101,6 +108,7 @@ rental_rc_details	rental	no	Detaljer
 rental_rc_documents	rental	no	Dokumenter
 rental_rc_elements	rental	no	Elementer
 rental_rc_ended	rental	no	Avsluttet
+rental_rc_events	rental	no	Hendelser
 rental_rc_floor	rental	no	Etasje
 rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
@@ -112,6 +120,7 @@ rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet
 rental_rc_occupied	rental	no	Opptatt
+rental_rc_others	rental	no	Annet
 rental_rc_overridden_address	rental	no	Overstyrt adresse
 rental_rc_post_code	rental	no	Postnummer
 rental_rc_post_place	rental	no	Sted
@@ -158,3 +167,7 @@ rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift
 rental_rc_out_of_operation	rental	no	Ikke i drift
+rental_contract_type_innleie	rental no	Innleie
+rental_contract_type_internleie	rental	no	Internleie
+rental_contract_type_eksternleie	rental	no Eksternleie
+rental_contract_type_investeringskontrakt	rental	no	Investeringskontrakt

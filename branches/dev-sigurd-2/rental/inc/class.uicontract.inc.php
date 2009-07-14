@@ -8,14 +8,16 @@
 		(
 			'add'			=> true,
 			'add_from_composite' => true,
+			'edit' => true,
 			'index'		=> true,
-			'query'		=> true
+			'query'		=> true,
+			'view' => true,
+			'viewedit' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
-			//$this->bo = CreateObject('rental.bocomposite');
 			self::set_active_menu('rental::contract');
 		}
 		
@@ -36,11 +38,141 @@
 				}
 			}
 		}
+		
+		/**
+		 * View a list of all contracts
+		 */
+		public function index()
+		{	
+			self::add_javascript('rental', 'rental', 'rental.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+			$this->render('contract_list.php');
+		}
+		
+		/**
+		 * Common function for viewing or editing a contract
+		 * 
+		 * @param $editable whether or not the contract should be editable in the view
+		 * @param $contract_id the id of the contract to show
+		 */
+		public function viewedit($editable, $contract_id)
+		{
+			if ($contract_id > 0) {
+				$contract = rental_contract::get($contract_id);
+				if ($contract) {
+					$message = phpgw::get_var('message');
+					$error = phpgw::get_var('error');
+					
+					self::add_javascript('rental', 'rental', 'rental.js');
+					phpgwapi_yui::load_widget('datatable');
+					phpgwapi_yui::load_widget('tabview');
+					
+					$tabs = array();
+					
+					foreach(array('rental_rc_details', 'rental_rc_area', 'rental_rc_contracts') as $tab) {
+						$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
+					}
+					
+					phpgwapi_yui::tabview_setup('contract_edit_tabview');
+	
+					$documents = array();
+					
+					$active_tab = phpgw::get_var('active_tab');
+					if (($active_tab == null) || ($active_tab == '')) {
+						$active_tab = 'rental_rc_details';
+					}
+					
+					$data = array
+					(
+						'contract' 	=> $contract,
+						'contract_id' => $contract_id,
+						'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+						'editable' => $editable,
+						'message' => $message,
+						'error' => $error,
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
+						'dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+					);
+					//self::render_template('contract', $data);
+					$this->render('contract.php', $data);
+				}
+			}
+		}
+		
+		/**
+		 * View a contract
+		 */
+		public function view() {
+			$contract_id = (int)phpgw::get_var('id');
+			return $this->viewedit(false, $contract_id);
+		}
+		
+		/**
+		 * Edit a contract
+		 */
+		public function edit()
+		{
+			$contract_id = (int)phpgw::get_var('id');
+			
+			if(isset($_POST['save_contract']))
+			{
+				$contract = rental_contract::get($contract_id);
+				
+				$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime(phpgw::get_var('date_start')));
+				$date_end =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime(phpgw::get_var('date_end')));
+				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
+				
+				
+				$contract->set_account(phpgw::get_var('account_number'));
+				
+				$contract->store();
+			}
+			
+			return $this->viewedit(true, $contract_id);
+		}
+		
+		/**
+		 * Create a new empty contract
+		 */
+		public function add()
+		{
+			$contract = new rental_contract();
+			
+			// Set the type of the new contract
+			$contract->set_type_id(phpgw::get_var('new_contract_type'));
+			$contract->store();
+			
+			// Redirect to edit
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		/**
+		 * Create a new contract tied to the composite provided in the composite_id parameter 
+		 */
+		public function add_from_composite()
+		{
+			$contract = new rental_contract();
+			$contract->store();
+			
+			// Get the composite object the user asked for from the DB
+			$composite = rental_composite::get(phpgw::get_var('composite_id'));
+			// Add that composite to the new contract
+			$contract->add_composite($composite);
+			
+			// TODO: set type of contract.  Do we set a default one or should the
+			// user be able to choose it from where this function is called?  (like the context
+			// menu of the composite table)
+			
+			$contract->store();
+			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
 
 		/**
-		 * Return a JSON result of rental composite related data
+		 * Return a JSON result of rental contract related data
 		 * 
-		 * @param $composite_id  rental composite id
+		 * @param $contract_id  rental contract id
 		 * @param $type	type of details
 		 * @param $field_total the field name that holds the total number of records
 		 * @param $field_result the field name that holds the query result
@@ -100,75 +232,18 @@
 			{
 				case 'index':
 					$value['actions'] = array(
-						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id']))),
-						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])))
-					);
-					break;
-				case 'included_areas':
-					$value['actions'] = array(
-						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])))
-					);
-					break;
-				case 'available_areas':
-					$value['actions'] = array(
-						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])))
-					);
-					break;
-				case 'contracts':
-					$value['actions'] = array(
-						'view_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id']))),
-						'edit_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])))
+						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id']))),
+						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])))
 					);
 					break;	
 			}
-			
 		}
-		
-		/**
-		 * Create a new empty contract
-		 */
-		public function add()
-		{
-			$contract = new rental_contract();
-			$contract->set_type_id(phpgw::get_var('new_contract_type'));
-			$contract->store();
-			
-			// Redirect to edit
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
-		}
-		
-		/**
-		 * Create a new contract tied to the composite provided in the composite_id parameter 
-		 */
-		public function add_from_composite()
-		{
-			$contract = new rental_contract();
-			$contract->store();
-			
-			// Get the composite object the user asked for from the DB
-			$composite = rental_composite::get(phpgw::get_var('composite_id'));
-			// Add that composite to the new contract
-			$contract->add_composite($composite);
-			$contract->store();
-			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
-		}
-			
-		///View all contracts
-		public function index()
-		{	
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			$this->render('contract_list.php');
-		}
-		
 		
 		/**
 		 * Convert a rental_contract object into a more XSL-friendly keyed array format
 		 * 
-		 * @param $composite rental_composite to be converted
-		 * @return key=>value array of composite data
+		 * @param $contract rental_contract to be converted
+		 * @return key=>value array of contract data
 		 */
 		protected function get_contract_hash($contract)
 		{

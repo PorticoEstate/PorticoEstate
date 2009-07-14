@@ -19,17 +19,17 @@
 		protected $composite_name;
 		protected $composites;
 		
+		/**
+		 * Constructor.  Takes an optional ID.  If a contract is created from outside
+		 * the database the ID should be empty so the database can add one according to its logic.
+		 * 
+		 * @param int $id the id of this composite
+		 */
 		public function __construct(int $id = null)
 		{
 			$this->id = $id;
 		}
 		
-		/**
-		 * Get the contract ID
-		 * 
-		 * @param $id
-		 * @return int
-		 */
 		public function set_id($id)
 		{
 			$this->id = $id;
@@ -83,13 +83,16 @@
 		
 		public function get_account() { return $this->account; }
 		
-		public function get_contract_type_title(){
-			return $this->contract_type_title;
-		}
-		
-		public function set_contract_type_title($title)
+		/**
+		 * Get the name of the contract type @see get_type_id()
+		 * 
+		 * @return string
+		 */
+		public function get_contract_type_title()
 		{
-			$this->contract_type_title = $title;
+			$types = self::get_contract_types();
+
+			return $types[$this->get_type_id()];
 		}
 		
 		public function get_party_name(){
@@ -115,6 +118,13 @@
 			$this->composites = $composites;
 		}
 		
+		/**
+		 * Get a list of the composites associated with this contract.  The composites are loaded
+		 * lazily, so they will not be populated at object construction, but rather at first call
+		 * of this function.
+		 * 
+		 * @return rental_composite[]
+		 */
 		public function get_composites()
 		{
 			if (!$this->composites) {
@@ -126,9 +136,24 @@
 			return $this->composites;
 		}
 		
-		public function add_composite($composite)
+		/**
+		 * Add a composite to this contract.  Note that the contract is not updated
+		 * in the database until store() is called.  This function checks for duplicates
+		 * before adding the gien composite.
+		 * 
+		 * @param $new_composite
+		 */
+		public function add_composite(rental_composite $new_composite)
 		{
-			if ($composite instanceof rental_composite) {
+			$already_has_composite = false;
+			
+			foreach ($this->get_composites() as $composite) {
+				if ($composite->get_id() == $new_composite->get_id()) {
+					$already_has_composite = true;
+				}
+			}
+			
+			if (!$already_has_composite) {
 				$composites = $this->get_composites();
 				$composites[] = $composite;
 				$this->set_composites($composites);
@@ -149,10 +174,16 @@
 			return self::$so;
 		}
 		
+		/**
+		 * Get the contract stored in the database with the given id
+		 * 
+		 * @param $id id of the contract to get
+		 * @return rental_contract
+		 */
 		public static function get($id)
 		{
 			$so = self::get_so();
-			return $so->get_single();
+			return $so->get_single($id);
 		}
 		
 		/**
@@ -182,6 +213,11 @@
 			return $contracts;
 		}
 		
+		/**
+		 * Get a list of the available contract types.
+		 * 
+		 * @return array key/value array of id mapped to contract type title 
+		 */
 		public static function get_contract_types(){
 			$so = self::get_so();
 			$contract_types = $so->get_contract_types();

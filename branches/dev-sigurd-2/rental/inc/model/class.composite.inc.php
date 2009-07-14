@@ -3,8 +3,9 @@
 	 * Class that represents a rental composite
 	 *
 	 */
-	
+
 	phpgw::import_class('rental.bocommon');
+	
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'unit', 'inc/model/');
 	include_class('rental', 'contract', 'inc/model/');
@@ -37,21 +38,13 @@
 		protected $area_net;
 		
 		protected $units;
-		
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
-		{
-			if (self::$so == null) {
-				self::$so = CreateObject('rental.socomposite');
-			}
-			
-			return self::$so;
-		}
 	
+		/**
+		 * Constructor.  Takes an optional ID.  If a composite is created from outside
+		 * the database the ID should be empty so the database can add one according to its logic.
+		 * 
+		 * @param int $id the id of this composite
+		 */
 		public function __construct(int $id = null)
 		{
 			$this->id = $id;
@@ -104,6 +97,13 @@
 			return $so->add($name);
 		}
 		
+		/**
+		 * Associate a rental unit to this composite.  Note that the composite is not updated
+		 * in the database until store() is called.  This function checks for duplicates
+		 * before adding the given unit.
+		 * 
+		 * @param $new_unit the unit to associate
+		 */
 		public function add_unit($new_unit)
 		{
 			$units = $this->get_included_rental_units();
@@ -121,6 +121,12 @@
 			}
 		}
 		
+		/**
+		 * Remove a given rental unit from this rental_composite. Note that the composite is not updated
+		 * in the database until store() is called.
+		 * 
+		 * @param $unit_to_remove the rental_unit to remove
+		 */
 		public function remove_unit($unit_to_remove)
 		{
 			$units = $this->get_included_rental_units();
@@ -151,6 +157,15 @@
 			}
 		}
 	
+		/**
+		 * Get the rental_unit objects associated with this composite
+		 * 
+		 * @param $sort the name of the column to sort by
+		 * @param $dir the sort direction, 'asc' or 'desc'
+		 * @param $start which row number to start returning results from
+		 * @param $results how many results to return
+		 * @return rental_unit[]
+		 */
 		public function get_included_rental_units($sort = null, $dir = 'asc', $start = 0, $results = null)
 		{
 			if (!$this->units) {
@@ -330,6 +345,25 @@
 		
 		public function get_area_net() { return $this->area_net; }
 		
+		/**
+		 * Get a static reference to the storage object associated with this model object
+		 * 
+		 * @return the storage object
+		 */
+		public static function get_so()
+		{
+			if (self::$so == null) {
+				self::$so = CreateObject('rental.socomposite');
+			}
+			
+			return self::$so;
+		}
+		
+		/**
+		 * Return a string representation of the composite.
+		 * 
+		 * @return string
+		 */
 		function __toString()
 		{
 			$result  = '{';

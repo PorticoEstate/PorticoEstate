@@ -37,10 +37,10 @@ $oProc->query("INSERT INTO rental_unit VALUES (10,515,'2104')"); // Level 2
 $oProc->query("INSERT INTO rental_unit VALUES (10,1421,'1101')"); // Level 3
 $oProc->query("INSERT INTO rental_unit VALUES (10,1389,'3409')"); // Level 4
 $oProc->query("INSERT INTO rental_unit VALUES (10,1391,'3409')"); // Level 5
-$oProc->query("INSERT INTO rental_contract_type VALUES (1,'Innleie','')");
-$oProc->query("INSERT INTO rental_contract_type VALUES (2,'Internleie','')");
-$oProc->query("INSERT INTO rental_contract_type VALUES (3,'Eksternleie','')");
-$oProc->query("INSERT INTO rental_contract_type VALUES (4,'Investeringskontrakt','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (1,'rental_contract_type_innleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (2,'rental_contract_type_internleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (3,'rental_contract_type_eksternleie','')");
+$oProc->query("INSERT INTO rental_contract_type VALUES (4,'rental_contract_type_investeringskontrakt','')");
 $oProc->query("INSERT INTO rental_billing_term VALUES (1,'Årlig','1')");
 $oProc->query("INSERT INTO rental_billing_term VALUES (2,'Månedlig','12')");
 $oProc->query("INSERT INTO rental_billing_term VALUES (3,'Halvår','12')");

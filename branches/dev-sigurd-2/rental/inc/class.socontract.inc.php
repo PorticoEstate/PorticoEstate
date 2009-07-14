@@ -165,7 +165,8 @@ class rental_socontract extends rental_socommon
 			$date = new rental_contract_date($date_start, $date_end);
 			$contract->set_contract_date($date);
 			
-			$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
+			$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date')));
+			$contract->set_billing_start_date($billing_start_date);
 			$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 			$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
 			$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));	
@@ -239,7 +240,6 @@ class rental_socontract extends rental_socommon
 		foreach ($results as $row) {
 			$contract = new rental_contract($row['id']);
 			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
-			$contract->set_contract_type_title($row['title']);
 			$contract->set_party_name($row['company_name'].":".$row['first_name']." ".$row['last_name']);
 			$contract->set_composite_name($row['composite_name']);
 			//var_dump($row);
@@ -361,17 +361,18 @@ class rental_socontract extends rental_socommon
 	{
 		$id = intval($contract->get_id());
 		
+		// TODO: Not all of these are mandatory, so include checks (@see add())
 		// Build a db-friendly array of the contract object
 		$values = array(
-			"billing_start = '" . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date') . "'",
+			"billing_start = " . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date'),
 			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
 			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
-			"account = '" . $this->marshal($contract->get_account(), 'string') . "'"
+			"account = " . $this->marshal($contract->get_account(), 'string')
 		);
 		
 		if ($contract->get_contract_date()) {
-			$values[] = "date_start = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date') . "'";
-			$values[] = "date_end = '" . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date') . "'";
+			$values[] = "date_start = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
+			$values[] = "date_end = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
 		}
 
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
