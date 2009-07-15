@@ -144,6 +144,14 @@ rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_update	rental	no	Oppdatér
 rental_reset	rental	no	Nullstill
+rental_paginator_elements_pr_page	rental	no	elementer per side
+rental_paginator_first	rental	no	Første
+rental_paginator_last	rental	no	Siste
+rental_paginator_next	rental	no	Next
+rental_paginator_previous	rental	no	Forrige
+rental_paginator_of_total	rental	no	av totalt
+rental_paginator_shows_from	rental	no	Viser fra
+rental_paginator_to	rental	no	til
 rental_party_account	rental	no	Kundenummer i Agresso
 rental_party_active	rental	no	Kontraktspart er aktiv
 rental_party_address	rental	no	Adresse

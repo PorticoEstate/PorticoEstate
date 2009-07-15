@@ -37,6 +37,10 @@
 		{
 			key: "actions",
 			hidden: true
+		},
+		{
+			key: "labels",
+			hidden: true
 		}];
 		
 	// Initiating the data source
@@ -53,6 +57,11 @@
 </script>
 
 <form id="list_form" method="GET">
+
+	<?php 
+	if($this->hasWritePermission())
+	{
+	?>
 	<fieldset>
 		<!-- Create new rental composite -->
 		<legend><?= lang('rental_rc_toolbar_new') ?></legend>
@@ -60,6 +69,9 @@
 		<input type="text" id="ctrl_add_rental_composite_name" name="ctrl_add_rental_composite_name"/>
 		<input type="submit" name="ctrl_add_rental_composite" id="ctrl_add_rental_composite" value="<?= lang('rental_rc_toolbar_functions_new_rc') ?>" />
 	</fieldset>
+	<?php 
+	}
+	?>
 	
 	<fieldset>
 		<!-- Select table columns -->

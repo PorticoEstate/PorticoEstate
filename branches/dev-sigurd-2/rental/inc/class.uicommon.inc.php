@@ -35,6 +35,18 @@
 	class rental_uicommon
 	{
 		protected static $old_exception_handler;
+		
+		/*
+		 * TODO: Hardcoded user group ids. Should maybe be administered through admin-interface?
+		 */
+		public static $admin_group_id = 2002;
+		public static $write_group_id = 2001;
+		public static $read_group_id = 2000;
+
+		// Default state for access rights
+		private $has_admin_rights = false;
+		private $has_write_permission = false;
+		private $has_read_permission = false;
 			
 		public function __construct()
 		{
@@ -58,7 +70,60 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
+			
+			
+			/*
+			 * Assign correct permissions for this user based on the group the user belongs to
+			 */
+			$groups = $GLOBALS['phpgw']->accounts->membership($GLOBALS['phpgw_info']['user']['account_id']);
+			foreach($groups as $group)
+			{
+				if( $group->id == self::$admin_group_id )
+				{
+					$this->has_admin_rights = true;
+					$this->has_write_permission = true;
+					$this->has_read_permission = true;
+					break;
+				} 
+				else if($group->id == self::$write_group_id)
+				{
+					$this->has_write_permission = true;
+					$this->has_read_permission = true;
+				} 
+				else if($group->id == self::$read_group_id)
+				{
+					$this->has_read_permission = true;
+				}
+			}
 		}
+		
+		/**
+		 * Is the user allowed to read and write in the rental module?
+		 * 
+		 * @return boolean
+		 */
+		protected function hasWritePermission(){
+			return $this->has_write_permission;
+		}
+		
+		/**
+		 * Is the user allowed to read (only) the rental module?
+		 * 
+		 * @return boolean
+		 */
+		protected function hasReadPermission(){
+			return $this->has_read_permission;
+		}
+		
+		/**
+		 * Is the user an administrator and thereby granted full access to the rental module?
+		 * 
+		 * @return boolean
+		 */
+		protected function isAdmin(){
+			return $this->has_admin_rights;
+		}
+		
 		
 		public static function process_rental_unauthorized_exceptions()
 		{

@@ -196,7 +196,7 @@
 		}
 
 		/**
-		 * Add action links for the context menu of the list item
+		 * Add action links and labels for the context menu of the list items
 		 * 
 		 * @param $value pointer to 
 		 * @param $key ?
@@ -204,51 +204,80 @@
 		 */
 		public function _add_actions(&$value, $key, $params)
 		{
+		
+			$value['actions'] = array();
+			$value['labels'] = array();
+			
 			switch($params[1])
 			{
 				case 'index':
-					$value['actions'] = array(
-						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id']))),
-						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])))
-					);
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
 					break;
 				case 'included_areas':
-					$value['actions'] = array(
-						'remove_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])))
-					);
+					if($this->hasWritePermission())
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
+						$value['labels'][] = lang('rental_cm_remove');
+					}
 					break;
 				case 'available_areas':
-					$value['actions'] = array(
-						'add_unit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])))
-					);
+					if($this->hasWritePermission())
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
+						$value['labels'][] = lang('rental_cm_add');
+					}
 					break;
 				case 'contracts':
-					$value['actions'] = array(
-						'view_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id']))),
-						'edit_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])))
-					);
+					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					if($this->hasWritePermission())
+					{
+						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
 					break;	
 			}
-			
 		}
 		
-		///View all rental composites
+		/**
+		 * Shows a list of composites
+		 */
 		public function index()
 		{			
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+			if(!$this->hasReadPermission())
+			{
+				$this->render('permission_denied.php');
+				return;	
+			}
 			$this->render('composite_list.php');
+			
 		}
 
 		//View rental composite
 		public function view() {
+		if(!self::hasReadPermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			$composite_id = (int)phpgw::get_var('id');
 			return $this -> viewedit(false, $composite_id);
 		}
 		
 		//Edit rental composite
 		public function edit(){
+		if(!$this->hasWritePermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}	
 			$composite_id = (int)phpgw::get_var('id');
 			if(isset($_POST['save_composite']))
 			{
@@ -273,6 +302,11 @@
 		//Create new rental composite
 		public function add()
 		{
+		if(!$this->hasWritePermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			$receipt = rental_composite::add(phpgw::get_var('rental_composite_name'));
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));
 		}
@@ -280,6 +314,11 @@
 		//Common method for JSON queries
 		public function query()
 		{
+			if(!$this->hasReadPermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				if((phpgw::get_var('id') && $type = phpgw::get_var('type')) || (phpgw::get_var('type') == 'orphan_units'))
@@ -347,6 +386,11 @@
 		//Add a unit to a rental composite
 		function add_unit()
 		{
+			if(!$this->hasWritePermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			$composite_id = (int)phpgw::get_var('id');
 			$composite = rental_composite::get($composite_id);
 			
@@ -363,6 +407,11 @@
 		//Remove a unit from a rental composite
 		function remove_unit()
 		{
+			if(!$this->hasWritePermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			$composite_id = (int)phpgw::get_var('id');
 			$composite = rental_composite::get($composite_id);
 
@@ -383,9 +432,11 @@
 		 */
 		public function orphan_units()
 		{
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+			if(!$this->hasReadPermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
 			self::render_template('orphan_unit_list', $data);
 		}
 				
