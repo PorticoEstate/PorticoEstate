@@ -94,6 +94,11 @@
 			$this->set_account($account_id, $account_type);
 		}
 
+		public function get_id()
+		{
+			return $this->account_id;
+		}
+
 		/**
 		* Add an account to a group entry
 		*
