@@ -345,7 +345,12 @@ HTML;
 	}
 	else	// on "normal" pageview
 	{
-		$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false);
+//		$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false);
+
+		if(!$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false))
+		{
+			$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'COOKIE', false);
+		}
 	}
 
 	if (isset($GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]))

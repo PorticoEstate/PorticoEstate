@@ -57,6 +57,7 @@
 		{
 			$form_domain = phpgw::get_var('FormDomain', 'string', 'POST', '');
 			$ConfigDomain = phpgw::get_var('ConfigDomain', 'string', 'REQUEST', $form_domain);
+			$ConfigDomain   = $ConfigDomain ? $ConfigDomain : phpgw::get_var('ConfigDomain', 'string', 'COOKIE');
 
 			$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_type'];
 			$GLOBALS['phpgw_info']['server']['db_host']	= $GLOBALS['phpgw_domain'][$ConfigDomain]['db_host'];
@@ -88,6 +89,14 @@
 			$ConfigPW     = phpgw::get_var('ConfigPW');
 			$HeaderPW     = phpgw::get_var('HeaderPW');
 			$ConfigLang   = phpgw::get_var('ConfigLang');
+
+			// In case the cookies are not included in $_REQUEST
+			$FormLogout   = $FormLogout ? $FormLogout : phpgw::get_var('FormLogout',	'string', 'COOKIE');
+			$ConfigDomain = $ConfigDomain ? $ConfigDomain: phpgw::get_var('ConfigDomain',	'string', 'COOKIE');
+			$ConfigPW     = $ConfigPW ? $ConfigPW : phpgw::get_var('ConfigPW',	'string', 'COOKIE');
+			$HeaderPW     = $HeaderPW ? $HeaderPW : phpgw::get_var('HeaderPW',	'string', 'COOKIE');
+			$ConfigLang   = $ConfigLang ? $ConfigLang : phpgw::get_var('ConfigLang',	'string', 'COOKIE');
+
 
 			/*
 			if(!empty($remoteip) && !$this->checkip($remoteip))

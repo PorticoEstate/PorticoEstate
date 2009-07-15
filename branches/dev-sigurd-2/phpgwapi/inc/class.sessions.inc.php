@@ -1482,11 +1482,6 @@
 		*/
 		protected function _phpgw_set_cookie_params()
 		{
-			if (function_exists('class_alias'))
-			{
-				$this->_cookie_domain = false; //FIXME: Sigurd june 09: PHP Version 5.3.0RC5 chokes on this one
-			}
-
 			if ( !is_null($this->_cookie_domain) )
 			{
 				return $this->_cookie_domain;
@@ -1498,7 +1493,8 @@
 			}
 			else
 			{
-				$this->_cookie_domain = phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
+				$parts = explode(':', phpgw::get_var('HTTP_HOST', 'string', 'SERVER')); // strip portnumber if it exists in url (as in 'http://127.0.0.1:8080/')
+				$this->_cookie_domain = $parts[0];
 			}
 
 			if($this->_cookie_domain == 'localhost')
