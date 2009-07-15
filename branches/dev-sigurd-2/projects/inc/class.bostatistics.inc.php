@@ -110,7 +110,7 @@
 				{
 					foreach($users as $user)
 					{
-						if(in_array($user['account_id'],$pro_employees))
+						if(in_array($user->id,$pro_employees))
 						{
 							$rights[] = $user;
 						}

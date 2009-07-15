@@ -32,7 +32,7 @@
 	* @package phpgroupware
 	* @subpackage phpgwapi
 	*/
-	class ofprojects extends object_factory
+	class projects_ofprojects extends phpgwapi_object_factory
 	{
 
 		/**

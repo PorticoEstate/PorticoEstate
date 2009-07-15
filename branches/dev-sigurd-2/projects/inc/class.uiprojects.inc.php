@@ -348,7 +348,6 @@
 			{
 				foreach( $pro as $p )
 				{
-					echo "testing<br />";
 					$this->nextmatchs->template_alternate_row_class($GLOBALS['phpgw']->template);
 
 // --------------- template declaration for list records -------------------------------------
@@ -1271,12 +1270,12 @@
 			$GLOBALS['phpgw']->template->set_var('message',$message);
 			$prefs = $this->boprojects->read_prefs();
 
-			$GLOBALS['phpgw']->template->set_var('addressbook_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'phpgwapi.pbaddbook_projects.show',
+			$GLOBALS['phpgw']->template->set_var('addressbook_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.pbaddbook_projects.show',
 			                                                                                                    'hidecc' => 1,
 			                                                                                                    'hidebcc' => 1,
 			                                                                                                    'targettagto' => 'customer'
 			                                                                                                   )));
-			$GLOBALS['phpgw']->template->set_var('accounts_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'phpgwapi.pbaddbookaccount_projects.show',
+			$GLOBALS['phpgw']->template->set_var('accounts_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.pbaddbookaccount_projects.show',
 			                                                                                                 'hidecc' => 1,
 			                                                                                                 'hidebcc' => 1,
 			                                                                                                 'targettagto' => 'cordinator'
@@ -1286,7 +1285,7 @@
 			                                                                                                   'hidebcc' => 1,
 			                                                                                                   'targettagto' => 'staff'
 			                                                                                                  )));
-			$GLOBALS['phpgw']->template->set_var('s_accounts_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'phpgwapi.pbaddbookaccount_projects.show',
+			$GLOBALS['phpgw']->template->set_var('s_accounts_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'projects.pbaddbookaccount_projects.show',
 			                                                                                                   'hidecc' => 1,
 			                                                                                                   'hidebcc' => 1,
 			                                                                                                   'targettagto' => 'salesmanager'

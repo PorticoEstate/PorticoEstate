@@ -1117,7 +1117,7 @@
 			$GLOBALS['phpgw']->template->set_var('limit',$values['limit']);
 			$GLOBALS['phpgw']->template->set_var('percent',$values['percent']);
 
-			$GLOBALS['phpgw']->template->pfp('out','event_list_t',True);
+			$GLOBALS['phpgw']->template->pfp('out','event_list_t');
 		}
 
 // --------- SURCHARGES ----------------------
@@ -1210,7 +1210,7 @@
 			$GLOBALS['phpgw']->template->set_var('charge_id',$charge_id);
 			$GLOBALS['phpgw']->template->set_var('lang_save_surcharge',lang('save surcharge'));
 			$GLOBALS['phpgw']->template->set_var('lang_new_surcharge',lang('new surcharge'));
-			$GLOBALS['phpgw']->template->pfp('out','charge_list_t',True);
+			$GLOBALS['phpgw']->template->pfp('out','charge_list_t');
 		}
 
 		function config_proid_help_msg()
@@ -1241,7 +1241,7 @@
 			$GLOBALS['phpgw']->template->set_var('helpmsg',stripslashes($this->boconfig->config_proid_help_msg(array('action' => 'get'))));
 			$GLOBALS['phpgw']->template->set_var('help_url',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'projects.uiprojects_base.proid_help_popup')));
 			$GLOBALS['phpgw']->template->set_var('lang_show',lang('show help msg'));
-			$GLOBALS['phpgw']->template->pfp('out','proidhelp',True);
+			$GLOBALS['phpgw']->template->pfp('out','proidhelp');
 		}
 
 		/*function abook()
@@ -1377,9 +1377,8 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('projects') . ': ' . lang('preferences');
 
 			$GLOBALS['phpgw']->common->phpgw_header();
-			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			echo parse_navbar();
-
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('prefs' => 'preferences.tpl'));
 			$this->set_app_langs();
 
@@ -1886,8 +1885,6 @@
 				$GLOBALS['phpgw']->template->set_var('cancel_button', '<input type="reset" value="'.lang('reset').'">');
 			}
 
-			$GLOBALS['phpgw']->template->pfp('out','location_list_t',True);
+			$GLOBALS['phpgw']->template->pfp('out','location_list_t');
 		}
-
 	}
-?>
