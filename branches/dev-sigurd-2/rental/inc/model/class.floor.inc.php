@@ -28,5 +28,9 @@ class rental_floor extends rental_building
         return 'floor[location code:'.$this->location_code.']';
     }
 	
+    public function serialize()
+	{
+		
+	} 
 }
 ?>

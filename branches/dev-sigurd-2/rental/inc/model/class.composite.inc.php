@@ -375,5 +375,9 @@
 			
 			return $result;
 		}
+		
+		public function serialize() {
+		
+	} 
 	}
 ?>

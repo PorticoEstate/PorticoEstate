@@ -41,5 +41,10 @@ class rental_contract_date
 		return $this->end_date != null && $this->end_date != ''; 
 	}
 	
+	public function serialize()
+	{
+		
+	} 
+	
 }
 ?>

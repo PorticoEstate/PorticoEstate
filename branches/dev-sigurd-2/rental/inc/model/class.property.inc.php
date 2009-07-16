@@ -30,6 +30,10 @@ class rental_property extends rental_unit
 	{
 		$this->location_code_property = (string)$location_code_property;
 	}
-	
+
+    public function serialize()
+	{
+		
+	}
 }
 ?>

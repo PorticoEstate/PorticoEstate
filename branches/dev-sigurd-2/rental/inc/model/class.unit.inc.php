@@ -349,5 +349,9 @@ abstract class rental_unit
 		return $available_unit_array;
 	}
 
+    public function serialize()
+	{
+		
+	}
 }
 ?>

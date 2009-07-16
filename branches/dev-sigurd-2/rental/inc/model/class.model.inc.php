@@ -1,6 +1,6 @@
 <?php
 
-	class rental_model
+	abstract class rental_model
 	{
 		/**
 		* Store the object in the database.  If the object has no ID it is assumed to be new and
@@ -20,5 +20,7 @@
 				$so->add($this);
 			}
 		}
+		
+		public abstract function serialize();
 	}
 ?>

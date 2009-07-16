@@ -27,6 +27,10 @@ class rental_building extends rental_property
 	public function __toString() {
         return 'building[location code:'.$this->location_code.']';
     }
-	
+    
+	public function serialize() {
+		
+	} 
+    
 }
 ?>

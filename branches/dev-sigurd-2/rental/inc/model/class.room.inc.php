@@ -27,6 +27,10 @@ class rental_room extends rental_section
 	public function __toString() {
         return 'room[location code:'.$this->location_code.']';
     }
-	
+
+    public function serialize()
+	{
+		
+	}
 }
 ?>

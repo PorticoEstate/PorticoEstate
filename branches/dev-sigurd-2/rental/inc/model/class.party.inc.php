@@ -239,6 +239,31 @@ class rental_party
 		$this->reskontro = $reskontro;
 	}
 	
+	public function get_name()
+	{
+		$name = $this->last_name;
+		if($this->first_name != '') // Firstname is set
+		{
+			if($name != '') // There's a lastname
+			{
+				$name .= ', '; // Append comma
+			}
+			$name .= $this->first_name; // Append firstname
+		}
+		if($this->company_name != '') // There's a company name
+		{
+			if($name != '') // We've already got a name
+			{
+				$name .= ' (' . $this->company_name . ')'; // Append company name in parenthesis
+			}
+			else // No name
+			{
+				$name = $this->company_name; // Set name to company
+			}
+		}
+		return $name;	
+	}
+	
 	public function get_reskontro() { return $this->reskontro; }
 
 	/**
@@ -291,5 +316,35 @@ class rental_party
 			'all' => lang('rental_party_all')
 		);
 	}
+	
+	public function serialize()
+	{
+		
+		return array(
+			'id' => $this->id,
+			'name' => $this->get_name(),
+			'personal_identification_number' => $this->personal_identification_number,
+			'firstname' => $this->first_name,
+			'lastname' => $this->last_name,
+			'title' => $this->title,
+			'company_name' => $this->company_name,
+			'department' => $this->department,
+			'address' => $this->address_1. ', ' . $this->address_2 . ', ' . $this->postal_code . ', ' . $this->place,
+			'address1' => $this->address_1,
+			'address2' => $this->address_2,
+			'postal_code' => $this->postal_code,
+		 	'place' => $this->place,
+			'phone' => $this->phone,
+			'fax' => $this->fax,
+			'email' => $this->email,
+			'url' => $this->url,
+			'type_id' => $this->type_id,
+			'post_bank_account_number' => $this->post_bank_account_number,
+			'account_number' => $this->account_number,
+			'reskontro' => $this->reskontro,
+			'is_active' => $this->is_active
+		);
+	}
+	
 }
 ?>

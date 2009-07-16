@@ -224,6 +224,10 @@
 			return $contract_types;
 		}
 		
+		public function serialize()
+		{
+			
+		} 
 		
 	}
 

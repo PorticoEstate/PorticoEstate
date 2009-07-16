@@ -28,6 +28,10 @@ class rental_section extends rental_floor
 	public function __toString() {
         return 'section[location code:'.$this->location_code.']';
     }
-	
+
+    public function serialize()
+	{
+		
+	}
 }
 ?>
