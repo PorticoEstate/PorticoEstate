@@ -47,6 +47,8 @@
 		private $has_admin_rights = false;
 		private $has_write_permission = false;
 		private $has_read_permission = false;
+		
+		public $dateFormat;
 			
 		public function __construct()
 		{
@@ -71,6 +73,7 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 			
+			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			/*
 			 * Assign correct permissions for this user based on the group the user belongs to

@@ -72,7 +72,7 @@
 										array('party_type' => phpgw::get_var('party_type'))
 										);
 					foreach ($parties as $party) {
-						$rows[] = $this->get_party_hash($party);
+						$rows[] = $party->serialize();
 					}
 					$party_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
@@ -80,7 +80,7 @@
 			}
 			
 			//Add action column to each row in result table
-			array_walk($party_data[$field_results], array($this, '_add_actions'), array($party_id,$type));
+			array_walk($party_data[$field_results], array($this, 'add_actions'), array($party_id,$type));
 			return $this->yui_results($party_data, $field_total, $field_results);
 		}
 		
@@ -91,22 +91,31 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query]
 		 */
-		public function _add_actions(&$value, $key, $params)
+		public function add_actions(&$value, $key, $params)
 		{
+			$value['actions'] = array();
+			$value['labes'] = array();
+				
 			switch($params[1])
 			{
 				case 'index':
-					$value['actions'] = array(
-						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id']))),
-						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])))
-					);
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
 					break;
 				case 'contracts':
-					$value['actions'] = array(
-						'view_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id']))),
-						'edit_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])))
-					);
-					break;	
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
+					break;
 			}
 			
 		}
@@ -114,14 +123,8 @@
 		
 		///View all contracts
 		public function index()
-		{
-			// XXX: Is dateFormat really used somewhere?
-			$data = array('dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			$this->render('party_list.php', $data);
+		{	
+			$this->render('party_list.php');
 		}
 		
 		/**
@@ -186,98 +189,19 @@
 			$party_id = (int)$party_id;
 			if($party_id > 0) // Id is set
 			{
-				$message = phpgw::get_var('message');
-				$error = phpgw::get_var('error');
-				
-				self::add_javascript('rental', 'rental', 'rental.js');
-				phpgwapi_yui::load_widget('datatable');
-				phpgwapi_yui::load_widget('tabview');
-				
-				$party = $this->get_party_hash(rental_party::get($party_id));
-				
-				$tabs = array();
-				
-				foreach(array('rental_party_details', 'rental_party_contracts', 'rental_party_comments', 'rental_party_documents') as $tab) {
-					$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
+				$party = rental_party::get($party_id);
+				if($party) {
+					$data = array
+					(
+						'party' 	=> $party,
+						'editable' => $editable,
+						'message' => phpgw::get_var('message'),
+						'error' => phpgw::get_var('error'),
+						'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
+						);				
+				$this->render('party.php', $data);	
 				}
-				
-				phpgwapi_yui::tabview_setup('party_edit_tabview');
-
-				$documents = array();
-				
-				$active_tab = phpgw::get_var('active_tab');
-				if (($active_tab == null) || ($active_tab == '')) {
-					$active_tab = 'rental_party_details';
-				}
-				
-				$data = array
-				(
-					'party' 	=> $party,
-					'party_id' => $party_id,
-					'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-					'access' => $editable,
-					'message' => $message,
-					'error' => $error,
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
-					'dateFormat' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
-				);				
-				self::render_template('party', $data);
 			}
 		}
-		
-		/**
-		 * Convert a rental_contract object into a more XSL-friendly keyed array format
-		 * 
-		 * @param $composite rental_composite to be converted
-		 * @return key=>value array of composite data
-		 */
-		protected function get_party_hash($party)
-		{
-			$name = $party->get_last_name();
-			if($party->get_first_name() != '') // Firstname is set
-			{
-				if($name != '') // There's a lastname
-				{
-					$name .= ', '; // Append comma
-				}
-				$name .= $party->get_first_name(); // Append firstname
-			}
-			if($party->get_company_name() != '') // There's a company name
-			{
-				if($name != '') // We've already got a name
-				{
-					$name .= ' (' . $party->get_company_name() . ')'; // Append company name in parenthesis
-				}
-				else // No name
-				{
-					$name = $party->get_company_name(); // Set name to company
-				}
-			}
-			return array(
-				'id' => $party->get_id(),
-				'name' => $name,
-				'personal_identification_number' => $party->get_personal_identification_number(),
-				'firstname' => $party->get_first_name(),
-				'lastname' => $party->get_last_name(),
-				'title' => $party->get_title(),
-				'company_name' => $party->get_company_name(),
-				'department' => $party->get_department(),
-				'address' => $party->get_address_1() . ', ' . $party->get_address_2() . ', ' . $party->get_postal_code() . ', ' . $party->get_place(),
-				'address1' => $party->get_address_1(),
-				'address2' => $party->get_address_2(),
-				'postal_code' => $party->get_postal_code(),
-			 	'place' => $party->get_place(),
-				'phone' => $party->get_phone(),
-				'fax' => $party->get_fax(),
-				'email' => $party->get_email(),
-				'url' => $party->get_url(),
-				'type_id' => $party->get_type_id(),
-				'post_bank_account_number' => $party->get_post_bank_account_number(),
-				'account_number' => $party->get_account_number(),
-				'reskontro' => $party->get_reskontro(),
-				'is_active' => $party->is_active()
-			);
-		}
-
 	}
 ?>

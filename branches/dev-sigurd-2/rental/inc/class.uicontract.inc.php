@@ -43,10 +43,7 @@
 		 * View a list of all contracts
 		 */
 		public function index()
-		{	
-			self::add_javascript('rental', 'rental', 'rental.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
+		{
 			$this->render('contract_list.php');
 		}
 		
@@ -61,40 +58,14 @@
 			if ($contract_id > 0) {
 				$contract = rental_contract::get($contract_id);
 				if ($contract) {
-					$message = phpgw::get_var('message');
-					$error = phpgw::get_var('error');
-					
-					self::add_javascript('rental', 'rental', 'rental.js');
-					phpgwapi_yui::load_widget('datatable');
-					phpgwapi_yui::load_widget('tabview');
-					
-					$tabs = array();
-					
-					foreach(array('rental_rc_details', 'rental_rc_area', 'rental_rc_contracts') as $tab) {
-						$tabs[$tab] =  array('label' => lang($tab), 'link' => '#' . $tab);
-					}
-					
-					phpgwapi_yui::tabview_setup('contract_edit_tabview');
-	
-					$documents = array();
-					
-					$active_tab = phpgw::get_var('active_tab');
-					if (($active_tab == null) || ($active_tab == '')) {
-						$active_tab = 'rental_rc_details';
-					}
-					
 					$data = array
 					(
 						'contract' 	=> $contract,
-						'contract_id' => $contract_id,
-						'tabs'	=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 						'editable' => $editable,
-						'message' => $message,
-						'error' => $error,
+						'message' => phpgw::get_var('message'),
+						'error' => phpgw::get_var('error'),
 						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
-						'dateFormat' 	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 					);
-					//self::render_template('contract', $data);
 					$this->render('contract.php', $data);
 				}
 			}
