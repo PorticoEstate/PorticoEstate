@@ -323,3 +323,7 @@ input.postcode {
 .yui-navset {
 	clear: both;
 }
+
+h1 img {
+	vertical-align: middle;
+}

@@ -1,7 +1,3 @@
-<?php 
-	include("common.php");
-?>
-
 <script type="text/javascript">
 	
 	//Add listener resetting form: redirects browser to call index  again
@@ -14,16 +10,6 @@
      	window.location = 'index.php?menuaction=rental.uiparty.index';
  		}
  	);
-
-	YAHOO.util.Event.addListener(
-		'ctrl_add_rental_party', 
-		'click', 
-		function(e)
-		{    	
-	  	YAHOO.util.Event.stopEvent(e);
-	  	window.location = 'index.php?menuaction=rental.uiparty.add';
-    }
-   );
 	
 	// Defining columns for datatable
 	var columnDefs = [{
@@ -61,9 +47,9 @@
 	setDataSource(
 			'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json',
 			columnDefs,
-			'list_form',
+			'party-list_form',
 			['ctrl_toggle_party_type','ctrl_toggle_party_fields','ctrl_search_query'],
-			'datatable-container',
+			'party-datatable-container',
 			1,
 			['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
 			['view','edit']	
@@ -71,15 +57,9 @@
 
 </script>
 
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?= lang('rental_menu_parties') ?></h1>
-
-<form id="list_form" method="GET">		
+<form id="party-list_form" method="GET">			
 	<fieldset>
-		<legend><?= lang('rental_party_toolbar_new') ?></legend>
-		<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party" value="<?= lang('rental_party_toolbar_functions_new_party') ?>" />
-	</fieldset>
-	
-	<fieldset>
+		<!-- Search -->
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?= lang('rental_rc_search_where') ?>&amp;nbsp;
@@ -99,6 +79,7 @@
 	</fieldset>
 	
 	<fieldset>
+		<!-- Filters -->
 		<legend><?= lang('rental_common_filters') ?></legend>
 		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?= lang('rental_party_type') ?></label>
 	
@@ -114,5 +95,6 @@
 		</select>
 	</fieldset>
 </form>
+
+<div id="party-datatable-container" class="datatable_container"></div>
 <div id="paginator" class="paginator"></div>
-<div id="datatable-container" class="datatable_container"></div>

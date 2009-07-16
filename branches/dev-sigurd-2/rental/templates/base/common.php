@@ -73,10 +73,12 @@ function onCalendarSelect(type,args,array,noPostOnSelect){
 	}
 	document.getElementById(array[0]).value = formatDate('<?= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
-	
+
+	/* XXX
 	if (!noPostOnSelect) {
 		document.getElementById('ctrl_search_button').click();
 	}
+	*/
 	
 }
 

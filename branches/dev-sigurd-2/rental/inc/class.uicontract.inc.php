@@ -237,7 +237,7 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_cm_show');
 					
-					if($this->hasWritePermission() && $value['id'] > 3) 
+					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_cm_edit');

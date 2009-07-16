@@ -4,6 +4,7 @@
  */
 function formListener(event){
 	YAHOO.util.Event.stopEvent(event);
+	
 	var qs = YAHOO.rental.serializeForm(this.dataSourceObject.formBinding);
     this.dataSource.liveData = this.baseURL + qs + '&';
     this.dataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {

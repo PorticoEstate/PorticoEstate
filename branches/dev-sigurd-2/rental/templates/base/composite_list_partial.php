@@ -1,18 +1,4 @@
-<?php
-	include("common.php");
-?>
-<script type="text/javascript">
-	YAHOO.util.Event.addListener(
-		'ctrl_add_rental_composite', 
-		'click', 
-		function(e)
-		{    	
-	  	YAHOO.util.Event.stopEvent(e);
-	  	newName = document.getElementById('ctrl_add_rental_composite_name').value;
-			window.location = 'index.php?menuaction=rental.uicomposite.add&amp;rental_composite_name=' + newName;
-		}
-	);
-	
+<script type="text/javascript">	
 	// Defining columns for datatable
 	var columnDefs = [{
 			key: "id",
@@ -37,49 +23,22 @@
 		{
 			key: "actions",
 			hidden: true
-		},
-		{
-			key: "labels",
-			hidden: true
 		}];
 		
 	// Initiating the data source
 	setDataSource(
 		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json',
 		columnDefs,
-		'list_form',
+		'composite_list_form',
 		['ctrl_toggle_active_rental_composites','ctrl_toggle_occupancy_of_rental_composites','ctrl_search_query'],
-		'datatable-container',
+		'composite-datatable-container',
 		1,
 		['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
 		['view','edit']	
 	);
 </script>
 
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/go-home.png" /> <?= lang('rental_menu_rc') ?></h1>
-<form id="list_form" method="GET">
-
-	<?php 
-	if($this->hasWritePermission())
-	{
-	?>
-	<fieldset>
-		<!-- Create new rental composite -->
-		<legend><?= lang('rental_rc_toolbar_new') ?></legend>
-		<label for="ctrl_add_rental_composite_name"><?= lang('rental_rc_name') ?></label>
-		<input type="text" id="ctrl_add_rental_composite_name" name="ctrl_add_rental_composite_name"/>
-		<input type="submit" name="ctrl_add_rental_composite" id="ctrl_add_rental_composite" value="<?= lang('rental_rc_toolbar_functions_new_rc') ?>" />
-	</fieldset>
-	<?php 
-	}
-	?>
-	
-	<fieldset>
-		<!-- Select table columns -->
-		<legend><?= lang('rental_rc_toolbar_functions') ?></legend>
-		<input type="button" id="dt-options-link" name="dt-options-link" value="<?= lang('rental_rc_toolbar_functions_select_columns') ?>" />
-	</fieldset>
-	
+<form id="composite_list_form" method="GET">
 	<fieldset>
 		<!-- Search -->
 		<legend><?= lang('rental_rc_search_options') ?></legend>
@@ -117,5 +76,5 @@
 	</fieldset>
 </form>
 
+<div id="composite-datatable-container" class="datatable_container"></div>
 <div id="paginator" class="paginator"></div>
-<div id="datatable-container" class="datatable_container"></div>

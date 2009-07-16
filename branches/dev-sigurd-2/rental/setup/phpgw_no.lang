@@ -77,6 +77,7 @@ rental_menu_price_list	rental	no	Prisbok
 rental_menu_reports	rental	no	Rapporter
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspart er opprettet
+rental_messages_right_click_to_add	rental	no	Høyreklikk for å legge til
 rental_operator_and	rental	no	og
 rental_operator_or	rental	no	eller
 rental_rc_active	rental	no	Aktiv
@@ -93,6 +94,10 @@ rental_rc_available_at	no	Ledig på dato
 rental_rc_available	rental	no	Tilgjengelig
 rental_rc_available_from	no	Tilgjengelig fra
 rental_rc_available?	rental	no	Kan leies ut?
+rental_rc_available_composites	rental	no	Tilgjengelige leieobjekter
+rental_rc_selected_composites	rental	no	Valgte leieobjekter
+rental_rc_available_parties	rental	no	Tilgjengelige kontraktsparter
+rental_rc_selected_parties	rental	no	Valgte kontraktsparter
 rental_rc_back	rental	no	Tilbake
 rental_rc_building	rental	no	Bygning
 rental_rc_cancel	rental	no	Avbryt

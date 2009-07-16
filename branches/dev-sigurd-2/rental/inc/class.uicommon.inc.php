@@ -1,7 +1,7 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
 
-	
+	define("RENTAL_TEMPLATE_PATH", "rental/templates/portico/");
 	
 	
 	/**
@@ -266,8 +266,8 @@
 				$gab_id = substr($gab_id,4,5).' / '.substr($gab_id,9,4).' / '.substr($gab_id,13,4).' / '.substr($gab_id,17,3);
 			}
 			return $gab_id;
-		}
-		
+		}	
+	
 		public function render($template,$local_variables = array())
 		{
 			foreach($local_variables as $name => $value)

@@ -36,7 +36,7 @@ YAHOO.util.Event.onDOMReady(
 );
 </script>
 
-<h3><?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h3>
+<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h1>
 
 <form action="#" method="post">
 	<div class="details">
@@ -112,36 +112,7 @@ YAHOO.util.Event.onDOMReady(
 			</dd>
 		</dl>
 	</div>
-	
-	<div id="contract_edit_tabview" class="yui-navset">
-		<ul class="yui-nav">
-			<li class="selected"><a href="#rental_rc_parties"><em><?= lang('rental_menu_parties') ?></em></a></li>
-			<li><a href="#rental_rc_composites"><em><?= lang('rental_contract_composite') ?></em></a></li>
-			<li><a href="#rental_rc_price"><em><?= lang('rental_common_price') ?></em></a></li>
-			<li><a href="#rental_rc_bill"><em><?= lang('rental_common_bill') ?></em></a></li>
-			<li><a href="#rental_rc_documents"><em><?= lang('rental_rc_documents') ?></em></a></li>
-			<li><a href="#rental_rc_events"><em><?= lang('rental_rc_events') ?></em></a></li>
-			<li><a href="#rental_rc_others"><em><?= lang('rental_rc_others') ?></em></a></li>
-		</ul>
 		
-		<div class="yui-content">
-			<div id="parties">
-			</div>
-			<div id="composites">
-			</div>
-			<div id="price">
-			</div>
-			<div id="bill">
-			</div>
-			<div id="documents">
-			</div>
-			<div id="events">
-			</div>
-			<div id="others">
-			</div>
-		</div>
-	</div>
-	
 	<div class="form-buttons">
 		<?php
 			if ($editable) {
@@ -153,3 +124,92 @@ YAHOO.util.Event.onDOMReady(
 		?>
 	</div>
 </form>
+
+<div id="contract_edit_tabview" class="yui-navset">
+	<ul class="yui-nav">
+		<li class="selected"><a href="#rental_rc_parties"><em><?= lang('rental_menu_parties') ?></em></a></li>
+		<li><a href="#rental_rc_composites"><em><?= lang('rental_contract_composite') ?></em></a></li>
+		<li><a href="#rental_rc_price"><em><?= lang('rental_common_price') ?></em></a></li>
+		<li><a href="#rental_rc_bill"><em><?= lang('rental_common_bill') ?></em></a></li>
+		<li><a href="#rental_rc_documents"><em><?= lang('rental_rc_documents') ?></em></a></li>
+		<li><a href="#rental_rc_events"><em><?= lang('rental_rc_events') ?></em></a></li>
+		<li><a href="#rental_rc_others"><em><?= lang('rental_rc_others') ?></em></a></li>
+	</ul>
+	
+	<div class="yui-content">
+		<div id="parties">
+			<h3><?= lang('rental_rc_selected_parties') ?></h3>
+			<script type="text/javascript">
+				// Defining columns for datatable
+				var columnDefs = [{
+					key: "id",
+					label: "<?= lang('rental_party_id') ?>",
+				    sortable: true
+				},
+				{
+					key: "name",
+					label: "<?= lang('rental_party_name') ?>",
+				    sortable: true
+				},
+				{
+					key: "address",
+					label: "<?= lang('rental_party_address') ?>",
+				    sortable: true
+				},
+				{
+					key: "phone",
+					label: "<?= lang('rental_party_phone') ?>",
+				    sortable: true
+				},
+				{
+					key: "reskontro",
+					label: "<?= lang('rental_party_account') ?>",
+				    sortable: false
+				},
+				{
+					key: "actions",
+					hidden: true
+				}
+				];
+				
+				// Initiating the data source
+				setDataSource(
+						'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json',
+						columnDefs,
+						'party-list_form',
+						['ctrl_toggle_party_type','ctrl_toggle_party_fields','ctrl_search_query'],
+						'selected-party-datatable-container',
+						1,
+						['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
+						['view','edit']	
+				);
+			
+			</script>
+			<div id="selected-party-datatable-container" class="datatable_container"></div>
+			<div id="party-paginator" class="paginator"></div>
+			<h3><?= lang('rental_rc_available_parties') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
+			<? include('party_list_partial.php'); ?>
+		</div>
+		<div id="composites">
+			<h3><?= lang('rental_rc_selected_composites') ?></h3>
+			<table>
+				<tr>
+					<td>stuff here</td>
+				</tr>
+			</table>
+			<h3><?= lang('rental_rc_available_composites') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
+			<? include('composite_list_partial.php'); ?>
+		</div>
+		<div id="price">
+		<input type="text" rel="masterform" name="price">
+		</div>
+		<div id="bill">
+		</div>
+		<div id="documents">
+		</div>
+		<div id="events">
+		</div>
+		<div id="others">
+		</div>
+	</div>
+</div>

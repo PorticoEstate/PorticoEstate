@@ -120,6 +120,9 @@
 			['view','edit']	
 	);	
 </script>
+
+<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?= lang('rental_menu_contracts') ?></h1>
+
 <form id="list_form" method="GET">
 	<fieldset>
 		<!-- New contract -->

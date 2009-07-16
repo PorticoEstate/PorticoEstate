@@ -3,6 +3,7 @@ phpgw::import_class('rental.socommon');
 
 include_class('rental', 'contract_date', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
+include_class('rental', 'composite', 'inc/model/');
 
 class rental_socontract extends rental_socommon
 {
@@ -335,7 +336,7 @@ class rental_socontract extends rental_socommon
 		$sql = "SELECT rental_composite.id FROM rental_composite
 							LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
 							LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)
-							WHERE rental_contract.id LIKE '$contract_id'";
+							WHERE rental_contract.id = $contract_id";
 							
 		$composites = array();
 		
