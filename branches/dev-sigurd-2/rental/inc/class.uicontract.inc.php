@@ -228,15 +228,23 @@
 		 */
 		public function _add_actions(&$value, $key, $params)
 		{
+			$value['actions'] = array();
+			$value['labels'] = array();
+			
 			switch($params[1])
 			{
 				case 'index':
-					$value['actions'] = array(
-						'view' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id']))),
-						'edit' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])))
-					);
-					break;	
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					
+					if($this->hasWritePermission() && $value['id'] > 3) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
+					break;
 			}
+			
 		}
 		
 		/**

@@ -101,6 +101,10 @@
 	{
 		key: "actions",
 		hidden: true
+	},
+	{
+		key: "labels",
+		hidden: true
 	}
 	];
 
