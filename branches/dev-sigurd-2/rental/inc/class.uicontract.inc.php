@@ -215,7 +215,7 @@
 			}
 			
 			//Add action column to each row in result table
-			array_walk($contract_data[$field_results], array($this, '_add_actions'), array($contract_id,$type));
+			array_walk($contract_data[$field_results], array($this, 'add_actions'), array($contract_id,$type));
 			return $this->yui_results($contract_data, $field_total, $field_results);
 		}
 		
@@ -226,7 +226,7 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query]
 		 */
-		public function _add_actions(&$value, $key, $params)
+		public function add_actions(&$value, $key, $params)
 		{
 			$value['actions'] = array();
 			$value['labels'] = array();

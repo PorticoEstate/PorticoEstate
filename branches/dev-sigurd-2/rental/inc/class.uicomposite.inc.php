@@ -191,7 +191,7 @@
 			}
 			
 			//Add action column to each row in result table
-			array_walk($composite_data[$field_results], array($this, '_add_actions'), array($composite_id,$type));
+			array_walk($composite_data[$field_results], array($this, 'add_actions'), array($composite_id,$type));
 			return $this->yui_results($composite_data, $field_total, $field_results);
 		}
 
@@ -202,7 +202,7 @@
 		 * @param $key ?
 		 * @param $params [composite_id, type of query]
 		 */
-		public function _add_actions(&$value, $key, $params)
+		public function add_actions(&$value, $key, $params)
 		{
 		
 			$value['actions'] = array();
