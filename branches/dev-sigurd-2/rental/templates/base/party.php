@@ -156,7 +156,7 @@
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="postal_code" id="postal_code" value="<?= $party->get_postal_code() ?>" />
+					<input type="text" name="postal_code" id="postal_code" class="postcode" value="<?= $party->get_postal_code() ?>" />
 					<input type="text" name="place" id="place" value="<?= $party->get_place() ?>" />
 				<?php 
 				}

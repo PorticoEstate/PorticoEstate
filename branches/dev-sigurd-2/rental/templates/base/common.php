@@ -719,20 +719,3 @@ YAHOO.util.Event.addListener(window, "load", function() {
 });
 
 </script>
-
-<style type="text/css">
-	/* Set up common form styles.  TODO: needs refinement. */
-	legend, label, input, select {
-		float:left;
-		margin:0 10px 0px 0px;
-	}
-	
-	label {
-		line-height:1.5em;
-	}
-	
-	fieldset {
-		border-bottom:1px solid #ccc;
-		padding:5px 0px 5px 10px;
-	}
-</style>

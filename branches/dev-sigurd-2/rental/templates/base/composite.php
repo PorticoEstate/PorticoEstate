@@ -140,7 +140,7 @@
 			<form id="available_areas_form" method="GET">
 				<fieldset>
 					<!-- Filters -->
-					<legend><?= lang('rental_rc_toolbar_filters') ?></legend>
+					<h3><?= lang('rental_rc_toolbar_filters') ?></h3>
 					<label for="ctrl_toggle_level"><?= lang('rental_rc_level') ?></label>
 					<select name="level" id="ctrl_toggle_level">
 						<option value="1"><?= lang('rental_rc_property') ?></option>
@@ -166,7 +166,7 @@
 			<form id="contracts_form" method="GET">
 				<fieldset>
 					<!-- Filters -->
-					<legend><?= lang('rental_rc_toolbar_filters') ?></legend>
+					<h3><?= lang('rental_rc_toolbar_filters') ?></h3>
 					<label class="toolbar_element_label" for="ctrl_toggle_contract_status"><?= lang('rental_rc_contract_status') ?></label>
 						<select name="contract_status" id="ctrl_toggle_contract_status">
 							<option value="active" default=""><?= lang('rental_rc_active') ?></option>
