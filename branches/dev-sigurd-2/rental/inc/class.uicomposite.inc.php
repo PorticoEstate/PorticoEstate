@@ -307,7 +307,7 @@
 		protected function viewedit($editable, $composite_id)
 		{
 			if ($composite_id > 0) {
-				$composite = rental_composite::get($composite_id)->serialize();
+				$composite = rental_composite::get($composite_id);
 				$data = array
 				(
 					'composite' 	=> $composite,
