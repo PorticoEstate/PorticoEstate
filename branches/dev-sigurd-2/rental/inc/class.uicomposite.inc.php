@@ -244,6 +244,7 @@
 			
 			//Add action column to each row in result table
 			array_walk($composite_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type));
+			
 			return $this->yui_results($composite_data, 'total_records', 'results');
 		}
 		
@@ -276,6 +277,9 @@
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
 						$value['labels'][] = lang('rental_cm_add');
 					}
+					break;
+				case 'orphan_units':
+					// No actions
 					break;
 				case 'contracts':
 					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
@@ -374,7 +378,14 @@
 				$this->render('permission_denied.php');
 				return;
 			}
-			self::render_template('orphan_unit_list', $data);
+				$data = array
+				(
+					'message' => phpgw::get_var('message'),
+					'error' =>  phpgw::get_var('error'),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.orphan_units'))
+				);
+				
+				$this->render('orphan_unit_list.php', $data);
 		}
 				
 		/**
