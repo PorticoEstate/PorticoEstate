@@ -53,16 +53,6 @@
 <div id="datatable-container" class="datatable_container"></div>
 
 <script type="text/javascript">
-	YAHOO.util.Event.addListener(
-		'ctrl_add_rental_composite', 
-		'click', 
-		function(e)
-		{    	
-	  	YAHOO.util.Event.stopEvent(e);
-	  	newName = document.getElementById('ctrl_add_rental_composite_name').value;
-			window.location = 'index.php?menuaction=rental.uicomposite.add&amp;rental_composite_name=' + newName;
-		}
-	);
 	
 	// Defining columns for datatable
 	var columnDefs = [{
@@ -96,7 +86,7 @@
 		
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json',
+		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=orphan_units',
 		columnDefs,
 		'list_form',
 		['ctrl_toggle_active_rental_composites','ctrl_toggle_occupancy_of_rental_composites','ctrl_search_query'],
