@@ -3,17 +3,6 @@
 ?>
 
 <script type="text/javascript">
-	
-	//Add listener resetting form: redirects browser to call index  again
-	YAHOO.util.Event.addListener(
-		'ctrl_reset_button', 
-		'click', 
-		function(e)
-		{    	
-  		YAHOO.util.Event.stopEvent(e);
-     	window.location = 'index.php?menuaction=rental.uiparty.index';
- 		}
- 	);
 
 	YAHOO.util.Event.addListener(
 		'ctrl_add_rental_party', 
@@ -24,95 +13,17 @@
 	  	window.location = 'index.php?menuaction=rental.uiparty.add';
     }
    );
-	
-	// Defining columns for datatable
-	var columnDefs = [{
-		key: "id",
-		label: "<?= lang('rental_party_id') ?>",
-	    sortable: true
-	},
-	{
-		key: "name",
-		label: "<?= lang('rental_party_name') ?>",
-	    sortable: true
-	},
-	{
-		key: "address",
-		label: "<?= lang('rental_party_address') ?>",
-	    sortable: true
-	},
-	{
-		key: "phone",
-		label: "<?= lang('rental_party_phone') ?>",
-	    sortable: true
-	},
-	{
-		key: "reskontro",
-		label: "<?= lang('rental_party_account') ?>",
-	    sortable: false
-	},
-	{
-		key: "actions",
-		hidden: true
-	}
-	];
-	
-	// Initiating the data source
-	setDataSource(
-			'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json',
-			columnDefs,
-			'list_form',
-			['ctrl_toggle_party_type','ctrl_toggle_party_fields','ctrl_search_query'],
-			'datatable-container',
-			1,
-			['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
-			['view','edit']	
-	);
-
 </script>
 
 <h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?= lang('rental_menu_parties') ?></h1>
 
-<form id="list_form" method="GET">		
-	<fieldset>
-		<legend><?= lang('rental_party_toolbar_new') ?></legend>
-		<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party" value="<?= lang('rental_party_toolbar_functions_new_party') ?>" />
-	</fieldset>
+<fieldset>
+	<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party" value="<?= lang('rental_party_toolbar_functions_new_party') ?>" />
+</fieldset>
+
+<? 
+	$party_list_id = 'all_parties';
+	$url_add_on = '&amp;type=all_parties';
+	include('party_list_partial.php');
+?>
 	
-	<fieldset>
-		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
-		<input id="ctrl_search_query" type="text" name="query" autocomplete="off" />
-		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?= lang('rental_rc_search_where') ?>&amp;nbsp;
-			<select name="search_option" id="ctr_toggle_party_fields">
-				<option value="all"><?= lang('rental_party_all') ?></option>
-				<option value="id"><?= lang('rental_party_id') ?></option>
-				<option value="name"><?= lang('rental_party_name') ?></option>
-				<option value="address"><?= lang('rental_party_address') ?></option>
-				<option value="ssn"><?= lang('rental_party_ssn') ?></option>
-				<option value="result_unit_number"><?= lang('rental_party_result_unit_number') ?></option>
-				<option value="organisation_number"><?= lang('rental_party_organisation_number') ?></option>
-				<option value="account"><?= lang('rental_party_account') ?></option>
-			</select>
-		</label>
-		<input type="submit" id="ctrl_search_button" value="<?= lang('rental_rc_search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?= lang('rental_reset') ?>" />
-	</fieldset>
-	
-	<fieldset>
-		<legend><?= lang('rental_common_filters') ?></legend>
-		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?= lang('rental_party_type') ?></label>
-	
-		<select name="party_type" id="ctrl_toggle_party_type">
-			<?php 
-			$types = rental_contract::get_contract_types();
-			foreach($types as $id => $label)
-			{
-				?><option value="<?= $id ?>"><?= $label ?></option><?
-			}
-			?>
-			<option value="all" selected="selected"><?= lang('rental_contract_all') ?></option>
-		</select>
-	</fieldset>
-</form>
-<div id="paginator" class="paginator"></div>
-<div id="datatable-container" class="datatable_container"></div>

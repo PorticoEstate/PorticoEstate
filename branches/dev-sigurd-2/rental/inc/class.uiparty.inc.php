@@ -20,69 +20,35 @@
 			self::set_active_menu('rental::party');
 		}
 		
-		//Common method for JSON queries
 		public function query()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				if(phpgw::get_var('id') && $type = phpgw::get_var('type'))
-				{
-					$id = phpgw::get_var('id');
-					$type = phpgw::get_var('type');
-					return $this->json_query($id,$type);	
-				} 
-				else 
-				{
-					return $this->json_query();
-				}
-			}
-		}
-
-		/**
-		 * Return a JSON result of rental party related data
-		 * 
-		 * @param $party_id  rental party id
-		 * @param $type	type of details
-		 * @param $field_total the field name that holds the total number of records
-		 * @param $field_result the field name that holds the query result
-		 * @return 
-		 */
-		protected function json_query($party_id = null, $type = 'index', $field_total = 'total_records', $field_results = 'results')
-		{	
-			/*  HTTP get variables:
-			 * 
-			 * sort: column to sort
-			 * dir: direction (ascending, descending)
-			 * startIndex: the index to start from in result
-			 * results: number of rows to return
-			 * contract_status: filter for contract status
-			 * contract_date: filter for contract dates
-			 */
+			$type = phpgw::get_var('type');
+			$parties = array();
 			switch($type)
 			{
-				case 'index':
-				case 'contract_partial':
-					$rows = array();
+				default:
 					$parties = rental_party::get_all(
-										phpgw::get_var('startIndex'),
-										phpgw::get_var('results'),
-										phpgw::get_var('sort'),
-										phpgw::get_var('dir'),
-										phpgw::get_var('query'),
-										phpgw::get_var('search_option'),
-										array('party_type' => phpgw::get_var('party_type'))
-										);
-					foreach ($parties as $party) {
-						$rows[] = $party->serialize();
-					}
-					$party_data = array('results' => $rows, 'total_records' => count($rows));
-					break;
-				return $party_data;
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'party_type' => phpgw::get_var('party_type')
+						)
+					);
 			}
 			
+			$rows = array();
+			foreach ($parties as $party) {
+				$rows[] = $party->serialize();
+			}
+			$party_data = array('results' => $rows, 'total_records' => count($rows));
+					
 			//Add action column to each row in result table
-			array_walk($party_data[$field_results], array($this, 'add_actions'), array($party_id,$type));
-			return $this->yui_results($party_data, $field_total, $field_results);
+			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type));
+			return $this->yui_results($party_data, 'total_records', 'results');			
 		}
 		
 		/**
@@ -96,22 +62,11 @@
 		{
 			$value['actions'] = array();
 			$value['labes'] = array();
-				
 			switch($params[1])
 			{
-				case 'index':
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
-					if($this->hasWritePermission()) 
-					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
-					}
-					break;
 				case 'contract_partial':
-					$value['actions'] = array(
-						'add_to_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'id' => $value['id'])))
-					);
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_add');
 					break;
 				case 'contracts':
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
@@ -122,27 +77,9 @@
 						$value['labels'][] = lang('rental_cm_edit');
 					}
 					break;
-			}
-			
-			$value['actions'] = array();
-			$value['labels'] = array();
-			
-			switch($params[1])
-			{
-				case 'index':
+				default:
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_cm_show');
-					
-					if($this->hasWritePermission()) 
-					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
-					}
-					break;
-				case 'contracts':
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
-					
 					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
@@ -150,7 +87,6 @@
 					}
 					break;
 			}
-			
 		}
 		
 		
@@ -185,7 +121,7 @@
 		 */
 		public function edit(){
 			$party_id = (int)phpgw::get_var('id');
-			if(isset($_POST['save_party']))
+			if(isset($_POST['save']))
 			{
 				$party = new rental_party($party_id);
 				$party->set_personal_identification_number(phpgw::get_var('personal_identification_number'));

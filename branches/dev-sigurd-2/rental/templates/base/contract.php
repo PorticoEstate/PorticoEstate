@@ -128,56 +128,15 @@ YAHOO.util.Event.onDOMReady(
 	</div>
 		<div id="parties">
 			<h3><?= lang('rental_rc_selected_parties') ?></h3>
-			<script type="text/javascript">
-				// Defining columns for datatable
-				var columnDefs = [{
-					key: "id",
-					label: "<?= lang('rental_party_id') ?>",
-				    sortable: true
-				},
-				{
-					key: "name",
-					label: "<?= lang('rental_party_name') ?>",
-				    sortable: true
-				},
-				{
-					key: "address",
-					label: "<?= lang('rental_party_address') ?>",
-				    sortable: true
-				},
-				{
-					key: "phone",
-					label: "<?= lang('rental_party_phone') ?>",
-				    sortable: true
-				},
-				{
-					key: "reskontro",
-					label: "<?= lang('rental_party_account') ?>",
-				    sortable: false
-				},
-				{
-					key: "actions",
-					hidden: true
-				}
-				];
-				
-				// Initiating the data source
-				setDataSource(
-						'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json',
-						columnDefs,
-						'party-list_form',
-						['ctrl_toggle_party_type','ctrl_toggle_party_fields','ctrl_search_query'],
-						'selected-party-datatable-container',
-						1,
-						['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
-						['view','edit']	
-				);
-			
-			</script>
-			<div id="selected-party-datatable-container" class="datatable_container"></div>
-			<div id="party-paginator" class="paginator"></div>
+			<? 
+				$party_list_id = 'included_parties';
+				$url_add_on = '&amp;type=included_parties';
+				include('party_list_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_parties') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
-			<? include('party_list_partial.php'); ?>
+			<? 
+				$party_list_id = 'not_included_parties';
+				$url_add_on = '&amp;type=not_included_parties';
+				include('party_list_partial.php'); ?>
 		</div>
 		<div id="composites">
 			<h3><?= lang('rental_rc_selected_composites') ?></h3>
@@ -187,7 +146,8 @@ YAHOO.util.Event.onDOMReady(
 				</tr>
 			</table>
 			<h3><?= lang('rental_rc_available_composites') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
-			<? include('composite_list_partial.php'); ?>
+			<? 
+			include('composite_list_partial.php'); ?>
 		</div>
 		<div id="price">
 		<input type="text" rel="masterform" name="price">
