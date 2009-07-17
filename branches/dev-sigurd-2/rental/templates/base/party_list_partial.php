@@ -80,7 +80,7 @@
 	
 	<fieldset>
 		<!-- Filters -->
-		<legend><?= lang('rental_common_filters') ?></legend>
+		<h3><?= lang('rental_common_filters') ?></h3>
 		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?= lang('rental_party_type') ?></label>
 	
 		<select name="party_type" id="ctrl_toggle_party_type">

@@ -41,7 +41,7 @@
 <form id="composite_list_form" method="GET">
 	<fieldset>
 		<!-- Search -->
-		<legend><?= lang('rental_rc_search_options') ?></legend>
+		<h3><?= lang('rental_rc_search_options') ?></h3>
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label for="ctrl_search_option"><?= lang('rental_rc_search_where') ?></label>
@@ -60,7 +60,7 @@
 	
 	<fieldset>
 		<!-- Filters -->
-		<legend><?= lang('rental_common_filters') ?></legend>
+		<h3><?= lang('rental_common_filters') ?></h3>
 		<label for="ctrl_toggle_active_rental_composites"><?= lang('rental_rc_availability') ?></label>
 		<select name="is_active" id="ctrl_toggle_active_rental_composites">
 			<option value="active"><?= lang('rental_rc_in_operation') ?></option>

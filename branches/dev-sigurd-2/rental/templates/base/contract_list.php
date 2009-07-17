@@ -126,7 +126,7 @@
 <form id="list_form" method="GET">
 	<fieldset>
 		<!-- New contract -->
-		<legend><?= lang('rental_contract_toolbar_new') ?></legend>
+		<h3><?= lang('rental_contract_toolbar_new') ?></h3>
 		<select name="new_contract_type" id="ctrl_new_contract_type">
 			<?php 
 			$types = rental_contract::get_contract_types();
@@ -141,7 +141,7 @@
 			
 	<fieldset>
 		<!-- Search -->
-		<legend><?= lang('rental_rc_search_options') ?></legend>
+		<h3><?= lang('rental_rc_search_options') ?></h3>
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" />
 		<label for="ctr_toggle_contract_type"><?= lang('rental_rc_search_where') ?></label>
@@ -157,7 +157,7 @@
 	
 	<fieldset>
 		<!-- Status and date filters -->
-		<legend><?= lang('rental_contract_status') ?></legend>
+		<h3><?= lang('rental_contract_status') ?></h3>
 		<select name="contract_status" id="ctrl_toggle_contract_status" >
 			<option value="under_planning"><?= lang('rental_contract_under_planning') ?></option>
 			<option value="active"><?= lang('rental_contract_active') ?></option>
@@ -179,7 +179,7 @@
 	
 	<fieldset>
 		<!-- Contract type filter -->
-		<legend><?= lang('rental_common_filters') ?></legend>
+		<h3><?= lang('rental_common_filters') ?></h3>
 			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?= lang('rental_contract_type') ?></label>
 			<select name="contract_type" id="ctrl_toggle_contract_type">
 				<?php

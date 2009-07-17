@@ -12,7 +12,7 @@
 	?>
 	<fieldset>
 		<!-- Create new rental composite -->
-		<legend><?= lang('rental_rc_toolbar_new') ?></legend>
+		<h3><?= lang('rental_rc_toolbar_new') ?></h3>
 		<label for="ctrl_add_rental_composite_name"><?= lang('rental_rc_name') ?></label>
 		<input type="text" id="ctrl_add_rental_composite_name" name="ctrl_add_rental_composite_name"/>
 		<input type="submit" name="ctrl_add_rental_composite" id="ctrl_add_rental_composite" value="<?= lang('rental_rc_toolbar_functions_new_rc') ?>" />
@@ -23,13 +23,13 @@
 	
 	<fieldset>
 		<!-- Select table columns -->
-		<legend><?= lang('rental_rc_toolbar_functions') ?></legend>
+		<h3><?= lang('rental_rc_toolbar_functions') ?></h3>
 		<input type="button" id="dt-options-link" name="dt-options-link" value="<?= lang('rental_rc_toolbar_functions_select_columns') ?>" />
 	</fieldset>
 	
 	<fieldset>
 		<!-- Search -->
-		<legend><?= lang('rental_rc_search_options') ?></legend>
+		<h3><?= lang('rental_rc_search_options') ?></h3>
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label for="ctrl_search_option"><?= lang('rental_rc_search_where') ?></label>
@@ -48,7 +48,7 @@
 	
 	<fieldset>
 		<!-- Filters -->
-		<legend><?= lang('rental_common_filters') ?></legend>
+		<h3><?= lang('rental_common_filters') ?></h3>
 		<label for="ctrl_toggle_active_rental_composites"><?= lang('rental_rc_availability') ?></label>
 		<select name="is_active" id="ctrl_toggle_active_rental_composites">
 			<option value="active"><?= lang('rental_rc_in_operation') ?></option>

@@ -327,3 +327,11 @@ input.postcode {
 h1 img, li img {
 	vertical-align: middle;
 }
+
+fieldset h3 {
+	display:block;
+	float:left;
+	line-height:1.3em;
+	margin:0;
+	width:120px;
+}
