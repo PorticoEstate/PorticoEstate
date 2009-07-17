@@ -35,7 +35,7 @@
 					</dt>
 					<dd>
 						<?php
-							if (!$editable && $composite->has_custom_address) {
+							if (!$editable && $composite->has_custom_address()) {
 								// In view mode the custom address should be displayed if it's filled in
 								echo $composite->get_custom_address_1() . "<br />";
 								
