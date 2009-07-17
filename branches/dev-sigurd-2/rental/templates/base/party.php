@@ -1,6 +1,8 @@
 <?php
 	//include common logic for all templates 
-	include("common.php");	
+	include("common.php");
+	phpgwapi_yui::load_widget('tabview');	
+	phpgwapi_yui::tabview_setup('party_edit_tabview');
 ?>
 
 <script type="text/javascript">
@@ -325,21 +327,23 @@
 	</div>
 	<div id="party_edit_tabview" class="yui-navset">
 		<ul class="yui-nav">
-			<li class="selected"><a href="#rental_rc_contracts"><em><?= lang('rental_common_contracts') ?></em></a></li>
-			<li><a href="#rental_rc_documents"><em><?= lang('rental_common_documents') ?></em></a></li>
-			<li><a href="#rental_rc_comments"><em><?= lang('rental_common_comments') ?></em></a></li>
+			<li class="selected"><a href="#contracts_party"><em><?= lang('rental_common_contracts') ?></em></a></li>
+			<li><a href="#documents_party"><em><?= lang('rental_common_documents') ?></em></a></li>
+			<li><a href="#comments_party"><em><?= lang('rental_common_comments') ?></em></a></li>
 		</ul>
 		
 		<div class="yui-content">
-			<div id="contracts">
+			<div id="rental_rc_contracts">
 				<?php 
 				$url_add_on = "&amp;type=contracts_part&amp;party_id=".$party->get_id();
 				include('contract_list_partial.php');
 				?>
 			</div>
-			<div id="documents">
+			<div id="rental_rc_documents">
+				Documents
 			</div>
-			<div id="comments">
+			<div id="rental_rc_comments">
+			Comments
 			</div>
 		</div>
 	</div>

@@ -19,4 +19,8 @@
 				array('text' => 'object_singular_name', 'href' => 'object_singular_name'),
 			);
 		}
+		
+		public function query(){
+			
+		}
 	}

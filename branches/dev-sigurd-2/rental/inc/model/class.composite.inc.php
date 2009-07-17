@@ -377,7 +377,24 @@
 		}
 		
 		public function serialize() {
-		
-	} 
+			return array(
+				'id' => $this->get_id(),
+				'description' => $this->get_description(),
+				'is_active' => $this->is_active(),
+				'name' => $this->get_name(),
+				'has_custom_address' => $this->has_custom_address(),
+				'address_1' => $this->get_custom_address_1(),
+				'address_2' => $this->get_custom_address_2(),
+				'postcode' => $this->get_custom_postcode(),
+				'place' => $this->get_custom_place(),
+				'adresse1' => $this->get_address_1(),
+				'adresse2' => $this->get_address_2(),
+				'postnummer' => $this->get_postcode(),
+				'poststed' => $this->get_place(),
+				'gab_id' => $this->get_gab_id(),
+				'area_gros' => $this->get_area_gros(),
+				'area_net' => $this->get_area_net()
+			);
+		} 
 	}
 ?>
