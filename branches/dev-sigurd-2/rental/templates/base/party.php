@@ -10,12 +10,20 @@
 	
 </script>
 
-
-
-<h3><?= lang('rental_common_party') ?>: <?= $party->get_name() ?></h3>
+<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><em> <?= lang('rental_common_party') ?>: <?= $party->get_name() ?></em></h1>
 
 <form action="#" method="post">
-	<div id="details">
+	
+	<div id="party_edit_tabview" class="yui-navset">
+		<ul class="yui-nav">
+			<li class="selected"><a href="#details_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/custom/contact.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
+			<li><a href="#contracts_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_contracts') ?></em></a></li>
+			<li><a href="#documents_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_common_documents') ?></em></a></li>
+			<li><a href="#comments_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/internet-group-chat.png" alt="icon" /> <?= lang('rental_common_comments') ?></em></a></li>
+		</ul>
+		
+		<div class="yui-content">
+			<div id="details">
 		<dl class="proplist-col">
 			<dt>
 				<label for="personal_identification_number"><?= lang('rental_party_ssn') ?> / <?= lang('rental_party_organisation_number') ?></label>
@@ -325,14 +333,6 @@
 			</dd>
 		</dl>
 	</div>
-	<div id="party_edit_tabview" class="yui-navset">
-		<ul class="yui-nav">
-			<li class="selected"><a href="#contracts_party"><em><?= lang('rental_common_contracts') ?></em></a></li>
-			<li><a href="#documents_party"><em><?= lang('rental_common_documents') ?></em></a></li>
-			<li><a href="#comments_party"><em><?= lang('rental_common_comments') ?></em></a></li>
-		</ul>
-		
-		<div class="yui-content">
 			<div id="rental_rc_contracts">
 				<?php 
 				$url_add_on = "&amp;type=contracts_part&amp;party_id=".$party->get_id();

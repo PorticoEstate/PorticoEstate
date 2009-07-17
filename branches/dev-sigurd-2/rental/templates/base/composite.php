@@ -8,8 +8,8 @@
 
 <div id="composite_tabview" class="yui-navset">
 	<ul class="yui-nav">
-		<li class="selected"><a href="#rental_rc_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_rc_details') ?></em></a></li>
-		<li><a href="#rental_rc_elements"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-presentation-template.png" alt="icon" /> <?= lang('rental_rc_elements') ?></em></a></li>
+		<li class="selected"><a href="#rental_rc_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_rc_details') ?></em></a></li>
+		<li><a href="#rental_rc_elements"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-drawing-template.png" alt="icon" /> <?= lang('rental_rc_elements') ?></em></a></li>
 		<li><a href="#rental_rc_contracts"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?= lang('rental_rc_contracts') ?></em></a></li>
 	</ul>
 	

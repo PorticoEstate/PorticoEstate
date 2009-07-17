@@ -6,6 +6,7 @@
 		'rental_party',										// All contract participants, tenants etc.
 		'rental_contract',								// Contracts, has tenants and a rental object
 		'rental_contract_composite',			// Connection between contracts and composites
+		'rental_contract_party',				// Link table between tenants and contracts
 		'rental_composite',								// Rental object, an aggregation of rental units or areas
 	//	'rental_contract_price_item',			// Price items from the price book tied to a contract
 	//	'rental_bill_price_item',					// Price items from the price book tied to a past bill
@@ -18,8 +19,8 @@
 		'rental_document_composite',
 		// Admin tables
 		'rental_billing_term',
-		'rental_contract_type',
-		'rental_contract_party'					// Link table between tenants and contracts
+		'rental_contract_type'
+		
 	//	'rental_price_item',
 	//	'rental_tenant_type',
 	//	'rental_custom_field_type',

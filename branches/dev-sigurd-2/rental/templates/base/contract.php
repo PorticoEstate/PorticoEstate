@@ -1,5 +1,7 @@
 <?php 
-	include("common.php");	
+	include("common.php");
+	phpgwapi_yui::load_widget('tabview');	
+	phpgwapi_yui::tabview_setup('contract_tabview');
 ?>
 
 <script type="text/javascript">
@@ -37,9 +39,21 @@ YAHOO.util.Event.onDOMReady(
 </script>
 
 <h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h1>
-
-<form action="#" method="post">
-	<div class="details">
+<div id="contract_tabview" class="yui-navset">
+	<ul class="yui-nav">
+	
+		<li class="selected"><a href="#rental_common_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/text-x-generic.png" alt="icon" /><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/text-x-generic.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
+		<li><a href="#rental_rc_parties"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?= lang('rental_menu_parties') ?></em></a></li>
+		<li><a href="#rental_rc_composites"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_contract_composite') ?></em></a></li>
+		<li><a href="#rental_rc_price"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?= lang('rental_common_price') ?></em></a></li>
+		<li><a href="#rental_rc_bill"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_bill') ?></em></a></li>
+		<li><a href="#rental_rc_documents"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_rc_documents') ?></em></a></li>
+		<li><a href="#rental_rc_events"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?= lang('rental_rc_events') ?></em></a></li>
+		<li><a href="#rental_rc_others"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_rc_others') ?></em></a></li>
+	</ul>
+	
+	<div class="yui-content">
+			<div class="details">
 		<dl class="proplist-col">
 			<dt>
 				<label for="name"><?= lang('rental_menu_contract_type') ?></label>
@@ -112,31 +126,6 @@ YAHOO.util.Event.onDOMReady(
 			</dd>
 		</dl>
 	</div>
-		
-	<div class="form-buttons">
-		<?php
-			if ($editable) {
-				echo '<input type="submit" name="save_contract" value="' . lang('rental_rc_save') . '"/>';
-				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_rc_cancel') . '</a>';
-			} else {
-				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_rc_back') . '</a>';
-			}
-		?>
-	</div>
-</form>
-
-<div id="contract_edit_tabview" class="yui-navset">
-	<ul class="yui-nav">
-		<li class="selected"><a href="#rental_rc_parties"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?= lang('rental_menu_parties') ?></em></a></li>
-		<li><a href="#rental_rc_composites"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_contract_composite') ?></em></a></li>
-		<li><a href="#rental_rc_price"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?= lang('rental_common_price') ?></em></a></li>
-		<li><a href="#rental_rc_bill"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_bill') ?></em></a></li>
-		<li><a href="#rental_rc_documents"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_rc_documents') ?></em></a></li>
-		<li><a href="#rental_rc_events"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?= lang('rental_rc_events') ?></em></a></li>
-		<li><a href="#rental_rc_others"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_rc_others') ?></em></a></li>
-	</ul>
-	
-	<div class="yui-content">
 		<div id="parties">
 			<h3><?= lang('rental_rc_selected_parties') ?></h3>
 			<script type="text/javascript">
@@ -213,3 +202,6 @@ YAHOO.util.Event.onDOMReady(
 		</div>
 	</div>
 </div>
+<?php 
+	include("form_buttons.php");
+?>

@@ -181,11 +181,10 @@
 		// Tenant to contract relationship
 		'rental_contract_party' => array(
 			'fd' => array(
-				'id' => 			array('type' => 'auto', 'nullable' => false),
 				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
-			'pk' => array('id'),
+			'pk' => array('contract_id','party_id'),
 			'fk' => array(
 					'rental_contract' => array('contract_id' => 'id'),
 					'rental_party' => array('party_id' => 'id')
