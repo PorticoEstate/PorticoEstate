@@ -1,7 +1,7 @@
 <?php
 	phpgw::import_class('phpgwapi.yui');
 
-	define("RENTAL_TEMPLATE_PATH", "rental/templates/portico/");
+	define("RENTAL_TEMPLATE_PATH", "rental/templates/base/");
 	
 	
 	/**
