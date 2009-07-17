@@ -107,10 +107,10 @@
 					$composite = rental_composite::get(phpgw::get_var('id'));
 					$rental_units = $composite->get_included_rental_units(phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'));
 					$composite_data = array();
-					$composite_data[$field_total] = count($rental_units);
-					$composite_data[$field_results] = array();
+					$composite_data[total_records] = count($rental_units);
+					$composite_data['results'] = array();
 					foreach ($rental_units as $unit) {
-						$composite_data[$field_results][] = array(
+						$composite_data['results'][] = array(
 							'location_code' => $unit->get_location_code(),
 							'location_id' => $unit->get_location_id(),
 							'loc1' => $unit->get_location_code_property(),
@@ -123,15 +123,15 @@
 					break;
 				case 'available_areas':
 					$composite_data = array();
-					$composite_data[$field_total] = count(rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('available_date_hidden'), phpgw::get_var('id'), 0, 10000));
-					$composite_data[$field_results] = array();
+					$composite_data[total_records] = count(rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('available_date_hidden'), phpgw::get_var('id'), 0, 10000));
+					$composite_data['results'] = array();
 					$unit_array = rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('id'), phpgw::get_var('available_date_hidden'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('sort'), phpgw::get_var('dir') == ' desc' ? false : true);
 					foreach($unit_array as $unit)
 					{
 						$occupied_date_array = $unit->get_occupied_date_array();
 						if($occupied_date_array !== null)
 						{
-							$data = &$composite_data[$field_results][];
+							$data = &$composite_data['results'][];
 							$data['location_code'] = $unit->get_location_code();
 							$data['location_id'] = $unit->get_location_id();
 							$data['loc1'] = $unit->get_location_code_property();
@@ -181,11 +181,11 @@
 					$composite = rental_composite::get(phpgw::get_var('id'));
 					$contracts = $composite->get_contracts(phpgw::get_var('id'), phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('contract_status'), phpgw::get_var('contract_date'));
 					$composite_data = array();
-					$composite_data[$field_total] = count($contracts);
-					$composite_data[$field_results] = array();
+					$composite_data[total_records] = count($contracts);
+					$composite_data['results'] = array();
 					
 					foreach ($contracts as $contract) {
-						$composite_data[$field_results][] = array(
+						$composite_data['results'][] = array(
 							'id' => $contract->get_id(),
 							'date_start' => $contract->get_contract_date()->get_start_date(),
 							'date_end' => $contract->get_contract_date()->get_end_date(),
@@ -199,12 +199,12 @@
 				case 'orphan_units':
 					$composite_data = array();
 					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
-					$composite_data[$field_total] = rental_unit::get_orphan_rental_unit_count();
-					$composite_data[$field_results] = array();
+					$composite_data[total_records] = rental_unit::get_orphan_rental_unit_count();
+					$composite_data['results'] = array();
 					
 					foreach($units as $unit)
 					{
-						$data = &$composite_data[$field_results][];
+						$data = &$composite_data['results'][];
 						$data['location_code'] = $unit->get_location_code();
 						$data['location_id'] = $unit->get_location_id();
 						$data['loc1'] = $unit->get_location_code_property();

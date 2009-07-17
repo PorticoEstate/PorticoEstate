@@ -127,13 +127,13 @@ YAHOO.util.Event.onDOMReady(
 
 <div id="contract_edit_tabview" class="yui-navset">
 	<ul class="yui-nav">
-		<li class="selected"><a href="#rental_rc_parties"><em><?= lang('rental_menu_parties') ?></em></a></li>
-		<li><a href="#rental_rc_composites"><em><?= lang('rental_contract_composite') ?></em></a></li>
-		<li><a href="#rental_rc_price"><em><?= lang('rental_common_price') ?></em></a></li>
-		<li><a href="#rental_rc_bill"><em><?= lang('rental_common_bill') ?></em></a></li>
-		<li><a href="#rental_rc_documents"><em><?= lang('rental_rc_documents') ?></em></a></li>
-		<li><a href="#rental_rc_events"><em><?= lang('rental_rc_events') ?></em></a></li>
-		<li><a href="#rental_rc_others"><em><?= lang('rental_rc_others') ?></em></a></li>
+		<li class="selected"><a href="#rental_rc_parties"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?= lang('rental_menu_parties') ?></em></a></li>
+		<li><a href="#rental_rc_composites"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_contract_composite') ?></em></a></li>
+		<li><a href="#rental_rc_price"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?= lang('rental_common_price') ?></em></a></li>
+		<li><a href="#rental_rc_bill"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_bill') ?></em></a></li>
+		<li><a href="#rental_rc_documents"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_rc_documents') ?></em></a></li>
+		<li><a href="#rental_rc_events"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?= lang('rental_rc_events') ?></em></a></li>
+		<li><a href="#rental_rc_others"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_rc_others') ?></em></a></li>
 	</ul>
 	
 	<div class="yui-content">

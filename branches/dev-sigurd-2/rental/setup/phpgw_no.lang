@@ -21,6 +21,7 @@ rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_postal_code_place	rental	no	Postnummer/-sted
 rental_common_reskontro	rental	no	Reskontronummer
 rental_common_party	rental	no	Kontraktspart
+rental_common_showing_composite	rental	no	Viser leieobjekt
 rental_common_showing_contract	rental	no	Viser kontrakt
 rental_common_title	rental	no	Stillingstittel
 rental_common_url	rental	no	Nettsted

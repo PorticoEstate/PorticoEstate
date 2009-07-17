@@ -61,6 +61,7 @@
 			switch($type)
 			{
 				case 'index':
+				case 'contract_partial':
 					$rows = array();
 					$parties = rental_party::get_all(
 										phpgw::get_var('startIndex'),
@@ -107,12 +108,44 @@
 						$value['labels'][] = lang('rental_cm_edit');
 					}
 					break;
+				case 'contract_partial':
+					$value['actions'] = array(
+						'add_to_contract' => html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'id' => $value['id'])))
+					);
+					break;
 				case 'contracts':
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_cm_show');
 					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
+					break;
+			}
+			
+			$value['actions'] = array();
+			$value['labels'] = array();
+			
+			switch($params[1])
+			{
+				case 'index':
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
+					break;
+				case 'contracts':
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_cm_edit');
 					}
 					break;

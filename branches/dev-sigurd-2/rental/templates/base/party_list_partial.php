@@ -45,7 +45,7 @@
 	
 	// Initiating the data source
 	setDataSource(
-			'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json',
+			'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json&amp;type=contract_partial',
 			columnDefs,
 			'party-list_form',
 			['ctrl_toggle_party_type','ctrl_toggle_party_fields','ctrl_search_query'],

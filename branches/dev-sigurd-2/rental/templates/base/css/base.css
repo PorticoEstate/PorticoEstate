@@ -324,6 +324,6 @@ input.postcode {
 	clear: both;
 }
 
-h1 img {
+h1 img, li img {
 	vertical-align: middle;
 }
