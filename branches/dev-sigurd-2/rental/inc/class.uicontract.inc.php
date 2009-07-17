@@ -21,22 +21,80 @@
 			self::set_active_menu('rental::contract');
 		}
 		
-		//Common method for JSON queries
 		public function query()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			$contracts = array();
+			$type = phpgw::get_var('type');
+			switch($type)
 			{
-				if(phpgw::get_var('id') && $type = phpgw::get_var('type'))
-				{
-					$id = phpgw::get_var('id');
-					$type = phpgw::get_var('type');
-					return $this->json_query($id,$type);	
-				} 
-				else 
-				{
-					return $this->json_query();
-				}
+				case 'contracts_part':
+					$contracts = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'party_id' => phpgw::get_var('party_id')
+						)
+					);
+					break;
+				default:
+					$contracts = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'contract_status' => phpgw::get_var('contract_status'),
+							'contract_type' => phpgw::get_var('contract_type'),
+							'status_date_hidden' => phpgw::get_var('status_date_hidden')
+						)
+					);
 			}
+			
+			//Serialize the contracts found
+			$rows = array();
+			foreach ($contracts as $contract) {
+				$rows[] = $contract->serialize();
+			}
+			
+			//Add context menu columns (actions and labels)
+			array_walk($rows, array($this, 'add_actions'), $type);
+			
+			//Build a YUI result from the data
+			$contract_data = array('results' => $rows, 'total_records' => count($rows));
+			return $this->yui_results($contract_data, 'total_records', 'results');
+		}
+		
+		/**
+		 * Add data for context menu
+		 * 
+		 * @param $value pointer to 
+		 * @param $key ?
+		 * @param $type
+		 */
+		public function add_actions(&$value, $key, $type)
+		{
+			$value['actions'] = array();
+			$value['labels'] = array();
+			
+			switch($type)
+			{
+				default:
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_cm_show');
+					
+					if($this->hasWritePermission()) 
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('rental_cm_edit');
+					}
+			}
+			
 		}
 		
 		/**
@@ -138,102 +196,6 @@
 			$contract->store();
 			
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
-		}
-
-		/**
-		 * Return a JSON result of rental contract related data
-		 * 
-		 * @param $contract_id  rental contract id
-		 * @param $type	type of details
-		 * @param $field_total the field name that holds the total number of records
-		 * @param $field_result the field name that holds the query result
-		 * @return 
-		 */
-		protected function json_query($contract_id = null, $type = 'index', $field_total = 'total_records', $field_results = 'results')
-		{	
-			/*  HTTP get variables:
-			 * 
-			 * sort: column to sort
-			 * dir: direction (ascending, descending)
-			 * startIndex: the index to start from in result
-			 * results: number of rows to return
-			 * level: (1-5) property to room
-			 * contract_status: filter for contract status
-			 * contract_date: filter for contract dates
-			 */
-			switch($type)
-			{
-				case 'index':
-					$rows = array();
-					$contracts = rental_contract::get_all(
-										phpgw::get_var('startIndex'),
-										phpgw::get_var('results'),
-										phpgw::get_var('sort'),
-										phpgw::get_var('dir'),
-										phpgw::get_var('query'),
-										phpgw::get_var('search_option'),
-										array(
-											'contract_status' => phpgw::get_var('contract_status'),
-											'contract_type' => phpgw::get_var('contract_type'),
-											'status_date_hidden' => phpgw::get_var('status_date_hidden')
-										));
-					foreach ($contracts as $contract) {
-						$rows[] = $this->get_contract_hash($contract);
-					}
-					$contract_data = array('results' => $rows, 'total_records' => count($rows));
-					break;
-				return $contract_data;
-			}
-			
-			//Add action column to each row in result table
-			array_walk($contract_data[$field_results], array($this, 'add_actions'), array($contract_id,$type));
-			return $this->yui_results($contract_data, $field_total, $field_results);
-		}
-		
-		/**
-		 * Add action links for the context menu of the list item
-		 * 
-		 * @param $value pointer to 
-		 * @param $key ?
-		 * @param $params [composite_id, type of query]
-		 */
-		public function add_actions(&$value, $key, $params)
-		{
-			$value['actions'] = array();
-			$value['labels'] = array();
-			
-			switch($params[1])
-			{
-				case 'index':
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
-					
-					if($this->hasWritePermission()) 
-					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
-					}
-					break;
-			}
-			
-		}
-		
-		/**
-		 * Convert a rental_contract object into a more XSL-friendly keyed array format
-		 * 
-		 * @param $contract rental_contract to be converted
-		 * @return key=>value array of contract data
-		 */
-		protected function get_contract_hash($contract)
-		{
-			return array(
-				'id' => $contract->get_id(),
-				'date_start' => $contract->get_contract_date()->get_start_date(),
-				'date_end' => $contract->get_contract_date()->get_end_date(),
-				'title'	=> $contract->get_contract_type_title(),
-				'composite' => $contract->get_composite_name(),
-				'party' => $contract->get_party_name()
-			);
 		}
 	}
 ?>

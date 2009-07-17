@@ -39,6 +39,7 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
 					break;
+				
 				case "composite":
 					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
@@ -61,6 +62,12 @@ class rental_socontract extends rental_socommon
 		}
 		
 		$filter_clauses = array();
+		
+		if(isset($filters['party_id'])){
+			$party_id  =   $filters['party_id'];
+			$filter_clauses[] = "party.id = $party_id";
+		}
+					
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
 			$type = $filters['contract_type'];
 			$filter_clauses[] = "contract.type_id = $type";
@@ -95,9 +102,6 @@ class rental_socontract extends rental_socommon
 					break;
 			}
 		}
-		
-		//var_dump($filter_clauses);
-		
 			
 		if(count($filter_clauses))
 			{

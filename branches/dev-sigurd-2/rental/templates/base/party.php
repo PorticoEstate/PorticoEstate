@@ -332,6 +332,10 @@
 		
 		<div class="yui-content">
 			<div id="contracts">
+				<?php 
+				$url_add_on = "&amp;type=contracts_part&amp;party_id=".$party->get_id();
+				include('contract_list_partial.php');
+				?>
 			</div>
 			<div id="documents">
 			</div>

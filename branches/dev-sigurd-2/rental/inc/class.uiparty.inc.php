@@ -133,8 +133,10 @@
 		 */
 		public function add()
 		{
-			$receipt = rental_party::add();
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_party')));
+			$party = new rental_party();
+			$party->store();
+			// Redirect to edit
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'message' => lang('rental_messages_new_party')));
 		}
 		
 		/**

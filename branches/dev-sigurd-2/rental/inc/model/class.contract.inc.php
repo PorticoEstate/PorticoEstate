@@ -226,7 +226,14 @@
 		
 		public function serialize()
 		{
-			
+			return array(
+				'id' => $this->get_id(),
+				'date_start' => $this->get_contract_date()->get_start_date(),
+				'date_end' => $this->get_contract_date()->get_end_date(),
+				'title'	=> $this->get_contract_type_title(),
+				'composite' => $this->get_composite_name(),
+				'party' => $this->get_party_name()
+			);
 		} 
 		
 	}

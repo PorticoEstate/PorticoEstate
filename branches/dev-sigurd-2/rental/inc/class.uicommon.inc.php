@@ -32,7 +32,7 @@
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
 	
-	class rental_uicommon
+	abstract class rental_uicommon
 	{
 		protected static $old_exception_handler;
 		
@@ -298,5 +298,11 @@
 			self::render_template('php_template',array('output' =>$output));
 		}
 		
+		/**
+		 * Method for JSON queries.
+		 * 
+		 * @return YUI result
+		 */
+		public abstract function query();
 	}
 ?>

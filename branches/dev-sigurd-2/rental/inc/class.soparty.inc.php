@@ -166,10 +166,14 @@ class rental_soparty extends rental_socommon
 		return $parties;
 	}
 
-	function add()
+	function add(rental_party &$party)
 	{
-		parent::add(array('is_active' => true));
-		return $receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');	
+		// Insert the new party
+		$q ="INSERT INTO ".$this->table_name." (is_active) VALUES (false)";
+		$result = $this->db->query($q);
+		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+		$party->set_id($receipt['id']);
+		return $receipt;
 	}
 	
 	protected function get_conditions($query, $filters,$search_option)
