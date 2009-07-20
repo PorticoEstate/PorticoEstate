@@ -98,5 +98,6 @@ $oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2005 AND p
 $oProc->query("INSERT INTO phpgw_preferences VALUES (2003,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
 $oProc->query("INSERT INTO phpgw_preferences VALUES (2004,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
 $oProc->query("INSERT INTO phpgw_preferences VALUES (2005,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
-
-
+$oProc->query("INSERT INTO rental_price_item VALUES (1, 'Fellesareal', '123456789', true, 34.59)");
+$oProc->query("INSERT INTO rental_price_item VALUES (2, 'Administrasjon', '473248234', true, 108.88)");
+$oProc->query("INSERT INTO rental_price_item VALUES (3, 'Parkeringsplass', '124246242', false, 50.00)");

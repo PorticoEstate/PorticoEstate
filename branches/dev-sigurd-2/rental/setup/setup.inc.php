@@ -19,9 +19,8 @@
 		'rental_document_composite',
 		// Admin tables
 		'rental_billing_term',
-		'rental_contract_type'
-		
-	//	'rental_price_item',
+		'rental_contract_type',
+		'rental_price_item'
 	//	'rental_tenant_type',
 	//	'rental_custom_field_type',
 	//	'rental_rental_object_type',

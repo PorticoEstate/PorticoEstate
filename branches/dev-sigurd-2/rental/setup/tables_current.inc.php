@@ -191,5 +191,19 @@
 			),
 			'ix' => array(),
 			'uc' => array()
+		),
+		// Price list
+		'rental_price_item' => array(
+				'fd' => array(
+					'id' =>	array('type' => 'auto', 'nullable' => false),
+					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'agresso_id' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
+					'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
 		)
 	);
