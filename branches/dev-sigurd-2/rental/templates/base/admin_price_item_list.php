@@ -4,8 +4,7 @@
 
 <h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?= lang('rental_menu_price_list') ?></h1>
 
-<form id="list_form" method="GET">
-
+<form action="#" method="GET">
 	<?php 
 	if($this->hasWritePermission())
 	{
@@ -15,7 +14,7 @@
 		<h3><?= lang('rental_price_item_toolbar_new') ?></h3>
 		<label for="ctrl_add_price_item_name"><?= lang('rental_rc_name') ?></label>
 		<input type="text" id="ctrl_add_price_item_name" name="ctrl_add_price_item_name"/>
-		<input type="submit" name="ctrl_price_item" id="ctrl_price_item" value="<?= lang('rental_price_item_toolbar_functions_new_price_item') ?>" />
+		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?= lang('rental_price_item_toolbar_functions_new_price_item') ?>" />
 	</fieldset>
 	<?php 
 	}
@@ -27,13 +26,13 @@
 
 <script type="text/javascript">
 	YAHOO.util.Event.addListener(
-		'ctrl_add_rental_composite', 
+		'ctrl_add_price_item', 
 		'click', 
 		function(e)
 		{    	
 	  	YAHOO.util.Event.stopEvent(e);
-	  	newName = document.getElementById('ctrl_add_rental_composite_name').value;
-			window.location = 'index.php?menuaction=rental.uicomposite.add&amp;rental_composite_name=' + newName;
+	  	newName = document.getElementById('ctrl_add_price_item_name').value;
+			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName;
 		}
 	);
 	
@@ -66,10 +65,10 @@
 		
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uiadmin.query&amp;phpgw_return_as=json&amp;type=price_item_list',
+		'index.php?menuaction=rental.uiprice_item.query&amp;phpgw_return_as=json',
 		columnDefs,
 		'list_form',
-		['ctrl_toggle_active_rental_composites','ctrl_toggle_occupancy_of_rental_composites','ctrl_search_query'],
+		[],
 		'datatable-container',
 		1,
 		['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],

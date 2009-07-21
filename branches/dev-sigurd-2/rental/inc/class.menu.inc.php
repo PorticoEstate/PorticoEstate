@@ -65,7 +65,7 @@
 				'price_item_list'	=> array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_menu_price_list', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadmin.price_item_list', 'appname' => 'rental') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-spreadsheet')
 				)
 			);

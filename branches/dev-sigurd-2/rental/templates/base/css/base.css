@@ -353,3 +353,7 @@ fieldset {
 	border-bottom:1px solid #ccc;
 	padding:5px 0px 5px 10px;
 }
+
+h1 em {
+	font-style:italic;
+}

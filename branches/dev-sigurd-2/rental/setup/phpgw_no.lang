@@ -183,10 +183,17 @@ rental_party_ssn	rental	no	Fødselsnummer
 rental_party_toolbar_functions_new_party	rental	no	Ny kontraktspart
 rental_party_toolbar_new	rental	no	Opprett ny kontraktspart
 rental_party_type	rental	no	Type
+rental_price_item_agresso_id	rental	no	Agresso ID
+rental_price_item_calculate_price_per_area	rental	no	Pris regnes ut fra areal
+rental_price_item_calculate_price_apiece	rental	no	Pris regnes per stk.
+rental_price_item_is_area	rental	no	Areal
+rental_price_item_price	rental	no	Pris
 rental_price_item_toolbar_functions_new_price_item	rental	no	Nytt priselement
 rental_price_item_toolbar_new	rental	no	Opprett nytt priselement
+rental_price_item_title	rental	no	Tittel
 rental_price_item_type_area	rental	no	Areal
 rental_price_item_type_apiece	rental	no	Stk.
+rental_price_item_showing	rental	no	Viser priselement
 rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift

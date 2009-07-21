@@ -19,6 +19,29 @@
 		}
 		
 		/**
+		 * Get single price item
+		 * 
+		 * @param	$id	id of the price item to return
+		 * @return a rental_price_item
+		 */
+		function get_single($id)
+		{
+			$id = (int)$id;
+			
+			$sql = "SELECT * FROM " . $this->table_name . " WHERE id = " . $id;
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->next_record();
+			
+			$price_item = new rental_price_item($this->get_field_value('id'));
+			$price_item->set_title($this->get_field_value('title'));
+			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
+			$price_item->set_is_area($this->get_field_value('is_area'));
+			$price_item->set_price($this->get_field_value('price'));
+			
+			return $price_item;
+		}
+		
+		/**
 		 * Get a list of price_item objects matching the specific filters
 		 * 
 		 * @param $start search result offset
@@ -102,5 +125,58 @@
 				}
 			
 			return join(' AND ', $clauses);
+		}
+		
+		/**
+		 * Add a new price_item to the database.  Adds the new insert id to the object reference.
+		 * 
+		 * @param $price_item the price_item to be added
+		 * @return result receipt from the db operation
+		 */
+		function add(&$price_item)
+		{
+			$price = $price_item->get_price() ? $price_item->get_price() : 0;
+			// Build a db-friendly array of the composite object
+			$values = array(
+				'\'' . $price_item->get_title() . '\'',
+				'\'' . $price_item->get_agresso_id() . '\'',
+				($price_item->is_area() ? "true" : "false"),
+				$price
+			);
+			
+			$cols = array('title', 'agresso_id', 'is_area', 'price');
+			
+			$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+			$result = $this->db->query($q);
+			$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+			
+			$price_item->set_id($receipt['id']);
+			
+			return $receipt;
+		}
+		
+		/**
+		 * Update the database values for an existing price item.
+		 * 
+		 * @param $price_item the price item to be updated
+		 * @return result receipt from the db operation
+		 */
+		function update($price_item)
+		{
+			$id = intval($price_item->get_id());
+			
+			$values = array(
+				'title = \'' . $price_item->get_title() . '\'',
+				'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
+				'is_area = ' . ($price_item->is_area() ? "true" : "false"),
+				'price = ' . $price_item->get_price()
+			);
+					
+			$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			
+			$receipt['id'] = $id;
+			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+
+			return $receipt;
 		}
 	}

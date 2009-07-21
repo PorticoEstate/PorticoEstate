@@ -19,6 +19,15 @@
 			$this->like			= & $this->db->like;
 			$this->join			= & $this->db->join;
 		}
+		
+		/*
+		 * Shortcut function to get a value from the current db row and unmarshal it according
+		 * to its type.
+		 */
+		protected function get_field_value($field)
+		{
+			return $this->unmarshal($this->db->f($field, true), $this->fields[$field]['type']);
+		}
 
 		/**
 		 * Marshal values according to type
