@@ -97,6 +97,10 @@ class rental_socomposite extends rental_socommon
 			case "both":
 				break;
 		}
+		
+		if(isset($filters['contract_id'])){
+			$filter_clauses[] = "rental_contract_composite.contract_id != ".$filters['contract_id'];
+		}
 			
 		if(count($filter_clauses))
 			{
@@ -121,13 +125,24 @@ class rental_socomposite extends rental_socommon
 	{
 		$condition = $this->get_conditions($query, $filters,$search_option);
 		
+		$composite_not_in = '';
+		if(isset($filters['contract_id'])){
+			$composite_not_in = "AND rental_composite.id NOT IN (SELECT composite_id FROM rental_contract_composite WHERE contract_id = ".$filters['contract_id'].")";
+		}
+		
 		$tables = "rental_composite";
-		$joins = 'LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id)';
+		$joins = '	LEFT JOIN rental_unit ON (rental_composite.id = rental_unit.composite_id) 
+					LEFT JOIN fm_location1 ON (rental_unit.loc1 = fm_location1.loc1) 
+					LEFT JOIN fm_gab_location ON (rental_unit.loc1 = fm_gab_location.loc1) 
+					LEFT JOIN fm_locations ON (rental_unit.location_id = fm_locations.id) 
+					LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)';
 		$distinct = 'distinct on(rental_composite.id)';
 		$cols = 'rental_composite.id, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, fm_location1.adresse1, fm_gab_location.gab_id';
 		
+		
+		
 		// Calculate total number of records
-		$this->db->query("SELECT COUNT(distinct rental_composite.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		$this->db->query("SELECT COUNT(distinct rental_composite.id) AS count FROM $tables $joins WHERE $condition $composite_not_in", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');
 
@@ -140,11 +155,11 @@ class rental_socomposite extends rental_socommon
 		if($order != '') // ORDER should be used
 		{
 			// We get a 'ERROR: SELECT DISTINCT ON expressions must match initial ORDER BY expressions' if we don't wrap the ORDER query.
-			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition) AS result $order", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT * FROM (SELECT $distinct $cols FROM $tables $joins WHERE $condition $composite_not_in) AS result $order", $start, __LINE__, __FILE__, $limit);
 		}
 		else
 		{
-			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT $distinct $cols FROM $tables $joins WHERE $condition $composite_not_in", $start, __LINE__, __FILE__, $limit);
 		}
 		
 		$results = array();

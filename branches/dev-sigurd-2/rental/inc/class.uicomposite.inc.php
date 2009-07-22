@@ -111,9 +111,19 @@
 					$composite_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
 				case 'not_included_composites':
-					$contract_id = phpgw::get_var('contract_id');
-					$contract = rental_contract::get($contract_id);
-					$composites = $contract->get_available_composites();
+					$composites = rental_composite::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'is_active' => phpgw::get_var('is_active'), 
+							'is_vacant' => phpgw::get_var('occupancy'),
+							'contract_id' => phpgw::get_var('contract_id')
+						)
+					);
 					$rows = array();
 					foreach ($composites as $composite) {
 						$rows[] = $composite->serialize();

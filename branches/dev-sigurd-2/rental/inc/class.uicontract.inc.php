@@ -226,7 +226,6 @@
 		public function add_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$composite_id = (int)phpgw::get_var('composite_id');
-			var_dump($composite_id);
 			$composite = rental_composite::get($composite_id);
 			$contract = rental_contract::get($contract_id);
 			$contract->add_composite($composite);
