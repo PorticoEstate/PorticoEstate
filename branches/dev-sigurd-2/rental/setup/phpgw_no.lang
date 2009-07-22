@@ -2,6 +2,7 @@ rental_calendar_clear	rental	no	Nullstill
 rental_calendar_close	rental	no	Lukk
 rental_calendar_title	rental	no	Velg dato
 rental_common_account_number	rental	no	Kontonummer
+rental_common_add	rental	no	Legg til
 rental_common_bill	rental	no	Faktura
 rental_common_calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 rental_common_calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
@@ -11,6 +12,7 @@ rental_common_contracts	rental	no	Kontrakter
 rental_common_department	rental	no	Avdeling
 rental_common_details	rental	no	Detaljer
 rental_common_documents	rental	no	Dokumenter
+rental_common_edit	rental	no	Redigér
 rental_common_email	renal	no	E-post
 rental_common_fax	rental	no	Faks
 rental_common_filters 	rental	no	Filtre
@@ -48,11 +50,13 @@ rental_contract_type	rental	no	Type
 rental_contract_partner	rental	no	Kontraktspart
 rental_contract_partner_name	rental	no	Navn på kontraktspart
 rental_contract_period	rental	no	Periode
+rental_common_remove	rental	no	Fjern
 rental_contract_rental_external	rental	no	Eksternleie
 rental_contract_rental_inn	rental	no	Innleie
 rental_contract_rental_internal	rental	no	Internleie
 rental_contract_party	rental	no	Kontraktspart
 rental_contract_party_name	rental	no	Navn på kontraktspart
+rental_common_show	rental	no	Vis
 rental_contract_status	rental	no	Status
 rental_contract_status_date	rental	no	den
 rental_contract_status_before	rental	no	før
@@ -64,10 +68,6 @@ rental_contract_running	rental	no	Løpende
 rental_contract_under_dismissal	rental	no	Under oppsigelse
 rental_contract_under_planning	rental	no	Under planlegging
 rental_contract_with_billing_type	rental	no	Fakturatype
-rental_cm_add	rental	no	Legg til
-rental_cm_edit	rental	no	Redigér
-rental_cm_remove	rental	no	Fjern
-rental_cm_show	rental	no	Vis
 rental_menu_contract_type	rental	no	Kontrakttype
 rental_menu_contract_types	rental	no	Kontrakttyper
 rental_menu_contracts	rental	no	Kontrakter

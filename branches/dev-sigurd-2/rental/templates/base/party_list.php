@@ -22,7 +22,8 @@
 </fieldset>
 
 <? 
-	$party_list_id = 'all_parties';
+	$list_form = true;
+	$list_id = 'all_parties';
 	$url_add_on = '&amp;type=all_parties';
 	include('party_list_partial.php');
 ?>

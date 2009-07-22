@@ -21,5 +21,10 @@
 			);
 			self::render_template('frontpage', $data);
 		}
+		
+		public function query()
+		{
+			
+		}
 	}
 ?>

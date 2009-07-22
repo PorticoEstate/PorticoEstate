@@ -1,6 +1,8 @@
 <?php
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'contract', 'inc/model/');
+	include_class('rental', 'party', 'inc/model/');
+	include_class('rental', 'composite', 'inc/model/');
 	
 	class rental_uicontract extends rental_uicommon
 	{	
@@ -12,7 +14,11 @@
 			'index'		=> true,
 			'query'		=> true,
 			'view' => true,
-			'viewedit' => true
+			'viewedit' => true,
+			'add_party' => true,
+			'remove_party' => true,
+			'add_composite' => true,
+			'remove_composite' => true
 		);
 
 		public function __construct()
@@ -27,6 +33,7 @@
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
+				
 				case 'contracts_part':
 					$contracts = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
@@ -195,6 +202,43 @@
 			
 			$contract->store();
 			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		public function add_party(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$party_id = (int)phpgw::get_var('party_id');
+			$party = rental_party::get($party_id);
+			$contract = rental_contract::get($contract_id);
+			$contract->add_party($party);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		public function remove_party(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$party_id = (int)phpgw::get_var('party_id');
+			$party = rental_party::get($party_id);
+			$contract = rental_contract::get($contract_id);
+			$contract->remove_party($party);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		public function add_composite(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$composite_id = (int)phpgw::get_var('composite_id');
+			var_dump($composite_id);
+			$composite = rental_composite::get($composite_id);
+			$contract = rental_contract::get($contract_id);
+			$contract->add_composite($composite);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		public function remove_composite(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$composite_id = (int)phpgw::get_var('composite_id');
+			$composite = rental_composite::get($composite_id);
+			$contract = rental_contract::get($contract_id);
+			$contract->remove_composite($composite);
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
 	}

@@ -24,26 +24,29 @@
 			key: "actions",
 			hidden: true
 		}];
-		
+
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json',
+		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?= $url_add_on; ?>',
 		columnDefs,
-		'composite_list_form',
-		['ctrl_toggle_active_rental_composites','ctrl_toggle_occupancy_of_rental_composites','ctrl_search_query'],
-		'composite-datatable-container',
-		1,
-		['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
-		['view','edit']	
+		'<?= $list_id ?>_form',
+		['<?= $list_id ?>_ctrl_toggle_active_rental_composites','<?= $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?= $list_id ?>_ctrl_search_query'],
+		'<?= $list_id ?>_container',
+		'<?= $list_id ?>_paginator'
 	);
+		
 </script>
 
-<form id="composite_list_form" method="GET">
+<?php 
+	if($list_form)
+	{
+?>
+<form id="<?= $list_id ?>_form" method="GET">
 	<fieldset>
 		<!-- Search -->
 		<h3><?= lang('rental_rc_search_options') ?></h3>
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
-		<input id="ctrl_search_query" type="text" name="query" autocomplete="off" />
+		<input id="<?= $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label for="ctrl_search_option"><?= lang('rental_rc_search_where') ?></label>
 		<select name="search_option" id="ctrl_search_option">
 			<option value="all"><?= lang('rental_rc_all') ?></option>
@@ -62,19 +65,22 @@
 		<!-- Filters -->
 		<h3><?= lang('rental_common_filters') ?></h3>
 		<label for="ctrl_toggle_active_rental_composites"><?= lang('rental_rc_availability') ?></label>
-		<select name="is_active" id="ctrl_toggle_active_rental_composites">
+		<select name="is_active" id="<?= $list_id ?>_ctrl_toggle_active_rental_composites">
 			<option value="active"><?= lang('rental_rc_in_operation') ?></option>
 			<option value="non_active"><?= lang('rental_rc_out_of_operation') ?></option>
 			<option value="both"><?= lang('rental_rc_all') ?></option>
 		</select>
 		<label for="ctrl_toggle_occupancy_of_rental_composites"><?= lang('rental_operator_and') ?></label>
-		<select name="occupancy" id="ctrl_toggle_occupancy_of_rental_composites">
+		<select name="occupancy" id="<?= $list_id ?>_ctrl_toggle_occupancy_of_rental_composites">
 			<option value="vacant"><?= lang('rental_rc_vacant') ?></option>
 			<option value="occupied"><?= lang('rental_rc_occupied') ?></option>
 			<option value="both"><?= lang('rental_rc_all') ?></option>
 		</select>
 	</fieldset>
 </form>
+<?php 
+	} // end if($list_form)
+?>
 
-<div id="composite-datatable-container" class="datatable_container"></div>
-<div id="paginator" class="paginator"></div>
+<div id="<?= $list_id ?>_container" class="datatable_container"></div>
+<div id="<?= $list_id ?>_paginator" class="paginator"></div>

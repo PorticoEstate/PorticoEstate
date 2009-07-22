@@ -42,10 +42,6 @@
 			$this->parties = $parties;
 		}
 		
-		public function get_parties() {
-			return $this->parties;
-		}
-		
 		public function set_contract_date($date)
 		{
 			$this->contract_date = $date;
@@ -137,6 +133,37 @@
 		}
 		
 		/**
+		 * Get a list of the composites associated with this contract.  The composites are loaded
+		 * lazily, so they will not be populated at object construction, but rather at first call
+		 * of this function.
+		 * 
+		 * @return rental_composite[]
+		 */
+		public function get_available_composites()
+		{
+			$so = self::get_so();
+			return $so->get_available_composites_for_contract($this->get_id());
+		}
+		
+		/**
+		 * Get a list of the parties associated with this contract.  The parties are loaded
+		 * lazily, so they will not be populated at object construction, but rather at first call
+		 * of this function.
+		 * 
+		 * @return rental_party[]
+		 */
+		public function get_parties()
+		{
+			if(!$this->parties) {
+				$so = self::get_so();
+				$this->parties = $so->get_parties_for_contract($this->get_id());
+			}
+			
+			return $this->parties;
+		}
+		
+		
+		/**
 		 * Add a composite to this contract.  Note that the contract is not updated
 		 * in the database until store() is called.  This function checks for duplicates
 		 * before adding the gien composite.
@@ -154,10 +181,60 @@
 			}
 			
 			if (!$already_has_composite) {
+				$so = self::get_so();
+				$so->add_composite($this->get_id(),$new_composite->get_id());
 				$composites = $this->get_composites();
-				$composites[] = $composite;
+				$composites[] = $new_composite;
 				$this->set_composites($composites);
 			}
+		}
+		
+		/**
+		 * Add a prty to this contract. Note that the contract is not updated
+		 * in the database until store() is called.  This function checks for duplicates
+		 * before adding the gien composite. 
+		 * 
+		 * @param rental_party $new_party the new party
+		 */
+		public function add_party(rental_party $new_party)
+		{
+			$already_has_party = false;
+			
+			foreach ($this->get_parties() as $party) {
+				if ($party->get_id() == $new_party->get_id()) {
+					$already_has_party = true;
+				}
+			}
+			
+			if (!$already_has_party) {
+				$so = self::get_so();
+				$so->add_party($this->get_id(),$new_party->get_id());
+				$parties = $this->get_parties();
+				$parties[] = $new_party;
+				$this->set_parties($parties);
+			}
+		}
+		
+		/**
+		 * Add a prty to this contract. Note that the contract is not updated
+		 * in the database until store() is called.  This function checks for duplicates
+		 * before adding the gien composite. 
+		 * 
+		 * @param rental_party $party_to_remove the party to remove
+		 */
+		public function remove_party(rental_party $party_to_remove)
+		{
+			unset($this->parties[$party_to_remove]);
+			$so = self::get_so();
+			$so->remove_party($this->get_id(),$party_to_remove->get_id());
+		}
+		
+		
+		public function remove_composite(rental_composite $composite_to_remove)
+		{
+			unset($this->composites[$composite_to_remove]);
+			$so = self::get_so();
+			$so->remove_composite($this->get_id(),$composite_to_remove->get_id());
 		}
 		
 		/**

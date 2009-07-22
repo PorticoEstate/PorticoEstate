@@ -332,28 +332,85 @@ class rental_socontract extends rental_socommon
 	
 	/**
 	 * Get the composites belonging to a certain contract
+	 * 
 	 * @return A list of rental_composite objects
 	 * @param string $contract_id
 	 */
 	public function get_composites_for_contract($contract_id)
 	{
 		$sql = "SELECT rental_composite.id FROM rental_composite
-							LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
-							LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)
-							WHERE rental_contract.id = $contract_id";
-							
+			LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
+			LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)
+			WHERE rental_contract.id = $contract_id";
+		$this->db->query($sql);						
 		$composites = array();
-		
 		$composite_so = rental_composite::get_so();
-		
-		$this->db->query($sql);
-		while($this->db->next_record())
-		{
+		while($this->db->next_record()) { 
 			$composite_id = $this->unmarshal($this->db->f('id', true), 'int');
 			$composites[] = $composite_so->get_single($composite_id);
-		}
-		
+		 }
 		return $composites;
+	}
+	
+	/**
+	 * Get the composites belonging to a certain contract
+	 * 
+	 * @return A list of rental_composite objects
+	 * @param string $contract_id
+	 */
+	public function get_available_composites_for_contract($contract_id)
+	{
+		$sql = "SELECT rental_composite.id FROM rental_composite
+			LEFT JOIN rental_contract_composite ON (rental_composite.id = rental_contract_composite.composite_id)
+			LEFT JOIN rental_contract ON (rental_contract_composite.contract_id = rental_contract.id)
+			WHERE rental_contract.id != $contract_id";
+		$this->db->query($sql);						
+		$composites = array();
+		$composite_so = rental_composite::get_so();
+		while($this->db->next_record()) { 
+			$composite_id = $this->unmarshal($this->db->f('id', true), 'int');
+			$composites[] = $composite_so->get_single($composite_id);
+		 }
+		return $composites;
+	}
+	
+	
+	/**
+	 * Get the parties involved in this contract
+	 * 
+	 * @param $contract_id the contract id
+	 * @return A list of rental_party objects
+	 */
+	public function get_parties_for_contract($contract_id)
+	{
+		$sql = "SELECT party_id FROM rental_contract_party WHERE contract_id = $contract_id";
+		$this->db->query($sql);
+		$parties = array();
+		$parties_so = rental_party::get_so();
+		while($this->db->next_record()) {
+			$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
+			$parties[] = $parties_so->get_single($party_id);
+		}
+		return $parties;
+	}
+	
+	/**
+	 * Get the parties not involved in this contract
+	 * 
+	 * @param $contract_id the contract id
+	 * @return  A list of rental_party objects
+	 */
+	public function get_available_parties_for_contract($contract_id)
+	{
+		$sql = "SELECT DISTINCT party_id FROM rental_contract_party WHERE contract_id != $contract_id";
+		$this->db->query($sql);
+		$parties = array();
+		$parties_so = rental_party::get_so();
+		while($this->db->next_record()) { 
+			$party_id = $this->unmarshal($this->db->f('party_id', true), 'int'); 
+			$parties[] = $parties_so->get_single($party_id);
+		}
+		return $parties;
 	}
 	
 	/**
@@ -432,5 +489,30 @@ class rental_socontract extends rental_socommon
 		
 		return $receipt;
 	}
+	
+	function add_party($contract_id, $party_id)
+	{
+		$q = "INSERT INTO rental_contract_party (contract_id, party_id) VALUES ($contract_id, $party_id)";
+		$result = $this->db->query($q);
+	}
+	
+	function remove_party($contract_id, $party_id)
+	{
+		$q = "DELETE FROM rental_contract_party WHERE contract_id = $contract_id AND party_id = $party_id";
+		$result = $this->db->query($q);
+	}
+	
+	function add_composite($contract_id, $composite_id)
+	{
+		$q = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ($contract_id, $composite_id)";
+		$result = $this->db->query($q);
+	}
+	
+	function remove_composite($contract_id, $composite_id)
+	{
+		$q = "DELETE FROM rental_contract_composite WHERE contract_id = $contract_id AND composite_id = $composite_id";
+		$result = $this->db->query($q);
+	}
+	
 }
 ?>

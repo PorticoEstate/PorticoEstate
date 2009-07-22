@@ -26,6 +26,25 @@
 			$parties = array();
 			switch($type)
 			{
+				case 'included_parties':
+					$contract_id = phpgw::get_var('contract_id');
+					$contract = rental_contract::get($contract_id);
+					$parties = $contract->get_parties();
+					break;
+				case 'not_included_parties':
+					$parties = rental_party::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'party_type' => phpgw::get_var('party_type'),
+							'contract_id' => phpgw::get_var('contract_id')
+						)
+					);
+					break;
 				default:
 					$parties = rental_party::get_all(
 						phpgw::get_var('startIndex'),
@@ -38,7 +57,10 @@
 							'party_type' => phpgw::get_var('party_type')
 						)
 					);
+					break;
 			}
+			
+			
 			
 			$rows = array();
 			foreach ($parties as $party) {
@@ -61,29 +83,24 @@
 		public function add_actions(&$value, $key, $params)
 		{
 			$value['actions'] = array();
-			$value['labes'] = array();
+			$value['labels'] = array();
 			switch($params[1])
 			{
-				case 'contract_partial':
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_add');
+				case 'included_parties':
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+					$value['labels'][] = lang('rental_common_remove');
 					break;
-				case 'contracts':
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
-					if($this->hasWritePermission()) 
-					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
-					}
+				case 'not_included_parties':
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+					$value['labels'][] = lang('rental_common_add');
 					break;
 				default:
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
+					$value['labels'][] = lang('rental_common_show');
 					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
+						$value['labels'][] = lang('rental_common_edit');
 					}
 					break;
 			}

@@ -100,6 +100,26 @@
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
+				case 'included_composites':
+					$contract_id = phpgw::get_var('contract_id');
+					$contract = rental_contract::get($contract_id);
+					$composites = $contract->get_composites();
+					$rows = array();
+					foreach ($composites as $composite) {
+						$rows[] = $composite->serialize();
+					}
+					$composite_data = array('results' => $rows, 'total_records' => count($rows));
+					break;
+				case 'not_included_composites':
+					$contract_id = phpgw::get_var('contract_id');
+					$contract = rental_contract::get($contract_id);
+					$composites = $contract->get_available_composites();
+					$rows = array();
+					foreach ($composites as $composite) {
+						$rows[] = $composite->serialize();
+					}
+					$composite_data = array('results' => $rows, 'total_records' => count($rows));
+					break;
 				case 'details':
 					$composite_data = rental_composite::get(phpgw::get_var('id'))->serialize();
 					break;
@@ -263,19 +283,32 @@
 			
 			switch($params[1])
 			{
-				
+				case 'included_composites':
+					if($this->hasWritePermission())
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['labels'][] = lang('rental_common_remove');
+					}
+					break;
+				case 'not_included_composites':
+					if($this->hasWritePermission())
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['labels'][] = lang('rental_common_add');
+					}
+					break;
 				case 'included_areas':
 					if($this->hasWritePermission())
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
-						$value['labels'][] = lang('rental_cm_remove');
+						$value['labels'][] = lang('rental_common_remove');
 					}
 					break;
 				case 'available_areas':
 					if($this->hasWritePermission())
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
-						$value['labels'][] = lang('rental_cm_add');
+						$value['labels'][] = lang('rental_common_add');
 					}
 					break;
 				case 'orphan_units':
@@ -283,21 +316,21 @@
 					break;
 				case 'contracts':
 					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
+					$value['labels'][] = lang('rental_common_show');
 					if($this->hasWritePermission())
 					{
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
+						$value['labels'][] = lang('rental_common_edit');
 					}
 					break;
 				default:
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
+					$value['labels'][] = lang('rental_common_show');
 					
 					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
+						$value['labels'][] = lang('rental_common_edit');
 					}
 			}
 		}

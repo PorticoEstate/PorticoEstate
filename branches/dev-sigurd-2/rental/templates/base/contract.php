@@ -129,25 +129,30 @@ YAHOO.util.Event.onDOMReady(
 		<div id="parties">
 			<h3><?= lang('rental_rc_selected_parties') ?></h3>
 			<? 
-				$party_list_id = 'included_parties';
-				$url_add_on = '&amp;type=included_parties';
+				$list_form = false;
+				$list_id = 'included_parties';
+				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_parties') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
-				$party_list_id = 'not_included_parties';
-				$url_add_on = '&amp;type=not_included_parties';
+				$list_form = true;
+				$list_id = 'not_included_parties';
+				$url_add_on = '&amp;type=not_included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php'); ?>
 		</div>
 		<div id="composites">
 			<h3><?= lang('rental_rc_selected_composites') ?></h3>
-			<table>
-				<tr>
-					<td>stuff here</td>
-				</tr>
-			</table>
+			<? 
+				$list_form = false;
+				$list_id = 'included_composites';
+				$url_add_on = '&amp;type=included_composites&amp;contract_id='.$contract->get_id();
+				include('composite_list_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_composites') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
-			include('composite_list_partial.php'); ?>
+				$list_form = true;
+				$list_id = 'not_included_composites';
+				$url_add_on = '&amp;type=not_included_composites&amp;contract_id='.$contract->get_id();
+				include('composite_list_partial.php'); ?>
 		</div>
 		<div id="price">
 		<input type="text" rel="masterform" name="price">

@@ -64,12 +64,14 @@ function dataSourceWrapper(source_properties,pag){
         return oPayload;
     }
 
+    this.table.container_id = this.properties.container
+
 	//... create context menu after the table has loaded the data
     this.table.doAfterLoadData = function() {
     	var recordSet = this.getRecordSet();
     	for(var i=0; i<recordSet.getLength(); i++) {
     		var record = recordSet.getRecord(i);
-    		var menu = new YAHOO.widget.ContextMenu("" +  i, {trigger:this.getTrEl(i)});
+    		var menu = new YAHOO.widget.ContextMenu(this.container_id + "_cm_" + i, {trigger:this.getTrEl(i)});
     		var labels = record.getData().labels;
     		for(var j=0; j<labels.length; j++)
     	    {
@@ -253,8 +255,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
  */
 function formListener(event){
 	YAHOO.util.Event.stopEvent(event);
-	var qs = YAHOO.rental.serializeForm(this.properties.formBinding);
-    this.source.liveData = this.baseURL + qs + '&';
+	var qs = YAHOO.rental.serializeForm(this.properties.form);
+    this.source.liveData = this.url + qs + '&';
     this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
     	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
     }, scope: this});

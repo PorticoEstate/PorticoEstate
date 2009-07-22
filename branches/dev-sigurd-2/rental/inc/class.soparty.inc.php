@@ -92,24 +92,42 @@ class rental_soparty extends rental_socommon
 	 * @return list of rental_party objects
 	*/
 	function get_party_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-	{
-		$condition = $this->get_conditions($query, $filters,$search_option);
-		
+	{	
 		// We have the option to search for party type. A party does not have a type per se
 		// but gets one or more types from the contracts it is associated to.
 		// So if this filter is set we need to do some joining to check what contracts this
 		// party is tied to.
-		if (isset($filters['party_type']) && $filters['party_type'] != 'all') {
-			// Get the type id requested
-			$type_id = $filters['party_type'];
+		if ((isset($filters['party_type']) && $filters['party_type'] != 'all') || isset($filters['contract_id'])) {
 			
 			// Join the contracts (many to many) so we can search for contract types, only
 			// include parties that actually have contracts
-			$sql = "SELECT rental_party.*, contracts.* FROM rental_party LEFT JOIN
-								(SELECT * FROM rental_contract_party map LEFT JOIN
-								(SELECT * FROM rental_contract WHERE rental_contract.type_id = $type_id) c ON (c.id = map.contract_id)) contracts ON (rental_party.id = contracts.party_id)
-								WHERE contracts.type_id IS NOT NULL AND $condition $order";
+
+			$filter_conditions = $this->get_filter_conditions($filters,'contracts');
+			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','AND');
+			$party_not_in = '';
+			if(isset($filters['contract_id']) )
+			{
+				$party_not_in = "AND party_id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = ".$filters['contract_id'].")";
+			}
+			if(isset($filters['contract_id']) && $filters['party_type'] != 'all')
+			{
+				
+			}
 			
+			$sql = "SELECT DISTINCT(rental_party.id), rental_party.* FROM rental_party LEFT JOIN
+					(
+						SELECT id, party_id, contract_id, type_id FROM rental_contract_party rcp LEFT JOIN
+						(
+							SELECT id, type_id FROM rental_contract 
+						) 
+						c
+						ON (c.id = rcp.contract_id) 
+					) 
+					contracts
+					ON (rental_party.id = contracts.party_id OR contracts.id IS NULL)
+					WHERE $filter_conditions $search_conditions $party_not_in $order";
+			
+			//var_dump($sql);
 			// Alternative, with subselect.  Test with many rows:
 			/*
 			$sql = "SELECT *
@@ -121,7 +139,8 @@ class rental_soparty extends rental_socommon
 			*/
 		} else {
 			// No type filter was set, do a normal select
-			$sql = "SELECT * FROM rental_party WHERE $condition $order";
+			$search_conditions = $this->get_search_conditions($query,$search_option,'WHERE');
+			$sql = "SELECT * FROM rental_party $search_conditions $order";
 		}
 		
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
@@ -169,88 +188,88 @@ class rental_soparty extends rental_socommon
 	function add(rental_party &$party)
 	{
 		// Insert the new party
-		$q ="INSERT INTO ".$this->table_name." (is_active) VALUES (false)";
+		$q ="INSERT INTO ".$this->table_name." (is_active) VALUES (true)";
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		$party->set_id($receipt['id']);
 		return $receipt;
 	}
 	
-	protected function get_conditions($query, $filters,$search_option)
-	{	
-		$clauses = array('1=1');
+	protected function get_search_conditions($query, $search_option,$table_name, $prefix='')
+	{
 		if($query)
 		{
-			
 			$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
-			$like_clauses = array();
 			switch($search_option){
 				case "id":
-					$like_clauses[] = "rental_party.id = $query";
+					$like_clauses[] = "$table_name.id = $query";
 					break;
 				case "name":
-					$like_clauses[] = "rental_party.first_name $this->like $like_pattern";
-					$like_clauses[] = "rental_party.last_name $this->like $like_pattern";
+					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
+					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
 					break;
 				case "address":
-					$like_clauses[] = "rental_party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "rental_party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "rental_party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "rental_party.place $this->like $like_pattern";
+					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
+					$like_clauses[] = "$table_name.address_2 $this->like $like_pattern";
+					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
+					$like_clauses[] = "$table_name.place $this->like $like_pattern";
 					break;
 				case "ssn":
-					$like_clauses[] = "rental_party.personal_identification_number $this->like $like_pattern";
+					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
 					break;
 				case "result_unit_number":
-					$like_clauses[] = "rental_party.result_unit $this->like $like_pattern";
+					$like_clauses[] = "$table_name.result_unit $this->like $like_pattern";
 				case "organisation_number":
-					$like_clauses[] = "rental_party.organisation_number $this->like $like_pattern";
+					$like_clauses[] = "$table_name.organisation_number $this->like $like_pattern";
 				case "account":
-					$like_clauses[] = "rental_party.reskontro = $like_pattern";
+					$like_clauses[] = "$table_name.reskontro = $like_pattern";
 				case "all":
-					$like_clauses[] = "rental_party.first_name $this->like $like_pattern";
-					$like_clauses[] = "rental_party.last_name $this->like $like_pattern";
-					$like_clauses[] = "rental_party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "rental_party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "rental_party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "rental_party.place $this->like $like_pattern";
-					$like_clauses[] = "rental_party.personal_identification_number $this->like $like_pattern";
-					$like_clauses[] = "rental_party.result_unit $this->like $like_pattern";
-					$like_clauses[] = "rental_party.organisation_number = $like_pattern";
-					$like_clauses[] = "rental_party.reskontro = $like_pattern";
+					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
+					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
+					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
+					$like_clauses[] = "$table_name.address_2 $this->like $like_pattern";
+					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
+					$like_clauses[] = "$table_name.place $this->like $like_pattern";
+					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
+					$like_clauses[] = "$table_name.result_unit $this->like $like_pattern";
+					$like_clauses[] = "$table_name.organisation_number = $like_pattern";
+					$like_clauses[] = "$table_name.reskontro = $like_pattern";
 					break;
 			}
-			
-			
-			if(count($like_clauses))
-			{
-				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
-			}
-			
-			
 		}
-		
-		$filter_clauses = array();
-		switch($filters['is_active']){
-			case "active":
-				$filter_clauses[] = "rental_party.is_active = TRUE";
-				break;
-			case "non_active":
-				$filter_clauses[] = "rental_party.is_active = FALSE";
-				break;
-			case "both":
-				break;
+		if(count($like_clauses) > 0)
+		{
+			return $prefix.' (' . join(' OR ', $like_clauses) . ')';
+		}
+		else
+		{
+			return '';
 		}
 			
-		if(count($filter_clauses))
-			{
-				$clauses[] = join(' AND ', $filter_clauses);
-			}
-		
-		return join(' AND ', $clauses);
 	}
 	
-
+	protected function get_filter_conditions($filters,$table_name, $prefix='')
+	{
+			
+		if(isset($filters['contract_id']))
+		{
+			$filter_clauses[] = "$table_name.id != ".$filters['contract_id'];
+		}
+			
+		if(isset($filters['party_type']) && $filters['party_type'] != 'all')
+		{
+			$filter_clauses[] = "$table_name.type_id = ".$filters['party_type'];
+		}
+		if(count($filter_clauses) > 0)
+		{
+			return $prefix.' '.join(' AND ', $filter_clauses);
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
 	/**
 	 * Update the database values for an existing party object.
 	 * 

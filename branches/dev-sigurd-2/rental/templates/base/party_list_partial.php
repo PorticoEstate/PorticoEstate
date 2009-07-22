@@ -51,21 +51,25 @@
 	setDataSource(
 		'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json<?= $url_add_on; ?>',
 		columnDefs,
-		'<?= $party_list_id ?>_form',
-		['<?= $party_list_id ?>_ctrl_toggle_party_type','<?= $party_list_id ?>_ctrl_toggle_party_fields','<?= $party_list_id ?>_ctrl_search_query'],
-		'<?= $party_list_id ?>_container',
-		'<?= $party_list_id ?>_paginator'
+		'<?= $list_id ?>_form',
+		['<?= $list_id ?>_ctrl_toggle_party_type','<?= $list_id ?>_ctrl_toggle_party_fields','<?= $list_id ?>_ctrl_search_query'],
+		'<?= $list_id ?>_container',
+		'<?= $list_id ?>_paginator'
 	);
 
 </script>
+<?php 
+	if($list_form)
+	{
+?>
 
-<form id="<?= $party_list_id ?>_form" method="GET">			
+<form id="<?= $list_id ?>_form" method="GET">			
 	<fieldset>
 		<!-- Search -->
 		<label for="ctrl_search_query"><?= lang('rental_rc_search_for') ?></label>
-		<input id="<?= $party_list_id ?>ctrl_search_query" type="text" name="query" autocomplete="off" />
+		<input id="<?= $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?= lang('rental_rc_search_where') ?>&amp;nbsp;
-			<select name="search_option" id="<?= $party_list_id ?>ctr_toggle_party_fields">
+			<select name="search_option" id="<?= $list_id ?>_ctr_toggle_party_fields">
 				<option value="all"><?= lang('rental_party_all') ?></option>
 				<option value="id"><?= lang('rental_party_id') ?></option>
 				<option value="name"><?= lang('rental_party_name') ?></option>
@@ -85,18 +89,21 @@
 		<h3><?= lang('rental_common_filters') ?></h3>
 		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?= lang('rental_party_type') ?></label>
 	
-		<select name="party_type" id="<?= $party_list_id ?>ctrl_toggle_party_type">
+		<select name="party_type" id="<?= $list_id ?>_ctrl_toggle_party_type">
 			<?php 
 			$types = rental_contract::get_contract_types();
 			foreach($types as $id => $label)
 			{
-				?><option value="<?= $id ?>"><?= $label ?></option><?
+				?><option value="<?= $id ?>"><?= lang($label) ?></option><?
 			}
 			?>
 			<option value="all" selected="selected"><?= lang('rental_contract_all') ?></option>
 		</select>
 	</fieldset>
 </form>
+<?php 
+	}
+?>
 
-<div id="<?= $party_list_id ?>_container" class="datatable_container"></div>
-<div id="<?= $party_list_id ?>_paginator" class="paginator"></div>
+<div id="<?= $list_id ?>_container" class="datatable_container"></div>
+<div id="<?= $list_id ?>_paginator" class="paginator"></div>

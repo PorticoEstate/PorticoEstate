@@ -15,7 +15,7 @@
 		{
 			$this->table_name = $table_name;
 			$this->fields = $fields;
-			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db           = clone $GLOBALS['phpgw']->db;
 			$this->like			= & $this->db->like;
 			$this->join			= & $this->db->join;
 		}
