@@ -71,7 +71,7 @@
 		[],
 		'datatable-container',
 		1,
-		['<?= lang('rental_cm_show') ?>','<?= lang('rental_cm_edit') ?>'],
+		['<?= lang('rental_common_show') ?>','<?= lang('rental_common_edit') ?>'],
 		['view','edit']	
 	);
 </script>

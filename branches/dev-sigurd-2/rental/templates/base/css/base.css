@@ -357,3 +357,14 @@ fieldset {
 h1 em {
 	font-style:italic;
 }
+
+p.info, p.error {
+	padding:10px;
+	font-size:1.1em;
+}
+
+.info {
+	background-color:#CCFFCC;
+	border:1px solid #00FF00;
+	color:black;
+}

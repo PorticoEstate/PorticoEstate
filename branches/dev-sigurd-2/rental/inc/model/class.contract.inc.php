@@ -313,6 +313,16 @@
 			);
 		} 
 		
+		public function __toString()
+		{
+			
+		}
+		
+		public static function export(string $name, bool $return)
+		{
+			
+		}
+		
 	}
 
 ?>

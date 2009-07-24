@@ -41,7 +41,8 @@
 				return;
 			}
 			$id = (int)phpgw::get_var('id');
-			return $this -> viewedit(false, $id);
+			$price_item = rental_price_item::get($id);
+			return $this->viewedit(false, $price_item);
 		}
 		
 		/*
@@ -56,20 +57,24 @@
 			}
 			
 			$id = (int)phpgw::get_var('id');
+			$price_item = rental_price_item::get($id);
 			
 			// Save the price item if it was posted
 			if(isset($_POST['save']))
 			{
-				$price_item = new rental_price_item($id);
 				$price_item->set_title(phpgw::get_var('title'));
 				$price_item->set_agresso_id(phpgw::get_var('agresso_id'));
 				$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
 				$price_item->set_price(phpgw::get_var('price'));
-				$price_item->store();
-				// XXX: How to get error msgs back to user?
+				if ($price_item->store()) {
+					return $this->viewedit(true, $price_item, lang('rental_messages_saved_form'));
+				} else {
+					return $this->viewedit(true, $price_item, '', lang('rental_messages_form_error'));
+				}
+				
 			}
 			
-			return $this -> viewedit(true, $id);
+			return $this->viewedit(true, $price_item);
 		}
 		
 		/*
@@ -81,32 +86,32 @@
 			if ($title) {
 				$price_item = new rental_price_item();
 				$price_item->set_title($title);
-				$price_item->store();
-				
-				return $this->viewedit(true, $price_item->get_id());
+				if ($price_item->store()) {
+					// The object was stored, forward to edit it further
+					return $this->viewedit(true, $price_item);
+				}
 			}
+			
+			return $this->index();
 		}
 		
 		/**
 		 * View or edit rental price_item
 		 * 
 		 * @param $editable true renders fields editable, false renders fields disabled
-		 * @param $id	the rental price_item id	
+		 * @param $price_item the price item to display
 		 */
-		protected function viewedit($editable, $id)
+		protected function viewedit($editable, $price_item, $message = '', $error = '')
 		{
-			if ($id > 0) {
-				$price_item = rental_price_item::get($id);
-				$data = array
-				(
-					'price_item' 	=> $price_item,
-					'editable' => $editable,
-					'message' => phpgw::get_var('message'),
-					'error' =>  phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiprice_item.index'))
-				);				
-				$this->render('admin_price_item.php', $data);
-			}
+			$data = array
+			(
+				'price_item' 	=> $price_item,
+				'editable' => $editable,
+				'message' => $message,
+				'error' => $error,
+				'cancel_link' => self::link(array('menuaction' => 'rental.uiprice_item.index'))
+			);				
+			$this->render('admin_price_item.php', $data);
 		}
 		
 		public function query()
@@ -155,12 +160,12 @@
 			{
 				default:
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_cm_show');
+					$value['labels'][] = lang('rental_common_show');
 					
 					if($this->hasWritePermission()) 
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_cm_edit');
+						$value['labels'][] = lang('rental_common_edit');
 					}
 			}
 		}

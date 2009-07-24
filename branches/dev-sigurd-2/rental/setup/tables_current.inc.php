@@ -196,7 +196,7 @@
 		'rental_price_item' => array(
 				'fd' => array(
 					'id' =>	array('type' => 'auto', 'nullable' => false),
-					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
 					'agresso_id' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
 					'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true)

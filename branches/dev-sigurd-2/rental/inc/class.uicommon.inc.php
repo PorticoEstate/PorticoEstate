@@ -304,5 +304,54 @@
 		 * @return YUI result
 		 */
 		public abstract function query();
+		
+		/**
+		 * Returns a html-formatted error message if one is defined in the
+		 * list of validation errors on the object we're given.  If no
+		 * error is defined, an empty string is returned.
+		 * 
+		 * @param $object the object to display errors for
+		 * @param $field the name of the attribute to display errors for
+		 * @return string a html formatted error message
+		 */
+		public static function get_field_error($object, $field)
+		{
+			$errors = $object->get_validation_errors();
+			
+			if ($errors[$field]) {
+				return '<label class="error" for="' . $field . '">' . $errors[$field] . '</label>';
+			}
+			return '';
+		}
+		
+		/**
+		 * Returns a html-formatted error message to display on top of the page.  If
+		 * no error is defined, an empty string is returned.
+		 * 
+		 * @param $error the error to display
+		 * @return string a html formatted error message
+		 */
+		public static function get_page_error($error)
+		{
+			if ($error) {
+				return '<p class="error">' . $error . '</p>';
+			}
+			
+			return '';
+		}
+		
+		/**
+		 * Returns a html-formatted info message to display on top of the page.  If
+		 * no message is defined, an empty string is returned.
+		 * 
+		 * @param $message the message to display
+		 * @return string a html formatted info message
+		 */
+		public static function get_page_message($message)
+		{
+			if ($message) {
+				return '<p class="info">' . $message . '</p>';
+			}
+		}
 	}
 ?>

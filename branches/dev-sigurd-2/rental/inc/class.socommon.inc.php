@@ -11,6 +11,8 @@
 		// Mapping of unit levels to classes
 		protected static $unit_class_array = array(1 => 'rental_property', 2 => 'rental_building', 3 => 'rental_floor', 4 => 'rental_section', 5 => 'rental_room');
 		
+		public $table_name;
+		
 		public function __construct($table_name, $fields)
 		{
 			$this->table_name = $table_name;
