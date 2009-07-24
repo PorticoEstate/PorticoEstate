@@ -78,6 +78,7 @@ rental_menu_rental	rental	no	Utleie
 rental_menu_parties	rental	no	Kontraktsparter
 rental_menu_price_list	rental	no	Prisbok
 rental_menu_reports	rental	no	Rapporter
+rental_messages_agresso_id_length	rental	no	Agresso ID må inneholde 9 tall eller bokstaver
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspart er opprettet
 rental_messages_right_click_to_add	rental	no	Høyreklikk for å legge til

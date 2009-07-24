@@ -31,7 +31,10 @@
 		}
 		
 		/**
-		 * Validate the object according to the database setup and custom rules
+		 * Validate the object according to the database setup and custom rules.  This function
+		 * can be overridden in subclasses.  It is then up to the subclasses to call this parent method
+		 * in order to validate against the standard database rules.  The subclasses can in addition
+		 * add their own specific validation logic.
 		 * 
 		 * @return boolean true if the object is valid, false otherwise
 		 */

@@ -109,4 +109,22 @@
 			
 			return true;
 		}
+		
+		/**
+		 * Example: Agresso_ID must be 9 characters long.  This is not an actual rule,
+		 * just an example of custom validation from objects.  @see rental_price_item
+		 * 
+		 * @param $value
+		 * @param $message
+		 * @return unknown_type
+		 */
+		public static function valid_agresso_id($value, &$message)
+		{
+			if (strlen($value) != 9) {
+				$message = lang('rental_messages_agresso_id_length');
+				return false;
+			}
+			
+			return true;
+		}
 	}
