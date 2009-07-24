@@ -92,11 +92,13 @@
 			switch($type)
 			{
 				default:
+					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					
 					if($this->hasWritePermission()) 
 					{
+						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_common_edit');
 					}
@@ -211,7 +213,8 @@
 			$party = rental_party::get($party_id);
 			$contract = rental_contract::get($contract_id);
 			$contract->add_party($party);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+			return true;
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
 		
 		public function remove_party(){
@@ -220,7 +223,8 @@
 			$party = rental_party::get($party_id);
 			$contract = rental_contract::get($contract_id);
 			$contract->remove_party($party);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+			return true;
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
 		
 		public function add_composite(){

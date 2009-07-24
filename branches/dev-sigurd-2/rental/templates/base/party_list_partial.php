@@ -43,6 +43,14 @@
 	{
 		key: "labels",
 		hidden: true
+	},
+	{
+		key: "AJAX_url",
+		hidden: true
+	},
+	{
+		key: "AJAX_params",
+		hidden: true
 	}
 	];
 	
@@ -54,7 +62,15 @@
 		'<?= $list_id ?>_form',
 		['<?= $list_id ?>_ctrl_toggle_party_type','<?= $list_id ?>_ctrl_toggle_party_fields','<?= $list_id ?>_ctrl_search_query'],
 		'<?= $list_id ?>_container',
-		'<?= $list_id ?>_paginator'
+		'<?= $list_id ?>_paginator',
+		'<?= $list_id ?>',
+		new Array(<?
+			if(isset($related)){
+				foreach($related as $r){
+					echo "\"".$r."\"";
+				}
+			} 
+		?>)
 	);
 
 </script>

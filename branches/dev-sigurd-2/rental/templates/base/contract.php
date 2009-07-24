@@ -131,12 +131,14 @@ YAHOO.util.Event.onDOMReady(
 			<? 
 				$list_form = false;
 				$list_id = 'included_parties';
+				$related = array('not_included_parties');
 				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_parties') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
 				$list_form = true;
 				$list_id = 'not_included_parties';
+				$related = array('included_parties');
 				$url_add_on = '&amp;type=not_included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php'); ?>
 		</div>
@@ -145,12 +147,14 @@ YAHOO.util.Event.onDOMReady(
 			<? 
 				$list_form = false;
 				$list_id = 'included_composites';
+				$related = array('not_included_composites');
 				$url_add_on = '&amp;type=included_composites&amp;contract_id='.$contract->get_id();
 				include('composite_list_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_composites') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
 				$list_form = true;
 				$list_id = 'not_included_composites';
+				$related = array('included_composites');
 				$url_add_on = '&amp;type=not_included_composites&amp;contract_id='.$contract->get_id();
 				include('composite_list_partial.php'); ?>
 		</div>

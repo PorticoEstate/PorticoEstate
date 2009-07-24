@@ -165,7 +165,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
 			
 			$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
-	    $date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
+	    	$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
 				
 			$date = new rental_contract_date($date_start, $date_end);
 			$contract->set_contract_date($date);
@@ -243,12 +243,35 @@ class rental_socontract extends rental_socommon
 		
 		// Go through each returned row and create contract objects
 		foreach ($results as $row) {
-			$contract = new rental_contract($row['id']);
+			$new_contract = true;
+			$party_name = $row['first_name']." ".$row['last_name'];
+			if($row['company_name'] != ''){
+				if(trim($party_name) != ''){
+					$party_name.= " (".$row['company_name'].")";
+				} else {
+					$party_name = $row['company_name'];
+				}
+			}
+			
+			foreach($contracts as $c) {
+				if($row[id] == $c->get_id()){
+					$new_contract = false;
+					if($row['composite_name'] != ''){
+						$c->set_composite_name($row['composite_name']);
+					}
+					if($row['company_name'] != '' || $row['first_name'] != '' || $row['last_name'] != ''){
+						$c->set_party_name($party_name);
+					}
+					break;
+				}		
+			}
+			if($new_contract) {
+				$contract = new rental_contract($row['id']);
 			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
-			$contract->set_party_name($row['company_name'].":".$row['first_name']." ".$row['last_name']);
+			$contract->set_party_name($party_name);
 			$contract->set_composite_name($row['composite_name']);
-			//var_dump($row);
 			$contracts[] = $contract;
+			}
 		}
 		return $contracts;
 	}

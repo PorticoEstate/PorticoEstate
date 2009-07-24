@@ -15,8 +15,8 @@
 		protected $term_id;
 		protected $account;
 		protected $contract_type_title;
-		protected $party_name;
-		protected $composite_name;
+		protected $party_names = Array();
+		protected $composite_names = Array();
 		protected $composites;
 		
 		/**
@@ -92,21 +92,32 @@
 		}
 		
 		public function get_party_name(){
-			return $this->party_name;
+			$names = '';
+			foreach($this->party_names as $party) {
+				$names .= $party."<br/>";
+			}
+			return $names;
 		}
 		
 		public function set_party_name($name)
 		{
-			$this->party_name = $name;
+			if(!in_array($name,$this->party_names)) {
+				$this->party_names[] = $name;
+			}
 		}
 		
 		public function get_composite_name(){
-			return $this->composite_name;
+			$names = '';
+			foreach($this->composite_names as $composite) {
+				$names .= $composite."<br/>";
+			}
+			return $names;
 		}
 		
 		public function set_composite_name($name)
 		{
-			$this->composite_name = $name;
+			if(!in_array($name,$this->composite_names))
+				$this->composite_names[] = $name;
 		}
 		
 		public function set_composites($composites)
@@ -213,15 +224,9 @@
 				$parties[] = $new_party;
 				$this->set_parties($parties);
 			}
+
 		}
 		
-		/**
-		 * Add a prty to this contract. Note that the contract is not updated
-		 * in the database until store() is called.  This function checks for duplicates
-		 * before adding the gien composite. 
-		 * 
-		 * @param rental_party $party_to_remove the party to remove
-		 */
 		public function remove_party(rental_party $party_to_remove)
 		{
 			unset($this->parties[$party_to_remove]);

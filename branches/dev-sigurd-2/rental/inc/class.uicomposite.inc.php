@@ -296,6 +296,7 @@
 				case 'included_composites':
 					if($this->hasWritePermission())
 					{
+						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
 						$value['labels'][] = lang('rental_common_remove');
 					}
@@ -303,11 +304,13 @@
 				case 'not_included_composites':
 					if($this->hasWritePermission())
 					{
+						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
 						$value['labels'][] = lang('rental_common_add');
 					}
 					break;
 				case 'included_areas':
+					$value['ajax'][] = true;
 					if($this->hasWritePermission())
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
@@ -315,6 +318,7 @@
 					}
 					break;
 				case 'available_areas':
+					$value['ajax'][] = true;
 					if($this->hasWritePermission())
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
@@ -325,20 +329,24 @@
 					// No actions
 					break;
 				case 'contracts':
+					$value['ajax'][] = false;
 					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					if($this->hasWritePermission())
 					{
+						$value['ajax'][] = false;
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_common_edit');
 					}
 					break;
 				default:
+					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					
 					if($this->hasWritePermission()) 
 					{
+						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_common_edit');
 					}

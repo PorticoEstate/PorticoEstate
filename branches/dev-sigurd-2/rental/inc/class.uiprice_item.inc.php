@@ -159,11 +159,13 @@
 			switch($params[1])
 			{
 				default:
+					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					
 					if($this->hasWritePermission()) 
 					{
+						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_common_edit');
 					}

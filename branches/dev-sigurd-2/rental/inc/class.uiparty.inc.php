@@ -87,18 +87,22 @@
 			switch($params[1])
 			{
 				case 'included_parties':
+					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
 					$value['labels'][] = lang('rental_common_remove');
 					break;
 				case 'not_included_parties':
+					$value['ajax'][] = true;			
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
 					$value['labels'][] = lang('rental_common_add');
 					break;
 				default:
+					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					if($this->hasWritePermission()) 
 					{
+						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('rental_common_edit');
 					}

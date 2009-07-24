@@ -84,17 +84,12 @@
 	    sortable: true
 	},
 	{
-		key: "title",
-		label: "<?= lang('rental_contract_title') ?>",
-	    sortable: true
-	},
-	{
 		key: "composite",
 		label: "<?= lang('rental_contract_composite') ?>",
 	    sortable: false
 	},
 	{
-		key: "tentant",
+		key: "party",
 		label: "<?= lang('rental_contract_partner') ?>",
 	    sortable: false
 	},
@@ -104,6 +99,10 @@
 	},
 	{
 		key: "labels",
+		hidden: true
+	},
+	{
+		key: "ajax",
 		hidden: true
 	}
 	];

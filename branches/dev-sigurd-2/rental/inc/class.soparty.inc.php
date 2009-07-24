@@ -107,7 +107,7 @@ class rental_soparty extends rental_socommon
 			$party_not_in = '';
 			if(isset($filters['contract_id']) )
 			{
-				$party_not_in = "AND party_id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = ".$filters['contract_id'].")";
+				//$party_not_in = "AND party_id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = ".$filters['contract_id'].")";
 			}
 			if(isset($filters['contract_id']) && $filters['party_type'] != 'all')
 			{
@@ -116,7 +116,7 @@ class rental_soparty extends rental_socommon
 			
 			$sql = "SELECT DISTINCT(rental_party.id), rental_party.* FROM rental_party LEFT JOIN
 					(
-						SELECT id, party_id, contract_id, type_id FROM rental_contract_party rcp LEFT JOIN
+						SELECT party_id, contract_id, type_id FROM rental_contract_party rcp LEFT JOIN
 						(
 							SELECT id, type_id FROM rental_contract 
 						) 
@@ -124,7 +124,7 @@ class rental_soparty extends rental_socommon
 						ON (c.id = rcp.contract_id) 
 					) 
 					contracts
-					ON (rental_party.id = contracts.party_id OR contracts.id IS NULL)
+					ON (rental_party.id = contracts.party_id OR contracts.contract_id IS NULL)
 					WHERE $filter_conditions $search_conditions $party_not_in $order";
 			
 			//var_dump($sql);
@@ -253,7 +253,7 @@ class rental_soparty extends rental_socommon
 			
 		if(isset($filters['contract_id']))
 		{
-			$filter_clauses[] = "$table_name.id != ".$filters['contract_id'];
+			$filter_clauses[] = "($table_name.contract_id != ".$filters['contract_id']." OR $table_name.contract_id IS NULL)";
 		}
 			
 		if(isset($filters['party_type']) && $filters['party_type'] != 'all')
