@@ -73,7 +73,8 @@
 
 		function import()
 		{
-			if ($_REQUEST['convert']) //&& ($_FILES['tsvfile']['error'] == UPLOAD_ERR_OK))
+			$conv_type_a = $GLOBALS['phpgw']->session->appsession('conv_type_values_i', 'addressbook');
+			if ($_REQUEST['convert'] && is_array($conv_type_a) && in_array($_REQUEST['conv_type'], $conv_type_a)) //&& ($_FILES['tsvfile']['error'] == UPLOAD_ERR_OK))
 			{
 				$buffer = $this->bo->import($_FILES['tsvfile']['tmp_name'],$_REQUEST['conv_type'],$_REQUEST['private'],$_REQUEST['fcat_id']);
 
@@ -133,6 +134,7 @@
 					$conv .= '<OPTION VALUE="' . $myfilearray[$i].'">' . $fname . '</OPTION>';
 				}
 
+				$GLOBALS['phpgw']->session->appsession('conv_type_values_i', 'addressbook', $myfilearray);
 				$this->template->set_var('lang_cancel',lang('Cancel'));
 				$this->template->set_var('lang_cat',lang('Select Category'));
 				$this->template->set_var('cancel_url',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index')));
@@ -174,8 +176,9 @@
 			//echo "<pre>Export_vars: "; print_r($export_vars); echo "</pre>\n";
 			
 			//$entries = $this->bo->$get_data_function($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
-			
-			if ($_REQUEST['convert'])
+
+			$conv_type_a = $GLOBALS['phpgw']->session->appsession('conv_type_values_e', 'addressbook');
+			if ($_REQUEST['convert'] && is_array($conv_type_a) && in_array($_REQUEST['conv_type'], $conv_type_a))
 			{
 				if ($_REQUEST['conv_type'] == 'none')
 				{
@@ -250,6 +253,7 @@
 					$conv .= '        <option value="'.$myfilearray[$i].'">'.$fname.'</option>'."\n";
 				}
 
+				$GLOBALS['phpgw']->session->appsession('conv_type_values_e', 'addressbook', $myfilearray);
 				$this->template->set_var('lang_cancel',lang('Cancel'));
 				$this->template->set_var('lang_cat',lang('Select Category'));
 				$this->template->set_var('cat_link',$this->cat_option($this->cat_id,False,False));

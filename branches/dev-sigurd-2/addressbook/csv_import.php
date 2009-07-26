@@ -32,12 +32,21 @@
 	$GLOBALS['phpgw']->template->set_block('import','ffooter','ffooterhandle');
 	$GLOBALS['phpgw']->template->set_block('import','imported','importedhandle');
 
-	$csvfile  = isset($_POST['csvfile']) ? $_POST['csvfile'] : $_FILES['csvfile']['tmp_name'];
+	$csvfile  = $_FILES['csvfile']['tmp_name'];
 
 	if($_POST['action'] == 'download' && (!$_POST['fieldsep'] || !$csvfile || !($fp=fopen($csvfile,'rb'))))
 	{
 		$_POST['action'] = '';
 	}
+	if($_POST['action'] == 'import')
+	{
+		$csvfile = $GLOBALS['phpgw']->session->appsession('import_data', 'addressbook');
+		if(!file_exists($csvfile))
+		{
+			$_POST['action'] = '';
+		}
+	}
+
 	$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/addressbook/csv_import.php'));
 
 	$PSep = '||'; // Pattern-Separator, separats the pattern-replacement-pairs in trans
@@ -176,9 +185,10 @@
 			$GLOBALS['phpgw']->template->set_var('max',200);
 			$GLOBALS['phpgw']->template->parse('ffooterhandle','ffooter'); 
 			fclose($fp);
-			$old = $csvfile; $csvfile = $GLOBALS['phpgw_info']['server']['temp_dir'].'/addrbook_import_'.basename($csvfile);
-			rename($old,$csvfile); 
-			$hiddenvars .= '<input type="hidden" name="csvfile" value="'.$csvfile.'">';
+			$old = $csvfile; $csvfile = $GLOBALS['phpgw_info']['server']['temp_dir'].'/addrbook_import_'.$GLOBALS['phpgw_info']['user']['account_id'].'_'.basename($csvfile);
+			rename($old,$csvfile);
+			$GLOBALS['phpgw']->session->appsession('import_data', 'addressbook', $csvfile);
+			//$hiddenvars .= '<input type="hidden" name="csvfile" value="'.$csvfile.'">';
 			$mktime_lotus = "${PSep}0?([0-9]+)[ .:-]+0?([0-9]*)[ .:-]+0?([0-9]*)[ .:-]+0?([0-9]*)[ .:-]+0?([0-9]*)[ .:-]+0?([0-9]*).*$ASep@mktime(${VPre}4,${VPre}5,${VPre}6,${VPre}2,${VPre}3,${VPre}1)";
 			$help_on_trans = "<a name=\"help\"></a><b>How to use Translation's</b><p>".
 				"Translations enable you to change / adapt the content of each CSV field for your needs. <br />".

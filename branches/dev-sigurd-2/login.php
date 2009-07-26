@@ -150,7 +150,9 @@
 			{
 				if (ereg('phpgw_',$name))
 				{
-					$extra_vars[$name] = $value;
+					//$extra_vars[$name] = $value;
+					$name = urlencode($name);
+					$extra_vars[$name] = urlencode($value);
 				}
 			}
 		}
