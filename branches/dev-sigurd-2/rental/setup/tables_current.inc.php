@@ -123,12 +123,21 @@
 				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'old_contract_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'old_contract_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'last_edited' =>	array('type' => 'date'),
+				'last_edited_by' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'created' =>		array('type' => 'date'),
+				'created_by' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				
 			),
 			'pk' => array('id'),
 			'fk' => array(
 					'rental_contract_type' => array('type_id' => 'id'),
-					'rental_billing_term' => array('term_id' => 'id')
+					'rental_billing_term' => array('term_id' => 'id'),
+					'phpgw_accounts' => array('executive_officer' => 'account_id'),
+					'phpgw_accounts' => array('last_edited_by' => 'account_id'),
+					'phpgw_accounts' => array('created_by' => 'account_id'),
 			),
 			'ix' => array(),
 			'uc' => array()
