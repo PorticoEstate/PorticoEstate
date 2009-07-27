@@ -18,7 +18,8 @@
 			'add_party' => true,
 			'remove_party' => true,
 			'add_composite' => true,
-			'remove_composite' => true
+			'remove_composite' => true,
+			'set_payer' => true
 		);
 
 		public function __construct()
@@ -226,6 +227,14 @@
 			return true;
 			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
+		
+		public function set_payer(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$party_id = (int)phpgw::get_var('party_id');
+			$contract = rental_contract::get($contract_id);
+			$contract->set_payer($party_id);
+		}
+		
 		
 		public function add_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');

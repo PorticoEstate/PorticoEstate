@@ -182,7 +182,8 @@
 		'rental_contract_party' => array(
 			'fd' => array(
 				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'is_payer'	=>	array('type' => 'bool','nullable' => false, 'default' => 'false')
 			),
 			'pk' => array('contract_id','party_id'),
 			'fk' => array(

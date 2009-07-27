@@ -131,9 +131,13 @@ YAHOO.util.Event.onDOMReady(
 			<? 
 				$list_form = false;
 				$list_id = 'included_parties';
+				$extra_cols = array(array("key" => "is_payer", "label" => lang('rental_contract_is_payer'), "index" => 3));
 				$related = array('not_included_parties');
 				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
-				include('party_list_partial.php'); ?>
+				include('party_list_partial.php');
+				$extra_cols = array();
+			?>
+				
 			<h3><?= lang('rental_rc_available_parties') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
 				$list_form = true;

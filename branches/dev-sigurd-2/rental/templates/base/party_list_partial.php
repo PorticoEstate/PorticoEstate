@@ -45,15 +45,24 @@
 		hidden: true
 	},
 	{
-		key: "AJAX_url",
-		hidden: true
-	},
-	{
-		key: "AJAX_params",
+		key: "ajax",
 		hidden: true
 	}
 	];
-	
+
+	<?
+		if(isset($extra_cols)){
+			foreach($extra_cols as $col){
+				$literal = "{key: \"".$col["key"]."\",
+						label: \"".$col["label"]."\"}";
+				if($col["index"]){
+					echo "columnDefs.splice(".$col["index"].", 0,".$literal.");";
+				} else {
+					echo "columnDefs.push($literal);";
+				}
+			}
+		} 
+	?>
 	
 	// Initiating the data source
 	setDataSource(

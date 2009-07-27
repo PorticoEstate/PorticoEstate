@@ -317,8 +317,13 @@ class rental_party
 		);
 	}
 	
-	public function serialize()
-	{
+	public function serialize(rental_contract $contract)
+	{	
+		$is_payer = '';
+		if(isset($contract) && $contract->get_payer_id() == $this->id){
+			
+			$is_payer = lang('rental_contract_is_payer');
+		}
 		
 		return array(
 			'id' => $this->id,
@@ -342,7 +347,8 @@ class rental_party
 			'post_bank_account_number' => $this->post_bank_account_number,
 			'account_number' => $this->account_number,
 			'reskontro' => $this->reskontro,
-			'is_active' => $this->is_active
+			'is_active' => $this->is_active,
+			'is_payer' => $is_payer
 		);
 	}
 	

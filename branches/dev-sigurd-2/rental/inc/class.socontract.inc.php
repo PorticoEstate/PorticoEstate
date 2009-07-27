@@ -153,30 +153,32 @@ class rental_socontract extends rental_socommon
 	function get_single($id)
 	{
 		$id = (int)$id;
+		$sql_payer_id = "LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
+		
+	    $sql = "SELECT * FROM " . $this->table_name ." $sql_payer_id WHERE " . $this->table_name . ".id={$id}";
+	
+	    $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+	
+	    $contract = new rental_contract();
+	
+	    $this->db->next_record();
 
-      $sql = "SELECT * FROM " . $this->table_name ." WHERE " . $this->table_name . ".id={$id}";
+		$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
 
-      $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-
-      $contract = new rental_contract();
-
-      $this->db->next_record();
+		$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
+   		$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
+	
+		$date = new rental_contract_date($date_start, $date_end);
+		$contract->set_contract_date($date);
+		
+		$billing_start_date = strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
+		$contract->set_billing_start_date($billing_start_date);
+		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
+		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
+		$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));
+		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 			
-			$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
-			
-			$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
-	    	$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
-				
-			$date = new rental_contract_date($date_start, $date_end);
-			$contract->set_contract_date($date);
-			
-			$billing_start_date = strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
-			$contract->set_billing_start_date($billing_start_date);
-			$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
-			$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
-			$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));	
-			
-      return $contract;
+      	return $contract;
 	}
 	
 	/**
@@ -535,6 +537,18 @@ class rental_socontract extends rental_socommon
 	{
 		$q = "DELETE FROM rental_contract_composite WHERE contract_id = $contract_id AND composite_id = $composite_id";
 		$result = $this->db->query($q);
+	}
+	
+	function set_payer($contract_id, $party_id)
+	{
+		$pid =$this->marshal($party_id, 'int');
+		$cid = $this->marshal($contract_id, 'int'); 
+		$q = "UPDATE rental_contract_party SET is_payer = true WHERE party_id = ".$pid." AND contract_id = ".$cid;
+		$result = $this->db->query($q);
+		$q = "UPDATE rental_contract_party SET is_payer = false WHERE party_id != ".$pid." AND contract_id = ".$cid;
+		$result = $this->db->query($q);
+				
+		
 	}
 	
 }

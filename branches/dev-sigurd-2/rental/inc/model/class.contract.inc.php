@@ -18,6 +18,7 @@
 		protected $party_names = Array();
 		protected $composite_names = Array();
 		protected $composites;
+		protected $payer_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -36,6 +37,18 @@
 		}
 		
 		public function get_id() { return $this->id; }
+		
+		public function set_payer($id)
+		{
+			$so = self::get_so();
+			$so->set_payer($this->get_id(),$id);
+		}
+		
+		public function set_payer_id($id){
+			$this->payer_id = $id;
+		}
+		
+		public function get_payer_id() { return $this->payer_id; }
 		
 		public function set_parties($parties)
 		{

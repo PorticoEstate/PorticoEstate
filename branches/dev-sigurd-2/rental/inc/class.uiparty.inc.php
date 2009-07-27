@@ -64,12 +64,12 @@
 			
 			$rows = array();
 			foreach ($parties as $party) {
-				$rows[] = $party->serialize();
+				$rows[] = $party->serialize($contract);
 			}
 			$party_data = array('results' => $rows, 'total_records' => count($rows));
 					
 			//Add action column to each row in result table
-			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type));
+			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('contract_id'),$type,$contract));
 			return $this->yui_results($party_data, 'total_records', 'results');			
 		}
 		
@@ -87,15 +87,26 @@
 			switch($params[1])
 			{
 				case 'included_parties':
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-					$value['labels'][] = lang('rental_common_remove');
+					if($this->hasWritePermission()) 
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
+						$value['labels'][] = lang('rental_common_remove');
+						if($value['id'] != $params[2]->get_payer_id()){
+							$value['ajax'][] = true;
+							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
+							$value['labels'][] = lang('rental_contract_set_payer');
+						}
+					}
 					break;
 				case 'not_included_parties':
-					$value['ajax'][] = true;			
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-					$value['labels'][] = lang('rental_common_add');
-					break;
+					if($this->hasWritePermission()) 
+					{
+						$value['ajax'][] = true;			
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['labels'][] = lang('rental_common_add');
+						break;
+					}
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));

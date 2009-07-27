@@ -45,6 +45,7 @@ rental_contract_fixed	rental	no	Tidsbestemt
 rental_contract_from	rental	no	Fra
 rental_contract_id	rental	no	Kontraksnummer
 rental_contract_investment	rental	no	Investeringskontrakt
+rental_contract_is_payer	rental	no	Fakturamottaker
 rental_contract_number	rental	no	Kontraktnummer
 rental_contract_type	rental	no	Type
 rental_contract_partner	rental	no	Kontraktspart
@@ -56,6 +57,7 @@ rental_contract_rental_inn	rental	no	Innleie
 rental_contract_rental_internal	rental	no	Internleie
 rental_contract_party	rental	no	Kontraktspart
 rental_contract_party_name	rental	no	Navn på kontraktspart
+rental_contract_set_payer	rental	no	Sett som fakturamottaker
 rental_common_show	rental	no	Vis
 rental_contract_status	rental	no	Status
 rental_contract_status_date	rental	no	den
