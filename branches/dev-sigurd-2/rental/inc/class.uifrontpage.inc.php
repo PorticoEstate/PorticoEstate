@@ -10,16 +10,13 @@
 
 		public function __construct()
 		{
-            parent::__construct();
+      parent::__construct();
 			self::set_active_menu('rental::frontpage');
 		}
 
 		public function index()
 		{
-			$data = array
-			(
-			);
-			self::render_template('frontpage', $data);
+			$this->render('frontpage.php');
 		}
 		
 		public function query()

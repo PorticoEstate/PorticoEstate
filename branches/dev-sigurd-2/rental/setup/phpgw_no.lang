@@ -68,6 +68,7 @@ rental_contract_running	rental	no	Løpende
 rental_contract_under_dismissal	rental	no	Under oppsigelse
 rental_contract_under_planning	rental	no	Under planlegging
 rental_contract_with_billing_type	rental	no	Fakturatype
+rental_dashboard_title	rental	no	Dashbord
 rental_menu_contract_type	rental	no	Kontrakttype
 rental_menu_contract_types	rental	no	Kontrakttyper
 rental_menu_contracts	rental	no	Kontrakter
