@@ -70,6 +70,16 @@ class rental_socontract extends rental_socommon
 			$party_id  =   $filters['party_id'];
 			$filter_clauses[] = "party.id = $party_id";
 		}
+		
+		if(isset($filters['executive_officer'])){
+			$account_id  =   $filters['executive_officer'];
+			$filter_clauses[] = "contract.executive_officer = $account_id";
+		}
+		
+		if(isset($filters['last_edited_by'])){
+			$account_id  =   $filters['last_edited_by'];
+			$filter_clauses[] = "contract.last_edited_by = $account_id";
+		}
 					
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
 			$type = $filters['contract_type'];
@@ -198,7 +208,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';

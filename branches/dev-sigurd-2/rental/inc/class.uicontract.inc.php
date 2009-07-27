@@ -48,6 +48,31 @@
 						)
 					);
 					break;
+				case 'contracts_for_executive_officer':
+					$contracts = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
+						)
+					);
+					break;
+				case 'last_edited_by':
+					$contracts = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
+						)
+					);
 				default:
 					$contracts = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
