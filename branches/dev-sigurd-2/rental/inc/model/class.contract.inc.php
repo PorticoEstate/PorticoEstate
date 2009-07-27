@@ -6,6 +6,7 @@
 	class rental_contract extends rental_model
 	{
 		public static $so;
+		public static $types;
 		
 		protected $id;
 		protected $parties;
@@ -14,6 +15,7 @@
 		protected $type_id;
 		protected $term_id;
 		protected $account;
+		protected $old_contract_id;
 		protected $contract_type_title;
 		protected $party_names = Array();
 		protected $composite_names = Array();
@@ -46,6 +48,14 @@
 		
 		public function set_payer_id($id){
 			$this->payer_id = $id;
+		}
+		
+		public function set_old_contract_id($id){
+			$this->old_contract_id = $id;
+		}
+		
+		public function get_old_contract_id(){
+			return $this->old_contract_id;
 		}
 		
 		public function get_payer_id() { return $this->payer_id; }
@@ -99,9 +109,12 @@
 		 */
 		public function get_contract_type_title()
 		{
-			$types = self::get_contract_types();
-
-			return $types[$this->get_type_id()];
+			return $this->contract_type_title;
+		}
+		
+		public function set_contract_type_title($title)
+		{
+			$this->contract_type_title = $title;
 		}
 		
 		public function get_party_name(){
@@ -281,6 +294,7 @@
 			return $so->get_single($id);
 		}
 		
+		
 		/**
 		 * Return a list of all contracts registered on the given rental_composite
 		 * 
@@ -315,8 +329,8 @@
 		 */
 		public static function get_contract_types(){
 			$so = self::get_so();
-			$contract_types = $so->get_contract_types();
-			return $contract_types;
+			$types = $so->get_contract_types();
+			return $types;
 		}
 		
 		public function serialize()
@@ -325,9 +339,10 @@
 				'id' => $this->get_id(),
 				'date_start' => $this->get_contract_date()->get_start_date(),
 				'date_end' => $this->get_contract_date()->get_end_date(),
-				'title'	=> $this->get_contract_type_title(),
+				'type'	=> lang($this->get_contract_type_title()),
 				'composite' => $this->get_composite_name(),
-				'party' => $this->get_party_name()
+				'party' => $this->get_party_name(),
+				'old_contract_id' => $this->get_old_contract_id()
 			);
 		} 
 		

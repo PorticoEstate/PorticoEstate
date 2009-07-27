@@ -84,6 +84,11 @@
 	    sortable: true
 	},
 	{
+		key: "type",
+		label: "<?= lang('rental_contract_type') ?>",
+	    sortable: false
+	},
+	{
 		key: "composite",
 		label: "<?= lang('rental_contract_composite') ?>",
 	    sortable: false
@@ -92,6 +97,11 @@
 		key: "party",
 		label: "<?= lang('rental_contract_partner') ?>",
 	    sortable: false
+	},
+	{
+		key: "old_contract_id",
+		label: "<?= lang('rental_rc_old_id') ?>",
+	    sortable: true
 	},
 	{
 		key: "actions",

@@ -122,7 +122,8 @@
 				'billing_start' => 	array('type' => 'date'),
 				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'old_contract_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

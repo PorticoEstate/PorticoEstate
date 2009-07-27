@@ -19,7 +19,8 @@ class rental_socontract extends rental_socommon
 					'composite_name' => array('type' => 'string'),
 					'first_name' => array('type' => 'string'),
 					'last_name' => array('type' => 'string'),
-					'company_name' => array('type' => 'string')
+					'company_name' => array('type' => 'string'),
+					'old_contract_id' => array('type' => 'string')
 		));
 	}
 	
@@ -32,7 +33,8 @@ class rental_socontract extends rental_socommon
 			$like_clauses = array();
 			switch($search_option){
 				case "id":
-					$like_clauses[] = "contract.id $this->like $like_pattern";
+					$like_clauses[] = "contract.id = $query";
+					$like_clauses[] = "contract.old_contract_id = $query";
 					break;
 				case "party_name":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
@@ -44,7 +46,8 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
 				case "all":
-					$like_clauses[] = "contract.id $this->like $like_pattern";
+					$like_clauses[] = "contract.id = $query";
+					$like_clauses[] = "contract.old_contract_id = $query";
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
@@ -110,6 +113,7 @@ class rental_socontract extends rental_socommon
 		
 		return join(' AND ', $clauses);
 	}
+	
 
 	/**
 	 * Get a key/value array of contract type titles keyed by their id
@@ -194,7 +198,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';
@@ -225,6 +229,7 @@ class rental_socontract extends rental_socommon
 		{
 			$this->db->limit_query("SELECT $distinct $columns_for_list FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
 		}
+		
 		
 		
 		
@@ -272,6 +277,8 @@ class rental_socontract extends rental_socommon
 			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
 			$contract->set_party_name($party_name);
 			$contract->set_composite_name($row['composite_name']);
+			$contract->set_old_contract_id($row['old_contract_id']);
+			$contract->set_contract_type_title($row['title']);
 			$contracts[] = $contract;
 			}
 		}
