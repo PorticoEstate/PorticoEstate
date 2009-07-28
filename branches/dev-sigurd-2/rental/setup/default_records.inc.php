@@ -40,6 +40,14 @@ $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Åsane s
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Byporten','')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Ukjent sted','')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Lots of levels','A rental composite that consists of areas from all levels.')");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Vitalitetssenteret','')");
+// Gullstøltunet sykehjem
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Gullstøltunet sykehjem','')");
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Gullstøltunet sykehjem - Bosshus/Trafo','')");
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Gullstøltunet sykehjem - Pumpehus','')");
+// Bergen Rådhus
+$oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Bergen Rådhus Nye','')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,1,'2711')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,2,'2712')");
 $oProc->query("INSERT INTO rental_unit VALUES (1,6,'2717')");
@@ -61,14 +69,23 @@ $oProc->query("INSERT INTO rental_unit VALUES (10,515,'2104')"); // Level 2
 $oProc->query("INSERT INTO rental_unit VALUES (10,1421,'1101')"); // Level 3
 $oProc->query("INSERT INTO rental_unit VALUES (10,1389,'3409')"); // Level 4
 $oProc->query("INSERT INTO rental_unit VALUES (10,1391,'3409')"); // Level 5
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_unit VALUES (11,1096,'5807')");
+// Gullstøltunet sykehjem
+$oProc->query("INSERT INTO rental_unit VALUES (12,1026,'3409')");
+$oProc->query("INSERT INTO rental_unit VALUES (13,1027,'3409')");
+$oProc->query("INSERT INTO rental_unit VALUES (14,1028,'3409')");
+// Bergen Rådhus
+$oProc->query("INSERT INTO rental_unit VALUES (15,468,'7183')");
 $oProc->query("INSERT INTO rental_contract_type VALUES (1,'rental_contract_type_innleie','')");
 $oProc->query("INSERT INTO rental_contract_type VALUES (2,'rental_contract_type_internleie','')");
 $oProc->query("INSERT INTO rental_contract_type VALUES (3,'rental_contract_type_eksternleie','')");
 $oProc->query("INSERT INTO rental_contract_type VALUES (4,'rental_contract_type_investeringskontrakt','')");
 $oProc->query("INSERT INTO rental_billing_term VALUES (1,'Årlig','1')");
-$oProc->query("INSERT INTO rental_billing_term VALUES (2,'Månedlig','12')");
-$oProc->query("INSERT INTO rental_billing_term VALUES (3,'Halvår','12')");
-$oProc->query("INSERT INTO rental_billing_term VALUES (4,'14. dag','12')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (2,'Halvår','2')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (3,'Kvartal','4')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (4,'Månedlig','12')");
+$oProc->query("INSERT INTO rental_billing_term VALUES (5,'14. dag','24')");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,'9710.13.8282', 2004,'2009-01-01', 2004, '2009-01-01', 2004)");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,'9710.13.8283', 2004,'2009-01-01', 2004, '2009-01-01', 2004)");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2008-01-01','2028-01-15','2008-01-15',1,2,'9710.13.8284', 2004,'2009-01-01', 2004, '2009-01-01', 2004)");
@@ -79,6 +96,9 @@ $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start,
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-16','2029-06-15','2009-06-16',3,2,'9710.13.8228', 2005,'2009-01-01', 2004, '2009-01-01', 2004)");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-01','2029-06-15','2009-06-15',3,2,'9710.13.8282', 2005,'2009-01-01', 2004, '2009-01-01', 2004)");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2004-02-01','2024-02-02','2004-02-15',3,2,'3416.12.23289', 2005,'2009-01-01', 2004, '2009-01-01', 2004)");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-02-12',NULL,'2005-01-01',2,4,NULL, 2005,'2005-12-06', 2005, '2009-07-27', 2005, 'K00000659')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, account, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-03-18',NULL,'2005-01-01',2,4,NULL, 2005,'2005-12-06', 2005, '2009-07-27', 2005, 'K00000660')");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (1,1)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (2,2)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (3,3)");
@@ -89,9 +109,18 @@ $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (8,8)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (9,9)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (10,10)");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (11,11)");
+$oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (12,11)");
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('12345678901','Ola','Nordmann',true,'Bergensgt 5','5050','BERGEN')");
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('23456789012','Kari','Nordmann',true,'Nordnesgt 7','5020','BERGEN')");
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('34567890123','Per','Nordmann',true,'Solheimsviken 13','5008','BERGEN')");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0443','Åge','Nilssen','IDRETT Sentrum sør','Byrådsavdeling for oppvekst','ar564@bergen.kommune.no','R0443',true)");
+$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0956','Berit','Tande','Bergenhus og Årstad kulturkontor','Byrådsavd. for kultur, næring og idrett','wb902@bergen.kommune.no','R0956',true)");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (11, 4, true)");
+$oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (12, 5, true)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', '473248234', true, 108.88)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Parkeringsplass', '124246242', false, 50.00)");
