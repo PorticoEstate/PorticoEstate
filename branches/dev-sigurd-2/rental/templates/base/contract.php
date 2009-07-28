@@ -42,7 +42,7 @@ YAHOO.util.Event.onDOMReady(
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
 	
-		<li class="selected"><a href="#rental_common_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/text-x-generic.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
+		<li class="selected"><a href="#rental_common_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
 		<li><a href="#rental_rc_parties"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?= lang('rental_menu_parties') ?></em></a></li>
 		<li><a href="#rental_rc_composites"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_contract_composite') ?></em></a></li>
 		<li><a href="#rental_rc_price"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?= lang('rental_common_price') ?></em></a></li>
