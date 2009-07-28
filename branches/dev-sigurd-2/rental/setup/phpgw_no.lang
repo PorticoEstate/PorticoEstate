@@ -210,8 +210,8 @@ rental_price_item_type_apiece	rental	no	Stk.
 rental_price_item_showing	rental	no	Viser priselement
 rental_price_item_area	rental	no	Areal
 rental_price_item_count	rental	no	Antall
-rental_price_item_date_start	rental	no	Startdato
-rental_price_item_date_end	rental	no	Sluttdato
+rental_price_item_date_start	rental	no	Gjelder fra
+rental_price_item_date_end	rental	no	Gjelder til
 rental_price_item_total_price	rental	no	Total pris
 rental_price_item_reset	rental	no	Hent verdier fra prisboken
 rental_rc_vacant	rental	no	Ledig
