@@ -213,6 +213,7 @@ rental_price_item_count	rental	no	Antall
 rental_price_item_date_start	rental	no	Startdato
 rental_price_item_date_end	rental	no	Sluttdato
 rental_price_item_total_price	rental	no	Total pris
+rental_price_item_reset	rental	no	Hent verdier fra prisboken
 rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift

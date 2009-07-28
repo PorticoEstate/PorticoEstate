@@ -58,6 +58,8 @@
 			$this->db->next_record();
 			
 			$price_item = new rental_contract_price_item($this->get_field_value('id'));
+			$price_item->set_price_item_id($this->get_field_value('price_item_id'));
+			$price_item->set_contract_id($this->get_field_value('contract_id'));
 			$price_item->set_title($this->get_field_value('title'));
 			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
 			$price_item->set_is_area($this->get_field_value('is_area'));
@@ -203,6 +205,44 @@
 			);
 					
 			$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			
+			$receipt['id'] = $id;
+			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+
+			return $receipt;
+		}
+		
+	/**
+		 * Update the database values for an existing contract price item.
+		 * 
+		 * @param $price_item the contract price item to be updated
+		 * @return result receipt from the db operation
+		 */
+		function update_contract_price_item($price_item)
+		{
+			$id = intval($price_item->get_id());
+			
+			$values = array(
+				'price_item_id = ' . $price_item->get_price_item_id(),
+				'contract_id = ' . $price_item->get_contract_id(),
+				'area = ' . $price_item->get_area(),
+				'count = ' . $price_item->get_count(),
+				'total_price = ' . $price_item->get_total_price(),
+				'title = \'' . $price_item->get_title() . '\'',
+				'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
+				'is_area = ' . ($price_item->is_area() ? "true" : "false"),
+				'price = ' . $price_item->get_price()
+			);
+			
+			if ($price_item->get_date_start()) {
+				$values[] = 'date_start = ' . $price_item->get_date_start();
+			}
+			
+			if ($price_item->get_date_end()) {
+				$values[] = 'date_end = ' . $price_item->get_date_end();
+			}
+					
+			$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 			
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));

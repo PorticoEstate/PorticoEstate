@@ -171,11 +171,11 @@ YAHOO.util.Event.onDOMReady(
 				$related = array('not_included_price_items');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
-					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 3),
-					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 4),
-					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "index" => 5),
-					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 6),
-					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 7)
+					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 4),
+					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 5),
+					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "index" => 6),
+					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7),
+					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8)
 				);
 				include('price_item_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_price_items') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>

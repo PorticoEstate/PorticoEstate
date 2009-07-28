@@ -23,7 +23,8 @@
 			'remove_composite' => true,
 			'set_payer' => true,
 			'add_price_item' => true,
-			'remove_price_item' => true
+			'remove_price_item' => true,
+			'reset_price_item' => true
 		);
 
 		public function __construct()
@@ -326,6 +327,14 @@
 			$contract = rental_contract::get($contract_id);
 			$contract->remove_price_item($price_item);
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+		}
+		
+		public function reset_price_item()
+		{
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$price_item_id = (int)phpgw::get_var('price_item_id');
+			$price_item = rental_contract_price_item::get($price_item_id);
+			$price_item->reset();
 		}
 	}
 ?>

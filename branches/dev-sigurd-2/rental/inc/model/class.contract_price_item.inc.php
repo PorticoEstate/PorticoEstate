@@ -63,6 +63,9 @@
 		
 		public function get_area()
 		{
+			if (!$this->area)
+				$this->area = 0;
+				
 			return $this->area;
 		}
 		
@@ -73,6 +76,9 @@
 		
 		public function get_count()
 		{
+			if (!$this->count)
+				$this->count = 0;
+				
 			return $this->count;
 		}
 		
@@ -83,6 +89,8 @@
 		
 		public function get_total_price()
 		{
+			if (!$this->total_price)
+				$this->total_price = 0;
 			return $this->total_price;
 		}
 		
@@ -109,6 +117,21 @@
 		public function set_date_end($date_end)
 		{
 			$this->date_end = $date_end;
+		}
+		
+		/**
+		 * Reset this contract price item to its original values from the price list
+		 */
+		public function reset()
+		{
+			$so = self::get_so();
+			
+			$original = $so->get_single($this->get_price_item_id());
+			$this->set_agresso_id($original->get_agresso_id());
+			$this->set_title($original->get_title());
+			$this->set_price($original->get_price());
+			
+			$so->update_contract_price_item($this);
 		}
 		
 		/**

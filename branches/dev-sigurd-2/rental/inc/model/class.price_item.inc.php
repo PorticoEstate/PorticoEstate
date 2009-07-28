@@ -79,6 +79,9 @@
 		
 		public function get_price()
 		{
+			if (!$this->price)
+				$this->price = 0;
+				
 			return $this->price;
 		}
 		
