@@ -132,35 +132,35 @@
 			</form>
 		</div>
 		<div id="elements">
+			<h3><?= lang('rental_rc_added_areas') ?></h3>
+			<div id="added-areas-datatable-container" class="datatable_container"></div>
 			<?php if ($editable) { ?>
-				<h3><?= lang('rental_rc_added_areas') ?></h3>
-				<div id="added-areas-datatable-container" class="datatable_container"></div>
+				<h3><?= lang('rental_rc_add_area') ?></h3>
+				<form id="available_areas_form" method="GET">
+					<fieldset>
+						<!-- Filters -->
+						<h3><?= lang('rental_rc_toolbar_filters') ?></h3>
+						<label for="ctrl_toggle_level"><?= lang('rental_rc_level') ?></label>
+						<select name="level" id="ctrl_toggle_level">
+							<option value="1"><?= lang('rental_rc_property') ?></option>
+							<option value="2" default=""><?= lang('rental_rc_building') ?></option>
+							<option value="3"><?= lang('rental_rc_floor') ?></option>
+							<option value="4"><?= lang('rental_rc_level') ?></option>
+							<option value="5"><?= lang('rental_rc_section') ?></option>
+						</select>
+						
+						<label class="toolbar_element_label" for="calendarPeriodFrom"><?= lang('rental_rc_available_at') ?></label>
+						<input type="text" name="available_date" id="available_date" size="10"/>
+						<input type="hidden" name="available_date_hidden" id="available_date_hidden"/>
+						<div id="calendarPeriodFrom">
+						</div>
+						
+						<input type="submit" id="ctrl_search_button" value="<?= lang('rental_rc_search') ?>" />
+						<input type="button" id="ctrl_reset_button" value="<?= lang('rental_reset') ?>" />
+					</fieldset>
+					<div id="available-areas-datatable-container" class="datatable_container"></div>
+				</form>
 			<?php } ?>
-			<h3><?= lang('rental_rc_add_area') ?></h3>
-			<form id="available_areas_form" method="GET">
-				<fieldset>
-					<!-- Filters -->
-					<h3><?= lang('rental_rc_toolbar_filters') ?></h3>
-					<label for="ctrl_toggle_level"><?= lang('rental_rc_level') ?></label>
-					<select name="level" id="ctrl_toggle_level">
-						<option value="1"><?= lang('rental_rc_property') ?></option>
-						<option value="2" default=""><?= lang('rental_rc_building') ?></option>
-						<option value="3"><?= lang('rental_rc_floor') ?></option>
-						<option value="4"><?= lang('rental_rc_level') ?></option>
-						<option value="5"><?= lang('rental_rc_section') ?></option>
-					</select>
-					
-					<label class="toolbar_element_label" for="calendarPeriodFrom"><?= lang('rental_rc_available_at') ?></label>
-					<input type="text" name="available_date" id="available_date" size="10"/>
-					<input type="hidden" name="available_date_hidden" id="available_date_hidden"/>
-					<div id="calendarPeriodFrom">
-					</div>
-					
-					<input type="submit" id="ctrl_search_button" value="<?= lang('rental_rc_search') ?>" />
-					<input type="button" id="ctrl_reset_button" value="<?= lang('rental_reset') ?>" />
-				</fieldset>
-				<div id="available-areas-datatable-container" class="datatable_container"></div>
-			</form>
 		</div>
 		<div id="contracts">
 			<form id="contracts_form" method="GET">
