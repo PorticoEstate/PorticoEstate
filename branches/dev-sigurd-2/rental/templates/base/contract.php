@@ -163,7 +163,28 @@ YAHOO.util.Event.onDOMReady(
 				include('composite_list_partial.php'); ?>
 		</div>
 		<div id="price">
-		<input type="text" rel="masterform" name="price">
+			<h3><?= lang('rental_rc_selected_price_items') ?></h3>
+			<? 
+				$list_form = false;
+				$list_id = 'included_price_items';
+				$related = array('not_included_price_items');
+				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
+				$extra_cols = array(
+					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 3),
+					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 4),
+					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "index" => 5),
+					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 6),
+					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 7)
+				);
+				include('price_item_partial.php'); ?>
+			<h3><?= lang('rental_rc_available_price_items') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
+			<? 
+				$list_form = true;
+				$list_id = 'not_included_price_items';
+				$related = array('included_price_items');
+				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
+				unset($extra_cols);
+				include('price_item_partial.php'); ?>
 		</div>
 		<div id="bill">
 		</div>
