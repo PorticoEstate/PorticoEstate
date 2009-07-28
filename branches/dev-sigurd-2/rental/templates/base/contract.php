@@ -92,8 +92,8 @@ YAHOO.util.Event.onDOMReady(
 			</dt>
 			<dd>
 				<?php
-					$end_date = $contract->get_contract_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
-					$end_date_yui = $contract->get_contract_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
+					$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
+					$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
 					if ($editable) {
 						?>
 						<input type="text" name="date_end" id="date_end" size="10" value="<?= $end_date ?>" />
@@ -110,6 +110,7 @@ YAHOO.util.Event.onDOMReady(
 						echo $end_date;
 					}
 				?>
+				<br/>
 			</dd>
 			
 			<dt>
