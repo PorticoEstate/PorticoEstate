@@ -121,9 +121,21 @@ $oProc->query("INSERT INTO rental_party (personal_identification_number, first_n
 // Vitalitetssenteret
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (11, 4, true)");
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (12, 5, true)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', '473248234', true, 108.88)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Parkeringsplass', '124246242', false, 50.00)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (1, 'Fellesareal', '123456789', true, 34.59)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (2, 'Administrasjon', 'Y900', true, 23.98)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (3, 'Parkeringsplass', '124246242', false, 50.00)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (4, 'Forsikring', 'Y901', true, 10.57)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (5, 'Kapitalkostnad', 'Y904', true, 702.34)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (6, 'Kom.avg. uten renovasjon', 'Y902', true, 32.29)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (7, 'Renovasjon', 'Y903', true, 10.94)");
+$oProc->query("INSERT INTO rental_price_item (id, title, agresso_id, is_area, price) VALUES (8, 'Vedlikehold', 'Y905', true, 98.23)");
+// Vitalitetssenteret
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (1, 2, 12, 'Administrasjon', 1158, 0, 'Y900', true, 23.98, 27768.84, '2009-01-01', NULL)");
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (2, 4, 12, 'Forsikring', 1158, 0, 'Y901', true, 10.57, 12240.06, '2009-01-01', NULL)");
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (3, 5, 12, 'Kapitalkostnad', 1158, 0, 'Y904', true, 702.34, 813309.72, '2009-01-01', NULL)");
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (4, 6, 12, 'Kom.avg. uten renovasjon', 1158, 0, 'Y902', true, 32.29, 37391.82, '2009-01-01', NULL)");
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (5, 7, 12, 'Renovasjon', 1158, 0, 'Y903', true, 10.94, 12668.52, '2009-01-01', NULL)");
+$oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (6, 8, 12, 'Vedlikehold', 1158, 0, 'Y905', true, 98.23, 113750.34, '2009-01-01', NULL)");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2000");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2001");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2002");
