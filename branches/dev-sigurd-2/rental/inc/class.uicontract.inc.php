@@ -21,7 +21,7 @@
 			'remove_party' => true,
 			'add_composite' => true,
 			'remove_composite' => true,
-			'set_payer' => true
+			'set_payer' => true,
 			'add_price_item' => true,
 			'remove_price_item' => true
 		);
@@ -248,15 +248,7 @@
 			$contract = new rental_contract();
 			$contract->store();
 			
-			// Get the composite ob		public function set_payer(){
-			$contract_id = (int)phpgw::get_var('contract_id');
-			$party_id = (int)phpgw::get_var('party_id');
-			$contract = rental_contract::get($contract_id);
-			$contract->set_payer($party_id);
-		}
-		
-		
-ject the user asked for from the DB
+			// Get the composite object the user asked for from the DB
 			$composite = rental_composite::get(phpgw::get_var('composite_id'));
 			// Add that composite to the new contract
 			$contract->add_composite($composite);
