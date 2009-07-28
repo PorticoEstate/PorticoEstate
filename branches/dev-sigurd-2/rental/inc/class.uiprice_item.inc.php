@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.uicommon');
 	
 	include_class('rental', 'price_item', 'inc/model/');
+	include_class('rental', 'contract', 'inc/model/');
 	
 	class rental_uiprice_item extends rental_uicommon
 	{
@@ -120,6 +121,12 @@
 			$records = array();
 			switch($type)
 			{
+				case 'included_price_items':
+					$contract_id = phpgw::get_var('contract_id');
+					$contract = rental_contract::get($contract_id);
+					$records = $contract->get_price_items();
+					break;
+				case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
 				default:
 					$records = rental_price_item::get_all(
 						phpgw::get_var('startIndex'),
@@ -158,6 +165,22 @@
 			
 			switch($params[1])
 			{
+				case 'included_price_items':
+					if($this->hasWritePermission())
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_price_item', 'price_item_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['labels'][] = lang('rental_common_remove');
+					}
+					break;
+				case 'not_included_price_items':
+					if($this->hasWritePermission())
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['labels'][] = lang('rental_common_add');
+					}
+					break;
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));

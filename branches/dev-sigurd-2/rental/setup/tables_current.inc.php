@@ -216,6 +216,30 @@
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
+		),
+		// Price item related to contract
+		'rental_contract_price_item' => array(
+				'fd' => array(
+					'id' =>	array('type' => 'auto', 'nullable' => false),
+					'price_item_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => false),
+					'area' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
+					'count' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'agresso_id' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
+					'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
+					'total_price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
+					'date_start' => 	array('type' => 'date'),
+					'date_end' => 		array('type' => 'date')
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'rental_price_item' => array('price_item_id' => 'id'),
+					'rental_contract' => array('contract_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
 		)
 	);
 

@@ -21,6 +21,7 @@
 		protected $composite_names = Array();
 		protected $composites;
 		protected $payer_id;
+		protected $price_items;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -199,11 +200,32 @@
 			return $this->parties;
 		}
 		
+		public function set_price_items($price_items)
+		{
+			$this->price_items = $price_items;
+		}
 		
 		/**
-		 * Add a composite to this contract.  Note that the contract is not updated
-		 * in the database until store() is called.  This function checks for duplicates
-		 * before adding the gien composite.
+		 * Get a list of the price items associated with this contract.  The price items
+		 * are loaded lazily, so they will not be populated at object construction, but rather
+		 * at first call of this function.
+		 * 
+		 * @return rental_price_item[]
+		 */
+		public function get_price_items()
+		{
+			if(!$this->price_items) {
+				$so = self::get_so();
+				$this->price_items = $so->get_price_items_for_contract($this->get_id());
+			}
+			
+			return $this->price_items;
+		}
+		
+		
+		/**
+		 * Add a composite to this contract. This function checks for duplicates
+		 * before adding the given composite.
 		 * 
 		 * @param $new_composite
 		 */
@@ -227,9 +249,8 @@
 		}
 		
 		/**
-		 * Add a prty to this contract. Note that the contract is not updated
-		 * in the database until store() is called.  This function checks for duplicates
-		 * before adding the gien composite. 
+		 * Add a party to this contract. This function checks for duplicates
+		 * before adding the party. 
 		 * 
 		 * @param rental_party $new_party the new party
 		 */
@@ -253,6 +274,21 @@
 
 		}
 		
+		/**
+		 * Add a price_item to this contract. This function does not check for duplicates
+		 * before adding the price_item because multiple instances of the same price items are allowed.
+		 * 
+		 * @param $new_price_item
+		 */
+		public function add_price_item(rental_price_item $new_price_item)
+		{
+			$so = self::get_so();
+			$so->add_price_item($this->get_id(), $new_price_item);
+			$price_items = $this->get_price_items();
+			$price_items[] = $new_price_item;
+			$this->set_price_items($price_items);
+		}
+		
 		public function remove_party(rental_party $party_to_remove)
 		{
 			unset($this->parties[$party_to_remove]);
@@ -266,6 +302,14 @@
 			unset($this->composites[$composite_to_remove]);
 			$so = self::get_so();
 			$so->remove_composite($this->get_id(),$composite_to_remove->get_id());
+		}
+		
+		public function remove_price_item(rental_contract_price_item $price_item_to_remove)
+		{
+			// TODO: Does this work?
+			unset($this->price_items[$price_item_to_remove]);
+			$so = self::get_so();
+			$so->remove_price_item($this->get_id(),$price_item_to_remove);
 		}
 		
 		/**

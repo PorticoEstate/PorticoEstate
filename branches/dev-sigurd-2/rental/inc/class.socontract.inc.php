@@ -4,6 +4,8 @@ phpgw::import_class('rental.socommon');
 include_class('rental', 'contract_date', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
 include_class('rental', 'composite', 'inc/model/');
+include_class('rental', 'price_item', 'inc/model/');
+include_class('rental', 'contract_price_item', 'inc/model/');
 
 class rental_socontract extends rental_socommon
 {
@@ -437,6 +439,26 @@ class rental_socontract extends rental_socommon
 	}
 	
 	/**
+	 * Get the price items involved in this contract
+	 * 
+	 * @param $contract_id the contract id
+	 * @return A list of rental_price_item objects
+	 */
+	public function get_price_items_for_contract($contract_id)
+	{
+		$sql = "SELECT * FROM rental_contract_price_item WHERE contract_id = $contract_id";
+		$this->db->query($sql);
+		$price_items = array();
+		$price_item_so = rental_contract_price_item::get_so();
+		while($this->db->next_record()) {
+			$id = $this->unmarshal($this->db->f('id', true), 'int');
+			
+			$price_items[] = $price_item_so->get_single_contract_price_item($id);
+		}
+		return $price_items;
+	}
+	
+	/**
 	 * Get the parties not involved in this contract
 	 * 
 	 * @param $contract_id the contract id
@@ -556,6 +578,26 @@ class rental_socontract extends rental_socommon
 		$result = $this->db->query($q);
 	}
 	
+	function add_price_item($contract_id, $price_item)
+	{
+		$values = array(
+			$price_item->get_id(),
+			$contract_id,
+			"'" . $price_item->get_title() . "'",
+			$price_item->get_agresso_id(),
+			$price_item->is_area() ? 'true' : 'false',
+			$price_item->get_price()
+		);
+		$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, agresso_id, is_area, price) VALUES (" . join(',', $values) . ")";
+		$result = $this->db->query($q);
+	}
+	
+	function remove_price_item($contract_id, $price_item)
+	{
+		$q = "DELETE FROM rental_contract_price_item WHERE id = {$price_item->get_id()}";
+		$result = $this->db->query($q);
+	}
+	
 	function set_payer($contract_id, $party_id)
 	{
 		$pid =$this->marshal($party_id, 'int');
@@ -567,6 +609,5 @@ class rental_socontract extends rental_socommon
 				
 		
 	}
-	
 }
 ?>

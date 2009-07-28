@@ -143,7 +143,7 @@ rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet
 rental_rc_occupied	rental	no	Opptatt
-rental_rc_old_id	rental	no	Gammelt kontraksnummer
+rental_rc_old_id	rental	no	Gammelt kontraktsnummer
 rental_rc_others	rental	no	Annet
 rental_rc_overridden_address	rental	no	Overstyrt adresse
 rental_rc_post_code	rental	no	Postnummer
@@ -208,6 +208,11 @@ rental_price_item_title	rental	no	Tittel
 rental_price_item_type_area	rental	no	Areal
 rental_price_item_type_apiece	rental	no	Stk.
 rental_price_item_showing	rental	no	Viser priselement
+rental_price_item_area	rental	no	Areal
+rental_price_item_count	rental	no	Antall
+rental_price_item_date_start	rental	no	Startdato
+rental_price_item_date_end	rental	no	Sluttdato
+rental_price_item_total_price	rental	no	Total pris
 rental_rc_vacant	rental	no	Ledig
 rental_rc_occupied	rental	no	Opptatt
 rental_rc_in_operation	rental	no	I drift

@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.socommon');
 	
 	include_class('rental', 'price_item', 'inc/model/');
+	include_class('rental', 'contract', 'inc/model/');
 	
 	class rental_soprice_item extends rental_socommon
 	{
@@ -11,10 +12,17 @@
 			array
 			(
 				'id'	=> array('type' => 'int'),
+				'price_item_id'	=> array('type' => 'int'),
+				'contract_id'	=> array('type' => 'int'),
 				'title' => array('type' => 'string'),
 				'agresso_id' => array('type', 'string'),
 	 			'is_area'	=> array('type' => 'bool'),
-				'price' => array('type' => 'float')
+				'price' => array('type' => 'float'),
+				'area' => array('type' => 'float'),
+				'count' => array('type' => 'int'),
+				'total_price' => array('type' => 'float'),
+				'date_start' => array('type' => 'date'),
+				'date_end' => array('type' => 'date')
 			));
 		}
 		
@@ -37,6 +45,28 @@
 			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
 			$price_item->set_is_area($this->get_field_value('is_area'));
 			$price_item->set_price($this->get_field_value('price'));
+			
+			return $price_item;
+		}
+		
+		function get_single_contract_price_item($id)
+		{
+			$id = (int)$id;
+			
+			$sql = "SELECT * FROM rental_contract_price_item WHERE id = " . $id;
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->next_record();
+			
+			$price_item = new rental_contract_price_item($this->get_field_value('id'));
+			$price_item->set_title($this->get_field_value('title'));
+			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
+			$price_item->set_is_area($this->get_field_value('is_area'));
+			$price_item->set_price($this->get_field_value('price'));
+			$price_item->set_area($this->get_field_value('area'));
+			$price_item->set_count($this->get_field_value('count'));
+			$price_item->set_total_price($this->get_field_value('total_price'));
+			$price_item->set_date_start($this->get_field_value('date_start'));
+			$price_item->set_date_end($this->get_field_value('date_end'));
 			
 			return $price_item;
 		}
