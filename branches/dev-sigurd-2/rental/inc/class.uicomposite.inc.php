@@ -100,6 +100,21 @@
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
+				case 'available_composites':
+					$rows = array();
+					$composites = rental_composite::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array( 'is_vacant' => 'vacant'));
+					foreach ($composites as $composite) {
+						$rows[] = $composite->serialize();
+					}
+					$composite_data = array('results' => $rows, 'total_records' => count($rows));
+					break;
 				case 'included_composites':
 					$contract_id = phpgw::get_var('contract_id');
 					$contract = rental_contract::get($contract_id);
