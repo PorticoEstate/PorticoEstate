@@ -46,6 +46,7 @@ rental_contract_from	rental	no	Fra
 rental_contract_id	rental	no	Kontraksnummer
 rental_contract_investment	rental	no	Investeringskontrakt
 rental_contract_is_payer	rental	no	Fakturamottaker
+rental_contract_last_edited_by_current_user	rental	no	Sist arbeidet med
 rental_contract_number	rental	no	Kontraktnummer
 rental_contract_type	rental	no	Type
 rental_contract_partner	rental	no	Kontraktspart

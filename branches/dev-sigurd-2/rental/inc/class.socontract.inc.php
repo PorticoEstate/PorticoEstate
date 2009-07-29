@@ -22,7 +22,8 @@ class rental_socontract extends rental_socommon
 					'first_name' => array('type' => 'string'),
 					'last_name' => array('type' => 'string'),
 					'company_name' => array('type' => 'string'),
-					'old_contract_id' => array('type' => 'string')
+					'old_contract_id' => array('type' => 'string'),
+					'edited_on' => array('type' => 'date')
 		));
 	}
 	
@@ -210,7 +211,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';
@@ -219,15 +220,8 @@ class rental_socontract extends rental_socommon
 		$condition = $this->get_conditions($query, $filters,$search_option);
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
-		//var_dump("SELECT  $columns_for_list FROM $tables $joins WHERE $condition");
-		//$this->db->limit_query("SELECT  $columns_for_list FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
-		
-		/*$temp = 'LEFT OUTER JOIN (rental_contract_party JOIN rental_party ON (rental_contract_party.party_id = rental_party.id)) USING (id)';
-		$temp1 = 'LEFT OUTER JOIN(SELECT rental_party.first_name, rental_party.last_name FROM rental_party INNER JOIN rental_contract_party ON rental_contract_party.party_id = rental_party.id)';
-		$cols = 'rental_contract.id, rental_contract.date_start, rental_contract.date_end, rental_contract_type.title, rental';
-		
 		// Calculate total number of records
-		$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
+		/*$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');*/
 		$order = $sort ? "ORDER BY $sort $dir ": '';
@@ -241,11 +235,12 @@ class rental_socontract extends rental_socommon
 		{
 			$this->db->limit_query("SELECT $distinct $columns_for_list FROM $tables $joins WHERE $condition", $start, __LINE__, __FILE__, $limit);
 		}
-		
-		
-		
-		
-		$results = array();
+		return $this->get_contracts_from_result();
+	}
+	
+	
+	protected function get_contracts_from_result(){
+	$results = array();
 		
 		while ($this->db->next_record())
 		{
@@ -286,16 +281,18 @@ class rental_socontract extends rental_socommon
 			}
 			if($new_contract) {
 				$contract = new rental_contract($row['id']);
-			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
+			$contract->set_contract_date(new rental_contract_date(strtotime($row['date_start']),strtotime($row['date_end'])));
 			$contract->set_party_name($party_name);
 			$contract->set_composite_name($row['composite_name']);
 			$contract->set_old_contract_id($row['old_contract_id']);
 			$contract->set_contract_type_title($row['title']);
+			$contract->set_last_edited_by_current_user(strtotime($row['edited_on']));
 			$contracts[] = $contract;
 			}
 		}
 		return $contracts;
 	}
+	
 	
 	/**
 	 * Returns all contracts for a specified composite.
@@ -372,6 +369,22 @@ class rental_socontract extends rental_socommon
 			'total_records' => $total_records,
 			'results'		=> $results
 		);
+	}
+	
+	public function get_last_edited_by(){
+		$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+		$sql = "
+			SELECT edited.edited_on, contract.id, contract.date_start, contract.date_end, party.first_name, party.last_name, party.company_name, composite.name as composite_name 
+			FROM rental_contract_last_edited edited 
+			LEFT JOIN rental_contract 			contract	ON (contract.id = edited.contract_id)
+			LEFT JOIN rental_contract_party 	con_par 	ON (con_par.contract_id = edited.contract_id) 
+			LEFT JOIN rental_party 				party 		ON (party.id = con_par.party_id)
+			LEFT JOIN rental_contract_composite	con_con		ON (con_con.contract_id = edited.contract_id)
+			LEFT JOIN rental_composite			composite	ON (composite.id = con_con.composite_id)
+			WHERE edited.account_id = $account_id";
+		//var_dump($sql);
+		$this->db->query($sql);						
+		return $this->get_contracts_from_result();
 	}
 	
 	/**
@@ -500,9 +513,17 @@ class rental_socontract extends rental_socommon
 			$values[] = "date_start = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
 			$values[] = "date_end = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
 		}
-
-		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
+		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		
+		if($result){
+		//Update last edited table, insert new record if necessary
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$sql_last_edited = "UPDATE last_edited_by_user SET (date=$current_date) WHERE account_id = $account_id AND contract_id = $id";
+			$update_result = $this->db->query($sql_last_edited, __LINE__,__FILE__);
+			var_dump($update_result);
+		}
+			
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
 		

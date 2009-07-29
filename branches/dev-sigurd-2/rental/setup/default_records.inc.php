@@ -6,6 +6,7 @@
  * 
  */
 
+//Create groups, users, add users to groups and set preferences
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2000");
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2001");
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2002");
@@ -31,6 +32,7 @@ $oProc->query("INSERT INTO phpgw_preferences VALUES (2003,'common','a:4:{s:9:\"m
 $oProc->query("INSERT INTO phpgw_preferences VALUES (2004,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
 $oProc->query("INSERT INTO phpgw_preferences VALUES (2005,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
 
+//Default rental composites
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Herdla fuglereservat','Pip pip')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Fløibanen','Tut tut')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Perle og Bruse','')");
@@ -212,6 +214,10 @@ $oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contra
 $oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (38, 6, 18, 'Kom.avg. uten renovasjon', 1160.4, 0, 'Y902', true, 32.29, 37469.32, '2005-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (39, 7, 18, 'Renovasjon', 1160.4, 0, 'Y903', true, 10.94, 12694.78, '2005-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (40, 8, 18, 'Vedlikehold', 1160.4, 0, 'Y905', true, 98.23, 113986.09, '2009-01-01', NULL)");
+
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,2004,'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,2005,'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,2004,'2009-07-28')");
 
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2000");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2001");

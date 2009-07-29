@@ -142,6 +142,22 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'rental_contract_last_edited' => array(
+			'fd' => array(
+				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'account_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'edited_on' =>			array('type' => 'date')
+			),
+			'pk' => array('contract_id','account_id'),
+			'fk' => array(
+				'rental_contract' => array('contract_id' => 'id'),
+				'phpgw_accounts' => array('account_id' => 'account_id')
+			),
+			'ix' => array(
+			),
+			'uc' => array(
+			)
+		),
 		// The connection between a contract and a composite. A composite can belong to several contracts (if they aren't active at the same time) and a contract can contain several composites.
 		'rental_contract_composite' => array(
 			'fd' => array(

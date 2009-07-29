@@ -21,8 +21,8 @@
 		protected $composite_names = Array();
 		protected $composites;
 		protected $payer_id;
-		protected $price_items;
-		
+		protected $price_items;	
+		protected $last_edited_by_current_user;
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -40,6 +40,8 @@
 		}
 		
 		public function get_id() { return $this->id; }
+		
+	
 		
 		public function set_payer($id)
 		{
@@ -151,6 +153,13 @@
 		{
 			$this->composites = $composites;
 		}
+		
+		public function set_last_edited_by_current_user($date)
+		{
+			$this->last_edited_by_current_user = $date;
+		}
+		
+		public function get_last_edited_by_current_user() { return $this->last_edited_by_current_user;}
 		
 		/**
 		 * Get a list of the composites associated with this contract.  The composites are loaded
@@ -366,6 +375,13 @@
 			return $contracts;
 		}
 		
+		public static function get_last_edited_by()
+		{
+			$so = self::get_so();
+			$contracts = $so->get_last_edited_by();
+			return $contracts;
+		}
+		
 		/**
 		 * Get a list of the available contract types.
 		 * 
@@ -379,14 +395,16 @@
 		
 		public function serialize()
 		{
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return array(
 				'id' => $this->get_id(),
-				'date_start' => $this->get_contract_date()->get_start_date(),
-				'date_end' => $this->get_contract_date()->get_end_date(),
+				'date_start' => $this->get_contract_date() && $this->get_contract_date()->has_start_date() ? date($date_format, $this->get_contract_date()->get_start_date()): '',
+				'date_end' => $this->get_contract_date() && $this->get_contract_date()->has_end_date() ? date($date_format, $this->get_contract_date()->get_end_date()): '',
 				'type'	=> lang($this->get_contract_type_title()),
 				'composite' => $this->get_composite_name(),
 				'party' => $this->get_party_name(),
-				'old_contract_id' => $this->get_old_contract_id()
+				'old_contract_id' => $this->get_old_contract_id(),
+				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()): ''
 			);
 		} 
 		

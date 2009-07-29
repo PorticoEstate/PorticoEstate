@@ -67,6 +67,9 @@
 					);
 					break;
 				case 'last_edited_by':
+					$contracts = rental_contract::get_last_edited_by();
+					break;
+				case 'ending_contracts':
 					$contracts = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
@@ -75,9 +78,10 @@
 						phpgw::get_var('query'),
 						phpgw::get_var('search_option'),
 						array(
-							'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
+							'contract_status' => 'under_dismissal'
 						)
 					);
+					break;
 				case 'contracts_for_executive_officer':
 					$contracts = rental_contract::get_all(
 						phpgw::get_var('startIndex'),

@@ -594,7 +594,7 @@ class rental_socomposite extends rental_socommon
 			while($this->db->next_record())
 			{
 //				var_dump(++$counter);
-				$unit->add_contract_date(new rental_contract_date($this->unmarshal($this->db->f('date_start', true), 'string'), $this->unmarshal($this->db->f('date_end', true), 'string')));
+				$unit->add_contract_date(new rental_contract_date(strtotime($this->unmarshal($this->db->f('date_start', true), 'string')), strtotime($this->unmarshal($this->db->f('date_end', true), 'string'))));
 			}
 //			var_dump($unit);
 		}

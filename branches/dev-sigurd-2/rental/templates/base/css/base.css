@@ -21,6 +21,10 @@ label {
 }
 .clr { clear: both;}
 
+#dashboard {padding: 1em;}
+#dashborad_column_1 { float:left; width:50%;}
+#dashboard_column_2 { margin-left:50%; width:50%;}
+
 #inactive {
 				background-color: #ff5555;
 				width: 10em;

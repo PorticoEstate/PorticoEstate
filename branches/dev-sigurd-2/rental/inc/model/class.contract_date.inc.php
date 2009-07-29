@@ -9,8 +9,7 @@ class rental_contract_date
 	protected $end_date;
 	
 	/**
-	 * Constructs a date range. Dates should be in the format YYYY-MM-DD
-	 * (Y-m-d in PHP), e.g. 1980-09-21.
+	 * Constructs a date range. Dates should be as long, seconds from 1.1.1970
 	 * 
 	 * @param $start_date string with start of contract.
 	 * @param $end_date string with end of contract.

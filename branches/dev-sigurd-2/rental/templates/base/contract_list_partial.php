@@ -78,6 +78,8 @@
 		hidden: true
 	}];
 
+
+	
 	<?
 		if(isset($extra_cols)){
 			foreach($extra_cols as $col){
@@ -90,6 +92,21 @@
 				}
 			}
 		} 
+	?>
+
+	<?
+		if(isset($hide_cols)){
+			foreach($hide_cols as $col){
+				?>
+					for(var i = 0; i < columnDefs.length; i++){
+						if(columnDefs[i].key == '<?= $col ?>'){
+							columnDefs[i].hidden = true;
+						}
+					}
+					
+				<?	
+			}
+		}
 	?>
 	
 	// Initiating the data source
