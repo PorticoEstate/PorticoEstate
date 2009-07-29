@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.uicommon');
 	
 	include_class('rental', 'price_item', 'inc/model/');
+	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'contract', 'inc/model/');
 	
 	class rental_uiprice_item extends rental_uicommon
@@ -12,7 +13,8 @@
 			'index' => true,
 			'query' => true,
 			'view'		=> true,
-			'edit'		=> true
+			'edit'		=> true,
+			'set_value' => true
 		);
 		
 		public function __construct()
@@ -94,6 +96,24 @@
 			}
 			
 			return $this->index();
+		}
+		
+		public function set_value()
+		{
+			if(!self::hasWritePermission())
+			{
+				$this->render('permission_denied.php');
+				return;
+			}
+			
+			$field = phpgw::get_var('field');
+			$value = phpgw::get_var('value');
+			$id = phpgw::get_var('id');
+			
+			$price_item = rental_contract_price_item::get($id);
+			$price_item->set_field($field, $value);
+			
+			$price_item->store();
 		}
 		
 		/**

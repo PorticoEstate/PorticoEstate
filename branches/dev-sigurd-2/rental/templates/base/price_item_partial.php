@@ -9,6 +9,7 @@
      	window.location = 'index.php?menuaction=rental.uiparty.index';
  		}
  	);
+
 	
 	// Defining columns for datatable
 	var columnDefs = [
@@ -25,12 +26,17 @@
 		{
 			key: "is_area",
 			label: "<?= lang('rental_rc_type') ?>",
-		  sortable: true
+		  sortable: true,
+		  editor: "hello"
 		},
 		{
 			key: "price",
 			label: "<?= lang('rental_rc_price') ?>",
 			sortable: true
+		},
+		{
+			key: "id",
+			hidden: true
 		},
 		{
 			key: "ajax",
@@ -42,20 +48,16 @@
 		}];
 
 	<?
-		if(isset($extra_cols)){
-			foreach($extra_cols as $col){
-				$literal = "{key: \"".$col["key"]."\",
-						label: \"".$col["label"]."\"}";
-				if($col["index"]){
-					echo "columnDefs.splice(".$col["index"].", 0,".$literal.");";
-				} else {
-					echo "columnDefs.push($literal);";
-				}
-			}
-		} 
+	if ($extra_cols) {
+		echo rental_uicommon::get_extra_column_defs('columnDefs', $extra_cols);
+	}
 	?>
-	
-	
+	<?
+	if ($editors) {
+		echo rental_uicommon::get_column_editors('columnDefs', $editors);
+	}
+	?>
+
 	// Initiating the data source
 	setDataSource(
 		'index.php?menuaction=rental.uiprice_item.query&amp;phpgw_return_as=json<?= $url_add_on; ?>',
@@ -71,9 +73,9 @@
 					echo "\"".$r."\"";
 				}
 			} 
-		?>)
+		?>),
+		'<?= $editor_action ?>'
 	);
-
 </script>
 
 <div id="<?= $list_id ?>_container" class="datatable_container"></div>

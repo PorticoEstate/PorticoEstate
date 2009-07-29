@@ -134,6 +134,27 @@
 			$so->update_contract_price_item($this);
 		}
 		
+		/*
+		 * Overridden function.  @see rental_model::store()
+		 * This function saves the contract price item rather than the price item, and
+		 * doesn't handle add since we handle that through a contract object.
+		 * 
+		 */
+		public function store()
+		{
+			if ($this->validates()) {
+				$so = $this->get_so();
+				
+				if ($this->id) {
+					// We can assume this composite came from the database since it has an ID. Update the existing row
+					return $so->update_contract_price_item($this);
+				}
+			}
+			
+			// The object did not validate 
+			return false;
+		}
+		
 		/**
 		 * Convert this object to a hash representation
 		 * 

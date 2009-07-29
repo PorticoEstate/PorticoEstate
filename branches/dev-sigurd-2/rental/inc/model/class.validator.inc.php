@@ -45,7 +45,7 @@
 					break;
 				
 				case 'bool':
-					if (!is_bool($value)) {
+					if (!is_bool($value) && !(is_numeric($value) && ($value == 1 || $value == 0))) {
 						$message = lang('rental_messages_general');
 						return false;
 					}

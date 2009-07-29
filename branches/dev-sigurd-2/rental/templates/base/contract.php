@@ -177,6 +177,15 @@ YAHOO.util.Event.onDOMReady(
 					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7),
 					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8)
 				);
+				
+				$editor_action = 'rental.uiprice_item.set_value';
+				
+				$editors = array(
+					'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'agresso_id' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
+				);
+				
 				include('price_item_partial.php'); ?>
 			<h3><?= lang('rental_rc_available_price_items') ?> (<?= lang('rental_messages_right_click_to_add') ?>)</h3>
 			<? 
@@ -185,6 +194,7 @@ YAHOO.util.Event.onDOMReady(
 				$related = array('included_price_items');
 				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
 				unset($extra_cols);
+				unset($editors);
 				include('price_item_partial.php'); ?>
 		</div>
 		<div id="bill">

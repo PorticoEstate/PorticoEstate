@@ -306,6 +306,53 @@
 		public abstract function query();
 		
 		/**
+		 * Generate javascript for the extra column definitions for a partial list
+		 * 
+		 * @param $array_name the name of the javascript variable that contains the column definitions
+		 * @param $extra_cols the list of extra columns to set
+		 * @return string javascript
+		 */
+		public static function get_extra_column_defs($array_name, $extra_cols = array())
+		{
+			$result = "";
+			
+			foreach($extra_cols as $col){
+				$literal = "{key: \"".$col["key"]."\",
+						label: \"".$col["label"]."\"}";
+				if($col["index"]){
+					$result .= "{$array_name}.splice(".$col["index"].", 0,".$literal.");";
+				} else {
+					$result .= "{$array_name}.push($literal);";
+				}
+			}
+			
+			return $result;
+		}
+		
+		/**
+		 * Generate javascript definitions for any editor widgets set on columns for 
+		 * a partial list.
+		 * 
+		 * @param $array_name the name of the javascript variable that contains the column definitions
+		 * @param $editors the list of editors, keyed by column key
+		 * @return string javascript
+		 */
+		public static function get_column_editors($array_name, $editors = array())
+		{
+			$result  = "for (var i in {$array_name}) {\n";
+			$result .= "	switch ({$array_name}[i].key) {\n";
+			foreach ($editors as $field => $editor) {
+				$result .= "		case '{$field}':\n";
+				$result .= "			{$array_name}[i].editor = {$editor};\n";
+				$result .= "			break;\n";
+			}
+			$result .= " }\n";
+			$result .= "}";
+			
+			return $result;
+		}
+		
+		/**
 		 * Returns a html-formatted error message if one is defined in the
 		 * list of validation errors on the object we're given.  If no
 		 * error is defined, an empty string is returned.
