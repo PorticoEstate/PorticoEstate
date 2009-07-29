@@ -202,9 +202,9 @@
 			var request = YAHOO.util.Connect.asyncRequest(
 					'GET',
 					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id, 
-					{ 
-						//success: ajaxResponseSuccess,
-						//failure: ajaxResponseFailure, 
+					{
+						success: ajaxResponseSuccess,
+						failure: ajaxResponseFailure, 
 						args:oArgs.editor.getDataTable()
 					}
 				);
