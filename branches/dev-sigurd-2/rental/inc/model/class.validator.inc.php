@@ -3,7 +3,7 @@
 	{
 		public static function valid_required($value, &$message = null)
 		{
-			if ((!$value) || ($value == null) || ($value == '')) {
+			if (!isset($value) || $value === '') {
 				return false;
 			}
 			
@@ -49,7 +49,8 @@
 						$message = lang('rental_messages_general');
 						return false;
 					}
-				
+					break;
+					
 				// Do not check these types
 				case 'auto':
 				case 'blob':
