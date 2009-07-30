@@ -219,6 +219,12 @@ $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,2004,'2009-07-2
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,2005,'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,2004,'2009-07-28')");
 
+$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date) VALUES (2005,11,'Oppdatér leietaker med ny postadresse.','".date('Y-m-d')."')");
+$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date) VALUES (2005,13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.','".date('Y-m-d')."')");
+$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date) VALUES (2005,15,'Kontrollér at priselementer er i henhold.','".date('Y-m-d')."')");
+$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date) VALUES (2005,17,'Oppdatér med ny postadresse.','".date('Y-m-d')."')");
+$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date) VALUES (2005,18,'Oppdatér med ny postadresse.','".date('Y-m-d')."')");
+
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2000");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2001");
 $oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2002");
