@@ -27,4 +27,3 @@
 	$url_add_on = '&amp;type=all_parties';
 	include('party_list_partial.php');
 ?>
-	

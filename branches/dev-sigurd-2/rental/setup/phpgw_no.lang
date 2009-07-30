@@ -100,8 +100,8 @@ rental_messages_required_field	rental	no	Dette feltet er påkrevd
 rental_messages_general	rental	no	Feil i feltet
 rental_messages_string_too_long	rental	no	Teksten er for lang
 rental_messages_number_out_of_range	rental	no	Tallet er over eller under tillatte verdier
-rental_messages_saved_form	rental	no	Informasjonen ble lagret
-rental_messages_form_error	rental	no	Skjemaet inneholder en feil
+rental_messages_saved_form	rental	no	Informasjonen ble lagret.
+rental_messages_form_error	rental	no	Skjemaet inneholder en feil.
 rental_operator_and	rental	no	og
 rental_operator_or	rental	no	eller
 rental_rc_active	rental	no	Aktiv

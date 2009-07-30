@@ -5,26 +5,27 @@
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'price_item', 'inc/model/');
 	include_class('rental', 'contract_price_item', 'inc/model/');
+	include_class('rental', 'notification', 'inc/model/');
 	
 	class rental_uicontract extends rental_uicommon
 	{	
 		public $public_functions = array
 		(
-			'add'			=> true,
-			'add_from_composite' => true,
-			'edit' => true,
-			'index'		=> true,
-			'query'		=> true,
-			'view' => true,
-			'viewedit' => true,
-			'add_party' => true,
-			'remove_party' => true,
-			'add_composite' => true,
-			'remove_composite' => true,
-			'set_payer' => true,
-			'add_price_item' => true,
-			'remove_price_item' => true,
-			'reset_price_item' => true
+			'add'					=> true,
+			'add_from_composite'	=> true,
+			'edit'					=> true,
+			'index'					=> true,
+			'query'					=> true,
+			'view'					=> true,
+			'viewedit'				=> true,
+			'add_party'				=> true,
+			'remove_party'			=> true,
+			'add_composite'			=> true,
+			'remove_composite'		=> true,
+			'set_payer'				=> true,
+			'add_price_item'		=> true,
+			'remove_price_item'		=> true,
+			'reset_price_item'		=> true
 		);
 
 		public function __construct()
@@ -180,7 +181,7 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id)
+		public function viewedit($editable, $contract_id, $notification, string $message = null, string $error = null)
 		{
 			if ($contract_id > 0) {
 				$contract = rental_contract::get($contract_id);
@@ -188,9 +189,10 @@
 					$data = array
 					(
 						'contract' 	=> $contract,
+						'notification' => $notification,
 						'editable' => $editable,
-						'message' => phpgw::get_var('message'),
-						'error' => phpgw::get_var('error'),
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
 						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
 					);
 					$this->render('contract.php', $data);
@@ -212,6 +214,8 @@
 		public function edit()
 		{
 			$contract_id = (int)phpgw::get_var('id');
+			$message = null;
+			$error = null;
 			
 			if(isset($_POST['save_contract']))
 			{
@@ -226,8 +230,25 @@
 				
 				$contract->store();
 			}
+			else if(isset($_POST['add_notification']))
+			{
+				$date = phpgw::get_var('date_notification_hidden');
+				if($date)
+				{
+					$date = strtotime($date);
+				}
+				$notification = new rental_notification(-1, $GLOBALS['phpgw_info']['user']['account_id'], phpgw::get_var('notification_contract_id'), $date, phpgw::get_var('notification_message'), false);
+				if ($notification->store())
+				{
+					$message = lang('rental_messages_saved_form');
+				}
+				else
+				{
+					$error = lang('rental_messages_form_error');
+				}
+			}
 			
-			return $this->viewedit(true, $contract_id);
+			return $this->viewedit(true, $contract_id, $notification, $message, $error);
 		}
 		
 		/**

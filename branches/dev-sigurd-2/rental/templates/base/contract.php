@@ -19,7 +19,6 @@ YAHOO.util.Event.onDOMReady(
 			'date_start_hidden',
 			true
 		);
-
 		updateCalFromInput(cal_start, 'date_start_hidden');
 
 		cal_end = initCalendar(
@@ -32,23 +31,39 @@ YAHOO.util.Event.onDOMReady(
 			'date_end_hidden',
 			true
 		);
-
 		updateCalFromInput(cal_end, 'date_end_hidden');
+		
+		cal_end = initCalendar(
+			'date_notification', 
+			'calendarNotificationDate', 
+			'calendarNotificationDate_body', 
+			'Velg dato', 
+			'calendarNotificationDateCloseButton',
+			'calendarNotificationDateClearButton',
+			'date_notification_hidden',
+			true
+		);
+		updateCalFromInput(cal_end, 'date_notification_hidden');
+		
 	}
 );
 </script>
 
 <h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?= lang('rental_common_showing_contract') ?> K<?= $contract->get_id() ?></h1>
+
+<?= rental_uicommon::get_page_error($error) ?>
+<?= rental_uicommon::get_page_message($message) ?>
+
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
 	
-		<li class="selected"><a href="#rental_common_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
+		<li <?= !isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_common_details"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
 		<li><a href="#rental_rc_parties"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?= lang('rental_menu_parties') ?></em></a></li>
 		<li><a href="#rental_rc_composites"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?= lang('rental_contract_composite') ?></em></a></li>
 		<li><a href="#rental_rc_price"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?= lang('rental_common_price') ?></em></a></li>
 		<li><a href="#rental_rc_bill"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_bill') ?></em></a></li>
 		<li><a href="#rental_rc_documents"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_rc_documents') ?></em></a></li>
-		<li><a href="#rental_rc_events"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?= lang('rental_rc_events') ?></em></a></li>
+		<li <?= isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_rc_notfications"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?= lang('rental_rc_notifications') ?></em></a></li>
 		<li><a href="#rental_rc_others"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_rc_others') ?></em></a></li>
 	</ul>
 	
@@ -201,7 +216,54 @@ YAHOO.util.Event.onDOMReady(
 		</div>
 		<div id="documents">
 		</div>
-		<div id="events">
+		<div id="notfications">
+			<h3><?= lang('rental_rc_new_notification') ?></h3>
+			<?php 
+			if ($editable) {
+			?>
+				<div id="calendarNotificationDate">
+					<div id="calendarNotificationDate_body"></div>
+					<div class="calheader">
+						<button id="calendarNotificationDateCloseButton"><?= lang('rental_calendar_close') ?></button>
+						<button id="calendarNotificationDateClearButton"><?= lang('rental_calendar_clear') ?></button>
+					</div>
+				</div>
+				<form action="?menuaction=rental.uicontract.edit&id=<?= $contract->get_id() ?>" method="post">
+					<?php
+					$date = $notification->get_date();
+					if($date)
+					{
+						$date = date('Y-m-d', $date);
+					}
+					?>
+					<input type="hidden" name="notification_contract_id" value="<?= $contract->get_id() ?>"/>
+					<input type="hidden" name="date_notification_hidden" id="date_notification_hidden" value="<?= $date ?>"/>
+					<table>
+						<tr>
+							<td>
+								<label for="calendarNotificationDate"><b><i><?= lang('rental_common_date') ?></i></b></label>
+								<input type="text" name="date_notification" id="date_notification" size="10" value="<?= $notification->get_date()?>" />
+								<?= rental_uicommon::get_field_error($notification, 'date') ?>
+							</td>
+							<td>
+								<label for="notification_message"><b><i><?= lang('rental_common_message') ?></i></b></label>
+								<input type="text" name="notification_message" id="notification_message" size="50" value="" />
+							</td>
+							<td>
+								<input type="submit" name="add_notification" id="" value="<?= lang('rental_add') ?>" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			<?php 
+			}
+			else
+			{
+				?>
+				<?= lang('rental_rc_log_in_to_add_notfications') ?>
+				<?php
+			}
+			?>
 		</div>
 		<div id="others">
 		</div>
