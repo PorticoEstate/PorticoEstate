@@ -143,14 +143,19 @@ rental_rc_floor	rental	no	Etasje
 rental_rc_gab	rental	no	GAB
 rental_rc_house_number	rental	no	Husnummer
 rental_rc_id	rental	no	ID
+rental_rc_in_operation	rental	no	I drift
 rental_rc_is_area	rental	no	Har areal
 rental_rc_land_title	rental	no	Gnr/Bnr
 rental_rc_level	rental	no	Nivå
+rental_rc_log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
 rental_rc_name	rental	no	Navn
+rental_rc_new_notification	rental	no	Nytt varsel
 rental_rc_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_rc_not_available	rental	no	Ikke tilgjengelig
 rental_rc_not_started	rental	no	Ikke startet
+rental_rc_notifications
 rental_rc_occupied	rental	no	Opptatt
+rental_rc_out_of_operation	rental	no	Ikke i drift
 rental_rc_old_id	rental	no	Gammelt kontraktsnummer
 rental_rc_others	rental	no	Annet
 rental_rc_overridden_address	rental	no	Overstyrt adresse
@@ -177,6 +182,7 @@ rental_rc_toolbar_functions_select_columns	rental	no	Velg kolonner
 rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_type	rental	no	Type
 rental_rc_update	rental	no	Oppdatér
+rental_rc_vacant	rental	no	Ledig
 rental_reset	rental	no	Nullstill
 rental_paginator_elements_pr_page	rental	no	elementer per side
 rental_paginator_first	rental	no	Første
@@ -222,10 +228,6 @@ rental_price_item_date_start	rental	no	Gjelder fra
 rental_price_item_date_end	rental	no	Gjelder til
 rental_price_item_total_price	rental	no	Total pris
 rental_price_item_reset	rental	no	Hent verdier fra prisboken
-rental_rc_vacant	rental	no	Ledig
-rental_rc_occupied	rental	no	Opptatt
-rental_rc_in_operation	rental	no	I drift
-rental_rc_out_of_operation	rental	no	Ikke i drift
 rental_contract_type_innleie	rental	no	Innleie
 rental_contract_type_internleie	rental	no	Internleie
 rental_contract_type_eksternleie	rental	no	Eksternleie
