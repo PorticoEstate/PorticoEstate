@@ -9,6 +9,7 @@ rental_common_calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 rental_common_comments	rental	no	Kommentarer
 rental_common_company	rental	no	Foretak
 rental_common_contracts	rental	no	Kontrakter
+rental_common_date	rental	no	Dato
 rental_common_department	rental	no	Avdeling
 rental_common_details	rental	no	Detaljer
 rental_common_documents	rental	no	Dokumenter
@@ -18,6 +19,7 @@ rental_common_fax	rental	no	Faks
 rental_common_filters 	rental	no	Filtre
 rental_common_firstname	rental	no	Fornavn
 rental_common_lastname	rental	no	Etternavn
+rental_common_message	rental	no	Melding
 rental_common_phone	rental	no	Telefon
 rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_postal_code_place	rental	no	Postnummer/-sted
