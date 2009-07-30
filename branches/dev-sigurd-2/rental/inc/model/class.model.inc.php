@@ -57,7 +57,7 @@
 				/*
 				 * Required field
 				 */
-				if (!$field_def['nullable'] && ($field_def['type'] != 'auto') && !rental_validator::valid_required($value)) {
+				if ((isset($field_def['nullable']) && $field_def['nullable'] == false ) && ($field_def['type'] != 'auto') && !rental_validator::valid_required($value)) {
 					// TODO: language string
 					$this->validation_errors[$field] = lang('rental_messages_required_field');
 					$valid = false;
