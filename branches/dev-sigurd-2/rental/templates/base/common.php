@@ -198,7 +198,12 @@
 			var value = oArgs.newData;
 			var id = oArgs.editor.getRecord().getData().id;
 			var action = oArgs.editor.getDataTable().editor_action;
-			
+
+			console.log(oArgs);
+			var selectedDate = oArgs.editor.calendar.getSelectedDates()[0];
+			console.log(selectedDate);
+			console.log(selectedDate);
+			//console.log(oArgs.editor.calendar.configOptions());
 			var request = YAHOO.util.Connect.asyncRequest(
 					'GET',
 					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id, 
@@ -212,14 +217,14 @@
 		
 		// Don't set the row to be left-clickable if the table is editable by inline editors.
 		// In that case we use cellClickEvents instead
-		var table_is_editable = false;
-		for (column in this.properties.columns) {
-			if (column.editor) {
-				table_is_editable = true;
+		var table_should_be_clickable = true;
+		for (i in this.properties.columns) {
+			if (this.properties.columns[i].editor) {
+				table_should_be_clickable = false;
 			}
 		}
 
-		if (table_is_editable) {
+		if (table_should_be_clickable) {
 			//... create a handler for regular clicks on a table row
 			this.table.subscribe("rowClickEvent", function(e,obj) {
 				YAHOO.util.Event.stopEvent(e);
