@@ -3,28 +3,28 @@
 	$setup_info['rental']['version'] = '0.0.10';
 	$setup_info['rental']['app_order'] = 51;
 	$setup_info['rental']['tables'] = array(
-		'rental_party',										// All contract participants, tenants etc.
-		'rental_contract',								// Contracts, has tenants and a rental object
-		'rental_contract_composite',			// Connection between contracts and composites
-		'rental_contract_party',				// Link table between tenants and contracts
-		'rental_composite',								// Rental object, an aggregation of rental units or areas
-		'rental_contract_price_item',			// Price items from the price book tied to a contract
-	//	'rental_bill_price_item',					// Price items from the price book tied to a past bill
-	//	'rental_bill',										// A sent bill tied to a contract
+		'rental_party',						// All contract participants, tenants etc.
+		'rental_contract',					// Contracts, has parties and a rental object
+		'rental_contract_composite',		// Connection between contracts and composites
+		'rental_contract_party',			// Link table between tenants and contracts
+		'rental_composite',					// Rental object, an aggregation of rental units or areas
+		'rental_contract_price_item',		// Price items from the price book tied to a contract
+	//	'rental_bill_price_item',			// Price items from the price book tied to a past bill
+	//	'rental_bill',						// A sent bill tied to a contract
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
-		'rental_unit',										// Link table between property register and rental objects or composites
-	//	'rental_comment',									// Comments to rental composites and tenants
+		'rental_unit',						// Link table between property register and rental objects or composites
+	//	'rental_comment',					// Comments to rental composites and tenants
 		'rental_permission',
 		'rental_permission_root',
 		'rental_document_composite',
+		'rental_contract_last_edited',
+		'rental_notification',				// Stores user notifications
 		// Admin tables
 		'rental_billing_term',
 		'rental_contract_type',
-		'rental_price_item'
-	//	'rental_tenant_type',
+		'rental_price_item',
 	//	'rental_custom_field_type',
-	//	'rental_rental_object_type',
-		
+	//	'rental_rental_object_type'
 	);
 	$setup_info['rental']['enable'] = 1;
 	$setup_info['rental']['app_group']	= 'office';
