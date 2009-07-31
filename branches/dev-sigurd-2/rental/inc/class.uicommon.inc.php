@@ -317,8 +317,17 @@
 			$result = "";
 			
 			foreach($extra_cols as $col){
-				$literal = "{key: \"".$col["key"]."\",
-						label: \"".$col["label"]."\"}";
+				$literal  = '{';
+				$literal .= 'key: "' . $col['key'] . '",';
+				$literal .= 'label: "' . $col['label'] . '",';
+				if (isset($col['formatter'])) {
+					$literal .= 'formatter: ' . $col['formatter'] . ',';
+				}
+				if (isset($col['parser'])) {
+					$literal .= 'parser: ' . $col['parser'] . ',';
+				}
+				$literal .= '}';
+				
 				if($col["index"]){
 					$result .= "{$array_name}.splice(".$col["index"].", 0,".$literal.");";
 				} else {

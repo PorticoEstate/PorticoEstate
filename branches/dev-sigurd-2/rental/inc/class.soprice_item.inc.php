@@ -235,11 +235,13 @@
 			);
 			
 			if ($price_item->get_date_start()) {
-				$values[] = 'date_start = ' . $price_item->get_date_start();
+				print_r($price_item);
+				$values[] = 'date_start = ' . $this->marshal(date('Y-m-d', $price_item->get_date_start()), 'date');
+				print_r($values);
 			}
 			
 			if ($price_item->get_date_end()) {
-				$values[] = 'date_end = ' . $price_item->get_date_end();
+				$values[] = 'date_end = ' . $this->marshal(date('Y-m-d', $price_item->get_date_end()), 'date');
 			}
 					
 			$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

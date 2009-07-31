@@ -26,8 +26,7 @@
 		{
 			key: "is_area",
 			label: "<?= lang('rental_rc_type') ?>",
-		  sortable: true,
-		  editor: "hello"
+		  sortable: true
 		},
 		{
 			key: "price",
@@ -44,6 +43,10 @@
 		},
 		{
 			key: "labels",
+			hidden: true
+		},
+		{
+			key: "actions",
 			hidden: true
 		}];
 

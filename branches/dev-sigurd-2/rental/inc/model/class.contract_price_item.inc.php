@@ -172,7 +172,13 @@
 				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
-				'price' => $this->get_price()
+				'price' => $this->get_price(),
+				// We set a format fitting for the DateCellEditor here because
+				// this table has inline editing enabled.  The DateCellEditor is not
+				// happy about empty values if a custom parser is set, so we use the YUI built
+				// in "date" parser which requires a format like: 2009/07/30 to work.
+				'date_start' => str_replace("-", "/", $this->get_date_start()),
+				'date_end' => str_replace("-", "/", $this->get_date_end())
 			);
 		}
 		

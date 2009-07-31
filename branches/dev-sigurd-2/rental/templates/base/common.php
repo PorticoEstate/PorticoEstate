@@ -26,6 +26,15 @@
 		);
 	}
 
+	YAHOO.rental.formatDate = function(elCell, oRecord, oColumn, oData) {
+		if (oData && oData != "Invalid Date") {
+			var my_date = Math.round(Date.parse(oData) / 1000);
+			elCell.innerHTML = formatDate("Y/m/d", my_date);
+		} else {
+			elCell.innerHTML = "";
+		}
+	}; 
+	
 	// Reloads all data sources that are necessary based on the selected related datatable
 	function reloadDataSources(selected_datatable){
 	
@@ -72,19 +81,14 @@
 		
 		this.source.responseType = YAHOO.util.DataSource.TYPE_JSON;
 		this.source.connXhrMode = "queueRequests";
+		
 		this.source.responseSchema = {
 			resultsList: "ResultSet.Result",
-			fields: fields,
+			fields: this.properties.columns,
 			metaFields : {
 				totalRecords: "ResultSet.totalRecords"
 			}
 		};
-
-		//... 
-		var fields = [];
-		for(var i=0; i < this.properties.columns.length; i++) {
-			fields.push(this.properties.columns[i].key);
-		}
 
 		//... set up a new data table
 		this.table = new YAHOO.widget.DataTable(
@@ -165,13 +169,12 @@
 		var onContextMenuClick = function(eventString, args, table) {
 			//... the argument holds the selected index number in the context menu
 			var task = args[1];
-	
 			//... only act on a data table
 			if(table instanceof YAHOO.widget.DataTable) {
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-	
+				
 				//... check whether this action should be an AJAX call
 				if(record.getData().ajax[task.index]) {
 					var request = YAHOO.util.Connect.asyncRequest(
@@ -199,11 +202,14 @@
 			var id = oArgs.editor.getRecord().getData().id;
 			var action = oArgs.editor.getDataTable().editor_action;
 
-			console.log(oArgs);
-			var selectedDate = oArgs.editor.calendar.getSelectedDates()[0];
-			console.log(selectedDate);
-			console.log(selectedDate);
-			//console.log(oArgs.editor.calendar.configOptions());
+			// Translate to unix time if the editor is a calendar.
+			if (oArgs.editor._sType == 'date') {
+				var selectedDate = oArgs.editor.calendar.getSelectedDates()[0];
+				// Make sure we're at midnight GMT
+				selectedDate = selectedDate.toString().split(" ").slice(0, 4).join(" ") + " 00:00:00 GMT";
+				var value = Math.round(Date.parse(selectedDate) / 1000);
+			}
+
 			var request = YAHOO.util.Connect.asyncRequest(
 					'GET',
 					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id, 

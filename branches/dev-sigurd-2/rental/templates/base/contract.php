@@ -189,16 +189,19 @@ YAHOO.util.Event.onDOMReady(
 					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 4),
 					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 5),
 					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "index" => 6),
-					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7),
-					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8)
+					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
+					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
 				);
 				
 				$editor_action = 'rental.uiprice_item.set_value';
 				
 				$editors = array(
 					'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
-					'agresso_id' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
-					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
+					'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'date_start' => 'new YAHOO.widget.DateCellEditor()',
+					'date_end' => 'new YAHOO.widget.DateCellEditor()'
 				);
 				
 				include('price_item_partial.php'); ?>
@@ -219,7 +222,7 @@ YAHOO.util.Event.onDOMReady(
 		<div id="notfications">
 			<h3><?= lang('rental_rc_new_notification') ?></h3>
 			<?php 
-			if ($editable) {
+			if (false) {
 			?>
 				<div id="calendarNotificationDate">
 					<div id="calendarNotificationDate_body"></div>

@@ -114,6 +114,8 @@
 			$price_item->set_field($field, $value);
 			
 			$price_item->store();
+			
+			print_r($price_item);
 		}
 		
 		/**
@@ -144,6 +146,7 @@
 				case 'included_price_items':
 					$contract_id = phpgw::get_var('contract_id');
 					$contract = rental_contract::get($contract_id);
+					
 					$records = $contract->get_price_items();
 					break;
 				case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
