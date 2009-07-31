@@ -233,10 +233,13 @@ YAHOO.util.Event.onDOMReady(
 				</div>
 				<form action="?menuaction=rental.uicontract.edit&id=<?= $contract->get_id() ?>" method="post">
 					<?php
-					$date = $notification->get_date();
-					if($date)
+					if(isset($notification))
 					{
-						$date = date('Y-m-d', $date);
+						$date = $notification->get_date();
+						if($date)
+						{
+							$date = date('Y-m-d', $date);
+						}
 					}
 					?>
 					<input type="hidden" name="notification_contract_id" value="<?= $contract->get_id() ?>"/>
@@ -245,12 +248,12 @@ YAHOO.util.Event.onDOMReady(
 						<tr>
 							<td>
 								<label for="calendarNotificationDate"><b><i><?= lang('rental_common_date') ?></i></b></label>
-								<input type="text" name="date_notification" id="date_notification" size="10" value="<?= $notification->get_date()?>" />
+								<input type="text" name="date_notification" id="date_notification" size="10" value="<?= isset($notification) ? htmlentities($notification->get_date()) : '' ?>" />
 								<?= rental_uicommon::get_field_error($notification, 'date') ?>
 							</td>
 							<td>
 								<label for="notification_message"><b><i><?= lang('rental_common_message') ?></i></b></label>
-								<input type="text" name="notification_message" id="notification_message" size="50" value="" />
+								<input type="text" name="notification_message" id="notification_message" size="50" value="<?= isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
 							</td>
 							<td>
 								<input type="submit" name="add_notification" id="" value="<?= lang('rental_add') ?>" />
@@ -266,6 +269,15 @@ YAHOO.util.Event.onDOMReady(
 				<?= lang('rental_rc_log_in_to_add_notfications') ?>
 				<?php
 			}
+			?>
+			<h3><?= lang('rental_rc_your_notifications') ?></h3>
+			<?php
+			$list_form = false;
+			$list_id = 'rental_notifications';
+			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;contract_id='.$contract->get_id();
+			unset($extra_cols);
+			unset($editors);
+			include('notification_list.php');
 			?>
 		</div>
 		<div id="others">

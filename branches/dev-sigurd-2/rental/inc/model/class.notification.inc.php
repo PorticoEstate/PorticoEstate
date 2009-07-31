@@ -65,12 +65,13 @@ class rental_notification extends rental_model
 	 */
 	public function serialize()
 	{
+		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		return array(
 			'id' => $this->get_id(),
 			'user_id' => $this->get_user_id(),
 			'contract_id' => $this->get_contract_id(),
 			'message' => $this->get_message(),
-			'date' => $this->get_date(),
+			'date' => date($date_format, $this->get_date()),
 			'dismissed' => $this->is_dismissed()
 		);
 	}
@@ -87,6 +88,12 @@ class rental_notification extends rental_model
 		}
 		
 		return self::$so;
+	}
+	
+	public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	{
+		$so = self::get_so();
+		return $so->get_notification_array($start, $results, $sort, $dir, $query, $search_option, $filters);
 	}
 	
 }

@@ -36,13 +36,13 @@
 		
 		public function query()
 		{
-			$contracts = array();
+			$resultArray = array();
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
 				
 				case 'contracts_part':
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -55,7 +55,7 @@
 					);
 					break;
 				case 'contracts_for_executive_officer':
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -68,10 +68,10 @@
 					);
 					break;
 				case 'last_edited_by':
-					$contracts = rental_contract::get_last_edited_by();
+					$resultArray = rental_contract::get_last_edited_by();
 					break;
 				case 'ending_contracts':
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -84,7 +84,7 @@
 					);
 					break;
 				case 'contracts_for_executive_officer':
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -97,7 +97,7 @@
 					);
 					break;
 				case 'last_edited_by':
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -108,8 +108,23 @@
 							'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
 						)
 					);
+					break;
+				case 'notifications':
+					$resultArray = rental_notification::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+							'contract_id' => phpgw::get_var('contract_id')
+						)
+					);
+					break;
 				default:
-					$contracts = rental_contract::get_all(
+					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -126,16 +141,16 @@
 			
 			//Serialize the contracts found
 			$rows = array();
-			foreach ($contracts as $contract) {
-				$rows[] = $contract->serialize();
+			foreach ($resultArray as $result) {
+				$rows[] = $result->serialize();
 			}
 			
 			//Add context menu columns (actions and labels)
 			array_walk($rows, array($this, 'add_actions'), $type);
 			
 			//Build a YUI result from the data
-			$contract_data = array('results' => $rows, 'total_records' => count($rows));
-			return $this->yui_results($contract_data, 'total_records', 'results');
+			$result_data = array('results' => $rows, 'total_records' => count($rows));
+			return $this->yui_results($result_data, 'total_records', 'results');
 		}
 		
 		/**
@@ -181,7 +196,7 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id, $notification, string $message = null, string $error = null)
+		public function viewedit($editable, $contract_id, $notification = null, string $message = null, string $error = null)
 		{
 			if ($contract_id > 0) {
 				$contract = rental_contract::get($contract_id);
@@ -225,7 +240,6 @@
 				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
-				
 				$contract->set_account(phpgw::get_var('account_number'));
 				
 				$contract->store();
@@ -241,6 +255,7 @@
 				if ($notification->store())
 				{
 					$message = lang('rental_messages_saved_form');
+					$notification = null; // We don't want to display the date/message when it was sucessfully stored.
 				}
 				else
 				{

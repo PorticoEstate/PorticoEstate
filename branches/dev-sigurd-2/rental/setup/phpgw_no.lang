@@ -185,6 +185,7 @@ rental_rc_toolbar_new	rental	no	Opprett nytt leieobjekt
 rental_rc_type	rental	no	Type
 rental_rc_update	rental	no	Oppdatér
 rental_rc_vacant	rental	no	Ledig
+rental_rc_your_notifications	rental	no	Dine varsler
 rental_reset	rental	no	Nullstill
 rental_paginator_elements_pr_page	rental	no	elementer per side
 rental_paginator_first	rental	no	Første
