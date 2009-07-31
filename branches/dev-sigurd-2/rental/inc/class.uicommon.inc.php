@@ -363,12 +363,15 @@
 		 */
 		public static function get_field_error($object, $field)
 		{
-			$errors = $object->get_validation_errors();
-			
-			if ($errors[$field]) {
-				return '<label class="error" for="' . $field . '">' . $errors[$field] . '</label>';
+			if(isset($object))
+			{
+				$errors = $object->get_validation_errors();
+				
+				if ($errors[$field]) {
+					return '<label class="error" for="' . $field . '">' . $errors[$field] . '</label>';
+				}
+				return '';
 			}
-			return '';
 		}
 		
 		/**
