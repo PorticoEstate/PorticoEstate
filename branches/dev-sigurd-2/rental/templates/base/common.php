@@ -1,7 +1,11 @@
-<script>
+<script type="text/javascript">
 
-	//DATASOURCE LOGIC
-	
+/**
+ * Javascript for the rental module.  Holds datasource init functions and form helpers.
+ * 
+ * Functions and objects within this file are kept in the YAHOO.rental namespace.
+ */
+ 
 	// Holds data source setup funtions
 	YAHOO.rental.setupDatasource = new Array();
 	
@@ -279,152 +283,154 @@
 	}
 
 
-// Set up data sources when the document has loaded
-YAHOO.util.Event.addListener(window, "load", function() {
-	var i = 0;
-    while(YAHOO.rental.setupDatasource.length > 0){
-
-    	//... create a variable name, assign set up function to that variable and instantiate properties
-    	variableName = "YAHOO.rental.datasource" + i;    	
-    	eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
-    	var source_properties = eval("new " + variableName + "()");
-
-		// ... create a paginator for this datasource
-    	var pag = new YAHOO.widget.Paginator({
-            rowsPerPage: 25,
-            alwaysVisible: true,
-            rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-            firstPageLinkLabel: '<< <?= lang(rental_paginator_first) ?>',
-    		previousPageLinkLabel: '< <?= lang(rental_paginator_previous) ?>',
-    		nextPageLinkLabel: '<?= lang(rental_paginator_next) ?> >',
-    		lastPageLinkLabel: '<?= lang(rental_paginator_last) ?> >>',
-    		template			: "{RowsPerPageDropdown}<?= lang(rental_paginator_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-    		pageReportTemplate	: "<?= lang(rental_paginator_shows_from) ?> {startRecord} <?= lang(rental_paginator_to) ?> {endRecord} <?= lang(rental_paginator_of_total) ?> {totalRecords}.",
-    		containers: [source_properties.paginator]
-        });
-    	pag.render();
-
-    	//... send data source properties and paginator to wrapper function
-		this.wrapper = new dataSourceWrapper(source_properties, pag);
-		i+=1;
-
-
-		// XXX: Create generic column picker for all datasources
-		
-		// Shows dialog, creating one when necessary
-        var newCols = true;
-        var showDlg = function(e) {
-            YAHOO.util.Event.stopEvent(e);
-
-            if(newCols) {
-                // Populate Dialog
-                // Using a template to create elements for the SimpleDialog
-                var allColumns = this.wrapper.table.getColumnSet().keys;
-                var elPicker = YAHOO.util.Dom.get("dt-dlg-picker");
-                var elTemplateCol = document.createElement("div");
-                YAHOO.util.Dom.addClass(elTemplateCol, "dt-dlg-pickercol");
-                var elTemplateKey = elTemplateCol.appendChild(document.createElement("span"));
-                YAHOO.util.Dom.addClass(elTemplateKey, "dt-dlg-pickerkey");
-                var elTemplateBtns = elTemplateCol.appendChild(document.createElement("span"));
-                YAHOO.util.Dom.addClass(elTemplateBtns, "dt-dlg-pickerbtns");
-                var onclickObj = {fn:handleButtonClick, obj:this, scope:false };
-                
-                // Create one section in the SimpleDialog for each Column
-                var elColumn, elKey, elButton, oButtonGrp;
-                for(var i=0,l=allColumns.length;i<l;i++) {
-                	
-                    var oColumn = allColumns[i];
-                    if(oColumn.label != 'unselectable'){ // We haven't marked the column as unselectable for the user
-    	                // Use the template
-    	                elColumn = elTemplateCol.cloneNode(true);
-    	                
-    	                // Write the Column key
-    	                elKey = elColumn.firstChild;
-    	                elKey.innerHTML = oColumn.label;
-    	                
-    	                // Create a ButtonGroup
-    	                oButtonGrp = new YAHOO.widget.ButtonGroup({ 
-    	                                id: "buttongrp"+i, 
-    	                                name: oColumn.getKey(), 
-    	                                container: elKey.nextSibling
-    	                });
-    	                oButtonGrp.addButtons([
-    	                    { label: "Vis", value: "Vis", checked: ((!oColumn.hidden)), onclick: onclickObj},
-    	                    { label: "Skjul", value: "Skjul", checked: ((oColumn.hidden)), onclick: onclickObj}
-    	                ]);
-    	                                
-    	                elPicker.appendChild(elColumn);
-                    }
-                }
-                newCols = false;
-        	}
-            myDlg.show();
-        };
-        
-        var storeColumnsUrl = YAHOO.rental.storeColumnsUrl;
-        var hideDlg = function(e) {
-    		this.hide();
-    		// After we've hidden the dialog we send a post call to store the columns the user has selected
-            var postData = 'values[save]=1';
-    		var allColumns = wrapper.table.getColumnSet().keys;
-    		for(var i=0; i < allColumns.length; i++) {
-    			if(!allColumns[i].hidden){
-            		postData += '&values[columns][]=' + allColumns[i].getKey();
-            	}
-            }
-           YAHOO.util.Connect.asyncRequest('POST', storeColumnsUrl, null, postData);
-        };
-        
-        var handleButtonClick = function(e, oSelf) {
-            var sKey = this.get("name");
-            if(this.get("value") === "Skjul") {
-                // Hides a Column
-                wrapper.table.hideColumn(sKey);
-            }
-            else {
-                // Shows a Column
-                wrapper.table.showColumn(sKey);
-            }
-        };
-    
-        // Create the SimpleDialog
-        YAHOO.util.Dom.removeClass("dt-dlg", "inprogress");
-        var myDlg = new YAHOO.widget.SimpleDialog("dt-dlg", {
-                width: "30em",
-    		    visible: false,
-    		    modal: false, // modal: true doesn't work for some reason - the dialog becomes unclickable
-    		    buttons: [ 
-    				{ text:"Lukk",  handler:hideDlg }
-                ],
-                fixedcenter: true,
-                constrainToViewport: true
-    	});
-    	myDlg.render();
-    
-    	// Nulls out myDlg to force a new one to be created
-        wrapper.table.subscribe("columnReorderEvent", function(){
-            newCols = true;
-            YAHOO.util.Event.purgeElement("dt-dlg-picker", true);
-            YAHOO.util.Dom.get("dt-dlg-picker").innerHTML = "";
-        }, this, true);
+	// Set up data sources when the document has loaded
+	YAHOO.util.Event.addListener(window, "load", function() {
+		var i = 0;
+		while(YAHOO.rental.setupDatasource.length > 0){
+			//... create a variable name, assign set up function to that variable and instantiate properties
+			variableName = "YAHOO.rental.datasource" + i;    	
+			eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
+			var source_properties = eval("new " + variableName + "()");
 	
-    	// Hook up the SimpleDialog to the link
-    	YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);	
-    }    
-});
+			// ... create a paginator for this datasource
+			var pag = new YAHOO.widget.Paginator({
+				rowsPerPage: 25,
+				alwaysVisible: true,
+				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
+				firstPageLinkLabel: '<< <?= lang(rental_paginator_first) ?>',
+				previousPageLinkLabel: '< <?= lang(rental_paginator_previous) ?>',
+				nextPageLinkLabel: '<?= lang(rental_paginator_next) ?> >',
+				lastPageLinkLabel: '<?= lang(rental_paginator_last) ?> >>',
+				template			: "{RowsPerPageDropdown}<?= lang(rental_paginator_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?= lang(rental_paginator_shows_from) ?> {startRecord} <?= lang(rental_paginator_to) ?> {endRecord} <?= lang(rental_paginator_of_total) ?> {totalRecords}.",
+				containers: [source_properties.paginator]
+			});
+	
+			pag.render();
+	
+			//... send data source properties and paginator to wrapper function
+			this.wrapper = new dataSourceWrapper(source_properties, pag);
+			i+=1;
+	
+	
+			// XXX: Create generic column picker for all datasources
+			
+			// Shows dialog, creating one when necessary
+			var newCols = true;
+			var showDlg = function(e) {
+				YAHOO.util.Event.stopEvent(e);
+	
+				if(newCols) {
+					// Populate Dialog
+					// Using a template to create elements for the SimpleDialog
+					var allColumns = this.wrapper.table.getColumnSet().keys;
+					var elPicker = YAHOO.util.Dom.get("dt-dlg-picker");
+					var elTemplateCol = document.createElement("div");
+					YAHOO.util.Dom.addClass(elTemplateCol, "dt-dlg-pickercol");
+					var elTemplateKey = elTemplateCol.appendChild(document.createElement("span"));
+					YAHOO.util.Dom.addClass(elTemplateKey, "dt-dlg-pickerkey");
+					var elTemplateBtns = elTemplateCol.appendChild(document.createElement("span"));
+					YAHOO.util.Dom.addClass(elTemplateBtns, "dt-dlg-pickerbtns");
+					var onclickObj = {fn:handleButtonClick, obj:this, scope:false };
+	
+					// Create one section in the SimpleDialog for each Column
+					var elColumn, elKey, elButton, oButtonGrp;
+	
+					for(var i=0,l=allColumns.length;i<l;i++) {
+						var oColumn = allColumns[i];
+						if(oColumn.label != 'unselectable') { // We haven't marked the column as unselectable for the user
+							// Use the template
+							elColumn = elTemplateCol.cloneNode(true);
+	
+							// Write the Column key
+							elKey = elColumn.firstChild;
+							elKey.innerHTML = oColumn.label;
+	
+							// Create a ButtonGroup
+							oButtonGrp = new YAHOO.widget.ButtonGroup({ 
+								id: "buttongrp"+i, 
+								name: oColumn.getKey(), 
+								container: elKey.nextSibling
+							});
+							oButtonGrp.addButtons([
+								{ label: "Vis", value: "Vis", checked: ((!oColumn.hidden)), onclick: onclickObj},
+								{ label: "Skjul", value: "Skjul", checked: ((oColumn.hidden)), onclick: onclickObj}
+							]);
+	
+							elPicker.appendChild(elColumn);
+						}
+					}
+	
+					newCols = false;
+				}
+	
+				myDlg.show();
+			};
+	
+			var storeColumnsUrl = YAHOO.rental.storeColumnsUrl;
+			var hideDlg = function(e) {
+				this.hide();
+				// After we've hidden the dialog we send a post call to store the columns the user has selected
+				var postData = 'values[save]=1';
+				var allColumns = wrapper.table.getColumnSet().keys;
+				for(var i=0; i < allColumns.length; i++) {
+					if(!allColumns[i].hidden){
+						postData += '&values[columns][]=' + allColumns[i].getKey();
+					}
+				}
+	
+				YAHOO.util.Connect.asyncRequest('POST', storeColumnsUrl, null, postData);
+			};
+	
+			var handleButtonClick = function(e, oSelf) {
+				var sKey = this.get("name");
+				if(this.get("value") === "Skjul") {
+					// Hides a Column
+					wrapper.table.hideColumn(sKey);
+				} else {
+					// Shows a Column
+					wrapper.table.showColumn(sKey);
+				}
+			};
+	
+			// Create the SimpleDialog
+			YAHOO.util.Dom.removeClass("dt-dlg", "inprogress");
+			var myDlg = new YAHOO.widget.SimpleDialog("dt-dlg", {
+				width: "30em",
+				visible: false,
+				modal: false, // modal: true doesn't work for some reason - the dialog becomes unclickable
+				buttons: [ 
+					{text:"Lukk", handler:hideDlg}
+				],
+				fixedcenter: true,
+				constrainToViewport: true
+			});
+			myDlg.render();
+	
+			// Nulls out myDlg to force a new one to be created
+			wrapper.table.subscribe("columnReorderEvent", function(){
+				newCols = true;
+				YAHOO.util.Event.purgeElement("dt-dlg-picker", true);
+				YAHOO.util.Dom.get("dt-dlg-picker").innerHTML = "";
+			}, this, true);
+		
+			// Hook up the SimpleDialog to the link
+			YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);	
+		}
+	});
 
-/*
- * Listen for events in form. Serialize all form elements. Stop
- * the original request and send new request.
- */
-function formListener(event){
-	YAHOO.util.Event.stopEvent(event);
-	var qs = YAHOO.rental.serializeForm(this.properties.form);
-    this.source.liveData = this.url + qs + '&';
-    this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-    	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
-    }, scope: this});
-}
+	/*
+	 * Listen for events in form. Serialize all form elements. Stop
+	 * the original request and send new request.
+	 */
+	function formListener(event){
+		YAHOO.util.Event.stopEvent(event);
+		var qs = YAHOO.rental.serializeForm(this.properties.form);
+	    this.source.liveData = this.url + qs + '&';
+	    this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+	    	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
+	    }, scope: this});
+	}
 
 
 
