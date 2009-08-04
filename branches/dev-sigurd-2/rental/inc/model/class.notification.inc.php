@@ -4,6 +4,11 @@ include_class('rental', 'model', 'inc/model/');
 
 class rental_notification extends rental_model
 {
+	const RECURRENCE_NEVER = 0;
+	const RECURRENCE_ANNUALLY = 1;
+	const RECURRENCE_MONTHLY = 2;
+	const RECURRENCE_WEEKLY = 3;
+	
 	public static $so;
 	
 	protected $id;
@@ -13,14 +18,15 @@ class rental_notification extends rental_model
 	protected $message;
 	protected $dismissed;
 	
-	public function __construct(int $id = null, int $user_id = null, int $contract_id = null, string $date = null, string $message = null, $dismissed = false)
+	public function __construct(int $id = null, int $user_id = null, int $contract_id = null, string $date = null, string $message = null, $dismissed = 0, $recurrence = RECURRENCE_NEVER)
 	{
 		$this->id = (int)$id;
 		$this->user_id = (int)$user_id;
 		$this->contract_id = (int)$contract_id;
 		$this->date = $date;
 		$this->message = $message;
-		$this->dismissed = (boolean)$dismissed;
+		$this->dismissed = (int)$dismissed;
+		$this->recurrence = (int)$recurrence;
 	}
 	
 	public function get_id()
@@ -53,11 +59,31 @@ class rental_notification extends rental_model
 		return $this->message;
 	}
 	
-	public function is_dismissed()
+	/**
+	 * Tells if the notification has been dismissed on or after specified timestamp.
+	 * 
+	 * @param $time int with unix timestamp to check.
+	 * @return boolean true if notification has been dismissed, false if not.
+	 */
+	public function is_dismissed($time)
+	{
+		return $this->dismissed >= (int)$time;
+	}
+	
+	/**
+	 * Returns timestamp when the user last dimissed the notification.
+	 * 
+	 * @return int with unix timestamp.
+	 */
+	public function get_dismissed()
 	{
 		return $this->dismissed;
 	}
 
+	public function get_recurrence()
+	{
+		return $this->recurrence;
+	}
 	/**
 	 * Convert this object to a hash representation
 	 * 
@@ -66,13 +92,26 @@ class rental_notification extends rental_model
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+		$recurrence = lang('rental_common_never'); // Default
+		switch ($this->get_recurrence())
+		{
+			case rental_notification::RECURRENCE_ANNUALLY:
+				$recurrence = lang('rental_common_annually');
+				break;
+			case rental_notification::RECURRENCE_MONTHLY:
+				$recurrence = lang('rental_common_monthly');
+				break;
+			case rental_notification::RECURRENCE_WEEKLY:
+				$recurrence = lang('rental_common_weekly');
+				break;
+		} 
 		return array(
 			'id' => $this->get_id(),
 			'user_id' => $this->get_user_id(),
 			'contract_id' => $this->get_contract_id(),
 			'message' => $this->get_message(),
 			'date' => date($date_format, $this->get_date()),
-			'dismissed' => $this->is_dismissed()
+			'recurrence' => $recurrence
 		);
 	}
 		

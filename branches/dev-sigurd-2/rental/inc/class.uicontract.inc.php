@@ -251,7 +251,7 @@
 				{
 					$date = strtotime($date);
 				}
-				$notification = new rental_notification(-1, $GLOBALS['phpgw_info']['user']['account_id'], phpgw::get_var('notification_contract_id'), $date, phpgw::get_var('notification_message'), false);
+				$notification = new rental_notification(-1, $GLOBALS['phpgw_info']['user']['account_id'], phpgw::get_var('notification_contract_id'), $date, phpgw::get_var('notification_message'), false, phpgw::get_var('notification_recurrence'));
 				if ($notification->store())
 				{
 					$message = lang('rental_messages_saved_form');

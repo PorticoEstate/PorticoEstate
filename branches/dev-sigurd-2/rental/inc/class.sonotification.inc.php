@@ -15,59 +15,13 @@ class rental_sonotification extends rental_socommon
 			'contract_id'	=> array('type' => 'int'),
 			'message' => array('type' => 'text'),
 			'date' => array('type', 'date'),
- 			'dismissed'	=> array('type' => 'bool'),
+ 			'dismissed'	=> array('type' => 'int'),
+ 			'recurrence'	=> array('type' => 'int'),
 		));
 	}
 	
 	/**
-	 * Get single price item
-	 * 
-	 * @param	$id	id of the price item to return
-	 * @return a rental_price_item
-	 */
-	function get_single($id)
-	{
-		$id = (int)$id;
-		
-		$sql = "SELECT * FROM " . $this->table_name . " WHERE id = " . $id;
-		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-		$this->db->next_record();
-		
-		$notification = new rental_price_item($this->get_field_value('id'));
-		$notification->set_title($this->get_field_value('title'));
-		$notification->set_agresso_id($this->get_field_value('agresso_id'));
-		$notification->set_is_area($this->get_field_value('is_area'));
-		$notification->set_price($this->get_field_value('price'));
-		
-		return $notification;
-	}
-	
-	function get_single_contract_price_item($id)
-	{
-		$id = (int)$id;
-		
-		$sql = "SELECT * FROM rental_contract_price_item WHERE id = " . $id;
-		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-		$this->db->next_record();
-		
-		$notification = new rental_contract_price_item($this->get_field_value('id'));
-		$notification->set_price_item_id($this->get_field_value('price_item_id'));
-		$notification->set_contract_id($this->get_field_value('contract_id'));
-		$notification->set_title($this->get_field_value('title'));
-		$notification->set_agresso_id($this->get_field_value('agresso_id'));
-		$notification->set_is_area($this->get_field_value('is_area'));
-		$notification->set_price($this->get_field_value('price'));
-		$notification->set_area($this->get_field_value('area'));
-		$notification->set_count($this->get_field_value('count'));
-		$notification->set_total_price($this->get_field_value('total_price'));
-		$notification->set_date_start($this->get_field_value('date_start'));
-		$notification->set_date_end($this->get_field_value('date_end'));
-		
-		return $notification;
-	}
-	
-	/**
-	 * Get a list of price_item objects matching the specific filters
+	 * Get a list of objects matching the specific filters
 	 * 
 	 * @param $start search result offset
 	 * @param $results number of results to return
@@ -92,7 +46,7 @@ class rental_sonotification extends rental_socommon
 			{
 				$date = strtotime($date);
 			}
-			$notification = new rental_notification($this->unmarshal($this->db->f('id', true), 'int'), $this->unmarshal($this->db->f('user_id', true), 'int'), $this->unmarshal($this->db->f('contract_id', true), 'int'), $date, $this->unmarshal($this->db->f('message', true), 'text'), $this->unmarshal($this->db->f('dismissed', true), 'bool'));
+			$notification = new rental_notification($this->unmarshal($this->db->f('id', true), 'int'), $this->unmarshal($this->db->f('user_id', true), 'int'), $this->unmarshal($this->db->f('contract_id', true), 'int'), $date, $this->unmarshal($this->db->f('message', true), 'text'), $this->unmarshal($this->db->f('dismissed', true), 'int'), $this->unmarshal($this->db->f('recurrence', true), 'int'));
 			
 			$results[] = $notification;
 		}
@@ -128,10 +82,11 @@ class rental_sonotification extends rental_socommon
 			(int)$notification->get_contract_id(),
 			"'".date('Y-m-d', (int)$notification->get_date())."'",
 			"'{$notification->get_message()}'",
-			$notification->is_dismissed() ? "true" : "false"
+			$notification->get_dismissed(),
+			(int)$notification->get_recurrence()
 		);
 		
-		$cols = array('user_id', 'contract_id', 'date', 'message', 'dismissed');
+		$cols = array('user_id', 'contract_id', 'date', 'message', 'dismissed', 'recurrence');
 		
 		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);

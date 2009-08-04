@@ -3,6 +3,7 @@ rental_calendar_close	rental	no	Lukk
 rental_calendar_title	rental	no	Velg dato
 rental_common_account_number	rental	no	Kontonummer
 rental_common_add	rental	no	Legg til
+rental_common_annually	rental	no	Årlig
 rental_common_bill	rental	no	Faktura
 rental_common_calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 rental_common_calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
@@ -20,11 +21,14 @@ rental_common_filters 	rental	no	Filtre
 rental_common_firstname	rental	no	Fornavn
 rental_common_lastname	rental	no	Etternavn
 rental_common_message	rental	no	Melding
+rental_common_monthly	rental	no	Månedlig
+rental_common_never	rental	no	Aldri
 rental_common_phone	rental	no	Telefon
 rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_postal_code_place	rental	no	Postnummer/-sted
 rental_common_reskontro	rental	no	Reskontronummer
 rental_common_party	rental	no	Kontraktspart
+rental_common_recurrence	rental	no	Gjentakelse
 rental_common_showing_composite	rental	no	Viser leieobjekt
 rental_common_showing_contract	rental	no	Viser kontrakt
 rental_common_title	rental	no	Stillingstittel
@@ -32,6 +36,7 @@ rental_common_url	rental	no	Nettsted
 rental_common_party_type	rental	no	Type kontraktspart
 rental_common_price	rental	no	Pris
 rental_common_title	rental	no	Tittel
+rental_common_weekly	rental	no	Ukentlig
 rental_contract_all	rental	no	Alle
 rental_contract_active	rental	no	Aktive
 rental_contract_billing_external	rental	no	Ekstern

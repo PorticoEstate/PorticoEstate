@@ -10,6 +10,10 @@
 	{
 		key: "message",
 		label: "<?php echo lang('rental_common_message') ?>",
+	},
+	{
+		key: "recurrence",
+		label: "<?php echo lang('rental_common_recurrence') ?>",
 	}];
 	
 	<?php

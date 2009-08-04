@@ -13,7 +13,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_start', 
 			'calendarStartDate', 
 			'calendarStartDate_body', 
-			'Velg dato', 
+			'<?php echo lang('rental_calendar_title') ?>', 
 			'calendarStartDateCloseButton',
 			'calendarStartDateClearButton',
 			'date_start_hidden',
@@ -25,7 +25,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_end', 
 			'calendarEndDate', 
 			'calendarEndDate_body', 
-			'Velg dato', 
+			'<?php echo lang('rental_calendar_title') ?>', 
 			'calendarEndDateCloseButton',
 			'calendarEndDateClearButton',
 			'date_end_hidden',
@@ -37,7 +37,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_notification', 
 			'calendarNotificationDate', 
 			'calendarNotificationDate_body', 
-			'Velg dato', 
+			'<?php echo lang('rental_calendar_title') ?>', 
 			'calendarNotificationDateCloseButton',
 			'calendarNotificationDateClearButton',
 			'date_notification_hidden',
@@ -222,7 +222,7 @@ YAHOO.util.Event.onDOMReady(
 		<div id="notfications">
 			<h3><?php echo lang('rental_rc_new_notification') ?></h3>
 			<?php 
-			if (false) {
+			if ($editable) {
 			?>
 				<div id="calendarNotificationDate">
 					<div id="calendarNotificationDate_body"></div>
@@ -256,7 +256,16 @@ YAHOO.util.Event.onDOMReady(
 								<input type="text" name="notification_message" id="notification_message" size="50" value="<?php echo isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
 							</td>
 							<td>
-								<input type="submit" name="add_notification" id="" value="<?php echo lang('rental_add') ?>" />
+								<label for="notification_recurrence"><b><i><?php echo lang('rental_common_recurrence') ?></i></b></label>
+								<select name="notification_recurrence" id="notification_recurrence">
+									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_NEVER ? 'selected="selected"' : '' ?>value="<?php echo rental_notification::RECURRENCE_NEVER ?>"><?php echo lang('rental_common_never') ?></option>
+									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_ANNUALLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_ANNUALLY ?>"><?php echo lang('rental_common_annually') ?></option>
+									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_MONTHLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_MONTHLY ?>"><?php echo lang('rental_common_monthly') ?></option>
+									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_WEEKLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_WEEKLY ?>"><?php echo lang('rental_common_weekly') ?></option>
+								</select>
+							</td>
+							<td>
+								<input type="submit" name="add_notification" id="" value="<?php echo lang('rental_common_add') ?>" />
 							</td>
 						</tr>
 					</table>

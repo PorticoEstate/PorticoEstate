@@ -264,7 +264,8 @@
 				'contract_id'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'message'		=> 	array('type' => 'text'),
 				'date'			=>	array('type' => 'date', 'nullable' => false),
-				'dismissed'		=>	array('type' => 'bool', 'nullable' => false, 'default' => 'false')
+				'dismissed'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0),
+				'recurrence'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0)
 			),
 			'pk' => array('id'),
 			'fk' => array(
