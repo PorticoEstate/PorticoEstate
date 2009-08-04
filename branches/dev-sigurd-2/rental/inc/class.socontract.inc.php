@@ -521,7 +521,7 @@ class rental_socontract extends rental_socommon
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			$sql_last_edited = "UPDATE last_edited_by_user SET (date=$current_date) WHERE account_id = $account_id AND contract_id = $id";
 			$update_result = $this->db->query($sql_last_edited, __LINE__,__FILE__);
-			var_dump($update_result);
+//			var_dump($update_result);
 		}
 			
 		$receipt['id'] = $id;

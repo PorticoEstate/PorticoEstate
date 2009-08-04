@@ -14,7 +14,6 @@
 		{
 			if ($this->validates()) {
 				$so = $this->get_so();
-				
 				if ($this->id > 0) {
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $so->update($this);

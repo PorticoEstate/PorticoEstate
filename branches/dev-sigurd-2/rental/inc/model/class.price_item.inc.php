@@ -75,7 +75,7 @@
 		
 		public function set_is_area($is_area)
 		{
-			$this->is_area = $is_area;
+			$this->is_area = (boolean)$is_area;
 		}
 		
 		public function get_price()

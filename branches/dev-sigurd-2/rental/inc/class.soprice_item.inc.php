@@ -235,9 +235,9 @@
 			);
 			
 			if ($price_item->get_date_start()) {
-				print_r($price_item);
+//				print_r($price_item);
 				$values[] = 'date_start = ' . $this->marshal(date('Y-m-d', $price_item->get_date_start()), 'date');
-				print_r($values);
+//				print_r($values);
 			}
 			
 			if ($price_item->get_date_end()) {
