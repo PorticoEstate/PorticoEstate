@@ -413,7 +413,7 @@
 						if($uicols['input_type'][$k]=='text')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= isset($project_entry[$uicols['name'][$k]])  ? $project_entry[$uicols['name'][$k]] : '';
 
 							if(isset($project_entry['query_location'][$uicols['name'][$k]]) && $project_entry['query_location'][$uicols['name'][$k]])
 							{
