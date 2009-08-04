@@ -2,7 +2,7 @@
 	include("common.php");
 ?>
 
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?= lang('rental_menu_price_list') ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('rental_menu_price_list') ?></h1>
 
 <form action="#" method="GET">
 	<?php 
@@ -11,10 +11,10 @@
 	?>
 	<fieldset>
 		<!-- Create new rental composite -->
-		<h3><?= lang('rental_price_item_toolbar_new') ?></h3>
-		<label for="ctrl_add_price_item_name"><?= lang('rental_rc_name') ?></label>
+		<h3><?php echo lang('rental_price_item_toolbar_new') ?></h3>
+		<label for="ctrl_add_price_item_name"><?php echo lang('rental_rc_name') ?></label>
 		<input type="text" id="ctrl_add_price_item_name" name="ctrl_add_price_item_name"/>
-		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?= lang('rental_price_item_toolbar_functions_new_price_item') ?>" />
+		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?php echo lang('rental_price_item_toolbar_functions_new_price_item') ?>" />
 	</fieldset>
 	<?php 
 	}
@@ -40,22 +40,22 @@
 	var columnDefs = [
 		{
 			key: "title",
-			label: "<?= lang('rental_rc_name') ?>",
+			label: "<?php echo lang('rental_rc_name') ?>",
 		  sortable: true
 		},
 		{
 			key: "agresso_id",
-			label: "<?= lang('rental_rc_agresso_id') ?>",
+			label: "<?php echo lang('rental_rc_agresso_id') ?>",
 		  sortable: false
 		},
 		{
 			key: "is_area",
-			label: "<?= lang('rental_rc_type') ?>",
+			label: "<?php echo lang('rental_rc_type') ?>",
 		  sortable: true
 		},
 		{
 			key: "price",
-			label: "<?= lang('rental_rc_price') ?>",
+			label: "<?php echo lang('rental_rc_price') ?>",
 			sortable: true
 		},
 		{
@@ -71,7 +71,7 @@
 		[],
 		'datatable-container',
 		1,
-		['<?= lang('rental_common_show') ?>','<?= lang('rental_common_edit') ?>'],
+		['<?php echo lang('rental_common_show') ?>','<?php echo lang('rental_common_edit') ?>'],
 		['view','edit']	
 	);
 </script>

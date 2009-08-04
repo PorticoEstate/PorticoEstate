@@ -15,24 +15,24 @@
    );
 </script>
 
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?= lang('rental_menu_contracts') ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_menu_contracts') ?></h1>
 
 <fieldset>
 	<!-- New contract -->
-	<h3><?= lang('rental_contract_toolbar_new') ?></h3>
+	<h3><?php echo lang('rental_contract_toolbar_new') ?></h3>
 	<select name="new_contract_type" id="ctrl_new_contract_type">
 		<?php 
 		$types = rental_contract::get_contract_types();
 		foreach($types as $id => $label)
 		{
-			?><option value="<?= $id ?>"><?= lang($label) ?></option><?
+			?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
 		}
 		?>
 	</select>
-	<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?= lang('rental_contract_toolbar_functions_new_contract') ?>" />
+	<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?php echo lang('rental_contract_toolbar_functions_new_contract') ?>" />
 </fieldset>
 
-<? 
+<?php
 	$list_form = true;
 	$list_id = 'all_contracts';
 	$url_add_on = '&amp;type='.$list_id;
@@ -43,3 +43,4 @@
 		array("key" => "old_contract_id", "label" => lang('rental_rc_old_id'), "index" => 6)
 	);
 	include('contract_list_partial.php');
+?>

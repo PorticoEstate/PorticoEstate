@@ -55,13 +55,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		if(isset($config))
 		{
 	?>
-		createPanel('<?= $panel ?>',<?= $config[0] ?>,<?= $config[1] ?>,<?= $config[2]?>);
+		createPanel('<?php echo $panel ?>',<?php echo $config[0] ?>,<?php echo $config[1] ?>,<?php echo $config[2]?>);
 	<?php
 		}
 		else
 		{
 	?>
-		createPanel('<?= $panel ?>',true,0,0);	
+		createPanel('<?php echo $panel ?>',true,0,0);	
 	<?php 
 		}
 	}
@@ -97,7 +97,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			var position = getCumulativeOffset(p.element);
 			var request = YAHOO.util.Connect.asyncRequest(
 				'GET', 
-				'<?= html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.query','type' => 'save_panel_settings'))) ?>' + 
+				'<?php echo html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.query','type' => 'save_panel_settings'))) ?>' + 
 					'&name=' + p.name + '&visibility=' + p.visible + '&x=' + position.x + '&y=' + position.y,
 				{ 
 					failure: ajaxFailure
@@ -120,15 +120,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 });
 	
 </script>
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?= lang('rental_dashboard_title') ?></h1> 
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?php echo lang('rental_dashboard_title') ?></h1> 
 
 <fieldset>
-	<h3><?= lang('rental_frontpage_panels') ?></h3>
-	<button type="button" id="workingOnContracts_button"><?= lang('rental_frontpage_working_on') ?></button>
-	<button type="button" id="executiveOfficerOnContracts_button"><?= lang('rental_frontpage_executive_officer_for') ?></button> 
-	<button type="button" id="endingContracts_button"><?= lang('rental_frontpage_contracts_under_dismissal') ?></button> 
-	<button type="button" id="availableComposites_button"><?= lang('rental_frontpage_available_composites') ?></button>
-	<button type="button" id="saveSetup"><?= lang('rental_frontpage_save_setup') ?></button> 
+	<h3><?php echo lang('rental_frontpage_panels') ?></h3>
+	<button type="button" id="workingOnContracts_button"><?php echo lang('rental_frontpage_working_on') ?></button>
+	<button type="button" id="executiveOfficerOnContracts_button"><?php echo lang('rental_frontpage_executive_officer_for') ?></button> 
+	<button type="button" id="endingContracts_button"><?php echo lang('rental_frontpage_contracts_under_dismissal') ?></button> 
+	<button type="button" id="availableComposites_button"><?php echo lang('rental_frontpage_available_composites') ?></button>
+	<button type="button" id="saveSetup"><?php echo lang('rental_frontpage_save_setup') ?></button> 
 	
 </fieldset>
 
@@ -138,7 +138,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 </div>
 
 <div id="workingOnContracts_panel"> 
-    <div class="hd"><h3><?= lang('rental_frontpage_working_on') ?></h3></div> 
+    <div class="hd"><h3><?php echo lang('rental_frontpage_working_on') ?></h3></div> 
     <div class="bd">
     	<?php 
 			$list_form = false;
@@ -155,7 +155,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     </div> 
 </div> 
 <div id="executiveOfficerOnContracts_panel"> 
-	<div class="hd"><h3><?= lang('rental_frontpage_executive_officer_for') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_frontpage_executive_officer_for') ?></h3></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
@@ -171,7 +171,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div> 
 <div id="endingContracts_panel"> 
-	<div class="hd"><h3><?= lang('rental_frontpage_contracts_under_dismissal') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_frontpage_contracts_under_dismissal') ?></h3></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
@@ -187,7 +187,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div>
 <div id="availableComposites_panel"> 
-	<div class="hd"><h3><?= lang('rental_frontpage_available_composites') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_frontpage_available_composites') ?></h3></div> 
     <div class="bd">
 	<?php 
 		$list_form = false;

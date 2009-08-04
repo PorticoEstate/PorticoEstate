@@ -233,11 +233,12 @@
 				table_should_be_clickable = false;
 			}
 		}
-
+		
 		if (table_should_be_clickable) {
 			//... create a handler for regular clicks on a table row
 			this.table.subscribe("rowClickEvent", function(e,obj) {
 				YAHOO.util.Event.stopEvent(e);
+				
 				//... trigger first action on row click
 				var row = obj.table.getTrEl(e.target);
 				if(row) {
@@ -247,7 +248,7 @@
 					if(record.menu.isVisible){
 						return;
 					}
-		
+					
 					//... check whether this action should be an AJAX call
 					if(record.getData().ajax[0]) {
 						var request = YAHOO.util.Connect.asyncRequest(
@@ -297,12 +298,12 @@
 				rowsPerPage: 25,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: '<< <?= lang(rental_paginator_first) ?>',
-				previousPageLinkLabel: '< <?= lang(rental_paginator_previous) ?>',
-				nextPageLinkLabel: '<?= lang(rental_paginator_next) ?> >',
-				lastPageLinkLabel: '<?= lang(rental_paginator_last) ?> >>',
-				template			: "{RowsPerPageDropdown}<?= lang(rental_paginator_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?= lang(rental_paginator_shows_from) ?> {startRecord} <?= lang(rental_paginator_to) ?> {endRecord} <?= lang(rental_paginator_of_total) ?> {totalRecords}.",
+				firstPageLinkLabel: '<< <?php echo lang(rental_paginator_first) ?>',
+				previousPageLinkLabel: '< <?php echo lang(rental_paginator_previous) ?>',
+				nextPageLinkLabel: '<?php echo lang(rental_paginator_next) ?> >',
+				lastPageLinkLabel: '<?php echo lang(rental_paginator_last) ?> >>',
+				template			: "{RowsPerPageDropdown}<?php echo lang(rental_paginator_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?php echo lang(rental_paginator_shows_from) ?> {startRecord} <?php echo lang(rental_paginator_to) ?> {endRecord} <?php echo lang(rental_paginator_of_total) ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
 	
@@ -470,13 +471,13 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 		"calendar",
 		calendarBodyId,
 		{ 	navigator:true, 
-			title: '<?= lang(rental_calendar_title) ?>',
+			title: '<?php echo lang(rental_calendar_title) ?>',
 			start_weekday:1, 
 			LOCALE_WEEKDAYS:"short"}
 	);
 	
-	cal.cfg.setProperty("MONTHS_LONG",<?= lang(rental_common_calendar_months) ?>);
-	cal.cfg.setProperty("WEEKDAYS_SHORT",<?= lang(rental_common_calendar_weekdays) ?>);
+	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(rental_common_calendar_months) ?>);
+	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(rental_common_calendar_weekdays) ?>);
 	cal.render();
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
 	cal.inputFieldID = inputFieldID;
@@ -508,7 +509,7 @@ function onCalendarSelect(type,args,array,noPostOnSelect){
 		}
 		hiddenDateField.value = year + '-' + month + '-' + day;
 	}
-	document.getElementById(array[0]).value = formatDate('<?= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
+	document.getElementById(array[0]).value = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
 
 	/* XXX

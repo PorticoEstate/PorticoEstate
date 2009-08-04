@@ -5,14 +5,14 @@
 	},
 	{
 		key: "date",
-		label: "<?= lang('rental_common_date') ?>",
+		label: "<?php echo lang('rental_common_date') ?>",
 	},
 	{
 		key: "message",
-		label: "<?= lang('rental_common_message') ?>",
+		label: "<?php echo lang('rental_common_message') ?>",
 	}];
 	
-	<?
+	<?php
 		if(isset($extra_cols)){
 			foreach($extra_cols as $col){
 				$literal = "{key: \"".$col["key"]."\",
@@ -26,31 +26,31 @@
 		} 
 	?>
 
-	<?
+	<?php
 		if(isset($hide_cols)){
 			foreach($hide_cols as $col){
 				?>
 					for(var i = 0; i < columnDefs.length; i++){
-						if(columnDefs[i].key == '<?= $col ?>'){
+						if(columnDefs[i].key == '<?php echo $col ?>'){
 							columnDefs[i].hidden = true;
 						}
 					}
 					
-				<?	
+				<?php	
 			}
 		}
 	?>
 	
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?= $url_add_on ?>',
+		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
 		columnDefs,
-		'<?= $list_id ?>_form',
-		['<?= $list_id ?>_ctrl_toggle_contract_status','<?= $list_id ?>_ctrl_toggle_contract_type','<?= $list_id ?>_status_date'],
-		'<?= $list_id ?>_container',
-		'<?= $list_id ?>_paginator',
-		'<?= $list_id ?>',
-		new Array(<?
+		'<?php echo $list_id ?>_form',
+		['<?php echo $list_id ?>_ctrl_toggle_contract_status','<?php echo $list_id ?>_ctrl_toggle_contract_type','<?php echo $list_id ?>_status_date'],
+		'<?php echo $list_id ?>_container',
+		'<?php echo $list_id ?>_paginator',
+		'<?php echo $list_id ?>',
+		new Array(<?php
 				if(isset($related)){
 					foreach($related as $r){
 						echo "\"".$r."\"";
@@ -63,10 +63,10 @@
 	if($list_form)
 	{
 ?>
-<form id="<?= $list_id ?>_form" method="GET">
+<form id="<?php echo $list_id ?>_form" method="GET">
 	
 <?php 
 	}
 ?>
-<div id="<?= $list_id ?>_container" class="datatable_container"></div>
-<div id="<?= $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
+<div id="<?php echo $list_id ?>_paginator" class="paginator"></div>

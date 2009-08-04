@@ -10,30 +10,30 @@
 	
 </script>
 
-<h1><img src="<?= RENTAL_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><em> <?= lang('rental_common_party') ?>: <?= $party->get_name() ?></em></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><em> <?php echo lang('rental_common_party') ?>: <?php echo $party->get_name() ?></em></h1>
 
 <form action="#" method="post">
 	
 	<div id="party_edit_tabview" class="yui-navset">
 		<ul class="yui-nav">
-			<li class="selected"><a href="#details_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/custom/contact.png" alt="icon" /> <?= lang('rental_common_details') ?></em></a></li>
-			<li><a href="#contracts_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?= lang('rental_common_contracts') ?></em></a></li>
-			<li><a href="#documents_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?= lang('rental_common_documents') ?></em></a></li>
-			<li><a href="#comments_party"><em><img src="<?= RENTAL_TEMPLATE_PATH ?>images/16x16/apps/internet-group-chat.png" alt="icon" /> <?= lang('rental_common_comments') ?></em></a></li>
+			<li class="selected"><a href="#details_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/custom/contact.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
+			<li><a href="#contracts_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_contracts') ?></em></a></li>
+			<li><a href="#documents_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('rental_common_documents') ?></em></a></li>
+			<li><a href="#comments_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/internet-group-chat.png" alt="icon" /> <?php echo lang('rental_common_comments') ?></em></a></li>
 		</ul>
 		
 		<div class="yui-content">
 			<div id="details">
 		<dl class="proplist-col">
 			<dt>
-				<label for="personal_identification_number"><?= lang('rental_party_ssn') ?> / <?= lang('rental_party_organisation_number') ?></label>
+				<label for="personal_identification_number"><?php echo lang('rental_party_ssn') ?> / <?php echo lang('rental_party_organisation_number') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="personal_identification_number" id="personal_identification_number" value="<?= $party->get_personal_identification_number() ?>" />
+					<input type="text" name="personal_identification_number" id="personal_identification_number" value="<?php echo $party->get_personal_identification_number() ?>" />
 				<?php 
 				}
 				else
@@ -43,14 +43,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="firstname"><?= lang('rental_common_firstname') ?></label>
+				<label for="firstname"><?php echo lang('rental_common_firstname') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="firstname" id="firstname" value="<?= $party->get_first_name() ?>" />
+					<input type="text" name="firstname" id="firstname" value="<?php echo $party->get_first_name() ?>" />
 				<?php 
 				}
 				else
@@ -60,14 +60,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="lastname"><?= lang('rental_common_lastname') ?></label>
+				<label for="lastname"><?php echo lang('rental_common_lastname') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="lastname" id="lastname" value="<?= $party->get_last_name() ?>" />
+					<input type="text" name="lastname" id="lastname" value="<?php echo $party->get_last_name() ?>" />
 				<?php 
 				}
 				else
@@ -77,14 +77,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="title"><?= lang('rental_common_title') ?></label>
+				<label for="title"><?php echo lang('rental_common_title') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="title" id="title" value="<?= $party->get_title() ?>" />
+					<input type="text" name="title" id="title" value="<?php echo $party->get_title() ?>" />
 				<?php 
 				}
 				else
@@ -94,14 +94,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="company_name"><?= lang('rental_common_company') ?></label>
+				<label for="company_name"><?php echo lang('rental_common_company') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="company_name" id="company_name" value="<?= $party->get_company_name() ?>" />
+					<input type="text" name="company_name" id="company_name" value="<?php echo $party->get_company_name() ?>" />
 				<?php 
 				}
 				else
@@ -111,14 +111,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="department"><?= lang('rental_common_department') ?></label>
+				<label for="department"><?php echo lang('rental_common_department') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="department" id="department" value="<?= $party->get_department() ?>" />
+					<input type="text" name="department" id="department" value="<?php echo $party->get_department() ?>" />
 				<?php 
 				}
 				else
@@ -128,16 +128,16 @@
 				?>
 			</dd>
 			<dt>
-				<label for="address1"><?= lang('rental_rc_address') ?></label>
+				<label for="address1"><?php echo lang('rental_rc_address') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="address1" id="address1" value="<?= $party->get_address_1() ?>" />
+					<input type="text" name="address1" id="address1" value="<?php echo $party->get_address_1() ?>" />
 					<br/>
-					<input type="text" name="address2" id="address2" value="<?= $party->get_address_2() ?>" />
+					<input type="text" name="address2" id="address2" value="<?php echo $party->get_address_2() ?>" />
 				<?php 
 				}
 				else
@@ -149,15 +149,15 @@
 				?>
 			</dd>
 			<dt>
-				<label for="postal_code"><?= lang('rental_common_postal_code_place') ?></label>
+				<label for="postal_code"><?php echo lang('rental_common_postal_code_place') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="postal_code" id="postal_code" class="postcode" value="<?= $party->get_postal_code() ?>" />
-					<input type="text" name="place" id="place" value="<?= $party->get_place() ?>" />
+					<input type="text" name="postal_code" id="postal_code" class="postcode" value="<?php echo $party->get_postal_code() ?>" />
+					<input type="text" name="place" id="place" value="<?php echo $party->get_place() ?>" />
 				<?php 
 				}
 				else
@@ -168,14 +168,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="phone"><?= lang('rental_common_phone') ?></label>
+				<label for="phone"><?php echo lang('rental_common_phone') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="phone" id="phone" value="<?= $party->get_phone() ?>" />
+					<input type="text" name="phone" id="phone" value="<?php echo $party->get_phone() ?>" />
 				<?php 
 				}
 				else
@@ -185,14 +185,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="fax"><?= lang('rental_common_fax') ?></label>
+				<label for="fax"><?php echo lang('rental_common_fax') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="fax" id="fax" value="<?= $party->get_fax() ?>" />
+					<input type="text" name="fax" id="fax" value="<?php echo $party->get_fax() ?>" />
 				<?php 
 				}
 				else
@@ -202,14 +202,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="email"><?= lang('rental_common_email') ?></label>
+				<label for="email"><?php echo lang('rental_common_email') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="email" id="email" value="<?= $party->get_email() ?>" />
+					<input type="text" name="email" id="email" value="<?php echo $party->get_email() ?>" />
 				<?php 
 				}
 				else
@@ -219,14 +219,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="url"><?= lang('rental_common_url') ?></label>
+				<label for="url"><?php echo lang('rental_common_url') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="url" id="url" value="<?= $party->get_url() ?>" />
+					<input type="text" name="url" id="url" value="<?php echo $party->get_url() ?>" />
 				<?php 
 				}
 				else
@@ -238,14 +238,14 @@
 		</dl>
 		<dl class="proplist-col">
 			<dt>
-				<label for="type_id"><?= lang('rental_common_party_type') ?></label>
+				<label for="type_id"><?php echo lang('rental_common_party_type') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="type_id" id="type_id" value="<?= $party->get_type_id() ?>" />
+					<input type="text" name="type_id" id="type_id" value="<?php echo $party->get_type_id() ?>" />
 				<?php 
 				}
 				else
@@ -262,14 +262,14 @@
 				 -->
 			</dd>
 			<dt>
-				<label for="post_bank_account_number"><?= lang('rental_common_post_bank_account_number') ?></label>
+				<label for="post_bank_account_number"><?php echo lang('rental_common_post_bank_account_number') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="post_bank_account_number" id="post_bank_account_number" value="<?= $party->get_post_bank_account_number() ?>" />
+					<input type="text" name="post_bank_account_number" id="post_bank_account_number" value="<?php echo $party->get_post_bank_account_number() ?>" />
 				<?php 
 				}
 				else
@@ -279,14 +279,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="account_number"><?= lang('rental_common_account_number') ?></label>
+				<label for="account_number"><?php echo lang('rental_common_account_number') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="account_number" id="account_number" value="<?= $party->get_account_number() ?>" />
+					<input type="text" name="account_number" id="account_number" value="<?php echo $party->get_account_number() ?>" />
 				<?php 
 				}
 				else
@@ -296,14 +296,14 @@
 				?>
 			</dd>
 			<dt>
-				<label for="reskontro"><?= lang('rental_common_reskontro') ?></label>
+				<label for="reskontro"><?php echo lang('rental_common_reskontro') ?></label>
 			</dt>
 			<dd>
 				<?php 
 				if ($editable) 
 				{
 				?>
-					<input type="text" name="reskontro" id="reskontro" value="<?= $party->get_reskontro() ?>" />
+					<input type="text" name="reskontro" id="reskontro" value="<?php echo $party->get_reskontro() ?>" />
 				<?php 
 				}
 				else
@@ -313,7 +313,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="is_active"><?= lang('rental_party_active') ?></label>
+				<label for="is_active"><?php echo lang('rental_party_active') ?></label>
 			</dt>
 			<dd>
 				<?php 

@@ -15,22 +15,22 @@
 	var columnDefs = [
 		{
 			key: "title",
-			label: "<?= lang('rental_rc_name') ?>",
+			label: "<?php echo lang('rental_rc_name') ?>",
 		  sortable: true
 		},
 		{
 			key: "agresso_id",
-			label: "<?= lang('rental_rc_agresso_id') ?>",
+			label: "<?php echo lang('rental_rc_agresso_id') ?>",
 		  sortable: false
 		},
 		{
 			key: "is_area",
-			label: "<?= lang('rental_rc_type') ?>",
+			label: "<?php echo lang('rental_rc_type') ?>",
 		  sortable: true
 		},
 		{
 			key: "price",
-			label: "<?= lang('rental_rc_price') ?>",
+			label: "<?php echo lang('rental_rc_price') ?>",
 			sortable: true
 		},
 		{
@@ -50,12 +50,12 @@
 			hidden: true
 		}];
 
-	<?
+	<?php
 	if ($extra_cols) {
 		echo rental_uicommon::get_extra_column_defs('columnDefs', $extra_cols);
 	}
 	?>
-	<?
+	<?php
 	if ($editors) {
 		echo rental_uicommon::get_column_editors('columnDefs', $editors);
 	}
@@ -63,23 +63,23 @@
 
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uiprice_item.query&amp;phpgw_return_as=json<?= $url_add_on; ?>',
+		'index.php?menuaction=rental.uiprice_item.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>',
 		columnDefs,
 		'',
 		[],
-		'<?= $list_id ?>_container',
-		'<?= $list_id ?>_paginator',
-		'<?= $list_id ?>',
-		new Array(<?
+		'<?php echo $list_id ?>_container',
+		'<?php echo $list_id ?>_paginator',
+		'<?php echo $list_id ?>',
+		new Array(<?php
 			if(isset($related)){
 				foreach($related as $r){
 					echo "\"".$r."\"";
 				}
 			} 
 		?>),
-		'<?= $editor_action ?>'
+		'<?php echo $editor_action ?>'
 	);
 </script>
 
-<div id="<?= $list_id ?>_container" class="datatable_container"></div>
-<div id="<?= $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
+<div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
