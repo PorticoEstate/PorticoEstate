@@ -12,7 +12,7 @@
 
 	$setup_info['projects']['name']      = 'projects';
 	$setup_info['projects']['title']	 = 'Projects';
-	$setup_info['projects']['version']   = '0.8.7.055';
+	$setup_info['projects']['version']   = '0.8.7.056';
 	$setup_info['projects']['app_order'] = 13;
 	$setup_info['projects']['enable']    = 1;
 
@@ -51,13 +51,14 @@
 
 	$setup_info['projects']['hooks'] = array
 	(
-		'preferences',
-		'admin',
+	//	'preferences',
+	//	'admin',
 		'manual',
-		'add_def_pref',
+	//	'add_def_pref',
 		'deleteaccount',
 		'home',
-		'sidebox_menu'
+	//	'sidebox_menu',
+		'menu'			=> 'projects.menu.get_menu'
 	);
 
 	$setup_info['projects']['hooks']['getFolderContent'] = 'projects.boprojects.get_folder_content';
@@ -89,9 +90,9 @@
 		 'versions' => Array('0.9.16','0.9.17')
 	);
 
-	$setup_info['projects']['depends'][] = array
+/*	$setup_info['projects']['depends'][] = array
 	(
 		 'appname' => 'email',
 		 'versions' => Array('0.9.13','0.9.17')
 	);
-?>
+*/

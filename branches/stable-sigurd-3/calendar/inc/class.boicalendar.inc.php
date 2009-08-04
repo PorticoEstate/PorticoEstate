@@ -1473,7 +1473,7 @@ class calendar_boicalendar
 							(
 								'type'		=> 'value',
 								'quoted'	=> false,
-								'to_text'	=> false,
+								'to_text'	=> true,
 								'properties'	=> array
 										(
 											'calscale'	=> true,
@@ -1633,7 +1633,7 @@ class calendar_boicalendar
 
 	function fold($str)
 	{
-		return $this->chunk_split ? chunk_split($str, FOLD_LENGTH, "\r\n") : $str."\r\n";
+		return $this->chunk_split == True ? rtrim(chunk_split($str,FOLD_LENGTH,"\r\n ") , ' ') : $str . "\r\n";
 	}
 
 	function strip_quotes($str)

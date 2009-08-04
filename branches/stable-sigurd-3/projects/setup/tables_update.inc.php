@@ -1179,4 +1179,18 @@
 		$GLOBALS['setup_info']['projects']['currentver'] = '0.8.7.055';
 		return $GLOBALS['setup_info']['projects']['currentver'];
 	}
-?>
+
+	$test[] = '0.8.7.055';
+	function projects_upgrade0_8_7_055()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw']->locations->add('.project', 'projects', 'projects', $allow_grant = true);
+		$GLOBALS['phpgw']->locations->add('.project_members', 'Project members', 'projects', false);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['projects']['currentver'] = '0.8.7.056';
+			return $GLOBALS['setup_info']['projects']['currentver'];
+		}
+
+	}

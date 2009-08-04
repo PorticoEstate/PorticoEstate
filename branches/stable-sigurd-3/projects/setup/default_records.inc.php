@@ -36,3 +36,7 @@ Frankfurt/Böblingen D04 01 910166
 Düsseldorf D04 01 910360
 München D04 01 910476
 */
+
+	$GLOBALS['phpgw']->locations->add('.project', 'projects', 'projects', $allow_grant = true);
+	$GLOBALS['phpgw']->locations->add('.project_members', 'Project members', 'projects', false);
+

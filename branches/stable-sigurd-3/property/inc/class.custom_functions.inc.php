@@ -91,5 +91,9 @@
 				$custom = new $function;
 				$custom->pre_run($data);
 			}
+			else
+			{
+				echo "no such file: path_to_phpgw_server_root/property/inc/cron/{$GLOBALS['phpgw_info']['user']['domain']}/{$function}.php";
+			}
 		}
 	}

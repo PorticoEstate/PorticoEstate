@@ -18,9 +18,11 @@
 
 		function soprojects()
 		{
-			$this->db			= $GLOBALS['phpgw']->db;
-			$this->db2			= $this->db;
-			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('projects');
+			$this->db			= & $GLOBALS['phpgw']->db;
+			$this->db2			= clone($this->db);
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
+			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('projects', 'project');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->currency 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
 			$this->year			= $GLOBALS['phpgw']->common->show_date(time(),'Y');
@@ -239,11 +241,11 @@
 
 			if ( $limit && $action == 'mains' )
 			{
-				$this->db2->query($sql . $parent_select, __LINE__, __FILE__);
+				$this->db->query($sql . $parent_select, __LINE__, __FILE__);
 
 				//echo 'query main: ' . $sql . $parent_select;
 
-				$total = $this->db2->num_rows();
+				$total = $this->db->num_rows();
 
 				$this->db->limit_query($sql . $parent_select . $ordermethod, $start,__LINE__,__FILE__);
 			}
@@ -383,7 +385,7 @@
 				'action'	=> isset( $values['action'] ) ? $values['action'] : '',
 				'main'		=> isset( $values['main'] ) ? $values['main'] : '',
 				'filter'	=> isset( $values['filter'] ) ? $values['filter'] : '',
-				'column'	=> 'project_id, p_number, level, title',
+				'column'	=> 'project_id,p_number,level,title',
 				'order'		=> 'title'
 			));
 
@@ -1027,6 +1029,8 @@
 		function delete_project( $project_id, $subs = false )
 		{
 			$project_id = intval( $project_id );
+			
+			$project_delete = array($project_id);
 
 			if($subs)
 			{
@@ -1037,6 +1041,7 @@
 					$i = 0;
 					foreach( $subpro as $sub )
 					{
+						$project_delete[] = $sub['project_id'];
 						$s[$i] = $sub['project_id'];
 						++$i;
 					}
@@ -1050,8 +1055,10 @@
 				}
 			}
 
-			$this->db->query("DELETE from phpgw_acl where acl_appname='project_members' and acl_rights=7 and (acl_location=" . $project_id . $sub_acl_delete
-							. ')',__LINE__,__FILE__);
+			foreach($project_delete as $delete_id)
+			{
+				$GLOBALS['phpgw']->acl->delete_repository('projects', ".project_members.{$delete_id}");
+			}
 
 			if( $subs )
 			{
@@ -1371,21 +1378,32 @@
 
 		function delete_acl( $project_id )
 		{
-			$this->db->query("DELETE from phpgw_acl where acl_appname='project_members' AND acl_location=" . $project_id
-							. ' AND acl_rights=7',__LINE__,__FILE__);
+			$GLOBALS['phpgw']->acl->delete_repository('projects', ".project_members.{$project_id}");
 		}
 
 		function get_acl_projects()
 		{
-			$this->db->query("SELECT acl_location FROM phpgw_acl, phpgw_p_projects WHERE acl_appname='project_members' AND acl_rights=7 AND acl_account="
-								. $this->account . " AND acl_location=project_id ORDER BY title", __LINE__, __FILE__);
+//			$this->db->query("SELECT acl_location FROM phpgw_acl, phpgw_p_projects WHERE acl_appname='project_members' AND acl_rights=7 AND acl_account="
+//								. $this->account . " AND acl_location=project_id ORDER BY title", __LINE__, __FILE__);
+
+
+			$sql = 'SELECT phpgw_locations.name FROM phpgw_locations'
+				. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " {$this->join} phpgw_acl ON phpgw_locations.location_id = phpgw_acl.location_id"
+				. " WHERE phpgw_applications.app_name = 'projects'"
+					. " AND phpgw_locations.name {$this->like} '.project_members.%'"
+					. " AND acl_rights=7 AND acl_account= {$this->account}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			// Did the query return any records?
 			if ( $this->db->next_record() )
 			{
 				while( $this->db->next_record() )
 				{
-					$projects[] = $this->db->f(0);
+					$location = ltrim($this->db->f(0), '.'); 
+					$parts = explode('.', $location);
+					$projects[] = $parts[1];
 				}
 
 				return $projects;
@@ -1444,7 +1462,9 @@
 
 		function member($project_id)
 		{
-			$this->db->query("SELECT acl_account from phpgw_acl where acl_appname = 'project_members' and acl_rights=7 and acl_location="
+			return $GLOBALS['phpgw']->acl->check(".project_members.{$project_id}", 7, 'projects');
+
+/*			$this->db->query("SELECT acl_account from phpgw_acl where acl_appname = 'project_members' and acl_rights=7 and acl_location="
 								. intval($project_id),__LINE__,__FILE__);
 
 			while($this->db->next_record())
@@ -1457,6 +1477,7 @@
 				return True;
 			}
 			return False;
+*/
 		}
 
 		function read_employee_roles($data)
@@ -1787,6 +1808,24 @@
 
 		function get_acl_project_members($project_id = false)
 		{
+			$location = ".'project_members.{$project_id}";
+			$ids = $GLOBALS['phpgw']->acl->get_ids_for_location($location, 7, 'projects');
+
+			$members = array();
+			foreach ($ids as $account_id)
+			{
+				$members[$account_id][] = $project_id;				
+			}
+
+			if(!$project_id)
+			{
+				throw new Exception("FIXME: empty project_id not handled");
+			}
+
+			return $members;
+
+/*
+
 			$sql  = 'SELECT * FROM phpgw_acl ';
 			$sql .= 'WHERE acl_appname LIKE \'project_members\' ';
 
@@ -1812,6 +1851,7 @@
 			}
 
 			return $members;
+*/
 		}
 
 	}

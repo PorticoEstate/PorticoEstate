@@ -23,7 +23,7 @@
 #  * @var               string FREETDS, FREETDSTAR
 #  */
 FREETDSTAR="freetds-stable.tgz"
-FREETDS="freetds-0.64"
+FREETDS="freetds-0.82"
 
 LIBXMLTAR="libxml2-2.7.3.tar.gz"
 LIBXML="libxml2-2.7.3"
@@ -49,16 +49,19 @@ APACHE="httpd-2.2.11"
 #  * 
 #  * @var               string PHP, PHPTAR
 #  */
-PHPTAR="php-5.2.9.tar.bz2"
-PHP="php-5.2.9"
+PHPTAR="php-5.3.0.tar.bz2"
+PHP="php-5.3.0"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
 #  * 
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  */
-EACCELERATORTAR="eaccelerator-0.9.5.3.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.5.3"
+#EACCELERATORTAR="eaccelerator-0.9.5.3.tar.bz2"
+#EACCELERATOR="eaccelerator-0.9.5.3"
+APCTAR="APC-3.1.2.tgz"
+APC="APC-3.1.2"
+
 
 # clean up from previous
 
@@ -67,7 +70,7 @@ rm $LIBXML -rf &&\
 rm $LIBXSL -rf &&\
 rm $IMAP -rf &&\
 rm $PHP -rf &&\
-rm $EACCELERATOR -rf &&\
+rm $APC -rf &&\
 rm $APACHE -rf &&\
 
 # perform the install
@@ -78,12 +81,14 @@ tar -xzf $LIBXSLTAR &&\
 gunzip -c $IMAPTAR | tar xf - &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
+tar -xzf $APCTAR &&\
 cd $FREETDS &&\
-./configure --prefix=/usr/local/freetds --with-tdsver=7.0 --enable-msdblib\
+./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
 --enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
 gmake &&\
 gmake install &&\
+touch /usr/local/freetds/include/tds.h &&\
+touch /usr/local/freetds/lib/libtds.a &&\
 cd ../$IMAP &&\
 make lmd SSLTYPE=unix.nopwd IP6=4 &&\
 ln -s c-client include &&\
@@ -124,8 +129,6 @@ export LDFLAGS=-lstdc++ &&\
  --with-imap-ssl\
  --with-sybase-ct=/usr/local/freetds\
  --with-apxs2=/usr/local/apache2/bin/apxs\
- --enable-mail\
- --with-xml\
  --with-xsl\
  --with-zlib\
  --with-pspell\
@@ -140,19 +143,19 @@ export LDFLAGS=-lstdc++ &&\
  --enable-sysvsem\
  --enable-sysvshm\
  --enable-calendar\
- --enable-pdo=shared\
- --with-pdo-sqlite=shared\
- --with-sqlite=shared\
+ --enable-pdo\
+ --with-pdo-sqlite\
+ --with-sqlite\
+ --with-pdo-pgsql\
  --with-openssl\
- --enable-mbstring &&\
+ --enable-mbstring\
+ --with-mcrypt &&\
 make &&\
 make install &&\
-cd ../$EACCELERATOR &&\
+cd ../$APC &&\
 $PHP_PREFIX/bin/phpize &&\
-./configure --enable-eaccelerator=shared --with-php-config=$PHP_PREFIX/bin/php-config &&\
+./configure --enable-apc-mmap --with-apxs --with-php-config=$PHP_PREFIX/bin/php-config &&\
 make &&\
-make install &&\
-mkdir /tmp/eaccelerator &&\
-chmod 0777 /tmp/eaccelerator
+make install
 
 # vim: set expandtab :
