@@ -43,6 +43,3 @@
 		array("key" => "old_contract_id", "label" => lang('rental_rc_old_id'), "index" => 6)
 	);
 	include('contract_list_partial.php');
-?>
-
-
