@@ -2,11 +2,12 @@
 		if(!isset($this->db) || !is_object($this->db))
 		{
 			$this->db		= & $GLOBALS['phpgw']->db;
-			$this->db2		= clone($this->db);
 			$this->like		= & $this->db->like;
 			
 		}
-		
+
+		$this->db2		= clone($this->db);
+
 		if(!isset($target_table) || !$target_table)
 		{
 			$target_table = "fm_{$this->type_app[$this->type]}_{$entity_id}_{$cat_id}";
@@ -43,6 +44,7 @@
 					if($loc == 'romid')
 					{
 						$this->db2->query("SELECT loc5 FROM fm_location5 WHERE rom_nr_id = '" . $this->db->f($loc) . "' AND location_code {$this->like} '" . implode('-', $location) . "%'",__LINE__,__FILE__);
+
 						$this->db2->next_record();
 						if($this->db2->f('loc5'))
 						{
