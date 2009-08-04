@@ -91,7 +91,7 @@
 				$price_item->set_title($title);
 				if ($price_item->store()) {
 					// The object was stored, forward to edit it further
-					return $this->viewedit(true, $price_item);
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprice_item.edit', 'id' => $price_item->get_id()));
 				}
 			}
 			

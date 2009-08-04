@@ -26,6 +26,7 @@
 		public function __construct($id = 0)
 		{
 			$this->id = $id;
+			$this->is_area = true;
 		}
 		
 		public function get_id()
