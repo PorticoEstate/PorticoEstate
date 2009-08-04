@@ -479,6 +479,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(rental_common_calendar_months) ?>);
 	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(rental_common_calendar_weekdays) ?>);
 	cal.render();
+
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
 	cal.inputFieldID = inputFieldID;
 	cal.hiddenField = hiddenField;
@@ -490,7 +491,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 	return cal;
 }
 
-function onCalendarSelect(type,args,array,noPostOnSelect){
+function onCalendarSelect(type,args,array){
 	var firstDate = args[0][0];
 	var month = firstDate[1] + "";
 	var day = firstDate[2] + "";
@@ -511,12 +512,9 @@ function onCalendarSelect(type,args,array,noPostOnSelect){
 	}
 	document.getElementById(array[0]).value = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
-
-	/* XXX
-	if (!noPostOnSelect) {
+	if (array[3] != undefined && !array[3]) {
 		document.getElementById('ctrl_search_button').click();
 	}
-	*/
 	
 }
 

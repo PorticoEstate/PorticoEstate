@@ -10,7 +10,8 @@
 				'<?php echo lang('rental_calendar_title') ?>', 
 				'calendarStatusDateCloseButton',
 				'calendarStatusDateClearButton',
-				'status_date_hidden'
+				'status_date_hidden',
+				false
 			);
 		}
 	);

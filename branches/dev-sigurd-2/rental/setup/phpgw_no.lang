@@ -96,7 +96,7 @@ rental_menu_rental	rental	no	Utleie
 rental_menu_parties	rental	no	Kontraktsparter
 rental_menu_price_list	rental	no	Prisbok
 rental_menu_reports	rental	no	Rapporter
-rental_messages_agresso_id_length	rental	no	Agresso ID må inneholde 9 tall eller bokstaver
+rental_messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
 rental_messages_new_composite	rental	no	Leieobjektet er opprettet
 rental_messages_new_party	rental	no	Kontraktspart er opprettet
 rental_messages_right_click_to_add	rental	no	Høyreklikk for å legge til
@@ -115,7 +115,7 @@ rental_rc_active	rental	no	Aktiv
 rental_rc_add_area	rental	no	Legg til areal
 rental_rc_added_areas	rental	no	Inkludert areal
 rental_rc_address	rental	no	Adresse
-rental_rc_agresso_id	rental	no	Agresso ID
+rental_rc_agresso_id	rental	no	Agresso-ID
 rental_rc_all	rental	no	Alle
 rental_rc_area	rental	no	Areal
 rental_rc_area_gros	rental	no	Bruttoareal
