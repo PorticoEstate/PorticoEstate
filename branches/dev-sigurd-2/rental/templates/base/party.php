@@ -296,7 +296,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="reskontro"><?php echo lang('rental_common_reskontro') ?></label>
+				<label for="reskontro"><?php echo lang('rental_party_account') ?></label>
 			</dt>
 			<dd>
 				<?php 
