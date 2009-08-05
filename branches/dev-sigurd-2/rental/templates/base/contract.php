@@ -153,7 +153,8 @@ YAHOO.util.Event.onDOMReady(
 				include('party_list_partial.php');
 				$extra_cols = array();
 			?>
-				
+			
+			<?php if ($editable) {?>
 			<h3><?php echo lang('rental_rc_available_parties') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php
 				$list_form = true;
@@ -161,6 +162,7 @@ YAHOO.util.Event.onDOMReady(
 				$related = array('included_parties');
 				$url_add_on = '&amp;type=not_included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php'); ?>
+			<?php } ?>
 		</div>
 		<div id="composites">
 			<h3><?php echo lang('rental_rc_selected_composites') ?></h3>
@@ -170,6 +172,8 @@ YAHOO.util.Event.onDOMReady(
 				$related = array('not_included_composites');
 				$url_add_on = '&amp;type=included_composites&amp;contract_id='.$contract->get_id();
 				include('composite_list_partial.php'); ?>
+			
+			<?php if ($editable) { ?>
 			<h3><?php echo lang('rental_rc_available_composites') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php 
 				$list_form = true;
@@ -177,6 +181,7 @@ YAHOO.util.Event.onDOMReady(
 				$related = array('included_composites');
 				$url_add_on = '&amp;type=not_included_composites&amp;contract_id='.$contract->get_id();
 				include('composite_list_partial.php'); ?>
+			<?php } ?>
 		</div>
 		<div id="price">
 			<h3><?php echo lang('rental_rc_selected_price_items') ?></h3>
@@ -205,6 +210,7 @@ YAHOO.util.Event.onDOMReady(
 				);
 				
 				include('price_item_partial.php'); ?>
+			<?php if ($editable) { ?>
 			<h3><?php echo lang('rental_rc_available_price_items') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php 
 				$list_form = true;
@@ -214,6 +220,7 @@ YAHOO.util.Event.onDOMReady(
 				unset($extra_cols);
 				unset($editors);
 				include('price_item_partial.php'); ?>
+			<?php } ?>
 		</div>
 		<div id="bill">
 		</div>
