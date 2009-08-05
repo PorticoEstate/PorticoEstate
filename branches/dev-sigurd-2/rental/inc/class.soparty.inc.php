@@ -294,7 +294,6 @@ class rental_soparty extends rental_socommon
 			'fax = \'' . $party->get_fax() . '\'',
 			'email = \'' . $party->get_email() . '\'',
 			'url = \'' . $party->get_url() . '\'',
-			'type_id = \'' . $party->get_type_id() . '\'',
 			'post_bank_account_number = \'' . $party->get_post_bank_account_number() . '\'',
 			'account_number = \'' . $party->get_account_number() . '\'',
 			'reskontro = \'' . $party->get_reskontro() . '\'',
