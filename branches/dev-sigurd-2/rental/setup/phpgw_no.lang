@@ -181,6 +181,7 @@ rental_rc_search_for	rental	no	Søk etter
 rental_rc_search_options	rental	no	Søkevalg
 rental_rc_search_where	rental	no	i 
 rental_rc_section	rental	no	Seksjon
+rental_rc_selected_price_items	rental	no	Valgte priselementer
 rental_rc_serial	rental	no	Løpenummer
 rental_rc_toolbar_filters	rental	no	Filtre
 rental_rc_toolbar_functions	rental	no	Funksjoner
