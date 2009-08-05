@@ -243,12 +243,12 @@
 		setDataSource(
 				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<?php echo $composite->get_id() ?>',
 				addedAreasColumnDefs,
-				'added_areas_form',
+				'',
 				[],
 				'added-areas-datatable-container',
-				1,
-				['<?php echo lang('rental_cm_remove') ?>'],
-				['remove_unit']	
+				'added-areas-paginator',
+				'added-areas',
+				new Array('available-areas')
 		);
 
 		//Columns for available areas datatable
@@ -312,11 +312,10 @@
 				'available_areas_form',
 				['crtl_toggle_level'],
 				'available-areas-datatable-container',
-				2,
-				['<?php echo lang('rental_cm_add') ?>'],
-				['add_unit']	
+				'available-areas-paginator',
+				'available-areas',
+				new Array('added-areas')
 		);
-
 		
 		// Columns for contracts table 
 		var contractsColumnDefs = [{
@@ -359,9 +358,8 @@
 				'contracts_form',
 				['ctrl_toggle_contract_status'],
 				'contracts-container',
-				3,
-				['<?php echo lang('rental_cm_show') ?>', '<?php echo lang('rental_cm_edit') ?>'],
-				['view_contract', 'edit_contract']	
+				'contracts-paginator',
+				'contracts'
 		);
 	});	
 </script>
