@@ -238,30 +238,6 @@
 		</dl>
 		<dl class="proplist-col">
 			<dt>
-				<label for="type_id"><?php echo lang('rental_common_party_type') ?></label>
-			</dt>
-			<dd>
-				<?php 
-				if ($editable) 
-				{
-				?>
-					<input type="text" name="type_id" id="type_id" value="<?php echo $party->get_type_id() ?>" />
-				<?php 
-				}
-				else
-				{	
-					echo $party->get_type_id();
-				}
-				?>
-				<!-- TODO:
-				<select name="type_id" id="type_id">
-					<xsl:if test="../access = 0"><xsl:attribute name="disabled" value="true"/></xsl:if>
-					<option value="internal"><xsl:value-of select="php:function('lang', 'rental_party_internal')"/></option>
-					<option value="external"><xsl:value-of select="php:function('lang', 'rental_party_external')"/></option>
-				</select>
-				 -->
-			</dd>
-			<dt>
 				<label for="post_bank_account_number"><?php echo lang('rental_common_post_bank_account_number') ?></label>
 			</dt>
 			<dd>
