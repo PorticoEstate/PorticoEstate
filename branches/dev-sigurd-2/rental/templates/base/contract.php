@@ -66,7 +66,6 @@ YAHOO.util.Event.onDOMReady(
 		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_rc_notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_rc_notifications') ?></em></a></li>
 		<li><a href="#rental_rc_others"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_rc_others') ?></em></a></li>
 	</ul>
-	
 	<div class="yui-content">
 		<div class="details">
 			<dl class="proplist-col">
@@ -82,8 +81,8 @@ YAHOO.util.Event.onDOMReady(
 				</dt>
 				<dd>
 					<?php
-						$start_date = $contract->get_contract_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
-						$start_date_yui = $contract->get_contract_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
+						$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
+						$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
 						if ($editable) {
 							?>
 							<input type="text" name="date_start" id="date_start" size="10" value="<?php echo $start_date ?>" />
