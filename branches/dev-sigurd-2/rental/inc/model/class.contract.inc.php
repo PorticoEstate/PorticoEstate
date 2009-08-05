@@ -406,11 +406,6 @@
 				'old_contract_id' => $this->get_old_contract_id(),
 				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()): ''
 			);
-		} 
-		
-		public function __toString()
-		{
-			
 		}
 		
 		public static function export(string $name, bool $return)
