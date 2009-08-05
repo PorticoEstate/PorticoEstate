@@ -315,26 +315,27 @@ abstract class rental_unit
 			if(!$unit->has_composite_id($composite_id) && $unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to specified composite and there are openings on this unit at specified time
 			{
 				$add_unit = true; // Tells if we should add unit to list of available units
-				for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
-				{
-					if($i != $level) // Not the level we already have data for
-					{
-						$related_unit_array = rental_unit::get_so()->get_unit_array($i, $unit->get_location_code(), 0, 10000, null, true);
-						foreach($related_unit_array as $related_unit)
-						{
-							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to specified composite and there are openings on this unit at specified time
-							{
-								// We add the contract dates from the related units to see at what time it's possible to rent the unit
-								$unit->add_contract_date_array($related_unit->get_contract_date_array());
-							}
-							else // Nothing available
-							{
-								$add_unit = false;
-								break 2; // No reason to continue
-							}
-						}
-					}
-				}
+// XXX: Fix this!
+//				for($i = 1; $i <= 5; $i++) // Runs through from top (property) to bottom (unit)
+//				{
+//					if($i != $level) // Not the level we already have data for
+//					{
+//						$related_unit_array = rental_unit::get_so()->get_unit_array($i, $unit->get_location_code(), 0, 10000, null, true);
+//						foreach($related_unit_array as $related_unit)
+//						{
+//							if(!$related_unit->has_composite_id($composite_id) && $related_unit->is_available_for_renting($avaiable_at_date)) // Unit doesn't already belong to specified composite and there are openings on this unit at specified time
+//							{
+//								// We add the contract dates from the related units to see at what time it's possible to rent the unit
+//								$unit->add_contract_date_array($related_unit->get_contract_date_array());
+//							}
+//							else // Nothing available
+//							{
+//								$add_unit = false;
+//								break 2; // No reason to continue
+//							}
+//						}
+//					}
+//				}
 				if($add_unit) // We should add unit
 				{
 					// Unit is available for renting, so we add it to the array
