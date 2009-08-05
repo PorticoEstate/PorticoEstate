@@ -836,18 +836,19 @@ class rental_socomposite extends rental_socommon
 	function add(&$composite)
 	{
 		// Build a db-friendly array of the composite object
+		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place');
 		$values = array(
-			'name = \'' . $composite->get_name() . '\'',
-			'description = \'' . $composite->get_description() . '\'',
-			'has_custom_address = ' . ($composite->has_custom_address() ? "true" : "false"),
-			'address_1 = \'' . $composite->get_address_1() . '\'',
-			'address_2 = \'' . $composite->get_address_2() . '\'',
-			'house_number = \'' . $composite->get_house_number() . '\'',
-			'postcode = \'' . $composite->get_postcode() . '\'',
-			'place = \'' . $composite->get_place() . '\''
+			"'".$composite->get_name()."'",
+			"'".$composite->get_description()."'",
+			($composite->has_custom_address() ? "true" : "false"),
+			"'".$composite->get_address_1()."'",
+			"'".$composite->get_address_2()."'",
+			"'".$composite->get_house_number()."'",
+			"'".$composite->get_postcode()."'",
+			"'".$composite->get_place()."'"
 		);
 		
-		$q ="INSERT INTO ".$this->table_name." (name) VALUES ('" . join(',', $values) . "')";
+		$q ="INSERT INTO ".$this->table_name."(" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		

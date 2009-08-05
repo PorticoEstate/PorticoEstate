@@ -85,16 +85,16 @@
 		}
 		
 		/**
-		 * Add a new rental composite object to the store
+		 * Add a new rental composite object to the store.
 		 * 
-		 * @param $name		the name of the new composite
+		 * @param $composite the new composite
 		 * @return the status of the operation
 		 */
-		public static function add($name)
+		public static function add($composite)
 		{
 			$so = self::get_so();
 			
-			return $so->add($name);
+			return $so->add($composite);
 		}
 		
 		/**
