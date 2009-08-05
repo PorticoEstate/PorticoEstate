@@ -153,7 +153,7 @@
 		 */
 		public function edit(){
 			$party_id = (int)phpgw::get_var('id');
-			if(isset($_POST['save']))
+			if(isset($_POST['save_party']))
 			{
 				$party = new rental_party($party_id);
 				$party->set_personal_identification_number(phpgw::get_var('personal_identification_number'));
@@ -170,7 +170,6 @@
 				$party->set_fax(phpgw::get_var('fax'));
 				$party->set_email(phpgw::get_var('email'));
 				$party->set_url(phpgw::get_var('url'));
-				$party->set_type_id(phpgw::get_var('type_id'));
 				$party->set_post_bank_account_number(phpgw::get_var('post_bank_account_number'));
 				$party->set_account_number(phpgw::get_var('account_number'));
 				$party->set_reskontro(phpgw::get_var('reskontro'));
