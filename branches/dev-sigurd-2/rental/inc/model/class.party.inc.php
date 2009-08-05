@@ -129,9 +129,9 @@ class rental_party
 	
 	public function get_last_name() { return $this->last_name; }
 
-	public function set_type_id($type_id)
+	public function set_type_id(int $type_id)
 	{
-		$this->type_id = $type_id;
+		$this->type_id = (int)$type_id;
 	}
 	
 	public function get_type_id() { return $this->type_id; }
