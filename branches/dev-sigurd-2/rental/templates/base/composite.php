@@ -289,7 +289,7 @@
 		},
 		{
 			key: "occupied",
-			label: "<?php echo lang('rental_rc_availibility') ?>",
+			label: "<?php echo lang('rental_rc_availability') ?>",
 		  sortable: false
 		},
 		{
