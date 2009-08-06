@@ -356,7 +356,7 @@
 			$price_item = rental_price_item::get($price_item_id);
 			$contract = rental_contract::get($contract_id);
 			$contract->add_price_item($price_item);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
 		}
 		
 		public function remove_price_item()

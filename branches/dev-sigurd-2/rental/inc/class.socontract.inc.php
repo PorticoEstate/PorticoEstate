@@ -605,7 +605,7 @@ class rental_socontract extends rental_socommon
 			$price_item->get_id(),
 			$contract_id,
 			"'" . $price_item->get_title() . "'",
-			$price_item->get_agresso_id(),
+			"'" . $price_item->get_agresso_id() . "'",
 			$price_item->is_area() ? 'true' : 'false',
 			$price_item->get_price()
 		);

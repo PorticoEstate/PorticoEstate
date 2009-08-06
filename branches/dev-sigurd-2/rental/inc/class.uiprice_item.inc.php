@@ -114,6 +114,7 @@
 			$price_item->set_field($field, $value);
 
 			$price_item->store();
+			print_r($price_item);
 			
 //			print_r($price_item);
 		}

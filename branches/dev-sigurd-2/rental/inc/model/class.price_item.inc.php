@@ -161,9 +161,11 @@
 			$valid = parent::validates();
 			
 			// Check that we have a correct agresso id
+			/*
 			if ($this->get_agresso_id() && !rental_validator::valid_agresso_id($this->get_agresso_id(), $this->validation_errors['agresso_id'])) {
 				$valid = false;
 			}
+			*/
 			
 			return $valid;
 		}

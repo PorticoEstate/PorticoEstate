@@ -218,7 +218,7 @@
 		 * @param $price_item the contract price item to be updated
 		 * @return result receipt from the db operation
 		 */
-		function update_contract_price_item($price_item)
+		function update_contract_price_item(rental_contract_price_item $price_item)
 		{
 			$id = intval($price_item->get_id());
 			
@@ -227,12 +227,17 @@
 				'contract_id = ' . $price_item->get_contract_id(),
 				'area = ' . $price_item->get_area(),
 				'count = ' . $price_item->get_count(),
-				'total_price = ' . $price_item->get_total_price(),
 				'title = \'' . $price_item->get_title() . '\'',
 				'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 				'is_area = ' . ($price_item->is_area() ? "true" : "false"),
 				'price = ' . $price_item->get_price()
 			);
+			
+			if ($price_item->is_area()) {
+				$values[] = 'total_price = ' . ($price_item->get_area() * $price_item->get_price());
+			} else {
+				$values[] = 'total_price = ' . ($price_item->get_count() * $price_item->get_price());
+			}
 			
 			if ($price_item->get_date_start()) {
 //				print_r($price_item);
