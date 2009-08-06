@@ -12,7 +12,7 @@
 		public function __construct()
 		{
       		parent::__construct();
-			self::set_active_menu('rental::frontpage');
+			self::set_active_menu('rental');
 		}
 
 		public function query()

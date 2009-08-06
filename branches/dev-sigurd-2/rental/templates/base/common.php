@@ -37,7 +37,14 @@
 		} else {
 			elCell.innerHTML = "";
 		}
-	}; 
+	};
+
+	// Override the built-in formatter
+	YAHOO.widget.DataTable.formatCurrency = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = parseFloat(oData).toFixed(2);
+		}
+	};
 	
 	// Reloads all data sources that are necessary based on the selected related datatable
 	function reloadDataSources(selected_datatable){

@@ -22,7 +22,7 @@
 		{
 			parent::__construct(); 
 			 
-			self::set_active_menu('rental::composite');
+			self::set_active_menu('rental::composites');
 		}
 		
 		/**
@@ -446,14 +446,17 @@
 				$this->render('permission_denied.php');
 				return;
 			}
-				$data = array
-				(
-					'message' => phpgw::get_var('message'),
-					'error' =>  phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.orphan_units'))
-				);
-				
-				$this->render('orphan_unit_list.php', $data);
+			
+			self::set_active_menu('rental::composites::orphan_units');
+			
+			$data = array
+			(
+				'message' => phpgw::get_var('message'),
+				'error' =>  phpgw::get_var('error'),
+				'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.orphan_units'))
+			);
+			
+			$this->render('orphan_unit_list.php', $data);
 		}
 				
 		/**

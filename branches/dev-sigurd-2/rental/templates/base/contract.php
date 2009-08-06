@@ -192,7 +192,7 @@ YAHOO.util.Event.onDOMReady(
 				$extra_cols = array(
 					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 4),
 					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 5),
-					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "index" => 6),
+					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "formatter" => "YAHOO.widget.DataTable.formatCurrency", "index" => 6),
 					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
 					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
 				);

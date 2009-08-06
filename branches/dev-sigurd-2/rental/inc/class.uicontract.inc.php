@@ -31,7 +31,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('rental::contract');
+			self::set_active_menu('rental::contracts');
 		}
 		
 		public function query()

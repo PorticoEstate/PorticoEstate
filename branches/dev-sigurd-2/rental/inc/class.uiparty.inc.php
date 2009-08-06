@@ -17,7 +17,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('rental::party');
+			self::set_active_menu('rental::parties');
 		}
 		
 		public function query()
