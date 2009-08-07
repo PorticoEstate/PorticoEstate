@@ -211,7 +211,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.id, contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
+		$columns_for_list = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON c_t.party_id = party.id';
@@ -224,7 +224,6 @@ class rental_socontract extends rental_socommon
 		/*$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
 		$this->db->next_record();
 		$total_records = (int)$this->db->f('count');*/
-		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
 		if($order != '') // ORDER should be used
 		{

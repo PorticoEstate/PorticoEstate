@@ -123,6 +123,7 @@
 						)
 					);
 					break;
+				case 'all_contracts':
 				default:
 					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
