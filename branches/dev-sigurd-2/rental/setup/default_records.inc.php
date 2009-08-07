@@ -80,7 +80,7 @@ $oProc->query("INSERT INTO rental_unit VALUES (12,1026,'3409')");
 $oProc->query("INSERT INTO rental_unit VALUES (13,1027,'3409')");
 $oProc->query("INSERT INTO rental_unit VALUES (14,1028,'3409')");
 	// Bergen Rådhus
-$oProc->query("INSERT INTO rental_unit VALUES (15,468,'7183')");
+$oProc->query("INSERT INTO rental_unit VALUES (15,468,'1102')");
 
 $oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_innleie','')");
 $oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_internleie','')");

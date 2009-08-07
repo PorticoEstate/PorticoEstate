@@ -297,6 +297,7 @@
 						}
 					}
 					break;
+				case 'all_composites':
 				default:
 					$rows = array();
 					$composites = rental_composite::get_all(phpgw::get_var('startIndex'),phpgw::get_var('results'),phpgw::get_var('sort'),phpgw::get_var('dir'),phpgw::get_var('query'),phpgw::get_var('search_option'),array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy')));
