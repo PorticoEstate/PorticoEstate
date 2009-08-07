@@ -29,18 +29,21 @@
 		(
 			"/phpgwapi/js/json/json.js",
 			"/phpgwapi/templates/portico/js/base.js"
-
 		);
 	}
 	phpgwapi_yui::load_widget('layout');
 	phpgwapi_yui::load_widget('button');
-	$stylesheets = array
-		(
-			"/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css",
-			"/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css",
-			"/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css",
-			"/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css",
-		);
+
+	$stylesheets = array();
+
+	if( !isset($GLOBALS['phpgw_info']['flags']['no_reset_fonts']) )
+	{
+		$stylesheets[] = '/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css';
+	}
+
+	$stylesheets[] = "/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css";
+	$stylesheets[] = "/phpgwapi/js/yahoo/resize/assets/skins/sam/resize.css";
+	$stylesheets[] = "/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css";
 	$stylesheets[] = "/phpgwapi/js/yahoo/menu/assets/skins/sam/menu.css";
 	$stylesheets[] = "/phpgwapi/js/yahoo/button/assets/skins/sam/button.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
