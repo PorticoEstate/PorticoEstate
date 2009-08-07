@@ -178,7 +178,6 @@
 			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato ";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
-//echo $sql;
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
@@ -191,6 +190,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$temp = array();
 			while ($this->db->next_record())
 			{
 				$temp[] = array
@@ -202,13 +202,13 @@
 			}
 
 			$invoice = array();
-			if (isset($temp) && $temp)
+			if ($temp)
 			{
 				$role= $this->check_role();
 				$i = 0;
 				foreach($temp as $invoice_temp)
 				{
-					$voucher_id=$invoice_temp['voucher_id'];
+					$voucher_id = $invoice_temp['voucher_id'];
 
 					$sql = "SELECT spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 					. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"

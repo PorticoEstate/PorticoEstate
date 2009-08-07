@@ -453,7 +453,10 @@
 
 				// Sort the data with account_lastname ascending, account_firstname ascending
 				// Add $data as the last parameter, to sort by the common key
-				array_multisort($account_lastname, SORT_ASC, $account_firstname, SORT_ASC, $users);
+				if($users)
+				{
+					array_multisort($account_lastname, SORT_ASC, $account_firstname, SORT_ASC, $users);
+				}
 
 				$this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location,$users);
 			}

@@ -541,7 +541,7 @@
 		{
 			$location_filter = array();
 
-			if((!isset($values['location']) || !is_array($values['location'])) || !isset($values['ecodimb']) || !$values['ecodimb'])
+			if((!isset($values['location']) || !is_array($values['location'])) && !isset($values['ecodimb']) || !$values['ecodimb'])
 			{
 				return 0;
 			}
@@ -551,6 +551,7 @@
 			if(isset($values['ecodimb']) && $values['ecodimb'])
 			{
 				$item_filter =   " WHERE ecodimb = '{$values['ecodimb']}'";
+				$location_filter[] = '';
 			}
 			elseif(isset($values['extra']) && is_array($values['extra']))
 			{
@@ -584,7 +585,7 @@
 			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
 			 . " {$item_filter}"
 			 . ' AND cat_id =' . (int) $values['cat_id']
-			 . ' AND active = 1 AND active_from < ' . time() . ' AND active_to > ' . time() . ' AND expired_on IS NULL';
+			 . ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL';
 
 			foreach ($location_filter as $filter_at_location)
 			{

@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: Import_fra_Kemner_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
+ 	* @version $Id: Import_fra_basware_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
 	*/
 
 	/**
@@ -33,56 +33,21 @@
 	 * @package property
 	 */
 
-/*
-<?xml version="1.0" encoding="utf-8"?>
-<INVOICEEXPORT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <TRANSACTIONINFORMATION>
-    <TRANSACTIONTYPE>X205</TRANSACTIONTYPE>
-    <TRANSFERDATE>2009.05.28</TRANSFERDATE>
-    <TRANSFERTIME>13:10:28</TRANSFERTIME>
-  </TRANSACTIONINFORMATION>
-  <INVOICES>
-    <INVOICE>
-      <INVOICEHEADER>
-        <KEY>1400050146</KEY>
-        <SCANNINGNO>11E28NJINL3VR6</SCANNINGNO>
-        <AMOUNT>312500</AMOUNT>
-        <ARRIVAL>2009.05.28</ARRIVAL>
-        <CATEGORY />
-        <CLIENT.CODE>14</CLIENT.CODE>
-        <CURRENCY.CURRENCYID>NOK</CURRENCY.CURRENCYID>
-        <EXCHANGERATE>1</EXCHANGERATE>
-        <INVOICEDATE>2009.05.28</INVOICEDATE>
-        <LOCALAMOUNT>312500</LOCALAMOUNT>
-        <LOCALVATAMOUNT>62500</LOCALVATAMOUNT>
-        <MATURITY>2009.06.30</MATURITY>
-        <PAYAMOUNT>0</PAYAMOUNT>
-        <POSTATUSUPDATED>0</POSTATUSUPDATED>
-        <PURCHASEORDERNO>1409220008</PURCHASEORDERNO>
-        <PURCHASEORDERSTATUS.CODE>WaitForMatch</PURCHASEORDERSTATUS.CODE>
-        <SUPPLIER.BANKGIRO>70580621110</SUPPLIER.BANKGIRO>
-        <SUPPLIER.CODE>100644</SUPPLIER.CODE>
-        <SUPPLIERREF>7869</SUPPLIERREF>
-        <VATAMOUNT>62500</VATAMOUNT>
-      </INVOICEHEADER>
-    </INVOICE>
-  </INVOICES>
-</INVOICEEXPORT>
-*/
+
 	class import_conv
 	{
-		var $spbudact_code='11954111';
-		var $dimb=99;
 		var $mvakode=0;
 		var $kildeid=1;
 		var $splitt=0;
 		var $soXport;
 		var $invoice;
+		var $bestiller = 85; //cat_id for rolle
+		var $attestant = 84; //cat_id for rolle
+		var $budsjettansvarlig = 83; //cat_id for rolle
 
 		var $import = array(
 			'Bilagsnr' => 'bilagsnr', 
 			'Fakturanr' => 'fakturanr', 
-			'Gnr/Bnr-seksjon' => 'gid',
 			'Konto' => 'spbudact_code',
 			'Objekt' => 'dima', //objectclass: organizationalPerson
 			'DimB' => 'dimb',
@@ -94,16 +59,19 @@
 			'BOEI Gateadresse' => 'boei_gateadresse',
 			);
 
-		var $header = array('Bilagsnr','Fakturanr','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
+		var $header = array('Bilagsnr','Fakturanr','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
 
 		function import_conv()
 		{
-			$this->soXport 		= CreateObject('property.soXport');	
-			$this->invoice 		= CreateObject('property.boinvoice');
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->dateformat	= $this->bocommon->dateformat;
-			$this->datetimeformat	= $this->bocommon->datetimeformat;
-//			$this->xmltool		= CreateObject('phpgwapi.xmltool');
+			$this->soXport			= CreateObject('property.soXport');	
+			$this->invoice			= CreateObject('property.soinvoice');
+			$this->responsible		= CreateObject('property.soresponsible');
+			$this->db				= & $GLOBALS['phpgw']->db;
+			$this->join				= & $this->db->join;
+			$this->left_join		= & $this->db->left_join;
+			$this->like				= & $this->db->like;
+			$this->dateformat		= $this->db->date_format();
+			$this->datetimeformat	= $this->db->datetime_format();
 		}
 
 		function import($invoice_common,$download)
@@ -114,18 +82,11 @@
 
 			$buffer = array();
 
-/*			$xmldata=file_get_contents($tsvfile);
-			$this->xmltool->import_xml($xmldata);
-			$var_result = $this->xmltool->export_var();
-*/
 			$xmlparse = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('UTF-8');
 			$var_result = $xmlparse->parseFile($tsvfile);
 
 			set_time_limit(300);
-
-//_debug_array($var_result);
-//die();
 
 			if (isset($var_result['INVOICES']) AND is_array($var_result['INVOICES']))
 			{
@@ -138,8 +99,8 @@
 				{
 					$_data = $entry['INVOICE'][0]['INVOICEHEADER'][0];
 				
-_debug_array($_data);
-die();
+//_debug_array($_data);
+//die();
 
 					$_data['KEY']; // => 1400050146
 					$_data['SCANNINGNO']; // => 11E28NJINL3VR6
@@ -157,20 +118,22 @@ die();
 //					$_data['PURCHASEORDERNO']; // => 1409220008
 					$_data['PURCHASEORDERSTATUS.CODE']; // => WaitForMatch
 					$_data['SUPPLIER.BANKGIRO']; // => 70580621110
-					$_data['SUPPLIER.CODE']; // => 100644
-					$_data['SUPPLIERREF']; // => 7869
+//					$_data['SUPPLIER.CODE']; // => 100644
+//					$_data['SUPPLIERREF']; // => 7869
 					$_data['VATAMOUNT']; // => 62500
 
 
-					$order_id = $_data['PURCHASEORDERNO'];
-					$fakturanr		= $data[$i]['InvoiceNo'];
+					$order_id 		= $_data['PURCHASEORDERNO'];
+					$fakturanr		= $_data['KEY'];
 					$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 					$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
+					$periode 		= date('n',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+					$belop 			= $_data['AMOUNT']/100;
 
-					$periode = date('n',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
-					
-					$belop 	= $_data['AMOUNT'];
-
+					if( $belop < 0 )
+					{
+						$invoice_common['art'] = 2;
+					}
 					if( $invoice_common['art'] == 2 ) // kreditnota
 					{
 						$belop = -1 * abs($belop);
@@ -188,24 +151,22 @@ die();
 					
 					$buffer[$i]['kidnr'] = $kidnr;
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
+					$buffer[$i]['referanse'] = "ordre: {$order_id}";
 
-					
-					//FIXME
+					$order_info = $this->get_order_info($order_id);
+
 					if(isset($invoice_common['dim_b']) && $invoice_common['dim_b'])
 					{
 						$buffer[$i]['dimb'] = $invoice_common['dim_b'];
 					}
 					else
 					{
-						$buffer[$i]['dimb'] = $this->dimb;
+						$buffer[$i]['dimb'] = $order_info['dimb'];
 					}
 
-			        //Finn dima fra Boei
-					
-					$location = $this->get_location($order_id);
+					$buffer[$i]['dima'] = $order_info['dima'];
+					$buffer[$i]['loc1'] = $order_info['loc1'];
 
-					$buffer[$i]['dima'] = $location['dima'];
-					$buffer[$i]['loc1'] = $location['loc1'];
 					$buffer[$i]['mvakode'] = $this->mvakode;
 
 					if($buffer[$i]['dima'] && (isset($invoice_common['auto_tax']) && $invoice_common['auto_tax']))
@@ -218,40 +179,73 @@ die();
 						}
 					}
 
+					if(isset($invoice_common['vendor_id']) && $invoice_common['vendor_id'])
+					{
+						$vendor_id = $invoice_common['vendor_id'];
+					}
+					else if ($order_id)
+					{
+						$vendor_id = $order_info['vendor_id'];
+					}
+					else
+					{
+						$vendor_id = $_data['SUPPLIER.CODE'];
+					}
+					
+					
 					if(isset($invoice_common['auto_tax']) && $invoice_common['auto_tax'])
 					{
-					//FIXME
-						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'] ,$this->spbudact_code);
-						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'] ,$invoice_common['vendor_id']);
+						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
+						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
 					}
 
 					$buffer[$i]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$i]['loc1']);
 					
-					//finn boei gateadresse for kontroll
-					$boei_gateadresse=$this->soXport->dima_to_address($buffer[$i]['dima']);
-					$buffer[$i]['boei_gateadresse'] = utf8_encode($boei_gateadresse);
-
-					$referanse = utf8_encode($data[$i]['Header'][0]['ShipTo'][0]['AddressInfo'][0]['Address']);
-	
-					$buffer[$i]['referanse'] = $referanse;                
-
-					$merknad = '';
-
-					$merknad = 'Kemner adr: '.$referanse."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n";
-
+					$merknad = "lag meg ein link til bilde av faktura - ref: {$_data['SCANNINGNO']}";
 					
-					$buffer[$i]['merknad'] = utf8_encode($merknad);
+					$buffer[$i]['merknad'] = $merknad;
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
-					$buffer[$i]['spbudact_code'] = $this->spbudact_code;
-					$buffer[$i]['typeid'] = $invoice_common['type'];
+					$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
+					$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
 					$buffer[$i]['regtid'] = $regtid;
 					$buffer[$i]['artid'] = $invoice_common['art'];
-					$buffer[$i]['spvend_code'] = $invoice_common['vendor_id'];
-					$buffer[$i]['oppsynsmannid'] = $invoice_common['janitor'];
-					$buffer[$i]['saksbehandlerid'] = $invoice_common['supervisor'];
-					$buffer[$i]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
-//_debug_array($bilagsnr);
+					$buffer[$i]['spvend_code'] = $vendor_id;
+
+					$oppsynsmannid = '';
+					if(isset($invoice_common['janitor']) && $invoice_common['janitor'])
+					{
+						$oppsynsmannid = $invoice_common['janitor'];
+					}
+					else if($order_info['janitor'])
+					{
+						$oppsynsmannid = $order_info['janitor'];				
+					}
+
+					$saksbehandlerid = '';
+					if(isset($invoice_common['supervisor']) && $invoice_common['supervisor'])
+					{
+						$saksbehandlerid = $invoice_common['supervisor'];
+					}
+					else if($order_info['supervisor'])
+					{
+						$saksbehandlerid = $order_info['supervisor'];	
+					}
+
+					$budsjettansvarligid = '';
+					if(isset($invoice_common['budget_responsible']) && $invoice_common['budget_responsible'])
+					{
+						$budsjettansvarligid = $invoice_common['budget_responsible'];
+					}
+					else if($order_info['budget_responsible'])
+					{
+						$budsjettansvarligid = $order_info['budget_responsible'];
+					}
+
+					$buffer[$i]['oppsynsmannid']		= $oppsynsmannid;
+					$buffer[$i]['saksbehandlerid']		= $saksbehandlerid;
+					$buffer[$i]['budsjettansvarligid']	= $budsjettansvarligid;
+
 					$bilagsnr++;
 					$i++;
 				}
@@ -265,21 +259,41 @@ die();
 			return $buffer;
 		}
 
-		function get_location($order_id = '')
+		function get_order_info($order_id = '')
 		{
-			$location = array();
+			$order_info = array();
 			$order_id = (int) $order_id;
-			$sql = "SELECT location_code FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = $order_id";
+			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id"
+			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = $order_id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if ($this->db->f('location_code'))
 			{ 
 				$parts = explode('-',$this->db->f('location_code'));
-				$location['dima'] = implode('', $parts);
-				$location['loc1'] = $parts[0];
+				$order_info['dima'] = implode('', $parts);
+				$order_info['loc1'] = $parts[0];
 			}
 			
-			return $location;
+			$order_info['vendor_id'] 			= $this->db->f('vendor_id');
+			$order_info['spbudact_code']		= $this->db->f('account_id');
+			$order_info['dimb']					= $this->db->f('ecodimb');
+			
+			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
+			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
+			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+
+			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
+			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
+			$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
+			$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+
+			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
+			$budget_responsible_contact_id		= $this->responsible->get_responsible($criteria_budget_responsible);
+			$budget_responsible_user_id			= $this->responsible->get_contact_user_id($budget_responsible_contact_id);
+			$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+
+			return $order_info;
 		}
 
 
