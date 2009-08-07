@@ -15,22 +15,22 @@
 	var columnDefs = [
 		{
 			key: "title",
-			label: "<?php echo lang('rental_rc_name') ?>",
+			label: "<?php echo lang('rental_common_name') ?>",
 		  sortable: true
 		},
 		{
 			key: "agresso_id",
-			label: "<?php echo lang('rental_rc_agresso_id') ?>",
+			label: "<?php echo lang('rental_common_agresso_id') ?>",
 		  sortable: false
 		},
 		{
 			key: "is_area",
-			label: "<?php echo lang('rental_rc_type') ?>",
+			label: "<?php echo lang('rental_common_title') ?>",
 		  sortable: true
 		},
 		{
 			key: "price",
-			label: "<?php echo lang('rental_rc_price') ?>",
+			label: "<?php echo lang('rental_common_price') ?>",
 			sortable: true
 		},
 		{

@@ -15,10 +15,10 @@
    );
 </script>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('rental_menu_parties') ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('rental_common_parties') ?></h1>
 
 <fieldset>
-	<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party" value="<?php echo lang('rental_party_toolbar_functions_new_party') ?>" />
+	<input type="submit" name="ctrl_add_rental_party" id="ctrl_add_rental_party" value="<?php echo lang('rental_common_toolbar_functions_new_party') ?>" />
 </fieldset>
 
 <?php

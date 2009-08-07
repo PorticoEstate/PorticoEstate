@@ -2,22 +2,22 @@
 	// Defining columns for datatable
 	var columnDefs = [{
 			key: "id",
-			label: "<?php echo lang('rental_rc_serial') ?>",
+			label: "<?php echo lang('rental_common_serial') ?>",
 			sortable: true
 		},
 		{
 			key: "name",
-			label: "<?php echo lang('rental_rc_name') ?>",
+			label: "<?php echo lang('rental_common_name') ?>",
 		    sortable: true
 		},
 		{
 			key: "adresse1",
-			label: "<?php echo lang('rental_rc_address') ?>",
+			label: "<?php echo lang('rental_common_address') ?>",
 		    sortable: false
 		},
 		{
 			key: "gab_id",
-			label: "<?php echo lang('rental_rc_propertyident') ?>",
+			label: "<?php echo lang('rental_common_propertyident') ?>",
 		    sortable: true
 		},
 		{
@@ -52,37 +52,37 @@
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
 		<!-- Search -->
-		<h3><?php echo lang('rental_rc_search_options') ?></h3>
-		<label for="ctrl_search_query"><?php echo lang('rental_rc_search_for') ?></label>
+		<h3><?php echo lang('rental_common_search_options') ?></h3>
+		<label for="ctrl_search_query"><?php echo lang('rental_common_search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
-		<label for="ctrl_search_option"><?php echo lang('rental_rc_search_where') ?></label>
+		<label for="ctrl_search_option"><?php echo lang('rental_common_search_where') ?></label>
 		<select name="search_option" id="ctrl_search_option">
-			<option value="all"><?php echo lang('rental_rc_all') ?></option>
-			<option value="id"><?php echo lang('rental_rc_serial') ?></option>
-			<option value="name"><?php echo lang('rental_rc_name') ?></option>
-			<option value="address"><?php echo lang('rental_rc_address') ?></option>
-			<option value="gab"><?php echo lang('rental_rc_gab') ?></option>
-			<option value="ident"><?php echo lang('rental_rc_gab') ?></option>
-			<option value="property_id"><?php echo lang('rental_rc_property_id') ?></option>
+			<option value="all"><?php echo lang('rental_common_all') ?></option>
+			<option value="id"><?php echo lang('rental_common_serial') ?></option>
+			<option value="name"><?php echo lang('rental_common_name') ?></option>
+			<option value="address"><?php echo lang('rental_common_address') ?></option>
+			<option value="gab"><?php echo lang('rental_common_gab') ?></option>
+			<option value="ident"><?php echo lang('rental_common_gab') ?></option>
+			<option value="property_id"><?php echo lang('rental_common_property_id') ?></option>
 		</select>
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_rc_search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_reset') ?>" />
+		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
+		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset') ?>" />
 	</fieldset>
 	
 	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('rental_common_filters') ?></h3>
-		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('rental_rc_availability') ?></label>
+		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('rental_common_availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
-			<option value="active"><?php echo lang('rental_rc_in_operation') ?></option>
-			<option value="non_active"><?php echo lang('rental_rc_out_of_operation') ?></option>
-			<option value="both"><?php echo lang('rental_rc_all') ?></option>
+			<option value="active"><?php echo lang('rental_common_in_operation') ?></option>
+			<option value="non_active"><?php echo lang('rental_common_out_of_operation') ?></option>
+			<option value="both"><?php echo lang('rental_common_all') ?></option>
 		</select>
-		<label for="ctrl_toggle_occupancy_of_rental_composites"><?php echo lang('rental_operator_and') ?></label>
+		<label for="ctrl_toggle_occupancy_of_rental_composites"><?php echo lang('rental_common_and') ?></label>
 		<select name="occupancy" id="<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites">
-			<option value="vacant"><?php echo lang('rental_rc_vacant') ?></option>
-			<option value="occupied"><?php echo lang('rental_rc_occupied') ?></option>
-			<option value="both"><?php echo lang('rental_rc_all') ?></option>
+			<option value="vacant"><?php echo lang('rental_common_vacant') ?></option>
+			<option value="occupied"><?php echo lang('rental_common_occupied') ?></option>
+			<option value="both"><?php echo lang('rental_common_all') ?></option>
 		</select>
 	</fieldset>
 </form>

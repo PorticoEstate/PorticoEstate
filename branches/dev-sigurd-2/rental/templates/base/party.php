@@ -26,7 +26,7 @@
 			<div id="details">
 		<dl class="proplist-col">
 			<dt>
-				<label for="personal_identification_number"><?php echo lang('rental_party_ssn') ?> / <?php echo lang('rental_party_organisation_number') ?></label>
+				<label for="personal_identification_number"><?php echo lang('rental_common_ssn') ?> / <?php echo lang('rental_common_organisation_number') ?></label>
 			</dt>
 			<dd>
 				<?php 
@@ -77,7 +77,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="title"><?php echo lang('rental_common_title') ?></label>
+				<label for="title"><?php echo lang('rental_common_job_title') ?></label>
 			</dt>
 			<dd>
 				<?php 
@@ -128,7 +128,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="address1"><?php echo lang('rental_rc_address') ?></label>
+				<label for="address1"><?php echo lang('rental_common_address') ?></label>
 			</dt>
 			<dd>
 				<?php 
@@ -272,7 +272,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="reskontro"><?php echo lang('rental_party_account') ?></label>
+				<label for="reskontro"><?php echo lang('rental_common_account') ?></label>
 			</dt>
 			<dd>
 				<?php 
@@ -289,7 +289,7 @@
 				?>
 			</dd>
 			<dt>
-				<label for="is_active"><?php echo lang('rental_party_active') ?></label>
+				<label for="is_active"><?php echo lang('rental_common_active_party') ?></label>
 			</dt>
 			<dd>
 				<?php 
@@ -309,7 +309,7 @@
 			</dd>
 		</dl>
 	</div>
-			<div id="rental_rc_contracts">
+			<div id="rental_common_contracts">
 				<?php 
 				$list_form = false;
 				$list_id = 'contracts_part';
@@ -317,10 +317,10 @@
 				include('contract_list_partial.php');
 				?>
 			</div>
-			<div id="rental_rc_documents">
+			<div id="rental_common_documents">
 				Documents
 			</div>
-			<div id="rental_rc_comments">
+			<div id="rental_common_comments">
 			Comments
 			</div>
 		</div>
@@ -328,10 +328,10 @@
 	<div class="form-buttons">
 		<?php
 			if ($editable) {
-				echo '<input type="submit" name="save_party" value="' . lang('rental_rc_save') . '"/>';
-				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_rc_cancel') . '</a>';
+				echo '<input type="submit" name="save_party" value="' . lang('rental_common_party') . '"/>';
+				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
 			} else {
-				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_rc_back') . '</a>';
+				echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
 			}
 		?>
 	</div>

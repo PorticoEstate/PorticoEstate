@@ -95,7 +95,7 @@
 						if($value['id'] != $params[2]->get_payer_id()){
 							$value['ajax'][] = true;
 							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-							$value['labels'][] = lang('rental_contract_set_payer');
+							$value['labels'][] = lang('rental_common_set_payer');
 						}
 					}
 					break;

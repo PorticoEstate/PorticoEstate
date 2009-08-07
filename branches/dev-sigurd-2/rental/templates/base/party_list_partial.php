@@ -13,27 +13,27 @@
 	// Defining columns for datatable
 	var columnDefs = [{
 		key: "id",
-		label: "<?php echo lang('rental_party_id') ?>",
+		label: "<?php echo lang('rental_common_id') ?>",
 	    sortable: true
 	},
 	{
 		key: "name",
-		label: "<?php echo lang('rental_party_name') ?>",
+		label: "<?php echo lang('rental_common_name') ?>",
 	    sortable: true
 	},
 	{
 		key: "address",
-		label: "<?php echo lang('rental_party_address') ?>",
+		label: "<?php echo lang('rental_common_address') ?>",
 	    sortable: true
 	},
 	{
 		key: "phone",
-		label: "<?php echo lang('rental_party_phone') ?>",
+		label: "<?php echo lang('rental_common_phone') ?>",
 	    sortable: true
 	},
 	{
 		key: "reskontro",
-		label: "<?php echo lang('rental_party_account') ?>",
+		label: "<?php echo lang('rental_common_account') ?>",
 	    sortable: false
 	},
 	{
@@ -91,28 +91,28 @@
 <form id="<?php echo $list_id ?>_form" method="GET">			
 	<fieldset>
 		<!-- Search -->
-		<label for="ctrl_search_query"><?php echo lang('rental_rc_search_for') ?></label>
+		<label for="ctrl_search_query"><?php echo lang('rental_common_search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
-		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('rental_rc_search_where') ?>&amp;nbsp;
+		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('rental_common_search_where') ?>&amp;nbsp;
 			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
-				<option value="all"><?php echo lang('rental_party_all') ?></option>
-				<option value="id"><?php echo lang('rental_party_id') ?></option>
-				<option value="name"><?php echo lang('rental_party_name') ?></option>
-				<option value="address"><?php echo lang('rental_party_address') ?></option>
-				<option value="ssn"><?php echo lang('rental_party_ssn') ?></option>
-				<option value="result_unit_number"><?php echo lang('rental_party_result_unit_number') ?></option>
-				<option value="organisation_number"><?php echo lang('rental_party_organisation_number') ?></option>
-				<option value="account"><?php echo lang('rental_party_account') ?></option>
+				<option value="all"><?php echo lang('rental_common_all') ?></option>
+				<option value="id"><?php echo lang('rental_common_id') ?></option>
+				<option value="name"><?php echo lang('rental_common_name') ?></option>
+				<option value="address"><?php echo lang('rental_common_address') ?></option>
+				<option value="ssn"><?php echo lang('rental_common_ssn') ?></option>
+				<option value="result_unit_number"><?php echo lang('rental_common_result_unit_number') ?></option>
+				<option value="organisation_number"><?php echo lang('rental_common_organisation_number') ?></option>
+				<option value="account"><?php echo lang('rental_common_account') ?></option>
 			</select>
 		</label>
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_rc_search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_reset') ?>" />
+		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
+		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset_price_item') ?>" />
 	</fieldset>
 	
 	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('rental_common_filters') ?></h3>
-		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('rental_party_type') ?></label>
+		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('rental_common_type') ?></label>
 	
 		<select name="party_type" id="<?php echo $list_id ?>_ctrl_toggle_party_type">
 			<?php 
@@ -122,7 +122,7 @@
 				?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
 			}
 			?>
-			<option value="all" selected="selected"><?php echo lang('rental_contract_all') ?></option>
+			<option value="all" selected="selected"><?php echo lang('rental_common_all') ?></option>
 		</select>
 	</fieldset>
 </form>

@@ -33,7 +33,7 @@
 	YAHOO.rental.formatDate = function(elCell, oRecord, oColumn, oData) {
 		if (oData && oData != "Invalid Date") {
 			var my_date = Math.round(Date.parse(oData) / 1000);
-			elCell.innerHTML = formatDate("Y/m/d", my_date);
+			elCell.innerHTML = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>', my_date);
 		} else {
 			elCell.innerHTML = "";
 		}
@@ -305,12 +305,12 @@
 				rowsPerPage: 25,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: '<< <?php echo lang(rental_paginator_first) ?>',
-				previousPageLinkLabel: '< <?php echo lang(rental_paginator_previous) ?>',
-				nextPageLinkLabel: '<?php echo lang(rental_paginator_next) ?> >',
-				lastPageLinkLabel: '<?php echo lang(rental_paginator_last) ?> >>',
-				template			: "{RowsPerPageDropdown}<?php echo lang(rental_paginator_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?php echo lang(rental_paginator_shows_from) ?> {startRecord} <?php echo lang(rental_paginator_to) ?> {endRecord} <?php echo lang(rental_paginator_of_total) ?> {totalRecords}.",
+				firstPageLinkLabel: '<< <?php echo lang(rental_common_first) ?>',
+				previousPageLinkLabel: '< <?php echo lang(rental_common_previous) ?>',
+				nextPageLinkLabel: '<?php echo lang(rental_common_next) ?> >',
+				lastPageLinkLabel: '<?php echo lang(rental_common_last) ?> >>',
+				template			: "{RowsPerPageDropdown}<?php echo lang(rental_common_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?php echo lang(rental_common_shows_from) ?> {startRecord} <?php echo lang(rental_common_to) ?> {endRecord} <?php echo lang(rental_common_of_total) ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
 	
@@ -478,7 +478,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 		"calendar",
 		calendarBodyId,
 		{ 	navigator:true, 
-			title: '<?php echo lang(rental_calendar_title) ?>',
+			title: '<?php echo lang(rental_common_select_date) ?>',
 			start_weekday:1, 
 			LOCALE_WEEKDAYS:"short"}
 	);

@@ -120,15 +120,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 });
 	
 </script>
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?php echo lang('rental_dashboard_title') ?></h1> 
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?php echo lang('rental_common_dashboard_title') ?></h1> 
 
 <fieldset>
-	<h3><?php echo lang('rental_frontpage_panels') ?></h3>
-	<button type="button" id="workingOnContracts_button"><?php echo lang('rental_frontpage_working_on') ?></button>
-	<button type="button" id="executiveOfficerOnContracts_button"><?php echo lang('rental_frontpage_executive_officer_for') ?></button> 
-	<button type="button" id="endingContracts_button"><?php echo lang('rental_frontpage_contracts_under_dismissal') ?></button> 
-	<button type="button" id="availableComposites_button"><?php echo lang('rental_frontpage_available_composites') ?></button>
-	<button type="button" id="saveSetup"><?php echo lang('rental_frontpage_save_setup') ?></button> 
+	<h3><?php echo lang('rental_common_panels') ?></h3>
+	<button type="button" id="workingOnContracts_button"><?php echo lang('rental_common_working_on') ?></button>
+	<button type="button" id="executiveOfficerOnContracts_button"><?php echo lang('rental_common_executive_officer_for') ?></button> 
+	<button type="button" id="endingContracts_button"><?php echo lang('rental_common_contracts_under_dismissal') ?></button> 
+	<button type="button" id="availableComposites_button"><?php echo lang('rental_common_available_composites') ?></button>
+	<button type="button" id="saveSetup"><?php echo lang('rental_common_party_setup') ?></button> 
 	
 </fieldset>
 
@@ -138,16 +138,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
 </div>
 
 <div id="workingOnContracts_panel"> 
-    <div class="hd"><h3><?php echo lang('rental_frontpage_working_on') ?></h3></div> 
+    <div class="hd"><h3><?php echo lang('rental_common_working_on') ?></h3></div> 
     <div class="bd">
     	<?php 
 			$list_form = false;
 			$list_id = 'last_edited_by';
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
-				array("key" => "composite", "label" => lang('rental_contract_composite'), "index" => 1),
-				array("key" => "party", "label" => lang('rental_contract_partner'), "index" => 2),
-				array("key" => "last_edited_by_current_user", "label" => lang('rental_contract_last_edited_by_current_user'), "index" => 3)
+				array("key" => "composite", "label" => lang('rental_common_composite'), "index" => 1),
+				array("key" => "party", "label" => lang('rental_common_party'), "index" => 2),
+				array("key" => "last_edited_by_current_user", "label" => lang('rental_common_last_edited_by_current_user'), "index" => 3)
 			);
 			$hide_cols = array("id","date_start","date_end");
 			include('contract_list_partial.php');
@@ -155,15 +155,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
     </div> 
 </div> 
 <div id="executiveOfficerOnContracts_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_frontpage_executive_officer_for') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_common_executive_officer_for') ?></h3></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
 			$list_id = 'contracts_for_executive_officer';
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
-				array("key" => "composite", "label" => lang('rental_contract_composite'), "index" => 1),
-				array("key" => "party", "label" => lang('rental_contract_partner'), "index" => 2)
+				array("key" => "composite", "label" => lang('rental_common_composite'), "index" => 1),
+				array("key" => "party", "label" => lang('rental_common_party'), "index" => 2)
 			);
 			$hide_cols = array("date_start","date_end");
 			include('contract_list_partial.php');
@@ -171,15 +171,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div> 
 <div id="endingContracts_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_frontpage_contracts_under_dismissal') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_common_contracts_under_dismissal') ?></h3></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
 			$list_id = 'ending_contracts';
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
-				array("key" => "composite", "label" => lang('rental_contract_composite'), "index" => 1),
-				array("key" => "party", "label" => lang('rental_contract_partner'), "index" => 2)
+				array("key" => "composite", "label" => lang('rental_common_composite'), "index" => 1),
+				array("key" => "party", "label" => lang('rental_common_party'), "index" => 2)
 			);
 			$hide_cols = array("date_start");
 			include('contract_list_partial.php');
@@ -187,7 +187,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div>
 <div id="availableComposites_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_frontpage_available_composites') ?></h3></div> 
+	<div class="hd"><h3><?php echo lang('rental_common_available_composites') ?></h3></div> 
     <div class="bd">
 	<?php 
 		$list_form = false;

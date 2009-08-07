@@ -198,7 +198,7 @@
 						
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.reset_price_item', 'price_item_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-						$value['labels'][] = lang('rental_price_item_reset');
+						$value['labels'][] = lang('rental_common_reset');
 					}
 					break;
 				case 'not_included_price_items':

@@ -13,7 +13,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_start', 
 			'calendarStartDate', 
 			'calendarStartDate_body', 
-			'<?php echo lang('rental_calendar_title') ?>', 
+			'<?php echo lang('rental_common_select_date') ?>', 
 			'calendarStartDateCloseButton',
 			'calendarStartDateClearButton',
 			'date_start_hidden',
@@ -25,7 +25,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_end', 
 			'calendarEndDate', 
 			'calendarEndDate_body', 
-			'<?php echo lang('rental_calendar_title') ?>', 
+			'<?php echo lang('rental_common_select_date') ?>', 
 			'calendarEndDateCloseButton',
 			'calendarEndDateClearButton',
 			'date_end_hidden',
@@ -37,7 +37,7 @@ YAHOO.util.Event.onDOMReady(
 			'date_notification', 
 			'calendarNotificationDate', 
 			'calendarNotificationDate_body', 
-			'<?php echo lang('rental_calendar_title') ?>', 
+			'<?php echo lang('rental_common_select_date') ?>', 
 			'calendarNotificationDateCloseButton',
 			'calendarNotificationDateClearButton',
 			'date_notification_hidden',
@@ -58,26 +58,26 @@ YAHOO.util.Event.onDOMReady(
 	<ul class="yui-nav">
 	
 		<li <?php echo !isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_common_details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
-		<li><a href="#rental_rc_parties"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('rental_menu_parties') ?></em></a></li>
-		<li><a href="#rental_rc_composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('rental_contract_composite') ?></em></a></li>
-		<li><a href="#rental_rc_price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('rental_common_price') ?></em></a></li>
-		<li><a href="#rental_rc_bill"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_bill') ?></em></a></li>
-		<li><a href="#rental_rc_documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('rental_rc_documents') ?></em></a></li>
-		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_rc_notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_rc_notifications') ?></em></a></li>
-		<li><a href="#rental_rc_others"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_rc_others') ?></em></a></li>
+		<li><a href="#rental_common_parties"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('rental_common_parties') ?></em></a></li>
+		<li><a href="#rental_common_composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('rental_common_composite') ?></em></a></li>
+		<li><a href="#rental_common_price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('rental_common_price') ?></em></a></li>
+		<li><a href="#rental_common_bill"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_bill') ?></em></a></li>
+		<li><a href="#rental_common_documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('rental_common_documents') ?></em></a></li>
+		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_common_notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?></em></a></li>
+		<li><a href="#rental_common_others"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_others') ?></em></a></li>
 	</ul>
 	<div class="yui-content">
 		<div class="details">
 			<dl class="proplist-col">
 				<dt>
-					<label for="name"><?php echo lang('rental_menu_contract_type') ?></label>
+					<label for="name"><?php echo lang('rental_common_contract_type') ?></label>
 				</dt>
 				<dd>
 					<?php echo lang($contract->get_contract_type_title()) ?>
 				</dd>
 				
 				<dt>
-					<label for="name"><?php echo lang('rental_rc_date_start') ?></label>
+					<label for="name"><?php echo lang('rental_common_date_start') ?></label>
 				</dt>
 				<dd>
 					<?php
@@ -90,8 +90,8 @@ YAHOO.util.Event.onDOMReady(
 							<div id="calendarStartDate">
 								<div id="calendarStartDate_body"></div>
 								<div class="calheader">
-									<button id="calendarStartDateCloseButton"><?php echo lang('rental_calendar_close') ?></button>
-									<button id="calendarStartDateClearButton"><?php echo lang('rental_calendar_clear') ?></button>
+									<button id="calendarStartDateCloseButton"><?php echo lang('rental_common_close') ?></button>
+									<button id="calendarStartDateClearButton"><?php echo lang('rental_common_reset') ?></button>
 								</div>
 							</div>
 						<?php
@@ -102,7 +102,7 @@ YAHOO.util.Event.onDOMReady(
 				</dd>
 				
 				<dt>
-					<label for="name"><?php echo lang('rental_rc_date_end') ?></label>
+					<label for="name"><?php echo lang('rental_common_date_end') ?></label>
 				</dt>
 				<dd>
 					<?php
@@ -115,8 +115,8 @@ YAHOO.util.Event.onDOMReady(
 							<div id="calendarEndDate">
 								<div id="calendarEndDate_body"></div>
 								<div class="calheader">
-									<button id="calendarEndDateCloseButton"><?php echo lang('rental_calendar_close') ?></button>
-									<button id="calendarEndDateClearButton"><?php echo lang('rental_calendar_clear') ?></button>
+									<button id="calendarEndDateCloseButton"><?php echo lang('rental_common_close') ?></button>
+									<button id="calendarEndDateClearButton"><?php echo lang('rental_common_reset') ?></button>
 								</div>
 							</div>
 						<?php
@@ -142,11 +142,11 @@ YAHOO.util.Event.onDOMReady(
 			</dl>
 		</div>
 		<div id="parties">
-			<h3><?php echo lang('rental_rc_selected_parties') ?></h3>
+			<h3><?php echo lang('rental_common_selected_parties') ?></h3>
 			<?php
 				$list_form = false;
 				$list_id = 'included_parties';
-				$extra_cols = array(array("key" => "is_payer", "label" => lang('rental_contract_is_payer'), "index" => 3));
+				$extra_cols = array(array("key" => "is_payer", "label" => lang('rental_common_is_payer'), "index" => 3));
 				$related = array('not_included_parties');
 				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
 				include('party_list_partial.php');
@@ -154,7 +154,7 @@ YAHOO.util.Event.onDOMReady(
 			?>
 			
 			<?php if ($editable) {?>
-			<h3><?php echo lang('rental_rc_available_parties') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
+			<h3><?php echo lang('rental_common_available_parties') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php
 				$list_form = true;
 				$list_id = 'not_included_parties';
@@ -164,7 +164,7 @@ YAHOO.util.Event.onDOMReady(
 			<?php } ?>
 		</div>
 		<div id="composites">
-			<h3><?php echo lang('rental_rc_selected_composites') ?></h3>
+			<h3><?php echo lang('rental_common_selected_composites') ?></h3>
 			<?php
 				$list_form = false;
 				$list_id = 'included_composites';
@@ -173,7 +173,7 @@ YAHOO.util.Event.onDOMReady(
 				include('composite_list_partial.php'); ?>
 			
 			<?php if ($editable) { ?>
-			<h3><?php echo lang('rental_rc_available_composites') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
+			<h3><?php echo lang('rental_common_available_composites') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php 
 				$list_form = true;
 				$list_id = 'not_included_composites';
@@ -183,34 +183,34 @@ YAHOO.util.Event.onDOMReady(
 			<?php } ?>
 		</div>
 		<div id="price">
-			<h3><?php echo lang('rental_rc_selected_price_items') ?></h3>
+			<h3><?php echo lang('rental_common_selected_price_items') ?></h3>
 			<?php 
 				$list_form = false;
 				$list_id = 'included_price_items';
 				$related = array('not_included_price_items');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
-					array("key" => "area", "label" => lang('rental_price_item_area'), "index" => 4),
-					array("key" => "count", "label" => lang('rental_price_item_count'), "index" => 5),
-					array("key" => "total_price", "label" => lang('rental_price_item_total_price'), "formatter" => "YAHOO.widget.DataTable.formatCurrency", "index" => 6),
-					array("key" => "date_start", "label" => lang('rental_price_item_date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
-					array("key" => "date_end", "label" => lang('rental_price_item_date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
+					array("key" => "area", "label" => lang('rental_common_area'), "index" => 4),
+					array("key" => "count", "label" => lang('rental_common_count'), "index" => 5),
+					array("key" => "total_price", "label" => lang('rental_common_total_price'), "formatter" => "YAHOO.widget.DataTable.formatCurrency", "index" => 6),
+					array("key" => "date_start", "label" => lang('rental_common_date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
+					array("key" => "date_end", "label" => lang('rental_common_date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
 				);
 				
 				$editor_action = 'rental.uiprice_item.set_value';
 				
 				$editors = array(
-					'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
-					'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
-					'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
-					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})',
+					'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+					'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+					'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 					'date_start' => 'new YAHOO.widget.DateCellEditor()',
 					'date_end' => 'new YAHOO.widget.DateCellEditor()'
 				);
 				
 				include('price_item_partial.php'); ?>
 			<?php if ($editable) { ?>
-			<h3><?php echo lang('rental_rc_available_price_items') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
+			<h3><?php echo lang('rental_common_available_price_items') ?> (<?php echo lang('rental_messages_right_click_to_add') ?>)</h3>
 			<?php 
 				$list_form = true;
 				$list_id = 'not_included_price_items';
@@ -226,15 +226,15 @@ YAHOO.util.Event.onDOMReady(
 		<div id="documents">
 		</div>
 		<div id="notfications">
-			<h3><?php echo lang('rental_rc_new_notification') ?></h3>
+			<h3><?php echo lang('rental_common_new_notification') ?></h3>
 			<?php 
 			if ($editable) {
 			?>
 				<div id="calendarNotificationDate">
 					<div id="calendarNotificationDate_body"></div>
 					<div class="calheader">
-						<button id="calendarNotificationDateCloseButton"><?php echo lang('rental_calendar_close') ?></button>
-						<button id="calendarNotificationDateClearButton"><?php echo lang('rental_calendar_clear') ?></button>
+						<button id="calendarNotificationDateCloseButton"><?php echo lang('rental_common_close') ?></button>
+						<button id="calendarNotificationDateClearButton"><?php echo lang('rental_common_reset') ?></button>
 					</div>
 				</div>
 				<form action="?menuaction=rental.uicontract.edit&id=<?php echo $contract->get_id() ?>" method="post">
@@ -281,11 +281,11 @@ YAHOO.util.Event.onDOMReady(
 			else
 			{
 				?>
-				<?php echo lang('rental_rc_log_in_to_add_notfications') ?>
+				<?php echo lang('rental_common_log_in_to_add_notfications') ?>
 				<?php
 			}
 			?>
-			<h3><?php echo lang('rental_rc_your_notifications') ?></h3>
+			<h3><?php echo lang('rental_common_your_notifications') ?></h3>
 			<?php
 			$list_form = false;
 			$list_id = 'rental_notifications';

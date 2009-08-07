@@ -311,9 +311,9 @@ class rental_party
 	public static function get_party_types()
 	{
 		return array(
-			'internal' => lang('rental_party_internal'),
-			'external' => lang('rental_party_external'),
-			'all' => lang('rental_party_all')
+			'internal' => lang('rental_common_internal'),
+			'external' => lang('rental_common_external'),
+			'all' => lang('rental_common_all')
 		);
 	}
 	
@@ -322,7 +322,7 @@ class rental_party
 		$is_payer = '';
 		if(isset($contract) && $contract->get_payer_id() == $this->id){
 			
-			$is_payer = lang('rental_contract_is_payer');
+			$is_payer = lang('rental_common_is_payer');
 		}
 		
 		return array(

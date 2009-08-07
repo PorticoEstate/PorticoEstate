@@ -67,9 +67,9 @@
 		public function get_type_text()
 		{
 			if ($this->is_area()) {
-				return lang('rental_price_item_type_area');
+				return lang('rental_common_price_item_type_area');
 			} else {
-				return lang('rental_price_item_type_apiece');
+				return lang('rental_common_price_item_type_apiece');
 			}
 		}
 		

@@ -177,7 +177,7 @@ class rental_socomposite extends rental_socommon
 			}
 			if($row['name'] == null || trim($row['name']) == '') // Composite doesn't have a name
 			{
-				$row['name'] = lang('rental_rc_no_name_composite', $row['id']);
+				$row['name'] = lang('rental_common_no_name_composite', $row['id']);
 			}
 			$row['gab_id'] = rental_uicommon::get_nicely_formatted_gab_id($row['gab_id']);
 			$results[] = $row;

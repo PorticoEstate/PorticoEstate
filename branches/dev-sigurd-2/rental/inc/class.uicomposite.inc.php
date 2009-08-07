@@ -189,7 +189,7 @@
 							$occupied = '';
 							if(count($occupied_date_array) == 0)
 							{
-								$occupied = lang('rental_rc_available');
+								$occupied = lang('rental_common_available');
 							}
 							else
 							{
@@ -202,7 +202,7 @@
 									}
 									$occupied .= ($contract_date->has_start_date() ? date($date_format, strtotime($contract_date->get_start_date())) : '').' - '.($contract_date->has_end_date() ? date($date_format, strtotime($contract_date->get_end_date())) : '');
 								}
-								$occupied = lang('rental_rc_occupied').' '.$occupied;
+								$occupied = lang('rental_common_occupied').' '.$occupied;
 							}
 							$data['occupied'] = $occupied;
 							if($unit instanceof rental_building)
@@ -410,7 +410,7 @@
 				$composite->store();
 			}
 			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_common_area'));
 		}
 		
 		//Remove a unit from a rental composite
@@ -431,7 +431,7 @@
 				$composite->store();
 			}
 			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_rc_area'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_common_area'));
 			
 		}
 
