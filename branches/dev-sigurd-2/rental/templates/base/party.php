@@ -167,6 +167,8 @@
 				}
 				?>
 			</dd>
+		</dl>
+		<dl class="proplist-col">
 			<dt>
 				<label for="phone"><?php echo lang('rental_common_phone') ?></label>
 			</dt>
@@ -235,25 +237,6 @@
 				}
 				?>
 			</dd>
-		</dl>
-		<dl class="proplist-col">
-			<dt>
-				<label for="post_bank_account_number"><?php echo lang('rental_common_post_bank_account_number') ?></label>
-			</dt>
-			<dd>
-				<?php 
-				if ($editable) 
-				{
-				?>
-					<input type="text" name="post_bank_account_number" id="post_bank_account_number" value="<?php echo $party->get_post_bank_account_number() ?>" />
-				<?php 
-				}
-				else
-				{	
-					echo $party->get_post_bank_account_number();
-				}
-				?>
-			</dd>
 			<dt>
 				<label for="account_number"><?php echo lang('rental_common_account_number') ?></label>
 			</dt>
@@ -296,13 +279,13 @@
 				if ($editable) 
 				{
 				?>
-					<input type="checkbox" name="is_active" id="is_active" disabled="false" <?php if($party->is_active()) { echo "checked='checked'";} ?>/>
+					<input type="checkbox" name="is_active" id="is_active" <?php if($party->is_active()) { echo "checked='checked'";} ?>/>
 				<?php 
 				}
 				else
 				{	
 				?>
-					<input type="checkbox" name="is_active" id="is_active" disabled="true" <?php if($party->is_active()) { echo "checked='checked'";} ?> />
+					<input type="checkbox" name="is_active" id="is_active" disabled="disabled" <?php if($party->is_active()) { echo "checked='checked'";} ?> />
 				<?php 
 				}
 				?>

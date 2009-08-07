@@ -170,7 +170,6 @@
 				$party->set_fax(phpgw::get_var('fax'));
 				$party->set_email(phpgw::get_var('email'));
 				$party->set_url(phpgw::get_var('url'));
-				$party->set_post_bank_account_number(phpgw::get_var('post_bank_account_number'));
 				$party->set_account_number(phpgw::get_var('account_number'));
 				$party->set_reskontro(phpgw::get_var('reskontro'));
 				$party->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);

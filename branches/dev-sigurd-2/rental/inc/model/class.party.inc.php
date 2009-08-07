@@ -33,7 +33,6 @@ class rental_party
     protected $email;
     protected $url;
 
-    protected $post_bank_account_number;
     protected $account_number;
     protected $reskontro;
 	
@@ -220,13 +219,6 @@ class rental_party
 	
 	public function get_url() { return $this->url; }
 
-	public function set_post_bank_account_number($post_bank_account_number)
-	{
-		$this->post_bank_account_number = $post_bank_account_number;
-	}
-	
-	public function get_post_bank_account_number() { return $this->post_bank_account_number; }
-
 	public function set_account_number($account_number)
 	{
 		$this->account_number = $account_number;
@@ -344,7 +336,6 @@ class rental_party
 			'email' => $this->email,
 			'url' => $this->url,
 			'type_id' => $this->type_id,
-			'post_bank_account_number' => $this->post_bank_account_number,
 			'account_number' => $this->account_number,
 			'reskontro' => $this->reskontro,
 			'is_active' => $this->is_active,

@@ -29,7 +29,6 @@ class rental_soparty extends rental_socommon
 			'fax' => array('type' => 'string'),
 			'email' => array('type' => 'string'),
 			'url' => array('type' => 'string'),
-			'post_bank_account_number' => array('type' => 'string'),
 			'account_number' => array('type' => 'string'),
 			'reskontro' => array('type' => 'string')
 		));
@@ -74,7 +73,6 @@ class rental_soparty extends rental_socommon
       $party->set_fax($this->unmarshal($this->db->f('fax', true), 'string'));
       $party->set_email($this->unmarshal($this->db->f('email', true), 'string'));
       $party->set_url($this->unmarshal($this->db->f('url', true), 'string'));
-      $party->set_post_bank_account_number($this->unmarshal($this->db->f('post_bank_account_number', true), 'string'));
       $party->set_account_number($this->unmarshal($this->db->f('account_number', true), 'string'));
       $party->set_reskontro($this->unmarshal($this->db->f('reskontro', true), 'string'));
 
@@ -176,7 +174,6 @@ class rental_soparty extends rental_socommon
 			$party->set_fax($row['fax']);
 			$party->set_email($row['email']);
 			$party->set_url($row['url']);
-			$party->set_post_bank_account_number($row['post_bank_account_number']);
 			$party->set_account_number($row['account_number']);
 			$party->set_reskontro($row['reskontro']);
 			
@@ -294,7 +291,6 @@ class rental_soparty extends rental_socommon
 			'fax = \'' . $party->get_fax() . '\'',
 			'email = \'' . $party->get_email() . '\'',
 			'url = \'' . $party->get_url() . '\'',
-			'post_bank_account_number = \'' . $party->get_post_bank_account_number() . '\'',
 			'account_number = \'' . $party->get_account_number() . '\'',
 			'reskontro = \'' . $party->get_reskontro() . '\'',
 			'is_active = \'' . ($party->is_active() ? 'true' : 'false') . '\''
