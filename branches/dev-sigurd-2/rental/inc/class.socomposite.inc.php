@@ -422,25 +422,24 @@ class rental_socomposite extends rental_socommon
 				
 				$rental_unit->set_area_gros((int)$area_gros);
 				$rental_unit->set_area_net((int)$area_net);
-				
+
 				switch($unit['level'])
 				{
 					case 5:
-						$rental_unit->set_room_name($unit['loc5_name']);
+						$rental_unit->set_room_name($this->db->f('loc5_name', true));
 					case 4:
-						$rental_unit->set_section_name($unit['loc4_name']);
+						$rental_unit->set_section_name($this->db->f('loc4_name', true));
 					case 3:
-						$rental_unit->set_floor_name($unit['loc3_name']);
+						$rental_unit->set_floor_name($this->db->f('loc3_name', true));
 					case 2:
-						$rental_unit->set_building_name($unit['loc2_name']);
+						$rental_unit->set_building_name($this->db->f('loc2_name', true));
 					case 1:
-						$rental_unit->set_property_name($unit['loc1_name']);
+						$rental_unit->set_property_name($this->db->f('loc1_name', true));
 						$rental_unit->set_location_code_property($unit_row['loc1']);
 						break;
 				}
+				$units[] = $rental_unit;
 			}
-			
-			$units[] = $rental_unit;
 		}
 
 		return $units;

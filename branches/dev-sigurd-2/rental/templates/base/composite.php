@@ -143,10 +143,10 @@
 						<label for="ctrl_toggle_level"><?php echo lang('rental_common_level') ?></label>
 						<select name="level" id="ctrl_toggle_level">
 							<option value="1"><?php echo lang('rental_common_property') ?></option>
-							<option value="2" default=""><?php echo lang('rental_common_building') ?></option>
+							<option value="2" selected="selected"><?php echo lang('rental_common_building') ?></option>
 							<option value="3"><?php echo lang('rental_common_floor') ?></option>
-							<option value="4"><?php echo lang('rental_common_level') ?></option>
-							<option value="5"><?php echo lang('rental_common_section') ?></option>
+							<option value="4"><?php echo lang('rental_common_section') ?></option>
+							<option value="5"><?php echo lang('rental_common_room') ?></option>
 						</select>
 						
 						<label class="toolbar_element_label" for="calendarPeriodFrom"><?php echo lang('rental_common_available_at') ?></label>
@@ -204,12 +204,22 @@
 		{
 			key: "loc2_name",
 			label: "<?php echo lang('rental_common_building') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "loc3_name",
+			label: "<?php echo lang('rental_common_floor') ?>",
+		  	sortable: false
+		},
+		{
+			key: "loc4_name",
 			label: "<?php echo lang('rental_common_section') ?>",
-		  sortable: false
+		  	sortable: false
+		},
+		{
+			key: "loc5_name",
+			label: "<?php echo lang('rental_common_room') ?>",
+		  	sortable: false
 		},
 		{
 			key: "address",
@@ -255,42 +265,52 @@
 		var availableAreasColumnDefs = [{
 			key: "location_code",
 			label: "<?php echo lang('rental_common_id') ?>",
-		  sortable: true
+			sortable: true
 		},
 		{
 			key: "loc1_name",
 			label: "<?php echo lang('rental_common_property') ?>",
-		  sortable: true
+		  	sortable: true
 		},
 		{
 			key: "loc2_name",
 			label: "<?php echo lang('rental_common_building') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "loc3_name",
+			label: "<?php echo lang('rental_common_floor') ?>",
+			sortable: false
+		},
+		{
+			key: "loc4_name",
 			label: "<?php echo lang('rental_common_section') ?>",
-		  sortable: false
+			sortable: false
+		},
+		{
+			key: "loc5_name",
+			label: "<?php echo lang('rental_common_room') ?>",
+			sortable: false
 		},
 		{
 			key: "address",
 			label: "<?php echo lang('rental_common_address') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "area_gros",
 			label: "<?php echo lang('rental_common_area_gros') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "area_net",
 			label: "<?php echo lang('rental_common_area_net') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "occupied",
 			label: "<?php echo lang('rental_common_availability') ?>",
-		  sortable: false
+			sortable: false
 		},
 		{
 			key: "actions",

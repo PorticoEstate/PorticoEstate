@@ -157,7 +157,9 @@
 					$composite_data[total_records] = count($rental_units);
 					$composite_data['results'] = array();
 					foreach ($rental_units as $unit) {
-						$composite_data['results'][] = array(
+//						var_dump($unit);
+						$result = array
+						(
 							'location_code' => $unit->get_location_code(),
 							'location_id' => $unit->get_location_id(),
 							'loc1' => $unit->get_location_code_property(),
@@ -166,6 +168,23 @@
 							'area_gros' => $unit->get_area_gros(),
 							'loc1_name' => $unit->get_property_name()
 						);
+						if($unit instanceof rental_building)
+						{
+							$result['loc2_name'] = $unit->get_building_name();
+							if($unit instanceof rental_floor)
+							{
+								$result['loc3_name'] = $unit->get_floor_name();
+								if($unit instanceof rental_section)
+								{
+									$result['loc4_name'] = $unit->get_section_name();
+									if($unit instanceof rental_room)
+									{
+										$result['loc5_name'] = $unit->get_room_name();
+									}
+								}
+							}
+						}
+						$composite_data['results'][] = $result;
 					}
 					break;
 				case 'available_areas':
@@ -208,18 +227,18 @@
 							if($unit instanceof rental_building)
 							{
 								$data['loc2_name'] = $unit->get_building_name();
-							}
-							if($unit instanceof rental_floor)
-							{
-								$data['loc3_name'] = $unit->get_floor_name();
-							}
-							if($unit instanceof rental_section)
-							{
-								$data['loc4_name'] = $unit->get_section_name();
-							}
-							if($unit instanceof rental_room)
-							{
-								$data['loc5_name'] = $unit->get_room_name();
+								if($unit instanceof rental_floor)
+								{
+									$data['loc3_name'] = $unit->get_floor_name();
+									if($unit instanceof rental_section)
+									{
+										$data['loc4_name'] = $unit->get_section_name();
+										if($unit instanceof rental_room)
+										{
+											$data['loc5_name'] = $unit->get_room_name();
+										}
+									}
+								}
 							}
 						}
 					}
