@@ -42,7 +42,7 @@
 		 */
 		function init_process()
 		{
-			$ConfigDomain = phpgw::get_var('ConfigDomain');
+			$ConfigDomain = phpgw::get_var('ConfigDomain','string', 'COOKIE');
 			$phpgw_domain = $GLOBALS['phpgw_domain'];
 
 			$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];

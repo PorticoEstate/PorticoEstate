@@ -891,7 +891,7 @@
 				'forfallsdato' => array('type' => 'timestamp','nullable' => False),
 				'artid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'godkjentbelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => True),
-				'spvend_code' => array('type' => 'varchar','precision' => '12','nullable' => True),
+				'spvend_code' => array('type' => 'int','precision' => '4','nullable' => True),
 				'oppsynsmannid' => array('type' => 'varchar','precision' => '12','nullable' => True),
 				'saksbehandlerid' => array('type' => 'varchar','precision' => '12','nullable' => True),
 				'budsjettansvarligid' => array('type' => 'varchar','precision' => '12','nullable' => False),
@@ -926,7 +926,7 @@
 				'regtid' => array('type' => 'timestamp','nullable' => False),
 				'artid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'godkjentbelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => True),
-				'spvend_code' => array('type' => 'varchar','precision' => '12','nullable' => True),
+				'spvend_code' => array('type' => 'int','precision' => '4','nullable' => True),
 				'dima' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'loc1' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'dimb' => array('type' => 'int','precision' => '2','nullable' => True),
@@ -945,7 +945,8 @@
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'pre_transfer' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -971,7 +972,7 @@
 				'regtid' => array('type' => 'timestamp','nullable' => False),
 				'artid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'godkjentbelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => True),
-				'spvend_code' => array('type' => 'varchar','precision' => '12','nullable' => True),
+				'spvend_code' => array('type' => 'varchar','int' => '4','nullable' => True),
 				'dima' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'loc1' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'dimb' => array('type' => 'int','precision' => '2','nullable' => True),
@@ -992,7 +993,8 @@
 				'filnavn' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

@@ -3514,3 +3514,64 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.564 to 0.9.17.565
+	* alter datatype for spvend_code
+	* 
+	*/
+
+	$test[] = '0.9.17.564';
+	function property_upgrade0_9_17_564()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		
+		$metadata = $GLOBALS['phpgw_setup']->db->metadata('fm_ecobilag');
+
+		if($metadata['spvend_code']->type == 'varchar')
+		{
+			echo 'oppdaterer..</br>';
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','spvend_code_tmp',array('type' => 'int','precision' => 4,'nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','spvend_code_tmp',array('type' => 'int','precision' => 4,'nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecoavvik','spvend_code_tmp',array('type' => 'int','precision' => 4,'nullable' => True));
+
+			$db->query('UPDATE fm_ecobilag SET spvend_code_tmp = CAST ( spvend_code AS integer )',__LINE__,__FILE__);
+			$db->query('UPDATE fm_ecobilagoverf SET spvend_code_tmp = CAST ( spvend_code AS integer )',__LINE__,__FILE__);
+			$db->query('UPDATE fm_ecoavvik SET spvend_code_tmp = CAST ( spvend_code AS integer )',__LINE__,__FILE__);
+
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilag',array(),'spvend_code');
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilagoverf',array(),'spvend_code');
+			$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecoavvik',array(),'spvend_code');
+
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecobilag','spvend_code_tmp','spvend_code');
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecobilagoverf','spvend_code_tmp','spvend_code');
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecoavvik','spvend_code_tmp','spvend_code');
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.565';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.565 to 0.9.17.566
+	* Add field to reference origin of invoices if imported from external system
+	* 
+	*/
+
+	$test[] = '0.9.17.565';
+	function property_upgrade0_9_17_565()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag', 'external_ref', array('type' => 'varchar','precision' => '30','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf',  'external_ref', array('type' => 'varchar','precision' => '30','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.566';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

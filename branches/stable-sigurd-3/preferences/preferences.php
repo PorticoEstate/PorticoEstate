@@ -603,7 +603,7 @@
 	$GLOBALS['phpgw']->common->phpgw_header(true);
 
 	$t->set_var('messages',$error);
-	$t->set_var('action_url',$GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=> $appname)));
+	$t->set_var('action_url',$GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=> $appname, 'type' => $GLOBALS['type'])));
 
 	switch ($GLOBALS['type'])	// set up some globals to be used by the hooks
 	{

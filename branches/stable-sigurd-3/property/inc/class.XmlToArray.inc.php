@@ -525,7 +525,7 @@
 			$children = array(); // Contains node data
 			if (isset($vals[$i]['tag']))
 			{
-				if( trim($vals[$i]['value']) != '' )
+				if( isset($vals[$i]['value']) && trim($vals[$i]['value']) != '' )
 				{
 					$children = $this->_onValue( $vals[$i]['value'] );
 				}

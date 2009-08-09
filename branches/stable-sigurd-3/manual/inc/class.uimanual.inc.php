@@ -69,6 +69,7 @@
 		function help()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['no_reset_fonts'] = true;
 			$app = phpgw::get_var('app', 'string', 'GET');
 			$section = phpgw::get_var('section', 'string', 'GET');
 

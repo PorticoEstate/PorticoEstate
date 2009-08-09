@@ -21,16 +21,19 @@
 #  * Name of the freetds package e.g freetds-stable.tgz
 #  * 
 #  * @var               string FREETDS, FREETDSTAR
+#  * Download: http://www.freetds.org/software.html
 #  */
 FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.82"
 
+# Download: http://xmlsoft.org/downloads.html
 LIBXMLTAR="libxml2-2.7.3.tar.gz"
 LIBXML="libxml2-2.7.3"
 
 LIBXSLTAR="libxslt-1.1.24.tar.gz"
 LIBXSL="libxslt-1.1.24"
 
+# Download: ftp://ftp.cac.washington.edu/imap/
 IMAPTAR="imap-2007e.tar.Z"
 IMAP="imap-2007e"
 
@@ -40,14 +43,16 @@ PHP_PREFIX="/usr/local"
 #  * Name of the APACHE tarball e.g httpd-2.2.6.tar.gz
 #  * 
 #  * @var               string APACHE, APACHETAR
+#  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.11.tar.gz"
-APACHE="httpd-2.2.11"
+APACHETAR="httpd-2.2.12.tar.gz"
+APACHE="httpd-2.2.12"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
 #  * 
 #  * @var               string PHP, PHPTAR
+#  * Download: http://httpd.apache.org/
 #  */
 PHPTAR="php-5.3.0.tar.bz2"
 PHP="php-5.3.0"
@@ -56,9 +61,13 @@ PHP="php-5.3.0"
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
 #  * 
 #  * @var               string EACCELERATOR, EACCELERATORTAR
+#  * Download: http://eaccelerator.net/
 #  */
 #EACCELERATORTAR="eaccelerator-0.9.5.3.tar.bz2"
 #EACCELERATOR="eaccelerator-0.9.5.3"
+
+# eaccelerator does not work with php-5.3 - change to apc.
+# Download: http://pecl.php.net/package/APC
 APCTAR="APC-3.1.2.tgz"
 APC="APC-3.1.2"
 

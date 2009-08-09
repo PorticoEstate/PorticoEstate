@@ -248,7 +248,8 @@
 						false,
 						false,
 						$fields['item_type'],
-						$fields['item_id']
+						$fields['item_id'],
+						$fields['external_ref']
 						);
 
 					$bilagsnr	= $fields['bilagsnr'];
@@ -258,8 +259,8 @@
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,fakturadato,"
 					. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 					. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
-					. " budsjettsigndato,utbetalingsigndato,item_type,item_id,belop,godkjentbelop)"
-					. " VALUES ($values," . $this->db-> money_format($fields['belop']) . "," . $this->db-> money_format($fields['godkjentbelop']) . ")";
+					. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref, belop,godkjentbelop)"
+					. " VALUES ($values," . $this->db->money_format($fields['belop']) . "," . $this->db->money_format($fields['godkjentbelop']) . ")";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
