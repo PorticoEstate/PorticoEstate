@@ -945,7 +945,8 @@
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'pre_transfer' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -992,7 +993,8 @@
 				'filnavn' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
-				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True)
+				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

@@ -146,16 +146,20 @@
 		public function __construct()
 		{
 			$this->_db			=& $GLOBALS['phpgw']->db;
-			$this->_sessionid	= phpgw::get_var(session_name());
-
-			$this->_phpgw_set_cookie_params();
-
 			$use_cookies = false;
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
 				$use_cookies = true;
+				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
 			}
+			else
+			{
+				$this->_sessionid	= phpgw::get_var(session_name()); // GET or POST
+			}
+
+			$this->_phpgw_set_cookie_params();
+
 			//respect the config option for cookies
 			ini_set('session.use_cookies', $use_cookies);
 

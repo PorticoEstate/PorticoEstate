@@ -103,7 +103,7 @@
 //die();
 
 					$_data['KEY']; // => 1400050146
-					$_data['SCANNINGNO']; // => 11E28NJINL3VR6
+//					$_data['SCANNINGNO']; // => 11E28NJINL3VR6
 //					$_data['AMOUNT']; // => 312500
 					$_data['ARRIVAL']; // => 2009.05.28
 					$_data['CLIENT.CODE']; // => 14
@@ -141,17 +141,18 @@
 
 					$kidnr 	= $_data['KIDNO'];
 
-					$buffer[$i]['pmwrkord_code'] = $order_id;
-					$buffer[$i]['fakturanr'] = $fakturanr;
-					$buffer[$i]['periode'] = $periode;
-					$buffer[$i]['forfallsdato'] = $forfallsdato;
-					$buffer[$i]['fakturadato'] = $fakturadato;
-					$buffer[$i]['belop'] = $belop;
-					$buffer[$i]['godkjentbelop'] = $belop;
+					$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
+					$buffer[$i]['pmwrkord_code']	= $order_id;
+					$buffer[$i]['fakturanr']		= $fakturanr;
+					$buffer[$i]['periode']			= $periode;
+					$buffer[$i]['forfallsdato']		= $forfallsdato;
+					$buffer[$i]['fakturadato']		= $fakturadato;
+					$buffer[$i]['belop']			= $belop;
+					$buffer[$i]['godkjentbelop']	= $belop;
 					
-					$buffer[$i]['kidnr'] = $kidnr;
-					$buffer[$i]['bilagsnr'] = $bilagsnr;
-					$buffer[$i]['referanse'] = "ordre: {$order_id}";
+					$buffer[$i]['kidnr']			= $kidnr;
+					$buffer[$i]['bilagsnr']			= $bilagsnr;
+					$buffer[$i]['referanse']		= "ordre: {$order_id}";
 
 					$order_info = $this->get_order_info($order_id);
 

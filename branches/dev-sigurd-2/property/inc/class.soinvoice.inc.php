@@ -347,8 +347,9 @@
 				$filtermethod = " WHERE ( bilagsnr= '$voucher_id')";
 			}
 
-			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table "
-			. " $this->left_join fm_workorder on fm_workorder.id = $table.pmwrkord_code  "
+			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
+			. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+			. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
 			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
@@ -379,7 +380,9 @@
 					'amount'				=> $this->db->f('belop'),
 					'charge_tenant'			=> $this->db->f('charge_tenant'),
 					'vendor'				=> $this->db->f('org_name'),
-					'paid_percent'			=> $this->db->f('paid_percent')
+					'paid_percent'			=> $this->db->f('paid_percent'),
+					'project_group'			=> $this->db->f('project_group'),
+					'external_ref'			=> $this->db->f('external_ref')
 				);
 
 				$i++;

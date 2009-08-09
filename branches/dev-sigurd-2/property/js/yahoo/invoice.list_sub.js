@@ -232,7 +232,7 @@
 	  	{
 			//Create ROW
 			newTR = document.createElement('tr');
-			td_empty(1);
+			td_empty(2);
 			CreateRowChecked("transfer_idClass");
 			td_empty(4);
 			td_sum(values_ds.sum);

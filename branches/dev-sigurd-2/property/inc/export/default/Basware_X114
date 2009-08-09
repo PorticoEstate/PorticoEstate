@@ -32,6 +32,7 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
 
 	class export_conv
 	{
@@ -527,6 +528,7 @@
 		function OverforPeriode($batchid,$periode,$download,$pre_transfer='',$force_period_year='')
 		{
 //----------
+			$localtime = phpgwapi_datetime::user_localtime();
 			$transactioninformation = array
 			(
 				0 => array
@@ -536,8 +538,8 @@
 					(
 						0 => array
 						(
-							'TRANSFERDATE' => date('d.m.Y',time()),//28.05.2009
-							'TRANSFERTIME' => date('H:i:s',time())//14:29:52
+							'TRANSFERDATE' => date('d.m.Y', $localtime),//28.05.2009
+							'TRANSFERTIME' => date('H:i:s', $localtime)//14:29:52
 						)
 					)
 				)
@@ -618,6 +620,7 @@
 			$xmldata = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
 			$xmldata = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $xmldata);
 			
+_debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			echo $xmldata; die();
 //-------------
 
