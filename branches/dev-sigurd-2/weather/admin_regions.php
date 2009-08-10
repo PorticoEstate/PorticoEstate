@@ -25,13 +25,13 @@
 	$doneurl    = $GLOBALS['phpgw']->link('/admin/index.php');
 	$message    = '';
 
-	$con    = $HTTP_POST_VARS['con'] ? $HTTP_POST_VARS['con'] : $HTTP_GET_VARS['con'];
-	$act    = $HTTP_POST_VARS['act'] ? $HTTP_POST_VARS['act'] : $HTTP_GET_VARS['act'];
-	$submit = $HTTP_POST_VARS['submit'] ? $HTTP_POST_VARS['submit'] : $HTTP_GET_VARS['submit'];
-	$query  = $HTTP_POST_VARS['query']  ? $HTTP_POST_VARS['query']  : $HTTP_GET_VARS['query'];
-	$sort   = $HTTP_POST_VARS['sort']   ? $HTTP_POST_VARS['sort']   : $HTTP_GET_VARS['sort'];
-	$order  = $HTTP_POST_VARS['order']  ? $HTTP_POST_VARS['order']  : $HTTP_GET_VARS['order'];
-	$filter = $HTTP_POST_VARS['filter'] ? $HTTP_POST_VARS['filter'] : $HTTP_GET_VARS['filter'];
+	$con    = $_POST['con'] ? $_POST['con'] : $_GET['con'];
+	$act    = $_POST['act'] ? $_POST['act'] : $_GET['act'];
+	$submit = $_POST['submit'] ? $_POST['submit'] : $_GET['submit'];
+	$query  = $_POST['query']  ? $_POST['query']  : $_GET['query'];
+	$sort   = $_POST['sort']   ? $_POST['sort']   : $_GET['sort'];
+	$order  = $_POST['order']  ? $_POST['order']  : $_GET['order'];
+	$filter = $_POST['filter'] ? $_POST['filter'] : $_GET['filter'];
 
 	if ($submit)
 	{

@@ -49,7 +49,7 @@
 		function editor()
 		{
 			$this->etemplate = CreateObject('etemplate.etemplate');
-			//echo '$HTTP_POST_VARS='; _debug_array($HTTP_POST_VARS);
+			//echo '$_POST='; _debug_array($_POST);
 
 			$this->editor = new etemplate('etemplate.editor');
 		}

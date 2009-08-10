@@ -20,9 +20,9 @@
 	);
 	include('../header.inc.php');
 
-	if ($HTTP_POST_VARS['submit'])
+	if ($_POST['submit'])
 	{
-		$settings = $HTTP_POST_VARS['settings'];
+		$settings = $_POST['settings'];
 		$GLOBALS['phpgw']->db->query('delete from phpgw_polls_settings',__LINE__,__FILE__);
 
 		while(list($name,$value) = each($settings))

@@ -17,7 +17,7 @@
 		'enable_nextmatchs_class' => True,
 		'admin_header' => True
 	);
-	if($HTTP_GET_VARS['confirm'])
+	if($_GET['confirm'])
 	{
 		$GLOBALS['phpgw_info']['flags']['noheader'] = True;
 		$GLOBALS['phpgw_info']['flags']['nonavbar'] = True;

@@ -26,16 +26,16 @@
 
 	$GLOBALS['phpgw']->config->read_repository();
 
-	if ($HTTP_POST_VARS['cancel'])
+	if ($_POST['cancel'])
 	{
 		Header('Location: ' . $GLOBALS['phpgw']->link('/admin/index.php'));
 		exit;
 	}
 
-	if ($HTTP_POST_VARS['submit'])
+	if ($_POST['submit'])
 	{
 		/*
-		if ($HTTP_POST_VARS['usemailnotification'])
+		if ($_POST['usemailnotification'])
 		{
 			$GLOBALS['phpgw']->config->config_data['mailnotification'] = True;
 		}
@@ -45,10 +45,10 @@
 		}
 		*/
 
-		$GLOBALS['phpgw']->config->config_data['vmailmgr_domain'] = $HTTP_POST_VARS['vmailmgr_domain'];
-		$GLOBALS['phpgw']->config->config_data['vmailmgr_domainpass'] = $HTTP_POST_VARS['vmailmgr_domainpass'];
-		$GLOBALS['phpgw']->config->config_data['vmailmgr_tcphost'] = $HTTP_POST_VARS['vmailmgr_tcphost'];
-		$GLOBALS['phpgw']->config->config_data['vmailmgr_tcphost_port'] = $HTTP_POST_VARS['vmailmgr_tcphost_port'];
+		$GLOBALS['phpgw']->config->config_data['vmailmgr_domain'] = $_POST['vmailmgr_domain'];
+		$GLOBALS['phpgw']->config->config_data['vmailmgr_domainpass'] = $_POST['vmailmgr_domainpass'];
+		$GLOBALS['phpgw']->config->config_data['vmailmgr_tcphost'] = $_POST['vmailmgr_tcphost'];
+		$GLOBALS['phpgw']->config->config_data['vmailmgr_tcphost_port'] = $_POST['vmailmgr_tcphost_port'];
 		$GLOBALS['phpgw']->config->save_repository(True);
 		Header('Location: ' . $GLOBALS['phpgw']->link('/admin/index.php'));
 	}
