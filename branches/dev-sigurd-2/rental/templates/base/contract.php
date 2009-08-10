@@ -128,19 +128,6 @@ YAHOO.util.Event.onDOMReady(
 				</dd>
 				
 				<dt>
-					<label for="name"><?php echo lang('rental_common_account_number') ?></label>
-				</dt>
-				<dd>
-					<?php
-						if ($editable) {
-							echo '<input type="text" name="account_number" id="account_number" value="' . $contract->get_account() . '"/>';
-						} else {
-							echo $contract->get_account();
-						}
-					?>
-				</dd>
-				
-				<dt>
 					<label for="name"><?php echo lang('rental_common_billing_unit') ?></label>
 				</dt>
 				<dd>

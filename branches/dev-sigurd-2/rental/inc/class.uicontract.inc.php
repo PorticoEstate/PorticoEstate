@@ -246,7 +246,7 @@
 				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
-				$contract->set_account(phpgw::get_var('account_number'));
+				$contract->set_billing_unit(phpgw::get_var('billing_unit'));
 				
 				$contract->store();
 			}

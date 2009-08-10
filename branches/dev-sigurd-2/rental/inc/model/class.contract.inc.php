@@ -14,7 +14,6 @@
 		protected $billing_start_date;
 		protected $type_id;
 		protected $term_id;
-		protected $account;
 		protected $billing_unit;
 		protected $old_contract_id;
 		protected $contract_type_title;
@@ -99,13 +98,6 @@
 		}
 		
 		public function get_term_id() { return $this->term_id; }
-		
-		public function set_account($account)
-		{
-			$this->account = $account;
-		}
-		
-		public function get_account() { return $this->account; }
 		
 		public function set_billing_unit($billing_unit)
 		{

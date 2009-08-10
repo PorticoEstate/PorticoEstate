@@ -192,7 +192,6 @@ class rental_socontract extends rental_socommon
 		$contract->set_billing_start_date($billing_start_date);
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
-		$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));
 		$contract->set_billing_unit($this->unmarshal($this->db->f('billing_unit', true), 'string'));
 		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 			
@@ -506,8 +505,7 @@ class rental_socontract extends rental_socommon
 		$values = array(
 			"billing_start = " . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date'),
 			"type_id = " . $this->marshal($contract->get_type_id(), 'int'),
-			"term_id = " . $this->marshal($contract->get_term_id(), 'int'),
-			"account = " . $this->marshal($contract->get_account(), 'string')
+			"term_id = " . $this->marshal($contract->get_term_id(), 'int')
 		);
 		
 		if ($contract->get_contract_date()) {
@@ -553,11 +551,6 @@ class rental_socontract extends rental_socommon
 		);
 		
 		// Check values that can be null before trying to add them to the db-pretty list
-		if ($contract->get_account()) {
-			$cols[] = 'account';
-			$values[] = "'" . $this->marshal($contract->get_account(), 'string') . "'";
-		}
-		
 		if ($contract->get_billing_start_date()) {
 			$cols[] = 'billing_start';
 			$values[] = $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date');
