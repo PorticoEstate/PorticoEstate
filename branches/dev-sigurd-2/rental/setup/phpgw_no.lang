@@ -30,6 +30,7 @@ rental_common_billing_external	rental	no	Ekstern
 rental_common_billing_internal	rental	no	Intern
 rental_common_billing_start	rental	no	Fakturastart
 rental_common_billing_type	rental	no	Fakturatype
+rental_common_billing_unit	rental	no	Ansvar-/Tjenestested
 rental_common_building	rental	no	Bygg
 rental_common_calculate_price_apiece	rental	no	Pris regnes per stk.
 rental_common_calculate_price_per_area	rental	no	Pris regnes ut fra areal

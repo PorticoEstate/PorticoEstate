@@ -309,8 +309,10 @@
 					
 			}
 			
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Add action column to each row in result table
-			array_walk($composite_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type));
+			array_walk($composite_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type,$editable));
 			
 			return $this->yui_results($composite_data, 'total_records', 'results');
 		}
@@ -320,7 +322,7 @@
 		 * 
 		 * @param $value pointer to 
 		 * @param $key ?
-		 * @param $params [composite_id, type of query]
+		 * @param $params [composite_id, type of query, editable]
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
@@ -328,10 +330,15 @@
 			$value['actions'] = array();
 			$value['labels'] = array();
 			
+			$editable = $params[2];
+			
 			switch($params[1])
 			{
 				case 'included_composites':
-					if($this->hasWritePermission())
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_show');
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
@@ -339,7 +346,10 @@
 					}
 					break;
 				case 'not_included_composites':
-					if($this->hasWritePermission())
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_show');
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
@@ -348,7 +358,7 @@
 					break;
 				case 'included_areas':
 					$value['ajax'][] = true;
-					if($this->hasWritePermission())
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
 						$value['labels'][] = lang('rental_common_remove');
@@ -356,7 +366,7 @@
 					break;
 				case 'available_areas':
 					$value['ajax'][] = true;
-					if($this->hasWritePermission())
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
 						$value['labels'][] = lang('rental_common_add');
@@ -369,7 +379,7 @@
 					$value['ajax'][] = false;
 					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
-					if($this->hasWritePermission())
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = false;
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));

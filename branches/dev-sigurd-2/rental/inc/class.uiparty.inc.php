@@ -67,9 +67,11 @@
 				$rows[] = $party->serialize($contract);
 			}
 			$party_data = array('results' => $rows, 'total_records' => count($rows));
-					
+
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Add action column to each row in result table
-			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('contract_id'),$type,$contract));
+			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('contract_id'),$type,$contract,$editable));
 			return $this->yui_results($party_data, 'total_records', 'results');			
 		}
 		
@@ -78,16 +80,22 @@
 		 * 
 		 * @param $value pointer to 
 		 * @param $key ?
-		 * @param $params [composite_id, type of query]
+		 * @param $params [composite_id, type of query, contract editable]
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
 			$value['actions'] = array();
 			$value['labels'] = array();
+			
+			$editable = $params[3];
+			
 			switch($params[1])
 			{
 				case 'included_parties':
-					if($this->hasWritePermission()) 
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_show');
+					if($this->hasWritePermission() && $editable == true) 
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
@@ -100,7 +108,10 @@
 					}
 					break;
 				case 'not_included_parties':
-					if($this->hasWritePermission()) 
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_show');
+					if($this->hasWritePermission() && $editable == true) 
 					{
 						$value['ajax'][] = true;			
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));

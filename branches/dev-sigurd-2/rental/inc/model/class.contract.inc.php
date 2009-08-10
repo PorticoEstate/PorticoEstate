@@ -15,6 +15,7 @@
 		protected $type_id;
 		protected $term_id;
 		protected $account;
+		protected $billing_unit;
 		protected $old_contract_id;
 		protected $contract_type_title;
 		protected $party_names = Array();
@@ -23,6 +24,7 @@
 		protected $payer_id;
 		protected $price_items;	
 		protected $last_edited_by_current_user;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -104,6 +106,13 @@
 		}
 		
 		public function get_account() { return $this->account; }
+		
+		public function set_billing_unit($billing_unit)
+		{
+			$this->billing_unit = $billing_unit;
+		}
+		
+		public function get_billing_unit() { return $this->billing_unit; }
 		
 		/**
 		 * Get the name of the contract type @see get_type_id()

@@ -146,8 +146,10 @@
 				$rows[] = $result->serialize();
 			}
 			
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), $type);
+			array_walk($rows, array($this, 'add_actions'), array($type, $editable));
 			
 			//Build a YUI result from the data
 			$result_data = array('results' => $rows, 'total_records' => count($rows));
@@ -159,12 +161,14 @@
 		 * 
 		 * @param $value pointer to 
 		 * @param $key ?
-		 * @param $type
+		 * @param $params [type of query, editable]
 		 */
-		public function add_actions(&$value, $key, $type)
+		public function add_actions(&$value, $key, $params)
 		{
 			$value['actions'] = array();
 			$value['labels'] = array();
+			
+			$editable = $params[1];
 			
 			switch($type)
 			{
@@ -173,7 +177,7 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_show');
 					
-					if($this->hasWritePermission()) 
+					if($this->hasWritePermission() && $editable == true) 
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
@@ -188,7 +192,8 @@
 		 */
 		public function index()
 		{
-			$this->render('contract_list.php');
+			$data = array('editable' => true);
+			$this->render('contract_list.php', $data);
 		}
 		
 		/**

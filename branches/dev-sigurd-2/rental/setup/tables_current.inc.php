@@ -123,13 +123,13 @@
 				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'billing_unit' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'old_contract_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'last_edited' =>	array('type' => 'date'),
 				'last_edited_by' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'created' =>		array('type' => 'date'),
 				'created_by' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false)
-				
 			),
 			'pk' => array('id'),
 			'fk' => array(

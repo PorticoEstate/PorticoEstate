@@ -169,8 +169,10 @@
 			}
 			$data = array('results' => $rows, 'total_records' => count($rows));
 					
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Add action column to each row in result table
-			array_walk($data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type));
+			array_walk($data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type,$editable));
 			return $this->yui_results($data, 'total_records', 'results');			
 		}
 		
@@ -179,7 +181,7 @@
 		 * 
 		 * @param $value pointer to 
 		 * @param $key ?
-		 * @param $params [price_item.id, type of query]
+		 * @param $params [price_item.id, type of query, editable]
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
@@ -187,10 +189,12 @@
 			$value['actions'] = array();
 			$value['labels'] = array();
 			
+			$editable = $params[2];
+
 			switch($params[1])
 			{
 				case 'included_price_items':
-					if($this->hasWritePermission())
+					if($this->hasWritePermission() && ($editable == true))
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_price_item', 'price_item_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
@@ -202,7 +206,7 @@
 					}
 					break;
 				case 'not_included_price_items':
-					if($this->hasWritePermission())
+					if($this->hasWritePermission() && ($editable == true))
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));

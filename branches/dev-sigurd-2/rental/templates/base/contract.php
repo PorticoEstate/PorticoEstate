@@ -139,6 +139,19 @@ YAHOO.util.Event.onDOMReady(
 						}
 					?>
 				</dd>
+				
+				<dt>
+					<label for="name"><?php echo lang('rental_common_billing_unit') ?></label>
+				</dt>
+				<dd>
+					<?php
+						if ($editable) {
+							echo '<input type="text" name="billing_unit" id="billing_unit" value="' . $contract->get_billing_unit() . '"/>';
+						} else {
+							echo $contract->get_billing_unit();
+						}
+					?>
+				</dd>
 			</dl>
 		</div>
 		<div id="parties">

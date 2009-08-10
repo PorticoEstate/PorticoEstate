@@ -172,18 +172,18 @@ class rental_socontract extends rental_socommon
 		$id = (int)$id;
 		$sql_payer_id = "LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-	    $sql = "SELECT * FROM " . $this->table_name ." $sql_payer_id WHERE " . $this->table_name . ".id={$id}";
+		$sql = "SELECT * FROM " . $this->table_name ." $sql_payer_id WHERE " . $this->table_name . ".id={$id}";
 	
-	    $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 	
-	    $contract = new rental_contract();
+		$contract = new rental_contract();
 	
-	    $this->db->next_record();
+		$this->db->next_record();
 
 		$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
 
 		$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
-   		$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
+		$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
 	
 		$date = new rental_contract_date($date_start, $date_end);
 		$contract->set_contract_date($date);
@@ -193,9 +193,10 @@ class rental_socontract extends rental_socommon
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
 		$contract->set_account($this->unmarshal($this->db->f('account', true), 'string'));
+		$contract->set_billing_unit($this->unmarshal($this->db->f('billing_unit', true), 'string'));
 		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 			
-      	return $contract;
+		return $contract;
 	}
 	
 	/**
@@ -285,6 +286,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_composite_name($row['composite_name']);
 			$contract->set_old_contract_id($row['old_contract_id']);
 			$contract->set_contract_type_title($row['title']);
+			$contract->set_billing_unit($row['billing_unit']);
 			$contract->set_last_edited_by_current_user(strtotime($row['edited_on']));
 			$contracts[] = $contract;
 			}
@@ -513,6 +515,10 @@ class rental_socontract extends rental_socommon
 			$values[] = "date_end = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
 		}
 		
+		if ($contract->get_billing_unit()) {
+			$values[] = "billing_unit = '" . $this->marshal($contract->get_billing_unit(), 'string') . "'";
+		}
+		
 		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		if($result){
@@ -562,6 +568,10 @@ class rental_socontract extends rental_socommon
 			$cols[] = 'date_end';
 			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
 			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
+		}
+		
+		if ($contract->get_billing_unit()) {
+			$values[] = "billing_unit = '" . $this->marshal($contract->get_billing_unit(), 'string') . "'";
 		}
 		
 		// Insert the new contract
