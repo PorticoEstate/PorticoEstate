@@ -184,6 +184,7 @@ YAHOO.util.Event.onDOMReady(
 		</div>
 		<div id="price">
 			<h3><?php echo lang('rental_common_selected_price_items') ?></h3>
+			<strong>Total pris:</strong> <?php echo number_format($contract->get_price(), 2, ",", " "); ?><br /><br />
 			<?php 
 				$list_form = false;
 				$list_id = 'included_price_items';

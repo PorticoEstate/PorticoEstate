@@ -120,6 +120,23 @@
 		}
 		
 		/**
+		 * Returns true if the price item is active at the given date, false otherwise
+		 * 
+		 * @param $date the date to check
+		 * @return boolean
+		 */
+		public function is_active_at($date)
+		{
+			if ($date >= strtotime($this->get_date_start())) {
+				if (!$this->get_date_end() || ($this->get_date_end() && $date <= strtotime($this->get_date_end()))) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		/**
 		 * Reset this contract price item to its original values from the price list
 		 */
 		public function reset()

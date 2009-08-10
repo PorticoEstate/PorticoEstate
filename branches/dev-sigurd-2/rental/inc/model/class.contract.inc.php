@@ -323,6 +323,30 @@
 		}
 		
 		/**
+		 * Get the price of this contract at the given date.  If no date is provided, the current
+		 * date is used.
+		 * 
+		 * @param $date the date to check the contract value at
+		 * @return the price
+		 */
+		public function get_price($date = null)
+		{
+			if ($date == null) {
+				$date = time();
+			}
+			
+			$total = 0;
+			
+			foreach ($this->get_price_items() as $price_item) {
+				if ($price_item->is_active_at($date)) {
+					$total += $price_item->get_total_price();
+				}
+			}
+			
+			return $total;
+		}
+		
+		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
 		 * @return the storage object
