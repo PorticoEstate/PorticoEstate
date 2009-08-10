@@ -251,7 +251,7 @@
 
 		// Initiating the data source
 		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<?php echo $composite->get_id() ?>',
+				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 				addedAreasColumnDefs,
 				'',
 				[],
@@ -327,7 +327,7 @@
 		
 		// Initiating the data source
 		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=available_areas&amp;id=<?php echo $composite->get_id() ?>',
+				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=available_areas&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 				availableAreasColumnDefs,
 				'available_areas_form',
 				['crtl_toggle_level'],
@@ -373,7 +373,7 @@
 		
 		// Initiating the data source
 		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=contracts&amp;id=<?php echo $composite->get_id() ?>',
+				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=contracts&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 				availableAreasColumnDefs,
 				'contracts_form',
 				['ctrl_toggle_contract_status'],

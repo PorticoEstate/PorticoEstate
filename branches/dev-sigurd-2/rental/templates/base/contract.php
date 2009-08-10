@@ -199,14 +199,16 @@ YAHOO.util.Event.onDOMReady(
 				
 				$editor_action = 'rental.uiprice_item.set_value';
 				
-				$editors = array(
-					'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-					'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-					'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-					'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-					'date_start' => 'new YAHOO.widget.DateCellEditor()',
-					'date_end' => 'new YAHOO.widget.DateCellEditor()'
-				);
+				if ($editable) {
+					$editors = array(
+						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'date_start' => 'new YAHOO.widget.DateCellEditor()',
+						'date_end' => 'new YAHOO.widget.DateCellEditor()'
+					);
+				}
 				
 				include('price_item_partial.php'); ?>
 			<?php if ($editable) { ?>
