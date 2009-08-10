@@ -4,7 +4,7 @@
 <?php
 include("xmlrpc.inc");
 
-if ($HTTP_POST_VARS["server"]) {
+if ($_POST["server"]) {
 	if ($server=="Userland") {
 		$XP="/RPC2"; $XS="206.204.24.2";
 	} else {

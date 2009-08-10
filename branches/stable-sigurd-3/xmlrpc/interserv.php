@@ -19,9 +19,9 @@
 
 	include('../header.inc.php');
 
-	$server_id  = $HTTP_POST_VARS['server_id'];
-	$xsessionid = $HTTP_POST_VARS['xsessionid'];
-	$xkp3       = $HTTP_POST_VARS['xkp3'];
+	$server_id  = $_POST['server_id'];
+	$xsessionid = $_POST['xsessionid'];
+	$xkp3       = $_POST['xkp3'];
 
 	$is = CreateObject('phpgwapi.interserver',intval($server_id));
 
@@ -58,19 +58,19 @@
 	}
 	else
 	{
-		$xserver_name = $HTTP_POST_VARS['xserver_name'];
+		$xserver_name = $_POST['xserver_name'];
 	}
 
 	/* _debug_array($is->server); */
-	if($HTTP_POST_VARS['login'])
+	if($_POST['login'])
 	{
-		if($HTTP_POST_VARS['xserver'])
+		if($_POST['xserver'])
 		{
 			$is->send(
 				'system.login', array(
-					'server_name' => $HTTP_POST_VARS['xserver_name'],
-					'username'    => $HTTP_POST_VARS['xusername'],
-					'password'    => $HTTP_POST_VARS['xpassword']
+					'server_name' => $_POST['xserver_name'],
+					'username'    => $_POST['xusername'],
+					'password'    => $_POST['xpassword']
 				),
 				$is->server['server_url']
 			);
@@ -79,9 +79,9 @@
 		{
 			$is->send(
 				'system.login', array(
-					'domain'      => $HTTP_POST_VARS['xserver_name'],
-					'username'    => $HTTP_POST_VARS['xusername'],
-					'password'    => $HTTP_POST_VARS['xpassword']
+					'domain'      => $_POST['xserver_name'],
+					'username'    => $_POST['xusername'],
+					'password'    => $_POST['xpassword']
 				),
 				$is->server['server_url']
 			);
@@ -91,7 +91,7 @@
 		$xsessionid = $is->result['sessionid'];
 		$xkp3       = $is->result['kp3'];
 	}
-	elseif($HTTP_POST_VARS['logout'])
+	elseif($_POST['logout'])
 	{
 		$is->send(
 			'system.logout', array(
@@ -103,7 +103,7 @@
 		$xsessionid = '';
 		$xkp3       = '';
 	}
-	elseif($HTTP_POST_VARS['methods'])
+	elseif($_POST['methods'])
 	{
 		if(!$server_id)
 		{
@@ -113,9 +113,9 @@
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
 
-		if($xsessionid & $HTTP_POST_VARS['xappname'])
+		if($xsessionid & $_POST['xappname'])
 		{
-			$method_str = $HTTP_POST_VARS['xappname'] . '.bo' . $HTTP_POST_VARS['xappname'] . '.list_methods';
+			$method_str = $_POST['xappname'] . '.bo' . $_POST['xappname'] . '.list_methods';
 			$server_id ? $is->send($method_str,'xmlrpc',$is->server['server_url']) : '';
 		}
 		else
@@ -123,28 +123,28 @@
 			$server_id ? $is->send('system.listMethods','',$is->server['server_url']) : '';
 		}
 	}
-	elseif($HTTP_POST_VARS['apps'])
+	elseif($_POST['apps'])
 	{
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
 
 		$is->send('system.list_apps','',$is->server['server_url']);
 	}
-	elseif($HTTP_POST_VARS['users'])
+	elseif($_POST['users'])
 	{
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
 
 		$is->send('system.listUsers','',$is->server['server_url']);
 	}
-	elseif($HTTP_POST_VARS['bogus'])
+	elseif($_POST['bogus'])
 	{
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
 
 		$is->send('system.bogus','',$is->server['server_url']);
 	}
-	elseif($HTTP_POST_VARS['addressbook'])
+	elseif($_POST['addressbook'])
 	{
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
@@ -165,7 +165,7 @@
 			$is->server['server_url']
 		);
 	}
-	elseif($HTTP_POST_VARS['calendar'])
+	elseif($_POST['calendar'])
 	{
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
@@ -182,7 +182,7 @@
 			$is->server['server_url']
 		);
 	}
-	elseif($HTTP_POST_VARS['appbyid'])
+	elseif($_POST['appbyid'])
 	{
 		$param = Array(
 			'server'    => $server_id,
@@ -226,7 +226,7 @@
 	$GLOBALS['phpgw']->template->set_var('login_type',lang('Server<->Server'));
 	$GLOBALS['phpgw']->template->set_var('note',lang('NOTE: listapps and listusers are disabled by default in xml_functions.php') . '.');
 
-	$GLOBALS['phpgw']->template->set_var('xserver',$HTTP_POST_VARS['xserver'] ? ' checked' : '');
+	$GLOBALS['phpgw']->template->set_var('xserver',$_POST['xserver'] ? ' checked' : '');
 	$GLOBALS['phpgw']->template->set_var('xsessionid',$xsessionid ? $xsessionid : lang('none'));
 	$GLOBALS['phpgw']->template->set_var('xkp3',$xkp3 ? $xkp3 : lang('none'));
 	$GLOBALS['phpgw']->template->set_var('xusername',$xusername);

@@ -21,13 +21,13 @@
 
 	include('../header.inc.php');
 
-	if ($HTTP_POST_VARS['method'])
+	if ($_POST['method'])
 	{
-		$f = CreateObject('phpgwapi.xmlrpcmsg',$HTTP_POST_VARS['method'],array(
-			CreateObject('phpgwapi.xmlrpcval',$HTTP_POST_VARS['param'], 'string')
+		$f = CreateObject('phpgwapi.xmlrpcmsg',$_POST['method'],array(
+			CreateObject('phpgwapi.xmlrpcval',$_POST['param'], 'string')
 		));
 		print "<pre>" . htmlentities($f->serialize()) . "</pre>\n";
-		$c = CreateObject('phpgwapi.xmlrpc_client',"{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php", $HTTP_SERVER_VARS['HTTP_HOST'], 80);
+		$c = CreateObject('phpgwapi.xmlrpc_client',"{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php", $_SERVER['HTTP_HOST'], 80);
 		$c->setDebug(1);
 		$r = $c->send($f);
 		if (!$r)
@@ -37,7 +37,7 @@
 		$v = $r->value();
 		if (!$r->faultCode())
 		{
-			print 'State number ' . $HTTP_POST_VARS['stateno'] . ' is ' . $v->scalarval() . '<br>';
+			print 'State number ' . $_POST['stateno'] . ' is ' . $v->scalarval() . '<br>';
 			// print "<HR>I got this value back<BR><PRE>" .
 			//  htmlentities($r->serialize()). "</PRE><HR>\n";
 		}

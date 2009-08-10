@@ -24,11 +24,11 @@
 	$GLOBALS['phpgw']->template->set_block('admin','form','form');
 	$GLOBALS['phpgw']->template->set_block('admin','row','row');
 
-	$poll_id = $HTTP_GET_VARS['poll_id'] ? $HTTP_GET_VARS['poll_id'] : $HTTP_POST_VARS['poll_id'];
+	$poll_id = $_GET['poll_id'] ? $_GET['poll_id'] : $_POST['poll_id'];
 
-	if ($HTTP_POST_VARS['edit'])
+	if ($_POST['edit'])
 	{
-		$question = $HTTP_POST_VARS['question'];
+		$question = $_POST['question'];
 		$GLOBALS['phpgw']->db->query("update phpgw_polls_desc set poll_title='" . addslashes($question)
 			. "' where poll_id='$poll_id'",__LINE__,__FILE__);
 		$GLOBALS['phpgw']->template->set_var('message',lang('Question has been updated'));

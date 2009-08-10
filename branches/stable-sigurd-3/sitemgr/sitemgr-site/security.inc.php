@@ -1,6 +1,6 @@
 <?php
 	// Security precaution: prevent script tags: <script>, <javascript "">, etc.
-	foreach ($HTTP_GET_VARS as $secvalue) 
+	foreach ($_GET as $secvalue) 
 	{
 		if (eregi("<[^>]*script*\"?[^>]*>", $secvalue)) 
 		{

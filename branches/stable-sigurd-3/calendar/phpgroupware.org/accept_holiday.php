@@ -11,8 +11,8 @@
   \**************************************************************************/
 	/* $Id$ */
 
-	$send_back_to = str_replace('submitlocale','holiday_admin',$HTTP_SERVER_VARS['HTTP_REFERER']);
-	$send_back_to = str_replace('submit','admin',$HTTP_SERVER_VARS['HTTP_REFERER']);	// 0.9.14.xxx
+	$send_back_to = str_replace('submitlocale','holiday_admin',$_SERVER['HTTP_REFERER']);
+	$send_back_to = str_replace('submit','admin',$_SERVER['HTTP_REFERER']);	// 0.9.14.xxx
 	if(!$locale)
 	{
 		Header('Location: '.$send_back_to);

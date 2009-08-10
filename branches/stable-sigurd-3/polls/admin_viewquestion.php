@@ -20,7 +20,7 @@
 	);
 	include('../header.inc.php');
 
-	$poll_id = $HTTP_GET_VARS['poll_id'];
+	$poll_id = $_GET['poll_id'];
 
 	$GLOBALS['phpgw']->template->set_file(array('admin' => 'admin_form.tpl'));
 	$GLOBALS['phpgw']->template->set_block('admin','form','form');

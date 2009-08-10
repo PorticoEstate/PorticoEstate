@@ -16,7 +16,7 @@
 	*/
 	$GLOBALS['phpgw_info'] = array();
 
-	$app = $HTTP_GET_VARS['app'];
+	$app = $_GET['app'];
 
 	if (!$app)
 	{

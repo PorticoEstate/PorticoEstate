@@ -23,7 +23,7 @@
 	require './phpunit.php';
 
 	$DEBUG = 0;
-	$LOCALSERVER = $HTTP_SERVER_VARS['HTTP_HOST'];
+	$LOCALSERVER = $_SERVER['HTTP_HOST'];
 	echo 'Testing: ' . $LOCALSERVER;
 	$suite = new TestSuite;
 

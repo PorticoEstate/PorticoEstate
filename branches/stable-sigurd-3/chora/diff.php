@@ -22,7 +22,7 @@
 		'noheader'   => False,
 		'enable_config_class' => True
 	);
-	if($HTTP_GET_VARS['f'] == 'u')
+	if($_GET['f'] == 'u')
 	{
 		$GLOBALS['phpgw_info']['flags']['noheader'] = True;
 	}
