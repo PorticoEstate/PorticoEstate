@@ -25,7 +25,7 @@
 		$GLOBALS['xajax']->setCharEncoding('utf-8');
 		define('XAJAX_DEFAULT_CHAR_ENCODING','utf-8');
 
-		$response =& new xajaxResponse();
+		$response = new xajaxResponse();
 		$response->addScript("location.href='".$GLOBALS['phpgw_info']['server']['webserver_url'].'/login.php?cd=10'."';");
 
 		header('Content-type: text/xml; charset='.'utf-8');
@@ -99,7 +99,10 @@
 		$ajaxClass =& CreateObject($appName.'.'.$className);
 		
 		$translation = CreateObject('felamimail.translation');
-		$argList = $translation->convert($argList);
+		if($argList)
+		{
+			$argList = $translation->convert($argList);
+		}
 
 		return call_user_func_array(array(&$ajaxClass, $functionName), $argList );
 	}

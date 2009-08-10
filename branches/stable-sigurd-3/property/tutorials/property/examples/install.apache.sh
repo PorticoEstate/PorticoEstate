@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id: install.apache.sh,v 1.11 2007/09/09 19:30:52 sigurdne Exp $ 
+# $Id$ 
 
 #/**
 #  * installscript for APACHE with PHP, IMAP, POSTGRESQL, MYSQL, LIBXML, XSLT, FREEDTS(MSSQL) and EACCELERATOR
@@ -63,13 +63,13 @@ PHP="php-5.3.0"
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  * Download: http://eaccelerator.net/
 #  */
-#EACCELERATORTAR="eaccelerator-0.9.5.3.tar.bz2"
-#EACCELERATOR="eaccelerator-0.9.5.3"
+EACCELERATORTAR="eaccelerator-0.9.6-rc1.tar.bz2"
+EACCELERATOR="eaccelerator-0.9.6-rc1"
 
-# eaccelerator does not work with php-5.3 - change to apc.
+# APC as Alternative:
 # Download: http://pecl.php.net/package/APC
-APCTAR="APC-3.1.2.tgz"
-APC="APC-3.1.2"
+# APCTAR="APC-3.1.2.tgz"
+# APC="APC-3.1.2"
 
 
 # clean up from previous
@@ -161,10 +161,19 @@ export LDFLAGS=-lstdc++ &&\
  --with-mcrypt &&\
 make &&\
 make install &&\
-cd ../$APC &&\
+cd ../$EACCELERATOR &&\
 $PHP_PREFIX/bin/phpize &&\
-./configure --enable-apc-mmap --with-apxs --with-php-config=$PHP_PREFIX/bin/php-config &&\
+./configure --enable-eaccelerator=shared --with-php-config=$PHP_PREFIX/bin/php-config &&\
 make &&\
-make install
+make install &&\
+mkdir /tmp/eaccelerator &&\
+chmod 0777 /tmp/eaccelerator
+
+
+#cd ../$APC &&\
+#$PHP_PREFIX/bin/phpize &&\
+#./configure --enable-apc-mmap --with-apxs --with-php-config=$PHP_PREFIX/bin/php-config &&\
+#make &&\
+#make install
 
 # vim: set expandtab :
