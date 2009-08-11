@@ -89,8 +89,15 @@ class TestCustomFunctions extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $funcs = $GLOBALS['phpgw']->custom_functions->find('phpgwapi', '.test');
-        foreach ( $funcs as $func ) {
+        $args = array
+        (
+        	'appname'	=> 'phpgwapi',
+        	'location'  => '.test'
+        );
+        $funcs = $GLOBALS['phpgw']->custom_functions->find($args);
+
+        foreach ( $funcs as $func )
+        {
             $GLOBALS['phpgw']->custom_functions->delete('phpgwapi',
                                                         '.test', $func['id']);
         }
@@ -117,7 +124,6 @@ class TestCustomFunctions extends PHPUnit_Framework_TestCase
     {
         $func = $GLOBALS['phpgw']->custom_functions->get('phpgwapi',
                                                         '.test', $this->functionID);
-
         $this->assertNotNull(1, $func);
     }
 
@@ -130,7 +136,6 @@ class TestCustomFunctions extends PHPUnit_Framework_TestCase
     {
         $old_func = $GLOBALS['phpgw']->custom_functions->get('phpgwapi', '.test',
                                                             $this->functionID);
-
         $new_values = array
         (
             'appname'                => 'phpgwapi',
