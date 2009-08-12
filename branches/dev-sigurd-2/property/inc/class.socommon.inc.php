@@ -309,11 +309,15 @@
 
 		function increment_id($name)
 		{
-			$this->db->query("SELECT value FROM fm_idgenerator WHERE name='$name'");
+			if($name == 'order') // FIXME: temporary hack
+			{
+				$name = 'workorder';
+			}
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name='{$name}'");
 			$this->db->next_record();
-			$next_id=$this->db->f('value') +1;
+			$next_id = $this->db->f('value') +1;
 
-			$this->db->query("update fm_idgenerator set value = $next_id WHERE name = 'workorder'");
+			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}'");
 			return $next_id;
 		}
 
