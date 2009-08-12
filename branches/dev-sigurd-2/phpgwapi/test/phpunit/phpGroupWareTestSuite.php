@@ -37,7 +37,7 @@ define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
  * @subpackage PHPGWAPI
  * @author     Dave Hall <dave.hall@skwashd.com>
  * @copyright  2008 Dave Hall
- * @license    http://www.gnu.org/licenses/gpl.html GPLv3 or later
+ * @license    http://www.gnu.org/licenses/gpl.html GPLv2 or later
  * @version    Release: 0.9.18
  * @link       http://davehall.com.au
  */
