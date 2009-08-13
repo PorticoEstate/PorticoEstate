@@ -46,7 +46,7 @@
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->db 				= & $GLOBALS['phpgw']->db;
-			$this->join				= & $this->db->join
+			$this->join				= & $this->db->join;
 
 			$this->soXport 			= CreateObject('property.soXport');	
 			$this->config			= CreateObject('phpgwapi.config','property');
@@ -466,100 +466,7 @@
 		function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
 //----------
-			$localtime = phpgwapi_datetime::user_localtime();
-			$transactioninformation = array
-			(
-				0 => array
-				(
-					'TRANSACTIONTYPE' => 'X114',
-					'TRANSFER' => array
-					(
-						0 => array
-						(
-							'TRANSFERDATE' => date('d.m.Y', $localtime),//28.05.2009
-							'TRANSFERTIME' => date('H:i:s', $localtime)//14:29:52
-						)
-					)
-				)
-			);
 
-			$invoices = array
-			(
-				0 => array
-				(
-					'INVOICE' => array
-					(
-						0 => array
-						(
-							'INVOICEHEADER' => array
-							(
-								0 => array
-								(
-									'TRANSACTIONTYPE'			=> 'X114',
-									'VOUCHERID'					=> $voucherid, // 70903541
-									'SCANNINGNO'				=> $scanningno, // 11E28NJINL3VR6
-									'PROFILE'					=> 'TRAINVPOMA',
-									'CLIENT.CODE'				=> $client_code, //14,
-									'POATTRIB1'					=> '', //dummy
-									'POATTRIB2'					=> '', //dummy
-									'POPURCHASER'				=> '', //dummy
-									'PURCHASEORDERNO'			=> $order_id, // 1409220008
-									'PURCHASEORDEROWNER.CODE'	=> $purchaseorderower, // 100644
-									'PURCHASEORDERSTATUS.CODE'	=> 'OK',
-									'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
-								)
-							),
-							'ACCOUNTLINES' => array
-							(
-								0 => array
-								(
-									'ACCOUNTLINE' => array
-									(
-										0 => array
-										(
-											'TRANSACTIONTYPE'		=> 'R114',
-											'ACCOUNTLINK.CODE'		=> $account_link, // 4180
-											'AMOUNT'				=> $amount, // 312500
-											'APPROVER.FULLNAME'		=> $approver, //Batch 04 - 14
-											'DIMENSION.D1.CODE'		=> $dim1, // 1111
-											'DIMENSION.D2.CODE'		=> $dim2, // 62000
-											'DIMENSION.D3.CODE'		=> $dim3, // dummy
-											'DIMENSION.D4.CODE'		=> $dim4, // dummy
-											'DIMENSION.D5.CODE'		=> $dim5, // dummy
-											'DIMENSION.D6.CODE'		=> $dim6, // dummy
-											'DIMENSION.D7.CODE'		=> $dim7, // dummy
-											'DIMENSION.D8.CODE'		=> $dim8, // dummy
-											'POITEMDESCRIPTION'		=> $descr, // Sugerør,plast,fleksibelt,20cm
-											'POITEMNUMBER'			=> $itemnumber, //200200
-											'POITEMTYPE'			=> $itemtype, // A = Item, B = Special Product (SP), C = Text based  (Misc.)
-											'POLINENUMBER'			=> $linenumber, // 10
-											'RECEIVER.FULLNAME'		=> $receiver, // Batch 04 - 14
-											'STATUS'				=> 5,
-											'SUBACCOUNT'			=> $period, //200905 Accounting period YYYYMM
-											'ALLOCATION.KEY'		=> $distribution_code, //0
-											'ALLOCATION.PERIOD'		=> '' //dummy
-										)
-									)
-								)
-							)
-						)
-					)
-				)
-			);
-
-			$export_data = array
-			(
-				'TRANSACTIONINFORMATION'	=> $transactioninformation,
-				'INVOICES'					=> $invoices				
-			);
-
-			$xmltool = CreateObject('phpgwapi.xmltool');	
-
-			$xmldata = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
-			$xmldata = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $xmldata);
-			
-_debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
-			echo $xmldata; die();
 //-------------
 
 			$BilagId = 'NULL';
@@ -591,11 +498,144 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			$this->db->transaction_begin();
 
 			$oRsBilag = $this->get_voucher($voucher_id);
+
+			$tranfser_bilag[] = $oRsBilag[0]['bilagsnr'];
+			$localtime = phpgwapi_datetime::user_localtime();
+
+			$transactioninformation = array
+			(
+				0 => array
+				(
+					'TRANSACTIONTYPE' => 'X114',
+					'TRANSFER' => array
+					(
+						0 => array
+						(
+							'TRANSFERDATE' => date('d.m.Y', $localtime),//28.05.2009
+							'TRANSFERTIME' => date('H:i:s', $localtime)//14:29:52
+						)
+					)
+				)
+			);
+
+			$invoiceheader = array
+			(
+				0 => array
+				(
+					'TRANSACTIONTYPE'			=> 'X114',
+					'VOUCHERID'					=> $oRsBilag[0]['bilagsnr'], // 70903541
+					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
+					'PROFILE'					=> 'TRAINVPOMA',
+					'CLIENT.CODE'				=> $client_code, //14,
+					'POATTRIB1'					=> '', //dummy
+					'POATTRIB2'					=> '', //dummy
+					'POPURCHASER'				=> '', //dummy
+					'PURCHASEORDERNO'			=> $oRsBilag[0]['order_id'], // 1409220008
+					'PURCHASEORDEROWNER.CODE'	=> $purchaseorderower, // 100644
+					'PURCHASEORDERSTATUS.CODE'	=> 'OK',
+					'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
+				)
+			);
+
+			$accountline = array();
+
+			if($force_period_year)
+			{
+				$periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+			}
+			else
+			{
+				$periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[0]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+			}
+
+			foreach ($oRsBilag as $line)
+			{
+				$descr = '';
+				if($line['merknad'])
+				{
+					$descr = $line['merknad'];
+				}
+				else if ($line['order_id'])
+				{
+					$descr = $this->get_order_title($line['order_id']);
+				}
+				
+				$accountline[] = array
+				(
+					'TRANSACTIONTYPE'		=> 'R114',
+					'ACCOUNTLINK.CODE'		=> $account_link, // 4180
+					'AMOUNT'				=> $line['belop'] * 100, // 312500
+					'APPROVER.FULLNAME'		=> $approver, //Batch 04 - 14
+					'DIMENSION.D1.CODE'		=> $line['dima'], // 1111
+					'DIMENSION.D2.CODE'		=> $line['dimb'], // 62000
+					'DIMENSION.D3.CODE'		=> $dim3, // dummy
+					'DIMENSION.D4.CODE'		=> $dim4, // dummy
+					'DIMENSION.D5.CODE'		=> $dim5, // dummy
+					'DIMENSION.D6.CODE'		=> $dim6, // dummy
+					'DIMENSION.D7.CODE'		=> $dim7, // dummy
+					'DIMENSION.D8.CODE'		=> $dim8, // dummy
+					'POITEMDESCRIPTION'		=> $descr, // Sugerør,plast,fleksibelt,20cm
+					'POITEMNUMBER'			=> $itemnumber, //200200
+					'POITEMTYPE'			=> $itemtype, // A = Item, B = Special Product (SP), C = Text based  (Misc.)
+					'POLINENUMBER'			=> $linenumber, // 10
+					'RECEIVER.FULLNAME'		=> $receiver, // Batch 04 - 14
+					'STATUS'				=> 5,
+					'SUBACCOUNT'			=> $periode, //200905 Accounting period YYYYMM
+					'ALLOCATION.KEY'		=> $distribution_code, //0
+					'ALLOCATION.PERIOD'		=> '' //dummy
+				);		
+			}
+	
+/*
+			$Dim_1		= sprintf("%8s",$oRsOverfBilag['district_id']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
+			$Dim_2		= sprintf("%-8s",$oRsOverfBilag['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
+			$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
+			$Dim_4		= sprintf("%-8s",'');// verdi: Ressurs, type: c8, plass: 53 - 60
+			$Dim_5		= sprintf("%-12s",$oRsOverfBilag['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
+			$Dim_6		= sprintf("%-4s",$oRsOverfBilag['dimd']);// verdi: Blank, type: c4, plass: 73 - 76
+			$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
+*/
+
+			$invoices = array
+			(
+				0 => array
+				(
+					'INVOICE' => array
+					(
+						0 => array
+						(
+							'INVOICEHEADER' => $invoiceheader,
+							'ACCOUNTLINES' => array
+							(
+								0 => array
+								(
+									'ACCOUNTLINE' => $accountline
+								)
+							)
+						)
+					)
+				)
+			);
+
+			$export_data = array
+			(
+				'TRANSACTIONINFORMATION'	=> $transactioninformation,
+				'INVOICES'					=> $invoices				
+			);
+
+			$xmltool = CreateObject('phpgwapi.xmltool');	
+
+			$xmldata = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
+			$xmldata = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $xmldata);
+			
+_debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
+			echo $xmldata; die();
 //-- fortsett her....									
+
+
 		 	$bilag_count= count($oRsBilag);
 		 	for ($k=0;$k<$bilag_count;$k++)
 			{				
-				$tranfser_bilag[] = $oRsBilag[$k]['bilagsnr'];
 				
 				//Bestem belops felt
 				if ($oRsBilag[$k]['splitt']==0)
@@ -633,45 +673,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 
 				//Skriv hovedbilag
 
-				$Buntnr		= sprintf("%-12s",basename($Filnavn,".TXT"));// verdi: MMDDFL, type: c12, plass: 1 - 12
-				$Forsystem	= 'BI';// verdi: BI, type: c2, plass: 13 - 14
-				
-				$Transtype	= 'GL';// verdi: GL, type: c2, plass: 17 - 18
-				$Firmakode	= sprintf("%-2s",'BB');// verdi: Firmakode, type: c2, plass: 19 - 20
-
-				$Valuteringsdato= date(Ymd,strtotime($oRsBilag[$k]['fakturadato']));// verdi: Dato, type: date, plass: 251 - 258
-				$Bilagsdato	= date(Ymd,strtotime($oRsBilag[$k]['fakturadato'])) ;// verdi: Dato, type: date, plass: 259 - 266
-				$Bilagsnr	= sprintf("%-9s",substr($oRsBilag[$k]['bilagsnr'],-8));// verdi: Bilagsnummer, type: i4, plass: 267 - 275
-		//		$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
-				$ESL		= sprintf("%1s",'');// verdi: Blank, type: i+C481, plass: 282 - 282
-
-
-				if($force_period_year)
-				{
-					$Periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
-				}
-				else
-				{
-					$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
-				}
-	
-				$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
-				$Forfall	= date(Ymd,strtotime($oRsBilag[$k]['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305				
-				
-				$Rab_forf	= sprintf("%-8s",'');// verdi: Blank, type: date, plass: 306 - 313
-				$Rabatt		= sprintf("%020s",'');// verdi: Blank, type: money, plass: 314 - 333
-				$Avt_Kon	= sprintf("%-8s",'');// verdi: Blank, type: c8, plass: 334 - 341
-
-				$Kid		= sprintf("%-27s",$oRsBilag[$k]['kidnr']);// verdi: Kid, type: c27, plass: 351 - 377
-				$Bet_overforing	= sprintf("%-2s",'');// verdi: Blank, type: c2, plass: 378 - 379
-				$Status		= 'N';// verdi: N, type: c1, plass: 380 - 380
-				$Resk_type	= 'P';// verdi: Blank, type: c1, plass: 381 - 381
 				$Resk_nr	= sprintf("%-9s",$oRsBilag[$k]['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
-				$Forskudd	= '0';// verdi: 0, type: i1, plass: 391 - 391
-				$Fakturaref	= '000000000';// verdi: 0, type: i4, plass: 392 - 400
-				$Fakturaref	= '000000000';// verdi: 0, type: i4, plass: 401 - 409
-				$Inkassokode	= sprintf("%-6s",'');// verdi: Blank, type: c6, plass: 410 - 415
-				$Bet_mottager	= sprintf("%-8s",'');// verdi: Blank, type: c8, plass: 416 - 423
 				$Att_ansvarlig	= sprintf("%-6s",utf8_decode($oRsBilag[$k]['saksbehandler']));// verdi: Blank, type: c6, plass: 424 - 429
 
 				$vendor_info = $this->get_vendor_info($oRsBilag[$k]['spvend_code']);
@@ -691,22 +693,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 				}
 
 				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
-				$Postadresse	= sprintf("%-160s",'');// verdi: Blank, type: c160, plass: 480 - 639
-				$Stat_Provins	= sprintf("%-50s",'');// verdi: Blank, type: c50, plass: 640 - 689
-				$Sted		= sprintf("%-50s",'');// verdi: Blank, type: c50, plass: 690 - 739
 				$Bank_Postgiro_kontonr = sprintf("%-35s",str_replace(" ","",$vendor_info['konto_nr']));// verdi: konto_nr, type: c35, plass: 740 - 774
-				$Betalingsmate	= sprintf("%-2s",'');// verdi: Blank, type: c2, plass: 775 - 776
-				$Mva_reg_nr	= sprintf("%-25s",'');// verdi: Blank, type: c25, plass: 777 - 801
-				$Postnummer	= sprintf("%-15s",'');// verdi: Blank, type: c15, plass: 802 - 816
-				$Val_dok	= sprintf("%-3s",'');// verdi: Blank, type: c3, plass: 817 - 819
-
-
-				//Velg ut alle underbilag
-				$oRsUnderbilag=$this->soXport->select_underbilag($oRsBilag[$k]['bilagsnr']);		
-
-
-				$underbilag_count= count($oRsUnderbilag);
-				$last_record = $underbilag_count - 1;
 
 				for ($i=0;$i<$underbilag_count;$i++)
 				{
@@ -714,18 +701,6 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					
 					$Belop = $oRsUnderbilag[$i][$BelopFelt]*100;
 					$Belop_ = $Belop;
-					
-					if($Belop < 0)
-					{
-						$Belop = abs($Belop);
-						$Belop = sprintf("%019s",$Belop);
-						$Belop = '-' . $Belop;
-					}
-					else
-					{					
-						$Belop = sprintf("%019s",$Belop);
-						$Belop = '+' . $Belop;
-					}
 					
 
 					if($oRsUnderbilag[$i]['pmwrkord_code'])
@@ -775,97 +750,10 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 						$oRsOverfBilag['dima'] = 9999;
 					}
 				*/	
-					$Konto		= sprintf("%08s",$oRsOverfBilag['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
-					$Dim_1		= sprintf("%8s",$oRsOverfBilag['district_id']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
-					$Dim_2		= sprintf("%-8s",$oRsOverfBilag['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
-					$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
-					$Dim_4		= sprintf("%-8s",'');// verdi: Ressurs, type: c8, plass: 53 - 60
-					$Dim_5		= sprintf("%-12s",$oRsOverfBilag['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
-					$Dim_6		= sprintf("%-4s",$oRsOverfBilag['dimd']);// verdi: Blank, type: c4, plass: 73 - 76
-					$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
-
-					$Avgiftskode=sprintf("%-2s",$oRsOverfBilag['mvakode']);// verdi: Avgiftskode, type: c2, plass: 81 - 82
-
-					$Avgiftssystem	= sprintf("%2s",'');// verdi: Blank, type: c2, plass: 83 - 84
-					$Valutakode	='NOK';// verdi: NOK, type: c3, plass: 85 - 87
-					$Debet_Kredit	= sprintf("%2s",'');// verdi: Blank, type: i2, plass: 88 - 89
-					$Valutabelop	= $Belop;// verdi: Beløp, type: money, plass: 90 - 109
-					$Belop_i_firmavaluta=$Belop;// verdi: Beløp, type: money, plass: 110 - 129
-					$Antall		= sprintf("%11s",'');// verdi: Blank, type: i4, plass: 130 - 140
-					$Belop2		= sprintf("%20s",'');// verdi: Blank, type: f8, plass: 141 - 160
-					$Belop3		= sprintf("%20s",'');// verdi: Blank, type: money, plass: 161 - 180
-
-				//	$Belop4 (også kalt "money3" )blir brukt for identifisere overføring på tvers av filer.
-					$Belop4		= sprintf("%20s",$batchid);// verdi: Blank, type: money, plass: 181 - 200 - batch_id høyre justert
-
-
-					if($oRsOverfBilag['pmwrkord_code'])
-					{
-						$Tekst	= sprintf("%-50s",substr(utf8_decode($this->get_order_title($oRsOverfBilag['pmwrkord_code'])),0,50));//sprintf("%-50s",substr($oRsOverfBilag['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-					}
-					else
-					{
-						$Tekst	= sprintf("%-50s",'');//sprintf("%-50s",substr($oRsOverfBilag['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-					}
-					
-					$Fakturanr	= sprintf("%-15s",substr(utf8_decode($oRsOverfBilag['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
-
-					$Ordrenummer	= sprintf("%-9s",$oRsOverfBilag['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
-
-
 					//Kopier verdier
 					if ($download=='on' && !$this->debug)
 					{
 						$this->soXport->add_OverfBilag($oRsOverfBilag);
-					}
-
-					//Skriv til fil
-
-					$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
-					$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
-					$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato . 
-					$Bilagsnr . $Periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
-					$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref . 
-					$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted . 
-					$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok ."\r\n";
-
-					if($i==$last_record)
-					{
-						$Konto		= sprintf("%-8s",'2327010');// verdi: Art, type: c8, plass: 21 - 28
-						$Dim_1		= sprintf("%-8s",'');// verdi: Ansvarssted, type: c8, plass: 29 - 36
-						$Dim_2		= sprintf("%-8s",'');// verdi: Tjeneste, type: c8, plass: 37 - 44
-						$Dim_3		= sprintf("%-8s",'');// verdi: Objekt, type: c8, plass: 45 - 52
-						$Dim_4		= sprintf("%-8s",'');// verdi: Ressurs, type: c8, plass: 53 - 60
-						$Dim_5		= sprintf("%-12s",'');// verdi: Prosjekt, type: c12, plass: 61 - 72
-						$Dim_6		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 73 - 76
-						$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
-						$Fakturanr	= sprintf("%-15s",'');// verdi: Fakturanr, type: c15, plass: 283 - 297
-						$Ordrenummer	= sprintf("%-9s",'');// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
-						$Tekst		= sprintf("%-50s",'');//sprintf("%-50s",substr($oRsOverfBilag['merknad'],0,50));// verdi: Tekst, type: text (50), plass: 201 - 250
-
-						if($Belop_motpost < 0)
-						{
-							$Belop_motpost = sprintf("%019s",abs($Belop_motpost));
-							$Belop_motpost = '+' . $Belop_motpost;
-						}
-						else
-						{
-							$Belop_motpost = sprintf("%019s",$Belop_motpost);
-							$Belop_motpost = '-' . $Belop_motpost;
-
-						}
-						
-						$Transtype	= 'AP';// verdi: GL, type: c2, plass: 17 - 18
-						$Valutabelop	= $Belop_motpost;// verdi: Beløp, type: money, plass: 90 - 109
-						$Belop_i_firmavaluta=$Belop_motpost;// verdi: Beløp, type: money, plass: 110 - 129
-
-						$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
-						$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
-						$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato . 
-						$Bilagsnr . $Periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
-						$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref . 
-						$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted . 
-						$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok ."\r\n";					
 					}
 				
 					//Slett post i fm_ecobilag
@@ -916,38 +804,6 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';				
 				}
 			}
-			elseif($download=='on' && !$this->debug):
-			{
-
-				$fp = fopen($Filnavn, "wb");
-				fwrite($fp,$buffer);
-
-				if(fclose($fp))
-				{
-					$file_written=True;
-				}
-				
-				if($file_written && $this->config->config_data['invoice_export_method']!='ftp'):
-				{
-					$transfer_ok = True;
-				}
-				elseif($file_written):
-				{
-					$transfer_ok = $this->transfer($buffer,$Filnavn,$batchid,$tranfser_bilag);
-				}
-				endif;
-
-				if($transfer_ok)
-				{
-					$this->db->transaction_commit();
-					$message = 'Ankomstregistrering: periode: '.$Periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
-				}
-				else
-				{
-					$this->db->transaction_abort();
-					$message = 'Noe gikk galt med ankomstregistrering!';				
-				}
-			}
 			else:
 			{
 				$message = $buffer;
@@ -976,7 +832,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					'kidnr'					=> $this->db->f('kidnr'),
 					'typeid'				=> $this->db->f('typeid'),
 					'kildeid'				=> $this->db->f('kildeid'),
-					'pmwrkord_code'			=> $this->db->f('pmwrkord_code'),
+					'order_id'				=> $this->db->f('pmwrkord_code'),
 					'belop'					=> $this->db->f('belop'),
 					'fakturadato'			=> $this->db->f('fakturadato'),
 					'periode'				=> $this->db->f('periode'),
@@ -1002,6 +858,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'saksbehandler'			=> $this->db->f('saksbehandler')
+				);
 			}
 
 			return $voucher;
