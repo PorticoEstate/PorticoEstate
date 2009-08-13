@@ -192,6 +192,8 @@ class rental_socontract extends rental_socommon
 		$contract->set_billing_start_date($billing_start_date);
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
+		$contract->set_security_type($this->unmarshal($this->db->f('security_type', true), 'int'));
+		$contract->set_security_amount($this->unmarshal($this->db->f('security_amount', true), 'string'));
 		$contract->set_billing_unit($this->unmarshal($this->db->f('billing_unit', true), 'string'));
 		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 			
@@ -514,16 +516,19 @@ class rental_socontract extends rental_socommon
 		}
 		
 		if ($contract->get_billing_unit()) {
-			$values[] = "billing_unit = '" . $this->marshal($contract->get_billing_unit(), 'string') . "'";
+			$values[] = "billing_unit = " . $this->marshal($contract->get_billing_unit(), 'string');
 		}
+		
+		$values[] = "security_type = '" . $this->marshal($contract->get_security_type(), 'int') . "'";
+		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
 		
 		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		if($result){
 		//Update last edited table, insert new record if necessary
-			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$sql_last_edited = "UPDATE last_edited_by_user SET (date=$current_date) WHERE account_id = $account_id AND contract_id = $id";
-			$update_result = $this->db->query($sql_last_edited, __LINE__,__FILE__);
+//			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+//			$sql_last_edited = "UPDATE last_edited_by_user SET (date=$current_date) WHERE account_id = $account_id AND contract_id = $id";
+//			$update_result = $this->db->query($sql_last_edited, __LINE__,__FILE__);
 //			var_dump($update_result);
 		}
 			

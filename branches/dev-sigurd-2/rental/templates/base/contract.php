@@ -68,78 +68,114 @@ YAHOO.util.Event.onDOMReady(
 	</ul>
 	<div class="yui-content">
 		<div class="details">
-			<dl class="proplist-col">
-				<dt>
-					<label for="name"><?php echo lang('rental_common_contract_type') ?></label>
-				</dt>
-				<dd>
-					<?php echo lang($contract->get_contract_type_title()) ?>
-				</dd>
-				
-				<dt>
-					<label for="name"><?php echo lang('rental_common_date_start') ?></label>
-				</dt>
-				<dd>
-					<?php
-						$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
-						$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
-						if ($editable) {
-							?>
-							<input type="text" name="date_start" id="date_start" size="10" value="<?php echo $start_date ?>" />
-							<input type="hidden" name="date_start_hidden" id="date_start_hidden" value="<?php echo $start_date_yui ?>"/>
-							<div id="calendarStartDate">
-								<div id="calendarStartDate_body"></div>
-								<div class="calheader">
-									<button id="calendarStartDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-									<button id="calendarStartDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-								</div>
-							</div>
+			<form action="#" method="post">
+				<dl class="proplist-col">
+					<dt>
+						<label for="name"><?php echo lang('rental_common_contract_type') ?></label>
+					</dt>
+					<dd>
+						<?php echo lang($contract->get_contract_type_title()) ?>
+					</dd>
+					
+					<dt>
+						<label for="name"><?php echo lang('rental_common_date_start') ?></label>
+					</dt>
+					<dd>
 						<?php
-						} else {
-							echo $start_date;
-						}
-					?>
-				</dd>
-				
-				<dt>
-					<label for="name"><?php echo lang('rental_common_date_end') ?></label>
-				</dt>
-				<dd>
-					<?php
-						$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
-						$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
-						if ($editable) {
-							?>
-							<input type="text" name="date_end" id="date_end" size="10" value="<?php echo $end_date ?>" />
-							<input type="hidden" name="date_end_hidden" id="date_end_hidden" value="<?php echo $end_date_yui ?>"/>
-							<div id="calendarEndDate">
-								<div id="calendarEndDate_body"></div>
-								<div class="calheader">
-									<button id="calendarEndDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-									<button id="calendarEndDateClearButton"><?php echo lang('rental_common_reset') ?></button>
+							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
+							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
+							if ($editable) {
+								?>
+								<input type="text" name="date_start" id="date_start" size="10" value="<?php echo $start_date ?>" />
+								<input type="hidden" name="date_start_hidden" id="date_start_hidden" value="<?php echo $start_date_yui ?>"/>
+								<div id="calendarStartDate">
+									<div id="calendarStartDate_body"></div>
+									<div class="calheader">
+										<button id="calendarStartDateCloseButton"><?php echo lang('rental_common_close') ?></button>
+										<button id="calendarStartDateClearButton"><?php echo lang('rental_common_reset') ?></button>
+									</div>
 								</div>
-							</div>
+							<?php
+							} else {
+								echo $start_date;
+							}
+						?>
+					</dd>
+					
+					<dt>
+						<label for="name"><?php echo lang('rental_common_date_end') ?></label>
+					</dt>
+					<dd>
 						<?php
-						} else {
-							echo $end_date;
-						}
-					?>
-					<br/>
-				</dd>
-				
-				<dt>
-					<label for="name"><?php echo lang('rental_common_billing_unit') ?></label>
-				</dt>
-				<dd>
+							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
+							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
+							if ($editable) {
+								?>
+								<input type="text" name="date_end" id="date_end" size="10" value="<?php echo $end_date ?>" />
+								<input type="hidden" name="date_end_hidden" id="date_end_hidden" value="<?php echo $end_date_yui ?>"/>
+								<div id="calendarEndDate">
+									<div id="calendarEndDate_body"></div>
+									<div class="calheader">
+										<button id="calendarEndDateCloseButton"><?php echo lang('rental_common_close') ?></button>
+										<button id="calendarEndDateClearButton"><?php echo lang('rental_common_reset') ?></button>
+									</div>
+								</div>
+							<?php
+							} else {
+								echo $end_date;
+							}
+						?>
+						<br/>
+					</dd>
+					
+					<dt>
+						<label for="name"><?php echo lang('rental_common_billing_unit') ?></label>
+					</dt>
+					<dd>
+						<?php
+							if ($editable) {
+								echo '<input type="text" name="billing_unit" id="billing_unit" value="' . $contract->get_billing_unit() . '"/>';
+							} else {
+								echo $contract->get_billing_unit();
+							}
+						?>
+					</dd>
+					
+					<dt>
+						<label for="name"><?php echo lang('rental_common_security') ?></label>
+					</dt>
+					<dd>
+						<?php
+							if ($editable) {
+								?>
+								<select name="security_type" id="security_type">
+									<option value="-1"></option>
+									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_BANK_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_BANK_GUARANTEE ?>"><?php echo lang('rental_common_bank_guarantee') ?></option>
+									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_DEPOSIT ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_DEPOSIT ?>"><?php echo lang('rental_common_deposit') ?></option>
+									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_ADVANCE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_ADVANCE ?>"><?php echo lang('rental_common_advance') ?></option>
+									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ?>"><?php echo lang('rental_common_other_guarantee') ?></option>
+								</select>
+								<input type="text" name="security_amount" id="security_amount" value="<?php echo $contract->get_security_amount(); ?>"/>
+								<?php
+							} 
+							else
+							{
+								echo $contract->get_security_type().'<br/>'.$contract->get_security_amount();
+							}
+						?>
+					</dd>
+				</dl>
+				<div class="form-buttons">
 					<?php
 						if ($editable) {
-							echo '<input type="text" name="billing_unit" id="billing_unit" value="' . $contract->get_billing_unit() . '"/>';
+							echo '<input type="submit" name="save_contract" value="' . lang('rental_common_save') . '"/>';
+							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
 						} else {
-							echo $contract->get_billing_unit();
+							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
 						}
 					?>
-				</dd>
-			</dl>
+				</div>
+			</form>
 		</div>
 		<div id="parties">
 			<h3><?php echo lang('rental_common_selected_parties') ?></h3>
@@ -302,6 +338,3 @@ YAHOO.util.Event.onDOMReady(
 		</div>
 	</div>
 </div>
-<?php 
-	include("form_buttons.php");
-?>

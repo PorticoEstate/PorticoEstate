@@ -7,6 +7,7 @@ rental_common_add	rental	no	Legg til
 rental_common_add_area	rental	no	Legg til areal
 rental_common_added_areas	rental	no	Inkludert areal
 rental_common_address	rental	no	Adresse
+rental_common_advance	rental	no	Forskudd
 rental_common_agresso_id	rental	no	Agresso ID
 rental_common_all	rental	no	Alle
 rental_common_and	rental	no	og
@@ -25,12 +26,13 @@ rental_common_available_from	rental	no	Tilgjengelig fra
 rental_common_available_parties	rental	no	Tilgjengelige kontraktsparter
 rental_common_available_price_item	rental	no	Tilgjengelige priselementer
 rental_common_back	rental	no	Tilbake
+rental_common_bank_guarantee	rental	no	Bankgaranti
 rental_common_bill	rental	no	Faktura
 rental_common_billing_external	rental	no	Ekstern
 rental_common_billing_internal	rental	no	Intern
 rental_common_billing_start	rental	no	Fakturastart
 rental_common_billing_type	rental	no	Fakturatype
-rental_common_billing_unit	rental	no	Ansvar-/Tjenestested
+rental_common_billing_unit	rental	no	Ansvar-/tjenestested
 rental_common_building	rental	no	Bygg
 rental_common_calculate_price_apiece	rental	no	Pris regnes per stk.
 rental_common_calculate_price_per_area	rental	no	Pris regnes ut fra areal
@@ -53,6 +55,7 @@ rental_common_date	rental	no	Dato
 rental_common_date_end	rental	no	Gjelder til
 rental_common_date_start	rental	no	Gjelder fra
 rental_common_department	rental	no	Avdeling
+rental_common_deposit	rental	no	Depositum
 rental_common_description	rental	no	Beskrivelse
 rental_common_details	rental	no	Detaljer
 rental_common_documents	rental	no	Dokumenter
@@ -103,6 +106,7 @@ rental_common_old_id	rental	no	Gammelt kontraktsnummer
 rental_common_or	rental	no	eller
 rental_common_organisation_number	rental	no	Organisasjonsnummer
 rental_common_orphan_units	rental	no	Ubrukte arealer
+rental_common_other_guarantee	rental	no	Annen garanti
 rental_common_others	rental	no	Annet
 rental_common_out_of_operation	rental	no	Ikke i drift
 rental_common_overridden_address	rental	no	Overstyrt adresse
@@ -113,7 +117,6 @@ rental_common_party_name	rental	no	Navn til kontraktspart
 rental_common_party_type	rental	no	Type kontraktspart
 rental_common_period	rental	no	Periode
 rental_common_phone	rental	no	Telefon
-rental_common_post_bank_account_number	rental	no	Postbank-kontonummer
 rental_common_post_code	rental	no	Postnummer
 rental_common_post_place	rental	no	Sted
 rental_common_postal_code_place	rental	no	Postnummer/-sted
@@ -142,6 +145,7 @@ rental_common_search_for	rental	no	Søk etter
 rental_common_search_options	rental	no	Søkevalg
 rental_common_search_where	rental	no	i
 rental_common_section	rental	no	Seksjon
+rental_common_security	rental	no	Sikkerhet
 rental_common_select_date	rental	no	Velg dato
 rental_common_selected_composites	rental	no	Valgte leieobjekter
 rental_common_selected_parties	rental	no	Valgte kontraktsparter

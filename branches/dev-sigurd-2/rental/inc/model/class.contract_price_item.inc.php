@@ -167,7 +167,6 @@
 					return $so->update_contract_price_item($this);
 				}
 			}
-			
 			// The object did not validate 
 			return false;
 		}

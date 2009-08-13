@@ -24,7 +24,7 @@
 					return $so->add($this);
 				}
 			}
-			
+
 			// The object did not validate 
 			return false;
 		}
@@ -65,6 +65,9 @@
 				/*
 				 * Field type
 				 */
+//				var_dump($field_def['type']);
+//				var_dump($field);
+//				var_dump($value);
 				if ($value && !rental_validator::valid_type($field_def['type'], $value, $this->validation_errors[$field])) {
 					$valid = false;
 				}

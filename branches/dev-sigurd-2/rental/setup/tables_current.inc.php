@@ -116,20 +116,21 @@
 		// A contract
 		'rental_contract' => array(
 			'fd' => array(
-				'id' => 			array('type' => 'auto', 'nullable' => false),
-				'date_start' => 	array('type' => 'date'),
-				'date_end' => 		array('type' => 'date'),
-				'billing_start' => 	array('type' => 'date'),
-				'type_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'term_id' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'account' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'id' => 				array('type' => 'auto', 'nullable' => false),
+				'date_start' => 		array('type' => 'date'),
+				'date_end' => 			array('type' => 'date'),
+				'billing_start' => 		array('type' => 'date'),
+				'type_id' =>	 		array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'term_id' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'security_type' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'security_amount' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'billing_unit' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'old_contract_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'last_edited' =>	array('type' => 'date'),
-				'last_edited_by' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'created' =>		array('type' => 'date'),
-				'created_by' =>		array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'old_contract_id' => 	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'executive_officer' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'last_edited' =>		array('type' => 'date'),
+				'last_edited_by' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'created' =>			array('type' => 'date'),
+				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -195,7 +196,6 @@
 					'fax' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'email' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'url' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
-					'post_bank_account_number' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'account_number' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'reskontro' =>	array('type' => 'varchar','precision' => '45','nullable' => true)
 				),

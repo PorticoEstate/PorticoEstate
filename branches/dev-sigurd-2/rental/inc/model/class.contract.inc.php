@@ -5,6 +5,11 @@
 
 	class rental_contract extends rental_model
 	{
+		const SECURITY_TYPE_BANK_GUARANTEE = 0;
+		const SECURITY_TYPE_DEPOSIT = 1;
+		const SECURITY_TYPE_ADVANCE = 2;
+		const SECURITY_TYPE_OTHER_GUARANTEE = 3;
+		
 		public static $so;
 		public static $types;
 		
@@ -14,11 +19,13 @@
 		protected $billing_start_date;
 		protected $type_id;
 		protected $term_id;
+		protected $security_type;
+		protected $security_amount;
 		protected $billing_unit;
 		protected $old_contract_id;
 		protected $contract_type_title;
-		protected $party_names = Array();
-		protected $composite_names = Array();
+		protected $party_names = array();
+		protected $composite_names = array();
 		protected $composites;
 		protected $payer_id;
 		protected $price_items;	
@@ -32,7 +39,7 @@
 		 */
 		public function __construct(int $id = null)
 		{
-			$this->id = $id;
+			$this->id = (int)$id;
 		}
 		
 		public function set_id($id)
@@ -103,8 +110,39 @@
 		{
 			$this->billing_unit = $billing_unit;
 		}
-		
+
 		public function get_billing_unit() { return $this->billing_unit; }
+		
+		public function set_security_type(int $security_type = null)
+		{
+			switch($security_type)
+			{
+				case rental_contract::SECURITY_TYPE_DEPOSIT:
+					$this->security_type = rental_contract::SECURITY_TYPE_BANK_GUARANTEE;
+					break;
+				case rental_contract::SECURITY_TYPE_ADVANCE:
+					$this->security_type = rental_contract::SECURITY_TYPE_ADVANCE;
+					break;
+				case rental_contract::SECURITY_TYPE_OTHER_GUARANTEE:
+					$this->security_type = rental_contract::SECURITY_TYPE_OTHER_GUARANTEE;
+					break;
+				case rental_contract::SECURITY_TYPE_BANK_GUARANTEE:
+					$this->security_type = rental_contract::SECURITY_TYPE_BANK_GUARANTEE;
+					break;
+				default:
+					$this->security_type = -1;
+					break;
+			}
+		}
+		
+		public function get_security_type() { return $this->security_type; }
+		
+		public function set_security_amount($security_amount)
+		{
+			$this->security_amount = $security_amount;
+		}
+		
+		public function get_security_amount() { return $this->security_amount; }
 		
 		/**
 		 * Get the name of the contract type @see get_type_id()
