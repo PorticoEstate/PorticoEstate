@@ -64,9 +64,33 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        // enable this for one run if it dies badly and you need to clean up
-        $this->tearDown();
 
+
+    }
+
+    /**
+     * Clean up the environment after running a test
+     *
+     * @return void
+     */ 
+    protected function clean()
+    {
+        $fields = $GLOBALS['phpgw']->custom_fields->find('phpgwapi', '.test');
+        foreach ( $fields as $field ) {
+            $GLOBALS['phpgw']->custom_fields->delete('phpgwapi', 
+                                                    '.test', $field['id']);
+        }
+
+        $GLOBALS['phpgw']->locations->delete('phpgwapi', '.test', true);
+    }
+
+    /**
+     * Test Custom Fields add method
+     *
+     * @return void
+     */
+    public function testAdd()
+    {
         $GLOBALS['phpgw']->locations->add('.test', 'Custom Functions Unit Test',
                                         'phpgwapi', false, 'aaaa_test');
 
@@ -118,31 +142,6 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
         );
 
         $this->fieldID = $GLOBALS['phpgw']->custom_fields->add($field);
-    }
-
-    /**
-     * Clean up the environment after running a test
-     *
-     * @return void
-     */ 
-    protected function tearDown()
-    {
-        $fields = $GLOBALS['phpgw']->custom_fields->find('phpgwapi', '.test');
-        foreach ( $fields as $field ) {
-            $GLOBALS['phpgw']->custom_fields->delete('phpgwapi', 
-                                                    '.test', $field['id']);
-        }
-
-        $GLOBALS['phpgw']->locations->delete('phpgwapi', '.test', true);
-    }
-
-    /**
-     * Test Custom Fields add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
         $this->assertTrue($this->fieldID > 0);
     }
 
@@ -154,7 +153,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
-                                                        '.test', $this->fieldID);
+                                                        '.test', 1); //$this->fieldID);
 
         $this->assertNotEquals(0, count($field));
     }
@@ -167,13 +166,13 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     public function testEdit()
     {
         $old_field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
-                                                        '.test', $this->fieldID);
+                                                        '.test', 1); //$this->fieldID);
 
         $loc = $GLOBALS['phpgw']->locations->get_name($old_field['location_id']);
 
         $new_values = array
         (
-            'id'           => $this->fieldID,
+            'id'           => 1,//$this->fieldID,
             'appname'      => $loc['appname'],
             'location'     => $loc['location'],
             'datatype'     => 'R',
@@ -189,7 +188,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
         $GLOBALS['phpgw']->custom_fields->edit($values);
 
         $new_field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
-                                                        '.test', $this->fieldID);
+                                                        '.test', 1);//$this->fieldID);
 
         $this->assertNotEquals($old_field, $new_field);
     }
@@ -228,7 +227,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     public function testGetFound()
     {
         $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
-                                                    '.test', $this->fieldID);
+                                                    '.test', 1); //$this->fieldID);
         
         $this->assertNotNull($field);
     }
@@ -253,9 +252,10 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
      */
     public function testGetChoices()
     {
-        $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi', '.test',
-                                                        $this->fieldID, true);
+        $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi', '.test', 1, true);
+                                                       // $this->fieldID, true);
         
+        $this->clean();
         $this->assertArrayNotHasKey('choice', $field);
     }
 }

@@ -98,7 +98,6 @@
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($custom_function['appname'], $custom_function['location']);
 
-			$custom_function['active'] = false;
 			if ( isset($custom_function['active']) && $custom_function['active'] )
 			{
 				$custom_function['active'] = true;
@@ -130,7 +129,7 @@
 				'id'			=> (int) $custom_function['id'],
 				'file_name'		=> $this->_db->db_addslashes($custom_function['custom_function_file']),
 				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
-				'active'		=> $custom_function['active'],
+				'active'		=> !!$custom_function['active'],
 				'custom_sort'	=> $custom_sort
 			);
 
