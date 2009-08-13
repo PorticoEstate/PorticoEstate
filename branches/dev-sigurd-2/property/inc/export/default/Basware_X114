@@ -46,29 +46,23 @@
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->join				= & $this->db->join
 
 			$this->soXport 			= CreateObject('property.soXport');	
 			$this->config			= CreateObject('phpgwapi.config','property');
 			$this->config->read_repository();
 		}
 
-		function select_periods_with_invoice_to_transfer($pre_transfer='')
+		function select_vouchers_to_transfer()
 		{
-			if($pre_transfer)
-			{
-				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE utbetalingsigndato IS NULL ";
-			}
-			else
-			{
-				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE budsjettsigndato is not null and (saksigndato is not null or oppsynsigndato is not null) and utbetalingsigndato is not null ";
-			}
-			
+			$sql= "SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
+			$vouchers = array();
 			while ($this->db->next_record())
 			{
-				$periode[]	= $this->db->f('periode');
+				$vouchers[]	= $this->db->f('bilagsnr');
 			}
-			return $periode;
+			return $vouchers;
 		}
 
 		function log_end($batchid)
@@ -318,12 +312,11 @@
 		}
 
 
-		function overfor($download,$pre_transfer='',$force_period_year='')
+		function overfor($download,$force_period_year='')
 		{
 
 //			$download = 'on';
 //			$download = False;
-			$pre_transfer=True;
 //			$this->debug=True;
 
 			//Generer batch ID
@@ -337,33 +330,15 @@
 
 			//Velg ut alle perioder som har bilag som skal overføres
 
+			$vouchers = $this->select_vouchers_to_transfer();
 
-			if ($pre_transfer)
+			foreach ($vouchers as $voucher_id)
 			{
-				$periode = $this->select_periods_with_invoice_to_transfer($pre_transfer);
-
-				for ($i=0;$i<count($periode);$i++)
-				{
-	
-					$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode[$i],$download,$pre_transfer));
-				}
+				$receipt['message'][]= array('msg' => $this->transfer_voucher($batchid, $voucher_id, $download, $force_period_year));
 			}
-
-
-			$pre_transfer=False;
-			
-			$periode = $this->select_periods_with_invoice_to_transfer($pre_transfer);
-
-			for ($i=0;$i<count($periode);$i++)
-			{
-
-				$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode[$i],$download,$pre_transfer,$force_period_year));
-			}
-
-
 
 			//Lagre melding
-			if ($download=='on' || $pre_transfer)
+			if ($download=='on')
 			{
 				$this->log_end($batchid); //Lagre melding
 			}
@@ -465,67 +440,30 @@
 		}
 				
 		
-		function LagFilnavn ($batchid,$pre_transfer='')
+		function LagFilnavn ($batchid)
 		{	
-			if($pre_transfer)
+			$fil_katalog = $this->config->config_data['export_path'];
+			$continue = True;
+			$i = 1;
+			do
 			{
-				$fil_katalog = $this->config->config_data['export_pre_path'];
-			
-				// Slett gamle filer
+				$Filnavn = $fil_katalog . '/FDB' . date("dmy") . '_' . sprintf("%02s",$i) . '.TXT';
 
-				if(!$this->old_files_deleted)
+				//Sjekk om filen eksisterer
+				If (!file_exists($Filnavn))
 				{
-				 	for ($i=0;$i<13;$i++)
-				 	{
-				 		@unlink($fil_katalog . '/FDA_' . $i. '.TXT');
-				 	}
-				 	
-				 	$this->old_files_deleted= True;
+					return $Filnavn;
 				}
 
-
-				$i = 1;
-				do
-				{
-					$Filnavn = $fil_katalog . '/FDA_' . $i. '.TXT';
-				
-					//Sjekk om filen eksisterer
-					If (!file_exists($Filnavn))
-					{
-						return $Filnavn;
-					}
-				
-					$i++;
-				}
-				while  ($i < 13);
-
+				$i++;
 			}
-			else
-			{
-				$fil_katalog = $this->config->config_data['export_path'];
-				$continue = True;
-				$i = 1;
-				do
-				{
-					$Filnavn = $fil_katalog . '/FDB' . date("dmy") . '_' . sprintf("%02s",$i) . '.TXT';
-				
-					//Sjekk om filen eksisterer
-					If (!file_exists($Filnavn))
-					{
-						return $Filnavn;
-					}
-				
-					$i++;
-				}
-				while  ($continue);
-			}
-			
+			while  ($continue);
 			
 			//Ingen løpenr er ledige, gi feilmelding
 			return False;
 		}
 		
-		function OverforPeriode($batchid,$periode,$download,$pre_transfer='',$force_period_year='')
+		function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
 //----------
 			$localtime = phpgwapi_datetime::user_localtime();
@@ -629,7 +567,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			//Bestem filnavn
 
 
-			$Filnavn = $this->LagFilnavn($batchid,$pre_transfer);
+			$Filnavn = $this->LagFilnavn($batchid);
 			if (!$Filnavn)
 			{
 				$message='LagFilnavn: Alle loepenr for filnavn er i bruk';
@@ -652,8 +590,8 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 
 			$this->db->transaction_begin();
 
-			$oRsBilag=$this->soXport->hoved_bilag($periode,$pre_transfer);
-									
+			$oRsBilag = $this->get_voucher($voucher_id);
+//-- fortsett her....									
 		 	$bilag_count= count($oRsBilag);
 		 	for ($k=0;$k<$bilag_count;$k++)
 			{				
@@ -667,7 +605,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					{
 						$BelopFelt = 'godkjentbelop';			
 						//Logg til avviks tabell
-						if ($download=='on' && !$pre_transfer)
+						if ($download=='on')
 						{
 //							$this->soXport->log_to_deviation_table($oRsBilag[$k]);
 						}
@@ -707,44 +645,18 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 		//		$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 				$ESL		= sprintf("%1s",'');// verdi: Blank, type: i+C481, plass: 282 - 282
 
-				if($pre_transfer)
-				{
-					if(abs(date(m,time()) - $periode) >1)
-					{
-						$temp_period = date(m,time()) -1;
-					
-						if($temp_period == 0)
-						{
-							$temp_period =1;
-						}
-						
-						$temp_year = date(Y,time());
-					}
-					else
-					{
-						$temp_period = $periode;
-						$temp_year = date(Y,strtotime($oRsBilag[$k]['fakturadato']));
-					}
 
-					$Periode	= sprintf("%06s",$temp_year . sprintf("%02d",$temp_period));// verdi: Periode, type: i4, plass: 276 - 281
-					$Bilagsart	= sprintf("%2s",'FF');// verdi: , type: c2, plass: 15 - 16
-					$Forfall	= '20991231';// verdi: Forfallsdato , type: date, plass: 298 - 305				
+				if($force_period_year)
+				{
+					$Periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 				}
 				else
 				{
-
-					if($force_period_year)
-					{
-						$Periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
-					}
-					else
-					{
-						$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
-					}
-					
-					$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
-					$Forfall	= date(Ymd,strtotime($oRsBilag[$k]['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305				
+					$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 				}
+	
+				$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
+				$Forfall	= date(Ymd,strtotime($oRsBilag[$k]['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305				
 				
 				$Rab_forf	= sprintf("%-8s",'');// verdi: Blank, type: date, plass: 306 - 313
 				$Rabatt		= sprintf("%020s",'');// verdi: Blank, type: money, plass: 314 - 333
@@ -820,7 +732,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					{
 		
 						//Oppdater beløp på arbeidsordre
-						if ($download=='on' && !$pre_transfer)
+						if ($download=='on')
 						{
 							if ($oRsUnderbilag[$i]['dimd'] % 2 == 0)
 							{
@@ -848,42 +760,32 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 
 					//dersom det mangler budsjett konto - kun aktuelt for ikke godkjent - sett konto til 2899999
 					
-					if(!$oRsOverfBilag['spbudact_code'] && $pre_transfer)
+					if(!$oRsOverfBilag['spbudact_code'])
 					{
 						$oRsOverfBilag['spbudact_code'] = 12304361;
 					}
 					
 					
 					//dersom ikke gyldig objekt - kun aktuelt for ikke godkjent - sett objekt til 9999
-					
-					if(!($oRsOverfBilag['kostra_id']>0) && $pre_transfer)
+				/*	
+					if(!($oRsOverfBilag['kostra_id']>0))
 					{
 						$oRsOverfBilag['kostra_id'] = 26550;
 						$oRsOverfBilag['mvakode'] = 0;
 						$oRsOverfBilag['dima'] = 9999;
 					}
-					
+				*/	
 					$Konto		= sprintf("%08s",$oRsOverfBilag['spbudact_code']);// verdi: Art, type: c8, plass: 21 - 28
 					$Dim_1		= sprintf("%8s",$oRsOverfBilag['district_id']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
 					$Dim_2		= sprintf("%-8s",$oRsOverfBilag['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
-					
-					if($pre_transfer)
-					{
-						$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,4));// verdi: Objekt, type: c8, plass: 45 - 52
-					}
-					else
-					{
-						$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
-					}
-					
-					
+					$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
 					$Dim_4		= sprintf("%-8s",'');// verdi: Ressurs, type: c8, plass: 53 - 60
 					$Dim_5		= sprintf("%-12s",$oRsOverfBilag['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
 					$Dim_6		= sprintf("%-4s",$oRsOverfBilag['dimd']);// verdi: Blank, type: c4, plass: 73 - 76
 					$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
 
 					$Avgiftskode=sprintf("%-2s",$oRsOverfBilag['mvakode']);// verdi: Avgiftskode, type: c2, plass: 81 - 82
-					
+
 					$Avgiftssystem	= sprintf("%2s",'');// verdi: Blank, type: c2, plass: 83 - 84
 					$Valutakode	='NOK';// verdi: NOK, type: c3, plass: 85 - 87
 					$Debet_Kredit	= sprintf("%2s",'');// verdi: Blank, type: i2, plass: 88 - 89
@@ -909,16 +811,16 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					$Fakturanr	= sprintf("%-15s",substr(utf8_decode($oRsOverfBilag['fakturanr']), 0, 15));// verdi: Fakturanr, type: c15, plass: 283 - 297
 
 					$Ordrenummer	= sprintf("%-9s",$oRsOverfBilag['pmwrkord_code']);// verdi: Infodoc ordrenr, type: i4, plass: 342 - 350
-	
-					
+
+
 					//Kopier verdier
-					if ($download=='on' && !$pre_transfer && !$this->debug)
+					if ($download=='on' && !$this->debug)
 					{
 						$this->soXport->add_OverfBilag($oRsOverfBilag);
 					}
-					
+
 					//Skriv til fil
-					
+
 					$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
 					$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
 					$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato . 
@@ -967,7 +869,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					}
 				
 					//Slett post i fm_ecobilag
-					if ($download=='on' && !$pre_transfer && !$this->debug)
+					if ($download=='on' && !$this->debug)
 					{
 						$this->soXport->delete_from_fm_ecobilag($oRsUnderbilag[$i]['id']);		
 						//Logg transaksjon		
@@ -983,7 +885,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			//Fullfør transaksjon
 			
 		
-			if ($download=='on' && !$pre_transfer && !$this->debug):
+			if ($download=='on' && !$this->debug):
 			{
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
@@ -1014,7 +916,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';				
 				}
 			}
-			elseif($download=='on' && $pre_transfer && !$this->debug):
+			elseif($download=='on' && !$this->debug):
 			{
 
 				$fp = fopen($Filnavn, "wb");
@@ -1057,6 +959,54 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			return $message;
 		}
 		
+
+    	function get_voucher($bilagsnr)
+    	{
+  	  		$bilagsnr = (int)$bilagsnr;
+  	  		$sql= "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr = {$bilagsnr}";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$voucher = array();
+			while ($this->db->next_record())
+			{
+				$voucher[] = array
+				(
+					'id'					=> $this->db->f('id'),
+					'bilagsnr'				=> $bilagsnr,
+					'kidnr'					=> $this->db->f('kidnr'),
+					'typeid'				=> $this->db->f('typeid'),
+					'kildeid'				=> $this->db->f('kildeid'),
+					'pmwrkord_code'			=> $this->db->f('pmwrkord_code'),
+					'belop'					=> $this->db->f('belop'),
+					'fakturadato'			=> $this->db->f('fakturadato'),
+					'periode'				=> $this->db->f('periode'),
+					'forfallsdato'			=> $this->db->f('forfallsdato'),
+					'fakturanr'				=> $this->db->f('fakturanr'),
+					'spbudact_code'			=> $this->db->f('spbudact_code'),
+					'regtid'				=> $this->db->f('regtid'),
+					'artid'					=> $this->db->f('artid'),
+					'godkjentbelop'			=> $this->db->f('belop'),
+					'spvend_code'			=> $this->db->f('spvend_code'),
+					'dima'					=> $this->db->f('dima'),
+					'dimb'					=> $this->db->f('dimb'),
+					'mvakode'				=> $this->db->f('mvakode'),
+					'dimd'					=> $this->db->f('dimd'),
+					'oppsynsmannid'			=> $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'		=> $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'	=> $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
+					'saksigndato'			=> $this->db->f('saksigndato'),
+					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
+					'merknad'				=> $this->db->f('merknad'),
+					'splitt'				=> $this->db->f('splitt'),
+					'utbetalingid'			=> $this->db->f('utbetalingid'),
+					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
+					'saksbehandler'			=> $this->db->f('saksbehandler')
+			}
+
+			return $voucher;
+    	}
+
 		function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
 		{			
 
