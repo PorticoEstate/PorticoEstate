@@ -122,7 +122,7 @@
 				<div class="form-buttons">
 					<?php
 						if ($editable) {
-							echo '<input type="submit" name="save_composite" value="' . lang('rental_common_party') . '"/>';
+							echo '<input type="submit" name="save_composite" value="' . lang('rental_common_save') . '"/>';
 							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
 						} else {
 							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
