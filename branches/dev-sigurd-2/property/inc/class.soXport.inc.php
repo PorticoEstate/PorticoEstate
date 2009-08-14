@@ -39,7 +39,7 @@
 		var $total_records = 0;
 		var $bilagsnr;
 
-		function __construct($useacl=true)
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->soinvoice	= CreateObject('property.soinvoice',true);
@@ -310,9 +310,10 @@
 				$data['utbetalingid'],
 				$data['utbetalingsigndato'],
 				$data['filnavn'],
-				date("Y-m-d G:i:s"),
+				date($this->db->datetime_format()),
 				$data['item_type'],
 				$data['item_id'],
+				$data['external_ref']
 				);
 
 			$values	= $this->db->validate_insert($values);
@@ -320,12 +321,12 @@
 			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
 				. " periode,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
-				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,"
+				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
 				. " belop,godkjentbelop,ordrebelop)"
 				. "values ($values, "
-				. $this->db-> money_format($data['belop']) . ","
-				. $this->db-> money_format($data['godkjentbelop']) . ","
-				. $this->db-> money_format($data['ordrebelop']) . ")";
+				. $this->db->money_format($data['belop']) . ","
+				. $this->db->money_format($data['godkjentbelop']) . ","
+				. $this->db->money_format($data['ordrebelop']) . ")";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 //echo 'sql ' . $sql.'<br>';
