@@ -74,7 +74,7 @@
 						),
 						array(
 							'key' => 'city',
-							'label' => lang('City'),
+							'label' => lang('Postal City'),
 						),
 						array(
 							'key' => 'district',

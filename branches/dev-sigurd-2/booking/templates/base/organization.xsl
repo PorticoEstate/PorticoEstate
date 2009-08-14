@@ -52,7 +52,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
             <dd><xsl:value-of select="organization/zip_code"/></dd>
 
-			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+			<dt><xsl:value-of select="php:function('lang', 'Postal City')" /></dt>
             <dd><xsl:value-of select="organization/city"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>

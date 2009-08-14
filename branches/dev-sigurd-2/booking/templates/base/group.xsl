@@ -31,7 +31,7 @@
             <dd><xsl:value-of select="group/name"/></dd>
 
 			<xsl:if test="count(group/contacts/*) &gt; 0">
-            	<dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
+            	<dt><xsl:value-of select="php:function('lang', 'Team leaders')" /></dt>
 	            <dd>
 	                <ul>
 						<xsl:if test="group/contacts[1]">
