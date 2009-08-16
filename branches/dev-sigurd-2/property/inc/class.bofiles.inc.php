@@ -203,7 +203,7 @@
 			if(!$file)
 			{
 				$file_name = urldecode(phpgw::get_var('file_name'));
-				$id        = phpgw::get_var('id', 'int');
+				$id        = phpgw::get_var('id');
 				$file      = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 			// prevent path traversal

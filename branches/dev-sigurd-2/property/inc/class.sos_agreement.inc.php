@@ -885,7 +885,8 @@
 //_debug_array($values_attribute);
 
 			$table = 'fm_s_agreement';
-
+			
+			$values['s_agreement_id'] = $this->db->db_addslashes($values['s_agreement_id']); // bigint
 			$values['name'] = $this->db->db_addslashes($values['name']);
 
 			if($values['member_of'])
@@ -942,9 +943,9 @@
 				$this->update_budget($_budget);
 			}
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
-							. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id=" . intval($values['s_agreement_id']));
+							. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id='{$values['s_agreement_id']}'");
 
-			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= " . $values['s_agreement_id']);
+			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= '{$values['s_agreement_id']}'");
 
 			$this->db->transaction_commit();
 			$receipt['s_agreement_id']= $values['s_agreement_id'];
