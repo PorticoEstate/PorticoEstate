@@ -37,17 +37,18 @@
 		var $gab_insert_level;
 		var $payment_date;
 
-		function __construct($gab_insert_level)
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->db           	= $this->bocommon->new_db();
-			$this->db2           	= $this->bocommon->new_db($this->db);
-			$this->join			= $this->bocommon->join;
-			$this->like			= $this->bocommon->like;
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2          = clone($this->db);
+			$this->join			= & $this->db->join;
+			$this->like			= & $this->db->like;
 
-			$this->gab_insert_level = $gab_insert_level;
+			$this->config		= CreateObject('phpgwapi.config');
+			$this->config->read();
+			$this->gab_insert_level = isset($this->config->config_data['gab_insert_level']) ? $this->config->config_data['gab_insert_level'] : 3;
 		}
 
 		function read($data)

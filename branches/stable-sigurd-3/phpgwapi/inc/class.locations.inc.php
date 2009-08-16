@@ -156,11 +156,11 @@
 				$oProc->DropTable($tbl);
 			}
 
+			$GLOBALS['phpgw']->acl->delete_repository($appname, $location);
+
 			$sql = 'DELETE FROM phpgw_locations'
 				. " WHERE app_id = {$app} AND name = '{$location}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
-
-			$GLOBALS['phpgw']->acl->delete_repository($appname, $location);
 
 			$this->_db->transaction_commit();
 

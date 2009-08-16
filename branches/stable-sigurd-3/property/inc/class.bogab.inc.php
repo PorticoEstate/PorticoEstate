@@ -52,14 +52,8 @@
 
 		function property_bogab($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon 	= CreateObject('property.bocommon');
 			$this->solocation 	= CreateObject('property.solocation');
-			$this->config		= CreateObject('phpgwapi.config');
-			$this->config->read();
-			$this->gab_insert_level = (isset($this->config->config_data['gab_insert_level'])?$this->config->config_data['gab_insert_level']:3);
-
-			$this->so 		= CreateObject('property.sogab',$this->gab_insert_level);
+			$this->so 		= CreateObject('property.sogab');
 
 			if ($session)
 			{
