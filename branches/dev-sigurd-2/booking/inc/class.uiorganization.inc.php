@@ -23,7 +23,7 @@
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'contacts', 'active');
+			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'contacts', 'active', 'organization_number');
 		}
 		
 		public function index()

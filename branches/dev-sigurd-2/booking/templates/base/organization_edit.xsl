@@ -23,9 +23,9 @@
 			        <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
 			    </input>
 			</dd>
-			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
+			<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
 			<dd>
-			    <input type="text"/>
+			    <input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}"/>
 			</dd>
 			<dt><label for="field_homepage"><xsl:value-of select="php:function('lang', 'Homepage')" /></label></dt>
 			<dd>

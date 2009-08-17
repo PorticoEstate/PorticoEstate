@@ -9,7 +9,8 @@
 		{
 			parent::__construct('bb_organization', 
 				array(
-					'id'			=> array('type' => 'int'),
+					'id'				=> array('type' => 'int'),
+					'organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => false, 'default'=>'', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'name'			=> array('type' => 'string', 'required' => True, 'query' => True),
 					'homepage'		=> array('type' => 'string', 'required' => False, 'query' => True),
 					'phone'			=> array('type' => 'string'),
@@ -19,7 +20,7 @@
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string'),
 					'city' 			=> array('type' => 'string'),
-                    'active'		=> array('type' => 'int', 'required'=>true),
+					'active'			=> array('type' => 'int', 'required'=>true),
 					'contacts'		=> array('type' => 'string',
 						'manytomany' => array(
 							'table' => 'bb_organization_contact',

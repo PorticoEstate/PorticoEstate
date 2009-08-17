@@ -63,6 +63,7 @@
 		'bb_organization' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => False, 'default' => ''),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'string', 'nullable' => True),
