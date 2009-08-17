@@ -78,7 +78,19 @@
 						array(
 							'key' => 'activity_name',
 							'label' => lang('Activity')
-						)
+						),
+						array(
+							'key' => 'building_street',
+							'label' => lang('Street')
+						),
+						array(
+							'key' => 'building_city',
+							'label' => lang('Postal city')
+						),
+						array(
+							'key' => 'building_district',
+							'label' => lang('District')
+						),
 					)
 				)
 			);

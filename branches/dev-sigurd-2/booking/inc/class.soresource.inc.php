@@ -23,6 +23,30 @@
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
+					'building_street'	=> array('type' => 'string',
+						  'query'		=> true,
+						  'join' 		=> array(
+							'table' 	=> 'bb_building',
+							'fkey' 		=> 'building_id',
+							'key' 		=> 'id',
+							'column' 	=> 'street'
+					)),
+					'building_city'	=> array('type' => 'string',
+						  'query'		=> true,
+						  'join' 		=> array(
+							'table' 	=> 'bb_building',
+							'fkey' 		=> 'building_id',
+							'key' 		=> 'id',
+							'column' 	=> 'city'
+					)),
+					'building_district'	=> array('type' => 'string',
+						  'query'		=> true,
+						  'join' 		=> array(
+							'table' 	=> 'bb_building',
+							'fkey' 		=> 'building_id',
+							'key' 		=> 'id',
+							'column' 	=> 'district'
+					)),
 					'activity_name'	=> array('type' => 'string', 'query' => true, 
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',
