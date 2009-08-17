@@ -7,6 +7,7 @@
 		const CATEGORY_PRICE_LIST = 'price_list';
 		const CATEGORY_PICTURE = 'picture';
 		const CATEGORY_DRAWING = 'drawing';
+		const CATEGORY_REGULATION = 'regulation';
 		const CATEGORY_OTHER = 'other';
 		
 		protected 
@@ -15,6 +16,7 @@
 			   self::CATEGORY_PRICE_LIST,
 			   self::CATEGORY_PICTURE,
 			   self::CATEGORY_DRAWING,
+				self::CATEGORY_REGULATION,
 			   self::CATEGORY_OTHER,
 			),
 			$uploadRootDir;
@@ -49,7 +51,7 @@
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
 			
 			if (!file_exists($server_files_dir) || !is_dir($server_files_dir)) {
-				throw new LogicException('The upload directory is not properly configured');
+				throw new LogicException('The upload directory is not properly configured: '.$server_files_dir);
 			}
 			
 			if (!is_writable($server_files_dir)) {
