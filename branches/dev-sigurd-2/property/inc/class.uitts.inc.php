@@ -51,6 +51,11 @@
 			'edit_status'=> true
 		);
 
+		/**
+		 * @var boolean $_simple use simplified interface
+		 */
+		protected $_simple = false;
+
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::helpdesk';
@@ -87,6 +92,17 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
+
+			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $simple_group))
+				{
+					$this->_simple = true;
+					break;
+				}
+			}
 		}
 
 		function save_sessiondata()
@@ -312,140 +328,233 @@
 
 				$group_filters = 'select';
 
-				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[1],$default_value);
+				$values_combo_box = array();
 
 				$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
 				$default_value = array ('id'=>'','name'=>lang('Open'));
 				array_unshift ($values_combo_box[2],$default_value);
 
-				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[3],$default_value);
+				if(!$this->_simple)
+				{
+					$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+					$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+					array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$datatable['actions']['form'] = array(
-				array(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array(
-								'menuaction' 		=> 'property.uitts.index',
-								'second_display'       => $second_display,
-								'district_id'       => $this->district_id,
-								'part_of_town_id'   => $this->part_of_town_id,
-								'cat_id'        	=> $this->cat_id,
-								'status'			=> $this->status
+					$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+					$default_value = array ('id'=>'','name'=>lang('no district'));
+					array_unshift ($values_combo_box[1],$default_value);
+
+					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+					$default_value = array ('id'=>'','name'=>lang('no user'));
+					array_unshift ($values_combo_box[3],$default_value);
+
+					$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+										array
+										(
+											'menuaction' 		=> 'property.uitts.index',
+											'second_display'       => $second_display,
+											'district_id'       => $this->district_id,
+											'part_of_town_id'   => $this->part_of_town_id,
+											'cat_id'        	=> $this->cat_id,
+											'status'			=> $this->status
+										)
+									),
+							'fields'	=> array
+							(
+	                       		'field' => array
+	                       		(
+									array
+									( //boton 	CATEGORY
+										'id' => 'btn_cat_id',
+										'name' => 'cat_id',
+										'value'	=> lang('Category'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 1
+									),
+									array
+										( //boton 	STATUS
+										'id' => 'btn_district_id',
+										'name' => 'district_id',
+										'value'	=> lang('District'),
+										'type' => 'button',
+										'style' => 'filter',
+											'tab_index' => 2
+									),
+									array
+									( //boton 	HOUR CATEGORY
+										'id' => 'btn_status_id',
+										'name' => 'status_id',
+										'value'	=> lang('Status'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 3
+									),
+									array
+									( //boton 	USER
+										'id' => 'btn_user_id',
+										'name' => 'user_id',
+										'value'	=> lang('User'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 4
+									),
+									array
+									(
+										'type'	=> 'button',
+										'id'	=> 'btn_export',
+										'value'	=> lang('download'),
+										'tab_index' => 9
+									),
+									array
+									(
+										'type'	=> 'button',
+										'id'	=> 'btn_new',
+										'value'	=> lang('add'),
+										'tab_index' => 8
+									),
+									array
+									( //hidden start_date
+										'type' => 'hidden',
+										'id' => 'start_date',
+										'value' => $start_date
+									),
+									array
+									( //hidden end_date
+										'type' => 'hidden',
+										'id' => 'end_date',
+										'value' => $end_date
+									),
+									array
+									(//for link "None",
+										'type'=> 'label_date'
+									),
+									array
+									(//for link "Date search",
+										'type'=> 'link',
+										'id'  => 'btn_data_search',
+										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+									array
+									(
+										'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+										'value' => lang('Date search'),
+										'tab_index' => 7
+									),
+									array
+									( //boton     SEARCH
+										'id' => 'btn_search',
+										'name' => 'search',
+										'value'    => lang('search'),
+										'type' => 'button',
+										'tab_index' => 6
+									),
+									array
+									( // TEXT INPUT
+										'name'     => 'query',
+										'id'     => 'txt_query',
+										'value'    => '',//$query,
+										'type' => 'text',
+										'onkeypress' => 'return pulsar(event)',
+										'size'    => 28,
+										'tab_index' => 5
+									)
+								),
+			                   	'hidden_value' => array
+			                	(
+								array
+									( //div values  combo_box_0
+										'id' => 'values_combo_box_0',
+										'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+									),
+									array
+									( //div values  combo_box_1
+										'id' => 'values_combo_box_1',
+										'value'	=> $this->bocommon->select2String($values_combo_box[1])
+									),
+									array
+									( //div values  combo_box_2
+										'id' => 'values_combo_box_2',
+										'value'	=> $this->bocommon->select2String($values_combo_box[2])
+									),
+									array
+									( //div values  combo_box_3
+										'id' => 'values_combo_box_3',
+										'value'	=> $this->bocommon->select2String($values_combo_box[3])
+									)
+								)
 							)
-						),
-					'fields'	=> array(
-                                    'field' => array(
-													array( //boton 	CATEGORY
-														'id' => 'btn_cat_id',
-														'name' => 'cat_id',
-														'value'	=> lang('Category'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 1
-													),
-													array( //boton 	STATUS
-														'id' => 'btn_district_id',
-														'name' => 'district_id',
-														'value'	=> lang('District'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 2
-													),
-													array( //boton 	HOUR CATEGORY
-														'id' => 'btn_status_id',
-														'name' => 'status_id',
-														'value'	=> lang('Status'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 3
-													),
-													array( //boton 	USER
-														'id' => 'btn_user_id',
-														'name' => 'user_id',
-														'value'	=> lang('User'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 4
-													),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_export',
-						                                'value'	=> lang('download'),
-						                                'tab_index' => 9
-						                            ),
-													array(
-						                                'type'	=> 'button',
-						                            	'id'	=> 'btn_new',
-						                                'value'	=> lang('add'),
-						                                'tab_index' => 8
-						                            ),
-													array( //hidden start_date
-	                                                    'type' => 'hidden',
-	                                                    'id' => 'start_date',
-	                                                    'value' => $start_date
-                                                    ),
-	                                                array( //hidden end_date
-	                                                    'type' => 'hidden',
-	                                                    'id' => 'end_date',
-	                                                    'value' => $end_date
-	                                                ),
-	                                                array(//for link "None",
-	                                                 	'type'=> 'label_date'
-	                                                ),
-													array(//for link "Date search",
-		                                                'type'=> 'link',
-		                                                'id'  => 'btn_data_search',
-		                                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-		                                                       array(
-		                                                           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-		                                                'value' => lang('Date search'),
-						                                'tab_index' => 7
-	                                                ),
-													array( //boton     SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-						                                'tab_index' => 6
-													),
-			   										array( // TEXT INPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//$query,
-														'type' => 'text',
-														'onkeypress' => 'return pulsar(event)',
-														'size'    => 28,
-						                                'tab_index' => 5
-													)
-		                           				),
-		                       		'hidden_value' => array(
-															array( //div values  combo_box_0
-																		'id' => 'values_combo_box_0',
-																		'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      ),
-							                                array( //div values  combo_box_1
-																		'id' => 'values_combo_box_1',
-																		'value'	=> $this->bocommon->select2String($values_combo_box[1])
-							                                      ),
-															 array( //div values  combo_box_2
-																		'id' => 'values_combo_box_2',
-																		'value'	=> $this->bocommon->select2String($values_combo_box[2])
-							                                      ),
-							                                array( //div values  combo_box_3
-																		'id' => 'values_combo_box_3',
-																		'value'	=> $this->bocommon->select2String($values_combo_box[3])
-							                                      )
-		                       								)
-												)
-										  )
-				);
+						)
+					);
+				}
+				else
+				{
+					$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+										array
+										(
+											'menuaction' 		=> 'property.uitts.index',
+											'second_display'       => $second_display,
+											'status'			=> $this->status
+										)
+									),
+							'fields'	=> array
+							(
+	                       		'field' => array
+	                       		(
+									array
+									( //boton 	HOUR CATEGORY
+										'id' => 'btn_status_id',
+										'name' => 'status_id',
+										'value'	=> lang('Status'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 3
+									),
+									array
+									(
+										'type'	=> 'button',
+										'id'	=> 'btn_new',
+										'value'	=> lang('add'),
+										'tab_index' => 8
+									),
+									array
+									( //boton     SEARCH
+										'id' => 'btn_search',
+										'name' => 'search',
+										'value'    => lang('search'),
+										'type' => 'button',
+										'tab_index' => 6
+									),
+									array
+									( // TEXT INPUT
+										'name'     => 'query',
+										'id'     => 'txt_query',
+										'value'    => '',//$query,
+										'type' => 'text',
+										'onkeypress' => 'return pulsar(event)',
+										'size'    => 28,
+										'tab_index' => 5
+									)
+								),
+			                   	'hidden_value' => array
+			                	(
+									array
+									( //div values  combo_box_0
+										'id' => 'values_combo_box_0',
+										'value'	=> $this->bocommon->select2String($values_combo_box[2])
+									)
+								)
+							)
+						)
+					);				
+				}
 
 				$dry_run = true;
 			}
@@ -793,7 +902,7 @@
 	
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 	
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', $this->_simple ? 'tts.index.simple' : 'tts.index' , 'property' );
 		}
 
 		function index2()
