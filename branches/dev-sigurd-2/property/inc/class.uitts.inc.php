@@ -1427,12 +1427,15 @@
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_finnish_date');
+			if(!$this->_simple)
+			{
+				$jscal = CreateObject('phpgwapi.jscalendar');
+				$jscal->add_listener('values_finnish_date');
+			}
 
 			$data = array
 			(
-				'tabs'							=> self::_generate_tabs(),
+				'simple'						=> $this->_simple,
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
@@ -1800,6 +1803,7 @@
 						$bofiles->vfs->override_acl = 0;
 					}
 				}
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 			}
 //---------end files
 			$ticket = $this->bo->read_single($id);
