@@ -80,6 +80,15 @@
     <td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
    </tr>
    <tr class="row_off">
+    <td>{lang_suppress_old_tenant}:</td>
+    <td>
+     <select name="newsettings[suppress_tenant]">
+      <option value="" {selected_suppress_tenant_}>NO</option>
+      <option value="1" {selected_suppress_tenant_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
     <td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
    </tr>
    <tr class="row_on">
