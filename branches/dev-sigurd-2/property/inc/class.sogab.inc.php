@@ -46,9 +46,9 @@
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 
-			$this->config		= CreateObject('phpgwapi.config');
+			$this->config		= CreateObject('phpgwapi.config','property');
 			$this->config->read();
-			$this->gab_insert_level = isset($this->config->config_data['gab_insert_level']) ? $this->config->config_data['gab_insert_level'] : 3;
+			$this->gab_insert_level = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
 		}
 
 		function read($data)
