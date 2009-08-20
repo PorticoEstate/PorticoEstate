@@ -1319,11 +1319,30 @@
 
 				if(!$values['assignedto'] && !$values['group_id'])
 				{
-					$boresponsible = CreateObject('property.boresponsible');
-					if(!$values['assignedto']=	$boresponsible->get_responsible($values))
+					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
+					if(!$_responsible)
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a person or a group to handle the ticket !'));
 					}
+					else
+					{
+						if( $GLOBALS['phpgw']->accounts->get($_responsible)->type == phpgwapi_account::TYPE_USER )
+						{
+							$values['assignedto'] = $_responsible;
+						}
+						else
+						{
+							$values['group_id'] = $_responsible;
+						}
+					}
+					unset($_responsible);
+				}
+
+				if(!isset($values['priority']) || !$values['priority'])
+				{
+					$_priority = $this->bo->get_priority_list();
+					$values['priority'] = count($_priority);
+					unset($_priority);
 				}
 
 				if(!isset($receipt['error']))
@@ -1370,7 +1389,7 @@
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view', 'id' => $receipt['id'], 'tab' =>'details'));					
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view', 'id' => $receipt['id'], 'tab' =>'general'));					
 					}
 				}
 				else
@@ -1467,7 +1486,7 @@
 				'lang_category'				=> lang('category'),
 				'lang_save'					=> lang('save'),
 				'lang_cancel'				=> lang('cancel'),
-				'lang_apply'					=> lang('apply'),
+				'lang_send'					=> lang('send'),
 				'value_details'				=> (isset($values['details'])?$values['details']:''),
 				'value_subject'				=> (isset($values['subject'])?$values['subject']:''),
 
@@ -1478,8 +1497,8 @@
 				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
 
 				'lang_cancel_statustext'			=> lang('Back to the ticket list'),
+				'lang_send_statustext'			=> lang('Save the entry and return to list'),
 				'lang_save_statustext'			=> lang('Save the ticket'),
-				'lang_apply_statustext'			=> lang('Apply the values'),
 				'lang_no_cat'					=> lang('no category'),
 				'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'				=> lang('Part of town'),
@@ -1940,9 +1959,12 @@
 				'id'		=> $id
 			);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_finnish_date');
-			
+			if(!$this->_simple)
+			{
+				$jscal = CreateObject('phpgwapi.jscalendar');
+				$jscal->add_listener('values_finnish_date');
+			}
+
 			//---datatable settings---------------------------------------------------	
 			$datavalues[0] = array
 			(
@@ -2016,6 +2038,7 @@
 
 			$data = array
 			(
+				'simple'					=> $this->_simple,
 				'tabs'						=> self::_generate_tabs(true),
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'					=> $datavalues,
@@ -2403,13 +2426,12 @@
 		{
 			if(!$tab = phpgw::get_var('tab'))
 			{
-				$tab = 'location';
+				$tab = 'general';
 			}
 
 			$tabs = array
 			(
-				'location'		=> array('label' => lang('location'), 'link' => '#location'),
-				'details'		=> array('label' => lang('details'), 'link' => '#details')
+				'general'		=> array('label' => lang('general'), 'link' => '#general')
 			);
 
 			if($history)

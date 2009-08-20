@@ -1105,7 +1105,7 @@
 		* @param mixed $criteria_token same like $criteria but builded<br>with phpgwapi_sql_criteria class, more powerfull
 		* @return array Array person with records
 		*/
-		function get_persons($fields, $limit='', $ofset='', $orderby='', $sort='', $criteria='', $criteria_token='')
+		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $criteria_token='')
 		{
 			$this->request($fields);
 			if(in_array('org_name', $fields))
@@ -1138,7 +1138,7 @@
 			$sql = $this->get_sql();
 			if ($limit)
 			{
-				$this->db->limit_query($sql, $ofset, __LINE__, __FILE__, $limit);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 			}
 			else
 			{
