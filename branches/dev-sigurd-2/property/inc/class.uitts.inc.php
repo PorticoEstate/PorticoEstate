@@ -2034,8 +2034,7 @@
 			);
 			
 			//----------------------------------------------datatable settings--------			
-			
-
+			
 			$data = array
 			(
 				'simple'					=> $this->_simple,
@@ -2063,18 +2062,21 @@
 				'table_header_history'			=> $table_header_history,
 				'lang_status'				=> lang('Status'),
 				'status_name'				=> 'values[status]',
+				'value_status'				=> $ticket['status'],
 				'status_list'				=> $this->bo->get_status_list($ticket['status']),
 				'lang_status_statustext'		=> lang('Set the status of the ticket'),
 
 				'lang_no_user'				=> lang('Select user'),
 				'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name'			=> 'values[assignedto]',
+				'value_assignedto'			=> $ticket['assignedto'],
 				'user_list'					=> $this->bocommon->get_user_list_right2('select',4,$ticket['assignedto'],$this->acl_location),
 
 				'lang_group'				=> lang('Group'),
 				'lang_no_group'				=> lang('No group'),
 				'group_list'				=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
 				'select_group_name'			=> 'values[group_id]',
+				'value_group_id'			=> $ticket['group_id'],
 
 				'lang_takeover'				=> (isset($values['assignedto']) && $values['assignedto'] != $this->account)  || (!isset($values['assignedto']) || !$values['assignedto']) ? lang('take over') : '',
 				'lang_takeover_statustext'	=> lang('Take over the assignment for this ticket'),
@@ -2086,6 +2088,7 @@
 				'priority_list'				=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'				=> lang('no category'),
+				'value_cat_id'				=> $this->cat_id,
 				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'lang_category'				=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],

@@ -880,6 +880,17 @@
 					<xsl:value-of select="value_category_name"/>
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_status"/>
+				</td>
+				<td>
+					<xsl:for-each select="status_list[selected='selected']" >
+						<xsl:value-of select="name"/>
+						<xsl:if test="position() != last()">, </xsl:if>
+					</xsl:for-each>
+				</td>
+			</tr>
 
 			<xsl:for-each select="value_target" >
 				<tr>
@@ -1004,8 +1015,8 @@
 					<xsl:value-of select="lang_status"/>
 				</td>
 				<td>
-				<xsl:variable name="lang_status_statustext"><xsl:value-of select="lang_status_statustext"/></xsl:variable>
-				<xsl:variable name="status_name"><xsl:value-of select="status_name"/></xsl:variable>
+					<xsl:variable name="lang_status_statustext"><xsl:value-of select="lang_status_statustext"/></xsl:variable>
+					<xsl:variable name="status_name"><xsl:value-of select="status_name"/></xsl:variable>
 					<select name="{$status_name}" class="forms" title = "{$lang_status_statustext}" onMouseover="window.status='{$lang_status_statustext}'; return true;" onMouseout="window.status='';return true;">
 							<xsl:apply-templates select="status_list"/>
 					</select>			
@@ -1033,6 +1044,14 @@
 				</td>
 			</tr>
 		</xsl:when>
+		<xsl:otherwise>
+				<input type="hidden" name="values[status]" value="{value_status}"></input>
+				<input type="hidden" name="values[assignedto]" value="{value_assignedto}"></input>
+				<input type="hidden" name="values[group_id]" value="{value_group_id}"></input>
+				<input type="hidden" name="values[priority]" value="{value_priority}"></input>
+				<input type="hidden" name="values[cat_id]" value="{value_cat_id}"></input>
+				<input type="hidden" name="values[finnish_date]" value="{value_finnish_date}"></input>
+			</xsl:otherwise>
 	</xsl:choose>
 
 			<tr>
