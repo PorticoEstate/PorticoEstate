@@ -10,7 +10,7 @@
     <td colspan="2">&nbsp;</td>
    </tr>
    <tr class="row_off">
-    <td colspan="2">&nbsp;<b>{lang_Workorder}/{lang_FM_settings}</b></font></td>
+    <td colspan="2">&nbsp;<b>{lang_Workorder}/{lang_FM_settings}</b></td>
    </tr>
    <tr class="row_on">
     <td>{lang_organisation}:</td>
@@ -78,6 +78,29 @@
     <td>{lang_Enter_GAB_URL.} <br>
 	{lang_Example:_http://www.domain.com/gab}:</td>
     <td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_suppress_old_tenant}:</td>
+    <td>
+     <select name="newsettings[suppress_tenant]">
+      <option value="" {selected_suppress_tenant_}>NO</option>
+      <option value="1" {selected_suppress_tenant_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
+   </tr>
+   <tr class="row_on">
+    <td valign = 'top'>{lang_TTS_simplified_group}:</td>
+    <td>
+    	<!--to be able to blank the setting - need a empty value-->
+    	<input type = 'hidden' name="newsettings[fmttssimple_group][]" value="">
+     <table>
+{hook_fmttssimple_group}
+	 </table>
+    <!-- </select>-->
+    </td>
    </tr>
    <tr class="row_off">
     <td>{lang_TTS_file_upload}:</td>

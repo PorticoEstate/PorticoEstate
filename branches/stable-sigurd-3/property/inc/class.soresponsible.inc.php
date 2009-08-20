@@ -540,52 +540,57 @@
 		public function get_responsible($values = array())
 		{
 			$location_filter = array();
-
-			if((!isset($values['location']) || !is_array($values['location'])) && !isset($values['ecodimb']) || !$values['ecodimb'])
-			{
-				return 0;
-			}
-			
+	
+			$todo = false;
 			$item_filter = '';
 			
 			if(isset($values['ecodimb']) && $values['ecodimb'])
 			{
-				$item_filter =   " WHERE ecodimb = '{$values['ecodimb']}'";
+				$item_filter =   " AND ecodimb = '{$values['ecodimb']}'";
 				$location_filter[] = '';
+				$todo = true;
 			}
-			elseif(isset($values['extra']) && is_array($values['extra']))
+			elseif(isset($values['extra']['p_entity_id']) && $values['extra']['p_entity_id'])
 			{
 				$location_code = implode('-', $values['location']);
 
-				$item_filter =   " WHERE p_num = '{$values['extra']['p_num']}'"
+				$item_filter =   " AND p_num = '{$values['extra']['p_num']}'"
 								.' AND p_entity_id =' . (int) $values['extra']['p_entity_id']
 								.' AND p_cat_id =' . (int) $values['extra']['p_cat_id'];
 
 				$location_filter[] = " AND location_code = '{$location_code}'";
 				$ordermethod = '';
+				$todo = true;
 			}
-			else
+			else if(isset($values['location']) && $values['location'])
 			{
+				$location_filter[] = ''; // when the responsibility is generic - not located to any location
 				$location_code = '';
 				$location_array = array();
-				$where = ' WHERE';
 				foreach ($values['location'] as $location)
 				{
 					$location_array[]	= $location;
 					$location_code		= implode('-', $location_array);
-					$location_filter[]	= "{$where} location_code $this->like '$location_code%'";
-					$location_filter	= array_reverse($location_filter);
-					$where = ' AND';
+					$location_filter[]	= "AND location_code $this->like '$location_code%'";
 				}
-				
+
+				// Start at the bottom level
+				$location_filter	= array_reverse($location_filter);				
+
 				$ordermethod = ' ORDER by location_code.id ASC';
+				$todo = true;
+			}
+
+			if( !$todo )
+			{
+				return 0;
 			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
 			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-			 . " {$item_filter}"
-			 . ' AND cat_id =' . (int) $values['cat_id']
-			 . ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL';
+			 . ' WHERE cat_id =' . (int) $values['cat_id']
+			 . ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
+ 			 . " {$item_filter}";
 
 			foreach ($location_filter as $filter_at_location)
 			{
@@ -610,7 +615,8 @@
 
 		public function get_contact_user_id($person_id)
 		{
-			$sql = 'SELECT account_id FROM phpgw_accounts WHERE person_id =' . (int) $person_id;
+			$person_id = (int) $person_id;
+			$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id ={$person_id} AND person_id > 0";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('account_id');

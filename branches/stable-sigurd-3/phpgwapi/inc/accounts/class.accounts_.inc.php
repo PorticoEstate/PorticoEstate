@@ -580,6 +580,7 @@
 				{
 					$this->account_id = $account;
 					$user = $this->read_repository();
+
 					$principal = array
 					(
 						'per_prefix'		=> '',
@@ -588,9 +589,12 @@
 						'access'			=> 'public',
 						'owner'				=> isset ($GLOBALS['phpgw_info']['server']['addressmaster']) ? $GLOBALS['phpgw_info']['server']['addressmaster'] : ''
 					);
+
 					$contact_type = $contacts->search_contact_type('Persons');
 					$user->person_id = $contacts->add_contact($contact_type, $principal);
-					$this->update_data($user->toArray());
+
+		//			$this->update_data($user);
+					$this->account = $user;
 					$this->save_repository();
 				}
 			}

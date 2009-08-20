@@ -258,6 +258,13 @@
 
 		function initiate_ui_location($data)
 		{
+			$config		= CreateObject('phpgwapi.config','property');
+			$config->read();
+			if (isset($config->config_data['suppress_tenant']) &&  $config->config_data['suppress_tenant'])
+			{
+				$data['tenant'] = false;
+			}
+			unset($config);
 
 			if(isset($data['lookup_type']))
 			{

@@ -197,7 +197,8 @@
 		'manual',
 		'settings',
 		'help',
-		'menu'	=> 'property.menu.get_menu'
+		'menu'	=> 'property.menu.get_menu',
+		'config'
 	);
 
 	/* Dependencies for this app to work */

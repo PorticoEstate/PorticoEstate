@@ -16,6 +16,7 @@
 
 	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home'
 		&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'welcome'
+		&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about'
 //		&& (isset($GLOBALS['phpgw_info']['server']['checkappversions']) &&	$GLOBALS['phpgw_info']['server']['checkappversions'])
 		)
 	{
