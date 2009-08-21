@@ -253,7 +253,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			$application['status'] = lang($application['status']);
+			$application['status'] = $application['status'];
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups));
 		}
