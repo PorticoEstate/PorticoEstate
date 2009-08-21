@@ -37,6 +37,7 @@
 		public function __construct(int $id = null)
 		{
 			$this->id = $id;
+			$this->units = array();
 		}
 		
 		/**
@@ -102,38 +103,13 @@
 			else // There are units
 			{
 				foreach ($this->units as $unit) {
-					if ($unit->get_location_id() == $new_unit->get_location_id()) { // Unit already exists
+					if ($unit->get_location_code() == $new_unit->get_location_code()) { // Unit already exists
 						return;
 					}
 				}
 			}
 			// Unit doesn't already exist so we add it to the array
 			$this->units[] = $new_unit;
-		}
-		
-		/**
-		 * Associate a rental unit to this composite.  Note that the composite is not updated
-		 * in the database until store() is called.  This function checks for duplicates
-		 * before adding the given unit. This function will fetch the belonging units from the
-		 * db if necessary.
-		 * 
-		 * @param $new_unit the unit to associate
-		 */
-		public function add_new_unit($new_unit)
-		{
-			$units = $this->get_included_rental_units();
-			
-			$already_has_unit = false;
-			
-			foreach ($this->get_included_rental_units() as $unit) {
-				if ($unit->get_location_id() == $new_unit->get_location_id()) {
-					$already_has_unit == true;
-				}
-			}
-			
-			if (!$already_has_unit) {
-				$this->units[] = $new_unit;
-			}
 		}
 		
 		/**
@@ -144,9 +120,9 @@
 		 */
 		public function remove_unit($unit_to_remove)
 		{
-			$units = $this->get_included_rental_units();
+			$units = $this->get_units();
 			
-			foreach ($this->get_included_rental_units() as $index => $unit) {
+			foreach ($this->get_units() as $index => $unit) {
 				if ($unit->get_location_id() == $unit_to_remove->get_location_id()) {
 					unset($this->rental_units[$index]);
 				}
@@ -183,9 +159,6 @@
 		 */
 		public function get_units($sort = null, $dir = 'asc', $start = 0, $results = null)
 		{
-			if (!$this->units) {
-				$this->units = rental_unit::get_units_for_composite($this->get_id(), $sort, $dir, $start, $results);
-			}
 			return $this->units; 
 		}
 		
