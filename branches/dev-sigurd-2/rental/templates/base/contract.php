@@ -49,7 +49,7 @@ YAHOO.util.Event.onDOMReady(
 );
 </script>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_showing_contract') ?> K<?php echo $contract->get_id() ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_showing_contract') ?> <?php echo $contract->get_id() ?></h1>
 
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
