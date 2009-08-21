@@ -136,18 +136,26 @@
 		);
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
-	$soworkorder= CreateObject('property.soworkorder');
 	$socommon= CreateObject('property.socommon');
-
-	$status_list= $soworkorder->select_status_list();
+	
+	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
+	$status_list_project = execMethod('property.soworkorder.select_status_list');
 
 	$district_list= $socommon->select_district_list();
 
-	if ($status_list)
+	if ($status_list_workorder)
 	{
-		foreach ( $status_list as $entry )
+		foreach ( $status_list_workorder as $entry )
 		{
-			$_status[$entry['id']] = $entry['name'];
+			$_status_workorder[$entry['id']] = $entry['name'];
+		}
+	}
+
+	if ($status_list_project)
+	{
+		foreach ( $status_list_project as $entry )
+		{
+			$_status_project[$entry['id']] = $entry['name'];
 		}
 	}
 
@@ -174,7 +182,8 @@
 
 	unset($soworkorder);
 	unset($socommon);
-	create_select_box('Default project status','project_status',$_status,'The default status for your projects and workorders');
+	create_select_box('Default project status','project_status',$_status_project,'The default status for your projects');
+	create_select_box('Default workorder status','workorder_status',$_status_workorder,'The default status for your workorders');
 	create_select_box('Default project categories','project_category',$_categories_project,'The default category for your projects and workorders');
 	create_select_box('Default district-filter','default_district',$_districts,'Your default district-filter ');
 

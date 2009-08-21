@@ -297,9 +297,6 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
-
-</table>
-
 	<!-- script>
 		var property_js = <xsl:value-of select="property_js" />
 		var datatable = new Array();
@@ -317,10 +314,59 @@
 		<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 		</xsl:for-each>
 	</script-->
+		<tr>
+			<xsl:choose>
+				<xsl:when test="need_approval='yes'">
+				<td valign="top">
+					<xsl:value-of select="lang_ask_approval"/>
+				</td>
+				<td>
+				<table>
+				<tr>
+				<td>
+					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_ask_approval_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td>
+					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" size="40" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_ask_approval_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+				</tr>
+				</table>
+				</td>
+				</xsl:when>
+			</xsl:choose>
+			</tr>
 
-
-
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_remark"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_remark_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_remark"/>
+					</textarea>
+				</td>
+			</tr>
+	</table>
 </div>
+
+
 
 <div id="location">
 
@@ -616,59 +662,6 @@
 </table>
 </div>
 
-<div id="extra">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-			<xsl:choose>
-				<xsl:when test="need_approval='yes'">
-				<td valign="top">
-					<xsl:value-of select="lang_ask_approval"/>
-				</td>
-				<td>
-				<table>
-				<tr>
-				<td>
-					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td>
-					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" size="40" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				</tr>
-				</table>
-				</td>
-				</xsl:when>
-			</xsl:choose>
-			</tr>
-
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_remark"/>
-				</td>
-				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_remark_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>
-					</textarea>
-				</td>
-			</tr>
-	</table>
-</div>
 
 <div id="history">
 		<!-- <hr noshade="noshade" width="100%" align="center" size="1"/>
@@ -1185,10 +1178,6 @@
 </table>
 </div>
 
-<div id="extra">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-</table>
-</div>
 
 <div id="history">
 		<hr noshade="noshade" width="100%" align="center" size="1"/>

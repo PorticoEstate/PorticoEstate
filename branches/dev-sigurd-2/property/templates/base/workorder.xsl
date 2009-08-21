@@ -358,7 +358,7 @@
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
 					<div class="yui-content">
 
-<div id="project">
+<div id="general">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
@@ -461,11 +461,6 @@
 					<xsl:value-of select="value_other_branch"/>
 				</td>
 			</tr>
-</table>
-</div>
-
-<div id="general">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:for-each select="value_origin" >
 				<tr>
 					<td valign ="top">
@@ -569,11 +564,61 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
+		<tr>
+			<xsl:choose>
+				<xsl:when test="need_approval='yes'">
+				<td valign="top">
+					<xsl:value-of select="lang_ask_approval"/>
+				</td>
+				<td>
+				<table>
+				<tr>
+				<td>
 
+					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_ask_approval_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td>
+
+					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_ask_approval_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+				</tr>
+				</table>
+				</td>
+				</xsl:when>
+			</xsl:choose>
+			</tr>
+
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_remark"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="onMouseover">
+							<xsl:text>window.status='</xsl:text>
+								<xsl:value-of select="lang_remark_statustext"/>
+							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_remark"/>
+					</textarea>
+				</td>
+			</tr>
 </table>
-
-	
 </div>
+
+
 
 <div id="budget">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -773,62 +818,6 @@
 							</xsl:when>
 						</xsl:choose>
 					</xsl:for-each>
-				</td>
-			</tr>
-</table>
-</div>
-
-<div id="extra">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-			<xsl:choose>
-				<xsl:when test="need_approval='yes'">
-				<td valign="top">
-					<xsl:value-of select="lang_ask_approval"/>
-				</td>
-				<td>
-				<table>
-				<tr>
-				<td>
-
-					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td>
-
-					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				</tr>
-				</table>
-				</td>
-				</xsl:when>
-			</xsl:choose>
-			</tr>
-
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_remark"/>
-				</td>
-				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_remark_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>
-					</textarea>
 				</td>
 			</tr>
 </table>
@@ -1035,7 +1024,7 @@
 		<div class="yui-navset" id="workorder_tabview">
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<div class="yui-content">
-<div id="project">
+<div id="general">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
 				<td width="25%" >
@@ -1125,10 +1114,6 @@
 					<xsl:value-of select="value_other_branch"/>
 				</td>
 			</tr>
-</table>
-</div>
-<div id="general">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:for-each select="value_origin" >
 				<tr>
 					<td valign ="top">
@@ -1182,10 +1167,29 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<xsl:value-of select="value_descr"/>
+					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="readonly">
+							<xsl:text>readonly</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_descr"/>
+					</textarea>
+
 				</td>
 			</tr>
-</table>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="lang_remark"/>
+				</td>
+				<td>
+					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<xsl:attribute name="readonly">
+							<xsl:text>readonly</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_remark"/>
+					</textarea>
+				</td>
+			</tr>
+		</table>
 </div>
 
 <div id="budget">
@@ -1339,25 +1343,6 @@
 			</tr>
 </table>
 </div>
-
-<div id="extra">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_remark"/>
-				</td>
-				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="readonly">
-							<xsl:text>readonly</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="value_remark"/>
-					</textarea>
-				</td>
-			</tr>
-</table>
-</div>
-
 
 <div id="documents">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
