@@ -319,7 +319,7 @@
 			$contacts		= CreateObject('property.soactor');
 			$contacts->role='vendor';
 
-			$config				= CreateObject('phpgwapi.config');
+			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
 			$tax = 1+(isset($config->config_data['fm_tax'])?$config->config_data['fm_tax']:0)/100;
 

@@ -907,7 +907,7 @@
 
 			if ($this->db->f('calculation') > 0)
 			{
-				$config	= CreateObject('phpgwapi.config');
+				$config	= CreateObject('phpgwapi.config','property');
 				$config->read_repository();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$combined_cost = $this->db->f('calculation')* $tax;

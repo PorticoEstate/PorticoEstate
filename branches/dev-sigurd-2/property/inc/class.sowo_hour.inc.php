@@ -741,7 +741,7 @@
 
 			if($calculation > 0)
 			{
-				$config		= CreateObject('phpgwapi.config');
+				$config		= CreateObject('phpgwapi.config','property');
 				$config->read();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$calculation = $calculation * $tax;

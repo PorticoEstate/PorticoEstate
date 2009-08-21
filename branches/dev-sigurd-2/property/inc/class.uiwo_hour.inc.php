@@ -73,7 +73,7 @@
 			$this->bopricebook			= CreateObject('property.bopricebook');
 
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->config				= CreateObject('phpgwapi.config');
+			$this->config				= CreateObject('phpgwapi.config','property');
 
 			$this->config->read();
 

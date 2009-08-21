@@ -745,7 +745,7 @@
 			}
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
-			$config				= CreateObject('phpgwapi.config');
+			$config				= CreateObject('phpgwapi.config','property');
 			$id 				= phpgw::get_var('id'); // in case of bigint
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');

@@ -41,7 +41,7 @@
 		{
 			$this->bo 			= CreateObject('property.botts');
 			$this->historylog	= CreateObject('property.historylog','tts');
-			$this->config		= CreateObject('phpgwapi.config');
+			$this->config		= CreateObject('phpgwapi.config','property');
 
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;

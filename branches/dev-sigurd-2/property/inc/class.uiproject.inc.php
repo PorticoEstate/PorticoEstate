@@ -845,7 +845,7 @@
 			/*$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.edit',"
 	    											."id:'{$id}'";*/
 
-			$config				= CreateObject('phpgwapi.config');
+			$config				= CreateObject('phpgwapi.config','property');
 			$bolocation			= CreateObject('property.bolocation');
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
