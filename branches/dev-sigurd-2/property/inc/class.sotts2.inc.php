@@ -73,6 +73,7 @@
 			** H - Billing hours
 			** F - finnish date
 			** C% - Status changed
+			** L - Location changed
 			*/
 
 			if ($old_status != $ticket['status'])
@@ -287,64 +288,73 @@ _debug_array($ticket);
 
 			if ($oldlocation_code != $ticket['location_code'])
 			{
-				$value_set	= array();
-
-				if(isset($ticket['street_name']) && $ticket['street_name'])
+				$interlink 	= CreateObject('property.interlink');
+				if( $interlink->get_relation('property', '.ticket', $id, 'origin') || $interlink->get_relation('property', '.ticket', $id, 'target'))
 				{
-					$address[]= $ticket['street_name'];
-					$address[]= $ticket['street_number'];
-					$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
+					$receipt['message'][]= array('msg' => lang('location could not be changed'));
 				}
-
-				if(!isset($address) || !$address)
+				else
 				{
-					$address = isset($ticket['location_name']) ? $this->db->db_addslashes($ticket['location_name']) : '';
-					if($address)
+					$value_set	= array();
+
+					if(isset($ticket['street_name']) && $ticket['street_name'])
 					{
-						$value_set['address'] = $address;
+						$address[]= $ticket['street_name'];
+						$address[]= $ticket['street_number'];
+						$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
 					}
-				}
 
-				if (isset($ticket['location_code']) && $ticket['location_code'])
-				{
-					$value_set['location_code'] = $ticket['location_code'];
-				}
-
-				$admin_location	= CreateObject('property.soadmin_location');
-				$admin_location->read(false);
-
-			// Delete old values for location - in case of moving up in the hierarchy
-				$metadata = $this->db->metadata('fm_tts_tickets');
-				for ($i = 1;$i < $admin_location->total_records + 1; $i++)
-				{
-					if(isset($metadata["loc{$i}"]))
+					if(!isset($address) || !$address)
 					{
-						$value_set["loc{$i}"]	= false;
+						$address = isset($ticket['location_name']) ? $this->db->db_addslashes($ticket['location_name']) : '';
+						if($address)
+						{
+							$value_set['address'] = $address;
+						}
 					}
-				}
 
-				if(isset($ticket['location']) && is_array($ticket['location']))
-				{
-					foreach ($ticket['location'] as $column => $value)
+					if (isset($ticket['location_code']) && $ticket['location_code'])
 					{
-						$value_set[$column]	= $value;
+						$value_set['location_code'] = $ticket['location_code'];
 					}
-				}
 
-				if(isset($ticket['extra']) && is_array($ticket['extra']))
-				{
-					foreach ($ticket['extra'] as $column => $value)
+					$admin_location	= CreateObject('property.soadmin_location');
+					$admin_location->read(false);
+
+				// Delete old values for location - in case of moving up in the hierarchy
+					$metadata = $this->db->metadata('fm_tts_tickets');
+					for ($i = 1;$i < $admin_location->total_records + 1; $i++)
 					{
-						$value_set[$column]	= $value;
+						if(isset($metadata["loc{$i}"]))
+						{
+							$value_set["loc{$i}"]	= false;
+						}
 					}
+
+					if(isset($ticket['location']) && is_array($ticket['location']))
+					{
+						foreach ($ticket['location'] as $column => $value)
+						{
+							$value_set[$column]	= $value;
+						}
+					}
+
+					if(isset($ticket['extra']) && is_array($ticket['extra']))
+					{
+						foreach ($ticket['extra'] as $column => $value)
+						{
+							$value_set[$column]	= $value;
+						}
+					}
+
+					$value_set	= $this->db->validate_update($value_set);
+
+					$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+
+					$this->historylog->add('L',$id,$ticket['location_code'],$oldlocation_code);
+					$receipt['message'][]= array('msg' => lang('Location has been updated'));
 				}
-
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
-
-				$this->historylog->add('L',$id,$ticket['location_code'],$oldlocation_code);
-				$receipt['message'][]= array('msg' => lang('Location has been updated'));
+				unset($interlink);
 			}
 
 			$this->db->transaction_commit();
