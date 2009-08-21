@@ -332,7 +332,7 @@ class rental_socontract extends rental_socommon
 					break;
 				case 'active':
 				default:
-					$condition .= " AND (rental_contract.date_start <= '{$current_date}' AND rental_contract.date_end >= '{$current_date}')";  
+					$condition .= " AND (rental_contract.date_start <= '{$current_date}' AND (rental_contract.date_end >= '{$current_date}' OR rental_contract.date_end IS NULL))";  
 					break;
 			}
 			
