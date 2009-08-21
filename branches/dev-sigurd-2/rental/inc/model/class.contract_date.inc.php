@@ -16,8 +16,22 @@ class rental_contract_date
 	 */
 	public function __construct(string $start_date = null, string $end_date = null)
 	{
-		$this->start_date = (string)$start_date;
-		$this->end_date = (string)$end_date;
+		if($start_date != '')
+		{
+			$this->start_date = (string)$start_date;
+		}
+		else
+		{
+			$this->start_date = null;
+		}
+		if($end_date != '')
+		{
+			$this->end_date = (string)$end_date;
+		}
+		else
+		{
+			$this->end_date = null;
+		}
 	}
 	
 	public function get_start_date()
