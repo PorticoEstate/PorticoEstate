@@ -170,10 +170,10 @@ class rental_socontract extends rental_socommon
 	function get_single($id)
 	{
 		$id = (int)$id;
-		$sql_payer_id = "LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
+		$sql_payer_id = " LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-		$sql = "SELECT * FROM " . $this->table_name ." $sql_payer_id WHERE " . $this->table_name . ".id={$id}";
-	
+		$sql = "SELECT * FROM " . $this->table_name . $sql_payer_id . $this->left_join . 'rental_contract_type ON (rental_contract_type.id = rental_contract.type_id)' . 'WHERE ' . $this->table_name . ".id={$id}";
+
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 	
 		$contract = new rental_contract();
@@ -191,6 +191,7 @@ class rental_socontract extends rental_socommon
 		$billing_start_date = strtotime($this->unmarshal($this->db->f('billing_start_date', true), 'date'));
 		$contract->set_billing_start_date($billing_start_date);
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
+		$contract->set_contract_type_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
 		$contract->set_security_type($this->unmarshal($this->db->f('security_type', true), 'int'));
 		$contract->set_security_amount($this->unmarshal($this->db->f('security_amount', true), 'string'));
@@ -241,7 +242,7 @@ class rental_socontract extends rental_socommon
 	
 	
 	protected function get_contracts_from_result(){
-	$results = array();
+		$results = array();
 		
 		while ($this->db->next_record())
 		{
@@ -253,9 +254,8 @@ class rental_socontract extends rental_socommon
 			$results[] = $row;
 		}
 		
-		
 		$contracts = array();
-		
+
 		// Go through each returned row and create contract objects
 		foreach ($results as $row) {
 			$new_contract = true;
