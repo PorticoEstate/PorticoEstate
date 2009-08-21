@@ -1184,10 +1184,10 @@
 				$supervisor_email = '';
 			}
 
-			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']:'');
+			$workorder_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status']:'');
 			if(!$values['status'])
 			{
-				$values['status']=$project_status;
+				$values['status']=$workorder_status;
 			}
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
@@ -1773,18 +1773,16 @@
 		{
 			$tabs = array
 			(
-				'project'		=> array('label' => lang('Project info'), 'link' => '#project'),
 				'general'		=> array('label' => lang('general'), 'link' => '#general'),
 				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
 				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
 				'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
 				'history'		=> array('label' => lang('history'), 'link' => '#history')
 			);
 
 			phpgwapi_yui::tabview_setup('workorder_tabview');
 
-			return phpgwapi_yui::tabview_generate($tabs, 'project');
+			return phpgwapi_yui::tabview_generate($tabs, 'general');
 		}
 
 	}

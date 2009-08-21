@@ -1420,7 +1420,7 @@
 				'lang_save_statustext'				=> lang('Save the project'),
 				'lang_no_cat'						=> lang('Select category'),
 				'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
-				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 				'lang_workorder_id'					=> lang('Workorder ID'),
 				//'sum_workorder_budget'				=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
 				//'sum_workorder_calculation'			=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
@@ -1738,7 +1738,6 @@
 				'location'		=> array('label' => lang('location'), 'link' => '#location'),
 				'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
 				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-				'extra'			=> array('label' => lang('extra'), 'link' => '#extra'),
 				'history'		=> array('label' => lang('history'), 'link' => '#history')
 			);
 
