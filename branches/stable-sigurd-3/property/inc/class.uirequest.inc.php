@@ -68,7 +68,7 @@
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->cats					= & $this->bo->cats;
 			$this->bolocation			= CreateObject('property.bolocation');
-			$this->config				= CreateObject('phpgwapi.config');
+			$this->config				= CreateObject('phpgwapi.config','property');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.project.request';

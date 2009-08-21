@@ -78,7 +78,7 @@
 			$this->so 					= CreateObject('property.sotts');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->historylog			= & $this->so->historylog;
-			$this->config				= CreateObject('phpgwapi.config');
+			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.ticket';
@@ -533,6 +533,7 @@
 						case 'B': $type = lang('Billable rate changed'); break;
 						case 'F': $type = lang('finnish date changed'); break;
 						case 'IF': $type = lang('Initial finnish date'); break;
+						case 'L': $type = lang('Location changed'); break;
 						default: break;
 					}
 

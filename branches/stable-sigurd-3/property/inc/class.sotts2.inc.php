@@ -41,7 +41,7 @@
 		{
 			$this->bo 			= CreateObject('property.botts');
 			$this->historylog	= CreateObject('property.historylog','tts');
-			$this->config		= CreateObject('phpgwapi.config');
+			$this->config		= CreateObject('phpgwapi.config','property');
 
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
@@ -112,8 +112,9 @@
 
 		}
 
-		function update_ticket($ticket,$id='')
+		function update_ticket($ticket,$id = 0)
 		{
+			$id = (int) $id;
 			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
@@ -121,6 +122,7 @@
 
 
 			$location_code 	= $this->db->f('location_code');
+			$oldlocation_code 	= $this->db->f('location_code');
 			$oldfinnish_date 	= $this->db->f('finnish_date');
 			$oldfinnish_date2 	= $this->db->f('finnish_date2');
 			$oldassigned 		= $this->db->f('assignedto');
@@ -163,6 +165,7 @@
 			** H - Billing hours
 			** F - finnish date
 			** C% - Status change
+			** L - Location changed
 			*/
 
 			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
@@ -213,6 +216,7 @@
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
 			{
+_debug_array($ticket);
 				$fields_updated = true;
 
 				$value_set=array('assignedto'	=> $ticket['assignedto']);
@@ -277,6 +281,70 @@
 			{
 				$fields_updated = true;
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
+			}
+
+			$ticket['location_code']=implode('-', $ticket['location']);
+
+			if ($oldlocation_code != $ticket['location_code'])
+			{
+				$value_set	= array();
+
+				if(isset($ticket['street_name']) && $ticket['street_name'])
+				{
+					$address[]= $ticket['street_name'];
+					$address[]= $ticket['street_number'];
+					$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
+				}
+
+				if(!isset($address) || !$address)
+				{
+					$address = isset($ticket['location_name']) ? $this->db->db_addslashes($ticket['location_name']) : '';
+					if($address)
+					{
+						$value_set['address'] = $address;
+					}
+				}
+
+				if (isset($ticket['location_code']) && $ticket['location_code'])
+				{
+					$value_set['location_code'] = $ticket['location_code'];
+				}
+
+				$admin_location	= CreateObject('property.soadmin_location');
+				$admin_location->read(false);
+
+			// Delete old values for location - in case of moving up in the hierarchy
+				$metadata = $this->db->metadata('fm_tts_tickets');
+				for ($i = 1;$i < $admin_location->total_records + 1; $i++)
+				{
+					if(isset($metadata["loc{$i}"]))
+					{
+						$value_set["loc{$i}"]	= false;
+					}
+				}
+
+				if(isset($ticket['location']) && is_array($ticket['location']))
+				{
+					foreach ($ticket['location'] as $column => $value)
+					{
+						$value_set[$column]	= $value;
+					}
+				}
+
+				if(isset($ticket['extra']) && is_array($ticket['extra']))
+				{
+					foreach ($ticket['extra'] as $column => $value)
+					{
+						$value_set[$column]	= $value;
+					}
+				}
+
+				$value_set	= $this->db->validate_update($value_set);
+
+				$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
+
+				$this->historylog->add('L',$id,$ticket['location_code'],$oldlocation_code);
+				$receipt['message'][]= array('msg' => lang('Location has been updated'));
 			}
 
 			$this->db->transaction_commit();

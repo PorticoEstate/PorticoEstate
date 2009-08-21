@@ -368,7 +368,7 @@
 				return false;	// event not found
 			}
 
-			$this->config		= CreateObject('phpgwapi.config');
+			$this->config		= CreateObject('phpgwapi.config','property');
 			$this->config->read();
 			$this->send			= CreateObject('phpgwapi.send');
 
