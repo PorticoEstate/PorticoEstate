@@ -30,11 +30,11 @@ class rental_unit
 
 	public function get_location(){ return $this->location; }
 
-	public function get_location_id()
+	public function get_location_code()
 	{
 		if($this->location != null)
 		{
-			return $this->location->get_location_id();
+			return $this->location->get_location_code();
 		}
 		return -1;
 	}
