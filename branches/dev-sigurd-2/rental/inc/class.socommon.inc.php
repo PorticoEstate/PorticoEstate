@@ -1,16 +1,6 @@
 <?php
 	abstract class rental_socommon
 	{
-		// Constants mapping a unit to the level used in the database
-		const UNIT_PROPERTY = 1;
-		const UNIT_BUILDING = 2;
-		const UNIT_FLOOR = 3;
-		const UNIT_SECTION = 4;
-		const UNIT_ROOM = 5;
-		
-		// Mapping of unit levels to classes
-		protected static $unit_class_array = array(1 => 'rental_property', 2 => 'rental_building', 3 => 'rental_floor', 4 => 'rental_section', 5 => 'rental_room');
-		
 		public $table_name;
 		
 		public function __construct($table_name, $fields)
@@ -20,6 +10,7 @@
 			$this->db           = clone $GLOBALS['phpgw']->db;
 			$this->like			= & $this->db->like;
 			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 		}
 		
 		/*

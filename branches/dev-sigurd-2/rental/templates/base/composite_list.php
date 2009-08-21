@@ -33,13 +33,15 @@ if($this->hasWritePermission())
 <?php 
 }
 ?>
-
+<?php
+/* TODO: Fix column selector: 
 <fieldset>
 	<!-- Select table columns -->
 	<h3><?php echo lang('rental_common_toolbar_functions') ?></h3>
 	<input type="button" id="dt-options-link" name="dt-options-link" value="<?php echo lang('rental_common_toolbar_functions_select_columns') ?>" />
 </fieldset>
-
+*/
+?>
 <?php 
 $list_form = true;
 $list_id = 'all_composites';

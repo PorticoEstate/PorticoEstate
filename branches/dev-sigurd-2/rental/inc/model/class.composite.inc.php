@@ -15,27 +15,16 @@
 		public static $so;
 		
 		protected $id;
+		protected $name;
 		protected $description;
 		protected $is_active;
-		protected $name;
 		protected $has_custom_address;
-		
-		protected $address_1;
-		protected $address_2;
-		protected $house_number;
-		protected $postcode;
-		protected $place;
-		// XXX: What are all these custom fields? They are not used when updated from db..
+		// These are custom fields that may be set on the composite
 		protected $custom_address_1;
 		protected $custom_address_2;
 		protected $custom_house_number;
 		protected $custom_postcode;
 		protected $custom_place;
-		
-		protected $gab_id;
-		
-		protected $area_gros;
-		protected $area_net;
 		
 		protected $units;
 	
@@ -98,13 +87,39 @@
 		}
 		
 		/**
+		 * Adds a composite to the composite object. Note that this method is
+		 * meant for populating the object and will not fetch anything from
+		 * the database.
+		 * @see add_new_unit().
+		 * @param $unit to add to object.
+		 */
+		public function add_unit($new_unit)
+		{
+			if(!isset($this->units)) // No units are added yet
+			{
+				$this->units = array();
+			}
+			else // There are units
+			{
+				foreach ($this->units as $unit) {
+					if ($unit->get_location_id() == $new_unit->get_location_id()) { // Unit already exists
+						return;
+					}
+				}
+			}
+			// Unit doesn't already exist so we add it to the array
+			$this->units[] = $new_unit;
+		}
+		
+		/**
 		 * Associate a rental unit to this composite.  Note that the composite is not updated
 		 * in the database until store() is called.  This function checks for duplicates
-		 * before adding the given unit.
+		 * before adding the given unit. This function will fetch the belonging units from the
+		 * db if necessary.
 		 * 
 		 * @param $new_unit the unit to associate
 		 */
-		public function add_unit($new_unit)
+		public function add_new_unit($new_unit)
 		{
 			$units = $this->get_included_rental_units();
 			
@@ -166,56 +181,12 @@
 		 * @param $results how many results to return
 		 * @return rental_unit[]
 		 */
-		public function get_included_rental_units($sort = null, $dir = 'asc', $start = 0, $results = null)
+		public function get_units($sort = null, $dir = 'asc', $start = 0, $results = null)
 		{
 			if (!$this->units) {
 				$this->units = rental_unit::get_units_for_composite($this->get_id(), $sort, $dir, $start, $results);
 			}
 			return $this->units; 
-		}
-	
-		/**
-		 * Get the contracts associated with this composite
-		 * 
-		 * @return an array of rental_contract objects
-		 * @param object $sort[optional]
-		 * @param object $dir[optional]
-		 * @param object $start[optional]
-		 * @param object $results[optional]
-		 * @param object $status[optional]
-		 * @param object $date[optional]
-		 */
-		public function get_contracts($sort = null, $dir = 'asc', $start = 0, $results = null, $status = null, $date = null)
-		{
-			if (!$this->contracts) {
-				$this->contracts = rental_contract::get_contracts_for_composite($this->get_id(), $sort, $dir, $start, $results, $status, $date);
-			}
-			return $this->contracts;
-		}
-		
-		/**
-		 * Check if the composite is vacant at the given date.  If no date is given, today is used as the date.
-		 * 
-		 * @return true if the composite is vacant, false otherwise
-		 * @param object $date[optional]
-		 */
-		public function is_vacant($date = null)
-		{
-			if (!$date) {
-				// No date to check was specified, so check for right now
-				$date = mktime(00,00,00);
-			}
-			
-			foreach ($this->get_contracts() as $contract) {
-				$start_date = strtotime($contract->get_contract_date()->get_start_date());
-				$end_date = strtotime($contract->get_contract_date()->get_end_date());
-				
-				if (($date > $start_date) && ($date < $end_date)) {
-					return false;
-				}
-			}
-			
-			return true;
 		}
 		
 		
@@ -235,7 +206,7 @@
 		
 		public function set_is_active($is_active)
 		{
-			$this->is_active = $is_active;
+			$this->is_active = (boolean)$is_active;
 		}
 		
 		public function is_active() { return $this->is_active;	}
@@ -254,67 +225,25 @@
 		
 		public function has_custom_address() { return $this->has_custom_address; }
 		
-		public function set_address_1($address)
-		{
-			$this->address_1 = $address;
-		}
-		
-		public function get_address_1() { return $this->address_1; }
-		
-		public function set_address_2($address)
-		{
-			$this->address_2 = $address;
-		}
-		
-		public function get_address_2() { return $this->address_2; }
-		
-		public function set_house_number($house_number)
-		{
-			$this->house_number = $house_number;
-		}
-		
-		public function get_house_number() { return $this->house_number; }
-		
-		public function set_postcode($postcode)
-		{
-			$this->postcode = $postcode;
-		}
-		
-		public function get_postcode() { return $this->postcode; }
-		
-		public function set_place($place)
-		{
-			$this->place = $place;
-		}
-		
-		public function get_place() { return $this->place; }
-		
-		public function set_custom_address_1($custom_address)
-		{
-			$this->custom_address_1 = $custom_address;
-		}
-		
-		public function get_custom_address_1() { return $this->custom_address_1; }
-		
-		public function set_custom_address_2($custom_address)
-		{
-			$this->custom_address_2 = $custom_address;
-		}
-		
-		public function get_custom_address_2() { return $this->custom_address_2; }
-		
-		public function set_custom_house_number($custom_house_number)
-		{
-			$this->custom_house_number = $custom_house_number;
-		}
-		
-		public function get_custom_house_number() { return $this->custom_house_number; }
-		
 		public function set_custom_postcode($custom_postcode)
 		{
 			$this->custom_postcode = $custom_postcode;
 		}
 		
+		public function set_custom_address_1($custom_address_1)
+		{
+			$this->custom_address_1 = $custom_address_1;
+		}
+	
+		public function get_custom_address_1(){ return $this->custom_address_1; }
+			
+		public function set_custom_address_2($custom_address_2)
+		{
+			$this->custom_address_2 = $custom_address_2;
+		}
+	
+		public function get_custom_address_2(){ return $this->custom_address_2; }
+			
 		public function get_custom_postcode() { return $this->custom_postcode; }
 		
 		public function set_custom_place($custom_place)
@@ -322,29 +251,42 @@
 			$this->custom_place = $custom_place;
 		}
 		
+		public function set_custom_house_number($custom_house_number)
+		{
+			$this->custom_house_number = $custom_house_number;
+		}
+	
+		public function get_custom_house_number(){ return $this->custom_house_number; }
+		
 		public function get_custom_place() { return $this->custom_place; }
 		
-		public function set_gab_id($gab_id)
-		{
-			$this->gab_id = $gab_id;
+		public function get_area_gros() {
+			$area = 0;
+			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			{
+				$location = $unit->get_location();
+				if($location != null) // There is an underlying property location
+				{
+					$area += $location->get_area_gros() ;
+				}
+			}
+			return $area;
 		}
 		
-		public function get_gab_id() { return $this->gab_id; }
-	
-		public function set_area_gros($area)
-		{
-			$this->area_gros = $area;
+		public function get_area_net() {
+			$area = 0;
+			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			{
+				$location = $unit->get_location();
+				if($location != null) // There is an underlying property location
+				{
+					$area += $location->get_area_net() ;
+				}
+			}
+			return $area;
+
 		}
-		
-		public function get_area_gros() { return $this->area_gros; }
-		
-		public function set_area_net($area)
-		{
-			$this->area_net = $area;
-		}
-		
-		public function get_area_net() { return $this->area_net; }
-		
+
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -367,31 +309,39 @@
 		function __toString()
 		{
 			$result  = '{';
-			
 			$result .= '"id":"' . $this->get_id() . '",';
 			$result .= '"name":"' . $this->get_name() . '"';
-			
 			$result .= '}';
-			
 			return $result;
 		}
 		
-		public function serialize() {
+		public function serialize()
+		{
+			$addresses = '';
+			$location_codes = '';
+			$gab_ids = '';
+			foreach($this->get_units() as $unit) // Runs through all of the composites units
+			{
+				$location = $unit->get_location();
+				if($location != null) // There is an underlying property location
+				{
+					$addresses .= $location->get_address_1() . "\n";
+					$location_codes .= $location->get_location_code() . "\n";
+					$gab_ids .= $location->get_gab_id() . "\n";
+				}
+			}
+			if($this->has_custom_address())
+			{
+				$addresses = $this->get_custom_address_1() . ' ' . $this->get_custom_house_number();
+			}
 			return array(
 				'id' => $this->get_id(),
+				'location_code' => $location_codes,
 				'description' => $this->get_description(),
 				'is_active' => $this->is_active(),
 				'name' => $this->get_name(),
-				'has_custom_address' => $this->has_custom_address(),
-				'address_1' => $this->get_custom_address_1(),
-				'address_2' => $this->get_custom_address_2(),
-				'postcode' => $this->get_custom_postcode(),
-				'place' => $this->get_custom_place(),
-				'adresse1' => $this->get_address_1(),
-				'adresse2' => $this->get_address_2(),
-				'postnummer' => $this->get_postcode(),
-				'poststed' => $this->get_place(),
-				'gab_id' => $this->get_gab_id(),
+				'address' => $addresses,
+				'gab_id' => $gab_ids,
 				'area_gros' => $this->get_area_gros(),
 				'area_net' => $this->get_area_net()
 			);

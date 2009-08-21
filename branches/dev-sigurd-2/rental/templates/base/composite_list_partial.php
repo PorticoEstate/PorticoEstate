@@ -3,7 +3,13 @@
 	var columnDefs = [{
 			key: "id",
 			label: "<?php echo lang('rental_common_serial') ?>",
-			sortable: true
+			sortable: false,
+			hidden: true
+		},
+		{
+			key: "location_code",
+			label: "<?php echo lang('rental_common_location_code') ?>",
+			sortable: false
 		},
 		{
 			key: "name",
@@ -11,14 +17,14 @@
 		    sortable: true
 		},
 		{
-			key: "adresse1",
+			key: "address",
 			label: "<?php echo lang('rental_common_address') ?>",
 		    sortable: false
 		},
 		{
 			key: "gab_id",
 			label: "<?php echo lang('rental_common_propertyident') ?>",
-		    sortable: true
+		    sortable: false
 		},
 		{
 			key: "actions",
@@ -61,8 +67,6 @@
 			<option value="id"><?php echo lang('rental_common_serial') ?></option>
 			<option value="name"><?php echo lang('rental_common_name') ?></option>
 			<option value="address"><?php echo lang('rental_common_address') ?></option>
-			<option value="gab"><?php echo lang('rental_common_gab') ?></option>
-			<option value="ident"><?php echo lang('rental_common_gab') ?></option>
 			<option value="property_id"><?php echo lang('rental_common_property_id') ?></option>
 		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
@@ -78,12 +82,16 @@
 			<option value="non_active"><?php echo lang('rental_common_out_of_operation') ?></option>
 			<option value="both"><?php echo lang('rental_common_all') ?></option>
 		</select>
+		<?
+		/* XXX: Why is this included? Have we ever checked for available composites?
 		<label for="ctrl_toggle_occupancy_of_rental_composites"><?php echo lang('rental_common_and') ?></label>
 		<select name="occupancy" id="<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites">
 			<option value="vacant"><?php echo lang('rental_common_vacant') ?></option>
 			<option value="occupied"><?php echo lang('rental_common_occupied') ?></option>
 			<option value="both"><?php echo lang('rental_common_all') ?></option>
 		</select>
+		*/
+		?>
 	</fieldset>
 </form>
 <?php 

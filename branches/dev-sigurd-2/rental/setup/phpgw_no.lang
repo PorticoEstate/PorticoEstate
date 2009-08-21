@@ -88,6 +88,7 @@ rental_common_last	rental	no	Siste
 rental_common_last_edited_by_current_user	rental	no	Sist arbeidet med
 rental_common_lastname	rental	no	Etternavn
 rental_common_level	rental	no	Nivå
+rental_common_location_code	rental	no	Enhetsnummer
 rental_common_log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
 rental_common_message	rental	no	Melding
 rental_common_monthly	rental	no	Månedlig

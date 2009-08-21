@@ -38,33 +38,14 @@
 							if (!$editable && $composite->has_custom_address()) {
 								// In view mode the custom address should be displayed if it's filled in
 								echo $composite->get_custom_address_1() . "<br />";
-								
 								if ($composite->get_custom_address_2()) {
 									echo ', ' . $composite->get_custom_address_2();
 								}
-								
 								if ($composite->get_custom_house_number()) {
 									echo ' ' . $composite->get_custom_house_number();
 								}
-								
 								if ($composite->get_custom_postcode()) {
 									echo '<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
-								}
-							} else {
-								// Always show the original address if in edit mode, or if the
-								// custom address isn't filled in
-								echo $composite->get_address_1();
-								
-								if ($composite->get_address_2()) {
-									echo ', ' . $composite->get_address_2();
-								}
-								
-								if ($composite->get_house_number()) {
-									echo ' ' . $composite->get_house_number();
-								}
-								
-								if ($composite->get_postcode()) {
-									echo '<br />' . $composite->get_postcode() . ' ' . $composite->get_place();
 								}
 							}
 						?>
@@ -77,7 +58,8 @@
 					</dt>
 					<dd>
 						<input type="text" name="address_1" id="address_1" value="<?php echo $composite->get_custom_address_1() ?>" />
-						<input type="text" name="house_number" id="house_number" value="<?php echo $composite->get_custom_house_number() ?>" />
+						<input type="text" name="house_number" id="house_number" value="<?php echo $composite->get_custom_house_number() ?>" /><br/>
+						<input type="text" name="address_2" id="address_2" value="<?php echo $composite->get_custom_address_2() ?>" />
 					</dd>
 					<dt>
 						<label for="postcode"><?php echo lang('rental_common_post_code') ?></label>
@@ -97,8 +79,6 @@
 					<dd><?php echo $composite->get_area_gros() ?> m<sup>2</sup></dd>
 					<dt><?php echo lang('rental_common_area_net') ?></dt>
 					<dd><?php echo $composite->get_area_net() ?> m<sup>2</sup></dd>
-					<dt><?php echo lang('rental_common_propertyident') ?></dt>
-					<dd><?php echo $composite->get_gab_id() ?></dd>
 					
 					<dt>
 						<label for="is_active"><?php echo lang('rental_common_available?') ?></label>
@@ -113,9 +93,7 @@
 						<label for="description"><?php echo lang('rental_common_description') ?></label>
 					</dt>
 					<dd>
-						<textarea name="description" id="description" rows="10" cols="50" <?php echo !$editable ? ' disabled="disabled"' : '' ?>>
-							<?php echo $composite->get_description() ?>
-						</textarea>
+						<textarea name="description" id="description" rows="10" cols="50" <?php echo !$editable ? ' disabled="disabled"' : '' ?>><?php echo $composite->get_description() ?></textarea>
 					</dd>
 				</dl>
 				
@@ -189,17 +167,16 @@
 
 		//initCalendar('available_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
 		
-		
 		//Columns for added areas datatable
 		var addedAreasColumnDefs = [{
 			key: "location_code",
-			label: "<?php echo lang('rental_common_id') ?>",
+			label: "<?php echo lang('rental_common_location_code') ?>",
 		  sortable: true
 		},
 		{
 			key: "loc1_name",
 			label: "<?php echo lang('rental_common_property') ?>",
-		  sortable: true
+		  sortable: false
 		},
 		{
 			key: "loc2_name",
@@ -270,7 +247,7 @@
 		{
 			key: "loc1_name",
 			label: "<?php echo lang('rental_common_property') ?>",
-		  	sortable: true
+		  	sortable: false
 		},
 		{
 			key: "loc2_name",
@@ -374,7 +351,7 @@
 		// Initiating the data source
 		setDataSource(
 				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=contracts&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
-				availableAreasColumnDefs,
+				contractsColumnDefs,
 				'contracts_form',
 				['ctrl_toggle_contract_status'],
 				'contracts-container',

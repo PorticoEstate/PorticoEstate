@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.uidocument_composite');
 	include_class('rental', 'composite', 'inc/model/');
+	include_class('rental', 'property_location', 'inc/model/');
 	
 	class rental_uicomposite extends rental_uicommon
 	{	
@@ -62,14 +63,13 @@
 			{
 				$composite = new rental_composite($composite_id);
 				$composite->set_name(phpgw::get_var('name'));
-				$composite->set_gab_id(phpgw::get_var('gab_id'));
-				$composite->set_address_1(phpgw::get_var('address_1'));
-				$composite->set_has_custom_address($composite->get_address_1() != null && $composite->get_address_1() != '' ? true : false);
+				$composite->set_custom_address_1(phpgw::get_var('address_1'));
+				$composite->set_has_custom_address($composite->get_custom_address_1() != null && $composite->get_custom_address_1() != '' ? true : false);
 				// XXX: Why do we have to use these functionand not the set_custom_*() ones? Does the SO layer use the incorrect functions?
-				$composite->set_house_number(phpgw::get_var('house_number'));
-				$composite->set_address_2(phpgw::get_var('address_2'));
-				$composite->set_postcode(phpgw::get_var('postcode'));
-				$composite->set_place(phpgw::get_var('place'));
+				$composite->set_custom_house_number(phpgw::get_var('house_number'));
+				$composite->set_custom_address_2(phpgw::get_var('address_2'));
+				$composite->set_custom_postcode(phpgw::get_var('postcode'));
+				$composite->set_custom_place(phpgw::get_var('place'));
 				$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 				$composite->set_description(phpgw::get_var('description'));
 				$composite->store();
@@ -152,102 +152,28 @@
 					break;
 				case 'included_areas':
 					$composite = rental_composite::get(phpgw::get_var('id'));
-					$rental_units = $composite->get_included_rental_units(phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'));
+					$rental_units = $composite->get_units(phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'));
 					$composite_data = array();
-					$composite_data[total_records] = count($rental_units);
+					$composite_data['total_records'] = count($rental_units);
 					$composite_data['results'] = array();
 					foreach ($rental_units as $unit) {
-//						var_dump($unit);
-						$result = array
-						(
-							'location_code' => $unit->get_location_code(),
-							'location_id' => $unit->get_location_id(),
-							'loc1' => $unit->get_location_code_property(),
-							'address' => $unit->get_address(),
-							'area_net' => $unit->get_area_net(),
-							'area_gros' => $unit->get_area_gros(),
-							'loc1_name' => $unit->get_property_name()
-						);
-						if($unit instanceof rental_building)
-						{
-							$result['loc2_name'] = $unit->get_building_name();
-							if($unit instanceof rental_floor)
-							{
-								$result['loc3_name'] = $unit->get_floor_name();
-								if($unit instanceof rental_section)
-								{
-									$result['loc4_name'] = $unit->get_section_name();
-									if($unit instanceof rental_room)
-									{
-										$result['loc5_name'] = $unit->get_room_name();
-									}
-								}
-							}
-						}
-						$composite_data['results'][] = $result;
+						$composite_data['results'][] = $unit->serialize();
 					}
 					break;
 				case 'available_areas':
 					$composite_data = array();
-					$composite_data[total_records] = count(rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('available_date_hidden'), phpgw::get_var('id'), 0, 10000));
+					$composite_data['total_records'] = count(rental_property_location::get_locations((int)phpgw::get_var('level'), phpgw::get_var('available_date_hidden'), phpgw::get_var('id'), 0, 10000));
 					$composite_data['results'] = array();
-					$unit_array = rental_unit::get_available_rental_units((int)phpgw::get_var('level'), phpgw::get_var('id'), phpgw::get_var('available_date_hidden'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('sort'), phpgw::get_var('dir') == ' desc' ? false : true);
+					$unit_array = rental_property_location::get_locations((int)phpgw::get_var('level'), phpgw::get_var('id'), phpgw::get_var('available_date_hidden'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('sort'), phpgw::get_var('dir') == ' desc' ? false : true);
 					foreach($unit_array as $unit)
 					{
-						$occupied_date_array = $unit->get_occupied_date_array();
-						if($occupied_date_array !== null)
-						{
-							$data = &$composite_data['results'][];
-							$data['location_code'] = $unit->get_location_code();
-							$data['location_id'] = $unit->get_location_id();
-							$data['loc1'] = $unit->get_location_code_property();
-							$data['address'] = $unit->get_address();
-							$data['area_net'] = $unit->get_area_net();
-							$data['area_gros'] = $unit->get_area_gros();
-							$data['loc1_name'] = $unit->get_property_name();
-							$occupied = '';
-							if(count($occupied_date_array) == 0)
-							{
-								$occupied = lang('rental_common_available');
-							}
-							else
-							{
-								$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-								foreach($occupied_date_array as $contract_date)
-								{
-									if($occupied != '')
-									{
-										$occupied .= ', ';
-									}
-									$occupied .= ($contract_date->has_start_date() ? date($date_format, strtotime($contract_date->get_start_date())) : '').' - '.($contract_date->has_end_date() ? date($date_format, strtotime($contract_date->get_end_date())) : '');
-								}
-								$occupied = lang('rental_common_occupied').' '.$occupied;
-							}
-							$data['occupied'] = $occupied;
-							if($unit instanceof rental_building)
-							{
-								$data['loc2_name'] = $unit->get_building_name();
-								if($unit instanceof rental_floor)
-								{
-									$data['loc3_name'] = $unit->get_floor_name();
-									if($unit instanceof rental_section)
-									{
-										$data['loc4_name'] = $unit->get_section_name();
-										if($unit instanceof rental_room)
-										{
-											$data['loc5_name'] = $unit->get_room_name();
-										}
-									}
-								}
-							}
-						}
+						$composite_data['results'][] = $unit->serialize();
 					}
 					break;
 				case 'contracts':
-					$composite = rental_composite::get(phpgw::get_var('id'));
-					$contracts = $composite->get_contracts(phpgw::get_var('id'), phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('contract_status'), phpgw::get_var('contract_date'));
+					$contracts = rental_contract::get_contracts_for_composite(phpgw::get_var('id'), phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('contract_status'), phpgw::get_var('contract_date'));
 					$composite_data = array();
-					$composite_data[total_records] = count($contracts);
+					$composite_data['total_records'] = count($contracts);
 					$composite_data['results'] = array();
 					
 					foreach ($contracts as $contract) {
@@ -257,15 +183,14 @@
 							'date_end' => $contract->get_contract_date()->get_end_date(),
 							'billing_start_date' => $contract->get_billing_start_date(),
 							'type_id' => $contract->get_type_id(),
-							'term_id' => $contract->get_term_id(),
-							'account' => $contract->get_account()
+							'term_id' => $contract->get_term_id()
 						);
 					}
 					break;
 				case 'orphan_units':
 					$composite_data = array();
 					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
-					$composite_data[total_records] = rental_unit::get_orphan_rental_unit_count();
+					$composite_data['total_records'] = rental_unit::get_orphan_rental_unit_count();
 					$composite_data['results'] = array();
 					
 					foreach($units as $unit)
@@ -436,7 +361,7 @@
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
 				$loc1 = (int)phpgw::get_var('loc1');
-				$composite->add_unit(new rental_property($loc1, $location_id));
+				$composite->add_new_unit(new rental_property($loc1, $location_id));
 				$composite->store();
 			}
 			
