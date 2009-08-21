@@ -352,9 +352,18 @@ class rental_socontract extends rental_socommon
 			while($this->db->next_record())
 			{
 				$contract = new rental_contract($this->unmarshal($this->db->f('id', true), 'string'));
-				
-				$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_start', true), 'date')));
-	     	$date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->unmarshal($this->db->f('date_end', true), 'date')));
+				$date_start = '';
+				$date_start_timestamp = $this->unmarshal($this->db->f('date_start', true), 'date');
+				if($date_start_timestamp != null && $date_start_timestamp != '')
+				{
+					$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($date_start_timestamp));
+				}
+				$date_end_timestamp = $this->unmarshal($this->db->f('date_end', true), 'date');
+				if($date_end_timestamp != null && $date_end_timestamp != '')
+				{
+					$date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($date_end_timestamp));
+				}
+	     			
 	     	
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
