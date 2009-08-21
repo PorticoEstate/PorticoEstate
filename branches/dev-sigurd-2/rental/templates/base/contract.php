@@ -160,7 +160,25 @@ YAHOO.util.Event.onDOMReady(
 							} 
 							else
 							{
-								echo $contract->get_security_type().'<br/>'.$contract->get_security_amount();
+								switch ($contract->get_security_type())
+								{
+									case rental_contract::SECURITY_TYPE_BANK_GUARANTEE:
+										echo lang('rental_common_bank_guarantee');
+										break;
+									case rental_contract::SECURITY_TYPE_DEPOSIT:
+										echo lang('rental_common_deposit');
+										break;
+									case rental_contract::SECURITY_TYPE_ADVANCE:
+										echo lang('rental_common_advance');
+										break;
+									case rental_contract::SECURITY_TYPE_OTHER_GUARANTEE:
+										echo lang('rental_common_other_guarantee');
+										break;
+									default:
+										/* no-op */
+										break;
+								}
+								echo '<br/>'.$contract->get_security_amount();
 							}
 						?>
 					</dd>
