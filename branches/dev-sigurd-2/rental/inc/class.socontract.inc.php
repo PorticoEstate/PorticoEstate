@@ -180,7 +180,7 @@ class rental_socontract extends rental_socommon
 	
 		$this->db->next_record();
 
-		$contract->set_id($this->unmarshal($this->db->f('id', true), 'int'));
+		$contract->set_id($this->unmarshal($this->db->f('contract_id', true), 'int'));
 
 		$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
 		$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
