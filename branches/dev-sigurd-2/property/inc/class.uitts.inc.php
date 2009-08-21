@@ -1779,6 +1779,19 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>4, 'acl_location'=> $this->acl_location));
 				}
 
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
 				if(isset($values['takeover']) && $values['takeover'])
 				{
 					$values['assignedto'] = $this->account;
@@ -1830,46 +1843,61 @@
 			$additional_notes = $this->bo->read_additional_notes($id);
 			$record_history = $this->bo->read_record_history($id);
 
-			$request_link_data = array
-			(
-				'menuaction'		=> 'property.uirequest.edit',
-				'bypass'		=> true,
-				'location_code'		=> $ticket['location_code'],
-				'p_num'			=> $ticket['p_num'],
-				'p_entity_id'		=> $ticket['p_entity_id'],
-				'p_cat_id'		=> $ticket['p_cat_id'],
-				'tenant_id'		=> $ticket['tenant_id'],
-				'origin'		=> '.ticket',
-				'origin_id'		=> $id
-			);
+			$order_link				= '';
+			$add_to_project_link	= '';
+			$request_link			='';
 
+			if($GLOBALS['phpgw']->acl->check('.project.request', PHPGW_ACL_ADD, 'property'))
+			{
+				$request_link_data = array
+				(
+					'menuaction'		=> 'property.uirequest.edit',
+					'bypass'			=> true,
+					'location_code'		=> $ticket['location_code'],
+					'p_num'				=> $ticket['p_num'],
+					'p_entity_id'		=> $ticket['p_entity_id'],
+					'p_cat_id'			=> $ticket['p_cat_id'],
+					'tenant_id'			=> $ticket['tenant_id'],
+					'origin'			=> '.ticket',
+					'origin_id'			=> $id
+				);
 
-			$order_link_data = array
-			(
-				'menuaction'		=> 'property.uiproject.edit',
-				'bypass'		=> true,
-				'location_code'		=> $ticket['location_code'],
-				'p_num'			=> $ticket['p_num'],
-				'p_entity_id'		=> $ticket['p_entity_id'],
-				'p_cat_id'		=> $ticket['p_cat_id'],
-				'tenant_id'		=> $ticket['tenant_id'],
-				'origin'		=> '.ticket',
-				'origin_id'		=> $id
-			);
+				$request_link			= $GLOBALS['phpgw']->link('/index.php',$request_link_data);
+			}
 
-			$add_to_project_link_data = array
-			(
-				'menuaction'		=> 'property.uiproject.index',
-				'from'				=> 'workorder',
-				'lookup'			=> true,
-				'query'				=> isset($ticket['location_data']['loc1']) ? $ticket['location_data']['loc1'] : '',
-		//		'p_num'				=> $ticket['p_num'],
-		//		'p_entity_id'		=> $ticket['p_entity_id'],
-		//		'p_cat_id'			=> $ticket['p_cat_id'],
-				'tenant_id'			=> $ticket['tenant_id'],
-				'origin'			=> '.ticket',
-				'origin_id'			=> $id
-			);
+			if($GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'property'))
+			{
+				$order_link_data = array
+				(
+					'menuaction'		=> 'property.uiproject.edit',
+					'bypass'			=> true,
+					'location_code'		=> $ticket['location_code'],
+					'p_num'				=> $ticket['p_num'],
+					'p_entity_id'		=> $ticket['p_entity_id'],
+					'p_cat_id'			=> $ticket['p_cat_id'],
+					'tenant_id'			=> $ticket['tenant_id'],
+					'origin'			=> '.ticket',
+					'origin_id'			=> $id
+				);
+
+				$add_to_project_link_data = array
+				(
+					'menuaction'		=> 'property.uiproject.index',
+					'from'				=> 'workorder',
+					'lookup'			=> true,
+					'query'				=> isset($ticket['location_data']['loc1']) ? $ticket['location_data']['loc1'] : '',
+		//			'p_num'				=> $ticket['p_num'],
+		//			'p_entity_id'		=> $ticket['p_entity_id'],
+		//			'p_cat_id'			=> $ticket['p_cat_id'],
+					'tenant_id'			=> $ticket['tenant_id'],
+					'origin'			=> '.ticket',
+					'origin_id'			=> $id
+				);
+
+				$order_link				= $GLOBALS['phpgw']->link('/index.php',$order_link_data);
+				$add_to_project_link	= $GLOBALS['phpgw']->link('/index.php',$add_to_project_link_data);
+
+			}
 
 			$form_link = array
 			(
@@ -1895,16 +1923,27 @@
 
 //_debug_array($ticket['location_data']);
 
+			if($ticket['origin'] || $ticket['target'])
+			{
+				$lookup_type	= 'view';
+				$type_id		= count(explode('-',$ticket['location_data']['location_code']));
+			}
+			else
+			{
+				$lookup_type	= 'form';
+				$type_id		= -1;
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
 						'values'	=> $ticket['location_data'],
-						'type_id'	=> count(explode('-',$ticket['location_data']['location_code'])),
+						'type_id'	=> $type_id,
 						'no_link'	=> false, // disable lookup links for location type less than type_id
 						'tenant'	=> (isset($ticket['location_data']['tenant_id'])?$ticket['location_data']['tenant_id']:''),
-						'lookup_type'	=> 'view',
+						'lookup_type'	=> $lookup_type,
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
 						'entity_data'	=> (isset($ticket['p'])?$ticket['p']:'')
 						));
-
+			unset($type_id);
 
 			if($ticket['contact_phone'])
 			{
@@ -1923,29 +1962,31 @@
 			}
 
 			$start_entity	= $this->bocommon->get_start_entity('ticket');
-//_debug_array($start_entity);
 
-			$link_entity = '';
+			$link_entity = array();
 			if (isset($start_entity) AND is_array($start_entity))
 			{
 				$i=0;
 				foreach($start_entity as $entry)
 				{
-					$link_entity[$i]['link'] = $GLOBALS['phpgw']->link('/index.php',array
-					(
-						'menuaction'		=> 'property.uientity.edit',
-						'bypass'		=> true,
-						'location_code'		=> $ticket['location_code'],
-						'entity_id'		=> $entry['id'],
-						'p_num'			=> $ticket['p_num'],
-						'p_entity_id'		=> $ticket['p_entity_id'],
-						'p_cat_id'		=> $ticket['p_cat_id'],
-						'tenant_id'		=> $ticket['tenant_id'],
-						'origin'		=> '.ticket',
-						'origin_id'		=> $id
-					));
-					$link_entity[$i]['name']	= $entry['name'];
-				$i++;
+					if($GLOBALS['phpgw']->acl->check(".entity.{$entry['id']}", PHPGW_ACL_ADD, 'property'))
+					{
+						$link_entity[$i]['link'] = $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uientity.edit',
+							'bypass'		=> true,
+							'location_code'		=> $ticket['location_code'],
+							'entity_id'		=> $entry['id'],
+							'p_num'			=> $ticket['p_num'],
+							'p_entity_id'		=> $ticket['p_entity_id'],
+							'p_cat_id'		=> $ticket['p_cat_id'],
+							'tenant_id'		=> $ticket['tenant_id'],
+							'origin'		=> '.ticket',
+							'origin_id'		=> $id
+						));
+						$link_entity[$i]['name']	= $entry['name'];
+						$i++;
+					}
 				}
 			}
 
@@ -2034,9 +2075,9 @@
 			);
 			
 			//----------------------------------------------datatable settings--------			
-			
-			$data = array
+						$data = array
 			(
+				'lookup_type'				=> $lookup_type,
 				'simple'					=> $this->_simple,
 				'tabs'						=> self::_generate_tabs(true),
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
@@ -2069,7 +2110,7 @@
 				'lang_no_user'				=> lang('Select user'),
 				'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name'			=> 'values[assignedto]',
-				'value_assignedto'			=> $ticket['assignedto'],
+				'value_assignedto_id'		=> $ticket['assignedto'],
 				'user_list'					=> $this->bocommon->get_user_list_right2('select',4,$ticket['assignedto'],$this->acl_location),
 
 				'lang_group'				=> lang('Group'),
@@ -2112,17 +2153,17 @@
 				'lang_assignedfrom'			=> lang('Assigned from'),
 				'value_assignedfrom'			=> $ticket['user_name'],
 				'lang_assignedto'			=> lang('Assigned to'),
-				'value_assignedto'			=> isset($ticket['assignedto_name'])?$ticket['assignedto_name']:'',
+				'value_assignedto_name'			=> isset($ticket['assignedto_name'])?$ticket['assignedto_name']:'',
 
 				'lang_no_additional_notes'		=> lang('No additional notes'),
 				'lang_history'				=> lang('History'),
 				'lang_no_history'			=> lang('No history for this record'),
 				'additional_notes'			=> $additional_notes,
 				'record_history'			=> $record_history,
-				'request_link'				=> $GLOBALS['phpgw']->link('/index.php',$request_link_data),
-				'order_link'				=> $GLOBALS['phpgw']->link('/index.php',$order_link_data),
-				'add_to_project_link'		=> $GLOBALS['phpgw']->link('/index.php',$add_to_project_link_data),				
-				
+				'request_link'				=> $request_link,
+				'order_link'				=> $order_link,
+				'add_to_project_link'		=> $add_to_project_link,
+
 				'lang_generate_request'			=> lang('Generate Request'),
 				'lang_generate_request_statustext'	=> lang('click this to generate a request with this information'),
 				'lang_generate_project'			=> lang('generate new project'),
@@ -2392,7 +2433,7 @@
 				'lang_assignedfrom'				=> lang('Assigned from'),
 				'value_assignedfrom'			=> $ticket['user_name'],
 				'lang_assignedto'				=> lang('Assigned to'),
-				'value_assignedto'				=> (isset($ticket['assignedto_name'])?$ticket['assignedto_name']:''),
+				'value_assignedto_name'				=> (isset($ticket['assignedto_name'])?$ticket['assignedto_name']:''),
 
 				'lang_no_additional_notes'		=> lang('No additional notes'),
 				'lang_history'					=> lang('History'),

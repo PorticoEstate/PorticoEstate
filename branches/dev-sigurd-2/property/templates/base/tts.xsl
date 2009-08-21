@@ -826,7 +826,15 @@
 					</td>
 				</tr>
 			</xsl:for-each>
-			<xsl:call-template name="location_view"/>
+			<xsl:choose>
+				<xsl:when test="lookup_type ='view'">
+					<xsl:call-template name="location_view"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="location_form"/>
+				</xsl:otherwise>
+			</xsl:choose>
+
 			<xsl:choose>
 				<xsl:when test="contact_phone !=''">
 					<tr>
@@ -861,7 +869,7 @@
 					<xsl:value-of select="lang_assignedto"/>
 				</td>
 				<td valign="top">
-					<xsl:value-of select="value_assignedto"/>
+					<xsl:value-of select="value_assignedto_name"/>
 				</td>
 			</tr>
 			<tr>
@@ -1046,7 +1054,7 @@
 		</xsl:when>
 		<xsl:otherwise>
 				<input type="hidden" name="values[status]" value="{value_status}"></input>
-				<input type="hidden" name="values[assignedto]" value="{value_assignedto}"></input>
+				<input type="hidden" name="values[assignedto]" value="{value_assignedto_id}"></input>
 				<input type="hidden" name="values[group_id]" value="{value_group_id}"></input>
 				<input type="hidden" name="values[priority]" value="{value_priority}"></input>
 				<input type="hidden" name="values[cat_id]" value="{value_cat_id}"></input>
@@ -1126,6 +1134,8 @@
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
+			<xsl:choose>
+				<xsl:when test="request_link != ''">
 				<td valign="top">
 					<xsl:variable name="request_link"><xsl:value-of select="request_link"/></xsl:variable>
 					<form method="post" action="{$request_link}">
@@ -1137,6 +1147,12 @@
 					</input>
 					</form>
 				</td>
+				</xsl:when>
+			</xsl:choose>
+
+			<xsl:choose>
+				<xsl:when test="order_link != ''">
+
 				<td valign="top">
 					<xsl:variable name="order_link"><xsl:value-of select="order_link"/></xsl:variable>
 					<form method="post" action="{$order_link}">
@@ -1159,6 +1175,8 @@
 					</input>
 					</form>
 				</td>
+				</xsl:when>
+			</xsl:choose>
 
 				<xsl:choose>
 					<xsl:when test="link_entity!=''">
@@ -1285,7 +1303,7 @@
 					<xsl:value-of select="lang_assignedto"/>
 				</td>
 				<td valign="top">
-					<xsl:value-of select="value_assignedto"/>
+					<xsl:value-of select="value_assignedto_name"/>
 				</td>
 			</tr>
 			<tr>

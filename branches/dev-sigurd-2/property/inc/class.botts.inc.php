@@ -533,6 +533,7 @@
 						case 'B': $type = lang('Billable rate changed'); break;
 						case 'F': $type = lang('finnish date changed'); break;
 						case 'IF': $type = lang('Initial finnish date'); break;
+						case 'L': $type = lang('Location changed'); break;
 						default: break;
 					}
 
