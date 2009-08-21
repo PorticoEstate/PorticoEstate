@@ -118,7 +118,7 @@
 			switch($security_type)
 			{
 				case rental_contract::SECURITY_TYPE_DEPOSIT:
-					$this->security_type = rental_contract::SECURITY_TYPE_BANK_GUARANTEE;
+					$this->security_type = rental_contract::SECURITY_TYPE_DEPOSIT;
 					break;
 				case rental_contract::SECURITY_TYPE_ADVANCE:
 					$this->security_type = rental_contract::SECURITY_TYPE_ADVANCE;
