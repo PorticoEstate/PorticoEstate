@@ -24,7 +24,7 @@
 	class phpgwapi_jscal
 	{
 
-		public static function input($id, $date, $format = 'input', $title = null)
+		public static function input($id, $date = '', $format = 'input', $title = null)
 		{
 			$date_format =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(!$date)
@@ -67,7 +67,18 @@
 
 			YAHOO.$namespace.$id.init = function()
 			{
-				YAHOO.$namespace.$id = new YAHOO.widget.Calendar('{$id}-cal','{$id}-container', { title:'{$title}', close:true } );
+				YAHOO.$namespace.$id = new YAHOO.widget.Calendar(
+					'{$id}-cal',
+					'{$id}-container',
+					{
+						navigator:true, 
+						title:'{$title}',
+						close:true,
+						start_weekday:1, 
+						LOCALE_WEEKDAYS:"short"
+					}
+				);
+
 				YAHOO.$namespace.$id.cfg.setProperty('DATE_FIELD_DELIMITER', '.');
 
 				YAHOO.$namespace.$id.cfg.setProperty('MDY_DAY_POSITION', {$date_pos['d']});

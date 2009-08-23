@@ -1072,6 +1072,18 @@ HTML;
 			{
 				$js .= $GLOBALS['phpgw']->js->get_script_links();
 			}
+			if( isset($GLOBALS['phpgw']->yuical) && is_object($GLOBALS['phpgw']->yuical))
+			{
+				if($cal_script = $GLOBALS['phpgw']->yuical->get_script())
+				{
+					$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+						. '<script type="text/javascript">' ."\n"
+						. '//<[CDATA[' ."\n"
+						. $cal_script ."\n"
+						. '//]]' ."\n"
+						. "</script>\n";
+				}
+			}
 
 			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
 			{
