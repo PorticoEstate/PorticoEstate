@@ -7,24 +7,24 @@
  */
 
 //Create groups, users, add users to groups and set preferences
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2000");
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2001");
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2002");
+//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2000");
+//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2001");
+//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2002");
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2003");
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2004");
 $oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2005");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2000,'rental_backend_read_only','','rental_backend_read_only','Gruppe','A',-1,'g',-1)");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2001,'rental_backend_write','','rental_backend_write','Gruppe','A',-1,'g',-1)");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2002,'rental_administrator','','rental_administrator','Gruppe','A',-1,'g',-1)");
+//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2000,'rental_backend_read_only','','rental_backend_read_only','Gruppe','A',-1,'g',-1)");
+//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2001,'rental_backend_write','','rental_backend_write','Gruppe','A',-1,'g',-1)");
+//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2002,'rental_administrator','','rental_administrator','Gruppe','A',-1,'g',-1)");
 $oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2003,'rental_read','{SSHA}ZbIRWYpt3HmeA0bUWrfV7+2ZEe0Vuw==','Bouvet','Read only backend user','A',-1,'u',-1)");
 $oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2004,'rental_write','{SSHA}jnwiYTpDgKeNcsPLTV5QQ0InqrhPeA==','Bouvet','Rental read and write','A',-1,'u',-1)");
 $oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2005,'rental_admin','{SSHA}mrnNbEnfyIk/1kL9Y70z2B5Zb9UhYA==','Bouvet','Rental administrator','A',-1,'u',-1)");
-$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2003");
-$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2004");
-$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2005");
-$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2000,2003,1)");
-$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2001,2004,1)");
-$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2002,2005,1)");
+//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2003");
+//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2004");
+//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2005");
+//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2000,2003,1)");
+//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2001,2004,1)");
+//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2002,2005,1)");
 $oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2003 AND preference_app LIKE 'common'");
 $oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2004 AND preference_app LIKE 'common'");
 $oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2005 AND preference_app LIKE 'common'");
@@ -219,20 +219,105 @@ $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,2004,'2009-07-2
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,2005,'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,2004,'2009-07-28')");
 
-$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date, dismissed, recurrence) VALUES (2005,11,'Oppdatér leietaker med ny postadresse.','".date('Y-m-d')."',0,0)");
-$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date, dismissed, recurrence) VALUES (2005,13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.','".date('Y-m-d')."',0,0)");
-$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date, dismissed, recurrence) VALUES (2005,15,'Kontrollér at priselementer er i henhold.','".date('Y-m-d')."',0,0)");
-$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date, dismissed, recurrence) VALUES (2005,17,'Oppdatér med ny postadresse.','".date('Y-m-d')."',0,0)");
-$oProc->query("INSERT INTO rental_notification (user_id, contract_id, message, date, dismissed, recurrence) VALUES (2005,18,'Oppdatér med ny postadresse.','".date('Y-m-d')."',0,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,17,'Oppdatér med ny postadresse.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,18,'Oppdatér med ny postadresse.',1250593658,0)");
 
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2000");
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2001");
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2002");
+$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES (2005,1,1250593658,1250593658)");
+$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES (2005,2,1250593658,1250593658)");
 
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2000,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental')))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2001,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental')))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2002,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental')))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2002,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'admin')))");
+$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2003");
+$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2004");
+$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2005");
+
+
+
+
+//include_class('phpgwapi', 'phpgwapi_acl', 'inc/');
+//var_dump(debug_backtrace());
+//include('class.acl.inc.php');
+//$this->aclForUser = new phpgwapi_acl(2000);
+/*$this->aclForUser->add('rental','.',PHPGW_ACL_READ);
+$this->aclForUser = new phpgwapi_acl(2001);
+$this->aclForUser->add('rental','.',15);
+$this->aclForUser = new phpgwapi_acl(2002);
+$this->aclForUser->add('rental','.',31);*/
+
+// Locations hierarchy
+/* 
+$GLOBALS['phpgw']->locations->delete('rental','.',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.02',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.03',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.04',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.05',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.06',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.07',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.08',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.30',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.33',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.34',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.36',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.37',false);
+$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.38',false);
+
+
+$oProc->query("DELETE FROM phpgw_locations WHERE 
+	( name = '.'  OR
+	name = '.ORG' OR
+	name = '.ORG.BK' OR
+	name = '.ORG.BK.01' OR
+	name = '.ORG.BK.02' OR
+	name = '.ORG.BK.03' OR
+	name = '.ORG.BK.04' OR
+	name = '.ORG.BK.05' OR
+	name = '.ORG.BK.06' OR
+	name = '.ORG.BK.07' OR
+	name = '.ORG.BK.08' OR
+	name = '.ORG.BK.01.30' OR
+	name = '.ORG.BK.01.33' OR
+	name = '.ORG.BK.01.34' OR
+	name = '.ORG.BK.01.36' OR
+	name = '.ORG.BK.01.37' OR
+	name = '.ORG.BK.01.38' )
+	AND app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental')");
+
+*/
+
+
+$GLOBALS['phpgw']->locations->add('.',				'Root',			'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG',			'Locations for organisational units',				'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Kommune',			'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01',		'Byrådsleders avdeling',							'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.02',		'Byrådsavd. for finans, konkurranse og omstilling',	'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.03',		'Byrådsavd. for helse og omsorg',					'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.04',		'Byrådsavd. for barnehage og skole',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.05',		'Byrådsavd. for klima, miljø og byutvikling',		'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.06',		'Byrådsavd. for byggesak og bydeler',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.07',		'Byrådsavd. for kultur, næring og idrett',			'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.08',		'Bystyrets organer',								'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.30',		'Seksjon informasjon',							'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.33',		'Byrådsleders avdeling, stab',					'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.34',		'Kommuneadvokaten',								'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.36',		'Etat for samfunnssikkerhet og beredskap',		'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.37',		'Erstatningsutvalgets sekretariat',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',false);
+
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2003,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2004,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2003,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2004,15,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,31,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
+$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'admin')))");
 $oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'property')");
 while($oProc->next_record())
 {

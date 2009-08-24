@@ -36,19 +36,14 @@
 	{
 		protected static $old_exception_handler;
 		
-		/*
-		 * TODO: Hardcoded user group ids. Should maybe be administered through admin-interface?
-		 */
-		public static $admin_group_id = 2002;
-		public static $write_group_id = 2001;
-		public static $read_group_id = 2000;
-
-		// Default state for access rights
-		private $has_admin_rights = false;
-		private $has_write_permission = false;
-		private $has_read_permission = false;
-		
 		public $dateFormat;
+		
+		//Global application permission holders
+		private $hasReadPermission = false;
+		private $hasAddPermission = false;
+		private $hasWritePermission = false;
+		private $hasDeletePermission = false;
+		private $hasPrivatePermission = false;
 			
 		public function __construct()
 		{
@@ -75,58 +70,21 @@
 			
 			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
-			/*
-			 * Assign correct permissions for this user based on the group the user belongs to
-			 */
-			$groups = $GLOBALS['phpgw']->accounts->membership($GLOBALS['phpgw_info']['user']['account_id']);
-			foreach($groups as $group)
-			{
-				if( $group->id == self::$admin_group_id )
-				{
-					$this->has_admin_rights = true;
-					$this->has_write_permission = true;
-					$this->has_read_permission = true;
-					break;
-				} 
-				else if($group->id == self::$write_group_id)
-				{
-					$this->has_write_permission = true;
-					$this->has_read_permission = true;
-				} 
-				else if($group->id == self::$read_group_id)
-				{
-					$this->has_read_permission = true;
-				}
-			}
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			
+			$this->hasReadPermission = $this->acl->check('.',PHPGW_ACL_READ, 'rental');
+			$this->hasAddPermission = $this->acl->check('.',PHPGW_ACL_ADD, 'rental');
+			$this->hasWritePermission = $this->acl->check('.',PHPGW_ACL_EDIT, 'rental');
+			$this->hasDeletePermission = $this->acl->check('.',PHPGW_ACL_DELETE, 'rental');
+			$this->hasPrivatePermission = $this->acl->check('.',PHPGW_ACL_PRIVATE, 'rental');
 		}
 		
-		/**
-		 * Is the user allowed to read and write in the rental module?
-		 * 
-		 * @return boolean
-		 */
-		protected function hasWritePermission(){
-			return $this->has_write_permission;
-		}
-		
-		/**
-		 * Is the user allowed to read (only) the rental module?
-		 * 
-		 * @return boolean
-		 */
-		protected function hasReadPermission(){
-			return $this->has_read_permission;
-		}
-		
-		/**
-		 * Is the user an administrator and thereby granted full access to the rental module?
-		 * 
-		 * @return boolean
-		 */
-		protected function isAdmin(){
-			return $this->has_admin_rights;
-		}
-		
+		// Permission location checks. Check global application privileges (permissions on the root of the location hierarchy)
+		protected function hasReadPermission(){ return $this->hasReadPermission; }
+		protected function hasAddPermission(){ return $this->hasAddPermission; }
+		protected function hasWritePermission(){ return $this->hasWritePermission; }
+		protected function hasDeletePermission(){ return $this->hasDeletePermission; }
+		protected function hasPrivatePermission(){ return $this->hasPrivatePermission; }
 		
 		public static function process_rental_unauthorized_exceptions()
 		{
@@ -273,11 +231,13 @@
 	
 		public function render($template,$local_variables = array())
 		{
+
 			foreach($local_variables as $name => $value)
 			{
 				$$name = $value;	
 				
 			}
+			
 			ob_start();
 			foreach(array_reverse($this->tmpl_search_path) as $path)
 			{

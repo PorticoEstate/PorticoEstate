@@ -71,6 +71,15 @@
 			);
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
+			
+			$menus['preferences'] = array
+			(
+				array
+				(
+				'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app'=> 'rental'))
+				)
+			);
 
 			return $menus;
 		}
