@@ -85,7 +85,7 @@
 					{ 	
 						navigator:true, 
 						title: '{$title}',
-						close:true,
+			//			close:true,
 						start_weekday:1, 
 						LOCALE_WEEKDAYS:"short"
 					}
@@ -181,7 +181,7 @@ JS;
 			$lang_clear = lang('clear');
 			$html .= <<<HTML
 				<input type="text" name="{$name}" id="{$name}" size="10" value="$value" />
-				<img src="$img" alt="$alt" id="{$name}_img" title="$name">
+			<!--	<img src="$img" alt="$alt" id="{$name}_img" title="$name"> -->
 				<input type="hidden" name="{$name}_hidden" id="{$name}_hidden" value="{$date2}"/>
 				<div id="calendar{$name}">
 					<div id="calendar{$name}_body"></div>
