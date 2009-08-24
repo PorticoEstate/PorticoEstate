@@ -289,6 +289,20 @@
 					$error = lang('rental_messages_form_error');
 				}
 			}
+			else if(isset($_POST['save_invoice']))
+			{
+				$contract = rental_contract::get($contract_id);
+				$contract->set_term_id(phpgw::get_var('billing_term'));
+				$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
+				if($contract->store())
+				{
+					$message = lang('rental_messages_saved_form');
+				}
+				else
+				{
+					$error = lang('rental_messages_form_error');
+				}
+			}
 			return $this->viewedit(true, $contract_id, $notification, $message, $error);
 		}
 		

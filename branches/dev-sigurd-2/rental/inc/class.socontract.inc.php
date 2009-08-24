@@ -170,7 +170,7 @@ class rental_socontract extends rental_socommon
 	function get_single($id)
 	{
 		$id = (int)$id;
-		$sql_payer_id = " LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
+		$sql_payer_id = " {$this->left_join} (SELECT contract_id, party_id FROM rental_contract_party WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
 		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, type_id, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, billing_unit, old_contract_id, rental_contract_type.title  FROM " . $this->table_name . $sql_payer_id . " {$this->left_join} rental_contract_type ON (rental_contract_type.id = rental_contract.type_id) {$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) WHERE {$this->table_name}.id={$id}";
 
@@ -188,10 +188,10 @@ class rental_socontract extends rental_socommon
 		$date = new rental_contract_date($date_start, $date_end);
 		$contract->set_contract_date($date);
 		
-		$billing_start = $this->unmarshal($this->db->f('billing_start', true), 'date');
-		if($billing_start != null && $billing_start != '')
+		$billing_start_date = $this->unmarshal($this->db->f('billing_start', true), 'date');
+		if($billing_start_date != null && $billing_start_date != '')
 		{
-			$billing_start = strtotime($billing_start);
+			$billing_start_date = strtotime($billing_start_date);
 		}
 		$contract->set_billing_start_date($billing_start_date);
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
@@ -536,7 +536,7 @@ class rental_socontract extends rental_socommon
 		
 		$values[] = "security_type = '" . $this->marshal($contract->get_security_type(), 'int') . "'";
 		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
-		
+
 		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		if($result){

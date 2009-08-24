@@ -91,6 +91,11 @@
 			$this->billing_start_date = $date;
 		}
 		
+		/**
+		 * Returns date of when the first invoice should be produced for the
+		 * contract.
+		 * @return string with UNIX time.
+		 */
 		public function get_billing_start_date() { return $this->billing_start_date; }
 		
 		public function set_type_id($type_id)
@@ -100,9 +105,9 @@
 		
 		public function get_type_id() { return $this->type_id; }
 		
-		public function set_term_id($term_id)
+		public function set_term_id(int $term_id)
 		{
-			$this->term_id = $term_id;
+			$this->term_id = (int)$term_id;
 		}
 		
 		public function get_term_id() { return $this->term_id; }
@@ -416,6 +421,17 @@
 		{
 			$so = self::get_so();
 			return $so->get_single($id);
+		}
+			
+		/**
+		 * Get a key/value array of titles of billing term types keyed by their id
+		 * 
+		 * @return array
+		 */
+		public static function get_billing_terms()
+		{
+			$so = self::get_so();
+			return $so->get_billing_terms($id);
 		}
 		
 		
