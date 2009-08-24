@@ -331,6 +331,13 @@ YAHOO.util.Event.onDOMReady(
 								<label for="notification_target"><b><i><?php echo lang('rental_common_audience') ?></i></b></label>
 								<select name="notification_target" id="notification_target">
 									<option value="<?php echo $GLOBALS['phpgw_info']['user']['account_id']; ?>"><?php echo lang('rental_common_target_me') ?></option>
+									<?php 
+										$accounts = $GLOBALS['phpgw']->accounts->get_list();
+										foreach($accounts as $account)
+										{
+											echo '<option value="'.$account->__get('id').'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";			
+										}
+									?>
 								</select>
 							</td>
 							<td>
