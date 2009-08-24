@@ -47,7 +47,9 @@
 
 		function date()
 		{
-			$start_field = $GLOBALS['phpgw']->yuical->add_listener('start_date');
+			$date1 = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+			$start_field = $GLOBALS['phpgw']->yuical->add_listener('start_date', $date1);
 			$end_field = $GLOBALS['phpgw']->yuical->add_listener('end_date');
 
 			//Only if not xslt_app
