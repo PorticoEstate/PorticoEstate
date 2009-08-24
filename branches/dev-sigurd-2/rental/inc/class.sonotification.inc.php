@@ -146,7 +146,8 @@ class rental_sonotification extends rental_socommon
 	
 	public function populate_workbench_notifications()
 	{
+		// Go through all notification data and add/remove notifications from the users workbench
+
 		
-	}
 	}
 }
