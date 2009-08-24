@@ -11,17 +11,19 @@ class rental_sonotification extends rental_socommon
 		array
 		(
 			'id'	=> array('type' => 'int'),
-			'user_id'	=> array('type' => 'int'),
+			'account_id'	=> array('type' => 'int'),
 			'contract_id'	=> array('type' => 'int'),
 			'message' => array('type' => 'text'),
 			'date' => array('type', 'date'),
- 			'dismissed'	=> array('type' => 'int'),
  			'recurrence'	=> array('type' => 'int'),
+			'dismissed'	=>	array('type' => 'date')
 		));
 	}
 	
+	
+	
 	/**
-	 * Get a list of objects matching the specific filters
+	 * Get all notifications with regards to result offset, search query and filters (e.g. contract identifier). 
 	 * 
 	 * @param $start search result offset
 	 * @param $results number of results to return
@@ -46,11 +48,57 @@ class rental_sonotification extends rental_socommon
 			{
 				$date = strtotime($date);
 			}
-			$notification = new rental_notification($this->unmarshal($this->db->f('id', true), 'int'), $this->unmarshal($this->db->f('user_id', true), 'int'), $this->unmarshal($this->db->f('contract_id', true), 'int'), $date, $this->unmarshal($this->db->f('message', true), 'text'), $this->unmarshal($this->db->f('dismissed', true), 'int'), $this->unmarshal($this->db->f('recurrence', true), 'int'));
+			$notification = new rental_notification(
+				$this->unmarshal($this->db->f('id', true), 'int'), 
+				$this->unmarshal($this->db->f('account_id', true), 'int'), 
+				$this->unmarshal($this->db->f('contract_id', true), 'int'), 
+				$date, 
+				$this->unmarshal($this->db->f('message', true), 'text'), 
+				$this->unmarshal($this->db->f('recurrence', true), 'int'));
 			
 			$results[] = $notification;
 		}
 		
+		return $results;
+	}
+	
+	/**
+	 * Get all active (not dismissed) workbench notifications
+	 * 
+	 * @param $start paginator parameter
+	 * @param $limit paginator paramater
+	 * @param $account_id the account identifier
+	 * @return the workbench notification objects for the user
+	 */
+	function get_workbench_notifications($start = 0, $limit = 1000, $account_id)
+	{	
+		$results = array();
+		if(isset($account_id)){
+			$now = strtotime("now");
+			
+			$sql = "SELECT rnw.id as workbench_id, rnw.dismissed, rnw.account_id, rn.message, rn.contract_id, rn.recurrence, rnw.date
+					FROM rental_notification_workbench rnw 
+					LEFT JOIN rental_notification rn ON (rnw.notification_id = rn.id)
+					WHERE 
+						( rnw.account_id = $account_id 
+						OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
+						AND dismissed > $now 
+					ORDER BY rnw.date ASC";
+			
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			
+			while ($this->db->next_record()) {
+				$notification = new rental_notification(
+					$this->unmarshal($this->db->f('workbench_id', true), 'int'), 
+					$this->unmarshal($this->db->f('account_id', true), 'int'), 
+					$this->unmarshal($this->db->f('contract_id', true), 'int'), 
+					$this->unmarshal($this->db->f('date', true), 'int'),
+					$this->unmarshal($this->db->f('message', true), 'text'),
+					$this->unmarshal($this->db->f('recurrence', true), 'int'),
+					$this->unmarshal($this->db->f('dismissed', true), 'int'));
+				$results[] = $notification;
+			}
+		}
 		return $results;
 	}
 	
@@ -82,11 +130,10 @@ class rental_sonotification extends rental_socommon
 			(int)$notification->get_contract_id(),
 			"'".date('Y-m-d', (int)$notification->get_date())."'",
 			"'{$notification->get_message()}'",
-			$notification->get_dismissed(),
 			(int)$notification->get_recurrence()
 		);
 		
-		$cols = array('user_id', 'contract_id', 'date', 'message', 'dismissed', 'recurrence');
+		$cols = array('user_id', 'contract_id', 'date', 'message', 'recurrence');
 		
 		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
@@ -95,5 +142,11 @@ class rental_sonotification extends rental_socommon
 		$notification->set_id($receipt['id']);
 		
 		return $receipt;
+	}
+	
+	public function populate_workbench_notifications()
+	{
+		
+	}
 	}
 }

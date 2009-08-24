@@ -68,7 +68,7 @@
 	{
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
-	
+</form>
 <?php 
 	}
 ?>

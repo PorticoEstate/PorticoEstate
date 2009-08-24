@@ -1,7 +1,5 @@
 <?php 
 	include("common.php");
-	phpgwapi_yui::load_widget('tabview');        
-	phpgwapi_yui::tabview_setup('composite_tabview');
 ?>
 <script>
 
@@ -44,7 +42,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	
 
 	<?php 
-	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','availableComposites');
+	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','availableComposites','notifications');
 	$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
 	$preferences = $GLOBALS['phpgw']->preferences->read();
 		//var_dump($preferences);
@@ -108,15 +106,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		var element = document.getElementById('messageHolder');
 		
 		if(success){
-			element.innerHTML ='<p class="message">Oppsettet ble lagret</p>';
+			element.innerHTML ='<p class="message"><?php echo lang('rental_messages_fontpage_saved') ?></p>';
 		} else {
-			element.innerHTML ='<p class="error">Oppsettet ble ikke lagret</p>';
+			element.innerHTML ='<p class="error"><?php echo lang('rental_messages_fontpage_not_saved') ?></p>';
 		}
 		
 	}
 
 	new YAHOO.widget.Button('saveSetup',{onclick: {fn:savePanelConfigurations, scope: panels}});
-	
+	//new YAHOO.widget.Button('createShortcut',{onclick: {fn:createShortcut}});
 });
 	
 </script>
@@ -124,21 +122,23 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 <fieldset>
 	<h3><?php echo lang('rental_common_panels') ?></h3>
-	<button type="button" id="workingOnContracts_button"><?php echo lang('rental_common_working_on') ?></button>
-	<button type="button" id="executiveOfficerOnContracts_button"><?php echo lang('rental_common_executive_officer_for') ?></button> 
-	<button type="button" id="endingContracts_button"><?php echo lang('rental_common_contracts_under_dismissal') ?></button> 
-	<button type="button" id="availableComposites_button"><?php echo lang('rental_common_available_composites') ?></button>
-	<button type="button" id="saveSetup"><?php echo lang('rental_common_party_setup') ?></button> 
-	
+	<button type="button" id="workingOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_working_on') ?></button>
+	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_executive_officer_for') ?></button> 
+	<button type="button" id="endingContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_contracts_under_dismissal') ?></button> 
+	<button type="button" id="availableComposites_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" /> <?php echo lang('rental_common_available_composites') ?></button>
+	<button type="button" id="notifications_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" /> <?php echo lang('rental_common_notifications') ?></button>
+	<!-- <button type="button" id="shortcuts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-jump.png" /> <?php echo lang('rental_common_shortcuts') ?></button> -->
+	&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+	<button type="button" id="saveSetup"><?php echo lang('rental_common_save_setup') ?></button> 
 </fieldset>
 
 
 <div id="messageHolder">
-
+	
 </div>
 
 <div id="workingOnContracts_panel"> 
-    <div class="hd"><h3><?php echo lang('rental_common_working_on') ?></h3></div> 
+    <div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_common_working_on') ?></h2></div> 
     <div class="bd">
     	<?php 
 			$list_form = false;
@@ -155,7 +155,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     </div> 
 </div> 
 <div id="executiveOfficerOnContracts_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_common_executive_officer_for') ?></h3></div> 
+	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_common_executive_officer_for') ?></h2></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
@@ -171,7 +171,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div> 
 <div id="endingContracts_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_common_contracts_under_dismissal') ?></h3></div> 
+	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_common_contracts_under_dismissal') ?></h2></div> 
     <div class="bd">
 		<?php 
 			$list_form = false;
@@ -187,7 +187,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div>
 <div id="availableComposites_panel"> 
-	<div class="hd"><h3><?php echo lang('rental_common_available_composites') ?></h3></div> 
+	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/go-home.png" /> <?php echo lang('rental_common_available_composites') ?></h2></div> 
     <div class="bd">
 	<?php 
 		$list_form = false;
@@ -197,3 +197,25 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	?>
 	</div>
 </div>
+<div id="notifications_panel"> 
+	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?> </h2></div>
+    <div class="bd">
+		<?php 
+			$list_form = false;
+			$list_id = 'notifications_for_user';
+			$url_add_on = '&amp;type='.$list_id;
+			$extra_cols = array();
+			$hide_cols = array();
+			include('notification_list.php');
+		?>
+	</div>
+</div>
+
+<!-- 
+<div id="shortcuts_panel"> 
+	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-jump.png" /> <?php echo lang('rental_common_notifications') ?></h2></div>
+    <div class="bd">
+		
+	</div>
+</div>
+ -->

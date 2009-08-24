@@ -19,6 +19,7 @@
 		'rental_document_composite',
 		'rental_contract_last_edited',
 		'rental_notification',				// Stores user notifications
+		'rental_notification_workbench',	
 		// Admin tables
 		'rental_billing_term',
 		'rental_contract_type',
@@ -51,6 +52,7 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['rental']['hooks'] = array
 	(
+		'preferences',
 		'menu'	=> 'rental.menu.get_menu'
 	);
 ?>

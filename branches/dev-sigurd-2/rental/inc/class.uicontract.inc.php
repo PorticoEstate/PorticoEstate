@@ -37,107 +37,124 @@
 		public function query()
 		{
 			$resultArray = array();
-			$type = phpgw::get_var('type');
-			switch($type)
-			{
-				
-				case 'contracts_part':
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'party_id' => phpgw::get_var('party_id')
-						)
-					);
-					break;
-				case 'contracts_for_executive_officer':
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
-						)
-					);
-					break;
-				case 'last_edited_by':
-					$resultArray = rental_contract::get_last_edited_by();
-					break;
-				case 'ending_contracts':
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'contract_status' => 'under_dismissal'
-						)
-					);
-					break;
-				case 'contracts_for_executive_officer':
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
-						)
-					);
-					break;
-				case 'last_edited_by':
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
-						)
-					);
-					break;
-				case 'notifications':
-					$resultArray = rental_notification::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-							'contract_id' => phpgw::get_var('contract_id')
-						)
-					);
-					break;
-				case 'all_contracts':
-				default:
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'contract_status' => phpgw::get_var('contract_status'),
-							'contract_type' => phpgw::get_var('contract_type'),
-							'status_date_hidden' => phpgw::get_var('status_date_hidden')
-						)
-					);
+			
+			// Complete query if user has global application read permission
+			if($this->hasReadPermission()){
+			
+				$type = phpgw::get_var('type');
+				switch($type)
+				{
+					case 'contracts_part':
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'party_id' => phpgw::get_var('party_id')
+							)
+						);
+						break;
+					case 'contracts_for_executive_officer':
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
+							)
+						);
+						break;
+					case 'last_edited_by':
+						$resultArray = rental_contract::get_last_edited_by();
+						break;
+					case 'ending_contracts':
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'contract_status' => 'under_dismissal'
+							)
+						);
+						break;
+					case 'contracts_for_executive_officer':
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
+							)
+						);
+						break;
+					case 'last_edited_by':
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
+							)
+						);
+						break;
+					case 'notifications':
+						$resultArray = rental_notification::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+								'contract_id' => phpgw::get_var('contract_id')
+							)
+						);
+						break;
+					case 'notifications_for_user':
+						$resultArray = rental_notification::get_workbench_notifications(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'rnw.account_id' => $GLOBALS['phpgw_info']['user']['account_id']
+							)
+						);
+						break;
+					case 'all_contracts':
+					default:
+						$resultArray = rental_contract::get_all(
+							phpgw::get_var('startIndex'),
+							phpgw::get_var('results'),
+							phpgw::get_var('sort'),
+							phpgw::get_var('dir'),
+							phpgw::get_var('query'),
+							phpgw::get_var('search_option'),
+							array(
+								'contract_status' => phpgw::get_var('contract_status'),
+								'contract_type' => phpgw::get_var('contract_type'),
+								'status_date_hidden' => phpgw::get_var('status_date_hidden')
+							)
+						);
+				}
 			}
 			
 			//Serialize the contracts found
@@ -253,12 +270,15 @@
 			}
 			else if(isset($_POST['add_notification']))
 			{
+				$account_id = phpgw::get_var('notification_target');
+				
+				
 				$date = phpgw::get_var('date_notification_hidden');
 				if($date)
 				{
 					$date = strtotime($date);
 				}
-				$notification = new rental_notification(-1, $GLOBALS['phpgw_info']['user']['account_id'], phpgw::get_var('notification_contract_id'), $date, phpgw::get_var('notification_message'), false, phpgw::get_var('notification_recurrence'));
+				$notification = new rental_notification(-1, $account_id, phpgw::get_var('notification_contract_id'), phpgw::get_var('notification_message'),  $date, phpgw::get_var('notification_recurrence'));
 				if ($notification->store())
 				{
 					$message = lang('rental_messages_saved_form');
@@ -269,7 +289,6 @@
 					$error = lang('rental_messages_form_error');
 				}
 			}
-			
 			return $this->viewedit(true, $contract_id, $notification, $message, $error);
 		}
 		

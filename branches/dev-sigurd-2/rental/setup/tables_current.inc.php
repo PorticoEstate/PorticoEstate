@@ -258,16 +258,32 @@
 		'rental_notification' => array(
 			'fd' => array(
 				'id'			=>	array('type' => 'auto', 'nullable' => false),
-				'user_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'account_id'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'contract_id'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'message'		=> 	array('type' => 'text'),
-				'date'			=>	array('type' => 'date', 'nullable' => false),
-				'dismissed'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0),
+				'date'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),	// timestamp, from
 				'recurrence'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0)
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'rental_contract' => array('contract_id' => 'id')
+				'rental_contract' => array('contract_id' => 'id'),
+				'phpgw_accounts' => array('account_id' => 'account_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_notification_workbench' => array(
+			'fd' => array(
+				'id'		=> array('type' => 'auto', 'nullable' => false),
+				'account_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'date'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => false), 	// timestamp, deadline  
+				'notification_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'dismissed' => array('type' => 'int', 'precision' => '4','nullable' => true) 			// timestamp, dismissed
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('account_id' => 'account_id'),
+				'rental_notification' => array('notification_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()

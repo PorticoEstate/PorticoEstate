@@ -165,7 +165,7 @@
 <script type="text/javascript">
 	YAHOO.util.Event.onDOMReady(function() {
 
-		//initCalendar('available_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
+		initCalendar('available_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
 		
 		//Columns for added areas datatable
 		var addedAreasColumnDefs = [{

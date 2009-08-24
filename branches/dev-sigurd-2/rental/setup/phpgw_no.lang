@@ -50,6 +50,7 @@ rental_common_contracts	rental	no	Kontrakter
 rental_common_contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
 rental_common_contracts_under_dismissal	rental	no	Siste under avslutning
 rental_common_count	rental	no	Antall
+rental_common_create_shortcut	rental	no	Ny snarvei
 rental_common_dashboard_title	rental	no	Forside - Min arbeidsoversikt
 rental_common_date	rental	no	Dato
 rental_common_date_end	rental	no	Gjelder til
@@ -88,6 +89,7 @@ rental_common_last	rental	no	Siste
 rental_common_last_edited_by_current_user	rental	no	Sist arbeidet med
 rental_common_lastname	rental	no	Etternavn
 rental_common_level	rental	no	Nivå
+rental_common_link	rental	no	Lenke
 rental_common_location_code	rental	no	Enhetsnummer
 rental_common_log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
 rental_common_message	rental	no	Melding
@@ -153,6 +155,7 @@ rental_common_selected_parties	rental	no	Valgte kontraktsparter
 rental_common_selected_price_items	rental	no	Valgte priselementer
 rental_common_serial	rental	no	Løpenummer
 rental_common_set_payer	rental	no	Sett som fakturamottaker
+rental_common_shortcuts	rental	no	Snarveier
 rental_common_show	rental	no	Vis
 rental_common_showing	rental	no	Viser priselement
 rental_common_showing_composite	rental	no	Viser leieobjekt
@@ -193,6 +196,8 @@ rental_contract_type_internleie	rental	no	Internleie
 rental_contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 rental_messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
 rental_messages_form_error	rental	no	Skjemaet inneholder en feil.
+rental_messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
+rental_messages_fontpage_saved	rental	no	Oppsettet ble lagret
 rental_messages_general	rental	no	Feil i feltet
 rental_messages_isint	rental	no	Feltet må inneholde et heltall
 rental_messages_isnumeric	rental	no	Feltet må inneholde et tall

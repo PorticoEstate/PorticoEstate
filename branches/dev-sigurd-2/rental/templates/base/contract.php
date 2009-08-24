@@ -328,6 +328,12 @@ YAHOO.util.Event.onDOMReady(
 								</select>
 							</td>
 							<td>
+								<label for="notification_target"><b><i><?php echo lang('rental_common_audience') ?></i></b></label>
+								<select name="notification_target" id="notification_target">
+									<option value="<?php echo $GLOBALS['phpgw_info']['user']['account_id']; ?>"><?php echo lang('rental_common_target_me') ?></option>
+								</select>
+							</td>
+							<td>
 								<input type="submit" name="add_notification" id="" value="<?php echo lang('rental_common_add') ?>" />
 							</td>
 						</tr>
