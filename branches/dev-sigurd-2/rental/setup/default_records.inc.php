@@ -87,11 +87,11 @@ $oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('re
 $oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_eksternleie','')");
 $oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_investeringskontrakt','')");
 
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('Årlig','1')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('Halvår','2')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('Kvartal','4')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('Månedlig','12')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('14. dag','24')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_annually','1')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_half-year','2')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_quarterly','4')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_monthly','12')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_every_second_week','24')");
 
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");

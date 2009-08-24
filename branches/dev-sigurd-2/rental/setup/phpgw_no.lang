@@ -31,7 +31,7 @@ rental_common_bill	rental	no	Faktura
 rental_common_billing_external	rental	no	Ekstern
 rental_common_billing_internal	rental	no	Intern
 rental_common_billing_start	rental	no	Fakturastart
-rental_common_billing_type	rental	no	Fakturatype
+rental_common_billing_term	rental	no	Faktureringstermin
 rental_common_billing_unit	rental	no	Ansvar-/tjenestested
 rental_common_building	rental	no	Bygg
 rental_common_calculate_price_apiece	rental	no	Pris regnes per stk.
@@ -67,6 +67,7 @@ rental_common_elements_pr_page	rental	no	elementer per side
 rental_common_email	renal	no	E-post
 rental_common_ended	rental	no	Avsluttet
 rental_common_events	rental	no	Hendelser
+rental_common_every_second_week	rental	no	Hver 14. dag
 rental_common_executive_officer_for	rental	no	Saksbehandler for
 rental_common_external	rental	no	Eksterne kontraktsparter
 rental_common_fax	rental	no	Faks
@@ -77,6 +78,7 @@ rental_common_fixed	rental	no	Tidsbestemt
 rental_common_floor	rental	no	Etasje
 rental_common_from	rental	no	Fra
 rental_common_gab	rental	no	GAB
+rental_common_half-year	rental	no	Halvårig
 rental_common_house_number	rental	no	Husnummer
 rental_common_id	rental	no	ID
 rental_common_contract_id	rental	no	Kontraktsnummer
@@ -129,6 +131,7 @@ rental_common_price_list	rental	no	Prisbok
 rental_common_property	rental	no	Eiendom
 rental_common_property_id	rental	no	BKB Identifikator
 rental_common_propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
+rental_common_quarterly	rental	no	Kvartalvis
 rental_common_rc	rental	no	Leieobjekter
 rental_common_recurrence	rental	no	Gjentakelse
 rental_common_remove	rental	no	Fjern

@@ -172,7 +172,7 @@ class rental_socontract extends rental_socommon
 		$id = (int)$id;
 		$sql_payer_id = " LEFT JOIN  (SELECT contract_id, party_id FROM rental_contract_party  WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, type_id, term_id, security_type, security_amount, billing_unit, old_contract_id, rental_contract_type.title  FROM " . $this->table_name . $sql_payer_id . $this->left_join . 'rental_contract_type ON (rental_contract_type.id = rental_contract.type_id)' . 'WHERE ' . $this->table_name . ".id={$id}";
+		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, type_id, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, billing_unit, old_contract_id, rental_contract_type.title  FROM " . $this->table_name . $sql_payer_id . " {$this->left_join} rental_contract_type ON (rental_contract_type.id = rental_contract.type_id) {$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) WHERE {$this->table_name}.id={$id}";
 
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 	
@@ -197,6 +197,7 @@ class rental_socontract extends rental_socommon
 		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
 		$contract->set_contract_type_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
+		$contract->set_term_id_title($this->unmarshal($this->db->f('term_id_title', true), 'string'));
 		$contract->set_security_type($this->unmarshal($this->db->f('security_type', true), 'int'));
 		$contract->set_security_amount($this->unmarshal($this->db->f('security_amount', true), 'string'));
 		$contract->set_billing_unit($this->unmarshal($this->db->f('billing_unit', true), 'string'));
