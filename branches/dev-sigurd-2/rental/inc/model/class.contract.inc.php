@@ -177,7 +177,7 @@
 		public function get_composite_name(){
 			$names = '';
 			foreach($this->composite_names as $composite) {
-				$names .= $composite."<br/>";
+				$names .= $composite."<br/>\n";
 			}
 			return $names;
 		}
@@ -214,7 +214,6 @@
 				$so = self::get_so();
 				$this->composites = $so->get_composites_for_contract($this->get_id());
 			}
-			
 			return $this->composites;
 		}
 		

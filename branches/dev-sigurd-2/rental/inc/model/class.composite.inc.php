@@ -298,9 +298,9 @@
 				$location = $unit->get_location();
 				if($location != null) // There is an underlying property location
 				{
-					$addresses .= $location->get_address_1() . "\n";
-					$location_codes .= $location->get_location_code() . "\n";
-					$gab_ids .= $location->get_gab_id() . "\n";
+					$addresses .= $location->get_address_1() . "<br>\n";
+					$location_codes .= $location->get_location_code() . "<br>\n";
+					$gab_ids .= $location->get_gab_id() . "<br>\n";
 				}
 			}
 			if($this->has_custom_address())
