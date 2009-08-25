@@ -2034,16 +2034,16 @@
 		/**
 		* pending approval for an item
 		*
-		* @param string $appname      the name of the module being looked up
-		* @param string $location     the location within the module to look up
-		* @param integer $id          id of the referenced item
-		* @param integer $account_id  the user asked for approval
+		* @param string   $appname      the name of the module being looked up
+		* @param string   $location     the location within the module to look up
+		* @param integer  $id           id of the referenced item - could possibly be a bigint
+		* @param integer  $account_id   the user asked for approval
 		*
-		* @return void
+		* @return integer $reminder     number of request for approval
 		*/
 
 		public function pending_approval($appname, $location, $id, $account_id)
 		{
-			$this->socommon->pending_approval($appname, $location, $id, $account_id);
+			return $this->socommon->pending_approval($appname, $location, $id, $account_id);
 		}
 	}

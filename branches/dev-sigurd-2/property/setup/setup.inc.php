@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.566';
+	$setup_info['property']['version']		= '0.9.17.567';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -199,7 +199,8 @@
 		'settings',
 		'help',
 		'menu'	=> 'property.menu.get_menu',
-		'config'
+		'config',
+		'home'
 	);
 
 	/* Dependencies for this app to work */

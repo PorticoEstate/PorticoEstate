@@ -2077,9 +2077,9 @@
  		),
 		'fm_approval' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto','precision' => 8,'nullable' => False),
+				'id' => array('type' => 'int','precision' => 8,'nullable' => False),
 				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'account_id' => array('type' => 'int','precision' => 2,'nullable' => False),
+				'account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'requested' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
 				'approved' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
 				'reminder' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '1'),

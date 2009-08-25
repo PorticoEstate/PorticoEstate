@@ -3575,3 +3575,42 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.566 to 0.9.17.567
+	* Add a general approval scheme for items across the system
+	* 
+	*/
+
+	$test[] = '0.9.17.566';
+	function property_upgrade0_9_17_566()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_approval', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 8,'nullable' => False),
+					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'requested' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'approved' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'reminder' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '1'),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id', 'location_id', 'account_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.567';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
