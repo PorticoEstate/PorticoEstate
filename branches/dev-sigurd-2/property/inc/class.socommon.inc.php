@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	class property_socommon
 	{
 		/**
@@ -407,5 +409,55 @@
 				}
 			}
 			return $access_location;
+		}
+
+		/**
+		* pending approval for an item
+		*
+		* @param string $appname      the name of the module being looked up
+		* @param string $location     the location within the module to look up
+		* @param integer $id          id of the referenced item - could possibly be a bigint
+		* @param integer $account_id  the user asked for approval
+		*
+		* @return void
+		*/
+
+		public function pending_approval($appname, $location, $id, $account_id)
+		{
+			$account_id = (int) $account_id;
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+
+			$sql = "SELECT id FROM fm_approval WHERE location_id = {$location_id} AND id = '{$id}' AND account_id = {$account_id}";
+			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('id'))
+			{
+				$value_set=array
+				(
+					'reminder'			=> $this->db->f('reminder') + 1,
+					'modified_date' 	=> phpgwapi_datetime::user_localtime(),
+					'modified_by' 		=> $this->account,
+				);
+
+				$value_set	= $this->db->validate_update($value_set);
+				$sql = "UPDATE fm_approval SET {$value_set} WHERE location_id = {$location_id} AND id = '{$id}' AND account_id = {$account_id}";
+				$this->db->query($sql, __LINE__,__FILE__);
+			}
+			else
+			{
+				$values= array
+				(
+					$id,
+					$location_id,
+					$account_id,
+					phpgwapi_datetime::user_localtime(),
+					1,
+					phpgwapi_datetime::user_localtime(),
+					$this->account
+				);
+				
+				$values	= $this->bocommon->validate_db_insert($values);
+				$this->db->query("INSERT INTO fm_workorder (id, location_id, account_id, requested, reminder, created_on, created_by VALUES ( $values $vals)",__LINE__,__FILE__);
+			}
 		}
 	}

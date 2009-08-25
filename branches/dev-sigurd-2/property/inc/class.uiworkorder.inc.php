@@ -918,19 +918,21 @@
 								$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 							}
 							$bcc = $coordinator_email;
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['mail_address'], $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+							foreach ($values['mail_address'] as $_account_id => $_address)
+							{
+								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+								if($rcpt)
+								{
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+								}
+								$this->bo->pending_approval('property', '.project.workorder', $id, $_account_id);
+							}
 						}
 						else
 						{
 							$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 						}
 					}
-
-					if($rcpt)
-					{
-						$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
-					}
-
 				}
 			}
 
@@ -1162,26 +1164,39 @@
 				'id'		=> $id
 			);
 
+			$supervisor_id = 0;
+
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
 			{
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 			}
-			else
-			{
-				$supervisor_id = '';
-			}
 
-			$need_approval = (isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'');
+			$need_approval = isset($config->config_data['workorder_approval']) ? $config->config_data['workorder_approval'] : '';
 
+			$supervisor_email = array();
 			if ($supervisor_id && ($need_approval=='yes'))
 			{
 				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-				$supervisor_email = $prefs['email'];
-			}
-			else
-			{
-				$supervisor_email = '';
+				$supervisor_email[] = array
+				(
+					'id'	  => $supervisor_id,
+					'address' => $prefs['email'],
+				);
+				if ( isset($prefs['approval_from']) )
+				{
+					$prefs = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+					if(isset($prefs['email']))
+					{
+						$supervisor_email[] = array
+						(
+							'id'	  => $prefs['approval_from'],
+							'address' => $prefs['email'],
+						);
+						$supervisor_email = array_reverse($supervisor_email);
+					}
+				}
 			}
 
 			$workorder_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status']:'');

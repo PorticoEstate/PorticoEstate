@@ -2074,5 +2074,23 @@
 			),
 			'ix' => array('location_code'),
 			'uc' => array()
- 		)
+ 		),
+		'fm_approval' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 8,'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'account_id' => array('type' => 'int','precision' => 2,'nullable' => False),
+				'requested' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'approved' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'reminder' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '1'),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id', 'location_id', 'account_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		)
 	);
