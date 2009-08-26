@@ -47,7 +47,6 @@
 			
 		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			self::set_active_menu('rental');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
@@ -168,21 +167,22 @@
 			die;
 		}
 
-        public function render_template($files, $data)
+        public function render_template($output)
         {
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 			if($this->flash_msgs)
 			{
-				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				foreach($msgbox_data as & $message)
+				{
+					echo "<div class='{$message['msgbox_class']}'>";
+					echo $message['msgbox_text'];
+					echo '</div>';
+				}
 			}
-			else
-			{
-           		$this->add_template_file('msgbox');
-			}
-			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
-			$GLOBALS['phpgw']->xslttpl->set_output($output);
-			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));
-			$this->add_template_file($files);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+			echo htmlspecialchars_decode($output);
+			$GLOBALS['phpgw']->common->phpgw_exit();
         }
         	
         public function check_active($url)
@@ -255,7 +255,7 @@
 			//return;
 			$output = ob_get_contents();
 			ob_end_clean();
-			self::render_template('php_template',array('output' =>$output));
+			self::render_template($output);
 		}
 		
 		/**

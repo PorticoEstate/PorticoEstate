@@ -4,51 +4,6 @@
 	phpgwapi_yui::tabview_setup('contract_tabview');
 ?>
 
-<script type="text/javascript">
-//Initiate calendar for changing status date when filtering on contract status
-YAHOO.util.Event.onDOMReady(
-	function()
-	{
-		cal_start = initCalendar(
-			'date_start', 
-			'calendarStartDate', 
-			'calendarStartDate_body', 
-			'<?php echo lang('rental_common_select_date') ?>', 
-			'calendarStartDateCloseButton',
-			'calendarStartDateClearButton',
-			'date_start_hidden',
-			true
-		);
-		updateCalFromInput(cal_start, 'date_start_hidden');
-
-		cal_end = initCalendar(
-			'date_end', 
-			'calendarEndDate', 
-			'calendarEndDate_body', 
-			'<?php echo lang('rental_common_select_date') ?>', 
-			'calendarEndDateCloseButton',
-			'calendarEndDateClearButton',
-			'date_end_hidden',
-			true
-		);
-		updateCalFromInput(cal_end, 'date_end_hidden');
-		
-		cal_end = initCalendar(
-			'date_notification', 
-			'calendarNotificationDate', 
-			'calendarNotificationDate_body', 
-			'<?php echo lang('rental_common_select_date') ?>', 
-			'calendarNotificationDateCloseButton',
-			'calendarNotificationDateClearButton',
-			'date_notification_hidden',
-			true
-		);
-		updateCalFromInput(cal_end, 'date_notification_hidden');
-		
-	}
-);
-</script>
-
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('rental_common_showing_contract') ?> <?php echo $contract->get_id() ?></h1>
 
 <?php echo rental_uicommon::get_page_error($error) ?>
@@ -85,17 +40,7 @@ YAHOO.util.Event.onDOMReady(
 							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
 							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
 							if ($editable) {
-								?>
-								<input type="text" name="date_start" id="date_start" size="10" value="<?php echo $start_date ?>" />
-								<input type="hidden" name="date_start_hidden" id="date_start_hidden" value="<?php echo $start_date_yui ?>"/>
-								<div id="calendarStartDate">
-									<div id="calendarStartDate_body"></div>
-									<div class="calheader">
-										<button id="calendarStartDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-										<button id="calendarStartDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-									</div>
-								</div>
-							<?php
+								echo $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);
 							} else {
 								echo $start_date;
 							}
@@ -110,17 +55,7 @@ YAHOO.util.Event.onDOMReady(
 							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
 							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
 							if ($editable) {
-								?>
-								<input type="text" name="date_end" id="date_end" size="10" value="<?php echo $end_date ?>" />
-								<input type="hidden" name="date_end_hidden" id="date_end_hidden" value="<?php echo $end_date_yui ?>"/>
-								<div id="calendarEndDate">
-									<div id="calendarEndDate_body"></div>
-									<div class="calheader">
-										<button id="calendarEndDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-										<button id="calendarEndDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-									</div>
-								</div>
-							<?php
+								echo $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
 							} else {
 								echo $end_date;
 							}
