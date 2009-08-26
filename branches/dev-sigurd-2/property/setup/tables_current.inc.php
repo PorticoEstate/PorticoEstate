@@ -972,7 +972,7 @@
 				'regtid' => array('type' => 'timestamp','nullable' => False),
 				'artid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'godkjentbelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => True),
-				'spvend_code' => array('type' => 'varchar','int' => '4','nullable' => True),
+				'spvend_code' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'dima' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'loc1' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'dimb' => array('type' => 'int','precision' => '2','nullable' => True),
