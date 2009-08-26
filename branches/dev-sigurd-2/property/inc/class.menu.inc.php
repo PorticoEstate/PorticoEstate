@@ -469,6 +469,11 @@
 					(
 						'text'		=> lang('responsible matrix'),
 						'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index') ),
+					),
+					'pending_action_type'	=> array
+					(
+						'text'		=> lang('pending action type'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'pending_action_type') )
 					)
 				);
 			}

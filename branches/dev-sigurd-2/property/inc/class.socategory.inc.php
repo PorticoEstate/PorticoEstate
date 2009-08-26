@@ -899,6 +899,33 @@
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
 
+				case 'pending_action_type':
+					$info = array
+					(
+						'table' 			=> 'fm_action_category',
+						'id'				=> array('name' => 'num', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('Pending action type'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::action_type'
+					);
+
 					break;
 
 				default:

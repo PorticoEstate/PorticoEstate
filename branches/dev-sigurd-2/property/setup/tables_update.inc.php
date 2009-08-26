@@ -3614,3 +3614,65 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.567 to 0.9.17.568
+	* Extend the approval scheme to include general actions
+	* 
+	*/
+/*
+	$test[] = '0.9.17.567';
+	function property_upgrade0_9_17_567()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_approval');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_action_pending', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'item_id' => array('type' => 'int','precision' => 8,'nullable' => False),
+					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'responsible' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'responsible_type' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+					'action_category'	=> array('type' => 'int','precision' => 4,'nullable' => False),
+					'action_requested' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'action_deadline' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'action_performed' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'reminder' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '1'),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),//timestamp
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'expired_on' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+					'expired_by' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'remark' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_action_category', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => True),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('num')
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.568';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+*/

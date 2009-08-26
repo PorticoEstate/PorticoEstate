@@ -187,7 +187,8 @@
 		'fm_budget_cost',
 		'fm_responsibility',
 		'fm_responsibility_contact',
-		'fm_approval'
+		'fm_action_pending',
+		'fm_action_category'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
