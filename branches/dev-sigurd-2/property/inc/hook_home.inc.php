@@ -55,7 +55,7 @@
 	if ( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'])
 		|| !$GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] )
 	{
-//		return;
+		return;
 	}
 //	$GLOBALS['phpgw']->translation->add_app('property');
 	
