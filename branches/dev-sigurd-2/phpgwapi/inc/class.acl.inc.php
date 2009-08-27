@@ -137,6 +137,8 @@
 		* define its own constants which reference this value
 		*/
 		const CUSTOM_3 = 256;
+		
+		protected $global_lock = false;
 
 		/**
 		* ACL constructor for setting account id
@@ -407,7 +409,15 @@
 			unset($subs);
 			unset($_locations);
 
-			$this->_db->transaction_begin();
+			if ( $this->_db->Transaction )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->_db->transaction_begin();
+			}
+
 
 			$sql = 'DELETE FROM phpgw_acl'
 					. " WHERE acl_account = {$acct_id} {$sql_delete_location}";
@@ -419,7 +429,11 @@
 				|| !count($this->_data[$acct_id])
 				)
 			{
-				$this->_db->transaction_commit();
+
+				if ( !$this->global_lock )
+				{
+					$this->_db->transaction_commit();
+				}
 
 				$this->_data[$acct_id] = array();
 
