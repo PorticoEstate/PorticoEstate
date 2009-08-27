@@ -6,31 +6,162 @@
  * 
  */
 
+
+// clean up from previous install
+$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'rental'");
+$GLOBALS['phpgw_setup']->oProc->next_record();
+$app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
+
+$GLOBALS['phpgw_setup']->oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
+
+$locations = array();
+while ($GLOBALS['phpgw_setup']->oProc->next_record())
+{
+	$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
+}
+
+if(count($locations))
+{
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_choice WHERE location_id IN ('. implode (',',$locations) . ')');
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN ('. implode (',',$locations). ')');
+	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_acl  WHERE location_id IN ('. implode (',',$locations) . ')');
+}
+
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
+
+
+unset($locations);
+
+
 //Create groups, users, add users to groups and set preferences
-//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2000");
-//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2001");
-//$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2002");
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2003");
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2004");
-$oProc->query("DELETE FROM phpgw_accounts WHERE account_id = 2005");
-//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2000,'rental_backend_read_only','','rental_backend_read_only','Gruppe','A',-1,'g',-1)");
-//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2001,'rental_backend_write','','rental_backend_write','Gruppe','A',-1,'g',-1)");
-//$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2002,'rental_administrator','','rental_administrator','Gruppe','A',-1,'g',-1)");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2003,'rental_read','{SSHA}ZbIRWYpt3HmeA0bUWrfV7+2ZEe0Vuw==','Bouvet','Read only backend user','A',-1,'u',-1)");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2004,'rental_write','{SSHA}jnwiYTpDgKeNcsPLTV5QQ0InqrhPeA==','Bouvet','Rental read and write','A',-1,'u',-1)");
-$oProc->query("INSERT INTO phpgw_accounts (account_id,account_lid, account_pwd, account_firstname, account_lastname, account_status, account_expires, account_type,account_quota) VALUES (2005,'rental_admin','{SSHA}mrnNbEnfyIk/1kL9Y70z2B5Zb9UhYA==','Bouvet','Rental administrator','A',-1,'u',-1)");
-//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2003");
-//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2004");
-//$oProc->query("DELETE FROM phpgw_group_map WHERE account_id = 2005");
-//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2000,2003,1)");
-//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2001,2004,1)");
-//$oProc->query("INSERT INTO phpgw_group_map (group_id,account_id,arights) VALUES (2002,2005,1)");
-$oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2003 AND preference_app LIKE 'common'");
-$oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2004 AND preference_app LIKE 'common'");
-$oProc->query("DELETE FROM phpgw_preferences WHERE preference_owner = 2005 AND preference_app LIKE 'common'");
-$oProc->query("INSERT INTO phpgw_preferences VALUES (2003,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
-$oProc->query("INSERT INTO phpgw_preferences VALUES (2004,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
-$oProc->query("INSERT INTO phpgw_preferences VALUES (2005,'common','a:4:{s:9:\"maxmatchs\";s:2:\"50\";s:10:\"dateformat\";s:5:\"d.m.Y\";s:10:\"timeformat\";s:2:\"12\";s:4:\"lang\";s:2:\"no\";}')");
+
+
+$GLOBALS['phpgw']->locations->add('.',				'Root',			'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG',			'Locations for organisational units',				'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Kommune',			'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01',		'Byrådsleders avdeling',							'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.02',		'Byrådsavd. for finans, konkurranse og omstilling',	'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.03',		'Byrådsavd. for helse og omsorg',					'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.04',		'Byrådsavd. for barnehage og skole',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.05',		'Byrådsavd. for klima, miljø og byutvikling',		'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.06',		'Byrådsavd. for byggesak og bydeler',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.07',		'Byrådsavd. for kultur, næring og idrett',			'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.08',		'Bystyrets organer',								'rental',false);
+
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.30',		'Seksjon informasjon',							'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.33',		'Byrådsleders avdeling, stab',					'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.34',		'Kommuneadvokaten',								'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.36',		'Etat for samfunnssikkerhet og beredskap',		'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.37',		'Erstatningsutvalgets sekretariat',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',false);
+
+// Default groups and users
+$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
+$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+
+if ($GLOBALS['phpgw']->accounts->exists('rental_backend_read_only') )
+{
+	$aclobj =& $GLOBALS['phpgw']->acl;
+	$aclobj->enable_inheritance = true;
+
+	$group_read			= $GLOBALS['phpgw']->accounts->name2id('rental_backend_read_only');
+	$group_write		= $GLOBALS['phpgw']->accounts->name2id('rental_backend_write');
+	$group_admin		= $GLOBALS['phpgw']->accounts->name2id('rental_administrator');
+	$aclobj->set_account_id($group_read, true);
+	$aclobj->add('rental', 'run', 1);
+	$aclobj->add('rental', '.', 1);
+	$aclobj->save_repository();
+	$aclobj->set_account_id($group_write, true);
+	$aclobj->add('rental', 'run', 1);
+	$aclobj->add('rental', '.', 15);
+	$aclobj->save_repository();
+	$aclobj->set_account_id($group_admin, true);
+	$aclobj->add('rental', 'run', 1);
+	$aclobj->add('rental', '.', 31);
+	$aclobj->save_repository();
+
+	$user_read  = $GLOBALS['phpgw']->accounts->name2id('rental_read');
+	$user_write = $GLOBALS['phpgw']->accounts->name2id('rental_write');
+	$user_admin = $GLOBALS['phpgw']->accounts->name2id('rental_admin');
+}
+else
+{
+	$modules = array
+	(
+		'manual',
+		'preferences',
+		'rental',
+		'property'
+	);
+
+	$acls = array
+	(
+		array
+		(
+			'appname'	=> 'preferences',
+			'location'	=> 'changepassword',
+			'rights'	=> 1
+		),
+		array
+		(
+			'appname'	=> 'rental',
+			'location'	=> '.',
+			'rights'	=> 1
+		)
+	);
+
+	$account			= new phpgwapi_group();
+	$account->lid		= 'rental_backend_read_only';
+	$account->firstname = 'Rental backend read_only';
+
+	$read_group =$GLOBALS['phpgw']->accounts->create($account, array(), $acls, $modules);
+
+	$acls[1]['rights'] = 15;
+	$account			= new phpgwapi_group();
+	$account->lid		= 'rental_backend_write';
+	$account->firstname = 'Rental backend write';
+
+	$group_write =$GLOBALS['phpgw']->accounts->create($account, array(), $acls, $modules);
+
+	$acls[1]['rights'] = 31;
+	$account			= new phpgwapi_group();
+	$account->lid		= 'rental_administrator';
+	$account->firstname = 'Rental administrator';
+	$admin_group =$GLOBALS['phpgw']->accounts->create($account, array(), $acls, $modules);
+
+	$account			= new phpgwapi_user();
+	$account->lid		= 'rental_read';
+	$account->firstname	= 'Bouvet';
+	$account->lastname	= 'Read only backend user';
+	$account->passwd	= 'Test_Passord10';
+	$account->enabled	= true;
+	$account->expires	= -1;
+	$groups = array($read_group);
+	$user_read = $GLOBALS['phpgw']->accounts->create($account, $groups);
+
+	$account			= new phpgwapi_user();
+	$account->lid		= 'rental_write';
+	$account->firstname	= 'Bouvet';
+	$account->lastname	= 'Rental read and write';
+	$account->passwd	= 'Test_Passord11';
+	$account->enabled	= true;
+	$account->expires	= -1;
+	$groups = array($group_write);
+	$user_write = $GLOBALS['phpgw']->accounts->create($account, $groups);
+
+	$account			= new phpgwapi_user();
+	$account->lid		= 'rental_admin';
+	$account->firstname	= 'Bouvet';
+	$account->lastname	= 'Rental administrator';
+	$account->passwd	= 'administrator';
+	$account->enabled	= true;
+	$account->expires	= -1;
+	$groups = array($admin_group);
+	$user_admin = $GLOBALS['phpgw']->accounts->create($account, $groups, array(), array('admin'));
+}
 
 //Default rental composites
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Herdla fuglereservat','Pip pip')");
@@ -93,27 +224,27 @@ $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('ren
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_monthly','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_every_second_week','24')");
 
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2008-01-01','2028-01-15','2008-01-15',1,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-10-01','2029-10-15','2009-10-15',3,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-09-21','2029-09-15','2009-09-15',4,2,2004,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-02-03','2029-02-15','2009-02-15',3,2,2005,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-08-12','2029-08-15','2009-08-15',3,2,2005,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-16','2029-06-15','2009-06-16',3,2,2005,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-01','2029-06-15','2009-06-15',3,2,2005,'2009-01-01', 2004, '2009-01-01', 2004)");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2004-02-01','2024-02-02','2004-02-15',3,2,2005,'2009-01-01', 2004, '2009-01-01', 2004)");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2008-01-01','2028-01-15','2008-01-15',1,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-10-01','2029-10-15','2009-10-15',3,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-09-21','2029-09-15','2009-09-15',4,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-02-03','2029-02-15','2009-02-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-08-12','2029-08-15','2009-08-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-16','2029-06-15','2009-06-16',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-01','2029-06-15','2009-06-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2004-02-01','2024-02-02','2004-02-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
 	// Vitalitetssenteret
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-02-12',NULL,'2005-01-01',2,4,2005,'2005-12-06', 2005, '2009-07-27', 2005, 'K00000659')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-03-18',NULL,'2005-01-01',2,4,2005,'2005-12-06', 2005, '2009-07-27', 2005, 'K00000660')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-02-12',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-06', {$user_admin}, '2009-07-27', {$user_admin}, 'K00000659')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-03-18',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-06', {$user_admin}, '2009-07-27', {$user_admin}, 'K00000660')");
 	// Gullstøltunet sykehjem
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,2005,'2005-12-20', 2005, '2009-07-28', 2005, ' K00000585')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,2005,'2005-06-27', 2005, '2009-07-28', 2005, ' K00000586')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,2005,'2005-06-27', 2005, '2009-07-28', 2005, ' K00000587')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2006-01-01',NULL,'2006-01-01',2,4,2005,'2005-12-20', 2005, '2009-07-28', 2005, ' K00006497')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-20', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000585')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-06-27', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000586')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-06-27', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000587')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2006-01-01',NULL,'2006-01-01',2,4,{$user_admin},'2005-12-20', {$user_admin}, '2009-07-28', {$user_admin}, ' K00006497')");
 	// Bergen Rådhus
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2008-01-01',NULL,'2005-01-01',2,4,2005,'2008-11-28', 2005, '2009-07-28', 2005, ' K00000797')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2005-01-01',NULL,'2005-01-01',2,4,2005,'2006-06-13', 2005, '2009-07-28', 2005, ' K00000798')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2008-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2008-11-28', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000797')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2005-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2006-06-13', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000798')");
 	
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (1,1)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (2,2)");
@@ -215,111 +346,16 @@ $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_i
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (7, 18, 'Renovasjon', 1160.4, 0, 'Y903', true, 10.94, 12694.78, '2005-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (8, 18, 'Vedlikehold', 1160.4, 0, 'Y905', true, 98.23, 113986.09, '2009-01-01', NULL)");
 
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,2004,'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,2005,'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,2004,'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
 
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,17,'Oppdatér med ny postadresse.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES (2005,18,'Oppdatér med ny postadresse.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},17,'Oppdatér med ny postadresse.',1250593658,0)");
+$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},18,'Oppdatér med ny postadresse.',1250593658,0)");
 
-$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES (2005,1,1250593658,1250593658)");
-$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES (2005,2,1250593658,1250593658)");
+$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},1,1250593658,1250593658)");
+$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},2,1250593658,1250593658)");
 
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2003");
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2004");
-$oProc->query("DELETE FROM phpgw_acl WHERE acl_account = 2005");
-
-
-
-
-//include_class('phpgwapi', 'phpgwapi_acl', 'inc/');
-//var_dump(debug_backtrace());
-//include('class.acl.inc.php');
-//$this->aclForUser = new phpgwapi_acl(2000);
-/*$this->aclForUser->add('rental','.',PHPGW_ACL_READ);
-$this->aclForUser = new phpgwapi_acl(2001);
-$this->aclForUser->add('rental','.',15);
-$this->aclForUser = new phpgwapi_acl(2002);
-$this->aclForUser->add('rental','.',31);*/
-
-// Locations hierarchy
-/* 
-$GLOBALS['phpgw']->locations->delete('rental','.',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.02',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.03',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.04',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.05',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.06',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.07',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.08',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.30',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.33',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.34',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.36',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.37',false);
-$GLOBALS['phpgw']->locations->delete('rental','.ORG.BK.01.38',false);
-
-
-$oProc->query("DELETE FROM phpgw_locations WHERE 
-	( name = '.'  OR
-	name = '.ORG' OR
-	name = '.ORG.BK' OR
-	name = '.ORG.BK.01' OR
-	name = '.ORG.BK.02' OR
-	name = '.ORG.BK.03' OR
-	name = '.ORG.BK.04' OR
-	name = '.ORG.BK.05' OR
-	name = '.ORG.BK.06' OR
-	name = '.ORG.BK.07' OR
-	name = '.ORG.BK.08' OR
-	name = '.ORG.BK.01.30' OR
-	name = '.ORG.BK.01.33' OR
-	name = '.ORG.BK.01.34' OR
-	name = '.ORG.BK.01.36' OR
-	name = '.ORG.BK.01.37' OR
-	name = '.ORG.BK.01.38' )
-	AND app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental')");
-
-*/
-
-
-$GLOBALS['phpgw']->locations->add('.',				'Root',			'rental',false);
-
-$GLOBALS['phpgw']->locations->add('.ORG',			'Locations for organisational units',				'rental',false);
-
-$GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Kommune',			'rental',false);
-
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01',		'Byrådsleders avdeling',							'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.02',		'Byrådsavd. for finans, konkurranse og omstilling',	'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.03',		'Byrådsavd. for helse og omsorg',					'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.04',		'Byrådsavd. for barnehage og skole',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.05',		'Byrådsavd. for klima, miljø og byutvikling',		'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.06',		'Byrådsavd. for byggesak og bydeler',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.07',		'Byrådsavd. for kultur, næring og idrett',			'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.08',		'Bystyrets organer',								'rental',false);
-
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.30',		'Seksjon informasjon',							'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.33',		'Byrådsleders avdeling, stab',					'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.34',		'Kommuneadvokaten',								'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.36',		'Etat for samfunnssikkerhet og beredskap',		'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.37',		'Erstatningsutvalgets sekretariat',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',false);
-
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2003,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2004,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = 'run'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2003,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2004,15,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,31,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'rental') AND name = '.'))");
-$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2005,1,-1,0,(SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'admin')))");
-$oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = (SELECT app_id FROM phpgw_applications WHERE app_name LIKE 'property')");
-while($oProc->next_record())
-{
-	$oProc->query("INSERT INTO phpgw_acl (acl_account,acl_rights,acl_grantor, acl_type, location_id) VALUES (2002,31,-1,0,".$oProc->f('location_id', true).")");
-}
