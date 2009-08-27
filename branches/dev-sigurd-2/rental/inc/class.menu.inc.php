@@ -67,6 +67,11 @@
 					'text'	=> $GLOBALS['phpgw']->translation->translate('rental_common_price_list', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-spreadsheet')
+				),
+				'acl'	=> array
+				(
+					'text'	=> lang('Configure Access Permissions'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'rental') )
 				)
 			);
 			
