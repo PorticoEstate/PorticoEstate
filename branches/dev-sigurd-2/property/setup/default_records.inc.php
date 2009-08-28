@@ -708,3 +708,8 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (locatio
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 11, 1, 'OK')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 11, 2, 'Not OK')");
 
+/*
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('approval', 'Approval', 'Please approve the item requested')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('remind', 'Remind', 'This is a reminder of task assigned')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('accept_delivery', 'Accept delivery', 'Please accept delivery on this item')");
+*/

@@ -412,56 +412,166 @@
 		}
 
 		/**
-		* pending approval for an item
+		* pending action for items across the system.
 		*
-		* @param string   $appname      the name of the module being looked up
-		* @param string   $location     the location within the module to look up
-		* @param integer  $id           id of the referenced item - could possibly be a bigint
-		* @param integer  $account_id   the user asked for approval
+		* @param array   $data array containing string  'appname'			- the name of the module being looked up
+		*										string  'location'			- the location within the module to look up
+		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		* 										integer 'responsible'		- the user_id asked for approval
+		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		* 										string  'action'			- what type of action is pending
+		* 										string  'remark'			- a general remark - if any
+		* 										integer 'deadline'			- unix timestamp if any deadline is given.
 		*
-		* @return integer $reminder     number of request for approval
+		* @return integer $reminder  number of request for this action
 		*/
 
-		public function pending_approval($appname, $location, $id, $account_id)
+		public function set_pending_action($data = array())
 		{
-			$account_id = (int) $account_id;
-			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$appname		= $data['appname'];
+			$location		= $data['location'];
+			$item_id		= $data['id']; //possible bigint
+			$responsible	= (int) $data['responsible'];
+			$action			= $this->db->db_addslashes($data['action']);
+			$remark			= $this->db->db_addslashes($data['remark']);
+			$deadline		= (int) $data['deadline'];
 
-			$sql = "SELECT reminder FROM fm_approval WHERE location_id = {$location_id} AND id = '{$id}' AND account_id = {$account_id}";
+			if( !$item_id)
+			{
+				throw new Exception("No item_id given");				
+			}
+
+
+			$valid_responsible_types = array
+			(
+				'user',
+				'vendor',
+				'tenant'
+			);
+
+			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
+
+			if( !in_array($responsible_type, $valid_responsible_types))
+			{
+				throw new Exception("No valid responsible_type given");				
+			}
+
+			$sql = "SELECT id FROM fm_action_pending_category WHERE num = '{$action}'";
+			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->next_record();
+			$action_category = $this->db->f('id');
+			if ( !$action_category )
+			{
+				throw new Exception("No valid action_type given");							
+			}
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			
+			if ( !$location_id )
+			{
+				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
+			}
+
+			$reminder = 1;
+			$this->db->transaction_begin();
+
+			$condition = " WHERE location_id = {$location_id}"
+				. " AND item_id = {$item_id}"
+				. " AND responsible = {$responsible}"
+				. " AND action_category = {$action_category}"
+				. " AND action_performed IS NULL"
+				. " AND expired_on IS NULL";
+
+			$sql = "SELECT id, reminder FROM fm_action_pending {$condition}";
+				
+
 			$this->db->query($sql, __LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('reminder'))
 			{
 				$reminder	= $this->db->f('reminder') + 1;
+				$id			= $this->db->f('id');
 
-				$value_set=array
+				$value_set = array
 				(
-					'reminder'			=> $reminder,
-					'modified_date' 	=> phpgwapi_datetime::user_localtime(),
-					'modified_by' 		=> $this->account,
+					'expired_on' 		=> phpgwapi_datetime::user_localtime(),
+					'expired_by' 		=> $this->account,
 				);
+
+				if ( $deadline > 0 )
+				{
+					$value_set['deadline'] = $deadline;
+				}
 
 				$value_set	= $this->db->validate_update($value_set);
-				$sql = "UPDATE fm_approval SET {$value_set} WHERE location_id = {$location_id} AND id = '{$id}' AND account_id = {$account_id}";
+				$sql = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
 				$this->db->query($sql, __LINE__,__FILE__);
 			}
-			else
-			{
-				$reminder = 1;
-				$values= array
-				(
-					$id,
-					$location_id,
-					$account_id,
-					phpgwapi_datetime::user_localtime(),
-					$reminder,
-					phpgwapi_datetime::user_localtime(),
-					$this->account
-				);
+
+			$values= array
+			(
+				$item_id,								//item_id
+				$location_id,
+				$responsible,							// responsible
+				$responsible_type,						// responsible_type
+				$action_category, 						//action_category
+				phpgwapi_datetime::user_localtime(),	// action_requested
+				$reminder,
+				$deadline,								//action_deadline
+				phpgwapi_datetime::user_localtime(),	//created_on
+				$this->account,							//created_by
+				$remark									//remark
+			);
 				
-				$values	= $this->db->validate_insert($values);
-				$this->db->query("INSERT INTO fm_approval (id, location_id, account_id, requested, reminder, created_on, created_by) VALUES ( $values $vals)",__LINE__,__FILE__);
-			}
+			$values	= $this->db->validate_insert($values);
+			$sql = "INSERT INTO fm_action_pending ("
+				. "item_id, location_id, responsible, responsible_type,"
+				. "action_category, action_requested, reminder, action_deadline,"
+				. "created_on, created_by, remark) VALUES ( $values $vals)";
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			$this->db->transaction_commit();
 			return $reminder;
+		}
+
+		public function get_pending_action($data = array())
+		{
+
+			$appname		= isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
+			$location		= isset($data['location']) && $data['location'] ? $data['location'] : '';
+			$item_id		= isset($data['id']) && $data['id'] ? $data['id'] : '';$data['id']; //possible bigint
+			//FIXME
+			$responsible	= (int) $data['responsible'];
+			$action			= isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
+			$deadline		= isset($data['deadline']) && $data['deadline'] ? (int) $data['deadline'] : 0;
+			
+			
+			$ret = array();
+			$condition =   
+				" WHERE action_performed IS NULL"
+			//	. " AND responsible =  {$GLOBALS['phpgw_info']['user']['account_id']}"
+				. " AND num = 'approval'"
+				. " AND expired_on IS NULL";
+
+			$sql = "SELECT * FROM fm_action_pending {$this->join} fm_action_pending_category ON fm_action_pending.action_category = fm_action_pending_category.id {$condition}";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+			$ret = $this->db->resultSet;
+
+			$interlink = CreateObject('property.interlink');
+			
+			foreach ($ret as &$entry)
+			{
+				if( !$location )
+				{
+					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+				}
+				$entry['url'] = $interlink->get_relation_link($location, $entry['item_id'], 'edit');
+			}
+			return $ret;
+		}
+
+		public function close_pending_action($data = array())
+		{
 		}
 	}

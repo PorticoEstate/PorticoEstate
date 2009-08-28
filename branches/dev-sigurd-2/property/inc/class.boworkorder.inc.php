@@ -599,19 +599,4 @@
 			$this->so->delete($workorder_id);
 		}
 
-		/**
-		* pending approval for an item
-		*
-		* @param string $appname      the name of the module being looked up
-		* @param string $location     the location within the module to look up
-		* @param integer $id          id of the referenced item
-		* @param integer $account_id  the user asked for approval
-		*
-		* @return void
-		*/
-
-		public function pending_approval($appname, $location, $id, $account_id)
-		{
-			$this->bocommon->pending_approval($appname, $location, $id, $account_id);
-		}
 	}

@@ -64,7 +64,7 @@
 
 			$uicols = array();
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'id';
+			$uicols['name'][]			= $this->location_info['id']['name'];
 			$uicols['descr'][]			= lang('id');
 			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
 
@@ -118,12 +118,20 @@
 
 			if($query)
 			{
+				if($this->location_info['id']['type']=='auto' || $this->location_info['id']['type']=='int')
+				{
+					$id_query = (int) $query;
+				}
+				else
+				{
+					$id_query = "'{$query}'";
+				}
+
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE descr $this->_like '%$query%' OR {$table}.id = '{$query}'";
+				$querymethod = " WHERE name $this->_like '%$query%' OR {$table}.{$this->location_info['id']['name']} = {$id_query}";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
-
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -898,11 +906,11 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
-
+					break;
 				case 'pending_action_type':
 					$info = array
 					(
-						'table' 			=> 'fm_action_category',
+						'table' 			=> 'fm_action_pending_category',
 						'id'				=> array('name' => 'num', 'type' => 'varchar'),
 						'fields'			=> array
 						(
@@ -955,7 +963,7 @@
 				$id = "'{$data['id']}'";
 			}
 
-			$sql = "SELECT * FROM $table WHERE id={$id}";
+			$sql = "SELECT * FROM $table WHERE {$this->location_info['id']['name']} = {$id}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -1082,7 +1090,7 @@
 
 			if($this->location_info['id']['type']!='auto')
 			{
-				$this->_db->query("SELECT id FROM {$table} WHERE id = '{$data['id']}'",__LINE__,__FILE__);
+				$this->_db->query("SELECT id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
 				if($this->_db->next_record())
 				{
 					$receipt['error'][]=array('msg'=>lang('duplicate key value'));
@@ -1163,7 +1171,7 @@
 
 			$value_set	= $this->_db->validate_update($value_set);
 			$this->_db->transaction_begin();
-			$this->_db->query("UPDATE $table SET {$value_set} WHERE id='" . $data['id']. "'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']}='" . $data['id']. "'",__LINE__,__FILE__);
 
 /*			//FIXME
 			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
@@ -1189,7 +1197,7 @@
 			{
 				return false;
 			}
-			$this->_db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
 		}
 	}
 

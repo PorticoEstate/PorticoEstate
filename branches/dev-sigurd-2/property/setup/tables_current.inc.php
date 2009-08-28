@@ -2095,10 +2095,10 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'fm_action_category' => array(
+		'fm_action_pending_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-				'num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+				'num' => array('type' => 'varchar', 'precision' => 25,'nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => True),
 				'descr' => array('type' => 'text','nullable' => True)
 			),
@@ -2107,5 +2107,5 @@
 			'ix' => array(),
 			'uc' => array('num')
 		)
-*/	
+	*/
 	);

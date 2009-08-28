@@ -917,15 +917,30 @@
 							{
 								$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 							}
+
+							$action_params = array
+							(
+								'appname'			=> 'property',
+								'location'			=> '.project.workorder',
+								'id'				=> $id,
+								'responsible'		=> '',
+								'responsible_type'  => 'user',
+								'action'			=> 'approval',
+								'remark'			=> '',
+								'deadline'			=> ''
+							
+							);
 							$bcc = $coordinator_email;
 							foreach ($values['mail_address'] as $_account_id => $_address)
 							{
+								$action_params['responsible'] = $_account_id;
 								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
 								if($rcpt)
 								{
 									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 								}
-								$this->bo->pending_approval('property', '.project.workorder', $id, $_account_id);
+
+								$this->bocommon->set_pending_action($action_params);
 							}
 						}
 						else

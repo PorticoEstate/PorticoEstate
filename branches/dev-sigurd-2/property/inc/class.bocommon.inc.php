@@ -2032,18 +2032,22 @@
 		}		
 
 		/**
-		* pending approval for an item
+		* pending action for items across the system.
 		*
-		* @param string   $appname      the name of the module being looked up
-		* @param string   $location     the location within the module to look up
-		* @param integer  $id           id of the referenced item - could possibly be a bigint
-		* @param integer  $account_id   the user asked for approval
+		* @param array   $data array containing string  'appname'			- the name of the module being looked up
+		*										string  'location'			- the location within the module to look up
+		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		* 										integer 'responsible'		- the user_id asked for approval
+		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		* 										string  'action'			- what type of action is pending
+		* 										string  'remark'			- a general remark - if any
+		* 										integer 'deadline'			- unix timestamp if any deadline is given.
 		*
-		* @return integer $reminder     number of request for approval
+		* @return integer $reminder  number of request for this action
 		*/
 
-		public function pending_approval($appname, $location, $id, $account_id)
+		public function set_pending_action($action_params)
 		{
-			return $this->socommon->pending_approval($appname, $location, $id, $account_id);
+			return $this->socommon->set_pending_action($action_params);
 		}
 	}

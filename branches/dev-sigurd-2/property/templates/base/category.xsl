@@ -41,7 +41,7 @@
 									<xsl:value-of select="value_id"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<input type="text" name="values[id]" value="{value_id}" onMouseout="window.status='';return true;">
+									<input type="text" name="values[{id_name}]" value="{value_id}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 										</xsl:attribute>

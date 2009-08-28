@@ -187,14 +187,13 @@
 		'fm_budget_cost',
 		'fm_responsibility',
 		'fm_responsibility_contact',
-//		'fm_action_pending',
-//		'fm_action_category'
+	//	'fm_action_pending',
+	//	'fm_action_pending_category'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
-		'add_def_pref',
 		'deleteaccount',
 		'manual',
 		'settings',

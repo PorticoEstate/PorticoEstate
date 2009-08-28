@@ -3620,7 +3620,7 @@
 	* Extend the approval scheme to include general actions
 	* 
 	*/
-/*
+
 	$test[] = '0.9.17.567';
 	function property_upgrade0_9_17_567()
 	{
@@ -3655,10 +3655,10 @@
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'fm_action_category', array(
+			'fm_action_pending_category', array(
 				'fd' => array(
 					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-					'num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
+					'num' => array('type' => 'varchar', 'precision' => 25,'nullable' => True),
 					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => True),
 					'descr' => array('type' => 'text','nullable' => True)
 				),
@@ -3669,10 +3669,14 @@
 			)
 		);
 
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('approval', 'Approval', 'Please approve the item requested')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('remind', 'Remind', 'This is a reminder of task assigned')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('accept_delivery', 'Accept delivery', 'Please accept delivery on this item')");
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.568';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-*/
+
