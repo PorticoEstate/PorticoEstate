@@ -61,11 +61,10 @@ $GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',
 // Default groups and users
 $GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
 $GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
-
+$GLOBALS['phpgw']->acl->enable_inheritance = true;
 if ($GLOBALS['phpgw']->accounts->exists('rental_backend_read_only') )
 {
 	$aclobj =& $GLOBALS['phpgw']->acl;
-	$aclobj->enable_inheritance = true;
 
 	$group_read			= $GLOBALS['phpgw']->accounts->name2id('rental_backend_read_only');
 	$group_write		= $GLOBALS['phpgw']->accounts->name2id('rental_backend_write');
