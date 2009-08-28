@@ -312,27 +312,22 @@
 					?>
 					<input type="hidden" name="notification_contract_id" value="<?php echo $contract->get_id() ?>"/>
 					<input type="hidden" name="date_notification_hidden" id="date_notification_hidden" value="<?php echo $date ?>"/>
-					<table>
-						<tr>
-							<td>
+					<fieldset>
+					
 								<label for="calendarNotificationDate"><b><i><?php echo lang('rental_common_date') ?></i></b></label>
 								<input type="text" name="date_notification" id="date_notification" size="10" value="<?php echo isset($notification) ? htmlentities($notification->get_date()) : '' ?>" />
 								<?php echo rental_uicommon::get_field_error($notification, 'date') ?>
-							</td>
-							<td>
 								<label for="notification_message"><b><i><?php echo lang('rental_common_message') ?></i></b></label>
 								<input type="text" name="notification_message" id="notification_message" size="50" value="<?php echo isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
-							</td>
-							<td>
+					</fieldset>	
+					<fieldset>		
 								<label for="notification_recurrence"><b><i><?php echo lang('rental_common_recurrence') ?></i></b></label>
 								<select name="notification_recurrence" id="notification_recurrence">
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_NEVER ? 'selected="selected"' : '' ?>value="<?php echo rental_notification::RECURRENCE_NEVER ?>"><?php echo lang('rental_common_never') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_ANNUALLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_ANNUALLY ?>"><?php echo lang('rental_common_annually') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_MONTHLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_MONTHLY ?>"><?php echo lang('rental_common_monthly') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_WEEKLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_WEEKLY ?>"><?php echo lang('rental_common_weekly') ?></option>
-								</select>
-							</td>
-							<td>
+								</select>	
 								<label for="notification_target"><b><i><?php echo lang('rental_common_audience') ?></i></b></label>
 								<select name="notification_target" id="notification_target">
 									<option value="<?php echo $GLOBALS['phpgw_info']['user']['account_id']; ?>"><?php echo lang('rental_common_target_me') ?></option>
@@ -344,12 +339,10 @@
 										}
 									?>
 								</select>
-							</td>
-							<td>
+					</fieldset>	
+					<fieldset>		
 								<input type="submit" name="add_notification" id="" value="<?php echo lang('rental_common_add') ?>" />
-							</td>
-						</tr>
-					</table>
+					</fieldset>		
 				</form>
 			<?php 
 			}
@@ -364,7 +357,7 @@
 			<?php
 			$list_form = false;
 			$list_id = 'rental_notifications';
-			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;contract_id='.$contract->get_id();
+			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
 			unset($extra_cols);
 			unset($editors);
 			include('notification_list.php');

@@ -19,12 +19,13 @@ class rental_notification extends rental_model
 	
 	public static $so;		// Storage object
 	
-	protected $id;			// Notification id
-	protected $contract_id; // Contract identifier
-	protected $account_id;	// Specific user or group
-	protected $date;		// Notification date data 
-	protected $message;		// User message
-	protected $dismissed;	// Date of dismissal (workbench notification)
+	protected $id;				// Notification id
+	protected $contract_id; 	// Contract identifier
+	protected $account_id;		// Specific user or group
+	protected $date;			// Notification date data 
+	protected $last_notified;	// Date lst notified
+	protected $message;			// User message
+	
 	
 	/**
 	 * Constructor for creating a notification data object
@@ -37,15 +38,22 @@ class rental_notification extends rental_model
 	 * @param $recurrence	Recurrence constant
 	 * @param $dismissed date	The date for dismissal (workbench notification), optional
 	 */
-	public function __construct(int $id = null, int $account_id = null, int $contract_id = null, string $date = null, string $message = null, $recurrence = RECURRENCE_NEVER, $dismissed = null)
+	public function __construct(
+		int $id = null, 
+		int $account_id = null, 
+		int $contract_id = null, 
+		int $date = null, 
+		string $message = null, 
+		$recurrence = RECURRENCE_NEVER,  
+		int $last_notified = null)
 	{
 		$this->id = (int)$id;
 		$this->account_id = (int)$account_id;
 		$this->contract_id = (int)$contract_id;
 		$this->date = $date;
+		$this->last_notified = $last_notified;
 		$this->message = $message;
 		$this->recurrence = (int)$recurrence;
-		$this->dismissed = (int)$dismissed;
 	}
 	
 	// Get methods
@@ -69,14 +77,14 @@ class rental_notification extends rental_model
 		return $this->date;
 	}
 	
+	public function get_last_notified()
+	{
+		return $this->last_notified;
+	}
+	
 	public function get_message()
 	{
 		return $this->message;
-	}
-
-	public function get_dismissed()
-	{
-		return $this->dismissed;
 	}
 
 	public function get_recurrence()
@@ -88,18 +96,6 @@ class rental_notification extends rental_model
 	public function set_id(int $id)
 	{
 		$this->id = (int)$id;
-	}
-	
-	
-	/**
-	 * Tells if the notification has been dismissed on or after specified timestamp.
-	 * 
-	 * @param $time int with unix timestamp to check.
-	 * @return boolean true if notification has been dismissed, false if not.
-	 */
-	public function is_dismissed($time)
-	{
-		return $this->dismissed >= (int)$time;
 	}
 	
 	/**
@@ -124,14 +120,16 @@ class rental_notification extends rental_model
 				break;
 		} 
 		
+		$account = $GLOBALS['phpgw']->accounts->get($this->get_account_id());
+		
 		return array(
 			'id' => $this->get_id(),
 			'account_id' => $this->get_account_id(),
+			'name' => $account->__get('firstname').' '.$account->__get('lastname'),
 			'contract_id' => $this->get_contract_id(),
 			'message' => $this->get_message(),
 			'date' => date($date_format, $this->get_date()),
-			'recurrence' => $recurrence,
-			'dismissed' => date($date_format, $this->get_dismissed())
+			'recurrence' => $recurrence
 		);
 	}
 	
@@ -161,6 +159,18 @@ class rental_notification extends rental_model
 	public static function get_workbench_notifications($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array()){
 		$so = self::get_so();
 		return $so->get_workbench_notifications($start, $results, $sort, $dir, $query, $search_option, $filters);
+	}
+	
+	// Delete a notification
+	public static function delete_notification($id){
+		$so = self::get_so();
+		$so->delete_notification($id);
+	}
+	
+	// Dismiss a workbench notification
+	public static function dismiss_notification($id,$ts_dismissed){
+		$so = self::get_so();
+		$so->dismiss_notification($id,$ts_dismissed);
 	}
 	
 }

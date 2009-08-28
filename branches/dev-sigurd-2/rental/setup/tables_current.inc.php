@@ -262,7 +262,9 @@
 				'contract_id'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'message'		=> 	array('type' => 'text'),
 				'date'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),	// timestamp, from
-				'recurrence'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0)
+				'last_notified' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'recurrence'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0),
+				'deleted'		=>	array('type' => 'bool', 'default' => 'false')
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -278,7 +280,7 @@
 				'account_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'date'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => false), 	// timestamp, deadline  
 				'notification_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'dismissed' => array('type' => 'int', 'precision' => '4','nullable' => true) 			// timestamp, dismissed
+				'dismissed' => array('type' => 'bool', 'default' => false)
 			),
 			'pk' => array('id'),
 			'fk' => array(

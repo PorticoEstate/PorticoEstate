@@ -16,6 +16,7 @@ rental_common_area	rental	no	Areal
 rental_common_area_gros	rental	no	Bruttoareal
 rental_common_area_net	rental	no	Nettoareal
 rental_common_area_not_found	rental	no	Kunne ikke finne detaljer om arealet
+rental_common_audience	rental	no	Målgruppe
 rental_common_availability	rental	no	Tilgjengelighet
 rental_common_available	rental	no	Tilgjengelig
 rental_common_available?	rental	no	Kan leies ut?
@@ -55,6 +56,7 @@ rental_common_dashboard_title	rental	no	Forside - Min arbeidsoversikt
 rental_common_date	rental	no	Dato
 rental_common_date_end	rental	no	Gjelder til
 rental_common_date_start	rental	no	Gjelder fra
+rental_common_delete	rental	no	Slett
 rental_common_department	rental	no	Avdeling
 rental_common_deposit	rental	no	Depositum
 rental_common_description	rental	no	Beskrivelse
@@ -169,6 +171,7 @@ rental_common_status	rental	no	Status
 rental_common_status_before	rental	no	før
 rental_common_status_date	rental	no	den
 rental_common_job_title	rental	no	Stillingstittel
+rental_common_target_me	rental	no	Meg selv
 rental_common_title	rental	no	Tittel
 rental_common_to	rental	no	Til
 rental_common_toolbar_functions	rental	no	Funksjoner

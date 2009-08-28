@@ -25,7 +25,9 @@
 			'set_payer'				=> true,
 			'add_price_item'		=> true,
 			'remove_price_item'		=> true,
-			'reset_price_item'		=> true
+			'reset_price_item'		=> true,
+			'delete_notification'	=> true,
+			'dismiss_notification'	=> true
 		);
 
 		public function __construct()
@@ -121,7 +123,7 @@
 							phpgw::get_var('query'),
 							phpgw::get_var('search_option'),
 							array(
-								'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+								//'account_id' => $GLOBALS['phpgw_info']['user']['account_id'], (show all notifications for each contract)
 								'contract_id' => phpgw::get_var('contract_id')
 							)
 						);
@@ -130,13 +132,7 @@
 						$resultArray = rental_notification::get_workbench_notifications(
 							phpgw::get_var('startIndex'),
 							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'rnw.account_id' => $GLOBALS['phpgw_info']['user']['account_id']
-							)
+							$GLOBALS['phpgw_info']['user']['account_id']
 						);
 						break;
 					case 'all_contracts':
@@ -182,13 +178,25 @@
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
+			$value['ajax'] = array();
 			$value['actions'] = array();
 			$value['labels'] = array();
 			
 			$editable = $params[1];
+			$type = $params[0];
 			
 			switch($type)
 			{
+				case 'notifications':
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_delete');
+					break;
+				case 'notifications_for_user':
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_delete');
+					break;
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
@@ -221,6 +229,8 @@
 		 */
 		public function viewedit($editable, $contract_id, $notification = null, string $message = null, string $error = null)
 		{
+
+			
 			if ($contract_id > 0) {
 				$contract = rental_contract::get($contract_id);
 				if ($contract) {
@@ -278,7 +288,7 @@
 				{
 					$date = strtotime($date);
 				}
-				$notification = new rental_notification(-1, $account_id, phpgw::get_var('notification_contract_id'), phpgw::get_var('notification_message'),  $date, phpgw::get_var('notification_recurrence'));
+				$notification = new rental_notification(-1, $account_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
 				if ($notification->store())
 				{
 					$message = lang('rental_messages_saved_form');
@@ -286,6 +296,7 @@
 				}
 				else
 				{
+
 					$error = lang('rental_messages_form_error');
 				}
 			}
@@ -415,6 +426,18 @@
 			$price_item_id = (int)phpgw::get_var('price_item_id');
 			$price_item = rental_contract_price_item::get($price_item_id);
 			$price_item->reset();
+		}
+		
+		public function delete_notification()
+		{
+			$notification_id = (int)phpgw::get_var('id');
+			rental_notification::delete_notification($notification_id);
+		}
+		
+		public function dismiss_notification()
+		{
+			$notification_id = (int)phpgw::get_var('id');
+			rental_notification::dismiss_notification($notification_id,strtotime('now'));
 		}
 	}
 ?>

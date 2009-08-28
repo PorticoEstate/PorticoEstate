@@ -231,12 +231,12 @@
 	
 		public function render($template,$local_variables = array())
 		{
-
 			foreach($local_variables as $name => $value)
 			{
 				$$name = $value;	
-				
+					
 			}
+			
 			
 			ob_start();
 			foreach(array_reverse($this->tmpl_search_path) as $path)

@@ -14,6 +14,22 @@
 	{
 		key: "recurrence",
 		label: "<?php echo lang('rental_common_recurrence') ?>",
+	},
+	{
+		key: "name",
+		label: "<?php echo lang('rental_common_audience') ?>" 
+	},
+	{
+		key: "actions",
+		hidden: true
+	},
+	{
+		key: "labels",
+		hidden: true
+	},
+	{
+		key: "ajax",
+		hidden: true
 	}];
 	
 	<?php
