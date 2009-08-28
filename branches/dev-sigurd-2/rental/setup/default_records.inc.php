@@ -358,13 +358,3 @@ $oProc->query("INSERT INTO rental_notification_workbench (account_id, notificati
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
-
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},17,'Oppdatér med ny postadresse.',1250593658,0)");
-$oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},18,'Oppdatér med ny postadresse.',1250593658,0)");
-
-$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},1,1250593658,1250593658)");
-$oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},2,1250593658,1250593658)");
-
