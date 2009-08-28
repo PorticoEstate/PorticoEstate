@@ -2072,7 +2072,7 @@
 			'ix' => array('location_code'),
 			'uc' => array()
  		),
-/*		'fm_action_pending' => array(
+		'fm_action_pending' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'item_id' => array('type' => 'int','precision' => 8,'nullable' => False),
@@ -2107,5 +2107,4 @@
 			'ix' => array(),
 			'uc' => array('num')
 		)
-	*/
 	);

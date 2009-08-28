@@ -198,7 +198,16 @@
 		{
 			$function = $function ? $function : 'view';
 			$link = array();
-			$type = $linkend_location['location'];
+
+			if(is_array($linkend_location))
+			{
+				$type = $linkend_location['location'];
+			}
+			else
+			{
+				$type = $linkend_location;
+			}
+
 			if($type == '.ticket')
 			{
 				$link = array('menuaction' => "property.uitts.{$function}", 'id' => $id);

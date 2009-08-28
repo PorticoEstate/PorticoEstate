@@ -1145,12 +1145,15 @@
 			$no_email		= phpgw::get_var('no_email', 'bool');
 			$values			= phpgw::get_var('values');
 			$print			= phpgw::get_var('print', 'bool');
+			$resend			= phpgw::get_var('resend', 'bool');
 
 			if($update_email)
 			{
 				$this->bo->update_email($to_email,$workorder_id);
 			}
+
 			$workorder = $this->boworkorder->read_single($workorder_id);
+			$workorder_history = $this->boworkorder->read_record_history($workorder_id);
 
 			$table_header_history[] = array
 			(
@@ -1260,6 +1263,7 @@
 				'location_data'					=> $location_data,
 				'lang_workorder'				=> lang('Workorder ID'),
 				'workorder_id'					=> $workorder_id,
+				'lang_reminder'					=> $this->boworkorder->order_sent_adress ? lang('reminder') : '',
 
 				'lang_date'					=> lang('Date'),
 				'date'						=> $date,
@@ -1382,6 +1386,22 @@ HTML;
 					exit;
 				}
 
+				if( $resend )
+				{
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> $workorder_id,
+						'responsible'		=> $workorder['vendor_id'],
+						'responsible_type'  => 'vendor',
+						'action'			=> 'remind',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+				
+				 execMethod('property.sopending_action.set_pending_action', $action_params);
+				}
 				$headers = "Return-Path: <". $from_email .">\r\n";
 				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
 				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
@@ -1432,16 +1452,22 @@ HTML;
 				}
 			}
 
-			$workorder_history = $this->boworkorder->read_record_history($workorder_id);
+			if( $this->boworkorder->order_sent_adress )
+			{
+				$to_email= $this->boworkorder->order_sent_adress;
+			}
+			else
+			{
+				$email_list	= $this->bo->get_email($to_email,$workorder['vendor_id']);
+				if(count($email_list)==1)
+				{
+					$to_email= $email_list[0]['email'];
+					unset($email_list);
+				}
+			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$email_list	= $this->bo->get_email($to_email,$workorder['vendor_id']);
-			if(count($email_list)==1)
-			{
-				$to_email= $email_list[0]['email'];
-				unset($email_list);
-			}
 
 			$link_file_data = array
 			(
@@ -1522,7 +1548,12 @@ HTML;
 				'to_email'						=> $to_email,
 				'email_list'					=> $email_list,
 				'lang_select_email'				=> lang('Select email'),
-				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'send'=>true, 'workorder_id'=> $workorder_id, 'show_details'=> $show_details)),
+				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array(
+																'menuaction'	=> 'property.uiwo_hour.view',
+																'send'			=> true,
+																'resend'		=> !!$this->boworkorder->order_sent_adress,
+																'workorder_id'	=> $workorder_id,
+																'show_details'	=> $show_details)),
 
 				'lang_no_history'				=> lang('No history'),
 				'lang_history'					=> lang('History'),
@@ -1574,7 +1605,7 @@ HTML;
 			//------------------------------datatable settings--
 
 			$appname		= lang('Workorder');
-			$function_msg	= lang('Send order');
+			$function_msg	= $this->boworkorder->order_sent_adress ? lang('ReSend order') :lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 			//$GLOBALS['phpgw']->xslttpl->pp();

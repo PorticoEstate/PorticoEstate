@@ -44,6 +44,8 @@
 
 	create_select_box('show pending approvals on main screen','mainscreen_showapprovals',$yes_and_no,'Approvals waiting for your decisions');
 
+	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
+
 	create_select_box('Group filters in single query','group_filters',$yes_and_no,'Group filters - means that one has to hit the search button to apply the filter');
 
 	$tts_status = array(
