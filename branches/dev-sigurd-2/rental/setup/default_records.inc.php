@@ -346,11 +346,6 @@ $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_i
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (7, 18, 'Renovasjon', 1160.4, 0, 'Y903', true, 10.94, 12694.78, '2005-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (8, 18, 'Vedlikehold', 1160.4, 0, 'Y905', true, 98.23, 113986.09, '2009-01-01', NULL)");
 
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
-
-
 $oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
 $oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
 $oProc->query("INSERT INTO rental_notification (account_id, contract_id, message, date, recurrence) VALUES ({$user_admin},15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
@@ -359,7 +354,6 @@ $oProc->query("INSERT INTO rental_notification (account_id, contract_id, message
 
 $oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},1,1250593658, 'FALSE')");
 $oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},2,1250593658, 'FALSE')");
-
 
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
