@@ -135,7 +135,7 @@ else
 	$account->lid		= 'rental_read';
 	$account->firstname	= 'Bouvet';
 	$account->lastname	= 'Read only backend user';
-	$account->passwd	= 'Test_Passord10';
+	$account->passwd	= 'EState12=';
 	$account->enabled	= true;
 	$account->expires	= -1;
 	$groups = array($read_group);
@@ -145,7 +145,7 @@ else
 	$account->lid		= 'rental_write';
 	$account->firstname	= 'Bouvet';
 	$account->lastname	= 'Rental read and write';
-	$account->passwd	= 'Test_Passord11';
+	$account->passwd	= 'EState12=';
 	$account->enabled	= true;
 	$account->expires	= -1;
 	$groups = array($group_write);
@@ -155,13 +155,14 @@ else
 	$account->lid		= 'rental_admin';
 	$account->firstname	= 'Bouvet';
 	$account->lastname	= 'Rental administrator';
-	$account->passwd	= 'administrator';
+	$account->passwd	= 'EState12=';
 	$account->enabled	= true;
 	$account->expires	= -1;
 	$groups = array($admin_group);
 	$user_admin = $GLOBALS['phpgw']->accounts->create($account, $groups, array(), array('admin'));
 }
 
+if($user_write > 0) {
 //Default rental composites
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Herdla fuglereservat','Pip pip')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Fløibanen','Tut tut')");
@@ -357,3 +358,4 @@ $oProc->query("INSERT INTO rental_notification_workbench (account_id, notificati
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
+}
