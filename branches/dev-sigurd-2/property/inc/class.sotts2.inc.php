@@ -36,13 +36,11 @@
 	class property_sotts2
 	{
 		var $acl_location;
+		var $fields_updated = false;
 
 		function __construct()
 		{
-			$this->bo 			= CreateObject('property.botts');
 			$this->historylog	= CreateObject('property.historylog','tts');
-			$this->config		= CreateObject('phpgwapi.config','property');
-
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
@@ -79,7 +77,7 @@
 
 			if ($old_status != $ticket['status'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				if($old_status=='X')
 				{
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
@@ -95,14 +93,8 @@
 
 			$this->db->transaction_commit();
 
-			if ($fields_updated)
+			if ($this->fields_updated)
 			{
-				$this->config->read();
-				if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
-				{
-					$receipt=$this->bo->mail_ticket($id,$fields_updated,'',$location_code);
-				}
-
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
 
@@ -188,14 +180,14 @@
 			{
 				if ($oldfinnish_date != $finnish_date)
 				{
-					$fields_updated = true;
+					$this->fields_updated = true;
 					$this->historylog->add('F',$id,$finnish_date,$oldfinnish_date);
 				}
 			}
 
 			if ($old_status != $ticket['status'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				if($old_status=='X')
 				{
 					$this->historylog->add('R', $id, $ticket['status'], $old_status);
@@ -214,8 +206,7 @@
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
 			{
-_debug_array($ticket);
-				$fields_updated = true;
+				$this->fields_updated = true;
 
 				$value_set=array('assignedto'	=> $ticket['assignedto']);
 				$value_set	= $this->db->validate_update($value_set);
@@ -226,7 +217,7 @@ _debug_array($ticket);
 
 			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 
 				$value_set=array('group_id'	=> $ticket['group_id']);
 				$value_set	= $this->db->validate_update($value_set);
@@ -237,7 +228,7 @@ _debug_array($ticket);
 
 			if ($oldpriority != $ticket['priority'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				$this->db->query("update fm_tts_tickets set priority='" . $ticket['priority']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
@@ -245,7 +236,7 @@ _debug_array($ticket);
 
 			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
@@ -253,7 +244,7 @@ _debug_array($ticket);
 
 	/*		if ($old_billable_hours != $ticket['billable_hours'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				$this->db->query("update fm_tts_tickets set billable_hours='" . $ticket['billable_hours']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
@@ -261,7 +252,7 @@ _debug_array($ticket);
 
 			if ($old_billable_rate != $ticket['billable_rate'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				$this->db->query("update fm_tts_tickets set billable_rate='" . $ticket['billable_rate']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
@@ -277,7 +268,7 @@ _debug_array($ticket);
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
-				$fields_updated = true;
+				$this->fields_updated = true;
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
 			}
 
@@ -356,16 +347,8 @@ _debug_array($ticket);
 
 			$this->db->transaction_commit();
 
-			if (isset($fields_updated))
+			if (isset($this->fields_updated))
 			{
-				$this->config->read();
-
-				if (isset($this->config->config_data['mailnotification']) && $ticket['send_mail'])
-				{
-					$receipt=$this->bo->mail_ticket($id,$fields_updated,'',$location_code);
-
-				}
-
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
 				$criteria = array

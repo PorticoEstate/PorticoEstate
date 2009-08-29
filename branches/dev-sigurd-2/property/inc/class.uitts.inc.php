@@ -218,7 +218,11 @@
 			$id 		= phpgw::get_var('id', 'int');
 			$so2		= CreateObject('property.sotts2');
 			$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
-			$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
+			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+			{
+				$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+			}
+		//	$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 			return "id ".$id." ".lang('Status has been changed');
 		}
 
@@ -1799,6 +1803,10 @@
 				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= $this->acl_location;
 				$receipt = $so2->update_ticket($values,$id);
+				if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+				{
+					$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+				}
 
 //--------- files
 				$bofiles	= CreateObject('property.bofiles');
@@ -2253,6 +2261,10 @@
 				$so2	= CreateObject('property.sotts2');
 				$so2->acl_location	= '.ticket.external';
 				$receipt = $so2->update_ticket($values,$id);
+				if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+				{
+					$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+				}
 			}
 
 			$ticket = $this->bo->read_single($id);

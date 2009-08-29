@@ -651,7 +651,7 @@
 		}
 
 
-		function mail_ticket($id,$fields_updated,$receipt=0,$location_code='')
+		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='')
 		{
 			$this->send			= CreateObject('phpgwapi.send');
 
