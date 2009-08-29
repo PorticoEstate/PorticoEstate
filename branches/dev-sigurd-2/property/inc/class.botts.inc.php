@@ -44,6 +44,7 @@
 		var $uicols_related = array();
 		var $start_date;
 		var $end_date;
+		var $fields_updated = false;
 
 		var $public_functions = array
 		(
@@ -83,6 +84,7 @@
 			$this->cats					= CreateObject('phpgwapi.categories');
 			$this->cats->app_name		= 'property.ticket';
 			$this->cats->supress_info	= true;
+			$this->acl_location			= $this->so->acl_location;
 
 			$this->config->read();
 
@@ -888,4 +890,17 @@
 			return $this->so->get_custom_status();
 		}
 
+		public function update_status($data, $id = 0)
+		{
+			$receipt 	= $this->so->update_status($data, $id);
+			$this->fields_updated = $this->so->fields_updated;
+			return $receipt;
+		}
+
+		public function update_ticket($data, $id)
+		{
+			$receipt 	= $this->so->update_ticket($data, $id);
+			$this->fields_updated = $this->so->fields_updated;		
+			return $receipt;
+		}
 	}

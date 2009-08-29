@@ -73,12 +73,12 @@
 			$this->bocommon 			= & $this->bo->bocommon;
 			$this->cats					= & $this->bo->cats;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= '.ticket';
-			$this->acl_read 			= $this->acl->check('.ticket', PHPGW_ACL_READ, 'property');
-			$this->acl_add 				= $this->acl->check('.ticket', PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 			= $this->acl->check('.ticket', PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 			= $this->acl->check('.ticket', PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage 			= $this->acl->check('.ticket', PHPGW_ACL_PRIVATE, 'property'); // manage
+			$this->acl_location			= $this->bo->acl_location;
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage 			= $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'property'); // manage
 			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
@@ -216,11 +216,10 @@
 
 			$new_status = phpgw::get_var('new_status', 'string', 'GET');
 			$id 		= phpgw::get_var('id', 'int');
-			$so2		= CreateObject('property.sotts2');
-			$receipt 	= $so2->update_status(array('status'=>$new_status),$id);
+			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
 			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
 			{
-				$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
 		//	$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 			return "id ".$id." ".lang('Status has been changed');
@@ -1800,12 +1799,10 @@
 				{
 					$values['assignedto'] = $this->account;
 				}
-				$so2	= CreateObject('property.sotts2');
-				$so2->acl_location	= $this->acl_location;
-				$receipt = $so2->update_ticket($values,$id);
+				$receipt = $this->bo->update_ticket($values,$id);
 				if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
 				{
-					$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 				}
 
 //--------- files
@@ -2258,12 +2255,12 @@
 				$values['group_id'] = 'ignore';
 				$values['cat_id'] = 'ignore';
 
-				$so2	= CreateObject('property.sotts2');
-				$so2->acl_location	= '.ticket.external';
-				$receipt = $so2->update_ticket($values,$id);
+				$so	= CreateObject('property.sotts');
+				$so->acl_location	= '.ticket.external';
+				$receipt = $so->update_ticket($values,$id);
 				if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
 				{
-					$receipt = $this->bo->mail_ticket($id, $so2->fields_updated, $receipt);
+					$receipt = $this->bo->mail_ticket($id, $so->fields_updated, $receipt);
 				}
 			}
 
