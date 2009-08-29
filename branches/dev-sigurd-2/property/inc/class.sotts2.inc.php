@@ -48,8 +48,9 @@
 			$this->join 		= & $this->db->join;
 		}
 
-		function update_status($ticket,$id='')
+		function update_status($ticket,$id = 0)
 		{
+			$id = (int) $id;
 			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
@@ -83,14 +84,12 @@
 				{
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
 
-					$this->db->query("update fm_tts_tickets set status='O' where id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='O' WHERE id= {$id}",__LINE__,__FILE__);
 				}
 				else
 				{
 					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
-
-					$this->db->query("update fm_tts_tickets set status='"
-					. $ticket['status'] . "' where id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
 			}
 
@@ -99,11 +98,9 @@
 			if ($fields_updated)
 			{
 				$this->config->read();
-
 				if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
 				{
 					$receipt=$this->bo->mail_ticket($id,$fields_updated,'',$location_code);
-
 				}
 
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
