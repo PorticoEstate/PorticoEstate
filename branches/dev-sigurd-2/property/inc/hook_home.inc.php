@@ -203,9 +203,15 @@
 		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
 		{
+			$sql='SELECT org_name FROM fm_vendor where id=' . (int)$entry['responsible'];
+			$GLOBALS['phpgw']->db;
+			$GLOBALS['phpgw']->db->query($sql);
+			$GLOBALS['phpgw']->db->next_record();
+			$vendor_name =  $GLOBALS['phpgw']->db->f('org_name',true);
+
 			$portalbox->data[] = array
 			(
-				'text' => "påminning nr {$entry['reminder']} til leverandør - ordre nr: {$entry['item_id']}",
+				'text' => "påminning nr {$entry['reminder']} til leverandør {$vendor_name}- ordre nr: {$entry['item_id']}",
 				'link' => $entry['url']
 			);
 		}

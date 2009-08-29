@@ -36,8 +36,10 @@
 
 	class property_sopending_action
 	{
+		public $total_records;
+
 		/**
-		 * @var array $join valid responsible types
+		 * @var array valid responsible types
 		 */
 		protected $valid_responsible_types = array(
 								'user',
@@ -45,6 +47,8 @@
 								'tenant'
 							);
 
+		//To avoid conflicting transactions
+		protected $global_transaction  = false;
 
 		function __construct()
 		{
@@ -56,7 +60,7 @@
 		}
 
 		/**
-		* pending action for items across the system.
+		* Set pending action for items across the system.
 		*
 		* @param array   $data array containing string  'appname'			- the name of the module being looked up
 		*										string  'location'			- the location within the module to look up
@@ -82,15 +86,14 @@
 
 			if( !$item_id)
 			{
-				throw new Exception("No item_id given");				
+				throw new Exception("No item_id given");
 			}
-
 
 			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
 
 			if( !in_array($responsible_type, $this->valid_responsible_types))
 			{
-				throw new Exception("No valid responsible_type given");				
+				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
 
 			$sql = "SELECT id FROM fm_action_pending_category WHERE num = '{$action}'";
@@ -99,18 +102,26 @@
 			$action_category = $this->db->f('id');
 			if ( !$action_category )
 			{
-				throw new Exception("No valid action_type given");							
+				throw new Exception("'{$action}' is not a valid action_type");
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			
+
 			if ( !$location_id )
 			{
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
 			}
 
 			$reminder = 1;
-			$this->db->transaction_begin();
+
+			if( $this->db->Transaction )
+			{
+				$this->global_transaction = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$condition = " WHERE location_id = {$location_id}"
 				. " AND item_id = {$item_id}"
@@ -120,7 +131,6 @@
 				. " AND expired_on IS NULL";
 
 			$sql = "SELECT id, reminder FROM fm_action_pending {$condition}";
-				
 
 			$this->db->query($sql, __LINE__,__FILE__);
 			$this->db->next_record();
@@ -140,9 +150,23 @@
 					$value_set['deadline'] = $deadline;
 				}
 
+				if( isset($data['close']) && $data['close'] )
+				{
+					$value_set['action_performed'] = phpgwapi_datetime::user_localtime();
+				}
+
 				$value_set	= $this->db->validate_update($value_set);
 				$sql = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
-				$this->db->query($sql, __LINE__,__FILE__);
+				$ok = !!$this->db->query($sql, __LINE__,__FILE__);
+
+				if( isset($data['close']) && $data['close'] )
+				{
+					if( !$this->global_transaction )
+					{
+						$this->db->transaction_commit();
+					}
+					return $ok;
+				}
 			}
 
 			$values= array
@@ -159,7 +183,7 @@
 				$this->account,							//created_by
 				$remark									//remark
 			);
-				
+
 			$values	= $this->db->validate_insert($values);
 			$sql = "INSERT INTO fm_action_pending ("
 				. "item_id, location_id, responsible, responsible_type,"
@@ -167,12 +191,16 @@
 				. "created_on, created_by, remark) VALUES ( $values $vals)";
 			$this->db->query($sql, __LINE__,__FILE__);
 
-			$this->db->transaction_commit();
+			if( !$this->global_transaction )
+			{
+				$this->db->transaction_commit();
+			}
+
 			return $reminder;
 		}
 
 		/**
-		* pending action for items across the system.
+		* Get pending action for items across the system.
 		*
 		* @param array   $data array containing string  'appname'			- the name of the module being looked up
 		*										string  'location'			- the location within the module to look up
@@ -188,6 +216,7 @@
 
 		public function get_pending_action($data = array())
 		{
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$appname			= isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
 			$location			= isset($data['location']) && $data['location'] ? $data['location'] : '';
 			$item_id			= isset($data['id']) && $data['id'] ? $data['id'] : '';$data['id']; //possible bigint
@@ -196,15 +225,17 @@
 			$action				= isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
 			$deadline			= isset($data['deadline']) && $data['deadline'] ? (int) $data['deadline'] : 0;
 			$created_by			= isset($data['created_by']) && $data['created_by'] ? (int) $data['created_by'] : 0;
-
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order				= isset($data['order']) ? $data['order'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 
 			if( !in_array($responsible_type, $this->valid_responsible_types))
 			{
-				throw new Exception("No valid responsible_type given");				
+				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			
+
 			if ( !$location_id )
 			{
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
@@ -212,7 +243,7 @@
 
 			$ret = array();
 			$condition = " WHERE action_performed IS NULL AND expired_on IS NULL AND num = '{$action}' AND location_id = {$location_id}";
-			
+
 			if( $responsible )
 			{
 				$condition .= " AND responsible = {$responsible}";
@@ -233,15 +264,36 @@
 				$condition .= " AND created_by = {$created_by}";
 			}
 
-			$sql = "SELECT * FROM fm_action_pending {$this->join} fm_action_pending_category"
+			if ($order)
+			{
+				$ordermethod = " ORDER BY $order $sort";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY created_on DESC';
+			}
+
+			$sql = "SELECT fm_action_pending.* FROM fm_action_pending {$this->join} fm_action_pending_category"
 			. " ON fm_action_pending.action_category = fm_action_pending_category.id {$condition}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
 
 			$this->db->limit_query($sql,0,__LINE__,__FILE__);
 
 			$ret = $this->db->resultSet;
 
 			$interlink = CreateObject('property.interlink');
-			
+
 			foreach ($ret as &$entry)
 			{
 				if( !$location )
@@ -253,7 +305,23 @@
 			return $ret;
 		}
 
+		/**
+		* Close pending action for items across the system.
+		*
+		* @param array   $data array containing string  'appname'			- the name of the module being looked up
+		*										string  'location'			- the location within the module to look up
+		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		* 										integer 'responsible'		- the user_id asked for approval
+		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		* 										string  'action'			- what type of action is pending
+		* 										string  'remark'			- a general remark - if any
+		* 										integer 'deadline'			- unix timestamp if any deadline is given.
+		*
+		* @return integer $reminder  number of request for this action
+		*/
 		public function close_pending_action($data = array())
 		{
+			$data['close'] = true;
+			return !!$this->set_pending_action($data);
 		}
 	}

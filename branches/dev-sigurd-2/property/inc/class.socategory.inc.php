@@ -75,7 +75,7 @@
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
 			}
-			
+
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 			{
 
@@ -160,7 +160,7 @@
 						'attrib_id'	=> $uicols['attib_id'][$key]
 					);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -598,6 +598,18 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit status'),
@@ -619,6 +631,30 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit status'),
@@ -994,7 +1030,7 @@
 			$values = array();
 
 			$this->get_location_info($data['type'], $data['type_id']);
-			
+
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
@@ -1035,7 +1071,7 @@
 			}
 			$cols = array();
 			$vals = array();
-						
+
 			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
 			if(isset($data['extra']))
@@ -1115,7 +1151,7 @@
 			{
 				if(!$data['id'] = $this->_db->get_last_insert_id($table, 'id'))
 				{
-					$this->_db->transaction_abort();				
+					$this->_db->transaction_abort();
 					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
 				}
 			}

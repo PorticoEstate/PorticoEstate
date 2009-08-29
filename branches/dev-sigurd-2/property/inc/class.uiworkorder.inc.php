@@ -928,7 +928,7 @@
 								'action'			=> 'approval',
 								'remark'			=> '',
 								'deadline'			=> ''
-							
+
 							);
 							$bcc = $coordinator_email;
 							foreach ($values['mail_address'] as $_account_id => $_address)
@@ -1105,7 +1105,7 @@
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
 				$_location_data = array();
-				
+
 				if(isset($values['location_data']) && $values['location_data'])
 				{
 					$_location_data = $values['location_data'];
@@ -1200,18 +1200,20 @@
 				);
 				if ( isset($prefs['approval_from']) )
 				{
-					$prefs = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
-					if(isset($prefs['email']))
+					if(isset($prefs2['email']))
 					{
 						$supervisor_email[] = array
 						(
 							'id'	  => $prefs['approval_from'],
-							'address' => $prefs['email'],
+							'address' => $prefs2['email'],
 						);
 						$supervisor_email = array_reverse($supervisor_email);
 					}
+					unset($prefs2);
 				}
+				unset($prefs);
 			}
 
 			$workorder_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status']:'');
@@ -1295,7 +1297,7 @@
 			
 			$catetory = $this->cats->return_single($project['cat_id']);
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
-			$cat_sub = array_merge($catetory,$cat_sub);			
+			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$data = array
 			(
