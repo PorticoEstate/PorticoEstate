@@ -41,9 +41,6 @@
 
 //		$GLOBALS['phpgw']->translation->add_app('property');
 
-		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-		$GLOBALS['portal_order'][] = $app_id;
-
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
 			'title'	=> lang('Helpdesk'),
@@ -54,6 +51,26 @@
 			'outerborderwidth'	=> '0',
 			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
 		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+			$portalbox->set_controls($key,$value);
+		}
+
 
 		$tts = CreateObject('property.sotts');
 
@@ -110,7 +127,12 @@
 		));
 
 		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-		$GLOBALS['portal_order'][] = $app_id;
+
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+
 		$var = array
 		(
 			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
@@ -171,7 +193,11 @@
 		));
 
 		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-		$GLOBALS['portal_order'][] = $app_id;
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+
 		$var = array
 		(
 			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
