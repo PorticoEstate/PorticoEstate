@@ -364,13 +364,9 @@
 					{
 						echo '<br>process->default_records(): Including default records for ' . $appname . "\n";
 					}
-					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 					$oProc = &$GLOBALS['phpgw_setup']->oProc;	// to be compatible with old apps
 					require_once $appdir.'default_records.inc.php';
-					if ( $GLOBALS['phpgw_setup']->oProc->m_odb->Transaction )
-					{
-						$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
-					}
 				}
 				/* $setup_info[$key]['status'] = 'C'; */
 			}

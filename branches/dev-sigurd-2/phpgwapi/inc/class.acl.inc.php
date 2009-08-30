@@ -591,7 +591,10 @@
 			//FIXME: this one is temporary to avoid problems with the old acl_grantor being NULL
 			$this->_db->query('UPDATE phpgw_acl SET acl_grantor = -1 WHERE acl_grantor is NULL',__LINE__,__FILE__,true);
 */
-			$this->_db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->_db->transaction_commit();
+			}
 
 			$clear_cache = array_keys($this->_clear_cache);
 			foreach($clear_cache as $location_id)
