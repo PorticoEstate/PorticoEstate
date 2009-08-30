@@ -60,6 +60,8 @@
 
 		var $values,$vars;	// standard notify substitues, will be set by standard_substitues()
 
+		protected $global_lock = false;
+
 		/**
 		 * Standard constructor for setting $this->account_id
 		 *
@@ -588,7 +590,15 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('session_only_preferences',1,'preferences'))
 			{
-				$this->db->transaction_begin();
+				if ( $this->db->Transaction )
+				{
+					$this->global_lock = true;
+				}
+				else
+				{
+					$this->db->transaction_begin();
+				}
+
 				$this->db->query("delete from phpgw_preferences where preference_owner='$account_id'",
 						__LINE__,__FILE__);
 
@@ -603,7 +613,11 @@
 							" (preference_owner,preference_app,preference_value)".
 							" VALUES ($account_id,'$app','$value')",__LINE__,__FILE__);
 				}
-				$this->db->transaction_commit();
+
+				if ( !$this->global_lock )
+				{
+					$this->db->transaction_commit();
+				}
 			}
 			else
 			{

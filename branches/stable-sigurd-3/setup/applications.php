@@ -137,8 +137,14 @@
 		$install = phpgw::get_var('install', 'string', 'POST');
 		$upgrade = phpgw::get_var('upgrade', 'string', 'POST');
 
+		if( !isset($GLOBALS['phpgw_setup']->oProc) || !$GLOBALS['phpgw_setup']->oProc )
+		{
+			$GLOBALS['phpgw_setup']->process->init_process();
+		}
+
 		if(!empty($remove) && is_array($remove))
 		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 			foreach($remove as $appname => $key)
 			{
 				echo '<h3>' . lang('Processing: %1', lang($appname)) . "</h3>\n<ul>";
@@ -166,10 +172,12 @@
 				$terror = $GLOBALS['phpgw_setup']->process->drop_langs($terror, $DEBUG);
 				echo '<li>' . lang('%1 translations removed', $appname) . ".</li>\n</ul>\n";
 			}
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		}
 
 		if(!empty($install) && is_array($install))
 		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 			foreach($install as $appname => $key)
 			{
 				echo '<h3>' . lang('Processing: %1', lang($appname)) . "</h3>\n<ul>";
@@ -210,6 +218,7 @@
 				$terror = $GLOBALS['phpgw_setup']->process->add_langs($terror,$DEBUG,$force_en);
 				echo '<li>' . lang('%1 translations added', lang($appname)) . ".</li>\n</ul>\n";
 			}
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		}
 
 		if(!empty($upgrade) && is_array($upgrade))

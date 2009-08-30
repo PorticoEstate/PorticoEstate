@@ -582,6 +582,11 @@
 		*/
 		public function transaction_begin()
 		{
+/*
+			$bt = debug_backtrace();
+			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
+			unset($bt);
+*/
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
@@ -593,6 +598,11 @@
 		*/ 
 		public function transaction_commit()
 		{
+/*
+			$bt = debug_backtrace();
+			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
+			unset($bt);
+*/
 			$this->Transaction = false;
 			return $this->db->commit();
 		}
