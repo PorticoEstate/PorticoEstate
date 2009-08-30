@@ -186,7 +186,7 @@
 			}
 		}
 
-		function column_list($selected='',$type_id='',$allrows='')
+		function column_list($selected = array(),$type_id='',$allrows='')
 		{
 			if(!$selected)
 			{
