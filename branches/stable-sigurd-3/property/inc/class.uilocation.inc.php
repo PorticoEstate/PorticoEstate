@@ -136,7 +136,7 @@
 
 		function columns()
 		{
-			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('tabview');
 			$receipt = array();
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 
@@ -145,16 +145,14 @@
 
 			$values 		= phpgw::get_var('values');
 
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
 			if (isset($values['save']) && $values['save'] && $this->type_id)
 			{
-				$GLOBALS['phpgw']->preferences->account_id=$this->account;
-				$GLOBALS['phpgw']->preferences->read();
 				$GLOBALS['phpgw']->preferences->add('property','location_columns_' . $this->type_id . !!$this->lookup,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
-
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
-			}
-
+			}
 			$function_msg	= lang('Select Column');
 
 			$link_data = array
@@ -164,13 +162,13 @@
 				'lookup'		=> $this->lookup
 			);
 
-
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'		=> $this->bo->column_list(isset($values['columns']) ? $values['columns']:'',$type_id=$this->type_id,$allrows=true),
+				'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
 				'function_msg'		=> $function_msg,
 				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_columns'		=> lang('columns'),

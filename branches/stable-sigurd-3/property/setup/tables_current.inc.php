@@ -520,7 +520,11 @@
 		'fm_workorder_status' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'approved' => array('type' => 'int','precision' => '2','nullable' => True),
+				'in_progress' => array('type' => 'int','precision' => '2','nullable' => True),
+				'delivered' => array('type' => 'int','precision' => '2','nullable' => True),
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -972,7 +976,7 @@
 				'regtid' => array('type' => 'timestamp','nullable' => False),
 				'artid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'godkjentbelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => True),
-				'spvend_code' => array('type' => 'varchar','int' => '4','nullable' => True),
+				'spvend_code' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'dima' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'loc1' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'dimb' => array('type' => 'int','precision' => '2','nullable' => True),
@@ -1154,7 +1158,9 @@
 		'fm_project_status' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'approved' => array('type' => 'int','precision' => '2','nullable' => True),
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1870,8 +1876,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
-
 		'fm_r_agreement_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
@@ -1882,7 +1886,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
 		'fm_r_agreement_item' => array(
 			'fd' => array(
 				'agreement_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
@@ -2074,5 +2077,40 @@
 			),
 			'ix' => array('location_code'),
 			'uc' => array()
- 		)
+ 		),
+		'fm_action_pending' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'item_id' => array('type' => 'int','precision' => 8,'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'responsible' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'responsible_type' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+				'action_category'	=> array('type' => 'int','precision' => 4,'nullable' => False),
+				'action_requested' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'action_deadline' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'action_performed' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'reminder' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '1'),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),//timestamp
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'expired_on' => array('type' => 'int','precision' => 4,'nullable' => True),//timestamp
+				'expired_by' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'remark' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_action_pending_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'num' => array('type' => 'varchar', 'precision' => 25,'nullable' => True),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('num')
+		)
 	);

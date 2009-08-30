@@ -917,20 +917,37 @@
 							{
 								$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 							}
+
+							$action_params = array
+							(
+								'appname'			=> 'property',
+								'location'			=> '.project.workorder',
+								'id'				=> $id,
+								'responsible'		=> '',
+								'responsible_type'  => 'user',
+								'action'			=> 'approval',
+								'remark'			=> '',
+								'deadline'			=> ''
+
+							);
 							$bcc = $coordinator_email;
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['mail_address'], $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+							foreach ($values['mail_address'] as $_account_id => $_address)
+							{
+								$action_params['responsible'] = $_account_id;
+								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+								if($rcpt)
+								{
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+								}
+
+								 execMethod('property.sopending_action.set_pending_action', $action_params);
+							}
 						}
 						else
 						{
 							$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 						}
 					}
-
-					if($rcpt)
-					{
-						$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
-					}
-
 				}
 			}
 
@@ -1088,7 +1105,7 @@
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
 				$_location_data = array();
-				
+
 				if(isset($values['location_data']) && $values['location_data'])
 				{
 					$_location_data = $values['location_data'];
@@ -1162,26 +1179,41 @@
 				'id'		=> $id
 			);
 
+			$supervisor_id = 0;
+
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
 			{
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 			}
-			else
-			{
-				$supervisor_id = '';
-			}
 
-			$need_approval = (isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'');
+			$need_approval = isset($config->config_data['workorder_approval']) ? $config->config_data['workorder_approval'] : '';
 
+			$supervisor_email = array();
 			if ($supervisor_id && ($need_approval=='yes'))
 			{
 				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-				$supervisor_email = $prefs['email'];
-			}
-			else
-			{
-				$supervisor_email = '';
+				$supervisor_email[] = array
+				(
+					'id'	  => $supervisor_id,
+					'address' => $prefs['email'],
+				);
+				if ( isset($prefs['approval_from']) )
+				{
+					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+					if(isset($prefs2['email']))
+					{
+						$supervisor_email[] = array
+						(
+							'id'	  => $prefs['approval_from'],
+							'address' => $prefs2['email'],
+						);
+						$supervisor_email = array_reverse($supervisor_email);
+					}
+					unset($prefs2);
+				}
+				unset($prefs);
 			}
 
 			$workorder_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status']:'');
@@ -1263,179 +1295,177 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true)))
 			);
 			
-
-
 			$catetory = $this->cats->return_single($project['cat_id']);
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
-			$cat_sub = array_merge($catetory,$cat_sub);			
+			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$data = array
 			(
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,		
-				'tabs'							=> self::_generate_tabs(),
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
-				'value_origin_type'				=> isset($origin)?$origin:'',
-				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
+				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'								=> $datavalues,
+				'myColumnDefs'							=> $myColumnDefs,		
+				'tabs'									=> self::_generate_tabs(),
+				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
+				'value_origin_type'						=> isset($origin)?$origin:'',
+				'value_origin_id'						=> isset($origin_id)?$origin_id:'',
 
-				'calculate_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
-				'lang_calculate'				=> lang('Calculate Workorder'),
-				'lang_calculate_statustext'		=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
+				'calculate_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
+				'lang_calculate'						=> lang('Calculate Workorder'),
+				'lang_calculate_statustext'				=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
-				'send_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
-				'lang_send'				=> lang('Send Workorder'),
-				'lang_send_statustext'			=> lang('send this workorder to vendor'),
+				'send_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
+				'lang_send'								=> $this->bo->order_sent_adress ? lang('ReSend Workorder') :lang('Send Workorder'),
+				'lang_send_statustext'					=> lang('send this workorder to vendor'),
 
-				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
-				'b_account_data'			=> $b_account_data,
-				'table_header_workorder_budget'		=> $table_header_workorder_budget,
-				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.w_edit')),
-				'record_history'			=> $record_history,
-				'table_header_history'			=> $table_header_history,
-				'lang_history'				=> lang('History'),
-				'lang_no_history'			=> lang('No history'),
+				'project_link'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+				'b_account_data'						=> $b_account_data,
+				'table_header_workorder_budget'			=> $table_header_workorder_budget,
+				'lang_no_workorders'					=> lang('No workorder budget'),
+				'workorder_link'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.w_edit')),
+				'record_history'						=> $record_history,
+				'table_header_history'					=> $table_header_history,
+				'lang_history'							=> lang('History'),
+				'lang_no_history'						=> lang('No history'),
 
-				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
+				'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'						=> lang('Select date'),
 
-				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
-				'lang_start_date'			=> lang('Workorder start date'),
-				'value_start_date'			=> $values['start_date'],
+				'lang_start_date_statustext'			=> lang('Select the estimated end date for the Project'),
+				'lang_start_date'						=> lang('Workorder start date'),
+				'value_start_date'						=> $values['start_date'],
 
-				'lang_end_date_statustext'		=> lang('Select the estimated end date for the Project'),
-				'lang_end_date'				=> lang('Workorder end date'),
-				'value_end_date'			=> $values['end_date'],
+				'lang_end_date_statustext'				=> lang('Select the estimated end date for the Project'),
+				'lang_end_date'							=> lang('Workorder end date'),
+				'value_end_date'						=> $values['end_date'],
 
-				'lang_copy_workorder'			=> lang('Copy workorder ?'),
-				'lang_copy_workorder_statustext'	=> lang('Choose Copy Workorder to copy this workorder to a new workorder'),
+				'lang_copy_workorder'					=> lang('Copy workorder ?'),
+				'lang_copy_workorder_statustext'		=> lang('Choose Copy Workorder to copy this workorder to a new workorder'),
 
-				'lang_contact_phone'			=> lang('Contact phone'),
-				'contact_phone'				=> (isset($project['contact_phone'])?$project['contact_phone']:''),
+				'lang_contact_phone'					=> lang('Contact phone'),
+				'contact_phone'							=> (isset($project['contact_phone'])?$project['contact_phone']:''),
 
-				'lang_charge_tenant'			=> lang('Charge tenant'),
-				'lang_charge_tenant_statustext'		=> lang('Choose charge tenant if the tenant i to pay for this project'),
-				'charge_tenant'				=> (isset($values['charge_tenant'])?$values['charge_tenant']:''),
+				'lang_charge_tenant'					=> lang('Charge tenant'),
+				'lang_charge_tenant_statustext'			=> lang('Choose charge tenant if the tenant i to pay for this project'),
+				'charge_tenant'							=> (isset($values['charge_tenant'])?$values['charge_tenant']:''),
 
-				'lang_power_meter'			=> lang('Power meter'),
-				'lang_power_meter_statustext'		=> lang('Enter the power meter'),
-				'value_power_meter'			=> (isset($project['power_meter'])?$project['power_meter']:''),
+				'lang_power_meter'						=> lang('Power meter'),
+				'lang_power_meter_statustext'			=> lang('Enter the power meter'),
+				'value_power_meter'						=> (isset($project['power_meter'])?$project['power_meter']:''),
 
-				'lang_addition_rs'			=> lang('Rig addition'),
-				'lang_addition_rs_statustext'		=> lang('Enter any round sum addition per order'),
-				'value_addition_rs'			=> (isset($values['addition_rs'])?$values['addition_rs']:''),
+				'lang_addition_rs'						=> lang('Rig addition'),
+				'lang_addition_rs_statustext'			=> lang('Enter any round sum addition per order'),
+				'value_addition_rs'						=> (isset($values['addition_rs'])?$values['addition_rs']:''),
 
-				'lang_addition_percentage'		=> lang('Percentage addition'),
+				'lang_addition_percentage'				=> lang('Percentage addition'),
 				'lang_addition_percentage_statustext'	=> lang('Enter any persentage addition per unit'),
-				'value_addition_percentage'		=> (isset($values['addition_percentage'])?$values['addition_percentage']:''),
+				'value_addition_percentage'				=> (isset($values['addition_percentage'])?$values['addition_percentage']:''),
 
-				'lang_budget'				=> lang('Budget'),
-				'value_budget'				=> (isset($values['budget'])?$values['budget']:''),
-				'lang_budget_statustext'		=> lang('Enter the budget'),
+				'lang_budget'							=> lang('Budget'),
+				'value_budget'							=> (isset($values['budget'])?$values['budget']:''),
+				'lang_budget_statustext'				=> lang('Enter the budget'),
 
-				'lang_incl_tax'				=> lang('incl tax'),
-				'lang_calculation'			=> lang('Calculation'),
-				'value_calculation'			=> (isset($values['calculation'])?$values['calculation']:''),
+				'lang_incl_tax'							=> lang('incl tax'),
+				'lang_calculation'						=> lang('Calculation'),
+				'value_calculation'						=> (isset($values['calculation'])?$values['calculation']:''),
 
-				'actual_cost'				=> (isset($values['actual_cost'])?$values['actual_cost']:''),
-				'lang_actual_cost'			=> lang('Actual cost'),
-				'ecodimb_data'				=> $ecodimb_data,
-				'vendor_data'				=> $vendor_data,
-				'location_data'				=> $location_data,
-				'location_template_type'	=> $location_template_type,
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
-				'lang_year'				=> lang('Year'),
-				'lang_save'				=> lang('save'),
-				'lang_done'				=> lang('done'),
-				'lang_title'				=> lang('Title'),
-				'value_title'				=> $values['title'],
-				'lang_project_name'			=> lang('Project name'),
-				'value_project_name'			=> (isset($project['name'])?$project['name']:''),
+				'actual_cost'							=> (isset($values['actual_cost'])?$values['actual_cost']:''),
+				'lang_actual_cost'						=> lang('Actual cost'),
+				'ecodimb_data'							=> $ecodimb_data,
+				'vendor_data'							=> $vendor_data,
+				'location_data'							=> $location_data,
+				'location_template_type'				=> $location_template_type,
+				'form_action'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
+				'lang_year'								=> lang('Year'),
+				'lang_save'								=> lang('save'),
+				'lang_done'								=> lang('done'),
+				'lang_title'							=> lang('Title'),
+				'value_title'							=> $values['title'],
+				'lang_project_name'						=> lang('Project name'),
+				'value_project_name'					=> (isset($project['name'])?$project['name']:''),
 
-				'lang_project_id'			=> lang('Project ID'),
-				'value_project_id'			=> $values['project_id'],
+				'lang_project_id'						=> lang('Project ID'),
+				'value_project_id'						=> $values['project_id'],
 
-				'lang_workorder_id'			=> lang('Workorder ID'),
-				'value_workorder_id'			=> (isset($id)?$id:''),
+				'lang_workorder_id'						=> lang('Workorder ID'),
+				'value_workorder_id'					=> (isset($id)?$id:''),
 
-				'lang_title_statustext'			=> lang('Enter Workorder title'),
+				'lang_title_statustext'					=> lang('Enter Workorder title'),
 
-				'lang_other_branch'			=> lang('Other branch'),
-				'lang_other_branch_statustext'		=> lang('Enter other branch if not found in the list'),
-				'value_other_branch'			=> (isset($project['other_branch'])?$project['other_branch']:''),
+				'lang_other_branch'						=> lang('Other branch'),
+				'lang_other_branch_statustext'			=> lang('Enter other branch if not found in the list'),
+				'value_other_branch'					=> (isset($project['other_branch'])?$project['other_branch']:''),
 
-				'lang_descr_statustext'			=> lang('Enter a short description of the workorder'),
-				'lang_descr'				=> lang('Description'),
-				'value_descr'				=> $values['descr'],
+				'lang_descr_statustext'					=> lang('Enter a short description of the workorder'),
+				'lang_descr'							=> lang('Description'),
+				'value_descr'							=> $values['descr'],
 
-				'lang_remark_statustext'		=> lang('Enter a remark to add to the history of the order'),
-				'lang_remark'				=> lang('remark'),
-				'value_remark'				=> (isset($values['remark'])?$values['remark']:''),
+				'lang_remark_statustext'				=> lang('Enter a remark to add to the history of the order'),
+				'lang_remark'							=> lang('remark'),
+				'value_remark'							=> (isset($values['remark'])?$values['remark']:''),
 
-				'lang_done_statustext'			=> lang('Back to the list'),
-				'lang_save_statustext'			=> lang('Save the workorder'),
-			//	'lang_no_cat'				=> lang('Select category'),
-			//	'lang_cat_statustext'			=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
-			//	'select_name'				=> 'values[cat_id]',
-			//	'value_cat_id'				=> (isset($values['cat_id'])?$values['cat_id']:''),
-			//	'cat_list'					=> $categories['cat_list'],
+				'lang_done_statustext'					=> lang('Back to the list'),
+				'lang_save_statustext'					=> lang('Save the workorder'),
+			//	'lang_no_cat'							=> lang('Select category'),
+			//	'lang_cat_statustext'					=> lang('Select the category the project belongs to. To do not use a category select NO CATEGORY'),
+			//	'select_name'							=> 'values[cat_id]',
+			//	'value_cat_id'							=> (isset($values['cat_id'])?$values['cat_id']:''),
+			//	'cat_list'								=> $categories['cat_list'],
 
-				'lang_cat_sub'				=> lang('category'),
-				'cat_sub_list'				=> $this->bocommon->select_list($values['cat_id'] ? $values['cat_id']: $project['cat_id'], $cat_sub),
-				'cat_sub_name'				=> 'values[cat_id]',
-				'lang_cat_sub_statustext'	=> lang('select sub category'),
+				'lang_cat_sub'							=> lang('category'),
+				'cat_sub_list'							=> $this->bocommon->select_list($values['cat_id'] ? $values['cat_id']: $project['cat_id'], $cat_sub),
+				'cat_sub_name'							=> 'values[cat_id]',
+				'lang_cat_sub_statustext'				=> lang('select sub category'),
 
-				'sum_workorder_budget'			=> (isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:''),
-				'workorder_budget'			=> (isset($values['workorder_budget'])?$values['workorder_budget']:''),
+				'sum_workorder_budget'					=> (isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:''),
+				'workorder_budget'						=> (isset($values['workorder_budget'])?$values['workorder_budget']:''),
 
-				'lang_coordinator'			=> lang('Coordinator'),
-				'lang_sum'				=> lang('Sum'),
-				'select_user_name'			=> 'values[coordinator]',
-				'user_list'				=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
+				'lang_coordinator'						=> lang('Coordinator'),
+				'lang_sum'								=> lang('Sum'),
+				'select_user_name'						=> 'values[coordinator]',
+				'user_list'								=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
 
-				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
-				'status_name'				=> 'values[status]',
-				'lang_no_status'			=> lang('Select status'),
-				'lang_status'				=> lang('Status'),
-				'lang_status_statustext'		=> lang('What is the current status of this workorder ?'),
-				'lang_confirm_status'			=> lang('Confirm status'),
-				'lang_confirm_statustext'		=> lang('Confirm status to the history'),
+				'status_list'							=> $this->bo->select_status_list('select',$values['status']),
+				'status_name'							=> 'values[status]',
+				'lang_no_status'						=> lang('Select status'),
+				'lang_status'							=> lang('Status'),
+				'lang_status_statustext'				=> lang('What is the current status of this workorder ?'),
+				'lang_confirm_status'					=> lang('Confirm status'),
+				'lang_confirm_statustext'				=> lang('Confirm status to the history'),
 
-				'branch_list'				=> $boproject->select_branch_p_list($project['project_id']),
-				'lang_branch'				=> lang('branch'),
-				'lang_branch_statustext'		=> lang('Select the branches for this project'),
+				'branch_list'							=> $boproject->select_branch_p_list($project['project_id']),
+				'lang_branch'							=> lang('branch'),
+				'lang_branch_statustext'				=> lang('Select the branches for this project'),
 
-				'key_responsible_list'			=> $boproject->select_branch_list($project['key_responsible']),
-				'lang_key_responsible'			=> lang('key responsible'),
+				'key_responsible_list'					=> $boproject->select_branch_list($project['key_responsible']),
+				'lang_key_responsible'					=> lang('key responsible'),
 
-				'key_fetch_list'			=> $this->bo->select_key_location_list((isset($values['key_fetch'])?$values['key_fetch']:'')),
-				'lang_no_key_fetch'			=> lang('Where to fetch the key'),
-				'lang_key_fetch'			=> lang('key fetch location'),
-				'lang_key_fetch_statustext'		=> lang('Select where to fetch the key'),
+				'key_fetch_list'						=> $this->bo->select_key_location_list((isset($values['key_fetch'])?$values['key_fetch']:'')),
+				'lang_no_key_fetch'						=> lang('Where to fetch the key'),
+				'lang_key_fetch'						=> lang('key fetch location'),
+				'lang_key_fetch_statustext'				=> lang('Select where to fetch the key'),
 
-				'key_deliver_list'			=> $this->bo->select_key_location_list((isset($values['key_deliver'])?$values['key_deliver']:'')),
-				'lang_no_key_deliver'			=> lang('Where to deliver the key'),
-				'lang_key_deliver'			=> lang('key deliver location'),
-				'lang_key_deliver_statustext'		=> lang('Select where to deliver the key'),
+				'key_deliver_list'						=> $this->bo->select_key_location_list((isset($values['key_deliver'])?$values['key_deliver']:'')),
+				'lang_no_key_deliver'					=> lang('Where to deliver the key'),
+				'lang_key_deliver'						=> lang('key deliver location'),
+				'lang_key_deliver_statustext'			=> lang('Select where to deliver the key'),
 
-				'need_approval'				=> $need_approval,
-				'lang_ask_approval'			=> lang('Ask for approval'),
-				'lang_ask_approval_statustext'		=> lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'		=> $supervisor_email,
-				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'					=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
-				'files'							=> isset($values['files'])?$values['files']:'',
-				'lang_files'					=> lang('files'),
-				'lang_filename'					=> lang('Filename'),
-				'lang_file_action'				=> lang('Delete file'),
-				'lang_view_file_statustext'		=> lang('click to view file'),
-				'lang_file_action_statustext'	=> lang('Check to delete file'),
-				'lang_upload_file'				=> lang('Upload file'),
-				'lang_file_statustext'			=> lang('Select file to upload')
+				'need_approval'							=> $need_approval,
+				'lang_ask_approval'						=> lang('Ask for approval'),
+				'lang_ask_approval_statustext'			=> lang('Check this to send a mail to your supervisor for approval'),
+				'value_approval_mail_address'			=> $supervisor_email,
+				'currency'								=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'link_view_file'						=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
+				'link_to_files'							=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
+				'files'									=> isset($values['files'])?$values['files']:'',
+				'lang_files'							=> lang('files'),
+				'lang_filename'							=> lang('Filename'),
+				'lang_file_action'						=> lang('Delete file'),
+				'lang_view_file_statustext'				=> lang('click to view file'),
+				'lang_file_action_statustext'			=> lang('Check to delete file'),
+				'lang_upload_file'						=> lang('Upload file'),
+				'lang_file_statustext'					=> lang('Select file to upload')
 			);
 
 			$appname						= lang('Workorder');

@@ -218,8 +218,8 @@
 				(
 					array
 					(
-						'name'		=> 'id',
-						'source'	=> 'id'
+						'name'		=> $this->location_info['id']['name'],
+						'source'	=>  $this->location_info['id']['name']
 					),
 				)
 			);
@@ -320,7 +320,7 @@
 
 			if ( ($this->start == 0) && (!$this->order))
 			{
-				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			=  $this->location_info['id']['name']; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
@@ -440,7 +440,7 @@
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
-					if(!$id && !$values['id'] && $this->location_info['id']['type'] !='auto')
+					if(!$id && !$values[$this->location_info['id']['name']] && $this->location_info['id']['type'] !='auto')
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter an id!'));									
 					}
@@ -589,6 +589,7 @@
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'id_name'						=> $this->location_info['id']['name'],
 				'id_type'						=> $this->location_info['id']['type'],
 				'fields'						=> $this->location_info['fields']
 			);
@@ -606,7 +607,7 @@
 				return lang('no access');
 			}
 
-			$id	= phpgw::get_var('id');
+			$id	= phpgw::get_var($this->location_info['id']['name']);
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

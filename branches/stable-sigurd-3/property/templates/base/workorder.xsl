@@ -571,30 +571,26 @@
 					<xsl:value-of select="lang_ask_approval"/>
 				</td>
 				<td>
-				<table>
-				<tr>
-				<td>
-
-					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				<td>
-
-					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				</tr>
-				</table>
+					<table>
+						<xsl:for-each select="value_approval_mail_address" >
+							<tr>
+								<td>
+									<input type="checkbox" name="values[approval][{id}]" value="True">
+										<xsl:attribute name="title">
+											<xsl:value-of select="//lang_ask_approval_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<input type="text" name="values[mail_address][{id}]" value="{address}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="//lang_ask_approval_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</table>
 				</td>
 				</xsl:when>
 			</xsl:choose>

@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	class property_socommon
 	{
 		/**

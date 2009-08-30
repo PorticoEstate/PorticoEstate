@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.566';
+	$setup_info['property']['version']		= '0.9.17.569';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -186,19 +186,21 @@
 		'fm_budget_period',
 		'fm_budget_cost',
 		'fm_responsibility',
-		'fm_responsibility_contact'
+		'fm_responsibility_contact',
+		'fm_action_pending',
+		'fm_action_pending_category'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
-		'add_def_pref',
 		'deleteaccount',
 		'manual',
 		'settings',
 		'help',
 		'menu'	=> 'property.menu.get_menu',
-		'config'
+		'config',
+		'home'
 	);
 
 	/* Dependencies for this app to work */

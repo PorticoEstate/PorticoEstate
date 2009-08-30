@@ -39,7 +39,12 @@
 		'true' => 'Yes',
 		''     => 'No'
 	);
-	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated',$yes_and_no,'Dont think this is working - yet');
+
+	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated_tts',$yes_and_no,'Link to tickets you are assigned to');
+
+	create_select_box('show pending approvals on main screen','mainscreen_showapprovals',$yes_and_no,'Approvals waiting for your decisions');
+
+	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
 
 	create_select_box('Group filters in single query','group_filters',$yes_and_no,'Group filters - means that one has to hit the search button to apply the filter');
 

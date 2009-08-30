@@ -24,7 +24,7 @@
 
 	phpgw::import_class('phpgwapi.datetime');
 
-	$GLOBALS['date'] = date('Ymd', phpgw_datetime::user_localtime() );
+	$GLOBALS['date'] = date('Ymd', phpgwapi_datetime::user_localtime() );
 	$GLOBALS['g_year'] = substr($GLOBALS['date'],0,4);
 	$GLOBALS['g_month'] = substr($GLOBALS['date'],4,2);
 	$GLOBALS['g_day'] = substr($GLOBALS['date'],6,2);

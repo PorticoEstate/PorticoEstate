@@ -194,25 +194,35 @@
 		* @return string the linkt to the the related item
 		*/
 
-		public function get_relation_link($linkend_location, $id)
+		public function get_relation_link($linkend_location, $id, $function = '')
 		{
+			$function = $function ? $function : 'view';
 			$link = array();
-			$type = $linkend_location['location'];
+
+			if(is_array($linkend_location))
+			{
+				$type = $linkend_location['location'];
+			}
+			else
+			{
+				$type = $linkend_location;
+			}
+
 			if($type == '.ticket')
 			{
-				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
+				$link = array('menuaction' => "property.uitts.{$function}", 'id' => $id);
 			}
 			else if($type == '.project.workorder')
 			{
-				$link = array('menuaction' => 'property.uiworkorder.view', 'id' => $id);
+				$link = array('menuaction' => "property.uiworkorder.{$function}", 'id' => $id);
 			}
 			else if($type == '.project.request')
 			{
-				$link = array('menuaction' => 'property.uirequest.view', 'id' => $id);
+				$link = array('menuaction' => "property.uirequest.{$function}", 'id' => $id);
 			}
 			else if($type == '.project')
 			{
-				$link = array('menuaction' => 'property.uiproject.view', 'id' => $id);
+				$link = array('menuaction' => "property.uiproject.{$function}", 'id' => $id);
 			}
 			else if( substr($type, 1, 6) == 'entity' )
 			{
@@ -221,7 +231,7 @@
 				$cat_id		= $type[3];
 				$link =	array
 				(
-					'menuaction'	=> 'property.uientity.view',
+					'menuaction'	=> "property.uientity.{$function}",
 					'entity_id'		=> $entity_id,
 					'cat_id'		=> $cat_id,
 					'id'			=> $id
@@ -234,7 +244,7 @@
 				$cat_id		= $type[3];
 				$link =	array
 				(
-					'menuaction'	=> 'property.uientity.view',
+					'menuaction'	=> "property.uientity.{$function}",
 					'type'			=> 'catch',
 					'entity_id'		=> $entity_id,
 					'cat_id'		=> $cat_id,

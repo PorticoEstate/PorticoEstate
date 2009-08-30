@@ -27,45 +27,224 @@
  	* @version $Id$
 	*/
 
-	if ($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated'])
-	{
-		$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-		$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
 
-		$GLOBALS['phpgw']->translation->add_app('property');
+	$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
+	$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+	$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
+
+
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'])
+	{
+
+//		$GLOBALS['phpgw']->translation->add_app('property');
+
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> lang('Helpdesk'),
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
 
 		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-		$GLOBALS['portal_order'][] = $app_id;
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
 
-		$GLOBALS['phpgw']->portalbox->set_params(array('app_id'	=> $app_id,
-														'title'	=> lang('property')));
+		foreach ( $var as $key => $value )
+		{
+			$portalbox->set_controls($key,$value);
+		}
 
-		$GLOBALS['HTTP_POST_VARS']['filter'] = phpgw::get_var('filter') = 'open';
-		$property = CreateObject('property.uitts');
 
-		$GLOBALS['phpgw']->portalbox->draw($property->index());
+		$tts = CreateObject('property.sotts');
 
-		unset($property);
-		$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+		$tickets = $tts->read(array('user_id' => $accound_id));
+
+		$category_name = array(); // caching
+
+		$portalbox->data = array();
+		foreach ($tickets as $ticket)
+		{
+			if(!$ticket['subject'])
+			{
+				if(!isset($category_name[$ticket['cat_id']]))
+				{
+					$ticket['subject']= execMethod('property.botts.get_category_name', $ticket['cat_id']);
+					$category_name[$ticket['cat_id']] = $ticket['subject'];
+				}
+				else
+				{
+					$ticket['subject'] = $category_name[$ticket['cat_id']];
+				}
+			}
+
+			$portalbox->data[] = array
+			(
+				'text' => "{$ticket['address']} :: {$ticket['subject']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+
+		unset($tts);
+		unset($portalbox);
+		unset($category_name);
 	}
 
-
-/*
-	if($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated'])
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] )
 	{
-		$property = CreateObject('property.uitts');
-		$property->bo->start = 0;
-		$property->bo->limit = 5;
-		$property->start = 0;
-		$property->limit = 5;
-		$extra_data = '<td>'."\n".$property->index(false).'</td>'."\n";
+
+		$title = lang('approvals');
+	
+		//TODO Make listbox css compliant
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> $title,
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
 
 		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-		$GLOBALS['portal_order'][] = $app_id;
 
-		$GLOBALS['phpgw']->portalbox->set_params(array('app_id'	=> $app_id,
-														'title'	=> lang('property')));
-		$GLOBALS['phpgw']->portalbox->draw($extra_data);
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.project.workorder',
+		//	'id'				=> $id,
+			'responsible'		=> $accound_id,
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> ''
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+		$portalbox->data = array();
+		foreach ($pending_approvals as $entry)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => 'Venter på godkjenning: ' . $entry['item_id'],
+				'link' => $entry['url']
+			);
+		}
+		
+		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+		unset($portalbox);
 	}
-*/
+
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'] )
+	{
+
+		$title = lang('vendor reminder');
+	
+		//TODO Make listbox css compliant
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> $title,
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.project.workorder',
+		//	'id'				=> $id,
+			'responsible'		=> '',
+			'responsible_type'  => 'vendor',
+			'action'			=> 'remind',
+			'deadline'			=> '',
+			'created_by'		=> $accound_id,
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+		$portalbox->data = array();
+		foreach ($pending_approvals as $entry)
+		{
+			$sql='SELECT org_name FROM fm_vendor where id=' . (int)$entry['responsible'];
+			$GLOBALS['phpgw']->db;
+			$GLOBALS['phpgw']->db->query($sql);
+			$GLOBALS['phpgw']->db->next_record();
+			$vendor_name =  $GLOBALS['phpgw']->db->f('org_name',true);
+
+			$portalbox->data[] = array
+			(
+				'text' => "påminning nr {$entry['reminder']} til leverandør {$vendor_name}- ordre nr: {$entry['item_id']}",
+				'link' => $entry['url']
+			);
+		}
+		
+		echo "\n".'<!-- BEGIN reminder info -->'."\n".$portalbox->draw()."\n".'<!-- END reminder info -->'."\n";
+	}
+	
+	$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 

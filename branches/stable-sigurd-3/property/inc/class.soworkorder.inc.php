@@ -339,7 +339,7 @@
 			{
 				$location_table = 'fm_workorder';
 			}
-			
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -445,9 +445,9 @@
 					$matchtypes = array
 					(
 						'exact' => '=',
-						'like'	=> $this->like						
+						'like'	=> $this->like
 					);
-					
+
 					if(count($criteria) > 1)
 					{
 						$_querymethod = array();
@@ -505,9 +505,9 @@
 			}
 
 			$sql .= " $group_method";
-			
+
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-		
+
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -669,7 +669,7 @@
 
 			if($project_planned_cost < 0)
 			{
-				$project_planned_cost = 0;			
+				$project_planned_cost = 0;
 			}
 
 //_debug_array("UPDATE fm_project SET planned_cost = {$project_planned_cost} WHERE id = {$project_id}");
@@ -686,7 +686,7 @@
 				$workorders[] = $this->db->f('id');
 			}
 //_debug_array($workorders);die();
-			
+
 			foreach ($workorders as $workorder_id)
 			{
 				$this->update_actual_cost($workorder_id);
@@ -703,7 +703,7 @@
 				$projects[] = $this->db->f('id');
 			}
 //_debug_array($projects);die();
-			
+
 			foreach ($projects as $project_id)
 			{
 				$this->update_planned_cost($project_id);
@@ -732,11 +732,11 @@
 				}
 				else
 				{
-					$act_vendor_cost = $act_vendor_cost + $entry['godkjentbelop'];				
+					$act_vendor_cost = $act_vendor_cost + $entry['godkjentbelop'];
 				}
 			}
 //_debug_array("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");
-			$this->db->query("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");			
+			$this->db->query("UPDATE fm_workorder SET act_mtrl_cost = {$act_mtrl_cost}, act_vendor_cost = {$act_vendor_cost}  WHERE id = {$workorder_id}");
 
 		}
 
@@ -769,7 +769,7 @@
 			$vals = array();
 
 			if (isset($workorder['extra']) && is_array($workorder['extra']))
-			{	
+			{
 				foreach ($workorder['extra'] as $input_name => $value)
 				{
 					if($value)
@@ -783,7 +783,7 @@
 			if ($workorder['location_code'])
 			{
 				$cols[] = 'location_code';
-				$vals[] = $workorder['location_code'];			
+				$vals[] = $workorder['location_code'];
 
 				if($workorder['street_name'])
 				{
@@ -843,7 +843,7 @@
 				$workorder['ecodimb'],
 				$workorder['cat_id']
 			);
-				
+
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
@@ -862,16 +862,16 @@
 			if(is_array($workorder['origin']))
 			{
 				if($workorder['origin'][0]['data'][0]['id'])
-				{					
+				{
 					$interlink_data = array
 					(
 						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $workorder['origin'][0]['location']),
 						'location1_item_id' => $workorder['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),			
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
 						'location2_item_id' => $id,
 						'account_id'		=> $this->account
 					);
-					
+
 					$this->interlink->add($interlink_data,$this->db);
 				}
 			}
@@ -963,7 +963,7 @@
 			}
 
 			if (isset($workorder['extra']) && is_array($workorder['extra']))
-			{	
+			{
 				foreach ($workorder['extra'] as $input_name => $value)
 				{
 					$value_set[$input_name] = $value;
@@ -1002,17 +1002,65 @@
 */
 			$this->update_planned_cost($workorder['project_id']); // at project
 
-			if($this->db->transaction_commit())
-			{
+			$check_pending_action = false;
 				if ($old_status != $workorder['status'])
 				{
 					$historylog->add('S',$workorder['id'],$workorder['status'], $old_status);
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $workorder['status'];
+					$check_pending_action = true;
 				}
 				elseif($workorder['confirm_status'])
 				{
+					$check_pending_action = true;
 					$historylog->add('SC',$workorder['id'],$workorder['status'], $old_status);
 					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $workorder['status'];
+				}
+
+				if( $check_pending_action )
+				{
+					$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
+
+					$this->db->next_record();
+
+ 					if ($this->db->f('approved') )
+ 					{
+ 						$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project.workorder',
+							'id'				=> $workorder['id'],
+							'responsible'		=> $this->account,
+							'responsible_type'  => 'user',
+							'action'			=> 'approval',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
+
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+						unset($action_params);
+ 					}
+ 					if ($this->db->f('in_progress') )
+ 					{
+ 						$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project.workorder',
+							'id'				=> $workorder['id'],
+							'responsible'		=> $workorder['vendor_id'],
+							'responsible_type'  => 'vendor',
+							'action'			=> 'remind',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
+
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+						unset($action_params);
+
+ 					}
+ 					if ($this->db->f('delivered') )
+ 					{
+ 						//close
+ 					}
 				}
 
 				if ($old_budget != $workorder['budget'])
@@ -1024,6 +1072,8 @@
 				{
 					$historylog->add('RM', $workorder['id'], $workorder['remark']);
 				}
+			if($this->db->transaction_commit())
+			{
 
 				$receipt['message'][] = array('msg'=>lang('workorder %1 has been edited', $workorder['id']));
 			}
@@ -1048,4 +1098,3 @@
 
 		}
 	}
-

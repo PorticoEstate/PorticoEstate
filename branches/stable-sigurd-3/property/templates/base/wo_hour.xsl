@@ -570,9 +570,18 @@
 			<tr>
 				<td class="th_text" align="left">
 					<xsl:value-of select="lang_workorder"/>
+
 				</td>
 				<td  align="left" colspan="2">
 					<xsl:value-of select="workorder_id"/>					
+					<xsl:choose>
+						<xsl:when test="lang_reminder !=''">
+							<xsl:text> - </xsl:text>
+							<b><xsl:value-of select="lang_reminder"/></b>
+						</xsl:when>
+					</xsl:choose>
+
+
 				</td>
 			</tr>
 			<tr>

@@ -1214,44 +1214,15 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$this->no_access();
-				return;
+				return 'No access';
 			}
 
-			$id				= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id', 'int');
 
-			$link_data = array
-			(
-				'menuaction' => 'property.uiresponsible.index'
-			);
-
-			if ( phpgw::get_var('confirm', 'bool', 'POST') )
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$this->bo->delete_type($id);
-				$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+				return lang('id %1 has been deleted', $id);
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
-
-			$data = array
-			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array
-															(
-																'menuaction'=> 'property.uiresponsible.delete_type',
-																'id'=> $id
-															)),
-				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'				=> lang('yes'),
-				'lang_yes_statustext'	=> lang('Delete the entry'),
-				'lang_no_statustext'	=> lang('Back to the list'),
-				'lang_no'				=> lang('no')
-			);
-
-			$function_msg	= lang('delete');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 	}

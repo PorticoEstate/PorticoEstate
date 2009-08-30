@@ -620,9 +620,11 @@
 						break;
 				}
 
-				$GLOBALS['phpgw_info']['user']['preferences'] = $this->data;
+			//	$GLOBALS['phpgw_info']['user']['preferences'] = $this->data;
 				$GLOBALS['phpgw']->session->save_repositories();
 			}
+
+			$GLOBALS['phpgw_info']['user']['preferences'] = $this->data;
 
 			if (($type == 'user' || !$type) && isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) && $GLOBALS['phpgw_info']['server']['cache_phpgw_info']  && $this->account_id == $GLOBALS['phpgw_info']['user']['account_id'])
 			{

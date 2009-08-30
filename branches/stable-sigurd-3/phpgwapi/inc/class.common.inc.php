@@ -1072,6 +1072,18 @@ HTML;
 			{
 				$js .= $GLOBALS['phpgw']->js->get_script_links();
 			}
+			if( isset($GLOBALS['phpgw']->yuical) && is_object($GLOBALS['phpgw']->yuical))
+			{
+				if($cal_script = $GLOBALS['phpgw']->yuical->get_script())
+				{
+					$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+						. '<script type="text/javascript">' ."\n"
+						. '//<[CDATA[' ."\n"
+						. $cal_script ."\n"
+						. '//]]' ."\n"
+						. "</script>\n";
+				}
+			}
 
 			if ( isset($GLOBALS['phpgw_info']['menuaction']) )
 			{
@@ -1636,20 +1648,28 @@ HTML;
 		{
 			$msgbox_data_error	 = array();
 			$msgbox_data_message = array();
-			if (isSet($receipt['error']) AND is_array($receipt['error']))
+			if (isset($receipt['error']) && is_array($receipt['error']))
 			{
 				foreach($receipt['error'] as $dummy => $error)
 				{
 					$msgbox_data_error[$error['msg']] = false;
 				}
 			}
+			else if(isset($receipt['error']))
+			{
+				$msgbox_data_error[$receipt['error']] = false;			
+			}
 
-			if (isSet($receipt['message']) AND is_array($receipt['message']))
+			if (isset($receipt['message']) && is_array($receipt['message']))
 			{
 				foreach($receipt['message'] as $dummy => $message)
 				{
 					$msgbox_data_message[$message['msg']] = true;
 				}
+			}
+			else if(isset($receipt['message']))
+			{
+				$msgbox_data_message[$receipt['message']] = true;			
 			}
 
 			$msgbox_data = array_merge($msgbox_data_error, $msgbox_data_message);

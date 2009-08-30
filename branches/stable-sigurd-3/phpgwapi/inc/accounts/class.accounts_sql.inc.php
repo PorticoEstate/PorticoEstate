@@ -37,6 +37,7 @@
 	*/
 	class phpgwapi_accounts_sql extends phpgwapi_accounts_
 	{
+		protected $global_lock = false;
 		/**
 		* Constructor
 		*
@@ -99,7 +100,15 @@
 		 */
 		public function create_group_account($account)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->Transaction )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$id = (int) $account->id;
 			if ( !$id || $this->exists($id) )
 			{
@@ -122,7 +131,11 @@
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
 			$account->id = $id;
 			return $account->id;
 		}

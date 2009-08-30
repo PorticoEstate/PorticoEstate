@@ -64,7 +64,7 @@
 
 			$uicols = array();
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'id';
+			$uicols['name'][]			= $this->location_info['id']['name'];
 			$uicols['descr'][]			= lang('id');
 			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
 
@@ -75,7 +75,7 @@
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
 			}
-			
+
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 			{
 
@@ -118,12 +118,20 @@
 
 			if($query)
 			{
+				if($this->location_info['id']['type']=='auto' || $this->location_info['id']['type']=='int')
+				{
+					$id_query = (int) $query;
+				}
+				else
+				{
+					$id_query = "'{$query}'";
+				}
+
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE descr $this->_like '%$query%' OR {$table}.id = '{$query}'";
+				$querymethod = " WHERE name $this->_like '%$query%' OR {$table}.{$this->location_info['id']['name']} = {$id_query}";
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
-
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -152,7 +160,7 @@
 						'attrib_id'	=> $uicols['attib_id'][$key]
 					);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -590,6 +598,18 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit status'),
@@ -611,6 +631,30 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit status'),
@@ -898,6 +942,33 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
+					break;
+				case 'pending_action_type':
+					$info = array
+					(
+						'table' 			=> 'fm_action_pending_category',
+						'id'				=> array('name' => 'num', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('Pending action type'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::action_type'
+					);
 
 					break;
 
@@ -928,7 +999,7 @@
 				$id = "'{$data['id']}'";
 			}
 
-			$sql = "SELECT * FROM $table WHERE id={$id}";
+			$sql = "SELECT * FROM $table WHERE {$this->location_info['id']['name']} = {$id}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -959,7 +1030,7 @@
 			$values = array();
 
 			$this->get_location_info($data['type'], $data['type_id']);
-			
+
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
@@ -1000,7 +1071,7 @@
 			}
 			$cols = array();
 			$vals = array();
-						
+
 			$data['descr'] = $this->_db->db_addslashes($data['descr']);
 
 			if(isset($data['extra']))
@@ -1055,7 +1126,7 @@
 
 			if($this->location_info['id']['type']!='auto')
 			{
-				$this->_db->query("SELECT id FROM {$table} WHERE id = '{$data['id']}'",__LINE__,__FILE__);
+				$this->_db->query("SELECT id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
 				if($this->_db->next_record())
 				{
 					$receipt['error'][]=array('msg'=>lang('duplicate key value'));
@@ -1080,7 +1151,7 @@
 			{
 				if(!$data['id'] = $this->_db->get_last_insert_id($table, 'id'))
 				{
-					$this->_db->transaction_abort();				
+					$this->_db->transaction_abort();
 					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
 				}
 			}
@@ -1136,7 +1207,7 @@
 
 			$value_set	= $this->_db->validate_update($value_set);
 			$this->_db->transaction_begin();
-			$this->_db->query("UPDATE $table SET {$value_set} WHERE id='" . $data['id']. "'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']}='" . $data['id']. "'",__LINE__,__FILE__);
 
 /*			//FIXME
 			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
@@ -1162,7 +1233,7 @@
 			{
 				return false;
 			}
-			$this->_db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
 		}
 	}
 

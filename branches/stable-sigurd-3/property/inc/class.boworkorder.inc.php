@@ -40,6 +40,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $order_sent_adress; // in case we want to resend the order as an reminder
 
 		var $public_functions = array
 		(
@@ -481,6 +482,7 @@
 		{
 			$historylog	= CreateObject('property.historylog','workorder');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
+
 			$i=0;
 			foreach ($history_array as $value) 
 			{
@@ -496,7 +498,10 @@
 					case 'O': $type = lang('Opened');    break;
 					case 'A': $type = lang('Re-assigned'); break;
 					case 'P': $type = lang('Priority changed'); break;
-					case 'M': $type = lang('Sendt by email to'); break;
+					case 'M':
+						$type = lang('Sendt by email to');
+						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+						break;
 					case 'B': $type = lang('Budget changed'); break;
 					case 'CO': $type = lang('Initial Coordinator'); break;
 					case 'C': $type = lang('Coordinator changed'); break;
@@ -598,5 +603,5 @@
 		{
 			$this->so->delete($workorder_id);
 		}
-	}
 
+	}

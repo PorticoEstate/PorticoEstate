@@ -91,7 +91,8 @@
 		var $resultSet;
 		
 		var $fetchmode = 'BOTH';
-		
+
+		var $Transaction  = false;		
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -581,7 +582,8 @@
 		*/
 		public function transaction_begin()
 		{
-			return $this->db->beginTransaction();
+			$this->Transaction = $this->db->beginTransaction();
+			return $this->Transaction;
 		}
 		
 		/**
@@ -591,6 +593,7 @@
 		*/ 
 		public function transaction_commit()
 		{
+			$this->Transaction = false;
 			return $this->db->commit();
 		}
 		
@@ -601,6 +604,7 @@
 		*/
 		public function transaction_abort()
 		{
+			$this->Transaction = false;
 			return $this->db->rollBack();
 		}
 
