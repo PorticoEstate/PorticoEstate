@@ -828,11 +828,13 @@
 
 		function edit()
 		{
+			$id = phpgw::get_var('id', 'int');
+
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $id));
 			}
-			$id 						= phpgw::get_var('id', 'int');
+
 			$values						= phpgw::get_var('values');
 			$add_request				= phpgw::get_var('add_request');
 			$values['project_group']	= phpgw::get_var('project_group');
@@ -955,8 +957,8 @@
 
 				if(!isset($values['end_date']) || !$values['end_date'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
-					$error_id=true;
+//					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+//					$error_id=true;
 				}
 
 				if(!$values['name'])

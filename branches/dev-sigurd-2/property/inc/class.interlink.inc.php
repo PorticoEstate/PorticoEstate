@@ -194,9 +194,8 @@
 		* @return string the linkt to the the related item
 		*/
 
-		public function get_relation_link($linkend_location, $id, $function = '')
+		public function get_relation_link($linkend_location, $id, $function = 'edit')
 		{
-			$function = $function ? $function : 'view';
 			$link = array();
 
 			if(is_array($linkend_location))
@@ -210,7 +209,7 @@
 
 			if($type == '.ticket')
 			{
-				$link = array('menuaction' => "property.uitts.{$function}", 'id' => $id);
+				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
 			}
 			else if($type == '.project.workorder')
 			{

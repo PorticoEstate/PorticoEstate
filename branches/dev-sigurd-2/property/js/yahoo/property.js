@@ -805,8 +805,8 @@
 								pageLinks			: 10,
 								rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
 								rowsPerPageOptions	: [myrowsPerPage, mytotalRows],
-								template			: "{RowsPerPageDropdown}items per Page, {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-								pageReportTemplate	: "Showing items {startRecord} - {endRecord} of {totalRecords}"
+								template			: "{RowsPerPageDropdown}poster pr side. {CurrentPageReport}<br>{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+								pageReportTemplate	: "Viser {startRecord} - {endRecord} av {totalRecords}"
 							}
 		myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
