@@ -162,8 +162,10 @@ apartment id	property	no	leilighet ID
 applications	property	no	Applikasjoner
 apply the values	property	no	Bruke verdier
 approval	property	no	Godkjenning
+approvals	property	no	Godkjenninger
 approval from	property	no	Godkjenning fra
 approval from is updated	property	no	Godkjenning fra er oppdatert
+approved	property	no	Godkjent
 archive	property	no	Arkiv
 art	property	no	Art
 ask for approval	property	no	Be om godkjenning
@@ -453,6 +455,7 @@ delete value	property	no	Slett verdi
 delete vendor activity	property	no	slett aktivitet
 delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett arbeidsordre
+delivered	property	no	Levert
 description	property	no	Beskrivelse
 details	property	no	Detaljer
 deviation	property	no	Avvik
@@ -1197,6 +1200,7 @@ request start date	property	no	anmodning startdato
 request status	property	no	Status anmodning
 request title	property	no	Tiltak tittel
 requirement	property	no	Behov/pålegg
+resend workorder	property	no	Send ordre på nytt
 reserve	property	no	reserve
 reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
@@ -1623,6 +1627,7 @@ vendor global categories	property	no	Globale leverandør kategorier
 vendor has been added	property	no	leverandør er lagt til
 vendor id	property	no	Lev ID
 vendor name	property	no	leverandør navn
+vendor reminder	property	no	leverandør purringer
 version	property	no	versjon
 view apartment	property	no	vis leilighet
 view building	property	no	vis bygning
