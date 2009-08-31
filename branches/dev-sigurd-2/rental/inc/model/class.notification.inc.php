@@ -173,6 +173,7 @@ class rental_notification extends rental_model
 		$so->dismiss_notification($id,$ts_dismissed);
 	}
 	
+	// Populates the workbench on a given day
 	public static function populate_workbench_notifications($day = null){
 		$so = self::get_so();
 		$so->populate_workbench_notifications();

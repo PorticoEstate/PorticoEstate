@@ -358,4 +358,15 @@ $oProc->query("INSERT INTO rental_notification_workbench (account_id, notificati
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
+
+$asyncservice = CreateObject('phpgwapi.asyncservice');
+$asyncservice->delete('rental_populate_workbench_notifications');
+$asyncservice->set_timer(
+	array('day' => "*/1"),
+	'rental_populate_workbench_notifications',
+	'rental.sonotification.populate_workbench_notifications',
+	null 
+	);
 }
+
+

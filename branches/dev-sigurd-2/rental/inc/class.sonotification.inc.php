@@ -136,6 +136,18 @@ class rental_sonotification extends rental_socommon
 	}
 	
 	/**
+	 * This method is a proxy menthod for the rental_notification::populate_workbench_notifications 
+	 * mthod so that it can be called from the Asynchservice in PHPGWAPI
+	 * 
+	 * @param $day the day to populate the workbench
+	 * @return unknown_type
+	 */
+	public static function populate_workbench($day = null)
+	{
+		rental_notification::populate_workbench_notifications($day);	
+	}
+	
+	/**
 	 * CRON
 	 * 
 	 * Populate workbench notifications. Traverses all notifications and populates PE users workbenches
