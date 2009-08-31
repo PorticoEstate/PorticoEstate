@@ -41,6 +41,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->interlink 	= CreateObject('property.interlink');
+			$this->custom 		= createObject('property.custom_fields');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
@@ -501,14 +502,14 @@
 			return isset($config->config_data['meter_table'])?$config->config_data['meter_table']:'';
 		}
 
-		function read_single($project_id)
+		function read_single($project_id, $values = array())
 		{
 			$project_id = (int) $project_id;
 			$sql = "SELECT * from fm_project WHERE id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$project = array();
+
 			if ($this->db->next_record())
 			{
 				$project = array
@@ -542,6 +543,17 @@
 					'ecodimb'				=> $this->db->f('ecodimb'),
 					'b_account_id'			=> $this->db->f('account_id')
 				);
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					$project['attributes'] = $values['attributes'];
+					foreach ( $project['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
+				}
+
+
 				$location_code = $this->db->f('location_code');
 				$project['power_meter']		= $this->get_power_meter($location_code);
 			}
@@ -610,7 +622,7 @@
 			return $project_id;
 		}
 
-		function add($project)
+		function add($project, $values_attribute = array())
 		{
 			$receipt = array();
 			$historylog	= CreateObject('property.historylog','project');
@@ -630,6 +642,19 @@
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
+				}
+			}
+
+			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute);
+			if(isset($data_attribute['value_set']))
+			{
+				foreach($data_attribute['value_set'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$cols[] = $input_name;
+						$vals[] = $value;
+					}
 				}
 			}
 
@@ -812,7 +837,7 @@
 			return $meter_id;
 		}
 
-		function edit($project)
+		function edit($project, $values_attribute = array())
 		{
 			$historylog	= CreateObject('property.historylog','project');
 			$receipt = array();
@@ -852,6 +877,13 @@
 				'ecodimb'			=> $project['ecodimb'],
 				'account_id'		=> $project['b_account_id']
 				);
+
+			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $data['id']);
+
+			if(isset($data_attribute['value_set']))
+			{
+				$value_set = array_merge($value_set, $data_attribute['value_set']);
+			}
 
 			while (is_array($project['location']) && list($input_name,$value) = each($project['location']))
 			{

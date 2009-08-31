@@ -58,6 +58,7 @@
 			$this->cats->app_name		= 'property.project';
 			$this->cats->supress_info	= true;
 			$this->interlink 			= & $this->so->interlink;
+			$this->custom 				= & $this->so->custom;
 
 			if ($session)
 			{
@@ -314,7 +315,7 @@
 			return $project;
 		}
 
-		function read_single($project_id)
+		function read_single($project_id = 0, $values = array(), $view = false)
 		{
 			$contacts		= CreateObject('property.soactor');
 			$contacts->role='vendor';
@@ -323,10 +324,22 @@
 			$config->read();
 			$tax = 1+(isset($config->config_data['fm_tax'])?$config->config_data['fm_tax']:0)/100;
 
-			$project				= $this->so->read_single($project_id);
+			$values['attributes'] = $this->custom->find('property', '.project', 0, '', 'ASC', 'attrib_sort', true, true);
+			if($project_id)
+			{
+				$values = $this->so->read_single($project_id, $values);
+			}
+
+			$values = $this->custom->prepare($values, 'property', '.project', $view);
+
+			if(!$project_id)
+			{
+				return $values;
+			}
+
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$project['start_date']			= $GLOBALS['phpgw']->common->show_date($project['start_date'],$dateformat);
-			$project['end_date']			= isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'],$dateformat) : '';
+			$values['start_date']			= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
+			$values['end_date']			= isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat) : '';
 			$workorder_data				= $this->so->project_workorder_data($project_id);
 
 			$sum_workorder_budget = 0;
@@ -334,7 +347,6 @@
 			$sum_workorder_calculation = 0;
 			$sum_workorder_actual_cost = 0;
 
-			$custom 		= createObject('property.custom_fields');
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
 				$sum_workorder_budget= $sum_workorder_budget+$workorder_data[$i]['budget'];
@@ -342,23 +354,23 @@
 				$sum_workorder_calculation= $sum_workorder_calculation+$workorder_data[$i]['calculation'];
 				$sum_workorder_actual_cost= $sum_workorder_actual_cost+$workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
 
-				$project['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
-				$project['workorder_budget'][$i]['budget']=number_format($workorder_data[$i]['budget'], 2, ',', '');
-				$project['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
-				$project['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
-				$project['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
-				$project['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
+				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
+				$values['workorder_budget'][$i]['budget']=number_format($workorder_data[$i]['budget'], 2, ',', '');
+				$values['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
+				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
+				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
+				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
-					$vendor['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+					$vendor['attributes'] = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 					$vendor	= $contacts->read_single($workorder_data[$i]['vendor_id'], $vendor);
 					foreach($vendor['attributes'] as $attribute)
 					{
 						if($attribute['name']=='org_name')
 						{
-							$project['workorder_budget'][$i]['vendor_name']=$attribute['value'];
+							$values['workorder_budget'][$i]['vendor_name']=$attribute['value'];
 							break;
 						}
 					}
@@ -366,49 +378,49 @@
 			}
 			if($workorder_data)
 			{
-				$project['sum_workorder_budget']= number_format($sum_workorder_budget, 2, ',', '');
-				$project['deviation']= $sum_deviation;
-				$project['sum_workorder_calculation']= number_format($sum_workorder_calculation*$tax, 2, ',', '');
-				$project['sum_workorder_actual_cost']= number_format($sum_workorder_actual_cost, 2, ',', '');
+				$values['sum_workorder_budget']= number_format($sum_workorder_budget, 2, ',', '');
+				$values['deviation']= $sum_deviation;
+				$values['sum_workorder_calculation']= number_format($sum_workorder_calculation*$tax, 2, ',', '');
+				$values['sum_workorder_actual_cost']= number_format($sum_workorder_actual_cost, 2, ',', '');
 			}
 
-			if($project['location_code'])
+			if($values['location_code'])
 			{
-				$project['location_data'] = execMethod('property.solocation.read_single', $project['location_code']);
+				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
 			}
 
-			if($project['tenant_id']>0)
+			if($values['tenant_id']>0)
 			{
-				$tenant_data=$this->bocommon->read_single_tenant($project['tenant_id']);
-				$project['location_data']['tenant_id']= $project['tenant_id'];
-				$project['location_data']['contact_phone']= $tenant_data['contact_phone'];
-				$project['location_data']['last_name']	= $tenant_data['last_name'];
-				$project['location_data']['first_name']	= $tenant_data['first_name'];
+				$tenant_data=$this->bocommon->read_single_tenant($values['tenant_id']);
+				$values['location_data']['tenant_id']= $values['tenant_id'];
+				$values['location_data']['contact_phone']= $tenant_data['contact_phone'];
+				$values['location_data']['last_name']	= $tenant_data['last_name'];
+				$values['location_data']['first_name']	= $tenant_data['first_name'];
 			}
 			else
 			{
-				unset($project['location_data']['tenant_id']);
-				unset($project['location_data']['contact_phone']);
-				unset($project['location_data']['last_name']);
-				unset($project['location_data']['first_name']);
+				unset($values['location_data']['tenant_id']);
+				unset($values['location_data']['contact_phone']);
+				unset($values['location_data']['last_name']);
+				unset($values['location_data']['first_name']);
 			}
 
-			if($project['p_num'])
+			if($values['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($project['p_entity_id'],$project['p_cat_id']);
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
 
-				$project['p'][$project['p_entity_id']]['p_num']=$project['p_num'];
-				$project['p'][$project['p_entity_id']]['p_entity_id']=$project['p_entity_id'];
-				$project['p'][$project['p_entity_id']]['p_cat_id']=$project['p_cat_id'];
-				$project['p'][$project['p_entity_id']]['p_cat_name'] = $category['name'];
+				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
-			$project['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
-			$project['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
+			$values['origin'] = $this->interlink->get_relation('property', '.project', $project_id, 'origin');
+			$values['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
-//_debug_array($project);
-			return $project;
+//_debug_array($values);
+			return $values;
 		}
 
 		function read_single_mini($project_id)
@@ -550,7 +562,7 @@
 			return $this->so->next_project_id();
 		}
 
-		function save($project,$action='')
+		function save($project,$action='',$values_attribute = array())
 		{
 
 //_debug_array($project);
@@ -570,14 +582,18 @@
 			$project['start_date']	= mktime (2,0,0,$start_date['month'],$start_date['day'],$start_date['year']);
 			$project['end_date']	= $end_date ? mktime (2,0,0,$end_date['month'],$end_date['day'],$end_date['year']) : '';
 
+			if(is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
 
 			if ($action=='edit')
 			{
-					$receipt = $this->so->edit($project);
+					$receipt = $this->so->edit($project, $values_attribute);
 			}
 			else
 			{
-				$receipt = $this->so->add($project);
+				$receipt = $this->so->add($project, $values_attribute);
 			}
 			return $receipt;
 		}

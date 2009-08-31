@@ -1176,6 +1176,7 @@ receipt	property	no	Kvittering
 record	property	no	Post
 related	property	no	Relatert
 related info	property	no	Relatert info
+remark	property	no	Merknad
 remainder	property	no	Rest
 reminder	property	no	Påminning
 rental	property	no	Utleie
@@ -1581,7 +1582,7 @@ time created	property	no	laget tid
 times	property	no	Tider
 timestampopened	property	no	Startet
 timing	property	no	Timing
-Title		property	no	Tittel
+title	property	no	Tittel
 to	property	no	Til
 to alter the priority key	property	no	Endre nøkkel
 to date	property	no	Til dato
