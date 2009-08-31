@@ -1627,7 +1627,7 @@ vendor global categories	property	no	Globale leverandør kategorier
 vendor has been added	property	no	leverandør er lagt til
 vendor id	property	no	Lev ID
 vendor name	property	no	leverandør navn
-vendor reminder	property	no	leverandør purringer
+vendor reminder	property	no	Leverandør purringer
 version	property	no	versjon
 view apartment	property	no	vis leilighet
 view building	property	no	vis bygning

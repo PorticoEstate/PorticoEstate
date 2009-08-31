@@ -1052,10 +1052,6 @@
 				{
 					$values['descr']=$project['descr'];
 				}
-				if( $project['status'] && !isset($values['status']))
-				{
-					$values['status']=$project['status'];
-				}
 			}
 
 			if($id)
