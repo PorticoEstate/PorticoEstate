@@ -42,6 +42,7 @@
 			
 			// Complete query if user has global application read permission
 			if($this->hasReadPermission()){
+				
 			
 				$type = phpgw::get_var('type');
 				switch($type)
@@ -188,11 +189,17 @@
 			switch($type)
 			{
 				case 'notifications':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
+					$value['labels'][] = lang('rental_common_edit_contract');
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_delete');
 					break;
 				case 'notifications_for_user':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
+					$value['labels'][] = lang('rental_common_edit_contract');
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_delete');

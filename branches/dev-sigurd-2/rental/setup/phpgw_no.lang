@@ -64,6 +64,7 @@ rental_common_details	rental	no	Detaljer
 rental_common_documents	rental	no	Dokumenter
 rental_common_economy	rental	no	Økonomi
 rental_common_edit	rental	no	Redigér
+rental_common_edit_contract	rental	no	Redigér kontrakt
 rental_common_elements	rental	no	Elementer
 rental_common_elements_pr_page	rental	no	elementer per side
 rental_common_email	renal	no	E-post

@@ -80,12 +80,13 @@ class rental_sonotification extends rental_socommon
 						OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
 						AND rnw.dismissed = 'FALSE'
 					ORDER BY rnw.date ASC";
-						
+			//var_dump($sql);
+			
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 			
 			while ($this->db->next_record()) {
 				
-				$results[] = read_notification();
+				$results[] = $this->read_notification();
 			}
 		}
 		return $results;
@@ -129,23 +130,25 @@ class rental_sonotification extends rental_socommon
 		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
 		
 		$notification->set_id($receipt['id']);
+		
 		$this->populate_workbench_notifications();
 		return $receipt;
 	}
 	
 	/**
-	 * CHRON
+	 * CRON
 	 * 
 	 * Populate workbench notifications. Traverses all notifications and populates PE users workbenches
-	 * based on date information and group membership.
+	 * based on date information and group membership. 
 	 * 	 
 	 * @param $today a string date, no parameter means today
 	 * @return unknown_type
 	 */
-	public function populate_workbench_notifications($today = null)
+	public function populate_workbench_notifications($day = null)
 	{
 		// Select all notifications not marked as deleted
 		$sql = "SELECT * FROM rental_notification WHERE deleted = false";
+		
 		$result = $this->db->query($sql);
 		
 		//Iterate through all notifications
@@ -155,23 +158,19 @@ class rental_sonotification extends rental_socommon
 			$notification = $this->read_notification();
 
 			
-			// Calculate the difference between the notification date and today's date
+			// Calculate timestamps the notification date, target date (default: today) and last notified
 			$notification_date = date("Y-m-d",$notification->get_date());
 			
-			//var_dump($notification_date); OK
-			
-			if(!$today)
+			if(!$day)
 			{
-				$today = date("Y-m-d",strtotime('now'));
+				$day = date("Y-m-d",strtotime('now'));
 			}
 			
 			$ts_notification_date = strtotime($notification_date);
-			$ts_today = strtotime($today);
+			$ts_today = strtotime($day);
 			$ts_last_notified = $notification->get_last_notified();
 			
-			var_dump($ts_notification_date);
-			var_dump($ts_today);
-			var_dump($ts_last_notified);
+			
 			// Check whether today is a notification date
 			$is_today_notification_date = false;
 			if( $ts_today == $ts_notification_date ) // today equals notification date
@@ -183,7 +182,7 @@ class rental_sonotification extends rental_socommon
 				{
 					$this->delete_notification($notification->get_id());
 				}
-			} else { // Assumption: the original notification date is in the past
+			} else { // the original notification date is in the past
 				
 				// Find out if today is notification date based on recurrence
 				$recurrence_interval = '';
@@ -221,7 +220,7 @@ class rental_sonotification extends rental_socommon
 			// If users should be notified today
 			if($is_today_notification_date)
 			{
-				//notify all users in a group or only the single user if target autience is not a group
+				//notify all users in a group or only the single user if target audience is not a group
 				$account_id = $notification->get_account_id();
 				$notification_id = $notification->get_id();
 				if($GLOBALS['phpgw']->accounts->get_type($account_id) == 'g')
@@ -238,6 +237,9 @@ class rental_sonotification extends rental_socommon
 				{
 					$this->add_workbench_notification($account_id,$ts_today,$notification_id); // specific user
 				}		
+				
+				// set today as last notification date for this notification
+				$this->set_notification_date($notification_id,$ts_today);
 			}
 		}	
 	}
@@ -269,7 +271,7 @@ class rental_sonotification extends rental_socommon
 	 */
 	private function add_workbench_notification($account_id, $date, $notification_id)
 	{
-		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id) VALUES ($account_id, $date, $notification_id)";
+		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ($account_id, $date, $notification_id,'FALSE')";
 		$result = $this->db->query($sql);
 	}
 	
@@ -294,8 +296,6 @@ class rental_sonotification extends rental_socommon
 	{
 		$sql = "UPDATE rental_notification SET deleted = true WHERE id = $id";
 		$result = $this->db->query($sql);
-		
-		
 	}
 	
 	/**
@@ -304,10 +304,9 @@ class rental_sonotification extends rental_socommon
 	 * @param $ts_dismissed	the timestamp of dismissal
 	 * @return unknown_type
 	 */
-	public function dismiss_notification($id, $ts_dismissed)
+	public function dismiss_notification($id)
 	{
-		$sql = "UPDATE rental_notification_workbench SET dismissed = $ts_dismissed WHERE id = $id";
-		var_dump($sql);
+		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = $id";
 		$result = $this->db->query($sql);
 	}
 }

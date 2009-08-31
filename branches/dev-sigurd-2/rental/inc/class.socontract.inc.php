@@ -217,7 +217,7 @@ class rental_socontract extends rental_socommon
 	 * @param $filters array of custom filters
 	 * @return list of rental_cotract objects
 	 */
-	function get_contract_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	function get_contract_array($start = 0, $limit = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
 		$columns_for_list = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_edited, contract.last_edited_by, type.title, composite.name as composite_name, party.first_name, party.last_name, party.company_name';

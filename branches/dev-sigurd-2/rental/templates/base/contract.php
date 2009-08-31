@@ -265,7 +265,7 @@
 						}
 						if($editable)
 						{
-							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date));
+							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
 						}
 						else{ // Non-ediable
 							echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
@@ -291,31 +291,25 @@
 			<h3><?php echo lang('rental_common_new_notification') ?></h3>
 			<?php 
 			if ($editable) {
+				
 			?>
-				<div id="calendarNotificationDate">
-					<div id="calendarNotificationDate_body"></div>
-					<div class="calheader">
-						<button id="calendarNotificationDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-						<button id="calendarNotificationDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-					</div>
-				</div>
 				<form action="?menuaction=rental.uicontract.edit&id=<?php echo $contract->get_id() ?>" method="post">
 					<?php
+					$notification_date = date('Y-m-d');
 					if(isset($notification))
 					{
-						$date = $notification->get_date();
-						if($date)
-						{
-							$date = date('Y-m-d', $date);
-						}
-					}
+						$notification_date = date('Y-m-d',$notification->get_date());	
+					} 
 					?>
+					
+					
 					<input type="hidden" name="notification_contract_id" value="<?php echo $contract->get_id() ?>"/>
-					<input type="hidden" name="date_notification_hidden" id="date_notification_hidden" value="<?php echo $date ?>"/>
+					<!-- <input type="hidden" name="date_notification_hidden" id="date_notification_hidden" value="<?php echo $date ?>"/> -->
 					<fieldset>
 					
 								<label for="calendarNotificationDate"><b><i><?php echo lang('rental_common_date') ?></i></b></label>
-								<input type="text" name="date_notification" id="date_notification" size="10" value="<?php echo isset($notification) ? htmlentities($notification->get_date()) : '' ?>" />
+								<!--<input type="text" name="date_notification" id="date_notification" size="10" value="<?php echo isset($notification) ? htmlentities($notification->get_date()) : '' ?>" /> -->
+								<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_notification', $notification_date); ?>
 								<?php echo rental_uicommon::get_field_error($notification, 'date') ?>
 								<label for="notification_message"><b><i><?php echo lang('rental_common_message') ?></i></b></label>
 								<input type="text" name="notification_message" id="notification_message" size="50" value="<?php echo isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
