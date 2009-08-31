@@ -709,7 +709,7 @@
 			}
 
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'])
-				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']
+				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes'
 				&& $this->acl_edit)
 			{
 				

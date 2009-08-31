@@ -36,7 +36,7 @@
 
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'] == 'yes')
 	{
 
 //		$GLOBALS['phpgw']->translation->add_app('property');
@@ -109,7 +109,7 @@
 	}
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] )
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] == 'yes' )
 	{
 
 		$title = lang('approvals');
@@ -175,7 +175,7 @@
 	}
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'] )
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder']  == 'yes' )
 	{
 
 		$title = lang('vendor reminder');

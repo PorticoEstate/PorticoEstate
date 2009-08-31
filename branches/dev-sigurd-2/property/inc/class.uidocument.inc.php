@@ -962,7 +962,7 @@
 					$json ['toolbar_height'] = $json ['toolbar_height'] + (count($datatable['locdata']) * 10);
 					$json ['current_consult'] = $datatable['locdata'];
 				}
-				
+_debug_array($datatable['locdata']);				
 	    		return $json;
 			}
 			//-------------------- JSON CODE ----------------------
