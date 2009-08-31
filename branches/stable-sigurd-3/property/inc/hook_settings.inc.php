@@ -36,8 +36,8 @@
 	create_select_box('Choose property filter','property_filter',$select_property_filter,'Filter by owner or owner type');
 
 	$yes_and_no = array(
-		'true' => 'Yes',
-		''     => 'No'
+		'yes' => 'Yes',
+		'no'     => 'No'
 	);
 
 	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated_tts',$yes_and_no,'Link to tickets you are assigned to');

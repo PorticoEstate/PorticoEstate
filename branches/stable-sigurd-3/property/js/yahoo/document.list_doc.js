@@ -89,14 +89,26 @@
 		 			}
 		 			else
 		 			{
-		 				newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
-			 			newTD.setAttribute("width","20");
+			 			//Suppress the street_id from the address
+			 			if(!values_ds.current_consult[i]['extra'][1])
+			 			{
+			 				newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['value']));
+				 			newTD.setAttribute("width","20");
+				 		}
 		 			}
 
 		 			newTR.appendChild(newTD);
 
 		 			newTD = document.createElement('td');
-		 			newTD.appendChild(document.createTextNode(values_ds.current_consult[i]['extra'][0]['value']));
+		 			var adress = values_ds.current_consult[i]['extra'][0]['value'];
+
+		 			//The street number
+		 			if(values_ds.current_consult[i]['extra'][1])
+		 			{
+		 				adress = adress + values_ds.current_consult[i]['extra'][1]['value'];
+		 			}
+
+		 			newTD.appendChild(document.createTextNode(adress));
 		 			newTR.appendChild(newTD);
 			 		newTbody.appendChild(newTR);
 		 		}
