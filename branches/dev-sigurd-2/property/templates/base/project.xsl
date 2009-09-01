@@ -270,6 +270,15 @@
 			</tr>
 			<tr>
 				<td>
+					<xsl:value-of select="lang_coordinator"/>
+				</td>
+				<td>
+					<xsl:call-template name="user_id_select"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<td>
@@ -385,21 +394,22 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_power_meter"/>
-				</td>
-				<td>
-					<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12" onMouseout="window.status='';return true;" >
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_power_meter_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
-
+			<xsl:choose>
+				<xsl:when test="suppressmeter =''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_power_meter"/>
+						</td>
+						<td>
+							<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12" onMouseout="window.status='';return true;" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_power_meter_statustext"/>
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 </table>
 </div>
 
@@ -593,16 +603,11 @@
 </table>
 </div>
 
+<xsl:choose>
+<xsl:when test="suppresscoordination =''">
+
 <div id="coordination">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-				<td>
-					<xsl:value-of select="lang_coordinator"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_branch"/>
@@ -666,6 +671,8 @@
 			</tr>
 </table>
 </div>
+</xsl:when>
+</xsl:choose>
 
 <div id="history">
 		<!-- <hr noshade="noshade" width="100%" align="center" size="1"/>
@@ -940,6 +947,21 @@
 			</tr>
 			<tr>
 				<td>
+					<xsl:value-of select="lang_coordinator"/>
+				</td>
+				<xsl:for-each select="user_list" >
+					<xsl:choose>
+						<xsl:when test="selected">
+							<td>
+								<xsl:value-of select="name"/>
+							</td>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
+
+			<tr>
+				<td>
 					<xsl:value-of select="lang_category"/>
 				</td>
 				<xsl:for-each select="cat_list" >
@@ -972,14 +994,18 @@
 				</xsl:when>
 			</xsl:choose>
 
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_power_meter"/>
-				</td>
-				<td>
-					<xsl:value-of select="value_power_meter"/>
-				</td>
-			</tr>
+			<xsl:choose>
+				<xsl:when test="suppressmeter =''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_power_meter"/>
+						</td>
+						<td>
+							<xsl:value-of select="value_power_meter"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 </table>
 </div>
 
@@ -1072,22 +1098,11 @@
 </table>
 </div>
 
+<xsl:choose>
+<xsl:when test="suppresscoordination =''">
+
 <div id="coordination">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<tr>
-				<td>
-					<xsl:value-of select="lang_coordinator"/>
-				</td>
-				<xsl:for-each select="user_list" >
-					<xsl:choose>
-						<xsl:when test="selected">
-							<td>
-								<xsl:value-of select="name"/>
-							</td>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:for-each>
-			</tr>
 			<tr>
 				<td>
 					<xsl:value-of select="lang_status"/>
@@ -1182,6 +1197,8 @@
 			</tr>
 </table>
 </div>
+</xsl:when>
+</xsl:choose>
 
 
 <div id="history">

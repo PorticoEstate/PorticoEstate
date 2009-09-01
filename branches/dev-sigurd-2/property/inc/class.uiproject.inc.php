@@ -1398,8 +1398,14 @@
 
 			//----------------------------------------------datatable settings--------
 
+
+
+			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+
 			$data = array
 			(
+				'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppresscoordination'				=> $suppresscoordination,
 				'attributes_group'					=> $attributes,
 				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
@@ -1407,7 +1413,7 @@
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
-				'tabs'								=> self::_generate_tabs($tabs),
+				'tabs'								=> self::_generate_tabs($tabs,array('coordination' => $suppresscoordination)),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'					=> isset($origin)?$origin:'',
@@ -1683,9 +1689,15 @@
 						'project_group_descr'	=> $values['project_group_descr'],
 						'type'					=> 'view'));
 
+			$config			= CreateObject('phpgwapi.config','property');
+			$config->read();
+
+			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$data = array
 			(
-				'tabs'							=> self::_generate_tabs(),
+				'suppressmeter'					=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppresscoordination'			=> $suppresscoordination,
+				'tabs'							=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
@@ -1792,7 +1804,7 @@
 
 		}
 
-		protected function _generate_tabs($tabs_ = array())
+		protected function _generate_tabs($tabs_ = array(), $suppress = array())
 		{
 			$tabs = array
 			(
@@ -1803,6 +1815,13 @@
 				'history'		=> array('label' => lang('history'), 'link' => '#history')
 			);
 			$tabs = array_merge($tabs, $tabs_);
+			foreach($suppress as $tab => $remove)
+			{
+				if($remove)
+				{
+					unset($tabs[$tab]);
+				}
+			}
 			phpgwapi_yui::tabview_setup('project_tabview');
 
 			return  phpgwapi_yui::tabview_generate($tabs, 'general');

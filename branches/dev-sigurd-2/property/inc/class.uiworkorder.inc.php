@@ -1261,7 +1261,7 @@
 		       				       					array('key' => 'value_new_value','label' => lang('New Value'),'sortable'=>true,'resizeable'=>true)))
 			);
 
-			$link_to_files =(isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
 			
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 
@@ -1297,12 +1297,14 @@
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
 			$cat_sub = array_merge($catetory,$cat_sub);
 
+			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$data = array
 			(
+				'suppressmeter'					=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'								=> $datavalues,
 				'myColumnDefs'							=> $myColumnDefs,		
-				'tabs'									=> self::_generate_tabs(),
+				'tabs'									=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
 				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'						=> isset($origin)?$origin:'',
@@ -1455,7 +1457,7 @@
 				'value_approval_mail_address'			=> $supervisor_email,
 				'currency'								=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 				'link_view_file'						=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'							=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
+				'link_to_files'							=> (isset($config->config_data['files_url'])?$config->config_data['files_url']:''),
 				'files'									=> isset($values['files'])?$values['files']:'',
 				'lang_files'							=> lang('files'),
 				'lang_filename'							=> lang('Filename'),
@@ -1672,9 +1674,16 @@
 
 			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
 
+			$config				= CreateObject('phpgwapi.config','property');
+			$config->read();
+
+
+			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+
 			$data = array
 			(
-				'tabs'							=> self::_generate_tabs(),
+				'suppressmeter'					=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'tabs'							=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
 				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view')),
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
 				'lang_no_workorders'			=> lang('No workorder budget'),
@@ -1797,7 +1806,7 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 		}
 
-		protected function _generate_tabs()
+		protected function _generate_tabs($tabs_ = array(), $suppress = array())
 		{
 			$tabs = array
 			(
@@ -1807,6 +1816,15 @@
 				'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
 				'history'		=> array('label' => lang('history'), 'link' => '#history')
 			);
+			$tabs = array_merge($tabs, $tabs_);
+
+			foreach($suppress as $tab => $remove)
+			{
+				if($remove)
+				{
+					unset($tabs[$tab]);
+				}
+			}
 
 			phpgwapi_yui::tabview_setup('workorder_tabview');
 
