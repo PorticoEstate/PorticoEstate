@@ -206,7 +206,7 @@
 
  				$sql = 'SELECT message_id, content, app_name'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
-					. " AND app_name IN({$applist}) {$order}";
+					. " AND app_name IN({$applist})";
 		//			. " AND app_name IN({$applist}) {$order}";
 					
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
