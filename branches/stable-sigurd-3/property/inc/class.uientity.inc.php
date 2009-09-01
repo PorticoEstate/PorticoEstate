@@ -844,15 +844,19 @@
 
 		function edit()
 		{
+			$id 				= phpgw::get_var('id', 'int');
+
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array(
+					'menuaction'	=> 'property.uientity.view', 'id'=> $id, 'entity_id'	=> $this->entity_id,
+					'cat_id'		=> $this->cat_id,
+					'type'			=> $this->type));
 			}
 
 		//	$config		= CreateObject('phpgwapi.config','property');
 			$bolocation	= CreateObject('property.bolocation');
 
-			$id 				= phpgw::get_var('id', 'int');
 			$values				= phpgw::get_var('values');
 			$values_attribute	= phpgw::get_var('values_attribute');
 			$bypass 			= phpgw::get_var('bypass', 'bool');

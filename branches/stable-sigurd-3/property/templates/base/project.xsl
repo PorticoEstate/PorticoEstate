@@ -110,6 +110,11 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
+		<script language="JavaScript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+		</script>
+
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -662,7 +667,6 @@
 </table>
 </div>
 
-
 <div id="history">
 		<!-- <hr noshade="noshade" width="100%" align="center" size="1"/>
 		table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -689,6 +693,7 @@
 		<div id="datatable-container_1"></div>
 
 </div>
+<xsl:call-template name="attributes_values"/>
 </div>
 </div>
 		<table>

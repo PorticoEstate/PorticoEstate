@@ -69,6 +69,7 @@
 			$this->bo				= CreateObject('property.boproject',true);
 			$this->bocommon			= & $this->bo->bocommon;
 			$this->cats				= & $this->bo->cats;
+			$this->custom			= & $this->bo->custom;
 
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.project';
@@ -828,12 +829,15 @@
 
 		function edit()
 		{
+			$id = phpgw::get_var('id', 'int');
+
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $id));
 			}
-			$id 						= phpgw::get_var('id', 'int');
+
 			$values						= phpgw::get_var('values');
+			$values_attribute			= phpgw::get_var('values_attribute');
 			$add_request				= phpgw::get_var('add_request');
 			$values['project_group']	= phpgw::get_var('project_group');
 			$values['ecodimb']			= phpgw::get_var('ecodimb');
@@ -849,7 +853,8 @@
 			$bolocation			= CreateObject('property.bolocation');
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+
+			$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
 
 			if(isset($insert_record_entity) && is_array($insert_record_entity))
 			{
@@ -859,7 +864,8 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+			
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
 
 			$bypass = phpgw::get_var('bypass', 'bool');
 
@@ -955,8 +961,8 @@
 
 				if(!isset($values['end_date']) || !$values['end_date'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
-					$error_id=true;
+//					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+//					$error_id=true;
 				}
 
 				if(!$values['name'])
@@ -995,6 +1001,17 @@
 					$error_id=true;
 				}
 
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+					}
+				}
+
 
 				if($id)
 				{
@@ -1009,7 +1026,7 @@
 					{
 						$action='add';
 					}
-					$receipt = $this->bo->save($values,$action);
+					$receipt = $this->bo->save($values,$action,$values_attribute);
 
 					if (! $receipt['error'])
 					{
@@ -1139,6 +1156,12 @@
 				}
 			}
 
+			/* Preserve attribute values from post */
+			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			{
+				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
+			}
+
 			$table_header_history[] = array
 			(
 				'lang_date'		=> lang('Date'),
@@ -1163,7 +1186,44 @@
 			else
 			{
 				$function_msg = lang('Add Project');
+				$values	= $this->bo->read_single();
 			}
+
+			$tabs = array();
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uiproject.attrib_history',
+							'attrib_id'	=> $attribute['id'],
+							'id'		=> $id,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+
+				$attributes_groups = $this->custom->get_attribute_groups('property', $this->acl_location, $values['attributes']);
+
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if(isset($group['attributes']))
+					{
+						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+						$group['link'] = str_replace(' ', '_', $group['name']);
+						$attributes[] = $group;
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+			}
+
 
 			if (isset($values['cat_id']))
 			{
@@ -1340,12 +1400,14 @@
 
 			$data = array
 			(
+				'attributes_group'					=> $attributes,
+				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
 				'ecodimb_data'						=> $ecodimb_data,
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
-				'tabs'								=> self::_generate_tabs(),
+				'tabs'								=> self::_generate_tabs($tabs),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'					=> isset($origin)?$origin:'',
@@ -1730,7 +1792,7 @@
 
 		}
 
-		protected function _generate_tabs()
+		protected function _generate_tabs($tabs_ = array())
 		{
 			$tabs = array
 			(
@@ -1740,7 +1802,7 @@
 				'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
 				'history'		=> array('label' => lang('history'), 'link' => '#history')
 			);
-
+			$tabs = array_merge($tabs, $tabs_);
 			phpgwapi_yui::tabview_setup('project_tabview');
 
 			return  phpgwapi_yui::tabview_generate($tabs, 'general');

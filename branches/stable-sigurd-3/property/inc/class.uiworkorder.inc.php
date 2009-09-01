@@ -739,14 +739,16 @@
 
 		function edit()
 		{
+			$id = phpgw::get_var('id'); // in case of bigint
+
 			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=> $id));
 			}
 			$boproject			= CreateObject('property.boproject');
 			$bolocation			= CreateObject('property.bolocation');
 			$config				= CreateObject('phpgwapi.config','property');
-			$id 				= phpgw::get_var('id'); // in case of bigint
+
 			$project_id 			= phpgw::get_var('project_id', 'int');
 			$values				= phpgw::get_var('values');
 			$values['ecodimb']	= phpgw::get_var('ecodimb');

@@ -985,6 +985,7 @@ no access	property	no	Ingen tilgang
 no account	property	no	Ingen konto
 no additional notes	property	no	Ingen tilleggskommentarer
 no branch	property	no	fag ikke valgt
+no category	property	no	Kategori ikke valgt
 no change type	property	no	Ingen endringstype
 no conversion type could be located.	property	no	Format filter ble ikke funnet
 no custom function	property	no	Ingen egendfinert funksjon
@@ -1174,6 +1175,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 record	property	no	Post
 related info	property	no	Relatert info
+remark	property	no	Merknad
 remainder	property	no	Rest
 reminder	property	no	Påminning
 rental	property	no	Utleie
@@ -1579,7 +1581,7 @@ time created	property	no	laget tid
 times	property	no	Tider
 timestampopened	property	no	Startet
 timing	property	no	Timing
-Title		property	no	Tittel
+title	property	no	Tittel
 to	property	no	Til
 to alter the priority key	property	no	Endre nøkkel
 to date	property	no	Til dato

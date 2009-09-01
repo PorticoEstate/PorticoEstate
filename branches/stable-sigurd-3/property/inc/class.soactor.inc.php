@@ -301,9 +301,9 @@
 			if($this->db->next_record())
 			{
 				$values['id']			= (int)$this->db->f('id');
-				$values['entry_date']		= $this->db->f('entry_date');
-				$values['cat_id']			= $this->db->f('category');
-				$values['member_of']			= explode(',',$this->db->f('member_of'));
+				$values['entry_date']	= $this->db->f('entry_date');
+				$values['cat_id']		= $this->db->f('category');
+				$values['member_of']	= explode(',',$this->db->f('member_of'));
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{

@@ -3705,3 +3705,32 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.569 to 0.9.17.570
+	* Add custom fields to projects, workorders and tickets
+	* 
+	*/
+
+	$test[] = '0.9.17.569';
+	function property_upgrade0_9_17_569()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id_project = $GLOBALS['phpgw']->locations->get_id('property', '.project');
+		$location_id_workorder = $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder');
+		$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+		$sql = "UPDATE phpgw_locations SET allow_c_function = 1, allow_c_attrib = 1, c_attrib_table = 'fm_project' WHERE location_id = {$location_id_project}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+		$sql = "UPDATE phpgw_locations SET allow_c_function = 1, allow_c_attrib = 1, c_attrib_table = 'fm_workorder' WHERE location_id = {$location_id_workorder}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+		$sql = "UPDATE phpgw_locations SET allow_c_function = 1, allow_c_attrib = 1, c_attrib_table = 'fm_tts_tickets' WHERE location_id = {$location_id_ticket}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.570';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
