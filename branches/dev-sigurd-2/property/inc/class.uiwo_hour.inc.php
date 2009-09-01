@@ -200,10 +200,10 @@
        		$myColumnDefs[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(key => id,		label=>$table_header[0]['lang_id'],		sortable=>true,resizeable=>true),
-									       				array(key => amount,	label=>$table_header[0]['lang_amount'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-									       				array(key => descr,		label=>$table_header[0]['lang_descr'],	sortable=>true,resizeable=>true),
-		       				       						array(key => entry_date,label=>$table_header[0]['lang_date'],	sortable=>true,resizeable=>true)))
+       			'values'		=>	json_encode(array(	array('key' => 'id',		'label' => $table_header[0]['lang_id'],		'sortable' => true,'resizeable' => true),
+									       				array('key' => 'amount',	'label' => $table_header[0]['lang_amount'],	'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
+									       				array('key' => 'descr',		'label' => $table_header[0]['lang_descr'],	'sortable' => true,'resizeable' => true),
+		       				       						array('key' => 'entry_date','label' => $table_header[0]['lang_date'],	'sortable' => true,'resizeable' => true)))
 			);	
 			
 //------------------------------------datatable0 settings------------------				
@@ -581,16 +581,16 @@
 	       $myColumnDefs[0] = array
 	       (
 	       'name'			=> "0",
-	       'values'		=>	json_encode(array(	array(key => post,				label=>$common_data['table_header'][0]['lang_post'],	sortable=>true,resizeable=>true),
-										       	array(key => code,				label=>$common_data['table_header'][0]['lang_code'],	sortable=>true,resizeable=>true),
-										       	array(key => extra_hours_descr,	label=>$common_data['table_header'][0]['lang_descr'],	sortable=>true,resizeable=>true),
-										       	array(key => unit,				label=>$common_data['table_header'][0]['lang_unit'],	sortable=>true,resizeable=>true),
-	       										array(key => quantity,			label=>$common_data['table_header'][0]['lang_quantity'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => billperae,			label=>$common_data['table_header'][0]['lang_billperae'],sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => cost,				label=>$common_data['table_header'][0]['lang_cost'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => result,			label=>$common_data['table_header'][0]['lang_result'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-	       										array(key => wo_hour_category,	label=>$common_data['table_header'][0]['lang_category'],sortable=>true,resizeable=>true),
-	       										array(key => cat_per_cent,		label=>$common_data['table_header'][0]['lang_per_cent'],sortable=>true,resizeable=>true, formatter=>FormatterCenter)
+	       'values'		=>	json_encode(array(	array('key' => 'post',				'label' => $common_data['table_header'][0]['lang_post'],	'sortable' => true,'resizeable' => true),
+										       	array('key' => 'code',				'label' => $common_data['table_header'][0]['lang_code'],	'sortable' => true,'resizeable' => true),
+										       	array('key' => 'extra_hours_descr',	'label' => $common_data['table_header'][0]['lang_descr'],	'sortable' => true,'resizeable' => true),
+										       	array('key' => 'unit',				'label' => $common_data['table_header'][0]['lang_unit'],	'sortable' => true,'resizeable' => true),
+	       										array('key' => 'quantity',			'label' => $common_data['table_header'][0]['lang_quantity'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
+	       										array('key' => 'billperae',			'label' => $common_data['table_header'][0]['lang_billperae'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
+	       										array('key' => 'cost',				'label' => $common_data['table_header'][0]['lang_cost'],	'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
+	       										array('key' => 'result',			'label' => $common_data['table_header'][0]['lang_result'],	'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterRight'),
+	       										array('key' => 'wo_hour_category',	'label' => $common_data['table_header'][0]['lang_category'],'sortable' => true,'resizeable' => true),
+	       										array('key' => 'cat_per_cent',		'label' => $common_data['table_header'][0]['lang_per_cent'],'sortable' => true,'resizeable' => true, 'formatter' => 'FormatterCenter')
 	      )));	
 //----------------------------------------------datatable settings--------			
 
@@ -802,8 +802,8 @@
 			}
 
 			$uicols = array (
-				'name'	=>	array(hour_id,post,code,hours_descr,unit,billperae,quantity,cost,deviation,result,wo_hour_category,cat_per_cent),
-				'input_type'	=>	array(hidden,text,text,text,text,text,text,text,text,text,text,text),
+				'name'	=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'	=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);
@@ -1145,7 +1145,7 @@
 			$no_email		= phpgw::get_var('no_email', 'bool');
 			$values			= phpgw::get_var('values');
 			$print			= phpgw::get_var('print', 'bool');
-			$resend			= phpgw::get_var('resend', 'bool');
+			$sent_ok		= phpgw::get_var('print', 'bool');
 
 			if($update_email)
 			{
@@ -1257,13 +1257,46 @@
 				}
 			}
 			
+			$action_params = array
+			(
+				'appname'			=> 'property',
+				'location'			=> '.project.workorder',
+				'id'				=> $workorder_id,
+				'responsible'		=> $workorder['vendor_id'],
+				'responsible_type'  => 'vendor',
+				'action'			=> 'remind',
+				'deadline'			=> '',
+				'created_by'		=> '',
+			);
+
+
+			$lang_reminder = '';
+/*
+			$pending_action = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+			$lang_reminder = '';
+			if( $pending_action )
+			{
+				$reminder = (int)$pending_action[0]['reminder'] +1;
+				$lang_reminder = lang('reminder') . " # {$reminder}";
+			}
+			else if ($this->boworkorder->order_sent_adress)
+			{
+				$lang_reminder = lang('reminder') . " # 1";			
+			}
+*/			
+			if ($this->boworkorder->order_sent_adress || $sent_ok)
+			{
+				$lang_reminder = lang('reminder');			
+			}
+
 			$email_data = array
 			(
 				'org_name'						=> isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 				'location_data'					=> $location_data,
 				'lang_workorder'				=> lang('Workorder ID'),
 				'workorder_id'					=> $workorder_id,
-				'lang_reminder'					=> $this->boworkorder->order_sent_adress ? lang('reminder') : '',
+				'lang_reminder'					=> $lang_reminder,
 
 				'lang_date'					=> lang('Date'),
 				'date'						=> $date,
@@ -1386,23 +1419,7 @@ HTML;
 					exit;
 				}
 
-				if( $resend )
-				{
-					$action_params = array
-					(
-						'appname'			=> 'property',
-						'location'			=> '.project.workorder',
-						'id'				=> $workorder_id,
-						'responsible'		=> $workorder['vendor_id'],
-						'responsible_type'  => 'vendor',
-						'action'			=> 'remind',
-						'remark'			=> '',
-						'deadline'			=> ''
-					);
-				
-				 execMethod('property.sopending_action.set_pending_action', $action_params);
-				}
-				$headers = "Return-Path: <". $from_email .">\r\n";
+				$headers  = "Return-Path: <". $from_email .">\r\n";
 				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
 				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
 				{
@@ -1411,7 +1428,7 @@ HTML;
 				}
 				$headers .= "Content-type: text/html; charset=utf-8\r\n";
 				$headers .= "MIME-Version: 1.0\r\n";
-				$subject = lang('Workorder').": ".$workorder_id;
+				$subject  = lang('Workorder').": ".$workorder_id;
 
 				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
@@ -1443,6 +1460,23 @@ HTML;
 					{
 						$receipt['message'][]=array('msg' => $attachment_log);
 					}
+
+					if( $this->boworkorder->order_sent_adress )
+					{
+						$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project.workorder',
+							'id'				=> $workorder_id,
+							'responsible'		=> $workorder['vendor_id'],
+							'responsible_type'  => 'vendor',
+							'action'			=> 'remind',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
+				
+						 $reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
+					}
 				}
 				else
 				{
@@ -1451,6 +1485,7 @@ HTML;
 					$receipt['error'][]=array('msg'=>lang('To') . ' ' . $to_email);
 				}
 			}
+
 
 			if( $this->boworkorder->order_sent_adress )
 			{
@@ -1505,15 +1540,16 @@ HTML;
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => post,		label=>lang('Post'),		sortable=>true,resizeable=>true),
-									       			array(key => code,		label=>lang('Code'),		sortable=>true,resizeable=>true),
-									       			array(key => descr,		label=>lang('descr'),		sortable=>true,resizeable=>true),
-		       				       					array(key => unit,		label=>lang('Unit'),		sortable=>true,resizeable=>true),
-		       				       					array(key => quantity,label=>lang('Quantity'),		sortable=>true,resizeable=>true),
-		       				       					array(key => billperae,label=>lang('Bill per unit'),sortable=>true,resizeable=>true),
-		       				       					array(key => cost,		label=>lang('cost'),		sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
+									       			array('key' => 'code',		'label' => lang('Code'),		'sortable' => true,'resizeable' => true),
+									       			array('key' => 'descr',		'label' => lang('descr'),		'sortable' => true,'resizeable' => true),
+		       				       					array('key' => 'unit',		'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
+		       				       					array('key' => 'quantity',	'label' => lang('Quantity'),	'sortable' => true,'resizeable' => true),
+		       				       					array('key' => 'billperae',	'label' => lang('Bill per unit'),'sortable' => true,'resizeable' => true),
+		       				       					array('key' => 'cost',		'label' => lang('cost'),		'sortable' => true,'resizeable' => true)))
 			);	
 			
+			$workorder_history = $this->boworkorder->read_record_history($workorder_id); // second time...(after the order is sendt)
 			$datavalues[1] = array
 			(
 					'name'					=> "1",
@@ -1526,10 +1562,10 @@ HTML;
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),	sortable=>true,resizeable=>true),
-									       			array(key => value_user,	label=>lang('User'),	sortable=>true,resizeable=>true),
-									       			array(key => value_action,	label=>lang('Action'),	sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date',	'label' => lang('Date'),	'sortable' => true,'resizeable' => true),
+									       			array('key' => 'value_user',	'label' => lang('User'),	'sortable' => true,'resizeable' => true),
+									       			array('key' => 'value_action',	'label' => lang('Action'),	'sortable' => true,'resizeable' => true),
+		       				       					array('key' => 'value_new_value','label' => lang('New value'),'sortable' => true,'resizeable' => true)))
 			);	
 			
 			
@@ -1551,14 +1587,14 @@ HTML;
 				'send_order_action'				=> $GLOBALS['phpgw']->link('/index.php',array(
 																'menuaction'	=> 'property.uiwo_hour.view',
 																'send'			=> true,
-																'resend'		=> !!$this->boworkorder->order_sent_adress,
 																'workorder_id'	=> $workorder_id,
-																'show_details'	=> $show_details)),
+																'show_details'	=> $show_details,
+																'sent_ok'		=> $rcpt)),
 
 				'lang_no_history'				=> lang('No history'),
 				'lang_history'					=> lang('History'),
 				'workorder_history'				=> $workorder_history,
-				'table_header_history'				=> $table_header_history,
+				'table_header_history'			=> $table_header_history,
 				'email_data'					=> $email_data,
 				'no_email'						=> $no_email,
 				'table_send'					=> $table_send,
@@ -1851,9 +1887,9 @@ HTML;
 			}
 				
 			$uicols = array (
-				'input_type'	=>	array(hidden,text,hidden,hidden,text,text,text,text,text,text,hidden,varchar,select,varchar),
+				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
 				'type'			=>	array('','','','','','','','','','','','text','',''),				
-				'name'			=>	array(activity_id,num,branch,vendor_id,descr,base_descr,unit,w_cost,m_cost,total_cost,this_index,quantity,wo_hour_cat,cat_per_cent),
+				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
 				'formatter'		=>	array('','','','','','','','','','','','','',''),
 				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('Per Cent')),
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
@@ -1955,8 +1991,8 @@ HTML;
 		//*************************************************/
 
 			$uicols_details = array (
-				'name'	=>	array(hour_id,post,code,hours_descr,unit,billperae,quantity,cost,deviation,result,wo_hour_category,cat_per_cent),
-				'input_type'	=>	array(hidden,text,text,text,text,text,text,text,text,text,text,text),
+				'name'	=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'	=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);
@@ -2309,9 +2345,9 @@ HTML;
 			}
 																				
 			$uicols = array (
-				'input_type'	=>	array(text,text,text,text,text,varchar,select,combo,varchar,hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden,hidden),
+				'input_type'	=>	array(text,'text','text','text','text','varchar','select','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
 				'type'			=>	array('','','','','','text','','','','text','','','',''),				
-				'name'			=>	array(building_part,code,hours_descr,unit,billperae,quantity,select,wo_hour_cat,cat_per_cent,chapter_id,grouping_descr,new_grouping,activity_id,activity_num,remark,ns3420_id,tolerance,cost,dim_d),
+				'name'			=>	array('building_part','code,hours_descr','unit','billperae','quantity','select','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
 				'formatter'		=>	array('','','','','','','','','','','','','','','','','','',''),
 				'descr'			=>	array(lang('Building part'),lang('Code'),lang('Description'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Select'),'','','','','','','','','','','',''),
 				'className'		=> 	array('','','','','rightClasss','','centerClasss','','','','','','','','','','','','')
@@ -2452,8 +2488,8 @@ HTML;
 		
 
 			$uicols_details = array (
-				'name'	=>	array(hour_id,post,code,hours_descr,unit,billperae,quantity,cost,deviation,result,wo_hour_category,cat_per_cent),
-				'input_type'	=>	array(hidden,text,text,text,text,text,text,text,text,text,text,text),
+				'name'	=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'	=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);

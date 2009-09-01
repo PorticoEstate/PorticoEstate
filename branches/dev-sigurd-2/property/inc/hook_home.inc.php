@@ -172,6 +172,7 @@
 		
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
+		unset($pending_approvals);
 	}
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'])
@@ -224,10 +225,10 @@
 			'created_by'		=> $accound_id,
 		);
 
-		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+		$pending_reminder = execMethod('property.sopending_action.get_pending_action', $action_params);
 
 		$portalbox->data = array();
-		foreach ($pending_approvals as $entry)
+		foreach ($pending_reminder as $entry)
 		{
 			$sql='SELECT org_name FROM fm_vendor where id=' . (int)$entry['responsible'];
 			$GLOBALS['phpgw']->db;
@@ -243,6 +244,8 @@
 		}
 		
 		echo "\n".'<!-- BEGIN reminder info -->'."\n".$portalbox->draw()."\n".'<!-- END reminder info -->'."\n";
+		unset($pending_reminder);
+		unset($portalbox);
 	}
 	
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
