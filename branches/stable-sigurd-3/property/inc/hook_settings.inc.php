@@ -42,6 +42,8 @@
 
 	create_select_box('show new/updated tickets on main screen','mainscreen_show_new_updated_tts',$yes_and_no,'Link to tickets you are assigned to');
 
+	create_select_box('show your pending request for approvals on main screen','mainscreen_showapprovals_request',$yes_and_no,'Your requests for Approvals waiting decisions');
+
 	create_select_box('show pending approvals on main screen','mainscreen_showapprovals',$yes_and_no,'Approvals waiting for your decisions');
 
 	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
