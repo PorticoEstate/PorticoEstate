@@ -35,6 +35,19 @@
 			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName;
 		}
 	);
+
+
+	var formatPrice = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData, 
+			{ 
+				suffix: " <?php echo lang('rental_currency_suffix') ?>",
+				thousandsSeparator: "<?php echo lang('rental_currency_thousands_separator') ?>",
+				decimalSeparator: "<?php echo lang('rental_currency_decimal_separator') ?>",
+				decimalPlaces: <?php echo lang('rental_currency_decimal_places') ?> 
+		    }); 
+		}
+	}
 	
 	// Defining columns for datatable
 	var columnDefs = [
@@ -56,7 +69,8 @@
 		{
 			key: "price",
 			label: "<?php echo lang('rental_common_price') ?>",
-			sortable: true
+			sortable: true,
+			formatter: formatPrice
 		},
 		{
 			key: "labels",

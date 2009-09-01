@@ -83,14 +83,22 @@
 						<?php
 							if ($editable) {
 								?>
-								<select name="security_type" id="security_type">
+								
+								<table><tr>
+								<td>
+									<select name="security_type" id="security_type">
 									<option value="-1"></option>
 									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_BANK_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_BANK_GUARANTEE ?>"><?php echo lang('rental_common_bank_guarantee') ?></option>
 									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_DEPOSIT ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_DEPOSIT ?>"><?php echo lang('rental_common_deposit') ?></option>
 									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_ADVANCE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_ADVANCE ?>"><?php echo lang('rental_common_advance') ?></option>
 									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ?>"><?php echo lang('rental_common_other_guarantee') ?></option>
 								</select>
-								<input type="text" name="security_amount" id="security_amount" value="<?php echo $contract->get_security_amount(); ?>"/>
+								</td>
+								<td><label for="security_amount"><?php echo lang('rental_currency_prefix') ?></label></td>
+								<td><input type="text" name="security_amount" id="security_amount" value="<?php echo $contract->get_security_amount(); ?>"/></td>
+								</tr></table>
+								
+								
 								<?php
 							} 
 							else
@@ -113,7 +121,7 @@
 										/* no-op */
 										break;
 								}
-								echo '<br/>'.$contract->get_security_amount();
+								echo '<br/>'.lang('rental_currency_prefix').' '.$contract->get_security_amount();
 							}
 						?>
 					</dd>
@@ -173,16 +181,16 @@
 		</div>
 		<div id="price">
 			<h3><?php echo lang('rental_common_selected_price_items') ?></h3>
-			<strong>Total pris:</strong> <?php echo number_format($contract->get_price(), 2, ",", " "); ?><br /><br />
+			<strong><?php echo lang('rental_common_total_price') ?>:</strong> <?php echo number_format($contract->get_price(), lang('rental_currency_decimal_places'), lang('rental_currency_decimal_separator'),lang('rental_currency_thousands_separator')); echo ' '.lang('rental_currency_suffix');?> <br /><br />
 			<?php 
 				$list_form = false;
 				$list_id = 'included_price_items';
 				$related = array('not_included_price_items');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
-					array("key" => "area", "label" => lang('rental_common_area'), "index" => 4),
-					array("key" => "count", "label" => lang('rental_common_count'), "index" => 5),
-					array("key" => "total_price", "label" => lang('rental_common_total_price'), "formatter" => "YAHOO.widget.DataTable.formatCurrency", "index" => 6),
+					array("key" => "area", "label" => lang('rental_common_area'), "index" => 4, "formatter" => "formatArea"),
+					array("key" => "count", "label" => lang('rental_common_count'), "index" => 5, "formatter" => "formatCount"),
+					array("key" => "total_price", "label" => lang('rental_common_total_price'), "formatter" => "formatPrice", "index" => 6),
 					array("key" => "date_start", "label" => lang('rental_common_date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
 					array("key" => "date_end", "label" => lang('rental_common_date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
 				);

@@ -1,3 +1,7 @@
+rental_area_decimal_places	rental	no	2
+rental_area_suffix	rental	no	kvm
+rental_area_thousands_separator	rental	no	.
+rental_area_decimal_separator	rental	no	,
 rental_common_account	rental	no	Kundenummer i Agresso
 rental_common_account_number	rental	no	Kontonummer
 rental_common_active	rental	no	Aktiv
@@ -25,7 +29,7 @@ rental_common_available_composites	rental	no	Ledige leieobjekt
 rental_common_available_composites	rental	no	Tilgjengelige leieobjekter
 rental_common_available_from	rental	no	Tilgjengelig fra
 rental_common_available_parties	rental	no	Tilgjengelige kontraktsparter
-rental_common_available_price_item	rental	no	Tilgjengelige priselementer
+rental_common_available_price_items	rental	no	Tilgjengelige priselementer
 rental_common_back	rental	no	Tilbake
 rental_common_bank_guarantee	rental	no	Bankgaranti
 rental_common_bill	rental	no	Faktura
@@ -51,6 +55,7 @@ rental_common_contracts	rental	no	Kontrakter
 rental_common_contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
 rental_common_contracts_under_dismissal	rental	no	Siste under avslutning
 rental_common_count	rental	no	Antall
+rental_common_count_suffix	rental	no	stk
 rental_common_create_shortcut	rental	no	Ny snarvei
 rental_common_dashboard_title	rental	no	Forside - Min arbeidsoversikt
 rental_common_date	rental	no	Dato
@@ -201,6 +206,14 @@ rental_contract_type_eksternleie	rental	no	Eksternleie
 rental_contract_type_innleie	rental	no	Innleie
 rental_contract_type_internleie	rental	no	Internleie
 rental_contract_type_investeringskontrakt	rental	no	Investeringskontrakt
+rental_count_decimal_places	rental	no	0
+rental_count_suffix	rental	no	stk
+rental_count_thousands_separator	rental	no	.
+rental_currency_decimal_places	rental	no	2
+rental_currency_prefix	rental	no	NOK
+rental_currency_decimal_separator	rental	no	,
+rental_currency_suffix	rental	no	kr
+rental_currency_thousands_separator	rental	no	.
 rental_messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
 rental_messages_form_error	rental	no	Skjemaet inneholder en feil.
 rental_messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret

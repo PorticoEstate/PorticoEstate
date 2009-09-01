@@ -76,9 +76,9 @@
 					<dt><?php echo lang('rental_common_serial') ?></dt>
 					<dd><?php echo $composite->get_id() ?></dd>
 					<dt><?php echo lang('rental_common_area_gros') ?>></dt>
-					<dd><?php echo $composite->get_area_gros() ?> m<sup>2</sup></dd>
+					<dd><?php echo $composite->get_area_gros().' '.lang('rental_area_suffix'); ?></dd>
 					<dt><?php echo lang('rental_common_area_net') ?></dt>
-					<dd><?php echo $composite->get_area_net() ?> m<sup>2</sup></dd>
+					<dd><?php echo $composite->get_area_net().' '.lang('rental_area_suffix'); ?></dd>
 					
 					<dt>
 						<label for="is_active"><?php echo lang('rental_common_available?') ?></label>

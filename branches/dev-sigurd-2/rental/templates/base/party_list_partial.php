@@ -106,7 +106,7 @@
 			</select>
 		</label>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset_price_item') ?>" />
+		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset') ?>" />
 	</fieldset>
 	
 	<fieldset>

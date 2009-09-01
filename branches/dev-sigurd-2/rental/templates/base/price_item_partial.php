@@ -10,6 +10,40 @@
  		}
  	);
 
+	var formatPrice = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData, 
+			{ 
+				suffix: " <?php echo lang('rental_currency_suffix') ?>",
+				thousandsSeparator: "<?php echo lang('rental_currency_thousands_separator') ?>",
+				decimalSeparator: "<?php echo lang('rental_currency_decimal_separator') ?>",
+				decimalPlaces: <?php echo lang('rental_currency_decimal_places') ?> 
+		    }); 
+		}
+	}
+
+	var formatArea = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData, 
+			{ 
+				suffix: " <?php echo lang('rental_area_suffix') ?>",
+				thousandsSeparator: "<?php echo lang('rental_area_thousands_separator') ?>",
+				decimalSeparator: "<?php echo lang('rental_area_decimal_separator')?>",
+				decimalPlaces: <?php echo lang('rental_area_decimal_places') ?> 
+		    }); 
+		}
+	}
+
+	var formatCount = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData, 
+			{ 
+				suffix: " <?php echo lang('rental_count_suffix') ?>",
+				thousandsSeparator: "<?php echo lang('rental_count_thousands_separator') ?>",
+				decimalPlaces: <?php echo lang('rental_count_decimal_places') ?> 
+		    });
+		}
+	}
 	
 	// Defining columns for datatable
 	var columnDefs = [
@@ -31,6 +65,7 @@
 		{
 			key: "price",
 			label: "<?php echo lang('rental_common_price') ?>",
+			formatter: formatPrice,
 			sortable: true
 		},
 		{

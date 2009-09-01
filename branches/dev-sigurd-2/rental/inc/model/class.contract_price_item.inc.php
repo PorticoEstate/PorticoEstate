@@ -177,17 +177,22 @@
 		 * @see rental/inc/model/rental_model#serialize()
 		 */
 		public function serialize()
-		{
+		{	
+			//var_dump($GLOBALS['phpgw_info']['user']['preferences']);
+			
+			$currency_prefix = $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
 			return array(
 				'id' => $this->get_id(),
 				'price_item_id' => $this->get_price_item_id(),
 				'contract_id' => $this->get_contract_id(),
 				'area' => $this->get_area(),
 				'count' => $this->get_count(),
+				//'total_price' => $currency_prefix.' '.$this->get_total_price(),
 				'total_price' => $this->get_total_price(),
 				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
+				//'price' => money_format($currency_prefix.' %.2n',$this->get_price()),
 				'price' => $this->get_price(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not

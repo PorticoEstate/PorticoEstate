@@ -42,8 +42,16 @@
 	// Override the built-in formatter
 	YAHOO.widget.DataTable.formatCurrency = function(elCell, oRecord, oColumn, oData) {
 		if (oData != undefined) {
-			elCell.innerHTML = parseFloat(oData).toFixed(2);
+			elCell.innerHTML = YAHOO.util.Number.format( oData, 
+			{ 
+				prefix: "<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'].' ' ?>",
+				thousandsSeparator: ",",
+				decimalPlaces: 2 
+		    }); 
 		}
+		//if (oData != undefined) {
+		//	elCell.innerHTML = '<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'].' ' ?>' + parseFloat(oData).toFixed(2);
+		//}
 	};
 	
 	// Reloads all data sources that are necessary based on the selected related datatable
