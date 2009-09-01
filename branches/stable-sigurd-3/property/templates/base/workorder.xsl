@@ -420,14 +420,18 @@
 
 				</xsl:otherwise>
 			</xsl:choose>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_power_meter"/>
-				</td>
-				<td>
-					<xsl:value-of select="value_power_meter"/>
-				</td>
-			</tr>
+			<xsl:choose>
+				<xsl:when test="suppressmeter =''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_power_meter"/>
+						</td>
+						<td>
+							<xsl:value-of select="value_power_meter"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -776,6 +780,9 @@
 </table>
 </div>
 
+<xsl:choose>
+<xsl:when test="suppresscoordination =''">
+
 <div id="coordination">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
@@ -818,6 +825,8 @@
 			</tr>
 </table>
 </div>
+</xsl:when>
+</xsl:choose>
 
 <div id="documents">
 <table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -1068,15 +1077,18 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_power_meter"/>
-				</td>
-				<td>
-					<xsl:value-of select="value_power_meter"/>
-				</td>
-			</tr>
+			<xsl:choose>
+				<xsl:when test="suppressmeter =''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_power_meter"/>
+						</td>
+						<td>
+							<xsl:value-of select="value_power_meter"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 			<tr>
 				<td>
 					<xsl:value-of select="lang_coordinator"/>
@@ -1293,6 +1305,9 @@
 </table>
 </div>
 
+<xsl:choose>
+<xsl:when test="suppresscoordination =''">
+
 <div id="coordination">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr>
@@ -1339,6 +1354,8 @@
 			</tr>
 </table>
 </div>
+</xsl:when>
+</xsl:choose>
 
 <div id="documents">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">

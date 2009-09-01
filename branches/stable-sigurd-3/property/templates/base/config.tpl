@@ -166,6 +166,26 @@
      </select>
     </td>
    </tr>
+
+   <tr class="row_on">
+    <td>{lang_project_suppress_meter}.</td>
+    <td>
+     <select name="newsettings[project_suppressmeter]">
+      <option value="" {selected_project_suppressmeter_}>NO</option>
+      <option value="1" {selected_project_suppressmeter_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_project_suppress_coordination}.</td>
+    <td>
+     <select name="newsettings[project_suppresscoordination]">
+      <option value="" {selected_project_suppresscoordination_}>NO</option>
+      <option value="1" {selected_project_suppresscoordination_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+
    <tr class="row_on">
     <td>{lang_meter_table}:</td>
     <td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
