@@ -163,6 +163,7 @@ applications	property	no	Applikasjoner
 apply the values	property	no	Bruke verdier
 approval	property	no	Godkjenning
 approvals	property	no	Godkjenninger
+approvals request	property	no	Anmodninger og godkjenning
 approval from	property	no	Godkjenning fra
 approval from is updated	property	no	Godkjenning fra er oppdatert
 approved	property	no	Godkjent

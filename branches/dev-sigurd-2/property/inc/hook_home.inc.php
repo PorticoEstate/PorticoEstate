@@ -108,6 +108,74 @@
 		unset($category_name);
 	}
 
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals_request'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals_request'] == 'yes' )
+	{
+
+		$title = lang('approvals request');
+	
+		//TODO Make listbox css compliant
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> $title,
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.project.workorder',
+		//	'id'				=> $id,
+			'responsible'		=> $accound_id,
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> '',
+			'created_by'		=> $accound_id
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+		$portalbox->data = array();
+		foreach ($pending_approvals as $entry)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => 'Venter på godkjenning: ' . $entry['item_id'],
+				'link' => $entry['url']
+			);
+		}
+		
+		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+		unset($portalbox);
+		unset($pending_approvals);
+	}
+
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'])
 		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] == 'yes' )
 	{
@@ -155,7 +223,8 @@
 			'responsible'		=> $accound_id,
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
-			'deadline'			=> ''
+			'deadline'			=> '',
+			'created_by'		=> '',
 		);
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
