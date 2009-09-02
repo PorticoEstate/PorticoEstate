@@ -106,7 +106,8 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file('nextmatchs', PHPGW_TEMPLATE_DIR);
 
-			$start = isset($values['start']) ? (int) $values['start'] : 0;
+			$start = isset($values['start']) && $values['start'] ? (int) $values['start'] : 0;
+
 			$nm_data = array
 			(
 				'img_width'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'funkwerk' ? '' : '12',

@@ -251,7 +251,7 @@
 			}
 
 			$query		= phpgw::get_var('query', 'string');
-			$start		= phpgw::get_var('start', 'int', 'GET', -1);
+			$start		= phpgw::get_var('start', 'int', 'GET', 0);
 			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			$allrows	= phpgw::get_var('allrows', 'bool');
@@ -435,7 +435,7 @@
 
 			$nm = array
 			(
-				'start'				=> $start,
+ 				'start'				=> $start == -1 ? 0 : $start,
  				'num_records'		=> count($account_info),
  				'all_records'		=> $total,
 				'link_data'			=> $link_data,

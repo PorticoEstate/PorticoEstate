@@ -22,6 +22,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 	
 	var $cal_event;
 	var $today = array('raw','day','month','year','full','dow','dm','bd');
+	protected $global_lock = false;
 
 	function __construct()
 	{
@@ -84,15 +85,29 @@ class calendar_socalendar_ extends calendar_socalendar__
 	{
 		$calendar = (int) $calendar;
 		//TODO transaction needed here 
+
 		$this->stream->query("SELECT cal_id FROM phpgw_cal WHERE owner = {$calendar}",__LINE__,__FILE__);
 		while($this->stream->next_record())
 		{
 			$this->delete_event( (int) $this->stream->f('cal_id'));
 		}
+//		$this->stream->lock(array('phpgw_cal_user'));
+		if ( $this->stream->Transaction )
+		{
+			$this->global_lock = true;
+		}
+		else
+		{
+			$this->stream->transaction_begin();
+		}
 		$this->expunge();
-		$this->stream->lock(array('phpgw_cal_user'));
 		$this->stream->query("DELETE FROM phpgw_cal_user WHERE cal_login = {$calendar}",__LINE__,__FILE__);
-		$this->stream->unlock();
+		if ( !$this->global_lock )
+		{
+			$this->stream->transaction_commit();
+		}
+
+//		$this->stream->unlock();
 		// end transaction
 		return $calendar;
 	}
@@ -483,7 +498,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 			return 1;
 		}
 		$this_event = $this->event;
-		$locks = array(
+/*		$locks = array(
 			'phpgw_cal',
 			'phpgw_cal_user',
 			'phpgw_cal_repeats',
@@ -491,6 +506,16 @@ class calendar_socalendar_ extends calendar_socalendar__
 // OLD-ALARM			'phpgw_cal_alarm'
 		);
 		$this->stream->lock($locks);
+*/
+		if ( $this->stream->Transaction )
+		{
+			$this->global_lock = true;
+		}
+		else
+		{
+			$this->stream->transaction_begin();
+		}
+
 		foreach($this->deleted_events as $cal_id)
 		{
 			foreach ($locks as $table)
@@ -498,7 +523,11 @@ class calendar_socalendar_ extends calendar_socalendar__
 				$this->stream->query('DELETE FROM '.$table.' WHERE cal_id='.$cal_id,__LINE__,__FILE__);
 			}
 		}
-		$this->stream->unlock();
+//		$this->stream->unlock();
+		if ( !$this->global_lock )
+		{
+			$this->stream->transaction_commit();
+		}
 
 		foreach($this->deleted_events as $cal_id)
 		{
