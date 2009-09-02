@@ -3,6 +3,7 @@
 	{
 		function get_menu()
 		{
+			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'booking';
 			$menus = array();
 
@@ -198,6 +199,8 @@
 				)
 			);
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
+
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 
 			return $menus;
 		}

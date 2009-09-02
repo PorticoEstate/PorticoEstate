@@ -1,10 +1,11 @@
 <?php
 	/**
 	* Handles multi-language support
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
-	* @copyright Portions Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
@@ -157,7 +158,7 @@
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
+				$lang_set[$GLOBALS['phpgw']->db->f('lang')][$GLOBALS['phpgw']->db->f('app_name')][$GLOBALS['phpgw']->db->f('message_id', true)] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 
 			$language = array_keys($lang_set);
@@ -180,50 +181,52 @@
 		*/
 		public function translate($key, $vars = array(), $only_common = false )
 		{
-			$ret = $key;
 			if ( !$userlang = $this->userlang )
 			{
 				$userlang = 'en';
 			}
 
+			$app_name = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
 			if ( !is_array($this->lang)
-				|| !isset($this->lang[$lookup_key]) )
+				|| !isset($this->lang[$app_name][$lookup_key])
+				|| !isset($this->lang['common'][$lookup_key]) )
 			{
-				$applist = "'common', 'all'";
-				$order = ' ORDER BY app_name ASC';
+				$applist = "'common'";
 				if ( !$only_common )
 				{
-					$applist .= ", '{$GLOBALS['phpgw_info']['flags']['currentapp']}'";
-					if ( strcasecmp($GLOBALS['phpgw_info']['flags']['currentapp'], 'common') <= 1 )
-					{
-						$order = 'ORDER BY app_name DESC';
-					}
+					$applist .= ", '{$app_name}'";
 				}
 
- 				$sql = 'SELECT message_id, content'
+ 				$sql = 'SELECT message_id, content, app_name'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
-					. " AND app_name IN({$applist}) {$order}";
+					. " AND app_name IN({$applist})";
 					
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
-					$this->lang[$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
+					$this->lang[$GLOBALS['phpgw']->db->f('app_name')][$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
 				}
+
 			}
+
 			$ret = "!{$key}";	// save key if we dont find a translation
 			$key = $lookup_key;
 
-			if ( isset($this->lang[$key]) )
+			if ( isset($this->lang[$app_name][$key]) )
 			{
-				$ret = $this->lang[$key];
+				$ret = $this->lang[$app_name][$key];
+			}
+			else if ( isset($this->lang['common'][$key]) )
+			{
+				$ret = $this->lang['common'][$key];
 			}
 			else if ($this->collect_missing)
 			{
 				$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
 				$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
-					. " AND app_name = '##{$GLOBALS['phpgw_info']['flags']['currentapp']}##'";
+					. " AND app_name = '##{$app_name}##'";
 				
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 
@@ -232,9 +235,15 @@
 					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$GLOBALS['phpgw_info']['flags']['currentapp']}##','$userlang','missing')",__LINE__,__FILE__);
 				}
 			}
+
 			$ndx = 1;
+
 			foreach ( $vars as $key => $val )
 			{
+				if(!$val)
+				{
+					break;
+				}
 				$ret = preg_replace( "/%$ndx/", $val, $ret );
 				++$ndx;
 			}
@@ -259,11 +268,11 @@
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
-			$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang like '{$userlang}' AND app_name like '{$app}'";
+			$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang = '{$userlang}' AND app_name = '{$app}'";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ( $GLOBALS['phpgw']->db->next_record() )
 			{
-				$this->lang[strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
+				$this->lang[$app][strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 		}
 

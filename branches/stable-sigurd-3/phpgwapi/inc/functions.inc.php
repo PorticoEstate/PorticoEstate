@@ -69,7 +69,7 @@
 			}
 			return "$str*#*";
 		}
-		return $GLOBALS['phpgw']->translation->translate("$key", $vars);
+		return $GLOBALS['phpgw']->translation->translate($key, $vars);
 	}
 
 	/**
