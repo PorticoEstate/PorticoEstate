@@ -1,10 +1,11 @@
 <?php
 	/**
 	* Handles multi-language support
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
-	* @copyright Portions Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage application
