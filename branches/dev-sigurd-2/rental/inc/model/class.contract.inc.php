@@ -31,6 +31,7 @@
 		protected $payer_id;
 		protected $price_items;	
 		protected $last_edited_by_current_user;
+		protected $executive_officer_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -91,6 +92,15 @@
 			$this->billing_start_date = $date;
 		}
 		
+		public function get_executive_officer_id() {
+			return $this->executive_officer_id;
+		}
+		
+		public function set_executive_officer_id($id)
+		{
+			$this->executive_officer_id = $id;
+		}
+		
 		/**
 		 * Returns date of when the first invoice should be produced for the
 		 * contract.
@@ -100,7 +110,7 @@
 		
 		public function set_type_id($type_id)
 		{
-			$this->type_id = $type_id;
+			$this->type_id = (int) $type_id;
 		}
 		
 		public function get_type_id() { return $this->type_id; }

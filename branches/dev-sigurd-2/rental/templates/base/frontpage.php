@@ -7,7 +7,7 @@
 YAHOO.util.Event.addListener(window, "load", function() {
 	var panels = new Array();
 	createPanel = function(element,visibility,x,y){
-		var panel = new YAHOO.widget.Panel(element + "_panel",{close: false, constraintoviewport: true});
+		var panel = new YAHOO.widget.Panel(element + "_panel",{close: false, constraintoviewport: false});
 		panel.name = element;
 		panels.push(panel);
 		var toggleVisibility = function(event){
@@ -198,14 +198,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div>
 <div id="notifications_panel"> 
-	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?> </h2></div>
+	<div class="hd"><h2 ><img style="" src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?> </h2></div>
     <div class="bd">
 		<?php 
 			$list_form = false;
 			$list_id = 'notifications_for_user';
 			$url_add_on = '&amp;type='.$list_id;
-			$extra_cols = array();
-			$hide_cols = array();
+			unset($extra_cols);
+			unset($hide_cols);
 			include('notification_list.php');
 		?>
 	</div>

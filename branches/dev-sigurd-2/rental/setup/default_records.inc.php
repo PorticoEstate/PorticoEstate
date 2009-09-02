@@ -213,10 +213,10 @@ $oProc->query("INSERT INTO rental_unit VALUES (14,'3409-03')");
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_unit VALUES (15,'1102-01')");
 
-$oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_innleie','')");
-$oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_internleie','')");
-$oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_eksternleie','')");
-$oProc->query("INSERT INTO rental_contract_type (title, description) VALUES ('rental_contract_type_investeringskontrakt','')");
+$oProc->query("INSERT INTO rental_contract_type (title, description, notify_before) VALUES ('rental_contract_type_innleie','',90)");
+$oProc->query("INSERT INTO rental_contract_type (title, description, notify_before) VALUES ('rental_contract_type_internleie','',90)");
+$oProc->query("INSERT INTO rental_contract_type (title, description, notify_before) VALUES ('rental_contract_type_eksternleie','',90)");
+$oProc->query("INSERT INTO rental_contract_type (title, description, notify_before) VALUES ('rental_contract_type_investeringskontrakt','',90)");
 
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_annually','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_half-year','2')");
@@ -224,27 +224,27 @@ $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('ren
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_monthly','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_every_second_week','24')");
 
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2008-01-01','2028-01-15','2008-01-15',1,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-10-01','2029-10-15','2009-10-15',3,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-09-21','2029-09-15','2009-09-15',4,2,{$user_write},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-02-03','2029-02-15','2009-02-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-08-12','2029-08-15','2009-08-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-16','2029-06-15','2009-06-16',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2009-06-01','2029-06-15','2009-06-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by) VALUES ('2004-02-01','2024-02-02','2004-02-15',3,2,{$user_admin},'2009-01-01', {$user_write}, '2009-01-01', {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-01-01','2009-09-21','2009-01-15',3,2,{$user_write}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-01-01','2020-12-12','2009-01-15',2,2,{$user_write}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2008-01-01','2028-01-15','2008-01-15',1,2,{$user_write}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-10-01','2029-10-15','2009-10-15',3,2,{$user_write}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-09-21','2029-09-15','2009-09-15',4,2,{$user_write}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-02-03','2029-02-15','2009-02-15',3,2,{$user_admin}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-08-12','2029-08-15','2009-08-15',3,2,{$user_admin}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-06-16','2029-06-15','2009-06-16',3,2,{$user_admin}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2009-06-01','2029-06-15','2009-06-15',3,2,{$user_admin}, 1250593658, {$user_write})");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by) VALUES ('2004-02-01','2024-02-02','2004-02-15',3,2,{$user_admin}, 1250593658, {$user_write})");
 	// Vitalitetssenteret
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-02-12',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-06', {$user_admin}, '2009-07-27', {$user_admin}, 'K00000659')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2003-03-18',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-06', {$user_admin}, '2009-07-27', {$user_admin}, 'K00000660')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('2003-02-12',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, 'K00000659')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('2003-03-18',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, 'K00000660')");
 	// Gullstøltunet sykehjem
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-12-20', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000585')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-06-27', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000586')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2005-06-27', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000587')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2006-01-01',NULL,'2006-01-01',2,4,{$user_admin},'2005-12-20', {$user_admin}, '2009-07-28', {$user_admin}, ' K00006497')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00000585')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00000586')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('1999-01-01',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00000587')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('2006-01-01',NULL,'2006-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00006497')");
 	// Bergen Rådhus
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2008-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2008-11-28', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000797')");
-$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer,last_edited, last_edited_by, created, created_by, old_contract_id) VALUES ('2005-01-01',NULL,'2005-01-01',2,4,{$user_admin},'2006-06-13', {$user_admin}, '2009-07-28', {$user_admin}, ' K00000798')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('2008-01-01',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00000797')");
+$oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, type_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES ('2005-01-01',NULL,'2005-01-01',2,4,{$user_admin}, 1250593658, {$user_admin}, ' K00000798')");
 	
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (1,1)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (2,2)");
@@ -355,9 +355,9 @@ $oProc->query("INSERT INTO rental_notification (account_id, contract_id, message
 $oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},1,1250593658, 'FALSE')");
 $oProc->query("INSERT INTO rental_notification_workbench (account_id, notification_id, date, dismissed) VALUES ({$user_admin},2,1250593658, 'FALSE')");
 
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},'2009-07-28')");
-$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},'2009-07-28')");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$user_write},1250593658)");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$user_admin},1250593658)");
+$oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$user_write},1250593658)");
 
 $asyncservice = CreateObject('phpgwapi.asyncservice');
 $asyncservice->delete('rental_populate_workbench_notifications');

@@ -2,6 +2,15 @@ div.content {
 	margin: 2em;	
 }
 
+.hd h2 {
+	margin-bottom: 0;
+	line-height: 2.5em;
+	}
+	
+.hd h2 img {
+	vertical-align: middle;
+	}
+
 fieldset {
 	margin-top: 0.5em;	
 }

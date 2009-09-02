@@ -366,6 +366,34 @@
 			?>
 		</div>
 		<div id="others">
+			<form action="#" method="post">
+				<h3>Saksbehander:</h3>
+				<select name="executive_officer" id="executive_officer">
+					<?php 
+						$executive_officer = $contract->get_executive_officer_id();
+						$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+						foreach($accounts as $account)
+						{	
+							$account_id = $account->__get('id');
+							$selected = '';
+							if($account_id == $executive_officer){
+								$selected = 'selected=\'selected\'';
+							}
+							echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";			
+						}
+					?>
+					<div class="form-buttons">
+						<?php
+							if ($editable) {
+								echo '<input type="submit" name="save_other" value="' . lang('rental_common_save') . '"/>';
+								echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
+							} else {
+								echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
+							}
+						?>
+					</div>
+				</select>
+			</form>
 		</div>
 	</div>
 </div>

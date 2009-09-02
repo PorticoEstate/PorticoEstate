@@ -204,6 +204,21 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification', 'id' => $value['id'])));
 					$value['labels'][] = lang('rental_common_delete');
 					break;
+				case 'last_edited_by':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_edit_contract');
+					break;
+				case 'contracts_for_executive_officer':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_edit_contract');
+					break;
+				case 'ending_contracts':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('rental_common_edit_contract');
+					break;
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
@@ -321,6 +336,19 @@
 					$error = lang('rental_messages_form_error');
 				}
 			}
+			else if(isset($_POST['save_other']))
+			{
+				$contract = rental_contract::get($contract_id);
+				$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
+				if($contract->store())
+				{
+					$message = lang('rental_messages_saved_form');
+				}
+				else
+				{
+					$error = lang('rental_messages_form_error');
+				}
+			}
 			return $this->viewedit(true, $contract_id, $notification, $message, $error);
 		}
 		
@@ -333,10 +361,16 @@
 			
 			// Set the type of the new contract
 			$contract->set_type_id(phpgw::get_var('new_contract_type'));
-			$contract->store();
-			
-			// Redirect to edit
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+			if($contract->store()) //contract validates
+			{
+				// Redirect to edit
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('rental_messages_new_contract')));
+			}
+			else
+			{
+				// Redirect to edit
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.index', 'message' => lang('rental_messages_no_new_contract')));
+			}
 		}
 		
 		/**
