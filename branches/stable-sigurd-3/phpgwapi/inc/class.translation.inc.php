@@ -240,10 +240,6 @@
 
 			foreach ( $vars as $key => $val )
 			{
-				if(!$val)
-				{
-					break;
-				}
 				$ret = preg_replace( "/%$ndx/", $val, $ret );
 				++$ndx;
 			}
