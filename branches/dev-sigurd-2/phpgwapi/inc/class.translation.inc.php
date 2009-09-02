@@ -180,7 +180,6 @@
 		*/
 		public function translate($key, $vars = array(), $only_common = false )
 		{
-			$ret = $key;
 			if ( !$userlang = $this->userlang )
 			{
 				$userlang = 'en';
@@ -194,20 +193,14 @@
 				|| !isset($this->lang['common'][$lookup_key]) )
 			{
 				$applist = "'common'";
-		//		$order = ' ORDER BY app_name ASC';
 				if ( !$only_common )
 				{
 					$applist .= ", '{$app_name}'";
-		//			if ( strcasecmp($app_name, 'common') <= 1 )
-		//			{
-		//				$order = 'ORDER BY app_name DESC';
-		//			}
 				}
 
  				$sql = 'SELECT message_id, content, app_name'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
 					. " AND app_name IN({$applist})";
-		//			. " AND app_name IN({$applist}) {$order}";
 					
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
@@ -246,13 +239,13 @@
 
 			foreach ( $vars as $key => $val )
 			{
-				if($val)
+				if(!$val)
 				{
-					$ret = preg_replace( "/%$ndx/", $val, $ret );
+					break;
 				}
+				$ret = preg_replace( "/%$ndx/", $val, $ret );
 				++$ndx;
 			}
-
 			return $ret;
 		}
 
@@ -274,11 +267,11 @@
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
-			$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang like '{$userlang}' AND app_name like '{$app}'";
+			$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang = '{$userlang}' AND app_name = '{$app}'";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ( $GLOBALS['phpgw']->db->next_record() )
 			{
-				$this->lang[strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
+				$this->lang[$app][strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 		}
 
