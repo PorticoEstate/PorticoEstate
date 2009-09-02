@@ -17,6 +17,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boapplication');
+			$this->event_bo = CreateObject('booking.boevent');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
@@ -216,10 +217,53 @@
 			}
 		}
 
+		private function create_event($application_id, $date_id)
+		{
+			$application = $this->bo->read_single($application_id);
+			foreach($application['dates'] as $d)
+			{
+				if($d['id'] == $date_id)
+				{
+					$date = $d;
+					break;
+				}
+			}
+			$event = array();
+			$event['from_'] = $date['from_'];
+			$event['to_'] = $date['to_'];
+			$event['active'] = 1;
+			$event['cost'] = 0;
+			$copy = array(
+				'activity_id', 'description', 'contact_name',
+				'contact_email', 'contact_phone', 'activity_id', 
+				'audience', 'agegroups', 'resources'
+			);
+			foreach($copy as $f)
+			{
+				$event[$f] = $application[$f];
+			}
+			echo "<pre>";
+			echo $_POST['create'] . ' ' . $date;
+			print_r($event);
+			$errors = $this->event_bo->validate($event);
+			print_r($errors);
+			if(!$errors)
+			{
+				//$receipt = $this->event_bo->add($event);
+			}
+			die;
+		}
+
 		public function show()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['create'])
+			{
+				$this->create_event($id, $_POST['date_id']);
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
+			}
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['status'])
 			{

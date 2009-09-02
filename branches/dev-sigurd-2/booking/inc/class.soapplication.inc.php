@@ -50,7 +50,7 @@
 						  'manytomany' => array(
 							'table' => 'bb_application_date',
 							'key' => 'application_id',
-							'column' => array('from_', 'to_')
+							'column' => array('from_', 'to_', 'id')
 					)),
 					'comments' => array('type' => 'string',
 						  'manytomany' => array(

@@ -42,17 +42,24 @@
         <dl class="proplist-col">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'When?')" /></dt>
 			<xsl:for-each select="application/dates">
-				<dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
-				<dd><xsl:value-of select="from_"/></dd>
-				<dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
-				<dd><xsl:value-of select="to_"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="from_"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="to_"/>: <xsl:value-of select="id"/></dd>
+				<form method="POST" >
+					<input type="hidden" name="date_id" value="{id}"/>
+					<select name="create" onchange="this.form.submit()">
+						<option value=""><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+						<option value="booking"><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+						<option value="allocation"><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+						<option value="event"><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+					</select>
+				</form>
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Who?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Target audience')" /></dt>
 			<dd>
-				<ul>
+				<ul>1
 					<xsl:for-each select="audience">
 						<xsl:if test="../application/audience=id">
 							<li><xsl:value-of select="name"/></li>
