@@ -92,6 +92,7 @@ rental_common_id	rental	no	ID
 rental_common_contract_id	rental	no	Kontraktsnummer
 rental_common_in_operation	rental	no	I drift
 rental_common_internal	rental	no	Interne kontraktsparter
+rental_common_invoice	rental	no	Faktura
 rental_common_is_area	rental	no	Areal
 rental_common_is_payer	rental	no	Fakturamottaker
 rental_common_land_title	rental	no	Gnr/Bnr
@@ -104,10 +105,24 @@ rental_common_location_code	rental	no	Enhetsnummer
 rental_common_log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
 rental_common_message	rental	no	Melding
 rental_common_monthly	rental	no	Månedlig
+rental_common_month	rental	no	Måned
+rental_common_month_1	rental	no	Januar
+rental_common_month_2	rental	no	Februar
+rental_common_month_3	rental	no	Mars
+rental_common_month_4	rental	no	April
+rental_common_month_5	rental	no	Mai
+rental_common_month_6	rental	no	Juni
+rental_common_month_7	rental	no	Juli
+rental_common_month_8	rental	no	August
+rental_common_month_9	rental	no	September
+rental_common_month_10	rental	no	Oktober
+rental_common_month_11	rental	no	November
+rental_common_month_12	rental	no	Desember
 rental_common_name	rental	no	Navn
 rental_common_never	rental	no	Aldri
 rental_common_new_notification	rental	no	Nytt varsel
 rental_common_next	rental	no	Neste
+rental_common_no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
 rental_common_no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 rental_common_not_available	rental	no	Ikke tilgjengelig
 rental_common_not_started	rental	no	Ikke startet
@@ -201,6 +216,7 @@ rental_common_url	rental	no	Nettsted
 rental_common_vacant	rental	no	Ledig
 rental_common_weekly	rental	no	Ukentlig
 rental_common_working_on	rental	no	Siste under arbeid
+rental_common_year	rental	no	År
 rental_common_your_notifications	rental	no	Dine varsler
 rental_contract_type_eksternleie	rental	no	Eksternleie
 rental_contract_type_innleie	rental	no	Innleie
