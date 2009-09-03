@@ -5,7 +5,7 @@
 %1 group	property	no	%1 gruppe
 %1 is notified	property	no	Melding sendt til %1
 %1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE ACTIVE fra før
-about	property	no	Om
+about	common	no	Om
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap
@@ -242,6 +242,7 @@ categories	property	no	Kategorier
 categories for the entity type	property	no	Kategori for entitet-type
 categories for the location type	property	no	Kategori for lokaliserings type
 categorise persons	common	no	Kategoriser personer
+category	common	no	Kategori
 category changed	property	no	Kategori er endret
 category has been edited	property	no	Kategori er rettet
 category has been saved	property	no	Kategori er lagret
@@ -371,7 +372,7 @@ day	property	no	dag
 day of week (0-6, 0=sun)	property	no	Ukedag (0-6, 0=søndag)
 days	property	no	Dager
 deadline	property	no	Frist
-debug	property	no	kontroller
+debug	common	no	kontroller
 debug output in browser	property	no	Kontroller data før  import
 decimal	property	no	desimal
 default	property	no	Standard
@@ -729,7 +730,7 @@ file	property	no	fil
 file deleted	property	no	fil er slettet
 filename	property	no	Filnavn
 find and register all application hooks	property	no	Finn og registrer alle Hooks
-finnish date	property	no	ferdig dato
+finnish date	property	no	Ferdig dato
 finnish_date	property	no	Ferdig dato
 finnish date changed	property	no	endret ferdig-dato
 first entry is added!	property	no	fil er lagt til
@@ -836,7 +837,7 @@ is there a demand from the authorities to correct this condition?	property	no	Fi
 items	property	no	Detaljer
 janitor	property	no	Oppsynsmann
 key deliver location	property	no	Sted for å levere nøkkel
-key fetch location	property	no	sted for å hente nøkkel
+key fetch location	property	no	Sted for å hente nøkkel
 key location	property	no	Nøkkel lokalisert
 key responsible	property	no	Nøkkel ansvarlig
 kid nr	property	no	KID nr
@@ -1163,7 +1164,7 @@ project name	property	no	Prosjekt navn
 project start date	property	no	prosjekt startdato
 .project.workorder	property	no	Arbeidsordre
 propagate	property	no	Propager
-property	property	no	Eiendom
+property	common	no	Eiendom
 property has been edited	property	no	eiendom er oppdater
 property has been saved	property	no	eiendom er lagret
 property id	property	no	eiendoms ID
@@ -1511,6 +1512,7 @@ sync account-contact	common	no	Synkroniser Brukerer og Kontakter
 table could not be added	property	no	Tabell kunne ikke legges til i databasen
 table has not been saved	property	no	Tabell er ikke lagret
 table name	property	no	Tabellnavn
+take over	property	no	Ta over
 tax code	property	no	MVA kode
 template	property	no	Mal
 template %1 is added	property	no	mal %1 er lagt til
