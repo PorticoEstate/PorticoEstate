@@ -32,6 +32,21 @@
 			        <div id="organization_container"/>
 			    </div>
 			</dd>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dd>
+				<select name="activity_id" id="field_activity">
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<xsl:for-each select="activities">
+						<option>
+							<xsl:if test="../group/activity_id = id">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</dd>
 
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd class="yui-skin-sam">

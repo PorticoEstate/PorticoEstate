@@ -21,6 +21,15 @@
 					'district' 		=> array('type' => 'string'),
 					'city' 			=> array('type' => 'string'),
 					'active'			=> array('type' => 'int', 'required'=>true),
+					'activity_id'	=> array('type' => 'int', 'required' => true),
+					'activity_name'	=> array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_activity',
+							'fkey' => 'activity_id',
+							'key' => 'id',
+							'column' => 'name'
+					)),
 					'contacts'		=> array('type' => 'string',
 						'manytomany' => array(
 							'table' => 'bb_organization_contact',

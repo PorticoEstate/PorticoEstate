@@ -15,6 +15,9 @@
             </li>
         </ul>
         <dl class="proplist-col">
+            <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
+            <dd><xsl:value-of select="organization/activity_name" /></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
             <dd>
 				<a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>

@@ -16,6 +16,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bogroup');
+			$this->activity_bo = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::groups');
 
             $this->module = "booking";
@@ -225,12 +226,11 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contacts', 'active')));
+				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contacts', 'active', 'activity_id')));
 				if (!isset($group["active"]))
 				{
 					$group['active'] = '1';
 				}
-				
 				$errors = $this->bo->validate($group);
 				if(!$errors)
 				{
@@ -254,8 +254,9 @@
 			}
 
 			$this->use_yui_editor();
-
-			self::render_template('group_edit', array('group' => $group, 'module' => $this->module));
+			$activities = $this->activity_bo->fetch_activities();
+			$activities = $activities['results'];
+			self::render_template('group_edit', array('group' => $group, 'module' => $this->module, 'activities' => $activities));
 		}
 		
 		public function show()

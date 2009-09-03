@@ -29,6 +29,8 @@
 
             <dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
+            <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
+            <dd><xsl:value-of select="group/activity_name" /></dd>
 
 			<xsl:if test="count(group/contacts/*) &gt; 0">
             	<dt><xsl:value-of select="php:function('lang', 'Team leaders')" /></dt>

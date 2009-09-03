@@ -74,9 +74,11 @@
 				'district' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
-			'fk' => array(),
+			'fk' => array(
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -104,11 +106,12 @@
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
-			),
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
