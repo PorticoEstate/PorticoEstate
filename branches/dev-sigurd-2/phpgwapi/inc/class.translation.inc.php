@@ -190,8 +190,8 @@
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
 			if ( !is_array($this->lang)
-				|| !isset($this->lang[$app_name][$lookup_key])
-				|| !isset($this->lang['common'][$lookup_key]) )
+				|| (!isset($this->lang[$app_name][$lookup_key])
+				&& !isset($this->lang['common'][$lookup_key])) )
 			{
 				$applist = "'common'";
 				if ( !$only_common )
@@ -202,7 +202,7 @@
  				$sql = 'SELECT message_id, content, app_name'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
 					. " AND app_name IN({$applist})";
-					
+
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
