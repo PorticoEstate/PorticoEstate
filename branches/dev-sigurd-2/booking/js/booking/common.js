@@ -72,11 +72,17 @@ YAHOO.booking.formatGenericLink = function() {
 		data = oRecord.getData(oColumn.key);
 		
 		linksHtml = '';
-		for (var i=0; i < nOfLinks; i++) {
-			if (data[i])
-			{
-				linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+		if (nOfLinks > 0) {
+			//Use specified link names
+			for (var i=0; i < nOfLinks; i++) {
+				if (data[i])
+				{
+					linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+				}
 			}
+		} else {
+			//Get label from embedded data
+			linksHtml += '<div><a href="' + data['href'] + '">' + data['label'] + '</a></div>';
 		}
 		
 		elCell.innerHTML = linksHtml;

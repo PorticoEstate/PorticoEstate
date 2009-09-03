@@ -232,6 +232,10 @@
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
+			
+			if (isset($params['where'])) {
+				$condition = "{$condition} AND {$params['where']}";
+			}
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);

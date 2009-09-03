@@ -158,6 +158,8 @@
 			{
 				$booking = extract_values($_POST, $this->fields);
 				$booking['active'] = '1';
+				$booking['completed'] = '0';
+				$booking['cost'] = '0';
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());

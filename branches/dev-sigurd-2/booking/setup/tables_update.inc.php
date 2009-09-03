@@ -1445,3 +1445,95 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.57';
+	function booking_upgrade0_1_57()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+	
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_completed_reservation', array(
+				'fd' => array(
+					'id' 						=> array('type' => 'auto', 'nullable' => False),
+					'reservation_type' 	=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+					'reservation_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'season_id' 			=> array('type' => 'int', 'precision' => '4'),
+					'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+					'from_' => array('type' => 'timestamp', 'nullable' => false),
+					'to_' => array('type' => 'timestamp', 'nullable' => false),
+					'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
+					'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+					'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+					'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
+					'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_organization' => array('organization_id' => 'id'),
+					'bb_season' => array('season_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_completed_reservation_resource', array(
+				'fd' => array(
+					'completed_reservation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				),
+				'pk' => array('completed_reservation_id', 'resource_id'),
+				'fk' => array(
+					'bb_completed_reservation' => array('completed_reservation_id' => 'id'),
+					'bb_resource' => array('resource_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN completed integer NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN completed integer NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN completed integer NOT NULL DEFAULT 0");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN cost numeric(10,2) NOT NULL DEFAULT 0.0");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.58';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.58';
+	function booking_upgrade0_1_58()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation, bb_completed_reservation_resource");
+		//$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_resource");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN description text NOT NULL");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.59';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.59';
+	function booking_upgrade0_1_59()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation, bb_completed_reservation_resource");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN building_name text NOT NULL");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.60';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -107,6 +107,7 @@
 				array_set_default($_POST, 'resources', array());
 				$allocation = extract_values($_POST, $this->fields);
 				$allocation['active'] = '1';
+				$allocation['completed'] = '0';
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
 				{

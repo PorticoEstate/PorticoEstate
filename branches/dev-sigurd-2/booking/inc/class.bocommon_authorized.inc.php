@@ -2,18 +2,15 @@
 	phpgw::import_class('booking.bocommon');
 	phpgw::import_class('booking.sopermission');
 	phpgw::import_class('booking.unauthorized_exception');
+	phpgw::import_class('booking.account_helper');
 
 	abstract class booking_bocommon_authorized extends booking_bocommon
-	{
-		const ADMIN_GROUP = 'Admins';
-		
+	{	
 		protected 
 			$sopermission,
-			$auth_enabled = true,
 			$collection_roles,
 			$subject_roles = array(),
-			$subject_global_roles,
-			$account_is_admin = null;
+			$subject_global_roles;
 			
 		protected $defaultObjectPermissions = array(
 			booking_sopermission::ROLE_DEFAULT =>
@@ -31,9 +28,23 @@
 		
 		protected $allow_all_permissions;
 		
+		static protected $auth_enabled = true;
+		
 		function __construct() {
 			parent::__construct();
 			$this->sopermission = $this->create_permission_storage();
+		}
+		
+		static public function disable_authorization() {
+			self::$auth_enabled = false;
+		}
+		
+		static public function enable_authorization() {
+			self::$auth_enabled = true;
+		}
+		
+		static public function authorization_enabled() {
+			return self::$auth_enabled;
 		}
 		
 		protected function create_permission_storage()
@@ -59,32 +70,17 @@
 		
 		protected function current_account_id()
 		{
-			return get_account_id();
+			return booking_account_helper::current_account_id();
 		}
 		
 		protected function current_account_memberships()
 		{
-			return $GLOBALS['phpgw']->accounts->membership();
+			return booking_account_helper::current_account_memberships();
 		}
 		
 		protected function current_account_member_of_admins()
 		{
-			if (!isset($this->account_is_admin))
-			{
-				$this->account_is_admin = false;
-				
-				$memberships = $this->current_account_memberships();
-				while($memberships && list($index,$group_info) = each($memberships))
-				{
-					if ($group_info->lid == self::ADMIN_GROUP)
-					{
-						$this->account_is_admin = true;
-						break;
-					}
-				}
-			}
-			
-			return $this->account_is_admin;
+			return booking_account_helper::current_account_member_of_admins();
 		}
 		
 		/**
@@ -391,7 +387,7 @@
 		 */
 		protected function authorize($operation, $object = null)
 		{
-			if ($this->current_account_member_of_admins()) {
+			if ($this->current_account_member_of_admins() || !self::authorization_enabled()) {
 				$all_permissions = $this->allow_all_permissions();
 				
 				if (!isset($all_permissions[$operation]))
@@ -502,7 +498,6 @@
 		public function add_permission_data(array $entity)
 		{	
 			$entity['permission'] = $this->get_permissions($entity);
-			$perm = var_export($entity['permission'], true);
 			return $entity;
 		}
 		

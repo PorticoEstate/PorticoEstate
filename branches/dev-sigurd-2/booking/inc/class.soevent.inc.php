@@ -17,6 +17,7 @@
 					'contact_name' => array('type' => 'string', 'required'=> true),
 					'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone' => array('type' => 'string'),
+					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',
@@ -84,5 +85,26 @@
 					$errors['event'] = lang('Overlaps with existing event');
 				}
 			}
+		}
+		
+		public function find_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			return $this->read(array('where' => $expired_conditions));
+		}
+		
+		protected function find_expired_sql_conditions() {
+			$table_name = $this->table_name;
+			$now = date('Y-m-d');
+			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
+		}
+		
+		public function complete_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions;";
+			$db->query($sql, __LINE__, __FILE__);
 		}
 	}

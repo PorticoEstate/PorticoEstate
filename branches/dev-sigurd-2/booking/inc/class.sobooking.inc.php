@@ -15,6 +15,8 @@
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),
 					'to_'		=> array('type' => 'timestamp', 'required'=> true),
 					'season_id'		=> array('type' => 'int', 'required' => true),
+					'cost'		=> array('type' => 'decimal', 'required' => true),
+					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'activity_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -282,5 +284,25 @@
 			}
 			return $results;
 		}
-
+		
+		public function find_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			return $this->read(array('where' => $expired_conditions));
+		}
+		
+		protected function find_expired_sql_conditions() {
+			$table_name = $this->table_name;
+			$now = date('Y-m-d');
+			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
+		}
+		
+		public function complete_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions;";
+			$db->query($sql, __LINE__, __FILE__);
+		}
 	}

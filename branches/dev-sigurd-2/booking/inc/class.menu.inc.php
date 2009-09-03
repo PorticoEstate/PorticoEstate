@@ -57,6 +57,12 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uievent.index') ),
 						                    'image'	=> array('property', 'location'),
 						),
+						'completed_reservations' => array
+						(
+							'text'	=> lang('Completed'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
+						                    'image'	=> array('property', 'location'),
+						),
 					)
 				),
 				'buildings' => array
@@ -165,7 +171,12 @@
 						(
 							'text'	=> lang('Age group'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
-						)
+						),
+						'async_settings'	=> array
+						(
+							'text'	=> lang('Asynchronous Tasks'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
+						),
 					)
 				),
 			);
@@ -190,7 +201,12 @@
 				(
 					'text'	=> lang('Agegroup'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
-				)
+				),
+				'async_settings'	=> array
+				(
+					'text'	=> lang('Asynchronous Tasks'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
+				),
 			);
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 

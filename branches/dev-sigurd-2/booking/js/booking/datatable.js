@@ -68,6 +68,7 @@ YAHOO.booking.initializeDataTable = function()
     }
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
+		  YAHOO.booking.preSerializeQueryForm('queryForm');
         var qs = YAHOO.booking.serializeForm('queryForm');
         myDataSource.liveData = baseUrl + qs + '&';
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {

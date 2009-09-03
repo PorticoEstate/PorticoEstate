@@ -386,5 +386,13 @@ function array_minus($a, $b)
 			}
 			return $new_bookings;
 		}
+		
+		public function complete_expired() {
+			$this->so->complete_expired();
+		}
+		
+		public function find_expired() {
+			return $this->so->find_expired();
+		}
 
 	}

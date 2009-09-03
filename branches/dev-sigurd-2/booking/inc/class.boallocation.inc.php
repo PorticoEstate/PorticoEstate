@@ -114,4 +114,12 @@
 				$defaultPermissions
 			);
 		}
+		
+		public function complete_expired() {
+			$this->so->complete_expired();
+		}
+		
+		public function find_expired() {
+			return $this->so->find_expired();
+		}
 	}
