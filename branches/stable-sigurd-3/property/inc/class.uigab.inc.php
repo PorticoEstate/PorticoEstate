@@ -280,7 +280,7 @@
 			   										 array( // TEXT IMPUT
 			                                            'name'     => 'location_code',
 			                                            'id'     => 'txt_location_code',
-			                                            'value'    => '',//$query,
+			                                            'value'    => $location_code,
 			                                            'type' => 'text',
 			                                            'size'    => 6,
 			                                            'tab_index' => 3,

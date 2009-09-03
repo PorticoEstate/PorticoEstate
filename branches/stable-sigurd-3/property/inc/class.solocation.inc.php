@@ -108,10 +108,11 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
+				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
-					'name'		=> lang('Helpdesk') . ' [' . $this->db->f('hits') . ']',
+					'name'		=> lang('Helpdesk') . " [{$hits}]",
 					'descr'		=> lang('Helpdesk')
 				);
 			}
@@ -121,10 +122,11 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
+				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index','query'=> $location_code)),
-					'name'		=> lang('request') . ' [' . $this->db->f('hits') . ']',
+					'name'		=> lang('request') . " [{$hits}]",
 					'descr'		=> lang('request')
 				);
 			}
@@ -134,10 +136,11 @@
 			$this->db->next_record();
 			if($this->db->f('hits'))
 			{
+				$hits = $this->db->f('hits');
 				$entity['gab'][] = array
 				(
 					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uigab.index','location_code'=> $location_code)),
-					'name'		=> lang('gabnr') . ' [' . $this->db->f('hits') . ']',
+					'name'		=> lang('gabnr') . " [{$hits}]",
 					'descr'		=> lang('gab info')
 				);
 			}

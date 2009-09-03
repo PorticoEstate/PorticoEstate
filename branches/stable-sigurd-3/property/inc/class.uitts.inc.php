@@ -459,7 +459,7 @@
 									( // TEXT INPUT
 										'name'     => 'query',
 										'id'     => 'txt_query',
-										'value'    => '',//$query,
+										'value'    => $this->query,
 										'type' => 'text',
 										'onkeypress' => 'return pulsar(event)',
 										'size'    => 28,

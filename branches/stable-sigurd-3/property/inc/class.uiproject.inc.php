@@ -1186,7 +1186,7 @@
 			else
 			{
 				$function_msg = lang('Add Project');
-				$values	= $this->bo->read_single();
+				$values	= $this->bo->read_single(0, $values);
 			}
 
 			$tabs = array();
