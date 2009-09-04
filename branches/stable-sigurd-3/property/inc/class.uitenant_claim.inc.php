@@ -570,7 +570,24 @@
 
 			$project_values	= $this->boproject->read_single($values['project_id']);
 
-//_debug_array($project_values);
+			$soinvoice	= CreateObject('property.soinvoice');
+			
+			foreach ($project_values['workorder_budget'] as &$workorder)
+			{
+				$vouchers = $soinvoice->read_invoice(array('paid'=>'1','workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+				if(isset($vouchers[0]['voucher_id']))
+				{
+					$workorder['voucher_id'] = $vouchers[0]['voucher_id'];
+				}
+				else
+				{
+					$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+					$workorder['voucher_id'] = isset($vouchers[0]['voucher_id']) ? $vouchers[0]['voucher_id'] : '';
+				}
+			}
+
+
+//_debug_array($project_values);die();
 
 			$table_header_workorder[] = array
 			(
@@ -694,7 +711,7 @@
 				'name'			=> "0",
 				'values' 		=> json_encode($project_values['workorder_budget']),
 				'total_records'	=> count($project_values['workorder_budget']),
-				'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view'))),
+				'edit_action'	=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 				'is_paginator'	=> 1,
 				'footer'		=> 0
 			);
@@ -704,14 +721,15 @@
 			$myColumnDefs[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(key => workorder_id,	label=>'Workorder',	sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
-									       				array(key => budget,	label=>'Budget',	sortable=>true,resizeable=>true),
-									       				array(key => calculation,	label=>'Calculation',	sortable=>true,resizeable=>true),
-		       				       						array(key => vendor_name,label=>'Vendor',sortable=>true,resizeable=>true),
-		       				       						array(key => charge_tenant,label=>'Charge tenant',sortable=>true,resizeable=>true),
-		       				       						array(key => status,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-		       				       						array(key => actual_cost,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-		       				       						array(key => selected,label=>'select',	sortable=>false,resizeable=>false)))
+       			'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+									       				array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
+									       				array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+		       				       						array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
 			);
 
 			$data = array

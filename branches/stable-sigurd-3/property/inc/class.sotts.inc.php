@@ -514,12 +514,16 @@
 
 			if ($old_status != $ticket['status'])
 			{
+				$check_old_custom = (int) trim($old_status,'C');
+				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
+				$this->db->next_record();
 				$this->fields_updated = true;
-				if($old_status=='X')
+				if($old_status=='X' || $this->db->f('closed'))
 				{
+					$new_status = $ticket['status'];
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
 
-					$this->db->query("UPDATE fm_tts_tickets SET status='O' WHERE id= {$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}",__LINE__,__FILE__);
 				}
 				else
 				{
@@ -624,20 +628,21 @@
 
 			if ($old_status != $ticket['status'])
 			{
+				$check_old_custom = (int) trim($old_status,'C');
+				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
+				$this->db->next_record();
 				$this->fields_updated = true;
-				if($old_status=='X')
+				if($old_status=='X' || $this->db->f('closed'))
 				{
-					$this->historylog->add('R', $id, $ticket['status'], $old_status);
+					$new_status = $ticket['status'];
+					$this->historylog->add('R',$id,$ticket['status'],$old_status);
 
-					$this->db->query("update fm_tts_tickets set status='"
-					. $ticket['status'] . "' where id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}",__LINE__,__FILE__);
 				}
 				else
 				{
 					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
-
-					$this->db->query("update fm_tts_tickets set status='"
-					. $ticket['status'] . "' where id='$id'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
 			}
 

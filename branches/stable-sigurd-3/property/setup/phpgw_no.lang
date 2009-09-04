@@ -1172,6 +1172,7 @@ property name	property	no	Eiendoms Navn
 purchase cost	property	no	anskaffelses kostnad
 quantity	property	no	Mengde
 read	property	no	Les
+ready for processing claim	property	no	Til fakturering
 re-assigned	property	no	Videresendt
 re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering

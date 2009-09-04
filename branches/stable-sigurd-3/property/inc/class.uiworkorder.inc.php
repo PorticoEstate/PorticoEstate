@@ -1300,7 +1300,8 @@
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$data = array
 			(
-				'suppressmeter'					=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppressmeter'							=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppresscoordination'					=> $suppresscoordination,
 				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'								=> $datavalues,
 				'myColumnDefs'							=> $myColumnDefs,		
@@ -1683,6 +1684,7 @@
 			$data = array
 			(
 				'suppressmeter'					=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppresscoordination'			=> $suppresscoordination,
 				'tabs'							=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
 				'project_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view')),
 				'table_header_workorder_budget'		=> $table_header_workorder_budget,
