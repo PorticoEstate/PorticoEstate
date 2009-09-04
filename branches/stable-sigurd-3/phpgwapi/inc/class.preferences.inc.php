@@ -334,7 +334,8 @@
 			{
 				reset($this->data);
 			}
-			if ($this->debug && substr($GLOBALS['phpgw_info']['flags']['currentapp'],0,3) != 'log') {
+			if ($this->debug && substr($GLOBALS['phpgw_info']['flags']['currentapp'],0,3) != 'log') 
+			{
 				echo "user<pre>";    print_r($this->user); echo "</pre>\n";
 				echo "forced<pre>";  print_r($this->forced); echo "</pre>\n";
 				echo "default<pre>"; print_r($this->default); echo "</pre>\n";
