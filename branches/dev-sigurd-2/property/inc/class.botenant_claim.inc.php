@@ -147,17 +147,19 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('status_' . $format));
 
-			$status[0][id]='closed';
-			$status[0][name]=lang('Closed');
+			$status[0][id]='ready';
+			$status[0][name]=lang('ready for processing claim');
+			$status[1][id]='closed';
+			$status[1][name]=lang('Closed');
 			if($format == "filter")
 			{
-				$status[1][id]='all';
-				$status[1][name]=lang('All');
+				$status[2][id]='all';
+				$status[2][name]=lang('All');
 			}
 			else
 			{
-				$status[1][id]='open';
-				$status[1][name]=lang('Open');
+				$status[2][id]='open';
+				$status[2][name]=lang('Open');
 			}
 
 			return $this->bocommon->select_list($selected,$status);
@@ -175,9 +177,10 @@
 											'allrows'=>$this->allrows,'project_id' => $data['project_id']));
 			$this->total_records = $this->so->total_records;
 
-			for ($i=0; $i<count($claim); $i++)
+			foreach ($claim as &$entry)
 			{
-				$claim[$i]['entry_date']  = $GLOBALS['phpgw']->common->show_date($claim[$i]['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$entry['entry_date']  = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$entry['status'] = lang($entry['status']);
 			}
 			return $claim;
 		}

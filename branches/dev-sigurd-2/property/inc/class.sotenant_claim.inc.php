@@ -47,15 +47,15 @@
 		{
 			if(is_array($data))
 			{
-				$start	= (isset($data['start'])?$data['start']:0);
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$status	= (isset($data['status'])?$data['status']:'open');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$allrows 	= (isset($data['allrows'])?$data['allrows']:'');
-				$project_id 	= (isset($data['project_id'])?$data['project_id']:'');
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+				$status		= isset($data['status']) && $data['status'] ? $data['status'] : 'open';
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
+				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+				$project_id	= isset($data['project_id']) ? $data['project_id'] : '';
 
 			}
 
@@ -91,17 +91,11 @@
 				$where = 'AND';
 			}
 
-			if ($status == 'closed'):
+			if ($status && $status != 'all')
 			{
-				$filtermethod .= " $where fm_tenant_claim.status='closed'";
+				$filtermethod .= " $where fm_tenant_claim.status='{$status}'";
 				$where = 'AND';
 			}
-			elseif($status == ''):
-			{
-				$filtermethod .= " $where fm_tenant_claim.status='open'";
-				$where = 'AND';
-			}
-			endif;
 
 			if($query)
 			{

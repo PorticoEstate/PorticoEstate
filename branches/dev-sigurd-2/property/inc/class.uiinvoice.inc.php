@@ -2916,14 +2916,14 @@
 
 		function view_order()
 		{
-			$order_id	= phpgw::get_var('order_id', 'int');
+			$order_id	= phpgw::get_var('order_id'); // could be bigint
 			$soXport    = CreateObject('property.soXport');
 
-			$order_type = $soXport->check_order(intval($order_id));
+			$order_type = $soXport->check_order($order_id);
 			switch($order_type)
 			{
 				case 'workorder':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'no_email'=> true, 'show_cost'=> true, 'workorder_id'=> $order_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id));
 					break;
 				case 's_agreement':
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));

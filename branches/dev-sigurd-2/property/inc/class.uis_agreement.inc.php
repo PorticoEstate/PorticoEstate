@@ -693,6 +693,12 @@
 		function edit()
 		{
 			$id				= phpgw::get_var('id'); // in case of bigint
+
+			if(!$this->acl_add && !$this->acl_edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $id));
+			}
+
 			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item');
 			$item_id		= phpgw::get_var('item_id');
@@ -1235,32 +1241,32 @@
          $myColumnDefs[0] = array
          (
           'name'   => "0",
-          'values'  => json_encode(array( array(key => time, label=>$alarm_data['header'][0]['lang_time'], sortable=>true,resizeable=>true,width=>140),
-                    array(key => text, label=>$alarm_data['header'][0]['lang_text'], sortable=>true,resizeable=>true,width=>340),
-                    array(key => user, label=>$alarm_data['header'][0]['lang_user'], sortable=>true,resizeable=>true,width=>200),
-                          array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
-                          array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true),
-                          array(key => select,label=>$alarm_data['header'][0]['lang_select'], sortable=>false,resizeable=>false,formatter=>myFormatterCheck,width=>60)))
+          'values'  => json_encode(array( array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+                    array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+                    array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+                          array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+                          array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
+                          array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)))
    );
 
          $myButtons[0] = array
          (
           'name'   => "0",
-          'values'  => json_encode(array( array(id =>'values[enable_alarm]',type=>buttons, value=>Enable, label=>$alarm_data[alter_alarm][0][lang_enable], funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
-                    array(id =>'values[disable_alarm]',type=>buttons, value=>Disable, label=>$alarm_data[alter_alarm][0][lang_disable], funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
-                    array(id =>'values[delete_alarm]',type=>buttons, value=>Delete, label=>$alarm_data[alter_alarm][0][lang_delete], funct=> onActionsClick , classname=> actionButton, value_hidden=>""),
+          'values'  => json_encode(array( array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=>$alarm_data[alter_alarm][0][lang_enable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+                    array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>$alarm_data[alter_alarm][0][lang_disable], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+                    array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=>$alarm_data[alter_alarm][0][lang_delete], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
                     ))
    );
 
          $myButtons[1] = array
          (
           'name'   => "1",
-          'values'  => json_encode(array( array(id =>'values[time][days]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-                    array(id =>'values[time][hours]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-                    array(id =>'values[time][mins]', type=>menu,  value=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), label=>"0", classname=> actionsFilter, value_hidden=>"0"),
-                    array(id =>'values[user_id]',  type=>menu,  value=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), label=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),classname=> actionsFilter, value_hidden=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
+          'values'  => json_encode(array( array(id =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+                    array('id' =>'values[time][hours]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+                    array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+                    array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
 
-                    array(id =>'values[add_alarm]',  type=>buttons, value=>Add,  label=>$alarm_data[add_alarm][lang_add],   funct=> onAddClick , classname=> actionButton, value_hidden=>""),
+                    array('id' =>'values[add_alarm]',  'type'=>'buttons', 'value'=>'Add',  'label'=>$alarm_data['add_alarm']['lang_add'],   'funct'=> 'onAddClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
                     ))
    );
 
@@ -1315,9 +1321,9 @@
 			$myButtons[2] = array
        		(
        			'name'			=> "2",
-       			'values'		=>	json_encode(array(	array(type=>text, label=>' New index:', classname=> 'index-opt'),
-       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'index-opt'),
-       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onUpdateClick , classname=> '')
+       			'values'		=>	json_encode(array(	array('type'=>'text', 'label'=>' New index:', 'classname'=> 'index-opt'),
+       													array('id' =>'values[new_index]', 'type'=>'inputText', size=>12, 'classname'=> 'index-opt'),
+       													array('id' =>'values[update]','type'=>'buttons',	'value'=>'Update',	'label'=>'Update',	funct=> onUpdateClick , 'classname'=> '')
        													))
 			);
 
@@ -1347,8 +1353,8 @@
 			$myColumnDefs[2] = array
        		(
        			'name'		=> "2",
-       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 
 			if($id)
@@ -1374,13 +1380,13 @@
 			$myColumnDefs[3] = array
        		(
        			'name'		=> "3",
-       			'values'	=>	json_encode(array(	array(key => 'year',label=>lang('year'),sortable=>false,resizeable=>true),
-       												array(key => 'category',label=>lang('category'),sortable=>false,resizeable=>true),
-       												array(key => 'ecodimb',label=>lang('dimb'),sortable=>false,resizeable=>true),
-       												array(key => 'budget_account',label=>lang('budget account'),sortable=>false,resizeable=>true),
-       												array(key => 'budget',label=>lang('budget'),sortable=>false,resizeable=>true),
-       												array(key => 'actual_cost',label=>lang('actual cost'),sortable=>false,resizeable=>true),
-									       			array(key => delete_year,label=>lang('Delete budget'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_year','label'=>lang('Delete budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 
 //--------------------------------------------JSON CODE------------
@@ -1391,7 +1397,7 @@
 			(
 				'td_count'					=> $td_count,
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'						=> json_encode(array(menuaction => "property.uis_agreement.edit",id=>$id)),
+				'base_java_url'						=> json_encode(array('menuaction' => "property.uis_agreement.edit",'id'=>$id)),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
 				'myButtons'							=> $myButtons,
@@ -1519,6 +1525,10 @@
 
 		function download()
 		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
 			$id	= phpgw::get_var('id', 'int');
 			$list = $this->bo->read_details($id);
 			$uicols		= $this->bo->uicols;
@@ -1527,6 +1537,11 @@
 
 		function edit_item()
 		{
+			if(!$this->acl_add && !$this->acl_edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
 			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$id	= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
@@ -1848,20 +1863,20 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => item_id,label=>lang('ID'),sortable=>true,resizeable=>true),
-									       			array(key => cost,label=>lang('Cost'),sortable=>true,resizeable=>true),
-									       			array(key => this_index,label=>lang('index'),sortable=>true,resizeable=>true),
-									       			array(key => index_count,label=>lang('index_count'),sortable=>true,resizeable=>true),
-									       			array(key => index_date,label=>lang('Date'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'item_id','label'=>lang('ID'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'cost','label'=>lang('Cost'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'this_index','label'=>lang('index'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'index_count','label'=>lang('index_count'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'index_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			$myButtons[0] = array
        		(
        			'name'			=> "0",
-       			'values'		=>	json_encode(array(	array(type=>text, label=>'New index', classname=> 'index-opt'),
-       													array(id =>'values[new_index]', type=>inputText, size=>12, classname=> 'index-opt'),
-       													array(id =>'values[update]',type=>buttons,	value=>Update,	label=>'Update',	funct=> onAddClick , classname=> ''),
-       													array(id =>'delete',type=>buttons,	value=>Delete,	label=>lang('delete last index'),	funct=> onDeleteClick , classname=> '')
+       			'values'		=>	json_encode(array(	array('type'=>'text', 'label'=>'New index', 'classname'=> 'index-opt'),
+       													array('id' =>'values[new_index]', 'type'=>'inputText', size=>12, 'classname'=> 'index-opt'),
+       													array('id' =>'values[update]','type'=>'buttons',	'value'=>'Update',	'label'=>'Update',	'funct'=> 'onAddClick' , 'classname'=> ''),
+       													array('id' =>'delete','type'=>'buttons',	'value'=>'Delete',	'label'=>lang('delete last index'),	'funct'=> 'onDeleteClick' , 'classname'=> '')
        													))
 			);
 
@@ -1871,7 +1886,7 @@
 			$data = array
 			(
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'						=> json_encode(array(menuaction => "property.uis_agreement.edit_item",id=>$id,s_agreement_id=>$s_agreement_id)),
+				'base_java_url'						=> json_encode(array('menuaction' => "property.uis_agreement.edit_item",'id'=>$id,'s_agreement_id'=>$s_agreement_id)),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
 				'myButtons'							=> $myButtons,
@@ -1949,6 +1964,11 @@
 
 		function view_item()
 		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
 			$from = phpgw::get_var('from');
 			$from = $from == 'edit'?'edit':'view';
 			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
@@ -2081,18 +2101,18 @@
 	         $myColumnDefs[0] = array
 	         (
 	          	'name'   => "0",
-	          	'values'  => json_encode(array( array(key => item_id, label=>$table_header[0]['header'], sortable=>true,resizeable=>true,width=>140),
-	                    	  array(key => cost, label=>$table_header[2]['header'], sortable=>true,resizeable=>true,width=>340),
-	                    	  array(key => this_index, label=>$table_header[3]['header'], sortable=>true,resizeable=>true,width=>200),
-	                          array(key => index_count, label=>$table_header[4]['header'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
-	                          array(key => index_date, label=>$table_header[5]['header'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60)))
+	          	'values'  => json_encode(array( array('key' => 'item_id', 'label'=>$table_header[0]['header'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+	                    	  array('key' => 'cost', 'label'=>$table_header[2]['header'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+	                    	  array('key' => 'this_index', 'label'=>$table_header[3]['header'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+	                          array('key' => 'index_count', 'label'=>$table_header[4]['header'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+	                          array('key' => 'index_date', 'label'=>$table_header[5]['header'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60)))
 	   		  );
 
 
 			$data = array
 			(
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view_item")),
+				'base_java_url'					=> json_encode(array('menuaction' => "property.uis_agreement.view_item")),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
 
@@ -2149,6 +2169,11 @@
 
 		function delete()
 		{
+			if(!$this->acl_delete)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
+			}
+
 			$s_agreement_id	= phpgw::get_var('s_agreement_id'); // in case of bigint
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
@@ -2190,6 +2215,11 @@
 
 		function view()
 		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
 			$s_agreement_id	= phpgw::get_var('id'); // in case of bigint
 			$config		= CreateObject('phpgwapi.config','property');
 
@@ -2318,11 +2348,11 @@
          $myColumnDefs[0] = array
          (
           	'name'   => "0",
-          	'values'  => json_encode(array( array(key => time, label=>$alarm_data['header'][0]['lang_time'], sortable=>true,resizeable=>true,width=>140),
-                    	  array(key => text, label=>$alarm_data['header'][0]['lang_text'], sortable=>true,resizeable=>true,width=>340),
-                    	  array(key => user, label=>$alarm_data['header'][0]['lang_user'], sortable=>true,resizeable=>true,width=>200),
-                          array(key => enabled,label=>$alarm_data['header'][0]['lang_enabled'],sortable=>true,resizeable=>true,formatter=>FormatterCenter,width=>60),
-                          array(key => alarm_id,label=>"dummy",sortable=>true,resizeable=>true,hidden=>true)))
+          	'values'  => json_encode(array( array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
+                    	  array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
+                    	  array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
+                          array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
+                          array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true)))
    		  );
 
 
@@ -2353,18 +2383,18 @@
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => item_id,label=>lang('ID'),sortable=>true,resizeable=>true),
-									       			array(key => location_code,label=>lang('Location'),sortable=>true,resizeable=>true),
-									       			array(key => address,label=>lang('Address'),sortable=>true,resizeable=>true),
-									       			array(key => p_entity_id,label=>lang('entity_id'),sortable=>true,resizeable=>true),
-									       			array(key => p_cat_id,label=>lang('cat_id'),sortable=>true,resizeable=>true),
-									       			array(key => p_num,label=>lang('entity_num'),sortable=>true,resizeable=>true),
-									       			array(key => cost,label=>lang('Cost'),sortable=>true,resizeable=>true),
-									       			array(key => this_index,label=>lang('index'),sortable=>true,resizeable=>true),
-									       			array(key => index_count,label=>lang('index_count'),sortable=>true,resizeable=>true),
-									       			array(key => index_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => enhet,label=>lang('Enhet'),sortable=>true,resizeable=>true),
-									       			array(key => quantity,label=>lang('mengde'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'item_id','label'=>lang('ID'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'location_code','label'=>lang('Location'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'address','label'=>lang('Address'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'p_entity_id','label'=>lang('entity_id'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'p_cat_id','label'=>lang('cat_id'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'p_num','label'=>lang('entity_num'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'cost','label'=>lang('Cost'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'this_index','label'=>lang('index'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'index_count','label'=>lang('index_count'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'index_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'enhet','label'=>lang('Enhet'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'quantity','label'=>lang('mengde'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 //---datatable2 settings---------------------------------------------------
@@ -2396,7 +2426,7 @@
 			$myColumnDefs[2] = array
        		(
        			'name'		=> "2",
-       			'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
+       			'values'	=>	json_encode(array(array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true)))
 			);
 
 
@@ -2415,19 +2445,19 @@
 			$myColumnDefs[3] = array
        		(
        			'name'		=> "3",
-       			'values'	=>	json_encode(array(	array(key => 'year',label=>lang('year'),sortable=>false,resizeable=>true),
-       												array(key => 'category',label=>lang('category'),sortable=>false,resizeable=>true),
-       												array(key => 'ecodimb',label=>lang('dimb'),sortable=>false,resizeable=>true),
-       												array(key => 'budget_account',label=>lang('budget account'),sortable=>false,resizeable=>true),
-       												array(key => 'budget',label=>lang('budget'),sortable=>false,resizeable=>true),
-       												array(key => 'actual_cost',label=>lang('actual cost'),sortable=>false,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+       												array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true)))
 			);
 
 			$data = array
 			(
 				'lang_budget'					=> lang('budget'),
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'					=> json_encode(array(menuaction => "property.uis_agreement.view")),
+				'base_java_url'					=> json_encode(array('menuaction' => "property.uis_agreement.view")),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
 

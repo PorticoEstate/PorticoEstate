@@ -1840,7 +1840,7 @@
 						$bofiles->vfs->override_acl = 0;
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
+	//			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 			}
 //---------end files
 			$ticket = $this->bo->read_single($id);

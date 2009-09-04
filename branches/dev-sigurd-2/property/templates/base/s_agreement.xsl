@@ -746,10 +746,13 @@
 					</input>
 				</td>
 			</tr>
-
 			<xsl:choose>
 				<xsl:when test="attributes_group != ''">
-					<xsl:call-template name="attributes_values"/>
+					<tr>
+						<td colspan = '2'>
+						<xsl:call-template name="attributes_values"/>
+						</td>
+					</tr>
 				</xsl:when>
 			</xsl:choose>
 			<tr height="50">

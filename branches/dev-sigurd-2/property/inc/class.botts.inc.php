@@ -212,18 +212,18 @@
 		function get_status_text()
 		{
 			$status_text = array(
-				'R' => 'Re-opened',
-				'X' => 'Closed',
-				'O' => 'Opened',
-				'A' => 'Re-assigned',
-				'G' => 'Re-assigned group',
-				'P' => 'Priority changed',
-				'T' => 'Category changed',
-				'S' => 'Subject changed',
-				'B' => 'Billing rate',
-				'H' => 'Billing hours',
-				'F' => 'finnish date',
-				'SC' => 'Status changed'
+				'R' => lang('Re-opened'),
+				'X' => lang('Closed'),
+				'O' => lang('Opened'),
+				'A' => lang('Re-assigned'),
+				'G' => lang('Re-assigned group'),
+				'P' => lang('Priority changed'),
+				'T' => lang('Category changed'),
+				'S' => lang('Subject changed'),
+				'B' => lang('Billing rate'),
+				'H' => lang('Billing hours'),
+				'F' => lang('finnish date'),
+				'SC' => lang('Status changed')
 			);
 
 			$custom_status	= $this->so->get_custom_status();
@@ -514,6 +514,7 @@
 			$status_text = $this->get_status_text();
 			$record_history = array();
 			$i=0;
+
 			if (is_array($history_array))
 			{
 				foreach ($history_array as $value)
@@ -539,19 +540,23 @@
 						default: break;
 					}
 
-					switch ($value['new_value'])
+					if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
 					{
-						case 'O': $value['new_value']=lang('Opened'); break;
-						case 'X': $value['new_value']=lang('Closed'); break;
-						case 'I': $value['new_value']=lang('In Progress'); break; //initiated
-						case 'C': $value['new_value']=lang('custom'); break; // FIXME: make configurable
-						default: break;
-					}
-
-					if(strlen($value['new_value']) == 2 && substr($value['new_value'], 0, 1) == 'C') // if custom status
-					{
-						$type = lang('Status changed');
+						switch ($value['status'])
+						{
+							case 'R': 
+								$type = lang('Re-opened');
+								break;
+							case 'X':
+								$type = lang('Closed');
+								break;
+							default:
+								$type = lang('Status changed')
+								;break;
+						}
+						
 						$value['new_value'] = $status_text[$value['new_value']];
+						$value['old_value'] = $status_text[$value['old_value']];
 					}
 
 					$record_history[$i]['value_action']	= $type?$type:'';
@@ -586,6 +591,7 @@
 					else
 					{
 						$record_history[$i]['value_new_value']	= '';
+
 					}
 
 					$i++;
