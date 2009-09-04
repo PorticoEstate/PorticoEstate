@@ -45,7 +45,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
             <dd><xsl:value-of select="building/zip_code"/></dd>
 
-			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+			<dt><xsl:value-of select="php:function('lang', 'Postal City')" /></dt>
             <dd><xsl:value-of select="building/city"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
@@ -83,19 +83,20 @@
 
 <script type="text/javascript">
 var building_id = <xsl:value-of select="building/id"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-    var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
+    var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 
 	var url = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}, {key: 'category', label: 'Category'}, {key: 'actions', label: 'Actions', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
 ]]>
-	var colDefs = [{key: 'subject_name', label: '<xsl:value-of select="php:function('lang', 'Account')" />'}, {key: 'role', label: '<xsl:value-of select="php:function('lang', 'Role')" />'}, {key: 'actions', label: '<xsl:value-of select="php:function('lang', 'Actions')" />', formatter: YAHOO.booking.formatGenericLink('Edit', 'Delete')}];
+	var colDefs = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: YAHOO.booking.formatGenericLink(lang['Edit'], lang['Delete'])}];
     <![CDATA[
 	YAHOO.booking.inlineTableHelper('permissions_container', url, colDefs);
 });

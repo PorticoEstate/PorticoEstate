@@ -7,6 +7,7 @@
 		const CATEGORY_PRICE_LIST = 'price_list';
 		const CATEGORY_PICTURE = 'picture';
 		const CATEGORY_DRAWING = 'drawing';
+		const CATEGORY_REGULATION = 'regulation';
 		const CATEGORY_OTHER = 'other';
 		
 		protected 
@@ -15,6 +16,7 @@
 			   self::CATEGORY_PRICE_LIST,
 			   self::CATEGORY_PICTURE,
 			   self::CATEGORY_DRAWING,
+				self::CATEGORY_REGULATION,
 			   self::CATEGORY_OTHER,
 			),
 			$uploadRootDir;
@@ -45,7 +47,18 @@
 				)
 			);
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->uploadRootDir = $GLOBALS['phpgw_info']['server']['files_dir'].DIRECTORY_SEPARATOR.'booking';
+			
+			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
+			
+			if (!file_exists($server_files_dir) || !is_dir($server_files_dir)) {
+				throw new LogicException('The upload directory is not properly configured: '.$server_files_dir);
+			}
+			
+			if (!is_writable($server_files_dir)) {
+				throw new LogicException('The upload directory is not writable');
+			}
+			
+			$this->uploadRootDir = $server_files_dir.DIRECTORY_SEPARATOR.'booking';
 		}
 		
 		public function get_categories()
@@ -59,7 +72,7 @@
 		}
 		
 		public function get_files_root()
-		{
+		{	
 			return $this->uploadRootDir;
 		}
 		
@@ -68,9 +81,15 @@
 			return self::get_files_root().DIRECTORY_SEPARATOR.$this->get_owner_type();
 		}
 		
+		private function _chomp_dir_sep($string)
+		{
+			$sep = DIRECTORY_SEPARATOR == '/' ? '\\/' : preg_quote(DIRECTORY_SEPARATOR);
+			return preg_replace('/('.$sep.')+$/', '', trim($string));
+		}
+
 		public function generate_filename($document_id, $document_name)
 		{
-			return $this->get_files_path().DIRECTORY_SEPARATOR.'/'.$document_id.'_'.$document_name;
+			return $this->get_files_path().DIRECTORY_SEPARATOR.$document_id.'_'.$document_name;
 		}
 		
 		function read_single($id)
@@ -110,8 +129,7 @@
 				}
 			}
 			
-			if (!in_array($document['category'], $this->defaultCategories))
-			{
+			if (!in_array($document['category'], $this->defaultCategories)) {
 				$errors['category'] = 'Invalid category';
 			}
 		}
@@ -125,9 +143,10 @@
 			$document['name'] = $this->newFile->getOriginalName();
 			$receipt = parent::add($document);
 			
+			$filePath = $this->generate_filename($receipt['id'], $document['name']);
+			$this->newFile->save($filePath);
+			
 			if ($this->db->transaction_commit()) { 
-				$filePath = $this->generate_filename($receipt['id'], $document['name']);
-				$this->newFile->save($filePath);
 				return $receipt;
 			}
 			
@@ -145,7 +164,9 @@
 			parent::delete($id);
 			
 			if ($this->db->transaction_commit()) { 
-				unlink($document['filename']);
+				if (file_exists($document['filename'])) {
+					unlink($document['filename']);
+				}
 				return true;
 			}
 			
@@ -174,7 +195,7 @@
 		{
 			if ($entity['category'] != self::CATEGORY_PICTURE) { return false; }
 			
-			switch ($this->get_file_extension($entity)) {
+			switch (strtolower($this->get_file_extension($entity))) {
 				case 'png':
 				case 'gif':
 				case 'jpg':

@@ -72,21 +72,21 @@
 			<div id="dates-container">
 				<xsl:for-each select="application/dates"><div class="date-container">
 					<a href="#" class="close-btn">-</a>
-					<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+					<dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
 					<dd class="datetime-picker">
-						<input id="field_from" name="from_[]" type="text">
+						<input id="field_{position()}_from" name="from_[]" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
 						</input>
 					</dd>
-					<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+					<dt><label for="field_{position()}_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
 					<dd class="datetime-picker">
-						<input id="field_to" name="to_[]" type="text">
+						<input id="field_{position()}_to" name="to_[]" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
 						</input>
 					</dd>
 				</div></xsl:for-each>
 			</div>
-			<dt><a href="#" id="add-date-link">Add another date</a></dt>
+			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></dt>
@@ -173,5 +173,6 @@
 	</div>
 	<script type="text/javascript">
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type')"/>;
 	</script>
 </xsl:template>

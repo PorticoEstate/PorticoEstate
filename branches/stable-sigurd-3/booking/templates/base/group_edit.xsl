@@ -32,6 +32,21 @@
 			        <div id="organization_container"/>
 			    </div>
 			</dd>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dd>
+				<select name="activity_id" id="field_activity">
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<xsl:for-each select="activities">
+						<option>
+							<xsl:if test="../group/activity_id = id">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</dd>
 
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd class="yui-skin-sam">
@@ -64,7 +79,7 @@
 		<div style='clear:left; padding:0; margin:0'/>
 
 		<dl class="form-col" style='margin-top:0'>
-			<dt class='heading'><xsl:value-of select="php:function('lang', 'Contact 1')" /></dt>
+			<dt class='heading'><xsl:value-of select="php:function('lang', 'Team leader 1')" /></dt>
 
 			<dt><label for="field_admin_name_1"><xsl:value-of select="php:function('lang', 'Name')" /></label><br /></dt>
 			<dd><input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{group/contacts[1]/name}'/></dd>
@@ -77,7 +92,7 @@
 		</dl>
 
 		<dl class="form-col" style='margin-top:0'>
-			<dt class='heading'><xsl:value-of select="php:function('lang', 'Contact 2')" /></dt>
+			<dt class='heading'><xsl:value-of select="php:function('lang', 'Team leader 2')" /></dt>
 
 			<dt><label for="field_admin_name_2"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd><input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{group/contacts[2]/name}'/></dd>

@@ -1,15 +1,29 @@
 YAHOO.namespace('booking');
 
-YAHOO.widget.Calendar.prototype.init_without_i18n = YAHOO.widget.Calendar.prototype.init;
-
-YAHOO.widget.Calendar.prototype.init_with_i18n = function(id, container, config) {
-	if (YAHOO && YAHOO.booking && YAHOO.booking.i18n && YAHOO.booking.i18n.Calendar) {
-		YAHOO.booking.i18n.Calendar(config);
-	}
-	return this.init_without_i18n(id, container, config);
+YAHOO.booking.js_alias_method_chain = function(constructor_func, func_name, new_feature_name, feature_impl_func) {
+	constructor_func.prototype[func_name+'_without_'+new_feature_name] = constructor_func.prototype[func_name];
+	constructor_func.prototype[func_name+'_with_'+new_feature_name] = feature_impl_func;
+	constructor_func.prototype[func_name] = constructor_func.prototype[func_name+'_with_'+new_feature_name];
 };
 
-YAHOO.widget.Calendar.prototype.init = YAHOO.widget.Calendar.prototype.init_with_i18n;
+YAHOO.booking.lang = function(section, config) {
+	config = config || {};
+	if (YAHOO && YAHOO.booking && YAHOO.booking.i18n && YAHOO.booking.i18n[section]) {
+		YAHOO.booking.i18n[section](config);
+	}
+	return config;
+};
+
+/** Hook widgets to translations **/
+YAHOO.booking.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
+	YAHOO.booking.lang('Calendar', config);
+	return this.init_without_i18n(id, container, config);
+});
+
+YAHOO.booking.js_alias_method_chain(YAHOO.widget.DataTable, '_initConfigs', 'i18n', function(config) {
+	YAHOO.booking.lang('DataTable', config);
+	return this._initConfigs_without_i18n(config);
+});
 
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
@@ -22,7 +36,6 @@ parseISO8601 = function (string) {
 		date.setMinutes(d[10]);
 	return date;
 };
-
 
 YAHOO.booking.serializeForm = function(formID) {
 	var form = YAHOO.util.Dom.get(formID);
@@ -59,11 +72,17 @@ YAHOO.booking.formatGenericLink = function() {
 		data = oRecord.getData(oColumn.key);
 		
 		linksHtml = '';
-		for (var i=0; i < nOfLinks; i++) {
-			if (data[i])
-			{
-				linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+		if (nOfLinks > 0) {
+			//Use specified link names
+			for (var i=0; i < nOfLinks; i++) {
+				if (data[i])
+				{
+					linksHtml += '<div><a href="' + data[i] + '">' + links[i] + '</a></div>';
+				}
 			}
+		} else {
+			//Get label from embedded data
+			linksHtml += '<div><a href="' + data['href'] + '">' + data['label'] + '</a></div>';
 		}
 		
 		elCell.innerHTML = linksHtml;
@@ -152,11 +171,14 @@ YAHOO.booking.inlineImages = function(container, url, options)
 
 
 YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
-	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, 'radio');
+	return YAHOO.booking.checkboxTableHelper(container, url, name, selection, {type: 'radio'});
 };
 
-YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, type) {
-	type = type || 'checkbox';
+YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, options) {
+	//debugger;
+	options = YAHOO.lang.isObject(options) ? options : {};
+	options = YAHOO.lang.merge({type: 'checkbox'}, options);
+	var type = options['type'] || 'checkbox';
 	selection = selection || [];
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -165,6 +187,10 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 		resultsList: "ResultSet.Result",
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable" }
 	};
+	
+	var lang = {LBL_NAME: 'Name'};
+	YAHOO.booking.lang('common', lang);
+	
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
 		var checked = '';
 		for(var i =0; i< selection.length; i++) {
@@ -178,8 +204,15 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, ty
 	};
 	var colDefs = [
 		{key: "id", label: "", formatter: checkboxFormatter},
-		{key: "name", label: "Name", sortable: true}
+		{key: "name", label: lang['LBL_NAME'], sortable: true}
 	];
+	
+	if (options['additional_fields'] && YAHOO.lang.isArray(options['additional_fields'])) {
+		for (var i=0; i < options['additional_fields'].length; i++) {
+			colDefs.push(options['additional_fields'][i]);
+		}
+	}
+	
 	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, {
 	   sortedBy: {key: 'name', dir: YAHOO.widget.DataTable.CLASS_ASC}
 	});
@@ -192,6 +225,13 @@ YAHOO.booking.setupDatePickers = function() {
 };
 
 YAHOO.booking.setupDatePickerHelper = function(field, args) {
+	if (!YAHOO.booking.setupDatePickerHelper.groups) {
+		YAHOO.booking.setupDatePickerHelper.groups = {};
+	}
+	
+	var groups = YAHOO.booking.setupDatePickerHelper.groups;
+	var Dom = YAHOO.util.Dom;
+	
 	if(field._converted)
 		return;
 	field._converted = true;
@@ -201,8 +241,25 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	var Event = YAHOO.util.Event;
 	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
 	var oButton = new YAHOO.widget.Button({type: "menu", id: Dom.generateId(), menu: oCalendarMenu, container: field});
+	
+	oButton.with_time = time;
+	oButton.with_date = date;
+	
+	var lang = {LBL_CHOOSE_DATE: 'Choose a date'};
+	YAHOO.booking.lang('setupDatePickerHelper', lang);
+	
 	oButton._calendarMenu = oCalendarMenu;
 	oButton._input = field._input = Dom.getElementsBy(function(){return true;}, 'input', field)[0];
+	
+	oButton.hasDateSection = function() { return this.with_date; };
+	oButton.hasTimeSection = function() { return this.with_time; };
+	
+	oButton.fireUpdateEvent = function() {
+		if (oButton.on_update) {
+			oButton.on_update.func.call(oButton.on_update.context, oButton);
+		}
+	};
+	
 	oButton.on("appendTo", function () {
 		this._calendarMenu.setBody(" ");
 		this._calendarMenu.body.id = Dom.generateId();
@@ -218,9 +275,9 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oButton._date = new Date(1, 1, 1);
 	oButton._input._update = function() {
 		oButton._date = parseISO8601(oButton._input.value);
-		oButton._update();
+		oButton._update(false);
 	};
-	oButton._update = function() {
+	oButton._update = function(fire_update_event) {
 		var year = this._date.getFullYear();
 		var month = this._date.getMonth() + 1;
 		var day = this._date.getDate();
@@ -233,13 +290,15 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		var dateValue = year + '-' + month + '-' + day;
 		var timeValue = hours + ':' + minutes;
 		if(year == 1901) {
-			this.set('label', 'Choose a date');
+			this.set('label', lang.LBL_CHOOSE_DATE);
 		} else {
 			this.set('label', dateValue);
 		}
 		if(time) {
-			this._hours.set('label', hours);
-			this._minutes.set('label', minutes);
+			this._hours.set('value', parseInt(hours, 10));
+			this._minutes.set('value', parseInt(minutes, 10));
+			this._hours.update();
+			this._minutes.update();
 		}
 		if(year != 1901 && date && time)
 			this._input.value = dateValue + ' ' + timeValue;
@@ -247,6 +306,14 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 			this._input.value = dateValue;
 		else if(!date && time)
 			this._input.value = timeValue;
+		
+		if (fire_update_event) {
+			oButton.fireUpdateEvent();
+		}
+	};
+	
+	oButton.getDate = function() {
+		return this._date;
 	};
 
 	oButton.on("click", function () {
@@ -274,37 +341,71 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 				this._date.setFullYear(aDate[0]);
 				this._date.setMonth(aDate[1]-1);
 				this._date.setDate(aDate[2]);
-				this._update();
+				this._update(true);
 				//this._input.value = value;
 			}
 			this._calendarMenu.hide();
 		}, this, true);
 	});
 	if(time) {
-		var hourMenu = [{text: '00', value: 0}, {text: '01', value: 1}, {text: '02', value: 2}, {text: '03', value: 3}, {text: '04', value: 4}, {text: '05', value: 5}, {text: '06', value: 6}, {text: '07', value: 7}, {text: '08', value: 8}, {text: '09', value: 9}, {text: '10', value: 10}, {text: '11', value: 11}, {text: '12', value: 12}, {text: '13', value: 13}, {text: '14', value: 14}, {text: '15', value: 15}, {text: '16', value: 16}, {text: '17', value: 17}, {text: '18', value: 18}, {text: '19', value: 19}, {text: '20', value: 20}, {text: '21', value: 21}, {text: '22', value: 22}, {text: '23', value: 23}];
-		oButton._hours = new YAHOO.widget.Button({ 
-									type: "menu", 
-									id: Dom.generateId(), 
-									menu: hourMenu, 
-									container: field});
-		var minuteMenu = [{text: '00', value: 0}, {text: '15', value: 15}, {text: '30', value: 30}, {text: '45', value: 45}];
-		oButton._minutes = new YAHOO.widget.Button({ 
-									type: "menu", 
-									id: Dom.generateId(), 
-									menu: minuteMenu, 
-									container: field});
-		oButton._hours.getMenu().subscribe('click', function(p_sType, p_aArgs) {
-			oMenuItem = p_aArgs[1];
-			this._date.setHours(oMenuItem.value);
-			this._update();
-		}, oButton, true);
-		oButton._minutes.getMenu().subscribe('click', function(p_sType, p_aArgs) {
-			oMenuItem = p_aArgs[1];
-			this._date.setMinutes(oMenuItem.value);
-			this._update();
-		}, oButton, true);
+		oButton._hours = new YAHOO.booking.InputNumberRange({min: 0, max:23});
+		oButton._minutes = new YAHOO.booking.InputNumberRange({min: 0, max:59});
+		
+		oButton._hours.on('updateEvent', function() {
+			oButton._date.setHours(this.get('value'));
+			oButton._update(true);
+		});
+		
+		oButton._minutes.on('updateEvent', function() {
+			oButton._date.setMinutes(this.get('value'));
+			oButton._update(true);
+		});
+		
+		oButton.on("appendTo", function () {
+			var timePicker = Dom.get(field).appendChild(document.createElement('span'));
+			Dom.addClass(timePicker, 'time-picker-inputs');
+			timePicker.appendChild(document.createTextNode(' '));
+			oButton._hours.render(timePicker);
+			timePicker.appendChild(document.createTextNode(' : '));
+			oButton._minutes.render(timePicker);
+			oButton._update(false);
+		});
 	}
-	oButton._update.apply(oButton);
+	oButton._update(false);
+	
+	var id = Dom.getAttribute(oButton._input, 'id');
+	var matches = /^([a-zA-Z][\w0-9\-_.:]+)_(from|to)$/.exec(id);
+	
+	var group_name = matches ? matches[1] : false;
+	var from_to = matches ? matches[2] : false;
+	
+	if (group_name && from_to && oButton.hasDateSection()) {
+		if (!groups[group_name]) { groups[group_name] = {}; }
+		
+		groups[group_name][from_to] = oButton;
+
+		if (groups[group_name]['from'] && groups[group_name]['to']) {
+			groups[group_name]['from'].on_update = {
+				context: groups[group_name]['to'], 
+				func: function(fromDateButton) {
+					var fromDate = fromDateButton.getDate();
+					var currentYear = this._date.getFullYear();
+					
+					if (this._date.getFullYear() == 1901) {
+						this._date.setFullYear(fromDate.getFullYear());
+						this._date.setMonth(fromDate.getMonth());
+						this._date.setDate(fromDate.getDate());
+					} else if (fromDate.getFullYear() <= this._date.getFullYear() && fromDate.getMonth() <= this._date.getMonth() && fromDate.getDate() <= this._date.getDate()) {
+						//this._date.
+					}
+				
+					this._update(false);
+				}
+			};
+			
+			delete groups[group_name];
+		}
+	}
 };
 
 // Executed on all booking.uicommon-based pages
@@ -331,3 +432,176 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 	descEdit.render();
 	return descEdit;
 };
+
+
+(function(){
+    var Dom = YAHOO.util.Dom,
+        Event = YAHOO.util.Event,
+        Panel = YAHOO.widget.Panel,
+		Lang = YAHOO.lang;
+
+	var CSS_PREFIX = 'booking_number_range_';
+ 
+	var InputNumberRange = function(oConfigs) {
+	    InputNumberRange.superclass.constructor.call(this, document.createElement('span'), oConfigs);
+	    this.createEvent('updateEvent');
+		this.refresh(['id'],true);
+	};
+
+	YAHOO.booking.InputNumberRange = InputNumberRange;
+
+	Lang.extend(InputNumberRange, YAHOO.util.Element, {
+		initAttributes: function (oConfigs) { 
+			InputNumberRange.superclass.initAttributes.call(this, oConfigs);
+			
+			var container = this.get('element');
+		
+			this.setAttributeConfig('inputEl', {
+		        readOnly: true,
+		        value: container.appendChild(document.createElement('span'))
+		    });
+	
+			this.setAttributeConfig('id', {
+		        writeOnce: true,
+		        validator: function (value) {
+		            return /^[a-zA-Z][\w0-9\-_.:]*$/.test(value);
+		        },
+		        value: Dom.generateId(),
+		        method: function (value) {
+		            this.get('inputEl').id = value;
+		        }
+		    });
+	
+			this.setAttributeConfig('value', {
+				value: 0,
+				validator: Lang.isNumber
+		  });
+		
+			this.setAttributeConfig('input', {
+				value: null
+		  });
+		
+			this.setAttributeConfig('min', {
+				validator: Lang.isNumber,
+				value: 100
+		  });
+		
+			this.setAttributeConfig('max', {
+				validator: Lang.isNumber,
+				value: 0
+			});
+		
+			this.setAttributeConfig('input_length', {
+				validator: Lang.isNumber,
+				value: null
+			});
+		},
+	
+		destroy: function () { 
+			var el = this.get('element');
+		    Event.purgeElement(el, true);
+		    el.parentNode.removeChild(el);
+		},
+		
+		_padValue: function(value)
+		{
+			value = value.toString('10');
+			var padding = this.get('input_length') - value.length;
+			if (padding > 0) {
+				return ((new Array(padding+1).join('0')) + value);
+			}
+			return value;
+		},
+		
+		_updateValue: function() {
+			var input = this.get('input');
+			var value;
+			
+			if (input.value.length > 0) {
+				value = parseInt(input.value, 10);
+			} else {
+				value = 0;
+			}
+				
+			if (isNaN(value)) { 
+				value = this.get('min');
+			}
+			
+			if (value < this.get('min')) {
+				value = this.get('min');
+			}
+			
+			if (value > this.get('max')) {
+				value = this.get('max');
+			}
+			
+			this.set('value', value);
+		},
+		
+		_fireUpdateEvent: function()
+		{
+			this._updateValue();
+			this.update();
+			
+			this.fireEvent('updateEvent');
+		},
+		
+		update: function() {
+			if (!this.get('input')) { return; }
+			this.get('input').value = this._padValue(this.get('value'));
+		},
+		
+		render: function (parentEl) {
+			parentEl = Dom.get(parentEl);
+	    
+			if (!parentEl) {
+				YAHOO.log('Missing mandatory argument in YAHOO.booking.InputNumberRange.render:  parentEl','error','Field');
+				return null;
+		  }
+		
+			var containerEl = this.get('element');
+			this.addClass(CSS_PREFIX + 'container');
+		
+			var inputEl = this.get('inputEl');
+			Dom.addClass(inputEl, CSS_PREFIX + 'input');
+		
+			this._renderInputEl(inputEl);
+		
+			parentEl.appendChild(containerEl); //Appends to document to show the component
+		},
+		
+		_renderInputEl: function (containerEl) { 
+			var input = containerEl.appendChild(document.createElement('input'));
+		
+			if (!this.get('input_length')) {
+				this.set('input_length', this.get('max').toString().length);
+			}
+		
+			var size = this.get('input_length');
+			input.setAttribute('size', size);
+			input.setAttribute('maxlength', size);
+			
+		  input.value = this._padValue(this.get('value'));
+		
+			this.set('input', input);
+		
+	    Event.on(input,'keyup', function (oArgs) {
+	        this._updateValue();
+	    }, this, true);
+		
+			Event.on(input, 'change', function(oArgs) {
+				this._fireUpdateEvent();
+		  }, this, true);
+			
+			oForm = input.form;
+			
+			if (oForm) {
+				Event.on(oForm, "submit", function() {
+					this._fireUpdateEvent();
+				}, null, this);
+			}
+			
+		}
+	});
+
+})();

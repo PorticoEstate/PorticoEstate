@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_booking_i18n"/>
+	
 	<div id="content">
 		<ul class="pathway">
 			<li>
@@ -29,6 +31,9 @@
 			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
 			<dd><xsl:value-of select="resource/building_name"/></dd>
 			
+			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
+			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
+			
 			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
 				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
 				<dd><xsl:value-of select="resource/activity_name"/></dd>
@@ -51,12 +56,12 @@
 
 	<script type="text/javascript">
 		var resource_id = <xsl:value-of select="resource/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Equipment Name', 'Document Name', 'category', 'Activity')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
 <![CDATA[
 	YAHOO.util.Event.addListener(window, "load", function() {
 
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: lang['Document Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['category']}];
+	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['category']}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';

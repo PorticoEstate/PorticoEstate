@@ -40,7 +40,7 @@
 				<dt><label for="field_zip_code"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
 				<dd><input type="text" name="zip_code" id="field_zip_code" value="{building/zip_code}"/></dd>
 
-				<dt><label for="field_city"><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
+				<dt><label for="field_city"><xsl:value-of select="php:function('lang', 'Postal City')"/></label></dt>
 				<dd><input type="text" name="city" id="field_city" value="{building/city}"/></dd>
 
 				<dt><label for='field_district'><xsl:value-of select="php:function('lang', 'District')"/></label></dt>

@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_booking_i18n"/>
+	
 	<div id="content">
 		<ul class="pathway">
 			<li>
@@ -70,17 +72,17 @@
 			
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
-				var lang = <xsl:value-of select="php:function('js_lang', 'Resource Name', 'Document Name', 'category', 'Activity')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity', 'Resource Type')"/>;
 				<![CDATA[
 				
 				YAHOO.util.Event.addListener(window, "load", function() {
 				var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: lang['Resource Name'], formatter: YAHOO.booking.formatLink}, {key: 'activity_name', label: lang['Activity']}];
+				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
 				YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 				});
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: lang['Document Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang.category}];
+				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang.category}];
 				YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';

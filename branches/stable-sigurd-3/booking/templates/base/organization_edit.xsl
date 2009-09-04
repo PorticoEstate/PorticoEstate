@@ -23,9 +23,24 @@
 			        <xsl:attribute name="value"><xsl:value-of select="organization/name"/></xsl:attribute>
 			    </input>
 			</dd>
-			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
+			<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
 			<dd>
-			    <input type="text"/>
+			    <input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}"/>
+			</dd>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dd>
+				<select name="activity_id" id="field_activity">
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<xsl:for-each select="activities">
+						<option>
+							<xsl:if test="../organization/activity_id = id">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
 			</dd>
 			<dt><label for="field_homepage"><xsl:value-of select="php:function('lang', 'Homepage')" /></label></dt>
 			<dd>
@@ -59,7 +74,7 @@
 			<dt><label for="field_zip_code"><xsl:value-of select="php:function('lang', 'Zip code')"/></label></dt>
 			<dd><input type="text" name="zip_code" id="field_zip_code" value="{organization/zip_code}"/></dd>
 
-			<dt><label for="field_city"><xsl:value-of select="php:function('lang', 'City')"/></label></dt>
+			<dt><label for="field_city"><xsl:value-of select="php:function('lang', 'Postal City')"/></label></dt>
 			<dd><input type="text" name="city" id="field_city" value="{organization/city}"/></dd>
 
 			<dt><label for='field_district'><xsl:value-of select="php:function('lang', 'District')"/></label></dt>

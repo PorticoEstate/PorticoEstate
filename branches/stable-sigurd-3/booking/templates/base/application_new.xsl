@@ -25,7 +25,7 @@
 			</dd>
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
-				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
+				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
 		</dl>
 		<div class="clr"/>
@@ -69,7 +69,7 @@
 			</div>
 
 
-			<dt><a href="#" id="add-date-link">Add another date</a></dt>
+			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></dt>
@@ -156,5 +156,6 @@
 	</div>
 	<script type="text/javascript">
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type')"/>;
 	</script>
 </xsl:template>

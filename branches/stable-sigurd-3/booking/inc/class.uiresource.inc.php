@@ -23,7 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -72,9 +72,25 @@
 							'label' => lang('Building name')
 						),
 						array(
+							'key' => 'type',
+							'label' => lang('Resource Type')
+						),
+						array(
 							'key' => 'activity_name',
 							'label' => lang('Activity')
-						)
+						),
+						array(
+							'key' => 'building_street',
+							'label' => lang('Street')
+						),
+						array(
+							'key' => 'building_city',
+							'label' => lang('Postal city')
+						),
+						array(
+							'key' => 'building_district',
+							'label' => lang('District')
+						),
 					)
 				)
 			);
@@ -114,14 +130,26 @@
 					}
 				}
 			}
+			else
+			{
+				$resource['type'] = 'Location';
+			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'resource_new.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
+			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$this->use_yui_editor();
 			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
+		}
+		
+		protected function resource_types()
+		{
+			$types = array();
+			foreach($this->bo->allowed_types() as $type) { $types[$type] = self::humanize($type); }
+			return $types;
 		}
 
 		public function edit()
@@ -132,6 +160,8 @@
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $resource['id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
+			$resource['types'] = $this->resource_types();
+			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

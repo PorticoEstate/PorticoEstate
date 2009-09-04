@@ -1,6 +1,6 @@
 populateResourceTable = function(building_id, selection) {
     YAHOO.booking.checkboxTableHelper('resources-container', 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
-    'resources[]', selection);
+    'resources[]', selection, {additional_fields: [{key: 'type', label: lang['Resource Type']}]});
 }
 
 YAHOO.util.Event.addListener(window, "load", function() {

@@ -18,6 +18,7 @@
         </ul-->
 
     	<xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
     	<form action="" method="POST" enctype='multipart/form-data'>
 			<dl class="form">

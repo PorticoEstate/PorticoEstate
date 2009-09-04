@@ -36,11 +36,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New allocation'),
-								'href' => self::link(array('menuaction' => 'booking.uiallocation.add'))
-							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -84,6 +79,16 @@
 					)
 				)
 			);
+			
+			
+			if ($this->bo->allow_create()) {
+				array_unshift($data['form']['toolbar']['item'], array(
+					'type' => 'link',
+					'value' => lang('New allocation'),
+					'href' => self::link(array('menuaction' => 'booking.uiallocation.add'))
+				));
+			}
+			
 			self::render_template('datatable', $data);
 		}
 
@@ -102,11 +107,16 @@
 				array_set_default($_POST, 'resources', array());
 				$allocation = extract_values($_POST, $this->fields);
 				$allocation['active'] = '1';
+				$allocation['completed'] = '0';
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
 				{
-					$receipt = $this->bo->add($allocation);
-					$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
+					try {
+						$receipt = $this->bo->add($allocation);
+						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not add object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -131,8 +141,12 @@
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
 				{
-					$receipt = $this->bo->update($allocation);
-					$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
+					try {
+						$receipt = $this->bo->update($allocation);
+						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 			$this->flash_form_errors($errors);

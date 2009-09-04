@@ -26,7 +26,7 @@
 				'zip_code' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'district' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
-				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>'')
+				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -63,6 +63,7 @@
 		'bb_organization' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => False, 'default' => ''),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'string', 'nullable' => True),
@@ -72,10 +73,12 @@
 				'zip_code' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'district' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
-				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
-			'fk' => array(),
+			'fk' => array(
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -85,7 +88,8 @@
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'building_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 			),
 			'pk' => array('id'),
@@ -100,13 +104,14 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'description' => array('type' => 'varchar','precision' => '1000','nullable' => False, 'default'=>''),
+				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
-			),
+				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -202,20 +207,6 @@
 			'pk' => array('season_id', 'resource_id'),
 			'fk' => array(
 				'bb_season' => array('season_id' => 'id'),
-				'bb_resource' => array('resource_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_equipment' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'description' => array('type' => 'varchar','precision' => '10000','nullable' => False),
-			),
-			'pk' => array('id'),
-			'fk' => array(
 				'bb_resource' => array('resource_id' => 'id')
 			),
 			'ix' => array(),

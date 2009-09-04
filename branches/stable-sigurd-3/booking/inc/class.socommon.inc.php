@@ -29,7 +29,7 @@
 			return $this->cols;
 		}
 
-		protected function get_cols_and_joins()
+		public function _get_cols_and_joins()
 		{
 			$cols = array();
 			$joins = array();
@@ -73,7 +73,7 @@
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
-		protected function _unmarshal($value, $type)
+		function _unmarshal($value, $type)
 		{
 			if($value === null || $value == 'NULL')
 			{
@@ -89,7 +89,7 @@
 		function read_single($id)
 		{
 			$id = intval($id);
-			$cols_joins = $this->get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE {$this->table_name}.id=$id", __LINE__, __FILE__);
@@ -159,11 +159,18 @@
 				$like_clauses = array();
 				foreach($this->fields as $field => $params)
 				{
-					if($params['query'] && $params['type'] !== 'int')
+					if($params['query'])
 					{
 						$table = $params['join'] ? $params['join']['table'].'_'.$params['join']['column'] : $this->table_name;
 						$column = $params['join'] ? $params['join']['column'] : $field;
-						$like_clauses[] = "{$table}.{$column} $this->like $like_pattern";
+						if($params['type'] == 'int')
+						{
+							$like_clauses[] = "{$table}.{$column} = ". $this->db->db_addslashes($query);
+						}
+						else
+						{
+							$like_clauses[] = "{$table}.{$column} $this->like $like_pattern";
+						}
 					}
 				}
 				if(count($like_clauses))
@@ -221,10 +228,14 @@
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 
-			$cols_joins = $this->get_cols_and_joins();
+			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
+			
+			if (isset($params['where'])) {
+				$condition = "{$condition} AND {$params['where']}";
+			}
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);

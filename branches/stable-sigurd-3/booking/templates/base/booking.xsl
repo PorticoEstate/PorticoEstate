@@ -6,6 +6,7 @@
         </ul>
 
         <xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
@@ -24,19 +25,23 @@
             <dd><div id="resources_container"/></dd>
         </dl>
 
-        <div class="clr"/>
-        <a class="button">
-            <xsl:attribute name="href"><xsl:value-of select="booking/edit_link"/></xsl:attribute>
-            <xsl:value-of select="php:function('lang', 'Edit')" />
-        </a>
+		<div class="form-buttons">
+			<xsl:if test="booking/permission/write">
+				<button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="booking/edit_link"/>"</xsl:attribute>
+		            <xsl:value-of select="php:function('lang', 'Edit')" />
+		        </button>
+			</xsl:if>
+		</div>
     </div>
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="booking/resource_ids"/>';
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-    var colDefs = [{key: 'name', label: 'Name', formatter: YAHOO.booking.formatLink}];
+    var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 });
 ]]>

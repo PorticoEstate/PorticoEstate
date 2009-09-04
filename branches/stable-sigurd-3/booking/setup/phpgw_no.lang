@@ -20,6 +20,7 @@ add new event	booking	no	Legg til arrangement
 add permission	booking	no	Legg til rettighet
 admin 1	booking	no	Bookingansvarlig 1
 admin 2	booking	no	Bookingansvarlig 2
+admins	booking	no	Bookingansvarliga
 age group	booking	no	Aldersgruppe
 agegroup	booking	no	Aldersgruppe
 allocation	booking	no	Tildeling
@@ -28,8 +29,10 @@ allocations colliding with existing bookings or allocations (%1)	booking	no	Dobb
 allocations that can be created (%1)	booking	no	Tildelingar som kan lages
 application	booking	no	Søknad
 applications	booking	no	Søknader
+apr	booking	no	april
 archived	booking	no	Arkivert
 audience	booking	no	Målgruppe
+aug	booking	no	august
 bookable resources	booking	no	Bookbare ressurser
 booking	booking	no	Booking
 booking district	booking	no	Bydel
@@ -45,9 +48,12 @@ cancel	booking	no	Avbryt
 cancelled	booking	no	Avbestilt
 case officer	booking	no	Saksbehandler
 category	booking	no	Kategori
+choose a date	booking	no	Velg dato
 choose a date	booking	no	Velg en dato
 choose file	booking	no	Velg dokument
 city	booking	no	Poststed
+click to sort ascending	booking	no	Klikk for å sortere stigende
+click to sort descending	booking	no	Klikk for å sortere synkende
 contact	booking	no	Kontakt
 contact 1	booking	no	Kontakt 1
 contact 2	booking	no	Kontakt 2
@@ -57,6 +63,7 @@ create	booking	no	Lagre
 created	booking	no	Opprettet
 dashboard	booking	no	Skrivebord
 day of the week	booking	no	Ukedag
+dec	booking	no	desember
 description	booking	no	Beskrivelse
 district	booking	no	Bydel
 document	booking	no	Dokument
@@ -67,20 +74,23 @@ edit agegroup group	booking	no	Rediger aldersgruppe
 edit allocation	booking	no	Rediger tildeling
 edit Audience group	booking	no	Rediger målgruppe
 edit booking	booking	no	Rediger booking
+edit event	booking	no	Rediger arrangement
 edit organization	booking	no	Rediger organisasjon
 editer	booking	no	Rediger
 equipment	booking	no	Utstyr
 equipment name	booking	no	Utstyr
 event	booking	no	Arrangement
 events	booking	no	Arrangementer
+feb	booking	no	februar
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
 found %1 results	booking	no	%1 treffer
+fr	booking	no	fr.
 from	booking	no	Fra
 generate allocations	booking	no	Lag tildelning
 generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
-group	booking	no	Gruppe
+group	booking	no	Gruppe/Lag
 history and comments (%1)	booking	no	Historikk (%1)
 hms document	booking	no	HMS dokument
 homepage	booking	no	Hjemmeside
@@ -88,8 +98,15 @@ id	booking	no	ID
 inactivate	booking	no	Inaktivert
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Faktura informasjon 
+jan	booking	no	januar
+jul	booking	no	juli
+jun	booking	no	juni
 last modified	booking	no	Sist endret
+joading...	booking	no	Laster...
 male	booking	no	Mann
+mar	booking	no	mars
+may	booking	no	mai
+mo	booking	no	ma.
 modified	booking	no	Endret
 more info	booking	no	Mer informasjon
 name	booking	no	Navn
@@ -115,10 +132,14 @@ new season	booking	no	Ny sesong
 new season permission	booking	no	Nye rettigheter sesong
 next	booking	no	Neste
 next week	booking	no	Neste uke
+no Data.	booking	no	Ingen treff.
 no description yet	booking	no	Beskrivelse manglar
 no parents	booking	no	Ingen overordnet
+no records found.	booking	no	Ingen treff.
 no records found.	booking	no	Inget funnet!
+nov	booking	no	november
 number of participants	booking	no	Antall deltakere
+oct	booking	no	oktober
 of	booking	no	av
 officer	booking	no	Saksbehandler
 organization	booking	no	Organisasjon
@@ -143,9 +164,11 @@ rejected	booking	no	Avvist
 resource	booking	no	Ressurs
 resource name	booking	no	Ressurs
 resource schedule	booking	no	Ressurskalender
+resource type	booking	no	Type
 resources	booking	no	Ressurser
 role	booking	no	Rolle
 root permissions	booking	no	Systemrettigheter
+Sa	booking	no	lø.
 schedule	booking	no	Ukeplan
 season	booking	no	Sesong
 season name	booking	no	Sesong
@@ -154,21 +177,27 @@ secondary admin	booking	no	Kontaktperson 2
 select a building first	booking	no	Velg bygg/anlegg først
 select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
+sep	booking	no	september
 settings	booking	no	Innstillinger
 show only active	booking	no	Skjul
 showing items	booking	no	Viser
+showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	no	Fødselsnummer (11 siffer)
 status	booking	no	Status
 street	booking	no	Gate
+su	booking	no	sø
 submit	booking	no	Lagre
 successfully created (%1) allocations:	booking	no	(%1) tildelingar lagret
 surname	booking	no	Etternavn
 target audience	booking	no	Målgruppe
 telephone	booking	no	Telefon
 terms and conditions	booking	no	Juridiske betingelser
+th	booking	no	to.
 to	booking	no	Til
+tu	booking	no	ti.
 upload document	booking	no	Last opp dokument
 user	booking	no	Bruker
+we	booking	no	on.
 week	booking	no	Uke
 week day	booking	no	Ukedag
 week template	booking	no	Ukeplan
@@ -181,10 +210,8 @@ who?	booking	no	Hvem?
 why	booking	no	Hvorfor
 why?	booking	no	Hvorfor?
 zip code	booking	no	Postnummer
-Mo	booking	no	ma.
-Tu	booking	no	ti.
-We	booking	no	on.
-Th	booking	no	to.
-Fr	booking	no	fr.
-Sa	booking	no	lø.
-Su	booking	no	sø
+postal city	booking	no	Poststed
+team leaders	booking	no	Ansvarliga gruppledare
+team leader 1	booking	no	Ansvarlig gruppledare 1
+team leader 2	booking	no	Ansvarlig gruppledare 2
+regulation	booking	no	Reglemang

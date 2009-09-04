@@ -20,10 +20,14 @@
 		public function __construct()
 		{
 			parent::__construct();
+			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 'street', 'zip_code', 'city', 'district', 'description', 'contacts', 'active');
+			$this->fields = array('name', 'homepage', 'phone', 'email', 
+								  'street', 'zip_code', 'city', 'district', 
+								  'description', 'contacts', 'active', 
+								  'organization_number', 'activity_id');
 		}
 		
 		public function index()
@@ -113,7 +117,7 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($organization);
-					$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+					$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -145,9 +149,9 @@
 				{
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend") {
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', "id" => $receipt["id"]));
+						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $receipt["id"]));
 					} else {
-						$this->redirect(array('menuaction' => 'booking.uiorganization.index'));
+						$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt["id"]));
 					}
 				}
 			}
@@ -158,8 +162,9 @@
 			$contact_form_link = self::link(array('menuaction' => $this->module . '.uicontactperson.edit', ));
 
 			$this->use_yui_editor();
-
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link));
+			$activities = $this->activity_bo->fetch_activities();
+			$activities = $activities['results'];
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities));
 		}
 		
 		public function show()

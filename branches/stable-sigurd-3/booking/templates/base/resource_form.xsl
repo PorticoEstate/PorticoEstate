@@ -19,7 +19,7 @@
 
 		<form action="" method="POST" id="form">
 			<dl class="form-col">
-				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Resource')" /></label></dt>
+				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 				<dd><input name="name" id="field_name" type="text" value="{resource/name}"/></dd>
 				
 				<dt><label for="field_activity_id"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
@@ -50,6 +50,23 @@
 						</input>
 						<div id="building_container"/>
 					</div>
+				</dd>
+			
+				<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
+				<dd>
+					<xsl:value-of select="node()"/>
+					<select name='type' id='field_type'>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select Type...')" /></option>
+						<xsl:for-each select="resource/types/*">
+							<option value="{local-name()}">
+								<xsl:if test="../../type = local-name()">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+
+								<xsl:value-of select="php:function('lang', string(node()))"/>
+							</option>
+						</xsl:for-each>
+					</select>
 				</dd>
 				
 				<xsl:if test="not(new_form)">

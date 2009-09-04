@@ -21,6 +21,7 @@
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
 
         <dl class="proplist">
             <dt><xsl:value-of select="php:function('lang', 'Organization')" /></dt>
@@ -28,9 +29,11 @@
 
             <dt><xsl:value-of select="php:function('lang', 'Name')" /></dt>
             <dd><xsl:value-of select="group/name"/></dd>
+            <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
+            <dd><xsl:value-of select="group/activity_name" /></dd>
 
 			<xsl:if test="count(group/contacts/*) &gt; 0">
-            	<dt><xsl:value-of select="php:function('lang', 'Admins')" /></dt>
+            	<dt><xsl:value-of select="php:function('lang', 'Team leaders')" /></dt>
 	            <dd>
 	                <ul>
 						<xsl:if test="group/contacts[1]">

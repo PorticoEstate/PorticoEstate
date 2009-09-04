@@ -46,6 +46,12 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 		
+		/**
+		 * Builds relations to other tables for the storage object's table def.
+		 * Override where necessary to customize relations.
+		 *
+		 * @return array
+		 */
 		protected function build_object_relations()
 		{
 			return array(

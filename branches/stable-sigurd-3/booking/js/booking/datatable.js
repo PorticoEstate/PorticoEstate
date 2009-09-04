@@ -13,8 +13,24 @@ YAHOO.booking.setupToolbar = function() {
     }
 }
 
-YAHOO.util.Event.addListener(window, "load", function() {
-    YAHOO.booking.setupToolbar();
+YAHOO.booking.setupPaginator = function() {
+	var paginatorConfig = {
+        rowsPerPage: 10,
+        alwaysVisible: false,
+        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
+        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        containers: ['paginator']
+    };
+	
+	YAHOO.booking.lang('setupPaginator', paginatorConfig);
+	var pag = new YAHOO.widget.Paginator(paginatorConfig);
+    pag.render();
+	return pag;
+};
+
+YAHOO.booking.initializeDataTable = function()
+{
+	YAHOO.booking.setupToolbar();
 	YAHOO.booking.setupDatasource();
 
     var fields = [];
@@ -37,14 +53,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
             totalResultsAvailable: "ResultSet.totalResultsAvailable"
         }
     };
-    var pag = new YAHOO.widget.Paginator({
-        rowsPerPage: 10,
-        alwaysVisible: false,
-        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
-        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
-        containers: ['paginator']
-    });
-    pag.render();
+
+	var pag = YAHOO.booking.setupPaginator();
+
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 
         YAHOO.booking.columnDefs, myDataSource, {
             paginator: pag,
@@ -57,10 +68,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
     }
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
+		  YAHOO.booking.preSerializeQueryForm('queryForm');
         var qs = YAHOO.booking.serializeForm('queryForm');
         myDataSource.liveData = baseUrl + qs + '&';
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});
-    }); 
-});
+    });
+};
+
+YAHOO.util.Event.addListener(window, "load", YAHOO.booking.initializeDataTable);

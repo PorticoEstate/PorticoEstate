@@ -1,10 +1,26 @@
 populateResourceTable = function(building_id, selection) {
     YAHOO.booking.checkboxTableHelper('resources_container', 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
-    'resources[]', selection);
+    'resources[]', selection, {additional_fields: [{key: 'type', label: lang['Resource Type']}]});
 }
 
 removeDateRow = function() {
 	this.parentNode.parentNode.removeChild(this.parentNode);
+}
+
+var createFromToDatePickerSection = function(containerEl) {
+	if (!this.counter) { this.counter = 0; }
+	containerEl.className = 'date-container';
+	containerEl.innerHTML = '							' +
+'			<a href="#" class="close-btn">-</a>		' +
+'			<div><label>'+lang['From']+'</label></div>				' +
+'			<div class="datetime-picker">			' +
+'				<input id="js_date_'+this.counter+'_from" type="text" name="from_[]">	' +
+'			</div>									' +
+'			<div><label>'+lang['To']+'</label></div>				' +
+'			<div class="datetime-picker">			' +
+'				<input id="js_date_'+this.counter+'_to" type="text" name="to_[]">	' +
+'			</div>';
+	this.counter++;
 }
 
 YAHOO.util.Event.addListener(window, "load", function() {
@@ -26,19 +42,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.util.Event.addListener("add-date-link", "click", function(e) {
 		var container = Dom.get('dates-container');
 		var div = document.createElement('div');
-		div.className = 'date-container';
-		container.appendChild(div);
 
-		div.innerHTML = '							' +
-'			<a href="#" class="close-btn">-</a>		' +
-'			<div><label>From</label></div>				' +
-'			<div class="datetime-picker">			' +
-'				<input type="text" name="from_[]">	' +
-'			</div>									' +
-'			<div><label>To</label></div>				' +
-'			<div class="datetime-picker">			' +
-'				<input type="text" name="to_[]">	' +
-'			</div>';
+		createFromToDatePickerSection(div);	
+	
+		container.appendChild(div);
 // 		div.innerHTML ='<div>' + 
 // 		'<a href="#" class="close-btn">-</a>' + 
 // 		'<div><label>From</label></div>' +

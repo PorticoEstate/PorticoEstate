@@ -13,6 +13,15 @@
 					'organization_id'	=> array('type' => 'int', 'required' => true),
 					'description'    => array('type' => 'description', 'query' => true, 'required' => false,),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
+					'activity_id'	=> array('type' => 'int', 'required' => true),
+					'activity_name'	=> array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_activity',
+							'fkey' => 'activity_id',
+							'key' => 'id',
+							'column' => 'name'
+					)),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(

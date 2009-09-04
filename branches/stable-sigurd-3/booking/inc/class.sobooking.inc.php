@@ -15,6 +15,8 @@
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),
 					'to_'		=> array('type' => 'timestamp', 'required'=> true),
 					'season_id'		=> array('type' => 'int', 'required' => true),
+					'cost'		=> array('type' => 'decimal', 'required' => true),
+					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'activity_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -70,19 +72,26 @@
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			// FIXME: Validate: Season contains all resources
-			// FIXME: Validate: Season from <= date, season to >= date
 			// FIXME: Validate: booking from/to
-			// Make sure to_ > from_
+			
+			if (count($errors) > 0) { return; /*Basic validation failed*/ }
+			
+			 if (false == (boolean)intval($entity['active'])) {
+				return; //Don't care about if booking is within necessary boundaries if dealing with inactivated entity
+			}
+			
 			$booking_id = $entity['id'] ? $entity['id'] : -1;
 			$allocation_id = $entity['allocation_id'] ? $entity['allocation_id'] : -1;
 			$from_ = new DateTime($entity['from_']);
 			$to_ = new DateTime($entity['to_']);
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
-			if($from_ > $to_)
-			{
+			
+			if(strtotime($start) > strtotime($end)) {
 				$errors['from_'] = 'Invalid from date';
+				return; //No need to continue validation if dates are invalid
 			}
+			
 			if($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
@@ -136,7 +145,11 @@
 					{
 						$errors['booking'] = lang("The booking uses resources not in the containing allocation");
 					}
-				}
+				}		
+			}
+			
+			if (!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_)) {
+				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
 		}
 
@@ -165,6 +178,22 @@
 			$ids = join(',', array_map("intval", $allocations));
 			$results = array();
 			$this->db->query("SELECT resource_id FROM bb_allocation_resource WHERE allocation_id IN ($ids)", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+			}
+			return $results;
+		}
+
+		function resource_ids_for_events($events)
+		{
+			if(!$events)
+			{
+				return array();
+			}
+			$ids = join(',', array_map("intval", $events));
+			$results = array();
+			$this->db->query("SELECT resource_id FROM bb_event_resource WHERE event_id IN ($ids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
@@ -255,5 +284,25 @@
 			}
 			return $results;
 		}
-
+		
+		public function find_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			return $this->read(array('where' => $expired_conditions));
+		}
+		
+		protected function find_expired_sql_conditions() {
+			$table_name = $this->table_name;
+			$now = date('Y-m-d');
+			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
+		}
+		
+		public function complete_expired() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions;";
+			$db->query($sql, __LINE__, __FILE__);
+		}
 	}

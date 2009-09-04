@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_booking_i18n"/>
     <div id="content">
         <ul class="pathway">
             <li>
@@ -14,6 +15,9 @@
             </li>
         </ul>
         <dl class="proplist-col">
+            <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
+            <dd><xsl:value-of select="organization/activity_name" /></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
             <dd>
 				<a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
@@ -51,7 +55,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
             <dd><xsl:value-of select="organization/zip_code"/></dd>
 
-			<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
+			<dt><xsl:value-of select="php:function('lang', 'Postal City')" /></dt>
             <dd><xsl:value-of select="organization/city"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>

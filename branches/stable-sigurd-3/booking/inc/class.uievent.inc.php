@@ -112,6 +112,7 @@
 				array_set_default($_POST, 'resources', array());
 				$event = extract_values($_POST, $this->fields);
 				$event['active'] = '1';
+				$event['completed'] = '0';
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$this->agegroup_bo->extract_form_data($event);

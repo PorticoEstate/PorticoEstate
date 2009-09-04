@@ -66,59 +66,12 @@
 				$children[$activity['parent_id']][] = $activity;
 			}
 			$treedata = json_encode($this->treeitem($children, null));
-						
 			phpgwapi_yui::load_widget('treeview');
-			$data = array(
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New activity'),
-								'href' => self::link(array('menuaction' => 'booking.uiactivity.add'))
-							),
-							array('type' => 'text', 
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						)
-					),
-				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uiactivity.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'parent_id',
-							'label' => lang('Parent')
-						),
-						array(
-							'key' => 'name',
-							'label' => lang('Name'),
-							'formatter' => 'YAHOO.booking.formatLink'
-						),
-						array(
-							'key' => 'description',
-							'label' => lang('Description')
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						)
-					)
-				)
-			);
-			
 			if ($this->bo->allow_create())
 			{
 				$navi['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
-				$lang['add'] = lang('Add Activity');
 			}
-
-			self::render_template('activities', array('data' => $data, 'treedata' => $treedata, 'navi' => $navi, 'lang' => $lang));
+			self::render_template('activities', array('treedata' => $treedata, 'navi' => $navi));
 		}
 
 		public function index_json()
