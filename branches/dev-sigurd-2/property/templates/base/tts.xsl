@@ -11,7 +11,7 @@
 			<xsl:when test="view">
 				<xsl:apply-templates select="view"/>
 			</xsl:when>
-			<xsl:when test="view">
+			<xsl:when test="view2">
 				<xsl:apply-templates select="view2"/>
 			</xsl:when>
 			<xsl:when test="list2">
@@ -441,7 +441,6 @@
 
 			<xsl:choose>
 				<xsl:when test="simple !='1'">
-
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_group"/>
@@ -458,7 +457,7 @@
 					<xsl:call-template name="user_id_select"/>
 				</td>
 			</tr>
-	
+			<xsl:call-template name="contact_form"/>	
 			<xsl:choose>
 				<xsl:when test="mailnotification != ''">
 					<tr>
@@ -888,6 +887,7 @@
 					<xsl:value-of select="value_category_name"/>
 				</td>
 			</tr>
+			<xsl:call-template name="contact_form"/>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_status"/>

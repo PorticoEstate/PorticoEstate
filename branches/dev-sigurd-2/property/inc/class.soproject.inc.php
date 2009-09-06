@@ -541,7 +541,8 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
 					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_id')
+					'b_account_id'			=> $this->db->f('account_id'),
+					'contact_id'			=> $this->db->f('contact_id'),
 				);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
@@ -705,12 +706,13 @@
 				$this->account,
 				$project['ecodimb'],
 				$project['b_account_id'],
+				$project['contact_id']
 			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id,contact_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -875,7 +877,8 @@
 				'location_code'		=> $project['location_code'],
 				'address'			=> $address,
 				'ecodimb'			=> $project['ecodimb'],
-				'account_id'		=> $project['b_account_id']
+				'account_id'		=> $project['b_account_id'],
+				'contact_id'		=> $project['contact_id']
 				);
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $data['id']);
@@ -939,6 +942,36 @@
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
+				$close_pending_action = false;
+				$close_workorders = false;
+				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$project['status']}'");
+				$this->db->next_record();
+				if ($this->db->f('closed') )
+				{
+					$close_workorders = true;
+				}
+
+
+				if ($this->db->f('approved') )
+				{
+					$close_pending_action = true;
+
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project',
+						'id'				=> (int)$project['id'],
+						'responsible'		=> $this->account,
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+				}
+ 
 				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
 				$workorder = array();
 				while ($this->db->next_record())
@@ -951,17 +984,17 @@
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
 
-				if($old_status != $project['status'])
+				if($old_status != $project['status'] && $close_workorders)
 				{
 					$historylog->add('S',$project['id'],$project['status'], $old_status);
 
-					$this->db->query("UPDATE fm_workorder SET status='{$project['status']}' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_workorder SET status='closed' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 
 					if (isset($workorder) AND is_array($workorder))
 					{
 						foreach($workorder as $workorder_id)
 						{
-							$historylog_workorder->add('S',$workorder_id,$project['status']);
+							$historylog_workorder->add('S',$workorder_id,'closed');
 						}
 					}
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
@@ -970,16 +1003,38 @@
 				{
 					$historylog->add('SC',$project['id'],$project['status']);
 
-					if (isset($workorder) AND is_array($workorder))
+					if (isset($workorder) && is_array($workorder)  && $close_workorders)
 					{
 						foreach($workorder as $workorder_id)
 						{
-							$historylog_workorder->add('SC',$workorder_id,$project['status']);
+							$historylog_workorder->add('SC',$workorder_id,'closed');
 						}
 					}
 					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $project['status'];
 				}
 
+				if($close_pending_action)
+				{
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> 0,
+						'responsible'		=> $this->account,
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+
+
+					foreach($workorder as $workorder_id)
+					{
+						$action_params['id'] =  $workorder_id;
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+					}
+					unset($action_params);
+				}
 			}
 
 			if ($old_category != $project['cat_id'])

@@ -150,9 +150,9 @@
 		$action_params = array
 		(
 			'appname'			=> 'property',
-			'location'			=> '.project.workorder',
+			'location'			=> '.project',
 		//	'id'				=> $id,
-			'responsible'		=> $accound_id,
+			'responsible'		=> '',
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
 			'deadline'			=> '',
@@ -164,9 +164,33 @@
 		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
 		{
+			$responsible = $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString();
 			$portalbox->data[] = array
 			(
-				'text' => 'Venter på godkjenning: ' . $entry['item_id'],
+				'text' => "{$responsible}: Prosjekt venter på godkjenning: {$entry['item_id']}",
+				'link' => $entry['url']
+			);
+		}
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.project.workorder',
+		//	'id'				=> $id,
+			'responsible'		=> '',
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> '',
+			'created_by'		=> $accound_id
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+		foreach ($pending_approvals as $entry)
+		{
+			$responsible = $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString();
+			$portalbox->data[] = array
+			(
+				'text' => "{$responsible}: Ordre venter på godkjenning: {$entry['item_id']}",
 				'link' => $entry['url']
 			);
 		}
@@ -218,7 +242,7 @@
 		$action_params = array
 		(
 			'appname'			=> 'property',
-			'location'			=> '.project.workorder',
+			'location'			=> '.project',
 		//	'id'				=> $id,
 			'responsible'		=> $accound_id,
 			'responsible_type'  => 'user',
@@ -234,7 +258,33 @@
 		{
 			$portalbox->data[] = array
 			(
-				'text' => 'Venter på godkjenning: ' . $entry['item_id'],
+				'text' => 'Prosjekt venter på godkjenning: ' . $entry['item_id'],
+				'link' => $entry['url']
+			);
+		}
+		
+//		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.project.workorder',
+		//	'id'				=> $id,
+			'responsible'		=> $accound_id,
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> '',
+			'created_by'		=> '',
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+//		$portalbox->data = array();
+		foreach ($pending_approvals as $entry)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => 'Ordre venter på godkjenning: ' . $entry['item_id'],
 				'link' => $entry['url']
 			);
 		}

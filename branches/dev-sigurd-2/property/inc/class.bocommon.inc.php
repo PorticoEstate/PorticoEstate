@@ -614,6 +614,45 @@
 			return $vendor;
 		}
 
+
+		function initiate_ui_contact_lookup($data)
+		{
+//_debug_array($data);
+
+			$field = $data['field'];
+			if( isset($data['type']) && $data['type']=='view')
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_view'));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_form'));
+			}
+
+			$contact['value_contact_id']		= $data['contact_id'];
+//			$contact['value_contact_name']		= $data['contact_name'];
+
+			if(isset($data['contact_id']) && $data['contact_id'] && !$data['contact_name'])
+			{
+				$contacts							= CreateObject('phpgwapi.contacts');
+				$contact_data						= $contacts->read_single_entry($data['contact_id'], array('fn','tel_work','email'));
+				$contact['value_contact_name']		= $contact_data[0]['fn'];
+				$contact['value_contact_email']		= $contact_data[0]['email'];
+				$contact['value_contact_tel']		= $contact_data[0]['tel_work'];
+
+				unset($contacts);
+			}
+
+			$contact['field']						= $field;
+			$contact['contact_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column' => $field));
+			$contact['lang_contact']				= lang('contact');
+			$contact['lang_select_contact_help']	= lang('click this link to select contact');
+			$contact['lang_contact_name']			= lang('contact Name');
+
+//_debug_array($contact);
+			return $contact;
+		}
+
 		function initiate_ui_tenant_lookup($data)
 		{
 			if($data['type']=='view')

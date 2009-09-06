@@ -1290,6 +1290,12 @@
 				$lang_reminder = lang('reminder');			
 			}
 
+			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
+						'contact_id'		=> $project['contact_id'],
+						'field'				=> 'contact',
+						'type'				=> 'view'));
+
+
 			$email_data = array
 			(
 				'org_name'						=> isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
@@ -1356,7 +1362,8 @@
 				'table_header_view_order'			=> $table_header,
 				'values_view_order'				=> $values_hour,
 				'sms_data'					=> $sms_data,
-				'use_yui_table' 			=> true
+				'use_yui_table' 			=> true,
+				'contact_data'				=> $contact_data
 			);
 
 			if($send_order && !$to_email)
