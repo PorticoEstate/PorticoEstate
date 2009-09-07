@@ -164,7 +164,7 @@
 		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
 		{
-			$responsible = $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString();
+			$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 			$portalbox->data[] = array
 			(
 				'text' => "{$responsible}: Prosjekt venter på godkjenning: {$entry['item_id']}",
@@ -187,7 +187,7 @@
 
 		foreach ($pending_approvals as $entry)
 		{
-			$responsible = $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString();
+			$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 			$portalbox->data[] = array
 			(
 				'text' => "{$responsible}: Ordre venter på godkjenning: {$entry['item_id']}",
