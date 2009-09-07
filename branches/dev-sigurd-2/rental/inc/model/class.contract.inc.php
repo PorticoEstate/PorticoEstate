@@ -17,12 +17,11 @@
 		protected $parties;
 		protected $contract_date;
 		protected $billing_start_date;
-		protected $type_id;
+		protected $location_id;
 		protected $term_id;
 		protected $term_id_title;
 		protected $security_type;
 		protected $security_amount;
-		protected $billing_unit;
 		protected $old_contract_id;
 		protected $contract_type_title;
 		protected $party_names = array();
@@ -108,12 +107,12 @@
 		 */
 		public function get_billing_start_date() { return $this->billing_start_date; }
 		
-		public function set_type_id($type_id)
+		public function set_location_id($location_id)
 		{
-			$this->type_id = (int) $type_id;
+			$this->location_id = (int) $location_id;
 		}
 		
-		public function get_type_id() { return $this->type_id; }
+		public function get_location_id() { return $this->location_id; }
 		
 		public function set_term_id(int $term_id)
 		{
@@ -128,14 +127,6 @@
 		}
 
 		public function get_term_id_title(){ return $this->term_id_title; }
-		
-		
-		public function set_billing_unit($billing_unit)
-		{
-			$this->billing_unit = $billing_unit;
-		}
-
-		public function get_billing_unit() { return $this->billing_unit; }
 		
 		public function set_security_type(int $security_type = null)
 		{
@@ -169,7 +160,7 @@
 		public function get_security_amount() { return $this->security_amount; }
 		
 		/**
-		 * Get the name of the contract type @see get_type_id()
+		 * Get the name of the contract type @see get_location_id()
 		 * 
 		 * @return string
 		 */

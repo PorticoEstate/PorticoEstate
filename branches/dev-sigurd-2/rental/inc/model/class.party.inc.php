@@ -16,7 +16,7 @@ class rental_party
     protected $personal_identification_number;
     protected $first_name;
     protected $last_name;
-    protected $type_id;
+    protected $location_id;
     protected $is_active;
 
     protected $title;
@@ -128,12 +128,12 @@ class rental_party
 	
 	public function get_last_name() { return $this->last_name; }
 
-	public function set_type_id(int $type_id)
+	public function set_location_id(int $location_id)
 	{
-		$this->type_id = (int)$type_id;
+		$this->location_id = (int)$ocation_id;
 	}
 	
-	public function get_type_id() { return $this->type_id; }
+	public function get_ocation_id() { return $this->location_id; }
 
 	public function set_is_active(bool $is_active)
 	{
@@ -335,7 +335,7 @@ class rental_party
 			'fax' => $this->fax,
 			'email' => $this->email,
 			'url' => $this->url,
-			'type_id' => $this->type_id,
+			'location_id' => $this->location_id,
 			'account_number' => $this->account_number,
 			'reskontro' => $this->reskontro,
 			'is_active' => $this->is_active,

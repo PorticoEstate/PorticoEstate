@@ -86,7 +86,7 @@ class rental_socontract extends rental_socommon
 					
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
 			$type = $filters['contract_type'];
-			$filter_clauses[] = "contract.type_id = $type";
+			$filter_clauses[] = "contract.location_id = $type";
 		}
 		
 		/* 
@@ -181,7 +181,11 @@ class rental_socontract extends rental_socommon
 		$id = (int)$id;
 		$sql_payer_id = " {$this->left_join} (SELECT contract_id, party_id FROM rental_contract_party WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, type_id, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, billing_unit, executive_officer, old_contract_id, rental_contract_type.title  FROM " . $this->table_name . $sql_payer_id . " {$this->left_join} rental_contract_type ON (rental_contract_type.id = rental_contract.type_id) {$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) WHERE {$this->table_name}.id={$id}";
+		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, rental_contract.location_id, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, executive_officer, old_contract_id, rental_contract_responsibility.title  
+				FROM " . $this->table_name . $sql_payer_id . " 
+				{$this->left_join} rental_contract_responsibility ON (rental_contract_responsibility.location_id = rental_contract.location_id) 
+				{$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) 
+				WHERE {$this->table_name}.id={$id}";
 
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 	
@@ -203,13 +207,12 @@ class rental_socontract extends rental_socommon
 			$billing_start_date = strtotime($billing_start_date);
 		}
 		$contract->set_billing_start_date($billing_start_date);
-		$contract->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
+		$contract->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 		$contract->set_contract_type_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
 		$contract->set_term_id_title($this->unmarshal($this->db->f('term_id_title', true), 'string'));
 		$contract->set_security_type($this->unmarshal($this->db->f('security_type', true), 'int'));
 		$contract->set_security_amount($this->unmarshal($this->db->f('security_amount', true), 'string'));
-		$contract->set_billing_unit($this->unmarshal($this->db->f('billing_unit', true), 'string'));
 		$contract->set_old_contract_id($this->unmarshal($this->db->f('old_contract_id', true), 'string'));
 		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 		$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer', true), 'int'));
@@ -233,7 +236,7 @@ class rental_socontract extends rental_socommon
 		$distinct = "DISTINCT contract.id, ";
 		$columns_for_list = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, type.title, type.notify_before, composite.name as composite_name, party.first_name, party.last_name, party.company_name, last_edited.edited_on';
 		$tables = "rental_contract contract";
-		$join_contract_type = 	' LEFT JOIN rental_contract_type type ON (type.id = contract.type_id)';
+		$join_contract_type = 	' LEFT JOIN rental_contract_responsibility type ON (type.location_id = contract.location_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
 		$join_composites = 		' LEFT JOIN rental_contract_composite c_c ON (contract.id = c_c.contract_id) LEFT JOIN rental_composite composite ON c_c.composite_id = composite.id';
 		$join_last_edited = ' LEFT JOIN rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
@@ -305,7 +308,6 @@ class rental_socontract extends rental_socommon
 			$contract->set_composite_name($row['composite_name']);
 			$contract->set_old_contract_id($row['old_contract_id']);
 			$contract->set_contract_type_title($row['title']);
-			$contract->set_billing_unit($row['billing_unit']);
 			$contract->set_last_edited_by_current_user($row['edited_on']);
 			$contracts[] = $contract;
 			}
@@ -537,13 +539,7 @@ class rental_socontract extends rental_socommon
 		if ($contract->get_contract_date()) {
 			$values[] = "date_start = " . $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
-		}
-		
-		if ($contract->get_billing_unit()) {
-			$values[] = "billing_unit = " . $this->marshal($contract->get_billing_unit(), 'string');
-		}
-		
-		
+		}	
 		
 		$values[] = "security_type = '" . $this->marshal($contract->get_security_type(), 'int') . "'";
 		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
@@ -604,11 +600,11 @@ class rental_socontract extends rental_socommon
 	function add(rental_contract &$contract)
 	{
 		// These are the columns we know we have or that are nullable
-		$cols = array('type_id', 'term_id');
+		$cols = array('location_id', 'term_id');
 		
 		// Start making a db-formatted list of values of the columns we have to have
 		$values = array(
-			$this->marshal($contract->get_type_id(), 'int'),
+			$this->marshal($contract->get_location_id(), 'int'),
 			$this->marshal($contract->get_term_id(), 'int')
 		);
 		
@@ -623,10 +619,6 @@ class rental_socontract extends rental_socommon
 			$cols[] = 'date_end';
 			$values[] = $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
-		}
-		
-		if ($contract->get_billing_unit()) {
-			$values[] = "billing_unit = '" . $this->marshal($contract->get_billing_unit(), 'string') . "'";
 		}
 		
 		$cols[] = 'created';

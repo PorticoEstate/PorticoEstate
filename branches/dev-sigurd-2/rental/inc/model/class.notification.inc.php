@@ -21,6 +21,7 @@ class rental_notification extends rental_model
 	
 	protected $id;				// Notification id
 	protected $contract_id; 	// Contract identifier
+	protected $location_id;		// Location identifier
 	protected $account_id;		// Specific user or group
 	protected $date;			// Notification date data 
 	protected $last_notified;	// Date lst notified
@@ -40,7 +41,8 @@ class rental_notification extends rental_model
 	 */
 	public function __construct(
 		int $id = null, 
-		int $account_id = null, 
+		int $account_id = null,
+		int $location_id = null,
 		int $contract_id = null, 
 		int $date = null, 
 		string $message = null, 
@@ -49,6 +51,7 @@ class rental_notification extends rental_model
 	{
 		$this->id = (int)$id;
 		$this->account_id = (int)$account_id;
+		$this->location_id = (int)$location_id;
 		$this->contract_id = (int)$contract_id;
 		$this->date = $date;
 		$this->last_notified = $last_notified;
@@ -92,6 +95,11 @@ class rental_notification extends rental_model
 		return $this->recurrence;
 	}
 	
+	public function get_location_id()
+	{
+		return $this->location_id;
+	}
+	
 	// Set methods
 	public function set_id(int $id)
 	{
@@ -121,11 +129,13 @@ class rental_notification extends rental_model
 		} 
 		
 		$account = $GLOBALS['phpgw']->accounts->get($this->get_account_id());
-		
+		if($account){
+			$name = $account->__get('firstname').' '.$account->__get('lastname');
+		}
 		return array(
 			'id' => $this->get_id(),
 			'account_id' => $this->get_account_id(),
-			'name' => $account->__get('firstname').' '.$account->__get('lastname'),
+			'name' => $name,
 			'contract_id' => $this->get_contract_id(),
 			'message' => $this->get_message(),
 			'date' => date($date_format, $this->get_date()),

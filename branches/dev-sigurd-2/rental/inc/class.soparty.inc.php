@@ -16,7 +16,7 @@ class rental_soparty extends rental_socommon
 			'personal_identification_number' => array('type' => 'string'),
 			'first_name' => array('type' => 'string'),
 			'last_name' => array('type' => 'string'),
-			'type_id'	=> array('type' => 'int'),
+			'location_id'	=> array('type' => 'int'),
 			'is_active' => array('type', 'bool'),
 			'title' => array('type' => 'string'),
 			'company_name' => array('type' => 'string'),
@@ -57,7 +57,7 @@ class rental_soparty extends rental_socommon
       $party->set_personal_identification_number($this->unmarshal($this->db->f('personal_identification_number', true), 'string'));
       $party->set_first_name($this->unmarshal($this->db->f('first_name', true), 'string'));
       $party->set_last_name($this->unmarshal($this->db->f('last_name', true), 'string'));
-      $party->set_type_id($this->unmarshal($this->db->f('type_id', true), 'int'));
+      $party->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
       $party->set_is_active($this->unmarshal($this->db->f('is_active', true), 'bool'));
 
       $party->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -114,9 +114,9 @@ class rental_soparty extends rental_socommon
 			
 			$sql = "SELECT DISTINCT(rental_party.id), rental_party.* FROM rental_party LEFT JOIN
 					(
-						SELECT party_id, contract_id, type_id FROM rental_contract_party rcp LEFT JOIN
+						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp LEFT JOIN
 						(
-							SELECT id, type_id FROM rental_contract 
+							SELECT id, location_id FROM rental_contract 
 						) 
 						c
 						ON (c.id = rcp.contract_id) 
@@ -158,7 +158,7 @@ class rental_soparty extends rental_socommon
 			$party->set_personal_identification_number($row['personal_identification_number']);
 			$party->set_first_name($row['first_name']);
 			$party->set_last_name($row['last_name']);
-			$party->set_type_id($row['type_id']);
+			$party->set_location_id($row['location_id']);
 			$party->set_is_active($row['is_active']);
 			
 			$party->set_title($row['title']);
@@ -255,7 +255,7 @@ class rental_soparty extends rental_socommon
 			
 		if(isset($filters['party_type']) && $filters['party_type'] != 'all')
 		{
-			$filter_clauses[] = "$table_name.type_id = ".$filters['party_type'];
+			$filter_clauses[] = "$table_name.location_id = ".$filters['party_type'];
 		}
 		if(count($filter_clauses) > 0)
 		{

@@ -14,8 +14,6 @@
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
 		'rental_unit',						// Link table between property register and rental objects or composites
 	//	'rental_comment',					// Comments to rental composites and tenants
-		'rental_permission',
-		'rental_permission_root',
 		'rental_document_composite',
 		'rental_contract_last_edited',
 		'rental_contract_responsibility',
@@ -23,7 +21,6 @@
 		'rental_notification_workbench',	
 		// Admin tables
 		'rental_billing_term',
-		'rental_contract_type',
 		'rental_price_item',
 	//	'rental_custom_field_type',
 	//	'rental_rental_object_type'

@@ -182,7 +182,7 @@
 							'date_start' => $contract->get_contract_date()->get_start_date(),
 							'date_end' => $contract->get_contract_date()->get_end_date(),
 							'billing_start_date' => $contract->get_billing_start_date(),
-							'type_id' => $contract->get_type_id(),
+							'location_id' => $contract->get_location_id(),
 							'term_id' => $contract->get_term_id()
 						);
 					}

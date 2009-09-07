@@ -37,7 +37,7 @@
 		protected static $old_exception_handler;
 		
 		const LOCATION_ROOT = '.';
-		const LOCATION_IN = '.RESPONSIBILITY.IN';
+		const LOCATION_IN = '.RESPONSIBILITY.INTO';
 		const LOCATION_OUT = '.RESPONSIBILITY.OUT';
 		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 		
@@ -84,11 +84,46 @@
 			$this->hasPrivatePermission = $this->acl->check('.',PHPGW_ACL_PRIVATE, 'rental');
 		}
 		
-		protected function hasPermissionOn($location = LOCATION_ROOT, $permission = PHPGW_ACL_READ){
-			var_dump($location);
-			var_dump($permission);
-			var_dump($this->acl->check_rights($location,$permission));
+		/**
+		 * Permission check. Proxy method for method check_rights in phpgwapi->acl
+		 * 
+		 * @param $location
+		 * @param $permission
+		 * @return true if check is ok, false othewise
+		 */
+		protected function hasPermissionOn($location = rental_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
 			return $this->acl->check_rights($location,$permission);
+		}
+		
+		/**
+		 * Check to see if this user is an administrator
+		 * 
+		 * @return true if private permission on root, false otherwise
+		 */
+		protected function isAdministrator(){
+			return $this->acl->check_rights(rental_uicommon::LOCATION_ROOT,PHPGW_ACL_PRIVATE);
+		}
+		
+		/**
+		 * Check to see if the user is an executive officer
+		 * 
+		 * @return true if at least add permission on fields of responsibilities (locations: .RESPONSIBIITY.*)
+		 */
+		protected function isExecutiveOfficer(){
+			return (
+				$this->acl->check_rights(rental_uicommon::LOCATION_IN,PHPGW_ACL_ADD)	||
+				$this->acl->check_rights(rental_uicommon::LOCATION_OUT,PHPGW_ACL_ADD)	||
+				$this->acl->check_rights(rental_uicommon::LOCATION_INTERNAL,PHPGW_ACL_ADD)
+			);
+		}
+		
+		/**
+		 * Check to see if the user is a manager
+		 * 
+		 * @return true if no read,add,delete,edit permission on fields of responsibilities (locations: .RESPONSIBILITY.*)
+		 */
+		protected function isManager(){
+			return !$this->isExecutiveOfficer();
 		}
 		
 		// Permission location checks. Check global application privileges (permissions on the root of the location hierarchy)

@@ -95,7 +95,6 @@
 				'term_id' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_type' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_amount' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'billing_unit' => 		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'old_contract_id' => 	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'executive_officer' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'created' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp

@@ -11,12 +11,12 @@
 
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
-	
-		<li><a href="#rental_common_details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
+		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#rental_common_details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
 		<li><a href="#rental_common_parties"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('rental_common_parties') ?></em></a></li>
 		<li><a href="#rental_common_composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('rental_common_composite') ?></em></a></li>
 		<li><a href="#rental_common_price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('rental_common_price') ?></em></a></li>
 		<li><a href="#rental_common_documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('rental_common_documents') ?></em></a></li>
+		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_common_notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?></em></a></li>
 	</ul>
 	<div class="yui-content">
 		<div class="details">
@@ -59,20 +59,6 @@
 						?>
 						<br/>
 					</dd>
-					
-					<dt>
-						<label for="name"><?php echo lang('rental_common_billing_unit') ?></label>
-					</dt>
-					<dd>
-						<?php
-							if ($editable) {
-								echo '<input type="text" name="billing_unit" id="billing_unit" value="' . $contract->get_billing_unit() . '"/>';
-							} else {
-								echo $contract->get_billing_unit();
-							}
-						?>
-					</dd>
-					
 					<dt>
 						<label for="name"><?php echo lang('rental_common_security') ?></label>
 					</dt>

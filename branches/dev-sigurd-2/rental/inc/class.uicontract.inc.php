@@ -294,7 +294,6 @@
 				$date_start =  strtotime(phpgw::get_var('date_start_hidden'));
 				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
-				$contract->set_billing_unit(phpgw::get_var('billing_unit'));
 				$contract->set_security_type(phpgw::get_var('security_type'));
 				$contract->set_security_amount(phpgw::get_var('security_amount'));
 				
@@ -310,7 +309,7 @@
 				{
 					$date = strtotime($date);
 				}
-				$notification = new rental_notification(-1, $account_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
+				$notification = new rental_notification(-1, $account_id, null, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
 				if ($notification->store())
 				{
 					$message = lang('rental_messages_saved_form');
@@ -360,7 +359,7 @@
 			$contract = new rental_contract();
 			
 			// Set the type of the new contract
-			$contract->set_type_id(phpgw::get_var('new_contract_type'));
+			$contract->set_location_id(phpgw::get_var('new_contract_type'));
 			if($contract->store()) //contract validates
 			{
 				// Redirect to edit

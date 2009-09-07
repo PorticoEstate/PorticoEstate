@@ -60,11 +60,11 @@ $GLOBALS['phpgw']->locations->add('.ORG.BK.01.36',		'Etat for samfunnssikkerhet 
 $GLOBALS['phpgw']->locations->add('.ORG.BK.01.37',		'Erstatningsutvalgets sekretariat',				'rental',false);
 $GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',false);
 
-$GLOBALS['phpgw']->locations->add('.RESPONSIBILIY',			'Fields of responsibilities',				'rental',false);
+$GLOBALS['phpgw']->locations->add('.RESPONSIBILITY',			'Fields of responsibilities',				'rental',false);
 
-$loc_id_internal	= $GLOBALS['phpgw']->locations->add('.RESPONSIBILIY.INTERNAL',	'Field of responsibility: internleie',				'rental',false);
-$loc_id_in		 	= $GLOBALS['phpgw']->locations->add('.RESPONSIBILIY.IN',			'Field of responsibility: innleie',					'rental',false);
-$loc_id_out			= $GLOBALS['phpgw']->locations->add('.RESPONSIBILIY.OUT',			'Field of responsibility: utleie',					'rental',false);
+$loc_id_internal	= $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY.INTERNAL',		'Field of responsibility: internleie',				'rental',false);
+$loc_id_in		 	= $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY.INTO',			'Field of responsibility: innleie',					'rental',false);
+$loc_id_out			= $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY.OUT',			'Field of responsibility: utleie',					'rental',false);
 
 
 // Default groups and users
@@ -188,7 +188,7 @@ else
 }
 
 $aclobj->set_account_id($rental_in, true);
-$aclobj->add('rental', '.RESPONSIBILITY.IN', 15);
+$aclobj->add('rental', '.RESPONSIBILITY.INTO', 15);
 $aclobj->save_repository();
 
 //- Field of responsibility: Out

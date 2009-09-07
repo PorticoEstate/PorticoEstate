@@ -18,7 +18,8 @@
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_common_contracts') ?></h1>
 
 <?php 
-//if($this)
+if($this->isAdministrator() || $this->isExecutiveOfficer())
+{
 ?>
 <fieldset>
 	<!-- New contract -->
@@ -44,8 +45,9 @@
 	</select>
 	<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?php echo lang('rental_common_toolbar_functions_new_contract') ?>" />
 </fieldset>
-
 <?php
+}
+
 	$list_form = true;
 	$list_id = 'all_contracts';
 	$url_add_on = '&amp;type='.$list_id;
