@@ -568,9 +568,9 @@
 				</tr>
 				</xsl:when>
 			</xsl:choose>
-		<tr>
 			<xsl:choose>
 				<xsl:when test="need_approval='yes'">
+				<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_ask_approval"/>
 				</td>
@@ -596,9 +596,9 @@
 						</xsl:for-each>
 					</table>
 				</td>
+			</tr>
 				</xsl:when>
 			</xsl:choose>
-			</tr>
 
 			<tr>
 				<td valign="top">

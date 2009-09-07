@@ -276,7 +276,7 @@
 					<xsl:call-template name="user_id_select"/>
 				</td>
 			</tr>
-
+				<xsl:call-template name="contact_form"/>
 			<tr>
 				<td>
 					<xsl:value-of select="lang_category"/>
@@ -328,40 +328,37 @@
 		<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 		</xsl:for-each>
 	</script-->
-		<tr>
-			<xsl:choose>
-				<xsl:when test="need_approval='yes'">
+		<xsl:choose>
+			<xsl:when test="need_approval='yes'">
+			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_ask_approval"/>
 				</td>
 				<td>
-				<table>
-				<tr>
-				<td>
-					<input type="checkbox" name="values[approval]" value="True"  onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
+					<table>
+						<xsl:for-each select="value_approval_mail_address" >
+							<tr>
+								<td>
+									<input type="checkbox" name="values[approval][{id}]" value="True">
+										<xsl:attribute name="title">
+											<xsl:value-of select="//lang_ask_approval_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<input type="text" name="values[mail_address][{id}]" value="{address}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="//lang_ask_approval_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</table>
 				</td>
-				<td>
-					<input type="text" name="values[mail_address]" value="{value_approval_mail_address}" size="40" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_ask_approval_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-				</tr>
-				</table>
-				</td>
-				</xsl:when>
-			</xsl:choose>
 			</tr>
-
+			</xsl:when>
+		</xsl:choose>
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_remark"/>

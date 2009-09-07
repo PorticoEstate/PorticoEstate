@@ -935,14 +935,17 @@
 							$bcc = $coordinator_email;
 							foreach ($values['mail_address'] as $_account_id => $_address)
 							{
-								$action_params['responsible'] = $_account_id;
-								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
-								if($rcpt)
+								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
-									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
-								}
+									$action_params['responsible'] = $_account_id;
+									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+									if($rcpt)
+									{
+										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+									}
 
-								 execMethod('property.sopending_action.set_pending_action', $action_params);
+									 execMethod('property.sopending_action.set_pending_action', $action_params);
+								}
 							}
 						}
 						else

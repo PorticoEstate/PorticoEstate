@@ -1236,7 +1236,7 @@
 			$bolocation		= CreateObject('property.bolocation');
 
 			$values		= phpgw::get_var('values');
-
+			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 			if ((isset($values['cancel']) && $values['cancel']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
@@ -1424,6 +1424,11 @@
 						));
 
 
+			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
+						'contact_id'		=> $ticket['contact_id'],
+						'field'				=> 'contact',
+						'type'				=> 'form'));
+
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uitts.add'
@@ -1457,6 +1462,7 @@
 
 			$data = array
 			(
+				'contact_data'					=> $contact_data,
 				'simple'						=> $this->_simple,
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'				=> (isset($origin)?$origin:''),
@@ -1769,6 +1775,7 @@
 
 			$id = phpgw::get_var('id', 'int', 'GET');
 			$values = phpgw::get_var('values');
+			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
@@ -1950,6 +1957,12 @@
 						));
 			unset($type_id);
 
+			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
+						'contact_id'		=> $ticket['contact_id'],
+						'field'				=> 'contact',
+						'type'				=> 'form'));
+
+
 			if($ticket['contact_phone'])
 			{
 				for ($i=0;$i<count($location_data['location']);$i++)
@@ -2082,6 +2095,7 @@
 			//----------------------------------------------datatable settings--------			
 						$data = array
 			(
+				'contact_data'				=> $contact_data,
 				'lookup_type'				=> $lookup_type,
 				'simple'					=> $this->_simple,
 				'tabs'						=> self::_generate_tabs(true),

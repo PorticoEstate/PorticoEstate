@@ -859,7 +859,8 @@
 				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'finnish_date' => array('type' => 'int','precision' => '4','nullable' => True),
-				'finnish_date2' => array('type' => 'int','precision' => '4','nullable' => True)
+				'finnish_date2' => array('type' => 'int','precision' => '4','nullable' => True),
+				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1200,7 +1201,8 @@
 				'project_group' => array('type' => 'int','precision' => '4','nullable' => True),
 				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True, 'default' => '0'),
 				'account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True)
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

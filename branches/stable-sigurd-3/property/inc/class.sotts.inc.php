@@ -322,6 +322,7 @@
 				$ticket['p_cat_id']			= $this->db->f('p_cat_id');
 				$ticket['finnish_date']		= $this->db->f('finnish_date');
 				$ticket['finnish_date2']	= $this->db->f('finnish_date2');
+				$ticket['contact_id']		= $this->db->f('contact_id');
 
 				$user_id=(int)$this->db->f('user_id');
 				$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='$user_id' ");
@@ -400,7 +401,8 @@
 				$address = $this->db->db_addslashes($ticket['location_name']);
 			}
 
-			$values= array(
+			$values= array
+			(
 				$ticket['priority'],
 				$GLOBALS['phpgw_info']['user']['account_id'],
 				$ticket['assignedto'],
@@ -412,14 +414,16 @@
 				$ticket['location_code'],
 				$address,
 				phpgwapi_datetime::user_localtime(),
-				$ticket['finnish_date']);
+				$ticket['finnish_date'],
+				$ticket['contact_id']
+			);
 
 			$values	= $this->db->validate_insert($values);
 			$this->db->transaction_begin();
 
 			$this->db->query("insert into fm_tts_tickets (priority,user_id,"
 				. "assignedto,group_id,subject,cat_id,status,details,location_code,"
-				. "address,entry_date,finnish_date $cols)"
+				. "address,entry_date,finnish_date,contact_id $cols)"
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			$id = $this->db->get_last_insert_id('fm_tts_tickets','id');
@@ -564,6 +568,7 @@
 		//	$old_billable_hours	= $this->db->f('billable_hours');
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject		= $this->db->f('subject');
+			$old_contact_id		= $this->db->f('contact_id');
 			if($oldcat_id ==0){$oldcat_id ='';}
 			if($oldassigned ==0){$oldassigned ='';}
 			if($oldgroup_id ==0){$oldgroup_id ='';}
@@ -676,6 +681,13 @@
 				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
 			}
 
+			if ($old_contact_id != $ticket['contact_id'])
+			{
+				$contact_id  = (int) $ticket['contact_id'];
+				$this->fields_updated = true;
+				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id",__LINE__,__FILE__);
+			}
+
 			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
 			{
 				$this->fields_updated = true;
@@ -714,9 +726,12 @@
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
 			}
 
-			$ticket['location_code']=implode('-', $ticket['location']);
+			if(isset($ticket['location']) && $ticket['location'])
+			{
+				$ticket['location_code'] = implode('-', $ticket['location']);
+			}
 
-			if ($oldlocation_code != $ticket['location_code'])
+			if (isset($ticket['location_code']) && $ticket['location_code'] && ($oldlocation_code != $ticket['location_code']))
 			{
 				$interlink 	= CreateObject('property.interlink');
 				if( $interlink->get_relation('property', '.ticket', $id, 'origin') || $interlink->get_relation('property', '.ticket', $id, 'target'))

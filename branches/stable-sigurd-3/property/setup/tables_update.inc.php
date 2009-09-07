@@ -3734,3 +3734,23 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.570 to 0.9.17.571
+	* Add custom fields to projects, workorders and tickets
+	* 
+	*/
+
+	$test[] = '0.9.17.570';
+	function property_upgrade0_9_17_570()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','contact_id',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','contact_id',array('type' => 'int','precision' => 4,'nullable' => True));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.571';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

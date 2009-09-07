@@ -288,8 +288,6 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			$this->db->limit_query($sql,0,__LINE__,__FILE__);
-
 			$ret = $this->db->resultSet;
 
 			$interlink = CreateObject('property.interlink');

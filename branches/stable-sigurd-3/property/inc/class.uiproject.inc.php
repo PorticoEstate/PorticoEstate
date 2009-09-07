@@ -843,6 +843,7 @@
 			$values['ecodimb']			= phpgw::get_var('ecodimb');
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 
 			$datatable = array();
 
@@ -905,6 +906,7 @@
 					{
 						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 					}
+					$values['contact_id'] = $ticket['contact_id'];
 				}
 
 				if($p_entity_id && $p_cat_id)
@@ -1042,32 +1044,50 @@
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-						if ($values['approval'] && $values['mail_address'])
+
+						$action_params['responsible'] = $_account_id;
+						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$headers = "Return-Path: <". $from_email .">\r\n";
+						$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
+						$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
+						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+						$headers .= "MIME-Version: 1.0\r\n";
+
+						$subject = lang(Approval).": ". $id;
+						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang(Project) . " " . $id ." ". lang('needs approval') .'</a>';
+
+						$bcc = $from_email;
+
+						$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project',
+							'id'				=> $id,
+							'responsible'		=> '',
+							'responsible_type'  => 'user',
+							'action'			=> 'approval',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
+
+						foreach ($values['mail_address'] as $_account_id => $_address)
 						{
-							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-							$headers = "Return-Path: <". $from_email .">\r\n";
-							$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
-							$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
-							$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-							$headers .= "MIME-Version: 1.0\r\n";
-
-							$subject = lang(Approval).": ". $id;
-							$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang(Project) . " " . $id ." ". lang('needs approval') .'</a>';
-
-							$bcc = $from_email;
-
-							$rcpt = $GLOBALS['phpgw']->send->msg('email',$values['mail_address'], $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
-
-							if(!$rcpt)
+							if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 							{
-								$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $values['mail_address'] . "', subject='$subject' failed !!!");
-								$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-								$bypass_error=true;
-							}
-							else
-							{
-								$receipt['message'][]=array('msg'=>lang('%1 is notified',$values['mail_address']));
+								$rcpt = $GLOBALS['phpgw']->send->msg('email',$_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+								$action_params['responsible'] = $_account_id;
+								execMethod('property.sopending_action.set_pending_action', $action_params);
+								if(!$rcpt)
+								{
+									$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
+									$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+									$bypass_error=true;
+								}
+								else
+								{
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+								}
 							}
 						}
 
@@ -1259,6 +1279,14 @@
 						'ecodimb_descr'		=> $values['ecodimb_descr']));
 			}
 
+
+			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
+						'contact_id'		=> $values['contact_id'],
+						'contact_name'		=> $values['contact_name'],
+						'field'				=> 'contact',
+						'type'				=> 'form'));
+
+
 			if(isset($values['contact_phone']))
 			{
 				for ($i=0;$i<count($location_data['location']);$i++)
@@ -1283,8 +1311,41 @@
 				'project_id'	=> (isset($id)?$id:'')
 			);
 
-			$supervisor_id= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']:'');
-			$need_approval = (isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'');
+			$supervisor_id = 0;
+
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
+			{
+				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+			}
+
+			$need_approval = isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'';
+			$supervisor_email = array();
+			if ($supervisor_id && ($need_approval=='yes'))
+			{
+				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+				$supervisor_email[] = array
+				(
+					'id'	  => $supervisor_id,
+					'address' => $prefs['email'],
+				);
+				if ( isset($prefs['approval_from']) )
+				{
+					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+					if(isset($prefs2['email']))
+					{
+						$supervisor_email[] = array
+						(
+							'id'	  => $prefs['approval_from'],
+							'address' => $prefs2['email'],
+						);
+						$supervisor_email = array_reverse($supervisor_email);
+					}
+					unset($prefs2);
+				}
+				unset($prefs);
+			}
 
 			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']:'');
 			$project_category=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']:'');
@@ -1301,12 +1362,6 @@
 			if(!isset($values['coordinator']))
 			{
 				$values['coordinator']=$this->account;
-			}
-
-			if ($supervisor_id && $need_approval=='yes')
-			{
-				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-				$supervisor_email = $prefs['email'];
 			}
 
 			if(!isset($values['start_date']) || !$values['start_date'])
@@ -1410,6 +1465,7 @@
 				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
 				'ecodimb_data'						=> $ecodimb_data,
+				'contact_data'						=> $contact_data,
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
@@ -1531,7 +1587,7 @@
 				'need_approval'						=> isset($need_approval)?$need_approval:'',
 				'lang_ask_approval'					=> lang('Ask for approval'),
 				'lang_ask_approval_statustext'		=> lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'		=> isset($supervisor_email)?$supervisor_email:'',
+				'value_approval_mail_address'		=> $supervisor_email,
 
 				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
