@@ -15,7 +15,7 @@
 
 		<tr>
 			<td valign="top">
-				<a href="javascript:{field}_contact_lookup()" onMouseover="window.status='{lang_select_contact_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_contact"/></a>
+				<a href="javascript:{field}_contact_lookup()" title="{lang_select_contact_help}"><xsl:value-of select="lang_contact"/></a>
 			</td>
 			<td>
 				<table>

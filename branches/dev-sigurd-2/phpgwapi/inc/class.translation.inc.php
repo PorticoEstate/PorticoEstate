@@ -179,7 +179,7 @@
 		* @param bool $only_common only use the "common" translation, should be used when calling this from non module contexts
 		* @return string the translated string - when unable to be translated, the string is returned as "!$key"
 		*/
-		public function translate($key, $vars = array(), $only_common = false )
+		public function translate($key, $vars = array(), $only_common = false , $force_app = '')
 		{
 			if ( !$userlang = $this->userlang )
 			{
@@ -198,10 +198,21 @@
 				{
 					$applist .= ", '{$app_name}'";
 				}
+				if ( $force_app )
+				{
+					$force_app = $GLOBALS['phpgw']->db->db_addslashes($force_app);
+					$applist .= ", '{$force_app}'";
+				}
 
  				$sql = 'SELECT message_id, content, app_name'
 					. " FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '" . $GLOBALS['phpgw']->db->db_addslashes($lookup_key) . '\''
 					. " AND app_name IN({$applist})";
+
+//			$bt = debug_backtrace();
+//			echo "<b>translation::{$bt[1]['function']} Called from file: {$bt[1]['file']} line: {$bt[1]['line']}</b><br/>";
+//			_debug_array($sql);
+//			unset($bt);
+
 
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())

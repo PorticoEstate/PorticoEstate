@@ -646,9 +646,7 @@
 			$contact['field']						= $field;
 			$contact['contact_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column' => $field));
 			$contact['lang_contact']				= lang('contact');
-			$contact['lang_select_contact_help']	= lang('click this link to select contact');
-			$contact['lang_contact_name']			= lang('contact Name');
-
+			$contact['lang_select_contact_help']	= lang('click this link to select');
 //_debug_array($contact);
 			return $contact;
 		}

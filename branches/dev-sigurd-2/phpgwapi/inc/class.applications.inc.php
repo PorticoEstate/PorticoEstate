@@ -150,7 +150,7 @@
 				{
 					$this->data[$app['name']] = array
 					(
-						'title'   => lang($app['name']),
+						'title'   => $GLOBALS['phpgw']->translation->translate($app['name'], array(),false, $app['name']),
 						'name'    => $app['name'],
 						'enabled' => True,
 						'status'  => $GLOBALS['phpgw_info']['apps'][$app['name']]['status'],
@@ -333,7 +333,7 @@
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array
 				(
 					'name'    => $value['app_name'],
-					'title'   => lang($value['app_name']),
+					'title'   => $GLOBALS['phpgw']->translation->translate($value['app_name'], array(),false, $value['app_name']),
 					'enabled' => true,
 					'status'  => $value['app_enabled'],
 					'id'      => (int) $value['app_id'],
