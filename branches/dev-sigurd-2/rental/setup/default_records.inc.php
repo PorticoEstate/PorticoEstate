@@ -140,6 +140,8 @@ if (!$GLOBALS['phpgw']->accounts->exists('rental_admin') ) // no rental accounts
 else
 {
 	$rental_admin		= $GLOBALS['phpgw']->accounts->name2id('rental_admin');
+	//Sigurd: seems to be needed for old installs
+	$GLOBALS['phpgw']->accounts->add_user2group($rental_admin, $rental_group);
 }
 
 $aclobj->set_account_id($rental_admin, true);
