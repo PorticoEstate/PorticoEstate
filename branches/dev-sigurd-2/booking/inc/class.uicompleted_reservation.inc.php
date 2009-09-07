@@ -17,7 +17,7 @@ phpgw::import_class('booking.uicommon');
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation');
-			//self::set_active_menu('booking::completed_reservation');
+			self::set_active_menu('booking::completed_reservations');
 			$this->url_prefix = 'booking.uicompleted_reservation';
 		}
 		
@@ -138,7 +138,7 @@ phpgw::import_class('booking.uicommon');
 		public function index_json()
 		{
 			$reservations = $this->bo->read();
-			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".completed_reservation.show");
+			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
 				$reservation['exported'] = $reservation['exported'] === 1 ? 'Yes' : 'No';
 				$reservation['reservation_type'] = array(
@@ -158,4 +158,36 @@ phpgw::import_class('booking.uicommon');
 			return $results;
 		}
 		
+		public function show()
+		{
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$reservation['reservations_link'] = $this->link_to('index');
+			$reservation['edit_link'] = $this->link_to('edit', array('id' => $reservation['id']));
+			
+			if ($reservation['season_id']) {
+				$reservation['season_link'] = $this->link_to('show', array('ui' => 'season', 'id' => $reservation['season_id']));
+			} else {
+				unset($reservation['season_id']);
+				unset($reservation['season_name']);
+			}
+			
+			if ($reservation['organization_id']) {
+				$reservation['organization_link'] = $this->link_to('show', array('ui' => 'organization', 'id' => $reservation['organization_id']));
+			} else {
+				unset($reservation['organization_id']);
+				unset($reservation['organization_name']);
+			}
+			
+			if (isset($reservation['payee_identifier_type']) && !empty($reservation['payee_identifier_type'])) {
+				$reservation['payee_identifier_type'] = self::humanize($reservation['payee_identifier_type']);
+			}
+			
+			$reservation['reservation_link'] = $this->link_to('show', array(
+				'ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id']));
+				
+			//TODO: Add application_link where necessary
+			//$reservation['application_link'] = ?;
+			
+			self::render_template('completed_reservation', array('reservation' => $reservation));
+		}
 	}

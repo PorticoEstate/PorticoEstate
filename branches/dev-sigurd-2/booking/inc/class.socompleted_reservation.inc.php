@@ -28,6 +28,20 @@
 					'exported' 				=> array('type' => 'int', 'required' => True, 'nullable' => False, 'default' => 0),
 					'description'			=> array('type' => 'string'),
 					'building_name'		=> array('type' => 'string', 'required' => True),
+					'season_name'	=> array('type' => 'string', 'query' => true,
+						  'join' => array(
+							'table' => 'bb_season',
+							'fkey' => 'season_id',
+							'key' => 'id',
+							'column' => 'name'
+					)),
+					'organization_name'	=> array('type' => 'string', 'query' => true,
+						  'join' => array(
+							'table' => 'bb_organization',
+							'fkey' => 'organization_id',
+							'key' => 'id',
+							'column' => 'name'
+					)),
 					'resources' => array('type' => 'int', 'required' => True,
 						  'manytomany' => array(
 							'table' => 'bb_completed_reservation_resource',

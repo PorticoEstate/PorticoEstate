@@ -71,9 +71,22 @@
 		{
 			$params = parent::build_default_read_params();
 			if ($filter_to = phpgw::get_var('filter_to', 'string', 'GET', null)) {
-				$params['where'] = sprintf("to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$params['where'] = sprintf($this->so->table_name.".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
 			
 			return $params;
+		}
+		
+		function read_single($id)
+		{
+			$entity = parent::read_single($id);
+			$active_identifier = $this->get_active_customer_identifier($entity);
+
+			if (current($active_identifier)) {
+				$entity['payee_identifier_type'] = key($active_identifier);
+				$entity['payee_identifier'] = current($active_identifier);
+			}
+			
+			return $entity;
 		}
 	}
