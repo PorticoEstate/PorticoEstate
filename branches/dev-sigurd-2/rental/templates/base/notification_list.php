@@ -5,19 +5,19 @@
 	},
 	{
 		key: "date",
-		label: "<?php echo lang('rental_common_date') ?>",
+		label: "<?php echo lang('date') ?>",
 	},
 	{
 		key: "message",
-		label: "<?php echo lang('rental_common_message') ?>",
+		label: "<?php echo lang('message') ?>",
 	},
 	{
 		key: "recurrence",
-		label: "<?php echo lang('rental_common_recurrence') ?>",
+		label: "<?php echo lang('recurrence') ?>",
 	},
 	{
 		key: "name",
-		label: "<?php echo lang('rental_common_audience') ?>" 
+		label: "<?php echo lang('audience') ?>"
 	},
 	{
 		key: "actions",
@@ -31,7 +31,7 @@
 		key: "ajax",
 		hidden: true
 	}];
-	
+
 	<?php
 		if(isset($extra_cols)){
 			foreach($extra_cols as $col){
@@ -43,7 +43,7 @@
 					echo "columnDefs.push($literal);";
 				}
 			}
-		} 
+		}
 	?>
 
 	<?php
@@ -55,12 +55,12 @@
 							columnDefs[i].hidden = true;
 						}
 					}
-					
-				<?php	
+
+				<?php
 			}
 		}
 	?>
-	
+
 	// Initiating the data source
 	setDataSource(
 		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
@@ -75,17 +75,17 @@
 					foreach($related as $r){
 						echo "\"".$r."\"";
 					}
-				} 
+				}
 			?>)
-	);	
+	);
 </script>
-<?php 
+<?php
 	if($list_form)
 	{
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
 </form>
-<?php 
+<?php
 	}
 ?>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

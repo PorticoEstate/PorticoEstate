@@ -1,10 +1,10 @@
 <script type="text/javascript">
 	//Add listener resetting form: redirects browser to call index  again
 	YAHOO.util.Event.addListener(
-		'ctrl_reset_button', 
-		'click', 
+		'ctrl_reset_button',
+		'click',
 		function(e)
-		{    	
+		{
 			YAHOO.util.Event.stopEvent(e);
 	    	window.location = 'index.php?menuaction=rental.uicontract.index';
 		}
@@ -12,17 +12,17 @@
 
 	var columnDefs = [{
 		key: "id",
-		label: "<?php echo lang('rental_common_contract_id') ?>",
+		label: "<?php echo lang('contract_id') ?>",
 	    sortable: true
 	},
 	{
 		key: "date_start",
-		label: "<?php echo lang('rental_common_date_start') ?>",
+		label: "<?php echo lang('date_start') ?>",
 	    sortable: true
 	},
 	{
 		key: "date_end",
-		label: "<?php echo lang('rental_common_date_end') ?>",
+		label: "<?php echo lang('date_end') ?>",
 	    sortable: true
 	},
 	{
@@ -39,7 +39,7 @@
 	}];
 
 
-	
+
 	<?php
 		if(isset($extra_cols)){
 			foreach($extra_cols as $col){
@@ -51,7 +51,7 @@
 					echo "columnDefs.push($literal);";
 				}
 			}
-		} 
+		}
 	?>
 
 	<?php
@@ -63,12 +63,12 @@
 							columnDefs[i].hidden = true;
 						}
 					}
-					
-				<?php	
+
+				<?php
 			}
 		}
 	?>
-	
+
 	// Initiating the data source
 	setDataSource(
 		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
@@ -83,49 +83,49 @@
 					foreach($related as $r){
 						echo "\"".$r."\"";
 					}
-				} 
+				}
 			?>)
-	);	
+	);
 </script>
-<?php 
+<?php
 	if($list_form)
 	{
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
 		<!-- Search -->
-		<h3><?php echo lang('rental_common_search_options') ?></h3>
-		<label for="ctrl_search_query"><?php echo lang('rental_common_search_for') ?></label>
+		<h3><?php echo lang('search_options') ?></h3>
+		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
 		<input id="ctrl_search_query" type="text" name="query" />
-		<label for="ctr_toggle_search_type"><?php echo lang('rental_common_search_where') ?></label>
+		<label for="ctr_toggle_search_type"><?php echo lang('search_where') ?></label>
 		<select name="search_option" id="ctr_toggle_seach_type">
-			<option value="all" selected="selected"><?php echo lang('rental_common_all') ?></option>
-			<option value="id"><?php echo lang('rental_common_id') ?></option>
-			<option value="party_name"><?php echo lang('rental_common_party_name') ?></option>
-			<option value="composite"><?php echo lang('rental_common_composite_name') ?></option>
+			<option value="all" selected="selected"><?php echo lang('all') ?></option>
+			<option value="id"><?php echo lang('id') ?></option>
+			<option value="party_name"><?php echo lang('party_name') ?></option>
+			<option value="composite"><?php echo lang('composite_name') ?></option>
 		</select>
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset') ?>" />
+		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
+		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
-	
+
 	<fieldset>
 		<!-- Status and date filters -->
-		<h3><?php echo lang('rental_common_status') ?></h3>
+		<h3><?php echo lang('status') ?></h3>
 		<select name="contract_status" id="<?php echo $list_id ?>_ctrl_toggle_contract_status" >
-			<option value="under_planning"><?php echo lang('rental_common_under_planning') ?></option>
-			<option value="active"><?php echo lang('rental_common_active_plural') ?></option>
-			<option value="under_dismissal"><?php echo lang('rental_common_under_dismissal') ?></option>
-			<option value="ended"><?php echo lang('rental_common_ended') ?></option>
-			<option value="all" selected="selected"><?php echo lang('rental_common_all') ?></option>
+			<option value="under_planning"><?php echo lang('under_planning') ?></option>
+			<option value="active"><?php echo lang('active_plural') ?></option>
+			<option value="under_dismissal"><?php echo lang('under_dismissal') ?></option>
+			<option value="ended"><?php echo lang('ended') ?></option>
+			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 		</select>
-		<label class="toolbar_element_label" for="calendarPeriodFrom" id="label_contract_status"><?php echo lang('rental_common_date') ?></label>
+		<label class="toolbar_element_label" for="calendarPeriodFrom" id="label_contract_status"><?php echo lang('date') ?></label>
 		<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_status', $notification_date); ?>
 	</fieldset>
-	
+
 	<fieldset>
 		<!-- Contract type filter -->
-		<h3><?php echo lang('rental_common_filters') ?></h3>
-			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?php echo lang('rental_common_type') ?></label>
+		<h3><?php echo lang('filters') ?></h3>
+			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?php echo lang('type') ?></label>
 			<select name="contract_type" id="<?php echo $list_id ?>_ctrl_toggle_contract_type">
 				<?php
 				$types = rental_contract::get_fields_of_responsibility();
@@ -134,12 +134,12 @@
 					?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
 				}
 				?>
-				<option value="all" selected="selected"><?php echo lang('rental_common_all') ?></option>
+				<option value="all" selected="selected"><?php echo lang('all') ?></option>
 			</select>
 	</fieldset>
 </form>
 
-<?php 
+<?php
 	}
 ?>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

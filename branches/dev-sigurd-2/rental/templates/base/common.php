@@ -2,16 +2,16 @@
 
 /**
  * Javascript for the rental module.  Holds datasource init functions and form helpers.
- * 
+ *
  * Functions and objects within this file are kept in the YAHOO.rental namespace.
  */
- 
+
 	// Holds data source setup funtions
 	YAHOO.rental.setupDatasource = new Array();
-	
+
 	//Holds all data sources
 	YAHOO.rental.datatables = new Array();
-	
+
 	counter = 0;
 	// Adds data source setup funtions
 	function setDataSource(source_url, column_defs, form_id, filter_ids, container_id, paginator_id, datatable_id,rel_id, editor_action) {
@@ -42,37 +42,37 @@
 	// Override the built-in formatter
 	YAHOO.widget.DataTable.formatCurrency = function(elCell, oRecord, oColumn, oData) {
 		if (oData != undefined) {
-			elCell.innerHTML = YAHOO.util.Number.format( oData, 
-			{ 
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
 				prefix: "<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'].' ' ?>",
 				thousandsSeparator: ",",
-				decimalPlaces: 2 
-		    }); 
+				decimalPlaces: 2
+		    });
 		}
 		//if (oData != undefined) {
 		//	elCell.innerHTML = '<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'].' ' ?>' + parseFloat(oData).toFixed(2);
 		//}
 	};
-	
+
 	// Reloads all data sources that are necessary based on the selected related datatable
 	function reloadDataSources(selected_datatable){
-	
+
 		//... hooks into  the regular callback function (onDataReturnInitializeTable) call to set empty payload array
 		var loaded =  function  ( sRequest , oResponse , oPayload ) {
 			var payload = new Array();
 			this.onDataReturnInitializeTable( sRequest , oResponse , payload );
 		}
-	
+
 		//... refresh the selected data tables
 		selected_datatable.getDataSource().sendRequest('',{success:loaded, scope:selected_datatable});
-	
-		//... traverse all datatables and refresh related (to the selected) data tables  
+
+		//... traverse all datatables and refresh related (to the selected) data tables
 		for(var i=0; i<YAHOO.rental.datatables.length; i++){
 			var datatable = YAHOO.rental.datatables[i];
-			
+
 			if(datatable.tid == selected_datatable.related){
 				datatable.getDataSource().sendRequest('',{success:loaded,scope: datatable});
-			} 
+			}
 		}
 	}
 
@@ -85,22 +85,22 @@
 
 	// Wraps data sources setup logic
 	function dataSourceWrapper(source_properties,pag) {
-	
+
 		this.properties = source_properties;
 		this.paginator = pag;
-	
+
 		//... prepare base url
 		this.url = this.properties.url;
 		if(this.url[length-1] != '&') {
 			this.url += '&';
 		}
-	
+
 		//... set up a new data source
 		this.source = new YAHOO.util.DataSource(this.url);
-		
+
 		this.source.responseType = YAHOO.util.DataSource.TYPE_JSON;
 		this.source.connXhrMode = "queueRequests";
-		
+
 		this.source.responseSchema = {
 			resultsList: "ResultSet.Result",
 			fields: this.properties.columns,
@@ -111,9 +111,9 @@
 
 		//... set up a new data table
 		this.table = new YAHOO.widget.DataTable(
-			this.properties.container, 
-			this.properties.columns, 
-			this.source, 
+			this.properties.container,
+			this.properties.columns,
+			this.source,
 			{
 				paginator: this.paginator,
 				dynamicData: true
@@ -132,7 +132,7 @@
 		//... ?
 		this.table.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
 			if(oPayload){
-				oPayload.totalRecords = oResponse.meta.totalRecords;	
+				oPayload.totalRecords = oResponse.meta.totalRecords;
 				return oPayload;
 			}
 		}
@@ -143,8 +143,8 @@
 			for(var i=0; i<records.getLength(); i++) {
 				var record = records.getRecord(i);
 				// use a global counter to create unique names (even for the same datatable) for all context menues on the page
-				var menuName = this.container_id + "_cm_" + counter; 
-				counter++; 
+				var menuName = this.container_id + "_cm_" + counter;
+				counter++;
 
 				//create a context menu that triggers on the HTML row element
 				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(i)});
@@ -184,7 +184,7 @@
 			reloadDataSources(this.args);
 		};
 
-		//...create a handler for context menu clicks 
+		//...create a handler for context menu clicks
 		var onContextMenuClick = function(eventString, args, table) {
 			//... the argument holds the selected index number in the context menu
 			var task = args[1];
@@ -193,21 +193,21 @@
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-				
+
 				//... check whether this action should be an AJAX call
 				if(record.getData().ajax[task.index]) {
 					var request = YAHOO.util.Connect.asyncRequest(
-						'GET', 
-						record.getData().actions[ task.index ], 
-						{ 
+						'GET',
+						record.getData().actions[ task.index ],
+						{
 							success: ajaxResponseSuccess,
-							success: ajaxResponseFailure, 
+							success: ajaxResponseFailure,
 							args:table
 						});
 				} else {
 					window.location = record.getData().actions[task.index];
 				}
-			}	
+			}
 		};
 
 		// Handle mouseover and click events for inline editing
@@ -231,15 +231,15 @@
 
 			var request = YAHOO.util.Connect.asyncRequest(
 					'GET',
-					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id, 
+					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id,
 					{
 						success: ajaxResponseSuccess,
-						failure: ajaxResponseFailure, 
+						failure: ajaxResponseFailure,
 						args:oArgs.editor.getDataTable()
 					}
 				);
 		});
-		
+
 		// Don't set the row to be left-clickable if the table is editable by inline editors.
 		// In that case we use cellClickEvents instead
 		var table_should_be_clickable = true;
@@ -248,31 +248,31 @@
 				table_should_be_clickable = false;
 			}
 		}
-		
+
 		if (table_should_be_clickable) {
 			//... create a handler for regular clicks on a table row
 			this.table.subscribe("rowClickEvent", function(e,obj) {
 				YAHOO.util.Event.stopEvent(e);
-				
+
 				//... trigger first action on row click
 				var row = obj.table.getTrEl(e.target);
 				if(row) {
 					var record = obj.table.getRecord(row);
-		
+
 					//... if the context menu for this table row is visible; do not handle
 					if(record.menu.isVisible){
 						return;
 					}
-					
+
 					//... check whether this action should be an AJAX call
 					if(record.getData().ajax[0]) {
 						var request = YAHOO.util.Connect.asyncRequest(
-							'GET', 
+							'GET',
 							//... execute first action
-							record.getData().actions[0], 
-							{ 
+							record.getData().actions[0],
+							{
 								success: ajaxResponseSuccess,
-								failure: ajaxResponseFailure, 
+								failure: ajaxResponseFailure,
 								args:obj.table
 							}
 						);
@@ -294,7 +294,7 @@
 		this.table.subscribe("renderEvent",this.table.doAfterLoadData);
 
 		//... listen for form submits and filter changes
-		YAHOO.util.Event.addListener(this.properties.form,'submit',formListener,this,true); 
+		YAHOO.util.Event.addListener(this.properties.form,'submit',formListener,this,true);
 		YAHOO.util.Event.addListener(this.properties.filters, 'change',formListener,this,true);
 	}
 
@@ -304,38 +304,38 @@
 		var i = 0;
 		while(YAHOO.rental.setupDatasource.length > 0){
 			//... create a variable name, assign set up function to that variable and instantiate properties
-			variableName = "YAHOO.rental.datasource" + i;    	
+			variableName = "YAHOO.rental.datasource" + i;
 			eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
 			var source_properties = eval("new " + variableName + "()");
-	
+
 			// ... create a paginator for this datasource
 			var pag = new YAHOO.widget.Paginator({
 				rowsPerPage: 25,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: '<< <?php echo lang(rental_common_first) ?>',
-				previousPageLinkLabel: '< <?php echo lang(rental_common_previous) ?>',
-				nextPageLinkLabel: '<?php echo lang(rental_common_next) ?> >',
-				lastPageLinkLabel: '<?php echo lang(rental_common_last) ?> >>',
-				template			: "{RowsPerPageDropdown}<?php echo lang(rental_common_elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?php echo lang(rental_common_shows_from) ?> {startRecord} <?php echo lang(rental_common_to) ?> {endRecord} <?php echo lang(rental_common_of_total) ?> {totalRecords}.",
+				firstPageLinkLabel: '<< <?php echo lang(first) ?>',
+				previousPageLinkLabel: '< <?php echo lang(previous) ?>',
+				nextPageLinkLabel: '<?php echo lang(next) ?> >',
+				lastPageLinkLabel: '<?php echo lang(last) ?> >>',
+				template			: "{RowsPerPageDropdown}<?php echo lang(elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?php echo lang(shows_from) ?> {startRecord} <?php echo lang(to) ?> {endRecord} <?php echo lang(of_total) ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
-	
+
 			pag.render();
-	
+
 			//... send data source properties and paginator to wrapper function
 			this.wrapper = new dataSourceWrapper(source_properties, pag);
 			i+=1;
-	
-	
+
+
 			// XXX: Create generic column picker for all datasources
-			
+
 			// Shows dialog, creating one when necessary
 			var newCols = true;
 			var showDlg = function(e) {
 				YAHOO.util.Event.stopEvent(e);
-	
+
 				if(newCols) {
 					// Populate Dialog
 					// Using a template to create elements for the SimpleDialog
@@ -348,41 +348,41 @@
 					var elTemplateBtns = elTemplateCol.appendChild(document.createElement("span"));
 					YAHOO.util.Dom.addClass(elTemplateBtns, "dt-dlg-pickerbtns");
 					var onclickObj = {fn:handleButtonClick, obj:this, scope:false };
-	
+
 					// Create one section in the SimpleDialog for each Column
 					var elColumn, elKey, elButton, oButtonGrp;
-	
+
 					for(var i=0,l=allColumns.length;i<l;i++) {
 						var oColumn = allColumns[i];
 						if(oColumn.label != 'unselectable') { // We haven't marked the column as unselectable for the user
 							// Use the template
 							elColumn = elTemplateCol.cloneNode(true);
-	
+
 							// Write the Column key
 							elKey = elColumn.firstChild;
 							elKey.innerHTML = oColumn.label;
-	
+
 							// Create a ButtonGroup
-							oButtonGrp = new YAHOO.widget.ButtonGroup({ 
-								id: "buttongrp"+i, 
-								name: oColumn.getKey(), 
+							oButtonGrp = new YAHOO.widget.ButtonGroup({
+								id: "buttongrp"+i,
+								name: oColumn.getKey(),
 								container: elKey.nextSibling
 							});
 							oButtonGrp.addButtons([
 								{ label: "Vis", value: "Vis", checked: ((!oColumn.hidden)), onclick: onclickObj},
 								{ label: "Skjul", value: "Skjul", checked: ((oColumn.hidden)), onclick: onclickObj}
 							]);
-	
+
 							elPicker.appendChild(elColumn);
 						}
 					}
-	
+
 					newCols = false;
 				}
-	
+
 				myDlg.show();
 			};
-	
+
 			var storeColumnsUrl = YAHOO.rental.storeColumnsUrl;
 			var hideDlg = function(e) {
 				this.hide();
@@ -394,10 +394,10 @@
 						postData += '&values[columns][]=' + allColumns[i].getKey();
 					}
 				}
-	
+
 				YAHOO.util.Connect.asyncRequest('POST', storeColumnsUrl, null, postData);
 			};
-	
+
 			var handleButtonClick = function(e, oSelf) {
 				var sKey = this.get("name");
 				if(this.get("value") === "Skjul") {
@@ -408,30 +408,30 @@
 					wrapper.table.showColumn(sKey);
 				}
 			};
-	
+
 			// Create the SimpleDialog
 			YAHOO.util.Dom.removeClass("dt-dlg", "inprogress");
 			var myDlg = new YAHOO.widget.SimpleDialog("dt-dlg", {
 				width: "30em",
 				visible: false,
 				modal: false, // modal: true doesn't work for some reason - the dialog becomes unclickable
-				buttons: [ 
+				buttons: [
 					{text:"Lukk", handler:hideDlg}
 				],
 				fixedcenter: true,
 				constrainToViewport: true
 			});
 			myDlg.render();
-	
+
 			// Nulls out myDlg to force a new one to be created
 			wrapper.table.subscribe("columnReorderEvent", function(){
 				newCols = true;
 				YAHOO.util.Event.purgeElement("dt-dlg-picker", true);
 				YAHOO.util.Dom.get("dt-dlg-picker").innerHTML = "";
 			}, this, true);
-		
+
 			// Hook up the SimpleDialog to the link
-			YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);	
+			YAHOO.util.Event.addListener("dt-options-link", "click", showDlg, this, true);
 		}
 	});
 
@@ -472,33 +472,33 @@ function clearCalendar(event)
 	document.getElementById(this.inputFieldID).value = '';
 	document.getElementById(this.hiddenField).value = '';
 }
-		
-function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField,noPostOnSelect) 
+
+function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField,noPostOnSelect)
 {
 	var overlay = new YAHOO.widget.Dialog(
-		divContainerID, 
+		divContainerID,
 		{	visible: false,
 			close: true
 		}
-	);	
-			
+	);
+
 	var cal = new YAHOO.widget.Calendar(
 		"calendar",
 		calendarBodyId,
-		{ 	navigator:true, 
-			title: '<?php echo lang(rental_common_select_date) ?>',
-			start_weekday:1, 
+		{ 	navigator:true,
+			title: '<?php echo lang(select_date) ?>',
+			start_weekday:1,
 			LOCALE_WEEKDAYS:"short"}
 	);
-	
-	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(rental_common_calendar_months) ?>);
-	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(rental_common_calendar_weekdays) ?>);
+
+	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(calendar_months) ?>);
+	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(calendar_weekdays) ?>);
 	cal.render();
 
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
 	cal.inputFieldID = inputFieldID;
 	cal.hiddenField = hiddenField;
-	
+
 	YAHOO.util.Event.addListener(closeButton,'click',closeCalender,overlay,true);
 	YAHOO.util.Event.addListener(clearButton,'click',clearCalendar,cal,true);
 	YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,overlay,true);
@@ -530,7 +530,7 @@ function onCalendarSelect(type,args,array){
 	if (array[3] != undefined && !array[3]) {
 		document.getElementById('ctrl_search_button').click();
 	}
-	
+
 }
 
 /**
@@ -546,7 +546,7 @@ function updateCalFromInput(cal, inputId) {
 		var year = date_elements[0];
 		var month = date_elements[1];
 		var day = date_elements[2];
-		
+
 		cal.select(month + "/" + day + "/" + year);
 		var selectedDates = cal.getSelectedDates();
 		if (selectedDates.length > 0) {
@@ -554,7 +554,7 @@ function updateCalFromInput(cal, inputId) {
 			cal.cfg.setProperty("pagedate", (firstDate.getMonth()+1) + "/" + firstDate.getFullYear());
 			cal.render();
 		}
-		
+
 	}
 }
 
@@ -584,7 +584,7 @@ function formatDate ( format, timestamp ) {
     // *     example 4: x = date('Y m d', (new Date()).getTime()/1000); // 2009 01 09
     // *     example 4: (x+'').length == 10
     // *     returns 4: true
- 
+
     var jsdate=(
         (typeof(timestamp) == 'undefined') ? new Date() : // Not provided
         (typeof(timestamp) == 'number') ? new Date(timestamp*1000) : // UNIX timestamp
@@ -608,7 +608,7 @@ function formatDate ( format, timestamp ) {
         var june2 = new Date(temp.slice(0, temp.lastIndexOf(' ')-1));
         var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
         var daylight_time_offset = (june1 - june2) / (1000 * 60 * 60);
- 
+
         if (std_time_offset === daylight_time_offset) {
             dst = 0; // daylight savings time is NOT observed
         }
@@ -629,7 +629,7 @@ function formatDate ( format, timestamp ) {
     var txt_months =  ["", "January", "February", "March", "April",
         "May", "June", "July", "August", "September", "October", "November",
         "December"];
- 
+
     var f = {
         // Day
             d: function(){
@@ -657,22 +657,22 @@ function formatDate ( format, timestamp ) {
             z: function(){
                 return (jsdate - new Date(jsdate.getFullYear() + "/1/1")) / 864e5 >> 0;
             },
- 
+
         // Week
             W: function(){
                 var a = f.z(), b = 364 + f.L() - a;
                 var nd2, nd = (new Date(jsdate.getFullYear() + "/1/1").getDay() || 7) - 1;
- 
+
                 if(b <= 2 && ((jsdate.getDay() || 7) - 1) <= 2 - b){
                     return 1;
-                } 
+                }
                 if(a <= 2 && nd >= 4 && a >= (6 - nd)){
                     nd2 = new Date(jsdate.getFullYear() - 1 + "/12/31");
                     return date("W", Math.round(nd2.getTime()/1000));
                 }
                 return (1 + (nd <= 3 ? ((a + nd) / 7) : (a - (7 - nd)) / 7) >> 0);
             },
- 
+
         // Month
             F: function(){
                 return txt_months[f.n()];
@@ -697,7 +697,7 @@ function formatDate ( format, timestamp ) {
                 }
                 return 30;
             },
- 
+
         // Year
             L: function(){
                 var y = f.Y();
@@ -718,7 +718,7 @@ function formatDate ( format, timestamp ) {
             y: function(){
                 return (jsdate.getFullYear() + "").slice(2);
             },
- 
+
         // Time
             a: function(){
                 return jsdate.getHours() > 11 ? "pm" : "am";
@@ -768,7 +768,7 @@ function formatDate ( format, timestamp ) {
             u: function(){
                 return pad(jsdate.getMilliseconds()*1000, 6);
             },
- 
+
         // Timezone
             e: function () {
 /*                var abbr='', i=0;
@@ -827,7 +827,7 @@ function formatDate ( format, timestamp ) {
             Z: function(){
                return -jsdate.getTimezoneOffset()*60;
             },
- 
+
         // Full Date/Time
             c: function(){
                 return f.Y() + "-" + f.m() + "-" + f.d() + "T" + f.h() + ":" + f.i() + ":" + f.s() + f.P();
@@ -839,7 +839,7 @@ function formatDate ( format, timestamp ) {
                 return Math.round(jsdate.getTime()/1000);
             }
     };
- 
+
     return format.replace(/[\\]?([a-zA-Z])/g, function(t, s){
         if( t!=s ){
             // escaped

@@ -3,9 +3,9 @@
 	phpgw::import_class('rental.uidocument_composite');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
-	
+
 	class rental_uicomposite extends rental_uicommon
-	{	
+	{
 		public $public_functions = array
 		(
 			'index'		=> true,
@@ -21,23 +21,23 @@
 
 		public function __construct()
 		{
-			parent::__construct(); 
-			 
+			parent::__construct();
+
 			self::set_active_menu('rental::composites');
 		}
-		
+
 		/**
 		 * Shows a list of composites
 		 */
 		public function index()
-		{			
+		{
 			if(!$this->hasReadPermission())
 			{
 				$this->render('permission_denied.php');
-				return;	
+				return;
 			}
 			$this->render('composite_list.php');
-			
+
 		}
 
 		//View rental composite
@@ -50,14 +50,14 @@
 			$composite_id = (int)phpgw::get_var('id');
 			return $this -> viewedit(false, $composite_id);
 		}
-		
+
 		//Edit rental composite
 		public function edit(){
 		if(!$this->hasWritePermission())
 			{
 				$this->render('permission_denied.php');
 				return;
-			}	
+			}
 			$composite_id = (int)phpgw::get_var('id');
 			if(isset($_POST['save_composite']))
 			{
@@ -77,7 +77,7 @@
 			}
 			return $this -> viewedit(true, $composite_id);
 		}
-		
+
 		//Create new rental composite
 		public function add()
 		{
@@ -89,9 +89,9 @@
 			$composite = new rental_composite();
 			$composite->set_name(phpgw::get_var('rental_composite_name'));
 			$receipt = rental_composite::add($composite);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('rental_messages_new_composite')));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('messages_new_composite')));
 		}
-		
+
 		public function query()
 		{
 			if(!$this->hasReadPermission())
@@ -136,7 +136,7 @@
 						phpgw::get_var('query'),
 						phpgw::get_var('search_option'),
 						array(
-							'is_active' => phpgw::get_var('is_active'), 
+							'is_active' => phpgw::get_var('is_active'),
 							'is_vacant' => phpgw::get_var('occupancy'),
 							'contract_id' => phpgw::get_var('contract_id')
 						)
@@ -175,7 +175,7 @@
 					$composite_data = array();
 					$composite_data['total_records'] = count($contracts);
 					$composite_data['results'] = array();
-					
+
 					foreach ($contracts as $contract) {
 						$composite_data['results'][] = array(
 							'id' => $contract->get_id(),
@@ -192,7 +192,7 @@
 					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
 					$composite_data['total_records'] = rental_unit::get_orphan_rental_unit_count();
 					$composite_data['results'] = array();
-					
+
 					foreach($units as $unit)
 					{
 						$data = &$composite_data['results'][];
@@ -231,54 +231,54 @@
 					}
 					$composite_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
-					
+
 			}
-			
+
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-			
+
 			//Add action column to each row in result table
 			array_walk($composite_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type,$editable));
-			
+
 			return $this->yui_results($composite_data, 'total_records', 'results');
 		}
-		
+
 		/**
 		 * Add action links and labels for the context menu of the list items
-		 * 
-		 * @param $value pointer to 
+		 *
+		 * @param $value pointer to
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, editable]
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
-		
+
 			$value['actions'] = array();
 			$value['labels'] = array();
-			
+
 			$editable = $params[2];
-			
+
 			switch($params[1])
 			{
 				case 'included_composites':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
+					$value['labels'][] = lang('show');
 					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-						$value['labels'][] = lang('rental_common_remove');
+						$value['labels'][] = lang('remove');
 					}
 					break;
 				case 'not_included_composites':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
+					$value['labels'][] = lang('show');
 					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-						$value['labels'][] = lang('rental_common_add');
+						$value['labels'][] = lang('add');
 					}
 					break;
 				case 'included_areas':
@@ -286,7 +286,7 @@
 					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
-						$value['labels'][] = lang('rental_common_remove');
+						$value['labels'][] = lang('remove');
 					}
 					break;
 				case 'available_areas':
@@ -294,7 +294,7 @@
 					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
-						$value['labels'][] = lang('rental_common_add');
+						$value['labels'][] = lang('add');
 					}
 					break;
 				case 'orphan_units':
@@ -303,33 +303,33 @@
 				case 'contracts':
 					$value['ajax'][] = false;
 					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
+					$value['labels'][] = lang('show');
 					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = false;
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_common_edit');
+						$value['labels'][] = lang('edit');
 					}
 					break;
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
-					
-					if($this->hasWritePermission()) 
+					$value['labels'][] = lang('show');
+
+					if($this->hasWritePermission())
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_common_edit');
+						$value['labels'][] = lang('edit');
 					}
 			}
 		}
-		
+
 		/**
 		 * View or edit rental composite
-		 * 
+		 *
 		 * @param $editable true renders fields editable, false renders fields disabled
-		 * @param $composite_id	the rental composite id	
+		 * @param $composite_id	the rental composite id
 		 */
 		protected function viewedit($editable, $composite_id)
 		{
@@ -342,11 +342,11 @@
 					'message' => phpgw::get_var('message'),
 					'error' =>  phpgw::get_var('error'),
 					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
-				);				
+				);
 				$this->render('composite.php', $data);
 			}
 		}
-		
+
 		//Add a unit to a rental composite
 		function add_unit()
 		{
@@ -357,17 +357,17 @@
 			}
 			$composite_id = (int)phpgw::get_var('id');
 			$composite = rental_composite::get($composite_id);
-			
+
 			if (($composite) != null) {
 				$location_id = (int)phpgw::get_var('location_id');
 				$loc1 = (int)phpgw::get_var('loc1');
 				$composite->add_new_unit(new rental_property($loc1, $location_id));
 				$composite->store();
 			}
-			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_common_area'));
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
 		}
-		
+
 		//Remove a unit from a rental composite
 		function remove_unit()
 		{
@@ -380,19 +380,19 @@
 			$composite = rental_composite::get($composite_id);
 
 			$location_id = (int)phpgw::get_var('location_id');
-						
+
 			if ($composite != null) {
 				$composite->remove_unit(new rental_property(null, $location_id));
 				$composite->store();
 			}
-			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'rental_common_area'));
-			
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
+
 		}
 
 		/**
 		 * Get a list of rental units or areas that are not tied to any rental composite
-		 * 
+		 *
 		 */
 		public function orphan_units()
 		{
@@ -401,23 +401,23 @@
 				$this->render('permission_denied.php');
 				return;
 			}
-			
+
 			self::set_active_menu('rental::composites::orphan_units');
-			
+
 			$data = array
 			(
 				'message' => phpgw::get_var('message'),
 				'error' =>  phpgw::get_var('error'),
 				'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.orphan_units'))
 			);
-			
+
 			$this->render('orphan_unit_list.php', $data);
 		}
-				
+
 		/**
 		 * Stores which columns that should be displayed in index(). The data
 		 * is stored per user.
-		 *  
+		 *
 		 */
 		function columns()
 		{

@@ -1,9 +1,9 @@
 <?php
 /**
  * Holds the queries inserting default data (not test data):
- * 
+ *
  * $oProc->query("sql_statement");
- * 
+ *
  */
 
 
@@ -136,7 +136,7 @@ if (!$GLOBALS['phpgw']->accounts->exists('rental_admin') ) // no rental accounts
 	$account->enabled	= true;
 	$account->expires	= -1;
 	$rental_admin 		= $GLOBALS['phpgw']->accounts->create($account, array($rental_group), array(), array('admin'));
-} 
+}
 else
 {
 	$rental_admin		= $GLOBALS['phpgw']->accounts->name2id('rental_admin');
@@ -145,7 +145,7 @@ else
 $aclobj->set_account_id($rental_admin, true);
 $aclobj->add('rental', '.', 31);
 $aclobj->save_repository();
-	
+
 
 
 //- Field of responsibility: Internal
@@ -180,7 +180,7 @@ if (!$GLOBALS['phpgw']->accounts->exists('rental_in') ) // no rental accounts al
 	$account->passwd	= 'EState12=';
 	$account->enabled	= true;
 	$account->expires	= -1;
-	$rental_in 			= $GLOBALS['phpgw']->accounts->create($account, array($rental_group));	
+	$rental_in 			= $GLOBALS['phpgw']->accounts->create($account, array($rental_group));
 }
 else
 {
@@ -202,8 +202,8 @@ if (!$GLOBALS['phpgw']->accounts->exists('rental_out') ) // no rental accounts a
 	$account->enabled	= true;
 	$account->expires	= -1;
 	$rental_out 		= $GLOBALS['phpgw']->accounts->create($account, array($rental_group));
-	
-	
+
+
 }
 else
 {
@@ -281,15 +281,15 @@ $oProc->query("INSERT INTO rental_unit VALUES (14,'3409-03')");
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_unit VALUES (15,'1102-01')");
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'rental_contract_type_innleie',90)");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_internal},'rental_contract_type_internleie',90)");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_out},'rental_contract_type_eksternleie',90)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_internal},'contract_type_internleie',90)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_out},'contract_type_eksternleie',90)");
 
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_annually','1')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_half-year','2')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_quarterly','4')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_monthly','12')");
-$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('rental_common_every_second_week','24')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('annually','1')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('half-year','2')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('quarterly','4')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('monthly','12')");
+$oProc->query("INSERT INTO rental_billing_term (title, runs_a_year) VALUES ('every_second_week','24')");
 
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1253491200,'2009-01-15',{$loc_id_out},2,{$rental_out}, 1250593658, {$rental_out})");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1607731200,'2009-01-15',{$loc_id_internal},2,{$rental_internal}, 1250593658, {$rental_internal})");
@@ -312,7 +312,7 @@ $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start,
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES (1199145600,NULL,'2005-01-01',{$loc_id_internal},4,{$rental_internal}, 1250593658, {$rental_internal}, ' K00000797')");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by, old_contract_id) VALUES (1104537600,NULL,'2005-01-01',{$loc_id_internal},4,{$rental_internal}, 1250593658, {$rental_internal}, ' K00000798')");
-	
+
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (1,1)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (2,2)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)  VALUES (3,3)");
@@ -334,7 +334,7 @@ $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (17,15)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (18,15)");
-	
+
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('12345678901','Ola','Nordmann',true,'Bergensgt 5','5050','BERGEN')");
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('23456789012','Kari','Nordmann',true,'Nordnesgt 7','5020','BERGEN')");
 $oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('34567890123','Per','Nordmann',true,'Solheimsviken 13','5008','BERGEN')");
@@ -432,7 +432,7 @@ $asyncservice->set_timer(
 	array('day' => "*/1"),
 	'rental_populate_workbench_notifications',
 	'rental.sonotification.populate_workbench_notifications',
-	null 
+	null
 	);
 
 

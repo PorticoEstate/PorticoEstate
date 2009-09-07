@@ -2,9 +2,9 @@
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'unit', 'inc/model/');
-	
+
 	class rental_uiparty extends rental_uicommon
-	{	
+	{
 		public $public_functions = array
 		(
 			'add'		=> true,
@@ -19,7 +19,7 @@
 			parent::__construct();
 			self::set_active_menu('rental::parties');
 		}
-		
+
 		public function query()
 		{
 			$type = phpgw::get_var('type');
@@ -59,9 +59,9 @@
 					);
 					break;
 			}
-			
-			
-			
+
+
+
 			$rows = array();
 			foreach ($parties as $party) {
 				$rows[] = $party->serialize($contract);
@@ -69,16 +69,16 @@
 			$party_data = array('results' => $rows, 'total_records' => count($rows));
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-			
+
 			//Add action column to each row in result table
 			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('contract_id'),$type,$contract,$editable));
-			return $this->yui_results($party_data, 'total_records', 'results');			
+			return $this->yui_results($party_data, 'total_records', 'results');
 		}
-		
+
 		/**
 		 * Add action links for the context menu of the list item
-		 * 
-		 * @param $value pointer to 
+		 *
+		 * @param $value pointer to
 		 * @param $key ?
 		 * @param $params [composite_id, type of query, contract editable]
 		 */
@@ -86,79 +86,79 @@
 		{
 			$value['actions'] = array();
 			$value['labels'] = array();
-			
+
 			$editable = $params[3];
-			
+
 			switch($params[1])
 			{
 				case 'included_parties':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
-					if($this->hasWritePermission() && $editable == true) 
+					$value['labels'][] = lang('show');
+					if($this->hasWritePermission() && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-						$value['labels'][] = lang('rental_common_remove');
+						$value['labels'][] = lang('remove');
 						if($value['id'] != $params[2]->get_payer_id()){
 							$value['ajax'][] = true;
 							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
-							$value['labels'][] = lang('rental_common_set_payer');
+							$value['labels'][] = lang('set_payer');
 						}
 					}
 					break;
 				case 'not_included_parties':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
-					if($this->hasWritePermission() && $editable == true) 
+					$value['labels'][] = lang('show');
+					if($this->hasWritePermission() && $editable == true)
 					{
-						$value['ajax'][] = true;			
+						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
-						$value['labels'][] = lang('rental_common_add');
+						$value['labels'][] = lang('add');
 						break;
 					}
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('rental_common_show');
-					if($this->hasWritePermission()) 
+					$value['labels'][] = lang('show');
+					if($this->hasWritePermission())
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('rental_common_edit');
+						$value['labels'][] = lang('edit');
 					}
 					break;
 			}
 		}
-		
-		
+
+
 		///View all contracts
 		public function index()
-		{	
+		{
 			$this->render('party_list.php');
 		}
-		
+
 		/**
 		 * Adds a new party and forwards to edit mode for it.
-		 * 
+		 *
 		 */
 		public function add()
 		{
 			$party = new rental_party();
 			$party->store();
 			// Redirect to edit
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'message' => lang('rental_messages_new_party')));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'message' => lang('messages_new_party')));
 		}
-		
+
 		/**
 		 * Displays info about a party.
-		 * 
+		 *
 		 */
 		public function view() {
 			return $this -> viewedit(false, (int)phpgw::get_var('id'));
 		}
-		
+
 		/**
 		 * Edits a party.
 		 */
@@ -189,12 +189,12 @@
 			}
 			return $this -> viewedit(true, $party_id);
 		}
-		
+
 		/**
 		 * View or edit party
-		 * 
+		 *
 		 * @param $editable bool true renders fields editable, false renders fields disabled
-		 * @param $party_id int with the party id	
+		 * @param $party_id int with the party id
 		 */
 		protected function viewedit($editable = false, $party_id)
 		{
@@ -210,8 +210,8 @@
 						'message' => phpgw::get_var('message'),
 						'error' => phpgw::get_var('error'),
 						'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
-						);				
-				$this->render('party.php', $data);	
+						);
+				$this->render('party.php', $data);
 				}
 			}
 		}
