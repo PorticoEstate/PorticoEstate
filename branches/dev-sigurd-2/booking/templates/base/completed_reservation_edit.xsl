@@ -1,0 +1,40 @@
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<div id="content">
+		<dl class="form">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit completed reservation')"/></dt>
+		</dl>
+		<xsl:call-template name="msgbox"/>
+		<xsl:call-template name="yui_booking_i18n"/>
+
+
+		<form action="" method="POST">
+			<dl class="form-col">
+				<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
+				<dd><input id="field_cost" name="cost" type="text" value="{reservation/cost}"/></dd>
+			</dl>
+
+			<dl class="form-col">
+				<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
+				<dd><input id="field_organization_number" name="payee_organization_number" type="text" value="{reservation/payee_organization_number}"/></dd>
+
+				<dt><label for="field_ssn"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
+				<dd><input type='text' id='field_ssn' name="payee_ssn" value='{reservation/payee_ssn}'/></dd>
+			</dl>
+
+			<div style='clear:both'/>
+			<dl class="form">
+				<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
+				<dd>
+					<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="reservation/description"/></textarea>
+				</dd>
+			</dl>
+
+			<div class="form-buttons">
+				<input type="submit" value="{php:function('lang', 'Save')}"/>
+				<a class="cancel" href="{reservation/cancel_link}">
+					<xsl:value-of select="php:function('lang', 'Cancel')"/>
+				</a>
+			</div>
+		</form>
+	</div>
+</xsl:template>

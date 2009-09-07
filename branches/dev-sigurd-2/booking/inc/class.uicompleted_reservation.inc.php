@@ -10,6 +10,8 @@ phpgw::import_class('booking.uicommon');
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
+		
+		protected $fields = array('cost', 'payee_organization_number', 'payee_ssn', 'description');
 
 		protected $module = 'booking';
 		
@@ -24,6 +26,11 @@ phpgw::import_class('booking.uicommon');
 		public function link_to($action, $params = array())
 		{
 			return $this->link($this->link_to_params($action, $params));
+		}
+		
+		public function redirect_to($action, $params = array())
+		{
+			return $this->redirect($this->link_to_params($action, $params));
 		}
 		
 		public function link_to_params($action, $params = array())
@@ -158,9 +165,8 @@ phpgw::import_class('booking.uicommon');
 			return $results;
 		}
 		
-		public function show()
+		protected function add_default_display_data(&$reservation)
 		{
-			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$reservation['reservations_link'] = $this->link_to('index');
 			$reservation['edit_link'] = $this->link_to('edit', array('id' => $reservation['id']));
 			
@@ -184,10 +190,43 @@ phpgw::import_class('booking.uicommon');
 			
 			$reservation['reservation_link'] = $this->link_to('show', array(
 				'ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id']));
-				
+			
+			$reservation['cancel_link'] = $this->link_to('show', array('id' => $reservation['id']));
 			//TODO: Add application_link where necessary
 			//$reservation['application_link'] = ?;
-			
+		}
+		
+		public function show()
+		{
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$this->add_default_display_data($reservation);
 			self::render_template('completed_reservation', array('reservation' => $reservation));
+		}
+		
+		public function edit() {
+			//TODO: Add editing of reservation type
+			//TODO: Display hint to user about primary type of customer identifier
+			
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			
+			$errors = array();
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$reservation = array_merge($reservation, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($reservation);
+				if(!$errors)
+				{
+					try {
+						$receipt = $this->bo->update($reservation);	
+						$this->redirect_to('show', array('id' => $reservation['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
+				}
+			}
+			
+			$this->add_default_display_data($reservation);
+			$this->flash_form_errors($errors);
+			self::render_template('completed_reservation_edit', array('reservation' => $reservation));
 		}
 	}
