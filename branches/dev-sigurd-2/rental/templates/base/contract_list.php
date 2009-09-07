@@ -17,15 +17,28 @@
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('rental_common_contracts') ?></h1>
 
+<?php 
+//if($this)
+?>
 <fieldset>
 	<!-- New contract -->
 	<h3><?php echo lang('rental_common_toolbar_new_contract') ?></h3>
 	<select name="new_contract_type" id="ctrl_new_contract_type">
 		<?php 
-		$types = rental_contract::get_contract_types();
+		$types = rental_contract::get_fields_of_responsibility();
 		foreach($types as $id => $label)
 		{
-			?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
+			
+			$names = $this->locations->get_name($id);
+			if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+			{	
+				if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+				{
+				?>
+					<option value="<?php echo $id ?>"><?php echo lang($label) ?></option>
+				<?php
+				}
+			}
 		}
 		?>
 	</select>

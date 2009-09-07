@@ -480,13 +480,13 @@
 		}
 		
 		/**
-		 * Get a list of the available contract types.
+		 * Get fields of responsibility.
 		 * 
-		 * @return array key/value array of id mapped to contract type title 
+		 * @return array key/value array of location_id mapped to field title 
 		 */
-		public static function get_contract_types(){
+		public static function get_fields_of_responsibility(){
 			$so = self::get_so();
-			$types = $so->get_contract_types();
+			$types = $so->get_fields_of_responsibility();
 			return $types;
 		}
 		

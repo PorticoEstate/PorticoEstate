@@ -12,14 +12,11 @@
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
 	
-		<li <?php echo (!isset($_POST['add_notification']) && !isset($_POST['save_invoice'])) ? 'class="selected"' : "" ?>><a href="#rental_common_details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
+		<li><a href="#rental_common_details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_details') ?></em></a></li>
 		<li><a href="#rental_common_parties"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('rental_common_parties') ?></em></a></li>
 		<li><a href="#rental_common_composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('rental_common_composite') ?></em></a></li>
 		<li><a href="#rental_common_price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('rental_common_price') ?></em></a></li>
-		<li <?php echo isset($_POST['save_invoice']) ? 'class="selected"' : "" ?>><a href="#rental_common_invoice"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_bill') ?></em></a></li>
 		<li><a href="#rental_common_documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('rental_common_documents') ?></em></a></li>
-		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#rental_common_notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('rental_common_notifications') ?></em></a></li>
-		<li><a href="#rental_common_others"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('rental_common_others') ?></em></a></li>
 	</ul>
 	<div class="yui-content">
 		<div class="details">
@@ -125,6 +122,82 @@
 							}
 						?>
 					</dd>
+					<dt>
+						<label for="billing_term"><?php echo lang('rental_common_billing_term') ?></label>
+					</dt>
+					<dd>
+						<?php 
+						if ($editable)
+						{
+							$current_term_id = $contract->get_term_id();
+							?>
+							<select name="billing_term">
+								<?php
+								foreach(rental_contract::get_billing_terms() as $term_id => $term_title)
+								{
+									echo "<option ".($current_term_id == $term_id ? 'selected="selected"' : "")." value=\"{$term_id}\">".lang($term_title)."</option>";
+								}
+								?>
+							</select>
+							<?php
+						?>
+						<?php 
+						}
+						else // Non-editable
+						{
+							echo lang($contract->get_term_id_title());
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="billing_start_date"><?php echo lang('rental_common_billing_start') ?></label>
+					</dt>
+					<dd>
+						<?php
+						$billing_start_date = $contract->get_billing_start_date();
+						if($billing_start_date == null || $billing_start_date == '') // No date set
+						{
+							// ..so we try to use the start date of the contract if any
+							$contract_date = $contract->get_contract_date();
+							if($contract_date != null && $contract_date->has_start_date())
+							{
+								$billing_start_date = $contract_date->get_start_date();
+							}
+							else // No start date of contract
+							{
+								// ..so we use the today's date
+								$billing_start_date = time();
+							}
+						}
+						if($editable)
+						{
+							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
+						}
+						else{ // Non-ediable
+							echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
+						}
+						?>
+					</dd>
+					<dt>
+						Saksbehander:
+					</dt>
+					<dd>
+						<select name="executive_officer" id="executive_officer">
+							<?php 
+								$executive_officer = $contract->get_executive_officer_id();
+								$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+								foreach($accounts as $account)
+								{	
+									$account_id = $account->__get('id');
+									$selected = '';
+									if($account_id == $executive_officer){
+										$selected = 'selected=\'selected\'';
+									}
+									echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";			
+								}
+							?>
+						</select>
+					</dd>
 				</dl>
 				<div class="form-buttons">
 					<?php
@@ -221,81 +294,9 @@
 				include('price_item_partial.php'); ?>
 			<?php } ?>
 		</div>
-		<div id="invoice">
-			<form action="#" method="post">
-				<dl class="proplist-col">
-					<dt>
-						<label for="billing_term"><?php echo lang('rental_common_billing_term') ?></label>
-					</dt>
-					<dd>
-						<?php 
-						if ($editable)
-						{
-							$current_term_id = $contract->get_term_id();
-							?>
-							<select name="billing_term">
-								<?php
-								foreach(rental_contract::get_billing_terms() as $term_id => $term_title)
-								{
-									echo "<option ".($current_term_id == $term_id ? 'selected="selected"' : "")." value=\"{$term_id}\">".lang($term_title)."</option>";
-								}
-								?>
-							</select>
-							<?php
-						?>
-						<?php 
-						}
-						else // Non-editable
-						{
-							echo lang($contract->get_term_id_title());
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="billing_start_date"><?php echo lang('rental_common_billing_start') ?></label>
-					</dt>
-					<dd>
-						<?php
-						$billing_start_date = $contract->get_billing_start_date();
-						if($billing_start_date == null || $billing_start_date == '') // No date set
-						{
-							// ..so we try to use the start date of the contract if any
-							$contract_date = $contract->get_contract_date();
-							if($contract_date != null && $contract_date->has_start_date())
-							{
-								$billing_start_date = $contract_date->get_start_date();
-							}
-							else // No start date of contract
-							{
-								// ..so we use the today's date
-								$billing_start_date = time();
-							}
-						}
-						if($editable)
-						{
-							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
-						}
-						else{ // Non-ediable
-							echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
-						}
-						?>
-					</dd>
-				</dl>
-				<div class="form-buttons">
-					<?php
-						if ($editable) {
-							echo '<input type="submit" name="save_invoice" value="' . lang('rental_common_save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
-						}
-					?>
-				</div>
-			</form>
-		</div>
 		<div id="documents">
 		</div>
-		<div id="notfications">
+		<div id="notifications">
 			<h3><?php echo lang('rental_common_new_notification') ?></h3>
 			<?php 
 			if ($editable) {
@@ -364,36 +365,6 @@
 			unset($editors);
 			include('notification_list.php');
 			?>
-		</div>
-		<div id="others">
-			<form action="#" method="post">
-				<h3>Saksbehander:</h3>
-				<select name="executive_officer" id="executive_officer">
-					<?php 
-						$executive_officer = $contract->get_executive_officer_id();
-						$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
-						foreach($accounts as $account)
-						{	
-							$account_id = $account->__get('id');
-							$selected = '';
-							if($account_id == $executive_officer){
-								$selected = 'selected=\'selected\'';
-							}
-							echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";			
-						}
-					?>
-					<div class="form-buttons">
-						<?php
-							if ($editable) {
-								echo '<input type="submit" name="save_other" value="' . lang('rental_common_save') . '"/>';
-								echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_cancel') . '</a>';
-							} else {
-								echo '<a class="cancel" href="' . $cancel_link . '">' . lang('rental_common_back') . '</a>';
-							}
-						?>
-					</div>
-				</select>
-			</form>
 		</div>
 	</div>
 </div>

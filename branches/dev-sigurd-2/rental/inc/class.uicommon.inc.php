@@ -36,6 +36,11 @@
 	{
 		protected static $old_exception_handler;
 		
+		const LOCATION_ROOT = '.';
+		const LOCATION_IN = '.RESPONSIBILITY.IN';
+		const LOCATION_OUT = '.RESPONSIBILITY.OUT';
+		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
+		
 		public $dateFormat;
 		
 		//Global application permission holders
@@ -70,12 +75,20 @@
 			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->locations = & $GLOBALS['phpgw']->locations;
 			
-			$this->hasReadPermission = $this->acl->check('run',PHPGW_ACL_READ, 'rental');
+			$this->hasReadPermission = $this->acl->check('.',PHPGW_ACL_READ, 'rental');
 			$this->hasAddPermission = $this->acl->check('.',PHPGW_ACL_ADD, 'rental');
 			$this->hasWritePermission = $this->acl->check('.',PHPGW_ACL_EDIT, 'rental');
 			$this->hasDeletePermission = $this->acl->check('.',PHPGW_ACL_DELETE, 'rental');
 			$this->hasPrivatePermission = $this->acl->check('.',PHPGW_ACL_PRIVATE, 'rental');
+		}
+		
+		protected function hasPermissionOn($location = LOCATION_ROOT, $permission = PHPGW_ACL_READ){
+			var_dump($location);
+			var_dump($permission);
+			var_dump($this->acl->check_rights($location,$permission));
+			return $this->acl->check_rights($location,$permission);
 		}
 		
 		// Permission location checks. Check global application privileges (permissions on the root of the location hierarchy)

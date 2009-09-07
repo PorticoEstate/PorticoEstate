@@ -18,6 +18,7 @@
 		'rental_permission_root',
 		'rental_document_composite',
 		'rental_contract_last_edited',
+		'rental_contract_responsibility',
 		'rental_notification',				// Stores user notifications
 		'rental_notification_workbench',	
 		// Admin tables

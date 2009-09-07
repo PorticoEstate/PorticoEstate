@@ -15,8 +15,8 @@ class rental_socontract extends rental_socommon
 		array
 		(
 					'id'	=> array('type' => 'int'),
-					'date_start' => array('type' => 'date'),
-					'date_end' => array('type' => 'date'),
+					'date_start' => array('type' => 'int'),
+					'date_end' => array('type' => 'int'),
 					'title'	=> array('type' => 'string'),
 					'composite_name' => array('type' => 'string'),
 					'first_name' => array('type' => 'string'),
@@ -89,32 +89,41 @@ class rental_socontract extends rental_socommon
 			$filter_clauses[] = "contract.type_id = $type";
 		}
 		
-		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){
-			
-			$status_date = date('Y-m-d');
-			$timestamp = mktime(0,0,0,date("m")+3,date("d"),date("y"));
-			$dismissal_date = date('Y-m-d',$timestamp);
-			
+		/* 
+		 * Contract status is defined by the dates in each contract compared to the target date (default today):
+		 * - contracts under planning: 
+		 * the start date is larger (in the future) than the target date, or start date is undefined
+		 * - active contracts: 
+		 * the start date is smaller (in the past) than the target date, and the end date is undefined (running) or 
+		 * larger (fixed) than the target date
+		 * - under dismissal: 
+		 * the start date is smaller than the target date, 
+		 * the end date is larger than the target date, and 
+		 * the end date substracted the contract type notification period is smaller than the target date
+		 * - ended:
+		 * the end date is smaller than the target date
+		 */
+		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){	
 			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
 			{
-				$status_date = $filters['status_date_hidden'];
-				$dismissal_timestamp = strtotime(date("Y-m-d", strtotime($status_date)) . " +3 month");;
-				$dismissal_date = date('Y-m-d',$dismissal_timestamp);
-				//var_dump($dismissal_date);
+				$ts_query = strtotime($filters['status_date_hidden']); // target timestamp specified by user
+			} 
+			else
+			{
+				$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 			}
-			
 			switch($filters['contract_status']){
 				case 'under_planning':
-					$filter_clauses[] = "contract.date_start > '{$status_date}' OR contract.date_start IS NULL";
+					$filter_clauses[] = "contract.date_start > {$ts_query} OR contract.date_start IS NULL";
 					break;
 				case 'active':
-					$filter_clauses[] = "contract.date_start <= '{$status_date}' AND ( contract.date_end >= '{$status_date}' OR contract.date_end IS NULL)";
+					$filter_clauses[] = "contract.date_start <= {$ts_query} AND ( contract.date_end >= {$ts_query} OR contract.date_end IS NULL)";
 					break;
 				case 'under_dismissal':
-					$filter_clauses[] = "contract.date_start <= '{$status_date}' AND contract.date_end >= '{$status_date}' AND contract.date_end <= '{$dismissal_date}'";
+					$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
 					break;
 				case 'ended':
-					$filter_clauses[] = "contract.date_end < '{$status_date}'" ;
+					$filter_clauses[] = "contract.date_end < {$ts_query}'" ;
 					break;
 			}
 		}
@@ -133,14 +142,14 @@ class rental_socontract extends rental_socommon
 	 * 
 	 * @return array
 	 */
-	function get_contract_types(){
-		$sql = "SELECT id,title FROM rental_contract_type";
+	function get_fields_of_responsibility(){
+		$sql = "SELECT location_id,title FROM rental_contract_responsibility";
 		$this->db->query($sql, __LINE__, __FILE__);
 		$results = array();
 		while($this->db->next_record()){
-			$results[$this->db->f('id', true)] = $this->db->f('title', true);
+			$location_id = $this->db->f('location_id', true);
+			$results[$location_id] = $this->db->f('title', true);
 		}
-		
 		return $results;
 	}
 	
@@ -182,8 +191,8 @@ class rental_socontract extends rental_socommon
 
 		$contract->set_id($this->unmarshal($this->db->f('contract_id', true), 'int'));
 
-		$date_start =  strtotime($this->unmarshal($this->db->f('date_start', true), 'date'));
-		$date_end = strtotime($this->unmarshal($this->db->f('date_end', true), 'date'));
+		$date_start =  $this->unmarshal($this->db->f('date_start', true), 'date');
+		$date_end = $this->unmarshal($this->db->f('date_end', true), 'date');
 	
 		$date = new rental_contract_date($date_start, $date_end);
 		$contract->set_contract_date($date);
@@ -291,7 +300,7 @@ class rental_socontract extends rental_socommon
 			}
 			if($new_contract) {
 				$contract = new rental_contract($row['id']);
-			$contract->set_contract_date(new rental_contract_date(strtotime($row['date_start']),strtotime($row['date_end'])));
+			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
 			$contract->set_party_name($party_name);
 			$contract->set_composite_name($row['composite_name']);
 			$contract->set_old_contract_id($row['old_contract_id']);
@@ -362,17 +371,8 @@ class rental_socontract extends rental_socommon
 			{
 				$contract = new rental_contract($this->unmarshal($this->db->f('id', true), 'string'));
 				$date_start = '';
-				$date_start_timestamp = $this->unmarshal($this->db->f('date_start', true), 'date');
-				if($date_start_timestamp != null && $date_start_timestamp != '')
-				{
-					$date_start =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($date_start_timestamp));
-				}
-				$date_end_timestamp = $this->unmarshal($this->db->f('date_end', true), 'date');
-				if($date_end_timestamp != null && $date_end_timestamp != '')
-				{
-					$date_end = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($date_end_timestamp));
-				}
-	     			
+				$date_start_timestamp = $this->unmarshal($this->db->f('date_start', true), 'int');
+				$date_end_timestamp = $this->unmarshal($this->db->f('date_end', true), 'int');
 	     	
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				
@@ -535,8 +535,8 @@ class rental_socontract extends rental_socommon
 		}
 		
 		if ($contract->get_contract_date()) {
-			$values[] = "date_start = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
-			$values[] = "date_end = " . $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
+			$values[] = "date_start = " . $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
+			$values[] = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
 		
 		if ($contract->get_billing_unit()) {
@@ -570,9 +570,7 @@ class rental_socontract extends rental_socommon
 	 * @return unknown_type
 	 */
 	private function last_edited_by($contract_id){
-		
-		
-		$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+		$account_id = $GLOBALS['phpgw_info']['user']['account_id']; // current user
 		$ts_now = strtotime('now');
 		
 		$sql_has_edited_before = "SELECT account_id FROM rental_contract_last_edited WHERE contract_id = $contract_id";
@@ -623,8 +621,8 @@ class rental_socontract extends rental_socommon
 		if ($contract->get_contract_date()) {
 			$cols[] = 'date_start';
 			$cols[] = 'date_end';
-			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_start_date()), 'date');
-			$values[] = $this->marshal(date('Y-m-d', $contract->get_contract_date()->get_end_date()), 'date');
+			$values[] = $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
+			$values[] = $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
 		
 		if ($contract->get_billing_unit()) {
