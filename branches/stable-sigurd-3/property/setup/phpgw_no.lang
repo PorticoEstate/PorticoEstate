@@ -459,6 +459,7 @@ delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett arbeidsordre
 delivered	property	no	Levert
 description	property	no	Beskrivelse
+descr	property	no	Beskrivelse
 details	property	no	Detaljer
 deviation	property	no	Avvik
 deviation has been added	property	no	Avvik er lagt til
@@ -496,6 +497,7 @@ do not import this invoice	property	no	Ikke importer dette bilaget
 down	property	no	Ned
 download	property	no	Last ned
 download table to your browser	property	no	Last ned tabell til din nettleser
+do you really want to change the status to %1	property	no	Vil du virkelig endre status til %1
 do you really want to delete this entry	property	no	Vil du virkelig slette denne posten
 do you really want to update the categories	property	no	vil du virkelig oppdatere kategoriene
 do you really want to update the categories again	property	no	vil du virkelig oppdatere kategoriene igjen
@@ -918,7 +920,8 @@ list vendors	property	no	List leverandør
 list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
 list workorder	property	no	List arbeidsordre
-location	property	no	lokalisering
+location	property	no	Lokalisering
+location changed	property	no	Lokalisering er endret
 location code	property	no	Lokaliserings kode
 location_code	property	no	Lokaliserings kode
 location config	property	no	Konfigurering av lokalisering
@@ -1053,7 +1056,6 @@ owner	property	no	eier
 owner attributes	property	no	Eier attributter
 owner categories	property	no	Eier kategorier
 owner type	property	no	Eiertype
-page prepared in %1 seconds.	property	no	Side produsert på %1 sekunder
 paid	property	no	Betalt
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
@@ -1513,6 +1515,7 @@ table could not be added	property	no	Tabell kunne ikke legges til i databasen
 table has not been saved	property	no	Tabell er ikke lagret
 table name	property	no	Tabellnavn
 take over	property	no	Ta over
+take over the assignment for this ticket	property	no	Ta over ansvaret for denne saken
 tax code	property	no	MVA kode
 template	property	no	Mal
 template %1 is added	property	no	mal %1 er lagt til

@@ -73,6 +73,7 @@ november	common	no	November
 october	common	no	Oktober
 ok	common	no	OK
 only yours	common	no	kun dine
+page prepared in %1 seconds.	common	no	Side produsert på %1 sekunder
 password	common	no	Passord
 password has been updated	common	no	Passord har blitt oppdatert
 powered by phpgroupware version %1	common	no	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
@@ -93,6 +94,10 @@ sorry, there was a problem processing your request.	common	no	Beklager, der var 
 submit	common	no	Submit
 sunday	common	no	Søndag
 thursday	common	no	Torsdag
+the api is current	common	no	API er oppdatert
+the api requires an upgrade	common	no	API må oppdateres
+this application is current	common	no	Denne modulen er oppdatert
+this application requires an upgrade	common	no	Denne modulen må oppdateres
 time	common	no	Tid
 total	common	no	Total
 tuesday	common	no	Tirsdag
