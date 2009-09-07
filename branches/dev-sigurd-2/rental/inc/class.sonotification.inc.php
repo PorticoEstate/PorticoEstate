@@ -46,7 +46,7 @@ class rental_sonotification extends rental_socommon
 			$notification = new rental_notification(
 				$this->unmarshal($this->db->f('id', true), 'int'), 
 				$this->unmarshal($this->db->f('account_id', true), 'int'), 
-				$this->unmarchal($this->db->f('location_id', true), 'int'),
+				$this->unmarshal($this->db->f('location_id', true), 'int'),
 				$this->unmarshal($this->db->f('contract_id', true), 'int'), 
 				$date, 
 				$this->unmarshal($this->db->f('message', true), 'text'), 
@@ -266,7 +266,8 @@ class rental_sonotification extends rental_socommon
 	{
 		return new rental_notification(
 			$this->unmarshal($this->db->f('id', true), 'int'), 
-			$this->unmarshal($this->db->f('account_id', true), 'int'), 
+			$this->unmarshal($this->db->f('account_id', true), 'int'),
+			$this->unmarshal($this->db->f('location_id', true), 'int'),
 			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
 			$this->unmarshal($this->db->f('date', true), 'int'),
 			$this->unmarshal($this->db->f('message', true), 'text'),
