@@ -113,24 +113,6 @@
 			<h3><?php echo lang('rental_common_added_areas') ?></h3>
 			<div id="added-areas-datatable-container" class="datatable_container"></div>
 			<?php if ($editable) { ?>
-            <script type="text/javascript">
-                //Initiate calendar for changing status date when filtering on contract status
-                YAHOO.util.Event.onDOMReady(
-                    function()
-                    {
-                        initCalendar(
-                            'available_date',
-                            'calendarAvailableDate',
-                            'calendarAvailableDate_body',
-                            '<?php echo lang('rental_common_select_date') ?>',
-                            'calendarAvailableDateCloseButton',
-                            'calendarAvailableDateClearButton',
-                            'available_date_hidden',
-                            false
-                        );
-                    }
-                );
-            </script>
 				<h3><?php echo lang('rental_common_add_area') ?></h3>
 				<form id="available_areas_form" method="GET">
 					<fieldset>
@@ -145,16 +127,9 @@
 							<option value="5"><?php echo lang('rental_common_room') ?></option>
 						</select>
 						
-						<label class="toolbar_element_label" for="calendarPeriodFrom"><?php echo lang('rental_common_available_at') ?></label>
-						<input type="text" name="available_date" id="available_date" size="10"/>
-						<input type="hidden" name="available_date_hidden" id="available_date_hidden"/>
-						<div id="calendarAvailableDate">
-                            <div id="calendarAvailableDate_body"></div>
-                            <div class="calheader">
-                                <button id="calendarAvailableDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-                                <button id="calendarAvailableDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-                            </div>
-                        </div>
+						<label class="toolbar_element_label" for="available_date"><?php echo lang('rental_common_available_at') ?></label>
+						<?php echo $GLOBALS['phpgw']->yuical->add_listener('available_date', $notification_date); ?>
+
 						
 						<input type="submit" id="ctrl_search_button" value="<?php echo lang('rental_common_search') ?>" />
 						<input type="button" id="ctrl_reset_button" value="<?php echo lang('rental_common_reset') ?>" />

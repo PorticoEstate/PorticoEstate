@@ -1,21 +1,4 @@
 <script type="text/javascript">
-	//Initiate calendar for changing status date when filtering on contract status
-	YAHOO.util.Event.onDOMReady(
-		function()
-		{
-			initCalendar(
-				'<?php echo $list_id ?>_status_date', 
-				'calendarStatusDate', 
-				'calendarStatusDate_body', 
-				'<?php echo lang('rental_common_select_date') ?>', 
-				'calendarStatusDateCloseButton',
-				'calendarStatusDateClearButton',
-				'status_date_hidden',
-				false
-			);
-		}
-	);
-
 	//Add listener resetting form: redirects browser to call index  again
 	YAHOO.util.Event.addListener(
 		'ctrl_reset_button', 
@@ -24,30 +7,6 @@
 		{    	
 			YAHOO.util.Event.stopEvent(e);
 	    	window.location = 'index.php?menuaction=rental.uicontract.index';
-		}
-	);
-
-
-	//Add listener on status change: disable on 'all', change label on other
-	YAHOO.util.Event.addListener(
-		'<?php echo $list_id ?>_ctrl_toggle_contract_status',
-		'change',
-		function(e)
-		{	
-			var value = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_contract_status').value;
-			if(value != 'all'){
-				document.getElementById('<?php echo $list_id ?>_status_date').disabled = false;
-				if(value == 'ended'){
-					document.getElementById('label_contract_status').innerHTML = '<?php echo lang('rental_common_status_before') ?>';
-				} else {
-					document.getElementById('label_contract_status').innerHTML = '<?php echo lang('rental_common_status_date') ?>';
-				}
-			} else {
-				document.getElementById('status_date_hidden').value = '';
-				document.getElementById('<?php echo $list_id ?>_status_date').value = '';
-				document.getElementById('<?php echo $list_id ?>_status_date').disabled = true;
-				document.getElementById('label_contract_status').innerHTML = '<?php echo lang('rental_common_status_date') ?>';
-			}
 		}
 	);
 
@@ -160,15 +119,7 @@
 			<option value="all" selected="selected"><?php echo lang('rental_common_all') ?></option>
 		</select>
 		<label class="toolbar_element_label" for="calendarPeriodFrom" id="label_contract_status"><?php echo lang('rental_common_date') ?></label>
-		<input type="text" name="status_date" id="<?php echo $list_id ?>_status_date" size="10" disabled="disabled"/>
-		<input type="hidden" name="status_date_hidden" id="status_date_hidden"/>
-		<div id="calendarStatusDate">
-			<div id="calendarStatusDate_body"></div>
-			<div class="calheader">
-				<button id="calendarStatusDateCloseButton"><?php echo lang('rental_common_close') ?></button>
-				<button id="calendarStatusDateClearButton"><?php echo lang('rental_common_reset') ?></button>
-			</div>
-		</div>
+		<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_status', $notification_date); ?>
 	</fieldset>
 	
 	<fieldset>
