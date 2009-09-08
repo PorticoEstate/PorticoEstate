@@ -67,11 +67,25 @@
 			return array($active_identifier_type => $entity[self::$customer_field_prefix.$active_identifier_type]);
 		}
 		
+		public function unset_show_all_completed_reservations()
+		{
+			unset($_SESSION['show_all_completed_reservations']);
+		}
+		
+		public function show_all_completed_reservations() 
+		{
+			$_SESSION['show_all_completed_reservations'] = "1";
+		}
+		
 		protected function build_default_read_params()
 		{
 			$params = parent::build_default_read_params();
-			if ($filter_to = phpgw::get_var('filter_to', 'string', 'GET', null)) {
+			if ($filter_to = phpgw::get_var('filter_to', 'string', array('GET', 'POST'), null)) {
 				$params['where'] = sprintf($this->so->table_name.".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+			}
+			
+			if(!isset($_SESSION['show_all_completed_reservations'])) {
+				$params['filters']['exported'] = '0';
 			}
 			
 			return $params;

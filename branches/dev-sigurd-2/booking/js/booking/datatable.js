@@ -1,17 +1,25 @@
 YAHOO.booking.setupToolbar = function() {
-    var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', 'toolbar');
-    for(var i=0; i < items.length; i++) {
-        var type = items[i].getAttribute('type');
-        if(type == 'link') {
-            new YAHOO.widget.Button(items[i], 
-                                    {type: 'link', 
-                                     href: items[i].getAttribute('href')});
-        }
-        else if(type == 'submit') {
-            new YAHOO.widget.Button(items[i], {type: 'submit'});
-        }
-    }
-}
+	YAHOO.booking.renderUiFormItems('toolbar');
+};
+
+YAHOO.booking.setupListActions = function() {
+	YAHOO.booking.renderUiFormItems('list_actions');
+};
+
+YAHOO.booking.renderUiFormItems = function(container) {
+	var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', container);
+   for(var i=0; i < items.length; i++) {
+       var type = items[i].getAttribute('type');
+       if(type == 'link') {
+           new YAHOO.widget.Button(items[i], 
+                                   {type: 'link', 
+                                    href: items[i].getAttribute('href')});
+       }
+       else if(type == 'submit') {
+           new YAHOO.widget.Button(items[i], {type: 'submit'});
+       }
+   }
+};
 
 YAHOO.booking.setupPaginator = function() {
 	var paginatorConfig = {
@@ -31,6 +39,7 @@ YAHOO.booking.setupPaginator = function() {
 YAHOO.booking.initializeDataTable = function()
 {
 	YAHOO.booking.setupToolbar();
+	YAHOO.booking.setupListActions();
 	YAHOO.booking.setupDatasource();
 
     var fields = [];
@@ -75,6 +84,18 @@ YAHOO.booking.initializeDataTable = function()
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});
     });
+
+	YAHOO.util.Event.addListener('list_actions_form', "submit", function(e){
+		YAHOO.util.Event.stopEvent(e);
+		window.setTimeout(function(baseUrl) {
+			var qs1 = YAHOO.booking.serializeForm('queryForm');
+			var qs2 = YAHOO.booking.serializeForm('list_actions_form');
+			var action = location.href + '&' + qs1 + '&' + qs2;
+			alert(action);
+			YAHOO.util.Dom.setAttribute(document.getElementById('list_actions_form'), 'action', action);
+			document.getElementById('list_actions_form').submit();
+		}, 0, baseUrl);
+	});
 };
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.booking.initializeDataTable);

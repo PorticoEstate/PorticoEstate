@@ -17,10 +17,10 @@
 
 <xsl:template match="data">
 	<xsl:call-template name="yui_booking_i18n"/>
-    <xsl:apply-templates select="form" />
-    <xsl:apply-templates select="toolbar"/>
-    <xsl:apply-templates select="paging"/>
-    <xsl:apply-templates select="datatable"/>
+	<xsl:apply-templates select="form" />
+	<xsl:apply-templates select="paging"/>
+	<xsl:apply-templates select="datatable"/> 
+	<xsl:apply-templates select="form/list_actions"/>
 </xsl:template>
 
 <xsl:template match="toolbar">
@@ -126,6 +126,29 @@
 			</xsl:if>
 		</table>
     </div>
+</xsl:template>
+
+<xsl:template match="form/list_actions">
+	<form id="list_actions_form" method="POST">
+		<!-- Form action is set by javascript listener -->
+		<div id="list_actions" class='yui-skin-sam'>
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<xsl:for-each select="item">
+						<td valign="top">
+							<input id="innertoolbar">
+								<xsl:attribute name="type"><xsl:value-of select="phpgw:conditional(not(type), '', type)"/></xsl:attribute>
+								<xsl:attribute name="name"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
+								<xsl:attribute name="onclick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
+								<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
+								<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
+							</input>
+						</td>
+					</xsl:for-each>
+				</tr>
+			</table>
+		</div>
+	</form>
 </xsl:template>
 
 <xsl:template match="form">
