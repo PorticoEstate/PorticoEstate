@@ -371,7 +371,7 @@ class uiaddressbook
 		//$criteria = $this->bo->criteria_contacts($this->access, $category_filter, $fields_search, $this->query);
 		$criteria = $this->bo->criteria_contacts($this->access, $category_filter, $this->qfield, $this->query, $fields_search);
 		$total_all_persons = $this->bo->$count_function($criteria);
-		$entries = $this->bo->$get_data_function($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+		$entries = $this->bo->$get_data_function($fields, $this->start, $this->limit, $this->order, $this->sort, '', $criteria);
 
 		if(is_array($entries) && count($entries) > 0)
 		{
