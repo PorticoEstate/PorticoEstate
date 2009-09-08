@@ -91,7 +91,6 @@ YAHOO.booking.initializeDataTable = function()
 			var qs1 = YAHOO.booking.serializeForm('queryForm');
 			var qs2 = YAHOO.booking.serializeForm('list_actions_form');
 			var action = location.href + '&' + qs1 + '&' + qs2;
-			alert(action);
 			YAHOO.util.Dom.setAttribute(document.getElementById('list_actions_form'), 'action', action);
 			document.getElementById('list_actions_form').submit();
 		}, 0, baseUrl);
