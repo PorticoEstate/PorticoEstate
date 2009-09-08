@@ -115,8 +115,8 @@
 			);
 		}
 		
-		public function complete_expired() {
-			$this->so->complete_expired();
+		public function complete_expired(&$allocations) {
+			$this->so->complete_expired($allocations);
 		}
 		
 		public function find_expired() {

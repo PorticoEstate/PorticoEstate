@@ -394,8 +394,8 @@ function array_minus($a, $b)
 			return $new_bookings;
 		}
 		
-		public function complete_expired() {
-			$this->so->complete_expired();
+		public function complete_expired(&$bookings) {
+			$this->so->complete_expired($bookings);
 		}
 		
 		public function find_expired() {

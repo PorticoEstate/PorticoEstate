@@ -74,7 +74,7 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		public function format_agresso(&$reservations) {
-			$orders = array();
+			//$orders = array();
 			$output = array();
 			//$batch_id_pattern = '{$date}-%s';
 			//%s - should be replaced with K (Kultur) or I (Idrett) 
@@ -219,7 +219,7 @@ phpgw::import_class('booking.uicommon');
 				$text['sequence_no'] = str_pad(intval($item['sequence_no'])+1, 8, '0', STR_PAD_LEFT);
 				
 				//Add to orders
-				$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
+				//$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
 				$output[] = implode('', $header);
 				$output[] = implode('', $item);
 				$output[] = implode('', $text);
