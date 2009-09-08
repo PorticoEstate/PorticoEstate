@@ -98,7 +98,8 @@
 				'old_contract_id' => 	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'executive_officer' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'created' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
-				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true)
+				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+                'comment' =>            array('type' => 'text')
 			),
 			'pk' => array('id'),
 			'fk' => array(

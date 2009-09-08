@@ -296,6 +296,7 @@
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 				$contract->set_security_type(phpgw::get_var('security_type'));
 				$contract->set_security_amount(phpgw::get_var('security_amount'));
+				$contract->set_comment(phpgw::get_var('comment'));
 
 				$contract->store();
 			}

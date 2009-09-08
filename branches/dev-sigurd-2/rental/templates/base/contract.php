@@ -185,6 +185,25 @@
 						</select>
 					</dd>
 				</dl>
+                <dl class="proplist-col">
+                    <dt>
+                        <label for="comment"><?php echo lang('comment') ?></label>
+                    </dt>
+                    <dd>
+                        <?php
+                        if ($editable)
+                        {
+                            ?>
+                            <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $contract->get_comment(); ?></textarea>
+                            <?php
+                        }
+                        else
+                        {
+                            echo $contract->get_comment();
+                        }
+                        ?>
+                    </dd>
+                </dl>
 				<div class="form-buttons">
 					<?php
 						if ($editable) {

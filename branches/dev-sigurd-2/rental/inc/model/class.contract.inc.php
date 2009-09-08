@@ -31,6 +31,7 @@
 		protected $price_items;	
 		protected $last_edited_by_current_user;
 		protected $executive_officer_id;
+		protected $comment;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -283,6 +284,21 @@
 			
 			return $this->price_items;
 		}
+
+        public function set_comment($comment)
+        {
+            $this->comment = $comment;
+        }
+        
+        /**
+         * Get comment associated with this contract.
+         * 
+         * @return string comment
+         */
+        public function get_comment()
+        {
+            return $this->comment;
+        }
 		
 		
 		/**
@@ -397,7 +413,7 @@
 			
 			return $total;
 		}
-		
+
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 

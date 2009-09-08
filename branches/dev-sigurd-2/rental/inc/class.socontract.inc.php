@@ -22,6 +22,7 @@ class rental_socontract extends rental_socommon
 					'first_name' => array('type' => 'string'),
 					'last_name' => array('type' => 'string'),
 					'company_name' => array('type' => 'string'),
+					'comment' => array('type' => 'string'),
 					'old_contract_id' => array('type' => 'string'),
 					'edited_on' => array('type' => 'date')
 		));
@@ -51,6 +52,7 @@ class rental_socontract extends rental_socommon
 				case "all":
 					$like_clauses[] = "contract.id = $query";
 					$like_clauses[] = "contract.old_contract_id = $query";
+					$like_clauses[] = "contract.comment = $this->like $like_pattern";
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
@@ -181,7 +183,7 @@ class rental_socontract extends rental_socommon
 		$id = (int)$id;
 		$sql_payer_id = " {$this->left_join} (SELECT contract_id, party_id FROM rental_contract_party WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, rental_contract.location_id, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, executive_officer, old_contract_id, rental_contract_responsibility.title  
+		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, rental_contract.location_id, rental_contract.comment, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, executive_officer, old_contract_id, rental_contract_responsibility.title
 				FROM " . $this->table_name . $sql_payer_id . " 
 				{$this->left_join} rental_contract_responsibility ON (rental_contract_responsibility.location_id = rental_contract.location_id) 
 				{$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) 
@@ -216,6 +218,7 @@ class rental_socontract extends rental_socommon
 		$contract->set_old_contract_id($this->unmarshal($this->db->f('old_contract_id', true), 'string'));
 		$contract->set_payer_id($this->unmarshal($this->db->f('party_id', true), 'int'));
 		$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer', true), 'int'));
+		$contract->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 
 			
 		return $contract;
@@ -302,14 +305,15 @@ class rental_socontract extends rental_socommon
 				}		
 			}
 			if($new_contract) {
-				$contract = new rental_contract($row['id']);
-			$contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
-			$contract->set_party_name($party_name);
-			$contract->set_composite_name($row['composite_name']);
-			$contract->set_old_contract_id($row['old_contract_id']);
-			$contract->set_contract_type_title($row['title']);
-			$contract->set_last_edited_by_current_user($row['edited_on']);
-			$contracts[] = $contract;
+                $contract = new rental_contract($row['id']);
+                $contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
+                $contract->set_party_name($party_name);
+                $contract->set_composite_name($row['composite_name']);
+                $contract->set_old_contract_id($row['old_contract_id']);
+                $contract->set_contract_type_title($row['title']);
+                $contract->set_comment($row['comment']);
+                $contract->set_last_edited_by_current_user($row['edited_on']);
+                $contracts[] = $contract;
 			}
 		}
 		return $contracts;
@@ -367,16 +371,18 @@ class rental_socontract extends rental_socommon
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 			
-			$sql = "SELECT rental_contract.id, date_start, date_end FROM {$tables} {$joins} WHERE {$condition} {$order}";
+			$sql = "SELECT rental_contract.id, date_start, date_end, rental_contract.comment FROM {$tables} {$joins} WHERE {$condition} {$order}";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 			while($this->db->next_record())
 			{
 				$contract = new rental_contract($this->unmarshal($this->db->f('id', true), 'string'));
 				$date_start = '';
 				$date_start_timestamp = $this->unmarshal($this->db->f('date_start', true), 'int');
+				$comment = $this->unmarshal($this->db->f('comment', true), 'string');
 				$date_end_timestamp = $this->unmarshal($this->db->f('date_end', true), 'int');
 	     	
 				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
+				$contract->set_comment($comment);
 				
 				// TODO: include party here whenever that db table is ready
 				//$contract->set_party($party)
@@ -539,11 +545,12 @@ class rental_socontract extends rental_socommon
 		if ($contract->get_contract_date()) {
 			$values[] = "date_start = " . $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
-		}	
+		}
 		
 		$values[] = "security_type = '" . $this->marshal($contract->get_security_type(), 'int') . "'";
 		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
 		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
+		$values[] = "comment = ". $this->marshal($contract->get_comment(), 'string');
 
 		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
