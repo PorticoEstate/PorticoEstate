@@ -18,6 +18,7 @@ class rental_soparty extends rental_socommon
 			'last_name' => array('type' => 'string'),
 			'location_id'	=> array('type' => 'int'),
 			'is_active' => array('type', 'bool'),
+			'comment' => array('type', 'string'),
 			'title' => array('type' => 'string'),
 			'company_name' => array('type' => 'string'),
 			'department' => array('type' => 'string'),
@@ -59,6 +60,7 @@ class rental_soparty extends rental_socommon
       $party->set_last_name($this->unmarshal($this->db->f('last_name', true), 'string'));
       $party->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
       $party->set_is_active($this->unmarshal($this->db->f('is_active', true), 'bool'));
+      $party->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 
       $party->set_title($this->unmarshal($this->db->f('title', true), 'string'));
       $party->set_company_name($this->unmarshal($this->db->f('company_name', true), 'string'));
@@ -160,6 +162,7 @@ class rental_soparty extends rental_socommon
 			$party->set_last_name($row['last_name']);
 			$party->set_location_id($row['location_id']);
 			$party->set_is_active($row['is_active']);
+			$party->set_comment($row['comment']);
 			
 			$party->set_title($row['title']);
 			$party->set_company_name($row['company_name']);
@@ -224,6 +227,7 @@ class rental_soparty extends rental_socommon
 					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
 					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
 					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
+					$like_clauses[] = "$table_name.comment $this->like $like_pattern";
 					$like_clauses[] = "$table_name.address_2 $this->like $like_pattern";
 					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
 					$like_clauses[] = "$table_name.place $this->like $like_pattern";
@@ -293,7 +297,8 @@ class rental_soparty extends rental_socommon
 			'url = \'' . $party->get_url() . '\'',
 			'account_number = \'' . $party->get_account_number() . '\'',
 			'reskontro = \'' . $party->get_reskontro() . '\'',
-			'is_active = \'' . ($party->is_active() ? 'true' : 'false') . '\''
+			'is_active = \'' . ($party->is_active() ? 'true' : 'false') . '\'',
+			'comment = \'' . $party->get_comment() . '\''
 		);
 				
 		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

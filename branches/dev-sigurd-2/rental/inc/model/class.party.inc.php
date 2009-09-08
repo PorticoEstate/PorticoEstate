@@ -18,6 +18,7 @@ class rental_party
     protected $last_name;
     protected $location_id;
     protected $is_active;
+    protected $comment;
 
     protected $title;
     protected $company_name;
@@ -231,6 +232,16 @@ class rental_party
 		$this->reskontro = $reskontro;
 	}
 
+    public function set_comment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    public function get_comment()
+    {
+        return $this->comment;
+    }
+	
 	public function get_name()
 	{
 		$name = $this->last_name;

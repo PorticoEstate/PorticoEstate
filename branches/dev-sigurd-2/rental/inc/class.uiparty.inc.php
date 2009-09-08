@@ -184,6 +184,7 @@
 				$party->set_account_number(phpgw::get_var('account_number'));
 				$party->set_reskontro(phpgw::get_var('reskontro'));
 				$party->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+				$party->set_comment(phpgw::get_var('comment'));
 				$party->store();
 				// XXX: How to get error msgs back to user?
 			}

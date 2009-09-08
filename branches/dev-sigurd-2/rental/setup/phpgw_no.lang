@@ -42,6 +42,7 @@ calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli"
 calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 cancel	rental	no	Avbryt
 close	rental	no	Lukk
+comment rental	no	Kommentar
 comments	rental	no	Kommentarer
 company	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt

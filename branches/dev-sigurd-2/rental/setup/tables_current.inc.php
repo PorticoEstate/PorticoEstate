@@ -149,6 +149,7 @@
 					'personal_identification_number' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'first_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'last_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'comment' =>	array('type' => 'text'),
 					'is_active' =>	array('type' => 'bool', 'nullable' => false, 'default' => 'true'),
 					'title' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'company_name' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
