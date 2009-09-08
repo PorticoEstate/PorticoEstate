@@ -29,7 +29,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
-			                      'from_', 'to_', 'audience', 'active');
+			                      'from_', 'to_', 'audience', 'active', 'cost');
 		}
 		
 		public function index()
@@ -87,6 +87,10 @@
 						array(
 							'key' => 'to_',
 							'label' => lang('To')
+						),
+						array(
+							'key' => 'cost',
+							'label' => lang('Cost')
 						),
 						array(
 							'key' => 'link',
@@ -159,7 +163,6 @@
 				$booking = extract_values($_POST, $this->fields);
 				$booking['active'] = '1';
 				$booking['completed'] = '0';
-				$booking['cost'] = '0';
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
