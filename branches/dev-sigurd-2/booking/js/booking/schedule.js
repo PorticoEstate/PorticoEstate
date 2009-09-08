@@ -44,6 +44,28 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 	}
 };
 
+YAHOO.booking.bookingToHtml = function(booking) { 
+	if(booking.type == 'booking') {
+		var link = 'index.php?menuaction=booking.uibooking.edit&id=' + booking.id;
+	}
+	else if(booking.type == 'allocation') {
+		var link = 'index.php?menuaction=booking.uiallocation.edit&id=' + booking.id;
+	}
+	else if(booking.type == 'event') {
+		var link = 'index.php?menuaction=booking.uievent.edit&id=' + booking.id;
+	}
+	else {
+		var link = null;
+	}
+	var html = YAHOO.booking.link(booking.name, link, 12);
+	if(booking.type == 'event' && booking.conflicts) {
+		for(var i=0; i<booking.conflicts.length;i++) {
+			html += '<div class="conflict">conflicts with: ' + YAHOO.booking.bookingToHtml(booking.conflicts[i]) + '</div>';
+		}
+	}
+	return html;
+};
+
 YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
@@ -52,18 +74,7 @@ YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn,
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
-		if(booking.type == 'booking') {
-			var link = 'index.php?menuaction=booking.uibooking.edit&id=' + booking.id;
-		}
-		else if(booking.type == 'allocation') {
-			var link = 'index.php?menuaction=booking.uiallocation.edit&id=' + booking.id;
-		}
-		else if(booking.type == 'event') {
-			var link = 'index.php?menuaction=booking.uievent.edit&id=' + booking.id;
-		}
-		else
-			var link = null;
-		elCell.innerHTML = YAHOO.booking.link(booking.name, link, 12);
+		elCell.innerHTML = YAHOO.booking.bookingToHtml(booking);
 	}
 	else {
 		elCell.innerHTML = '...';

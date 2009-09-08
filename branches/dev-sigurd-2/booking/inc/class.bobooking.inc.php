@@ -365,24 +365,31 @@ function array_minus($a, $b)
 			return $new_bookings;
 		}
 
-		function _remove_event_conflicts($bookings, $events)
+		function _remove_event_conflicts($bookings, &$events)
 		{
+			foreach($events as &$e)
+			{
+				$e['conflicts'] = array();
+			}
 			$new_bookings = array();
 			foreach($bookings as $b)
 			{
 				$keep = true;
-				foreach($events as $e)
+				foreach($events as &$e)
 				{
 					if(($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
 					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_']))
 					{
 						$keep = false;
+						$e['conflicts'][] = $b;
 						break;
 					}
 				}
 				if($keep)
+				{
 					$new_bookings[] = $b;
+				}
 			}
 			return $new_bookings;
 		}
