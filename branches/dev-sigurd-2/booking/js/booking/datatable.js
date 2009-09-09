@@ -75,10 +75,13 @@ YAHOO.booking.initializeDataTable = function()
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
         return oPayload;
     }
+
+	 YAHOO.booking.lastDatatableQuery = false;
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
 		  YAHOO.booking.preSerializeQueryForm('queryForm');
         var qs = YAHOO.booking.serializeForm('queryForm');
+		  YAHOO.booking.lastDatatableQuery = qs;
         myDataSource.liveData = baseUrl + qs + '&';
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
@@ -87,13 +90,14 @@ YAHOO.booking.initializeDataTable = function()
 
 	YAHOO.util.Event.addListener('list_actions_form', "submit", function(e){
 		YAHOO.util.Event.stopEvent(e);
-		window.setTimeout(function(baseUrl) {
-			var qs1 = YAHOO.booking.serializeForm('queryForm');
-			var qs2 = YAHOO.booking.serializeForm('list_actions_form');
-			var action = location.href + '&' + qs1 + '&' + qs2;
+		window.setTimeout(function() {
+			var action = location.href + '&' + YAHOO.booking.serializeForm('list_actions_form');
+			if (YAHOO.booking.lastDatatableQuery) {
+				action = action + '&' + YAHOO.booking.lastDatatableQuery;
+			}
 			YAHOO.util.Dom.setAttribute(document.getElementById('list_actions_form'), 'action', action);
-			document.getElementById('list_actions_form').submit();
-		}, 0, baseUrl);
+		   document.getElementById('list_actions_form').submit();
+		}, 0);
 	});
 };
 

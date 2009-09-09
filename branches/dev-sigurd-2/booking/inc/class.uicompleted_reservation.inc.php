@@ -41,7 +41,6 @@ phpgw::import_class('booking.uicommon');
 				unset($params['ui']);
 			} else {
 				$ui = 'completed_reservation';
-				//$this->apply_inline_params($params);
 			}
 			
 			$action = sprintf($this->module.'.ui%s.%s', $ui, $action);
@@ -50,21 +49,15 @@ phpgw::import_class('booking.uicommon');
 		
 		public function export() {
 			//TODO: also filter on exported value
-			$reservations = $this->bo->read();
+			$reservations = $this->bo->read_all();
 			
 			$filename = 'report.txt';
 			$file_type = self::get_file_type_from_extension($filename);
 			
 			$options = array('filename' => $filename);
 			$options['latin1_filename'] = utf8_decode($options['filename']);
-			
-			#Below only seems to work for firefox. RE: http://www.ietf.org/rfc/rfc2047.txt
-			#header("Content-Disposition: attachment; filename*=utf-8'en-us'{$options['filename']}");
-			
-			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined. 
-			//However, in reality (where most of us live), UAs pick one of the two values that it understands. 
+
 			header("Content-Disposition: attachment; filename={$options['latin1_filename']}");
-			#header("Content-Description: {$options['filename']}");
 			header("Content-Type: $file_type");
 			
 			echo $this->format_agresso($reservations['results']);

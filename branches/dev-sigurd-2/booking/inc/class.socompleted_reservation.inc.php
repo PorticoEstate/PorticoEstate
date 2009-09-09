@@ -52,13 +52,9 @@
 			);
 		}
 		
-		// final public static function getTypeColumnValue() {
-		// 	return self::typeColumnValue();
-		// }
-		// 
-		// public static function typeColumnValue() {
-		// 	return null;
-		// }
+		public function read($options) {
+			return parent::read($options);
+		}
 		
 		public function create_from($type, $reservation) {
 			$entity = array(

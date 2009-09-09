@@ -88,6 +88,14 @@
 				$params['filters']['exported'] = '0';
 			}
 			
+			if (isset($params['filters']['season_name']) AND isset($params['filters']['season_id'])) {
+				unset($params['filters']['season_name']);
+			}
+				
+			if (isset($params['filters']['building_name']) AND isset($params['filters']['building_id'])) {
+				unset($params['filters']['building_name']);
+			} 
+			
 			return $params;
 		}
 		
