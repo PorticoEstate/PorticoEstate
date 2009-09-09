@@ -33,6 +33,20 @@
 			return $this->so->read($this->build_default_read_params());
 		}
 		
+		/**
+		 * Returns all rows matching current filters using no limit.
+		 */
+		function read_all() {
+			return $this->so->read($this->build_read_all_params());
+		}
+		
+		protected function build_read_all_params() {
+			$params = $this->build_default_read_params();
+			unset($params['start']);
+			$params['results'] = 'all';
+			return $params;
+		}
+		
 		protected function build_default_read_params()
 		{
 			$start = phpgw::get_var('startIndex', 'int', array('GET','POST'), 0);
