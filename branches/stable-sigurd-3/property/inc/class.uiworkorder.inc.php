@@ -938,7 +938,7 @@
 								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
 									$action_params['responsible'] = $_account_id;
-									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'plain');
+									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 									if($rcpt)
 									{
 										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
