@@ -186,7 +186,7 @@
 				$userlang = 'en';
 			}
 
-			$app_name = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$app_name = $force_app ? $GLOBALS['phpgw']->db->db_addslashes($force_app) : $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
 			if ( !is_array($this->lang)
@@ -197,11 +197,6 @@
 				if ( !$only_common )
 				{
 					$applist .= ", '{$app_name}'";
-				}
-				if ( $force_app )
-				{
-					$force_app = $GLOBALS['phpgw']->db->db_addslashes($force_app);
-					$applist .= ", '{$force_app}'";
 				}
 
  				$sql = 'SELECT message_id, content, app_name'
