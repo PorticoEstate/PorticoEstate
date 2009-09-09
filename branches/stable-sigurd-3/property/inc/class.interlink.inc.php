@@ -277,7 +277,7 @@
 				{
 					$status_text = execMethod('property.botts.get_status_text');
 				}
-				return lang($status_text[$status_code]);
+				return $status_text[$status_code];
 			}
 			else if($type == '.project.workorder')
 			{
