@@ -1801,7 +1801,7 @@
 				{
 					$this->_account_id = $account_id;
 
-					if(!$this->check($location,$required, 'property'))
+					if(!$this->check($location,$required, $appname))
 					{
 						unset($accounts[$account_id]);
 					}
