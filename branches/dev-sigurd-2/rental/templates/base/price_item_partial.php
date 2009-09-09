@@ -14,10 +14,10 @@
 		if (oData != undefined) {
 			elCell.innerHTML = YAHOO.util.Number.format( oData,
 			{
-				suffix: " <?php echo lang('currency_suffix') ?>",
+				suffix: " <?php echo isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK'; ?>",
 				thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
-				decimalSeparator: "<?php echo lang('currency_decimal_separator') ?>",
-				decimalPlaces: <?php echo lang('currency_decimal_places') ?>
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ','; ?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2; ?>
 		    });
 		}
 	}
@@ -26,10 +26,10 @@
 		if (oData != undefined && oData != 0) {
 			elCell.innerHTML = YAHOO.util.Number.format( oData,
 			{
-				suffix: " <?php echo lang('area_suffix') ?>",
-				thousandsSeparator: "<?php echo lang('thousands_separator') ?>",
-				decimalSeparator: "<?php echo lang('decimal_separator')?>",
-				decimalPlaces: <?php echo lang('area_decimal_places') ?>
+				suffix: " <?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?>",
+				thousandsSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; ?>",
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] : 2; ?>
 		    });
 		}
 	}
@@ -39,8 +39,8 @@
 			elCell.innerHTML = YAHOO.util.Number.format( oData,
 			{
 				suffix: " <?php echo lang('count_suffix') ?>",
-				thousandsSeparator: "<?php echo lang('count_thousands_separator') ?>",
-				decimalPlaces: <?php echo lang('count_decimal_places') ?>
+				thousandsSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; ?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['count_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['count_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['count_decimal_places'] : 0; ?>
 		    });
 		}
 	}

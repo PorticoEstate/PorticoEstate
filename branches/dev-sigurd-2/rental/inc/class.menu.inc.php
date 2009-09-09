@@ -65,6 +65,11 @@
 
 			$menus['admin'] = array
 			(
+				'index'	=> array
+				(
+					'text'	=> lang('Configuration'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'rental') )
+				),
 				'price_item_list'	=> array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('price_list', array(), true),
@@ -82,6 +87,11 @@
 
 			$menus['preferences'] = array
 			(
+				array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'rental', 'type'=> 'user') )
+				),
 				array
 				(
 				'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),

@@ -1,5 +1,7 @@
 <?php
 	include("common.php");
+	$config	= CreateObject('phpgwapi.config','rental');
+	$config->read();
 ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('price_list') ?></h1>
@@ -41,10 +43,10 @@
 		if (oData != undefined) {
 			elCell.innerHTML = YAHOO.util.Number.format( oData,
 			{
-				suffix: " <?php echo lang('currency_suffix') ?>",
+				suffix: " <?php echo isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK'; ?>",
 				thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
-				decimalSeparator: "<?php echo lang('currency_decimal_separator') ?>",
-				decimalPlaces: <?php echo lang('currency_decimal_places') ?>
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ','; ?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2; ?>
 		    });
 		}
 	}

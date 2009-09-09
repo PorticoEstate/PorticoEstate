@@ -11,12 +11,12 @@ agresso_id	rental	no	Agresso ID
 all	rental	no	Alle
 and	rental	no	og
 annually	rental	no	Årlig
-area_decimal_places	rental	no	2
 area_gros	rental	no	Bruttoareal
 area_net	rental	no	Nettoareal
 area_not_found	rental	no	Kunne ikke finne detaljer om arealet
 area	rental	no	Areal
-area_suffix	rental	no	kvm
+area decimal places	rental	no	Antall desimaler for arealer
+area suffix	rental	no	Areal suffix
 audience	rental	no	Målgruppe
 availability	rental	no	Tilgjengelighet
 available_at	rental	no	Ledig på dato
@@ -58,23 +58,20 @@ contract_type_internleie	rental	no	Internleie
 contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
-count_decimal_places	rental	no	0
+count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
 count_suffix	rental	no	stk
 count_suffix	rental	no	stk
-count_thousands_separator	rental	no	.
 create_shortcut	rental	no	Ny snarvei
-currency_decimal_places	rental	no	2
-currency_decimal_separator	rental	no	,
-currency_prefix	rental	no	NOK
-currency_suffix	rental	no	kr
-currency_thousands_separator	rental	no	.
+currency decimal places	rental	no	Antall desimaler for valuta
+currency prefix	rental	no	Valuta prefix
+currency suffix	rental	no	Valuta suffix
 customer_account	rental	no	Kundenummer i Agresso
 dashboard_title	rental	no	Forside - Min arbeidsoversikt
 date_end	rental	no	Gjelder til
 date	rental	no	Dato
 date_start	rental	no	Gjelder fra
-decimal_separator	rental	no	,
+decimal separator	rental	no	Skilletegn for desimaler
 delete	rental	no	Slett
 department	rental	no	Avdeling
 deposit	rental	no	Depositum
@@ -228,8 +225,8 @@ status_before	rental	no	før
 status_date	rental	no	den
 status	rental	no	Status
 target_me	rental	no	Meg selv
+thousands separator	rental	no	Skilletegn for tusen
 t_functions	rental	no	Funksjoner
-thousands_separator	rental	no	.
 title	rental	no	Tittel
 t_new_composite	rental	no	Opprett nytt leieobjekt
 t_new_contract	rental	no	Ny kontrakt

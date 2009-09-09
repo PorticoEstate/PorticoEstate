@@ -2,6 +2,8 @@
 	include("common.php");
 	phpgwapi_yui::load_widget('tabview');
 	phpgwapi_yui::tabview_setup('contract_tabview');
+	$config	= CreateObject('phpgwapi.config','rental');
+	$config->read();
 ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?> <?php echo $contract->get_id() ?></h1>
@@ -77,7 +79,7 @@
 									<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ?>"><?php echo lang('other_guarantee') ?></option>
 								</select>
 								</td>
-								<td><label for="security_amount"><?php echo lang('currency_prefix') ?></label></td>
+								<td><label for="security_amount"><?php echo isset($config->config_data['currency_prefix']) && $config->config_data['currency_prefix'] ? $config->config_data['currency_prefix'] : 'Kr'; ?></label></td>
 								<td><input type="text" name="security_amount" id="security_amount" value="<?php echo $contract->get_security_amount(); ?>"/></td>
 								</tr></table>
 
@@ -104,7 +106,7 @@
 										/* no-op */
 										break;
 								}
-								echo '<br/>'.lang('currency_prefix').' '.$contract->get_security_amount();
+								echo '<br/>'.isset($config->config_data['currency_prefix']) && $config->config_data['currency_prefix'] ? $config->config_data['currency_prefix'] : 'Kr'.' '.$contract->get_security_amount();
 							}
 						?>
 					</dd>
@@ -259,7 +261,7 @@
 		</div>
 		<div id="price">
 			<h3><?php echo lang('selected_price_items') ?></h3>
-			<strong><?php echo lang('total_price') ?>:</strong> <?php echo number_format($contract->get_price(), lang('currency_decimal_places'), lang('currency_decimal_separator'),lang('currency_thousands_separator')); echo ' '.lang('currency_suffix');?> <br /><br />
+			<strong><?php echo lang('total_price') ?>:</strong> <?php echo number_format($contract->get_price(), isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK';?> <br /><br />
 			<?php
 				$list_form = false;
 				$list_id = 'included_price_items';

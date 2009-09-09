@@ -1,7 +1,9 @@
 <?php
 	include("common.php");
 	phpgwapi_yui::load_widget('tabview');
-  phpgwapi_yui::tabview_setup('composite_tabview');
+	phpgwapi_yui::tabview_setup('composite_tabview');
+	$config	= CreateObject('phpgwapi.config','rental');
+	$config->read();
 ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?> <em><?php echo $composite->get_name() ?></em></h1>
@@ -76,9 +78,9 @@
 					<dt><?php echo lang('serial') ?></dt>
 					<dd><?php echo $composite->get_id() ?></dd>
 					<dt><?php echo lang('area_gros') ?>></dt>
-					<dd><?php echo $composite->get_area_gros().' '.lang('area_suffix'); ?></dd>
+					<dd><?php echo $composite->get_area_gros().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt><?php echo lang('area_net') ?></dt>
-					<dd><?php echo $composite->get_area_net().' '.lang('area_suffix'); ?></dd>
+					<dd><?php echo $composite->get_area_net().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 
 					<dt>
 						<label for="is_active"><?php echo lang('available?') ?></label>

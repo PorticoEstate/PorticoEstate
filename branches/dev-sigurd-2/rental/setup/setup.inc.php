@@ -50,7 +50,8 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['rental']['hooks'] = array
 	(
-		'preferences',
-		'menu'	=> 'rental.menu.get_menu'
+		'config',
+		'menu'	=> 'rental.menu.get_menu',
+		'settings'
 	);
 ?>
