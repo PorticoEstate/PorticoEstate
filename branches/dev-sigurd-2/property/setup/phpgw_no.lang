@@ -1152,8 +1152,9 @@ prizing	property	no	Priser
 probability	property	no	sansynlighet
 project	property	no	prosjekt
 .project	property	no	Prosjekt
-project %1 has been edited	property	no	prosjekt %1 er oppdatert
-project %1 has been saved	property	no	prosjekt %1 er lagret
+project %1 has been edited	property	no	Prosjekt %1 er oppdatert
+project %1 has been saved	property	no	Prosjekt %1 er lagret
+project %1 needs approval	property	no	Prosjekt %1 venter på godkjenning
 project budget	property	no	Prosjekt budsjett
 project categories	property	no	Prosjekt kategorier
 project coordinator	property	no	Prosjekt ansvarlig
@@ -1712,6 +1713,7 @@ work:____________	property	no	Arbeid:____________
 workorder	property	no	Arbeidsordre
 workorder %1 has been edited	property	no	Arbeidsordre %1 er oppdatert
 workorder %1 has been saved	property	no	Arbeidsordre %1 er lagret
+workorder %1 needs approval	property	no	Bestilling %1 venter på godkjenning
 workorder detail categories	property	no	Detaljering av arbeidsordre/bestilling
 workorder end date	property	no	Arbeidsordre frist
 workorder entry date	property	no	Registreringsdato

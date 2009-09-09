@@ -361,7 +361,7 @@
 					$hour[$i]['hours_descr'],
 					$hour[$i]['unit'],
 					$hour[$i]['cost'],
-					$hour[$i]['quantity'],
+					(int)$hour[$i]['quantity'],
 					$hour[$i]['billperae'],
 					$hour[$i]['ns3420_id'],
 					$hour[$i]['dim_d'],

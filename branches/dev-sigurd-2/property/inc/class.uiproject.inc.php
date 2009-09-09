@@ -1055,7 +1055,7 @@
 						$headers .= "MIME-Version: 1.0\r\n";
 
 						$subject = lang(Approval).": ". $id;
-						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang(Project) . " " . $id ." ". lang('needs approval') .'</a>';
+						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang('project %1 needs approval',$id) .'</a>';
 
 						$bcc = $from_email;
 
