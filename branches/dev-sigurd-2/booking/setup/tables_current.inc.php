@@ -551,6 +551,7 @@
 				'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
 				'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				'description' => array('type' => 'text', 'nullable' => false),
+				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(

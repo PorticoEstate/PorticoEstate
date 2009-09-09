@@ -60,6 +60,11 @@
 		</dl>
 		
 		<dl class="proplist">
+			<dt><xsl:value-of select="php:function('lang', 'Article Description')" /></dt>
+			<div class="description"><xsl:value-of select="reservation/article_description" disable-output-escaping="yes"/></div>
+		</dl>
+		
+		<dl class="proplist">
 			<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 			<div class="description"><xsl:value-of select="reservation/description" disable-output-escaping="yes"/></div>
 		</dl>

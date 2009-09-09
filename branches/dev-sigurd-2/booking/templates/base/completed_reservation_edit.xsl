@@ -23,9 +23,13 @@
 
 			<div style='clear:both'/>
 			<dl class="form">
+				<dt><label for="field_article_description"><xsl:value-of select="php:function('lang', 'Article Description')" /></label></dt>
+				<dd>
+					<dd><input type='text' id='article_description' name="description" value='{reservation/article_description}' maxlength='35' style="width: 20em"/></dd>
+				</dd>
 				<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 				<dd>
-					<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="reservation/description"/></textarea>
+					<dd><input type='text' id='field_description' name="description" value='{reservation/description}' maxlength='60' style="width: 28em"/></dd>
 				</dd>
 			</dl>
 

@@ -111,6 +111,10 @@ phpgw::import_class('booking.uicommon');
 			$voucher_type = str_pad(substr(strtoupper('XX'), 0, 2), 2, ' ');
 			
 			foreach($reservations as &$reservation) {
+				foreach($reservation as &$field) {
+					$field = utf8_decode($field);
+				}
+				
 				$reservation['payee_identifier'] = $this->bo->get_active_customer_identifier($reservation);
 				$string_payee_identifier = (is_null(current($reservation['payee_identifier'])) ? 'N/A' : current($reservation['payee_identifier']));
 				
@@ -133,8 +137,7 @@ phpgw::import_class('booking.uicommon');
 				//TODO: Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
 				$header['dim_value_1'] = str_pad(strtoupper(substr('todo', 0, 12)), 12, ' ');
 				
-				//Nøkkelfelt, kundens personnr/orgnr. 
-				//TODO: Make this mandatory elsewhere?
+				//Nøkkelfelt, kundens personnr/orgnr.
 				$header['ext_ord_ref'] = str_pad(substr($string_payee_identifier, 0, 15), 15, ' ');
 				 
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
@@ -167,7 +170,7 @@ phpgw::import_class('booking.uicommon');
 				 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
 				 * TODO: Fix so that description does not include dates
 				 */
-				$item['art_descr'] = str_pad(substr($reservation['description'], 0, 35), 35, ' '); //35 chars long
+				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				
 				//TODO: Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
 				$item['article'] = str_pad(substr(strtoupper('todo_article_article_article'), 0, 15), 15, ' '); 
@@ -201,11 +204,10 @@ phpgw::import_class('booking.uicommon');
 				
 				//text level
 				$text = $this->get_agresso_row_template();
-				$short_info = substr($reservation['from_'], 0, -3).' - '.substr($reservation['to_'], 0, -3); //Tidspunkt: <dato booking>, <fra_klokken> - <til_klokken>;
 				$text['batch_id'] = $header['batch_id'];
 				$text['client'] = $header['client'];
 				$text['line_no'] = $item['line_no']; 
-				$text['short_info'] = str_pad(substr($short_info, 0, 60), 60, ' ');
+				$text['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
 				$text['trans_type'] = $header['trans_type'];
 				$text['voucher_type'] = $header['voucher_type'];
 				
@@ -213,9 +215,9 @@ phpgw::import_class('booking.uicommon');
 				
 				//Add to orders
 				//$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
-				$output[] = implode('', $header);
-				$output[] = implode('', $item);
-				$output[] = implode('', $text);
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $header));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
 			}
 			
 			return implode("\n", $output);
