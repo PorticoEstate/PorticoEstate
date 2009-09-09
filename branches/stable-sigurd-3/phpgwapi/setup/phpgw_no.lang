@@ -13,7 +13,8 @@ cancel	common	no	Avslutt
 change	common	no	Endre
 charset	common	no	utf-8
 clear	common	no	Clear
-clear form	common	no	Endre Form
+clear form	common	no	Tøm skjema
+configuration	common	no	Konfigurasjon
 copy	common	no	Kopier
 create	common	no	Lag
 created by	common	no	Laget av

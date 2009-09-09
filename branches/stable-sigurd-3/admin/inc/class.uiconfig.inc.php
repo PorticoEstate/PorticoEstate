@@ -195,7 +195,7 @@
 					switch($type)
 					{
 						case 'lang':
-							$t->set_var($value,lang($newval));
+							$t->set_var($value,$GLOBALS['phpgw']->translation->translate($newval, array(),false, $appname));
 							break;
 						case 'value':
 							$newval = ereg_replace(' ','_',$newval);
