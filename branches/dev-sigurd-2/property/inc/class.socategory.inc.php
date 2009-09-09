@@ -128,7 +128,14 @@
 				}
 
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE name $this->_like '%$query%' OR {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " WHERE {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				foreach($this->location_info['fields'] as $field)
+				{
+					if($field['type'] == 'varchar')
+					{
+						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
+					}
+				}
 			}
 
 			$sql = "SELECT * FROM $table $querymethod";
