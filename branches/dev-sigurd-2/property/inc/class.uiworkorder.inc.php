@@ -799,6 +799,11 @@
 
 			if (isset($values['save']))
 			{
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
@@ -1296,6 +1301,13 @@
 									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true)))
 			);
 			
+				
+			$link_claim = '';
+			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
+			{
+				$link_claim = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check', 'project_id' => $project['project_id']));
+			}
+
 			$catetory = $this->cats->return_single($project['cat_id']);
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
 			$cat_sub = array_merge($catetory,$cat_sub);
@@ -1303,6 +1315,8 @@
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$data = array
 			(
+				'link_claim'							=> $link_claim,
+				'lang_claim'							=> lang('claim'),
 				'suppressmeter'							=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination'					=> $suppresscoordination,
 				'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),

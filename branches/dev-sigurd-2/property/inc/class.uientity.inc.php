@@ -956,6 +956,11 @@
 
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
 				if(!$values['location'] && isset($category['location_level']) && $category['location_level'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
