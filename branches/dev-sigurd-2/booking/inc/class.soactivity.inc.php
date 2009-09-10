@@ -19,10 +19,17 @@
 		function validate($entity)
 		{
 			$errors = parent::validate($entity);
-
-			if($entity['id'] && $entity['parent_id'] == $entity['id'])
+			# Detect and prevent loop creation
+			$node_id = $entity['parent_id'];
+			while($entity['id'] && $node_id)
 			{
-				$errors['parent_id'] = 'Invalid parent activity';
+				if($node_id == $entity['id'])
+				{
+					$errors['parent_id'] = 'Invalid parent activity';
+					break;
+				}
+				$next = $this->read_single($node_id);
+				$node_id = $next['parent_id'];
 			}
 			return $errors;
 		}

@@ -122,7 +122,7 @@
 				{
 					$_POST['parent_id'] = null;
 				}
-				$activity = array_merge($activity, extract_values($_POST, array('name', 'description', 'parent_id')));
+								$activity = array_merge($activity, extract_values($_POST, array('name', 'description', 'parent_id')));
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{
