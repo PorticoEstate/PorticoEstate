@@ -33,7 +33,18 @@
 	/**
 	* @global object $GLOBALS['server']
 	*/
-	$GLOBALS['server'] = new SoapServer(null, array('uri' => "http://test-uri/"));
+	
+	$wdsl = null;
+	$options = array
+	(
+		'uri'          => "http://test-uri/", # the name space of the SOAP service
+		'soap_version' => SOAP_1_2,
+	//	'actor'        => "...", # the actor
+		'encoding'     => "UTF-8", # the encoding name
+	//	'classmap'     => "...", # a map of WSDL types to PHP classes
+	);
+
+	$GLOBALS['server'] = new SoapServer($wdsl, $options);
 
 	//_debug_array($GLOBALS['server']);exit;
 	//include(PHPGW_API_INC . '/soaplib.soapinterop.php');
@@ -48,11 +59,11 @@
 		$auth = base64_decode(trim($tmp));
 		list($sessionid,$kp3) = split(':',$auth);
 
-		if($GLOBALS['phpgw']->session->verify($sessionid,$kp3))
+		if($GLOBALS['phpgw']->session->verify($sessionid))
 		{
 			$GLOBALS['server']->authed = True;
 		}
-		elseif($GLOBALS['phpgw']->session->verify_server($sessionid,$kp3))
+		elseif($GLOBALS['phpgw']->session->verify_server($sessionid))
 		{
 			$GLOBALS['server']->authed = True;
 		}
@@ -63,6 +74,21 @@
 	{
 		$functions[] = 'system_listApps';
 	}
+
+	function hello($someone)
+	{
+		return "Hello " . $someone . "! - SOAP 1.2";
+		return getallheaders();
+	} 
+
+	$functions[] = 'hello';
+
+	function displayheaders($data)
+	{
+		return getallheaders();
+	} 
+
+	$functions[] = 'displayheaders';
 
 	$GLOBALS['server']->addFunction($functions);
 //	$GLOBALS['server']->addFunction(SOAP_FUNCTIONS_ALL);
@@ -93,5 +119,4 @@
 		}
 	}
 
-	
 ?>

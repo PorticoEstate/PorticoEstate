@@ -1,15 +1,17 @@
 <?php
 	/**
 	* Shared functions and vars for use with soap client/server
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @author Dietrich <dietrich@ganx4.com>
 	* @copyright Copyright (C) ? Dietrich
-	* @copyright Portions Copyright (C) 2004 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2004-2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage communication
 	* @version $Id$
 	*/
 
+/*
 	$GLOBALS['soapTypes'] = array(
 		'i4'           => 1,
 		'int'          => 1,
@@ -46,7 +48,7 @@
 		'http://schemas.xmlsoap.org/soap/encoding/' => 'SOAP-ENC',
 		'http://soapinterop.org/xsd'                => 'si'
 	);
-
+*/
 	/*
 	NOTE: already defined in xml_functions
 	$xmlEntities = array(
@@ -68,66 +70,56 @@
 	* @param string $m3 password
 	* @return array Array with soapval object(s)
 	*/
-	function system_login($m1,$m2,$m3)
+	function system_login($data)
 	{
-		$server_name = trim($m1);
-		$username    = trim($m2);
-		$password    = trim($m3);
+		$domain		= $data['domain'];
+		$username	= $data['username'];
+		$password	= $data['password'];
 
-		list($sessionid,$kp3) = $GLOBALS['phpgw']->session->create_server($username.'@'.$server_name,$password,'text');
+		$sessionid = $GLOBALS['phpgw']->session->create_server("{$username}@{$domain}", $password);
 
-		if(!$sessionid && !$kp3)
+		if(!$sessionid)
 		{
-			if($server_name)
+			if($domain)
 			{
-				$user = $username.'@'.$server_name;
+				$user = $username.'@'.$domain;
 			}
 			else
 			{
 				$user = $username;
 			}
 			$sessionid = $GLOBALS['phpgw']->session->create($user,$password);
-			$kp3 = $GLOBALS['phpgw']->session->kp3;
-			$domain = $GLOBALS['phpgw']->session->account_domain;
 		}
-		if($sessionid && $kp3)
+		if($sessionid)
 		{
-			$rtrn = array(
-				CreateObject('phpgwapi.soapval','domain','string',$domain),
-				CreateObject('phpgwapi.soapval','sessionid','string',$sessionid),
-				CreateObject('phpgwapi.soapval','kp3','string',$kp3)
-			);
+			$rtrn = array('sessionid' => $sessionid);
+
 		}
 		else
 		{
-			$rtrn = array(CreateObject('phpgwapi.soapval','GOAWAY','string',$username));
+			$rtrn = array('GOAWAY' => $username);
 		}
 		return $rtrn;
 	}
 
-	function system_logout($m1,$m2)
+	function system_logout($data)
 	{
-		$sessionid   = $m1;
-		$kp3         = $m2;
+		$sessionid   = $data['sessionid'];
 		
-		$later = $GLOBALS['phpgw']->session->destroy($sessionid,$kp3);
+		$later = $GLOBALS['phpgw']->session->destroy($sessionid);
 
 		if($later)
 		{
-			$rtrn = array(
-				CreateObject('phpgwapi.soapval','GOODBYE','string','XOXO')
-			);
+			$rtrn = array('GOODBYE' => 'XOXO');
 		}
 		else
 		{
-			$rtrn = array(
-				CreateObject('phpgwapi.soapval','OOPS','string','WHAT?')
-			);
+			$rtrn = array('OOPS'=> 'WHAT?');
 		}
 		return $rtrn;
 	}
 
-	/*
+	
 	function system_listApps()
 	{
 		$GLOBALS['phpgw']->db->query("SELECT * FROM phpgw_applications WHERE app_enabled<3",__LINE__,__FILE__);
@@ -140,15 +132,13 @@
 				$title  = $GLOBALS['phpgw']->db->f('app_title');
 				$status = $GLOBALS['phpgw']->db->f('app_enabled');
 				$version= $GLOBALS['phpgw']->db->f('app_version');
+
 				$apps[$name] = array(
-					CreateObject('phpgwapi.soapval','title','string',$title),
-					CreateObject('phpgwapi.soapval','name','string',$name),
-					CreateObject('phpgwapi.soapval','status','string',$status),
-					CreateObject('phpgwapi.soapval','version','string',$version)
+					$name,
+					$status,
+					$version
 				);
 			}
 		}
 		return $apps;
 	}
-	*/
-?>
