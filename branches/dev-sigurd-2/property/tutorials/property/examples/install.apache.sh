@@ -158,7 +158,8 @@ export LDFLAGS=-lstdc++ &&\
  --with-pdo-pgsql\
  --with-openssl\
  --enable-mbstring\
- --with-mcrypt &&\
+ --with-mcrypt\
+ --enable-soap &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
