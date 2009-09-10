@@ -674,6 +674,11 @@
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 
+					if($GLOBALS['phpgw']->session->is_repost())
+					{
+						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					}
+
 					if(!isset($values['cat_id']) || !$values['cat_id'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a category !'));

@@ -440,6 +440,11 @@
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
+					if($GLOBALS['phpgw']->session->is_repost())
+					{
+						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					}
+
 					if(!$id && !$values[$this->location_info['id']['name']] && $this->location_info['id']['type'] !='auto')
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter an id!'));									

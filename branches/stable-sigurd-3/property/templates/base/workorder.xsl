@@ -732,7 +732,14 @@
 			</tr>
 			<tr>
 				<td>
-					<xsl:value-of select="lang_charge_tenant"/>
+				<xsl:choose>
+					<xsl:when test="link_claim !=''">
+						<a href="{link_claim}"><xsl:value-of select="lang_charge_tenant"/></a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="lang_charge_tenant"/>
+					</xsl:otherwise>
+				</xsl:choose>
 				</td>
 				<td>
 				<xsl:choose>
