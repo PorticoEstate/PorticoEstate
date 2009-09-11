@@ -80,11 +80,17 @@
 				(
 					'text'	=> lang('Configure Access Permissions'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'rental') )
+				),
+				'billing'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('common_invoice', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'x-office-document')
 				)
 			);
-
+			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
-
+			
 			$menus['preferences'] = array
 			(
 				array
