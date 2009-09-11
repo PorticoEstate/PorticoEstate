@@ -17,6 +17,7 @@ class rental_socontract extends rental_socommon
 					'id'	=> array('type' => 'int'),
 					'date_start' => array('type' => 'int'),
 					'date_end' => array('type' => 'int'),
+					'billing_start' => array('type' => 'int'),
 					'title'	=> array('type' => 'string'),
 					'composite_name' => array('type' => 'string'),
 					'first_name' => array('type' => 'string'),
@@ -205,12 +206,7 @@ class rental_socontract extends rental_socommon
 		$date = new rental_contract_date($date_start, $date_end);
 		$contract->set_contract_date($date);
 		
-		$billing_start_date = $this->unmarshal($this->db->f('billing_start', true), 'date');
-		if($billing_start_date != null && $billing_start_date != '')
-		{
-			$billing_start_date = strtotime($billing_start_date);
-		}
-		$contract->set_billing_start_date($billing_start_date);
+		$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start', true), 'date'));
 		$contract->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 		$contract->set_contract_type_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
@@ -309,6 +305,7 @@ class rental_socontract extends rental_socommon
 			if($new_contract) {
                 $contract = new rental_contract($row['id']);
                 $contract->set_contract_date(new rental_contract_date($row['date_start'],$row['date_end']));
+                $contract->set_billing_start_date($row['billing_start']);
                 $contract->set_party_name($party_name);
                 $contract->set_composite_name($row['composite_name']);
                 $contract->set_old_contract_id($row['old_contract_id']);
@@ -321,7 +318,6 @@ class rental_socontract extends rental_socommon
 		}
 		return $contracts;
 	}
-	
 	
 	/**
 	 * Returns all contracts for a specified composite.
@@ -400,6 +396,49 @@ class rental_socontract extends rental_socommon
 			'total_records' => $total_records,
 			'results'		=> $results
 		);
+	}
+	
+	/**
+	 * Returns contracts that should be billed for a given period.
+	 * 
+	 * @param $contract_type_location_id int with location id of contract.
+	 * @param $billing_term_id int with billing term id of contract.
+	 * @param $year int with year of billing.
+	 * @param $month int 1-12 with month of billing.
+	 * @return return array of contract objects
+	 */
+	public function get_contracts_for_billing($contract_type_location_id, $billing_term_id, $year, $month)
+	{
+		$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+		$result = $this->db->query($sql);
+		if(!$result)
+		{
+			return;
+		}
+		if(!$this->db->next_record())
+		{
+			return;
+		}
+		$months = $this->unmarshal($this->db->f('months', true), 'int');
+		$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+		$timestamp_start = strtotime("-{$$months} months", $timestamp_end); // The first day of the period to bill for
+		$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+		
+		$timestamp_start = strtotime("{$year}-{$month}-01");
+		$sql = "SELECT contract.id, contract.date_start, contract.date_end, contract.term_id, contract.location_id, contract.billing_start, party.first_name, party.last_name, party.company_name, composite.name as composite_name 
+			FROM rental_contract AS contract
+			LEFT JOIN rental_contract_party 	con_par 	ON (contract.id = con_par.contract_id) 
+			LEFT JOIN rental_party 				party 		ON (party.id = con_par.party_id)
+			LEFT JOIN rental_contract_composite	con_con		ON (con_con.contract_id = contract.id)
+			LEFT JOIN rental_composite			composite	ON (composite.id = con_con.composite_id)
+			WHERE contract.location_id = {$contract_type_location_id} AND contract.term_id = {$billing_term_id}
+			AND date_start < $timestamp_end
+			AND (date_end IS NULL OR date_end >= {$timestamp_start})
+			AND billing_start <= {$timestamp_end}
+			ORDER BY contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC
+			";
+		$this->db->query($sql);
+		return $this->get_contracts_from_result();
 	}
 	
 	/**
@@ -575,7 +614,7 @@ class rental_socontract extends rental_socommon
 		}
 		
 		if($contract->get_billing_start_date()) {
-			$values[] = "billing_start = " . $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date');
+			$values[] = "billing_start = " . $this->marshal($contract->get_billing_start_date(), 'int');
 		}
 		
 		if ($contract->get_contract_date()) {
@@ -654,7 +693,7 @@ class rental_socontract extends rental_socommon
 		// Check values that can be null before trying to add them to the db-pretty list
 		if ($contract->get_billing_start_date()) {
 			$cols[] = 'billing_start';
-			$values[] = $this->marshal(date('Y-m-d', $contract->get_billing_start_date()), 'date');
+			$values[] = $this->marshal($contract->get_billing_start_date(), 'int');
 		}
 		
 		if ($contract->get_contract_date()) {
