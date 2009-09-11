@@ -72,9 +72,10 @@ foreach( $f as $line ) {
 		if ( ereg('extends',$line) ) {
 			trim($tmp[3]);
 			$a[$i][2] = "/* Please see class.base_nusoap.inc.php for more information */\n\n".
-	"if (@!".'$GLOBALS'."['phpgw_info']['flags']['included_classes']['$tmp[3]'])\n".
-	"{\n\trequire_once(PHPGW_API_INC.\"/class.$tmp[3].inc.php\");\n\t".
-	'$GLOBALS'."['phpgw_info']['flags']['included_classes']['$tmp[3]'] = True;\n}\n";
+//	"if (@!".'$GLOBALS'."['phpgw_info']['flags']['included_classes']['$tmp[3]'])\n".
+//	"{\n\trequire_once(PHPGW_API_INC.\"/class.$tmp[3].inc.php\");\n\t".
+//	'$GLOBALS'."['phpgw_info']['flags']['included_classes']['$tmp[3]'] = True;\n}\n";
+	"phpgw::import_class('phpgwapi.{$tmp[3]}');\n";
 		$line = ereg_replace($tmp[3], "phpgwapi_$tmp[3]", $line);
 		} else {
 			$a[$i][2] = "/*\n".

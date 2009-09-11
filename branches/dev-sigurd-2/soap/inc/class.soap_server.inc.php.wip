@@ -361,4 +361,3 @@ class soap_server
 		$this->fault = true;
 	}
 }
-?>

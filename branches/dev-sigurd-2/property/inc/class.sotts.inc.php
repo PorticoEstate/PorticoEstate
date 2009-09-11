@@ -39,6 +39,11 @@
 		var $uicols_related = array();
 		var $acl_location = '.ticket';
 
+		var $soap_enabled = array
+		(
+			'read'	=> true
+		);
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
