@@ -9,6 +9,8 @@
 		'rental_contract_party',			// Link table between tenants and contracts
 		'rental_composite',					// Rental object, an aggregation of rental units or areas
 		'rental_contract_price_item',		// Price items from the price book tied to a contract
+		'rental_billing_job',				// Contains information about the job creating invoices
+		'rental_invoice',
 	//	'rental_bill_price_item',			// Price items from the price book tied to a past bill
 	//	'rental_bill',						// A sent bill tied to a contract
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
