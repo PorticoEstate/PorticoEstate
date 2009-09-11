@@ -15,6 +15,9 @@
             </li>
         </ul>
         <dl class="proplist-col">
+            <dt><xsl:value-of select="php:function('lang', 'Organization number')" /></dt>
+            <dd><xsl:value-of select="organization/organization_number" /></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
             <dd><xsl:value-of select="organization/activity_name" /></dd>
 

@@ -128,8 +128,10 @@
 			self::add_javascript('yahoo', 'yahoo/dom', 'dom-min.js');
 			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+			$activities = $this->activity_bo->fetch_activities();
+			$activities = $activities['results'];
 
-			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module));
+			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities));
 		}
 
 		public function edit()
