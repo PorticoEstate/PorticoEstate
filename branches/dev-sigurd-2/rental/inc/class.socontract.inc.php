@@ -523,6 +523,39 @@ class rental_socontract extends rental_socommon
 	}
 	
 	/**
+	 * Returns the range of year there are contracts. That is, the array
+	 * returned contains reversed chronologically all the years from the earliest start
+	 * year of the contracts to next year. 
+	 * 
+	 * @return array of string values, never null.
+	 */
+	public function get_year_range()
+	{
+		$year_range = array();
+		$sql = "SELECT date_start FROM rental_contract ORDER BY date_start ASC";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		$first_year = (int)date('Y'); // First year in the array returned - we first set it to default this year
+		if($this->db->next_record()){
+			$date = $this->unmarshal($this->db->f('date_start', true), 'date');
+			if($date != null && $date != '')
+			{
+				$first_contract_year = (int)date('Y', strtotime($date));
+				if($first_contract_year < $first_year) // First contract year is before this year
+				{
+					$first_year = $first_contract_year;
+				}
+			}
+		}
+		$next_year = (int)date('Y', strtotime('+1 year'));
+		for($year = $next_year; $year >= $first_year; $year--) // Runs through all years from next year to the first year we want
+		{
+			$year_range[] = $year;
+		}
+		
+		return $year_range;
+	}
+	
+	/**
 	 * Update the database values for an existing contract object.
 	 * 
 	 * @param $contract the contract to be updated
