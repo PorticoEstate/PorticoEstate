@@ -60,7 +60,7 @@
 	);
 	*/
 
-	$GLOBALS['soap_defencoding'] = 'UTF-8';
+//	$GLOBALS['soap_defencoding'] = 'UTF-8';
 
 	/**
 	* SOAP Login
