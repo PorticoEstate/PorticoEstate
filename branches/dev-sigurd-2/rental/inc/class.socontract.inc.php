@@ -24,7 +24,9 @@ class rental_socontract extends rental_socommon
 					'company_name' => array('type' => 'string'),
 					'comment' => array('type' => 'string'),
 					'old_contract_id' => array('type' => 'string'),
-					'edited_on' => array('type' => 'date')
+					'edited_on' => array('type' => 'date'),
+					'location_id' => array('type' => 'int'),
+					'executive_officer' => array('type' => 'int')
 		));
 	}
 	
@@ -237,7 +239,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $limit = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, type.title, type.notify_before, composite.name as composite_name, party.first_name, party.last_name, party.company_name, last_edited.edited_on';
+		$columns_for_list = 'contract.date_start, contract.location_id, contract.date_end, contract.old_contract_id, contract.executive_officer, type.title, type.notify_before, composite.name as composite_name, party.first_name, party.last_name, party.company_name, last_edited.edited_on';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_responsibility type ON (type.location_id = contract.location_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
@@ -313,6 +315,7 @@ class rental_socontract extends rental_socommon
                 $contract->set_contract_type_title($row['title']);
                 $contract->set_comment($row['comment']);
                 $contract->set_last_edited_by_current_user($row['edited_on']);
+                $contract->set_location_id($row['location_id']);
                 $contracts[] = $contract;
 			}
 		}
@@ -406,7 +409,7 @@ class rental_socontract extends rental_socommon
 	public function get_last_edited_by(){
 		$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 		$sql = "
-			SELECT edited.edited_on, contract.id, contract.date_start, contract.date_end, party.first_name, party.last_name, party.company_name, composite.name as composite_name 
+			SELECT edited.edited_on, contract.id, contract.location_id, contract.date_start, contract.date_end, party.first_name, party.last_name, party.company_name, composite.name as composite_name 
 			FROM rental_contract_last_edited edited 
 			LEFT JOIN rental_contract 			contract	ON (contract.id = edited.contract_id)
 			LEFT JOIN rental_contract_party 	con_par 	ON (con_par.contract_id = edited.contract_id) 
@@ -659,6 +662,11 @@ class rental_socontract extends rental_socommon
 			$cols[] = 'date_end';
 			$values[] = $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
 			$values[] = $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
+		}
+		
+		if($contract->get_executive_officer_id()) {
+			$cols[] = 'executive_officer';
+			$values[] = $this->marshal($contract->get_executive_officer_id(), 'int');
 		}
 		
 		$cols[] = 'created';

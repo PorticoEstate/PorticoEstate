@@ -22,7 +22,9 @@ legend {
 
 label {
 	margin-left: 0.3em;
-	margin-right: 0,3em;	
+	margin-right: 0,3em;
+	font-style: normal;
+	font-size: 13px;
 }
 
 #content {
@@ -118,6 +120,7 @@ dl.form dt.heading, dl.form-col dt.heading {
 dl.proplist,
 dl.proplist-col {
     margin: 1em 0;
+    padding-left: 2em;
 }
 dl.proplist dt,
 dl.proplist-col dt { 
@@ -131,6 +134,15 @@ dl.proplist-col,
 dl.form-col {
     width: 18em;
     float: left;
+}
+
+div.identifier-header {
+	padding-left: 2em;
+	margin-bottom: 1em;	
+}
+
+div.identifier-header label {
+	font-weight: bold;
 }
 
 .form-buttons {
@@ -339,6 +351,8 @@ input.postcode {
 
 .yui-navset {
 	clear: both;
+	margin-left: 2em;
+	margin-right: 2em;
 }
 
 h1 img, li img {
@@ -355,12 +369,14 @@ fieldset h3 {
 
 /* Set up common form styles.  TODO: needs refinement. */
 legend, label, input, select {
-	margin:0 10px 0px 0px;
+	margin:0 13px 0px 0px;
 }
 	
 label {
 	line-height:1.5em;
 }
+
+
 	
 fieldset {
 	border-bottom:1px solid #ccc;

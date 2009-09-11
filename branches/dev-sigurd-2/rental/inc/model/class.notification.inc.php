@@ -21,11 +21,13 @@ class rental_notification extends rental_model
 
 	protected $id;				// Notification id
 	protected $contract_id; 	// Contract identifier
-	protected $location_id;		// Location identifier
-	protected $account_id;		// Specific user or group
+	protected $location_id;		// Location identifier (audience)
+	protected $account_id;		// Specific user or group (audience)
 	protected $date;			// Notification date data
 	protected $last_notified;	// Date lst notified
 	protected $message;			// User message
+	protected $field_of_responsibility;	//The title of the field of responsibility (location)
+	protected $originated_from;
 
 
 	/**
@@ -47,16 +49,20 @@ class rental_notification extends rental_model
 		int $date = null,
 		string $message = null,
 		$recurrence = RECURRENCE_NEVER,
-		int $last_notified = null)
+		int $last_notified = null,
+		string $title = null,
+		int $originated_from = null)
 	{
 		$this->id = (int)$id;
-		$this->account_id = (int)$account_id;
-		$this->location_id = (int)$location_id;
+		if($account_id > 0) {$this->account_id = (int)$account_id;}
+		if($location_id > 0) {$this->location_id = (int)$location_id;}
 		$this->contract_id = (int)$contract_id;
 		$this->date = $date;
 		$this->last_notified = $last_notified;
 		$this->message = $message;
 		$this->recurrence = (int)$recurrence;
+		$this->field_of_responsibility = $title;
+		$this->originated_from = $originated_from;
 	}
 
 	// Get methods
@@ -72,7 +78,9 @@ class rental_notification extends rental_model
 
 	public function get_account_id()
 	{
-		return $this->account_id;
+		if($this->account_id && $this->account_id > 0 )
+			return $this->account_id;
+		return null;
 	}
 
 	public function get_date()
@@ -98,6 +106,16 @@ class rental_notification extends rental_model
 	public function get_location_id()
 	{
 		return $this->location_id;
+	}
+	
+	public function get_field_of_responsibility()
+	{
+		return $this->field_of_responsibility;
+	}
+	
+	public function get_originated_from()
+	{
+		return $this->originated_from;
 	}
 
 	// Set methods
@@ -132,6 +150,12 @@ class rental_notification extends rental_model
 		if($account){
 			$name = $account->__get('firstname').' '.$account->__get('lastname');
 		}
+		
+		
+		if($this->get_field_of_responsibility()){
+			$responsibility = lang($this->get_field_of_responsibility());
+		}
+		
 		return array(
 			'id' => $this->get_id(),
 			'account_id' => $this->get_account_id(),
@@ -139,7 +163,10 @@ class rental_notification extends rental_model
 			'contract_id' => $this->get_contract_id(),
 			'message' => $this->get_message(),
 			'date' => date($date_format, $this->get_date()),
-			'recurrence' => $recurrence
+			'recurrence' => $recurrence,
+			'field_of_responsibility' => $responsibility,
+			'originated_from' => $this->get_originated_from(),
+			'permissions' => $this->get_permission_array()
 		);
 	}
 
@@ -181,6 +208,11 @@ class rental_notification extends rental_model
 	public static function dismiss_notification($id,$ts_dismissed){
 		$so = self::get_so();
 		$so->dismiss_notification($id,$ts_dismissed);
+	}
+	
+	public static function dismiss_notification_for_all($notification_id){
+		$so = self::get_so();
+		$so->dismiss_notification_for_all($notification_id);
 	}
 
 	// Populates the workbench on a given day

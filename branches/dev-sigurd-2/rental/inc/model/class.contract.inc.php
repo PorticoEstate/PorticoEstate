@@ -5,10 +5,10 @@
 
 	class rental_contract extends rental_model
 	{
-		const SECURITY_TYPE_BANK_GUARANTEE = 0;
-		const SECURITY_TYPE_DEPOSIT = 1;
-		const SECURITY_TYPE_ADVANCE = 2;
-		const SECURITY_TYPE_OTHER_GUARANTEE = 3;
+		const SECURITY_TYPE_BANK_GUARANTEE = 1;
+		const SECURITY_TYPE_DEPOSIT = 2;
+		const SECURITY_TYPE_ADVANCE = 3;
+		const SECURITY_TYPE_OTHER_GUARANTEE = 4;
 		
 		public static $so;
 		public static $types;
@@ -110,6 +110,7 @@
 		
 		public function set_location_id($location_id)
 		{
+			$this->field_of_responsibility_id = (int) $location_id;
 			$this->location_id = (int) $location_id;
 		}
 		
@@ -299,7 +300,6 @@
         {
             return $this->comment;
         }
-		
 		
 		/**
 		 * Add a composite to this contract. This function checks for duplicates
@@ -497,6 +497,7 @@
 			return $types;
 		}
 		
+		
 		public function serialize()
 		{
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -508,7 +509,8 @@
 				'composite' => $this->get_composite_name(),
 				'party' => $this->get_party_name(),
 				'old_contract_id' => $this->get_old_contract_id(),
-				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()): ''
+				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()): '',
+				'permissions' => $this->get_permission_array()
 			);
 		}
 		

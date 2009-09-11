@@ -38,22 +38,14 @@ class rental_sonotification extends rental_socommon
 		$condition = $this->get_conditions($query, $filters, $search_option);
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
-		$sql = "SELECT * FROM rental_notification WHERE deleted = 'FALSE' AND $condition $order";
+		$sql = "SELECT rn.*, rcr.title, rc.location_id FROM rental_notification rn
+		LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
+		LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
+		WHERE deleted = 'FALSE' AND $condition $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 		while ($this->db->next_record()) {
-			$date = $this->unmarshal($this->db->f('date', true), 'date');
-			$notification = new rental_notification(
-				$this->unmarshal($this->db->f('id', true), 'int'), 
-				$this->unmarshal($this->db->f('account_id', true), 'int'), 
-				$this->unmarshal($this->db->f('location_id', true), 'int'),
-				$this->unmarshal($this->db->f('contract_id', true), 'int'), 
-				$date, 
-				$this->unmarshal($this->db->f('message', true), 'text'), 
-				$this->unmarshal($this->db->f('recurrence', true), 'int')
-			);
-			
-			$results[] = $notification;
+			$results[] = $this->read_notification();
 		}
 		
 		return $results;
@@ -73,9 +65,11 @@ class rental_sonotification extends rental_socommon
 		if(isset($account_id)){
 			$now = strtotime("now");
 			
-			$sql = "SELECT rnw.id as id, rnw.account_id, rn.message, rn.contract_id, rn.recurrence, rnw.date
+			$sql = "SELECT rnw.id as id, rc.location_id, rn.account_id, rn.message, rn.contract_id, rn.recurrence, rnw.date, rcr.title, rn.id as originated_from
 					FROM rental_notification_workbench rnw 
 					LEFT JOIN rental_notification rn ON (rnw.notification_id = rn.id)
+					LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
+					LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
 					WHERE 
 						( rnw.account_id = $account_id 
 						OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
@@ -116,15 +110,26 @@ class rental_sonotification extends rental_socommon
 	function add(&$notification)
 	{
 		// Build a db-friendly array of the composite object
+		
+		$cols = array('contract_id', 'date', 'message', 'recurrence');
 		$values = array(
-			(int)$notification->get_account_id(),
 			(int)$notification->get_contract_id(),
 			(int)$notification->get_date(),
 			"'{$notification->get_message()}'",
-			(int)$notification->get_recurrence()
+			(int)$notification->get_recurrence(),
 		);
 		
-		$cols = array('account_id', 'contract_id', 'date', 'message', 'recurrence');
+		if($notification->get_account_id() && $notification->get_account_id() > 0)
+		{
+			$cols[] = 'account_id';
+			$values[] = $notification->get_account_id();
+		}
+		
+		if($notification->get_location_id() && $notification->get_location_id() > 0)
+		{
+			$cols[] = 'location_id';
+			$values[] = $notification->get_location_id();
+		}
 		
 		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
@@ -233,23 +238,50 @@ class rental_sonotification extends rental_socommon
 			// If users should be notified today
 			if($is_today_notification_date)
 			{
+				
 				//notify all users in a group or only the single user if target audience is not a group
 				$account_id = $notification->get_account_id();
 				$notification_id = $notification->get_id();
-				if($GLOBALS['phpgw']->accounts->get_type($account_id) == 'g')
-				{
-					$accounts = $this->accounts->get_members($account_id);
+				$account_ids = array();
 				
-					foreach($accounts as $a)
-					{
-						$a_id = $a->__get['id'];
-						$this->add_workbench_notification($a_id,$ts_today,$notification_id); //user in a group
-					}
-				} 
-				else 
+				
+				if($account_id)
 				{
-					$this->add_workbench_notification($account_id,$ts_today,$notification_id); // specific user
-				}		
+					if($GLOBALS['phpgw']->accounts->get_type($account_id) == phpgwapi_account::TYPE_GROUP)
+					{
+						$accounts = $GLOBALS['phpgw']->accounts->get_members($account_id);
+						$account_ids = array_merge($account_ids, $accounts);  //users in a group
+					} 
+					else 
+					{
+						$account_ids[] = $account_id; // specific user 
+					}		
+				}
+				
+				//notify all users with write access on the field of responsibility
+				$location_id = $notification->get_location_id();
+				if($location_id)
+				{
+					$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
+					if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+					{
+						$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT,$location_names['location']);
+						foreach($responsible_accounts as $ra)
+						{
+							$account_ids[] = $ra['account_id'];
+						}
+					}
+					
+				}
+			
+				//merge the two account arrays and retrieve only unique account ids
+				$unique_account_ids = array_unique($account_ids);
+				
+				//notify each unique account
+				foreach($unique_account_ids as $unique_account) {
+					if($unique_account && $unique_account > 0)
+						$this->add_workbench_notification($unique_account,$ts_today,$notification_id);
+				}
 				
 				// set today as last notification date for this notification
 				$this->set_notification_date($notification_id,$ts_today);
@@ -264,7 +296,7 @@ class rental_sonotification extends rental_socommon
 	 */
 	private function read_notification()
 	{
-		return new rental_notification(
+		$notification =  new rental_notification(
 			$this->unmarshal($this->db->f('id', true), 'int'), 
 			$this->unmarshal($this->db->f('account_id', true), 'int'),
 			$this->unmarshal($this->db->f('location_id', true), 'int'),
@@ -272,8 +304,12 @@ class rental_sonotification extends rental_socommon
 			$this->unmarshal($this->db->f('date', true), 'int'),
 			$this->unmarshal($this->db->f('message', true), 'text'),
 			$this->unmarshal($this->db->f('recurrence', true), 'int'),
-			$this->unmarshal($this->db->f('last_notified', true), 'int')
+			$this->unmarshal($this->db->f('last_notified', true), 'int'),
+			$this->unmarshal($this->db->f('title', true), 'string'),
+			$this->unmarshal($this->db->f('originated_from', true), 'int')
 		);	
+		$notification->set_field_of_responsibility_id($this->db->f('location_id',true),'int');
+		return $notification;
 	}
 	
 	/**
@@ -285,6 +321,7 @@ class rental_sonotification extends rental_socommon
 	 */
 	private function add_workbench_notification($account_id, $date, $notification_id)
 	{
+		
 		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ($account_id, $date, $notification_id,'FALSE')";
 		$result = $this->db->query($sql);
 	}
@@ -321,6 +358,17 @@ class rental_sonotification extends rental_socommon
 	public function dismiss_notification($id)
 	{
 		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = $id";
+		$result = $this->db->query($sql);
+	}
+	
+	/**
+	 * This method dismisses all workbench notifications generated from a given notification
+	 * @param $id the notification id all workbench notifications originated from
+	 * @return unknown_type
+	 */
+	public function dismiss_notification_for_all($id)
+	{
+		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = $id";
 		$result = $this->db->query($sql);
 	}
 }

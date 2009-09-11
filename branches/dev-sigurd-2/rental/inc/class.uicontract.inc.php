@@ -27,7 +27,8 @@
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
 			'delete_notification'	=> true,
-			'dismiss_notification'	=> true
+			'dismiss_notification'	=> true,
+			'dismiss_notification_for_all'	=> true
 		);
 
 		public function __construct()
@@ -40,124 +41,125 @@
 		{
 			$resultArray = array();
 
-			// Complete query if user has global application read permission
-			if($this->hasReadPermission()){
-
-
-				$type = phpgw::get_var('type');
-				switch($type)
-				{
-					case 'contracts_part':
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'party_id' => phpgw::get_var('party_id')
-							)
-						);
-						break;
-					case 'contracts_for_executive_officer':
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
-							)
-						);
-						break;
-					case 'last_edited_by':
-						$resultArray = rental_contract::get_last_edited_by();
-						break;
-					case 'ending_contracts':
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'contract_status' => 'under_dismissal'
-							)
-						);
-						break;
-					case 'contracts_for_executive_officer':
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
-							)
-						);
-						break;
-					case 'last_edited_by':
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
-							)
-						);
-						break;
-					case 'notifications':
-						$resultArray = rental_notification::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								//'account_id' => $GLOBALS['phpgw_info']['user']['account_id'], (show all notifications for each contract)
-								'contract_id' => phpgw::get_var('contract_id')
-							)
-						);
-						break;
-					case 'notifications_for_user':
-						$resultArray = rental_notification::get_workbench_notifications(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							$GLOBALS['phpgw_info']['user']['account_id']
-						);
-						break;
-					case 'all_contracts':
-					default:
-						$resultArray = rental_contract::get_all(
-							phpgw::get_var('startIndex'),
-							phpgw::get_var('results'),
-							phpgw::get_var('sort'),
-							phpgw::get_var('dir'),
-							phpgw::get_var('query'),
-							phpgw::get_var('search_option'),
-							array(
-								'contract_status' => phpgw::get_var('contract_status'),
-								'contract_type' => phpgw::get_var('contract_type'),
-								'status_date_hidden' => phpgw::get_var('status_date_hidden')
-							)
-						);
-				}
+			$type = phpgw::get_var('type');
+			switch($type)
+			{
+				case 'contracts_part':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'party_id' => phpgw::get_var('party_id')
+						)
+					);
+					break;
+				case 'contracts_for_executive_officer':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
+						)
+					);
+					break;
+				case 'last_edited_by':
+					$resultArray = rental_contract::get_last_edited_by();
+					break;
+				case 'ending_contracts':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'contract_status' => 'under_dismissal'
+						)
+					);
+					break;
+				case 'contracts_for_executive_officer':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
+						)
+					);
+					break;
+				case 'last_edited_by':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']
+						)
+					);
+					break;
+				case 'notifications':
+					$resultArray = rental_notification::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							//'account_id' => $GLOBALS['phpgw_info']['user']['account_id'], (show all notifications for each contract)
+							'contract_id' => phpgw::get_var('contract_id')
+						)
+					);
+					break;
+				case 'notifications_for_user':
+					$resultArray = rental_notification::get_workbench_notifications(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						$GLOBALS['phpgw_info']['user']['account_id']
+					);
+					break;
+				case 'all_contracts':
+				default:
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'contract_status' => phpgw::get_var('contract_status'),
+							'contract_type' => phpgw::get_var('contract_type'),
+							'status_date_hidden' => phpgw::get_var('status_date_hidden')
+						)
+					);
 			}
 
 			//Serialize the contracts found
 			$rows = array();
 			foreach ($resultArray as $result) {
-				$rows[] = $result->serialize();
+				if(isset($result))
+				{
+					if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
+					{
+						$rows[] = $result->serialize();
+					}
+				}
 			}
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
@@ -185,53 +187,75 @@
 
 			$editable = $params[1];
 			$type = $params[0];
-
+			$permissions = $value['permissions'];
+			
 			switch($type)
 			{
 				case 'notifications':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
-					$value['labels'][] = lang('edit_contract');
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'])));
-					$value['labels'][] = lang('delete');
+					if($permissions[PHPGW_ACL_DELETE])
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'])));
+						$value['labels'][] = lang('delete');
+					}
 					break;
 				case 'notifications_for_user':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
-					$value['labels'][] = lang('edit_contract');
+					if($permissions[PHPGW_ACL_EDIT])
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
+						$value['labels'][] = lang('edit_contract');
+					}
+					
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification', 'id' => $value['id'])));
-					$value['labels'][] = lang('delete');
+					$value['labels'][] = lang('remove_from_workbench');
+					
+					if($permissions[PHPGW_ACL_DELETE])
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification_for_all', 'id' => $value['originated_from'])));
+						$value['labels'][] = lang('remove_from_all_workbenches');
+					}
 					break;
 				case 'last_edited_by':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
+					if($permissions[PHPGW_ACL_EDIT])
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('edit_contract');
+					}
 					break;
 				case 'contracts_for_executive_officer':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
+					if($permissions[PHPGW_ACL_EDIT])
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('edit_contract');
+					}
 					break;
 				case 'ending_contracts':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
+					if($permissions[PHPGW_ACL_EDIT])
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('edit_contract');
+					}
 					break;
 				default:
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('show');
-
-					if($this->hasWritePermission() && $editable == true)
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('edit');
 					}
-			}
-
+					if($permissions[PHPGW_ACL_READ] && $editable == true)
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+						$value['labels'][] = lang('show');		
+					}
+				}
 		}
 
 		/**
@@ -251,11 +275,23 @@
 		 */
 		public function viewedit($editable, $contract_id, $notification = null, string $message = null, string $error = null)
 		{
-
-
-			if ($contract_id > 0) {
+			
+			if (isset($contract_id) && $contract_id > 0) {
 				$contract = rental_contract::get($contract_id);
 				if ($contract) {
+					
+					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
+					{
+						$editable = false;
+						$error .= '<br/>'.lang('permission_denied_edit_contract');
+					}
+					
+					if(!$editable && !$contract->has_permission(PHPGW_ACL_READ))
+					{
+						$this->render('permission_denied.php',array('error' => lang('permission_denied_view_contract')));
+						return;
+					}
+					
 					$data = array
 					(
 						'contract' 	=> $contract,
@@ -265,7 +301,31 @@
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
 						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
 					);
+					
 					$this->render('contract.php', $data);
+				}
+			}
+			else
+			{
+				if($this->isAdministrator() && $this->isExecutiveOfficer()){
+					$contract = new rental_contract();
+					if ($contract) {
+						$data = array
+						(
+							'contract' 	=> $contract,
+							'notification' => $notification,
+							'editable' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
+						);
+						$this->render('contract.php', $data);
+					}
+				}
+				else
+				{
+					$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
+					return;	
 				}
 			}
 		}
@@ -289,64 +349,73 @@
 
 			if(isset($_POST['save_contract']))
 			{
-				$contract = rental_contract::get($contract_id);
-
+				if(isset($contract_id))
+				{
+					$contract = rental_contract::get($contract_id);
+					if(!$contract->has_permission(PHPGW_ACL_EDIT))
+					{
+						unset($contract);
+						$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_contract')));
+					}
+				}
+				else
+				{
+					if($this->isExecutiveOfficer() && $this->isAdministrator()){
+						$contract = new rental_contract();
+					}
+				}
+				
 				$date_start =  strtotime(phpgw::get_var('date_start_hidden'));
 				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
-				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
-				$contract->set_security_type(phpgw::get_var('security_type'));
-				$contract->set_security_amount(phpgw::get_var('security_amount'));
-				$contract->set_comment(phpgw::get_var('comment'));
-
-				$contract->store();
+				
+				if(isset($contract)){
+					$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
+					$contract->set_security_type(phpgw::get_var('security_type'));
+					$contract->set_security_amount(phpgw::get_var('security_amount'));
+					$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
+					$contract->set_comment(phpgw::get_var('comment'));
+					$contract->set_location_id(phpgw::get_var('location_id'));
+					$contract->set_term_id(phpgw::get_var('billing_term'));
+					$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
+					
+					if($contract->store())
+					{
+						$message = lang('messages_saved_form');
+						$contract_id = $contract->get_id();
+					}
+					else
+					{
+						$error = lang('messages_form_error');
+					}
+				}
 			}
 			else if(isset($_POST['add_notification']))
 			{
-				$account_id = phpgw::get_var('notification_target');
-
-
-				$date = phpgw::get_var('date_notification_hidden');
-				if($date)
-				{
-					$date = strtotime($date);
-				}
-				$notification = new rental_notification(-1, $account_id, null, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
-				if ($notification->store())
-				{
-					$message = lang('messages_saved_form');
-					$notification = null; // We don't want to display the date/message when it was sucessfully stored.
-				}
-				else
-				{
-
-					$error = lang('messages_form_error');
-				}
-			}
-			else if(isset($_POST['save_invoice']))
-			{
 				$contract = rental_contract::get($contract_id);
-				$contract->set_term_id(phpgw::get_var('billing_term'));
-				$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
-				if($contract->store())
+				if($contract->has_permission(PHPGW_ACL_EDIT))
 				{
-					$message = lang('messages_saved_form');
+					$account_id = phpgw::get_var('notification_target');
+					$location_id = phpgw::get_var('notification_location');
+					$date = phpgw::get_var('date_notification_hidden');
+					if($date)
+					{
+						$date = strtotime($date);
+					}
+					$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
+					if ($notification->store())
+					{
+						$message = lang('messages_saved_form');
+						$notification = null; // We don't want to display the date/message when it was sucessfully stored.
+					}
+					else
+					{
+	
+						$error = lang('messages_form_error');
+					}
 				}
 				else
 				{
-					$error = lang('messages_form_error');
-				}
-			}
-			else if(isset($_POST['save_other']))
-			{
-				$contract = rental_contract::get($contract_id);
-				$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
-				if($contract->store())
-				{
-					$message = lang('messages_saved_form');
-				}
-				else
-				{
-					$error = lang('messages_form_error');
+					$error = lang('permission_denied_edit_contract');
 				}
 			}
 			return $this->viewedit(true, $contract_id, $notification, $message, $error);
@@ -357,20 +426,7 @@
 		 */
 		public function add()
 		{
-			$contract = new rental_contract();
-
-			// Set the type of the new contract
-			$contract->set_location_id(phpgw::get_var('new_contract_type'));
-			if($contract->store()) //contract validates
-			{
-				// Redirect to edit
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
-			}
-			else
-			{
-				// Redirect to edit
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.index', 'message' => lang('messages_no_new_contract')));
-			}
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit'));
 		}
 
 		/**
@@ -479,6 +535,13 @@
 		{
 			$notification_id = (int)phpgw::get_var('id');
 			rental_notification::dismiss_notification($notification_id,strtotime('now'));
+		}
+		
+		public function dismiss_notification_for_all()
+		{
+			$notification_id = (int)phpgw::get_var('id');
+			rental_notification::dismiss_notification_for_all($notification_id);
+			
 		}
 	}
 ?>

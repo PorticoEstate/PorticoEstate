@@ -17,7 +17,11 @@
 	},
 	{
 		key: "name",
-		label: "<?php echo lang('audience') ?>"
+		label: "<? echo lang('user_or_group') ?>"
+	},
+	{
+		key: "field_of_responsibility",
+		label: "<? echo lang('field_of_responsibility') ?>"
 	},
 	{
 		key: "actions",
@@ -76,7 +80,9 @@
 						echo "\"".$r."\"";
 					}
 				}
-			?>)
+			?>),
+		'',
+		<?php echo isset($disable_left_click) ? 'true' : 'false'; ?>
 	);
 </script>
 <?php

@@ -14,7 +14,7 @@
 
 	counter = 0;
 	// Adds data source setup funtions
-	function setDataSource(source_url, column_defs, form_id, filter_ids, container_id, paginator_id, datatable_id,rel_id, editor_action) {
+	function setDataSource(source_url, column_defs, form_id, filter_ids, container_id, paginator_id, datatable_id,rel_id, editor_action, disable_left_click) {
 		YAHOO.rental.setupDatasource.push(
 			function() {
 				this.url = source_url;
@@ -26,6 +26,12 @@
 				this.tid = datatable_id;
 				this.related_datatable = rel_id;
 				this.editor_action = editor_action;
+				if(disable_left_click) {
+					this.disable_left_click = true;
+				} else {
+					this.disable_left_click = false;
+				}
+				
 			}
 		);
 	}
@@ -249,7 +255,7 @@
 			}
 		}
 
-		if (table_should_be_clickable) {
+		if (table_should_be_clickable && !this.properties.disable_left_click) {
 			//... create a handler for regular clicks on a table row
 			this.table.subscribe("rowClickEvent", function(e,obj) {
 				YAHOO.util.Event.stopEvent(e);

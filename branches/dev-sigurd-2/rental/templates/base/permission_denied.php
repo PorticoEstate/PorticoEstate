@@ -1,3 +1,1 @@
-<div>
-	You do not have the sufficient permission for the current operation
-</div>
+<?php echo rental_uicommon::get_page_error($error) ?>

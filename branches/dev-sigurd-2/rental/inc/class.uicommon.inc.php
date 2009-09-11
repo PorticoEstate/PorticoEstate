@@ -42,13 +42,6 @@
 		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 		
 		public $dateFormat;
-		
-		//Global application permission holders
-		private $hasReadPermission = false;
-		private $hasAddPermission = false;
-		private $hasWritePermission = false;
-		private $hasDeletePermission = false;
-		private $hasPrivatePermission = false;
 			
 		public function __construct()
 		{
@@ -76,12 +69,6 @@
 			
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
-			
-			$this->hasReadPermission = $this->acl->check('.',PHPGW_ACL_READ, 'rental');
-			$this->hasAddPermission = $this->acl->check('.',PHPGW_ACL_ADD, 'rental');
-			$this->hasWritePermission = $this->acl->check('.',PHPGW_ACL_EDIT, 'rental');
-			$this->hasDeletePermission = $this->acl->check('.',PHPGW_ACL_DELETE, 'rental');
-			$this->hasPrivatePermission = $this->acl->check('.',PHPGW_ACL_PRIVATE, 'rental');
 		}
 		
 		/**
@@ -94,6 +81,7 @@
 		protected function hasPermissionOn($location = rental_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
 			return $this->acl->check_rights($location,$permission);
 		}
+		
 		
 		/**
 		 * Check to see if this user is an administrator
@@ -125,13 +113,6 @@
 		protected function isManager(){
 			return !$this->isExecutiveOfficer();
 		}
-		
-		// Permission location checks. Check global application privileges (permissions on the root of the location hierarchy)
-		protected function hasReadPermission(){ return $this->hasReadPermission; }
-		protected function hasAddPermission(){ return true;return $this->hasAddPermission; }
-		protected function hasWritePermission(){ return true;return $this->hasWritePermission; }
-		protected function hasDeletePermission(){ return true;return $this->hasDeletePermission; }
-		protected function hasPrivatePermission(){ return true;return $this->hasPrivatePermission; }
 		
 		public static function process_rental_unauthorized_exceptions()
 		{

@@ -6,10 +6,21 @@
 	$config->read();
 ?>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?> <?php echo $contract->get_id() ?></h1>
+
 
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
+
+<div class="identifier-header">
+	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
+	<div>
+		<label><?php echo lang('contract_number') ?> </label>
+		<?php if($contract->get_id() > 0) { echo $contract->get_id(); } else { echo lang('no_value'); }?>
+		<?php if($contract->get_old_contract_id()){ 
+			echo ' ('.$contract->get_old_contract_id().' )'; 
+		} ?>
+	</div>
+</div>
 
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
@@ -23,20 +34,95 @@
 	<div class="yui-content">
 		<div class="details">
 			<form action="#" method="post">
+				<input type="hidden" name="id" value="<?php echo $contract->get_id() ?>"/>
 				<dl class="proplist-col">
 					<dt>
-						<label for="name"><?php echo lang('contract_type') ?></label>
+						<label for="name"><?php echo lang('field_of_responsibility') ?></label>
 					</dt>
 					<dd>
-						<?php echo lang($contract->get_contract_type_title()) ?>
+						<?php 
+							if($editable) {
+							 ?>
+							<select name="location_id" id="location_id">
+								<?php
+								$types = rental_contract::get_fields_of_responsibility();
+								foreach($types as $id => $label)
+								{
+						
+									$names = $this->locations->get_name($id);
+									if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+									{
+										if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+										{
+										?>
+											<option 
+												value="<?php echo $id ?>"
+												<?php echo $id == $contract->get_location_id() ? 'selected=selected' : '';?>
+											>
+												<?php echo lang($label) ?>
+											</option>
+										<?php
+										}
+									}
+								}
+								?>
+							</select>
+							<?php 
+							}
+							else
+							{
+								echo lang($contract->get_contract_type_title());
+							}
+							?>
 					</dd>
-
+					<dt>
+						<label for="executive_officer"><?php echo lang('executive_officer') ?></label>
+					</dt>
+					<dd>
+						<?php if($editable) { ?>
+								<select name="executive_officer" id="executive_officer">
+									<option value=""><?php echo lang('nobody') ?></option>
+									<?php
+										$executive_officer = $contract->get_executive_officer_id();
+										$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+										foreach($accounts as $account)
+										{
+											$account_id = $account->__get('id');
+											$selected = '';
+											if($account_id == $executive_officer){
+												$selected = 'selected=\'selected\'';
+											}
+											echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+										}
+									?>
+								</select>
+						<?php } else { 
+							$executive_officer = $contract->get_executive_officer_id();
+							if(isset($executive_officer)){
+								 $account = $GLOBALS['phpgw']->accounts->get($executive_officer);
+								 if(isset($account)){
+								 	echo $account->__get('firstname')." ".$account->__get('lastname');
+								 } 
+								 else
+								 {
+								 	echo lang('nobody');
+								 }
+							}
+							else
+							{
+								echo lang('nobody');
+							}
+							
+						}?>
+						
+						
+					</dd>
 					<dt>
 						<label for="name"><?php echo lang('date_start') ?></label>
 					</dt>
 					<dd>
 						<?php
-							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '';
+							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '-';
 							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
 							if ($editable) {
 								echo $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);
@@ -51,7 +137,7 @@
 					</dt>
 					<dd>
 						<?php
-							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '';
+							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '-';
 							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
 							if ($editable) {
 								echo $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
@@ -61,11 +147,27 @@
 						?>
 						<br/>
 					</dd>
+				</dl>
+				<dl class="proplist-col">
 					<dt>
-						<label for="name"><?php echo lang('security') ?></label>
+						<label for="security_type"><?php echo lang('security') ?></label>
 					</dt>
 					<dd>
 						<?php
+						if ($editable) {
+						?>
+						<select name="security_type" id="security_type">
+							<option value="0"><?php echo lang('nobody') ?></option>
+							<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_BANK_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_BANK_GUARANTEE ?>"><?php echo lang('bank_guarantee') ?></option>
+							<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_DEPOSIT ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_DEPOSIT ?>"><?php echo lang('deposit') ?></option>
+							<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_ADVANCE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_ADVANCE ?>"><?php echo lang('advance') ?></option>
+							<option <?php echo $contract->get_security_type() == rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ? 'selected="selected"' : '' ?>value="<?php echo rental_contract::SECURITY_TYPE_OTHER_GUARANTEE ?>"><?php echo lang('other_guarantee') ?></option>
+						</select>
+						<?php 
+						}
+						else
+						{
+							switch ($contract->get_security_type())
 							if ($editable) {
 								?>
 
@@ -103,11 +205,34 @@
 										echo lang('other_guarantee');
 										break;
 									default:
-										/* no-op */
+										echo lang('nobody');
 										break;
 								}
-								echo '<br/>'.isset($config->config_data['currency_prefix']) && $config->config_data['currency_prefix'] ? $config->config_data['currency_prefix'] : 'Kr'.' '.$contract->get_security_amount();
+						}
+						?>
+					<dd>
+					<dt>
+						<label for="security_amount"><?php echo lang('security_amount') ?></label>
+					</dt>
+					<dd>
+						<label for="security_amount"><?php echo lang('currency_prefix') ?></label>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="security_amount" id="security_amount" value="<?php echo $contract->get_security_amount(); ?>"/>
+						<?php
+						}
+						else
+						{	
+							if($contract->get_security_amount() && $contract->get_security_amount() > 0)
+							{
+								echo $contract->get_security_amount();
 							}
+							else
+							{
+								echo '0';
+							}
+						}
 						?>
 					</dd>
 					<dt>
@@ -166,26 +291,7 @@
 						}
 						?>
 					</dd>
-					<dt>
-						Saksbehander:
-					</dt>
-					<dd>
-						<select name="executive_officer" id="executive_officer">
-							<?php
-								$executive_officer = $contract->get_executive_officer_id();
-								$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
-								foreach($accounts as $account)
-								{
-									$account_id = $account->__get('id');
-									$selected = '';
-									if($account_id == $executive_officer){
-										$selected = 'selected=\'selected\'';
-									}
-									echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
-								}
-							?>
-						</select>
-					</dd>
+					
 				</dl>
                 <dl class="proplist-col">
                     <dt>
@@ -196,7 +302,7 @@
                         if ($editable)
                         {
                             ?>
-                            <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $contract->get_comment(); ?></textarea>
+                            <textarea cols="40" rows="10" name="comment" id="comment"><?php echo $contract->get_comment(); ?></textarea>
                             <?php
                         }
                         else
@@ -323,32 +429,71 @@
 					<!-- <input type="hidden" name="date_notification_hidden" id="date_notification_hidden" value="<?php echo $date ?>"/> -->
 					<fieldset>
 
-								<label for="calendarNotificationDate"><b><i><?php echo lang('date') ?></i></b></label>
+								<label for="calendarNotificationDate"><?php echo lang('date') ?></label>
 								<!--<input type="text" name="date_notification" id="date_notification" size="10" value="<?php echo isset($notification) ? htmlentities($notification->get_date()) : '' ?>" /> -->
 								<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_notification', $notification_date); ?>
 								<?php echo rental_uicommon::get_field_error($notification, 'date') ?>
-								<label for="notification_message"><b><i><?php echo lang('message') ?></i></b></label>
-								<input type="text" name="notification_message" id="notification_message" size="50" value="<?php echo isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
-					</fieldset>
-					<fieldset>
-								<label for="notification_recurrence"><b><i><?php echo lang('recurrence') ?></i></b></label>
+									<label for="notification_recurrence"><?php echo lang('recurrence') ?></label>
 								<select name="notification_recurrence" id="notification_recurrence">
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_NEVER ? 'selected="selected"' : '' ?>value="<?php echo rental_notification::RECURRENCE_NEVER ?>"><?php echo lang('never') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_ANNUALLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_ANNUALLY ?>"><?php echo lang('annually') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_MONTHLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_MONTHLY ?>"><?php echo lang('monthly') ?></option>
 									<option <?php echo isset($notification) && $notification->get_recurrence() == rental_notification::RECURRENCE_WEEKLY ? 'selected="selected"' : '' ?> value="<?php echo rental_notification::RECURRENCE_WEEKLY ?>"><?php echo lang('weekly') ?></option>
 								</select>
-								<label for="notification_target"><b><i><?php echo lang('audience') ?></i></b></label>
-								<select name="notification_target" id="notification_target">
-									<option value="<?php echo $GLOBALS['phpgw_info']['user']['account_id']; ?>"><?php echo lang('target_me') ?></option>
-									<?php
-										$accounts = $GLOBALS['phpgw']->accounts->get_list();
-										foreach($accounts as $account)
-										{
-											echo '<option value="'.$account->__get('id').'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
-										}
-									?>
-								</select>
+					</fieldset>
+					<fieldset>
+						<label for="notification_message"><?php echo lang('message') ?></label>
+								<input type="text" name="notification_message" id="notification_message" size="50" value="<?php echo isset($notification) ? htmlentities($notification->get_message()) : '' ?>" />
+					</fieldset>
+					<fieldset>
+						<label><?php echo lang('audience') ?></label>
+						<label for="notification_target"><?php echo lang('user_or_group') ?></label>
+						<select name="notification_target" id="notification_target">
+							<option value=""><?php echo lang('target_none') ?></option>
+							
+							<?php
+								$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+								$label = lang('notification_optgroup_users');
+								echo '<optgroup label="'.$label.'">';
+								echo '<option value="'.$GLOBALS['phpgw_info']['user']['account_id'].'">'.lang('target_me').'</option>';
+								foreach($accounts as $account)
+								{
+									$id = $account->__get('id');
+									if($id != $GLOBALS['phpgw_info']['user']['account_id'])
+									{
+										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+									}
+								}
+								echo '</optgroup>';
+								$accounts = $GLOBALS['phpgw']->accounts->get_list('groups');
+								$label = lang('notification_optgroup_groups');
+								echo '<optgroup label="'.$label.'">';
+								foreach($accounts as $account)
+								{
+										$id = $account->__get('id');
+										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+								}
+								echo '</optgroup>';
+							?>
+						</select>
+						<label for="notification_location"><?php echo lang('field_of_responsibility') ?></label>
+						<select name="notification_location" id="notification_location">
+							<option value=""><?php echo lang('target_none') ?></option>
+							<?php
+							$types = rental_contract::get_fields_of_responsibility();
+							foreach($types as $id => $label)
+							{
+								$names = $this->locations->get_name($id);
+								if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+								{
+									if($id == $contract->get_location_id()){
+										$selected = 'selected="selected"';	
+									} 
+									echo '<option value="'.$id.'" '.$selected.'>'.lang($label).'</option>';
+								}
+							}
+							?>
+						</select>
 					</fieldset>
 					<fieldset>
 								<input type="submit" name="add_notification" id="" value="<?php echo lang('add') ?>" />
@@ -363,11 +508,12 @@
 				<?php
 			}
 			?>
-			<h3><?php echo lang('your_notifications') ?></h3>
+			<h3><?php echo lang('contract_notifications') ?></h3>
 			<?php
 			$list_form = false;
 			$list_id = 'rental_notifications';
 			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
+			$disable_left_click = true;
 			unset($extra_cols);
 			unset($editors);
 			include('notification_list.php');

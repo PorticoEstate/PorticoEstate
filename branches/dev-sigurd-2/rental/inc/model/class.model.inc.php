@@ -5,7 +5,76 @@
 	abstract class rental_model
 	{
 		protected $validation_errors = array();
+		protected $field_of_responsibility_id;
+		protected $field_of_responsibility_name;
+		protected $permission_array;
 
+		/**
+		 * Retrieve the name of the 'field of responsibility' this object belongs to.
+		 * The default name is the root location (.)
+		 * 
+		 * @return the field name
+		 */
+		public function get_field_of_responsibility_name()
+		{
+			if(!isset($this->field_of_responsibility_name))
+			{
+				if(isset($this->field_of_responsibility_id))
+				{
+					$array = $GLOBALS['phpgw']->locations->get_name($this->field_of_responsibility_id);
+					if($array['appname'] = $GLOBALS['phpgw_info']['flags']['currentapp']){
+						$this->field_of_responsibility_name = $array['location'];
+					}
+				}
+				else
+				{
+					$this->field_of_responsibility_name = '.';
+				}
+				return $this->field_of_responsibility_name;
+			}
+			else
+			{
+				return $this->field_of_responsibility_name;	
+			}
+		}
+		
+		/**
+		 * Check if the current user has been given permission for a given action
+		 * 
+		 * @param $permission
+		 * @return true if current user has permission, false otherwise
+		 */
+		public function has_permission($permission = PHPGW_ACL_PRIVATE)
+		{
+			return $GLOBALS['phpgw']->acl->check_rights($this->get_field_of_responsibility_name(),$permission);
+		}
+		
+		/**
+		 * Set the identifier for the field of responsibility this object belongs to
+		 * 
+		 * @param $id the ocation identifier
+		 */
+		public function set_field_of_responsibility_id($id)
+		{
+			$this->field_of_responsibility_id = $id;
+		}
+		
+		/**
+		 * Retrieve an array with the different permission levels the current user has for this object
+		 * 
+		 * @return an array with permissions [PERMISSION_BITMASK => true/false]
+		 */
+		protected function get_permission_array(){
+			$location_name = $this->get_field_of_responsibility_name();
+			return array (
+				PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_READ),
+				PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_ADD),
+				PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_EDIT),
+				PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_DELETE),
+				PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_PRIVATE)
+			);	
+		}
+		
 		/**
 		* Store the object in the database.  If the object has no ID it is assumed to be new and
 		* inserted for the first time.  The object is then updated with the new insert id.
@@ -119,5 +188,6 @@
 		}
 
 		public abstract function serialize();
+		
 	}
 ?>
