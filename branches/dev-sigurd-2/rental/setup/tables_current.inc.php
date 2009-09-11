@@ -73,12 +73,12 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		// Describes different billing terms like '14 days', 'Monthly', etc.
+		// Describes different billing terms like 'Monthly', 'Yearly', etc.
 		'rental_billing_term' => array(
 			'fd' => array(
 				'id' => 			array('type' => 'auto', 'nullable' => false),
 				'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'runs_a_year' => 	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'months' => 		array('type' => 'int', 'precision' => '4', 'nullable' => false)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -90,7 +90,7 @@
 				'id' => 				array('type' => 'auto', 'nullable' => false),
 				'date_start' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'date_end' => 			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'billing_start' => 		array('type' => 'date'),								
+				'billing_start' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true),						
 				'location_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'term_id' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_type' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
@@ -259,6 +259,32 @@
 			'fk' => array(
 				'phpgw_accounts' => array('account_id' => 'account_id'),
 				'rental_notification' => array('notification_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_invoice' => array(
+			'fd' => array(
+				'id'		=>	array('type' => 'auto', 'nullable' => false),
+				'date_run'	=>	array('type' => 'date', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_billing_job' => array(
+			'fd' => array(
+				'id'				=>	array('type' => 'auto', 'nullable' => false),
+				'date_run'			=>	array('type' => 'date', 'nullable' => false),
+				'success'			=>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'timestamp_start'	=>	array('type' => 'timestamp'),
+				'timestamp_stop'	=>	array('type' => 'timestamp'),
+				'contract_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_contract' => array('contract_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
