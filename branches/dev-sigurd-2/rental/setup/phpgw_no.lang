@@ -35,6 +35,7 @@ billing_start	rental	no	Fakturastart
 billing_term	rental	no	Faktureringstermin
 billing_unit	rental	no	Ansvar-/tjenestested
 bill	rental	no	Faktura
+bill2	rental	no	Fakturér
 building	rental	no	Bygg
 calculate_price_apiece	rental	no	Pris regnes per stk.
 calculate_price_per_area	rental	no	Pris regnes ut fra areal
