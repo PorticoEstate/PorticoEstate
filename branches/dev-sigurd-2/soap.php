@@ -46,10 +46,12 @@
 	include_once('header.inc.php');
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
+	$GLOBALS['phpgw_info']['flags']['authed'] = false;
+	$GLOBALS['phpgw_info']['message']['errors'] = array();
 
 	if(!isset($_GET['domain']) || !$_GET['domain'])
 	{
-		die('not a valid domain');
+		$GLOBALS['phpgw_info']['message']['errors'][] = 'domain not given as input';
 	}
 	else
 	{
@@ -57,7 +59,7 @@
 		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
 		if(!$_domain_info)
 		{
-			die('not a valid domain');
+			$GLOBALS['phpgw_info']['message']['errors'][] = 'not a valid domain';
 		}
 		else
 		{
@@ -77,9 +79,13 @@
 		$auth = base64_decode(trim($tmp));
 		list($login,$password) = split(':',$auth);
 
-		if(!$GLOBALS['phpgw']->session->create($login, $password))
+		if($GLOBALS['phpgw']->session->create($login, $password))
 		{
-			die('not authenticated');
+			$GLOBALS['phpgw_info']['flags']['authed'] = true;
+		}
+		else
+		{
+			$GLOBALS['phpgw_info']['message']['errors'][] = 'not authenticated';
 		}
 	}
 
@@ -102,7 +108,7 @@
 
 	$functions = array();
 	/**
-	* Include the SOAP specific functions
+	* Include SOAP specific functions - Sigurd: Think these are obsolete.
 	*/
 //	include_once(PHPGW_API_INC . '/soap_functions.inc.php');
 //	$functions = array('system_login', 'system_logout');
@@ -130,6 +136,18 @@
 */
 	function execute($data)
 	{
+		if( isset($GLOBALS['phpgw_info']['message']['errors']) && $GLOBALS['phpgw_info']['message']['errors'] )
+		{
+    		$error = 'Error(s): ' . implode(' ## AND ## ', $GLOBALS['phpgw_info']['message']['errors']);
+    		return new SoapFault("phpgw", $error);
+		}
+
+		//to be sure...
+		if( !$GLOBALS['phpgw_info']['flags']['authed'] )
+		{
+    		return new SoapFault("phpgw", 'not authenticated');
+		}
+
 		$GLOBALS['phpgw_info']['flags'] = array
 		(
 			'disable_template_class' => true,
