@@ -9,7 +9,7 @@
 	* @package phpgroupware
 	* @subpackage communication
 	* @category core
- 	* @version $Id: class.soap_client.inc.php 3537 2009-09-09 09:33:24Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/*
