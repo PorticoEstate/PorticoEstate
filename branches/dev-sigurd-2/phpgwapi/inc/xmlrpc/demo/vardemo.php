@@ -2,7 +2,7 @@
 <head><title>xmlrpc</title></head>
 <body>
 <?php
-	include("xmlrpc.inc");
+	include("../lib/xmlrpc.inc");
 
 	$f = new xmlrpcmsg('examples.getStateName');
 
