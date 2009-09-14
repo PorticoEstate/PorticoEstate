@@ -201,24 +201,24 @@ class rental_notification extends rental_model
 	// Delete a notification
 	public static function delete_notification($id){
 		$so = self::get_so();
-		$so->delete_notification($id);
+		return $so->delete_notification($id);
 	}
 
 	// Dismiss a workbench notification
 	public static function dismiss_notification($id,$ts_dismissed){
 		$so = self::get_so();
-		$so->dismiss_notification($id,$ts_dismissed);
+		return $so->dismiss_notification($id,$ts_dismissed);
 	}
 	
 	public static function dismiss_notification_for_all($notification_id){
 		$so = self::get_so();
-		$so->dismiss_notification_for_all($notification_id);
+		return $so->dismiss_notification_for_all($notification_id);
 	}
 
 	// Populates the workbench on a given day
 	public static function populate_workbench_notifications($day = null){
 		$so = self::get_so();
-		$so->populate_workbench_notifications();
+		return $so->populate_workbench_notifications();
 	}
 
 }

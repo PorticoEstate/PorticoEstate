@@ -24,12 +24,20 @@
 		{
 			$type = phpgw::get_var('type');
 			$parties = array();
+			
+			$contract_id = phpgw::get_var('contract_id');
+			if(isset($contract_id))
+			{
+				$contract = rental_contract::get($contract_id);
+			}
+					
 			switch($type)
 			{
 				case 'included_parties':
-					$contract_id = phpgw::get_var('contract_id');
-					$contract = rental_contract::get($contract_id);
-					$parties = $contract->get_parties();
+					if(isset($contract))
+					{
+						$parties = $contract->get_parties();
+					}
 					break;
 				case 'not_included_parties':
 					$parties = rental_party::get_all(
@@ -41,7 +49,7 @@
 						phpgw::get_var('search_option'),
 						array(
 							'party_type' => phpgw::get_var('party_type'),
-							'contract_id' => phpgw::get_var('contract_id')
+							'contract_id' => $contract_id
 						)
 					);
 					break;
@@ -71,7 +79,7 @@
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			//Add action column to each row in result table
-			array_walk($party_data['results'], array($this, 'add_actions'), array(phpgw::get_var('contract_id'),$type,$contract,$editable));
+			array_walk($party_data['results'], array($this, 'add_actions'), array($contract_id,$type,$contract->serialize(),$editable));
 			return $this->yui_results($party_data, 'total_records', 'results');
 		}
 
@@ -88,19 +96,25 @@
 			$value['labels'] = array();
 
 			$editable = $params[3];
-
+			$contract_id = $params[0];
+			$serialized_contract= $params[2];
+			$permissions = $serialized_contract['permissions'];
+			
+			
 			switch($params[1])
 			{
 				case 'included_parties':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission() && $editable == true)
+						
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
 						$value['labels'][] = lang('remove');
-						if($value['id'] != $params[2]->get_payer_id()){
+						
+						if($value['id'] != $serialized_contract['payer_id']){
 							$value['ajax'][] = true;
 							$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer', 'party_id' => $value['id'], 'contract_id' => $params[0])));
 							$value['labels'][] = lang('set_payer');
@@ -111,18 +125,20 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission() && $editable == true)
+			
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
 						$value['labels'][] = lang('add');
-						break;
 					}
+					break;
 				default:
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission())
+					
+					if($this->isExecutiveOfficer || $this->isAdministrator())
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));

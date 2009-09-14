@@ -195,7 +195,7 @@
 					if($permissions[PHPGW_ACL_DELETE])
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'], 'contract_id' => $value['contract_id'])));
 						$value['labels'][] = lang('delete');
 					}
 					break;
@@ -214,7 +214,7 @@
 					if($permissions[PHPGW_ACL_DELETE])
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification_for_all', 'id' => $value['originated_from'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification_for_all', 'id' => $value['originated_from'], 'contract_id' => $value['contract_id'])));
 						$value['labels'][] = lang('remove_from_all_workbenches');
 					}
 					break;
@@ -307,7 +307,7 @@
 			}
 			else
 			{
-				if($this->isAdministrator() && $this->isExecutiveOfficer()){
+				if($this->isAdministrator() || $this->isExecutiveOfficer()){
 					$contract = new rental_contract();
 					if ($contract) {
 						$data = array
@@ -360,7 +360,7 @@
 				}
 				else
 				{
-					if($this->isExecutiveOfficer() && $this->isAdministrator()){
+					if($this->isExecutiveOfficer() || $this->isAdministrator()){
 						$contract = new rental_contract();
 					}
 				}
@@ -434,21 +434,47 @@
 		 */
 		public function add_from_composite()
 		{
-			$contract = new rental_contract();
-			$contract->store();
-
-			// Get the composite object the user asked for from the DB
-			$composite = rental_composite::get(phpgw::get_var('composite_id'));
-			// Add that composite to the new contract
-			$contract->add_composite($composite);
-
-			// TODO: set type of contract.  Do we set a default one or should the
-			// user be able to choose it from where this function is called?  (like the context
-			// menu of the composite table)
-
-			$contract->store();
-
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+			if($this->isExcutiveOfficer())
+			{
+				$contract = new rental_contract();
+				
+				// Sets the first location this user is executive officer (add access) for
+				$types = rental_contract::get_fields_of_responsibility();
+				foreach($types as $id => $label)
+				{
+					$names = $this->locations->get_name($id);
+					if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+					{
+						if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+						{
+							$contract->set_location_id($id);
+							break;
+						}
+					}
+				}
+				
+				if($contract->store())
+				{
+					// Get the composite object the user asked for from the DB
+					$composite = rental_composite::get(phpgw::get_var('composite_id'));
+					// Add that composite to the new contract
+					$contract->add_composite($composite);
+					
+					
+					
+					if($contract->store())
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					}
+				}
+			}
+			
+			// If no executive officer 
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
 		}
 
 		public function add_party(){
@@ -456,8 +482,12 @@
 			$party_id = (int)phpgw::get_var('party_id');
 			$party = rental_party::get($party_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->add_party($party);
-			return true;
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->add_party($party);
+				return true;
+			}
+			return false;
 			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
@@ -466,8 +496,12 @@
 			$party_id = (int)phpgw::get_var('party_id');
 			$party = rental_party::get($party_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->remove_party($party);
-			return true;
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->remove_party($party);
+				return true;
+			}
+			return false;
 			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
@@ -475,7 +509,12 @@
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$party_id = (int)phpgw::get_var('party_id');
 			$contract = rental_contract::get($contract_id);
-			$contract->set_payer($party_id);
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->set_payer($party_id);
+				return true;
+			}
+			return false;
 		}
 
 
@@ -484,8 +523,13 @@
 			$composite_id = (int)phpgw::get_var('composite_id');
 			$composite = rental_composite::get($composite_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->add_composite($composite);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->add_composite($composite);
+				return true;
+			}
+			return false;
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
 		public function remove_composite(){
@@ -493,8 +537,13 @@
 			$composite_id = (int)phpgw::get_var('composite_id');
 			$composite = rental_composite::get($composite_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->remove_composite($composite);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->remove_composite($composite);
+				return true;
+			}
+			return false;
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
 		public function add_price_item()
@@ -503,7 +552,12 @@
 			$price_item_id = (int)phpgw::get_var('price_item_id');
 			$price_item = rental_price_item::get($price_item_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->add_price_item($price_item);
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->add_price_item($price_item);
+				return true;
+			}
+			return false;
 			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
@@ -513,8 +567,13 @@
 			$price_item_id = (int)phpgw::get_var('price_item_id');
 			$price_item = rental_contract_price_item::get($price_item_id);
 			$contract = rental_contract::get($contract_id);
-			$contract->remove_price_item($price_item);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->remove_price_item($price_item);
+				return true;
+			}
+			return false;
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
 		public function reset_price_item()
@@ -522,25 +581,69 @@
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$price_item_id = (int)phpgw::get_var('price_item_id');
 			$price_item = rental_contract_price_item::get($price_item_id);
-			$price_item->reset();
+			if($this->isExecutiveOfficer() || $this->isAdministrator())
+			{
+				$price_item->reset();
+				return true;
+			}
+			return false;
 		}
 
+		/**
+		 * Visible controller function for deleting a contract notification.
+		 * 
+		 * @return true on success/false otherwise
+		 */
 		public function delete_notification()
 		{
 			$notification_id = (int)phpgw::get_var('id');
-			rental_notification::delete_notification($notification_id);
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$contract = rental_contract::get($contract_id);
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{	
+				rental_notification::delete_notification($notification_id);
+				return true;
+			}
+			return false;
 		}
 
+		
+		/**
+		 * Visible controller function for dismissing a single workbench notification
+		 * 
+		 * @return true on success/false otherwise
+		 */
 		public function dismiss_notification()
 		{
 			$notification_id = (int)phpgw::get_var('id');
+			
+			//TODO: should we check to see if the notification exist on the current users workbench? 
+			
 			rental_notification::dismiss_notification($notification_id,strtotime('now'));
 		}
 		
+		/**
+		 * Visible controller function for dismissing all workbench notifications originated 
+		 * from a given notification. The user must have EDIT privileges on a contract for
+		 * this action.
+		 * 
+		 * @return true on success/false otherwise
+		 */
 		public function dismiss_notification_for_all()
 		{
+			//the source notification
 			$notification_id = (int)phpgw::get_var('id');
-			rental_notification::dismiss_notification_for_all($notification_id);
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$contract = rental_contract::get($contract_id);
+
+			//TODO: should we check to see if the notification exist on the current users workbench? 
+						
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				rental_notification::dismiss_notification_for_all($notification_id);
+				return true;
+			}
+			return false;
 			
 		}
 	}

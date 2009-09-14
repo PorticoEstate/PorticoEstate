@@ -320,11 +320,10 @@ class rental_party
 		);
 	}
 
-	public function serialize(rental_contract $contract)
+	public function serialize(rental_contract $contract = null)
 	{
 		$is_payer = '';
 		if(isset($contract) && $contract->get_payer_id() == $this->id){
-
 			$is_payer = lang('is_payer');
 		}
 

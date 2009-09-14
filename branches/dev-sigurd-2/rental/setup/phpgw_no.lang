@@ -124,7 +124,7 @@ link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer
 log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
 message	rental	no	Melding
-messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
+messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver	
 messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
 messages_fontpage_saved	rental	no	Oppsettet ble lagret
 messages_form_error	rental	no	Skjemaet inneholder en feil.
