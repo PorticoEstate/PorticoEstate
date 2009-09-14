@@ -2,32 +2,80 @@
 	/**
 	* phpGroupWare
 	*
-	* phpgroupware base
 	* @author Joseph Engo <jengo@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package phpgroupware
-	* @version $Id$
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package xmlrpc
+	* @subpackage communication
+ 	* @version $Id$
 	*/
 	
+
 	$GLOBALS['phpgw_info'] = array();
-	
+
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'currentapp'			=> 'login',
-		'noheader'				=> True,
-		'disable_Template_class'=> True
+		'disable_Template_class'	=> true,
+		'currentapp'				=> 'login',
+		'noheader'					=> true,
+		'noapi'						=> true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
-	
+
 	/**
 	* Include phpgroupware header
 	*/
+
 	include_once('header.inc.php');
+
+	unset($GLOBALS['phpgw_info']['flags']['noapi']);
+	$GLOBALS['phpgw_info']['flags']['authed'] = false;
+	$GLOBALS['phpgw_info']['message']['errors'] = array();
+
+	if(!isset($_GET['domain']) || !$_GET['domain'])
+	{
+		$GLOBALS['phpgw_info']['message']['errors'][] = 'domain not given as input';
+	}
+	else
+	{
+		$_REQUEST['domain'] = $_GET['domain'];
+		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+		if(!$_domain_info)
+		{
+			$GLOBALS['phpgw_info']['message']['errors'][] = 'not a valid domain';
+		}
+		else
+		{
+			$GLOBALS['phpgw_domain'] = array();
+			$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
+		}
+	}
+
+	include(PHPGW_API_INC.'/functions.inc.php');
+
 
 	/**
 	* Include the XMLRPC specific functions
 	*/
-	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
+	phpgw::import_class('phpgwapi.xmlrpc_server');
+//	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
 
 	// If XML-RPC isn't enabled in PHP, return an XML-RPC response stating so
 	if (! function_exists('xmlrpc_server_create'))
@@ -74,12 +122,28 @@
 	{
 		$request_xml = implode("\r\n", file('php://input'));
 	}
-			
+
+	if(!$_domain_info)
+	{
+		// domain is invalid
+		xmlrpc_error(1001,'not a valid domain');
+	}
+
+//		xmlrpc_error(1001,$headers['Authorization']);
+
 	if ( isset($headers['Authorization']) 
 		&& ereg('Basic', $headers['Authorization']) )
 	{
-		if ( $GLOBALS['phpgw']->session->verify($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) )
+		$tmp = $headers['Authorization'];
+		$tmp = str_replace(' ','',$tmp);
+		$tmp = str_replace('Basic','',$tmp);
+		$auth = base64_decode(trim($tmp));
+		list($login,$password) = split(':',$auth);
+
+		if($GLOBALS['phpgw']->session->create($login, $password))
 		{
+			$GLOBALS['phpgw_info']['flags']['authed'] = true;
+
 			// Find out what method they are calling
 			// This function is odd, you *NEED* to assign the results
 			// to a value, or $method is never returned.  (jengo)
@@ -112,7 +176,7 @@
 			}
 			else if ($method != 'system.listMethods' && $method != 'system.describeMethods')
 			{
-				xmlrpc_error(1001,'Access not permitted');
+//				xmlrpc_error(1001,'Access not permitted');
 			}
 
 			echo xmlrpc_server_call_method($xmlrpc_server,$request_xml,'');
@@ -120,8 +184,7 @@
 		}
 		else
 		{
-			// Session is invalid
-			xmlrpc_error(1001,'Session expired');
+			xmlrpc_error(1001, 'not authenticated');
 		}
 	}
 	else
