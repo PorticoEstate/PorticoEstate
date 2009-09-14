@@ -14,7 +14,7 @@ When you press <kbd>Send</kbd> this page will reload, showing you the XML-RPC re
 <p>You can find the source to this page here: <a href="mail.php?showSource=1">mail.php</a><br/>
 And the source to a functionally identical mail-by-XML-RPC server in the file <a href="../server/server.php?showSource=1">server.php</a> included with the library (look for the 'mail_send' method)</p>
 <?php
-include("xmlrpc.inc");
+include("../../lib/xmlrpc.inc");
 
 // Play nice to PHP 5 installations with REGISTER_LONG_ARRAYS off
 if (!isset($HTTP_POST_VARS) && isset($_POST))

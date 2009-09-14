@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST' && isset($_GET['showSource']))
 	die();
 }
 
-	include("xmlrpc.inc");
-	include("xmlrpcs.inc");
-	include("xmlrpc_wrappers.inc");
+	include("../../lib/xmlrpc.inc");
+	include("../../lib/xmlrpcs.inc");
+	include("../../lib/xmlrpc_wrappers.inc");
 
 	/**
 	* Used to test usage of object methods in dispatch maps and in wrapper code

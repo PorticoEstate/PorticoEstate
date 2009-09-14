@@ -4,7 +4,7 @@
 <h1>Zope test demo</h1>
 <h3>The code demonstrates usage of basic authentication to connect to the server</h3>
 <?php
-	include("xmlrpc.inc");
+	include("../../lib/xmlrpc.inc");
 
 	$f = new xmlrpcmsg('document_src', array());
 	$c = new xmlrpc_client("/index_html", "pingu.heddley.com", 9080);

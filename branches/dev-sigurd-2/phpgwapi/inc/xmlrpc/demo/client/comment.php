@@ -1,5 +1,5 @@
 <?php
-include("xmlrpc.inc");
+include("../../lib/xmlrpc.inc");
 
 $mydir="/demo";
 

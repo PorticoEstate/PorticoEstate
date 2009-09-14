@@ -5,7 +5,7 @@
 <h2>Query server for available methods and their description</h2>
 <h3>The code demonstrates usage of multicall and introspection methods</h3>
 <?php
-	include("xmlrpc.inc");
+	include("../../lib/xmlrpc.inc");
 
 	function display_error($r)
 	{
@@ -15,7 +15,9 @@
 	}
 
 	// 'new style' client constuctor
-	$c = new xmlrpc_client("http://phpxmlrpc.sourceforge.net/server.php");
+	$server =  'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['PHP_SELF'], 0, -strlen('/client/introspect.php')) . '/server/server.php';
+	$c = new xmlrpc_client($server);
+//	$c = new xmlrpc_client("http://phpxmlrpc.sourceforge.net/server.php");
 	print "<h3>methods available at http://" . $c->server . $c->path .  "</h3>\n";
 
 	$m = new xmlrpcmsg('system.listMethods');
