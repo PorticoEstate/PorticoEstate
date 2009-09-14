@@ -128,7 +128,6 @@
 		// domain is invalid
 		xmlrpc_error(1001,'not a valid domain');
 	}
-
 //		xmlrpc_error(1001,$headers['Authorization']);
 
 	if ( isset($headers['Authorization']) 
@@ -148,7 +147,7 @@
 			// This function is odd, you *NEED* to assign the results
 			// to a value, or $method is never returned.  (jengo)
 			$null = xmlrpc_decode_request($request_xml, $method);
-			
+
 			$GLOBALS['phpgw']->session->xmlrpc_method_called = $method;
 			$GLOBALS['phpgw']->session->update_dla();
 
@@ -156,31 +155,34 @@
 			// for that class, and execute it
 			list($app,$class,$func) = explode('.',$method);
 
-			if ($method == 'system.logout' || $GLOBALS['phpgw_info']['user']['apps'][$app] || $app == 'phpgwapi')
+			if ($method == 'system.logout' || $GLOBALS['phpgw_info']['user']['apps'][$app] || $app == 'phpgwapi' || $app == 'xmlrpc')
 			{
 				$GLOBALS['obj'] = CreateObject($app . '.' . $class);
 
-				xmlrpc_server_register_method($xmlrpc_server,sprintf('%s.%s.%s',$app,$class,'listMethods'),'xmlrpc_list_methods');
-				xmlrpc_server_register_method($xmlrpc_server,sprintf('%s.%s.%s',$app,$class,'describeMethods'),xmlrpc_describe_methods);
-				xmlrpc_server_register_method($xmlrpc_server,'system.logout','xmlrpc_logout');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],sprintf('%s.%s.%s',$app,$class,'list_methods'),'xmlrpc_list_methods');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],sprintf('%s.%s.%s',$app,$class,'describeMethods'),'xmlrpc_describe_methods');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],'system.logout','xmlrpc_logout');
 
-				while (list(,$new_method) = @each($obj->xmlrpc_methods))
+				if(isset($GLOBALS['obj']->xmlrpc_methods) && is_array($GLOBALS['obj']->xmlrpc_methods))
 				{
-					$full_method_name = sprintf('%s.%s.%s',$app,$class,$new_method['name']);
+					foreach ($GLOBALS['obj']->xmlrpc_methods as $new_method)
+					{
+						$full_method_name = sprintf('%s.%s.%s',$app,$class,$new_method['name']);
 
-					xmlrpc_server_register_method($xmlrpc_server,$full_method_name,'xmlrpc_call_wrapper');
-					// The following function is listed as being in the API, but doesn't actually exisit.
-					// This is more of a mental note to track down its exisitence
-					//xmlrpc_server_set_method_description($xmlrpc_server,$full_method_name,$new_method);
+						xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],$full_method_name,'xmlrpc_call_wrapper');
+						// The following function is listed as being in the API, but doesn't actually exisit.
+						// This is more of a mental note to track down its exisitence
+						//xmlrpc_server_set_method_description($GLOBALS['xmlrpc_server'],$full_method_name,$new_method);
+					}
 				}
 			}
 			else if ($method != 'system.listMethods' && $method != 'system.describeMethods')
 			{
-//				xmlrpc_error(1001,'Access not permitted');
+				xmlrpc_error(1001,'Access not permitted');
 			}
 
-			echo xmlrpc_server_call_method($xmlrpc_server,$request_xml,'');
-			xmlrpc_server_destroy($xmlrpc_server);
+			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml,'');
+			xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 		}
 		else
 		{
@@ -196,9 +198,9 @@
 
 		if ($method == 'system.login')
 		{
-			xmlrpc_server_register_method($xmlrpc_server,'system.login','xmlrpc_login');
-			echo xmlrpc_server_call_method($xmlrpc_server,$request_xml,'');
-			xmlrpc_server_destroy($xmlrpc_server);
+			xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],'system.login','xmlrpc_login');
+			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml,'');
+			xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 
 			exit;
 		}

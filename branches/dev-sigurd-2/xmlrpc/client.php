@@ -31,11 +31,14 @@
 		$stateno = phpgw::get_var('stateno', 'int', 'POST', 0);
 		$c = new xmlrpc_client("{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php?domain={$phpgw_domain}", $_SERVER['HTTP_HOST'], 80);
 		$c->setCredentials($username, $password);	 
-		$f=new xmlrpcmsg('examples.getStateName',array(php_xmlrpc_encode($stateno))	);
+		$f=new xmlrpcmsg('xmlrpc.examples.findstate',array(php_xmlrpc_encode($stateno))	);
 
-		print "<pre>" . htmlentities($f->serialize('UTF-8')) . "</pre>\n";
-		$c->setDebug(1);
+//		print "<pre>" . htmlentities($f->serialize('UTF-8')) . "</pre>\n";
+//		$c->setDebug(1);
 		$r=&$c->send($f);
+
+//		$cookies = $r->cookies();
+
 		if(!$r->faultCode())
 		{
 			$v=$r->value();
