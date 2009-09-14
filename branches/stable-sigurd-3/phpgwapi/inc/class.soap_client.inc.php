@@ -1,119 +1,158 @@
 <?php
 	/**
-	* This file is generated automaticaly from the nusoap library for
-	* phpGroupWare, using the nusoap2phpgwapi.php script written for this purpose by 
-	* Caeies (caeies@phpgroupware.org)
-	* @copyright Portions Copyright (C) 2003,2006 Free Software Foundation, Inc. http://www.fsf.org/
-	* @package phpgwapi
+	* phpGroupWare
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package phpgroupware
 	* @subpackage communication
-	* Please see original header after this one and class.nusoap_base.inc.php
-	* @version $Id$
+	* @category core
+ 	* @version $Id$
 	*/
 
-/* Please see class.base_nusoap.inc.php for more information */
+	/*
+	   This program is free software: you can redistribute it and/or modify
+	   it under the terms of the GNU General Public License as published by
+	   the Free Software Foundation, either version 2 of the License, or
+	   (at your option) any later version.
 
-	phpgw::import_class('phpgwapi.soap_transport_http');
-/***************************************************************************
-* TOTALY DEPRECATED , DON'T USE
-*/
-	/**
-	* SOAPx4 client
-	* @author Edd Dumbill <edd@usefulinc.com>
-	* @author Victor Zou <victor@gigaideas.com.cn>
-	* @author Dietrich Ayala <dietrich@ganx4.com>
-	* @copyright Copyright (C) 1999-2000 Edd Dumbill
-	* @copyright Copyright (C) 2000-2001 Victor Zou
-	* @copyright Copyright (C) 2001 Dietrich Ayala
-	* @copyright Portions Copyright (C) 2003,2004 Free Software Foundation, Inc. http://www.fsf.org/
-	* @package phpgwapi
-	* @subpackage communication
-	* @version $ I d: class.soap_client.inc.php,v 1.6.4.3 2004/02/10 13:51:19 ceb
-Exp $
-	* @internal This project began based on code from the 2 projects below,
-	* @internal and still contains some original code. The licenses of both must be respected.
-	* @internal XML-RPC for PHP; SOAP for PHP
-	*/
+	   This program is distributed in the hope that it will be useful,
+	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   GNU General Public License for more details.
+
+	   You should have received a copy of the GNU General Public License
+	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 
 	/**
-	* SOAPx4 client
-	* @package phpgwapi
-	* @subpackage communication
-	* $path can be a complete endpoint url, with the other parameters left blank:
-	* $soap_client = new soap_client("http://path/to/soap/server");
-	* @deprecated : this is a wrapper to class.soap_transport_http.inc.php
-	*/
+	 * soap_client
+	 *
+	 * @package phpgroupware
+	 * @subpackage communication
+	 * @category core
+	 */
 
-class phpgwapi_soap_client extends phpgwapi_soap_transport_http 
+	class phpgwapi_soap_client
 	{
-		 function phpgwapi_soap_client($path,$server=False,$port=False)
-		 {
-			$url = '';
-			/* We MUST Heavily test this !! */
-			/* Would be better if we "just" change class.interserver.inc.php */
-			if ( $server ) {
-				$url .= $server;
-			}
-			if ( $port ) {
-				$url .= ':'.$port;
-			}
-			$url .= $path;
-			/* Call our parent constructor */
-			$this->phpgwapi_soap_transport_http($url);
-		}
+		/**
+		* @var 
+		*/
+		var $phpgw_domain = 'default';
+		var	$wdsl = null;
+		var $uri = "urn://www.tempuri.testing/soap";
+		var $soap_version = SOAP_1_2;
+		var $trace	= 1;
+		var $login	= 'anonymous';
+		var $password = 'anonymous1';
+		var $encoding = 'UTF-8';
 
-		function send($msg, $action, $timeout=0, $ssl=False)
+		/**
+		* Constructor
+		*
+		*/
+
+		function __construct($data = array(), $init = true)
 		{
-			// where msg is an soapmsg
-			$msg->debug_flag = $this->debug_flag;
-			//$this->action = $action;
-			$this->setSOAPAction($action);
-			if($ssl)
+
+			if(isset($data['phpgw_domain']) && $data['phpgw_domain'])
 			{
-				return $this->ssl_sendPayloadHTTP10(
-					$msg,
-					$this->server,
-					$this->port,
-					$timeout,
-					$this->username,
-					$this->password
-				);
+				$this->phpgw_domain = $data['phpgw_domain'];
+			}
+			if(isset($data['location']) && $data['location'])
+			{
+				$this->location = $data['location'];
 			}
 			else
 			{
-				return $this->sendPayloadHTTP10(
-					$msg,
-					$this->server,
-					$this->port,
-					$timeout,
-					$this->username,
-					$this->password
-				);
+				$this->location = "http://{$_SERVER['HTTP_HOST']}" . parse_url($GLOBALS['phpgw_info']['server']['webserver_url'], PHP_URL_PATH) . "/soap.php?domain={$this->phpgw_domain}";
+			}
+
+			if(isset($data['wdsl']) && $data['wdsl'])
+			{
+				$this->wdsl = $data['wdsl'];
+			}
+			if(isset($data['uri']) && $data['uri'])
+			{
+				$this->uri = $data['uri'];
+			}
+			if(isset($data['soap_version']) && $data['soap_version'])
+			{
+				$this->soap_version = $data['soap_version'];
+			}
+			if(isset($data['trace']))
+			{
+				$this->trace = $data['trace'];
+			}
+			if(isset($data['login']))
+			{
+				$this->login = $data['login'];
+			}
+			if(isset($data['password']))
+			{
+				$this->password = $data['password'];
+			}
+
+/* to consider
+'proxy_host'     => "localhost",
+'proxy_port'     => 8080,
+'proxy_login'    => "some_name",
+'proxy_password' => "some_password",
+'local_cert'     => "cert_key.pem",
+'style'    => SOAP_DOCUMENT,
+'use'      => SOAP_LITERAL
+*/
+			if( $init )
+			{
+				$this->init();
 			}
 		}
 
-		function sendPayloadHTTP10($msg, $server, $port, $timeout=0, $username='', $password='')
-		{	
-			$this->scheme = 'http';
-			/* Add some specific headers */
-			$this->outgoing_headers['X-PHPGW-Server'] = $this->server; // ?? strange ...
-			$this->outgoing_headers['X-PHPGW-Version'] = $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'] ;
-			if ( $username ) {
-				$this->setCredentials($username,$password);
-			}
-			return phpgwapi_soap_transport_http::send($msg,$timeout);
-		}
-
-		function ssl_sendPayloadHTTP10($msg, $server, $port, $timeout=0,$username='', $password='')
+		function init()
 		{
-			$this->scheme = 'https';
-			/* Add some specific headers */
-			$this->outgoing_headers['X-PHPGW-Server'] = $this->server; // ?? strange ...
-			$this->outgoing_headers['X-PHPGW-Version'] = $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'] ;
-			if ( $username ) {
-				$this->setCredentials($username,$password);
-			}
-			return phpgwapi_soap_transport_http::send($msg,$timeout);
+			$this->client = new SoapClient($this->wdsl, array(
+				'location'		=> $this->location,
+				'uri'			=> $this->uri,
+				'soap_version'	=> $this->soap_version,
+				'trace'			=> $this->trace,
+				'login'			=> $this->login,
+				'password'		=> $this->password,
+				'encoding'		=> $this->encoding
+		 	));
 		}
 
-	} // end class soap_client
-?>
+		/**
+		* call the SOAP method, returns PHP native type
+		*
+		* Note: if the operation has multiple return values
+		* the return value of this method will be an array
+		* of those values.
+		*
+		* @param    string $function_name
+		* @param    array $arguments
+		* @return	mixed native PHP types.
+		* @access   public
+		*/
+		public function call($function_name, $arguments)
+		{
+			return $this->client->__soapCall($function_name, array($arguments));
+		}
+		public function getLastRequestHeaders()
+		{
+			return $this->client->__getLastRequestHeaders();
+		}
+		public function getLastRequest()
+		{
+			return $this->client->__getLastRequest();
+		}
+		public function getLastResponseHeaders()
+		{
+			return $this->client->__getLastResponseHeaders();
+		}
+		public function getLastResponse()
+		{
+			return $this->client->__getLastResponse();
+		}
+	}

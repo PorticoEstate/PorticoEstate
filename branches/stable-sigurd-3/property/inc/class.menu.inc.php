@@ -624,12 +624,6 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index')),
 							'text'	=> lang('template'),
 							'image'		=> array('property', 'project_template')
-						),
-						'claim'		=> array
-						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
-							'text'	=> lang('Tenant claim'),
-							'image'		=> array('property', 'project_tenant_claim')
 						)
 					)
 				);
@@ -700,6 +694,12 @@
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> 'tenant')),
 							'text'	=> lang('Tenant')
+						),
+						'claim'		=> array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
+							'text'	=> lang('Tenant claim'),
+							'image'		=> array('property', 'project_tenant_claim')
 						)
 					), $children)
 				);

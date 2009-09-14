@@ -13,14 +13,13 @@
 
 	class uiserver
 	{
-		var $public_functions = array();
-		/* as it doesn't work lets disable it for now - skwashd
+		var $public_functions = array(
 			'list_servers' => True,
 			'edit'         => True,
 			'add'          => True,
 			'delete'       => True
 		);
-		*/
+
 
 		var $start = 0;
 		var $limit = 0;
@@ -96,8 +95,8 @@
 
 		function list_servers()
 		{
-			$GLOBALS['phpgw']->common->phpgw_header();
-
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('server_list_t' => 'listservers.tpl'));
 			$GLOBALS['phpgw']->template->set_block('server_list_t','server_list','list');
 
@@ -150,7 +149,7 @@
 
 			while(list($key,$server) = @each($servers))
 			{
-				$tr_color = $this->nextmatchs->alternate_row_color($tr_color);
+				$tr_color = $this->nextmatchs->alternate_row_class($tr_color);
 				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
 				$server_id = $server['server_id'];
 
@@ -178,6 +177,8 @@
 		{
 			$is = CreateObject('phpgwapi.interserver');
 
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('form' => 'server_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('form','add','addhandle');
 			$GLOBALS['phpgw']->template->set_block('form','edit','edithandle');
@@ -297,8 +298,9 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->common->phpgw_header();
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 
+				$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 				$GLOBALS['phpgw']->template->set_file(array('server_delete' => 'delete_common.tpl'));
 
 				$nolink = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiserver.list_servers'));

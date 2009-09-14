@@ -1,45 +1,76 @@
 <?php
-/**************************************************************************\
-* phpGroupWare - addressbook                                               *
-* http://www.phpgroupware.org                                              *
-* Written by Joseph Engo <jengo@phpgroupware.org>                          *
-* --------------------------------------------                             *
-*  This program is free software; you can redistribute it and/or modify it *
-*  under the terms of the GNU General Public License as published by the   *
-*  Free Software Foundation; either version 2 of the License, or (at your  *
-*  option) any later version.                                              *
-\**************************************************************************/
+	/**
+	* phpGroupWare
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @author Joseph Engo <jengo@phpgroupware.org>
+	* @copyright Copyright (C) 2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package soap
+	* @subpackage communication
+ 	* @version $Id$
+	*/
 
-/* $Id$ */
-/*
-	$phpgw_info['flags'] = array(
-		'currentapp' => 'soap',
-		'noheader' => True
+	$phpgw_info = array();
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'disable_template_class' => true,
+		'login'                  => true,
+		'currentapp'             => 'login',
+		'noheader'               => true
 	);
 
 	include('../header.inc.php');
-*/
-	$login  = 'anonymous';
-	$passwd = 'anonymous1';
 
-	$phpgw_info['flags'] = array(
-		'disable_Template_class' => True,
-		'login' => True,
-		'currentapp' => 'soap',
-		'noheader'  => True);
 
-	include('../header.inc.php');
-	include('./vars.php');
+	$client = CreateObject('phpgwapi.soap_client');
 
-	$sessionid = $phpgw->session->create($login,$passwd);
+	
+	$arguments = array
+	(
+		'app'	=> 'property',
+		'class'	=> 'sotts',
+		'method'=> 'read',	
+		'input'	=> array('user_id' => $accound_id)
+	);
 
-	if (!$symbol)
-	{
-		$symbol = 'LNUX';
-	}
-	$soapclient = CreateObject('phpgwapi.phpgw_soapclient',"http://services.xmethods.net:80/soap");
-	echo $soapclient->call("getQuote",array("symbol"=>$symbol),"urn:xmethods-delayed-quotes","urn:xmethods-delayed-quotes#getQuote");
+	$result = $client->call("execute", $arguments);
+	_debug_array($result);
 
-//	$soapclient = CreateObject('phpgwapi.phpgw_soapclient','http://' . $HTTP_HOST . '/phpgroupware/soap.php');
-//	echo 'response: ' . $soapclient->call("hello",array($phpgw_info['server']['site_title']),"http://soapinterop.org/ilab","http://soapinterop.org/ilab#hello");
-//	echo $soapclient->call('echoString','hello',False,'echoString');
+//	$return = $client->call("hello",array("world"));
+//_debug_array($return);
+//	$return = $client->call("system_listApps",array());
+//_debug_array($return);
+//	$return = $client->call("system_logout",$login_data);
+//_debug_array($return);
+
+
+	echo("<H1>Dumping request headers:</H1></br>"
+		.$client->getLastRequestHeaders());
+
+	echo("</br><H1>Dumping request:</H1></br>".$client->getLastRequest());
+
+	echo("</br><H1>Dumping response headers:</H1></br>"
+		.$client->getLastResponseHeaders());
+
+	echo("</br><H1>Dumping response:</H1></br>".$client->getLastResponse());
+
+	$GLOBALS['phpgw']->common->phpgw_exit();
+?>
