@@ -186,7 +186,7 @@ class rental_socontract extends rental_socommon
 		$id = (int)$id;
 		$sql_payer_id = " {$this->left_join} (SELECT contract_id, party_id FROM rental_contract_party WHERE is_payer = true) rcp ON (rental_contract.id = rcp.contract_id)";
 		
-		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, rental_contract.location_id, rental_contract.comment, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, executive_officer, old_contract_id, rental_contract_responsibility.title
+		$sql = "SELECT rental_contract.id AS contract_id, date_start, date_end, billing_start, rental_contract.location_id, rental_contract.comment, term_id, rental_billing_term.title as term_id_title, security_type, security_amount, executive_officer, old_contract_id, rental_contract_responsibility.title, party_id
 				FROM " . $this->table_name . $sql_payer_id . " 
 				{$this->left_join} rental_contract_responsibility ON (rental_contract_responsibility.location_id = rental_contract.location_id) 
 				{$this->left_join} rental_billing_term ON (rental_contract.term_id = rental_billing_term.id) 

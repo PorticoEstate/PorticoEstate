@@ -51,8 +51,6 @@
 		
 		public function get_id() { return $this->id; }
 		
-	
-		
 		public function set_payer($id)
 		{
 			$so = self::get_so();
