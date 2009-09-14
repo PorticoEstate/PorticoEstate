@@ -167,7 +167,6 @@
 						}
 						else
 						{
-							switch ($contract->get_security_type())
 							if ($editable) {
 								?>
 
@@ -208,6 +207,7 @@
 										echo lang('nobody');
 										break;
 								}
+							}
 						}
 						?>
 					<dd>
