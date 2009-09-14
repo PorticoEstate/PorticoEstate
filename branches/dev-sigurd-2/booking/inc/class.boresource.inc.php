@@ -120,6 +120,7 @@
 			{
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
+				$resource['full_name'] = $resource['building_name'] . ' / ' . $resource['name'];
 			}
 			$data = array(
 				 'ResultSet' => array(
