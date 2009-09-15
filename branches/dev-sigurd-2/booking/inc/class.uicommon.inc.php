@@ -9,14 +9,15 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	function extract_values($array, $keys)
+	function extract_values($array, $keys, $options = array())
 	{
+		$options = array_merge(array('prefix' => '', 'suffix' => ''), $options);
 		$result = array();
-		foreach($keys as $key)
+		foreach($keys as $write_key)
 		{
-			if(in_array($key, array_keys($array)))
-			{
-				$result[$key] = $array[$key];
+			$array_key = $options['prefix'].$write_key.$options['suffix'];
+			if(isset($array[$array_key])) {
+				$result[$write_key] = $array[$array_key];
 			}
 		}
 		return $result;

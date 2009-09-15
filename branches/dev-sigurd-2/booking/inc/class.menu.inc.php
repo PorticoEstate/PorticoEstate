@@ -62,6 +62,15 @@
 							'text'	=> lang('Completed'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
 						                    'image'	=> array('property', 'location'),
+							'children' => array
+							(
+								'exports' => array
+								(
+									'text'	=> lang('Exports'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index') ),
+								                    'image'	=> array('property', 'location'),
+								),
+							)
 						),
 					)
 				),

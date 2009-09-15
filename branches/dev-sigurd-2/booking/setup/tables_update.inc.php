@@ -1583,6 +1583,7 @@
 						'building_id' 			=> array('type' => 'int', 'precision' => '4'),
 						'from_' => array('type' => 'timestamp', 'nullable' => True), /*Should be automatically filled in sometimes*/
 						'to_' => array('type' => 'timestamp', 'nullable' => True),
+						'created_on' => array('type' => 'timestamp', 'nullable' => False),
 						'filename' => array('type' => 'text', 'nullable' => False),
 					),
 					'pk' => array('id'),

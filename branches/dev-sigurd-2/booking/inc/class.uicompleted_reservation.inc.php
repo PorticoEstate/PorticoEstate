@@ -49,6 +49,13 @@ phpgw::import_class('booking.uicommon');
 		
 		public function export() {
 			//TODO: also filter on exported value
+			$forward_values = extract_values($_GET, array('season_id', 'season_name', 'building_id', 'building_name', 'to'), array('prefix' => 'filter_'));
+			isset($forward_values['to']) AND $forward_values['to_'] = $forward_values['to'];
+			$forward_values['ui'] = 'completed_reservation_export';
+			
+			$this->redirect_to('add', $forward_values);
+			return;
+			
 			$reservations = $this->bo->read_all();
 			
 			$filename = 'report.txt';
@@ -361,6 +368,7 @@ phpgw::import_class('booking.uicommon');
 					'href' => $this->link_to('show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
 					'label' => lang($reservation['reservation_type']),
 				);
+				
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
 				$reservation['payee_type'] = lang($reservation['payee_type']);
