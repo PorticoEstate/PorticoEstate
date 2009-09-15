@@ -552,11 +552,14 @@
 				'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				'description' => array('type' => 'text', 'nullable' => false),
 				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
+				'building_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'building_name' => array('type' => 'text', 'nullable' => false),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
+				'bb_completed_reservation_export' => array('exported' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

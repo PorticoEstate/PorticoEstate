@@ -47,7 +47,7 @@
 		{
 			if (!isset($entity['id']) && !isset($entity['filename']) && !$entity['filename']) {
 				$entity['filename'] = self::TEMP_FILE_NAME;
-			} 
+			}
 		}
 		
 		protected function doValidate($entity, booking_errorstack $errors)
@@ -68,6 +68,18 @@
 		}
 		
 		function add($entry) {
+			$to_date = (isset($entry['to_']) && !empty($entry['to_']) ? $entry['to_'] : date('Y-m-d'));
+			
+			$to_date = date('Y-m-d', strtotime($to_date));
+			
+			if (strtotime($to_date) > strtotime('tomorrow')) {
+				$to_date = date('Y-m-d');
+			}
+			
+			$to_date .= ' 23:59:59';
+			
+			$entry['to_'] = $to_date;
+			
 			$export_reservations =& $this->get_completed_reservations_for($entry);
 			
 			if (!$export_reservations) {
@@ -109,10 +121,8 @@
 		}
 		
 		public function &get_completed_reservations_for($entity) {
-			$to_date = (isset($entity['to_']) && $entity['to_'] ? $entity['to_'] : date('Y-m-d'));
-			
 			$filters = array(
-				'where' => "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $to_date),
+				'where' => "%%table%%".sprintf(".to_ <= '%s'", $entity['to_']),
 				'exported' => '0',
 			);
 			

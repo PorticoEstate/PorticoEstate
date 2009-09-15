@@ -191,6 +191,10 @@ phpgw::import_class('booking.uicommon');
 				}
 			}
 			
+			if (!isset($export['to_']) || empty($export['to_'])) {
+				$export['to_'] = date('Y-m-d');
+			}
+			
 			$this->flash_form_errors($errors);
 			//self::add_javascript('export', 'export', 'export.js');
 

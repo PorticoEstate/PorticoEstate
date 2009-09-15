@@ -28,6 +28,7 @@
 					'exported' 				=> array('type' => 'int', 'required' => True, 'nullable' => False, 'default' => 0),
 					'description'			=> array('type' => 'string', 'required' => True, 'nullable' => False),
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
+					'building_id'			=> array('type' => 'string', 'required' => True),
 					'building_name'		=> array('type' => 'string', 'required' => True),
 					'season_name'	=> array('type' => 'string', 'query' => true,
 						  'join' => array(
@@ -76,18 +77,19 @@
 		}
 		
 		protected function set_description($type, &$reservation, &$entity) {
-			$building_name = $this->get_building_name($type, $reservation);
-			$entity['article_description'] = $building_name . ': ' . implode(', ', $this->get_resource_names($reservation['resources']));
+			$building = $this->get_building($type, $reservation);
+			$entity['article_description'] = $building['name'] . ': ' . implode(', ', $this->get_resource_names($reservation['resources']));
 			
 			if (mb_strlen($entity['article_description']) > 35) {
 				$entity['article_description'] = mb_substr($entity['article_description'], 0, 32).'...'; 
 			}
 			
 			$entity['description'] = mb_substr($entity['from_'], 0, -3) .' - '. mb_substr($entity['to_'], 0, -3);
-			$entity['building_name'] = $building_name;
+			$entity['building_name'] = $building['name'];
+			$entity['building_id'] = $building['id'];
 		}
 		
-		public function get_building_name($type, &$reservation) {
+		public function get_building($type, &$reservation) {
 			switch ($type) {
 				case 'booking':
 				case 'allocation':
@@ -103,7 +105,7 @@
 			static $cache = array();
 			if (!isset($cache[$season_id])) {
 				$season = $this->season_so->read_single($season_id);
-				$cache[$season_id] = $season['building_name'];
+				$cache[$season_id] = array('id' => $season['building_id'], 'name' => $season['building_name']);
 			}
 			
 			return $cache[$season_id];
@@ -113,7 +115,7 @@
 			static $cache = array();
 			if (!isset($cache[$resource_id])) {
 				$resource = $this->resource_so->read_single($resource_id);
-				$cache[$resource_id] = $resource['building_name'];
+				$cache[$resource_id] = array('id' => $resource['building_id'], 'name' => $resource['building_name']);
 			}
 			
 			return $cache[$resource_id];
