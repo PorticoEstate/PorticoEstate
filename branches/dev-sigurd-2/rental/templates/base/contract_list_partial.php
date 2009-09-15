@@ -86,6 +86,20 @@
 				}
 			?>)
 	);
+
+
+    function doExport() {
+        // TODO: Add support for status date
+        var typeselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_contract_type');
+        var typeoption = typeselect.options[typeselect.selectedIndex].value;
+
+        var statusselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_contract_status');
+        var statusoption = statusselect.options[statusselect.selectedIndex].value;
+
+        window.location = 'index.php?menuaction=rental.uicontract.download'+
+            '&contract_type='+typeoption+
+            '&contract_status='+statusoption;
+    }
 </script>
 <?php
 	if($list_form)
@@ -142,5 +156,6 @@
 <?php
 	}
 ?>
+<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>

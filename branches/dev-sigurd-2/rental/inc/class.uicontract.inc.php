@@ -28,7 +28,8 @@
 			'reset_price_item'		=> true,
 			'delete_notification'	=> true,
 			'dismiss_notification'	=> true,
-			'dismiss_notification_for_all'	=> true
+			'dismiss_notification_for_all'	=> true,
+			'download'              => true
 		);
 
 		public function __construct()
@@ -645,6 +646,28 @@
 			}
 			return false;
 			
+		}
+
+        /**
+		 * Download xls, csv or similar file representation of the data table
+		 */
+        public function download()
+		{
+            $list = $this->query();
+            $list = $list[ResultSet][Result];
+
+            $keys = array();
+            foreach($list[0] as $key => $value) {
+                if(!is_array($value)) {
+                    array_push($keys, $key);
+                }
+            }
+
+            // Use keys as headings
+            $headings = $keys;
+
+			$property_common = CreateObject('property.bocommon');
+            $property_common->download($list, $keys, $headings);
 		}
 	}
 ?>
