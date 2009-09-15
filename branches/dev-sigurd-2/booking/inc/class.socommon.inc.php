@@ -1,6 +1,8 @@
 <?php
 	abstract class booking_socommon
 	{
+		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true));
+		
 		protected
 			$cols;
 		
@@ -60,7 +62,7 @@
 			}
 			else if($type == 'int')
 			{
-				return intval($value);
+				return (is_string($value) && strlen($value) === 0) ? 'NULL' : intval($value);
 			}
 			else if($type == 'intarray')
 			{
@@ -323,17 +325,25 @@
 		function add($entry)
 		{
 			$cols = array();
-			$values = array();
 			foreach($this->fields as $field => $params)
 			{
 				if($field == 'id' || $params['join'] || $params['manytomany'])
 				{
 					continue;
 				}
-				$cols[] = $field;
-				$values[] = $this->_marshal($entry[$field], $params['type']);
+				$cols[$field] = $this->_marshal($entry[$field], $params['type']);
 			}
-			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', $cols) . ') VALUES(' . join(',', $values) . ')', __LINE__,__FILE__);
+			
+			if ( isset($this->fields[key(self::$AUTO_CREATED_ON)]) 
+				&& isset($this->fields[key(self::$AUTO_CREATED_ON)]['type']) && $this->fields[key(self::$AUTO_CREATED_ON)]['type'] == 'timestamp'
+				&& (!isset($this->fields[key(self::$AUTO_CREATED_ON)]['auto']) || $this->fields[key(self::$AUTO_CREATED_ON)]['auto'] !== false)
+			) 
+			{
+				$params = current(self::$AUTO_CREATED_ON);
+				$cols['created_on'] = $this->_marshal(date('Y-m-d H:i:s'), $params['type']);
+			}
+			
+			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($cols)) . ') VALUES(' . join(',', $cols) . ')', __LINE__,__FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			foreach($this->fields as $field => $params)
 			{
