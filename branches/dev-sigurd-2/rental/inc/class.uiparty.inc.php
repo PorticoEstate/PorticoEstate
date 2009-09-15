@@ -239,7 +239,6 @@
 		 */
         public function download()
 		{
-            // TODO: Add support for filters.
             $list = $this->query();
             $list = $list[ResultSet][Result];
 

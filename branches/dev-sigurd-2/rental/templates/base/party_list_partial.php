@@ -82,6 +82,12 @@
 		?>)
 	);
 
+    function doExport() {
+        var select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_type');
+        var option = select.options[select.selectedIndex].value;
+        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option;
+    }
+
 </script>
 <?php
 	if($list_form)
@@ -129,6 +135,6 @@
 <?php
 	}
 ?>
-<div id="export"><a href="index.php?menuaction=rental.uiparty.download&type_id=1"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
+<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
