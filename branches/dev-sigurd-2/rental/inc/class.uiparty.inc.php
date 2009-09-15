@@ -11,7 +11,8 @@
 			'edit'		=> true,
 			'index'		=> true,
 			'query'		=> true,
-			'view'		=> true
+			'view'		=> true,
+			'download'	=> true
 		);
 
 		public function __construct()
@@ -231,6 +232,29 @@
 				$this->render('party.php', $data);
 				}
 			}
+		}
+
+        /**
+		 * Download xls, csv or similar file representation of the data table
+		 */
+        public function download()
+		{
+            // TODO: Add support for filters.
+            $list = $this->query();
+            $list = $list[ResultSet][Result];
+
+            $keys = array();
+            foreach($list[0] as $key => $value) {
+                if(!is_array($value)) {
+                    array_push($keys, $key);
+                }
+            }
+            
+            // Use keys as headings
+            $headings = $keys;
+            
+			$property_common = CreateObject('property.bocommon');
+            $property_common->download($list, $keys, $headings);
 		}
 	}
 ?>

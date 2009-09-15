@@ -129,6 +129,6 @@
 <?php
 	}
 ?>
-
+<div id="export"><a href="index.php?menuaction=rental.uiparty.download&type_id=1"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
