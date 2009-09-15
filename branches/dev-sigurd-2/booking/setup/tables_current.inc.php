@@ -574,5 +574,22 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_completed_reservation_export', array(
+			'fd' => array(
+				'id' 						=> array('type' => 'auto', 'nullable' => False),
+				'season_id' 			=> array('type' => 'int', 'precision' => '4'),
+				'building_id' 			=> array('type' => 'int', 'precision' => '4'),
+				'from_' => array('type' => 'timestamp', 'nullable' => True), /*Should be automatically filled in sometimes*/
+				'to_' => array('type' => 'timestamp', 'nullable' => True),
+				'filename' => array('type' => 'text', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_building' => array('building_id' => 'id'),
+				'bb_season' => array('season_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
 ?>

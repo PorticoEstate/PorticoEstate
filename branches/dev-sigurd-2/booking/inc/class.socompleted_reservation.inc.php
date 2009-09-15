@@ -53,10 +53,6 @@
 			);
 		}
 		
-		public function read($options) {
-			return parent::read($options);
-		}
-		
 		public function create_from($type, $reservation) {
 			$entity = array(
 				'reservation_type' 	=> $type, 
