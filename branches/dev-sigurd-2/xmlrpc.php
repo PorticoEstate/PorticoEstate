@@ -74,7 +74,10 @@
 	/**
 	* Include the XMLRPC specific functions
 	*/
-	phpgw::import_class('phpgwapi.xmlrpc_server');
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpc.inc';
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpcs.inc';
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpc_wrappers.inc';
+
 //	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
 
 	// If XML-RPC isn't enabled in PHP, return an XML-RPC response stating so

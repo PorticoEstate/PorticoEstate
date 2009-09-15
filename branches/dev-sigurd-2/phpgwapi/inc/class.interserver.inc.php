@@ -10,6 +10,9 @@
 	* @version $Id$
 	*/
 
+
+	phpgw::import_class('phpgwapi.xmlrpc_client');
+
 	/**
 	* Inter-server communications - Maintain list and provide send interface to remote phpgw servers
 	* 
@@ -33,10 +36,7 @@
 		var $kp3 = '';
 
 		/* These are now entered as defaults if the admin forgot to enter the full URL */
-		var $urlparts = array(
-			'xmlrpc' => '/phpgroupware/xmlrpc.php',
-			'soap'   => '/phpgroupware/soap.php'
-		);
+		var $urlparts = array();
 
 		/*
 		0/none == no access
@@ -77,6 +77,11 @@
 
 		function interserver($serverid='')
 		{
+			$this->urlparts = array(
+				'xmlrpc' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php?domain=default",
+				'soap'   => "http://{$_SERVER['HTTP_HOST']}" . parse_url($GLOBALS['phpgw_info']['server']['webserver_url'], PHP_URL_PATH) . '/soap.php?domain=default'
+			);
+
 			$this->db =& $GLOBALS['phpgw']->db;
 			if($serverid)
 			{
@@ -203,11 +208,12 @@
 
 		function _send_xmlrpc_($method_name, $args, $url, $debug=True)
 		{
+_debug_array($url);
 			list($uri,$hostpart) = $this->_split_url($url);
 			if(gettype($args) != 'array')
 			{
-				$arr[] = createObject('phpgwapi.xmlrpcval',$args,'string');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'string');
+				$arr[] = new xmlrpcval($args,'string');
+				$f = new xmlrpcmsg($method_name, $arr,'string');
 			}
 			else
 			{
@@ -217,22 +223,23 @@
 					{
 						while(list($x,$y) = each($val))
 						{
-							$tmp[$x] = createObject('phpgwapi.xmlrpcval',$y, 'string');
+							$tmp[$x] = new xmlrpcval($y, 'string');
 						}
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$tmp,'struct');
+						$ele[$key] = new xmlrpcval($tmp,'struct');
 					}
 					else
 					{
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$val, 'string');
+						$ele[$key] = new xmlrpcval($val, 'string');
 					}
 				}
-				$arr[] = createObject('phpgwapi.xmlrpcval',$ele,'struct');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'struct');
+				$arr[] = new xmlrpcval($ele,'struct');
+				$f = new xmlrpcmsg($method_name, $arr,'struct');
 			}
 
 			$this->debug('<pre>' . htmlentities($f->serialize()) . '</pre>' . "\n",$debug);
-			$c = createObject('phpgwapi.xmlrpc_client',$uri, $hostpart, 80);
-			$c->setCredentials($this->sessionid,$this->kp3);
+			$c = new xmlrpc_client($uri, $hostpart, 80);
+
+			$c->setCredentials($args['username'],$args['password']);
 //			_debug_array($c);
 			$c->setDebug(0);
 			$r = $c->send($f);
