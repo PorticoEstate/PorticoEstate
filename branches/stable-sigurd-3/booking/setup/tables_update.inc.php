@@ -1555,3 +1555,17 @@
 		}
 	}
 	
+	$test[] = '0.1.61';
+	function booking_upgrade0_1_61()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation, bb_completed_reservation_resource");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN article_description character varying(35) NOT NULL");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.62';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

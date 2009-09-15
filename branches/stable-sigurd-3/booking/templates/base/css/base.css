@@ -135,6 +135,10 @@ dl.form-col {
     margin: auto .25em;
 }
 
+#list_actions {
+   margin-top: 0.5em;
+}
+
 dl.proplist dd.address,
 dl.proplist-col dd.address {
     white-space: pre;

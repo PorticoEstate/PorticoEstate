@@ -9,8 +9,8 @@
 			$this->so = CreateObject('booking.soevent');
 		}
 		
-		public function complete_expired() {
-			$this->so->complete_expired();
+		public function complete_expired(&$events) {
+			$this->so->complete_expired($events);
 		}
 		
 		public function find_expired() {

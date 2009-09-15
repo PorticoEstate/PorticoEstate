@@ -157,7 +157,8 @@
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
 				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
-				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
+				'season_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'completed' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -175,7 +176,9 @@
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
 				'allocation_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'season_id' => array('type' => 'int','precision' => '4','nullable' => False)
+				'season_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'completed' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -484,6 +487,7 @@
 				'contact_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
 				'contact_email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
 				'contact_phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
+				'completed' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -528,6 +532,45 @@
 			'fk' => array(
 				'bb_event' => array('event_id' => 'id'),
 				'bb_agegroup' => array('agegroup_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		
+		'bb_completed_reservation' => array(
+			'fd' => array(
+				'id' 						=> array('type' => 'auto', 'nullable' => False),
+				'reservation_type' 	=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'reservation_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'season_id' 			=> array('type' => 'int', 'precision' => '4'),
+				'cost' => array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => false),
+				'to_' => array('type' => 'timestamp', 'nullable' => false),
+				'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
+				'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+				'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
+				'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				'description' => array('type' => 'text', 'nullable' => false),
+				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_organization' => array('organization_id' => 'id'),
+				'bb_season' => array('season_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_completed_reservation_resource' => array(
+			'fd' => array(
+				'completed_reservation_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'resource_id' => array('type' => 'int','precision' => '4','nullable' => False),
+			),
+			'pk' => array('completed_reservation_id', 'resource_id'),
+			'fk' => array(
+				'bb_completed_reservation' => array('completed_reservation_id' => 'id'),
+				'bb_resource' => array('resource_id' => 'id')
+			),
 			'ix' => array(),
 			'uc' => array()
 		),

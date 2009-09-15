@@ -13,6 +13,8 @@
             <dd><xsl:value-of select="booking/from_"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
             <dd><xsl:value-of select="booking/to_"/></dd>
+            <dt><xsl:value-of select="php:function('lang', 'Cost')" /></dt>
+            <dd><xsl:value-of select="booking/cost"/></dd>
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Season')" /></dt>

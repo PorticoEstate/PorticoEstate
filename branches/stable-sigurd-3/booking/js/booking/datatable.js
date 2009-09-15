@@ -1,17 +1,25 @@
 YAHOO.booking.setupToolbar = function() {
-    var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', 'toolbar');
-    for(var i=0; i < items.length; i++) {
-        var type = items[i].getAttribute('type');
-        if(type == 'link') {
-            new YAHOO.widget.Button(items[i], 
-                                    {type: 'link', 
-                                     href: items[i].getAttribute('href')});
-        }
-        else if(type == 'submit') {
-            new YAHOO.widget.Button(items[i], {type: 'submit'});
-        }
-    }
-}
+	YAHOO.booking.renderUiFormItems('toolbar');
+};
+
+YAHOO.booking.setupListActions = function() {
+	YAHOO.booking.renderUiFormItems('list_actions');
+};
+
+YAHOO.booking.renderUiFormItems = function(container) {
+	var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', container);
+   for(var i=0; i < items.length; i++) {
+       var type = items[i].getAttribute('type');
+       if(type == 'link') {
+           new YAHOO.widget.Button(items[i], 
+                                   {type: 'link', 
+                                    href: items[i].getAttribute('href')});
+       }
+       else if(type == 'submit') {
+           new YAHOO.widget.Button(items[i], {type: 'submit'});
+       }
+   }
+};
 
 YAHOO.booking.setupPaginator = function() {
 	var paginatorConfig = {
@@ -31,6 +39,7 @@ YAHOO.booking.setupPaginator = function() {
 YAHOO.booking.initializeDataTable = function()
 {
 	YAHOO.booking.setupToolbar();
+	YAHOO.booking.setupListActions();
 	YAHOO.booking.setupDatasource();
 
     var fields = [];
@@ -66,15 +75,30 @@ YAHOO.booking.initializeDataTable = function()
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
         return oPayload;
     }
+
+	 YAHOO.booking.lastDatatableQuery = false;
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
 		  YAHOO.booking.preSerializeQueryForm('queryForm');
         var qs = YAHOO.booking.serializeForm('queryForm');
+		  YAHOO.booking.lastDatatableQuery = qs;
         myDataSource.liveData = baseUrl + qs + '&';
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});
     });
+
+	YAHOO.util.Event.addListener('list_actions_form', "submit", function(e){
+		YAHOO.util.Event.stopEvent(e);
+		window.setTimeout(function() {
+			var action = location.href + '&' + YAHOO.booking.serializeForm('list_actions_form');
+			if (YAHOO.booking.lastDatatableQuery) {
+				action = action + '&' + YAHOO.booking.lastDatatableQuery;
+			}
+			YAHOO.util.Dom.setAttribute(document.getElementById('list_actions_form'), 'action', action);
+		   document.getElementById('list_actions_form').submit();
+		}, 0);
+	});
 };
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.booking.initializeDataTable);

@@ -92,6 +92,8 @@
                 </input>
                 </div>
             </dd>
+            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
+            <dd><input id="field_cost" name="cost" type="text" value="{booking/cost}"/></dd>
         </dl>
 		<dl class="form-col">
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>

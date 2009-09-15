@@ -89,13 +89,14 @@ YAHOO.booking.formatGenericLink = function() {
 	};
 };
 
-YAHOO.booking.autocompleteHelper = function(url, field, hidden, container) {
+YAHOO.booking.autocompleteHelper = function(url, field, hidden, container, label_attr) {
+	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		fields: ['name', 'id']
+		fields: [label_attr, 'id']
 	};
 	myDataSource.maxCacheEntries = 5; 
 	var ac = new YAHOO.widget.AutoComplete(field, container, myDataSource);

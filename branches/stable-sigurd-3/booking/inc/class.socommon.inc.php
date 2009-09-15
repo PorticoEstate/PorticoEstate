@@ -222,7 +222,7 @@
 		function read($params)
 		{
 			$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? $data['results'] : 1000;
+			$results = isset($params['results']) && $params['results'] ? $params['results'] : null; //Passing null causes the system default to be used later on
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'desc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
@@ -241,10 +241,12 @@
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
+			
+			strtolower($results) === 'all' AND $results = $total_records;
 
 			$order = $sort ? "ORDER BY $sort $dir ": '';
 
-			$this->db->limit_query("SELECT $cols FROM $this->table_name $joins WHERE $condition $order", $start, __LINE__, __FILE__, $limit);
+			$this->db->limit_query("SELECT $cols FROM $this->table_name $joins WHERE $condition $order", $start, __LINE__, __FILE__, $results);
 			$results = array();
 			while ($this->db->next_record())
 			{
@@ -561,5 +563,7 @@
 		}
 		
 		
-		
+		public static function select_id(&$entity) {
+			return $entity['id'];
+		}
 	}

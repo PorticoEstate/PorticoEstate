@@ -289,7 +289,7 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
-			return $this->read(array('where' => $expired_conditions));
+			return $this->read(array('where' => $expired_conditions, 'results' => 500));
 		}
 		
 		protected function find_expired_sql_conditions() {
@@ -298,11 +298,12 @@
 			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
 		}
 		
-		public function complete_expired() {
+		public function complete_expired(&$bookings) {
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
-			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions;";
+			$ids = join(', ', array_map(array($this, 'select_id'), $bookings));
+			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions AND {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
 		}
 	}
