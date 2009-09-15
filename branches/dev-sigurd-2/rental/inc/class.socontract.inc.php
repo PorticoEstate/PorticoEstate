@@ -578,10 +578,10 @@ class rental_socontract extends rental_socommon
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$first_year = (int)date('Y'); // First year in the array returned - we first set it to default this year
 		if($this->db->next_record()){
-			$date = $this->unmarshal($this->db->f('date_start', true), 'date');
+			$date = $this->unmarshal($this->db->f('date_start', true), 'int');
 			if($date != null && $date != '')
 			{
-				$first_contract_year = (int)date('Y', strtotime($date));
+				$first_contract_year = (int)date('Y', $date);
 				if($first_contract_year < $first_year) // First contract year is before this year
 				{
 					$first_year = $first_contract_year;

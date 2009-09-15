@@ -62,8 +62,8 @@
 		'rental_contract_responsibility' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'location_id' => array('type' => 'int','precision' => '4', 'nullable' => false),
-				'title' => 			array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'location_id'	=>	array('type' => 'int','precision' => '4', 'nullable' => false),
+				'title'			=>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'notify_before' =>	array('type' => 'int','precision' => '4','nullable' => false)
 			),
 			'pk' => array('id'),
@@ -91,7 +91,7 @@
 				'date_start' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'date_end' => 			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'billing_start' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true),						
-				'location_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'location_id' =>	 	array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
 				'term_id' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_type' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'security_amount' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
@@ -263,30 +263,65 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'rental_invoice' => array(
-			'fd' => array(
-				'id'		=>	array('type' => 'auto', 'nullable' => false),
-				'date_run'	=>	array('type' => 'date', 'nullable' => false)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'rental_billing_job' => array(
+		'rental_billing' => array(
 			'fd' => array(
 				'id'				=>	array('type' => 'auto', 'nullable' => false),
-				'date_run'			=>	array('type' => 'date', 'nullable' => false),
+				'total_sum'			=>	array('type' => 'int', 'precision' => '8'),
 				'success'			=>	array('type' => 'bool','nullable' => false,'default' => 'false'),
-				'timestamp_start'	=>	array('type' => 'timestamp'),
-				'timestamp_stop'	=>	array('type' => 'timestamp'),
-				'contract_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'timestamp_stop'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'location_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
+				'term_id'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'year'				=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'month'				=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'rental_contract' => array('contract_id' => 'id')
+				'phpgw_locations'		=> array('location_id' => 'location_id'),
+				'rental_billing_term'	=> array('term_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'rental_invoice' => array(
+			'fd' => array(
+				'id'				=>	array('type' => 'auto', 'nullable' => false),
+				'contract_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'billing_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_created'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_end'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_contract'	=> array('contract_id' => 'id'),
+				'rental_billing'	=> array('billing_id' => 'id'),
+				'rental_party'		=> array('party_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		// Price item related to invoice
+		'rental_invoice_price_item' => array(
+			'fd' => array(
+				'id'			=> array('type' => 'auto', 'nullable' => false),
+				'invoice_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'title'			=> array('type' => 'varchar','precision' => '45','nullable' => false),
+				'area'			=> array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'count'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'agresso_id'	=> array('type' => 'varchar','precision' => '45','nullable' => true),
+				'is_area'		=> array('type' => 'bool','nullable' => false,'default' => 'true'),
+				'price'			=> array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'total_price'	=> array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'date_start'	=> array('type' => 'date'),
+				'date_end'		=> array('type' => 'date')
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_invoice' => array('invoice_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);

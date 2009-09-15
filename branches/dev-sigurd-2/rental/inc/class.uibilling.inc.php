@@ -1,6 +1,7 @@
 <?php
 phpgw::import_class('rental.uicommon');
 include_class('rental', 'contract', 'inc/model/');
+include_class('rental', 'billing', 'inc/model/');
 
 class rental_uibilling extends rental_uicommon
 {
@@ -36,6 +37,17 @@ class rental_uibilling extends rental_uicommon
 		// Step 3
 		else if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '4' && phpgw::get_var('previous') != null) // User clicked next on step 2 or previous on step 4
 		{
+			var_dump($_POST);
+			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
+			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
+			{
+				$billing_start_timestamps = array(); // Billing start timestamps for each of the contracts
+				foreach($contract_ids as $contract_id)
+				{
+					$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
+				}
+				rental_billing::create_billing(phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps);
+			}
 			$this->render('billing_step3.php', $data);
 		}
 		// Step 2

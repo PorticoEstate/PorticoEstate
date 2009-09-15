@@ -1,6 +1,6 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';
-	$setup_info['rental']['version'] = '0.0.15';
+	$setup_info['rental']['version'] = '0.0.17';
 	$setup_info['rental']['app_order'] = 51;
 	$setup_info['rental']['tables'] = array(
 		'rental_party',						// All contract participants, tenants etc.
@@ -9,10 +9,9 @@
 		'rental_contract_party',			// Link table between tenants and contracts
 		'rental_composite',					// Rental object, an aggregation of rental units or areas
 		'rental_contract_price_item',		// Price items from the price book tied to a contract
-		'rental_billing_job',				// Contains information about the job creating invoices
-		'rental_invoice',
-	//	'rental_bill_price_item',			// Price items from the price book tied to a past bill
-	//	'rental_bill',						// A sent bill tied to a contract
+		'rental_billing',					// Contains information about the job creating invoices
+		'rental_invoice',					// Contratcs' invoices
+		'rental_invoice_price_item',		// Price items from the contract tied to a past invoice
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
 		'rental_unit',						// Link table between property register and rental objects or composites
 	//	'rental_comment',					// Comments to rental composites and tenants

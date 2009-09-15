@@ -2,7 +2,7 @@
 <form action="#" method="post">
 	<input type="hidden" name="step" value="2"/>
 	<input type="hidden" name="contract_type" value="<?php echo $contract_type ?>"/>
-	<input type="hidden" name="year" value="<?php echo $year ?>"/>
+	<input type="hidden" name="year" value="<?php echo $contract_type ?>"/>
 	<input type="hidden" name="month" value="<?php echo $month ?>"/>
 	<input type="hidden" name="billing_term" value="<?php echo $billing_term ?>"/>
 	<div>
@@ -73,17 +73,8 @@
 					if($contracts != null && count($contracts) > 0)
 					{
 						$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-						$bill_from_timestamp = strtotime($year . '-' . $month . '-01'); // The billing should start from the first date the month we're billing for
 						foreach ($contracts as $contract)
 						{
-							$last_bill_timestamp = $contract->get_last_invoice_timestamp($bill_from_timestamp); // Finds the last day of the last period the contract was billed before the specified date
-							if($last_bill_timestamp == null) // Not billed before this period
-							{
-								$next_bill_timestamp = $contract->get_billing_start_date();
-								}
-							else{ // Billed before
-								$next_bill_timestamp = strtotime('+1 day', $last_bill_timestamp); // The next that day that the contract should be billed from
-							}
 							?>
 							<tr>
 								<td><div class="yui-dt-liner"><?php echo $contract->get_id() ?></div></td>
@@ -91,30 +82,8 @@
 								<td><div class="yui-dt-liner"><?php echo ($contract->get_contract_date()->has_end_date() ? date($date_format, $contract->get_contract_date()->get_end_date()) : '') ?></div></td>
 								<td><div class="yui-dt-liner"><?php echo $contract->get_composite_name() ?></div></td>
 								<td><div class="yui-dt-liner"><?php echo $contract->get_party_name() ?></div></td>
-								<?php 
-								if($next_bill_timestamp == $bill_from_timestamp) // The next time the contract should be billed from equals the first day of the current selected period
-								{
-									?>
-									<td>
-										<div class="yui-dt-liner">
-											<?php echo date($date_format, $bill_from_timestamp); ?>
-											<input type="hidden" name="bill_start_date_<?php echo $contract->get_id(); ?>_hidden" value="<?php echo date('Y-m-d', $bill_from_timestamp); ?>"/>
-										</div>
-									</td>
-									<?php 
-								}
-								else{ // The next time the contract should be billed from is for some reason (maybe it hasn't been billed before?) not the same as the first day of the current selected period
-									// We give a date selector to make it possible for the user to change the bill start date 
-								?>
-									<td>
-										<div class="yui-dt-liner">
-										<?php echo $GLOBALS['phpgw']->yuical->add_listener('bill_start_date_' . $contract->get_id(), date($date_format, $next_bill_timestamp)); ?>
-										</div>
-									</td>
-								<?php 
-								}
-								?>
-								<td><div class="yui-dt-liner"><input name="contract[]" value="<?php echo $contract->get_id() ?>" type="checkbox" <?php echo (($next_bill_timestamp == $bill_from_timestamp) ? 'checked="checked"' : ''); ?>/></div></td>
+								<td><div class="yui-dt-liner"><?php echo ($contract->get_billing_start_date() != null ? date($date_format, $contract->get_billing_start_date()) : '') ?></div></td>
+								<td><div class="yui-dt-liner"><input name="contract[]" value="<?php echo $contract->get_id() ?>" type="checkbox" checked="checked"/></div></td>
 							</tr>
 							<?php
 						}
@@ -123,13 +92,7 @@
 					{
 						?>
 						<tr>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
-							<td><div class="yui-dt-liner"><?php echo lang('no_contracts_found') ?></div></td>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
-							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
+							<td colspan="7"><?php echo lang('no_contracts_found') ?></td>
 						</tr>
 						<?php
 					}
