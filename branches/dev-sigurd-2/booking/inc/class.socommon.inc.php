@@ -187,8 +187,8 @@
 					$table = $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
 					if(is_array($val) && count($val) == 0)
 					{
-					    $clauses[] = '1=0';
-				    }
+						$clauses[] = '1=0';
+					}
 					else if(is_array($val))
 					{
 						$vals = array();
@@ -205,6 +205,12 @@
 					{
 						$clauses[] = "{$table}.{$key}=" . $this->_marshal($val, $this->fields[$key]['type']);
 					}
+				} 	
+				else if($key == 'where') 
+				{
+					//Includes a custom where-clause as a filter. Also replaces %%table%% 
+					//tokens with actual table_name in the clause.
+					$clauses[] = strtr($val, array('%%table%%' => $this->table_name));
 				}
 			}
 			return join(' AND ', $clauses);
@@ -234,10 +240,6 @@
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
-			
-			if (isset($params['where'])) {
-				$condition = "{$condition} AND {$params['where']}";
-			}
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
@@ -400,9 +402,12 @@
 			$id = intval($entry['id']);
 			$cols = array();
 			$values = array();
+			
+			$non_updatable_fields = array(key(self::$AUTO_CREATED_ON) => true);
+			
 			foreach($this->fields as $field => $params)
 			{
-				if($field == 'id' || $params['join'] || $params['manytomany'])
+				if($field == 'id' || $params['join'] || $params['manytomany'] || $non_updatable_fields[$field])
 				{
 					continue;
 				}
@@ -550,9 +555,17 @@
 		function validate($entity)
 		{
 			$errors = $this->create_error_stack();
+			$this->preValidate($entity);
 			$this->_validate($entity, $this->fields, $errors);
 			$this->doValidate($entity, $errors);
 			return $errors->getArrayCopy();
+		}
+		
+		/**
+		 * Implement in subclasses to perform actions on entity before validation
+		 */
+		protected function preValidate(&$entity)
+		{
 		}
 		
 		/**

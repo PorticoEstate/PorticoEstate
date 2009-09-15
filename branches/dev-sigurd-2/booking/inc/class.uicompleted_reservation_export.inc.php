@@ -7,7 +7,8 @@ phpgw::import_class('booking.uicommon');
 		(
 			'index'			=>	true,
 			'show'			=>	true,
-			'add'       => true,
+			'add'				=> true,
+			'download'  	=> true,
 		);
 		
 		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_');
@@ -45,6 +46,11 @@ phpgw::import_class('booking.uicommon');
 			return array_merge(array('menuaction' => $action), $params);
 		}
 		
+		public function download() {
+			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			self::send_file($export['file']->get_system_identifier(), array('filename' => $export['filename']));
+		}
+		
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -76,7 +82,7 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
+							// 'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
 							'key' => 'building_name',
@@ -98,7 +104,16 @@ phpgw::import_class('booking.uicommon');
 							'key' => 'created_on',
 							'label' => lang('Created on'),
 						),
-						//TODO: Add download link
+						array(
+							'key' => 'actions',
+							'label' => lang('Actions'), //TODO: Add download link to excel
+							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\')', lang('Download')),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						),
 					)
 				)
 			);
@@ -113,6 +128,8 @@ phpgw::import_class('booking.uicommon');
 			foreach($exports["results"] as &$export) {
 				$export['from_'] = substr($export['from_'], 0, -9);
 				$export['to_'] = substr($export['to_'], 0, -9);
+				$export_actions = array();
+				$export['actions'] = array($this->link_to('download', array('id' => $export['id'])));
 			}
 			
 			$results = $this->yui_results($exports);
@@ -158,8 +175,10 @@ phpgw::import_class('booking.uicommon');
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$export = extract_values($_POST, $this->fields);
-				$export['filename'] = 'export.dat';
+				
+				//TODO: remove this once so object sets this values
 				$export['from_'] = date('Y-m-d H:i:s');
+				
 				$errors = $this->bo->validate($export);
 				if(!$errors)
 				{
@@ -179,31 +198,4 @@ phpgw::import_class('booking.uicommon');
 			
 			self::render_template('completed_reservation_export_form', array('new_form' => true, 'export' => $export));
 		}
-		
-		// public function edit() {
-		// 	//TODO: Add editing of reservation type
-		// 	//TODO: Display hint to user about primary type of customer identifier
-		// 	
-		// 	$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-		// 	
-		// 	$errors = array();
-		// 	if($_SERVER['REQUEST_METHOD'] == 'POST')
-		// 	{
-		// 		$export = array_merge($export, extract_values($_POST, $this->fields));
-		// 		$errors = $this->bo->validate($export);
-		// 		if(!$errors)
-		// 		{
-		// 			try {
-		// 				$receipt = $this->bo->update($export);	
-		// 				$this->redirect_to('show', array('id' => $export['id']));
-		// 			} catch (booking_unauthorized_exception $e) {
-		// 				$errors['global'] = lang('Could not update object due to insufficient permissions');
-		// 			}
-		// 		}
-		// 	}
-		// 	
-		// 	$this->add_default_display_data($export);
-		// 	$this->flash_form_errors($errors);
-		// 	self::render_template('completed_reservation_export_edit', array('reservation' => $export));
-		// }
 	}

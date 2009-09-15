@@ -196,4 +196,12 @@
 		protected function initialize_completed_event(&$event, &$entity) {
 			$entity['payee_type']      = 'public';
 		}
+		
+		public function update_exported_state_of(&$reservations, $with_export_id) {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$ids = join(', ', array_map(array($this, 'select_id'), $reservations));
+			$sql = "UPDATE $table_name SET exported = $with_export_id WHERE {$table_name}.id IN ($ids);";
+			return $db->query($sql, __LINE__, __FILE__);
+		}
 	}
