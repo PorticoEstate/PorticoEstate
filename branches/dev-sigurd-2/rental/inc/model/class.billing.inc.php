@@ -88,7 +88,7 @@
 			return self::$so;
 		}
 		
-		public static function create_billing(int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)
+		public static function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)
 		{
 			// We start a transaction before running the billing
 			rental_billing::get_so()->db->transaction_begin();
@@ -99,7 +99,7 @@
 			$counter = 0;
 			foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 			{
-				rental_invoice::create_invoice($billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
+				rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
 			}
 			$billing->set_timestamp_stop(time()); //  End of run
 			$billing->set_success(true); // Billing job is a success

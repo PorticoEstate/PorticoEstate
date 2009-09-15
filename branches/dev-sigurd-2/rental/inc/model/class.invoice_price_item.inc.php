@@ -9,6 +9,7 @@
 	 */
 	class rental_invoice_price_item extends rental_model
 	{
+		protected $decimals;
 		protected $id;
 		protected $invoice_id;
 		protected $title;
@@ -23,18 +24,20 @@
 		
 		public static $so;
 		
-		public function __construct(int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price, float $area, int $count, int $timestamp_start, int $timestamp_end)
+		public function __construct(int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, boolean $is_area, float $price, float $area, int $count, int $timestamp_start, int $timestamp_end)
 		{
+			$this->decimals = (int)$decimals;
 			$this->id = (int)$id;
 			$this->invoice_id = (int)$invoice_id;
-			$this->title = (int)$title;
-			$this->agresso_id = (int)$agresso_id;
-			$this->is_area = (int)$is_area;
-			$this->price = (int)$price;
-			$this->area = (int)$area;
+			$this->title = $title;
+			$this->agresso_id = $agresso_id;
+			$this->is_area = (boolean)$is_area;
+			$this->price = (float)$price;
+			$this->area = (float)$area;
 			$this->count = (int)$count;
 			$this->timestamp_start = (int)$timestamp_start;
 			$this->timestamp_end = (int)$timestamp_end;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 		
 		public function set_id($id)
@@ -44,12 +47,12 @@
 	
 		public function get_id(){ return $this->id; }
 		
-		public function set_invoice_id($invoice_id)
+		public function set_invoice_id(int $invoice_id)
 		{
-			$this->invoice_id = $invoice_id;
+			$this->invoice_id = (int)$invoice_id;
 		}
 	
-		public function set_title($title)
+		public function set_title(string $title)
 		{
 			$this->title = $title;
 		}
@@ -58,58 +61,77 @@
 			
 		public function get_invoice_id(){ return $this->invoice_id; }
 			
-		public function set_agresso_id($agresso_id)
+		public function set_agresso_id(string $agresso_id)
 		{
 			$this->agresso_id = $agresso_id;
 		}
 	
 		public function get_agresso_id(){ return $this->agresso_id; }
 			
-		public function set_is_area($is_area)
+		public function set_is_area(boolean $is_area)
 		{
-			$this->is_area = $is_area;
+			$this->is_area = (boolean)$is_area;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 	
 		public function is_area(){ return $this->is_area; }
 		
-		public function set_count($count)
+		public function set_count(int $count)
 		{
-			$this->count = $count;
+			$this->count = (int)$count;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 
 		public function set_price($price)
 		{
-			$this->price = $price;
+			$this->price = (float)$price;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 	
 		public function get_price(){ return $this->price; }
 			
 		public function set_area($area)
 		{
-			$this->area = $area;
+			$this->area = (float)$area;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 	
 		public function get_area(){ return $this->area; }
 		
 		public function get_count(){ return $this->count; }
 		
-		public function set_total_price($total_price)
+		public function set_total_price(float $total_price)
 		{
-			$this->total_price = $total_price;
+			$this->total_price = (float)$total_price;
 		}
 	
-		public function get_total_price(){ return $this->total_price; }
+		public function get_total_price(){ 
+			if($this->total_price == null) // Needs to be calculated
+			{
+				if($this->is_area()) // Area
+				{
+					$this->total_price = round($this->get_area() * $this->get_price(), $this->decimals);
+				}
+				else // Count
+				{
+					$this->total_price = round($this->get_count() * $this->get_price(), $this->decimals);
+				}
+			}
+			return $this->total_price;
+		}
 		
-		public function set_timestamp_start($timestamp_start)
+		public function set_timestamp_start(int $timestamp_start)
 		{
-			$this->timestamp_start = $timestamp_start;
+			$this->timestamp_start = (int)$timestamp_start;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 		
 		public function get_timestamp_start(){ return $this->timestamp_start; }
 		
-		public function set_timestamp_end($timestamp_end)
+		public function set_timestamp_end(int $timestamp_end)
 		{
-			$this->timestamp_end = $timestamp_end;
+			$this->timestamp_end = (int)$timestamp_end;
+			$this->total_price = null; // Needs to be re-calculated
 		}
 	
 		public function get_timestamp_end(){ return $this->timestamp_end; }

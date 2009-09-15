@@ -27,8 +27,8 @@ class rental_soinvoice_price_item extends rental_socommon
 		$values = array
 		(
 			$this->marshal($invoice_price_item->get_invoice_id(), 'int'),
-			$this->marshal($invoice_price_item->get_title(), 'int'),
-			$this->marshal($invoice_price_item->get_agresso_id(), 'int'),
+			$this->marshal($invoice_price_item->get_title(), 'string'),
+			$this->marshal($invoice_price_item->get_agresso_id(), 'string'),
 			$invoice_price_item->is_area() ? 'true' : 'false',
 			$this->marshal($invoice_price_item->get_price(), 'float'),
 			$this->marshal($invoice_price_item->get_area(), 'float'),

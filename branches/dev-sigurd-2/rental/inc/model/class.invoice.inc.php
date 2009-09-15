@@ -118,7 +118,7 @@
 			return rental_invoice::get_so()->get_invoices_for_contract($contract_id);
 		}
 		
-		public static function create_invoice(int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
 		{
 			if($timestamp_invoice_start > $timestamp_invoice_end) // Sanity check
 			{
@@ -188,7 +188,7 @@
 					$invoice_price_item_end = $timestamp_invoice_end;
 				}
 				 
-				$invoice_price_item = new rental_invoice_price_item(-1, $invoice->get_id(), $contract_price_item->get_title(), $contract_price_item->get_agresso_id(), $contract_price_item->is_area(), $contract_price_item->get_price(), $contract_price_item->get_area(), $contract_price_item->get_count(), $invoice_price_item_start, $invoice_price_item_end);
+				$invoice_price_item = new rental_invoice_price_item($decimals, -1, $invoice->get_id(), $contract_price_item->get_title(), $contract_price_item->get_agresso_id(), $contract_price_item->is_area(), $contract_price_item->get_price(), $contract_price_item->get_area(), $contract_price_item->get_count(), $invoice_price_item_start, $invoice_price_item_end);
 				$invoice_price_item->store(); // The price item must store itself
 				$invoice->add_invoice_price_item($invoice_price_item);
 			}
