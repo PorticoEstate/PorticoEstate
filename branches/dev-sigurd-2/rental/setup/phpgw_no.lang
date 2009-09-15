@@ -29,6 +29,7 @@ available?	rental	no	Kan leies ut?
 available	rental	no	Tilgjengelig
 back	rental	no	Tilbake
 bank_guarantee	rental	no	Bankgaranti
+Billing date	rental	no	Fakturadato
 billing_external	rental	no	Ekstern
 billing_internal	rental	no	Intern
 billing_start	rental	no	Fakturastart
@@ -252,6 +253,7 @@ t_new_contract	rental	no	Ny kontrakt
 t_new_party	rental	no	Opprett ny kontraktspart
 t_new_price_item	rental	no	Opprett nytt priselement
 to	rental	no	Til
+Total sum	rental	no	Totalt beløp
 total_price	rental	no	Total pris
 type	rental	no	Type
 under_dismissal	rental	no	Under oppsigelse

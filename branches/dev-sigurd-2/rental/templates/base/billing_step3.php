@@ -48,42 +48,41 @@
 			</tr>
 			<tr>
 				<td><input type="submit" name="previous" value="<?php echo lang('previous') ?>"/></td>
-				<td><input type="submit" name="next" value="<?php echo lang('bill2') ?>"/></td>
+				<td><input type="submit" name="next" value="<?php echo lang('Generate file') ?>"/></td>
 			</tr>
 		</table>
 		<div>&amp;nbsp;</div>
 		<?php 
-//		var_dump($contracts);
 		?>
 		<div id="contractContainer">
 		    <table id="contractTable">
 		        <thead>
 		            <tr>
 						<th><?php echo lang('contract_id') ?></th>
-						<th><?php echo lang('date_start') ?></th>
-						<th><?php echo lang('date_end') ?></th>
+						<th><?php echo lang('Billing date') ?></th>
 						<th><?php echo lang('composite_name') ?></th>
 						<th><?php echo lang('party_name') ?></th>
-						<th><?php echo lang('billing_start') ?></th>
-						<th><?php echo lang('bill2') ?></th>
+						<th><?php echo lang('Total sum') ?></th>
 		            </tr>
 		        </thead>
 		        <tbody>
 					<?php
-					if($contracts != null && count($contracts) > 0)
+					if($billing_job->get_invoices() != null && count($billing_job->get_invoices()) > 0)
 					{
 						$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-						foreach ($contracts as $contract)
+						$decimals = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2;
+						$decimal_point = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
+						$thousand_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_thousands_separator'] : '.';
+						foreach ($billing_job->get_invoices() as $invoice)
 						{
+							var_dump($invoice->get_contract());
 							?>
 							<tr>
-								<td><div class="yui-dt-liner"><?php echo $contract->get_id() ?></div></td>
-								<td><div class="yui-dt-liner"><?php echo ($contract->get_contract_date()->has_start_date() ? date($date_format, $contract->get_contract_date()->get_start_date()) : '') ?></div></td>
-								<td><div class="yui-dt-liner"><?php echo ($contract->get_contract_date()->has_end_date() ? date($date_format, $contract->get_contract_date()->get_end_date()) : '') ?></div></td>
-								<td><div class="yui-dt-liner"><?php echo $contract->get_composite_name() ?></div></td>
-								<td><div class="yui-dt-liner"><?php echo $contract->get_party_name() ?></div></td>
-								<td><div class="yui-dt-liner"><?php echo ($contract->get_billing_start_date() != null ? date($date_format, $contract->get_billing_start_date()) : '') ?></div></td>
-								<td><div class="yui-dt-liner"><input name="contract[]" value="<?php echo $contract->get_id() ?>" type="checkbox" checked="checked"/></div></td>
+								<td><div class="yui-dt-liner"><?php echo $invoice->get_contract()->get_id() ?></div></td>
+								<td><div class="yui-dt-liner"><?php echo date($date_format, $invoice->get_timestamp_created()) ?></div></td>
+								<td><div class="yui-dt-liner"><?php echo $invoice->get_contract()->get_composite_name() ?></div></td>
+								<td><div class="yui-dt-liner"><?php echo $invoice->get_contract()->get_party_name() ?></div></td>
+								<td><div class="yui-dt-liner"><?php echo number_format($invoice->get_total_sum(), $decimals, $decimal_point, $thousand_separator); echo ' '.isset($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : ' NOK';?></div></td>
 							</tr>
 							<?php
 						}
@@ -105,21 +104,17 @@
 			contractDataSource.responseType = YAHOO.util.DataSource.TYPE_HTMLTABLE;
 			contractDataSource.responseSchema = {
 			    fields: [{key:"<?php echo lang('contract_id') ?>"},
-			            {key:"<?php echo lang('date_start') ?>"},
-			            {key:"<?php echo lang('date_end') ?>"},
+			            {key:"<?php echo lang('Billing date') ?>"},
 			            {key:"<?php echo lang('composite_name') ?>"},
 			            {key:"<?php echo lang('party_name') ?>"},
-			            {key:"<?php echo lang('billing_start') ?>"},
-			            {key:"<?php echo lang('bill2') ?>"}]
+			            {key:"<?php echo lang('Total sum') ?>"}]
 			};
 			
 			var contractColumnDefs = [{key:"<?php echo lang('contract_id') ?>"},
-					            {key:"<?php echo lang('date_start') ?>"},
-					            {key:"<?php echo lang('date_end') ?>"},
+					            {key:"<?php echo lang('Billing date') ?>"},
 					            {key:"<?php echo lang('composite_name') ?>"},
 					            {key:"<?php echo lang('party_name') ?>"},
-					            {key:"<?php echo lang('billing_start') ?>"},
-					            {key:"<?php echo lang('bill2') ?>"}];
+					            {key:"<?php echo lang('Total sum') ?>"}];
 			
 			var contractDataTable = new YAHOO.widget.DataTable("contractContainer", contractColumnDefs, contractDataSource);
 		</script>

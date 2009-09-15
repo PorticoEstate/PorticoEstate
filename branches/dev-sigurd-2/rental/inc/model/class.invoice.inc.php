@@ -14,6 +14,7 @@
 		protected $timstamp_end; // End date of invoice
 		protected $invoice_price_items;
 		protected $total_sum;
+		protected $contract;
 		
 		public static $so;
 		
@@ -26,7 +27,8 @@
 			$this->timestamp_start = (int)$timestamp_start;
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_sum = (float)$total_sum;
-			$invoice_price_items = null;
+			$this->invoice_price_items = null;
+			$this->contract = null;
 		}
 		
 		public function set_id($id)
@@ -50,6 +52,20 @@
 		}
 	
 		public function get_contract_id(){ return $this->contract_id; }
+		
+		/**
+		 * Returns the underlying contract for this object. Uses lazy loading.
+		 * 
+		 * @return rental_contract for the invoice, should never be null.
+		 */
+		public function get_contract()
+		{
+			if($this->contract == null)
+			{
+				$this->contract = rental_contract::get($this->get_contract_id());
+			}
+			return $this->contract;
+		}
 
 		public function set_timestamp_created($timestamp_created)
 		{
@@ -122,9 +138,21 @@
 		 * @return array of rental_invoice objects, empty array if no invoices
 		 * found, never null.
 		 */
-		public static function get_invoices(int $contract_id)
+		public static function get_invoices_for_contract(int $contract_id)
 		{
 			return rental_invoice::get_so()->get_invoices_for_contract($contract_id);
+		}
+		
+		/**
+		 * Returns all invoices of a specified billing id.
+		 * 
+		 * @param $billing_id int with id of billing job.
+		 * @return array of rental_invoice objects, empty array if no invoices
+		 * found, never null.
+		 */
+		public static function get_invoices_for_billing(int $billing_id)
+		{
+			return rental_invoice::get_so()->get_invoices_for_billing($billing_id);
 		}
 		
 		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)

@@ -18,18 +18,9 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		$data = array
-		(
-		);
-		// Step 4
-		if(phpgw::get_var('step') == '3' && phpgw::get_var('next') != null) // User clicked next on step 3
-		{
-			$this->render('billing_step4.php', $data);
-		}
 		// Step 3
-		else if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '4' && phpgw::get_var('previous') != null) // User clicked next on step 2 or previous on step 4
+		if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '4' && phpgw::get_var('previous') != null) // User clicked next on step 2 or previous on step 4
 		{
-			var_dump($_POST);
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
 			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
 			{
@@ -38,7 +29,15 @@ class rental_uibilling extends rental_uicommon
 				{
 					$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
 				}
-				rental_billing::create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps);
+				$billing_job = rental_billing::create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps);
+				$data = array
+				(
+					'billing_job' => $billing_job,
+					'contract_type' => phpgw::get_var('contract_type'),
+					'billing_term' => phpgw::get_var('billing_term'),
+					'year' => phpgw::get_var('year'),
+					'month' => phpgw::get_var('month')
+				);
 			}
 			$this->render('billing_step3.php', $data);
 		}

@@ -483,8 +483,7 @@
 		 */
 		public static function get($id)
 		{
-			$so = self::get_so();
-			return $so->get_single($id);
+			return self::get_so()->get_single($id);
 		}
 			
 		/**
