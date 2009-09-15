@@ -41,9 +41,9 @@
 		
 		public function get_billing_term(){ return $this->billing_term; }
 		
-		public function set_total_sum(int $total_sum)
+		public function set_total_sum(float $total_sum)
 		{
-			$this->total_sum = (int)$total_sum;
+			$this->total_sum = (float)$total_sum;
 		}
 		public function get_location_id(){ return $this->location_id; }
 		
@@ -97,10 +97,16 @@
 			$billing->store(); // Store job as it is
 			$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
 			$counter = 0;
+			$total_sum = 0;
 			foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 			{
-				rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
+				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
+				if($invoice != null)
+				{
+					$total_sum += $invoice->get_total_sum();
+				}
 			}
+			$billing->set_total_sum(round($total_sum, $decimals));
 			$billing->set_timestamp_stop(time()); //  End of run
 			$billing->set_success(true); // Billing job is a success
 			$billing->store(); // Store job now that we're done
@@ -109,6 +115,17 @@
 				return $receipt;
 			}
 			throw new UnexpectedValueException('Transaction failed.');
+		}
+		
+		/**
+		 * Returns all billing jobs.
+		 * 
+		 * @return rental_billing objects, empty array if noone found, never
+		 * null.
+		 */
+		public static function get_billings()
+		{
+			return rental_billing::get_so()->get_billings();
 		}
 		
 		public function serialize()

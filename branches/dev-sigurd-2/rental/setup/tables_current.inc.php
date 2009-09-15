@@ -266,7 +266,7 @@
 		'rental_billing' => array(
 			'fd' => array(
 				'id'				=>	array('type' => 'auto', 'nullable' => false),
-				'total_sum'			=>	array('type' => 'int', 'precision' => '8'),
+				'total_sum'			=>	array('type' => 'float', 'precision' => '8'),
 				'success'			=>	array('type' => 'bool','nullable' => false,'default' => 'false'),
 				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp_stop'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
@@ -291,7 +291,8 @@
 				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'timestamp_created'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'timestamp_end'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				'timestamp_end'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'total_sum'			=>	array('type' => 'float', 'precision' => '8')
 			),
 			'pk' => array('id'),
 			'fk' => array(

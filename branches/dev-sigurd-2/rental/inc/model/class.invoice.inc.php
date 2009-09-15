@@ -13,10 +13,11 @@
 		protected $timstamp_start; // Start date of invoice
 		protected $timstamp_end; // End date of invoice
 		protected $invoice_price_items;
+		protected $total_sum;
 		
 		public static $so;
 		
-		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end)
+		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum)
 		{
 			$this->id = (int)$id;
 			$this->billing_id = (int)$billing_id;
@@ -24,6 +25,7 @@
 			$this->timestamp_created = (int)$timestamp_created;
 			$this->timestamp_start = (int)$timestamp_start;
 			$this->timestamp_end = (int)$timestamp_end;
+			$this->total_sum = (float)$total_sum;
 			$invoice_price_items = null;
 		}
 		
@@ -92,6 +94,13 @@
 			}
 			$invoice_price_items[] = $invoice_price_item;
 		}
+		
+		public function set_total_sum($total_sum)
+		{
+			$this->total_sum = $total_sum;
+		}
+		
+		public function get_total_sum(){ return $this->total_sum; }
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -122,14 +131,15 @@
 		{
 			if($timestamp_invoice_start > $timestamp_invoice_end) // Sanity check
 			{
-				return;
+				return null;
 			}
 			$contract = rental_contract::get($contract_id);
-			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end);
+			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0);
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
 			$contract_price_items = $contract->get_price_items();
 			$invoice->store(); // We must store the invoice at this point to have an id to give to the price item
+			$total_sum = 0;
 			foreach($contract_price_items as $contract_price_item)
 			{
 				// We have to find the period the price item applies for on this invoice
@@ -191,7 +201,11 @@
 				$invoice_price_item = new rental_invoice_price_item($decimals, -1, $invoice->get_id(), $contract_price_item->get_title(), $contract_price_item->get_agresso_id(), $contract_price_item->is_area(), $contract_price_item->get_price(), $contract_price_item->get_area(), $contract_price_item->get_count(), $invoice_price_item_start, $invoice_price_item_end);
 				$invoice_price_item->store(); // The price item must store itself
 				$invoice->add_invoice_price_item($invoice_price_item);
+				$total_sum += $invoice_price_item->get_total_price();
 			}
+			$invoice->set_total_sum(round($total_sum, $decimals));
+			$invoice->store();
+			return $invoice;
 		}
 		
 		public function serialize()

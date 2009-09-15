@@ -14,7 +14,8 @@ class rental_soinvoice extends rental_socommon
 				'party_id'			=> array('type' => 'int'),
 				'timestamp_created'	=> array('type' => 'int'),
 				'timestamp_start'	=> array('type' => 'int'),
-				'timestamp_end'		=> array('type' => 'int')
+				'timestamp_end'		=> array('type' => 'int'),
+				'total_sum'			=> array('type' => 'float')
 			));
 	}
 	
@@ -27,7 +28,8 @@ class rental_soinvoice extends rental_socommon
 			$this->marshal($invoice->get_party_id(), 'int'),
 			$this->marshal($invoice->get_timestamp_created(), 'int'),
 			$this->marshal($invoice->get_timestamp_start(), 'int'),
-			$this->marshal($invoice->get_timestamp_end(), 'int')
+			$this->marshal($invoice->get_timestamp_end(), 'int'),
+			$this->marshal($invoice->get_total_sum(), 'float')
 		);
 		$query ="INSERT INTO ".$this->table_name." (" . join(',', array_keys(array_slice($this->fields, 1))) . ") VALUES (" . join(',', $values) . ")";
 		$receipt = null;
@@ -38,6 +40,20 @@ class rental_soinvoice extends rental_socommon
 			$invoice->set_id($receipt['id']);
 		}
 		return $receipt;
+	}
+	
+	public function update(rental_invoice &$invoice)
+	{
+		$values = array(
+			'contract_id = '		. $this->marshal($invoice->get_contract_id(), 'int'),
+			'billing_id = '			. $this->marshal($invoice->get_billing_id(), 'int'),
+			'party_id = '			. $this->marshal($invoice->get_party_id(), 'int'),
+			'timestamp_created = '	. $this->marshal($invoice->get_timestamp_created(), 'int'),
+			'timestamp_start = '	. $this->marshal($invoice->get_timestamp_start(), 'int'),
+			'timestamp_end = '		. $this->marshal($invoice->get_timestamp_end(), 'int'),
+			'total_sum = '			. $this->marshal($invoice->get_total_sum(), 'float')
+		);
+		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__,__FILE__);
 	}
 	
 	/**
@@ -55,11 +71,11 @@ class rental_soinvoice extends rental_socommon
 		$contract_id = (int)$contract_id;
 		if($contract_id > 0) // Id ok
 		{
-			$query = "SELECT id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end FROM {$this->table_name} wHERE contract_id = {$contract_id} ORDER BY timestamp_end DESC";
+			$query = "SELECT id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum FROM {$this->table_name} wHERE contract_id = {$contract_id} ORDER BY timestamp_end DESC";
 			if($this->db->query($query))
 			{
 				while($this->db->next_record()){
-					$invoices[] = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $contract_id, $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true));
+					$invoices[] = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $contract_id, $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true));
 				}
 			}
 		}

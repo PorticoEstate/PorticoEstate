@@ -18,14 +18,6 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		// First we get all active contrcts
-		// TOOD: This limit value is insane.. we have to get rid of it:
-//		$contracs = rental_contract::get_all(0, 1000000, null, null, null, null, array('contract_status' => 'active'));
-////		var_dump($contracs);
-//		foreach ($contracs as $contract) // Runs through all active contracts
-//		{
-//			
-//		}
 		$data = array
 		(
 		);
@@ -71,7 +63,8 @@ class rental_uibilling extends rental_uicommon
 				'contract_type' => phpgw::get_var('contract_type'),
 				'billing_term' => phpgw::get_var('billing_term'),
 				'year' => phpgw::get_var('year'),
-				'month' => phpgw::get_var('month')
+				'month' => phpgw::get_var('month'),
+				'billing_jobs' => rental_billing::get_billings()
 			);
 			$this->render('billing_step1.php', $data);
 		}
