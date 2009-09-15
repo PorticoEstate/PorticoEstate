@@ -26,7 +26,7 @@
 			</xsl:if>
 		</h2>
 		
-		<xsl:if test="description and normalize-space(description)">
+		<xsl:if test="organization/description and normalize-space(organization/description)">
 			<dl class="proplist description">
 	            <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 	            <dd><xsl:value-of select="organization/description" disable-output-escaping="yes"/></dd>
