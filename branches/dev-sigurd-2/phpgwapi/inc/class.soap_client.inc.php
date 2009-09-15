@@ -41,13 +41,23 @@
 		* @var 
 		*/
 		var $phpgw_domain = 'default';
-		var	$wdsl = null;
+		var	$wsdl = null;
 		var $uri = "urn://www.tempuri.testing/soap";
 		var $soap_version = SOAP_1_2;
 		var $trace	= 1;
 		var $login	= 'anonymous';
 		var $password = 'anonymous1';
 		var $encoding = 'UTF-8';
+
+		var $proxy_host;
+		var $proxy_port;
+		var $proxy_login;
+		var $proxy_password;
+		var $local_cert;
+		var $style; //   = SOAP_DOCUMENT;
+		var $use;   //   = SOAP_LITERAL;
+
+
 
 		/**
 		* Constructor
@@ -70,9 +80,9 @@
 				$this->location = "http://{$_SERVER['HTTP_HOST']}" . parse_url($GLOBALS['phpgw_info']['server']['webserver_url'], PHP_URL_PATH) . "/soap.php?domain={$this->phpgw_domain}";
 			}
 
-			if(isset($data['wdsl']) && $data['wdsl'])
+			if(isset($data['wsdl']) && $data['wsdl'])
 			{
-				$this->wdsl = $data['wdsl'];
+				$this->wsdl = $data['wsdl'];
 			}
 			if(isset($data['uri']) && $data['uri'])
 			{
@@ -95,15 +105,6 @@
 				$this->password = $data['password'];
 			}
 
-/* to consider
-'proxy_host'     => "localhost",
-'proxy_port'     => 8080,
-'proxy_login'    => "some_name",
-'proxy_password' => "some_password",
-'local_cert'     => "cert_key.pem",
-'style'    => SOAP_DOCUMENT,
-'use'      => SOAP_LITERAL
-*/
 			if( $init )
 			{
 				$this->init();
@@ -112,14 +113,21 @@
 
 		function init()
 		{
-			$this->client = new SoapClient($this->wdsl, array(
-				'location'		=> $this->location,
-				'uri'			=> $this->uri,
-				'soap_version'	=> $this->soap_version,
-				'trace'			=> $this->trace,
-				'login'			=> $this->login,
-				'password'		=> $this->password,
-				'encoding'		=> $this->encoding
+			$this->client = new SoapClient($this->wsdl, array(
+				'location'			=> $this->location,
+				'uri'				=> $this->uri,
+				'soap_version'		=> $this->soap_version,
+				'trace'				=> $this->trace,
+				'login'				=> $this->login,
+				'password'			=> $this->password,
+				'encoding'			=> $this->encoding,
+				'proxy_host'		=> $this->proxy_host,
+				'proxy_port'		=> $this->proxy_port,
+				'proxy_login'		=> $this->proxy_login,
+				'proxy_password'	=> $this->proxy_password,
+				'local_cert'		=> $this->local_cert,
+				'style'				=> $this->style,
+				'use'				=> $this->use
 		 	));
 		}
 
