@@ -126,8 +126,8 @@ phpgw::import_class('booking.uicommon');
 			$exports = $this->bo->read();
 			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
 			foreach($exports["results"] as &$export) {
-				$export['from_'] = substr($export['from_'], 0, -9);
-				$export['to_'] = substr($export['to_'], 0, -9);
+				$export['from_'] = substr($export['from_'], 0, -3);
+				$export['to_'] = substr($export['to_'], 0, -3);
 				$export_actions = array();
 				$export['actions'] = array($this->link_to('download', array('id' => $export['id'])));
 			}

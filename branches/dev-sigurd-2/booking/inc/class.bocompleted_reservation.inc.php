@@ -90,7 +90,7 @@
 			}
 			
 			if(!isset($_SESSION['show_all_completed_reservations'])) {
-				$params['filters']['exported'] = '0';
+				$params['filters']['exported'] = null;
 			}
 			
 			//Removes season_name from filters if the season_id is already included in the filters

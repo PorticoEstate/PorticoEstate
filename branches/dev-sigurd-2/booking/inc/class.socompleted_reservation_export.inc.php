@@ -86,6 +86,9 @@
 				throw new LogicException('Nothing to export');
 			}
 			
+			$entry['from_'] = $export_reservations[0]['to_'];
+			$entry['to_'] = $export_reservations[count($export_reservations)-1]['to_'];
+			
 			$this->db->transaction_begin();
 			
 			$entry['filename'] = self::TEMP_FILE_NAME;
@@ -123,7 +126,7 @@
 		public function &get_completed_reservations_for($entity) {
 			$filters = array(
 				'where' => "%%table%%".sprintf(".to_ <= '%s'", $entity['to_']),
-				'exported' => '0',
+				'exported' => null,
 			);
 			
 			if ($entity['season_id']) {
@@ -136,7 +139,7 @@
 			}
 			
 			//TODO: order by to_ to get the oldest one in the bunch (to use as export from_)
-			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all'));
+			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'to_', 'dir' => 'asc'));
 			
 			if (count($reservations['results']) > 0) {
 				return $reservations['results'];

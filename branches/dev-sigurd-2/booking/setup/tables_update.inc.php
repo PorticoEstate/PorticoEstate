@@ -1633,3 +1633,23 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.65';
+	function booking_upgrade0_1_65()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_export, bb_completed_reservation, bb_completed_reservation_resource");
+		
+		//Do it over, do it right!
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation DROP CONSTRAINT bb_completed_reservation_exported_fkey");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation DROP COLUMN exported");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN exported int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD CONSTRAINT bb_completed_reservation_exported_fkey FOREIGN KEY (exported) REFERENCES bb_completed_reservation_export(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.66';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

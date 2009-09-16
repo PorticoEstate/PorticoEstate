@@ -62,7 +62,6 @@
 				'from_' 					=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
 				'payee_type' 			=> 'organization',
-				'exported' 				=> 0,
 				'resources' 			=> $reservation['resources'],
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);

@@ -232,7 +232,7 @@
 			$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
 			$results = isset($params['results']) && $params['results'] ? $params['results'] : null; //Passing null causes the system default to be used later on
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'desc';
+			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 

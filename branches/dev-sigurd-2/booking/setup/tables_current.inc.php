@@ -549,7 +549,7 @@
 				'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
 				'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
 				'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
-				'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				'exported' 				=> array('type' => 'int', 'precision' => '4'),
 				'description' => array('type' => 'text', 'nullable' => false),
 				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
 				'building_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => False),

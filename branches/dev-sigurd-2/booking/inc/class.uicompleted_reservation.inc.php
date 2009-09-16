@@ -181,7 +181,7 @@ phpgw::import_class('booking.uicommon');
 			$reservations = $this->bo->read();
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
-				$reservation['exported'] = $reservation['exported'] != '0' ? 'Yes' : 'No';
+				$reservation['exported'] = $reservation['exported'] ? 'Yes' : 'No';
 				$reservation['reservation_type'] = array(
 					'href' => $this->link_to('show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
 					'label' => lang($reservation['reservation_type']),
