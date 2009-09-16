@@ -176,7 +176,7 @@ phpgw::import_class('booking.uicommon');
 			{
 				$export = extract_values($_POST, $this->fields);
 				
-				//TODO: remove this once so object sets this values
+				//Fill in a dummy value (because of validation), will be automatically filled in by so->add.
 				$export['from_'] = date('Y-m-d H:i:s');
 				
 				$errors = $this->bo->validate($export);

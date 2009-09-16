@@ -595,5 +595,24 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_account_code_set' => array(
+			'fd' => array(
+				'id' 							=> array('type' => 'auto', 'nullable' => False),
+				'name'				   	=> array('type' => 'text', 'nullable' => False),
+				'object_number' 			=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+				'responsible_code' 		=> array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
+				'article' 					=> array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+				'service' 					=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+				'project_number' 			=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+				'unit_number' 				=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+				'unit_prefix' 				=> array('type' => 'varchar', 'precision' => '1', 'nullable' => False),
+				'invoice_instruction' 	=> array('type' => 'varchar', 'precision' => '120'),
+				'active' 					=> array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
 ?>

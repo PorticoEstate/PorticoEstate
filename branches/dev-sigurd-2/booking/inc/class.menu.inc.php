@@ -181,6 +181,11 @@
 							'text'	=> lang('Age group'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
 						),
+						'account_code_sets'	=> array
+						(
+							'text'	=> lang('Account Codes'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaccount_code_set.index', 'appname' => 'booking') )
+						),
 						'async_settings'	=> array
 						(
 							'text'	=> lang('Asynchronous Tasks'),
