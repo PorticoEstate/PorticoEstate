@@ -207,8 +207,8 @@
 					$field = utf8_decode($field);
 				}
 				
-				$reservation['payee_identifier'] = $this->completed_reservation_bo->get_active_customer_identifier($reservation);
-				$string_payee_identifier = (is_null(current($reservation['payee_identifier'])) ? 'N/A' : current($reservation['payee_identifier']));
+				$reservation['customer_identifier'] = $this->completed_reservation_bo->get_active_customer_identifier($reservation);
+				$string_customer_identifier = (is_null(current($reservation['customer_identifier'])) ? 'N/A' : current($reservation['customer_identifier']));
 				
 				//header level
 				$header = $this->get_agresso_row_template();
@@ -230,7 +230,7 @@
 				$header['dim_value_1'] = str_pad(strtoupper(substr('todo', 0, 12)), 12, ' ');
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
-				$header['ext_ord_ref'] = str_pad(substr($string_payee_identifier, 0, 15), 15, ' ');
+				$header['ext_ord_ref'] = str_pad(substr($string_customer_identifier, 0, 15), 15, ' ');
 				 
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				

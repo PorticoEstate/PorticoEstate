@@ -4,7 +4,7 @@
 	
 	class booking_bocompleted_reservation extends booking_bocommon
 	{
-		protected static $customer_field_prefix = 'payee_';
+		protected static $customer_field_prefix = 'customer_';
 		
 		function __construct()
 		{
@@ -19,12 +19,12 @@
 		 * @return array with identifier types ordered by ascending precedence/priority
 		 */
 		public function get_customer_identifier_precedence(&$entity) {
-			//payee_organization_number or payee_ssn
+			//customer_organization_number or customer_ssn
 			
 			if ($entity['reservation_type'] == 'event') {
 				return array('ssn', 'organization_number');
 			} else {
-				if ($entity['payee_type'] == 'organization') {
+				if ($entity['customer_type'] == 'organization') {
 					return array('organization_number', 'ssn');
 				} else {
 					return array('ssn', 'organization_number');
@@ -112,8 +112,8 @@
 			$active_identifier = $this->get_active_customer_identifier($entity);
 
 			if (current($active_identifier)) {
-				$entity['payee_identifier_type'] = key($active_identifier);
-				$entity['payee_identifier'] = current($active_identifier);
+				$entity['customer_identifier_type'] = key($active_identifier);
+				$entity['customer_identifier'] = current($active_identifier);
 			}
 			
 			return $entity;

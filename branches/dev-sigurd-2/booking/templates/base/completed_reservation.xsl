@@ -50,8 +50,8 @@
 			
 			<dt><xsl:value-of select="php:function('lang', 'Customer #')" /></dt>
 			<xsl:choose>
-				<xsl:when test="reservation/payee_identifier">
-					<dd><xsl:value-of select="reservation/payee_identifier"/> (<xsl:value-of select="php:function('lang', string(reservation/payee_identifier_type))"/>)</dd>
+				<xsl:when test="reservation/customer_identifier">
+					<dd><xsl:value-of select="reservation/customer_identifier"/> (<xsl:value-of select="php:function('lang', string(reservation/customer_identifier_type))"/>)</dd>
 				</xsl:when>
 				<xsl:otherwise>
 					N/A

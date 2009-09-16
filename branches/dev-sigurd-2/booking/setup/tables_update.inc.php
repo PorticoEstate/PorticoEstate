@@ -1462,9 +1462,9 @@
 					'from_' => array('type' => 'timestamp', 'nullable' => false),
 					'to_' => array('type' => 'timestamp', 'nullable' => false),
 					'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
-					'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
-					'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
-					'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
+					'customer_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+					'customer_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+					'customer_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
 					'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				),
 				'pk' => array('id'),
@@ -1653,3 +1653,29 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.66';
+	function booking_upgrade0_1_66()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();		
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_type TO customer_type"
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_organization_number TO customer_organization_number"
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_ssn TO customer_ssn"
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.67';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	

@@ -12,7 +12,7 @@ phpgw::import_class('booking.uicommon');
 			'toggle_show_all_completed_reservations'	=>	true,
 		);
 		
-		protected $fields = array('cost', 'payee_organization_number', 'payee_ssn', 'description');
+		protected $fields = array('cost', 'customer_organization_number', 'customer_ssn', 'description');
 
 		protected $module = 'booking';
 		
@@ -150,11 +150,11 @@ phpgw::import_class('booking.uicommon');
 							'label' => lang('To'),
 						),
 						array(
-							'key' => 'payee_type',
+							'key' => 'customer_type',
 							'label' => lang('Cust. Type'),
 						),
 						array(
-							'key' => 'payee_identifier',
+							'key' => 'customer_identifier',
 							'label' => lang('Cust. #'),
 							'sortable' => false,
 						),
@@ -189,10 +189,10 @@ phpgw::import_class('booking.uicommon');
 				
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
-				$reservation['payee_type'] = lang($reservation['payee_type']);
-				$reservation['payee_identifier'] = $this->bo->get_active_customer_identifier($reservation);
-				$string_payee_identifier = (is_null(current($reservation['payee_identifier'])) ? 'N/A' : current($reservation['payee_identifier']));
-				$reservation['payee_identifier'] = $string_payee_identifier;
+				$reservation['customer_type'] = lang($reservation['customer_type']);
+				$reservation['customer_identifier'] = $this->bo->get_active_customer_identifier($reservation);
+				$string_customer_identifier = (is_null(current($reservation['customer_identifier'])) ? 'N/A' : current($reservation['customer_identifier']));
+				$reservation['customer_identifier'] = $string_customer_identifier;
 			}
 			
 			$results = $this->yui_results($reservations);
@@ -219,8 +219,8 @@ phpgw::import_class('booking.uicommon');
 				unset($reservation['organization_name']);
 			}
 			
-			if (isset($reservation['payee_identifier_type']) && !empty($reservation['payee_identifier_type'])) {
-				$reservation['payee_identifier_type'] = self::humanize($reservation['payee_identifier_type']);
+			if (isset($reservation['customer_identifier_type']) && !empty($reservation['customer_identifier_type'])) {
+				$reservation['customer_identifier_type'] = self::humanize($reservation['customer_identifier_type']);
 			}
 			
 			$reservation['reservation_link'] = $this->link_to('show', array(

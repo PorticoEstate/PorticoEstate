@@ -22,9 +22,9 @@
 					'from_'					=> array('type' => 'timestamp', 'required'=> true),
 					'to_'						=> array('type' => 'timestamp', 'required'=> true),
 					'organization_id'    => array('type' => 'int'),
-					'payee_type' 			=> array('type' => 'string', 'nullable' => False),
-					'payee_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
-					'payee_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
+					'customer_type' 			=> array('type' => 'string', 'nullable' => False),
+					'customer_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
+					'customer_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
 					'exported' 				=> array('type' => 'int', 'required' => True, 'nullable' => False, 'default' => 0),
 					'description'			=> array('type' => 'string', 'required' => True, 'nullable' => False),
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
@@ -61,7 +61,7 @@
 				'cost' 					=> $reservation['cost'],
 				'from_' 					=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
-				'payee_type' 			=> 'organization',
+				'customer_type' 			=> 'organization',
 				'resources' 			=> $reservation['resources'],
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);
@@ -156,9 +156,9 @@
 		}
 		
 		protected function set_organization(&$entity, &$organization) {
-			$entity['payee_type']      = 'organization';
+			$entity['customer_type']      = 'organization';
 			$entity['organization_id'] = $organization['id'];
-			$entity['payee_organization_number'] = $organization['organization_number'];
+			$entity['customer_organization_number'] = $organization['organization_number'];
 		}
 		
 		protected function initialize_completed_booking(&$booking, &$entity) {
@@ -195,7 +195,7 @@
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
-			$entity['payee_type']      = 'public';
+			$entity['customer_type']      = 'public';
 		}
 		
 		public function update_exported_state_of(&$reservations, $with_export_id) {

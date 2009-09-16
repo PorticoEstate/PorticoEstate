@@ -15,10 +15,10 @@
 
 			<dl class="form-col">
 				<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
-				<dd><input id="field_organization_number" name="payee_organization_number" type="text" value="{reservation/payee_organization_number}"/></dd>
+				<dd><input id="field_organization_number" name="customer_organization_number" type="text" value="{reservation/customer_organization_number}"/></dd>
 
 				<dt><label for="field_ssn"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-				<dd><input type='text' id='field_ssn' name="payee_ssn" value='{reservation/payee_ssn}'/></dd>
+				<dd><input type='text' id='field_ssn' name="customer_ssn" value='{reservation/customer_ssn}'/></dd>
 			</dl>
 
 			<div style='clear:both'/>
