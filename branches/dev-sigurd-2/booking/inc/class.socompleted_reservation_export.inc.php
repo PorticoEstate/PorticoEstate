@@ -6,7 +6,8 @@
 		protected 
 			$file_storage,
 			$completed_reservation_so,
-			$completed_reservation_bo;
+			$completed_reservation_bo,
+			$account_code_set_so;
 			
 		const TEMP_FILE_NAME = '##TEMP##';
 		
@@ -15,6 +16,7 @@
 			$this->file_storage = CreateObject('booking.filestorage', $this);
 			$this->completed_reservation_so = CreateObject('booking.socompleted_reservation');
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
+			$this->account_code_set_so = CreateObject('booking.soaccount_code_set');
 			
 			parent::__construct('bb_completed_reservation_export', 
 				array(
@@ -24,8 +26,8 @@
 					'from_'					=> array('type' => 'timestamp', 'required' => true),
 					'to_'						=> array('type' => 'timestamp', 'required' => true),
 					'filename'    			=> array('type' => 'string', 'required' => true),
+					'account_code_set_id' => array('type' => 'int', 'required' => true),
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
-					// 'account_codes_id'    => array('type' => 'int', 'precision' => '4'), 
 					'season_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
 							'table' => 'bb_season',
 							'fkey' => 'season_id',
@@ -100,8 +102,10 @@
 			
 			$export_file = new booking_storage_object($entry['filename']);
 			
+			$account_codes = $this->account_code_set_so->read_single($entry['account_code_set_id']);
+			
 			$export_file->set_data(
-				$this->export($export_reservations)
+				$this->export($export_reservations, $account_codes)
 			);
 			
 			$this->update_completed_reservations_exported_state($entry, $export_reservations);
@@ -137,7 +141,6 @@
 				$filters['building_id'] = $entity['building_id'];
 			}
 			
-			//TODO: order by to_ to get the oldest one in the bunch (to use as export from_)
 			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'to_', 'dir' => 'asc'));
 			
 			if (count($reservations['results']) > 0) {
@@ -151,22 +154,18 @@
 			return $this->completed_reservation_so->update_exported_state_of($reservations, $entity['id']);
 		}
 		
-		public function export(array &$reservations) {
+		public function export(array &$reservations, array $account_codes) {
 			if (is_array($reservations)) {
-				return $this->format_agresso($reservations);
+				return $this->format_agresso($reservations, $account_codes);
 			}
 			return '';
 		}
 		
-		public function format_agresso(array &$reservations) {
+		public function format_agresso(array &$reservations, array $account_codes) {
 			//$orders = array();
 			$output = array();
-			//$batch_id_pattern = '{$date}-%s';
-			//%s - should be replaced with K (Kultur) or I (Idrett) 
 			
-			
-			
-			/* TODO: The specification states that values of type date
+			/* NOTE: The specification states that values of type date
 			 * should be left padded with spaces. The example file,
 			 * however, is right padded with spaces.
 			 *
@@ -178,14 +177,15 @@
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
 			//$date = str_pad(date('ymd'), 17, ' ');
 			
-			$batch_id_pattern = 'BO%s'.date('ymd');
+			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
+			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
 			
 			$client_id = str_pad(substr(strtoupper('BY'), 0, 2), 2, ' ');
 			$currency = str_pad(substr(strtoupper('NOK'), 0, 3), 3, ' ');
 			$order_type = str_pad(substr(strtoupper('FS'), 0, 2), 2, ' ');
 			$pay_method = str_pad(substr(strtoupper('IP'), 0, 2), 2, ' ');
 			
-			/* TODO: The specification states i8 format (integer left padded with zeroes)
+			/* NOTE: The specification states i8 format (integer left padded with zeroes)
 			 * whereas the example file uses c8 format (8 characters right padded with spaces).
 			 *
 			 * Using i8 for now (i.e specced version)
@@ -214,32 +214,28 @@
 				$header = $this->get_agresso_row_template();
 				$header['accept_flag'] = '1';
 				
-				/* TODO: Should contain K (Kultur) or I (Idrett), using X for now to denote that it should be completed
-				 * once we have ascertained where and how we should manage this information
-				 *
-				 * TODO: Introduce a unique id if several transfers in one day?
+				/* TODO: Introduce a unique id if several transfers in one day?
 				 */
-				$header['batch_id'] = str_pad(substr(sprintf($batch_id_pattern, 'X'), 0, 12), 12, ' ');
+				$header['batch_id'] = $batch_id;
 				
 				$header['client'] = $client_id;
 				$header['confirm_date'] = $date;
 				$header['currency'] = $currency;
 				$header['deliv_date'] = $header['confirm_date'];
 				
-				//TODO: Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-				$header['dim_value_1'] = str_pad(strtoupper(substr('todo', 0, 12)), 12, ' ');
+				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+				$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
 				$header['ext_ord_ref'] = str_pad(substr($string_customer_identifier, 0, 15), 15, ' ');
 				 
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				
-				//TODO: Topptekst til faktura, knyttet mot fagavdeling
-				$header['long_info1'] = str_pad(substr('TODO: Topptekst til faktura, knyttet mot fagavdeling', 0, 120), 120, ' ');
-				
+				//Topptekst til faktura, knyttet mot fagavdeling
+				$header['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				
 				//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
-				$header['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT); //TODO: generate from a given series
+				$header['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT);
 				
 				$header['order_type'] = $order_type;
 				$header['pay_method'] = $pay_method;
@@ -260,27 +256,26 @@
 				
 				/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på 
 				 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
-				 * TODO: Fix so that description does not include dates
 				 */
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				
-				//TODO: Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
-				$item['article'] = str_pad(substr(strtoupper('todo_article_article_article'), 0, 15), 15, ' '); 
+				//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
+				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
 				
 				$item['batch_id'] = $header['batch_id'];
 				$item['client'] = $header['client'];
 				
-				//TODO: Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-				$item['dim_1'] = str_pad(strtoupper(substr('tododim1', 0, 8)), 8, ' '); 
+				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
+				$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' '); 
 				
-				//TODO: Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-				$item['dim_2'] = str_pad(strtoupper(substr('tododim2', 0, 8)), 8, ' ');
+				//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
+				$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 				
-				//TODO: Objektnr. vil være knyttet til hvert hus (FDVU)
-				$item['dim_3'] = str_pad(strtoupper(substr('tododim3', 0, 8)), 8, ' ');
+				//Objektnr. vil være knyttet til hvert hus (FDVU)
+				$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 				
-				//TODO: Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
-				$item['dim_5'] = str_pad(strtoupper(substr('todotoddim_5', 0, 12)), 12, ' ');
+				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
+				$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 				
 				$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 				

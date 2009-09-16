@@ -11,7 +11,7 @@ phpgw::import_class('booking.uicommon');
 			'download'  	=> true,
 		);
 		
-		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_');
+		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_', 'account_code_set_id');
 
 		protected $module = 'booking';
 		
@@ -174,6 +174,7 @@ phpgw::import_class('booking.uicommon');
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$export = array();
 				$export = extract_values($_POST, $this->fields);
 				
 				//Fill in a dummy value (because of validation), will be automatically filled in by so->add.
@@ -198,7 +199,7 @@ phpgw::import_class('booking.uicommon');
 			$this->flash_form_errors($errors);
 			//self::add_javascript('export', 'export', 'export.js');
 
-			$export['cancel_link'] = $this->link_to('index');
+			$export['cancel_link'] = $this->link_to('index', array('ui' => 'completed_reservation'));
 			
 			self::render_template('completed_reservation_export_form', array('new_form' => true, 'export' => $export));
 		}

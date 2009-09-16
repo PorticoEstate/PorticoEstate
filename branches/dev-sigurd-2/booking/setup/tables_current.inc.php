@@ -586,11 +586,13 @@
 				'to_' => array('type' => 'timestamp', 'nullable' => True),
 				'created_on' => array('type' => 'timestamp', 'nullable' => False),
 				'filename' => array('type' => 'text', 'nullable' => False),
+				'account_code_set_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_building' => array('building_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
+				'bb_account_code_set' => array('account_code_set_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

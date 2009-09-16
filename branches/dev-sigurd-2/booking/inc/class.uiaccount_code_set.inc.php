@@ -53,10 +53,6 @@ phpgw::import_class('booking.uicommon');
 				return $this->index_json();
 			}
 			
-			if (phpgw::get_var('export')) {
-				return $this->export();
-			}
-			
 			self::add_javascript('booking', 'booking', 'account_code_set.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
@@ -92,7 +88,7 @@ phpgw::import_class('booking.uicommon');
 						),
 						array(
 							'key' => 'object_number',
-							'label' => lang('0bject No.'),
+							'label' => lang('Object No.'),
 						),
 						array(
 							'key' => 'responsible_code',
