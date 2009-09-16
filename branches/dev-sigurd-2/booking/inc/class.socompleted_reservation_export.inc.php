@@ -133,7 +133,6 @@
 				$filters['season_id'] = $entity['season_id'];
 			}
 			
-			//TODO: watch out! No building_id field on completed reservations!
 			if ($entity['building_id']) {
 				$filters['building_id'] = $entity['building_id'];
 			}

@@ -98,7 +98,6 @@
 				unset($params['filters']['season_name']);
 			}
 			
-			//TODO: add missing building_id to socompleted_reservation!
 			//Removes building_name from filters if the building_id is already included in the filters
 			if (isset($params['filters']['building_name']) AND isset($params['filters']['building_id'])) {
 				unset($params['filters']['building_name']);
