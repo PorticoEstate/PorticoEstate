@@ -54,6 +54,40 @@
 			);
 		}
 		
+		function _get_conditions($query, $filters)
+		{	
+			//Removes season_name from filters if the season_id is already included in the filters
+			if (isset($filters['season_name']) AND isset($filters['season_id'])) {
+				unset($filters['season_name']);
+			}
+			
+			//Removes building_name from filters if the building_id is already included in the filters
+			if (isset($filters['building_name']) AND isset($filters['building_id'])) {
+				unset($filters['building_name']);
+			}
+			
+			$where_clauses = (isset($filters['where']) ? (array)$filters['where'] : array());
+			
+			if (isset($filters['season_id'])) {
+				
+				$season_id = $this->marshal_field_value('season_id', $filters['season_id']);
+				unset($filters['season_id']);
+				
+				$where_clauses[] =  
+					"(%%table%%.season_id = $season_id OR (%%table%%.reservation_type = 'event' AND %%table%%.season_id IS NULL) ".
+					"AND %%table%%.reservation_type != 'event' OR ".
+					"(%%table%%.reservation_type = 'event' AND %%table%%.reservation_id IN ".
+						"(SELECT event_id FROM bb_event_resource er JOIN bb_season_resource sr ON er.resource_id = sr.resource_id AND sr.season_id = $season_id) ".
+					"))";
+			}
+			
+			if (count($where_clauses) > O) {
+				$filters['where'][] = join($where_clauses, ' AND ');
+			}
+			
+			return parent::_get_conditions($query, $filters);
+		}
+		
 		public function create_from($type, $reservation) {
 			$entity = array(
 				'reservation_type' 	=> $type, 

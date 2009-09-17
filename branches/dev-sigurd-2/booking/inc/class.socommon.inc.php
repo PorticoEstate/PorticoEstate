@@ -10,7 +10,7 @@
 		{
 			$this->table_name = $table_name;
 			$this->fields = $fields;
-			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db         = $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
@@ -52,6 +52,15 @@
 				}
 			}
 			return array($cols, $joins);
+		}
+		
+		public function marshal_field_value($field, $value) {
+			if (!is_array($field_def = $this->fields[$field])) 
+				throw new InvalidArgumentException(sprintf('Field "%s" does not exists in "%s"', $field, get_class($this)));
+			if (!isset($field_def['type']))
+				throw new InvalidArgumentException(sprintf('Field "%s" in "%s" is missing a type definition', $field, get_class($this)));
+				
+			return $this->_marshal($value, $field_def['type']);
 		}
 
 		function _marshal($value, $type)
@@ -210,7 +219,7 @@
 				{
 					//Includes a custom where-clause as a filter. Also replaces %%table%% 
 					//tokens with actual table_name in the clause.
-					$clauses[] = strtr($val, array('%%table%%' => $this->table_name));
+					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
 			return join(' AND ', $clauses);

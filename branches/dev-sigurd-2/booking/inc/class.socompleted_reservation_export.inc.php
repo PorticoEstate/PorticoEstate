@@ -129,7 +129,7 @@
 		
 		public function &get_completed_reservations_for($entity) {
 			$filters = array(
-				'where' => "%%table%%".sprintf(".to_ <= '%s'", $entity['to_']),
+				'where' => array("%%table%%".sprintf(".to_ <= '%s'", $entity['to_'])),
 				'exported' => null,
 			);
 			
