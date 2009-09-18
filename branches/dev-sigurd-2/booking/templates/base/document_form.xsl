@@ -65,7 +65,6 @@
 				
 				<dt><label for="field_category"><xsl:value-of select="php:function('lang', 'Category')" /></label></dt>
 				<dd>
-					<xsl:value-of select="node()"/>
 					<select name='category' id='field_category'>
 						<option value=''><xsl:value-of select="php:function('lang', 'Select Category...')" /></option>
 						<xsl:for-each select="document/document_types/*">
