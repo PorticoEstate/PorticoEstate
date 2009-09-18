@@ -108,6 +108,10 @@
 		 * @return booking_storage_object
 		 */
 		public function get($identifier) {
+			if (!$identifier) {
+				throw new InvalidArgumentException('Invalid identifier');
+			}
+			
 			$sto = $this->attach(new booking_storage_object($identifier));
 			if (!$sto->exists()) { 
 				throw new LogicException($identifier.' does not exist');

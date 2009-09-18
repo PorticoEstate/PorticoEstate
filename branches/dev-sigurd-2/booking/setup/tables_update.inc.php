@@ -1734,3 +1734,37 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.69';
+	function booking_upgrade0_1_69()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export DROP COLUMN filename");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export DROP COLUMN account_code_set_id");
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_completed_reservation_export_file', array(
+				'fd' => array(
+					'id' 							=> array('type' => 'auto', 'nullable' => False),
+					'filename'				  	=> array('type' => 'text'),
+					'type'				   	=> array('type' => 'text', 'nullable' => False),
+					'export_id'				   => array('type' => 'int', 'precision' => '4'),
+					'account_code_set_id'	=> array('type' => 'int', 'precision' => '4'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_account_code_set' => array('account_code_set_id' => 'id'),
+					'bb_completed_reservation_export' => array('export_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.70';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

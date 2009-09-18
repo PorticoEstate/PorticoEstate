@@ -1,7 +1,7 @@
 <?php
 
 /**
- * sfValidatorEmail validates the format of an Norwegian organization number 
+ * sfValidatorNorwegianOrganizationNumber validates the basic format of an Norwegian organization number 
  * (see http://www.brreg.no/english/coordination/number.html).
  *
  * @package    symfony

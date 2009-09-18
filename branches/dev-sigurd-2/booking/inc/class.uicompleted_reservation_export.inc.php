@@ -11,7 +11,7 @@ phpgw::import_class('booking.uicommon');
 			'download'  	=> true,
 		);
 		
-		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_', 'account_code_set_id');
+		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_', 'export_files');
 
 		protected $module = 'booking';
 		
@@ -48,7 +48,14 @@ phpgw::import_class('booking.uicommon');
 		
 		public function download() {
 			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
-			self::send_file($export['file']->get_system_identifier(), array('filename' => $export['filename']));
+			
+			if (!is_array($export)) {
+				$this->redirect_to('index');
+			}
+			
+			$file = $this->bo->get_export_file($export, phpgw::get_var('type', 'GET'));
+			
+			self::send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
 		}
 		
 		public function index()
@@ -101,10 +108,6 @@ phpgw::import_class('booking.uicommon');
 							'label' => lang('To'),
 						),
 						array(
-							'key' => 'account_code_set_name',
-							'label' => lang('Account Codes'),
-						),
-						array(
 							'key' => 'created_on',
 							'label' => lang('Created on'),
 						),
@@ -113,9 +116,15 @@ phpgw::import_class('booking.uicommon');
 							'label' => lang('Created by'),
 						),
 						array(
-							'key' => 'actions',
-							'label' => lang('Actions'), //TODO: Add download link to excel
-							'formatter' => 'YAHOO.booking.'.sprintf('formatGenericLink(\'%s\')', lang('Download')),
+							'key' => 'internal',
+							'label' => lang('Internal'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'sortable' => false,
+						),
+						array(
+							'key' => 'external',
+							'label' => lang('External'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
 							'sortable' => false,
 						),
 						array(
@@ -137,7 +146,14 @@ phpgw::import_class('booking.uicommon');
 				$export['from_'] = substr($export['from_'], 0, -3);
 				$export['to_'] = substr($export['to_'], 0, -3);
 				$export_actions = array();
-				$export['actions'] = array($this->link_to('download', array('id' => $export['id'])));
+				$export['external'] = array(
+					'label' => lang('Download'), 
+					'href' => $this->link_to('download', array('id' => $export['id'], 'type' => 'external'))
+				);
+				$export['internal'] = array(
+					'label' => lang('Download'), 
+					'href' => $this->link_to('download', array('id' => $export['id'], 'type' => 'internal'))
+				);
 			}
 			
 			$results = $this->yui_results($exports);

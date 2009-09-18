@@ -47,20 +47,43 @@
 				<dd><xsl:value-of select="export/to_"/></dd>
 			</xsl:if>
 			
-			<dt><label for="field_account_code_set_name"><xsl:value-of select="php:function('lang', 'Choose')" /><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'Account Codes')" /></label></dt>
+			<input name="export_files[internal][type]" type="hidden" value="internal"/>
+			<dt>
+				<label for="field_account_code_set_internal_name">
+					<xsl:value-of select="php:function('lang', 'Choose')" /><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'Internal Account Codes')" />
+				</label>
+			</dt>
 			<dd>
 				<div class="autocomplete">
-					<input id="field_account_code_set_id" name="account_code_set_id" type="hidden" value="{export/account_code_set_id}"/>
-					<input id="field_account_code_set_name" name="account_code_set_name" type="text" value="{export/account_code_set_name}">
+					<input id="field_account_code_set_internal_id" name="export_files[internal][account_code_set_id]" type="hidden" value="{export/export_files/internal/account_code_set_id}"/>
+					<input id="field_account_code_set_internal_name" name="export_files[internal][account_code_set_name]" type="text" value="{export/export_files/internal/account_code_set_name}">
 						<xsl:if test="not(new_form)">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>
 					</input>
-					<div id="account_code_set_container"/>
+					<div id="account_code_set_internal_container"/>
+				</div>
+			</dd>
+		
+			<input name="export_files[external][type]" type="hidden" value="external"/>
+			<dt>
+				<label for="field_account_code_set_external_name">
+					<xsl:value-of select="php:function('lang', 'Choose')" /><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'External Account Codes')" />
+				</label>
+			</dt>
+			<dd>
+				<div class="autocomplete">
+					<input id="field_account_code_set_external_id" name="export_files[external][account_code_set_id]" type="hidden" value="{export/export_files/external/account_code_set_id}"/>
+					<input id="field_account_code_set_external_name" name="export_files[external][account_code_set_name]" type="text" value="{export/export_files/external/account_code_set_name}">
+						<xsl:if test="not(new_form)">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+					</input>
+					<div id="account_code_set_external_container"/>
 				</div>
 			</dd>
 		</dl>
-
+			
 		<div class="clr"/>
 
 		<div class="form-buttons">
@@ -76,7 +99,10 @@
 <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uiaccount_code_set.index&phpgw_return_as=json&',
-                                     'field_account_code_set_name', 'field_account_code_set_id', 'account_code_set_container');
+      'field_account_code_set_internal_name', 'field_account_code_set_internal_id', 'account_code_set_internal_container');
+
+    YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uiaccount_code_set.index&phpgw_return_as=json&',
+       'field_account_code_set_external_name', 'field_account_code_set_external_id', 'account_code_set_external_container');
 });
 ]]>
 </script>

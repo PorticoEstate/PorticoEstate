@@ -8,8 +8,6 @@
 			$completed_reservation_so,
 			$completed_reservation_bo,
 			$account_code_set_so;
-			
-		const TEMP_FILE_NAME = '##TEMP##';
 		
 		function __construct()
 		{
@@ -25,8 +23,6 @@
 					'building_id'    		=> array('type' => 'int'),
 					'from_'					=> array('type' => 'timestamp', 'required' => true),
 					'to_'						=> array('type' => 'timestamp', 'required' => true),
-					'filename'    			=> array('type' => 'string', 'required' => true),
-					'account_code_set_id' => array('type' => 'int', 'required' => true),
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
 					key(booking_socommon::$AUTO_CREATED_BY) => current(booking_socommon::$AUTO_CREATED_BY),
 					'season_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
@@ -41,11 +37,15 @@
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
-					'account_code_set_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
-							'table' 		=> 'bb_account_code_set',
-							'fkey' 		=> 'account_code_set_id',
-							'key' 		=> 'id',
-							'column' 	=> 'name'
+					'export_files' => array('manytomany' => array(
+							'table' => 'bb_completed_reservation_export_file',
+							'key' => 'export_id',
+							'column' => array(
+								'id' => array('type' => 'int'),
+								'filename' => array('type' => 'string'),
+								'type' => array('type' => 'string', 'required' => true),
+								'account_code_set_id' => array('type' => 'int', 'required' => true),
+							)
 					)),
 					'created_by_name' => booking_socommon::$REL_CREATED_BY_NAME,
 				)
@@ -65,13 +65,6 @@
 			
 			return $to_date;
 		}
-
-		protected function preValidate(&$entity)
-		{
-			if (!isset($entity['id']) && !isset($entity['filename']) && !$entity['filename']) {
-				$entity['filename'] = self::TEMP_FILE_NAME;
-			}
-		}
 		
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
@@ -83,11 +76,82 @@
 		
 		function read_single($id)
 		{
-			if (($entity = parent::read_single($id))) {
-				$entity['file'] = $this->file_storage->get($entity['filename']);
+			$entity = parent::read_single($id);
+			
+			//re-index export files by their types
+			$export_files = array();
+			if (!(array_key_exists('export_files', $entity) && is_array($entity['export_files']))) {
+				return $entity;
 			}
 			
+			foreach($entity['export_files'] as $file) {
+				$export_files[$file['type']] = $file;
+			}
+			$entity['export_files'] = $export_files;
+			
 			return $entity;
+		}
+		
+		function get_export_file($entity, $type) {
+			$entity_file = null;
+			
+			foreach($entity['export_files'] as $file) {
+				if ($file['type'] == $type) {
+					$entity_file = $file; 
+					break;
+				}
+			}
+			
+			if (!$entity_file) {
+				throw new InvalidArgumentException(sprintf('Could not locate export file of type "%s" for export id "%s"', $type, $entity['id']));
+			}
+			
+			if (isset($entity_file['filename']) && !empty($entity_file['filename'])) {
+				return $this->file_storage->get($entity_file['filename']);
+			}
+			
+			if (!isset($entity_file['id'])) {
+				throw new LogicException('Export file is missing id');
+			}
+			
+			$export_reservations =& $this->get_completed_reservations_for($entity['id']);
+			
+			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.txt';
+			
+			$export_file = new booking_storage_object($entity_file['filename']);
+			
+			$account_codes = $this->account_code_set_so->read_single($entity_file['account_code_set_id']);
+			
+			$export_method = "export_{$entity_file['type']}";
+			
+			if (!method_exists($this, $export_method)) {
+				throw new LogicException(sprintf('Cannot generate export for type "%s"', $entity_file['type']));
+			}
+			
+			$export_file->set_data(
+				$this->$export_method($export_reservations, $account_codes)
+			);
+			
+			$this->db->transaction_begin();
+			$this->file_storage->attach($export_file)->persist();
+			$this->db_query(
+				"UPDATE {$this->fields['export_files']['manytomany']['table']} SET filename=".
+					$this->_marshal($entity_file['filename'], $this->fields['export_files']['manytomany']['column']['filename']['type']).
+					' WHERE id='.$entity_file['id'],
+				__LINE__, __FILE__
+			);
+			
+			if ($this->db->transaction_commit()) { 
+				return $export_file;
+			}
+			
+			try {
+				if ($export_file->exists()) {
+					$export_file->delete();
+				}
+			} catch (booking_unattached_storage_object $e) { }
+			
+			throw new UnexpectedValueException('Transaction failed.');
 		}
 		
 		function add($entry) {
@@ -101,53 +165,37 @@
 			$entry['to_'] = $export_reservations[count($export_reservations)-1]['to_'];
 			
 			$this->db->transaction_begin();
-			
-			$entry['filename'] = self::TEMP_FILE_NAME;
-			
 			$receipt = parent::add($entry);
-			
 			$entry['id'] = $receipt['id'];
-			$entry['filename'] = 'export_'.$entry['id'].'.txt';
-			
-			$export_file = new booking_storage_object($entry['filename']);
-			
-			$account_codes = $this->account_code_set_so->read_single($entry['account_code_set_id']);
-			
-			$export_file->set_data(
-				$this->export($export_reservations, $account_codes)
-			);
-			
 			$this->update_completed_reservations_exported_state($entry, $export_reservations);
 			
-			$this->file_storage->attach($export_file)->persist();
-			
-			parent::update($entry);
-			
-			if ($this->db->transaction_commit()) { 
-				return $receipt;
+			if (!($this->db->transaction_commit())) {
+				throw new UnexpectedValueException('Transaction failed.');
 			}
 			
-			try {
-				if ($export_file->exists()) {
-					$export_file->delete();
-				}
-			} catch (booking_unattached_storage_object $e) { }
-			
-			throw new UnexpectedValueException('Transaction failed.');
+			return $receipt;
 		}
 		
 		public function &get_completed_reservations_for($entity) {
-			$filters = array(
-				'where' => array("%%table%%".sprintf(".to_ <= '%s'", $this->_get_search_to_date($entity))),
-				'exported' => null,
-			);
+			$filters = array();
 			
-			if ($entity['season_id']) {
-				$filters['season_id'] = $entity['season_id'];
+			if (is_array($entity)) {			
+				$filters['where'] = array("%%table%%".sprintf(".to_ <= '%s'", $this->_get_search_to_date($entity)));
+				$filters['exported'] = null;
+			
+				if ($entity['season_id']) {
+					$filters['season_id'] = $entity['season_id'];
+				}
+			
+				if ($entity['building_id']) {
+					$filters['building_id'] = $entity['building_id'];
+				}
+			} else if ($entity) {
+				$filters['exported'] = $entity;
 			}
-			
-			if ($entity['building_id']) {
-				$filters['building_id'] = $entity['building_id'];
+			else
+			{
+				throw new InvalidArgumentException('Invalid entity parameter');
 			}
 			
 			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'to_', 'dir' => 'asc'));
@@ -163,11 +211,117 @@
 			return $this->completed_reservation_so->update_exported_state_of($reservations, $entity['id']);
 		}
 		
-		public function export(array &$reservations, array $account_codes) {
+		public function select_external($reservation) {
+			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_EXTERNAL;
+		}
+		
+		public function select_internal($reservation) {
+			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_INTERNAL;
+		}
+		
+		public function export_external(array &$reservations, array $account_codes) {
 			if (is_array($reservations)) {
-				return $this->format_agresso($reservations, $account_codes);
+				if (count($external_reservations = array_filter($reservations, array($this, 'select_external'))) > 0) {
+					return $this->format_agresso($external_reservations, $account_codes);
+				}
 			}
 			return '';
+		}
+		
+		public function export_internal(array &$reservations, array $account_codes) {
+			if (is_array($reservations)) {
+				if (count($internal_reservations = array_filter($reservations, array($this, 'select_internal'))) > 0) {
+					return $this->format_csv($internal_reservations, $account_codes);
+				}
+			}
+			return '';
+		}
+		
+		public function format_csv(array &$reservations, array $account_codes) {
+			$output = array();
+			
+			foreach ($reservations as $reservation) {
+				$reservation = array_map('utf8_decode', $reservation);
+				
+				$item = array();
+				$item['amount'] = str_pad($reservation['cost']*100, 17, 0, STR_PAD_LEFT); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
+				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
+				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
+				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
+				$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' '); 
+
+				//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
+				$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+
+				//Objektnr. vil være knyttet til hvert hus (FDVU)
+				$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+
+				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
+				$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+
+				$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				$item['ext_ord_ref'] = str_pad(substr($string_customer_identifier, 0, 15), 15, ' ');
+				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
+				$item['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT);
+				$item['period'] = str_pad(substr('00'.date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
+				$item['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
+
+				$output[] = $this->format_to_csv_line(array_values($item));
+			}
+			
+			return join($output, '');
+		}
+		
+		/**
+		 * @param array  $fields Ordered array with the data
+		 * @param array  $conf   (optional) The configuration of the dest CSV
+		 *
+		 * @return String Fields in csv format
+		 */
+		function format_to_csv_line(&$fields, $conf = array())
+		{
+			$conf = array_merge(array('sep' => ',', 'quote' => '"', 'crlf' => "\n"), $conf);
+
+			$field_count = count($fields);
+
+			$write = '';
+			$quote = $conf['quote'];
+			for ($i = 0; $i < $field_count; ++$i) {
+				// Write a single field
+ 				$quote_field = false;
+				// Only quote this field in the following cases:
+				if (is_numeric($fields[$i])) {
+				// Numeric fields should not be quoted
+				} elseif (isset($conf['sep']) && (strpos($fields[$i], $conf['sep']) !== false)) {
+					// Separator is present in field
+					$quote_field = true;
+				} elseif (strpos($fields[$i], $quote) !== false) {
+					// Quote character is present in field
+					$quote_field = true;
+				} elseif (
+					strpos($fields[$i], "\n") !== false
+					|| strpos($fields[$i], "\r") !== false
+				) {
+					// Newline is present in field
+					$quote_field = true;
+				} elseif (!is_numeric($fields[$i]) && (substr($fields[$i], 0, 1) == " " || substr($fields[$i], -1) == " ")) {
+					// Space found at beginning or end of field value
+					$quote_field = true;
+				}
+
+				if ($quote_field) {
+					// Escape the quote character within the field (e.g. " becomes "")
+					$quoted_value = str_replace($quote, $quote.$quote, $fields[$i]);
+
+					$write .= $quote . $quoted_value . $quote;
+				} else {
+					$write .= $fields[$i];
+				}
+
+				$write .= ($i < ($field_count - 1)) ? $conf['sep']: $conf['crlf'];
+			}
+
+			return $write;
 		}
 		
 		public function format_agresso(array &$reservations, array $account_codes) {

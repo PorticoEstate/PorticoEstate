@@ -245,6 +245,11 @@ phpgw::import_class('booking.uicommon');
 			
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			
+			if (((int)$reservation['exported']) !== 0) {
+				//Cannot edit already exported reservation
+				$this->redirect_to('show', array('id' => $reservation['id']));
+			}
+			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
