@@ -4,6 +4,14 @@
 		public function __construct()
 		{
 		}
+		
+		/**
+		 * Forwards method invocations to so
+		 */
+		public function __call($method, $arguments) 
+		{
+			return call_user_func_array(array($this->so, $method), $arguments);
+		}
 
 		function read_single($id)
 		{
