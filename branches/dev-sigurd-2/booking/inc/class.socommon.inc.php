@@ -31,6 +31,10 @@
 			$this->like			= & $this->db->like;
 		}
 		
+		protected function db_query($sql, $line, $file) {
+			return $this->db->query($sql, $line, $file);
+		}
+		
 		public function get_field_defs() {
 			return $this->fields;
 		}
@@ -453,12 +457,14 @@
 					$key = $params['manytomany']['key'];
 					
 					if(is_array($params['manytomany']['column']))
-					{
+					{	
 						$colnames = array();
 						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
-							$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
+							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
 						}
-						$colnames = join(',', $colnames);
+						unset($colnames['id']);
+						
+						$colnames = join(',', array_keys($colnames));
 						
 						foreach($entry[$field] as $v)
 						{
@@ -472,6 +478,8 @@
 									$col = $paramsOrCol;
 									$type = $params['type'];
 								}
+								
+								if ($col == 'id') { continue; }
 								
 								$data[] = $this->_marshal($v[$col], $type);
 							}
@@ -497,6 +505,7 @@
 		
 		function column_update_expression(&$value, $field) { 
 			$value = sprintf($field.'=%s', $this->marshal_field_value($field, $value));
+			return $value;
 		}
 		
 		function update($entry)
@@ -527,9 +536,11 @@
 					{
 						$colnames = array();
 						foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol) {
-							$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
+							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
 						}
-						$colnames = join(',', $colnames);
+						unset($colnames['id']);
+						
+						$colnames = join(',', array_keys($colnames));
 
 						foreach($entry[$field] as $v)
 						{
