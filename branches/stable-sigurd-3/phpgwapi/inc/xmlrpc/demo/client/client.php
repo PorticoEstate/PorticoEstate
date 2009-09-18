@@ -5,7 +5,7 @@
 <h2>Send a U.S. state number to the server and get back the state name</h2>
 <h3>The code demonstrates usage of the php_xmlrpc_encode function</h3>
 <?php
-	include("xmlrpc.inc");
+	include("../../lib/xmlrpc.inc");
 
 	// Play nice to PHP 5 installations with REGISTER_LONG_ARRAYS off
 	if(!isset($HTTP_POST_VARS) && isset($_POST))
@@ -20,7 +20,9 @@
 			array(php_xmlrpc_encode($stateno))
 		);
 		print "<pre>Sending the following request:\n\n" . htmlentities($f->serialize()) . "\n\nDebug info of server data follows...\n\n";
-		$c=new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
+		$server =  substr($_SERVER['PHP_SELF'], 0, -strlen('/client/client.php')) . '/server/server.php';
+		$c=new xmlrpc_client($server, "localhost", 80);
+//		$c=new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
 		$c->setDebug(1);
 		$r=&$c->send($f);
 		if(!$r->faultCode())

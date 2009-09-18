@@ -1,0 +1,15 @@
+PlaySMS gateway module for carrot
+
+Need a config-section named 'carrot' with values:
+
+array
+(
+	'wsdl'			=>
+	'send_url'		=>
+	'login'			=>
+	'password'		=>
+	'proxy_host'	=>
+	'proxy_port'	=>
+);
+
+

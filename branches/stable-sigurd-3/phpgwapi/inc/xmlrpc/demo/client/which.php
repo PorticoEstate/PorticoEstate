@@ -5,10 +5,12 @@
 <h2>Query server for toolkit information</h2>
 <h3>The code demonstrates usage of the php_xmlrpc_decode function</h3>
 <?php
-	include("xmlrpc.inc");
+	include("../../lib/xmlrpc.inc");
 
 	$f = new xmlrpcmsg('interopEchoTests.whichToolkit', array());
-	$c = new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
+	$server =  substr($_SERVER['PHP_SELF'], 0, -strlen('/client/which.php')) . '/server/server.php';
+	$c = new xmlrpc_client($server, $_SERVER['HTTP_HOST'], 80);
+//	$c = new xmlrpc_client("/server.php", "phpxmlrpc.sourceforge.net", 80);
 	$r = $c->send($f);
 	if(!$r->faultCode())
 	{

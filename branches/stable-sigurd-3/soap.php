@@ -113,9 +113,9 @@
 //	include_once(PHPGW_API_INC . '/soap_functions.inc.php');
 //	$functions = array('system_login', 'system_logout');
 
-	if(function_exists('system_listapps'))
+	if(function_exists('system_list_apps'))
 	{
-		$functions[] = 'system_listApps';
+		$functions[] = 'system_list_apps';
 	}
 
 	function hello($someone)

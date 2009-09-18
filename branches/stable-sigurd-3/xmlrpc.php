@@ -2,32 +2,83 @@
 	/**
 	* phpGroupWare
 	*
-	* phpgroupware base
 	* @author Joseph Engo <jengo@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @package phpgroupware
-	* @version $Id$
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package xmlrpc
+	* @subpackage communication
+ 	* @version $Id$
 	*/
 	
+
 	$GLOBALS['phpgw_info'] = array();
-	
+
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'currentapp'			=> 'login',
-		'noheader'				=> True,
-		'disable_Template_class'=> True
+		'disable_Template_class'	=> true,
+		'currentapp'				=> 'login',
+		'noheader'					=> true,
+		'noapi'						=> true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
-	
+
 	/**
 	* Include phpgroupware header
 	*/
+
 	include_once('header.inc.php');
+
+	unset($GLOBALS['phpgw_info']['flags']['noapi']);
+	$GLOBALS['phpgw_info']['flags']['authed'] = false;
+	$GLOBALS['phpgw_info']['message']['errors'] = array();
+
+	if(!isset($_GET['domain']) || !$_GET['domain'])
+	{
+		$GLOBALS['phpgw_info']['message']['errors'][] = 'domain not given as input';
+	}
+	else
+	{
+		$_REQUEST['domain'] = $_GET['domain'];
+		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+		if(!$_domain_info)
+		{
+			$GLOBALS['phpgw_info']['message']['errors'][] = 'not a valid domain';
+		}
+		else
+		{
+			$GLOBALS['phpgw_domain'] = array();
+			$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
+		}
+	}
+
+	include(PHPGW_API_INC.'/functions.inc.php');
+
 
 	/**
 	* Include the XMLRPC specific functions
 	*/
-	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpc.inc';
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpcs.inc';
+	require_once PHPGW_API_INC . '/xmlrpc/lib/xmlrpc_wrappers.inc';
+
+//	include_once(PHPGW_API_INC . '/xml_functions.inc.php');
 
 	// If XML-RPC isn't enabled in PHP, return an XML-RPC response stating so
 	if (! function_exists('xmlrpc_server_create'))
@@ -74,17 +125,32 @@
 	{
 		$request_xml = implode("\r\n", file('php://input'));
 	}
-			
+
+	if(!$_domain_info)
+	{
+		// domain is invalid
+		xmlrpc_error(1001,'not a valid domain');
+	}
+//		xmlrpc_error(1001,$headers['Authorization']);
+
 	if ( isset($headers['Authorization']) 
 		&& ereg('Basic', $headers['Authorization']) )
 	{
-		if ( $GLOBALS['phpgw']->session->verify($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) )
+		$tmp = $headers['Authorization'];
+		$tmp = str_replace(' ','',$tmp);
+		$tmp = str_replace('Basic','',$tmp);
+		$auth = base64_decode(trim($tmp));
+		list($login,$password) = split(':',$auth);
+
+		if($GLOBALS['phpgw']->session->create($login, $password))
 		{
+			$GLOBALS['phpgw_info']['flags']['authed'] = true;
+
 			// Find out what method they are calling
 			// This function is odd, you *NEED* to assign the results
 			// to a value, or $method is never returned.  (jengo)
 			$null = xmlrpc_decode_request($request_xml, $method);
-			
+
 			$GLOBALS['phpgw']->session->xmlrpc_method_called = $method;
 			$GLOBALS['phpgw']->session->update_dla();
 
@@ -92,22 +158,25 @@
 			// for that class, and execute it
 			list($app,$class,$func) = explode('.',$method);
 
-			if ($method == 'system.logout' || $GLOBALS['phpgw_info']['user']['apps'][$app] || $app == 'phpgwapi')
+			if ($method == 'system.logout' || $GLOBALS['phpgw_info']['user']['apps'][$app] || $app == 'phpgwapi' || $app == 'xmlrpc')
 			{
 				$GLOBALS['obj'] = CreateObject($app . '.' . $class);
 
-				xmlrpc_server_register_method($xmlrpc_server,sprintf('%s.%s.%s',$app,$class,'listMethods'),'xmlrpc_list_methods');
-				xmlrpc_server_register_method($xmlrpc_server,sprintf('%s.%s.%s',$app,$class,'describeMethods'),xmlrpc_describe_methods);
-				xmlrpc_server_register_method($xmlrpc_server,'system.logout','xmlrpc_logout');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],sprintf('%s.%s.%s',$app,$class,'list_methods'),'xmlrpc_list_methods');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],sprintf('%s.%s.%s',$app,$class,'describeMethods'),'xmlrpc_describe_methods');
+				xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],'system.logout','xmlrpc_logout');
 
-				while (list(,$new_method) = @each($obj->xmlrpc_methods))
+				if(isset($GLOBALS['obj']->xmlrpc_methods) && is_array($GLOBALS['obj']->xmlrpc_methods))
 				{
-					$full_method_name = sprintf('%s.%s.%s',$app,$class,$new_method['name']);
+					foreach ($GLOBALS['obj']->xmlrpc_methods as $new_method)
+					{
+						$full_method_name = sprintf('%s.%s.%s',$app,$class,$new_method['name']);
 
-					xmlrpc_server_register_method($xmlrpc_server,$full_method_name,'xmlrpc_call_wrapper');
-					// The following function is listed as being in the API, but doesn't actually exisit.
-					// This is more of a mental note to track down its exisitence
-					//xmlrpc_server_set_method_description($xmlrpc_server,$full_method_name,$new_method);
+						xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],$full_method_name,'xmlrpc_call_wrapper');
+						// The following function is listed as being in the API, but doesn't actually exisit.
+						// This is more of a mental note to track down its exisitence
+						//xmlrpc_server_set_method_description($GLOBALS['xmlrpc_server'],$full_method_name,$new_method);
+					}
 				}
 			}
 			else if ($method != 'system.listMethods' && $method != 'system.describeMethods')
@@ -115,13 +184,12 @@
 				xmlrpc_error(1001,'Access not permitted');
 			}
 
-			echo xmlrpc_server_call_method($xmlrpc_server,$request_xml,'');
-			xmlrpc_server_destroy($xmlrpc_server);
+			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml,'');
+			xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 		}
 		else
 		{
-			// Session is invalid
-			xmlrpc_error(1001,'Session expired');
+			xmlrpc_error(1001, 'not authenticated');
 		}
 	}
 	else
@@ -133,9 +201,9 @@
 
 		if ($method == 'system.login')
 		{
-			xmlrpc_server_register_method($xmlrpc_server,'system.login','xmlrpc_login');
-			echo xmlrpc_server_call_method($xmlrpc_server,$request_xml,'');
-			xmlrpc_server_destroy($xmlrpc_server);
+			xmlrpc_server_register_method($GLOBALS['xmlrpc_server'],'system.login','xmlrpc_login');
+			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml,'');
+			xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 
 			exit;
 		}

@@ -27,6 +27,20 @@
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
+	$GLOBALS['phpgw_info']['server']['sessions_type'] = 'db';
+
+	$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+	if(!$_domain_info)
+	{
+		echo "not a valid domain\n";
+		die();
+	}
+	else
+	{
+		$GLOBALS['phpgw_domain'] = array();
+		$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
+	}
+
 	$db_type = $GLOBALS['phpgw_domain'][$_GET['domain']]['db_type'];
 	if($db_type == 'postgres')
 	{
@@ -36,8 +50,6 @@
 	{
 		echo "Extension '$db_type' is not loaded and can't be loaded via dl('$db_type.so') !!!\n";
 	}
-	
-	$GLOBALS['phpgw_info']['server']['sessions_type'] = 'db';
 
 	/**
 	* Include API functions

@@ -120,7 +120,7 @@
 	}
 
 	
-	function system_listApps()
+	function system_list_apps()
 	{
 		$GLOBALS['phpgw']->db->query("SELECT * FROM phpgw_applications WHERE app_enabled<3",__LINE__,__FILE__);
 		$apps = array();

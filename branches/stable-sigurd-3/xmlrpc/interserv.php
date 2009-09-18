@@ -128,7 +128,8 @@
 		$is->sessionid = $xsessionid;
 		$is->kp3 = $xkp3;
 
-		$is->send('system.list_apps','',$is->server['server_url']);
+		$apps = $is->send('system.list_apps','',$is->server['server_url']);
+		_debug_array($apps);
 	}
 	elseif($_POST['users'])
 	{

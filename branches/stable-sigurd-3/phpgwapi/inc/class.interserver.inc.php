@@ -10,6 +10,9 @@
 	* @version $Id$
 	*/
 
+
+	phpgw::import_class('phpgwapi.xmlrpc_client');
+
 	/**
 	* Inter-server communications - Maintain list and provide send interface to remote phpgw servers
 	* 
@@ -27,16 +30,13 @@
 		var $servers = array();
 		var $serverid = 0;
 		var $security = '';
-		var $mode = '';
+		var $mode = 'soap';
 		var $authed = False;
 		var $sessionid = '';
 		var $kp3 = '';
 
 		/* These are now entered as defaults if the admin forgot to enter the full URL */
-		var $urlparts = array(
-			'xmlrpc' => '/phpgroupware/xmlrpc.php',
-			'soap'   => '/phpgroupware/soap.php'
-		);
+		var $urlparts = array();
 
 		/*
 		0/none == no access
@@ -77,6 +77,11 @@
 
 		function interserver($serverid='')
 		{
+			$this->urlparts = array(
+				'xmlrpc' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/xmlrpc.php?domain=default",
+				'soap'   => "http://{$_SERVER['HTTP_HOST']}" . parse_url($GLOBALS['phpgw_info']['server']['webserver_url'], PHP_URL_PATH) . '/soap.php?domain=default'
+			);
+
 			$this->db =& $GLOBALS['phpgw']->db;
 			if($serverid)
 			{
@@ -154,8 +159,8 @@
 			list($uri,$hostpart) = $this->_split_url($url);
 			if(gettype($args) != 'array')
 			{
-				$arr[] = createObject('phpgwapi.xmlrpcval',$args,'string');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'string');
+				$arr[] = new xmlrpcval($args,'string');
+				$f = new xmlrpcmsg($method_name, $arr,'string');
 			}
 			else
 			{
@@ -165,22 +170,23 @@
 					{
 						while(list($x,$y) = each($val))
 						{
-							$tmp[$x] = createObject('phpgwapi.xmlrpcval',$y, 'string');
+							$tmp[$x] = new xmlrpcval($y, 'string');
 						}
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$tmp,'struct');
+						$ele[$key] = new xmlrpcval($tmp,'struct');
 					}
 					else
 					{
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$val, 'string');
+						$ele[$key] = new xmlrpcval($val, 'string');
 					}
 				}
-				$arr[] = createObject('phpgwapi.xmlrpcval',$ele,'struct');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'struct');
+				$arr[] = new xmlrpcval($ele,'struct');
+				$f = new xmlrpcmsg($method_name, $arr,'struct');
 			}
 
 			$this->debug("<pre>" . htmlentities($f->serialize()) . "</pre>\n",$debug);
-			$c = createObject('phpgwapi.xmlrpc_client',$uri, $hostpart, 443);
-			$c->setCredentials($this->sessionid,$this->kp3);
+			$c = new xmlrpc_client($uri, $hostpart, 443);
+			$c->setCredentials($args['username'],$args['password']);
+
 			$c->setDebug(0);
 			$r = $c->send($f,0,'https');
 			if (!$r)
@@ -206,8 +212,8 @@
 			list($uri,$hostpart) = $this->_split_url($url);
 			if(gettype($args) != 'array')
 			{
-				$arr[] = createObject('phpgwapi.xmlrpcval',$args,'string');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'string');
+				$arr[] = new xmlrpcval($args,'string');
+				$f = new xmlrpcmsg($method_name, $arr,'string');
 			}
 			else
 			{
@@ -217,22 +223,22 @@
 					{
 						while(list($x,$y) = each($val))
 						{
-							$tmp[$x] = createObject('phpgwapi.xmlrpcval',$y, 'string');
+							$tmp[$x] = new xmlrpcval($y, 'string');
 						}
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$tmp,'struct');
+						$ele[$key] = new xmlrpcval($tmp,'struct');
 					}
 					else
 					{
-						$ele[$key] = createObject('phpgwapi.xmlrpcval',$val, 'string');
+						$ele[$key] = new xmlrpcval($val, 'string');
 					}
 				}
-				$arr[] = createObject('phpgwapi.xmlrpcval',$ele,'struct');
-				$f = createObject('phpgwapi.xmlrpcmsg', $method_name, $arr,'struct');
+				$arr[] = new xmlrpcval($ele,'struct');
+				$f = new xmlrpcmsg($method_name, $arr,'struct');
 			}
 
 			$this->debug('<pre>' . htmlentities($f->serialize()) . '</pre>' . "\n",$debug);
-			$c = createObject('phpgwapi.xmlrpc_client',$uri, $hostpart, 80);
-			$c->setCredentials($this->sessionid,$this->kp3);
+			$c = new xmlrpc_client($uri, $hostpart, 80);
+			$c->setCredentials($args['username'],$args['password']);
 //			_debug_array($c);
 			$c->setDebug(0);
 			$r = $c->send($f);
@@ -258,126 +264,24 @@
 		{
 			$method_name = str_replace('.','_',$method_name);
 			list($uri,$hostpart) = $this->_split_url($url);
-			if(gettype($args) != 'array')
-			{
-				$arr[] = createObject('phpgwapi.soapval','','string',$args);
-			}
-			else
-			{
-				while(list($key,$val) = @each($args))
-				{
-					if(gettype($val) == 'array')
-					{
-						while(list($x,$y) = each($val))
-						{
-							$tmp[] = createObject('phpgwapi.soapval',$x,'string',$y);
-						}
-						$arr[] = createObject('phpgwapi.soapval',$key, 'array',$tmp);
-					}
-					else
-					{
-						$arr[] = createObject('phpgwapi.soapval',$key, 'string',$val);
-					}
-				}
-			}
-
-			$soap_message = createObject('phpgwapi.soapmsg',$method_name,$arr);
-			/* print_r($soap_message);exit; */
-			$soap = createObject('phpgwapi.soap_client',$uri,$hostpart);
-			$soap->username = $this->sessionid;
-			$soap->password = $this->kp3;
-			/* _debug_array($soap);exit; */
-			if($r = $soap->send($soap_message,$method_name))
-			{
-				$this->debug('<hr>I got this value back<br><pre>' . htmlentities($r->serialize()) . '</pre><hr>',$debug);
-				$this->result = $r->decode();
-				return $this->result;
-			}
-			else
-			{
-				$this->debug('Fault Code: ' . $r->ernno . ' Reason "' . $r->errstring . '"<br>',$debug);
-			}
+			$soap = createObject('phpgwapi.soap_client',array('uri' => $uri, 'location' => $url),false);
+			$soap->login	= $args['username'];
+			$soap->password = $args['password'];
+			$soap->init();
+			$this->result =  $soap->call($method_name, $args);
+			return $this->result;
 		}
 
 		function _send_soap_($method_name, $args, $url, $debug=True)
 		{
 			$method_name = str_replace('.','_',$method_name);
 			list($uri,$hostpart) = $this->_split_url($url);
-
-			if(!$args)
-			{
-				$arr = '';
-			}
-			elseif(is_array($args))
-			{
-				while(list($key,$val) = @each($args))
-				{
-					if(gettype($val) == 'array')
-					{
-						while(list($x,$y) = each($val))
-						{
-							$tmp[] = createObject('phpgwapi.soapval',$x,'string',$y);
-						}
-						$ele[] = createObject('phpgwapi.soapval',$key, 'array',$tmp);
-						$complex = True;
-					}
-					else
-					{
-						$ele[] = createObject('phpgwapi.soapval',$key, 'string',$val);
-					}
-				}
-				$arr[] = createObject('phpgwapi.soapval','','struct',$ele);
-			}
-			else
-			{
-				$arr[] = createObject('phpgwapi.soapval','','string',$args);
-			}
-			$this->request = $arr;
-
-			$soap_message = createObject('phpgwapi.soapmsg',$method_name,$this->request);
-			$soap = createObject('phpgwapi.soap_client',$uri,$hostpart);
-			$soap->username = $this->sessionid;
-			$soap->password = $this->kp3;
-			if($r = $soap->send($soap_message,$method_name))
-			{
-				_debug_array(htmlentities($soap->outgoing_payload));
-				_debug_array(htmlentities($soap->incoming_payload));
-				$this->debug('<hr>I got this value back<br><pre>' . htmlentities($r->serialize()) . '</pre><hr>',$debug);
-				$this->result = $r->decode();
-				return $this->result;
-			}
-			else
-			{
-				_debug_array($soap->outgoing_payload);
-				$this->debug('Fault Code: ' . $r->ernno . ' Reason "' . $r->errstring . '"<br>',$debug);
-			}
-		}
-
-		function build_request($_req,$recursed=False,$ext='')
-		{
-			if(is_array($_req))
-			{
-				$ele = array();
-				@reset($_req);
-				while(list($key,$val) = @each($_req))
-				{
-					$ele[$key] = $this->build_request($val,True,$key);
-				}
-				$this->request[] = createObject('phpgwapi.soapval',$ext,'struct',$ele);
-				$ext = '';
-			}
-			else
-			{
-				$_type = (is_long($_req)?'int':gettype($_req));
-				if($recursed)
-				{
-					return CreateObject('phpgwapi.soapval',$ext,$_type,$_req);
-				}
-				else
-				{
-					$this->request[$ext] = createObject('phpgwapi.soapval',$ext,$_type,$_req);
-				}
-			}
+			$soap = createObject('phpgwapi.soap_client',array('uri' => $uri, 'location' => $url),false);
+			$soap->login	= $args['username'];
+			$soap->password = $args['password'];
+			$soap->init();
+			$this->result =  $soap->call($method_name, $args);
+			return $this->result;
 		}
 
 		/* Following are for server list management and query */

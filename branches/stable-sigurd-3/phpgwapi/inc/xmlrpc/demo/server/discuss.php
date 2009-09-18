@@ -1,7 +1,7 @@
 <?php
 // $Id: discuss.php 2 2009-03-16 20:22:51Z ggiunta $
-	include("xmlrpc.inc");
-	include("xmlrpcs.inc");
+	include("../../lib/xmlrpc.inc");
+	include("../../lib/xmlrpcs.inc");
 
 	$addcomment_sig=array(array($xmlrpcInt, $xmlrpcString, $xmlrpcString, $xmlrpcString));
 
