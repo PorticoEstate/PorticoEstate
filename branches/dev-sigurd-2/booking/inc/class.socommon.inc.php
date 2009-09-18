@@ -132,7 +132,7 @@
 			}
 			else if($type == 'int')
 			{
-				return (is_string($value) && strlen($value) === 0) ? 'NULL' : intval($value);
+				return (is_string($value) && strlen(trim($value)) === 0) ? 'NULL' : intval($value);
 			}
 			else if($type == 'intarray')
 			{
@@ -147,8 +147,9 @@
 
 		function _unmarshal($value, $type)
 		{
-			if($value === null || $value == 'NULL')
+			if(($value === null || $value == 'NULL') || ($type != 'string' && strlen(trim($value)) === 0))
 			{
+				//phpgw always returns empty strings (i.e '') for null values
 				return null;
 			}
 			else if($type == 'int')
