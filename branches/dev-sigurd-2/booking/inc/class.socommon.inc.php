@@ -1,10 +1,26 @@
 <?php
+	phpgw::import_class('booking.account_helper');
+
 	abstract class booking_socommon
 	{
-		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true));
+		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true, 'add_callback' => '_set_created_on'));
+		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int', 'auto' => true, 'add_callback' => '_set_created_by'));
+		public static $REL_CREATED_BY_NAME = array(
+			'type' => 'string',
+			'query' => true,
+			'join' => array(
+				'table' => 'phpgw_accounts',
+				'fkey' => 'created_by',
+				'key' => 'account_id',
+				'column' => 'account_lid'
+			)
+		);
 		
 		protected
-			$cols;
+			$cols,
+			$auto_fields;
+			
+		protected static $AUTO_FIELD_ACTIONS = array('add' => true, 'update' => true);
 		
 		public function __construct($table_name, $fields)
 		{
@@ -13,6 +29,16 @@
 			$this->db         = $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
+		}
+		
+		protected function _set_created_on($field, &$entity) {
+			$params = current(self::$AUTO_CREATED_ON);
+			$entity[$field] = $this->_marshal(date('Y-m-d H:i:s'), $params['type']);
+		}
+		
+		protected function _set_created_by($field, &$entity) {
+			$params = current(self::$AUTO_CREATED_BY);
+			$entity[$field] = $this->_marshal(booking_account_helper::current_account_id(), $params['type']);
 		}
 		
 		public function get_columns()
@@ -29,6 +55,24 @@
 			}
 			
 			return $this->cols;
+		}
+		
+		public function get_table_values(&$entry, $action) {
+			//First, set automatic fields registered for this action
+			$this->process_auto_fields($entry, $action);
+			
+			//Id is maintained by database, so unset it
+			unset($entry['id']);
+			
+			//Here we return only those fields in entry that exist in the table
+			return array_intersect_key(
+				$entry, 
+				array_filter($this->fields, array($this, 'is_table_field_def'))+$this->get_auto_field_defs($action)
+			);
+		}
+		
+		protected function is_table_field_def(&$field_def) {
+			return !($field_def['join'] || $field_def['manytomany']);
 		}
 
 		public function _get_cols_and_joins()
@@ -61,6 +105,15 @@
 				throw new InvalidArgumentException(sprintf('Field "%s" in "%s" is missing a type definition', $field, get_class($this)));
 				
 			return $this->_marshal($value, $field_def['type']);
+		}
+		
+		private function _marshal_field_value_by_ref(&$value, $field) {
+			$value = $this->_marshal($value, $this->fields[$field]['type']);
+		}
+		
+		function marshal_field_values(&$entry) {
+			array_walk($entry, array($this, '_marshal_field_value_by_ref'));
+			return $entry;
 		}
 
 		function _marshal($value, $type)
@@ -332,29 +385,56 @@
 				'results'		=> $results
 			);
 		}
+		
+		protected function is_auto_field_def(array &$field_def, $action) {
+			return isset($field_def['auto']) && $field_def['auto'] != false && $this->get_auto_field_def_callback($field_def, $action);
+		}
+		
+		protected function get_auto_field_def_callback(array &$field_def, $action) {
+			return isset($field_def[$action.'_callback']) ? $field_def[$action.'_callback'] : null;
+		}
+		
+		protected function get_auto_field_def($name, $action) {
+			$auto_field_defs = $this->get_auto_field_defs($action);
+			return (isset($auto_field_defs[$name]) ? $auto_field_defs[$name] : null);
+		}
+		
+		protected function get_auto_field_defs($action = null) {
+			if (is_string($action) && !array_key_exists($action, self::$AUTO_FIELD_ACTIONS)) { 
+				throw new InvalidArgumentException("Unsupported mode \"$action\"");
+			}
+			
+			if (!isset($this->auto_fields)) {
+				foreach(array_keys(self::$AUTO_FIELD_ACTIONS) as $supported_action) {
+					if (!is_array($this->auto_fields[$supported_action])) {
+						$action_auto_fields = array();
+						foreach($this->fields as $field => $params) {
+							if (!$this->is_auto_field_def($params, $supported_action)) continue;
+							$params['action_callback'] = $this->get_auto_field_def_callback($params, $supported_action);
+							$params['action'] = $supported_action;
+							$action_auto_fields[$field] = $params;
+						}
+						$this->auto_fields[$supported_action] = $action_auto_fields;
+					}
+				}
+			}
+			
+			return is_string($action) ? $this->auto_fields[$action] : $this->auto_fields;
+		}
+		
+		protected function process_auto_fields(&$entity, $action) {
+			foreach($this->get_auto_field_defs($action) as $field => $params) { 
+				$callback = $params['action_callback'];
+				$this->$callback($field, $entity);
+			}
+			return $entity;
+		}
 
 		function add($entry)
-		{
-			$cols = array();
-			foreach($this->fields as $field => $params)
-			{
-				if($field == 'id' || $params['join'] || $params['manytomany'])
-				{
-					continue;
-				}
-				$cols[$field] = $this->_marshal($entry[$field], $params['type']);
-			}
+		{			
+			$values = $this->marshal_field_values($this->get_table_values($entry, __FUNCTION__));
 			
-			if ( isset($this->fields[key(self::$AUTO_CREATED_ON)]) 
-				&& isset($this->fields[key(self::$AUTO_CREATED_ON)]['type']) && $this->fields[key(self::$AUTO_CREATED_ON)]['type'] == 'timestamp'
-				&& (!isset($this->fields[key(self::$AUTO_CREATED_ON)]['auto']) || $this->fields[key(self::$AUTO_CREATED_ON)]['auto'] !== false)
-			) 
-			{
-				$params = current(self::$AUTO_CREATED_ON);
-				$cols['created_on'] = $this->_marshal(date('Y-m-d H:i:s'), $params['type']);
-			}
-			
-			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($cols)) . ') VALUES(' . join(',', $cols) . ')', __LINE__,__FILE__);
+			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__,__FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			foreach($this->fields as $field => $params)
 			{
@@ -405,33 +485,35 @@
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been saved', $receipt['id']));
 			return $receipt;
 		}
-
+		
+		function column_update_expression(&$value, $field) { 
+			$value = sprintf($field.'=%s', $this->marshal_field_value($field, $value));
+		}
+		
 		function update($entry)
 		{
-			$id = intval($entry['id']);
-			$cols = array();
-			$values = array();
-			
-			$non_updatable_fields = array(key(self::$AUTO_CREATED_ON) => true);
-			
-			foreach($this->fields as $field => $params)
-			{
-				if($field == 'id' || $params['join'] || $params['manytomany'] || $non_updatable_fields[$field])
-				{
-					continue;
-				}
-				$values[] = $field . "=" . $this->_marshal($entry[$field], $params['type']);
+			if (!isset($entry['id'])) {
+				throw new InvalidArgumentException(sprintf('Missing id in %s->%s', get_class($this), __FUNCTION__));
 			}
-			$cols = join(',', $cols);
-			$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			
+			$id = intval($entry['id']);
+			
+			$values = $this->get_table_values($entry, __FUNCTION__);
+			
+			array_walk($values, array($this, 'column_update_expression'));
+			
+			$update_queries = array(
+				'UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id"
+			);
+			
 			foreach($this->fields as $field => $params)
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
 				{
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
-					$this->db->query("DELETE FROM $table WHERE $key=$id", __LINE__, __FILE__);
-					
+					$update_queries[] = "DELETE FROM $table WHERE $key=$id";
+
 					if(is_array($params['manytomany']['column']))
 					{
 						$colnames = array();
@@ -439,7 +521,7 @@
 							$colnames[] = is_array($paramsOrCol) ? $intOrCol : $paramsOrCol;
 						}
 						$colnames = join(',', $colnames);
-						
+
 						foreach($entry[$field] as $v)
 						{
 							$data = array();
@@ -452,11 +534,11 @@
 									$col = $paramsOrCol;
 									$type = $params['type'];
 								}
-								
+
 								$data[] = $this->_marshal($v[$col], $type);
 							}
 							$v = join(',', $data);
-							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
+							$update_queries[] = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
 						}
 					}
 					else
@@ -465,11 +547,14 @@
 						foreach($entry[$field] as $v)
 						{
 							$v = $this->_marshal($v, $params['type']);
-							$this->db->query("INSERT INTO $table ($key, $colname) VALUES($id, $v)", __LINE__, __FILE__);
+							$update_queries[] = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
 						}
 					}
 				}
 			}
+			
+			$this->db->query(join($update_queries, ';'), __LINE__, __FILE__);
+			
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;

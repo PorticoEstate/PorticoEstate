@@ -101,8 +101,16 @@ phpgw::import_class('booking.uicommon');
 							'label' => lang('To'),
 						),
 						array(
+							'key' => 'account_code_set_name',
+							'label' => lang('Account Codes'),
+						),
+						array(
 							'key' => 'created_on',
 							'label' => lang('Created on'),
+						),
+						array(
+							'key' => 'created_by_name',
+							'label' => lang('Created by'),
 						),
 						array(
 							'key' => 'actions',

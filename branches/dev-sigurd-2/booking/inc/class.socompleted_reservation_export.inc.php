@@ -28,22 +28,43 @@
 					'filename'    			=> array('type' => 'string', 'required' => true),
 					'account_code_set_id' => array('type' => 'int', 'required' => true),
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
+					key(booking_socommon::$AUTO_CREATED_BY) => current(booking_socommon::$AUTO_CREATED_BY),
 					'season_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
-							'table' => 'bb_season',
-							'fkey' => 'season_id',
-							'key' => 'id',
-							'column' => 'name'
+							'table' 		=> 'bb_season',
+							'fkey' 		=> 'season_id',
+							'key' 		=> 'id',
+							'column' 	=> 'name'
 					)),
 					'building_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
-							'table' 	=> 'bb_building',
+							'table' 		=> 'bb_building',
 							'fkey' 		=> 'building_id',
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
+					'account_code_set_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
+							'table' 		=> 'bb_account_code_set',
+							'fkey' 		=> 'account_code_set_id',
+							'key' 		=> 'id',
+							'column' 	=> 'name'
+					)),
+					'created_by_name' => booking_socommon::$REL_CREATED_BY_NAME,
 				)
 			);
 		}
 		
+		protected function _get_search_to_date(&$entity) {
+			$to_date = (isset($entity['to_']) && !empty($entity['to_']) ? $entity['to_'] : date('Y-m-d'));
+			
+			$to_date = date('Y-m-d', strtotime($to_date));
+			
+			if (strtotime($to_date) > strtotime('tomorrow')) {
+				$to_date = date('Y-m-d');
+			}
+			
+			$to_date .= ' 23:59:59';
+			
+			return $to_date;
+		}
 
 		protected function preValidate(&$entity)
 		{
@@ -70,18 +91,6 @@
 		}
 		
 		function add($entry) {
-			$to_date = (isset($entry['to_']) && !empty($entry['to_']) ? $entry['to_'] : date('Y-m-d'));
-			
-			$to_date = date('Y-m-d', strtotime($to_date));
-			
-			if (strtotime($to_date) > strtotime('tomorrow')) {
-				$to_date = date('Y-m-d');
-			}
-			
-			$to_date .= ' 23:59:59';
-			
-			$entry['to_'] = $to_date;
-			
 			$export_reservations =& $this->get_completed_reservations_for($entry);
 			
 			if (!$export_reservations) {
@@ -129,7 +138,7 @@
 		
 		public function &get_completed_reservations_for($entity) {
 			$filters = array(
-				'where' => array("%%table%%".sprintf(".to_ <= '%s'", $entity['to_'])),
+				'where' => array("%%table%%".sprintf(".to_ <= '%s'", $this->_get_search_to_date($entity))),
 				'exported' => null,
 			);
 			
