@@ -234,13 +234,12 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT * , $value_table.id as value_id FROM $attrib_table LEFT JOIN $value_table ON ($attrib_table.type_id = $value_table.type_id AND $attrib_table.id = $value_table.attrib_id )WHERE $attrib_table.type_id = '$type_id' $querymethod";
+			$sql = "SELECT * , $value_table.id as value_id, $attrib_table.input_type FROM $attrib_table LEFT JOIN $value_table ON ($attrib_table.type_id = $value_table.type_id AND $attrib_table.id = $value_table.attrib_id )WHERE $attrib_table.type_id = '$type_id' $querymethod";
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -254,18 +253,19 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$config_info = array();
 			while ($this->db->next_record())
 			{
+				$input_type	= $this->db->f('input_type');
 				$config_info[] = array
 				(
 					'id'		=> $this->db->f(1),
 					'type_id'	=> $this->db->f('type_id'),
 					'value_id'	=> $this->db->f('value_id'),
-					'name'		=> stripslashes($this->db->f('name')),
-					'value'		=> stripslashes($this->db->f('value'))
+					'name'		=> $this->db->f('name', true),
+					'value'		=> $input_type == 'password' && $this->db->f('value') ? '****' : $this->db->f('value', true)
 				);
 			}
-
 			return $config_info;
 		}
 

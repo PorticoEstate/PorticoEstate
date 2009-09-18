@@ -363,7 +363,7 @@
 					'lang_edit_config_text'			=> lang('edit the config'),
 					'text_edit'				=> lang('edit'),
 					'text_delete'				=> lang('delete'),
-					'text_value'				=> $entry['value']?$entry['value']:lang('value'),
+					'text_value'				=> $entry['value']?$entry['value']:lang('no value'),
 					'lang_delete_config_text'		=> lang('delete the config'),
 					'lang_value_text'			=> lang('values for this config type'),
 				);
@@ -805,6 +805,11 @@
 
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+			if($attrib['input_type'] == 'password')
+			{
+				$values['value'] = '';
+			}
 
 			$data = array
 			(
