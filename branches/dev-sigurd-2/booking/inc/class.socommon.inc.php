@@ -31,6 +31,10 @@
 			$this->like			= & $this->db->like;
 		}
 		
+		public function get_field_defs() {
+			return $this->fields;
+		}
+		
 		protected function _set_created_on($field, &$entity) {
 			$params = current(self::$AUTO_CREATED_ON);
 			$entity[$field] = $this->_marshal(date('Y-m-d H:i:s'), $params['type']);
@@ -69,6 +73,10 @@
 				$entry, 
 				array_filter($this->fields, array($this, 'is_table_field_def'))+$this->get_auto_field_defs($action)
 			);
+		}
+		
+		public function get_table_field_defs() {
+			return array_filter($this->fields, array($this, 'is_table_field_def'));
 		}
 		
 		protected function is_table_field_def(&$field_def) {

@@ -56,7 +56,7 @@
 			$dir = phpgw::get_var('dir');
 			
 			$filters = array();
-			foreach($this->so->fields as $field => $params) {
+			foreach($this->so->get_field_defs() as $field => $params) {
 				if(phpgw::get_var("filter_$field")) {
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}
