@@ -12,7 +12,7 @@ phpgw::import_class('booking.uicommon');
 			'toggle_show_all_completed_reservations'	=>	true,
 		);
 		
-		protected $fields = array('cost', 'customer_organization_number', 'customer_ssn', 'description');
+		protected $fields = array('cost', 'customer_organization_number', 'customer_ssn', 'customer_type', 'description', 'article_description');
 
 		protected $module = 'booking';
 		
@@ -205,6 +205,8 @@ phpgw::import_class('booking.uicommon');
 			$reservation['reservations_link'] = $this->link_to('index');
 			$reservation['edit_link'] = $this->link_to('edit', array('id' => $reservation['id']));
 			
+			$reservation['customer_types'] = array_combine($this->bo->get_customer_types(), $this->bo->get_customer_types());
+			
 			if ($reservation['season_id']) {
 				$reservation['season_link'] = $this->link_to('show', array('ui' => 'season', 'id' => $reservation['season_id']));
 			} else {
@@ -239,7 +241,6 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		public function edit() {
-			//TODO: Add editing of reservation type
 			//TODO: Display hint to user about primary type of customer identifier
 			
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));

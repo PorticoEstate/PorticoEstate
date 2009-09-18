@@ -11,6 +11,23 @@
 			<dl class="form-col">
 				<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
 				<dd><input id="field_cost" name="cost" type="text" value="{reservation/cost}"/></dd>
+				
+				<dt><label for="field_customer_type"><xsl:value-of select="php:function('lang', 'Customer Type')" /></label></dt>
+				<dd>
+					<select name='customer_type' id='field_customer_type'>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select...')" /></option>
+						<xsl:for-each select="reservation/customer_types/*">
+							<option>
+								<xsl:if test="../../customer_type = local-name()">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+						
+								<xsl:attribute name="value"><xsl:value-of select="local-name()"/></xsl:attribute>
+								<xsl:value-of select="php:function('lang', string(node()))"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</dd>
 			</dl>
 
 			<dl class="form-col">

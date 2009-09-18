@@ -3,6 +3,14 @@
 	
 	class booking_socompleted_reservation extends booking_socommon
 	{
+		const CUSTOMER_TYPE_EXTERNAL='external';
+		const CUSTOMER_TYPE_INTERNAL='internal';
+		
+		protected static $customerTypes = array(
+			self::CUSTOMER_TYPE_EXTERNAL,
+			self::CUSTOMER_TYPE_INTERNAL
+		);
+		
 		protected 
 			$resource_so,
 			$season_so;
@@ -25,7 +33,7 @@
 					'customer_type' 			=> array('type' => 'string', 'nullable' => False),
 					'customer_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'customer_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
-					'exported' 				=> array('type' => 'int', 'required' => True, 'nullable' => False, 'default' => 0),
+					'exported' 				=> array('type' => 'int'),
 					'description'			=> array('type' => 'string', 'required' => True, 'nullable' => False),
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
 					'building_id'			=> array('type' => 'string', 'required' => True),
@@ -52,6 +60,21 @@
 					)),
 				)
 			);
+		}
+		
+		/**
+		 * Implement in subclasses to perform custom validation.
+		 */
+		protected function doValidate($entity, booking_errorstack $errors)
+		{
+			if (!in_array($entity['customer_type'], $this->get_customer_types())) {
+				$errors['customer_type'] = 'Invalid customer type';
+			}
+		}
+		
+		public function get_customer_types()
+		{
+			return self::$customerTypes;
 		}
 		
 		function _get_conditions($query, $filters)
@@ -95,7 +118,7 @@
 				'cost' 					=> $reservation['cost'],
 				'from_' 					=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
-				'customer_type' 			=> 'organization',
+				'customer_type' 			=> 'external',
 				'resources' 			=> $reservation['resources'],
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);
@@ -190,7 +213,6 @@
 		}
 		
 		protected function set_organization(&$entity, &$organization) {
-			$entity['customer_type']      = 'organization';
 			$entity['organization_id'] = $organization['id'];
 			$entity['customer_organization_number'] = $organization['organization_number'];
 		}
@@ -229,7 +251,6 @@
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
-			$entity['customer_type']      = 'public';
 		}
 		
 		public function update_exported_state_of(&$reservations, $with_export_id) {

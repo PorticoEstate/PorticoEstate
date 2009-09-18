@@ -20,13 +20,28 @@
 			<dt><xsl:value-of select="php:function('lang', 'Cost')" /></dt>
 			<dd><xsl:value-of select="reservation/cost"/></dd>
 			
+			<dt><xsl:value-of select="php:function('lang', 'Customer Type')" /></dt>
+			<dd><xsl:value-of select="reservation/customer_type"/></dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Customer #')" /></dt>
+			<xsl:choose>
+				<xsl:when test="reservation/customer_identifier">
+					<dd><xsl:value-of select="reservation/customer_identifier"/> (<xsl:value-of select="php:function('lang', string(reservation/customer_identifier_type))"/>)</dd>
+				</xsl:when>
+				<xsl:otherwise>
+					N/A
+				</xsl:otherwise>
+			</xsl:choose>
+		</dl>
+
+		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
 			<dd><xsl:value-of select="reservation/from_"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
 			<dd><xsl:value-of select="reservation/to_"/></dd>
 		</dl>
-
+		
 		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'Season')" /></dt>
 			<xsl:choose>
@@ -34,7 +49,7 @@
 					<dd><a href="{reservation/season_link}"><xsl:value-of select="reservation/season_name"/></a></dd>
 				</xsl:when>
 				<xsl:otherwise>
-					N/A
+					<xsl:value-of select="php:function('lang', 'N/A')" />
 				</xsl:otherwise>
 			</xsl:choose>
 			
@@ -44,17 +59,7 @@
 					<dd><a href="{reservation/organization_link}"><xsl:value-of select="reservation/organization_name"/></a></dd>
 				</xsl:when>
 				<xsl:otherwise>
-					N/A
-				</xsl:otherwise>
-			</xsl:choose>
-			
-			<dt><xsl:value-of select="php:function('lang', 'Customer #')" /></dt>
-			<xsl:choose>
-				<xsl:when test="reservation/customer_identifier">
-					<dd><xsl:value-of select="reservation/customer_identifier"/> (<xsl:value-of select="php:function('lang', string(reservation/customer_identifier_type))"/>)</dd>
-				</xsl:when>
-				<xsl:otherwise>
-					N/A
+					<xsl:value-of select="php:function('lang', 'N/A')" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</dl>
