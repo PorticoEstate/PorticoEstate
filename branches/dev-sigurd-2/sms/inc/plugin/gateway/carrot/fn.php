@@ -13,98 +13,122 @@
 		    // nothing
 		}
 
+		function parse_html( $s_str )
+		{
+			$i_left = 0;
+			$i_right = 0;
+			$vars = array();
+			// Search for a tag in string
+			while( is_int(($i_left = strpos($s_str,"<!--",$i_right)))) 
+			{
+				$i_left = $i_left + 4;
+				$i_right = strpos($s_str,"-->", $i_left);
+				$s_temp = substr($s_str, $i_left, ($i_right-$i_left) );
+				$a_tag = explode('=', $s_temp );
+				$vars[$a_tag[0]] = $a_tag[1];
+			}
+			return $vars;
+		}
+
+
 		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false)
 		{
-
-			$client = CreateObject('phpgwapi.soap_client', array(), false);
-
-			$client->phpgw_domain = 'default';
-			$client->wsdl = $this->carrot_param['wsdl'];
-			$client->location = $this->carrot_param['send_url'];
-
-			$client->uri		= "urn://www.tempuri.testing/soap";
-			$client->trace		= 1;
-			$client->login		= $this->carrot_param['login'];
-			$client->password	= $this->carrot_param['password'];
-			$client->proxy_host	= $this->carrot_param['proxy_host'];
-			$client->proxy_port	= $this->carrot_param['proxy_port'];
-			$client->encoding	= 'UTF-8';
-
-			$client->init();
+			$sms_msg = utf8_decode($sms_msg);
 
 			$arguments = array
 			(
 				'Type'				=> '1', // text
-				'serviceid'			=> '', //Unique identifier for service. Provided by Carrot.
+				'serviceid'			=> $this->carrot_param['serviceid'], //Unique identifier for service. Provided by Carrot.
 				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
 				'content'			=> $sms_msg,
-				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
-				'originator'		=> $GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
-				'originatortype'	=> $this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
-				'recipient'			=> $sms_to,
+//				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
+				'originator'		=> 1960,//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
+				'originatortype'	=> 3,//$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
+				'recipient'			=> urlencode($sms_to),
 				'username'			=> $this->carrot_param['login'],
 				'password'			=> $this->carrot_param['password'],
-				'priority'			=> '',
-				'price'				=> '0',
-				'differentiator'	=> '',
-				'TTL'				=> ''
+//				'priority'			=> '',
+//				'price'				=> '0',
+				'differentiator'	=> 'Test',
+//				'TTL'				=> ''
 
 			);
 
-			$result = $client->call("sendMTMessage", $arguments);
+			if($this->carrot_param['type'] == 'GET')
+			{
+				$query = http_build_query($arguments);
+				$request = "{$this->carrot_param['send_url']}?{$query}";
 
-		}
+				$aContext = array
+				(
+				   	'http' => array
+					(
+						'proxy' => "{$this->carrot_param['proxy_host']}:{$this->carrot_param['proxy_port']}", // This needs to be the server and the port of the NTLM Authentication Proxy Server.
+						'request_fulluri' => True,
+					),
+				);
 
-		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="")
-		{
-return; //for now...
+				$cxContext = stream_context_create($aContext);
+
+				$response = file_get_contents($request, False, $cxContext);
+
+				$this->result = $this->parse_html($response);
+			}
+			else
+			{
+				$client = CreateObject('phpgwapi.soap_client', array(), false);
+				$client->phpgw_domain = 'default';
+				$client->wsdl = $this->carrot_param['wsdl'];
+				$client->location = $this->carrot_param['send_url'];
+
+				$client->uri		= "urn://www.tempuri.testing/soap";
+				$client->trace		= 1;
+				$client->login		= $this->carrot_param['login'];
+				$client->password	= $this->carrot_param['password'];
+				$client->proxy_host	= $this->carrot_param['proxy_host'];
+				$client->proxy_port	= $this->carrot_param['proxy_port'];
+				$client->encoding	= 'UTF-8';
+				$client->init();
+				$this->result = $client->call("sendMTMessage", $arguments);
+			}
+
 		    // p_status :
 		    // 0 = pending
 		    // 1 = delivered
 		    // 2 = failed
-		    if ($gp_code)
-		    {
-		        $fn = $this->carrot_param[path] . "/cache/smsd/out.$gp_code.$uid.$smslog_id";
-		        $efn = $this->carrot_param[path] . "/cache/smsd/ERR.out.$gp_code.$uid.$smslog_id";
-		    }
-		    else
-		    {
-		        $fn = $this->carrot_param[path] . "/cache/smsd/out.PV.$uid.$smslog_id";
-		        $efn = $this->carrot_param[path] . "/cache/smsd/ERR.out.PV.$uid.$smslog_id";
-		    }
-		    // set delivered first
-		    $p_status = 1;
-		    $this->setsmsdeliverystatus($smslog_id,$uid,$p_status);
-		    // and then check if its not delivered
-		    if (file_exists($fn))
-		    {
-		        $p_datetime_stamp = strtotime($p_datetime);
-		        $p_update_stamp = strtotime($p_update);
-		        $p_delay = floor(($p_update_stamp - $p_datetime_stamp)/86400);
-			// set pending if its under 2 days
-		        if ($p_delay <= 2)
-		        {
-		    	    $p_status = 0;
-		    	    $this->setsmsdeliverystatus($smslog_id,$uid,$p_status);
-		        }
-		        else
-		        {
-		    	    $p_status = 2;
-		    	    $this->setsmsdeliverystatus($smslog_id,$uid,$p_status);
-		    	    @unlink ($fn);
-		    	    @unlink ($efn);
-		        }
-				return;
-		    }
-		    // set if its failed
-		    if (file_exists($efn))
-		    {
-		        $p_status = 2;
-		        $this->setsmsdeliverystatus($smslog_id,$uid,$p_status);
-		        @unlink ($fn);
-		    	@unlink ($efn);
-				return;
-		    }
+
+			if($this->result['Statuscode'] == 1)
+			{
+			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
+			}
+			else if($this->result['Statuscode'] == 5)
+			{
+			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
+			}
+
+			if($this->result['Statuscode'] == 1)
+			{
+				return true;
+			}
+		}
+
+		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="")
+		{
+return;
+		    // p_status :
+		    // 0 = pending
+		    // 1 = delivered
+		    // 2 = failed
+
+			if($this->result['Statuscode'] == 1)
+			{
+			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
+			}
+			else if($this->result['Statuscode'] == 5)
+			{
+			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
+			}
+
 		    return;
 		}
 
