@@ -273,6 +273,8 @@
 			$input_type[0]['name'] = 'text';
 			$input_type[1]['id'] = 'listbox';
 			$input_type[1]['name'] = 'listbox';
+			$input_type[2]['id'] = 'password';
+			$input_type[2]['name'] = 'Password';
 
 			return $this->bocommon->select_list($selected,$input_type);
 
