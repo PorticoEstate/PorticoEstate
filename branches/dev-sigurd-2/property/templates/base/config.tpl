@@ -94,12 +94,11 @@
    <tr class="row_on">
     <td valign = 'top'>{lang_TTS_simplified_group}:</td>
     <td>
-    	<!--to be able to blank the setting - need a empty value-->
+    	<!--to be able to blank the setting - need an empty value-->
     	<input type = 'hidden' name="newsettings[fmttssimple_group][]" value="">
      <table>
 {hook_fmttssimple_group}
 	 </table>
-    <!-- </select>-->
     </td>
    </tr>
    <tr class="row_off">
@@ -158,11 +157,42 @@
     </td>
    </tr>
    <tr class="row_off">
+    <td>{lang_mandatory_title_(TTS)}.</td>
+    <td>
+     <select name="newsettings[tts_mandatory_title]">
+      <option value="" {selected_tts_mandatory_title_}>NO</option>
+      <option value="1" {selected_tts_mandatory_title_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+
+   <tr class="row_on">
+    <td valign = 'top'>{lang_TTS_finnish_date}:</td>
+    <td>
+    	<!--to be able to blank the setting - need an empty value-->
+    	<input type = 'hidden' name="newsettings[fmtts_group_finnish_date][]" value="">
+     <table>
+{hook_fmtts_group_finnish_date}
+	 </table>
+    </td>
+   </tr>
+
+   <tr class="row_off">
     <td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
     <td>
      <select name="newsettings[workorder_approval]">
-       <option value="no" {selected_workorder_approval_no}>NO</option>
-     <option value="yes" {selected_workorder_approval_yes}>YES</option>
+       <option value="no" {selected_workorder_approval_}>NO</option>
+     <option value="yes" {selected_workorder_approval_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_Ask_for_project_approval_by_e-mail}.</td>
+    <td>
+     <select name="newsettings[project_approval]">
+       <option value="no" {selected_project_approval_}>NO</option>
+     <option value="yes" {selected_project_approval_1}>YES</option>
      </select>
     </td>
    </tr>

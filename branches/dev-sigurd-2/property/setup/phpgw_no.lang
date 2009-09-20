@@ -1240,6 +1240,7 @@ save the deviation	property	no	Lagre avvik
 save the document	property	no	lagre dokument
 save the entity	property	no	Lagre entitet
 save the entrance	property	no	lagre inngang
+save the entry and return to list	property	no	lagre data og returner til hovedliste
 save the equipment	property	no	lagre utstyr
 save the gab	property	no	Lagre GrunnEiendom
 save the investment	property	no	lagre investering
@@ -1438,6 +1439,7 @@ select user	property	no	velg bruker
 select where to deliver the key	property	no	velg hvor nøkkel skal leveres
 select where to fetch the key	property	no	velk hvor nøkkel kan hentes
 select year	property	no	Velg år
+send	property	no	Send
 send e-mail	property	no	Send epost
 send order	property	no	send ordre
 sendt by email to	property	no	send med e-post til

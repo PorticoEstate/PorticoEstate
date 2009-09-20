@@ -55,6 +55,7 @@
 		 * @var boolean $_simple use simplified interface
 		 */
 		protected $_simple = false;
+		protected $_show_finnish_date = false;
 
 		public function __construct()
 		{
@@ -103,6 +104,21 @@
 					break;
 				}
 			}
+
+
+			reset($user_groups);
+			$group_finnish_date = isset($this->bo->config->config_data['fmtts_group_finnish_date']) ? $this->bo->config->config_data['fmtts_group_finnish_date'] : array();
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $group_finnish_date))
+				{
+					$this->_show_finnish_date = true;
+					break;
+				}
+			}
+
+
+
 		}
 
 		function save_sessiondata()
@@ -1305,6 +1321,12 @@
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
+
+				if(!$values['subject'] && isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a title !'));
+				}
+
 				if(!$values['cat_id'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a category !'));
@@ -1454,7 +1476,8 @@
 
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
-			if(!$this->_simple)
+
+			if(!$this->_simple && $this->_show_finnish_date)
 			{
 				$jscal = CreateObject('phpgwapi.jscalendar');
 				$jscal->add_listener('values_finnish_date');
@@ -1464,6 +1487,7 @@
 			(
 				'contact_data'					=> $contact_data,
 				'simple'						=> $this->_simple,
+				'show_finnish_date'				=> $this->_show_finnish_date,
 				'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'				=> (isset($origin)?$origin:''),
 				'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
@@ -2018,7 +2042,7 @@
 				'id'		=> $id
 			);
 
-			if(!$this->_simple)
+			if(!$this->_simple && $this->_show_finnish_date)
 			{
 				$jscal = CreateObject('phpgwapi.jscalendar');
 				$jscal->add_listener('values_finnish_date');
@@ -2098,6 +2122,7 @@
 				'contact_data'				=> $contact_data,
 				'lookup_type'				=> $lookup_type,
 				'simple'					=> $this->_simple,
+				'show_finnish_date'		=> $this->_show_finnish_date,
 				'tabs'						=> self::_generate_tabs(true),
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'					=> $datavalues,

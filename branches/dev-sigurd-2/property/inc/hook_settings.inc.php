@@ -50,13 +50,43 @@
 
 	create_select_box('Group filters in single query','group_filters',$yes_and_no,'Group filters - means that one has to hit the search button to apply the filter');
 
-	$tts_status = array(
-		'' 		=> lang('Open'),
-		'closed' 	=> lang('Closed'),
-		'all' 		=> lang('All')
-	);
+	$status_list_tts = execMethod('property.botts._get_status_list');
+	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
+	$status_list_project = execMethod('property.soworkorder.select_status_list');
 
-	create_select_box('Default ticket status','tts_status',$tts_status,'The default status when entering the helpdesk');
+	if ($status_list_tts)
+	{
+		foreach ( $status_list_tts as $entry )
+		{
+			$_status_tts[$entry['id']] = $entry['name'];
+		}
+	}
+
+	if ($status_list_workorder)
+	{
+		foreach ( $status_list_workorder as $entry )
+		{
+			$_status_workorder[$entry['id']] = $entry['name'];
+		}
+	}
+
+	if ($status_list_project)
+	{
+		foreach ( $status_list_project as $entry )
+		{
+			$_status_project[$entry['id']] = $entry['name'];
+		}
+	}
+
+
+	create_select_box('Default ticket status','tts_status',$_status_tts,'The default status when entering the helpdesk and mainscreen');
+	create_select_box('Default updated ticket status when creating project','tts_status_create_project',$_status_tts,'The default status when entering the helpdesk and mainscreen');
+	create_select_box('Autocreate project from ticket','auto_create_project_from_ticket',$yes_and_no);
+	
+	create_select_box('your workorders on main screen - list 1','mainscreen_workorder_1',$yes_and_no,'Link to your workorders');
+	create_select_box('Default workorder status 1','workorder_status_mainscreen_1',$_status_workorder,'The default status for list 1 when entering the mainscreen');
+	create_select_box('your workorders on main screen - list 2','mainscreen_workorder_2',$yes_and_no,'Link to your workorders');
+	create_select_box('Default workorder status 2','workorder_status_mainscreen_2',$_status_workorder,'The default status for list 2 when entering the mainscreen');
 
 	create_select_box('show quick link for changing status for tickets','tts_status_link',$yes_and_no,'Enables to set status wihout entering the ticket');
 
@@ -133,6 +163,7 @@
 	create_select_box('Default Degree Request residential environment','default_environment',$degree);
 
 	create_select_box('Send order receipt as email ','order_email_rcpt',$yes_and_no,'Send the order as BCC to the user');
+	create_select_box('Notify owner of project/order on change','notify_project_owner',$yes_and_no,'By email');
 
 	$default_start_page = array(
 		'location'   => lang('Location'),
@@ -144,27 +175,8 @@
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
 	$socommon= CreateObject('property.socommon');
-	
-	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
-	$status_list_project = execMethod('property.soworkorder.select_status_list');
 
-	$district_list= $socommon->select_district_list();
-
-	if ($status_list_workorder)
-	{
-		foreach ( $status_list_workorder as $entry )
-		{
-			$_status_workorder[$entry['id']] = $entry['name'];
-		}
-	}
-
-	if ($status_list_project)
-	{
-		foreach ( $status_list_project as $entry )
-		{
-			$_status_project[$entry['id']] = $entry['name'];
-		}
-	}
+	$district_list= $socommon->select_district_list();	
 
 	$cats->app_name = 'property.project';
 
