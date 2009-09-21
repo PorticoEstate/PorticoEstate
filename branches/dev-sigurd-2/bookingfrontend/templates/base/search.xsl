@@ -1,4 +1,4 @@
-<xsl:template name="strip-tags">
+<xsl:template name="strip-tags" xmlns:php="http://php.net/xsl">
 	<xsl:param name="text"/>
 	<xsl:choose>
 		<xsl:when test="contains($text, '&lt;')">
@@ -26,7 +26,7 @@
           <input id="search" type="text" name="searchterm" value="Sök hall, klubb eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text> </xsl:text><input type="submit" value="Search"/>
+      <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
         T.ex "<i>Haukelandshallen, Håndball</i>" eller "<i>Årstad Håndball</i>".
       </div>
@@ -73,6 +73,13 @@
 	                          <xsl:value-of select="php:function('lang', 'No description yet')" />
 	                        </xsl:otherwise>
 	                      </xsl:choose>
+						<div id="{img_container}"/>
+						<script type="text/javascript">
+						YAHOO.util.Event.addListener(window, "load", function() {
+							YAHOO.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
+						});
+						</script>
+
 	                    </dd>
 	                    <xsl:if test="string-length(homepage) &gt; 1">
 	                      <dt><h4><xsl:value-of select="php:function('lang', 'Homepage')" /></h4></dt>

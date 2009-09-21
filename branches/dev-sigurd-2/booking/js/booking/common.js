@@ -156,7 +156,7 @@ YAHOO.booking.inlineImages = function(container, url, options)
         for(var key in oResponse.results) { 
 			displayContainer = true;
 			var imgEl = dlImages.appendChild(document.createElement('dd')).appendChild(document.createElement('img'));
-			var captionEl = dlImages.appendChild(document.createElement('dl'));
+			var captionEl = dlImages.appendChild(document.createElement('dt'));
 			imgEl.src = oResponse.results[key].src.replace(/&amp;/gi, '&');
 			captionEl.appendChild(document.createTextNode(oResponse.results[key].description));
 		}

@@ -225,8 +225,13 @@ dl.contactinfo dd {
 
 
 #frontend h2 { margin-bottom: 0.1em;}
-#frontend dl.proplist.images dd img { width: 300px; border:1px solid black;}
+#frontend dl.proplist.images dd img { width: 300px; border:1px solid #777; padding: 1px;}
 #frontend dl.proplist.images dl { margin-bottom: 1.5em; }
+
+#frontend #result dl.proplist.images dt { display: inline;}
+#frontend #result dl.proplist.images dd { display: inline; padding-right: 1em;}
+#frontend #result dl.proplist.images dd img { width: auto; height: 120px; border:1px solid black;}
+
 
 #agegroup {
     background: #eee;
