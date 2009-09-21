@@ -481,7 +481,8 @@
 			(
 				'menuaction'	=> 'admin.uicategories.delete',
 				'cat_id'		=> $this->cat_id,
-				// FIXME this hack won't be merged!
+				'appname'     => $appname,
+				'global_cats' => $global_cats,
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 			$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
