@@ -52,7 +52,7 @@
 
 	$status_list_tts = execMethod('property.botts._get_status_list');
 	$status_list_workorder = execMethod('property.soworkorder.select_status_list');
-	$status_list_project = execMethod('property.soworkorder.select_status_list');
+	$status_list_project = execMethod('property.soproject.select_status_list');
 
 	if ($status_list_tts)
 	{

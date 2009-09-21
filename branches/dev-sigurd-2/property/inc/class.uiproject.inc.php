@@ -844,6 +844,7 @@
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
+			$auto_create 				= false;
 
 			$datatable = array();
 
@@ -916,8 +917,7 @@
 					if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'])
 						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
 					{
-// add logic for autocreate - and redirect to the first workorder
-
+						$auto_create = true;
 					}
 				}
 
@@ -1045,6 +1045,9 @@
 					{
 						$action='add';
 					}
+	_debug_array($values);
+	die();
+
 					$receipt = $this->bo->save($values,$action,$values_attribute);
 
 					if (! $receipt['error'])
@@ -1610,6 +1613,33 @@
 				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
 			//_debug_array($data);die;
+
+			if( $auto_create )
+			{
+				$location= explode('-', $values['location_data']['location_code']);
+
+				$level = count($location);
+				for ($i = 1; $i < $level+1; $i++)
+				{
+					$values['location']["loc$i"] = $location[$i];
+				}
+
+				$values['street_name'] = $values['location_data']['street_name'];
+ 				$values['street_number'] = $values['location_data']['street_number'];
+				$values['location_name'] = $values['location_data']["loc{$level}_name"];
+				$values['extra'] = $values['p'][0];
+
+				unset($values['location_data']);
+				unset($values['p']);
+
+				$receipt = $this->bo->save($values, 'add', array());
+
+				if (! $receipt['error'])
+				{
+					$id = $receipt['id'];
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
+				}
+			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
