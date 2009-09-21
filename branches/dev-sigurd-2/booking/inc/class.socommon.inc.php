@@ -31,6 +31,16 @@
 			$this->like			= & $this->db->like;
 		}
 		
+		/**
+		 * Added because error reporting facilities in phpgw tries to serialize the PDO
+		 * instance in $this->db which causes an error. This method removes $this->db from the 
+		 * serialized values to avoid this problem.
+		 */
+		public function __sleep()
+		{
+			return array('table_name', 'fields');
+		}
+		
 		protected function db_query($sql, $line, $file) {
 			return $this->db->query($sql, $line, $file);
 		}
