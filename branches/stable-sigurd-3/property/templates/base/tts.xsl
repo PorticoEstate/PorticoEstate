@@ -503,20 +503,25 @@
 					</select>			
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<xsl:value-of select="lang_finnish_date"/>
-				</td>
-				<td>
-					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_finnish_date_statustext"/>
-						</xsl:attribute>
-					</input>
-					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-				</td>
-			</tr>
-				</xsl:when>
+			<xsl:choose>
+				<xsl:when test="show_finnish_date ='1'">
+					<tr>
+						<td>
+							<xsl:value-of select="lang_finnish_date"/>
+						</td>
+						<td>
+							<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_finnish_date_statustext"/>
+								</xsl:attribute>
+							</input>
+							<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						</td>
+					</tr>
+			</xsl:when>
+			</xsl:choose>
+
+			</xsl:when>
 			</xsl:choose>
 
 
@@ -1038,19 +1043,24 @@
 					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<xsl:value-of select="lang_finnish_date"/>
-				</td>
-				<td>
-					<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_finnish_date_statustext"/>
-						</xsl:attribute>
-					</input>
-					<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-				</td>
-			</tr>
+			<xsl:choose>
+				<xsl:when test="show_finnish_date ='1'">
+					<tr>
+						<td>
+							<xsl:value-of select="lang_finnish_date"/>
+						</td>
+						<td>
+							<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_finnish_date_statustext"/>
+								</xsl:attribute>
+							</input>
+							<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+
 		</xsl:when>
 		<xsl:otherwise>
 				<input type="hidden" name="values[status]" value="{value_status}"></input>

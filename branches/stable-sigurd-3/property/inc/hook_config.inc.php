@@ -36,18 +36,44 @@
 	function fmttssimple_group($config)
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
-		$simple_group = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
+		$groups_assigned = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
 		$out = '';
 		foreach ( $groups as $group => $label)
 		{
 			$checked = '';
-			if ( in_array($group, $simple_group))
+			if ( in_array($group, $groups_assigned))
 			{
 				$checked = ' checked';
 			}
 
 			$out .=  <<<HTML
 				<tr><td><input type="checkbox" name="newsettings[fmttssimple_group][]" value="{$group}" {$checked}><label>{$label}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
+	* Get HTML checkbox with groups that are candidates for the field finnish date at tts
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function fmtts_group_finnish_date($config)
+	{
+		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups_assigned = isset($config['fmtts_group_finnish_date']) ? $config['fmtts_group_finnish_date'] : array();
+		$out = '';
+		foreach ( $groups as $group => $label)
+		{
+			$checked = '';
+			if ( in_array($group, $groups_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+				<tr><td><input type="checkbox" name="newsettings[fmtts_group_finnish_date][]" value="{$group}" {$checked}><label>{$label}</label></td></tr>
 HTML;
 		}
 		return $out;

@@ -844,6 +844,7 @@
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
+			$auto_create 				= false;
 
 			$datatable = array();
 
@@ -907,6 +908,17 @@
 						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 					}
 					$values['contact_id'] = $ticket['contact_id'];
+					$tts_status_create_project 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
+					if($tts_status_create_project)
+					{
+						$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
+					}
+					
+					if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
+					{
+						$auto_create = true;
+					}
 				}
 
 				if($p_entity_id && $p_cat_id)
@@ -1033,6 +1045,9 @@
 					{
 						$action='add';
 					}
+	_debug_array($values);
+	die();
+
 					$receipt = $this->bo->save($values,$action,$values_attribute);
 
 					if (! $receipt['error'])
@@ -1042,7 +1057,7 @@
 
 					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
 						&& $GLOBALS['phpgw_info']['server']['smtp_server']
-						&& $config->config_data['workorder_approval'] )
+						&& $config->config_data['project_approval'] )
 					{
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
@@ -1062,7 +1077,7 @@
 						$subject = lang(Approval).": ". $id;
 						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang('project %1 needs approval',$id) .'</a>';
 
-						$bcc = $from_email;
+						$bcc = '';//$from_email;
 
 						$action_params = array
 						(
@@ -1096,7 +1111,8 @@
 							}
 						}
 
-						if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']))
+						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) 
+						 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'] == 1)
 						{
 							if($this->account!=$values['coordinator'] && $config->config_data['mailnotification'])
 							{
@@ -1324,7 +1340,7 @@
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 			}
 
-			$need_approval = isset($config->config_data['workorder_approval'])?$config->config_data['workorder_approval']:'';
+			$need_approval = isset($config->config_data['project_approval'])?$config->config_data['project_approval']:'';
 			$supervisor_email = array();
 			if ($supervisor_id && ($need_approval=='yes'))
 			{
@@ -1597,6 +1613,33 @@
 				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency']
 			);
 			//_debug_array($data);die;
+
+			if( $auto_create )
+			{
+				$location= explode('-', $values['location_data']['location_code']);
+
+				$level = count($location);
+				for ($i = 1; $i < $level+1; $i++)
+				{
+					$values['location']["loc$i"] = $location[$i];
+				}
+
+				$values['street_name'] = $values['location_data']['street_name'];
+ 				$values['street_number'] = $values['location_data']['street_number'];
+				$values['location_name'] = $values['location_data']["loc{$level}_name"];
+				$values['extra'] = $values['p'][0];
+
+				unset($values['location_data']);
+				unset($values['p']);
+
+				$receipt = $this->bo->save($values, 'add', array());
+
+				if (! $receipt['error'])
+				{
+					$id = $receipt['id'];
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
+				}
+			}
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');

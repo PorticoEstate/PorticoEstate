@@ -71,10 +71,10 @@
 			$portalbox->set_controls($key,$value);
 		}
 
-
 		$tts = CreateObject('property.sotts');
 
-		$tickets = $tts->read(array('user_id' => $accound_id));
+		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'] : '';
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
 
 		$category_name = array(); // caching
 
@@ -106,6 +106,122 @@
 		unset($tts);
 		unset($portalbox);
 		unset($category_name);
+		unset($default_status);
+	}
+
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_1'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_1'] == 'yes')
+	{
+
+//		$GLOBALS['phpgw']->translation->add_app('property');
+
+		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_1']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_1'] : '';
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status}",
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$obj = CreateObject('property.soworkorder');
+
+		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+
+		$portalbox->data = array();
+		foreach ($workorders as $workorder)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => "{$workorder['address']} :: {$workorder['title']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $workorder['workorder_id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN workorder 1 info -->'."\n".$portalbox->draw()."\n".'<!-- END workorder 1 info -->'."\n";
+
+		unset($obj);
+		unset($portalbox);
+		unset($default_status);
+	}
+	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_2'])
+		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_2'] == 'yes')
+	{
+
+//		$GLOBALS['phpgw']->translation->add_app('property');
+
+		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_2']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_2'] : '';
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status}",
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$obj = CreateObject('property.soworkorder');
+
+		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+
+		$portalbox->data = array();
+		foreach ($workorders as $workorder)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => "{$workorder['address']} :: {$workorder['title']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $workorder['workorder_id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN workorder 2 info -->'."\n".$portalbox->draw()."\n".'<!-- END workorder 2 info -->'."\n";
+
+		unset($obj);
+		unset($portalbox);
+		unset($default_status);
 	}
 
 	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals_request'])

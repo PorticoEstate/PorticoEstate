@@ -937,7 +937,7 @@
 								'deadline'			=> ''
 
 							);
-							$bcc = $coordinator_email;
+							$bcc = '';//$coordinator_email;
 							foreach ($values['mail_address'] as $_account_id => $_address)
 							{
 								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
@@ -995,7 +995,9 @@
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
-				if (isset($receipt['notice_owner']) AND is_array($receipt['notice_owner']) && $config->config_data['mailnotification'])
+				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
+				 && $config->config_data['mailnotification'] 
+				 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'] == 1)
 				{
 					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 					{
@@ -1054,6 +1056,12 @@
 				{
 					$values['end_date']=$project['end_date'];
 				}
+				else if( !$project['end_date'] && !$values['end_date'])
+				{
+					$values['end_date']=$project['end_date'];
+					$values['end_date'] = $GLOBALS['phpgw']->common->show_date(time(),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				}
+
 				if( $project['name'] && !isset($values['title']))
 				{
 					$values['title']=$project['name'];

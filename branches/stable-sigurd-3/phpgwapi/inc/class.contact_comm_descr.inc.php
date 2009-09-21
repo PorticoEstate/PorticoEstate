@@ -85,7 +85,7 @@
 			
 			foreach($element['value'] as $value)
 			{
-				$data[] = phpgwapi_sql_criteria::equal($field, sql::string($value));
+				$data[] = phpgwapi_sql_criteria::equal($field, phpgwapi_sql::string($value));
 			}
 
 			$criteria = phpgwapi_sql_criteria::append_or($data);
