@@ -190,6 +190,7 @@
 			$type = $params[0];
 			$permissions = $value['permissions'];
 			
+			
 			switch($type)
 			{
 				case 'notifications':
@@ -618,7 +619,7 @@
 		{
 			$notification_id = (int)phpgw::get_var('id');
 			
-			//TODO: should we check to see if the notification exist on the current users workbench? 
+			//TODO: should we check to see if the notification exists on the current users workbench? 
 			
 			rental_notification::dismiss_notification($notification_id,strtotime('now'));
 		}
@@ -637,7 +638,7 @@
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$contract = rental_contract::get($contract_id);
 
-			//TODO: should we check to see if the notification exist on the current users workbench? 
+			//TODO: should we check to see if the notification exists on the current users workbench? 
 						
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{

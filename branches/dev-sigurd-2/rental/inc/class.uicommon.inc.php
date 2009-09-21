@@ -32,6 +32,10 @@
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
 	
+	define('MANAGER','MANAGER');
+	define('EXECUTIVE_OFFICER','EXECUTIVE_OFFICER');
+	define('ADMINISTRATOR','ADMINISTRATOR');
+	
 	abstract class rental_uicommon
 	{
 		protected static $old_exception_handler;

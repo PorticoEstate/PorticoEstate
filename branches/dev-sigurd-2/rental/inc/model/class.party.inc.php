@@ -7,7 +7,7 @@
 phpgw::import_class('rental.bocommon');
 include_class('rental', 'contract', 'inc/model/');
 
-class rental_party
+class rental_party extends rental_model
 {
 	public static $so;
 
@@ -268,24 +268,6 @@ class rental_party
 	}
 
 	public function get_reskontro() { return $this->reskontro; }
-
-	/**
-	 * Store the object in the database. If the object has no id it is assumed to be new and
-	 * inserted for the first time. The object is then updated with the new insert id.
-	 */
-	public function store()
-	{
-		$so = self::get_so();
-		if ($this->id) {
-			// We can assume this object came from the database since it has an ID. Update the existing row.
-			$so->update($this);
-		}
-		else
-		{
-			// This object does not have an ID, so will be saved as a new DB row
-			$so->add($this);
-		}
-	}
 
 	/**
 	 * Creates a new party.

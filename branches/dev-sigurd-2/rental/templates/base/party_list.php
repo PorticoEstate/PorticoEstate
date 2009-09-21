@@ -2,6 +2,8 @@
 	include("common.php");
 ?>
 
+
+
 <script type="text/javascript">
 
 	YAHOO.util.Event.addListener(
@@ -14,6 +16,9 @@
     }
    );
 </script>
+
+<?php echo rental_uicommon::get_page_error($error) ?>
+<?php echo rental_uicommon::get_page_message($message) ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('parties') ?></h1>
 
