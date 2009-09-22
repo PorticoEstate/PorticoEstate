@@ -159,7 +159,8 @@ export LDFLAGS=-lstdc++ &&\
  --with-openssl\
  --enable-mbstring\
  --with-mcrypt\
- --enable-soap &&\
+ --enable-soap\
+ --with-xmlrpc &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
