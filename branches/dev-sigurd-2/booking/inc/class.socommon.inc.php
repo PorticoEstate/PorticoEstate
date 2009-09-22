@@ -314,8 +314,8 @@
 		 */
 		function read($params)
 		{
-			$start = isset($params['start']) && $params['start'] ? $params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? $params['results'] : null; //Passing null causes the system default to be used later on
+			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null; //Passing null causes the system default to be used later on
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
@@ -331,18 +331,27 @@
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 			
-			strtolower($results) === 'all' AND $results = $total_records;
+			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
 
 			$order = $sort ? "ORDER BY $sort $dir ": '';
-
-			$this->db->limit_query("SELECT $cols FROM $this->table_name $joins WHERE $condition $order", $start, __LINE__, __FILE__, $results);
+			
+			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
+			
+			if ($results) 
+			{
+				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
+			} else {
+				$offset = ($start > 0) ?  'OFFSET ' . $start . ' ' : ' ';
+				$this->db->query($base_sql.$offset, __LINE__, __FILE__);
+			}
+			
 			$results = array();
 			while ($this->db->next_record())
 			{
 				$row = array();
-				foreach($this->fields as $field => $fparams)
+				foreach($this->fields as $field => $params)
 				{
-                    $row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+					$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
 				}
 				$results[] = $row;
 			}
@@ -631,18 +640,23 @@
 				$v = trim($entity[$field]);
 				$empty = false;
 				
-				if(isset($params['manytomany']) && isset($params['manytomany']['column']) && isset($entity[$field]))
+				if(isset($params['manytomany']) && isset($params['manytomany']['column']))
 				{
-					$sub_entity_count = 0; 
-					foreach($entity[$field] as $sub_entity)
-					{
-						$this->_validate(
-							(array)$sub_entity, 
-							(array)$params['manytomany']['column'], 
-							$errors, 
-							sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", $sub_entity_count++)
-						);
+					$sub_entity_count = 0;
+					
+					if (isset($entity[$field]) && is_array($entity[$field]))	{
+						foreach($entity[$field] as $key => $sub_entity)
+						{
+							$this->_validate(
+								(array)$sub_entity, 
+								(array)$params['manytomany']['column'], 
+								$errors, 
+								sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
+							);
+							$sub_entity_count++;
+						}
 					}
+
 					if($params['required'] && $sub_entity_count == 0)
 					{
 						$errors[$field] = "Field $field is required";
