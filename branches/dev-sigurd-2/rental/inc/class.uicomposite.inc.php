@@ -25,110 +25,46 @@
 
 			self::set_active_menu('rental::composites');
 		}
-
+		
 		/**
-		 * Shows a list of composites
+		 * (non-PHPdoc)
+		 * @see rental/inc/rental_uicommon#query()
 		 */
-		public function index()
-		{
-			if(!$this->hasReadPermission())
-			{
-				$this->render('permission_denied.php');
-				return;
-			}
-			$this->render('composite_list.php');
-
-		}
-
-		//View rental composite
-		public function view() {
-		if(!self::hasReadPermission())
-			{
-				$this->render('permission_denied.php');
-				return;
-			}
-			$composite_id = (int)phpgw::get_var('id');
-			return $this -> viewedit(false, $composite_id);
-		}
-
-		//Edit rental composite
-		public function edit(){
-		if(!$this->hasWritePermission())
-			{
-				$this->render('permission_denied.php');
-				return;
-			}
-			$composite_id = (int)phpgw::get_var('id');
-			if(isset($_POST['save_composite']))
-			{
-				$composite = new rental_composite($composite_id);
-				$composite->set_name(phpgw::get_var('name'));
-				$composite->set_custom_address_1(phpgw::get_var('address_1'));
-				$composite->set_has_custom_address($composite->get_custom_address_1() != null && $composite->get_custom_address_1() != '' ? true : false);
-				// XXX: Why do we have to use these functionand not the set_custom_*() ones? Does the SO layer use the incorrect functions?
-				$composite->set_custom_house_number(phpgw::get_var('house_number'));
-				$composite->set_custom_address_2(phpgw::get_var('address_2'));
-				$composite->set_custom_postcode(phpgw::get_var('postcode'));
-				$composite->set_custom_place(phpgw::get_var('place'));
-				$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
-				$composite->set_description(phpgw::get_var('description'));
-				$composite->store();
-				// XXX: How to get error msgs back to user?
-			}
-			return $this -> viewedit(true, $composite_id);
-		}
-
-		//Create new rental composite
-		public function add()
-		{
-		if(!$this->hasWritePermission())
-			{
-				$this->render('permission_denied.php');
-				return;
-			}
-			$composite = new rental_composite();
-			$composite->set_name(phpgw::get_var('rental_composite_name'));
-			$receipt = rental_composite::add($composite);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $receipt['id'], 'message' => lang('messages_new_composite')));
-		}
-
 		public function query()
 		{
-			if(!$this->hasReadPermission())
+			// Create an empty result set
+			$query_result = array();
+			
+			//Retrieve a contract identifier and load corresponding contract
+			$contract_id = phpgw::get_var('contract_id');
+			if(isset($contract_id))
 			{
-				$this->render('permission_denied.php');
-				return;
+				$contract = rental_contract::get($contract_id);
 			}
+			
+			//Retrieve the type of query and perform type specific logic
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
-				case 'available_composites':
-					$rows = array();
-					$composites = rental_composite::get_all(
+				case 'available_composites': // ... get all vacant composites
+					$query_result = rental_composite::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
 						phpgw::get_var('dir'),
 						phpgw::get_var('query'),
 						phpgw::get_var('search_option'),
-						array( 'is_vacant' => 'vacant'));
-					foreach ($composites as $composite) {
-						$rows[] = $composite->serialize();
-					}
-					$composite_data = array('results' => $rows, 'total_records' => count($rows));
+						array( 'is_vacant' => 'vacant')
+					);
 					break;
-				case 'included_composites':
-					$contract_id = phpgw::get_var('contract_id');
-					$contract = rental_contract::get($contract_id);
-					$composites = $contract->get_composites();
-					$rows = array();
-					foreach ($composites as $composite) {
-						$rows[] = $composite->serialize();
+				case 'included_composites': // ... get all composites in contract
+					if(isset($contract))
+					{
+						$query_result = $contract->get_composites();
 					}
-					$composite_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
-				case 'not_included_composites':
-					$composites = rental_composite::get_all(
+				case 'not_included_composites': // ... get all vacant and active composites not in contract
+					$query_result = rental_composite::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -141,107 +77,100 @@
 							'contract_id' => phpgw::get_var('contract_id')
 						)
 					);
-					$rows = array();
-					foreach ($composites as $composite) {
-						$rows[] = $composite->serialize();
-					}
-					$composite_data = array('results' => $rows, 'total_records' => count($rows));
 					break;
 				case 'details':
-					$composite_data = rental_composite::get(phpgw::get_var('id'))->serialize();
+					$query_result[] = $composite; 
 					break;
 				case 'included_areas':
-					$composite = rental_composite::get(phpgw::get_var('id'));
-					$rental_units = $composite->get_units(phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'));
-					$composite_data = array();
-					$composite_data['total_records'] = count($rental_units);
-					$composite_data['results'] = array();
-					foreach ($rental_units as $unit) {
-						$composite_data['results'][] = $unit->serialize();
-					}
+					$query_result = $composite->get_units(
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'), 
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results')
+					);
 					break;
 				case 'available_areas':
-					$composite_data = array();
-					$composite_data['total_records'] = count(rental_property_location::get_locations((int)phpgw::get_var('level'), phpgw::get_var('available_date_hidden'), phpgw::get_var('id'), 0, 10000));
-					$composite_data['results'] = array();
-					$unit_array = rental_property_location::get_locations((int)phpgw::get_var('level'), phpgw::get_var('id'), phpgw::get_var('available_date_hidden'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('sort'), phpgw::get_var('dir') == ' desc' ? false : true);
-					foreach($unit_array as $unit)
-					{
-						$composite_data['results'][] = $unit->serialize();
-					}
+					$query_result  = rental_property_location::get_locations(
+						(int)phpgw::get_var('level'), 
+						phpgw::get_var('id'),
+						phpgw::get_var('available_date_hidden'), 
+						phpgw::get_var('startIndex'), 
+						phpgw::get_var('results'), 
+						phpgw::get_var('sort'), 
+						phpgw::get_var('dir') == ' desc' ? false : true
+					);
 					break;
 				case 'contracts':
-					$contracts = rental_contract::get_contracts_for_composite(phpgw::get_var('id'), phpgw::get_var('sort'), phpgw::get_var('dir'), phpgw::get_var('startIndex'), phpgw::get_var('results'), phpgw::get_var('contract_status'), phpgw::get_var('contract_date'));
-					$composite_data = array();
-					$composite_data['total_records'] = count($contracts);
-					$composite_data['results'] = array();
-
-					foreach ($contracts as $contract) {
-						$composite_data['results'][] = array(
-							'id' => $contract->get_id(),
-							'date_start' => $contract->get_contract_date()->get_start_date(),
-							'date_end' => $contract->get_contract_date()->get_end_date(),
-							'billing_start_date' => $contract->get_billing_start_date(),
-							'location_id' => $contract->get_location_id(),
-							'term_id' => $contract->get_term_id()
-						);
-					}
+					$query_result = rental_contract::get_contracts_for_composite(
+						phpgw::get_var('id'), 
+						phpgw::get_var('sort'), 
+						phpgw::get_var('dir'), 
+						phpgw::get_var('startIndex'), 
+						phpgw::get_var('results'), 
+						phpgw::get_var('contract_status'), 
+						phpgw::get_var('contract_date')
+					);
 					break;
 				case 'orphan_units':
-					$composite_data = array();
-					$units = rental_unit::get_orphan_rental_units(phpgw::get_var('startIndex'), phpgw::get_var('results'));
-					$composite_data['total_records'] = rental_unit::get_orphan_rental_unit_count();
-					$composite_data['results'] = array();
-
-					foreach($units as $unit)
-					{
-						$data = &$composite_data['results'][];
-						$data['location_code'] = $unit->get_location_code();
-						$data['location_id'] = $unit->get_location_id();
-						$data['loc1'] = $unit->get_location_code_property();
-						$data['address'] = $unit->get_address();
-						$data['area_net'] = $unit->get_area_net();
-						$data['area_gros'] = $unit->get_area_gros();
-						$data['loc1_name'] = $unit->get_property_name();
-
-						if($unit instanceof rental_building)
-						{
-							$data['loc2_name'] = $unit->get_building_name();
-						}
-						if($unit instanceof rental_floor)
-						{
-							$data['loc3_name'] = $unit->get_floor_name();
-						}
-						if($unit instanceof rental_section)
-						{
-							$data['loc4_name'] = $unit->get_section_name();
-						}
-						if($unit instanceof rental_room)
-						{
-							$data['loc5_name'] = $unit->get_room_name();
-						}
-					}
+					$query_result = rental_unit::get_orphan_rental_units(
+						phpgw::get_var('startIndex'), 
+						phpgw::get_var('results')
+					);
 					break;
 				case 'all_composites':
 				default:
-					$rows = array();
-					$composites = rental_composite::get_all(phpgw::get_var('startIndex'),phpgw::get_var('results'),phpgw::get_var('sort'),phpgw::get_var('dir'),phpgw::get_var('query'),phpgw::get_var('search_option'),array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy')));
-					foreach ($composites as $composite) {
-						$rows[] = $composite->serialize();
-					}
-					$composite_data = array('results' => $rows, 'total_records' => count($rows));
+					$query_result = rental_composite::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array(
+							'is_active' => phpgw::get_var('is_active'), 
+							'is_vacant' => phpgw::get_var('occupancy')
+						)
+					);
 					break;
 
 			}
 
+			//Create an empty row set
+			$rows = array();
+			foreach($query_result as $result) {
+				if(isset($result))
+				{
+					if($result->has_permission(PHPGW_ACL_READ))
+					{
+						// ... add a serialized result
+						$rows[] = $result->serialize();
+					}
+				}
+			}
+			
+			//var_dump($rows);
+			
+			// ... add result data
+			$result_data = array('results' => $rows, 'total_records' => count($rows));
+			
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			//Add action column to each row in result table
-			array_walk($composite_data['results'], array($this, 'add_actions'), array(phpgw::get_var('id'),$type,$editable));
+			array_walk(
+				$result_data['results'],
+				array($this, 'add_actions'), 
+				array(													// Parameters (non-object pointers)
+					$contract_id,										// [1] The contract id
+					$type,												// [2] The type of query
+					$editable,											// [3] Editable flag
+					$this->type_of_user,								// [4] User role			
+					isset($contract) ? $contract->serialize() : null,	// [5] Serialized contract
+				)
+			);
 
-			return $this->yui_results($composite_data, 'total_records', 'results');
+			return $this->yui_results($result_data, 'total_records', 'results');
 		}
-
+		
 		/**
 		 * Add action links and labels for the context menu of the list items
 		 *
@@ -251,22 +180,35 @@
 		 */
 		public function add_actions(&$value, $key, $params)
 		{
-
+			//Defining new columns
+			$value['ajax'] = array();
 			$value['actions'] = array();
 			$value['labels'] = array();
 
+			// Get parameters
+			$contract_id = $params[0];
+			$type = $params[1];
 			$editable = $params[2];
+			$user_is = $params[3];
+			$serialized_contract= $params[4];
 
-			switch($params[1])
+			// Get permissions on contract
+			if(isset($serialized_contract))
+			{
+				$permissions = $serialized_contract['permissions'];
+			}
+			
+			// Depending on the type of query: set an ajax flag and define the action and label for each row
+			switch($type)
 			{
 				case 'included_composites':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission() && $editable == true)
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
 						$value['labels'][] = lang('remove');
 					}
 					break;
@@ -274,26 +216,26 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission() && $editable == true)
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => phpgw::get_var('contract_id'))));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
 						$value['labels'][] = lang('add');
 					}
 					break;
 				case 'included_areas':
 					$value['ajax'][] = true;
-					if($this->hasWritePermission() && $editable == true)
+					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $params[0], 'location_id' => $value['location_id'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $contract_id, 'location_id' => $value['location_id'])));
 						$value['labels'][] = lang('remove');
 					}
 					break;
 				case 'available_areas':
 					$value['ajax'][] = true;
-					if($this->hasWritePermission() && $editable == true)
+					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
 					{
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $params[0], 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $contract_id, 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
 						$value['labels'][] = lang('add');
 					}
 					break;
@@ -302,9 +244,9 @@
 					break;
 				case 'contracts':
 					$value['ajax'][] = false;
-					$value['actions']['view_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($this->hasWritePermission() && $editable == true)
+					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
 					{
 						$value['ajax'][] = false;
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
@@ -316,7 +258,7 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
 
-					if($this->hasWritePermission())
+					if($user_is[EXECUTIVE_OFFICER])
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
@@ -324,70 +266,179 @@
 					}
 			}
 		}
+		
 
 		/**
-		 * View or edit rental composite
-		 *
-		 * @param $editable true renders fields editable, false renders fields disabled
-		 * @param $composite_id	the rental composite id
+		 * Shows a list of composites
 		 */
-		protected function viewedit($editable, $composite_id)
+		public function index()
 		{
-			if ($composite_id > 0) {
+			$this->render('composite_list.php');
+
+		}
+		
+		/**
+	 	* Public method. Forwards the user to edit mode.
+	 	*/
+		public function add()
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit'));
+		}
+
+		/**
+		 * Public method. Called when a user wants to view information about a composite.
+		 * @param HTTP::id	the composite ID
+		 */
+		public function view() {
+		
+			//Retrieve the composite object
+			$composite_id = (int)phpgw::get_var('id');
+			if(isset($composite_id) && $composite_id > 0)
+			{
 				$composite = rental_composite::get($composite_id);
-				$data = array
+			}
+			else
+			{
+				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+				return;
+			}
+			
+			if(isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
+			{
+				return $this->render(
+					'composite.php', 
+					array (
+						'composite' 	=> $composite,
+						'editable' => false,
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
+					)
+				);	
+			}
+			else
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_view_composite')));
+			}
+			
+		}
+
+		/**
+		 * Public method. Called when user wants to edit a composite.
+		 * @param HTTP::id	the composite ID
+		 */
+		public function edit(){
+			// Get the composite ID
+			$composite_id = (int)phpgw::get_var('id');
+			
+			// Retrieve the party object or create a new one if correct permissions
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				if(isset($composite_id) && $composite_id > 0)
+				{
+					$composite = rental_composite::get($composite_id); 
+				}
+				else
+				{
+					$composite = new rental_composite();
+				}
+			}
+			else
+			{
+				$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+			}
+			
+			if(isset($_POST['save_composite'])) // The user has pressed the save button
+			{
+				if(isset($composite))
+				{
+					$composite->set_name(phpgw::get_var('name'));
+					$composite->set_custom_address_1(phpgw::get_var('address_1'));
+					$composite->set_has_custom_address($composite->get_custom_address_1() != null && $composite->get_custom_address_1() != '' ? true : false);
+					$composite->set_custom_house_number(phpgw::get_var('house_number'));
+					$composite->set_custom_address_2(phpgw::get_var('address_2'));
+					$composite->set_custom_postcode(phpgw::get_var('postcode'));
+					$composite->set_custom_place(phpgw::get_var('place'));
+					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+					$composite->set_description(phpgw::get_var('description'));
+					
+					if($composite->store())
+					{
+						$message = lang('messages_saved_form');
+					}
+					else
+					{
+						$error = lang('messages_form_error');
+					}
+				}
+			}
+			return $this->render('composite.php', array
 				(
 					'composite' 	=> $composite,
-					'editable' => $editable,
-					'message' => phpgw::get_var('message'),
-					'error' =>  phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
-				);
-				$this->render('composite.php', $data);
-			}
+					'editable' => true,
+					'message' => isset($message) ? $message : phpgw::get_var('message'),
+					'error' => isset($error) ? $error : phpgw::get_var('error'),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index')),
+				)	
+			);
+			
 		}
 
-		//Add a unit to a rental composite
+
+		/**
+		 * Public method. Called when user wants to add a unit to a composite
+		 * @param HTTP::id	the composite ID
+		 * @param HTTP::location_id
+		 * @param HTTP::loc1
+		 */
 		function add_unit()
 		{
-			if(!$this->hasWritePermission())
+			if(!$this->isExecutiveOfficer())
 			{
-				$this->render('permission_denied.php');
+				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
 			$composite_id = (int)phpgw::get_var('id');
-			$composite = rental_composite::get($composite_id);
+			if(isset($composite_id) && $composite_id > 0)
+			{
+				$composite = rental_composite::get($composite_id);
 
-			if (($composite) != null) {
-				$location_id = (int)phpgw::get_var('location_id');
-				$loc1 = (int)phpgw::get_var('loc1');
-				$composite->add_new_unit(new rental_property($loc1, $location_id));
-				$composite->store();
+				if (isset($composite)) {
+					$location_id = (int)phpgw::get_var('location_id');
+					$loc1 = (int)phpgw::get_var('loc1');
+					$composite->add_new_unit(new rental_property($loc1, $location_id));
+					//$composite->store();
+				}
 			}
+			
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
 		}
 
-		//Remove a unit from a rental composite
+		/**
+		 * Public method. Called when user wants to remove a unit to a composite
+		 * @param HTTP::id	the composite ID
+		 * @param HTTP::location_id
+		 */
 		function remove_unit()
 		{
-			if(!$this->hasWritePermission())
+			if(!$this->isExecutiveOfficer())
 			{
-				$this->render('permission_denied.php');
+				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
 			$composite_id = (int)phpgw::get_var('id');
-			$composite = rental_composite::get($composite_id);
+			if(isset($composite_id) && $composite_id > 0)
+			{
+				$composite = rental_composite::get($composite_id);
 
-			$location_id = (int)phpgw::get_var('location_id');
+				$location_id = (int)phpgw::get_var('location_id');
 
-			if ($composite != null) {
-				$composite->remove_unit(new rental_property(null, $location_id));
-				$composite->store();
+				if (isset($composite)) {
+					$composite->remove_unit(new rental_property(null, $location_id));
+					//$composite->store();
+				}
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
-
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
 		}
 
 		/**
@@ -396,9 +447,9 @@
 		 */
 		public function orphan_units()
 		{
-			if(!$this->hasReadPermission())
+			if(!$this->isExecutiveOfficer())
 			{
-				$this->render('permission_denied.php');
+				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
 

@@ -46,7 +46,9 @@
 		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 		
 		public $dateFormat;
-			
+		
+		public $type_of_user;
+		
 		public function __construct()
 		{
 			self::set_active_menu('rental');
@@ -73,6 +75,12 @@
 			
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
+			
+			$this->type_of_user = array(
+				MANAGER => $this->isManager(),
+				EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
+				ADMINISTRATOR => $this->isAdministrator()
+			);
 		}
 		
 		/**

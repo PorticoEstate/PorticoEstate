@@ -27,8 +27,6 @@ class rental_uiparty extends rental_uicommon
 	 */
 	public function query()
 	{
-		
-
 		//Create an empty result set
 		$parties = array();
 		
@@ -96,12 +94,6 @@ class rental_uiparty extends rental_uicommon
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
-		$type_of_user = array(
-			MANAGER => $this->isManager(),
-			EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
-			ADMINISTRATOR => $this->isAdministrator()
-		);
-			
 		array_walk(
 			$party_data['results'], 
 			array($this, 'add_actions'), 
@@ -110,7 +102,7 @@ class rental_uiparty extends rental_uicommon
 				$type,												// [2] The type of query
 				isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
 				$editable,											// [4] Editable flag
-				$type_of_user										// [5] User role			
+				$this->type_of_user									// [5] User role			
 			)
 		);
 		
@@ -127,13 +119,14 @@ class rental_uiparty extends rental_uicommon
 	 */
 	public function add_actions(&$value, $key, $params)
 	{
+		$value['ajax'] = array();
 		$value['actions'] = array();
 		$value['labels'] = array();
 
 		// Get parameters
 		$contract_id = $params[0];
-		$serialized_contract= $params[2];
 		$type = $params[1];
+		$serialized_contract= $params[2];
 		$editable = $params[3];
 		$user_is = $params[4];
 		
@@ -187,7 +180,6 @@ class rental_uiparty extends rental_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 				}
-					
 				break;
 		}
 	}
@@ -266,7 +258,7 @@ class rental_uiparty extends rental_uicommon
 		}
 		else
 		{
-			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit_party')));
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 		}
 
 		if(isset($_POST['save_party'])) // The user has pressed the save button
@@ -310,7 +302,7 @@ class rental_uiparty extends rental_uicommon
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error'),
 				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
-			)
+			)	
 		);
 	}
 
