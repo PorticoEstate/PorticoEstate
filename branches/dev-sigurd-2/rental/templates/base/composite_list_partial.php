@@ -50,7 +50,6 @@
 	);
 
     function doExport() {
-        // TODO: Add support for status date
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
 

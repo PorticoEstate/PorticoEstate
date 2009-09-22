@@ -482,25 +482,5 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}
-
-
-        public function download()
-        {
-            $list = $this->query();
-            $list = $list[ResultSet][Result];
-
-            $keys = array();
-            foreach($list[0] as $key => $value) {
-                if(!is_array($value)) {
-                    array_push($keys, $key);
-                }
-            }
-
-            // Use keys as headings
-            $headings = $keys;
-
-            $property_common = CreateObject('property.bocommon');
-            $property_common->download($list, $keys, $headings);
-        }
 	}
 ?>
