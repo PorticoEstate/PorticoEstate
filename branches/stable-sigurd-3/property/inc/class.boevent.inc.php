@@ -321,7 +321,15 @@
 
 			if($data['enabled'] && !$this->so->check_event_exception($id,$data['time']))
 			{
-				$message = execMethod($data['action'], $data);
+				list($module, $classname) = explode('.', $data['action'], 2);
+				if ( is_file(PHPGW_INCLUDE_ROOT . "/{$module}/class.{$classname}.inc.php") )
+				{
+					$message = execMethod($data['action'], $data);
+				}
+				else
+				{
+					$message = "No such file: {$module}/class.{$classname}.inc.php";
+				}
 
 				$this->so->cron_log(array
 					(
