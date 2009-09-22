@@ -120,11 +120,14 @@
 					$allocation['active'] = '1';
 					$allocation['from_'] = $date->format("Y-m-d").' '.$talloc['from_'];
 					$allocation['to_'] = $date->format("Y-m-d").' '.$talloc['to_'];
+					$allocation['completed'] = 1;
 					$errors = $this->bo_allocation->validate($allocation);
 					if(!$errors)
 						$valid[] = $allocation;
-					else
+					elseif (count($this->bo_allocation->filter_conflict_errors($errors)) === 0)
 						$invalid[] = $allocation;
+					else
+						throw new UnexpectedValueException('Encountered an unexpected validation error');
 				}
 				if($date->format('Y-m-d') == $to->format('Y-m-d'))
 				{

@@ -96,6 +96,11 @@
 		{
 			if (!self::$old_exception_handler) {
 				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+				if (!self::$old_exception_handler) {
+					//The exception handler of phpgw has probably not been activated, 
+					//so taking that as a hint to not enable any of our own either.
+					restore_exception_handler();
+				}
 			}
 		}
 		
@@ -107,7 +112,9 @@
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else {
-				call_user_func(self::$old_exception_handler, $e);
+				if (self::$old_exception_handler) {
+					call_user_func(self::$old_exception_handler, $e);
+				}
 			}
 		}
 		
