@@ -58,7 +58,7 @@
 		protected function build_default_read_params()
 		{
 			$start = phpgw::get_var('startIndex', 'int', array('GET','POST'), 0);
-			$results = phpgw::get_var('results', 'int', array('GET','POST'), null);
+			$results = phpgw::get_var('results', 'int', array('GET','POST'), 10);
 			$query = phpgw::get_var('query');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
