@@ -414,6 +414,9 @@
 			}
 		}
 
+        /**
+		 * Download xls, csv or similar file representation of a data table
+		 */
         public function download()
         {
             $list = $this->query();
