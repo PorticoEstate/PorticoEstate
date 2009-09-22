@@ -20,7 +20,7 @@
 
 
 <?php
-if($this->hasWritePermission())
+if($this->isExecutiveOfficer())
 {
 ?>
 <fieldset>

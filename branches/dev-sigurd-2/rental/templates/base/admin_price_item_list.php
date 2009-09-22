@@ -8,7 +8,7 @@
 
 <form action="#" method="GET">
 	<?php
-	if($this->hasWritePermission())
+	if($this->type_of_user[ADMINISTRATOR])
 	{
 	?>
 	<fieldset>
@@ -23,8 +23,8 @@
 	?>
 </form>
 
-<div id="paginator" class="paginator"></div>
-<div id="datatable-container" class="datatable_container"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
+<div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
 
 <script type="text/javascript">
 	YAHOO.util.Event.addListener(
@@ -75,19 +75,34 @@
 			formatter: formatPrice
 		},
 		{
+			key: "actions",
+			hidden: true
+		},
+		{
 			key: "labels",
 			hidden: true
-		}];
+		},
+		{
+			key: "ajax",
+			hidden: true
+		}
+		];
 
 	// Initiating the data source
 	setDataSource(
 		'index.php?menuaction=rental.uiprice_item.query&amp;phpgw_return_as=json',
 		columnDefs,
-		'list_form',
+		'<?php echo $list_id ?>_list_form',
 		[],
-		'datatable-container',
-		1,
-		['<?php echo lang('show') ?>','<?php echo lang('edit') ?>'],
-		['view','edit']
+		'<?php echo $list_id ?>_container',
+		'<?php echo $list_id ?>_paginator',
+		'<?php echo $list_id ?>',
+		new Array(<?php
+			if(isset($related)){
+				foreach($related as $r){
+					echo "\"".$r."\"";
+				}
+			}
+		?>)
 	);
 </script>
