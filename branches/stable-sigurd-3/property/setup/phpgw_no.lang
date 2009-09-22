@@ -201,7 +201,7 @@ back to entity	property	no	Returner til entitet
 back to investment list	property	no	Tilbake til liste over investeringer
 back to list	property	no	Tilbake til liste
 back to the list	property	no	Tilbake til liste
-back to the ticket list	property	no	Tilbake til meldings liste
+back to the ticket list	property	no	Tilbake til meldings liste uten å lagre
 back to the workorder list	property	no	Tilbake til arbeidsordre liste
 base	property	no	Grunnlag
 base description	property	no	Beskrivelse av grunnlag
@@ -1256,7 +1256,7 @@ save the request	property	no	lagre anmodning
 save the service agreement and return back to the list	property	no	Lagre serviceavtale og returner til oversikten
 save the standard	property	no	lagre standard
 save the status	property	no	Lagre status
-save the ticket	property	no	lagre melding
+save the ticket	property	no	Lagre melding og bli stående i skjema
 save the voucher	property	no	lagre bilag
 save the workorder	property	no	lagre arbeidsordre
 save this workorder as a template for later use	property	no	lagre denne arbeidsordren som mal for senere bruk
