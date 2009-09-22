@@ -23,12 +23,12 @@
           <input id="search" type="text" name="searchterm" value="{search/searchterm}"/>
         </xsl:when>
         <xsl:otherwise>
-          <input id="search" type="text" name="searchterm" value="Sök hall, klubb eller aktivitet" onclick="value=''" />
+          <input id="search" type="text" name="searchterm" value="Søk hall, klubb eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
-        T.ex "<i>Haukelandshallen, Håndball</i>" eller "<i>Årstad Håndball</i>".
+        F.eks. "<i>Haukelandshallen, Håndball</i>" eller "<i>Årstad Håndball</i>".
       </div>
     </form>
 	

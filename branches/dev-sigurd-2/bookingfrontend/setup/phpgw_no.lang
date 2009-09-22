@@ -24,9 +24,9 @@ admins	bookingfrontend	no	Bookingansvarliga
 age group	bookingfrontend	no	Aldersgruppe
 agegroup	bookingfrontend	no	Aldersgruppe
 allocation	bookingfrontend	no	Tildeling
-allocations	bookingfrontend	no	Tildelingar
+allocations	bookingfrontend	no	Tildelinger
 allocations colliding with existing bookings or allocations (%1)	bookingfrontend	no	Dobbel-booking som IKKE lagres
-allocations that can be created (%1)	bookingfrontend	no	Tildelingar som kan lages
+allocations that can be created (%1)	bookingfrontend	no	Tildelinger som kan lages
 application	bookingfrontend	no	Søknad
 applications	bookingfrontend	no	Søknader
 apr	bookingfrontend	no	april
@@ -57,6 +57,7 @@ click to sort descending	bookingfrontend	no	Klikk for å sortere synkende
 contact	bookingfrontend	no	Kontakt
 contact 1	bookingfrontend	no	Kontakt 1
 contact 2	bookingfrontend	no	Kontakt 2
+contact person	bookingfrontend	no	Kontaktperson
 contact information	bookingfrontend	no	Kontaktinformasjon 
 cost	bookingfrontend	no	Pris
 create	bookingfrontend	no	Lagre
@@ -67,6 +68,7 @@ dec	bookingfrontend	no	desember
 description	bookingfrontend	no	Beskrivelse
 district	bookingfrontend	no	Bydel
 document	bookingfrontend	no	Dokument
+documents	bookingfrontend	no	Dokumenter
 document name	bookingfrontend	no	Dokumentnavn
 drawing	bookingfrontend	no	Tegning
 edit	bookingfrontend	no	Rediger
@@ -103,6 +105,7 @@ jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
 last modified	bookingfrontend	no	Sist endret
 joading...	bookingfrontend	no	Laster...
+location	booking	no	Lokale
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai
@@ -145,6 +148,7 @@ officer	bookingfrontend	no	Saksbehandler
 organization	bookingfrontend	no	Organisasjon
 organization number	bookingfrontend	no	Organisasjonnummer
 organizations	bookingfrontend	no	Organisasjoner
+organization index	bookingfrontend	no	Organisasjonsoversikt
 other	bookingfrontend	no	Annet
 parent activity	bookingfrontend	no	Overordnet kategori
 parent id	bookingfrontend	no	Overordnet id
@@ -154,7 +158,7 @@ picture	bookingfrontend	no	Bilde
 planning	bookingfrontend	no	Planlegging
 prev	bookingfrontend	no	Forrige
 preview	bookingfrontend	no	Forhåndsvisning
-previous week	bookingfrontend	no	Forige uke
+previous week	bookingfrontend	no	Forrige uke
 price list	bookingfrontend	no	Prisliste
 primary admin	bookingfrontend	no	Kontaktperson 1
 primary contact	bookingfrontend	no	Kontaktperson 1
@@ -175,6 +179,7 @@ season name	bookingfrontend	no	Sesong
 seasons	bookingfrontend	no	Sesonger
 secondary admin	bookingfrontend	no	Kontaktperson 2
 select a building first	bookingfrontend	no	Velg bygg/anlegg først
+select a grooup	bookingfrontend	no	Velg en Gruppe
 select category...	bookingfrontend	no	Velg en kategori...
 select role...	bookingfrontend	no	Velg rolle...
 sep	bookingfrontend	no	september
@@ -187,7 +192,7 @@ status	bookingfrontend	no	Status
 street	bookingfrontend	no	Gate
 su	bookingfrontend	no	sø
 submit	bookingfrontend	no	Lagre
-successfully created (%1) allocations:	bookingfrontend	no	(%1) tildelingar lagret
+successfully created (%1) allocations:	bookingfrontend	no	(%1) tildelinger lagret
 surname	bookingfrontend	no	Etternavn
 target audience	bookingfrontend	no	Målgruppe
 telephone	bookingfrontend	no	Telefon
