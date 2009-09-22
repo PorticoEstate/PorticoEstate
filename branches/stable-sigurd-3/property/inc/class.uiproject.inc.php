@@ -1621,7 +1621,7 @@
 				$level = count($location);
 				for ($i = 1; $i < $level+1; $i++)
 				{
-					$values['location']["loc$i"] = $location[$i];
+					$values['location']["loc$i"] = $location[($i-1)];
 				}
 
 				$values['street_name'] = $values['location_data']['street_name'];
