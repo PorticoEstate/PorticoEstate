@@ -17,41 +17,51 @@
 		// Extract agegroup info from _POST into $data
 		public function extract_form_data(&$data)
 		{
-			foreach($_POST['male'] as $group_id => $num)
-			{
-				$found = false;
-				foreach($data['agegroups'] as &$group)
+			$one_group_value_found = false;
+			$groups_by_ref = array();
+			
+			$sexes = array('male' => 'female', 'female' => 'male');
+			
+			foreach($sexes as $current_sex => $opposite_sex) {
+				foreach($_POST[$current_sex] as $group_id => $num)
 				{
-					if($group['agegroup_id'] == $group_id)
+					$found = false;
+					$num = (int)$num;
+					$num = $num > 0 ? $num : null;
+					
+					if ($num && $num > 0) {
+						$one_group_value_found = true;
+					}
+					
+					foreach($data['agegroups'] as &$group)
 					{
-						$group['male'] = $num;
-						$found = true;
-						break;
+						if($group['agegroup_id'] == $group_id)
+						{
+							$found = true;
+							$group[$current_sex] = $num;
+							$groups_by_ref[$group_id] = &$group;
+							break;
+						}
+					}
+						
+					if(!$found)
+					{
+						$data['agegroups'][] = array('agegroup_id' => $group_id, $current_sex => $num, $opposite_sex => null); 
+						$groups_by_ref[$group_id] = &$data['agegroups'][count($data['agegroups'])-1];
 					}
 				}
-				if(!$found)
-				{
-					$data['agegroups'][] = array('agegroup_id' => $group_id, 'male' => $num, 'female' => 0);
-				}
 			}
-			foreach($_POST['female'] as $group_id => $num)
-			{
-				$found = false;
-				foreach($data['agegroups'] as &$group)
-				{
-					if($group['agegroup_id'] == $group_id)
-					{
-						$group['female'] = $num;
-						$found = true;
-						break;
+			
+			if (!$one_group_value_found) { return $data; }
+			
+			foreach($groups_by_ref as &$group) {
+				foreach($sexes as $current_sex) {
+					if (!$group[$current_sex]) {
+						$group[$current_sex] = 0;
 					}
 				}
-				if(!$found)
-				{
-					$data['agegroups'][] = array('agegroup_id' => $group_id, 'female' => $num, 'male' => 0);
-				}
 			}
+
+			return $data;
 		}
-
-
 	}

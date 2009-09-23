@@ -122,12 +122,6 @@
 			}
 			$this->flash_form_errors($errors);
 			$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.index',));
-			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
-			self::add_javascript('yahoo', 'yahoo/yahoo-dom-event', 'yahoo-dom-event.js');
-			self::add_javascript('yahoo', 'yahoo/element', 'element-min.js');
-			self::add_javascript('yahoo', 'yahoo/dom', 'dom-min.js');
-			self::add_javascript('yahoo', 'yahoo/container', 'container_core-min.js');
-			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 

@@ -9,14 +9,15 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	function extract_values($array, $keys)
+	function extract_values($array, $keys, $options = array())
 	{
+		$options = array_merge(array('prefix' => '', 'suffix' => ''), $options);
 		$result = array();
-		foreach($keys as $key)
+		foreach($keys as $write_key)
 		{
-			if(in_array($key, array_keys($array)))
-			{
-				$result[$key] = $array[$key];
+			$array_key = $options['prefix'].$write_key.$options['suffix'];
+			if(isset($array[$array_key])) {
+				$result[$write_key] = $array[$array_key];
 			}
 		}
 		return $result;
@@ -95,6 +96,11 @@
 		{
 			if (!self::$old_exception_handler) {
 				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
+				if (!self::$old_exception_handler) {
+					//The exception handler of phpgw has probably not been activated, 
+					//so taking that as a hint to not enable any of our own either.
+					restore_exception_handler();
+				}
 			}
 		}
 		
@@ -106,7 +112,9 @@
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else {
-				call_user_func(self::$old_exception_handler, $e);
+				if (self::$old_exception_handler) {
+					call_user_func(self::$old_exception_handler, $e);
+				}
 			}
 		}
 		

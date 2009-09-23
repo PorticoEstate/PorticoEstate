@@ -19,7 +19,7 @@
 			self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boasync_settings');
 			
-			self::set_active_menu('booking::async_settings');
+			self::set_active_menu('booking::settings::async_settings');
 		}
 		
 		public function index() {

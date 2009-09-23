@@ -28,11 +28,16 @@
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "organization"));
-			$bouser = CreateObject('bookingfrontend.bouser');
 			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
+
+			// BEGIN EVIL HACK
+			$auth_forward .= '&orgnr='.$organization['organization_number'];
+			// END EVIL HACK
+
+			$bouser = CreateObject('bookingfrontend.bouser');
 			$organization['login_link'] = 'login.php'.$auth_forward;
 			$organization['logoff_link'] = 'logoff.php'.$auth_forward;
-			if ($bouser->is_organization_admin()) $organization['logged_on'] = true;
+			if ($bouser->is_organization_admin($organization['id'])) $organization['logged_on'] = true;
 			self::render_template('organization', array('organization' => $organization));
 		}
 	}

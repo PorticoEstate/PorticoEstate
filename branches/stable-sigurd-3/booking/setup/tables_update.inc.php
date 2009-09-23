@@ -1462,9 +1462,9 @@
 					'from_' => array('type' => 'timestamp', 'nullable' => false),
 					'to_' => array('type' => 'timestamp', 'nullable' => false),
 					'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
-					'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
-					'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
-					'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
+					'customer_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+					'customer_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+					'customer_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
 					'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				),
 				'pk' => array('id'),
@@ -1566,6 +1566,205 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.62';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.62';
+	function booking_upgrade0_1_62()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'bb_completed_reservation_export', array(
+					'fd' => array(
+						'id' 						=> array('type' => 'auto', 'nullable' => False),
+						'season_id' 			=> array('type' => 'int', 'precision' => '4'),
+						'building_id' 			=> array('type' => 'int', 'precision' => '4'),
+						'from_' => array('type' => 'timestamp', 'nullable' => True), /*Should be automatically filled in sometimes*/
+						'to_' => array('type' => 'timestamp', 'nullable' => True),
+						'created_on' => array('type' => 'timestamp', 'nullable' => False),
+						'filename' => array('type' => 'text', 'nullable' => False),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'bb_building' => array('building_id' => 'id'),
+						'bb_season' => array('season_id' => 'id'),
+					),
+					'ix' => array(),
+					'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.63';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.63';
+	function booking_upgrade0_1_63()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_export, bb_completed_reservation, bb_completed_reservation_resource");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN building_id int NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD CONSTRAINT bb_completed_reservation_building_id_fkey FOREIGN KEY (building_id) REFERENCES bb_building(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.64';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.64';
+	function booking_upgrade0_1_64()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD CONSTRAINT bb_completed_reservation_exported_fkey FOREIGN KEY (exported) REFERENCES bb_completed_reservation_export(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.65';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.65';
+	function booking_upgrade0_1_65()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_export, bb_completed_reservation, bb_completed_reservation_resource");
+		
+		//Do it over, do it right!
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation DROP CONSTRAINT bb_completed_reservation_exported_fkey");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation DROP COLUMN exported");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD COLUMN exported int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation ADD CONSTRAINT bb_completed_reservation_exported_fkey FOREIGN KEY (exported) REFERENCES bb_completed_reservation_export(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.66';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.66';
+	function booking_upgrade0_1_66()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();		
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_type TO customer_type"
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_organization_number TO customer_organization_number"
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_completed_reservation RENAME COLUMN payee_ssn TO customer_ssn"
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.67';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.67';
+	function booking_upgrade0_1_67()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();		
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_account_code_set', array(
+				'fd' => array(
+					'id' 							=> array('type' => 'auto', 'nullable' => False),
+					'name'				   	=> array('type' => 'text', 'nullable' => False),
+					'object_number' 			=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+					'responsible_code' 		=> array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
+					'article' 					=> array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+					'service' 					=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+					'project_number' 			=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+					'unit_number' 				=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+					'unit_prefix' 				=> array('type' => 'varchar', 'precision' => '1', 'nullable' => False),
+					'invoice_instruction' 	=> array('type' => 'varchar', 'precision' => '120'),
+					'active'						=> array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_completed_reservation SET exported=null");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_export CASCADE");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export ADD COLUMN account_code_set_id int NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export ADD CONSTRAINT bb_completed_reservation_export_account_code_set_id_fkey FOREIGN KEY (account_code_set_id) REFERENCES bb_account_code_set(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.68';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.68';
+	function booking_upgrade0_1_68()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("TRUNCATE TABLE bb_completed_reservation_export CASCADE");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export ADD COLUMN created_by int NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export ADD CONSTRAINT bb_completed_reservation_export_created_by_fkey FOREIGN KEY (created_by) REFERENCES phpgw_accounts(account_id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.69';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.69';
+	function booking_upgrade0_1_69()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export DROP COLUMN filename");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation_export DROP COLUMN account_code_set_id");
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_completed_reservation_export_file', array(
+				'fd' => array(
+					'id' 							=> array('type' => 'auto', 'nullable' => False),
+					'filename'				  	=> array('type' => 'text'),
+					'type'				   	=> array('type' => 'text', 'nullable' => False),
+					'export_id'				   => array('type' => 'int', 'precision' => '4'),
+					'account_code_set_id'	=> array('type' => 'int', 'precision' => '4'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_account_code_set' => array('account_code_set_id' => 'id'),
+					'bb_completed_reservation_export' => array('export_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.70';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

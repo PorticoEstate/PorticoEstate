@@ -215,3 +215,13 @@ team leaders	booking	no	Ansvarliga gruppledare
 team leader 1	booking	no	Ansvarlig gruppledare 1
 team leader 2	booking	no	Ansvarlig gruppledare 2
 regulation	booking	no	Reglemang
+Object No.	booking	no	Objektnr.
+Article	booking	no	Artikkel
+Unit No.	booking	no	Fagavdelningsnr.
+Unit Prefix	booking	no	Fagavdelnings kode (for buntnummeret)
+Invoice Instruction	booking	no	Topptekst til faktura
+Responsible Code	booking	no	Ansvarssted
+Service	booking	no	Tjeneste
+Project No.	booking	no	Prosjektnr.
+Account Codes	booking	no	Konteringsstrenger
+Account Codes	booking	no	Konteringsstreng

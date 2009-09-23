@@ -35,7 +35,7 @@
 						  'manytomany' => array(
 							'table' => 'bb_event_agegroup',
 							'key' => 'event_id',
-							'column' => array('agegroup_id', 'male', 'female')
+							'column' => array('agegroup_id' => array('type' => 'int', 'required' => true), 'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int', 'required' => true)),
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(

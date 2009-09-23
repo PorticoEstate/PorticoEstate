@@ -44,7 +44,7 @@
 						  'manytomany' => array(
 							'table' => 'bb_application_agegroup',
 							'key' => 'application_id',
-							'column' => array('agegroup_id', 'male', 'female')
+							'column' => array('agegroup_id' => array('type' => 'int', 'required' => true), 'male' => array('type' => 'int', 'required' => true), 'female' => array('type' => 'int', 'required' => true)),
 					)),
 					'dates' => array('type' => 'timestamp', 'required' => true,
 						  'manytomany' => array(

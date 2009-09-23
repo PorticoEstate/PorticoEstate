@@ -54,23 +54,13 @@
 			</xsl:if>
 
 			<xsl:if test="organization/street and normalize-space(organization/street)">
-				<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
-	            <dd><xsl:value-of select="organization/street"/></dd>
-			</xsl:if>
-			
-			<xsl:if test="organization/zip_code and normalize-space(organization/zip_code)">
-				<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
-	            <dd><xsl:value-of select="organization/zip_code"/></dd>
-			</xsl:if>
-
-			<xsl:if test="organization/city and normalize-space(organization/city)">
-				<dt><xsl:value-of select="php:function('lang', 'City')" /></dt>
-	            <dd><xsl:value-of select="organization/city"/></dd>	
-			</xsl:if>
-
-			<xsl:if test="organization/district and normalize-space(organization/district)">
-				<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
-	            <dd><xsl:value-of select="organization/district"/></dd>
+						<dt><xsl:value-of select="php:function('lang', 'Address')" /></dt>
+						<dd>
+							<xsl:value-of select="organization/street"/><br/>
+							<xsl:value-of select="organization/zip_code"/><span>&nbsp; </span>
+							<xsl:value-of select="organization/city"/><br/>
+							<xsl:value-of select="organization/district"/>
+						</dd>
 			</xsl:if>
 
         </dl>

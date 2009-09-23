@@ -4,6 +4,14 @@
 		public function __construct()
 		{
 		}
+		
+		/**
+		 * Forwards method invocations to so
+		 */
+		public function __call($method, $arguments) 
+		{
+			return call_user_func_array(array($this->so, $method), $arguments);
+		}
 
 		function read_single($id)
 		{
@@ -50,13 +58,13 @@
 		protected function build_default_read_params()
 		{
 			$start = phpgw::get_var('startIndex', 'int', array('GET','POST'), 0);
-			$results = phpgw::get_var('results', 'int', array('GET','POST'), null);
+			$results = phpgw::get_var('results', 'int', array('GET','POST'), 10);
 			$query = phpgw::get_var('query');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
 			
 			$filters = array();
-			foreach($this->so->fields as $field => $params) {
+			foreach($this->so->get_field_defs() as $field => $params) {
 				if(phpgw::get_var("filter_$field")) {
 					$filters[$field] = phpgw::get_var("filter_$field");
 				}

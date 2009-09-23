@@ -546,17 +546,20 @@
 				'from_' => array('type' => 'timestamp', 'nullable' => false),
 				'to_' => array('type' => 'timestamp', 'nullable' => false),
 				'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
-				'payee_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
-				'payee_organization_number' => array('type' => 'varchar', 'precision' => '9'),
-				'payee_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
-				'exported' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				'customer_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+				'customer_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
+				'exported' 				=> array('type' => 'int', 'precision' => '4'),
 				'description' => array('type' => 'text', 'nullable' => false),
 				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
+				'building_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'building_name' => array('type' => 'text', 'nullable' => false),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
+				'bb_completed_reservation_export' => array('exported' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -570,6 +573,60 @@
 			'fk' => array(
 				'bb_completed_reservation' => array('completed_reservation_id' => 'id'),
 				'bb_resource' => array('resource_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_completed_reservation_export', array(
+			'fd' => array(
+				'id' 						=> array('type' => 'auto', 'nullable' => False),
+				'season_id' 			=> array('type' => 'int', 'precision' => '4'),
+				'building_id' 			=> array('type' => 'int', 'precision' => '4'),
+				'from_' => array('type' => 'timestamp', 'nullable' => True), /*Should be automatically filled in sometimes*/
+				'to_' => array('type' => 'timestamp', 'nullable' => True),
+				'created_on' => array('type' => 'timestamp', 'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_building' => array('building_id' => 'id'),
+				'bb_season' => array('season_id' => 'id'),
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_account_code_set' => array(
+			'fd' => array(
+				'id' 							=> array('type' => 'auto', 'nullable' => False),
+				'name'				   	=> array('type' => 'text', 'nullable' => False),
+				'object_number' 			=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+				'responsible_code' 		=> array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
+				'article' 					=> array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+				'service' 					=> array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
+				'project_number' 			=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+				'unit_number' 				=> array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+				'unit_prefix' 				=> array('type' => 'varchar', 'precision' => '1', 'nullable' => False),
+				'invoice_instruction' 	=> array('type' => 'varchar', 'precision' => '120'),
+				'active' 					=> array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_completed_reservation_export_file' => array(
+			'fd' => array(
+				'id' 							=> array('type' => 'auto', 'nullable' => False),
+				'filename'				  	=> array('type' => 'text'),
+				'type'				   	=> array('type' => 'text', 'nullable' => False),
+				'export_id'				   => array('type' => 'int', 'precision' => '4'),
+				'account_code_set_id'	=> array('type' => 'int', 'precision' => '4'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_account_code_set' => array('account_code_set_id' => 'id'),
+				'bb_completed_reservation_export' => array('export_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

@@ -3,6 +3,16 @@
 	
 	class booking_soallocation extends booking_socommon
 	{
+		const ERROR_CONFLICTING_BOOKING = 'booking';
+		const ERROR_CONFLICTING_EVENT = 'event';
+		const ERROR_CONFLICTING_ALLOCATION = 'allocation';
+		
+		protected static $allocation_conflict_error_types = array(
+			self::ERROR_CONFLICTING_BOOKING => true,
+			self::ERROR_CONFLICTING_EVENT => true,
+			self::ERROR_CONFLICTING_ALLOCATION => true,
+		);
+		
 		function __construct()
 		{
 			parent::__construct('bb_allocation', 
@@ -14,7 +24,7 @@
 					'from_'		=> array('type' => 'string', 'required'=> true),
 					'to_'		=> array('type' => 'string', 'required'=> true),
 					'cost'			=> array('type' => 'decimal', 'required' => true),
-					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
+					'completed'	=> array('type' => 'int', 'required' => true, 'default' => '0'),
 					'organization_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(
@@ -46,6 +56,18 @@
 					)),
 				)
 			);
+		}
+		
+		/** 
+		 * Filters out any errors having to do with reservation conflicts 
+		 * from an errors array leaving only errors of other types. If
+		 * this function returns an empty array then the original errors
+		 * array would have consisted of only reservation conflicts.
+		 *
+		 * @return array  
+		 */
+		public function filter_conflict_errors(array $errors) {
+			return array_diff_key($errors, self::$allocation_conflict_error_types);
 		}
 
 		protected function doValidate($entity, booking_errorstack $errors)
@@ -82,7 +104,7 @@
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$errors['event'] = lang('Overlaps with existing event');
+					$errors[self::ERROR_CONFLICTING_EVENT] = lang('Overlaps with existing event');
 				}
 				// Check if we overlap with any existing allocation
 				$this->db->query("SELECT a.id FROM bb_allocation a 
@@ -93,7 +115,7 @@
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$errors['allocation'] = lang('Overlaps with existing allocation');
+					$errors[self::ERROR_CONFLICTING_ALLOCATION] = lang('Overlaps with existing allocation');
 				}
 				// Check if we overlap with any existing booking
 				$this->db->query("SELECT b.id FROM bb_booking b 
@@ -104,7 +126,7 @@
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$errors['booking'] = lang('Overlaps with existing booking');
+					$errors[self::ERROR_CONFLICTING_BOOKING] = lang('Overlaps with existing booking');
 				}
 			}
 			

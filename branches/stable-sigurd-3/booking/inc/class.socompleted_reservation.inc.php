@@ -3,6 +3,14 @@
 	
 	class booking_socompleted_reservation extends booking_socommon
 	{
+		const CUSTOMER_TYPE_EXTERNAL='external';
+		const CUSTOMER_TYPE_INTERNAL='internal';
+		
+		protected static $customerTypes = array(
+			self::CUSTOMER_TYPE_EXTERNAL,
+			self::CUSTOMER_TYPE_INTERNAL
+		);
+		
 		protected 
 			$resource_so,
 			$season_so;
@@ -22,12 +30,13 @@
 					'from_'					=> array('type' => 'timestamp', 'required'=> true),
 					'to_'						=> array('type' => 'timestamp', 'required'=> true),
 					'organization_id'    => array('type' => 'int'),
-					'payee_type' 			=> array('type' => 'string', 'nullable' => False),
-					'payee_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
-					'payee_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
-					'exported' 				=> array('type' => 'int', 'required' => True, 'nullable' => False, 'default' => 0),
+					'customer_type' 			=> array('type' => 'string', 'nullable' => False),
+					'customer_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
+					'customer_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
+					'exported' 				=> array('type' => 'int'),
 					'description'			=> array('type' => 'string', 'required' => True, 'nullable' => False),
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
+					'building_id'			=> array('type' => 'string', 'required' => True),
 					'building_name'		=> array('type' => 'string', 'required' => True),
 					'season_name'	=> array('type' => 'string', 'query' => true,
 						  'join' => array(
@@ -53,8 +62,53 @@
 			);
 		}
 		
-		public function read($options) {
-			return parent::read($options);
+		/**
+		 * Implement in subclasses to perform custom validation.
+		 */
+		protected function doValidate($entity, booking_errorstack $errors)
+		{
+			if (!in_array($entity['customer_type'], $this->get_customer_types())) {
+				$errors['customer_type'] = 'Invalid customer type';
+			}
+		}
+		
+		public function get_customer_types()
+		{
+			return self::$customerTypes;
+		}
+		
+		function _get_conditions($query, $filters)
+		{	
+			//Removes season_name from filters if the season_id is already included in the filters
+			if (isset($filters['season_name']) AND isset($filters['season_id'])) {
+				unset($filters['season_name']);
+			}
+			
+			//Removes building_name from filters if the building_id is already included in the filters
+			if (isset($filters['building_name']) AND isset($filters['building_id'])) {
+				unset($filters['building_name']);
+			}
+			
+			$where_clauses = (isset($filters['where']) ? (array)$filters['where'] : array());
+			
+			if (isset($filters['season_id'])) {
+				
+				$season_id = $this->marshal_field_value('season_id', $filters['season_id']);
+				unset($filters['season_id']);
+				
+				$where_clauses[] =  
+					"(%%table%%.season_id = $season_id OR (%%table%%.reservation_type = 'event' AND %%table%%.season_id IS NULL) ".
+					"AND %%table%%.reservation_type != 'event' OR ".
+					"(%%table%%.reservation_type = 'event' AND %%table%%.reservation_id IN ".
+						"(SELECT event_id FROM bb_event_resource er JOIN bb_season_resource sr ON er.resource_id = sr.resource_id AND sr.season_id = $season_id) ".
+					"))";
+			}
+			
+			if (count($where_clauses) > O) {
+				$filters['where'][] = join($where_clauses, ' AND ');
+			}
+			
+			return parent::_get_conditions($query, $filters);
 		}
 		
 		public function create_from($type, $reservation) {
@@ -64,8 +118,7 @@
 				'cost' 					=> $reservation['cost'],
 				'from_' 					=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
-				'payee_type' 			=> 'organization',
-				'exported' 				=> 0,
+				'customer_type' 			=> 'external',
 				'resources' 			=> $reservation['resources'],
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);
@@ -80,18 +133,19 @@
 		}
 		
 		protected function set_description($type, &$reservation, &$entity) {
-			$building_name = $this->get_building_name($type, $reservation);
-			$entity['article_description'] = $building_name . ': ' . implode(', ', $this->get_resource_names($reservation['resources']));
+			$building = $this->get_building($type, $reservation);
+			$entity['article_description'] = $building['name'] . ': ' . implode(', ', $this->get_resource_names($reservation['resources']));
 			
 			if (mb_strlen($entity['article_description']) > 35) {
 				$entity['article_description'] = mb_substr($entity['article_description'], 0, 32).'...'; 
 			}
 			
 			$entity['description'] = mb_substr($entity['from_'], 0, -3) .' - '. mb_substr($entity['to_'], 0, -3);
-			$entity['building_name'] = $building_name;
+			$entity['building_name'] = $building['name'];
+			$entity['building_id'] = $building['id'];
 		}
 		
-		public function get_building_name($type, &$reservation) {
+		public function get_building($type, &$reservation) {
 			switch ($type) {
 				case 'booking':
 				case 'allocation':
@@ -107,7 +161,7 @@
 			static $cache = array();
 			if (!isset($cache[$season_id])) {
 				$season = $this->season_so->read_single($season_id);
-				$cache[$season_id] = $season['building_name'];
+				$cache[$season_id] = array('id' => $season['building_id'], 'name' => $season['building_name']);
 			}
 			
 			return $cache[$season_id];
@@ -117,7 +171,7 @@
 			static $cache = array();
 			if (!isset($cache[$resource_id])) {
 				$resource = $this->resource_so->read_single($resource_id);
-				$cache[$resource_id] = $resource['building_name'];
+				$cache[$resource_id] = array('id' => $resource['building_id'], 'name' => $resource['building_name']);
 			}
 			
 			return $cache[$resource_id];
@@ -159,9 +213,8 @@
 		}
 		
 		protected function set_organization(&$entity, &$organization) {
-			$entity['payee_type']      = 'organization';
 			$entity['organization_id'] = $organization['id'];
-			$entity['payee_organization_number'] = $organization['organization_number'];
+			$entity['customer_organization_number'] = $organization['organization_number'];
 		}
 		
 		protected function initialize_completed_booking(&$booking, &$entity) {
@@ -198,6 +251,13 @@
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
-			$entity['payee_type']      = 'public';
+		}
+		
+		public function update_exported_state_of(&$reservations, $with_export_id) {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$ids = join(', ', array_map(array($this, 'select_id'), $reservations));
+			$sql = "UPDATE $table_name SET exported = $with_export_id WHERE {$table_name}.id IN ($ids);";
+			return $db->query($sql, __LINE__, __FILE__);
 		}
 	}

@@ -1,9 +1,10 @@
 <?php
 	phpgw::import_class('booking.bocommon');
+	phpgw::import_class('booking.bocompleted_reservation_export');
 	
 	class booking_bocompleted_reservation extends booking_bocommon
 	{
-		protected static $customer_field_prefix = 'payee_';
+		protected static $customer_field_prefix = 'customer_';
 		
 		function __construct()
 		{
@@ -18,12 +19,12 @@
 		 * @return array with identifier types ordered by ascending precedence/priority
 		 */
 		public function get_customer_identifier_precedence(&$entity) {
-			//payee_organization_number or payee_ssn
+			//customer_organization_number or customer_ssn
 			
 			if ($entity['reservation_type'] == 'event') {
 				return array('ssn', 'organization_number');
 			} else {
-				if ($entity['payee_type'] == 'organization') {
+				if ($entity['customer_type'] == 'organization') {
 					return array('organization_number', 'ssn');
 				} else {
 					return array('ssn', 'organization_number');
@@ -80,21 +81,23 @@
 		protected function build_default_read_params()
 		{
 			$params = parent::build_default_read_params();
+			
+			$where_clauses = array();
+			
+			//build_default_read_params will not automatically build a filter for the to_ field 
+			//because it cannot match the name 'filter_to' to an existing field once the prefix 
+			//'filter' is removed nor do we want it to, so we build that filter manually here:
 			if ($filter_to = phpgw::get_var('filter_to', 'string', array('GET', 'POST'), null)) {
-				$params['where'] = sprintf($this->so->table_name.".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$where_clauses[] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
 			
 			if(!isset($_SESSION['show_all_completed_reservations'])) {
-				$params['filters']['exported'] = '0';
+				$params['filters']['exported'] = null;
 			}
 			
-			if (isset($params['filters']['season_name']) AND isset($params['filters']['season_id'])) {
-				unset($params['filters']['season_name']);
+			if (count($where_clauses) > O) {
+				$params['filters']['where'] = $where_clauses;
 			}
-				
-			if (isset($params['filters']['building_name']) AND isset($params['filters']['building_id'])) {
-				unset($params['filters']['building_name']);
-			} 
 			
 			return $params;
 		}
@@ -105,8 +108,8 @@
 			$active_identifier = $this->get_active_customer_identifier($entity);
 
 			if (current($active_identifier)) {
-				$entity['payee_identifier_type'] = key($active_identifier);
-				$entity['payee_identifier'] = current($active_identifier);
+				$entity['customer_identifier_type'] = key($active_identifier);
+				$entity['customer_identifier'] = current($active_identifier);
 			}
 			
 			return $entity;

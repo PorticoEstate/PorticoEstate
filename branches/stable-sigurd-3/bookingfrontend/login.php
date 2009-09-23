@@ -9,6 +9,7 @@
 		'noheader'   		 		 => true,
 		'nonavbar'   				 => true,
 	);
+	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
 	
 	if(file_exists('../header.inc.php'))
 	{
@@ -24,6 +25,8 @@
 	
 	$GLOBALS['phpgw']->hooks->process('login');
 
+	$bouser = CreateObject('bookingfrontend.bouser');
+	$bouser->log_in();
 	$forward = phpgw::get_var('phpgw_forward', 'int');
 
 	if($forward)
@@ -56,5 +59,5 @@
 
 	$GLOBALS['phpgw']->hooks->process('login');
 
-	$GLOBALS['phpgw']->redirect_link('/index.php', $extra_vars);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $extra_vars);
 	exit;
