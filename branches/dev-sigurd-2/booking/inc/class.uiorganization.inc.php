@@ -31,7 +31,8 @@
 			$this->fields = array('name', 'homepage', 'phone', 'email', 
 								  'street', 'zip_code', 'city', 'district', 
 								  'description', 'contacts', 'active', 
-								  'organization_number', 'activity_id');
+								  'organization_number', 'activity_id',
+								  'customer_number');
 								
 			
 		}
