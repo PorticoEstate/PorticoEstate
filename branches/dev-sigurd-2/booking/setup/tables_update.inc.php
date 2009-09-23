@@ -1768,3 +1768,29 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.70';
+	function booking_upgrade0_1_70()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN customer_number text");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN customer_identifier_type character varying(255)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN customer_organization_number character varying(9)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN customer_ssn character varying(12)");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_identifier_type character varying(255)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_organization_number character varying(9)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_ssn character varying(12)");
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_identifier_type character varying(255)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_organization_number character varying(9)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_ssn character varying(12)");
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.71';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

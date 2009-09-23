@@ -68,6 +68,8 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
+			<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
+
 			<dt><label for="field_street"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
 			<dd><input id="field_street" name="street" type="text" value="{organization/street}"/></dd>
 

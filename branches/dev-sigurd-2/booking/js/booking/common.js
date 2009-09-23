@@ -176,7 +176,6 @@ YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
 };
 
 YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, options) {
-	//debugger;
 	options = YAHOO.lang.isObject(options) ? options : {};
 	options = YAHOO.lang.merge({type: 'checkbox'}, options);
 	var type = options['type'] || 'checkbox';

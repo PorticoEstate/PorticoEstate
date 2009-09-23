@@ -10,11 +10,14 @@
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
+		
+		protected $customer_id;
 
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boevent');
+			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
@@ -103,6 +106,40 @@
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
 			return $this->yui_results($events);
 		}
+		
+		protected function get_customer_identifier() {
+			return $this->customer_id;
+		}
+		
+		protected function extract_customer_identifier(&$data) {
+			$this->get_customer_identifier()->extract_form_data($data);
+		}
+		
+		protected function validate_customer_identifier(&$data) {
+			return $this->get_customer_identifier()->validate($data);
+		}
+		
+		protected function install_customer_identifier_ui(&$entity) {
+			$this->get_customer_identifier()->install($this, $entity);
+		}
+		
+		protected function validate(&$entity) {
+			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
+			return $errors;
+		}
+		
+		protected function extract_form_data($defaults = array()) {
+			$entity = array_merge($defaults, extract_values($_POST, $this->fields));
+			$this->agegroup_bo->extract_form_data($entity);
+			$this->extract_customer_identifier($entity);
+			return $entity;
+		}
+		
+		protected function extract_and_validate($defaults = array()) {
+			$entity = $this->extract_form_data($defaults);
+			$errors = $this->validate($entity);
+			return array($entity, $errors);
+		}
 
 		public function add()
 		{
@@ -110,13 +147,14 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
-				$event = extract_values($_POST, $this->fields);
+				$event = array(); 
 				$event['active'] = '1';
 				$event['completed'] = '0';
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
-				$this->agegroup_bo->extract_form_data($event);
-				$errors = $this->bo->validate($event);
+				
+				list($event, $errors) = $this->extract_and_validate($event);
+				
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($event);
@@ -135,6 +173,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
+			$this->install_customer_identifier_ui($event);
 			self::render_template('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
@@ -149,9 +188,9 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
-				$event = array_merge($event, extract_values($_POST, $this->fields));
-				$this->agegroup_bo->extract_form_data($event);
-				$errors = $this->bo->validate($event);
+				
+				list($event, $errors) = $this->extract_and_validate($event);
+				
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($event);
@@ -168,6 +207,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
+			$this->install_customer_identifier_ui($event);
 			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 

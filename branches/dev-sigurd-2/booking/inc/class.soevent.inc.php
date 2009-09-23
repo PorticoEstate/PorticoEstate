@@ -18,6 +18,9 @@
 					'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone' => array('type' => 'string'),
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
+					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
+					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
+					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',

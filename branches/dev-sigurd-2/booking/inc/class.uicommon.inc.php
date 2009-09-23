@@ -87,6 +87,14 @@
 			}
 		}
 		
+		public function add_js_event($event, $js) {
+			$GLOBALS['phpgw']->js->add_event($event, $js);
+		}
+		
+		public function add_js_load_event($js) {
+			$this->add_js_event('load', $js);
+		}
+		
 		public static function encoding()
 		{
 			return 'UTF-8';
