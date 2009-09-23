@@ -118,7 +118,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 });
 
 </script>
+<?php echo rental_uicommon::get_page_error($error) ?>
+<?php echo rental_uicommon::get_page_message($message) ?>
+
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?php echo lang('dashboard_title') ?></h1>
+
+
 
 <fieldset>
 	<h3><?php echo lang('panels') ?></h3>
@@ -138,16 +143,17 @@ YAHOO.util.Event.addListener(window, "load", function() {
 </div>
 
 <div id="workingOnContracts_panel">
-    <div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('working_on') ?></h2></div>
+    <div class="hd"><!-- <img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" />  --> <?php echo lang('working_on') ?></div>
     <div class="bd">
     	<?php
 			$list_form = false;
-			$list_id = 'last_edited_by';
-			$url_add_on = '&amp;type='.$list_id;
+			$list_id = 'last_edited';
+			$url_add_on = '&amp;type='.$list_id.'&amp;';
 			$extra_cols = array(
 				array("key" => "composite", "label" => lang('composite'), "index" => 1),
 				array("key" => "party", "label" => lang('party'), "index" => 2),
-				array("key" => "last_edited_by_current_user", "label" => lang('last_edited_by_current_user'), "index" => 3)
+				array("key" => "last_edited_by_current_user", "label" => lang('last_edited_by_current_user'), "index" => 3),
+				array("key" => "last_updated", "label" => lang('last_updated'), "sortable" => true,"index" => 3)
 			);
 			$hide_cols = array("id","date_start","date_end");
 			include('contract_list_partial.php');
@@ -155,7 +161,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     </div>
 </div>
 <div id="executiveOfficerOnContracts_panel">
-	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('executive_officer_for') ?></h2></div>
+	<div class="hd"><!--<img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" />--> <?php echo lang('executive_officer_for') ?></div>
     <div class="bd">
 		<?php
 			$list_form = false;
@@ -165,13 +171,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				array("key" => "composite", "label" => lang('composite'), "index" => 1),
 				array("key" => "party", "label" => lang('party'), "index" => 2)
 			);
-			$hide_cols = array("date_start","date_end");
+			$hide_cols = array("id");
 			include('contract_list_partial.php');
 		?>
 	</div>
 </div>
 <div id="endingContracts_panel">
-	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" /> <?php echo lang('contracts_under_dismissal') ?></h2></div>
+	<div class="hd"><!--<img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" />--> <?php echo lang('contracts_under_dismissal') ?></div>
     <div class="bd">
 		<?php
 			$list_form = false;
@@ -179,15 +185,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
 				array("key" => "composite", "label" => lang('composite'), "index" => 1),
-				array("key" => "party", "label" => lang('party'), "index" => 2)
+				array("key" => "party", "label" => lang('party'), "index" => 2),
+				array("key" => "type", "label" => lang('type'), "index" => 3),
 			);
-			$hide_cols = array("date_start");
+			$hide_cols = array("date_start","id");
 			include('contract_list_partial.php');
 		?>
 	</div>
 </div>
 <div id="availableComposites_panel">
-	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/go-home.png" /> <?php echo lang('available_composites') ?></h2></div>
+	<div class="hd"><!-- <img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/go-home.png" />  --> <?php echo lang('available_composites') ?></div>
     <div class="bd">
 	<?php
 		$list_form = false;
@@ -198,7 +205,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	</div>
 </div>
 <div id="notifications_panel">
-	<div class="hd"><h2 ><img style="" src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/appointment-new.png" alt="icon" /> <?php echo lang('notifications') ?> </h2></div>
+	<div class="hd"><!-- <img style="" src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/appointment-new.png" alt="icon" /> --> <?php echo lang('notifications') ?> </div>
     <div class="bd">
 		<?php
 			$list_form = false;

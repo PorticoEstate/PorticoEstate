@@ -79,10 +79,10 @@
 						)
 					);
 					break;
-				case 'details':
+				case 'details': // ... composite details, TODO is this used?
 					$query_result[] = $composite; 
 					break;
-				case 'included_areas':
+				case 'included_areas': // ... included areas in a composite
 					$query_result = $composite->get_units(
 						phpgw::get_var('sort'),
 						phpgw::get_var('dir'), 
@@ -90,7 +90,7 @@
 						phpgw::get_var('results')
 					);
 					break;
-				case 'available_areas':
+				case 'available_areas':	// ... available areas for a composite, filters (date)
 					$query_result  = rental_property_location::get_locations(
 						(int)phpgw::get_var('level'), 
 						phpgw::get_var('id'),
@@ -101,7 +101,7 @@
 						phpgw::get_var('dir') == ' desc' ? false : true
 					);
 					break;
-				case 'contracts':
+				case 'contracts': // ... all contracts this composite is involved in, filters (status and date)
 					$query_result = rental_contract::get_contracts_for_composite(
 						phpgw::get_var('id'), 
 						phpgw::get_var('sort'), 
@@ -112,13 +112,13 @@
 						phpgw::get_var('contract_date')
 					);
 					break;
-				case 'orphan_units':
+				case 'orphan_units': // ... all units not included in any composite
 					$query_result = rental_unit::get_orphan_rental_units(
 						phpgw::get_var('startIndex'), 
 						phpgw::get_var('results')
 					);
 					break;
-				case 'all_composites':
+				case 'all_composites': // ... all composites, filters (active and vacant)
 				default:
 					$query_result = rental_composite::get_all(
 						phpgw::get_var('startIndex'),

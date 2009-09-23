@@ -57,6 +57,7 @@ class rental_socomposite extends rental_socommon
 					break;
 				case "property_id":
 					$like_clauses[] = "rental_unit.location_code $this->like $like_pattern";
+					break;
 				case "all":
 					$like_clauses[] = "rental_composite.id = $query";
 					$like_clauses[] = "rental_composite.name $this->like $like_pattern";

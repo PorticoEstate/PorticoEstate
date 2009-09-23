@@ -75,6 +75,22 @@
 					$resultArray = rental_contract::get_last_edited_by();
 					break;
 				case 'ending_contracts':
+					//find location id for current user
+					$types = rental_contract::get_fields_of_responsibility();
+					$ids = array();
+					foreach($types as $id => $label)
+					{
+						$names = $this->locations->get_name($id);
+						if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+						{
+							if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+							{
+								$ids[] = $id;
+							}
+						}
+					}
+					
+					
 					$resultArray = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
@@ -83,7 +99,8 @@
 						phpgw::get_var('query'),
 						phpgw::get_var('search_option'),
 						array(
-							'contract_status' => 'under_dismissal'
+							'contract_status' => 'under_dismissal',
+							'contract_type' => implode(',',$ids)
 						)
 					);
 					break;
@@ -113,6 +130,25 @@
 						)
 					);
 					break;
+				case 'last_edited':
+					$resultArray = rental_contract::get_all(
+						phpgw::get_var('startIndex'),
+						phpgw::get_var('results'),
+						phpgw::get_var('sort'),
+						phpgw::get_var('dir'),
+						phpgw::get_var('query'),
+						phpgw::get_var('search_option'),
+						array()
+					);
+					
+					foreach($resultArray as &$result)
+					{
+						if(!$result->has_permission(PHPGW_ACL_EDIT))
+						{
+							$result = null;
+						}	
+					}
+					break;
 				case 'notifications':
 					$resultArray = rental_notification::get_all(
 						phpgw::get_var('startIndex'),
@@ -134,6 +170,16 @@
 						$GLOBALS['phpgw_info']['user']['account_id']
 					);
 					break;
+				case 'contracts_for_composite':
+					$query_result = rental_contract::get_contracts_for_composite(
+						phpgw::get_var('composite_id'), 
+						phpgw::get_var('sort'), 
+						phpgw::get_var('dir'), 
+						phpgw::get_var('startIndex'), 
+						phpgw::get_var('results'), 
+						phpgw::get_var('contract_status'), 
+						phpgw::get_var('contract_date')
+					);
 				case 'all_contracts':
 				default:
 					$resultArray = rental_contract::get_all(
@@ -245,13 +291,13 @@
 					}
 					break;
 				default:
-					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
+					if($permissions[PHPGW_ACL_EDIT] && $editable == false)
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('edit');
 					}
-					if($permissions[PHPGW_ACL_READ] && $editable == true)
+					if($permissions[PHPGW_ACL_READ] && $editable == false)
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));

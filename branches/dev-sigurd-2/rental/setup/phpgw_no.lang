@@ -119,9 +119,10 @@ is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr
-last_edited_by_current_user	rental	no	Sist arbeidet med
+last_edited_by_current_user	rental	no	Din siste endring
 lastname	rental	no	Etternavn
 last	rental	no	Siste
+last_updated	rental	no	Sist oppdatert
 level	rental	no	Nivå
 link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer

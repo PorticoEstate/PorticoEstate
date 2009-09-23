@@ -27,7 +27,9 @@ class rental_socontract extends rental_socommon
 					'old_contract_id' => array('type' => 'string'),
 					'edited_on' => array('type' => 'date'),
 					'location_id' => array('type' => 'int'),
-					'executive_officer' => array('type' => 'int')
+					'executive_officer' => array('type' => 'int'),
+					'last_updated' => array('type' => 'int'),
+					'last_edited_by_current_user' => array('type' => 'int')
 		));
 	}
 	
@@ -91,7 +93,11 @@ class rental_socontract extends rental_socommon
 					
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
 			$type = $filters['contract_type'];
-			$filter_clauses[] = "contract.location_id = $type";
+			$filter_clauses[] = "contract.location_id IN ($type)";
+		}
+		
+		if(isset($filters['composite_id'])){
+			
 		}
 		
 		/* 
@@ -206,7 +212,7 @@ class rental_socontract extends rental_socommon
 		$date = new rental_contract_date($date_start, $date_end);
 		$contract->set_contract_date($date);
 		
-		$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start', true), 'date'));
+		$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start', true), 'int'));
 		$contract->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 		$contract->set_contract_type_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$contract->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
@@ -235,7 +241,7 @@ class rental_socontract extends rental_socommon
 	function get_contract_array($start = 0, $limit = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{ 
 		$distinct = "DISTINCT contract.id, ";
-		$columns_for_list = 'contract.date_start, contract.location_id, contract.date_end, contract.old_contract_id, contract.executive_officer, type.title, type.notify_before, composite.name as composite_name, party.first_name, party.last_name, party.company_name, last_edited.edited_on';
+		$columns_for_list = 'contract.date_start, contract.location_id, contract.date_end, contract.old_contract_id, contract.executive_officer, type.title, type.notify_before, composite.name as composite_name, party.first_name, party.last_name, party.company_name, last_edited.edited_on, contract.last_updated';
 		$tables = "rental_contract contract";
 		$join_contract_type = 	' LEFT JOIN rental_contract_responsibility type ON (type.location_id = contract.location_id)';
 		$join_parties = 'LEFT JOIN rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
@@ -313,6 +319,7 @@ class rental_socontract extends rental_socommon
                 $contract->set_comment($row['comment']);
                 $contract->set_last_edited_by_current_user($row['edited_on']);
                 $contract->set_location_id($row['location_id']);
+                $contract->set_last_updated($row['last_updated']);
                 $contracts[] = $contract;
 			}
 		}
@@ -341,21 +348,27 @@ class rental_socontract extends rental_socommon
 			$tables = 'rental_contract';
 			$joins = 'JOIN rental_contract_composite ON (rental_contract.id = rental_contract_composite.contract_id)';
 			$condition = 'rental_contract_composite.composite_id = '.$id;
-			$current_date = date('Y-m-d');
+			if(isset($date)){
+				$current_date = $date;
+			}
+			else
+			{
+				$current_date = strtotime('now');
+			}
 			switch($contract_date)
 			{
 				case 'all':
 					/* no-op */
 					break;
 				case 'not_started':
-					$condition .= " AND rental_contract.date_start > '{$current_date}'";  
+					$condition .= " AND rental_contract.date_start > $current_date";  
 					break;
 				case 'ended':
-					$condition .= " AND rental_contract.date_end < '{$current_date}'";  
+					$condition .= " AND rental_contract.date_end < $current_date";  
 					break;
 				case 'active':
 				default:
-					$condition .= " AND (rental_contract.date_start <= '{$current_date}' AND (rental_contract.date_end >= '{$current_date}' OR rental_contract.date_end IS NULL))";  
+					$condition .= " AND (rental_contract.date_start <= $current_date AND (rental_contract.date_end >= $current_date OR rental_contract.date_end IS NULL))";  
 					break;
 			}
 			
@@ -365,37 +378,14 @@ class rental_socontract extends rental_socommon
 			{
 				$order = 'ORDER BY '.$sort.' '.($dir == 'desc' ? 'desc' : 'asc');
 			}
-			
-			$this->db->query("SELECT COUNT(distinct rental_contract.id) AS count FROM $tables $joins WHERE $condition", __LINE__, __FILE__);
-			$this->db->next_record();
-			$total_records = (int)$this->db->f('count');
-			
-			$sql = "SELECT rental_contract.id, date_start, date_end, rental_contract.comment FROM {$tables} {$joins} WHERE {$condition} {$order}";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-			while($this->db->next_record())
-			{
-				$contract = new rental_contract($this->unmarshal($this->db->f('id', true), 'string'));
-				$date_start = '';
-				$date_start_timestamp = $this->unmarshal($this->db->f('date_start', true), 'int');
-				$comment = $this->unmarshal($this->db->f('comment', true), 'string');
-				$date_end_timestamp = $this->unmarshal($this->db->f('date_end', true), 'int');
-	     	
-				$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
-				$contract->set_comment($comment);
-				
-				// TODO: include party here whenever that db table is ready
-				//$contract->set_party($party)
-				
-				$contracts[] = $contract;
-			}
+			$sql = "SELECT id FROM $tables $joins WHERE $condition";
+			//var_dump($sql);
+			$this->db->query($sql, __LINE__, __FILE__);
+			$contracts = $this->get_contracts_from_result();
+			//var_dump($contracts);
+			return $contracts;
 		}
-		
-		return $contracts;
-		
-		return array(
-			'total_records' => $total_records,
-			'results'		=> $results
-		);
+		return $results;	
 	}
 	
 	/**
@@ -459,6 +449,28 @@ class rental_socontract extends rental_socommon
 		//var_dump($sql);
 		$this->db->query($sql);						
 		return $this->get_contracts_from_result();
+	}
+	
+	/**
+	 * This method retrieves contracts belonging to the same area of responsibility as the current user.
+	 * The contracts are sorted ascending on the date for the last update.
+	 * 
+	 * @return array of contract objects
+	 */
+	public function get_last_edited(){
+		$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+		$sql = "
+			SELECT contract.last_updated, contract.id, contract.location_id, contract.date_start, contract.date_end, party.first_name, party.last_name, party.company_name, composite.name as composite_name 
+			FROM rental_contract contract
+			LEFT JOIN rental_contract_party 	con_par 	ON (con_par.contract_id = edited.contract_id) 
+			LEFT JOIN rental_party 				party 		ON (party.id = con_par.party_id)
+			LEFT JOIN rental_contract_composite	con_con		ON (con_con.contract_id = edited.contract_id)
+			LEFT JOIN rental_composite			composite	ON (composite.id = con_con.composite_id)
+			WHERE contract.location_id 
+			IN (SELECT location_id )
+		";
+		$this->db->query($sql);
+		return $this->get_contracts_form_results();
 	}
 	
 	/**
@@ -626,10 +638,11 @@ class rental_socontract extends rental_socommon
 		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
 		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
 		$values[] = "comment = ". $this->marshal($contract->get_comment(), 'string');
+		$values[] = "last_updated = ".strtotime('now');
 
 		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
-		if($result)
+		if(isset($result))
 		{
 			$this->last_edited_by($id);
 		}
@@ -641,36 +654,57 @@ class rental_socontract extends rental_socommon
 	}
 	
 	/**
-	 * This method stamps the given contract with the current timestamp. It checks to see if this user 
-	 * has edited this contract before. If not it inserts a new record in the database. 
+	 * This method marks the combination contract/user account with the current timestamp. It updates the record if the user has updated
+	 * this contract before; inserts a new record if the user has never updated this contract. 
 	 * 
 	 * @param $contract_id
-	 * @return unknown_type
+	 * @return true if the contract was marker, false otherwise
 	 */
 	private function last_edited_by($contract_id){
 		$account_id = $GLOBALS['phpgw_info']['user']['account_id']; // current user
 		$ts_now = strtotime('now');
 		
-		$sql_has_edited_before = "SELECT account_id FROM rental_contract_last_edited WHERE contract_id = $contract_id";
+		$sql_has_edited_before = "SELECT account_id FROM rental_contract_last_edited WHERE contract_id = $contract_id AND account_id = $account_id";
 		$result = $this->db->query($sql_has_edited_before);
 		
-		if($result)
+		if(isset($result))
 		{
 			if($this->db->next_record())
 			{
-				$sql = "UPDATE rental_contract_last_ledited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
+				$sql = "UPDATE rental_contract_last_edited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
+				var_dump($sql);
 			} 
 			else
 			{
 				$sql = "INSERT INTO rental_contract_last_edited VALUES ($contract_id,$account_id,$ts_now)";
 			}
-			$result = $this->db->query($sql_edited);
-			if($result)
+			$result = $this->db->query($sql);
+			if(isset($result))
 			{
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * This method markw the given contract with the current timestamp
+	 * 
+	 * @param $contract_id
+	 * @return true if the contract was marked, false otherwise
+	 */
+	private function last_updated($contract_id){
+		$ts_now = strtotime('now');
+		$sql = "UPDATE rental_contract SET last_updated=$ts_now";
+		$result = $this->db->query($sql);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**
@@ -733,46 +767,93 @@ class rental_socontract extends rental_socommon
 		
 	}
 	
+	/**
+	 * This method adds a party to a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $party_id	the party to add
+	 * @return true if successful, false otherwise
+	 */
 	function add_party($contract_id, $party_id)
 	{
 		$q = "INSERT INTO rental_contract_party (contract_id, party_id) VALUES ($contract_id, $party_id)";
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method removes a party from a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $party_id	the party to remove
+	 * @return true if successful, false otherwise
+	 */
 	function remove_party($contract_id, $party_id)
 	{
 		$q = "DELETE FROM rental_contract_party WHERE contract_id = $contract_id AND party_id = $party_id";
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method adds a composite to a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $composite_id	the composite to add
+	 * @return true if successful, false otherwise
+	 */
 	function add_composite($contract_id, $composite_id)
 	{
 		$q = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ($contract_id, $composite_id)";
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method removes a composite from a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $party_id	the composite to remove
+	 * @return true if successful, false otherwise
+	 */
 	function remove_composite($contract_id, $composite_id)
 	{
 		$q = "DELETE FROM rental_contract_composite WHERE contract_id = $contract_id AND composite_id = $composite_id";
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method adds a price item to a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $price_item	the price item to add
+	 * @return true if successful, false otherwise
+	 */
 	function add_price_item($contract_id, $price_item)
 	{
 		$values = array(
@@ -787,20 +868,40 @@ class rental_socontract extends rental_socommon
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method removes a price item to a contract. Updates last edited hisory.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $price_item	the prce item to remove
+	 * @return true if successful, false otherwise
+	 */
 	function remove_price_item($contract_id, $price_item)
 	{
 		$q = "DELETE FROM rental_contract_price_item WHERE id = {$price_item->get_id()}";
 		$result = $this->db->query($q);
 		if($result)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * This method sets a payer on a contract
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $party_id	the party to be the payer
+	 * @return true if successful, false otherwise
+	 */
 	function set_payer($contract_id, $party_id)
 	{
 		$pid =$this->marshal($party_id, 'int');
@@ -811,8 +912,11 @@ class rental_socontract extends rental_socommon
 		$result1 = $this->db->query($q1);
 		if($result && $result1)
 		{
+			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
+			return true;
 		}
+		return false;
 	}
 }
 ?>

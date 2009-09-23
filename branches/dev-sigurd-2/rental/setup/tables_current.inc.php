@@ -99,7 +99,8 @@
 				'executive_officer' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'created' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
 				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-                'comment' =>            array('type' => 'text')
+                'comment' =>            array('type' => 'text'),
+				'last_updated' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true) // timestamp
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -34,6 +34,7 @@
 		protected $executive_officer_id;
 		protected $comment;
 		protected $invoices;
+		protected $last_updated;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -290,6 +291,26 @@
         public function set_comment($comment)
         {
             $this->comment = $comment;
+        }
+        
+        /**
+         * Get the timestamp for the last update on this contract
+         * 
+         * @return int timestamp for last update
+         */
+        public function get_last_updated()
+        {
+            return $this->last_updated;
+        }
+        
+        /**
+         * Set the timestamp for the last update on this contract
+         * 
+         * @param $timestamp last update
+         */
+		public function set_last_updated($timestamp)
+        {
+            $this->last_updated = $timestamp;
         }
         
         /**
@@ -580,9 +601,10 @@
 				'composite' => $this->get_composite_name(),
 				'party' => $this->get_party_name(),
 				'old_contract_id' => $this->get_old_contract_id(),
-				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()): '',
+				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format.' h:i:s A', $this->get_last_edited_by_current_user()): '',
 				'permissions' => $this->get_permission_array(),
-				'payer_id' => $this->get_payer_id()
+				'payer_id' => $this->get_payer_id(),
+				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : ''
 			);
 		}
 		

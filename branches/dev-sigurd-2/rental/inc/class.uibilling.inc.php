@@ -71,7 +71,7 @@ class rental_uibilling extends rental_uicommon
 	
 	public function query()
 	{
-		if(!$this->hasReadPermission())
+		if(!$this->isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;

@@ -2,12 +2,12 @@ div.content {
 	margin: 2em;	
 }
 
-.hd h2 {
+.hd {
 	margin-bottom: 0;
-	line-height: 2.5em;
+	text-align: center;
 	}
 	
-.hd h2 img {
+.hd img {
 	vertical-align: middle;
 	}
 

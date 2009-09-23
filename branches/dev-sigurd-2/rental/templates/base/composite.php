@@ -5,6 +5,8 @@
 	$config	= CreateObject('phpgwapi.config','rental');
 	$config->read();
 ?>
+<?php echo rental_uicommon::get_page_error($error) ?>
+<?php echo rental_uicommon::get_page_message($message) ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?> <em><?php echo $composite->get_name() ?></em></h1>
 
@@ -141,22 +143,18 @@
 			<?php } ?>
 		</div>
 		<div id="contracts">
-			<form id="contracts_form" method="GET">
-				<fieldset>
-					<!-- Filters -->
-					<h3><?php echo lang('filters') ?></h3>
-					<label class="toolbar_element_label" for="ctrl_toggle_contract_status"><?php echo lang('status') ?></label>
-						<select name="contract_status" id="ctrl_toggle_contract_status">
-							<option value="active" default=""><?php echo lang('active') ?></option>
-							<option value="not_started"><?php echo lang('not_started') ?></option>
-							<option value="both"><?php echo lang('ended') ?></option>
-						</select>
-
-					<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
-					<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
-				</fieldset>
-				<div id="contracts-container" class="datatable_container"></div>
-			</form>
+			<?php 
+				$list_form = true; 
+				$list_id = 'contracts_for_composite';
+				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
+				$editable = false;
+				$extra_cols = array(
+					array("key" => "type", "label" => lang('title'), "index" => 3),
+					array("key" => "party", "label" => lang('party'), "index" => 4),
+					array("key" => "old_contract_id", "label" => lang('old_contract_id'), "index" => 5)
+				);
+				include('contract_list_partial.php');
+			?>
 		</div>
 	</div>
 </div>
@@ -312,51 +310,6 @@
 				'available-areas-paginator',
 				'available-areas',
 				new Array('added-areas')
-		);
-
-		// Columns for contracts table
-		var contractsColumnDefs = [{
-			key: "id",
-			label: "<?php echo lang('id') ?>",
-		  sortable: true
-		},
-		{
-			key: "date_start",
-			label: "<?php echo lang('date_start') ?>",
-		  sortable: true
-		},
-		{
-			key: "date_end",
-			label: "<?php echo lang('date_end') ?>",
-		  sortable: false
-		},
-		{
-			key: "tenant",
-			label: "<?php echo lang('party') ?>",
-		  sortable: false
-		},
-		{
-			key: "actions",
-			hidden: true
-		},
-		{
-			key: "labels",
-			hidden: true
-		},
-		{
-			key: "ajax",
-			hidden: true
-		}];
-
-		// Initiating the data source
-		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=contracts&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
-				contractsColumnDefs,
-				'contracts_form',
-				['ctrl_toggle_contract_status'],
-				'contracts-container',
-				'contracts-paginator',
-				'contracts'
 		);
 	});
 </script>
