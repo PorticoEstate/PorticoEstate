@@ -18,7 +18,7 @@ add comment	bookingfrontend	no	Legg til komentar
 add document	bookingfrontend	no	Legg til dokument
 add new event	bookingfrontend	no	Legg til arrangement
 add permission	bookingfrontend	no	Legg til rettighet
-address	bookingfrontend	no	Besöksadresse
+address	bookingfrontend	no	Besøksadresse
 admin 1	bookingfrontend	no	Bookingansvarlig 1
 admin 2	bookingfrontend	no	Bookingansvarlig 2
 admins	bookingfrontend	no	Bookingansvarliga
