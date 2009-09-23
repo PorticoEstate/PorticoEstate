@@ -6,7 +6,7 @@
 	<xsl:call-template name="yui_booking_i18n"/>
 
 	<form action="" method="POST">
-		<dl class="form">
+		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
