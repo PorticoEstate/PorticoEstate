@@ -63,15 +63,28 @@ class rental_uiparty extends rental_uicommon
 				break;
 			default:	// ... get all parties of a given type
 				$parties = rental_party::get_all(
-				phpgw::get_var('startIndex'),
-				phpgw::get_var('results'),
-				phpgw::get_var('sort'),
-				phpgw::get_var('dir'),
-				phpgw::get_var('query'),
-				phpgw::get_var('search_option'),
-				array(
-					'party_type' => phpgw::get_var('party_type')
-				)
+					phpgw::get_var('startIndex'),
+					phpgw::get_var('results'),
+					phpgw::get_var('sort'),
+					phpgw::get_var('dir'),
+					phpgw::get_var('query'),
+					phpgw::get_var('search_option'),
+					array(
+						'party_type' => phpgw::get_var('party_type')
+					),
+					false
+				);
+				$count = rental_party::get_all(
+					phpgw::get_var('startIndex'),
+					phpgw::get_var('results'),
+					phpgw::get_var('sort'),
+					phpgw::get_var('dir'),
+					phpgw::get_var('query'),
+					phpgw::get_var('search_option'),
+					array(
+						'party_type' => phpgw::get_var('party_type')
+					),
+					true
 				);
 				break;
 		}
@@ -90,7 +103,7 @@ class rental_uiparty extends rental_uicommon
 
 		}
 		// ... add result data
-		$party_data = array('results' => $rows, 'total_records' => count($rows));
+		$party_data = array('results' => $rows, 'total_records' => $count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			

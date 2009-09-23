@@ -71,11 +71,11 @@ class rental_party extends rental_model
 		return $so->get_single($id);
 	}
 
-	public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array(),$count = false)
 	{
 		$so = self::get_so();
-		$partys = $so->get_party_array($start, $results, $sort, $dir, $query, $search_option, $filters);
-		return $partys;
+		$result = $so->get_party_array($start, $results, $sort, $dir, $query, $search_option, $filters,$count);
+		return $result;
 	}
 
 	/**

@@ -92,10 +92,28 @@ class rental_soparty extends rental_socommon
 	 * @param $sort field to sort by
 	 * @param $query LIKE-based query string
 	 * @param $filters array of custom filters
+	 * @param $count boolean value, true if only count, false if regular query
 	 * @return list of rental_party objects
 	 */
-	function get_party_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	function get_party_array($start = 0, $results = 1000, $sort = 'id', $dir = 'asc', $query = null, $search_option = null, $filters = array(), $count = false)
 	{
+		// If no count query, create ORDER BY condition
+		if(!$count)
+		{
+			if($sort == 'name')
+			{
+				$order = "ORDER BY last_name $dir, first_name $dir";
+			} 
+			else if($sort = 'address')
+			{
+				$order = "ORDER BY address_1 $dir, address_2 $dir";
+			}
+			else
+			{
+				$order = $sort ? "ORDER BY $sort $dir ": '';
+			}
+		}
+		
 		// We have the option to search for party type. A party does not have a type per se
 		// but gets one or more types from the contracts it is associated to.
 		// So if this filter is set we need to do some joining to check what contracts this
@@ -104,49 +122,50 @@ class rental_soparty extends rental_socommon
 				
 			// Join the contracts (many to many) so we can search for contract types, only
 			// include parties that actually have contracts
-
+			if($count)
+			{
+				$columns = "COUNT(DISTINCT(rental_party.id)) as count";
+			}
+			else
+			{
+				$columns = 	"DISTINCT(rental_party.id), rental_party.*";
+			}
+			
 			$filter_conditions = $this->get_filter_conditions($filters,'contracts');
 			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','AND');
-			$party_not_in = '';
-			if(isset($filters['contract_id']) )
-			{
-				//$party_not_in = "AND party_id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = ".$filters['contract_id'].")";
-			}
-			if(isset($filters['contract_id']) && $filters['party_type'] != 'all')
-			{
-
-			}
-				
-			$sql = "SELECT DISTINCT(rental_party.id), rental_party.* FROM rental_party LEFT JOIN
-					(
-						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp LEFT JOIN
-						(
+			$sql = "SELECT $columns 
+					LEFT JOIN (
+						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp 
+						LEFT JOIN (
 							SELECT id, location_id FROM rental_contract 
-						) 
-						c
+						) c
 						ON (c.id = rcp.contract_id) 
-					) 
-					contracts
+					) contracts
 					ON (rental_party.id = contracts.party_id OR contracts.contract_id IS NULL)
-					WHERE $filter_conditions $search_conditions $party_not_in $order";
-				
-			//var_dump($sql);
-			// Alternative, with subselect.  Test with many rows:
-			/*
-			$sql = "SELECT *
-			FROM rental_party
-			WHERE id IN
-			(SELECT id
-			FROM rental_contract_party
-			WHERE contract_id IN (SELECT id FROM rental_contract WHERE type_id = $type_id)) AND $condition $order";
-			*/
-		} else {
+					WHERE $filter_conditions $search_conditions $order";
+		} 
+		else
+		{
 			// No type filter was set, do a normal select
-			$search_conditions = $this->get_search_conditions($query,$search_option,'WHERE');
-			$sql = "SELECT * FROM rental_party $search_conditions $order";
+			if($count)
+			{
+				$columns = "COUNT(DISTINCT(rental_party.id)) as count";
+			}
+			else
+			{
+				$columns = "*";
+			}
+			
+			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','WHERE');
+			$sql = "SELECT $columns FROM rental_party $search_conditions $order";
 		}
-
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		if($count)
+		{
+			return $this->get_count($sql);	
+		}
+		
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
 		$parties = array();
 
@@ -234,8 +253,6 @@ class rental_soparty extends rental_socommon
 				case "ssn":
 					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
 					break;
-				case "result_unit_number":
-					$like_clauses[] = "$table_name.result_unit $this->like $like_pattern";
 				case "organisation_number":
 					$like_clauses[] = "$table_name.organisation_number $this->like $like_pattern";
 				case "account":
@@ -249,7 +266,6 @@ class rental_soparty extends rental_socommon
 					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
 					$like_clauses[] = "$table_name.place $this->like $like_pattern";
 					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
-					$like_clauses[] = "$table_name.result_unit $this->like $like_pattern";
 					$like_clauses[] = "$table_name.organisation_number = $like_pattern";
 					$like_clauses[] = "$table_name.reskontro = $like_pattern";
 					break;

@@ -85,5 +85,20 @@
 			}
 			return $errors;
 		}
+		
+		/**
+		 * Get the count of the last query 
+		 * 
+		 * @param $sql the sql query
+		 * @return the count value
+		 */
+		function get_count($sql)
+		{
+			$result = $this->db->query($sql);
+			if($result && $this->db->next_record())
+			{
+				return $this->unmarshal($this->db->f('count', true), 'int');
+			} 
+		}
 	}
 ?>

@@ -106,7 +106,6 @@
 				<option value="name"><?php echo lang('name') ?></option>
 				<option value="address"><?php echo lang('address') ?></option>
 				<option value="ssn"><?php echo lang('ssn') ?></option>
-				<option value="result_unit_number"><?php echo lang('result_unit_number') ?></option>
 				<option value="organisation_number"><?php echo lang('organisation_number') ?></option>
 				<option value="account"><?php echo lang('customer_account') ?></option>
 			</select>
