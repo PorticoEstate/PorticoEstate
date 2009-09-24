@@ -201,20 +201,6 @@
 	*/
 	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.29';
 	
-	/**
-	 * The purpose of this function is to reanimate dead guest sessions in the frontend.
-	 * It is registered as shutdown function and is as such executed before shut down occurs.
-	 */
-	function reanimate_frontend_guest_session()
-	{
-		if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$GLOBALS['phpgw']->session->verify()) {
-			header('Location: bookingfrontend/frontend.php?continue='.urlencode($_SERVER['REQUEST_URI']), true);
-		}
-	}
-	
-	register_shutdown_function('reanimate_frontend_guest_session');
-
-
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
 		|| !$GLOBALS['phpgw_info']['flags']['noapi'] )
 	{
