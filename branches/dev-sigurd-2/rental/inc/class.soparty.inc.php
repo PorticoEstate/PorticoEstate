@@ -6,33 +6,18 @@ include_class('rental', 'party', 'inc/model/');
 
 class rental_soparty extends rental_socommon
 {
-	function __construct()
+
+	/**
+	 * Get a static reference to the storage object associated with this model object
+	 * 
+	 * @return the storage object
+	 */
+	public static function get_instance()
 	{
-		parent::__construct('rental_party',
-		array
-		(
-			'id'	=> array('type' => 'int'),
-			'agresso_id' => array('type' => 'string'),
-			'personal_identification_number' => array('type' => 'string'),
-			'first_name' => array('type' => 'string'),
-			'last_name' => array('type' => 'string'),
-			'location_id'	=> array('type' => 'int'),
-			'is_active' => array('type', 'bool'),
-			'comment' => array('type', 'string'),
-			'title' => array('type' => 'string'),
-			'company_name' => array('type' => 'string'),
-			'department' => array('type' => 'string'),
-			'address_1' => array('type' => 'string'),
-			'address_2' => array('type' => 'string'),
-			'postal_code' => array('type' => 'string'),
-			'place' => array('type' => 'string'),
-			'phone' => array('type' => 'string'),
-			'fax' => array('type' => 'string'),
-			'email' => array('type' => 'string'),
-			'url' => array('type' => 'string'),
-			'account_number' => array('type' => 'string'),
-			'reskontro' => array('type' => 'string')
-		));
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.soparty');
+		}
+		return self::$so;
 	}
 
 	/**

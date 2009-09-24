@@ -3,20 +3,18 @@ phpgw::import_class('rental.socommon');
 
 class rental_soinvoice extends rental_socommon
 {
-	public function __construct()
+
+	/**
+	 * Get a static reference to the storage object associated with this model object
+	 * 
+	 * @return the storage object
+	 */
+	public static function get_instance()
 	{
-		parent::__construct('rental_invoice',
-			array
-			(
-				'id'				=> array('type' => 'int'),
-				'contract_id'		=> array('type' => 'int'),
-				'billing_id'		=> array('type' => 'int'),
-				'party_id'			=> array('type' => 'int'),
-				'timestamp_created'	=> array('type' => 'int'),
-				'timestamp_start'	=> array('type' => 'int'),
-				'timestamp_end'		=> array('type' => 'int'),
-				'total_sum'			=> array('type' => 'float')
-			));
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.soinvoice');
+		}
+		return self::$so;
 	}
 	
 	public function add(rental_invoice &$invoice)

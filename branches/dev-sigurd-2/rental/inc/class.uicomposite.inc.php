@@ -1,6 +1,6 @@
 <?php
+	phpgw::import_class('rental.socomposite');
 	phpgw::import_class('rental.uicommon');
-	phpgw::import_class('rental.uidocument_composite');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
 
@@ -27,118 +27,58 @@
 			self::set_active_menu('rental::composites');
 		}
 		
-		/**
-		 * (non-PHPdoc)
-		 * @see rental/inc/rental_uicommon#query()
-		 */
 		public function query()
 		{
+			// YUI variables for paging and sorting
+			$start_index	= phpgw::get_var('startIndex', 'int');
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+			$sort_field		= phpgw::get_var('sort');
+			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			// Form variables
+			$search_for 	= phpgw::get_var('query');
+			$search_type	= phpgw::get_var('search_option');
 			// Create an empty result set
-			$query_result = array();
+			$result_objects = array();
+			$result_count = 0;
 			
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
 			if(isset($contract_id))
 			{
-				$contract = rental_contract::get($contract_id);
+				$contract = rental_socomposite::get_instance()->get_single($contract_id);
 			}
 			
 			//Retrieve the type of query and perform type specific logic
-			$type = phpgw::get_var('type');
-			switch($type)
+			$query_type = phpgw::get_var('type');
+			switch($query_type)
 			{
 				case 'available_composites': // ... get all vacant composites
-					$query_result = rental_composite::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array( 'is_vacant' => 'vacant')
-					);
+					$filters = array('is_vacant' => 'vacant');
+					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'included_composites': // ... get all composites in contract
 					if(isset($contract))
 					{
-						$query_result = $contract->get_composites();
+						$result_objects = $contract->get_composites();
+						$result_count = count($result_objects);
 					}
 					break;
 				case 'not_included_composites': // ... get all vacant and active composites not in contract
-					$query_result = rental_composite::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'is_active' => phpgw::get_var('is_active'),
-							'is_vacant' => phpgw::get_var('occupancy'),
-							'contract_id' => phpgw::get_var('contract_id')
-						)
-					);
-					break;
-				case 'details': // ... composite details, TODO is this used?
-					$query_result[] = $composite; 
-					break;
-				case 'included_areas': // ... included areas in a composite
-					$query_result = $composite->get_units(
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'), 
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results')
-					);
-					break;
-				case 'available_areas':	// ... available areas for a composite, filters (date)
-					$query_result  = rental_property_location::get_locations(
-						(int)phpgw::get_var('level'), 
-						phpgw::get_var('id'),
-						phpgw::get_var('available_date_hidden'), 
-						phpgw::get_var('startIndex'), 
-						phpgw::get_var('results'), 
-						phpgw::get_var('sort'), 
-						phpgw::get_var('dir') == ' desc' ? false : true
-					);
-					break;
-				case 'contracts': // ... all contracts this composite is involved in, filters (status and date)
-					$query_result = rental_contract::get_contracts_for_composite(
-						phpgw::get_var('id'), 
-						phpgw::get_var('sort'), 
-						phpgw::get_var('dir'), 
-						phpgw::get_var('startIndex'), 
-						phpgw::get_var('results'), 
-						phpgw::get_var('contract_status'), 
-						phpgw::get_var('contract_date')
-					);
-					break;
-				case 'orphan_units': // ... all units not included in any composite
-					$query_result = rental_unit::get_orphan_rental_units(
-						phpgw::get_var('startIndex'), 
-						phpgw::get_var('results')
-					);
+					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'not_in_contract' => phpgw::get_var('contract_id'));
+					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'all_composites': // ... all composites, filters (active and vacant)
-				default:
-					$query_result = rental_composite::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'is_active' => phpgw::get_var('is_active'), 
-							'is_vacant' => phpgw::get_var('occupancy')
-						)
-					);
+					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'));
+					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
-
 			}
 
 			//Create an empty row set
 			$rows = array();
-			foreach($query_result as $result) {
+			foreach($result_objects as $result) {
 				if(isset($result))
 				{
 					if($result->has_permission(PHPGW_ACL_READ))
@@ -149,10 +89,8 @@
 				}
 			}
 			
-			//var_dump($rows);
-			
 			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => count($rows));
+			$result_data = array('results' => $rows, 'total_records' => $object_count);
 			
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 

@@ -3,21 +3,17 @@ phpgw::import_class('rental.socommon');
 
 class rental_sobilling extends rental_socommon
 {
-	public function __construct()
+	/**
+	 * Get a static reference to the storage object associated with this model object
+	 * 
+	 * @return the storage object
+	 */
+	public static function get_instance()
 	{
-		parent::__construct('rental_billing',
-			array
-			(
-				'id'				=> array('type' => 'int'),
-				'total_sum'			=> array('type' => 'float'),
-				'success'			=> array('type' => 'int'),
-				'timestamp_start'	=> array('type' => 'int'),
-				'timestamp_stop'	=> array('type' => 'int'),
-				'location_id'		=> array('type' => 'int'), // Contract type
-				'term_id'			=> array('type' => 'int'),
-				'year'				=> array('type' => 'int'),
-				'month'				=> array('type' => 'int')
-			));
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.sobilling');
+		}
+		return self::$so;
 	}
 	
 	public function add(rental_billing &$billing)
@@ -59,29 +55,29 @@ class rental_sobilling extends rental_socommon
 		$result = $this->db->query("UPDATE {$this->table_name} SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__,__FILE__);
 	}
 	
-		/**
-		 * Returns all billing jobs.
-		 * 
-		 * @return rental_billing objects, empty array if noone found, never
-		 * null.
-		 */
-		public function get_billings()
+	/**
+	 * Returns all billing jobs.
+	 * 
+	 * @return rental_billing objects, empty array if noone found, never
+	 * null.
+	 */
+	public function get_billings()
+	{
+		$billings = array();
+		$query = "SELECT " . join(',', array_keys($this->fields)) . " FROM {$this->table_name} ORDER BY timestamp_start DESC";
+		if($this->db->query($query, __LINE__,__FILE__))
 		{
-			$billings = array();
-			$query = "SELECT " . join(',', array_keys($this->fields)) . " FROM {$this->table_name} ORDER BY timestamp_start DESC";
-			if($this->db->query($query, __LINE__,__FILE__))
-			{
-				while($this->db->next_record()){
-					$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('term_id', true), $this->db->f('year', true), $this->db->f('month', true));
-					$billing->set_success($this->db->f('success', true));
-					$billing->set_total_sum($this->db->f('total_sum', true));
-					$billing->set_timestamp_start($this->db->f('timestamp_start', true));
-					$billing->set_timestamp_stop($this->db->f('timestamp_stop', true));
-					$billings[] = $billing;
-				}
+			while($this->db->next_record()){
+				$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('term_id', true), $this->db->f('year', true), $this->db->f('month', true));
+				$billing->set_success($this->db->f('success', true));
+				$billing->set_total_sum($this->db->f('total_sum', true));
+				$billing->set_timestamp_start($this->db->f('timestamp_start', true));
+				$billing->set_timestamp_stop($this->db->f('timestamp_stop', true));
+				$billings[] = $billing;
 			}
-			return $billings;
 		}
+		return $billings;
+	}
 	
 }
 ?>

@@ -199,7 +199,6 @@
 				{
 					continue; // We don't add this price item - continue to next
 				}
-				
 				if($contract_price_item_start < $timestamp_invoice_start) // Start of price item before invoice start
 				{
 					$invoice_price_item_start = $timestamp_invoice_start; // We use the invoice start

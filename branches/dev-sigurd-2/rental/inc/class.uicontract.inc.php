@@ -170,7 +170,7 @@
 						$GLOBALS['phpgw_info']['user']['account_id']
 					);
 					break;
-				case 'contracts_for_composite':
+				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
 					$query_result = rental_contract::get_contracts_for_composite(
 						phpgw::get_var('composite_id'), 
 						phpgw::get_var('sort'), 

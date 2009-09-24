@@ -1,12 +1,10 @@
 <?php
+	include_class('rental', 'price_item', 'inc/model/');
+	
 	/**
 	 * Class that represents a price item in the price list
 	 *
 	 */
-	
-	phpgw::import_class('rental.bocommon');
-	include_class('rental', 'price_item', 'inc/model/');
-	
 	class rental_contract_price_item extends rental_price_item
 	{
 		public static $so;

@@ -79,13 +79,6 @@ class rental_property_location
 		$result['area_gros'] = $this->get_area_gros();
 		return $result;
 	}
-	
-	public static function get_locations(int $level, $start_row = 0, $num_of_rows = 25)
-	{
-//		$data = execMethod('property.bolocation.read', 1);//, array('type_id'=>1));
-//		var_dump($data);
-// XXX: Continue here
-		return array();
-	}
+
 }
 ?>

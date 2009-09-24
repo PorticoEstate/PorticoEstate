@@ -278,7 +278,6 @@
 					
 			}
 			
-			
 			ob_start();
 			foreach(array_reverse($this->tmpl_search_path) as $path)
 			{
@@ -287,13 +286,8 @@
 				{
 					include($filename);
 					break;
-					//$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
 				}
 			}
-			//include();
-			//var_dump(include_class('rental','tplcontract_ist'));
-			//var_dump(include $template);
-			//return;
 			$output = ob_get_contents();
 			ob_end_clean();
 			self::render_template($output);

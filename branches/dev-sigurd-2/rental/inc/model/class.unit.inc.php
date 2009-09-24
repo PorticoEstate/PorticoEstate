@@ -1,8 +1,6 @@
 <?php
-phpgw::import_class('rental.bocommon');
-
 /**
- * Respresents one single unit. A unit is one single combination of one
+ * Represents one single unit. A unit is one single combination of one
  * composite from the rental module and one location from the property
  * module. 
  *

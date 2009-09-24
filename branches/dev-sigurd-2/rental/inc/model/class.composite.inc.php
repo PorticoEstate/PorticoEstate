@@ -1,20 +1,14 @@
 <?php
-	/**
-	 * Class that represents a rental composite
-	 *
-	 */
-
-	phpgw::import_class('rental.bocommon');
-	
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'unit', 'inc/model/');
 	include_class('rental', 'contract', 'inc/model/');
 	
+	/**
+	 * Class that represents a rental composite
+	 *
+	 */
 	class rental_composite extends rental_model
 	{
-		public static $so;
-		
-		protected $id;
 		protected $name;
 		protected $description;
 		protected $is_active;
@@ -36,55 +30,8 @@
 		 */
 		public function __construct(int $id = null)
 		{
-			$this->id = $id;
+			parent::__construct($id);
 			$this->units = array();
-		}
-		
-		/**
-		 * Return a single rental_composite object based on the provided id
-		 * 
-		 * @param $id rental composite id
-		 * @return a rental_composite
-		 */
-		public static function get($id)
-		{
-			$so = self::get_so();
-			
-			return $so->get_single($id);
-		}
-		
-		/**
-		 * Return a list all of rental_composite objects that fits the provided arguments
-		 * 
-		 * @param $start		which index to start the list at
-		 * @param $results	how many results to return
-		 * @param $sort			sort column
-		 * @param $dir			sort direction
-		 * @param $query
-		 * @param $search_option
-		 * @param $filters
-		 * @return a list of rental_composite objects
-		 */
-		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-		{
-			$so = self::get_so();
-			
-			$composites = $so->get_composite_array($start, $results, $sort, $dir, $query, $search_option, $filters);
-			
-			return $composites;
-		}
-		
-		/**
-		 * Add a new rental composite object to the store.
-		 * 
-		 * @param $composite the new composite
-		 * @return the status of the operation
-		 */
-		public static function add($composite)
-		{
-			$so = self::get_so();
-			
-			return $so->add($composite);
 		}
 		
 		/**
@@ -130,25 +77,6 @@
 		}
 		
 		/**
-		 * Store the composite in the database.  If the composite has no ID it is assumed to be new and
-		 * inserted for the first time.  The composite is then updated with the new insert id.
-		 */
-		public function store()
-		{
-			$so = self::get_so();
-			
-			if ($this->id) {
-				// We can assume this composite came from the database since it has an ID. Update the existing row
-				$so->update($this);
-			} 
-			else
-			{
-				// This object does not have an ID, so will be saved as a new DB row
-				$so->add($this);
-			}
-		}
-	
-		/**
 		 * Get the rental_unit objects associated with this composite
 		 * 
 		 * @param $sort the name of the column to sort by
@@ -161,14 +89,6 @@
 		{
 			return $this->units; 
 		}
-		
-		
-		public function set_id($id)
-		{
-			$this->id = $id;
-		}
-		
-		public function get_id() { return $this->id; }
 		
 		public function set_description($description)
 		{
@@ -258,20 +178,6 @@
 			}
 			return $area;
 
-		}
-
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
-		{
-			if (self::$so == null) {
-				self::$so = CreateObject('rental.socomposite');
-			}
-			
-			return self::$so;
 		}
 		
 		/**

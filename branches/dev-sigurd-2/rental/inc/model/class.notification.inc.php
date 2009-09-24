@@ -1,5 +1,4 @@
 <?php
-phpgw::import_class('rental.bocommon');
 include_class('rental', 'model', 'inc/model/');
 
 /**

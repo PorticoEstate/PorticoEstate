@@ -9,28 +9,18 @@ include_class('rental', 'contract_price_item', 'inc/model/');
 
 class rental_socontract extends rental_socommon
 {
-	function __construct()
+
+	/**
+	 * Get a static reference to the storage object associated with this model object
+	 * 
+	 * @return the storage object
+	 */
+	public static function get_instance()
 	{
-		parent::__construct('rental_contract',
-		array
-		(
-					'id'	=> array('type' => 'int'),
-					'date_start' => array('type' => 'int'),
-					'date_end' => array('type' => 'int'),
-					'billing_start' => array('type' => 'int'),
-					'title'	=> array('type' => 'string'),
-					'composite_name' => array('type' => 'string'),
-					'first_name' => array('type' => 'string'),
-					'last_name' => array('type' => 'string'),
-					'company_name' => array('type' => 'string'),
-					'comment' => array('type' => 'string'),
-					'old_contract_id' => array('type' => 'string'),
-					'edited_on' => array('type' => 'date'),
-					'location_id' => array('type' => 'int'),
-					'executive_officer' => array('type' => 'int'),
-					'last_updated' => array('type' => 'int'),
-					'last_edited_by_current_user' => array('type' => 'int')
-		));
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.socontract');
+		}
+		return self::$so;
 	}
 	
 	protected function get_conditions($query, $filters,$search_option)

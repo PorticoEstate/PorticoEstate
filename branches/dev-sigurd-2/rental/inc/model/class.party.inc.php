@@ -1,10 +1,8 @@
 <?php
 /**
- * Class that represents a rental composite
+ * Class that represents a contract party
  *
  */
-
-phpgw::import_class('rental.bocommon');
 include_class('rental', 'contract', 'inc/model/');
 
 class rental_party extends rental_model

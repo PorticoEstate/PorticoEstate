@@ -98,6 +98,7 @@ external	rental	no	Eksterne kontraktsparter
 fax	rental	no	Faks
 field_of_responsibility	rental	no	Ansvarsområde
 filters 	rental	no	Filtre
+Finish	rental	no	Avslutt
 firstname	rental	no	Fornavn
 first	rental	no	Første
 fixed	rental	no	Tidsbestemt
@@ -144,18 +145,30 @@ messages_required_field	rental	no	Dette feltet er påkrevd
 messages_right_click_to_add	rental	no	Høyreklikk for å legge til
 messages_saved_form	rental	no	Informasjonen ble lagret.
 messages_string_too_long	rental	no	Teksten er for lang
-month_10	rental	no	Oktober
-month_11	rental	no	November
-month_12	rental	no	Desember
-month_1	rental	no	Januar
-month_2	rental	no	Februar
-month_3	rental	no	Mars
-month_4	rental	no	April
-month_5	rental	no	Mai
-month_6	rental	no	Juni
-month_7	rental	no	Juli
-month_8	rental	no	August
-month_9	rental	no	September
+month 10	rental	no	oktober
+Month 10	rental	no	Oktober
+month 11	rental	no	november
+Month 11	rental	no	November
+month 12	rental	no	desember
+Month 12	rental	no	Desember
+month 1	rental	no	Januar
+month 2	rental	no	Februar
+month 3	rental	no	Mars
+month 4	rental	no	April
+month 5	rental	no	Mai
+month 6	rental	no	Juni
+month 7	rental	no	Juli
+month 8	rental	no	August
+month 9	rental	no	September
+month 1	rental	no	Januar
+month 2	rental	no	Februar
+month 3	rental	no	Mars
+month 4	rental	no	April
+month 5	rental	no	Mai
+month 6	rental	no	Juni
+month 7	rental	no	Juli
+month 8	rental	no	August
+month 9	rental	no	September
 monthly	rental	no	Månedlig
 month	rental	no	Måned
 name	rental	no	Navn

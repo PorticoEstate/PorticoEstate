@@ -228,11 +228,6 @@
 		 */
 		public function get_composites()
 		{
-			if (!$this->composites) {
-				// The list of composites are empty, so try to get them from the database
-				$so = self::get_so();
-				$this->composites = $so->get_composites_for_contract($this->get_id());
-			}
 			return $this->composites;
 		}
 		
@@ -446,7 +441,7 @@
 		{
 			if($invoices == null)
 			{
-				$invoices = rental_invoice::get_invoices($this->get_id());
+				$invoices = rental_invoice::get_invoices_for_contract($this->get_id());
 			}
 			return $invoices;
 		}

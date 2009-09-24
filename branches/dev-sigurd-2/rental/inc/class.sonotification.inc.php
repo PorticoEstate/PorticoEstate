@@ -5,18 +5,18 @@ include_class('rental', 'notification', 'inc/model/');
 
 class rental_sonotification extends rental_socommon
 {
-	function __construct()
+
+	/**
+	 * Get a static reference to the storage object associated with this model object
+	 * 
+	 * @return the storage object
+	 */
+	public static function get_instance()
 	{
-		parent::__construct('rental_notification',
-		array
-		(
-			'id'	=> array('type' => 'int'),
-			'account_id'	=> array('type' => 'int'),
-			'contract_id'	=> array('type' => 'int'),
-			'message' => array('type' => 'text'),
-			'date' => array('type', 'date'),
- 			'recurrence'	=> array('type' => 'int')
-		));
+		if (self::$so == null) {
+			self::$so = CreateObject('rental.sonotification');
+		}
+		return self::$so;
 	}
 	
 	/**

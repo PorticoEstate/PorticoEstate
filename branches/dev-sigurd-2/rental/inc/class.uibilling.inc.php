@@ -18,8 +18,23 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		// Step 3
-		if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '4' && phpgw::get_var('previous') != null) // User clicked next on step 2 or previous on step 4
+		$data = array
+		(
+			'contract_type' => phpgw::get_var('contract_type'),
+			'billing_term' => phpgw::get_var('billing_term'),
+			'year' => phpgw::get_var('year'),
+			'month' => phpgw::get_var('month'),
+			'billing_jobs' => rental_billing::get_billings()
+		);
+		$this->render('billing_list.php', $data);
+		return;
+		
+		// No messages so far
+		$errorMsg = null;
+		$infoMsg = null;
+		$step = null; // Used for overriding the user's selection and choose where to go by code
+		// Step 3 - the billing job
+		if(phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
 		{
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
 			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
@@ -38,11 +53,16 @@ class rental_uibilling extends rental_uicommon
 					'year' => phpgw::get_var('year'),
 					'month' => phpgw::get_var('month')
 				);
+				$this->render('billing_step3.php', $data);
 			}
-			$this->render('billing_step3.php', $data);
+			else
+			{
+				$errorMsg = lang('No contracts were selected.');
+				$step = 2; // Go back to step 2
+			}
 		}
 		// Step 2
-		else if((phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
+		else if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
 			$contracts = rental_contract::get_contracts_for_billing(phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'));
 			$data = array
@@ -51,21 +71,10 @@ class rental_uibilling extends rental_uicommon
 				'contract_type' => phpgw::get_var('contract_type'),
 				'billing_term' => phpgw::get_var('billing_term'),
 				'year' => phpgw::get_var('year'),
-				'month' => phpgw::get_var('month')
+				'month' => phpgw::get_var('month'),
+				'error' => $errorMsg
 			);
 			$this->render('billing_step2.php', $data);
-		}
-		else // Step 1	
-		{
-			$data = array
-			(
-				'contract_type' => phpgw::get_var('contract_type'),
-				'billing_term' => phpgw::get_var('billing_term'),
-				'year' => phpgw::get_var('year'),
-				'month' => phpgw::get_var('month'),
-				'billing_jobs' => rental_billing::get_billings()
-			);
-			$this->render('billing_step1.php', $data);
 		}
 	}
 	
