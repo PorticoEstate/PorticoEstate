@@ -276,7 +276,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
-				//$this->phpgw_setcookie(session_name(), $this->_sessionid);
+				$this->phpgw_setcookie(session_name(), $this->_sessionid);
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -805,7 +805,7 @@
 		*/
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
-			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+/*			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
 
 			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
 			{
@@ -815,9 +815,10 @@
 			{
 				$webserver_url = '/';
 			}
-
-			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
-					$this->_cookie_domain, $secure, true);
+*/
+//			setcookie($cookiename, $cookievalue, $cookietime, parse_url($webserver_url, PHP_URL_PATH),
+//					$this->_cookie_domain, $secure, true);
+			setcookie($cookiename, $cookievalue, $cookietime);
 		}
 
 
