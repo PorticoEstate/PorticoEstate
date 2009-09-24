@@ -39,7 +39,7 @@
 			(
 				'Type'				=> '1', // text
 				'serviceid'			=> $this->carrot_param['serviceid'], //Unique identifier for service. Provided by Carrot.
-				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
+//				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
 				'content'			=> $sms_msg,
 //				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
 				'originator'		=> 1960,//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
@@ -79,17 +79,18 @@
 				$client = CreateObject('phpgwapi.soap_client', array(), false);
 				$client->phpgw_domain = 'default';
 				$client->wsdl = $this->carrot_param['wsdl'];
-				$client->location = $this->carrot_param['send_url'];
+				$client->location = $this->carrot_param['service_url'];
 
-				$client->uri		= "urn://www.tempuri.testing/soap";
+				$client->uri		= "http://ws.v4.sms.carrot.no";
 				$client->trace		= 1;
 				$client->login		= $this->carrot_param['login'];
 				$client->password	= $this->carrot_param['password'];
 				$client->proxy_host	= $this->carrot_param['proxy_host'];
 				$client->proxy_port	= $this->carrot_param['proxy_port'];
-				$client->encoding	= 'UTF-8';
+				$client->encoding	= 'iso-8859-1';//'UTF-8';
 				$client->init();
 				$this->result = $client->call("sendMTMessage", $arguments);
+
 			}
 
 		    // p_status :

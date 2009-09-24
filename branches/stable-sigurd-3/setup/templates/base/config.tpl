@@ -44,12 +44,15 @@
    </tr>
 
    <tr class="row_off">
-     <td>{lang_cookie_domain_for_sessions_-_if_unsure_use_request_fqdn}</td>
+     <td>{lang_cookie_domain_for_sessions_-_if_unsure_leave_empty}</td>
+	 <td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
+<!--
 	 <td>
 	   <select name="newsettings[cookie_domain]">
          {hook_cookie_domain}
 	   </select>
 	 </td>
+-->
    </tr>
 
    <tr class="row_on">
