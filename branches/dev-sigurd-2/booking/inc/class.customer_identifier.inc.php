@@ -21,6 +21,14 @@
 			return in_array($type, $this->get_valid_types());
 		}
 		
+		public function copy_between(array $from_entity, array &$to_entity) {
+			if ($from_entity_customer_identifier = $this->get_current_identifier_type($from_entity))
+			{
+				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
+				$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $this->get_current_identifier_value($from_entity);
+			}
+		}
+		
 		/** 
 		 * Extract customer identifier from _POST into $data
 		 */
@@ -39,7 +47,6 @@
 			
 			$identifier_field = $this->field_prefix.$current_type;
 			$identifier_value = isset($_POST[$identifier_field]) ? trim($_POST[$identifier_field]) : null;
-			
 			
 			if (empty($identifier_value)) {
 				$data[$this->identifier_type_field] = null;

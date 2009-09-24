@@ -12,6 +12,7 @@
 		);
 		
 		protected 
+			$customer_id,
 			$resource_so,
 			$season_so;
 		
@@ -19,6 +20,7 @@
 		{
 			$this->season_so = CreateObject('booking.soseason');
 			$this->resource_so = CreateObject('booking.soresource');
+			$this->customer_id = CreateObject('booking.customer_identifier');
 			
 			parent::__construct('bb_completed_reservation', 
 				array(
@@ -119,7 +121,7 @@
 				'cost' 					=> $reservation['cost'],
 				'from_' 					=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
-				'customer_type' 			=> 'external',
+				'customer_type' 		=> 'external',
 				'resources' 			=> $reservation['resources'],
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);
@@ -131,6 +133,10 @@
 			$this->$method($reservation, $entity);
 			$this->set_description($type, $reservation, $entity);
 			$this->add($entity);
+		}
+		
+		private function copy_customer_identifier(array $from, array &$to) {
+			$this->customer_id->copy_between($from, $to);
 		}
 		
 		protected function set_description($type, &$reservation, &$entity) {
@@ -234,6 +240,7 @@
 			}
 
 			$this->set_organization($entity, $org);
+			$this->copy_customer_identifier($org, $entity);
 		}
 		
 		protected function initialize_completed_allocation(&$allocation, &$entity) {
@@ -249,9 +256,11 @@
 			}
 			
 			$this->set_organization($entity, $org);
+			$this->copy_customer_identifier($org, $entity);
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
+			$this->copy_customer_identifier($event, $entity);
 		}
 		
 		public function update_exported_state_of(&$reservations, $with_export_id) {
