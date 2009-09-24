@@ -31,6 +31,7 @@
 					'to_'						=> array('type' => 'timestamp', 'required'=> true),
 					'organization_id'    => array('type' => 'int'),
 					'customer_type' 			=> array('type' => 'string', 'nullable' => False),
+					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
 					'customer_organization_number' => array('type' => 'string', 'precision' => '9', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'customer_ssn' 			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN')), 
 					'exported' 				=> array('type' => 'int'),

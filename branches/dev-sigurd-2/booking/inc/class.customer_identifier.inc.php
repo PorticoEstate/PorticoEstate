@@ -1,4 +1,6 @@
 <?php
+	phpgw::import_class('booking.uicommon');
+
 	class booking_customer_identifier {
 		const TYPE_SSN = 'ssn';
 		const TYPE_ORGANIZATION_NUMBER = 'organization_number';
@@ -95,7 +97,7 @@
 			return (empty($identifier_field) ? null : $identifier_field);
 		}
 		
-		public function install(booking_uicommon $ui, &$entity = array()) {
+		public function install(booking_uicommon $ui, &$entity = null) {
 			$js = <<<JST
 			(function() {
 				var Dom = YAHOO.util.Dom;
@@ -137,18 +139,24 @@
 			})();
 JST;
 			
-			$entity['customer_identifier_types'] = $this->get_valid_types_ui_values();
-			
-			if ($customer_identifier_value = $this->get_current_identifier_value($entity)) {
-				$entity['customer_identifier_value'] = $customer_identifier_value;
-			}
-			
-			if ($customer_identifier_type = $this->get_current_identifier_type($entity)) {
-				$entity['customer_identifier_label'] = booking_uicommon::humanize($customer_identifier_type);
+			if (is_array($entity)) {
+				$this->add_current_identifier_info($entity);
 			}
 			
 			$ui->add_template_file('customer_identifier');
 			$ui->add_js_load_event($js);
+		}
+		
+		public function add_current_identifier_info(&$entity) {
+			$entity['customer_identifier_types'] = $this->get_valid_types_ui_values();
+		
+			if ($customer_identifier_type = $this->get_current_identifier_type($entity)) {
+				$entity['customer_identifier_label'] = booking_uicommon::humanize($customer_identifier_type);
+			}
+		
+			if ($customer_identifier_value = $this->get_current_identifier_value($entity)) {
+				$entity['customer_identifier_value'] = $customer_identifier_value;
+			}
 		}
 		
 		public function get_valid_types() {

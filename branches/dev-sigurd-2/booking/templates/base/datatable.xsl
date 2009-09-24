@@ -19,6 +19,9 @@
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
+	<div id="list_flash">
+		<xsl:call-template name="msgbox"/>
+	</div>
 	<xsl:apply-templates select="datatable"/> 
 	<xsl:apply-templates select="form/list_actions"/>
 </xsl:template>
@@ -28,19 +31,29 @@
 		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
 			<tr>
         <xsl:for-each select="item">
+			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
+			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
+			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
+		
 			<xsl:choose>
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
 					<div class="date-picker">
-                	<input id="filter_{name}" name="filter_{name}" type="text"/>
+                	<input id="filter_{name}" name="filter_{name}" type="text">
+							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
+						</input>
                 </div>
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
 					<td valign="top" width="160px">
 						<div style="width:140px">
-							<input id="filter_{name}_name" name="filter_{name}_name" type="text"/>
-							<input id="filter_{name}_id" name="filter_{name}_id" type="hidden"/>
+							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
+								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
+							</input>
+							<input id="filter_{name}_id" name="filter_{name}_id" type="hidden">
+								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_id]"/></xsl:attribute>
+							</input>
 							<div id="filter_{name}_container"/>
 						</div>
 						<script type="text/javascript">	

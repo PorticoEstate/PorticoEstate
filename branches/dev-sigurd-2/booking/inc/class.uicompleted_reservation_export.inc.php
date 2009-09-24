@@ -2,7 +2,7 @@
 phpgw::import_class('booking.uicommon');
 
 	class booking_uicompleted_reservation_export extends booking_uicommon
-	{
+	{	
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -10,10 +10,10 @@ phpgw::import_class('booking.uicommon');
 			'add'				=> true,
 			'download'  	=> true,
 		);
-		
-		protected $fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_', 'export_files');
 
-		protected $module = 'booking';
+		protected 
+			$module = 'booking',
+			$fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_', 'to_', 'export_files');
 		
 		public function __construct()
 		{
@@ -55,7 +55,7 @@ phpgw::import_class('booking.uicommon');
 			
 			$file = $this->bo->get_export_file($export, phpgw::get_var('type', 'GET'));
 			
-			self::send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
+			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
 		}
 		
 		public function index()
@@ -109,7 +109,7 @@ phpgw::import_class('booking.uicommon');
 						),
 						array(
 							'key' => 'created_on',
-							'label' => lang('Created on'),
+							'label' => lang('Created'),
 						),
 						array(
 							'key' => 'created_by_name',
@@ -135,7 +135,7 @@ phpgw::import_class('booking.uicommon');
 				)
 			);
 			
-			self::render_template('datatable', $data);
+			$this->render_template('datatable', $data);
 		}
 
 		public function index_json()
@@ -154,6 +154,7 @@ phpgw::import_class('booking.uicommon');
 					'label' => lang('Download'), 
 					'href' => $this->link_to('download', array('id' => $export['id'], 'type' => 'internal'))
 				);
+				$export['created_on'] = substr($export['created_on'], 0, 19);
 			}
 			
 			$results = $this->yui_results($exports);
@@ -186,12 +187,34 @@ phpgw::import_class('booking.uicommon');
 		{
 			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$this->add_default_display_data($export);
-			self::render_template('completed_reservation_export', array('reservation' => $export));
+			$this->render_template('completed_reservation_export', array('reservation' => $export));
+		}
+		
+		protected function get_export_key() {
+			return phpgw::get_var('export_key', 'string', array('GET','POST'), null);
+		}
+		
+		public function pre_validate($export) {
+			if (!is_array($errors = $this->bo->validate($export))) { return; }
+			
+			$export_errors = array_intersect_key(
+				$errors, 
+				array('nothing_to_export' => true, 'invalid_customer_ids' => true)
+			);
+			
+			if (!count($export_errors) > 0) { return; }
+			
+			$redirect_params = array('ui' => 'completed_reservation');
+			
+			if ($export_key = $this->get_export_key()) {
+				$redirect_params['export_key'] = $export_key;
+			}
+			
+			$this->flash_form_errors($export_errors);
+			$this->redirect_to('index', $redirect_params);
 		}
 		
 		public function add() {
-			$export = array();
-			
 			//Values passed in from the "Export"-action in uicompleted_reservation.index
 			$export = extract_values($_GET, $this->fields);
 			
@@ -220,11 +243,17 @@ phpgw::import_class('booking.uicommon');
 				$export['to_'] = date('Y-m-d');
 			}
 			
-			$this->flash_form_errors($errors);
-			//self::add_javascript('export', 'export', 'export.js');
-
-			$export['cancel_link'] = $this->link_to('index', array('ui' => 'completed_reservation'));
+			$this->pre_validate($export);
 			
-			self::render_template('completed_reservation_export_form', array('new_form' => true, 'export' => $export));
+			$this->flash_form_errors($errors);
+			
+			$cancel_params = array('ui' => 'completed_reservation');
+			if ($export_key = $this->get_export_key()) {
+				$cancel_params['export_key'] = $export_key;
+			}
+			
+			$export['cancel_link'] = $this->link_to('index', $cancel_params);
+			
+			$this->render_template('completed_reservation_export_form', array('new_form' => true, 'export' => $export));
 		}
 	}

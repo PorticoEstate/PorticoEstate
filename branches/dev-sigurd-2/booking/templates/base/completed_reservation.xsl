@@ -39,15 +39,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'Customer Type')" /></dt>
 			<dd><xsl:value-of select="reservation/customer_type"/></dd>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Customer #')" /></dt>
-			<xsl:choose>
-				<xsl:when test="reservation/customer_identifier">
-					<dd><xsl:value-of select="reservation/customer_identifier"/> (<xsl:value-of select="php:function('lang', string(reservation/customer_identifier_type))"/>)</dd>
-				</xsl:when>
-				<xsl:otherwise>
-					N/A
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:copy-of select="phpgw:booking_customer_identifier_show(reservation, 'Customer ID')"/>
 		</dl>
 
 		<dl class="proplist-col">

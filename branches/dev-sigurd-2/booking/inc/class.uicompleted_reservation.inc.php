@@ -3,6 +3,8 @@ phpgw::import_class('booking.uicommon');
 
 	class booking_uicompleted_reservation extends booking_uicommon
 	{
+		const SESSION_EXPORT_FILTER_KEY = 'export_filters';
+		
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -11,17 +13,22 @@ phpgw::import_class('booking.uicommon');
 			'export'       => true,
 			'toggle_show_all_completed_reservations'	=>	true,
 		);
-		
-		protected $fields = array('cost', 'customer_organization_number', 'customer_ssn', 'customer_type', 'description', 'article_description');
 
-		protected $module = 'booking';
+		protected
+			$module = 'booking',
+			$fields = array('cost', 'customer_organization_number', 'customer_ssn', 
+								 'customer_type', 'description', 'article_description'),
+			$customer_id,
+			$export_filters = array();
 		
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation');
+			$this->customer_id = CreateObject('booking.customer_identifier');
 			self::set_active_menu('booking::completed_reservations');
 			$this->url_prefix = 'booking.uicompleted_reservation';
+			$this->restore_export_filters();
 		}
 		
 		public function link_to($action, $params = array())
@@ -47,10 +54,28 @@ phpgw::import_class('booking.uicommon');
 			return array_merge(array('menuaction' => $action), $params);
 		}
 		
+		protected function restore_export_filters() {
+			if ($export_key = phpgw::get_var('export_key', 'string', array('GET','POST'), null)) {
+				if (is_array($export_filters = $this->ui_session_get(self::SESSION_EXPORT_FILTER_KEY.'_'.$export_key))) {
+					$this->export_filters = $export_filters;
+				}
+			}
+		}
+		
+		protected function store_export_filters($filters) {
+			$export_key = md5(print_r($filters, true));
+			$this->ui_session_set(self::SESSION_EXPORT_FILTER_KEY.'_'.$export_key, $filters);
+			return $export_key;
+		}
+		
 		public function export() {
 			//TODO: also filter on exported value
+			$filter_values = extract_values($_GET, array('season_id', 'season_name', 'building_id', 'building_name', 'to'), array('prefix' => 'filter_', 'preserve_prefix' => true));
+			$export_key = $this->store_export_filters($filter_values);
+			
 			$forward_values = extract_values($_GET, array('season_id', 'season_name', 'building_id', 'building_name', 'to'), array('prefix' => 'filter_'));
 			isset($forward_values['to']) AND $forward_values['to_'] = $forward_values['to'];
+			$forward_values['export_key'] = $export_key;
 			$forward_values['ui'] = 'completed_reservation_export';
 			$this->redirect_to('add', $forward_values);
 			return;
@@ -155,7 +180,7 @@ phpgw::import_class('booking.uicommon');
 						),
 						array(
 							'key' => 'customer_identifier',
-							'label' => lang('Cust. #'),
+							'label' => lang('Customer ID'),
 							'sortable' => false,
 						),
 						array(
@@ -173,9 +198,15 @@ phpgw::import_class('booking.uicommon');
 					)
 				)
 			);
+			
+			$data['filters'] = $this->export_filters;
 			self::render_template('datatable', $data);
 		}
-
+		
+		protected function add_current_customer_identifier_info(&$data) {
+			$this->get_customer_identifier()->add_current_identifier_info($data);
+		}
+		
 		public function index_json()
 		{
 			$reservations = $this->bo->read();
@@ -190,9 +221,11 @@ phpgw::import_class('booking.uicommon');
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
 				$reservation['customer_type'] = lang($reservation['customer_type']);
-				$reservation['customer_identifier'] = $this->bo->get_active_customer_identifier($reservation);
-				$string_customer_identifier = (is_null(current($reservation['customer_identifier'])) ? 'N/A' : current($reservation['customer_identifier']));
-				$reservation['customer_identifier'] = $string_customer_identifier;
+
+				$this->add_current_customer_identifier_info($reservation);
+				
+				$reservation['customer_identifier'] = isset($reservation['customer_identifier_label']) ? 
+					$reservation['customer_identifier_value'] : lang('None');
 			}
 			
 			$results = $this->yui_results($reservations);
@@ -221,10 +254,6 @@ phpgw::import_class('booking.uicommon');
 				unset($reservation['organization_name']);
 			}
 			
-			if (isset($reservation['customer_identifier_type']) && !empty($reservation['customer_identifier_type'])) {
-				$reservation['customer_identifier_type'] = self::humanize($reservation['customer_identifier_type']);
-			}
-			
 			$reservation['reservation_link'] = $this->link_to('show', array(
 				'ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id']));
 			
@@ -237,7 +266,41 @@ phpgw::import_class('booking.uicommon');
 		{
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$this->add_default_display_data($reservation);
+			$this->install_customer_identifier_ui($reservation);
 			self::render_template('completed_reservation', array('reservation' => $reservation));
+		}
+		
+		protected function get_customer_identifier() {
+			return $this->customer_id;
+		}
+
+		protected function extract_customer_identifier(&$data) {
+			$this->get_customer_identifier()->extract_form_data($data);
+		}
+
+		protected function validate_customer_identifier(&$data) {
+			return $this->get_customer_identifier()->validate($data);
+		}
+
+		protected function install_customer_identifier_ui(&$entity) {
+			$this->get_customer_identifier()->install($this, $entity);
+		}
+
+		protected function validate(&$entity) {
+			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
+			return $errors;
+		}
+
+		protected function extract_form_data($defaults = array()) {
+			$entity = array_merge($defaults, extract_values($_POST, $this->fields));
+			$this->extract_customer_identifier($entity);
+			return $entity;
+		}
+
+		protected function extract_and_validate($defaults = array()) {
+			$entity = $this->extract_form_data($defaults);
+			$errors = $this->validate($entity);
+			return array($entity, $errors);
 		}
 		
 		public function edit() {
@@ -253,8 +316,8 @@ phpgw::import_class('booking.uicommon');
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$reservation = array_merge($reservation, extract_values($_POST, $this->fields));
-				$errors = $this->bo->validate($reservation);
+				list($reservation, $errors) = $this->extract_and_validate($reservation);
+
 				if(!$errors)
 				{
 					try {
@@ -268,6 +331,7 @@ phpgw::import_class('booking.uicommon');
 			
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);
+			$this->install_customer_identifier_ui($reservation);
 			self::render_template('completed_reservation_edit', array('reservation' => $reservation));
 		}
 	}
