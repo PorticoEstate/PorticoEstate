@@ -112,7 +112,9 @@
 
 				var select_input_id = 'field_{$this->identifier_type_field}';
 				var select_input = Dom.get(select_input_id);
-
+				
+				if (!select_input) { return; }
+				
 				var selectedIndex = document.getElementById(select_input_id).selectedIndex;
 
 				var items = Dom.getElementsBy(function(){return true;}, 'option', select_input);
@@ -137,12 +139,17 @@
 					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
 					all_cust_fields[field_type].focus();
 				}
-
-				Dom.batch(items, function(opt) {
-					Event.addListener(opt, 'click', function(e) { 
-						enableCustField(this.value);
-					})
+				
+				Event.addListener(select_input, 'change', function(e) {
+					enableCustField(this[this.selectedIndex].value);
 				});
+				
+				// Wouldn't work in IE6:
+				// Dom.batch(items, function(opt) {
+				// 	Event.addListener(opt, 'click', function(e) { 
+				// 		enableCustField(this.value);
+				// 	})
+				// });
 			})();
 JST;
 			
