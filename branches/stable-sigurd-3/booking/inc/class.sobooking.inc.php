@@ -69,6 +69,35 @@
 			);
 		}
 
+		function calculate_allocation_id($entity)
+		{
+			if(!$entity['resources'])
+			{
+				return null;
+			}
+			$booking_id = $entity['id'] ? $entity['id'] : -1;
+			$group_id = intval($entity['group_id']);
+			$from_ = new DateTime($entity['from_']);
+			$to_ = new DateTime($entity['to_']);
+			$start = $from_->format('Y-m-d H:i');
+			$end = $to_->format('Y-m-d H:i');
+			$rids = join(',', array_map("intval", $entity['resources']));
+
+			// Check if we overlap with any existing allocation
+			$this->db->query("SELECT a.id FROM bb_allocation a 
+								WHERE a.active = 1 AND a.organization_id IN (SELECT organization_id FROM bb_group WHERE id=$group_id) AND 
+								a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
+								((a.from_ >= '$start' AND a.from_ < '$end') OR 
+					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
+					 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
+			if($this->db->next_record()) {
+				return $this->db->f('id', true);
+			}
+			else {
+				return null;
+			}
+		}
+
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			// FIXME: Validate: Season contains all resources
@@ -90,6 +119,12 @@
 			if(strtotime($start) > strtotime($end)) {
 				$errors['from_'] = 'Invalid from date';
 				return; //No need to continue validation if dates are invalid
+			}
+
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' &&
+				$allocation_id == -1)
+			{
+				$errors['booking'] = lang("This booking is outside the organization's allocated time");
 			}
 			
 			if($entity['resources'])
@@ -115,7 +150,7 @@
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$errors['allocation'] = lang('Overlaps with existing allocation');
+					$errors['allocation'] = lang('Overlaps other organizations allocation');
 				}
 			
 				// Check if we overlap with any existing booking

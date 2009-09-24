@@ -75,6 +75,10 @@
 				'city' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
+				'customer_number' => array('type' => 'string', 'nullable' => True),
+				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
+				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -272,7 +276,10 @@
 				'contact_email' => array('type' => 'text', 'nullable' => False),
 				'contact_phone' => array('type' => 'text', 'nullable' => False),
 				'secret' => array('type' => 'text', 'nullable' => False),
-				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False)
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
+				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
+				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -488,6 +495,9 @@
 				'contact_email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
 				'contact_phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false, 'default'=>''),
 				'completed' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
+				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
+				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

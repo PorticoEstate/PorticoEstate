@@ -63,13 +63,13 @@
 			$errors = array();
 			$booking = array();
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
-			$booking['allocation_id'] = phpgw::get_var('allocation_id', 'int', 'GET');
+			$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
 			$booking['from_'] = phpgw::get_var('from_', 'str', 'GET');
 			$booking['to_'] = phpgw::get_var('to_', 'str', 'GET');
-			if($booking['allocation_id'])
+			if($allocation_id)
 			{
-				$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+				$allocation = $this->allocation_bo->read_single($allocation_id);
 				$season = $this->season_bo->read_single($allocation['season_id']);
 				$building = $this->building_bo->read_single($season['building_id']);
 				$booking['season_id'] = $season['id'];
@@ -80,6 +80,8 @@
 			{
 				$booking = extract_values($_POST, $this->fields);
 				$booking['active'] = '1';
+				$booking['cost'] = 0;
+				$booking['completed'] = '0';
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
@@ -88,14 +90,14 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibooking.edit', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
+			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id'=> $booking['building_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -111,7 +113,7 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
-			$booking['id'] = $id;
+			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -122,20 +124,20 @@
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibooking.show', 'id'=>$booking['id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $booking['building_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$groups = $this->group_bo->read();
+			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
 			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'groups' => $groups));
 		}

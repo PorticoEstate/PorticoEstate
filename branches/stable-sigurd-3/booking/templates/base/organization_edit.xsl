@@ -27,6 +27,10 @@
 			<dd>
 			    <input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}"/>
 			</dd>
+			
+			<dt><label for="field_customer_number"><xsl:value-of select="php:function('lang', 'Customer number')" /></label></dt>
+			<dd><input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}"/></dd>
+			
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -68,6 +72,8 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
+			<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
+
 			<dt><label for="field_street"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
 			<dd><input id="field_street" name="street" type="text" value="{organization/street}"/></dd>
 

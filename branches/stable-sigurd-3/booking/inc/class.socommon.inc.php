@@ -573,7 +573,9 @@
 									$col = $paramsOrCol;
 									$type = $params['type'];
 								}
-
+								
+								if ($col == 'id') { continue; }
+								
 								$data[] = $this->_marshal($v[$col], $type);
 							}
 							$v = join(',', $data);
@@ -592,7 +594,7 @@
 				}
 			}
 			
-			$this->db->query(join($update_queries, ';'), __LINE__, __FILE__);
+			$this->db->query(join($update_queries, ";\n"), __LINE__, __FILE__);
 			
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));

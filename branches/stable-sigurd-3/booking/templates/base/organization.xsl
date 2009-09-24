@@ -18,6 +18,9 @@
             <dt><xsl:value-of select="php:function('lang', 'Organization number')" /></dt>
             <dd><xsl:value-of select="organization/organization_number" /></dd>
 
+            <dt><xsl:value-of select="php:function('lang', 'Customer number')" /></dt>
+            <dd><xsl:value-of select="organization/customer_number" /></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
             <dd><xsl:value-of select="organization/activity_name" /></dd>
 
@@ -52,6 +55,8 @@
         </dl>
 
 		<dl class="proplist-col">
+			<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
+			
 			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
             <dd><xsl:value-of select="organization/street"/></dd>
 			

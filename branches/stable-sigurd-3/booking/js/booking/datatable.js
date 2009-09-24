@@ -7,7 +7,7 @@ YAHOO.booking.setupListActions = function() {
 };
 
 YAHOO.booking.renderUiFormItems = function(container) {
-	var items = YAHOO.util.Dom. getElementsBy(function(){return true;}, 'input', container);
+	var items = YAHOO.util.Dom.getElementsBy(function(){return true;}, 'input', container);
    for(var i=0; i < items.length; i++) {
        var type = items[i].getAttribute('type');
        if(type == 'link') {

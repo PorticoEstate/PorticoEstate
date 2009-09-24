@@ -156,6 +156,7 @@
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
+			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></dt>

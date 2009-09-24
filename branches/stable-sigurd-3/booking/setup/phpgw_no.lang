@@ -183,6 +183,7 @@ show only active	booking	no	Skjul
 showing items	booking	no	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	no	Fødselsnummer (11 siffer)
+Ssn	booking	no	Fødselsnummer (11 siffer)
 status	booking	no	Status
 street	booking	no	Gate
 su	booking	no	sø

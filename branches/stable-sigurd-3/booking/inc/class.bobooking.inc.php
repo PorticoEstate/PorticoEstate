@@ -402,4 +402,10 @@ function array_minus($a, $b)
 			return $this->so->find_expired();
 		}
 
+		function validate(&$entry)
+		{
+			$entry['allocation_id'] = $this->so->calculate_allocation_id($entry);
+			return parent::validate($entry);
+		}
+		
 	}

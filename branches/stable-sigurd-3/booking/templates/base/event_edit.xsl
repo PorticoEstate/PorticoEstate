@@ -159,6 +159,10 @@
                 </input>
             </dd>
         </dl>
+			<dl class="form-col">
+				<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
+				<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
+			</dl>
         <div class="form-buttons">
             <input type="submit">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>
