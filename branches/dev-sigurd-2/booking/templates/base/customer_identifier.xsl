@@ -44,7 +44,7 @@
 		</xsl:if>
 		
 		<xsl:if test="not($entity/customer_identifier_label)">
-			<xsl:value-of select="php:function('lang', 'None')"/>
+			<dd><xsl:value-of select="php:function('lang', 'None')"/></dd>
 		</xsl:if>
 		
 	</func:result>
