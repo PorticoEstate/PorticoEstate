@@ -11,13 +11,21 @@
 	 */
 	function extract_values($array, $keys, $options = array())
 	{
-		$options = array_merge(array('prefix' => '', 'suffix' => ''), $options);
+		static $default_options = array(
+			'prefix' => '',
+			'suffix' => '', 
+			'preserve_prefix' => false,
+			'preserve_suffix' => false
+		);
+		
+		$options = array_merge($default_options, $options);
+		
 		$result = array();
 		foreach($keys as $write_key)
 		{
 			$array_key = $options['prefix'].$write_key.$options['suffix'];
 			if(isset($array[$array_key])) {
-				$result[$write_key] = $array[$array_key];
+				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = $array[$array_key];
 			}
 		}
 		return $result;
@@ -51,14 +59,23 @@
 	
 	abstract class booking_uicommon
 	{
+		const UI_SESSION_FLASH = 'flash_msgs';
+		
 		protected	
 			$filesArray;
 			
 		protected static 
 			$old_exception_handler;
+			
+		private 
+			$ui_session_key,
+			$flash_msgs;
 		
 		public function __construct()
 		{
+			$this->ui_session_key = $this->current_app().'_uicommon';
+			$this->restore_flash_msgs();
+			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			self::set_active_menu('booking');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
@@ -85,6 +102,54 @@
 			if ($this->current_app() == 'bookingfrontend') {
 				$GLOBALS['phpgw']->translation->add_app('booking');
 			}
+		}
+		
+		private function get_ui_session_key() {
+			return $this->ui_session_key;
+		}
+		
+		private function restore_flash_msgs() {
+			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH))) {
+				if (is_array($flash_msgs)) {
+					$this->flash_msgs = $flash_msgs;
+					$this->session_set(self::UI_SESSION_FLASH, array());
+					return true;
+				}
+			}
+			
+			$this->flash_msgs = array();
+			return false;
+		}
+		
+		private function store_flash_msgs() {
+			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
+		}
+		
+		private function reset_flash_msgs() {
+			$this->flash_msgs = array();
+			$this->store_flash_msgs();
+		}
+		
+		private function session_set($key, $data) {
+			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
+		}
+		
+		private function session_get($key) {
+			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
+		}
+		
+		/**
+		 * Provides a private session cache setter per ui class.
+		 */
+		protected function ui_session_set($key, $data) {
+			return $this->session_set(get_class($this).'_'.$key, $data);
+		}
+		
+		/**
+		 * Provides a private session cache getter per ui class .
+		 */
+		protected function ui_session_get($key) {
+			return $this->session_get(get_class($this).'_'.$key);
 		}
 		
 		public function add_js_event($event, $js) {
@@ -141,6 +206,8 @@
 
 		public function redirect($link_data)
 		{
+			$this->store_flash_msgs();
+			
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $link_data);
 			else
@@ -241,8 +308,10 @@
 			if($this->flash_msgs) {
 				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
 			} else {
-           		$this->add_template_file('msgbox');
+				$this->add_template_file('msgbox');
 			}
+			
+			$this->reset_flash_msgs();
 			
 			$this->add_yui_translation($data);
 			

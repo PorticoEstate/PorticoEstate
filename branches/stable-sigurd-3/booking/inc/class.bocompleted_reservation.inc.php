@@ -3,69 +3,11 @@
 	phpgw::import_class('booking.bocompleted_reservation_export');
 	
 	class booking_bocompleted_reservation extends booking_bocommon
-	{
-		protected static $customer_field_prefix = 'customer_';
-		
+	{	
 		function __construct()
 		{
 			parent::__construct();
 			$this->so = CreateObject('booking.socompleted_reservation');
-		}
-		
-		/**
-		 * Returns the 'precedence rules' for a completed reservation's customer identifier number
-		 *
-		 * @param array $entity
-		 * @return array with identifier types ordered by ascending precedence/priority
-		 */
-		public function get_customer_identifier_precedence(&$entity) {
-			//customer_organization_number or customer_ssn
-			
-			if ($entity['reservation_type'] == 'event') {
-				return array('ssn', 'organization_number');
-			} else {
-				if ($entity['customer_type'] == 'organization') {
-					return array('organization_number', 'ssn');
-				} else {
-					return array('ssn', 'organization_number');
-				}
-			}
-		}
-		
-		/**
-		 * Returns the primary customer identifier type for the $entity
-		 *
-		 * @param array $entity
-		 * @return string identifier type
-		 */
-		public function get_primary_customer_identifier_type(&$entity) {
-			$prule = $this->get_customer_identifier_precedence($entity);
-			return $prule[0];
-		}
-		
-		/**
-		 * Returns the active primary customer identifier type for the $entity
-		 *
-		 * @param array $entity
-		 * @return string identifier type
-		 */
-		public function get_active_customer_identifier_type(&$entity) {
-			$prule = $this->get_customer_identifier_precedence($entity);
-			foreach($prule as $identifier_type) {
-				if (isset($entity[self::$customer_field_prefix.$identifier_type])) {
-					$identifier_value = trim($entity[self::$customer_field_prefix.$identifier_type]);
-					if (!empty($identifier_value)) return $identifier_type;
-				}
-			}
-			
-			return null;
-		}
-		
-		public function get_active_customer_identifier(&$entity) {
-			if (!($active_identifier_type = $this->get_active_customer_identifier_type($entity))) { 
-				return array('N/A' => null);
-			}
-			return array($active_identifier_type => $entity[self::$customer_field_prefix.$active_identifier_type]);
 		}
 		
 		public function unset_show_all_completed_reservations()
@@ -100,18 +42,5 @@
 			}
 			
 			return $params;
-		}
-		
-		function read_single($id)
-		{
-			$entity = parent::read_single($id);
-			$active_identifier = $this->get_active_customer_identifier($entity);
-
-			if (current($active_identifier)) {
-				$entity['customer_identifier_type'] = key($active_identifier);
-				$entity['customer_identifier'] = current($active_identifier);
-			}
-			
-			return $entity;
 		}
 	}

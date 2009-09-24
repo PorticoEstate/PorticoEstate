@@ -51,7 +51,7 @@
 		
 		protected function _set_created_on($field, &$entity) {
 			$params = current(self::$AUTO_CREATED_ON);
-			$entity[$field] = $this->_marshal(date('Y-m-d H:i:s'), $params['type']);
+			$entity[$field] = 'now';
 		}
 		
 		protected function _set_created_by($field, &$entity) {

@@ -1,4 +1,6 @@
 <?php
+	phpgw::import_class('booking.uicommon');
+
 	class booking_customer_identifier {
 		const TYPE_SSN = 'ssn';
 		const TYPE_ORGANIZATION_NUMBER = 'organization_number';
@@ -19,6 +21,14 @@
 			return in_array($type, $this->get_valid_types());
 		}
 		
+		public function copy_between(array $from_entity, array &$to_entity) {
+			if ($from_entity_customer_identifier = $this->get_current_identifier_type($from_entity))
+			{
+				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
+				$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $this->get_current_identifier_value($from_entity);
+			}
+		}
+		
 		/** 
 		 * Extract customer identifier from _POST into $data
 		 */
@@ -37,7 +47,6 @@
 			
 			$identifier_field = $this->field_prefix.$current_type;
 			$identifier_value = isset($_POST[$identifier_field]) ? trim($_POST[$identifier_field]) : null;
-			
 			
 			if (empty($identifier_value)) {
 				$data[$this->identifier_type_field] = null;
@@ -95,7 +104,7 @@
 			return (empty($identifier_field) ? null : $identifier_field);
 		}
 		
-		public function install(booking_uicommon $ui, &$entity = array()) {
+		public function install(booking_uicommon $ui, &$entity = null) {
 			$js = <<<JST
 			(function() {
 				var Dom = YAHOO.util.Dom;
@@ -103,7 +112,9 @@
 
 				var select_input_id = 'field_{$this->identifier_type_field}';
 				var select_input = Dom.get(select_input_id);
-
+				
+				if (!select_input) { return; }
+				
 				var selectedIndex = document.getElementById(select_input_id).selectedIndex;
 
 				var items = Dom.getElementsBy(function(){return true;}, 'option', select_input);
@@ -128,27 +139,38 @@
 					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
 					all_cust_fields[field_type].focus();
 				}
-
-				Dom.batch(items, function(opt) {
-					Event.addListener(opt, 'click', function(e) { 
-						enableCustField(this.value);
-					})
+				
+				Event.addListener(select_input, 'change', function(e) {
+					enableCustField(this[this.selectedIndex].value);
 				});
+				
+				// Wouldn't work in IE6:
+				// Dom.batch(items, function(opt) {
+				// 	Event.addListener(opt, 'click', function(e) { 
+				// 		enableCustField(this.value);
+				// 	})
+				// });
 			})();
 JST;
 			
-			$entity['customer_identifier_types'] = $this->get_valid_types_ui_values();
-			
-			if ($customer_identifier_value = $this->get_current_identifier_value($entity)) {
-				$entity['customer_identifier_value'] = $customer_identifier_value;
-			}
-			
-			if ($customer_identifier_type = $this->get_current_identifier_type($entity)) {
-				$entity['customer_identifier_label'] = booking_uicommon::humanize($customer_identifier_type);
+			if (is_array($entity)) {
+				$this->add_current_identifier_info($entity);
 			}
 			
 			$ui->add_template_file('customer_identifier');
 			$ui->add_js_load_event($js);
+		}
+		
+		public function add_current_identifier_info(&$entity) {
+			$entity['customer_identifier_types'] = $this->get_valid_types_ui_values();
+		
+			if ($customer_identifier_type = $this->get_current_identifier_type($entity)) {
+				$entity['customer_identifier_label'] = booking_uicommon::humanize($customer_identifier_type);
+			}
+		
+			if ($customer_identifier_value = $this->get_current_identifier_value($entity)) {
+				$entity['customer_identifier_value'] = $customer_identifier_value;
+			}
 		}
 		
 		public function get_valid_types() {

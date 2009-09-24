@@ -63,6 +63,16 @@ YAHOO.booking.initializeDataTable = function()
         }
     };
 
+	 YAHOO.booking.lastDatatableQuery = false;
+	 myDataSource.update_request_url = function() { 
+		  YAHOO.booking.preSerializeQueryForm('queryForm');
+        var qs = YAHOO.booking.serializeForm('queryForm');
+		  YAHOO.booking.lastDatatableQuery = qs;
+        this.liveData = baseUrl + qs + '&';
+	 };
+	
+	myDataSource.update_request_url();
+
 	var pag = YAHOO.booking.setupPaginator();
 
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 
@@ -75,14 +85,11 @@ YAHOO.booking.initializeDataTable = function()
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
         return oPayload;
     }
-
-	 YAHOO.booking.lastDatatableQuery = false;
+	 
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
-		  YAHOO.booking.preSerializeQueryForm('queryForm');
-        var qs = YAHOO.booking.serializeForm('queryForm');
-		  YAHOO.booking.lastDatatableQuery = qs;
-        myDataSource.liveData = baseUrl + qs + '&';
+		  YAHOO.util.Dom.setStyle('list_flash', 'display', 'none');
+		  myDataSource.update_request_url();
         myDataSource.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
             myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
         }});

@@ -5,8 +5,7 @@
 		</dl>
 		<xsl:call-template name="msgbox"/>
 		<xsl:call-template name="yui_booking_i18n"/>
-
-
+		
 		<form action="" method="POST">
 			<dl class="form-col">
 				<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
@@ -31,11 +30,7 @@
 			</dl>
 
 			<dl class="form-col">
-				<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
-				<dd><input id="field_organization_number" name="customer_organization_number" type="text" value="{reservation/customer_organization_number}"/></dd>
-
-				<dt><label for="field_ssn"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-				<dd><input type='text' id='field_ssn' name="customer_ssn" value='{reservation/customer_ssn}'/></dd>
+				<xsl:copy-of select="phpgw:booking_customer_identifier(reservation, 'Customer ID')"/>
 			</dl>
 
 			<div style='clear:both'/>

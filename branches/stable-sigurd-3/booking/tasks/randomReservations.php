@@ -95,6 +95,37 @@
 		}
 	}
 	
+	function generate_random_organization_number() {
+		$rand_nums = array();
+		for ($i=0; $i < 9; $i++) { 
+			$rand_nums[] = rand(1,9);
+		}
+		return join($rand_nums, '');
+	}
+	
+	function generate_random_ssn() {
+		return str_pad(rand(1,28), 2, 0, STR_PAD_LEFT). /* Dag */
+		       str_pad(rand(1,12), 2, 0, STR_PAD_LEFT). /* Måned */
+				 str_pad(rand(0,99), 2, 0, STR_PAD_LEFT). /* År */
+				 rand(100,999). 									/* Individsiffre + Kön */
+				 str_pad(rand(0,99), 2, 0, STR_PAD_LEFT); /* Kontroll */
+	}
+	
+	function set_random_customer_identifier(&$entity) {
+		static $customer_identifier_types = array('ssn', 'organization_number');
+		static $customer_id;
+		
+		$current_type = $customer_identifier_types[rand(0,1)];
+		$entity['customer_identifier_type'] = $current_type;
+		$entity['customer_'.$current_type] = $current_id = call_user_func('generate_random_'.$current_type);
+		
+		if (count($errors = CreateObject('booking.customer_identifier')->validate($entity)) > 0) {
+			throw new LogicException(
+				sprintf('Unable to create valid random customer %s. Generated %s', $current_type, $current_id)
+			);
+		}
+	}
+	
 	function initialize_booking($data, $options) {
 		$data['season_id'] = $options['season_id'];
 		$agegroups = array();
@@ -124,6 +155,7 @@
 		$data['contact_name'] = 'John Doe';
 		$data['contact_email'] = 'john.doe@domain.com';
 		$data['contact_phone'] = '123456789';
+		set_random_customer_identifier($data);
 		return initialize_booking($data, $options);
 	} 
 	

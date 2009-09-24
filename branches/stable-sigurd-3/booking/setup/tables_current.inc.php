@@ -557,6 +557,7 @@
 				'to_' => array('type' => 'timestamp', 'nullable' => false),
 				'organization_id' 		=> array('type' => 'int', 'precision' => '4'),
 				'customer_type' 		=> array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9'),
 				'customer_ssn' 		=> array('type' => 'varchar', 'precision' => '12'),
 				'exported' 				=> array('type' => 'int', 'precision' => '4'),

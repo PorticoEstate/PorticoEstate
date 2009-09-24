@@ -7,11 +7,13 @@
 			$file_storage,
 			$completed_reservation_so,
 			$completed_reservation_bo,
-			$account_code_set_so;
+			$account_code_set_so,
+			$customer_id;
 		
 		function __construct()
 		{
 			$this->file_storage = CreateObject('booking.filestorage', $this);
+			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->completed_reservation_so = CreateObject('booking.socompleted_reservation');
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
 			$this->account_code_set_so = CreateObject('booking.soaccount_code_set');
@@ -67,10 +69,17 @@
 		}
 		
 		protected function doValidate($entity, booking_errorstack $errors)
-		{
+		{	
 			$exportable_reservations =& $this->get_completed_reservations_for($entity);
 			if (!$exportable_reservations) {
 				$errors['nothing_to_export'] = 'Nothing to export';
+				return;
+			}
+			
+			foreach($exportable_reservations as &$reservation) {
+				if (!$this->get_customer_identifier_value_for($reservation)) {
+					$errors['invalid_customer_ids'] = 'Unable to export: Missing a valid Customer ID on some rows';
+				}
 			}
 		}
 		
@@ -211,6 +220,10 @@
 			return $this->completed_reservation_so->update_exported_state_of($reservations, $entity['id']);
 		}
 		
+		protected function get_customer_identifier_value_for(&$reservation) {
+			return $this->customer_id->get_current_identifier_value($reservation);
+		}
+		
 		public function select_external($reservation) {
 			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_EXTERNAL;
 		}
@@ -260,7 +273,7 @@
 				$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 
 				$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
-				$item['ext_ord_ref'] = str_pad(substr($string_customer_identifier, 0, 15), 15, ' ');
+				$item['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				$item['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT);
 				$item['period'] = str_pad(substr('00'.date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
@@ -370,9 +383,6 @@
 					$field = utf8_decode($field);
 				}
 				
-				$reservation['customer_identifier'] = $this->completed_reservation_bo->get_active_customer_identifier($reservation);
-				$string_customer_identifier = (is_null(current($reservation['customer_identifier'])) ? 'N/A' : current($reservation['customer_identifier']));
-				
 				//header level
 				$header = $this->get_agresso_row_template();
 				$header['accept_flag'] = '1';
@@ -390,7 +400,7 @@
 				$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
-				$header['ext_ord_ref'] = str_pad(substr($string_customer_identifier, 0, 15), 15, ' ');
+				$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				 
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				

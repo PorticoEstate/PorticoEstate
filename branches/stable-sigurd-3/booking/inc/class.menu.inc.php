@@ -62,15 +62,6 @@
 							'text'	=> lang('Completed'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
 						                    'image'	=> array('property', 'location'),
-							'children' => array
-							(
-								'exports' => array
-								(
-									'text'	=> lang('Exports'),
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index') ),
-								                    'image'	=> array('property', 'location'),
-								),
-							)
 						),
 					)
 				),
@@ -155,10 +146,19 @@
 				// 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicost.index') ),
 				//                     'image'	=> array('property', 'location'),
 				// )
+				
+				'invoice_exports' => array
+				(
+					'text'	=> lang('Invoice Data Exports'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index')),
+					'image'	=> array('property', 'location'),
+				),
+				
 				'settings' => array
 				(
 					'text'	=> lang('Settings'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking')),
+					'image' => array('admin', 'navbar'),
 					'children' => array
 					(
 						'permissions'	=> array
