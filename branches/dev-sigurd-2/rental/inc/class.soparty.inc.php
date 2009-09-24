@@ -131,9 +131,10 @@ class rental_soparty extends rental_socommon
 				$columns = 	"DISTINCT(rental_party.id), rental_party.*";
 			}
 			
-			$filter_conditions = $this->get_filter_conditions($filters,'contracts');
+			$filter_conditions = $this->get_filter_conditions($filters,'contracts','');
 			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','AND');
-			$sql = "SELECT $columns 
+			$sql = "SELECT $columns
+					FROM rental_party
 					LEFT JOIN (
 						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp 
 						LEFT JOIN (
@@ -243,6 +244,7 @@ class rental_soparty extends rental_socommon
 				case "name":
 					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
 					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
+					$like_clauses[] = "$table_name.company_name $this->like $like_pattern";
 					break;
 				case "address":
 					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
