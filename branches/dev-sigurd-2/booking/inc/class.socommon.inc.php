@@ -3,6 +3,18 @@
 
 	abstract class booking_socommon
 	{
+		protected $db_null='NULL';
+		
+		protected $valid_field_types = array(
+			'date' => true,
+			'time' => true,
+			'timestamp' => true,
+			'string' => true,
+			'int' => true,
+			'decimal' => true,
+			'intarray' => true,
+		);
+		
 		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true, 'add_callback' => '_set_created_on'));
 		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int', 'auto' => true, 'add_callback' => '_set_created_by'));
 		public static $REL_CREATED_BY_NAME = array(
@@ -138,15 +150,28 @@
 			return $entry;
 		}
 
+		public function valid_field_type($type) {
+			return isset($this->valid_field_types[$type]);
+		}
+		
 		function _marshal($value, $type)
 		{
+			$type = strtolower($type);
 			if($value === null)
 			{
-				return 'NULL';
+				return $this->db_null;
 			}
-			else if($type == 'int')
+			else if($type == 'int' || $type == 'decimal')
 			{
-				return (is_string($value) && strlen(trim($value)) === 0) ? 'NULL' : intval($value);
+				if (is_string($value) && strlen(trim($value)) === 0) {
+					return $this->db_null;
+				} else if ($type == 'int') {
+					return intval($value);
+				} else if ($type == 'decimal') {
+					return floatval($value);
+				}
+				//Don't know what could have gone wrong above for us to get here but returning NULL here as a safety
+				return $this->db_null;
 			}
 			else if($type == 'intarray')
 			{
@@ -156,20 +181,38 @@
 				}
 				return '('.join(',', $values).')';
 			}
+					
+			//Sanity check
+			if (!$this->valid_field_type($type)) {
+				throw new LogicException(sprintf('Invalid type "%s"', $type));
+			}
+			
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
 		function _unmarshal($value, $type)
 		{
-			if(($value === null || $value == 'NULL') || ($type != 'string' && strlen(trim($value)) === 0))
-			{
-				//phpgw always returns empty strings (i.e '') for null values
+			$type = strtolower($type);
+			if( 
+				 ($value === null || $value == $this->db_null) 
+				 || ($type != 'string' && strlen(trim($value)) === 0) /* phpgw always returns empty strings (i.e '') for null values */
+			  ) 
+			{				
 				return null;
 			}
 			else if($type == 'int')
 			{
 				return intval($value);
 			}
+			else if ($type == 'decimal') {
+				return floatval($value);
+			}
+			
+			//Sanity check
+			if (!$this->valid_field_type($type)) {
+				throw new LogicException(sprintf('Invalid type "%s"', $type));
+			}
+			
 			return $value;
 		}
 
@@ -212,7 +255,7 @@
 										$type = $params['type'];
 									}
 									
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -284,7 +327,7 @@
 					}
 					else if($val == null)
 					{
-						$clauses[] = "{$table}.{$key} IS NULL";
+						$clauses[] = "{$table}.{$key} IS ".$this->db_null;
 					}
 					else
 					{
