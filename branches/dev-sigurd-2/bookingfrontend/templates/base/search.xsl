@@ -48,7 +48,7 @@
 	                (<xsl:value-of select="php:function('lang', string(type))"/>)
 	              </div>
 	              <div class="details">
-	                <div class="col col3">
+	                <div>
 	                  <dl>
 	                    <dt><h4><xsl:value-of select="php:function('lang', 'Description')" /></h4></dt>
 	                    <dd class="description">

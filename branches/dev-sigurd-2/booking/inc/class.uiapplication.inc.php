@@ -221,7 +221,7 @@
 				{
 					$receipt = $this->bo->update($application);
 					$this->bo->send_notification($application);
-					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$application['id']));
+					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -247,14 +247,16 @@
 		{
 			foreach($allocation['dates'] as &$date)
 			{
-				$available = $this->bo->so->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
+				$available = $this->bo->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
 				$date['status'] = intval($available);
+				$date['allocation_params'] = $this->event_for_date($allocation, $date['id']);
+				$date['booking_params'] = $this->event_for_date($allocation, $date['id']);
+				$date['event_params'] = $this->event_for_date($allocation, $date['id']);
 			}
 		}
 
-		private function create_event($application_id, $date_id)
+		private function event_for_date($application, $date_id)
 		{
-			$application = $this->bo->read_single($application_id);
 			foreach($application['dates'] as $d)
 			{
 				if($d['id'] == $date_id)
@@ -264,29 +266,31 @@
 				}
 			}
 			$event = array();
-			$event['from_'] = $date['from_'];
-			$event['to_'] = $date['to_'];
-			$event['active'] = 1;
-			$event['cost'] = 0;
+			$event[] = array('from_', $date['from_']);
+			$event[] = array('to_', $date['to_']);
+			$event[] = array('cost', '0');
 			$copy = array(
 				'activity_id', 'description', 'contact_name',
-				'contact_email', 'contact_phone', 'activity_id', 
-				'audience', 'agegroups', 'resources'
+				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name'
 			);
 			foreach($copy as $f)
 			{
-				$event[$f] = $application[$f];
+				$event[] = array($f, $application[$f]);
 			}
-			echo "<pre>";
-			echo $_POST['create'] . ' ' . $date;
-			print_r($event);
-			$errors = $this->event_bo->validate($event);
-			print_r($errors);
-			if(!$errors)
+			foreach($application['agegroups'] as $ag)
 			{
-				//$receipt = $this->event_bo->add($event);
+				$event[] = array('male['.$ag['agegroup_id'].']', $ag['male']);
+				$event[] = array('female['.$ag['agegroup_id'].']', $ag['female']);
 			}
-			die;
+			foreach($application['audience'] as $a)
+			{
+				$event[] = array('audience[]', $a);
+			}
+			foreach($application['resources'] as $r)
+			{
+				$event[] = array('resources[]', $r);
+			}
+			return json_encode($event);
 		}
 
 		public function show()
@@ -296,7 +300,6 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['create'])
 			{
-				$this->create_event($id, $_POST['date_id']);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
 

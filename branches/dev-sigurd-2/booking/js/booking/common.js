@@ -465,6 +465,22 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 	return descEdit;
 };
 
+YAHOO.booking.postToUrl = function(path, params, method) {
+    method = method || "post"; // Set method to post by default, if not specified.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", params[key][0]);
+        hiddenField.setAttribute("value", params[key][1]);
+        form.appendChild(hiddenField);
+    }
+    document.body.appendChild(form);    // Not entirely sure if this is necessary
+    form.submit();
+};
 
 (function(){
     var Dom = YAHOO.util.Dom,
