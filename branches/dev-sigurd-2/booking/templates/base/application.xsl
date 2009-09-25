@@ -54,17 +54,12 @@
 					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
 				</script>
-				<xsl:if test="status='1'">
-					<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}])">
-						<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
-						<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
-						<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
-						<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
-					</select>
-				</xsl:if>
-				<xsl:if test="status='0'">
-					<xsl:value-of select="php:function('lang', 'Not bookable')" />	
-				</xsl:if>
+				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}])">
+					<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+				</select>
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">
