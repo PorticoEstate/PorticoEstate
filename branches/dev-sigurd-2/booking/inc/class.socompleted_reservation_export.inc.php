@@ -9,6 +9,11 @@
 			$completed_reservation_bo,
 			$account_code_set_so,
 			$customer_id;
+			
+		protected static $export_type_to_file_type_map = array(
+			'internal' => 'csv',
+			'external' => 'txt',
+		);
 		
 		function __construct()
 		{
@@ -52,6 +57,12 @@
 					'created_by_name' => booking_socommon::$REL_CREATED_BY_NAME,
 				)
 			);
+		}
+		
+		protected function file_type_for_export_type($export_type) {
+			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
+						self::$export_type_to_file_type_map[$export_type] :
+						'txt';
 		}
 		
 		protected function _get_search_to_date(&$entity) {
@@ -125,7 +136,7 @@
 			
 			$export_reservations =& $this->get_completed_reservations_for($entity['id']);
 			
-			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.txt';
+			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.'.$this->file_type_for_export_type($entity_file['type']);
 			
 			$export_file = new booking_storage_object($entity_file['filename']);
 			
