@@ -382,14 +382,17 @@
 		// Build a YUI result style array
 		public function yui_results($results)
 		{
-            return array
-			(   
+			if (!$results) {
+				$results['total_records'] = 0;
+				$result['results'] = array();
+			}
+			
+			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable' => $results['total_records'], 
 					'Result' => $results['results']
 				)   
 			);  
-
 		}
         	
         public function check_active($url)
