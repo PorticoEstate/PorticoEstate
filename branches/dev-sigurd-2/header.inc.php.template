@@ -200,7 +200,8 @@
 	* Version of this header file
 	*/
 	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.29';
-	
+
+
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
 		|| !$GLOBALS['phpgw_info']['flags']['noapi'] )
 	{
