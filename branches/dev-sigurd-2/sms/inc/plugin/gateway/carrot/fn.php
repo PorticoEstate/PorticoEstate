@@ -25,7 +25,7 @@
 				$i_right = strpos($s_str,"-->", $i_left);
 				$s_temp = substr($s_str, $i_left, ($i_right-$i_left) );
 				$a_tag = explode('=', $s_temp );
-				$vars[$a_tag[0]] = $a_tag[1];
+				$vars[strtolower($a_tag[0])] = $a_tag[1];
 			}
 			return $vars;
 		}
@@ -33,23 +33,24 @@
 
 		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false)
 		{
+			$result = array();
 			$sms_msg = utf8_decode($sms_msg);
 
 			$arguments = array
 			(
-				'Type'				=> '1', // text
+				'type'				=> '1', // text
 				'serviceid'			=> $this->carrot_param['serviceid'], //Unique identifier for service. Provided by Carrot.
 //				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
-				'content'			=> $sms_msg,
+				'content'			=> utf8_decode($sms_msg),
 //				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
-				'originator'		=> 1960,//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
-				'originatortype'	=> 3,//$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
+				'originator'		=> $this->carrot_param['originator'],//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
+				'originatortype'	=> $this->carrot_param['originatortype'],//$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
 				'recipient'			=> urlencode($sms_to),
 				'username'			=> $this->carrot_param['login'],
 				'password'			=> $this->carrot_param['password'],
 //				'priority'			=> '',
 //				'price'				=> '0',
-				'differentiator'	=> 'Test',
+				'differentiator'	=> $this->carrot_param['differentiator'],//'Test',
 //				'TTL'				=> ''
 
 			);
@@ -72,25 +73,45 @@
 
 				$response = file_get_contents($request, False, $cxContext);
 
-				$this->result = $this->parse_html($response);
+				$result = $this->parse_html($response);
 			}
 			else
 			{
-				$client = CreateObject('phpgwapi.soap_client', array(), false);
-				$client->phpgw_domain = 'default';
-				$client->wsdl = $this->carrot_param['wsdl'];
-				$client->location = $this->carrot_param['service_url'];
+				require_once 'SMSGatewayService.php';
 
-				$client->uri		= "http://ws.v4.sms.carrot.no";
-				$client->trace		= 1;
-				$client->login		= $this->carrot_param['login'];
-				$client->password	= $this->carrot_param['password'];
-				$client->proxy_host	= $this->carrot_param['proxy_host'];
-				$client->proxy_port	= $this->carrot_param['proxy_port'];
-				$client->encoding	= 'iso-8859-1';//'UTF-8';
-				$client->init();
-				$this->result = $client->call("sendMTMessage", $arguments);
+				$options=array();
+				$options['soap_version'] = SOAP_1_1;
+				$options['location'] = $this->carrot_param['service_url'];
+				$options['uri']		= "http://ws.v4.sms.carrot.no";
+				$options['trace']		= 1;
+				$options['proxy_host']	= $this->carrot_param['proxy_host'];
+				$options['proxy_port']	= $this->carrot_param['proxy_port'];
+				$options['encoding']	= 'iso-8859-1';//'UTF-8';
 
+				$service = new SMSGatewayService($this->carrot_param['wsdl'], $options);
+
+				$Request = new SendSMSRequest();
+				
+				$recipients = new Recipient();
+				$recipients->recipient = $arguments['recipient'];
+				
+				$Request->type				= $arguments['type'];
+				$Request->serviceId			= $arguments['serviceid'];
+				$Request->content			= $arguments['content'];
+				$Request->originator		= $arguments['originator'];
+				$Request->originatorType	= $arguments['originatortype'];
+				$Request->recipients		= $recipients;
+				$Request->username			= $arguments['username'];
+				$Request->password			= $arguments['password'];
+				$Request->differentiator	= $arguments['differentiator'];
+
+				$sendMTMessage = new sendMTMessage();
+				$sendMTMessage->mtreq = $Request;
+				
+				$sendMTMessageResponse = $service->sendMTMessage($sendMTMessage);
+				
+				$result['statuscode'] = $sendMTMessageResponse->sendMTMessageReturn->statuscode;
+				$result['messageid'] = $sendMTMessageResponse->sendMTMessageReturn->messageid;
 			}
 
 		    // p_status :
@@ -98,16 +119,16 @@
 		    // 1 = delivered
 		    // 2 = failed
 
-			if($this->result['Statuscode'] == 1)
+			if($result['statuscode'] == 1)
 			{
 			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
 			}
-			else if($this->result['Statuscode'] == 5)
+			else if($result['statuscode'] == 5)
 			{
 			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
 			}
 
-			if($this->result['Statuscode'] == 1)
+			if($result['statuscode'] == 1)
 			{
 				return true;
 			}
@@ -121,11 +142,11 @@ return;
 		    // 1 = delivered
 		    // 2 = failed
 
-			if($this->result['Statuscode'] == 1)
+			if($result['statuscode'] == 1)
 			{
 			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
 			}
-			else if($this->result['Statuscode'] == 5)
+			else if($result['statuscode'] == 5)
 			{
 			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
 			}
