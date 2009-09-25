@@ -109,8 +109,34 @@ YAHOO.booking.autocompleteHelper = function(url, field, hidden, container, label
 	return ac;
 };
 
+YAHOO.booking.setupInlineTablePaginator = function(container) {
+	var paginatorConfig = {
+        rowsPerPage: 10,
+        alwaysVisible: false,
+        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
+        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        containers: [YAHOO.util.Dom.get(container)]
+    };
+	
+	YAHOO.booking.lang('setupPaginator', paginatorConfig);
+	var pag = new YAHOO.widget.Paginator(paginatorConfig);
+   pag.render();
+	return pag;
+};
+
 YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
+	var Dom = YAHOO.util.Dom;
+	
+	var container = Dom.get(container);
+	var paginatorContainer = container.appendChild(document.createElement('div'));
+	var dataTableContainer = container.appendChild(document.createElement('div'));
+	
 	options = options || {};
+	options.paginator = YAHOO.booking.setupInlineTablePaginator(paginatorContainer);
+	options.dynamicData = true;
+	
+	url += 'results=' + options.paginator.getRowsPerPage() + '&';
+	
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
@@ -118,7 +144,13 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 		resultsList: "ResultSet.Result",
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
 	};
-	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, options);
+	
+	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
+	
+	myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
+       oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+       return oPayload;
+   }
 	
 	myDataTable.doBeforeLoadData = function(nothing, data) {
 		if (!data.meta.actions) return data;

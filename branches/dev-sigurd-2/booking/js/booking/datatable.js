@@ -41,6 +41,7 @@ YAHOO.booking.initializeDataTable = function()
 	YAHOO.booking.setupToolbar();
 	YAHOO.booking.setupListActions();
 	YAHOO.booking.setupDatasource();
+	var pag = YAHOO.booking.setupPaginator();
 
     var fields = [];
     for(var i=0; i < YAHOO.booking.columnDefs.length; i++) {
@@ -50,7 +51,7 @@ YAHOO.booking.initializeDataTable = function()
     if(baseUrl[baseUrl.length - 1] != '&') {
         baseUrl += '&';
     }
-	baseUrl += 'sort=' + fields[0] + '&';
+	baseUrl += 'sort=' + fields[0] + '&results=' + pag.getRowsPerPage() + '&';
     var myDataSource = new YAHOO.util.DataSource(baseUrl);
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -72,8 +73,6 @@ YAHOO.booking.initializeDataTable = function()
 	 };
 	
 	myDataSource.update_request_url();
-
-	var pag = YAHOO.booking.setupPaginator();
 
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 
         YAHOO.booking.columnDefs, myDataSource, {
