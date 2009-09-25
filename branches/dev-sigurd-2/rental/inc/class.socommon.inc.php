@@ -92,8 +92,6 @@ abstract class rental_socommon
 	 * @return string with SQL.
 	 */
 	protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
-	
-	protected abstract function get_results(string $sql, int $start_index, int $num_of_objects);
 
 	/**
 	 * Convenience method for getting one single object. Calls get() with the
@@ -128,7 +126,25 @@ abstract class rental_socommon
 	 */
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
-		return $this->get_results($this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false), $start_index, $num_of_objects);
+		$results = array();
+		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
+		$this->db->query($sql,__LINE__, __FILE__);
+		$counter = 1;
+		if($start_index < 1){
+			$start_index = 1;
+		}
+		
+		while ($this->db->next_record() && ( $num_of_objects == null || ($counter < $start_index + $num_of_objects))) // Runs through all of the results
+		{	
+			if($counter >= $start_index)
+			{
+				$result_id = $this->unmarshal($this->db->f(get_id_field_name(), true), 'int');
+				$result = &$results[$result_id];
+				$results[$result_id] = $this->populate($result_id,$result);
+			}
+			$counter++;
+		}
+		return $results; 
 	}
 	
 	/**
@@ -144,9 +160,13 @@ abstract class rental_socommon
 		return $this->get_query_count($this->get_query(null, null, $search_for, $search_type, $filters, true));
 	}
 	
-	public abstract function add(&$object);
+	protected abstract function add(&$object);
 	
-	public abstract function update($object);
+	protected abstract function update($object);
+	
+	protected abstract function populate(int $object_id, &$object);
+	
+	protected abstract function get_id_field_name();
 	
 	/**
 	* Store the object in the database.  If the object has no ID it is assumed to be new and
