@@ -581,17 +581,21 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			input.setAttribute('size', size);
 			input.setAttribute('maxlength', size);
 			
-		  input.value = this._padValue(this.get('value'));
+			if (YAHOO.env.ua.ie > 6) {
+				YAHOO.util.Dom.setStyle(input, 'width', '2em');
+			}
+			
+			input.value = this._padValue(this.get('value'));
 		
 			this.set('input', input);
 		
-	    Event.on(input,'keyup', function (oArgs) {
-	        this._updateValue();
-	    }, this, true);
+			Event.on(input,'keyup', function (oArgs) {
+				this._updateValue();
+				}, this, true);
 		
 			Event.on(input, 'change', function(oArgs) {
 				this._fireUpdateEvent();
-		  }, this, true);
+			}, this, true);
 			
 			oForm = input.form;
 			
