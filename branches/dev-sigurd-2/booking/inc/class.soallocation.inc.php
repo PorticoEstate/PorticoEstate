@@ -139,7 +139,7 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
-			return $this->read(array('where' => $expired_conditions, 'results' => 500));
+			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
 		}
 		
 		protected function find_expired_sql_conditions() {
@@ -151,9 +151,8 @@
 		public function complete_expired(&$allocations) {
 			$table_name = $this->table_name;
 			$db = $this->db;
-			$expired_conditions = $this->find_expired_sql_conditions();
 			$ids = join(', ', array_map(array($this, 'select_id'), $allocations));
-			$sql = "UPDATE $table_name SET completed = 1 WHERE $expired_conditions AND {$table_name}.id IN ($ids);";
+			$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
 		}
 	}
