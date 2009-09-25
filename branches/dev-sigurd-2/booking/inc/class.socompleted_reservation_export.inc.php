@@ -253,6 +253,24 @@
 		public function format_csv(array &$reservations, array $account_codes) {
 			$output = array();
 			
+			$columns = array(
+				'amount', 
+				'art_descr', 
+				'art', 
+				'responsible_code', 
+				'service', 
+				'object_number', 
+				'project_number', 
+				'unit_number',
+				'ext_ord_ref',
+				'invoice_instruction', 
+				'order_id',
+				'period',
+				'short_info',
+			);
+			
+			$output[] = $this->format_to_csv_line($columns);
+			
 			foreach ($reservations as $reservation) {
 				$reservation = array_map('utf8_decode', $reservation);
 				
