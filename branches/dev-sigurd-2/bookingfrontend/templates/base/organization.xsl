@@ -67,6 +67,9 @@
 
         <h3><xsl:value-of select="php:function('lang', 'Groups')" /></h3>
         <div id="groups_container"/>
+
+		  <h3><xsl:value-of select="php:function('lang', 'Used buildings')" /></h3>
+        <div id="buildings_used_by_container"/>
     </div>
 	
 	<script type="text/javascript">
@@ -80,6 +83,10 @@
 				{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'link', 'hidden': true}
 			];
 			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
+			
+			var url = 'index.php?menuaction=bookingfrontend.uibuilding.find_buildings_used_by&sort=name&organization_id=' + organization_id + '&phpgw_return_as=json&';
+			var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}];
+			YAHOO.booking.inlineTableHelper('buildings_used_by_container', url, colDefs);
 		});
 		]]>
 	</script>

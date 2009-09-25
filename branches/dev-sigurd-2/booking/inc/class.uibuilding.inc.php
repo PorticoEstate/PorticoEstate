@@ -14,6 +14,7 @@
 			'edit'			=>	true,
 			'schedule'		=>	true,
 			'toggle_show_inactive'	=>	true,
+			'find_buildings_used_by' => true,
 		);
 
 		public function __construct()
@@ -25,6 +26,18 @@
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active');
+		}
+		
+		public function find_buildings_used_by() {
+			if(!phpgw::get_var('phpgw_return_as') == 'json') { return; }
+			
+			if (($organization_id = phpgw::get_var('organization_id', 'int', array('GET','POST'), null))) {
+				$buildings = $this->bo->find_buildings_used_by($organization_id);
+				array_walk($buildings["results"], array($this, "_add_links"), "bookingfrontend.uibuilding.show");
+				return $this->yui_results($buildings);
+			}
+			
+			return $this->yui_results(null);
 		}
 				
 		public function index()

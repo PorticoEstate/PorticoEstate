@@ -7,6 +7,7 @@
 			 'index'		=> true,
 			 'schedule'		=> true,
 			 'show'         => true,
+			'find_buildings_used_by' => true,
 		);
 
 		public function schedule()

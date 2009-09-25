@@ -82,5 +82,13 @@
 			}
 			return $building;
 		}
+		
+		/**
+		 * @see sobuilding
+		 */
+		function find_buildings_used_by($organization_id)
+		{
+			return $this->so->find_buildings_used_by($organization_id, $this->build_default_read_params());
+		}
 
 	}
