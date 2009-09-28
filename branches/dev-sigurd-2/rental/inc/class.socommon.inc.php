@@ -131,6 +131,13 @@ abstract class rental_socommon
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
 		$results = array();
+		
+		//Special case: Sort on id field. Always changed to the id field name
+		if($sort_field == 'id')
+		{
+			$sort_field = $this->get_id_field_name();
+		}
+		
 		$object_ids = array(); // All of the object ids
 		$added_object_ids = array(); // All of the added objects ids
 		if($start_index < 1)
