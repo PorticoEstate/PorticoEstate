@@ -30,7 +30,7 @@ class rental_socomposite extends rental_socommon
 			$like_clauses = array();
 			switch($search_type){
 				case "id":
-					$like_clauses[] = "rental_composite.id = $query";
+					$like_clauses[] = "rental_composite.id = {$this->marshal($search_for, 'int')}";
 					break;
 				case "name":
 					$like_clauses[] = "rental_composite.name $this->like $like_pattern";
@@ -44,7 +44,7 @@ class rental_socomposite extends rental_socommon
 					$like_clauses[] = "rental_unit.location_code $this->like $like_pattern";
 					break;
 				case "all":
-					$like_clauses[] = "rental_composite.id = $query";
+					$like_clauses[] = "rental_composite.id = {$this->marshal($search_for, 'int')}";
 					$like_clauses[] = "rental_composite.name $this->like $like_pattern";
 					$like_clauses[] = "rental_composite.address_1 $this->like $like_pattern";
 					$like_clauses[] = "rental_composite.address_2 $this->like $like_pattern";
