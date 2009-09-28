@@ -45,7 +45,9 @@
 		public function __construct(int $id = null)
 		{
 			$this->id = (int)$id;
-			$invoices = null;
+			$this->parties = array();
+			$this->composites = array();
+			$this->invoices = array();
 		}
 		
 		public function set_id($id)
@@ -220,11 +222,9 @@
 		public function get_last_edited_by_current_user() { return $this->last_edited_by_current_user;}
 		
 		/**
-		 * Get a list of the composites associated with this contract.  The composites are loaded
-		 * lazily, so they will not be populated at object construction, but rather at first call
-		 * of this function.
+		 * Get a list of the composites associated with this contract.
 		 * 
-		 * @return rental_composite[]
+		 * @return array with rental_composite objects, empty array if none, never null.
 		 */
 		public function get_composites()
 		{
@@ -253,11 +253,6 @@
 		 */
 		public function get_parties()
 		{
-			if(!$this->parties) {
-				$so = self::get_so();
-				$this->parties = $so->get_parties_for_contract($this->get_id());
-			}
-			
 			return $this->parties;
 		}
 		
@@ -319,54 +314,25 @@
         }
 		
 		/**
-		 * Add a composite to this contract. This function checks for duplicates
-		 * before adding the given composite.
+		 * Add a composite to this contract. This method does not check if
+		 * object is already added and does not do any db handling.
 		 * 
 		 * @param $new_composite
 		 */
 		public function add_composite(rental_composite $new_composite)
 		{
-			$already_has_composite = false;
-			
-			foreach ($this->get_composites() as $composite) {
-				if ($composite->get_id() == $new_composite->get_id()) {
-					$already_has_composite = true;
-				}
-			}
-			
-			if (!$already_has_composite) {
-				$so = self::get_so();
-				$so->add_composite($this->get_id(),$new_composite->get_id());
-				$composites = $this->get_composites();
-				$composites[] = $new_composite;
-				$this->set_composites($composites);
-			}
+			$this->composites[] = $new_composite;
 		}
 		
 		/**
-		 * Add a party to this contract. This function checks for duplicates
-		 * before adding the party. 
+		 * Add a party to this contract. This method does not check if
+		 * object is already added and does not do any db handling.
 		 * 
 		 * @param rental_party $new_party the new party
 		 */
 		public function add_party(rental_party $new_party)
 		{
-			$already_has_party = false;
-			
-			foreach ($this->get_parties() as $party) {
-				if ($party->get_id() == $new_party->get_id()) {
-					$already_has_party = true;
-				}
-			}
-			
-			if (!$already_has_party) {
-				$so = self::get_so();
-				$so->add_party($this->get_id(),$new_party->get_id());
-				$parties = $this->get_parties();
-				$parties[] = $new_party;
-				$this->set_parties($parties);
-			}
-
+			$this->parties[] = $new_party;
 		}
 		
 		/**
@@ -531,14 +497,6 @@
 		{
 			$so = self::get_so();
 			return $so->get_contracts($composite_id, $sort = null, $dir = '', $start = 0, $results = 1000, $status = null, $date = null);
-		}
-		
-		
-		public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-		{
-			$so = self::get_so();
-			$contracts = $so->get_contract_array($start, $results, $sort, $dir, $query, $search_option, $filters);
-			return $contracts;
 		}
 		
 		public static function get_last_edited_by()

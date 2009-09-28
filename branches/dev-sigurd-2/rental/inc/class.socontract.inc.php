@@ -30,9 +30,15 @@ class rental_socontract extends rental_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 		
-		$sort = $this->marshal($sort,'string');
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort ? "ORDER BY $sort $dir": '';
+		switch($sort_field)
+		{
+			case 'id':
+			default:
+				$sort_field = 'contract.id';
+				break;
+		}
+		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
 		
 		if($query)
 		{
@@ -207,7 +213,7 @@ class rental_socontract extends rental_socommon
 		$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
 		$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited;
-			
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -234,7 +240,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_contract_type_title($this->unmarshal($this->db->f('title'),'string'));
 			$contract->set_comment($this->unmarshal($this->db->f('comment'),'string'));
 			$contract->set_last_edited_by_current_user($this->unmarshal($this->db->f('edited_on'),'int'));
-			$contract->set_location_id($this->unmarshal($this->db->f('location_id','int')));
+			$contract->set_location_id($this->unmarshal($this->db->f('location_id'),'int'));
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
 		}
 		
@@ -354,7 +360,7 @@ class rental_socontract extends rental_socommon
 	 * @param $contract the contract to be updated
 	 * @return result receipt from the db operation
 	 */
-	function update(rental_contract $contract)
+	function update($contract)
 	{
 		$id = intval($contract->get_id());
 		
@@ -452,7 +458,7 @@ class rental_socontract extends rental_socommon
 	 * @param $contract the contract to be added
 	 * @return array result receipt from the db operation
 	 */
-	function add(rental_contract &$contract)
+	function add(&$contract)
 	{
 		// These are the columns we know we have or that are nullable
 		$cols = array('location_id', 'term_id');

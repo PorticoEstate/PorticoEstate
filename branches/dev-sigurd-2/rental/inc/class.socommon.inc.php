@@ -127,24 +127,26 @@ abstract class rental_socommon
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
 		$results = array();
+		$reult_ids = array(); // We store the ids here to know how to deal with the start index and number of objects
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
 		$this->db->query($sql,__LINE__, __FILE__);
 		$counter = 1;
-		if($start_index < 1){
-			$start_index = 1;
+		if($start_index < 0){
+			$start_index = 0;
 		}
 		
-		while ($this->db->next_record() && ( $num_of_objects == null || ($counter < $start_index + $num_of_objects))) // Runs through all of the results
+		while ($this->db->next_record()) // Runs through all of the results
 		{	
-			if($counter >= $start_index)
+			$result_id = $this->unmarshal($this->db->f($this->get_id_field_name(), true), 'int');
+			$result = &$results[$result_id];
+			$results[$result_id] = $this->populate($result_id,$result);
+			if($num_of_objects != null && count($results) > ($start_index + $num_of_objects)) // We've found as many objects as we want (+ 1)
 			{
-				$result_id = $this->unmarshal($this->db->f(get_id_field_name(), true), 'int');
-				$result = &$results[$result_id];
-				$results[$result_id] = $this->populate($result_id,$result);
+				array_pop($results); // We remove the last object as we don't need it
+				break;
 			}
-			$counter++;
 		}
-		return $results; 
+		return array_slice($results, $start_index);
 	}
 	
 	/**

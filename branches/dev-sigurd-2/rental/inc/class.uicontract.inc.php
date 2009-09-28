@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('rental.uicommon');
+	phpgw::import_class('rental.socontract');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -40,13 +41,23 @@
 
 		public function query()
 		{
-			$resultArray = array();
+			// YUI variables for paging and sorting
+			$start_index	= phpgw::get_var('startIndex', 'int');
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+			$sort_field		= phpgw::get_var('sort');
+			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			// Form variables
+			$search_for 	= phpgw::get_var('query');
+			$search_type	= phpgw::get_var('search_option');
+			// Create an empty result set
+			$result_objects = array();
+			$result_count = 0;
 
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
 				case 'contracts_part':
-					$resultArray = rental_contract::get_all(
+					$result_objects = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -59,7 +70,7 @@
 					);
 					break;
 				case 'contracts_for_executive_officer':
-					$resultArray = rental_contract::get_all(
+					$result_objects = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -72,7 +83,7 @@
 					);
 					break;
 				case 'last_edited_by':
-					$resultArray = rental_contract::get_last_edited_by();
+					$result_objects = rental_contract::get_last_edited_by();
 					break;
 				case 'ending_contracts':
 					//find location id for current user
@@ -91,7 +102,7 @@
 					}
 					
 					
-					$resultArray = rental_contract::get_all(
+					$result_objects = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -105,7 +116,7 @@
 					);
 					break;
 				case 'contracts_for_executive_officer':
-					$resultArray = rental_contract::get_all(
+					$result_objects = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -118,7 +129,7 @@
 					);
 					break;
 				case 'last_edited_by':
-					$resultArray = rental_contract::get_all(
+					$result_objects = rental_contract::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -141,7 +152,7 @@
 						array()
 					);
 					
-					foreach($resultArray as &$result)
+					foreach($result_objects as &$result)
 					{
 						if(!$result->has_permission(PHPGW_ACL_EDIT))
 						{
@@ -150,7 +161,7 @@
 					}
 					break;
 				case 'notifications':
-					$resultArray = rental_notification::get_all(
+					$result_objects = rental_notification::get_all(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						phpgw::get_var('sort'),
@@ -164,14 +175,14 @@
 					);
 					break;
 				case 'notifications_for_user':
-					$resultArray = rental_notification::get_workbench_notifications(
+					$result_objects = rental_notification::get_workbench_notifications(
 						phpgw::get_var('startIndex'),
 						phpgw::get_var('results'),
 						$GLOBALS['phpgw_info']['user']['account_id']
 					);
 					break;
 				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
-					$query_result = rental_contract::get_contracts_for_composite(
+					$result_objects = rental_contract::get_contracts_for_composite(
 						phpgw::get_var('composite_id'), 
 						phpgw::get_var('sort'), 
 						phpgw::get_var('dir'), 
@@ -182,24 +193,13 @@
 					);
 				case 'all_contracts':
 				default:
-					$resultArray = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'contract_status' => phpgw::get_var('contract_status'),
-							'contract_type' => phpgw::get_var('contract_type'),
-							'status_date_hidden' => phpgw::get_var('status_date_hidden')
-						)
-					);
+					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
+					rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			}
 
 			//Serialize the contracts found
 			$rows = array();
-			foreach ($resultArray as $result) {
+			foreach ($result_objects as $result) {
 				if(isset($result))
 				{
 					if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
