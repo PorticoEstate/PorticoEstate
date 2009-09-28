@@ -429,5 +429,16 @@
             $property_common = CreateObject('property.bocommon');
             $property_common->download($list, $keys, $headings);
         }
+		
+		/**
+		 * Added because error reporting facilities in phpgw tries to serialize the PDO
+		 * instance in $this->db which causes an error. This method removes $this->db from the 
+		 * serialized values to avoid this problem.
+		 */
+		public function __sleep()
+		{
+			return array('table_name', 'fields');
+		}
+		
 	}
 ?>

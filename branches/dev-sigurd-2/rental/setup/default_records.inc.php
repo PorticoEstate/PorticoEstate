@@ -253,35 +253,35 @@ $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Gullstø
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Bergen Rådhus Nye','')");
 
-$oProc->query("INSERT INTO rental_unit VALUES (1,'2711')");
-$oProc->query("INSERT INTO rental_unit VALUES (1,'2712')");
-$oProc->query("INSERT INTO rental_unit VALUES (1,'2717')");
-$oProc->query("INSERT INTO rental_unit VALUES (1,'2721')");
-$oProc->query("INSERT INTO rental_unit VALUES (2,'2714')");
-$oProc->query("INSERT INTO rental_unit VALUES (2,'2716')");
-$oProc->query("INSERT INTO rental_unit VALUES (3,'2717')");
-$oProc->query("INSERT INTO rental_unit VALUES (3,'2721')");
-$oProc->query("INSERT INTO rental_unit VALUES (4,'2726')");
-$oProc->query("INSERT INTO rental_unit VALUES (4,'2730')");
-$oProc->query("INSERT INTO rental_unit VALUES (5,'7179')");
-$oProc->query("INSERT INTO rental_unit VALUES (5,'7183')");
-$oProc->query("INSERT INTO rental_unit VALUES (6,'2104-02')"); // Level 2
-$oProc->query("INSERT INTO rental_unit VALUES (7,'1101-01-02')"); // Level 3
-$oProc->query("INSERT INTO rental_unit VALUES (8,'3409-01-02-01')"); // Level 4
-$oProc->query("INSERT INTO rental_unit VALUES (9,'3409-01-02-01-201')"); // Level 5
-$oProc->query("INSERT INTO rental_unit VALUES (10,'2711')"); // Level 1
-$oProc->query("INSERT INTO rental_unit VALUES (10,'2104-02')"); // Level 2
-$oProc->query("INSERT INTO rental_unit VALUES (10,'1101-01-02')"); // Level 3
-$oProc->query("INSERT INTO rental_unit VALUES (10,'3409-01-02-01')"); // Level 4
-$oProc->query("INSERT INTO rental_unit VALUES (10,'3409-01-02-01-201')"); // Level 5
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (1,'2711')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (1,'2712')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (1,'2717')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (1,'2721')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (2,'2714')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (2,'2716')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (3,'2717')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (3,'2721')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (4,'2726')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (4,'2730')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (5,'7179')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (5,'7183')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (6,'2104-02')"); // Level 2
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (7,'1101-01-02')"); // Level 3
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (8,'3409-01-02-01')"); // Level 4
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (9,'3409-01-02-01-201')"); // Level 5
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (10,'2711')"); // Level 1
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (10,'2104-02')"); // Level 2
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (10,'1101-01-02')"); // Level 3
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (10,'3409-01-02-01')"); // Level 4
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (10,'3409-01-02-01-201')"); // Level 5
 	// Vitalitetssenteret
-$oProc->query("INSERT INTO rental_unit VALUES (11,'5807-01')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (11,'5807-01')");
 	// Gullstøltunet sykehjem
-$oProc->query("INSERT INTO rental_unit VALUES (12,'3409-01')");
-$oProc->query("INSERT INTO rental_unit VALUES (13,'3409-02')");
-$oProc->query("INSERT INTO rental_unit VALUES (14,'3409-03')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (12,'3409-01')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (13,'3409-02')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (14,'3409-03')");
 	// Bergen Rådhus
-$oProc->query("INSERT INTO rental_unit VALUES (15,'1102-01')");
+$oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (15,'1102-01')");
 
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_internal},'contract_type_internleie',90)");

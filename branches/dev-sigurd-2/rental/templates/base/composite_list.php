@@ -9,9 +9,8 @@
 	'click',
 	function(e)
 	{
-  	YAHOO.util.Event.stopEvent(e);
-  	newName = document.getElementById('ctrl_add_rental_composite_name').value;
-		window.location = 'index.php?menuaction=rental.uicomposite.add&amp;rental_composite_name=' + newName;
+  		YAHOO.util.Event.stopEvent(e);
+		window.location = 'index.php?menuaction=rental.uicomposite.add';
 	}
 );
 </script>
@@ -26,8 +25,6 @@ if($this->isExecutiveOfficer())
 <fieldset>
 	<!-- Create new rental composite -->
 	<h3><?php echo lang('t_new_composite') ?></h3>
-	<label for="ctrl_add_rental_composite_name"><?php echo lang('name') ?></label>
-	<input type="text" id="ctrl_add_rental_composite_name" name="ctrl_add_rental_composite_name"/>
 	<input type="submit" name="ctrl_add_rental_composite" id="ctrl_add_rental_composite" value="<?php echo lang('f_new_rc') ?>" />
 </fieldset>
 <?php

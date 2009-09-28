@@ -230,11 +230,5 @@ class rental_socomposite extends rental_socommon
 		return $composite_id;
 	}
 	
-	public function delete_unit(int $composite_id, string $location_code)
-	{
-		$sql ="DELETE FROM rental_unit WHERE composite_id = {$this->marshal($composite_id, 'int')} AND location_code = {$this->marshal($location_code, 'string')}";
-		return $this->db->query($sql);
-	}
-	
 }
 ?>

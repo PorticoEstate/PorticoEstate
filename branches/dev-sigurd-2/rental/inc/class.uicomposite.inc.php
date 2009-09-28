@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('rental.socomposite');
+	phpgw::import_class('rental.sounit');
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
@@ -73,6 +74,11 @@
 					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
+					break;
+				case 'included_areas':
+					$filters = array('included_areas' => phpgw::get_var('id'));
+					$result_objects = rental_sounit::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_sounit::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 			}
 
@@ -368,7 +374,7 @@
 			$location_code = phpgw::get_var('location_id');
 			if($composite_id > 0 && isset($location_code))
 			{
-				rental_socomposite::get_instance()->delete_unit($composite_id, $location_code);
+				rental_sounit::get_instance()->delete($composite_id, $location_code);
 			}
 		}
 

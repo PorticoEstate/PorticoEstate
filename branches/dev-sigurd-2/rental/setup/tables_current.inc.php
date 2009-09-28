@@ -34,15 +34,18 @@
 		),
 		'rental_unit' => array(
 				'fd' => array(
-					'composite_id' => 		array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_code' => 		array('type' => 'varchar', 'precision' => 50, 'nullable' => false)
+					'id'			=> array('type' => 'auto', 'nullable' => false),
+					'composite_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_code' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false)
 				),
-				'pk' => array('composite_id','location_code'),
+				'pk' => array('id'),
 				'fk' => array(
 					'rental_composite' => array( 'composite_id' => 'id'),
 				),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array(
+					array('composite_id','location_code')
+				)
 		),
 		'rental_document_composite' => array(
 			'fd' => array(

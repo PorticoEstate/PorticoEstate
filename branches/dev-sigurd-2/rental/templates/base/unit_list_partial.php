@@ -10,7 +10,7 @@
 		function(e)
 		{
   		YAHOO.util.Event.stopEvent(e);
-     	window.location = 'index.php?menuaction=rental.uiparty.index';
+     	window.location = 'index.php?menuaction=rental.uicomposite.edit';
  		}
  	);
 	
@@ -74,24 +74,6 @@
 		hidden: true
 	}];
 
-	// Initiating the data source
-	setDataSource(
-			'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
-			columnDefs,
-			'<?php echo $list_id ?>_form',
-			[],
-			'<?php echo $list_id ?>_container',
-			'<?php echo $list_id ?>_paginator',
-			'<?php echo $list_id ?>',
-			new Array(<?php
-					if(isset($related)){
-						foreach($related as $r){
-							echo "\"".$r."\"";
-						}
-					}
-				?>
-	);
-
 	<?php
 			if(isset($extra_cols)){
 				foreach($extra_cols as $col){
@@ -105,12 +87,29 @@
 				}
 			}
 		?>
+
+	// Initiating the data source
+	setDataSource(
+			'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=<?php echo $list_id ?>&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
+			columnDefs,
+			'<?php echo $list_id ?>_form',
+			[],
+			'<?php echo $list_id ?>_container',
+			'<?php echo $list_id ?>_paginator',
+			'<?php echo $list_id ?>',
+			new Array(<?php
+					if(isset($related)){
+						foreach($related as $r){
+							echo "\"".$r."\"";
+						}
+					}
+				?>)
+	);
 </script>
 <?php
 	if($list_form)
 	{
 ?>
-<h3><?php echo lang('add_area') ?></h3>
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
 		<!-- Filters -->

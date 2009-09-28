@@ -20,6 +20,7 @@
 	<div class="yui-content">
 		<div id="details">
 			<form action="#" method="post">
+				<input type="hidden" name="id" value="<?php echo $composite->get_id() ?>"/>
 				<dl class="proplist-col">
 					<dt>
 						<label for="name"><?php echo lang('name') ?></label>
@@ -57,8 +58,7 @@
 
 					<?php if ($editable) { // Only show custom address fields if we're in edit mode ?>
 					<dt>
-						<label for="address_1"><?php echo lang('overridden_address') ?></label>
-						/ <label for="house_number"><?php echo lang('house_number') ?></label>
+						<label for="address_1"><?php echo lang('overridden_address') ?></label> / <label for="house_number"><?php echo lang('house_number') ?></label>
 					</dt>
 					<dd>
 						<input type="text" name="address_1" id="address_1" value="<?php echo $composite->get_custom_address_1() ?>" />
@@ -130,7 +130,7 @@
 				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
 				$editable = false;
 				unset($extra_cols);
-				include('unit_list_partial.php');
+				//include('unit_list_partial.php');
 			?>
 		</div>
 		<div id="contracts">

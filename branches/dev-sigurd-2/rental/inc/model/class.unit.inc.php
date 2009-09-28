@@ -5,16 +5,18 @@
  * module. 
  *
  */
-class rental_unit
+class rental_unit extends rental_model
 {
 	protected static $so;
 
+	protected $id;
 	protected $composite_id;
 	// The property location that this unit represents
 	protected $location;
 	
-	public function __construct($composite_id = -1, rental_property_location $location = null)
+	public function __construct(int $id, $composite_id = -1, rental_property_location $location = null)
 	{
+		parent::__construct($id);
 		$this->composite_id = (int)$composite_id;
 		$this->location = $location;
 	}
@@ -36,13 +38,6 @@ class rental_unit
 		}
 		return -1;
 	}
-	protected static function get_so()
-	{
-		if (self::$so == null) {
-			self::$so = CreateObject('rental.socomposite');
-		}
-		return self::$so;
-	}
 		
 	/**
 	 * Returns a string representation of this object.
@@ -50,14 +45,7 @@ class rental_unit
 	 * @return string with data about the object.
 	 */
 	public function __toString() {
-        return 'unit[composite id:'.$this->composite_id.',location:'.$this->get_location().']';
-	}
-	
-	public static function get_units_for_composite($id, $sort = null, $dir = 'asc', $start = 0, $results = null)
-	{
-		$so = self::get_so();
-		$units = $so->get_included_rental_units($id, $sort = null, $dir = 'asc', $start = 0, $results = null);
-		return $units;
+        return "unit[id:{$this->get_id()},composite id:{$this->composite_id},location:{$this->get_location()}]";
 	}
 	
 	/** 
