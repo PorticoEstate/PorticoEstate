@@ -115,32 +115,23 @@
 		</div>
 		<div id="elements">
 			<h3><?php echo lang('added_areas') ?></h3>
-			<div id="added-areas-datatable-container" class="datatable_container"></div>
-			<?php if ($editable) { ?>
-				<h3><?php echo lang('add_area') ?></h3>
-				<form id="available_areas_form" method="GET">
-					<fieldset>
-						<!-- Filters -->
-						<h3><?php echo lang('filters') ?></h3>
-						<label for="ctrl_toggle_level"><?php echo lang('level') ?></label>
-						<select name="level" id="ctrl_toggle_level">
-							<option value="1"><?php echo lang('property') ?></option>
-							<option value="2" selected="selected"><?php echo lang('building') ?></option>
-							<option value="3"><?php echo lang('floor') ?></option>
-							<option value="4"><?php echo lang('section') ?></option>
-							<option value="5"><?php echo lang('room') ?></option>
-						</select>
-
-						<label class="toolbar_element_label" for="available_date"><?php echo lang('available_at') ?></label>
-						<?php echo $GLOBALS['phpgw']->yuical->add_listener('available_date', $notification_date); ?>
-
-
-						<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
-						<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
-					</fieldset>
-					<div id="available-areas-datatable-container" class="datatable_container"></div>
-				</form>
-			<?php } ?>
+			<?php 
+				$list_form = false; 
+				$list_id = 'included_areas';
+				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
+				$editable = false;
+				unset($extra_cols);
+				include('unit_list_partial.php');
+			?>
+			<h3><?php echo lang('available_areas') ?></h3>
+			<?php 
+				$list_form = true; 
+				$list_id = 'available_areas';
+				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
+				$editable = false;
+				unset($extra_cols);
+				include('unit_list_partial.php');
+			?>
 		</div>
 		<div id="contracts">
 			<?php 
@@ -158,158 +149,3 @@
 		</div>
 	</div>
 </div>
-
-
-<script type="text/javascript">
-	YAHOO.util.Event.onDOMReady(function() {
-
-		initCalendar('available_date', 'calendarPeriodFrom', 'cal1', 'Velg dato');
-
-		//Columns for added areas datatable
-		var addedAreasColumnDefs = [{
-			key: "location_code",
-			label: "<?php echo lang('location_code') ?>",
-		  sortable: true
-		},
-		{
-			key: "loc1_name",
-			label: "<?php echo lang('property') ?>",
-		  sortable: false
-		},
-		{
-			key: "loc2_name",
-			label: "<?php echo lang('building') ?>",
-			sortable: false
-		},
-		{
-			key: "loc3_name",
-			label: "<?php echo lang('floor') ?>",
-		  	sortable: false
-		},
-		{
-			key: "loc4_name",
-			label: "<?php echo lang('section') ?>",
-		  	sortable: false
-		},
-		{
-			key: "loc5_name",
-			label: "<?php echo lang('room') ?>",
-		  	sortable: false
-		},
-		{
-			key: "address",
-			label: "<?php echo lang('address') ?>",
-		  sortable: false
-		},
-		{
-			key: "area_gros",
-			label: "<?php echo lang('area_gros') ?>",
-		  sortable: false
-		},
-		{
-			key: "area_net",
-			label: "<?php echo lang('area_net') ?>",
-		  sortable: false
-		},
-		{
-			key: "actions",
-			hidden: true
-		},
-		{
-			key: "labels",
-			hidden: true
-		},
-		{
-			key: "ajax",
-			hidden: true
-		}];
-
-		// Initiating the data source
-		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=included_areas&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
-				addedAreasColumnDefs,
-				'',
-				[],
-				'added-areas-datatable-container',
-				'added-areas-paginator',
-				'added-areas',
-				new Array('available-areas')
-		);
-
-		//Columns for available areas datatable
-		var availableAreasColumnDefs = [{
-			key: "location_code",
-			label: "<?php echo lang('id') ?>",
-			sortable: true
-		},
-		{
-			key: "loc1_name",
-			label: "<?php echo lang('property') ?>",
-		  	sortable: false
-		},
-		{
-			key: "loc2_name",
-			label: "<?php echo lang('building') ?>",
-			sortable: false
-		},
-		{
-			key: "loc3_name",
-			label: "<?php echo lang('floor') ?>",
-			sortable: false
-		},
-		{
-			key: "loc4_name",
-			label: "<?php echo lang('section') ?>",
-			sortable: false
-		},
-		{
-			key: "loc5_name",
-			label: "<?php echo lang('room') ?>",
-			sortable: false
-		},
-		{
-			key: "address",
-			label: "<?php echo lang('address') ?>",
-			sortable: false
-		},
-		{
-			key: "area_gros",
-			label: "<?php echo lang('area_gros') ?>",
-			sortable: false
-		},
-		{
-			key: "area_net",
-			label: "<?php echo lang('area_net') ?>",
-			sortable: false
-		},
-		{
-			key: "occupied",
-			label: "<?php echo lang('availability') ?>",
-			sortable: false
-		},
-		{
-			key: "actions",
-			hidden: true
-		},
-		{
-			key: "labels",
-			hidden: true
-		},
-		{
-			key: "ajax",
-			hidden: true
-		}];
-
-		// Initiating the data source
-		setDataSource(
-				'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=available_areas&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
-				availableAreasColumnDefs,
-				'available_areas_form',
-				['crtl_toggle_level'],
-				'available-areas-datatable-container',
-				'available-areas-paginator',
-				'available-areas',
-				new Array('added-areas')
-		);
-	});
-</script>
