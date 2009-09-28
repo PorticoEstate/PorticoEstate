@@ -31,6 +31,10 @@ abstract class rental_socommon
 		{
 			return intval($value);
 		}
+		else if($type == 'field')
+		{
+			return $this->db->db_addslashes($value);
+		}
 		return "'" . $this->db->db_addslashes($value) . "'";
 	}
 
