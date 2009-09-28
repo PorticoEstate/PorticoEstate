@@ -1808,3 +1808,22 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.72';
+	function booking_upgrade0_1_72()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN application_id int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN application_id int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN application_id int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD CONSTRAINT bb_allocation_application_id_fkey FOREIGN KEY (application_id) REFERENCES bb_application(id)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD CONSTRAINT bb_booking_application_id_fkey FOREIGN KEY (application_id) REFERENCES bb_application(id)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD CONSTRAINT bb_event_application_id_fkey FOREIGN KEY (application_id) REFERENCES bb_application(id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.73';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

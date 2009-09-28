@@ -19,6 +19,7 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required' => true),
+					'application_id'	=> array('type' => 'int', 'required' => false),
 					'organization_id'		=> array('type' => 'int', 'required' => true),
 					'season_id'		=> array('type' => 'int', 'required' => 'true'),
 					'from_'		=> array('type' => 'string', 'required'=> true),

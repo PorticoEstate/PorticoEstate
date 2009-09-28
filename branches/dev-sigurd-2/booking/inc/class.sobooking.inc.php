@@ -10,6 +10,7 @@
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required'=>true),
 					'allocation_id'	=> array('type' => 'int', 'required' => false),
+					'application_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),

@@ -10,6 +10,7 @@
 					'id'		=> array('type' => 'int'),
 					'active'	=> array('type' => 'int', 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
+					'application_id'	=> array('type' => 'int', 'required' => false),
 					'description' => array('type' => 'string', 'required'=> true),
 					'from_'		=> array('type' => 'string', 'required'=> true),
 					'to_'		=> array('type' => 'string', 'required'=> true),
