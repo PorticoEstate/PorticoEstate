@@ -91,70 +91,17 @@ class rental_socomposite extends rental_socommon
 		{
 			$cols = 'rental_composite.id AS composite_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place';
 		}
-		$order = $sort ? "ORDER BY $sort $dir ": '';
-		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
-	protected function get_results(string $sql, int $start_index, int $num_of_objects)
-	{
-		$composites = array();
-		// XXX: How do we use $num_of_objects in a case like this one?
-		$this->db->limit_query($sql, $start_index, __LINE__, __FILE__, $num_of_objects);
-		while ($this->db->next_record()) // Runs through all of the results
+	function populate(int $composite_id, &$composite)
+	{ 
+		if($composite == null ) // new object
 		{
-			$composite_id = $this->unmarshal($this->db->f('composite_id', true), 'int');
-			if(array_key_exists($composite_id, $composites)) // We've already added the composite to the array
-			{
-				$composite = &$composites[$composite_id];
-			}
-			else // We haven't added the composite yet
-			{
-				$composites[$composite_id] = new rental_composite($composite_id);
-				$composite = &$composites[$composite_id];
-			}
-			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
-			// We get the data from the property module
-			$data = execMethod('property.bolocation.read_single', $location_code);
-			$level = -1;
-			$generic_name = '';
-			$names = array();
-			$levelFound = false;
-			for($i = 1; !$levelFound; $i++)
-			{
-				$loc_name = 'loc'.$i.'_name';
-				if(array_key_exists($loc_name, $data))
-				{
-					$level = $i;
-					$generic_name = $data[$loc_name];
-					$names[$level] = $generic_name;
-				}
-				else{
-					$levelFound = true;
-				}
-			}
-			$gab_id = '';
-			$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'sallrows' => true));
-			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
-			{
-				$gabinfo = array_shift($gabinfos);
-				$gab_id = $gabinfo['gab_id'];
-			}
-			$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $name, $level, $names);
-			$location->set_address_1($data['street_name'].' '.$data['street_number']);
-			foreach($data['attributes'] as $attributes)
-			{
-				switch($attributes['column_name'])
-				{
-					case 'area_gross':
-						$location->set_area_gros($attributes['value']);
-						break;
-					case 'area_net':
-						$location->set_area_net($attributes['value']);
-						break;
-				}
-			}
-
+			$composite = new rental_composite($composite_id);
 			$composite->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 			$composite->set_is_active($this->db->f('is_active'));
 			$composite_name = $this->unmarshal($this->db->f('name', true), 'string');
@@ -164,17 +111,61 @@ class rental_socomposite extends rental_socommon
 			}
 			$composite->set_name($composite_name);
 			$composite->set_has_custom_address($this->unmarshal($this->db->f('has_custom_address', true), 'bool'));
-
-			$composite->add_unit(new rental_unit($composite_id, $location));
-
 			$composite->set_custom_address_1($this->unmarshal($this->db->f('address_1', true), 'string'));
 			$composite->set_custom_address_2($this->unmarshal($this->db->f('address_2', true), 'string'));
 			$composite->set_custom_house_number($this->unmarshal($this->db->f('house_number', true), 'string'));
 			$composite->set_custom_postcode($this->unmarshal($this->db->f('postcode', true), 'string'));
 			$composite->set_custom_place($this->unmarshal($this->db->f('place', true), 'string'));
 		}
+		// Location code
+		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+		// We get the data from the property module
+		$data = execMethod('property.bolocation.read_single', $location_code);
+		$level = -1;
+		$generic_name = '';
+		$names = array();
+		$levelFound = false;
+		for($i = 1; !$levelFound; $i++)
+		{
+			$loc_name = 'loc'.$i.'_name';
+			if(array_key_exists($loc_name, $data))
+			{
+				$level = $i;
+				$generic_name = $data[$loc_name];
+				$names[$level] = $generic_name;
+			}
+			else{
+				$levelFound = true;
+			}
+		}
+		$gab_id = '';
+		$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'sallrows' => true));
+		if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+		{
+			$gabinfo = array_shift($gabinfos);
+			$gab_id = $gabinfo['gab_id'];
+		}
+		$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $name, $level, $names);
+		$location->set_address_1($data['street_name'].' '.$data['street_number']);
+		foreach($data['attributes'] as $attributes)
+		{
+			switch($attributes['column_name'])
+			{
+				case 'area_gross':
+					$location->set_area_gros($attributes['value']);
+					break;
+				case 'area_net':
+					$location->set_area_net($attributes['value']);
+					break;
+			}
+		}
+		$composite->add_unit(new rental_unit($composite_id, $location));
 		
-		return $composites;
+		return $composite;
+	}
+	
+	public function get_id_field_name(){
+		return 'composite_id';
 	}
 
 	/**
@@ -203,7 +194,7 @@ class rental_socomposite extends rental_socommon
 
 		return $result != null;
 	}
-
+	
 	/**
 	 * Add a new composite to the database.  Adds the new insert id to the object reference.
 	 * Also saves included rental_unit objects.
@@ -230,6 +221,12 @@ class rental_socomposite extends rental_socommon
 		$result = $this->db->query($q);
 
 		return $this->db->get_last_insert_id($this->table_name, 'id');
+	}
+	
+	public function delete_unit(int $composite_id, string $location_code)
+	{
+		$sql ="DELETE FROM rental_unit WHERE composite_id = {$this->marshal($composite_id, 'int')} AND location_code = {$this->marshal($location_code, 'string')}";
+		return $this->db->query($sql);
 	}
 	
 }

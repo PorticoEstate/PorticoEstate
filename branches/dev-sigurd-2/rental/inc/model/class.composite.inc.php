@@ -38,24 +38,10 @@
 		 * Adds a composite to the composite object. Note that this method is
 		 * meant for populating the object and will not fetch anything from
 		 * the database.
-		 * @see add_new_unit().
 		 * @param $unit to add to object.
 		 */
 		public function add_unit($new_unit)
 		{
-			if(!isset($this->units)) // No units are added yet
-			{
-				$this->units = array();
-			}
-			else // There are units
-			{
-				foreach ($this->units as $unit) {
-					if ($unit->get_location_code() == $new_unit->get_location_code()) { // Unit already exists
-						return;
-					}
-				}
-			}
-			// Unit doesn't already exist so we add it to the array
 			$this->units[] = $new_unit;
 		}
 		

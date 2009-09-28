@@ -45,7 +45,7 @@
 			$contract_id = phpgw::get_var('contract_id');
 			if(isset($contract_id))
 			{
-				$contract = rental_socomposite::get_instance()->get_single($contract_id);
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
 			}
 			
 			//Retrieve the type of query and perform type specific logic
@@ -365,19 +365,11 @@
 				return;
 			}
 			$composite_id = (int)phpgw::get_var('id');
-			if(isset($composite_id) && $composite_id > 0)
+			$location_code = phpgw::get_var('location_id');
+			if($composite_id > 0 && isset($location_code))
 			{
-				$composite = rental_composite::get($composite_id);
-
-				$location_id = (int)phpgw::get_var('location_id');
-
-				if (isset($composite)) {
-					$composite->remove_unit(new rental_property(null, $location_id));
-					//$composite->store();
-				}
+				rental_socomposite::get_instance()->delete_unit($composite_id, $location_code);
 			}
-
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
 		}
 
 		/**
