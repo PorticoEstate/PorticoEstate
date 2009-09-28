@@ -106,10 +106,11 @@ abstract class rental_socommon
 	 */
 	public function get_single(int $id)
 	{
-		$objects = $this->get(null, null, null, null, null, null, array('id' => $id), false);
+		$objects = $this->get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
 		if(count($objects) > 0)
 		{
-			return $objects[0];
+			$keys = array_keys($objects);
+			return $objects[$keys[0]];
 		}
 		return null;
 	}
@@ -132,7 +133,7 @@ abstract class rental_socommon
 	{
 		$results = array();
 		
-		//Special case: Sort on id field. Always changed to the id field name
+		// Special case: Sort on id field. Always changed to the id field name.
 		if($sort_field == 'id')
 		{
 			$sort_field = $this->get_id_field_name();

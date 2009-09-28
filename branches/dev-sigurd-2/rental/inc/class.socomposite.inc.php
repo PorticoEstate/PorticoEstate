@@ -73,6 +73,11 @@ class rental_socomposite extends rental_socommon
 		if(isset($filters['not_in_contract'])){
 			$filter_clauses[] = "rental_contract_composite.contract_id != ".$filters['not_in_contract'];
 		}
+		
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "{$this->get_id_field_name()} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
 
 		if(count($filter_clauses))
 		{

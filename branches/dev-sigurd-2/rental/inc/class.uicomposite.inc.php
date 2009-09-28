@@ -234,14 +234,14 @@
 			$composite_id = (int)phpgw::get_var('id');
 			if(isset($composite_id) && $composite_id > 0)
 			{
-				$composite = rental_composite::get($composite_id);
+				$composite = rental_socomposite::get_instance()->get_single($composite_id);
 			}
 			else
 			{
 				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
 				return;
 			}
-			
+
 			if(isset($composite) && $composite->has_permission(PHPGW_ACL_READ))
 			{
 				return $this->render(
@@ -273,7 +273,7 @@
 			{
 				if(isset($composite_id) && $composite_id > 0)
 				{
-					$composite = rental_composite::get($composite_id); 
+					$composite = rental_socomposite::get_instance()->get_single($composite_id); 
 				}
 				else
 				{
