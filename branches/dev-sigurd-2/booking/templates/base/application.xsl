@@ -19,11 +19,11 @@
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Created')" /></dt>
-            <dd><xsl:value-of select="application/created"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', application/created)"/></dd>
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Modified')" /></dt>
-            <dd><xsl:value-of select="application/modified"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></dd>
         </dl>
 
         <dl class="proplist">
@@ -47,8 +47,8 @@
 				var eventParams = {};
 			</script>
 			<xsl:for-each select="application/dates">
-				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="from_"/></dd>
-				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="to_"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
 				<script type="text/javascript">
 					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
@@ -101,7 +101,7 @@
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">
 				<dt>
-					<xsl:value-of select="time"/>: <xsl:value-of select="author"/>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
 				</dt>
 				<dd><pre><xsl:value-of select="comment"/></pre></dd>
 			</xsl:for-each>

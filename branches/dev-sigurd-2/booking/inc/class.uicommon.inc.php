@@ -35,7 +35,27 @@
 	{
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
-	
+
+	/**
+	 * Reformat an ISO timestamp into norwegian format
+	 * 
+	 * @param string $date    date
+	 *
+	 * @return string containg timestamp in norwegian format
+	 */
+	function pretty_timestamp($date)
+	{
+		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
+		{
+			$date = $date[0]->nodeValue;
+		}
+		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
+		$text = "{$match[3]}.{$match[2]}.{$match[1]}";
+		if($match[4])
+			$text .= " {$match[5]}:{$match[6]}";
+		return $text;
+	}
+
 	/**
 	 * Generates a javascript translator object/hash for the specified fields.
 	 */

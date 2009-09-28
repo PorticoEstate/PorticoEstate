@@ -10,7 +10,6 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
-			'status_check'	=>	true,
 		);
 		
 		protected $customer_id;
@@ -108,6 +107,8 @@
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
+				$application['created'] = pretty_timestamp($application['created']);
+				$application['modified'] = pretty_timestamp($application['modified']);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
@@ -236,11 +237,6 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
 			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
-		}
-
-		public function status_check()
-		{
-			return array();
 		}
 
 		private function check_date_availability(&$allocation)

@@ -24,9 +24,9 @@
             <dt><xsl:value-of select="php:function('lang', 'Case officer')" /></dt>
             <dd><xsl:value-of select="season/officer_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
-            <dd><xsl:value-of select="season/from_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', season/from_)"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
-            <dd><xsl:value-of select="season/to_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', season/to_)"/></dd>
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
