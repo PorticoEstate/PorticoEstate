@@ -328,7 +328,7 @@
 		</div>
 		<div id="contracts">
 			<?php
-			$list_form = false;
+			$list_form = true;
 			$list_id = 'contracts_part';
 			$url_add_on = "&amp;type=contracts_part&amp;party_id=".$party->get_id();
 			include('contract_list_partial.php');

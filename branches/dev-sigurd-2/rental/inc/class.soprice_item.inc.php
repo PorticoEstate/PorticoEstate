@@ -248,4 +248,52 @@ class rental_soprice_item extends rental_socommon
 
 		return $receipt;
 	}
+	
+/**
+	 * This method removes a price item to a contract. Updates last edited hisory.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $price_item	the prce item to remove
+	 * @return true if successful, false otherwise
+	 */
+	function remove_price_item($contract_id, $price_item)
+	{
+		$q = "DELETE FROM rental_contract_price_item WHERE id = {$price_item->get_id()}";
+		$result = $this->db->query($q);
+		if($result)
+		{
+			$this->last_updated($contract_id);
+			$this->last_edited_by($contract_id);
+			return true;
+		}
+		return false;
+	}
+	
+/**
+	 * This method adds a price item to a contract. Updates last edited history.
+	 * 
+	 * @param $contract_id	the given contract
+	 * @param $price_item	the price item to add
+	 * @return true if successful, false otherwise
+	 */
+	function add_price_item($contract_id, $price_item)
+	{
+		$values = array(
+			$price_item->get_id(),
+			$contract_id,
+			"'" . $price_item->get_title() . "'",
+			"'" . $price_item->get_agresso_id() . "'",
+			$price_item->is_area() ? 'true' : 'false',
+			$price_item->get_price()
+		);
+		$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, agresso_id, is_area, price) VALUES (" . join(',', $values) . ")";
+		$result = $this->db->query($q);
+		if($result)
+		{
+			$this->last_updated($contract_id);
+			$this->last_edited_by($contract_id);
+			return true;
+		}
+		return false;
+	}
 }

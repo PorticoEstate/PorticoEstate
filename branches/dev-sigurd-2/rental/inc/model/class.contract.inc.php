@@ -25,8 +25,6 @@
 		protected $security_amount;
 		protected $old_contract_id;
 		protected $contract_type_title;
-		protected $party_names = array();
-		protected $composite_names = array();
 		protected $composites;
 		protected $payer_id;
 		protected $price_items;	
@@ -182,31 +180,18 @@
 		
 		public function get_party_name(){
 			$names = '';
-			foreach($this->party_names as $party) {
-				$names .= $party."<br/>";
+			foreach($this->parties as $party) {
+				$names .= $party->get_name()."<br/>";
 			}
 			return $names;
-		}
-		
-		public function set_party_name($name)
-		{
-			if(!in_array($name,$this->party_names)) {
-				$this->party_names[] = $name;
-			}
 		}
 		
 		public function get_composite_name(){
 			$names = '';
-			foreach($this->composite_names as $composite) {
-				$names .= $composite."<br/>\n";
+			foreach($this->composites as $composite) {
+				$names .= $composite->get_name()."<br/>";
 			}
 			return $names;
-		}
-		
-		public function set_composite_name($name)
-		{
-			if(!in_array($name,$this->composite_names))
-				$this->composite_names[] = $name;
 		}
 		
 		public function set_composites($composites)
@@ -321,7 +306,11 @@
 		 */
 		public function add_composite(rental_composite $new_composite)
 		{
-			$this->composites[] = $new_composite;
+			$new_composite_id = $new_composite->get_id();
+			if(!in_array($new_composite_id,$this->composites))
+			{
+				$this->composites[$new_composite_id] = $new_composite;
+			}
 		}
 		
 		/**
@@ -332,7 +321,12 @@
 		 */
 		public function add_party(rental_party $new_party)
 		{
-			$this->parties[] = $new_party;
+			$new_party_id = $new_party->get_id();
+			
+			if(!in_array($new_party_id,$this->parties))
+			{
+				$this->parties[$new_party_id] = $new_party;
+			}
 		}
 		
 		/**

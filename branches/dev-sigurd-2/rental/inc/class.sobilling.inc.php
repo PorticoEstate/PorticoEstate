@@ -79,5 +79,22 @@ class rental_sobilling extends rental_socommon
 		return $billings;
 	}
 	
+	/**
+	 * Get a key/value array of titles of billing term types keyed by their id
+	 * 
+	 * @return array
+	 */
+	function get_billing_terms()
+	{
+		$sql = "SELECT id, title FROM rental_billing_term";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$results = array();
+		while($this->db->next_record()){
+			$results[$this->db->f('id', true)] = $this->db->f('title', true);
+		}
+		
+		return $results;
+	}
+	
 }
 ?>

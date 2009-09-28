@@ -332,6 +332,28 @@ class rental_soparty extends rental_socommon
 				return false;
 			}
 	}
+	
+	
+	/**
+	 * Get the parties not involved in this contract
+	 * 
+	 * TODO: make as filter
+	 * 
+	 * @param $contract_id the contract id
+	 * @return  A list of rental_party objects
+	 */
+	public function get_available_parties_for_contract($contract_id)
+	{
+		$sql = "SELECT DISTINCT party_id FROM rental_contract_party WHERE contract_id != $contract_id";
+		$this->db->query($sql);
+		$parties = array();
+		$parties_so = rental_party::get_so();
+		while($this->db->next_record()) { 
+			$party_id = $this->unmarshal($this->db->f('party_id', true), 'int'); 
+			$parties[] = $parties_so->get_single($party_id);
+		}
+		return $parties;
+	}
 
 }
 ?>
