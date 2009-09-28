@@ -140,9 +140,9 @@ abstract class rental_socommon
 		
 		$object_ids = array(); // All of the object ids
 		$added_object_ids = array(); // All of the added objects ids
-		if($start_index < 1)
+		if($start_index < 0)
 		{
-			$start_index = 1;
+			$start_index = 0;
 		}
 		
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
@@ -163,7 +163,7 @@ abstract class rental_socommon
 					$object_ids[] = $result_id; // We have to add the new id
 				}
 				// We have to check if we should populate this object
-				if(count($object_ids) >= $start_index) // We're at index above start index
+				if(count($object_ids) > $start_index) // We're at index above start index
 				{
 					if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
 					{
