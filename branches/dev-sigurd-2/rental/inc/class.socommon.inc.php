@@ -127,26 +127,47 @@ abstract class rental_socommon
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
 		$results = array();
-		$reult_ids = array(); // We store the ids here to know how to deal with the start index and number of objects
-		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		$this->db->query($sql,__LINE__, __FILE__);
-		$counter = 1;
-		if($start_index < 0){
-			$start_index = 0;
+		$object_ids = array(); // All of the object ids
+		$added_object_ids = array(); // All of the added objects ids
+		if($start_index < 1)
+		{
+			$start_index = 1;
 		}
 		
+		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
+		$this->db->query($sql,__LINE__, __FILE__);
+
 		while ($this->db->next_record()) // Runs through all of the results
-		{	
-			$result_id = $this->unmarshal($this->db->f($this->get_id_field_name(), true), 'int');
-			$result = &$results[$result_id];
-			$results[$result_id] = $this->populate($result_id,$result);
-			if($num_of_objects != null && count($results) > ($start_index + $num_of_objects)) // We've found as many objects as we want (+ 1)
+		{
+			$should_populate_object = false; // Default value - we won't populate object	
+			$result_id = $this->unmarshal($this->db->f($this->get_id_field_name(), true), 'int'); // The id of object
+			if(in_array($result_id, $added_object_ids)) // Object with this id already added
 			{
-				array_pop($results); // We remove the last object as we don't need it
-				break;
+				$should_populate_object = true; // We should populate this object as we already have it in our result array
+			}
+			else // Object isn't already added to array
+			{
+				if(!in_array($result_id, $object_ids)) // Haven't already added this id
+				{
+					$object_ids[] = $result_id; // We have to add the new id
+				}
+				// We have to check if we should populate this object
+				if(count($object_ids) >= $start_index) // We're at index above start index
+				{
+					if($num_of_objects == null || count($results) < $num_of_objects) // We haven't found all the objects we're looking for
+					{
+						$should_populate_object = true; // We should populate this object
+						$added_object_ids[] = $result_id; // We keep the id
+					}
+				}
+			}
+			if($should_populate_object)
+			{	
+				$result = &$results[$result_id];
+				$results[$result_id] = $this->populate($result_id,$result);
 			}
 		}
-		return array_slice($results, $start_index);
+		return $results;
 	}
 	
 	/**
