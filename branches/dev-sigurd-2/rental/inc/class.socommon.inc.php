@@ -207,7 +207,7 @@ abstract class rental_socommon
 	* Store the object in the database.  If the object has no ID it is assumed to be new and
 	* inserted for the first time.  The object is then updated with the new insert id.
 	*/
-	public function store($object)
+	public function store(&$object)
 	{
 		if ($object->validates()) {
 			if ($object->get_id() > 0) {

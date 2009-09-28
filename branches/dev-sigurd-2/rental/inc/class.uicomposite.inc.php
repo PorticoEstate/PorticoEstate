@@ -273,7 +273,7 @@
 			{
 				if(isset($composite_id) && $composite_id > 0)
 				{
-					$composite = rental_socomposite::get_instance()->get_single($composite_id); 
+					$composite = rental_socomposite::get_instance()->get_single($composite_id);
 				}
 				else
 				{
@@ -299,7 +299,7 @@
 					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 					$composite->set_description(phpgw::get_var('description'));
 					
-					if($composite->store())
+					if(rental_socomposite::get_instance()->store($composite))
 					{
 						$message = lang('messages_saved_form');
 					}

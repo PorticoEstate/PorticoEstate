@@ -76,7 +76,7 @@ class rental_socomposite extends rental_socommon
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "{$this->get_id_field_name()} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
 
 		if(count($filter_clauses))
@@ -87,7 +87,7 @@ class rental_socomposite extends rental_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "rental_composite";
-		$joins = "	{$this->join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
@@ -195,7 +195,7 @@ class rental_socomposite extends rental_socommon
 			'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\''
 		);
 
-		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		$result = $this->db->query('UPDATE rental_composite SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 		return $result != null;
 	}
@@ -222,10 +222,12 @@ class rental_socomposite extends rental_socommon
 			"'".$composite->get_custom_place()."'"
 		);
 
-		$q ="INSERT INTO ".$this->table_name."(" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$q ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 
-		return $this->db->get_last_insert_id($this->table_name, 'id');
+		$composite_id = $this->db->get_last_insert_id('rental_composite', 'id');
+		$composite->set_id($composite_id);
+		return $composite_id;
 	}
 	
 	public function delete_unit(int $composite_id, string $location_code)
