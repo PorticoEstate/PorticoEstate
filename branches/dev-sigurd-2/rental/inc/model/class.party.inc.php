@@ -69,10 +69,11 @@ class rental_party extends rental_model
 		return $so->get_single($id);
 	}
 
-	public static function get_all($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array(),$count = false)
+	public static function get_all($start_index = 0, $num_of_objects = 1000, $sort_field = null, $ascending = true, $search_for = null, $search_type = null, $filters = array())
 	{
 		$so = self::get_so();
-		$result = $so->get_party_array($start, $results, $sort, $dir, $query, $search_option, $filters,$count);
+        $result = $so->get($start_index, $num_of_objects, $sort_field, $ascending, $search_for, $search_type, $filters);
+		//$result = $so->get_party_array($start, $results, $sort, $dir, $query, $search_option, $filters,$count);
 		return $result;
 	}
 
@@ -112,6 +113,22 @@ class rental_party extends rental_model
 	}
 
 	public function get_personal_identification_number() { return $this->personal_identification_number; }
+
+    /**
+     * Alias for set_personal_identificiation_number()
+     *
+     * @param mixed $pid Personal ID number
+     */
+    public function set_pid($pid) {
+        $this->set_personal_identification_number($pid);
+    }
+
+    /**
+     * Alias for get_personal_identificiation_number()
+     *
+     * @return string Personal ID number
+     */
+    public function get_pid() { return $this->get_personal_identification_number(); }
 
 	public function set_first_name($first_name)
 	{
