@@ -720,7 +720,7 @@
 
 					if($params['required'] && $sub_entity_count == 0)
 					{
-						$errors[$field] = "Field $field is required";
+						$errors[$field] = lang("Field %1 is required", $field);
 					}
 					continue;
 				}
@@ -728,14 +728,14 @@
 				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
 				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
-					$errors[$error_key] = "Field $error_key is required";
+					$errors[$error_key] = lang("Field %1 is required", $error_key);
 					$empty = true;
 				}
 				if($params['type'] == 'date' && !empty($entity[$field]))
 				{
 					$date = date_parse($entity[$field]);
 					if(!$date || count($date['errors']) > 0) {
-						$errors[$error_key] = "Field {$error_key}: Invalid format";
+						$errors[$error_key] = lang("Field %1: Invalid format", $error_key);
 					}
 				}
 				

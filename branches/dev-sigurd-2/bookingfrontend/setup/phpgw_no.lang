@@ -233,3 +233,5 @@ Service	bookingfrontend	no	Tjeneste
 Project No.	bookingfrontend	no	Prosjektnr.
 Account Codes	bookingfrontend	no	Konteringsstrenger
 Account Codes	bookingfrontend	no	Konteringsstreng
+Field %1 is required	bookingfrontend	no	Feltet %1 kreves
+Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format

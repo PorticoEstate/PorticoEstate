@@ -235,3 +235,4 @@ Create booking	booking	no	Lag booking
 Create event	booking	no	Lag arrangement
 Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
+Field %1 is required	booking	no	Feltet %1 kreves

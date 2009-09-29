@@ -35,7 +35,7 @@
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
-					'contact_email'	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
+					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
 					'audience' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
