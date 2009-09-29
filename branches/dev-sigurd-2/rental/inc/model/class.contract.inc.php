@@ -27,7 +27,6 @@
 		protected $contract_type_title;
 		protected $composites;
 		protected $payer_id;
-		protected $price_items;	
 		protected $last_edited_by_current_user;
 		protected $executive_officer_id;
 		protected $comment;
@@ -241,27 +240,6 @@
 			return $this->parties;
 		}
 		
-		public function set_price_items($price_items)
-		{
-			$this->price_items = $price_items;
-		}
-		
-		/**
-		 * Get a list of the price items associated with this contract.  The price items
-		 * are loaded lazily, so they will not be populated at object construction, but rather
-		 * at first call of this function.
-		 * 
-		 * @return rental_price_item[]
-		 */
-		public function get_price_items()
-		{
-			if(!$this->price_items) {
-				$so = self::get_so();
-				$this->price_items = $so->get_price_items_for_contract($this->get_id());
-			}
-			
-			return $this->price_items;
-		}
 
         public function set_comment($comment)
         {
@@ -367,29 +345,6 @@
 			$so->remove_price_item($this->get_id(),$price_item_to_remove);
 		}
 		
-		/**
-		 * Get the price of this contract at the given date.  If no date is provided, the current
-		 * date is used.
-		 * 
-		 * @param $date the date to check the contract value at
-		 * @return the price
-		 */
-		public function get_price($date = null)
-		{
-			if ($date == null) {
-				$date = time();
-			}
-			
-			$total = 0;
-			
-			foreach ($this->get_price_items() as $price_item) {
-				if ($price_item->is_active_at($date)) {
-					$total += $price_item->get_total_price();
-				}
-			}
-			
-			return $total;
-		}
 		
 		public function add_bill_timestamp(int $timestamp)
 		{

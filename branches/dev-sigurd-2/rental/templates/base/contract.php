@@ -246,7 +246,7 @@
 							?>
 							<select name="billing_term">
 								<?php
-								foreach(rental_contract::get_billing_terms() as $term_id => $term_title)
+								foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 								{
 									echo "<option ".($current_term_id == $term_id ? 'selected="selected"' : "")." value=\"{$term_id}\">".lang($term_title)."</option>";
 								}
@@ -367,8 +367,8 @@
 		</div>
 		<div id="price">
 			<h3><?php echo lang('selected_price_items') ?></h3>
-			<strong><?php echo lang('total_price') ?>:</strong> <?php echo number_format($contract->get_price(), isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK';?> <br /><br />
-			<?php
+			<strong><?php echo lang('total_price') ?>:</strong> <?php echo number_format(0, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK';?> <br /><br />
+		 	<?php
 				$list_form = false;
 				$list_id = 'included_price_items';
 				$related = array('not_included_price_items');

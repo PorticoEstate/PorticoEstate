@@ -209,7 +209,8 @@ class rental_socontract extends rental_socommon
 			$columns[] = 'contract.id AS contract_id';
 			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start';
 			$columns[] = 'party.id AS party_id';
-			$columns[] = 'party.first_name, party.last_name, party.company_name';		
+			$columns[] = 'party.first_name, party.last_name, party.company_name';
+			$columns[] = 'c_t.is_payer';		
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
 			$columns[] = 'type.title, type.notify_before';
@@ -226,7 +227,6 @@ class rental_socontract extends rental_socommon
 		$join_last_billed = $this->left_join.' rental_invoice invoice ON (contract.id = invoice.contract_id)';
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited.' '.$join_last_billed;
 
-		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -255,9 +255,20 @@ class rental_socontract extends rental_socommon
 			$contract->set_last_edited_by_current_user($this->unmarshal($this->db->f('edited_on'),'int'));
 			$contract->set_location_id($this->unmarshal($this->db->f('location_id'),'int'));
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
+			
 		}
 		
-		$contract->add_bill_timestamp($this->unmarshal($this->db->f('timestamp_end'),'int'));
+		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
+		if($timestamp_end)
+		{
+			$contract->add_bill_timestamp($timestamp_end);
+		}
+		
+		$total_price = $this->unmarshal($this->db->f('total_price'),'int');
+		if($total_price)
+		{
+			$contract->set_total_price($total_price);
+		}
 		
 		$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
 		if($party_id)
@@ -266,6 +277,11 @@ class rental_socontract extends rental_socommon
 			$party->set_first_name($this->unmarshal($this->db->f('first_name', true), 'string'));
 			$party->set_last_name($this->unmarshal($this->db->f('last_name', true), 'string'));
 			$party->set_company_name($this->unmarshal($this->db->f('company_name', true), 'string'));
+			$is_payer = $this->unmarshal($this->db->f('is_payer', true), 'bool');
+			if($is_payer)
+			{
+				$contract->set_payer_id($party_id);
+			}
 			$contract->add_party($party);
 		}
 		
