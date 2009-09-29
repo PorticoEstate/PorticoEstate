@@ -83,7 +83,7 @@
 				),
 				'billing'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('common_invoice', array(), true),
+					'text'	=> $GLOBALS['phpgw']->translation->translate('invoice', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-document')
 				)
