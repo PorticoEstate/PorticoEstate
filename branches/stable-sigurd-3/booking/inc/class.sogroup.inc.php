@@ -11,7 +11,7 @@
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required' => true),
 					'organization_id'	=> array('type' => 'int', 'required' => true),
-					'description'    => array('type' => 'description', 'query' => true, 'required' => false,),
+					'description'    => array('type' => 'string', 'query' => true, 'required' => false,),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'activity_name'	=> array('type' => 'string',

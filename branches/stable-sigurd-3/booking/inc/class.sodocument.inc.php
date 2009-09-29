@@ -19,9 +19,14 @@
 				self::CATEGORY_REGULATION,
 			   self::CATEGORY_OTHER,
 			),
-			$uploadRootDir;
-		
-		protected $ownerType = null;
+			$uploadRootDir,
+			$ownerType = null;
+			
+		protected static 
+			$document_owners = array(
+				'building',
+				'resource',
+			);
 		
 		function __construct()
 		{
@@ -59,6 +64,10 @@
 			}
 			
 			$this->uploadRootDir = $server_files_dir.DIRECTORY_SEPARATOR.'booking';
+		}
+		
+		public static function get_document_owners() {
+			return self::$document_owners;
 		}
 		
 		public function get_categories()

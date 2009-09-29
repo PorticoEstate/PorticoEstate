@@ -10,9 +10,9 @@
 
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
-            <dd><xsl:value-of select="booking/from_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', booking/from_)"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
-            <dd><xsl:value-of select="booking/to_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', booking/to_)"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Cost')" /></dt>
             <dd><xsl:value-of select="booking/cost"/></dd>
         </dl>

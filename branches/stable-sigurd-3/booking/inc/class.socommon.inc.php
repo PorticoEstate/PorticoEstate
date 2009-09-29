@@ -3,6 +3,18 @@
 
 	abstract class booking_socommon
 	{
+		protected $db_null='NULL';
+		
+		protected $valid_field_types = array(
+			'date' => true,
+			'time' => true,
+			'timestamp' => true,
+			'string' => true,
+			'int' => true,
+			'decimal' => true,
+			'intarray' => true,
+		);
+		
 		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp', 'auto' => true, 'add_callback' => '_set_created_on'));
 		public static $AUTO_CREATED_BY = array('created_by' => array('type' => 'int', 'auto' => true, 'add_callback' => '_set_created_by'));
 		public static $REL_CREATED_BY_NAME = array(
@@ -114,7 +126,9 @@
 				}
 				else 
 				{
-					$cols[] = "{$this->table_name}.{$field} AS {$field}";
+					$value_expression = isset($params['expression']) ? 
+						'('.strtr($params['expression'], array('%%table%%' => $this->table_name)).')' : "{$this->table_name}.{$field}";
+					$cols[] = "{$value_expression} AS {$field}";
 				}
 			}
 			return array($cols, $joins);
@@ -138,15 +152,28 @@
 			return $entry;
 		}
 
+		public function valid_field_type($type) {
+			return isset($this->valid_field_types[$type]);
+		}
+		
 		function _marshal($value, $type)
 		{
+			$type = strtolower($type);
 			if($value === null)
 			{
-				return 'NULL';
+				return $this->db_null;
 			}
-			else if($type == 'int')
+			else if($type == 'int' || $type == 'decimal')
 			{
-				return (is_string($value) && strlen(trim($value)) === 0) ? 'NULL' : intval($value);
+				if (is_string($value) && strlen(trim($value)) === 0) {
+					return $this->db_null;
+				} else if ($type == 'int') {
+					return intval($value);
+				} else if ($type == 'decimal') {
+					return floatval($value);
+				}
+				//Don't know what could have gone wrong above for us to get here but returning NULL here as a safety
+				return $this->db_null;
 			}
 			else if($type == 'intarray')
 			{
@@ -156,30 +183,62 @@
 				}
 				return '('.join(',', $values).')';
 			}
+					
+			//Sanity check
+			if (!$this->valid_field_type($type)) {
+				throw new LogicException(sprintf('Invalid type "%s"', $type));
+			}
+			
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
 		function _unmarshal($value, $type)
 		{
-			if(($value === null || $value == 'NULL') || ($type != 'string' && strlen(trim($value)) === 0))
-			{
-				//phpgw always returns empty strings (i.e '') for null values
+			$type = strtolower($type);
+			if( 
+				 ($value === null || $value == $this->db_null) 
+				 || ($type != 'string' && strlen(trim($value)) === 0) /* phpgw always returns empty strings (i.e '') for null values */
+			  ) 
+			{				
 				return null;
 			}
 			else if($type == 'int')
 			{
 				return intval($value);
 			}
+			else if ($type == 'decimal') {
+				return floatval($value);
+			}
+			
+			//Sanity check
+			if (!$this->valid_field_type($type)) {
+				throw new LogicException(sprintf('Invalid type "%s"', $type));
+			}
+			
 			return $value;
+		}
+		
+		protected function primary_key_conditions($id_params) {
+			if (is_array($id_params)) {
+				return $this->_get_conditions(null, $id_params);
+			}
+			
+			if (isset($this->fields['id']) && isset($this->fields['id']['type'])) {
+				$id_value = $this->_marshal($id_params, $this->fields['id']['type']);
+			} else {
+				$id_value = intval($id_params);
+			}
+			
+			return $this->table_name.'.id='.$id_value;
 		}
 
 		function read_single($id)
 		{
-			$id = intval($id);
+			$pk_params = $this->primary_key_conditions($id);
 			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
-			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE {$this->table_name}.id=$id", __LINE__, __FILE__);
+			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
 				foreach($this->fields as $field => $params)
@@ -212,7 +271,7 @@
 										$type = $params['type'];
 									}
 									
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $params['type']);
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -284,7 +343,7 @@
 					}
 					else if($val == null)
 					{
-						$clauses[] = "{$table}.{$key} IS NULL";
+						$clauses[] = "{$table}.{$key} IS ".$this->db_null;
 					}
 					else
 					{
@@ -315,7 +374,7 @@
 		function read($params)
 		{
 			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null; //Passing null causes the system default to be used later on
+			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;

@@ -7,6 +7,7 @@
 		
 		public $public_functions = array
 		(
+			'building_users' => true,
 			'index'			=>	true,
 			'index_json'		=>	true,
 			'add'			=>	true,
@@ -37,6 +38,18 @@
 			
 		}
 		
+		public function building_users() {
+			if(!phpgw::get_var('phpgw_return_as') == 'json') { return; }
+			
+			if (($building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null))) {
+				$organizations = $this->bo->find_building_users($building_id);
+				array_walk($organizations["results"], array($this, "_add_links"), "bookingfrontend.uiorganization.show");
+				return $this->yui_results($organizations);
+			}
+			
+			return $this->yui_results(null);
+		}
+		
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -56,7 +69,7 @@
 							),
 							array(
 								'type' => 'text',
-								'name' => 'q'
+								'name' => 'query'
 							),
 							array(
 								'type' => 'submit',

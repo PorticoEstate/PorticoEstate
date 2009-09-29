@@ -191,7 +191,7 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		protected function get_export_key() {
-			return phpgw::get_var('export_key', 'string', array('GET','POST'), null);
+			return phpgw::get_var('export_key', 'string', 'REQUEST', null);
 		}
 		
 		public function pre_validate($export) {

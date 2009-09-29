@@ -8,6 +8,7 @@
 			 'show'			=>	true,
 			 'edit'         =>  true,
 			 'index'        =>  true,
+			 'building_users' => true,
 			);
 		protected $module;
 

@@ -15,9 +15,9 @@
 
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
-            <dd><xsl:value-of select="allocation/from_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', allocation/from_)"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
-            <dd><xsl:value-of select="allocation/to_"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', allocation/to_)"/></dd>
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Season')" /></dt>

@@ -9,6 +9,11 @@
 			$completed_reservation_bo,
 			$account_code_set_so,
 			$customer_id;
+			
+		protected static $export_type_to_file_type_map = array(
+			'internal' => 'csv',
+			'external' => 'txt',
+		);
 		
 		function __construct()
 		{
@@ -54,6 +59,12 @@
 			);
 		}
 		
+		protected function file_type_for_export_type($export_type) {
+			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
+						self::$export_type_to_file_type_map[$export_type] :
+						'txt';
+		}
+		
 		protected function _get_search_to_date(&$entity) {
 			$to_date = (isset($entity['to_']) && !empty($entity['to_']) ? $entity['to_'] : date('Y-m-d'));
 			
@@ -77,7 +88,8 @@
 			}
 			
 			foreach($exportable_reservations as &$reservation) {
-				if (!$this->get_customer_identifier_value_for($reservation)) {
+				if (!$this->get_customer_identifier_value_for($reservation) 
+				 	&& $this->get_cost_value($reservation['cost']) > 0 /* Exclude free reservations from this check */ ) { 
 					$errors['invalid_customer_ids'] = 'Unable to export: Missing a valid Customer ID on some rows';
 				}
 			}
@@ -125,7 +137,7 @@
 			
 			$export_reservations =& $this->get_completed_reservations_for($entity['id']);
 			
-			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.txt';
+			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.'.$this->file_type_for_export_type($entity_file['type']);
 			
 			$export_file = new booking_storage_object($entity_file['filename']);
 			
@@ -250,14 +262,53 @@
 			return '';
 		}
 		
+		public function format_cost($cost) {
+			$cost = $this->get_cost_value($cost);
+			return str_pad(round($cost, 2)*100, 17, 0, STR_PAD_LEFT);
+		}
+		
+		public function get_cost_value($cost) {
+			if (is_null($cost)) {
+				$cost = floatval(0); //floatval and doubleval, the same thing in php
+			}
+			
+			if (gettype($cost) != 'double') {
+				$cost = floatval($cost); //floatval and doubleval, the same thing in php
+			}
+			
+			return $cost;
+		}
+		
 		public function format_csv(array &$reservations, array $account_codes) {
 			$output = array();
+			
+			$columns = array(
+				'amount', 
+				'art_descr', 
+				'art', 
+				'responsible_code', 
+				'service', 
+				'object_number', 
+				'project_number', 
+				'unit_number',
+				'ext_ord_ref',
+				'invoice_instruction', 
+				'order_id',
+				'period',
+				'short_info',
+			);
+			
+			$output[] = $this->format_to_csv_line($columns);
 			
 			foreach ($reservations as $reservation) {
 				$reservation = array_map('utf8_decode', $reservation);
 				
+				if ($this->get_cost_value($reservation['cost']) <= 0) {
+					continue; //Don't export costless rows
+				}
+				
 				$item = array();
-				$item['amount'] = str_pad($reservation['cost']*100, 17, 0, STR_PAD_LEFT); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
+				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
 				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
@@ -383,6 +434,10 @@
 					$field = utf8_decode($field);
 				}
 				
+				if ($this->get_cost_value($reservation['cost']) <= 0) {
+					continue; //Don't export costless rows
+				}
+				
 				//header level
 				$header = $this->get_agresso_row_template();
 				$header['accept_flag'] = '1';
@@ -424,7 +479,7 @@
 				$item = $this->get_agresso_row_template();
 				$line_no = 1;
 				
-				$item['amount'] = str_pad($reservation['cost']*100, 17, 0, STR_PAD_LEFT); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
+				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
 				$item['amount_set'] = '1';
 				
 				/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på 

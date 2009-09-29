@@ -23,6 +23,10 @@
 					<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="season/generate_url"/>"</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Generate allocations')" />
 				</button>
+				<a class="cancel">
+					<xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'Back to season')"/>
+				</a>
 			</div>
 		</xsl:if>
 		
@@ -99,7 +103,7 @@ Dom = YAHOO.util.Dom;
 YAHOO.booking.AllocationDialog = function(container) {
 	this._container = container;
 	YAHOO.booking.AllocationDialog.superclass.constructor.call(this, container, { 
-		width:"520px", 
+		width:"580px", 
 		visible:false, 
 		constraintoviewport:true,
 		hideaftersubmit: false,

@@ -1,6 +1,57 @@
+YAHOO.booking.RegulationsTable = function() { 
+	this.building_id = null;
+	this.resources = [];
+	this.container = 'regulation_documents';
+	this.selection = [];
+	this.doAcceptAll = false;
+};
+
+YAHOO.booking.RegulationsTable.prototype.update = function() {
+	var url = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::'+this.building_id;
+
+	for(var r in this.resources) {
+		url += '&owner[]=resource::'+this.resources[r];
+	}
+
+	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}];
+	var options = {
+		defaultChecked: this.doAcceptAll,
+		selectionFieldOptions: {label: lang['Accepted']},
+		nameFieldOptions: {formatter: YAHOO.booking.formatLink, label: lang['Document']},
+		additional_fields: [{key: 'link', hidden: true}]
+	};
+	this.doAcceptAll = false;
+	YAHOO.booking.checkboxTableHelper(this.container, url, 'accepted_documents[]', this.selection, options);
+};
+
+YAHOO.booking.RegulationsTable.prototype.setBuildingId = function(building_id) {
+	this.building_id = building_id;
+};
+
+YAHOO.booking.RegulationsTable.prototype.setResources = function(resources) {
+	this.resources = resources || [];
+};
+
+YAHOO.booking.RegulationsTable.prototype.setSelection = function(selection) {
+	this.selection = selection || [];
+};
+
+YAHOO.booking.RegulationsTable.prototype.allAccepted = function() {
+	return YAHOO.util.Dom.getElementsBy(function(e){return !e.checked;}, 'input', this.container).length == 0;
+}
+
+YAHOO.booking.RegulationsTable.prototype.checkAll = function() {
+	this.doAcceptAll = true;
+}
+
+var regulationsTable = new YAHOO.booking.RegulationsTable();
+
 populateResourceTable = function(building_id, selection) {
     YAHOO.booking.checkboxTableHelper('resources_container', 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
-    'resources[]', selection, {additional_fields: [{key: 'type', label: lang['Resource Type']}]});
+    'resources[]', selection, {
+		additional_fields: [{key: 'type', label: lang['Resource Type']}], 
+		onSelectionChanged: function(selectedItems) { regulationsTable.setResources(selectedItems); regulationsTable.update(); } 
+	 });
 }
 
 removeDateRow = function() {
@@ -26,14 +77,27 @@ var createFromToDatePickerSection = function(containerEl) {
 YAHOO.util.Event.addListener(window, "load", function() {
 	var Dom = YAHOO.util.Dom;
     var building_id = Dom.get('field_building_id').value;
+	
     if(building_id) {
-        populateResourceTable(building_id, YAHOO.booking.initialSelection);
+      populateResourceTable(building_id, YAHOO.booking.initialSelection);
+		regulationsTable.setBuildingId(building_id);
+		regulationsTable.setResources(YAHOO.booking.initialSelection);
+		regulationsTable.setSelection(YAHOO.booking.initialDocumentSelection);
+		
+		if (YAHOO.booking.initialAcceptAllTerms) {
+			regulationsTable.checkAll();
+		}
+		
+		regulationsTable.update();
     }
     var ac = YAHOO.booking.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 
                                               'field_building_name', 'field_building_id', 'building_container');
     // Update the resource table as soon a new building is selected
     ac.itemSelectEvent.subscribe(function(sType, aArgs) {
         populateResourceTable(aArgs[2].id, []);
+		  regulationsTable.setBuildingId(aArgs[2].id);
+		  regulationsTable.setResources([]);
+		  regulationsTable.update();
     });
 	Dom.getElementsByClassName('close-btn', 'a', null, function(a) {
 		a.onclick = removeDateRow;
@@ -46,27 +110,18 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		createFromToDatePickerSection(div);	
 	
 		container.appendChild(div);
-// 		div.innerHTML ='<div>' + 
-// 		'<a href="#" class="close-btn">-</a>' + 
-// 		'<div><label>From</label></div>' +
-// '			<div class="datetime-picker">			' +
-// '				<input type="text" name="from_[]">	' +
-// '			</div>									' +
-// 		'</div>';
-// 		div.innerHTML = '							' +
-// '<div>			<a href="#" class="close-btn">-</a>		' +
-// '			<dt><label>From</label></dt>				' +
-// '			<dd class="datetime-picker">			' +
-// '				<input type="text" name="from_[]">	' +
-// '			</dd>									' +
-// '			<dt><label>To</label></dt>				' +
-// '			<dd class="datetime-picker">			' +
-// '				<input type="text" name="to_[]">	' +
-// '			</dd>';
 		var a = div.getElementsByTagName('a')[0];
 		a.onclick = removeDateRow;
 		YAHOO.booking.setupDatePickers();
 	}); 
+	
+	
+	YAHOO.util.Event.addListener('application_form', "submit", function(e) {
+		if (!regulationsTable.allAccepted()) {
+			YAHOO.util.Event.stopEvent(e);
+			alert(lang['You must accept to follow all terms and conditions of lease first.']);
+		}
+   });
 
 });
 

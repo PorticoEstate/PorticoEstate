@@ -52,6 +52,9 @@
 		        <button onclick="window.location.href='{schedule_link}'">
 		            <xsl:value-of select="php:function('lang', 'Building schedule')" />
 		        </button>
+		
+				<h3><xsl:value-of select="php:function('lang', 'Building users')" /></h3>
+				<div id="building_users_container"/>
 
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>
@@ -77,6 +80,10 @@
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
 				YAHOO.booking.inlineImages('images_container', url);
+				
+				var url = 'index.php?menuaction=bookingfrontend.uiorganization.building_users&sort=name&building_id=' + building_id + '&phpgw_return_as=json&';
+				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'activity_name', label: lang['Activity']}];
+				YAHOO.booking.inlineTableHelper('building_users_container', url, colDefs);
 				]]>
 			</script>
 		</xsl:for-each>

@@ -109,8 +109,34 @@ YAHOO.booking.autocompleteHelper = function(url, field, hidden, container, label
 	return ac;
 };
 
+YAHOO.booking.setupInlineTablePaginator = function(container) {
+	var paginatorConfig = {
+        rowsPerPage: 10,
+        alwaysVisible: false,
+        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
+        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
+        containers: [YAHOO.util.Dom.get(container)]
+    };
+	
+	YAHOO.booking.lang('setupPaginator', paginatorConfig);
+	var pag = new YAHOO.widget.Paginator(paginatorConfig);
+   pag.render();
+	return pag;
+};
+
 YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
+	var Dom = YAHOO.util.Dom;
+	
+	var container = Dom.get(container);
+	var paginatorContainer = container.appendChild(document.createElement('div'));
+	var dataTableContainer = container.appendChild(document.createElement('div'));
+	
 	options = options || {};
+	options.paginator = YAHOO.booking.setupInlineTablePaginator(paginatorContainer);
+	options.dynamicData = true;
+	
+	url += 'results=' + options.paginator.getRowsPerPage() + '&';
+	
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
@@ -118,7 +144,13 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 		resultsList: "ResultSet.Result",
 		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
 	};
-	var myDataTable = new YAHOO.widget.DataTable(container, colDefs, myDataSource, options);
+	
+	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
+	
+	myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
+       oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+       return oPayload;
+   }
 	
 	myDataTable.doBeforeLoadData = function(nothing, data) {
 		if (!data.meta.actions) return data;
@@ -177,7 +209,12 @@ YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
 
 YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, options) {
 	options = YAHOO.lang.isObject(options) ? options : {};
-	options = YAHOO.lang.merge({type: 'checkbox'}, options);
+	
+	options = YAHOO.lang.merge(
+		{type: 'checkbox', selectionFieldOptions: {}, nameFieldOptions: {}, defaultChecked: false}, 
+		options
+	);
+	
 	var type = options['type'] || 'checkbox';
 	selection = selection || [];
 	var myDataSource = new YAHOO.util.DataSource(url);
@@ -191,20 +228,51 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, op
 	var lang = {LBL_NAME: 'Name'};
 	YAHOO.booking.lang('common', lang);
 	
+	var changeListener = false;
+	
+	if (options.onSelectionChanged) {
+		changeListener = function(e) {
+			var selectedItems = [];
+			var items = YAHOO.util.Dom.getElementsBy(function(i){return i.checked;}, 'input', container);
+			
+			YAHOO.util.Dom.batch(items, function(e, selectedItems) {
+				selectedItems.push(e.value);
+			}, selectedItems);
+			
+			options.onSelectionChanged(selectedItems);
+		};
+	}
+	
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
-		var checked = '';
-		for(var i =0; i< selection.length; i++) {
-			if((selection[i] * 1) == (oData * 1)) {
-				var checked = 'checked="checked"';
+		var checked = false;
+		var newInput; 
+		for(var i=0; i < selection.length; i++) {
+			if (selection[i] == oData) {
+				checked = true;
+				break;
 			}
 		}
-		// alert(selection.length);
-		// var checked = (selection.indexOf(oData * 1) != -1) ? 'checked="checked"' : '';
-		elCell.innerHTML = '<input type="' + type + '" name="' + name + '" value="' + oData + '" ' + checked + '/>'; 
+		
+		newInput = document.createElement('input');
+		newInput.setAttribute('type', type);
+		newInput.setAttribute('name', name);
+		newInput.setAttribute('value', oData);
+		if (checked || options.defaultChecked) {
+			newInput.setAttribute('checked', 'checked');
+			newInput.setAttribute('defaultChecked', true); //Needed for IE compatibility
+		}
+		
+		if (changeListener != false) {
+			//Using 'click' event on IE as the change event does not work as expected there.
+			YAHOO.util.Event.addListener(newInput, (YAHOO.env.ua.ie > 0 ? 'click' : 'change'), changeListener);
+		}
+		
+		elCell.appendChild(newInput);
+		
 	};
 	var colDefs = [
-		{key: "id", label: "", formatter: checkboxFormatter},
-		{key: "name", label: lang['LBL_NAME'], sortable: true}
+		YAHOO.lang.merge({key: "id", formatter: checkboxFormatter, label: ''}, options.selectionFieldOptions),
+		YAHOO.lang.merge({key: "name", label: lang['LBL_NAME'], sortable: true}, options.nameFieldOptions)
 	];
 	
 	if (options['additional_fields'] && YAHOO.lang.isArray(options['additional_fields'])) {
@@ -433,6 +501,22 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 	return descEdit;
 };
 
+YAHOO.booking.postToUrl = function(path, params, method) {
+    method = method || "post"; // Set method to post by default, if not specified.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", params[key][0]);
+        hiddenField.setAttribute("value", params[key][1]);
+        form.appendChild(hiddenField);
+    }
+    document.body.appendChild(form);    // Not entirely sure if this is necessary
+    form.submit();
+};
 
 (function(){
     var Dom = YAHOO.util.Dom,
@@ -581,17 +665,21 @@ YAHOO.booking.rtfEditorHelper = function(textarea_id, options) {
 			input.setAttribute('size', size);
 			input.setAttribute('maxlength', size);
 			
-		  input.value = this._padValue(this.get('value'));
+			if (YAHOO.env.ua.ie > 6) {
+				YAHOO.util.Dom.setStyle(input, 'width', '2em');
+			}
+			
+			input.value = this._padValue(this.get('value'));
 		
 			this.set('input', input);
 		
-	    Event.on(input,'keyup', function (oArgs) {
-	        this._updateValue();
-	    }, this, true);
+			Event.on(input,'keyup', function (oArgs) {
+				this._updateValue();
+				}, this, true);
 		
 			Event.on(input, 'change', function(oArgs) {
 				this._fireUpdateEvent();
-		  }, this, true);
+			}, this, true);
 			
 			oForm = input.form;
 			

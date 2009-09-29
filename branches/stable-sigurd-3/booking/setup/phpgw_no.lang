@@ -11,10 +11,10 @@ actions	booking	no	Handling
 active	booking	no	Aktiv
 active applications	booking	no	Aktive søknader
 activity	booking	no	Aktivitet
-add a comment	booking	no	Legg til en komentar
+add a comment	booking	no	Legg til en kommentar
 add another date	booking	no	Legg til dato
 add boundary	booking	no	Legg til rammetid
-add comment	booking	no	Legg til komentar
+add comment	booking	no	Legg til kommentar
 add document	booking	no	Legg til dokument
 add new event	booking	no	Legg til arrangement
 add permission	booking	no	Legg til rettighet
@@ -68,6 +68,7 @@ description	booking	no	Beskrivelse
 district	booking	no	Bydel
 document	booking	no	Dokument
 document name	booking	no	Dokumentnavn
+documents	booking	no	Dokumenter
 drawing	booking	no	Tegning
 edit	booking	no	Rediger
 edit agegroup group	booking	no	Rediger aldersgruppe
@@ -103,6 +104,7 @@ jul	booking	no	juli
 jun	booking	no	juni
 last modified	booking	no	Sist endret
 joading...	booking	no	Laster...
+location	booking	no	Lokale
 male	booking	no	Mann
 mar	booking	no	mars
 may	booking	no	mai
@@ -226,3 +228,10 @@ Service	booking	no	Tjeneste
 Project No.	booking	no	Prosjektnr.
 Account Codes	booking	no	Konteringsstrenger
 Account Codes	booking	no	Konteringsstreng
+New Account Codes	booking	no	Ny konteringsstreng
+- Actions -	booking	no	- Valg -
+Create allocation	booking	no	Lag tildeling
+Create booking	booking	no	Lag booking
+Create event	booking	no	Lag arrangement
+Loading...	booking	no	Laster...
+Back to season	booking	no	Gå tilbake til sesong

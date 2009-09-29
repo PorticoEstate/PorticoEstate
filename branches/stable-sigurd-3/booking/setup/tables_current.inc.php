@@ -153,10 +153,37 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_application' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
+				'status' => array('type' => 'text', 'nullable'=> False),
+				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
+				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
+				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => False),
+				'contact_name' => array('type' => 'text', 'nullable' => False),
+				'contact_email' => array('type' => 'text', 'nullable' => False),
+				'contact_phone' => array('type' => 'text', 'nullable' => False),
+				'secret' => array('type' => 'text', 'nullable' => False),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
+				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
+				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_activity' => array('activity_id' => 'id'),
+				'phpgw_accounts' => array('owner_id' => 'account_id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_allocation' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
@@ -167,6 +194,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
+				'bb_application' => array('application_id' => 'id'),
 				'bb_season' => array('season_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
@@ -176,6 +204,7 @@
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'group_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
@@ -189,6 +218,7 @@
 				'bb_group' => array('group_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
 				'bb_allocation' => array('allocation_id' => 'id'),
+				'bb_application' => array('application_id' => 'id'),
 				'bb_activity' => array('activity_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
@@ -259,32 +289,6 @@
 			'fk' => array(
 				'bb_allocation' => array('allocation_id' => 'id'),
 				'bb_resource' => array('resource_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_application' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => False),
-				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
-				'status' => array('type' => 'text', 'nullable'=> False),
-				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
-				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
-				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'description' => array('type' => 'text', 'nullable' => False),
-				'contact_name' => array('type' => 'text', 'nullable' => False),
-				'contact_email' => array('type' => 'text', 'nullable' => False),
-				'contact_phone' => array('type' => 'text', 'nullable' => False),
-				'secret' => array('type' => 'text', 'nullable' => False),
-				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
-				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
-				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				'bb_activity' => array('activity_id' => 'id'),
-				'phpgw_accounts' => array('owner_id' => 'account_id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -486,6 +490,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int','precision' => '4','nullable' => False, 'default'=>'1'),
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => false, 'default'=>''),
 				'from_' => array('type' => 'timestamp', 'nullable' => false),
@@ -502,6 +507,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_activity' => array('activity_id' => 'id'),
+				'bb_application' => array('application_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array(),

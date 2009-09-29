@@ -19,11 +19,11 @@
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Created')" /></dt>
-            <dd><xsl:value-of select="application/created"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', application/created)"/></dd>
         </dl>
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Modified')" /></dt>
-            <dd><xsl:value-of select="application/modified"/></dd>
+            <dd><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></dd>
         </dl>
 
         <dl class="proplist">
@@ -41,18 +41,27 @@
         </dl>
         <dl class="proplist-col">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'When?')" /></dt>
+			<script type="text/javascript">
+				var allocationParams = {};
+				var bookingParams = {};
+				var eventParams = {};
+			</script>
 			<xsl:for-each select="application/dates">
-				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="from_"/></dd>
-				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="to_"/>: <xsl:value-of select="id"/></dd>
-				<form method="POST" >
-					<input type="hidden" name="date_id" value="{id}"/>
-					<select name="create" onchange="this.form.submit()">
-						<option value=""><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
-						<option value="booking"><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
-						<option value="allocation"><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
-						<option value="event"><xsl:value-of select="php:function('lang', 'Create event')" /></option>
-					</select>
-				</form>
+				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
+				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+				<xsl:if test="../edit_link">
+				<script type="text/javascript">
+					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
+					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
+					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
+				</script>
+				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}])">
+					<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
+				</select>
+				</xsl:if>
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">
@@ -94,7 +103,7 @@
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">
 				<dt>
-					<xsl:value-of select="time"/>: <xsl:value-of select="author"/>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
 				</dt>
 				<dd><pre><xsl:value-of select="comment"/></pre></dd>
 			</xsl:for-each>

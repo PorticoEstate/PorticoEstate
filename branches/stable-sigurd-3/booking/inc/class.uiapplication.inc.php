@@ -10,7 +10,6 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'toggle_show_inactive'	=>	true,
-			'status_check'	=>	true,
 		);
 		
 		protected $customer_id;
@@ -28,7 +27,7 @@
 			$this->fields = array('description', 'resources', 'activity_id', 
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
-								  'active');
+								  'active', 'accepted_documents');
 		}
 		
 		public function index()
@@ -108,6 +107,8 @@
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
+				$application['created'] = pretty_timestamp($application['created']);
+				$application['modified'] = pretty_timestamp($application['modified']);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
@@ -158,6 +159,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+				array_set_default($_POST, 'accepted_documents', array());
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
@@ -180,6 +182,7 @@
 			}
 			array_set_default($application, 'resources', array());
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
+			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
 			if(phpgw::get_var('from_', 'GET'))
 			{
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
@@ -188,6 +191,7 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
@@ -211,6 +215,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+				array_set_default($_POST, 'accepted_documents', array());
 				
 				$application = array_merge($application, extract_values($_POST, $this->fields));
 				$this->agegroup_bo->extract_form_data($application);
@@ -221,12 +226,13 @@
 				{
 					$receipt = $this->bo->update($application);
 					$this->bo->send_notification($application);
-					$this->redirect(array('menuaction' => $this->url_prefix . '.edit', 'id'=>$application['id']));
+					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
@@ -238,23 +244,20 @@
 			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-		public function status_check()
-		{
-			return array();
-		}
-
 		private function check_date_availability(&$allocation)
 		{
 			foreach($allocation['dates'] as &$date)
 			{
-				$available = $this->bo->so->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
+				$available = $this->bo->check_timespan_availability($allocation['resources'], $date['from_'], $date['to_']);
 				$date['status'] = intval($available);
+				$date['allocation_params'] = $this->event_for_date($allocation, $date['id']);
+				$date['booking_params'] = $this->event_for_date($allocation, $date['id']);
+				$date['event_params'] = $this->event_for_date($allocation, $date['id']);
 			}
 		}
 
-		private function create_event($application_id, $date_id)
+		private function event_for_date($application, $date_id)
 		{
-			$application = $this->bo->read_single($application_id);
 			foreach($application['dates'] as $d)
 			{
 				if($d['id'] == $date_id)
@@ -264,29 +267,31 @@
 				}
 			}
 			$event = array();
-			$event['from_'] = $date['from_'];
-			$event['to_'] = $date['to_'];
-			$event['active'] = 1;
-			$event['cost'] = 0;
+			$event[] = array('from_', $date['from_']);
+			$event[] = array('to_', $date['to_']);
+			$event[] = array('cost', '0');
 			$copy = array(
 				'activity_id', 'description', 'contact_name',
-				'contact_email', 'contact_phone', 'activity_id', 
-				'audience', 'agegroups', 'resources'
+				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name'
 			);
 			foreach($copy as $f)
 			{
-				$event[$f] = $application[$f];
+				$event[] = array($f, $application[$f]);
 			}
-			echo "<pre>";
-			echo $_POST['create'] . ' ' . $date;
-			print_r($event);
-			$errors = $this->event_bo->validate($event);
-			print_r($errors);
-			if(!$errors)
+			foreach($application['agegroups'] as $ag)
 			{
-				//$receipt = $this->event_bo->add($event);
+				$event[] = array('male['.$ag['agegroup_id'].']', $ag['male']);
+				$event[] = array('female['.$ag['agegroup_id'].']', $ag['female']);
 			}
-			die;
+			foreach($application['audience'] as $a)
+			{
+				$event[] = array('audience[]', $a);
+			}
+			foreach($application['resources'] as $r)
+			{
+				$event[] = array('resources[]', $r);
+			}
+			return json_encode($event);
 		}
 
 		public function show()
@@ -296,7 +301,6 @@
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['create'])
 			{
-				$this->create_event($id, $_POST['date_id']);
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
 

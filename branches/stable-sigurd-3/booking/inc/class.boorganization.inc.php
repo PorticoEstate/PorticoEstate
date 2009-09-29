@@ -99,4 +99,12 @@
 		{
 			return parent::update($this->trim_contacts($entity));
 		}
+		
+		/**
+		 * @see soorganization
+		 */
+		function find_building_users($building_id)
+		{
+			return $this->so->find_building_users($building_id, $this->build_default_read_params());
+		}
 	}

@@ -29,7 +29,7 @@
 			//build_default_read_params will not automatically build a filter for the to_ field 
 			//because it cannot match the name 'filter_to' to an existing field once the prefix 
 			//'filter' is removed nor do we want it to, so we build that filter manually here:
-			if ($filter_to = phpgw::get_var('filter_to', 'string', array('GET', 'POST'), null)) {
+			if ($filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null)) {
 				$where_clauses[] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
 			}
 			
