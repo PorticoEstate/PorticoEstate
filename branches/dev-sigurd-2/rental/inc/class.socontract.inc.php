@@ -223,7 +223,7 @@ class rental_socontract extends rental_socommon
 		$join_parties = $this->left_join.' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
 		$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
 		$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
-		$join_last_billed = $this->left_join.' rental_invoice invoice ON (contract.id = rental_invoice.contract_id)';
+		$join_last_billed = $this->left_join.' rental_invoice invoice ON (contract.id = invoice.contract_id)';
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited.' '.$join_last_billed;
 
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
@@ -248,7 +248,6 @@ class rental_socontract extends rental_socommon
 					$this->unmarshal($this->db->f('date_end'),'int')
 				)
 			);
-			
 			$contract->set_billing_start_date($this->unmarshal($this->db->f('billing_start'),'int'));
 			$contract->set_old_contract_id($this->unmarshal($this->db->f('old_contract_id'),'string'));
 			$contract->set_contract_type_title($this->unmarshal($this->db->f('title'),'string'));
@@ -258,7 +257,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
 		}
 		
-		$contract->add_bill_date($this->unmarshal($this->db->f('timestamp_end'),'int'));
+		$contract->add_bill_timestamp($this->unmarshal($this->db->f('timestamp_end'),'int'));
 		
 		$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
 		if($party_id)

@@ -132,18 +132,6 @@
 		}
 		
 		/**
-		 * Returns all invoices of a specified contract id.
-		 * 
-		 * @param $contract_id int with id of conctract.
-		 * @return array of rental_invoice objects, empty array if no invoices
-		 * found, never null.
-		 */
-		public static function get_invoices_for_contract(int $contract_id)
-		{
-			return rental_invoice::get_so()->get_invoices_for_contract($contract_id);
-		}
-		
-		/**
 		 * Returns all invoices of a specified billing id.
 		 * 
 		 * @param $billing_id int with id of billing job.

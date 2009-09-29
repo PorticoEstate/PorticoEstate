@@ -32,6 +32,7 @@
 		protected $executive_officer_id;
 		protected $comment;
 		protected $last_updated;
+		protected $bill_timestamps; // Keeps the bill timestamps for the contract - not a db property on the contract
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -44,6 +45,7 @@
 			$this->id = (int)$id;
 			$this->parties = array();
 			$this->composites = array();
+			$this->bill_timestamps = array(); // Consider to have all invoices here if other data than billing timetamps are needed 
 		}
 		
 		public function set_id($id)
@@ -389,8 +391,45 @@
 			return $total;
 		}
 		
+		public function add_bill_timestamp(int $timestamp)
+		{
+			if(!in_array($timestamp, $this->bill_timestamps)) // New timestamnp
+			{
+				$this->bill_timestamps[] = (int)$timestamp;
+			}
+		}
 		
-
+		/**
+		 * Helper method to return the end date of the last invoice. The timestamp
+		 * parameter is optional, but when used the date returned will be the
+		 * end date of the last invoice before or at that time.
+		 *  
+		 * @param $timestamp int with UNIX timestamp.
+		 * @return int with UNIX timestamp with the end date of the invoice, or
+		 * null if no such invoice was found.
+		 */
+		public function get_last_invoice_timestamp(int $timestamp = null)
+		{
+			if(count($this->bill_timestamps) > 0) // The contract has been billed before
+			{
+				sort($this->bill_timestamps); // First we sort the timestamps..
+				$this->bill_timestamps = array_reverse($this->bill_timestamps); // ..then we reverse them to make the last biling come first
+				if($timestamp == null) // No timestamp specified
+				{
+					// We can just use the first invoice
+					$keys = array_keys($this->bill_timestamps);
+					return $this->bill_timestamps[$keys[0]]->get_timestamp_end();
+				}
+				foreach ($this->bill_timestamps as $bill_timestamp) // Runs through all invoices
+				{
+					if($bill_timestamp <= $timestamp)
+					{
+						return $bill_timestamp;
+					}
+				}
+			}
+			return null; // No matching invoices found
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object

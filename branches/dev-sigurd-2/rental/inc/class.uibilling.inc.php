@@ -1,6 +1,7 @@
 <?php
 phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.soinvoice');
 include_class('rental', 'contract', 'inc/model/');
 include_class('rental', 'billing', 'inc/model/');
 
