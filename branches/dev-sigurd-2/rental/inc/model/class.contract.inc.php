@@ -461,18 +461,6 @@
 		{
 			return self::get_so()->get_single($id);
 		}
-			
-		/**
-		 * Get a key/value array of titles of billing term types keyed by their id
-		 * 
-		 * @return array
-		 */
-		public static function get_billing_terms()
-		{
-			$so = self::get_so();
-			return $so->get_billing_terms();
-		}
-		
 		
 		/**
 		 * Return a list of all contracts registered on the given rental_composite
