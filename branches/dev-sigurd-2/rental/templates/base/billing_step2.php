@@ -28,7 +28,7 @@
 			</tr>
 			<tr>
 				<td><?php echo lang('month') ?></td>
-				<td><?php echo lang('month_' . $month) ?></td>
+				<td><?php echo lang('Month ' . $month) ?></td>
 			</tr>
 			<tr>
 				<td>
@@ -36,7 +36,7 @@
 				</td>
 				<td>
 					<?php
-					foreach(rental_contract::get_billing_terms() as $term_id => $term_title)
+					foreach(rental_billing::get_billing_terms() as $term_id => $term_title)
 					{
 						if($term_id == $billing_term)
 						{
@@ -51,6 +51,9 @@
 				<td><input type="submit" name="next" value="<?php echo lang('bill2') ?>"/></td>
 			</tr>
 		</table>
+		<div>&amp;nbsp;</div>
+		<?php echo rental_uicommon::get_page_error($error) ?>
+		<?php echo rental_uicommon::get_page_message($message) ?>
 		<div>&amp;nbsp;</div>
 		<?php 
 //		var_dump($contracts);
