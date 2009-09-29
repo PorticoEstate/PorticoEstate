@@ -397,114 +397,149 @@
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
 		}
 
+		/**
+		 * Public function. Add a party to a contract
+		 * @param HTTP::contract_id	the contract id
+		 * @param HTTP::party_id the party id
+		 * @return true if successful, false otherwise
+		 */
 		public function add_party(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$party_id = (int)phpgw::get_var('party_id');
-			$party = rental_party::get($party_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->add_party($party);
-				return true;
+				return $so_contract->add_party($contract_id,$party_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Remove a party from a contract
+		 * @param HTTP::contract_id the contract id
+		 * @param HTTP::party_id the party id
+		 * @return true if successful, false otherwise
+		 */
 		public function remove_party(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$party_id = (int)phpgw::get_var('party_id');
-			$party = rental_party::get($party_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->remove_party($party);
-				return true;
+				return $so_contract->remove_party($contract_id, $party_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Set the payer on a contract
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::party_id	the party id
+		 * @return true if successful, false otherwise
+		 */
 		public function set_payer(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$party_id = (int)phpgw::get_var('party_id');
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->set_payer($party_id);
-				return true;
+				return $so_contract->set_payer($contract_id,$party_id);
 			}
 			return false;
 		}
 
-
+		/**
+		 * Public function. Add a composite to a contract.
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::composite_id	the composite id
+		 * @return boolean true if successful, false otherwise
+		 */
 		public function add_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$composite_id = (int)phpgw::get_var('composite_id');
-			$composite = rental_composite::get($composite_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->add_composite($composite);
-				return true;
+				return $so_contract->add_composite($contract_id, $composite_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Remove a composite from a contract.
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::composite_id	the composite id
+		 * @return boolean true if successful, false otherwise
+		 */
 		public function remove_composite(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$composite_id = (int)phpgw::get_var('composite_id');
-			$composite = rental_composite::get($composite_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->remove_composite($composite);
-				return true;
+				return $so_contract->remove_composite($contract_id. $composite_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Add a price item to a contract
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::price_item_id	the price item id
+		 * @return boolean true if successful, false otherwise
+		 */
 		public function add_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$price_item_id = (int)phpgw::get_var('price_item_id');
-			$price_item = rental_price_item::get($price_item_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->add_price_item($price_item);
-				return true;
+				return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Remove a price item from a contract
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::price_item_id	the price item id
+		 * @return boolean true if successful, false otherwise
+		 */
 		public function remove_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$price_item_id = (int)phpgw::get_var('price_item_id');
-			$price_item = rental_contract_price_item::get($price_item_id);
-			$contract = rental_contract::get($contract_id);
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract->remove_price_item($price_item);
-				return true;
+				return rental_soprice_item::get_instance()->remove_price_item($contract_id, $price_item_id);
 			}
 			return false;
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 		}
 
+		/**
+		 * Public function. Reset a price item on a contract
+		 * @param	HTTP::contract_id	the contract id
+		 * @param	HTTP::price_item_id	the price item id
+		 * @return boolean true if successful, false otherwise
+		 */
 		public function reset_price_item()
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$price_item_id = (int)phpgw::get_var('price_item_id');
-			$price_item = rental_contract_price_item::get($price_item_id);
-			if($this->isExecutiveOfficer() || $this->isAdministrator())
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single($contract_id);
+			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$price_item->reset();
-				return true;
+				return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
 			}
 			return false;
 		}

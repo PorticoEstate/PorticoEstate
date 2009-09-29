@@ -230,17 +230,17 @@ class rental_soprice_item extends rental_socommon
 	 * This method removes a price item to a contract. Updates last edited hisory.
 	 * 
 	 * @param $contract_id	the given contract
-	 * @param $price_item	the prce item to remove
+	 * @param $price_item	the price item to remove
 	 * @return true if successful, false otherwise
 	 */
-	function remove_price_item($contract_id, $price_item)
+	function remove_price_item($contract_id, $price_item_id)
 	{
-		$q = "DELETE FROM rental_contract_price_item WHERE id = {$price_item->get_id()}";
+		$q = "DELETE FROM rental_contract_price_item WHERE id = {$price_item_id} AND contract_id = {$contract_id}";
 		$result = $this->db->query($q);
 		if($result)
 		{
-			$this->last_updated($contract_id);
-			$this->last_edited_by($contract_id);
+			rental_socontract::get_instance()->last_updated($contract_id);
+			rental_socontract::get_instance()->last_edited_by($contract_id);
 			return true;
 		}
 		return false;
@@ -253,24 +253,33 @@ class rental_soprice_item extends rental_socommon
 	 * @param $price_item	the price item to add
 	 * @return true if successful, false otherwise
 	 */
-	function add_price_item($contract_id, $price_item)
+	function add_price_item($contract_id, $price_item_id)
 	{
-		$values = array(
-			$price_item->get_id(),
-			$contract_id,
-			"'" . $price_item->get_title() . "'",
-			"'" . $price_item->get_agresso_id() . "'",
-			$price_item->is_area() ? 'true' : 'false',
-			$price_item->get_price()
-		);
-		$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, agresso_id, is_area, price) VALUES (" . join(',', $values) . ")";
-		$result = $this->db->query($q);
-		if($result)
+		$price_item = $this->get_single($price_item_id);
+		if($price_item)
 		{
-			$this->last_updated($contract_id);
-			$this->last_edited_by($contract_id);
-			return true;
+			$values = array(
+				$price_item_id,
+				$contract_id,
+				"'" . $price_item->get_title() . "'",
+				"'" . $price_item->get_agresso_id() . "'",
+				$price_item->is_area() ? 'true' : 'false',
+				$price_item->get_price()
+			);
+			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, agresso_id, is_area, price) VALUES (" . join(',', $values) . ")";
+			$result = $this->db->query($q);
+			if($result)
+			{
+				rental_socontract::get_instance()->last_updated($contract_id);
+				rental_socontract::get_instance()->last_edited_by($contract_id);
+				return true;
+			}
 		}
 		return false;
+	}
+	
+	function reset_contract_price_item($contract_id, $price_item_id)
+	{
+		//TODO: implement reset function
 	}
 }
