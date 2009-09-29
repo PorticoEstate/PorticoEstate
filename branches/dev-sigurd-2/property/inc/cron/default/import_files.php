@@ -153,11 +153,10 @@
 		function import_vaktprotokoll()
 		{
 			$filename = 'Vakthendelser.xls';
-			//require_once  PHPGW_APP_INC . SEP . 'excelreader' . SEP . 'reader.php';
 			$data = CreateObject('phpgwapi.excelreader');
 
 			$data->setOutputEncoding('CP1251');
-			$data->read(PHPGW_API_INC . "/excelreader/test/{$filename}");
+			$data->read(PHPGW_SERVER_ROOT . "/property/inc/excelreader/test/{$filename}");
 
 			for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++)
 			{

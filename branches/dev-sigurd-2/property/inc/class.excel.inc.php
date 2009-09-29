@@ -26,6 +26,6 @@
  	* @version $Id$
 	*/
 
-	require_once(PHPGW_APP_INC . '/excel/Worksheet.php');
-	require_once(PHPGW_APP_INC . '/excel/Workbook.php');
+	require_once PHPGW_SERVER_ROOT . '/property/inc/excel/Worksheet.php';
+	require_once PHPGW_SERVER_ROOT . '/property/inc/excel/Workbook.php';
 

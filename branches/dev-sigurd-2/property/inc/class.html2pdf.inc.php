@@ -37,5 +37,5 @@
 	* Include the html2pdf class
 	* @see html2pdf
 	*/
-	require_once PHPGW_APP_INC . '/html2pdf/html2pdf.class.php';
+	require_once PHPGW_SERVER_ROOT . '/property/inc/html2pdf/html2pdf.class.php';
 
