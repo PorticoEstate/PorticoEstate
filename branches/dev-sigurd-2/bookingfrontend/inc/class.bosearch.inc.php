@@ -23,7 +23,7 @@
                     $bui['type'] = "building";
                     $bui['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $bui['id']));
                     $bui['img_container'] = "building-" . $bui['id'];
-                    $bui['img_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_building.index_images', 'filter_owner_id' => $bui['id'], 'phpgw_return_as' => 'json'));
+                    $bui['img_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_building.index_images', 'filter_owner_id' => $bui['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
 					
                 }
             }
@@ -44,7 +44,7 @@
                     $res['type'] = "resource";
                     $res['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $res['id']));
                     $res['img_container'] = "resource-" . $res['id'];
-                    $res['img_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_resource.index_images', 'filter_owner_id' => $res['id'], 'phpgw_return_as' => 'json'));
+                    $res['img_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uidocument_resource.index_images', 'filter_owner_id' => $res['id'], 'phpgw_return_as' => 'json', 'results' => '1'));
                 }
             }
 			$final_array = array_merge_recursive($bui_result, $org_result, $res_result);
