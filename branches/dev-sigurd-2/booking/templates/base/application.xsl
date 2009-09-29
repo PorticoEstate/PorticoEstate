@@ -49,6 +49,7 @@
 			<xsl:for-each select="application/dates">
 				<dd><xsl:value-of select="php:function('lang', 'From')" />: <xsl:value-of select="php:function('pretty_timestamp', from_)"/></dd>
 				<dd><xsl:value-of select="php:function('lang', 'To')" />: <xsl:value-of select="php:function('pretty_timestamp', to_)"/></dd>
+				<xsl:if test="../edit_link">
 				<script type="text/javascript">
 					allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
@@ -60,6 +61,7 @@
 					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
 					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
 				</select>
+				</xsl:if>
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">
