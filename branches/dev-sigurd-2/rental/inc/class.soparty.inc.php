@@ -21,7 +21,20 @@ class rental_soparty extends rental_socommon
 		return self::$so;
 	}
 
-
+    /**
+     * Generate SQL query
+     *
+     * @todo Add support for filter "party_type", meaning what type of contracts
+     * the party is involved in.
+     *
+     * @param string $sort_field
+     * @param boolean $ascending
+     * @param string $search_for
+     * @param string $search_type
+     * @param array $filters
+     * @param boolean $return_count
+     * @return string SQL
+     */
     protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
@@ -89,7 +102,7 @@ class rental_soparty extends rental_socommon
 
 
 		// All parties with contracts of type X
-		/*if(isset($filters['party_type']))
+		if(isset($filters['party_type']))
 		{
 			$party_type = $this->marshal($filters['party_type'],'int');
             $filter_clauses[] = "SELECT $columns
@@ -103,51 +116,7 @@ class rental_soparty extends rental_socommon
 					) contracts
 					ON (rental_party.id = contracts.party_id OR contracts.contract_id IS NULL)
 					WHERE location_id = $party_type";
-		}*/
-
-		/*
-		 * Contract status is defined by the dates in each contract compared to the target date (default today):
-		 * - contracts under planning:
-		 * the start date is larger (in the future) than the target date, or start date is undefined
-		 * - active contracts:
-		 * the start date is smaller (in the past) than the target date, and the end date is undefined (running) or
-		 * larger (fixed) than the target date
-		 * - under dismissal:
-		 * the start date is smaller than the target date,
-		 * the end date is larger than the target date, and
-		 * the end date substracted the contract type notification period is smaller than the target date
-		 * - ended:
-		 * the end date is smaller than the target date
-		 
-
-		if(isset($filters['contracts_for_billing']))
-		{
-			$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
-			$result = $this->db->query($sql);
-			if(!$result)
-			{
-				return;
-			}
-			if(!$this->db->next_record())
-			{
-				return;
-			}
-			$months = $this->unmarshal($this->db->f('months', true), 'int');
-			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-			$timestamp_start = strtotime("-{$$months} months", $timestamp_end); // The first day of the period to bill for
-			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
-
-			$timestamp_start = strtotime("{$year}-{$month}-01");
-
-			$filter_clauses[] = "contract.location_id = {$contract_type_location_id}";
-			$filter_clauses[] = "contract.term_id = {$billing_term_id}";
-			$filter_clauses[] = "date_start < $timestamp_end";
-			$filter_clauses[] = "(date_end IS NULL OR date_end >= {$timestamp_start})";
-			$filter_clauses[] = "billing_start <= {$timestamp_end}";
-
-			$specific_ordering = 'contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
-			$order = $order ? $order.' '.$specific_ordering : "ORDER BY {$specific_ordering}";
-		}*/
+		}
 
 		if(count($filter_clauses))
         {
@@ -192,187 +161,11 @@ class rental_soparty extends rental_socommon
 		//$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
 		//$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
 		//$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited;
-//        echo '<pre>';
-//        print_r("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
-//        echo '</pre>';
+
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 
 
-
-	/**
-	 * Get single party
-	 *
-	 * @param	$id	id of the party to return
-	 * @return a rental_party object, null if unsuccessful loading
-	 */
-	function get_single($id)
-	{
-		$id = (int)$id;
-
-		$sql = "SELECT * FROM " . $this->table_name ." WHERE " . $this->table_name . ".id={$id}";
-
-		$result = $this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-
-		if(isset($result)){
-			$this->db->next_record();
-			$party = new rental_party($this->unmarshal($this->db->f('id', true), 'int'));
-			
-			if(isset($party))
-			{
-				$party->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
-				$party->set_personal_identification_number($this->unmarshal($this->db->f('personal_identification_number', true), 'string'));
-				$party->set_first_name($this->unmarshal($this->db->f('first_name', true), 'string'));
-				$party->set_last_name($this->unmarshal($this->db->f('last_name', true), 'string'));
-				$party->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$party->set_is_active($this->unmarshal($this->db->f('is_active', true), 'bool'));
-				$party->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
-	
-				$party->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$party->set_company_name($this->unmarshal($this->db->f('company_name', true), 'string'));
-				$party->set_department($this->unmarshal($this->db->f('department', true), 'string'));
-	
-				$party->set_address_1($this->unmarshal($this->db->f('address_1', true), 'string'));
-				$party->set_address_2($this->unmarshal($this->db->f('address_2', true), 'string'));
-				$party->set_postal_code($this->unmarshal($this->db->f('postal_code', true), 'string'));
-				$party->set_place($this->unmarshal($this->db->f('place', true), 'string'));
-	
-				$party->set_phone($this->unmarshal($this->db->f('phone', true), 'string'));
-				$party->set_fax($this->unmarshal($this->db->f('fax', true), 'string'));
-				$party->set_email($this->unmarshal($this->db->f('email', true), 'string'));
-				$party->set_url($this->unmarshal($this->db->f('url', true), 'string'));
-				$party->set_account_number($this->unmarshal($this->db->f('account_number', true), 'string'));
-				$party->set_reskontro($this->unmarshal($this->db->f('reskontro', true), 'string'));
-				return $party;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Get a list of composite objects matching the specific filters
-	 *
-	 * @param $start search result offset
-	 * @param $results number of results to return
-	 * @param $sort field to sort by
-	 * @param $query LIKE-based query string
-	 * @param $filters array of custom filters
-	 * @param $count boolean value, true if only count, false if regular query
-	 * @return list of rental_party objects
-	 
-	function get_party_array($start = 0, $results = 1000, $sort = 'id', $dir = 'asc', $query = null, $search_option = null, $filters = array(), $count = false)
-	{
-		// If no count query, create ORDER BY condition
-		if(!$count)
-		{
-			if($sort == 'name')
-			{
-				$order = "ORDER BY last_name $dir, first_name $dir";
-			} 
-			else if($sort = 'address')
-			{
-				$order = "ORDER BY address_1 $dir, address_2 $dir";
-			}
-			else
-			{
-				$order = $sort ? "ORDER BY $sort $dir ": '';
-			}
-		}
-		
-		// We have the option to search for party type. A party does not have a type per se
-		// but gets one or more types from the contracts it is associated to.
-		// So if this filter is set we need to do some joining to check what contracts this
-		// party is tied to.
-		if ((isset($filters['party_type']) && $filters['party_type'] != 'all') || isset($filters['contract_id']))
-        {
-				
-			// Join the contracts (many to many) so we can search for contract types, only
-			// include parties that actually have contracts
-			if($count)
-			{
-				$columns = "COUNT(DISTINCT(rental_party.id)) as count";
-			}
-			else
-			{
-				$columns = 	"DISTINCT(rental_party.id), rental_party.*";
-			}
-			
-			$filter_conditions = $this->get_filter_conditions($filters,'contracts','');
-			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','AND');
-			$sql = "SELECT $columns
-					FROM rental_party
-					LEFT JOIN (
-						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp 
-						LEFT JOIN (
-							SELECT id, location_id FROM rental_contract 
-						) c
-						ON (c.id = rcp.contract_id) 
-					) contracts
-					ON (rental_party.id = contracts.party_id OR contracts.contract_id IS NULL)
-					WHERE $filter_conditions $search_conditions $order";
-		} 
-		else
-		{
-			// No type filter was set, do a normal select
-			if($count)
-			{
-				$columns = "COUNT(DISTINCT(rental_party.id)) as count";
-			}
-			else
-			{
-				$columns = "*";
-			}
-			
-			$search_conditions = $this->get_search_conditions($query,$search_option,'rental_party','WHERE');
-			$sql = "SELECT $columns FROM rental_party $search_conditions $order";
-		}
-		
-		if($count)
-		{
-			return $this->get_count($sql);	
-		}
-		
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
-
-		$parties = array();
-
-		while ($this->db->next_record()) {
-			$row = array();
-			foreach($this->fields as $field => $fparams)
-			{
-				$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
-			}
-				
-			$party = new rental_party($row['id']);
-				
-			$party->set_agresso_id($row['agresso_id']);
-			$party->set_personal_identification_number($row['personal_identification_number']);
-			$party->set_first_name($row['first_name']);
-			$party->set_last_name($row['last_name']);
-			$party->set_location_id($row['location_id']);
-			$party->set_is_active($row['is_active']);
-			$party->set_comment($row['comment']);
-				
-			$party->set_title($row['title']);
-			$party->set_company_name($row['company_name']);
-			$party->set_department($row['department']);
-				
-			$party->set_address_1($row['address_1']);
-			$party->set_address_2($row['address_2']);
-			$party->set_postal_code($row['postal_code']);
-			$party->set_place($row['place']);
-				
-			$party->set_phone($row['phone']);
-			$party->set_fax($row['fax']);
-			$party->set_email($row['email']);
-			$party->set_url($row['url']);
-			$party->set_account_number($row['account_number']);
-			$party->set_reskontro($row['reskontro']);
-				
-			$parties[] = $party;
-		}
-		return $parties;
-	}*/
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.
@@ -498,7 +291,7 @@ class rental_soparty extends rental_socommon
 			'url = '            . $this->marshal($party->get_url(), 'string'),
 			'account_number = ' . $this->marshal($party->get_account_number(), 'string'),
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
-			'is_active = '      . $this->marshal(($party->is_active() ? 'true' : 'false'), 'boolean'),
+			'is_active = '      . $this->marshal(($party->is_active() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string')
 			);
 
@@ -555,7 +348,7 @@ class rental_soparty extends rental_socommon
             $party->set_email(          $this->unmarshal($this->db->f('email'), 'string'));
             $party->set_fax(            $this->unmarshal($this->db->f('fax'), 'string'));
             $party->set_first_name(     $this->unmarshal($this->db->f('first_name'), 'string'));
-            $party->set_is_active(      $this->unmarshal($this->db->f('is_active'), 'boolean'));
+            $party->set_is_active(      $this->unmarshal($this->db->f('is_active'), 'bool'));
             $party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
             $party->set_location_id(    $this->unmarshal($this->db->f('location_id'), 'int'));
             $party->set_pid(            $this->unmarshal($this->db->f('personal_identification_number'), 'string'));
