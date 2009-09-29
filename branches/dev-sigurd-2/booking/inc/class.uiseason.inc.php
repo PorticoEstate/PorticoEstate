@@ -278,6 +278,7 @@
 			$season['post_url'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate_alloc_json', 'season_id' => $season['id'], 'phpgw_return_as'=>'json'));
 			$season['generate_url'] = self::link(array('menuaction' => 'booking.uiseason.generate', 'id' => $season['id']));
 			$season['delete_wtemplate_alloc_url'] = self::link(array('menuaction' => 'booking.uiseason.delete_wtemplate_alloc', 'phpgw_return_as'=>'json'));
+			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('season_wtemplate', array('season' => $season));
 		}

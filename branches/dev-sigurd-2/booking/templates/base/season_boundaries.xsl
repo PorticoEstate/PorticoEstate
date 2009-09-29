@@ -100,7 +100,7 @@
 				</input>
 				<a class="cancel">
 					<xsl:attribute name="href"><xsl:value-of select="season/cancel_link"/></xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Cancel')"/>
+					<xsl:value-of select="php:function('lang', 'Back to season')"/>
 				</a>
 			</div>
 		</form>
