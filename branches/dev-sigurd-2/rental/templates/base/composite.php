@@ -119,7 +119,6 @@
 				$list_form = false; 
 				$list_id = 'included_areas';
 				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
-				$editable = false;
 				unset($extra_cols);
 				include('unit_list_partial.php');
 			?>
@@ -128,9 +127,8 @@
 				$list_form = true; 
 				$list_id = 'available_areas';
 				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
-				$editable = false;
 				unset($extra_cols);
-				//include('unit_list_partial.php');
+				include('unit_list_partial.php');
 			?>
 		</div>
 		<div id="contracts">

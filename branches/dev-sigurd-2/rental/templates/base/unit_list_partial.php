@@ -1,7 +1,3 @@
-<?php 
-	include("common.php");
-?>
-
 <script type="text/javascript">
 	//Add listener resetting form: redirects browser to call index  again
 	YAHOO.util.Event.addListener(
@@ -14,17 +10,16 @@
  		}
  	);
 	
-
 	//Columns for added areas datatable
 	var columnDefs = [{
 		key: "location_code",
 		label: "<?php echo lang('location_code') ?>",
-	  sortable: true
+	  	sortable: true
 	},
 	{
 		key: "loc1_name",
 		label: "<?php echo lang('property') ?>",
-	  sortable: false
+	  	sortable: false
 	},
 	{
 		key: "loc2_name",
@@ -90,7 +85,7 @@
 
 	// Initiating the data source
 	setDataSource(
-			'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json&amp;type=<?php echo $list_id ?>&amp;id=<?php echo $composite->get_id() ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
+			'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
 			columnDefs,
 			'<?php echo $list_id ?>_form',
 			[],
