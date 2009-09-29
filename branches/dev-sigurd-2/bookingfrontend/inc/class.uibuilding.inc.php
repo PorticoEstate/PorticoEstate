@@ -13,7 +13,11 @@
 		public function schedule()
 		{
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
-			$building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $building['id'], 'building_name' => $building['name']));
+			$building['application_link'] = self::link(array(
+				'menuaction' => 'bookingfrontend.uiapplication.add', 
+				'building_id' => $building['id'], 
+				'building_name' => $building['name'],
+			));
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building));

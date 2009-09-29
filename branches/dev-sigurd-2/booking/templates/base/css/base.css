@@ -76,7 +76,7 @@ dl.form-col dd .autocomplete {
     padding-bottom: 2em;
 }
 
-dl.form dt.heading, dl.form-col dt.heading, 
+dl.form dt.heading, dl.form-col dt.heading, div.heading,
 dl.proplist dt.heading, dl.proplist-col dt.heading {
     color: #448;
     font-weight: normal;

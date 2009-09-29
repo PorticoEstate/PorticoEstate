@@ -5,9 +5,9 @@
 	<xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 
-	<form action="" method="POST">
+	<form action="" method="POST" id='application_form'>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></div>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -30,7 +30,7 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', '2. Where?')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', '2. Where?')" /></div>
 			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
@@ -49,30 +49,32 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', '3. When?')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', '3. When?')" /></div>
 			<div id="dates-container">
-				<xsl:for-each select="application/dates"><div class="date-container">
-					<a href="#" class="close-btn">-</a>
-					<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-					<dd class="datetime-picker">
-						<input id="field_from" name="from_[]" type="text">
-							<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
-						</input>
-					</dd>
-					<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-					<dd class="datetime-picker">
-						<input id="field_to" name="to_[]" type="text">
-							<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
-						</input>
-					</dd>
-				</div></xsl:for-each>
+				<xsl:for-each select="application/dates">
+					<div class="date-container">
+						<a href="#" class="close-btn">-</a>
+						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+						<dd class="datetime-picker">
+							<input id="field_from" name="from_[]" type="text">
+								<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
+							</input>
+						</dd>
+						<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+						<dd class="datetime-picker">
+							<input id="field_to" name="to_[]" type="text">
+								<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
+							</input>
+						</dd>
+					</div>
+				</xsl:for-each>
 			</div>
 
 
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></div>
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 			<dd>
 				<ul>
@@ -117,7 +119,7 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd>
 				<input id="field_contact_name" name="contact_name" type="text">
@@ -138,11 +140,13 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></div>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 		</dl>
 		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></dt>
+			<div class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+			<br/>
+			<div id='regulation_documents'>&nbsp;</div>
 		</dl>
 		<div class="form-buttons">
 			<input type="submit">
@@ -156,7 +160,9 @@
 	</form>
 	</div>
 	<script type="text/javascript">
+		YAHOO.booking.initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
+		YAHOO.booking.initialAcceptAllTerms = false;
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
 	</script>
 </xsl:template>

@@ -209,7 +209,12 @@ YAHOO.booking.radioTableHelper = function(container, url, name, selection) {
 
 YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, options) {
 	options = YAHOO.lang.isObject(options) ? options : {};
-	options = YAHOO.lang.merge({type: 'checkbox'}, options);
+	
+	options = YAHOO.lang.merge(
+		{type: 'checkbox', selectionFieldOptions: {}, nameFieldOptions: {}, defaultChecked: false}, 
+		options
+	);
+	
 	var type = options['type'] || 'checkbox';
 	selection = selection || [];
 	var myDataSource = new YAHOO.util.DataSource(url);
@@ -223,20 +228,51 @@ YAHOO.booking.checkboxTableHelper = function(container, url, name, selection, op
 	var lang = {LBL_NAME: 'Name'};
 	YAHOO.booking.lang('common', lang);
 	
+	var changeListener = false;
+	
+	if (options.onSelectionChanged) {
+		changeListener = function(e) {
+			var selectedItems = [];
+			var items = YAHOO.util.Dom.getElementsBy(function(i){return i.checked;}, 'input', container);
+			
+			YAHOO.util.Dom.batch(items, function(e, selectedItems) {
+				selectedItems.push(e.value);
+			}, selectedItems);
+			
+			options.onSelectionChanged(selectedItems);
+		};
+	}
+	
 	var checkboxFormatter = function(elCell, oRecord, oColumn, oData) { 
-		var checked = '';
-		for(var i =0; i< selection.length; i++) {
-			if((selection[i] * 1) == (oData * 1)) {
-				var checked = 'checked="checked"';
+		var checked = false;
+		var newInput; 
+		for(var i=0; i < selection.length; i++) {
+			if (selection[i] == oData) {
+				checked = true;
+				break;
 			}
 		}
-		// alert(selection.length);
-		// var checked = (selection.indexOf(oData * 1) != -1) ? 'checked="checked"' : '';
-		elCell.innerHTML = '<input type="' + type + '" name="' + name + '" value="' + oData + '" ' + checked + '/>'; 
+		
+		newInput = document.createElement('input');
+		newInput.setAttribute('type', type);
+		newInput.setAttribute('name', name);
+		newInput.setAttribute('value', oData);
+		if (checked || options.defaultChecked) {
+			newInput.setAttribute('checked', 'checked');
+			newInput.setAttribute('defaultChecked', true); //Needed for IE compatibility
+		}
+		
+		if (changeListener != false) {
+			//Using 'click' event on IE as the change event does not work as expected there.
+			YAHOO.util.Event.addListener(newInput, (YAHOO.env.ua.ie > 0 ? 'click' : 'change'), changeListener);
+		}
+		
+		elCell.appendChild(newInput);
+		
 	};
 	var colDefs = [
-		{key: "id", label: "", formatter: checkboxFormatter},
-		{key: "name", label: lang['LBL_NAME'], sortable: true}
+		YAHOO.lang.merge({key: "id", formatter: checkboxFormatter, label: ''}, options.selectionFieldOptions),
+		YAHOO.lang.merge({key: "name", label: lang['LBL_NAME'], sortable: true}, options.nameFieldOptions)
 	];
 	
 	if (options['additional_fields'] && YAHOO.lang.isArray(options['additional_fields'])) {

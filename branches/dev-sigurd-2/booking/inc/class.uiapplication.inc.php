@@ -27,7 +27,7 @@
 			$this->fields = array('description', 'resources', 'activity_id', 
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
-								  'active');
+								  'active', 'accepted_documents');
 		}
 		
 		public function index()
@@ -159,6 +159,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+				array_set_default($_POST, 'accepted_documents', array());
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
@@ -181,6 +182,7 @@
 			}
 			array_set_default($application, 'resources', array());
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
+			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
 			if(phpgw::get_var('from_', 'GET'))
 			{
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
@@ -189,6 +191,7 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
@@ -212,6 +215,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+				array_set_default($_POST, 'accepted_documents', array());
 				
 				$application = array_merge($application, extract_values($_POST, $this->fields));
 				$this->agegroup_bo->extract_form_data($application);
@@ -228,6 +232,7 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];

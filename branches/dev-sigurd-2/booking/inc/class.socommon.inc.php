@@ -126,7 +126,9 @@
 				}
 				else 
 				{
-					$cols[] = "{$this->table_name}.{$field} AS {$field}";
+					$value_expression = isset($params['expression']) ? 
+						'('.strtr($params['expression'], array('%%table%%' => $this->table_name)).')' : "{$this->table_name}.{$field}";
+					$cols[] = "{$value_expression} AS {$field}";
 				}
 			}
 			return array($cols, $joins);
@@ -215,14 +217,28 @@
 			
 			return $value;
 		}
+		
+		protected function primary_key_conditions($id_params) {
+			if (is_array($id_params)) {
+				return $this->_get_conditions(null, $id_params);
+			}
+			
+			if (isset($this->fields['id']) && isset($this->fields['id']['type'])) {
+				$id_value = $this->_marshal($id_params, $this->fields['id']['type']);
+			} else {
+				$id_value = intval($id_params);
+			}
+			
+			return $this->table_name.'.id='.$id_value;
+		}
 
 		function read_single($id)
 		{
-			$id = intval($id);
+			$pk_params = $this->primary_key_conditions($id);
 			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
-			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE {$this->table_name}.id=$id", __LINE__, __FILE__);
+			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
 				foreach($this->fields as $field => $params)

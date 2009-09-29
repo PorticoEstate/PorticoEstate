@@ -215,6 +215,10 @@
 		{
 			return $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
+		
+		public function in_frontend() {
+			return $this->current_app() == 'bookingfrontend';
+		}
 
 		public static function link($data)
 		{
