@@ -1594,10 +1594,12 @@
 				}
 
 				$line = 0;
+
 				foreach($content as $row)
 				{
 					$line++;
-					for ($i=0; $i<count($row); $i++)
+					$rows = count($row);
+					for ($i=0; $i < $rows; $i++)
 					{
 						$worksheet1->write($line,$i, $this->utf2ascii($row[$i]));
 					}
