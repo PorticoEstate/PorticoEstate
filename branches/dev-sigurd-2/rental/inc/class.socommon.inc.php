@@ -203,11 +203,11 @@ abstract class rental_socommon
 	 */
 	protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
 	
+	protected abstract function populate(int $object_id, &$object);
+	
 	protected abstract function add(&$object);
 	
 	protected abstract function update($object);
-	
-	protected abstract function populate(int $object_id, &$object);
 	
 	/**
 	* Store the object in the database.  If the object has no ID it is assumed to be new and
