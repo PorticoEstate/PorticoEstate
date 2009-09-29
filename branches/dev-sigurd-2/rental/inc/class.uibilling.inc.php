@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.sobilling');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.soinvoice');
 include_class('rental', 'contract', 'inc/model/');
@@ -36,7 +37,7 @@ class rental_uibilling extends rental_uicommon
 				{
 					$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
 				}
-				$billing_job = rental_billing::create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps);
+				$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps);
 				$data = array
 				(
 					'billing_job' => $billing_job,
@@ -79,7 +80,7 @@ class rental_uibilling extends rental_uicommon
 				'year' => phpgw::get_var('year'),
 				'month' => phpgw::get_var('month'),
 			);
-			$this->render('billing_list.php', $data);
+			$this->render('billing_step1.php', $data);
 		}
 	}
 	
