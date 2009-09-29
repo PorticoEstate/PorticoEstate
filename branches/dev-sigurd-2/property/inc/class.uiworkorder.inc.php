@@ -1185,7 +1185,13 @@
 					)
 			);
 			
-
+			$event_criteria = array
+			(
+				'name'			=> 'event',
+				'event_name'	=> lang('schedule'),
+				'item_id'		=> $id
+			);
+			$event_data=$this->bocommon->initiate_event_lookup($event_criteria);
 
 			$link_data = array
 			(
@@ -1323,6 +1329,7 @@
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$data = array
 			(
+				'event_data'							=> $event_data,
 				'link_claim'							=> $link_claim,
 				'lang_claim'							=> lang('claim'),
 				'suppressmeter'							=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
