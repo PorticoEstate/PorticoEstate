@@ -219,7 +219,8 @@ class rental_socontract extends rental_socommon
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
 			$columns[] = 'type.title, type.notify_before';
-			$columns[] = 'last_edited.edited_on';	
+			$columns[] = 'last_edited.edited_on';
+			$columns[] = 'rental_invoice.timestamp_end';	
 			$cols = implode(',',$columns);
 		}
 		
@@ -228,7 +229,8 @@ class rental_socontract extends rental_socommon
 		$join_parties = $this->left_join.' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
 		$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
 		$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
-		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited;
+		$join_last_billed = $this->left_join.' rental_invoice ON (contract.id = rental_invoice.contract_id)';
+		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited.' '.$join_last_billed;
 
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -260,7 +262,10 @@ class rental_socontract extends rental_socommon
 			$contract->set_last_edited_by_current_user($this->unmarshal($this->db->f('edited_on'),'int'));
 			$contract->set_location_id($this->unmarshal($this->db->f('location_id'),'int'));
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
+			
 		}
+		
+		$contract->add_bill_date($this->unmarshal($this->db->f('timestamp_end'),'int'));
 		
 		$party_id = $this->unmarshal($this->db->f('party_id', true), 'int');
 		if($party_id)
