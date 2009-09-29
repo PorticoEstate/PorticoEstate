@@ -79,23 +79,6 @@ abstract class rental_socommon
 	 * @return the class instance.
 	 */
 	public abstract static function get_instance();
-	
-	/**
-	 * Returns SQL for retrieving matching objects or object count.
-	 * 
-	 * @param $start_index int with index of first object.
-	 * @param $num_of_objects int with max number of objects to return.
-	 * @param $sort_field string representing the object field to sort on.
-	 * @param $ascending boolean true for ascending sort on sort field, false
-	 * for descending.
-	 * @param $search_for string with free text search query.
-	 * @param $search_type string with the query type.
-	 * @param $filters array with key => value of filters.
-	 * @param $return_count boolean telling to return only the count of the
-	 * matching objects, or the objects themself.
-	 * @return string with SQL.
-	 */
-	protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
 
 	/**
 	 * Convenience method for getting one single object. Calls get() with the
@@ -195,13 +178,36 @@ abstract class rental_socommon
 		return $this->get_query_count($this->get_query(null, null, $search_for, $search_type, $filters, true));
 	}
 	
+	/**
+	 * Implementing classes must return the name of the field used in the query
+	 * returned from get_query().
+	 * 
+	 * @return string with name of id field.
+	 */
+	protected abstract function get_id_field_name();
+	
+	/**
+	 * Returns SQL for retrieving matching objects or object count.
+	 * 
+	 * @param $start_index int with index of first object.
+	 * @param $num_of_objects int with max number of objects to return.
+	 * @param $sort_field string representing the object field to sort on.
+	 * @param $ascending boolean true for ascending sort on sort field, false
+	 * for descending.
+	 * @param $search_for string with free text search query.
+	 * @param $search_type string with the query type.
+	 * @param $filters array with key => value of filters.
+	 * @param $return_count boolean telling to return only the count of the
+	 * matching objects, or the objects themself.
+	 * @return string with SQL.
+	 */
+	protected abstract function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count);
+	
 	protected abstract function add(&$object);
 	
 	protected abstract function update($object);
 	
 	protected abstract function populate(int $object_id, &$object);
-	
-	protected abstract function get_id_field_name();
 	
 	/**
 	* Store the object in the database.  If the object has no ID it is assumed to be new and
