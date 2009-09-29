@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.sobilling');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -18,7 +19,6 @@
 			'index'					=> true,
 			'query'					=> true,
 			'view'					=> true,
-			'viewedit'				=> true,
 			'add_party'				=> true,
 			'remove_party'			=> true,
 			'add_composite'			=> true,
@@ -27,9 +27,6 @@
 			'add_price_item'		=> true,
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
-			'delete_notification'	=> true,
-			'dismiss_notification'	=> true,
-			'dismiss_notification_for_all'	=> true,
 			'download'              => true
 		);
 
@@ -53,75 +50,50 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			//find location id for current user
-			$types = rental_contract::get_fields_of_responsibility();
-			$ids = array();
-			foreach($types as $id => $label)
-			{
-				$names = $this->locations->get_name($id);
-				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
-				{
-					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
-					{
-						$ids[] = $id;
-					}
-				}
-			}
-			$comma_seperated_ids = implode(',',$ids);
-			
-			$type = phpgw::get_var('type');
+			$type = phpgw::get_var('type');	
 			switch($type)
 			{
-				case 'contracts_part':
-					$result_objects = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'party_id' => phpgw::get_var('party_id')
-						)
-					);
+				case 'contracts_part': 						// Contracts for this party
+					$filters = array('party_id' => phpgw::get_var('party_id'));
 					break;
-				case 'contracts_for_executive_officer':
-					$result_objects = rental_contract::get_all(
-						phpgw::get_var('startIndex'),
-						phpgw::get_var('results'),
-						phpgw::get_var('sort'),
-						phpgw::get_var('dir'),
-						phpgw::get_var('query'),
-						phpgw::get_var('search_option'),
-						array(
-							'executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']
-						)
-					);
-					break;
-				case 'last_edited_by':
-					$filters = array();
-					$result_objects = rental_contract::get_last_edited_by();
-					break;
-				case 'ending_contracts':
-					
-					$filters = array('contract_status' => 'under_dismissal', 'contract_type' => $comma_seperated_ids);
-					break;
-				case 'last_edited':
-					$filters = array('last_edited_by' => $comma_seperated_ids);
-					break;
-				case 'contracts_for_executive_officer':
+				case 'contracts_for_executive_officer': 	// Contracts for this executive officer
 					$filters = array('executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']);
 					break;
-				case 'last_edited_by':
-					$filters = array('last_edited_by' => $GLOBALS['phpgw_info']['user']['account_id']);
+				case 'ending_contracts' OR 'ended_contracts' OR 'last_edited':					
+					// Queries that depend on areas of responsibility
+					$types = rental_contract::get_fields_of_responsibility();
+					$ids = array();
+					foreach($types as $id => $label)
+					{
+						$names = $this->locations->get_name($id);
+						if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+						{
+							if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+							{
+								$ids[] = $id;
+							}
+						}
+					}
+					$comma_seperated_ids = implode(',',$ids);
+					switch($type)
+					{
+						case 'ending_contracts':			// Contracts that are about to end in areas of responsibility
+							$filters = array('contract_status' => 'under_dismissal', 'contract_type' => $comma_seperated_ids);
+							break;
+						case 'ended_contracts': 			// Contracts that are ended in areas of responsibility
+							$filters = array('contract_status' => 'ended', 'contract_type' => $comma_seperated_ids);
+							break;
+						case 'last_edited': 				// Contracts that are last edited in areas of resposibility
+							$filters = array('contract_type' => $comma_seperated_ids);
+							break;
+					}
+					
 					break;
-				
 				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
 					$filters = array('composite_id' => phpgw::get_var('composite_id'),phpgw::get_var('contract_status'),phpgw::get_var('contract_date'));
 				case 'all_contracts':
 				default:
 					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
-					
 			}
 
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -139,10 +111,8 @@
 				}
 			}
 
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type, $editable));
+			array_walk($rows, array($this, 'add_actions'), array($type));
 
 			//Build a YUI result from the data
 			$result_data = array('results' => $rows, 'total_records' => $result_count);
@@ -162,40 +132,12 @@
 			$value['actions'] = array();
 			$value['labels'] = array();
 
-			$editable = $params[1];
 			$type = $params[0];
 			$permissions = $value['permissions'];
 			
 			
 			switch($type)
 			{
-				case 'notifications':
-					if($permissions[PHPGW_ACL_DELETE])
-					{
-						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.delete_notification', 'id' => $value['id'], 'contract_id' => $value['contract_id'])));
-						$value['labels'][] = lang('delete');
-					}
-					break;
-				case 'notifications_for_user':
-					if($permissions[PHPGW_ACL_EDIT])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
-						$value['labels'][] = lang('edit_contract');
-					}
-					
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification', 'id' => $value['id'])));
-					$value['labels'][] = lang('remove_from_workbench');
-					
-					if($permissions[PHPGW_ACL_DELETE])
-					{
-						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.dismiss_notification_for_all', 'id' => $value['originated_from'], 'contract_id' => $value['contract_id'])));
-						$value['labels'][] = lang('remove_from_all_workbenches');
-					}
-					break;
 				case 'last_edited_by':
 					if($permissions[PHPGW_ACL_EDIT])
 					{
@@ -213,6 +155,7 @@
 					}
 					break;
 				case 'ending_contracts':
+				case 'ended_contracts':
 					if($permissions[PHPGW_ACL_EDIT])
 					{
 						$value['ajax'][] = false;
@@ -221,13 +164,13 @@
 					}
 					break;
 				default:
-					if($permissions[PHPGW_ACL_EDIT] && $editable == false)
+					if($permissions[PHPGW_ACL_EDIT])
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
 						$value['labels'][] = lang('edit');
 					}
-					if($permissions[PHPGW_ACL_READ] && $editable == false)
+					if($permissions[PHPGW_ACL_READ])
 					{
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
@@ -241,8 +184,7 @@
 		 */
 		public function index()
 		{
-			$data = array('editable' => true);
-			$this->render('contract_list.php', $data);
+			$this->render('contract_list.php');
 		}
 
 		/**
@@ -255,7 +197,7 @@
 		{
 			
 			if (isset($contract_id) && $contract_id > 0) {
-				$contract = rental_contract::get($contract_id);
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
 				if ($contract) {
 					
 					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
@@ -565,64 +507,6 @@
 				return true;
 			}
 			return false;
-		}
-
-		/**
-		 * Visible controller function for deleting a contract notification.
-		 * 
-		 * @return true on success/false otherwise
-		 */
-		public function delete_notification()
-		{
-			$notification_id = (int)phpgw::get_var('id');
-			$contract_id = (int)phpgw::get_var('contract_id');
-			$contract = rental_contract::get($contract_id);
-			if($contract->has_permission(PHPGW_ACL_EDIT))
-			{	
-				rental_notification::delete_notification($notification_id);
-				return true;
-			}
-			return false;
-		}
-
-		
-		/**
-		 * Visible controller function for dismissing a single workbench notification
-		 * 
-		 * @return true on success/false otherwise
-		 */
-		public function dismiss_notification()
-		{
-			$notification_id = (int)phpgw::get_var('id');
-			
-			//TODO: should we check to see if the notification exists on the current users workbench? 
-			
-			rental_notification::dismiss_notification($notification_id,strtotime('now'));
-		}
-		
-		/**
-		 * Visible controller function for dismissing all workbench notifications originated 
-		 * from a given notification. The user must have EDIT privileges on a contract for
-		 * this action.
-		 * 
-		 * @return true on success/false otherwise
-		 */
-		public function dismiss_notification_for_all()
-		{
-			//the source notification
-			$notification_id = (int)phpgw::get_var('id');
-			$contract_id = (int)phpgw::get_var('contract_id');
-			$contract = rental_contract::get($contract_id);
-
-			//TODO: should we check to see if the notification exists on the current users workbench? 
-						
-			if($contract->has_permission(PHPGW_ACL_EDIT))
-			{
-				rental_notification::dismiss_notification_for_all($notification_id);
-				return true;
-			}
-			return false;
-			
 		}
 	}
 ?>
