@@ -20,74 +20,13 @@ class rental_sonotification extends rental_socommon
 		return self::$so;
 	}
 	
-	/**
-	 * Get all notifications with regards to result offset, search query and filters (e.g. contract identifier). 
-	 * 
-	 * @param $start search result offset
-	 * @param $results number of results to return
-	 * @param $sort field to sort by
-	 * @param $query LIKE-based query string
-	 * @param $filters array of custom filters
-	 * @return list of notfication objects
-	 */
-	function get_notification_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	protected function get_id_field_name()
 	{
-		$results = array();
-		
-		$condition = $this->get_conditions($query, $filters, $search_option);
-		$order = $sort ? "ORDER BY $sort $dir ": '';
-		
-		$sql = "SELECT rn.*, rcr.title, rc.location_id FROM rental_notification rn
-		LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
-		LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
-		WHERE deleted = 'FALSE' AND $condition $order";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-
-		while ($this->db->next_record()) {
-			$results[] = $this->read_notification();
-		}
-		
-		return $results;
+		return 'notification_id';
 	}
 	
-	/**
-	 * Get all active (not dismissed) workbench notifications
-	 * 
-	 * @param $start paginator parameter
-	 * @param $limit paginator paramater
-	 * @param $account_id the account identifier
-	 * @return the workbench notification objects for the user
-	 */
-	function get_workbench_notifications($start = 0, $limit = 1000, $account_id)
-	{	
-		$results = array();
-		if(isset($account_id)){
-			$now = strtotime("now");
-			
-			$sql = "SELECT rnw.id as id, rc.location_id, rn.account_id, rn.message, rn.contract_id, rn.recurrence, rnw.date, rcr.title, rn.id as originated_from, rc.id as contract_id
-					FROM rental_notification_workbench rnw 
-					LEFT JOIN rental_notification rn ON (rnw.notification_id = rn.id)
-					LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
-					LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
-					WHERE 
-						( rnw.account_id = $account_id 
-						OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
-						AND rnw.dismissed = 'FALSE'
-					ORDER BY rnw.date ASC";
-			//var_dump($sql);
-			
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-			
-			while ($this->db->next_record()) {
-				
-				$results[] = $this->read_notification();
-			}
-		}
-		return $results;
-	}
-	
-	protected function get_conditions($query, $filters,$search_option)
-	{	
+	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+	{
 		$clauses = array('1=1');
 		if(isset($filters))
 		{
@@ -97,19 +36,36 @@ class rental_sonotification extends rental_socommon
 			}
 		}
 		
-		return join(' AND ', $clauses);
+		$condition =  join(' AND ', $clauses);
+		
+		$order = $sort ? "ORDER BY $sort $dir ": '';
+		
+		$sql = "SELECT rn.*, rcr.title, rc.location_id FROM rental_notification rn
+		LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
+		LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
+		WHERE deleted = 'FALSE' AND $condition $order";
 	}
 	
-	/**
-	 * Add a new notification to the database.  Adds the new insert id to the object reference.
-	 * 
-	 * @param $notification the object to be added
-	 * @return result receipt from the db operation
-	 */
+	protected function populate(int $notification_id, &$notification)
+	{
+		$notification =  new rental_notification(
+			$this->unmarshal($this->db->f('id', true), 'int'), 
+			$this->unmarshal($this->db->f('account_id', true), 'int'),
+			$this->unmarshal($this->db->f('location_id', true), 'int'),
+			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
+			$this->unmarshal($this->db->f('date', true), 'int'),
+			$this->unmarshal($this->db->f('message', true), 'text'),
+			$this->unmarshal($this->db->f('recurrence', true), 'int'),
+			$this->unmarshal($this->db->f('last_notified', true), 'int'),
+			$this->unmarshal($this->db->f('title', true), 'string'),
+			$this->unmarshal($this->db->f('originated_from', true), 'int')
+		);	
+		$notification->set_field_of_responsibility_id($this->db->f('location_id',true),'int');
+		return $notification;
+	}
+	
 	function add(&$notification)
 	{
-		// Build a db-friendly array of the composite object
-		
 		$cols = array('contract_id', 'date', 'message', 'recurrence');
 		$values = array(
 			(int)$notification->get_contract_id(),
@@ -132,12 +88,19 @@ class rental_sonotification extends rental_socommon
 		
 		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
-		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
-		
-		$notification->set_id($receipt['id']);
-		
-		$this->populate_workbench_notifications();
-		return $receipt;
+		if($result)
+		{
+			$notification->set_id($this->db->get_last_insert_id($this->table_name, 'id'));
+			$this->populate_workbench_notifications();
+			return true;
+		}
+		return false;
+	}
+	
+	function update($notification)
+	{
+		// TODO: Not implemented yet
+		return false;	
 	}
 	
 	/**
@@ -279,7 +242,10 @@ class rental_sonotification extends rental_socommon
 				//notify each unique account
 				foreach($unique_account_ids as $unique_account) {
 					if($unique_account && $unique_account > 0)
-						$this->add_workbench_notification($unique_account,$ts_today,$notification_id);
+					{
+							//TODO create workbench notification objects and add through SO
+						//$this->add_workbench_notification($unique_account,$ts_today,$notification_id);
+					}		
 				}
 				
 				// set today as last notification date for this notification
@@ -287,46 +253,7 @@ class rental_sonotification extends rental_socommon
 			}
 		}	
 	}
-	
-	/**
-	 * A utility method to read a notification from query result and construct an object representation
-	 * 
-	 * @return a notification object
-	 */
-	private function read_notification()
-	{
-		$notification =  new rental_notification(
-			$this->unmarshal($this->db->f('id', true), 'int'), 
-			$this->unmarshal($this->db->f('account_id', true), 'int'),
-			$this->unmarshal($this->db->f('location_id', true), 'int'),
-			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
-			$this->unmarshal($this->db->f('date', true), 'int'),
-			$this->unmarshal($this->db->f('message', true), 'text'),
-			$this->unmarshal($this->db->f('recurrence', true), 'int'),
-			$this->unmarshal($this->db->f('last_notified', true), 'int'),
-			$this->unmarshal($this->db->f('title', true), 'string'),
-			$this->unmarshal($this->db->f('originated_from', true), 'int')
-		);	
-		$notification->set_field_of_responsibility_id($this->db->f('location_id',true),'int');
-		return $notification;
-	}
-	
-	/**
-	 * This method adds workbench notifications for a user marked with given date
-	 * @param $account_id	the end user
-	 * @param $date	the notification date (based on original notification date or recurrence)
-	 * @param $notification_id	the notification this workbench notification originated from
-	 * @return true on successful query execution / false otherwise
-	 */
-	private function add_workbench_notification($account_id, $date, $notification_id)
-	{
-		
-		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ($account_id, $date, $notification_id,'FALSE')";
-		$result = $this->db->query($sql);
-		
-		if($result) { return true; }
-		else { return false; }
-	}
+
 	
 	/**
 	 * This method sets the last notification date on a given notification
@@ -351,35 +278,6 @@ class rental_sonotification extends rental_socommon
 	public function delete_notification($id)
 	{
 		$sql = "UPDATE rental_notification SET deleted = true WHERE id = $id";
-		$result = $this->db->query($sql);
-		
-		if($result) { return true; }
-		else { return false; }
-	}
-	
-	/**
-	 * This method dismisses a workbench notification
-	 * @param $id	the workbench notification identifier
-	 * @param $ts_dismissed	the timestamp of dismissal
-	 * @return true on successful query execution / false otherwise
-	 */
-	public function dismiss_notification($id)
-	{
-		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = $id";
-		$result = $this->db->query($sql);
-		
-		if($result) { return true; }
-		else { return false; }
-	}
-	
-	/**
-	 * This method dismisses all workbench notifications generated from a given notification
-	 * @param $id the notification id all workbench notifications originated from
-	 * @return true on successful query execution / false otherwise
-	 */
-	public function dismiss_notification_for_all($id)
-	{
-		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = $id";
 		$result = $this->db->query($sql);
 		
 		if($result) { return true; }
