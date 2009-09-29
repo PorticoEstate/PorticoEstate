@@ -112,6 +112,11 @@ class rental_uibilling extends rental_uicommon
 				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
+			case 'invoices':
+				$filters = array('billing_id' => phpgw::get_var('billing_id'));
+				$result_objects = rental_soinvoice::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_soinvoice::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
 		}
 		
 		//Create an empty row set

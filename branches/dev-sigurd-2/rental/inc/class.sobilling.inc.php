@@ -141,7 +141,6 @@ class rental_sobilling extends rental_socommon
 			if($invoice != null)
 			{
 				$total_sum += $invoice->get_total_sum();
-				$billing->add_invoice($invoice);
 			}
 		}
 		$billing->set_total_sum(round($total_sum, $decimals));

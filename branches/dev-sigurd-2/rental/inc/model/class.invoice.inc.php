@@ -16,6 +16,8 @@
 		protected $timstamp_end; // End date of invoice
 		protected $invoice_price_items;
 		protected $total_sum;
+		protected $composite_names; // From party - not part of invoice db data
+		protected $party_names; // From party - not part of invoice db data
 		
 		public static $so;
 		
@@ -29,6 +31,8 @@
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_sum = (float)$total_sum;
 			$this->invoice_price_items = null;
+			$this->composite_names = array();
+			$this->party_names = array();
 		}
 		
 		public function set_id($id)
@@ -103,6 +107,40 @@
 		}
 		
 		public function get_total_sum(){ return $this->total_sum; }
+		
+		public function add_composite_name(string $name)
+		{
+			if(!in_array($name, $this->composite_names))
+			{
+				$this->composite_names[] = $name;
+			}
+		}
+		
+		public function get_composite_names()
+		{
+			$names = '';
+			foreach($this->composite_names as $name) {
+				$names .= "{$name}<br/>";
+			}
+			return $names;
+		}
+		
+		public function add_party_name(string $name)
+		{
+			if(!in_array($name, $this->party_names))
+			{
+				$this->party_names[] = $name;
+			}
+		}
+		
+		public function get_party_names()
+		{
+			$names = '';
+			foreach($this->party_names as $name) {
+				$names .= "{$name}<br/>";
+			}
+			return $names;
+		}
 		
 		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
 		{
@@ -186,7 +224,14 @@
 		
 		public function serialize()
 		{
-			return array();
+			return array(
+				'id'				=> $this->get_id(),
+				'contract_id'		=> $this->get_contract_id(),
+				'timestamp_created'	=> $this->get_timestamp_created(),
+				'composite_name'	=> $this->get_composite_names(),
+				'party_name'		=> $this->get_party_names(),
+				'total_sum'			=> $this->get_total_sum()
+			);
 		}
 		
 	}

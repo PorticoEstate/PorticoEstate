@@ -20,7 +20,7 @@ class rental_soinvoice extends rental_socommon
 	
 	protected function get_id_field_name()
 	{
-		return 'id';
+		return 'rental_invoice.id';
 	}
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
@@ -34,21 +34,27 @@ class rental_soinvoice extends rental_socommon
 		{
 			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
 		}
+		if(isset($filters['billing_id']))
+		{
+			$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'],'int')}";
+		}
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
 		}
 		$condition =  join(' AND ', $clauses);
 
-		$tables = "rental_invoice";
-		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$tables = "rental_invoice, rental_composite, rental_contract_party";
+		$joins .= "	{$this->left_join} rental_composite ON (rental_invoice.contract_id = rental_composite.contract_id)";
+		$joins = "	{$this->left_join} rental_contract_party ON (rental_invoice.contract_id = rental_contract_party.contract_id)";
+		$joins = "	{$this->left_join} rental_party ON (rental_contract_party.party_id = rental_party.id)";
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$cols = 'COUNT(DISTINCT(rental_invoice.id)) AS count';
 		}
 		else
 		{
-			$cols = 'id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, rental_composite.name AS composite_name, rental_party.first_name AS party_first_name, rental_party.last_name AS party_last_name, rental_party.company_name AS party_company_name';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -62,6 +68,30 @@ class rental_soinvoice extends rental_socommon
 			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $contract_id, $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true));
 			$invoice->set_party_id($this->unmarshal($this->db->f('party_id'),'int'));
 		}
+		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
+		$party_company_name = $this->unmarshal($this->db->f('party_company_name'),'string');
+		$party_first_name = $this->unmarshal($this->db->f('party_first_name'),'string');
+		$name = $this->unmarshal($this->db->f('party_last_name'),'string');
+		if($party_first_name != '') // Firstname is set
+		{
+			if($name != '') // There's a lastname
+			{
+				$name .= ', '; // Append comma
+			}
+			$name .= $party_first_name; // Append firstname
+		}
+		if($party_company_name != '') // There's a company name
+		{
+			if($name != '') // We've already got a name
+			{
+				$name .= " ({$party_company_name})"; // Append company name in parenthesis
+			}
+			else // No name
+			{
+				$name = $party_company_name; // Set name to company
+			}
+		}
+		$invoice->add_party_name($name);
 		return $invoice;
 	}
 	
