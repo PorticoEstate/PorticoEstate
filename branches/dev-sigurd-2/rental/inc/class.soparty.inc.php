@@ -6,7 +6,8 @@ include_class('rental', 'party', 'inc/model/');
 
 class rental_soparty extends rental_socommon
 {
-
+	protected static $so;
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 

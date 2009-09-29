@@ -10,6 +10,8 @@ include_class('rental', 'contract_price_item', 'inc/model/');
 
 class rental_socontract extends rental_socommon
 {
+	protected static $so;
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 

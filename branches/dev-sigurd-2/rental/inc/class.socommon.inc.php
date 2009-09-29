@@ -5,7 +5,6 @@ abstract class rental_socommon
 	protected $like;
 	protected $join;
 	protected $left_join;
-	protected static $so;
 	
 	public function __construct()
 	{

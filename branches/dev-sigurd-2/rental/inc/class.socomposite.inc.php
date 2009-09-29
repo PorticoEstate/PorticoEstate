@@ -7,7 +7,8 @@ include_class('rental', 'property_location', 'inc/model/');
 
 class rental_socomposite extends rental_socommon
 {
-
+	protected static $so;
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 

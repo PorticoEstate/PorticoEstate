@@ -5,7 +5,8 @@ include_class('rental', 'notification', 'inc/model/');
 
 class rental_sonotification extends rental_socommon
 {
-
+	protected static $so;
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 
