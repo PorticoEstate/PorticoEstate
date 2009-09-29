@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.socontract');
 include_class('rental', 'contract', 'inc/model/');
 include_class('rental', 'billing', 'inc/model/');
 
@@ -18,16 +19,6 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-		$data = array
-		(
-			'contract_type' => phpgw::get_var('contract_type'),
-			'billing_term' => phpgw::get_var('billing_term'),
-			'year' => phpgw::get_var('year'),
-			'month' => phpgw::get_var('month'),
-			'billing_jobs' => rental_billing::get_billings()
-		);
-		$this->render('billing_list.php', $data);
-		return;
 		
 		// No messages so far
 		$errorMsg = null;
@@ -64,7 +55,8 @@ class rental_uibilling extends rental_uicommon
 		// Step 2
 		else if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
-			$contracts = rental_contract::get_contracts_for_billing(phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'));
+			$filters = array('contracts_for_billing' => true, 'contract_type' => phpgw::get_var('contract_type'), 'billing_term_id' => phpgw::get_var('billing_term'), 'year' => phpgw::get_var('year'), 'month' => phpgw::get_var('month'));
+			$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$data = array
 			(
 				'contracts' => $contracts,
@@ -76,6 +68,18 @@ class rental_uibilling extends rental_uicommon
 			);
 			$this->render('billing_step2.php', $data);
 		}
+		// Step 1 - billing job list
+		else
+		{
+			$data = array
+			(
+				'contract_type' => phpgw::get_var('contract_type'),
+				'billing_term' => phpgw::get_var('billing_term'),
+				'year' => phpgw::get_var('year'),
+				'month' => phpgw::get_var('month'),
+			);
+			$this->render('billing_list.php', $data);
+		}
 	}
 	
 	public function query()
@@ -85,7 +89,72 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
+		// YUI variables for paging and sorting
+		$start_index	= phpgw::get_var('startIndex', 'int');
+		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+		$sort_field		= phpgw::get_var('sort');
+		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+		// Form variables
+		$search_for 	= phpgw::get_var('query');
+		$search_type	= phpgw::get_var('search_option');
+		// Create an empty result set
+		$result_objects = array();
+		$result_count = 0;
+		//Retrieve the type of query and perform type specific logic
+		$query_type = phpgw::get_var('type');
+		switch($query_type)
+		{
+			case 'not_included_composites': // ... get all vacant and active composites not in contract
+				$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'not_in_contract' => phpgw::get_var('contract_id'));
+				$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_sounit::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
+		}
+		
+		//Create an empty row set
+		$rows = array();
+		foreach($result_objects as $result) {
+			if(isset($result))
+			{
+				if($result->has_permission(PHPGW_ACL_READ))
+				{
+					// ... add a serialized result
+					$rows[] = $result->serialize();
+				}
+			}
+		}
+		
+		// ... add result data
+		$result_data = array('results' => $rows, 'total_records' => $object_count);
+		
+		//Add action column to each row in result table
+		array_walk(
+			$result_data['results'],
+			array($this, 'add_actions'), 
+			array()
+		);
+
+		return $this->yui_results($result_data, 'total_records', 'results');
 	}
+		
+		/**
+		 * Add action links and labels for the context menu of the list items
+		 *
+		 * @param $value pointer to
+		 * @param $key ?
+		 * @param $params [composite_id, type of query, editable]
+		 */
+		public function add_actions(&$value, $key, $params)
+		{
+			//Defining new columns
+			$value['ajax'] = array();
+			$value['actions'] = array();
+			$value['labels'] = array();
+
+			$value['ajax'][] = false;
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
+			$value['labels'][] = lang('show');
+		}
 
 }
 ?>

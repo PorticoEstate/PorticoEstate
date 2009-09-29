@@ -217,7 +217,6 @@
 					}
 			}
 		}
-		
 
 		/**
 		 * Shows a list of composites
@@ -225,7 +224,6 @@
 		public function index()
 		{
 			$this->render('composite_list.php');
-
 		}
 		
 		/**
@@ -241,7 +239,6 @@
 		 * @param HTTP::id	the composite ID
 		 */
 		public function view() {
-		
 			//Retrieve the composite object
 			$composite_id = (int)phpgw::get_var('id');
 			if(isset($composite_id) && $composite_id > 0)

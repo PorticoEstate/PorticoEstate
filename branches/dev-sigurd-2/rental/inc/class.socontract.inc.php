@@ -4,6 +4,7 @@ phpgw::import_class('rental.socommon');
 include_class('rental', 'contract_date', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
 include_class('rental', 'composite', 'inc/model/');
+include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'price_item', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
 
@@ -167,6 +168,7 @@ class rental_socontract extends rental_socommon
 		 */
 		if(isset($filters['contracts_for_billing']))
 		{
+			$billing_term_id = (int)$filters['billing_term_id'];
 			$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
 			$result = $this->db->query($sql);
 			if(!$result)
@@ -177,14 +179,14 @@ class rental_socontract extends rental_socommon
 			{
 				return;
 			}
+			$month = (int)$filters['month'];
+			$year = (int)$filters['year'];
 			$months = $this->unmarshal($this->db->f('months', true), 'int');
 			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-			$timestamp_start = strtotime("-{$$months} months", $timestamp_end); // The first day of the period to bill for
+			$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
 			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
-			
 			$timestamp_start = strtotime("{$year}-{$month}-01");
 			
-			$filter_clauses[] = "contract.location_id = {$contract_type_location_id}";
 			$filter_clauses[] = "contract.term_id = {$billing_term_id}";
 			$filter_clauses[] = "date_start < $timestamp_end";
 			$filter_clauses[] = "(date_end IS NULL OR date_end >= {$timestamp_start})";

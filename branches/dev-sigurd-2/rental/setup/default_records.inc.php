@@ -283,14 +283,14 @@ $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (14,'
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (15,'1102-01')");
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_internal},'contract_type_internleie',90)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_out},'contract_type_eksternleie',90)");
 
+$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('half-year','6')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','4')");
-$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1253491200,".strtotime('2009-01-15').",{$loc_id_out},2,{$rental_out}, 1250593658, {$rental_out})");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1607731200,".strtotime('2009-01-15').",{$loc_id_internal},2,{$rental_internal}, 1250593658, {$rental_internal})");

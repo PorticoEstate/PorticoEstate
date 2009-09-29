@@ -498,20 +498,6 @@
 			return self::get_so()->get_fields_of_responsibility();
 		}
 		
-		/**
-		 * Returns contracts that should be billed for a given period.
-		 * 
-		 * @param $contract_type_location_id int with location id of contract.
-		 * @param $billing_term_id int with billing term id of contract.
-		 * @param $year int with year of billing.
-		 * @param $month int 1-12 with month of billing.
-		 * @return return array of contract objects
-		 */
-		public static function get_contracts_for_billing($contract_type_location_id, $billing_term_id, $year, $month)
-		{
-			return self::get_so()->get_contracts_for_billing($contract_type_location_id, $billing_term_id, $year, $month);
-		}
-		
 		/** 
 		 * Returns the range of year there are contracts. That is, the array 
 		 * returned contains reversed chronologically all the years from the earliest start 
