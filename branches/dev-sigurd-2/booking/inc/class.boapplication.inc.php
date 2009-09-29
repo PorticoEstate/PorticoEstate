@@ -15,13 +15,13 @@
 				return;
 			$send = CreateObject('phpgwapi.send');
 			if($created)
-				$subject = "Söknad #{$application[id]} är registrerad";
+				$subject = "Søknad #{$application[id]} er mottatt";
 			else
-				$subject = "Söknad #{$application[id]} uppdaterad";
+				$subject = "Søknad #{$application[id]} endret/oppdatert";
 			$link = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiapplication.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
 			$link = str_replace('&amp;', '&', $link);
-			$body = "Klicka på länken nedan för att titta på söknaden:\r\n\n\r$link";
-			$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'jonas@borgstrom.se', 'Bergen Booking', 'plain');
+			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
+			$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@bergen.kommune.no', 'Bergen Booking', 'plain');
 		}
 
 	}
