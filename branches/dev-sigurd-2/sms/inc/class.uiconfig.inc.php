@@ -356,15 +356,15 @@
 
 				$content[] = array
 				(
-					'name'					=> $entry['name'],
+					'name'						=> $entry['name'],
 					'link_value'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_value', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'], 'id'=> $entry['value_id'])),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_attrib', 'type_id'=> $entry['type_id'], 'attrib_id'=> $entry['id'])),
-					'lang_edit_config_text'			=> lang('edit the config'),
-					'text_edit'				=> lang('edit'),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.edit_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
+					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_attrib', 'type_id'=> $type_id, 'attrib_id'=> $entry['id'])),
+					'lang_edit_config_text'		=> lang('edit the config'),
+					'text_edit'					=> lang('edit'),
 					'text_delete'				=> lang('delete'),
 					'text_value'				=> $entry['value']?$entry['value']:lang('no value'),
-					'lang_delete_config_text'		=> lang('delete the config'),
+					'lang_delete_config_text'	=> lang('delete the config'),
 					'lang_value_text'			=> lang('values for this config type'),
 				);
 			}
@@ -867,7 +867,7 @@
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_type($type_id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
@@ -904,15 +904,14 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'sms.uiconfig.index',
-				'type_id'	=> $type_id,
-				'attrib_id'	=> $attrib_id
+				'menuaction'	=> 'sms.uiconfig.list_attrib',
+				'type_id'	=> $type_id
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_attrib($type_id,$attrib_id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
@@ -920,7 +919,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_type','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.delete_attrib','type_id'=> $type_id, 'attrib_id'=> $attrib_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'			=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
@@ -960,7 +959,7 @@
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$this->bo->delete_value($type_id,$attrib_id,$id);
-				$GLOBALS['phpgw']->redirect_link($GLOBALS['phpgw']->link('/index.php',$link_data));
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
