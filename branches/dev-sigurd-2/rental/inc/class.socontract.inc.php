@@ -109,7 +109,7 @@ class rental_socontract extends rental_socommon
 		
 		// Contracts with this id (filter for retrieveing a single contract)
 		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters['id'],'int');
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "contract.id = {$id}";
 		}
 		
