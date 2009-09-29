@@ -283,23 +283,28 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
-			$this->uicols['input_type'][]	= 'text';
-			$this->uicols['name'][]			= 'ticket';
-			$this->uicols['descr'][]		= lang('ticket');
-			$this->uicols['statustext'][]	= false;
-			$this->uicols['exchange'][]		= false;
-			$this->uicols['align'][] 		= '';
-			$this->uicols['datatype'][]		= 'link';
+			if(!isset($data['skip_origin']) || !$data['skip_origin'])
+			{
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= 'ticket';
+				$this->uicols['descr'][]		= lang('ticket');
+				$this->uicols['statustext'][]	= false;
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= 'link';
+			}
 
 //			$cols_extra		= $this->so->cols_extra;
 
 			foreach ($project as & $entry)
 			{
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
-				$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
-				if(isset($origin[0]['location']) && $origin[0]['location'] == '.ticket')
+				if(!isset($data['skip_origin']) || !$data['skip_origin'])
 				{
-					$entry['ticket'] = array
+					$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');
+					if(isset($origin[0]['location']) && $origin[0]['location'] == '.ticket')
+					{
+						$entry['ticket'] = array
 										(
 											'url' 			=> $GLOBALS['phpgw']->link('/index.php', array
 																(
@@ -310,6 +315,7 @@
 											'text'			=> $origin[0]['data'][0]['id'],
 											'statustext'	=> $origin[0]['data'][0]['statustext'],											
 										);
+					}
 				}
 			}
 			return $project;
