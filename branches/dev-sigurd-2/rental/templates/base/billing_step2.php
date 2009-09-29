@@ -11,7 +11,7 @@
 				<td><?php echo lang('contract_type') ?></td>
 				<td>
 				<?php
-					$fields = rental_contract::get_fields_of_responsibility();
+					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 					foreach($fields as $id => $label)
 					{
 						if($id == $contract_type)
@@ -28,7 +28,7 @@
 			</tr>
 			<tr>
 				<td><?php echo lang('month') ?></td>
-				<td><?php echo lang('Month ' . $month) ?></td>
+				<td><?php echo lang('month ' . $month . ' capitalized') ?></td>
 			</tr>
 			<tr>
 				<td>
@@ -36,7 +36,7 @@
 				</td>
 				<td>
 					<?php
-					foreach(rental_billing::get_billing_terms() as $term_id => $term_title)
+					foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 					{
 						if($term_id == $billing_term)
 						{

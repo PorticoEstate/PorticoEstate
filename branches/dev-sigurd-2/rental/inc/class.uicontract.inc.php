@@ -61,7 +61,7 @@
 					break;
 				case 'ending_contracts' OR 'ended_contracts' OR 'last_edited':					
 					// Queries that depend on areas of responsibility
-					$types = rental_contract::get_fields_of_responsibility();
+					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
 					foreach($types as $id => $label)
 					{
@@ -359,7 +359,7 @@
 				$contract = new rental_contract();
 				
 				// Sets the first location this user is executive officer (add access) for
-				$types = rental_contract::get_fields_of_responsibility();
+				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 				foreach($types as $id => $label)
 				{
 					$names = $this->locations->get_name($id);

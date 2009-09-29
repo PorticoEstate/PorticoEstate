@@ -67,7 +67,6 @@ class rental_soinvoice extends rental_socommon
 	
 	public function add(&$invoice)
 	{
-		var_dump($invoice);
 		$values = array
 		(
 			$this->marshal($invoice->get_contract_id(), 'int'),

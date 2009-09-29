@@ -145,30 +145,30 @@ messages_required_field	rental	no	Dette feltet er påkrevd
 messages_right_click_to_add	rental	no	Høyreklikk for å legge til
 messages_saved_form	rental	no	Informasjonen ble lagret.
 messages_string_too_long	rental	no	Teksten er for lang
+month 1	rental	no	januar
+month 2	rental	no	februar
+month 3	rental	no	mars
+month 4	rental	no	april
+month 5	rental	no	mai
+month 6	rental	no	juni
+month 7	rental	no	juli
+month 8	rental	no	august
+month 9	rental	no	september
 month 10	rental	no	oktober
-Month 10	rental	no	Oktober
 month 11	rental	no	november
-Month 11	rental	no	November
 month 12	rental	no	desember
-Month 12	rental	no	Desember
-month 1	rental	no	Januar
-month 2	rental	no	Februar
-month 3	rental	no	Mars
-month 4	rental	no	April
-month 5	rental	no	Mai
-month 6	rental	no	Juni
-month 7	rental	no	Juli
-month 8	rental	no	August
-month 9	rental	no	September
-month 1	rental	no	Januar
-month 2	rental	no	Februar
-month 3	rental	no	Mars
-month 4	rental	no	April
-month 5	rental	no	Mai
-month 6	rental	no	Juni
-month 7	rental	no	Juli
-month 8	rental	no	August
-month 9	rental	no	September
+month 1 capitalized	rental	no	Januar
+month 2 capitalized	rental	no	Februar
+month 3 capitalized	rental	no	Mars
+month 4 capitalized	rental	no	April
+month 5 capitalized	rental	no	Mai
+month 6 capitalized	rental	no	Juni
+month 7 capitalized	rental	no	Juli
+month 8 capitalized	rental	no	August
+month 9 capitalized	rental	no	September
+month 10 capitalized	rental	no	Oktober
+month 11 capitalized	rental	no	November
+month 12 capitalized	rental	no	Desember
 monthly	rental	no	Månedlig
 month	rental	no	Måned
 name	rental	no	Navn
@@ -257,6 +257,7 @@ ssn	rental	no	Fødselsnummer
 status_before	rental	no	før
 status_date	rental	no	den
 status	rental	no	Status
+sum	rental	no	Sum
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
 thousands separator	rental	no	Skilletegn for tusen

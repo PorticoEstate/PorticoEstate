@@ -12,6 +12,7 @@ class rental_uibilling extends rental_uicommon
 	public $public_functions = array
 	(
 		'index'	=> true,
+		'query'	=> true
 	);
 	
 	public function index()
@@ -106,10 +107,10 @@ class rental_uibilling extends rental_uicommon
 		$query_type = phpgw::get_var('type');
 		switch($query_type)
 		{
-			case 'not_included_composites': // ... get all vacant and active composites not in contract
-				$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'not_in_contract' => phpgw::get_var('contract_id'));
-				$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-				$object_count = rental_sounit::get_instance()->get_count($search_for, $search_type, $filters);
+			case 'all_billings':
+				$filters = array();
+				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 		}
 		

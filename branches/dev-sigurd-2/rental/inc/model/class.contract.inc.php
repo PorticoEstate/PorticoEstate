@@ -426,16 +426,6 @@
 			return $contracts;
 		}
 		
-		/**
-		 * Get fields of responsibility.
-		 * 
-		 * @return array key/value array of location_id mapped to field title 
-		 */
-		public static function get_fields_of_responsibility()
-		{
-			return self::get_so()->get_fields_of_responsibility();
-		}
-		
 		/** 
 		 * Returns the range of year there are contracts. That is, the array 
 		 * returned contains reversed chronologically all the years from the earliest start 

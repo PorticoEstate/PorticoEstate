@@ -113,7 +113,6 @@
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0);
 			$invoice->set_timestamp_created(time());
-			var_dump($contract);
 			$invoice->set_party_id($contract->get_payer_id());
 			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
 			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item

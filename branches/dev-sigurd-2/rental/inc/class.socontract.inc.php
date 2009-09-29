@@ -11,6 +11,7 @@ include_class('rental', 'contract_price_item', 'inc/model/');
 class rental_socontract extends rental_socommon
 {
 	protected static $so;
+	protected $fields_of_responsibility; // Used for caching the values
 	
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -301,14 +302,18 @@ class rental_socontract extends rental_socommon
 	 * @return array
 	 */
 	function get_fields_of_responsibility(){
-		$sql = "SELECT location_id,title FROM rental_contract_responsibility";
-		$this->db->query($sql, __LINE__, __FILE__);
-		$results = array();
-		while($this->db->next_record()){
-			$location_id = $this->db->f('location_id', true);
-			$results[$location_id] = $this->db->f('title', true);
+		if($this->fields_of_responsibility == null)
+		{
+			$sql = "SELECT location_id,title FROM rental_contract_responsibility";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$results = array();
+			while($this->db->next_record()){
+				$location_id = $this->db->f('location_id', true);
+				$results[$location_id] = $this->db->f('title', true);
+			}
+			$this->fields_of_responsibility = $results;
 		}
-		return $results;
+		return $this->fields_of_responsibility;
 	}
 	
 	/**

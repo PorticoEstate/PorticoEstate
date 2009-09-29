@@ -13,7 +13,7 @@
 				<td>
 					<select name="contract_type" id="contract_type">
 						<?php 
-						$fields = rental_contract::get_fields_of_responsibility();
+						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 						foreach($fields as $id => $label)
 						{
 							?>
@@ -54,7 +54,7 @@
 						for($i = 1; $i <= 12; $i++)
 						{
 							?>
-							<option value="<?php echo $i ?>"<?php echo $this_month == $i ? ' selected="selected"' : '' ?>><?php echo lang('Month ' . $i) ?></option>
+							<option value="<?php echo $i ?>"<?php echo $this_month == $i ? ' selected="selected"' : '' ?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
 							<?php
 						}
 						?>
@@ -68,7 +68,7 @@
 				<td>
 					<select name="billing_term">
 						<?php
-						foreach(rental_billing::get_billing_terms() as $term_id => $term_title)
+						foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 						{
 							?>
 							 <option value="<?php echo $term_id ?>" <?php echo ($term_id == $billing_term ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>

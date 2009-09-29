@@ -176,8 +176,6 @@
 		 */
 		public function serialize()
 		{	
-			//var_dump($GLOBALS['phpgw_info']['user']['preferences']);
-			
 			$currency_prefix = $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
 			return array(
 				'id' => $this->get_id(),

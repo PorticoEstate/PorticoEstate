@@ -480,7 +480,7 @@
 						<select name="notification_location" id="notification_location">
 							<option value=""><?php echo lang('target_none') ?></option>
 							<?php
-							$types = rental_contract::get_fields_of_responsibility();
+							$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 							foreach($types as $id => $label)
 							{
 								$names = $this->locations->get_name($id);

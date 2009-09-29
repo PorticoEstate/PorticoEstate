@@ -118,8 +118,6 @@
 				$date_end['year'] = (int)date('Y', $this->get_timestamp_end());
 				$date_end['month'] = (int)date('n', $this->get_timestamp_end());
 				$date_end['day'] = (int)date('j', $this->get_timestamp_end());
-				var_dump($date_start);
-				var_dump($dte_end);
 				for($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--) // Runs through all the years this price item goes for
 				{
 					// We need to find which months to cover the current year

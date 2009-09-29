@@ -142,7 +142,7 @@
 			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?php echo lang('type') ?></label>
 			<select name="contract_type" id="<?php echo $list_id ?>_ctrl_toggle_contract_type">
 				<?php
-				$types = rental_contract::get_fields_of_responsibility();
+				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 				foreach($types as $id => $label)
 				{
 					?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php

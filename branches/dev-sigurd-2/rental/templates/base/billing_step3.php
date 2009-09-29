@@ -1,3 +1,6 @@
+<?php
+	include("common.php");
+?>
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-document.png" /> <?php echo lang('invoice') ?></h1>
 <form action="#" method="post">
 	<input type="hidden" name="step" value="3"/>
@@ -11,7 +14,7 @@
 				<td><?php echo lang('contract_type') ?></td>
 				<td>
 				<?php
-					$fields = rental_contract::get_fields_of_responsibility();
+					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 					foreach($fields as $id => $label)
 					{
 						if($id == $contract_type)
@@ -28,7 +31,7 @@
 			</tr>
 			<tr>
 				<td><?php echo lang('month') ?></td>
-				<td><?php echo lang('Month ' . $month) ?></td>
+				<td><?php echo lang('month ' . $month . ' capitalized') ?></td>
 			</tr>
 			<tr>
 				<td>

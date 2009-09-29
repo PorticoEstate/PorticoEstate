@@ -4,6 +4,7 @@ phpgw::import_class('rental.socommon');
 class rental_sobilling extends rental_socommon
 {
 	protected static $so;
+	protected $billing_terms; // Used for caching the billing terms
 	
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -32,7 +33,7 @@ class rental_sobilling extends rental_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "rental_billing";
-		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$joins = "";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(id)) AS count';
@@ -40,9 +41,9 @@ class rental_sobilling extends rental_socommon
 		else
 		{
 			$cols = 'id, total_sum, success, timestamp_start, timestamp_stop, location_id, term_id, year, month';
+			$dir = $ascending ? 'ASC' : 'DESC';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY timestamp_stop DESC';
 		}
-		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -110,14 +111,18 @@ class rental_sobilling extends rental_socommon
 	 */
 	function get_billing_terms()
 	{
-		$sql = "SELECT id, title FROM rental_billing_term";
-		$this->db->query($sql, __LINE__, __FILE__);
-		$results = array();
-		while($this->db->next_record()){
-			$results[$this->db->f('id', true)] = $this->db->f('title', true);
+		if($this->billing_terms == null)
+		{
+			$sql = "SELECT id, title FROM rental_billing_term";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$results = array();
+			while($this->db->next_record()){
+				$results[$this->db->f('id', true)] = $this->db->f('title', true);
+			}
+			$this->billing_terms = $results;
 		}
 		
-		return $results;
+		return $this->billing_terms;
 	}
 		
 	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)

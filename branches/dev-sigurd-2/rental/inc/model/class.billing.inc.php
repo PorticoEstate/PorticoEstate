@@ -19,7 +19,6 @@
 		protected $total_sum;
 		protected $timestamp_start;
 		protected $timestamp_stop;
-		protected $invoices;
 		
 		public static $so;
 		
@@ -31,7 +30,6 @@
 			$this->year = (int)$year;
 			$this->month = (int)$month;
 			$this->success = false;
-			$this->invoices = null;
 		}
 		
 		public function get_id(){ return $this->id; }
@@ -77,61 +75,27 @@
 	
 		public function get_success(){ return $this->success; }
 		
-		/**
-		 * Adds an invoice to the billing job.
-		 * NOTE: The 
-		 * @param $invoice
-		 * @return unknown_type
-		 */
-		public function add_invoice(rental_invoice &$invoice)
-		{
-			if($this->invoices == null)
-			{
-				$this->invoices = array();
-			}
-			$this->invoices[] = $invoice;
-		}
-		
-		/**
-		 * Returns the invoices belonging the contract.
-		 * @return unknown_type
-		 */
-		public function get_invoices()
-		{
-			if($this->invoices == null)
-			{
-				$this->invoices = rental_invoice::get_so()->get_invoices_for_billing($this->get_id());
-			}
-			return $this->invoices;
-		}
-
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
-		{
-			if (self::$so == null) {
-				self::$so = CreateObject('rental.sobilling');
-			}
-			return self::$so;
-		}
-			
-		/**
-		 * Get a key/value array of titles of billing term types keyed by their id
-		 * 
-		 * @return array
-		 */
-		public static function get_billing_terms()
-		{
-			$so = self::get_so();
-			return $so->get_billing_terms();
-		}
-		
 		public function serialize()
 		{
-			return array();
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$description = '';
+			$location_id = $this->get_location_id();
+			$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($fields as $id => $label)
+			{
+				if($id == $location_id)
+				{
+					$description = lang($label) . ' ';
+				}
+			}
+			$description .= lang('month ' . $this->get_month()) . ' ';
+			$description .= $this->get_year();
+			return array(
+				'id'				=> $this->get_id(),
+				'description'		=> $description,
+				'total_sum'			=> $this->get_total_sum(),
+				'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop())
+			);
 		}
 		
 	}
