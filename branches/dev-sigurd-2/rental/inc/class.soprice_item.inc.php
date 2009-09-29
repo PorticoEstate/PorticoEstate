@@ -44,30 +44,6 @@ class rental_soprice_item extends rental_socommon
 		return $price_item;
 	}
 	
-	function get_single_contract_price_item($id)
-	{
-		$id = (int)$id;
-		
-		$sql = "SELECT * FROM rental_contract_price_item WHERE id = " . $id;
-		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-		$this->db->next_record();
-		
-		$price_item = new rental_contract_price_item($this->get_field_value('id'));
-		$price_item->set_price_item_id($this->get_field_value('price_item_id'));
-		$price_item->set_contract_id($this->get_field_value('contract_id'));
-		$price_item->set_title($this->get_field_value('title'));
-		$price_item->set_agresso_id($this->get_field_value('agresso_id'));
-		$price_item->set_is_area($this->get_field_value('is_area'));
-		$price_item->set_price($this->get_field_value('price'));
-		$price_item->set_area($this->get_field_value('area'));
-		$price_item->set_count($this->get_field_value('count'));
-		$price_item->set_total_price($this->get_field_value('total_price'));
-		$price_item->set_date_start($this->get_field_value('date_start'));
-		$price_item->set_date_end($this->get_field_value('date_end'));
-		
-		return $price_item;
-	}
-	
 	/**
 	 * Get a list of price_item objects matching the specific filters
 	 * 
