@@ -94,7 +94,7 @@ class rental_socomposite extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_composite.id AS composite_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place';
+			$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -164,8 +164,8 @@ class rental_socomposite extends rental_socommon
 					break;
 			}
 		}
-		$composite->add_unit(new rental_unit($composite_id, $location));
-		
+		$composite->add_unit(new rental_unit($this->unmarshal($this->db->f('unit_id', true), 'int'), $composite_id, $location));
+
 		return $composite;
 	}
 	
