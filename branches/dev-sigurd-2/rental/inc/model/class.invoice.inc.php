@@ -1,4 +1,6 @@
 <?php
+	phpgw::import_class('rental.socontract_price_item');
+	phpgw::import_class('rental.soinvoice_price_item');
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'invoice_price_item', 'inc/model/');
@@ -14,7 +16,6 @@
 		protected $timstamp_end; // End date of invoice
 		protected $invoice_price_items;
 		protected $total_sum;
-		protected $contract;
 		
 		public static $so;
 		
@@ -28,7 +29,6 @@
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_sum = (float)$total_sum;
 			$this->invoice_price_items = null;
-			$this->contract = null;
 		}
 		
 		public function set_id($id)
@@ -52,20 +52,6 @@
 		}
 	
 		public function get_contract_id(){ return $this->contract_id; }
-		
-		/**
-		 * Returns the underlying contract for this object. Uses lazy loading.
-		 * 
-		 * @return rental_contract for the invoice, should never be null.
-		 */
-		public function get_contract()
-		{
-			if($this->contract == null)
-			{
-				$this->contract = rental_contract::get($this->get_contract_id());
-			}
-			return $this->contract;
-		}
 
 		public function set_timestamp_created($timestamp_created)
 		{
@@ -117,31 +103,6 @@
 		}
 		
 		public function get_total_sum(){ return $this->total_sum; }
-			
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
-		{
-			if (self::$so == null) {
-				self::$so = CreateObject('rental.soinvoice');
-			}
-			return self::$so;
-		}
-		
-		/**
-		 * Returns all invoices of a specified billing id.
-		 * 
-		 * @param $billing_id int with id of billing job.
-		 * @return array of rental_invoice objects, empty array if no invoices
-		 * found, never null.
-		 */
-		public static function get_invoices_for_billing(int $billing_id)
-		{
-			return rental_invoice::get_so()->get_invoices_for_billing($billing_id);
-		}
 		
 		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
 		{
@@ -149,12 +110,13 @@
 			{
 				return null;
 			}
-			$contract = rental_contract::get($contract_id);
+			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0);
 			$invoice->set_timestamp_created(time());
+			var_dump($contract);
 			$invoice->set_party_id($contract->get_payer_id());
-			$contract_price_items = $contract->get_price_items();
-			$invoice->store(); // We must store the invoice at this point to have an id to give to the price item
+			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			$total_sum = 0;
 			foreach($contract_price_items as $contract_price_item)
 			{
@@ -214,12 +176,12 @@
 				}
 				 
 				$invoice_price_item = new rental_invoice_price_item($decimals, -1, $invoice->get_id(), $contract_price_item->get_title(), $contract_price_item->get_agresso_id(), $contract_price_item->is_area(), $contract_price_item->get_price(), $contract_price_item->get_area(), $contract_price_item->get_count(), $invoice_price_item_start, $invoice_price_item_end);
-				$invoice_price_item->store(); // The price item must store itself
+				rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
 				$invoice->add_invoice_price_item($invoice_price_item);
 				$total_sum += $invoice_price_item->get_total_price();
 			}
 			$invoice->set_total_sum(round($total_sum, $decimals));
-			$invoice->store();
+			rental_soinvoice::get_instance()->store($invoice);
 			return $invoice;
 		}
 		

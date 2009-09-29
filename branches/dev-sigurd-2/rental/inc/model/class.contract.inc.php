@@ -401,17 +401,6 @@
 		}
 		
 		/**
-		 * Get the contract stored in the database with the given id
-		 * 
-		 * @param $id id of the contract to get
-		 * @return rental_contract
-		 */
-		public static function get($id)
-		{
-			return self::get_so()->get_single($id);
-		}
-		
-		/**
 		 * Return a list of all contracts registered on the given rental_composite
 		 * 
 		 * @param $composite_id	which composite to return contracts for

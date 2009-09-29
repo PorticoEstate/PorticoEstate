@@ -117,36 +117,6 @@
 			}
 			return self::$so;
 		}
-		
-		public static function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)
-		{
-			// We start a transaction before running the billing
-			rental_billing::get_so()->db->transaction_begin();
-			$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month); // The billing job itself
-			$billing->set_timestamp_start(time()); // Start of run
-			$billing->store(); // Store job as it is
-			$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
-			$counter = 0;
-			$total_sum = 0;
-			foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
-			{
-				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
-				if($invoice != null)
-				{
-					$total_sum += $invoice->get_total_sum();
-					$billing->add_invoice($invoice);
-				}
-			}
-			$billing->set_total_sum(round($total_sum, $decimals));
-			$billing->set_timestamp_stop(time()); //  End of run
-			$billing->set_success(true); // Billing job is a success
-			$billing->store(); // Store job now that we're done
-			// End of transaction!
-			if (rental_billing::get_so()->db->transaction_commit()) { 
-				return $billing;
-			}
-			throw new UnexpectedValueException('Transaction failed.');
-		}
 			
 		/**
 		 * Get a key/value array of titles of billing term types keyed by their id
