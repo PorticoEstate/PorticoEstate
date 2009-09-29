@@ -77,12 +77,12 @@ class rental_sobilling extends rental_socommon
 			$this->marshal($billing->get_year(), 'int'),
 			$this->marshal($billing->get_month(), 'int'),
 		);
-		$query ="INSERT INTO {$this->table_name} (" . join(',', array_keys(array_slice($this->fields, 1))) . ") VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_billing(total_sum, success, timestamp_start, timestamp_stop, location_id, term_id, year, month) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
 			$receipt = array();
-			$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+			$receipt['id'] = $this->db->get_last_insert_id('rental_billing', 'id');
 			$billing->set_id($receipt['id']);
 		}
 		return $receipt;
@@ -100,7 +100,7 @@ class rental_sobilling extends rental_socommon
 			'year = ' . $this->marshal($billing->get_year(), 'int'),
 			'month = ' . $this->marshal($billing->get_month(), 'int')
 		);
-		$result = $this->db->query("UPDATE {$this->table_name} SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__,__FILE__);
+		$result = $this->db->query("UPDATE rental_billing SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__,__FILE__);
 	}
 	
 	/**
@@ -118,6 +118,36 @@ class rental_sobilling extends rental_socommon
 		}
 		
 		return $results;
+	}
+		
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)
+	{
+		// We start a transaction before running the billing
+		$this->db->transaction_begin();
+		$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month); // The billing job itself
+		$billing->set_timestamp_start(time()); // Start of run
+		$this->store($billing); // Store job as it is
+		$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
+		$counter = 0;
+		$total_sum = 0;
+		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
+		{
+			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
+			if($invoice != null)
+			{
+				$total_sum += $invoice->get_total_sum();
+				$billing->add_invoice($invoice);
+			}
+		}
+		$billing->set_total_sum(round($total_sum, $decimals));
+		$billing->set_timestamp_stop(time()); //  End of run
+		$billing->set_success(true); // Billing job is a success
+		$this->store($billing); // Store job now that we're done
+		// End of transaction!
+		if ($this->db->transaction_commit()) { 
+			return $billing;
+		}
+		throw new UnexpectedValueException('Transaction failed.');
 	}
 	
 }
