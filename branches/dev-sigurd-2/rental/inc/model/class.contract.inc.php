@@ -31,7 +31,6 @@
 		protected $last_edited_by_current_user;
 		protected $executive_officer_id;
 		protected $comment;
-		protected $invoices;
 		protected $last_updated;
 		
 		/**
@@ -45,7 +44,6 @@
 			$this->id = (int)$id;
 			$this->parties = array();
 			$this->composites = array();
-			$this->invoices = array();
 		}
 		
 		public function set_id($id)
@@ -391,51 +389,8 @@
 			return $total;
 		}
 		
-		/**
-		 * Returns the invoices of the contract. Uses lazy loading.
-		 * 
-		 * @return array of rental_invoice objects, empty array if no invoices,
-		 * never null.
-		 */
-		public function get_invoices()
-		{
-			if($invoices == null)
-			{
-				$invoices = rental_invoice::get_invoices_for_contract($this->get_id());
-			}
-			return $invoices;
-		}
 		
-		/**
-		 * Helper method to return the end date of the last invoice. The timestamp
-		 * parameter is optional, but when used the date returned will be the
-		 * end date of the last invoice before or at that time.
-		 *  
-		 * @param $timestamp int with UNIX timestamp.
-		 * @return int with UNIX timestamp with the end date of the invoice, or
-		 * null if no such invoice was found.
-		 */
-		public function get_last_invoice_timestamp(int $timestamp = null)
-		{
-			$invoices = $this->get_invoices(); // Should be ordered so that the last invoice is first
-			if($invoices != null && count($invoices) > 0) // Found invoices
-			{
-				if($timestamp == null) // No timestamp specified
-				{
-					// We can just use the first invoice
-					$keys = array_keys($invoices);
-					return $invoices[$keys[0]]->get_timestamp_end();
-				}
-				foreach ($invoices as $invoice) // Runs through all invoices
-				{
-					if($invoice->get_timestamp_end() <= $timestamp)
-					{
-						return $invoice->get_timestamp_end();
-					}
-				}
-			}
-			return null; // No matching invoices found
-		}
+
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
