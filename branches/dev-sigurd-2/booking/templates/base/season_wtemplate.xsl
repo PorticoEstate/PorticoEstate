@@ -103,7 +103,7 @@ Dom = YAHOO.util.Dom;
 YAHOO.booking.AllocationDialog = function(container) {
 	this._container = container;
 	YAHOO.booking.AllocationDialog.superclass.constructor.call(this, container, { 
-		width:"520px", 
+		width:"580px", 
 		visible:false, 
 		constraintoviewport:true,
 		hideaftersubmit: false,
