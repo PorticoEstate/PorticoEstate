@@ -147,16 +147,16 @@
 			}
 			throw new UnexpectedValueException('Transaction failed.');
 		}
-		
+			
 		/**
-		 * Returns all billing jobs.
+		 * Get a key/value array of titles of billing term types keyed by their id
 		 * 
-		 * @return rental_billing objects, empty array if noone found, never
-		 * null.
+		 * @return array
 		 */
-		public static function get_billings()
+		public static function get_billing_terms()
 		{
-			return rental_billing::get_so()->get_billings();
+			$so = self::get_so();
+			return $so->get_billing_terms();
 		}
 		
 		public function serialize()
