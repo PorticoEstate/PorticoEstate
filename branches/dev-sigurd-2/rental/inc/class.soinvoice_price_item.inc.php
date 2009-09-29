@@ -18,7 +18,22 @@ class rental_soinvoice_price_item extends rental_socommon
 		return self::$so;
 	}
 	
-	public function add(rental_invoice_price_item &$invoice_price_item)
+	protected function get_id_field_name()
+	{
+		return 'id';
+	}
+	
+	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+	{
+		throw new Exception("Not implemented");
+	}
+	
+	protected function populate(int $object_id, &$object)
+	{
+		throw new Exception("Not implemented");
+	}
+	
+	public function add(&$invoice_price_item)
 	{
 		$values = array
 		(
@@ -33,15 +48,20 @@ class rental_soinvoice_price_item extends rental_socommon
 			$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_start()), 'date'),
 			$this->marshal(date('Y-m-d', $invoice_price_item->get_timestamp_end()), 'date')
 		);
-		$query ="INSERT INTO ".$this->table_name." (" . join(',', array_keys(array_slice($this->fields, 1))) . ") VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
 			$receipt = array();
-			$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+			$receipt['id'] = $this->db->get_last_insert_id('rental_invoice_price_item', 'id');
 			$invoice_price_item->set_id($receipt['id']);
 		}
 		return $receipt;
+	}
+	
+	protected function update($object)
+	{
+		throw new Exception("Not implemented");
 	}
 	
 }
