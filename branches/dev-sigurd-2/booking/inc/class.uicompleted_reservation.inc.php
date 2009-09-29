@@ -55,7 +55,7 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		protected function restore_export_filters() {
-			if ($export_key = phpgw::get_var('export_key', 'string', array('GET','POST'), null)) {
+			if ($export_key = phpgw::get_var('export_key', 'string', 'REQUEST', null)) {
 				if (is_array($export_filters = $this->ui_session_get(self::SESSION_EXPORT_FILTER_KEY.'_'.$export_key))) {
 					$this->export_filters = $export_filters;
 				}

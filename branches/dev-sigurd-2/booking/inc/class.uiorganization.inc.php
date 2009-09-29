@@ -41,7 +41,7 @@
 		public function building_users() {
 			if(!phpgw::get_var('phpgw_return_as') == 'json') { return; }
 			
-			if (($building_id = phpgw::get_var('building_id', 'int', array('GET','POST'), null))) {
+			if (($building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null))) {
 				$organizations = $this->bo->find_building_users($building_id);
 				array_walk($organizations["results"], array($this, "_add_links"), "bookingfrontend.uiorganization.show");
 				return $this->yui_results($organizations);
