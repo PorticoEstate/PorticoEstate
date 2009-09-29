@@ -181,8 +181,8 @@
     <td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
     <td>
      <select name="newsettings[workorder_approval]">
-       <option value="no" {selected_workorder_approval_}>NO</option>
-     <option value="yes" {selected_workorder_approval_1}>YES</option>
+       <option value="" {selected_workorder_approval_}>NO</option>
+     <option value="1" {selected_workorder_approval_1}>YES</option>
      </select>
     </td>
    </tr>
@@ -191,8 +191,8 @@
     <td>{lang_Ask_for_project_approval_by_e-mail}.</td>
     <td>
      <select name="newsettings[project_approval]">
-       <option value="no" {selected_project_approval_}>NO</option>
-     <option value="yes" {selected_project_approval_1}>YES</option>
+       <option value="" {selected_project_approval_}>NO</option>
+     <option value="1" {selected_project_approval_1}>YES</option>
      </select>
     </td>
    </tr>
