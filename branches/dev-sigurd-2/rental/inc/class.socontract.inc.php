@@ -54,10 +54,11 @@ class rental_socontract extends rental_socommon
 		{
 			$search_for = $this->marshal($search_for,'field');
 			$like_pattern = "'%".$search_for."%'";
+			$int_value_of_search = (int) $search_for;
 			$like_clauses = array();
 			switch($search_type){
 				case "id":
-					$like_clauses[] = "contract.id = $search_for";
+					$like_clauses[] = "contract.id = $int_value_of_search";
 					$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
 					break;
 				case "party_name":
@@ -69,9 +70,10 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
 				case "all":
-					$like_clauses[] = "contract.id = $search_for";
-					$like_clauses[] = "contract.old_contract_id = $search_for";
-					$like_clauses[] = "contract.comment = $this->like $like_pattern";
+					
+					$like_clauses[] = "contract.id = $int_value_of_search";
+					$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
+					$like_clauses[] = "contract.comment $this->like $like_pattern";
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
