@@ -323,7 +323,19 @@ class rental_party extends rental_model
 		if(isset($contract) && $contract->get_payer_id() == $this->id){
 			$is_payer = lang('is_payer');
 		}
-
+		$address_elements = array($this->address_1, $this->address_2, "{$this->postal_code} {$this->place}");
+		$address = '';
+		foreach($address_elements as $element)
+		{
+			if($element != null && $element != '') // Address set
+			{
+				if($address != '') // There's alredy some text set
+				{
+					$address .= ', ';
+				}
+				$address .= $element;
+			}
+		}
 		return array(
 			'id' => $this->id,
 			'name' => $this->get_name(),
@@ -333,7 +345,7 @@ class rental_party extends rental_model
 			'title' => $this->title,
 			'company_name' => $this->company_name,
 			'department' => $this->department,
-			'address' => $this->address_1. ', ' . $this->address_2 . ', ' . $this->postal_code . ', ' . $this->place,
+			'address' => $address,
 			'address1' => $this->address_1,
 			'address2' => $this->address_2,
 			'postal_code' => $this->postal_code,

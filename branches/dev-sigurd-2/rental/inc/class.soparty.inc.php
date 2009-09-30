@@ -354,7 +354,7 @@ class rental_soparty extends rental_socommon
             $party->set_pid(            $this->unmarshal($this->db->f('personal_identification_number'), 'string'));
             $party->set_phone(          $this->unmarshal($this->db->f('phone'), 'string'));
             $party->set_place(          $this->unmarshal($this->db->f('place'), 'string'));
-            $party->set_postal_code(    $this->unmarshal($this->db->f('postal_code'), 'int'));
+            $party->set_postal_code(    $this->unmarshal($this->db->f('postal_code'), 'string'));
             $party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));
             $party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
             $party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
