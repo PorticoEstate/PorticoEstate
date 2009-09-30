@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('rental.socomposite');
+	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.sounit');
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'composite', 'inc/model/');

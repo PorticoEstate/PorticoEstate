@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.socontract');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 
@@ -34,7 +35,7 @@ class rental_uiparty extends rental_uicommon
 		$contract_id = phpgw::get_var('contract_id');
 		if(isset($contract_id))
 		{
-			$contract = rental_contract::get($contract_id);
+			$contract = rental_socontract::get_instance()->get_single($contract_id);
 		}
 		
 		//Retrieve the type of query and perform type specific logic

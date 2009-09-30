@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.socontract');
 
 include_class('rental', 'price_item', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
@@ -156,7 +157,7 @@ class rental_uiprice_item extends rental_uicommon
 		$contract_id = phpgw::get_var('contract_id');
 		if(isset($contract_id))
 		{
-			$contract = rental_contract::get($contract_id);
+			$contract = rental_socontract::get_instance()->get_single($contract_id);
 		}
 		
 		//Retrieve the type of query and perform type specific logic
@@ -166,12 +167,14 @@ class rental_uiprice_item extends rental_uicommon
 			case 'included_price_items':
 				if(isset($contract))
 				{
-					$records = $contract->get_price_items();
+					$filters = array('contract_id' => $contract->get_id());
+					$result_objects = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_socontract_price_item::get_instance()->get_count($search_for, $search_type, $filters);
 				}
 				break;
 			case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
 			default:
-				$records = rental_price_item::get_all(
+				$result_objects = rental_price_item::get_all(
 				phpgw::get_var('startIndex'),
 				phpgw::get_var('results'),
 				phpgw::get_var('sort'),
@@ -179,12 +182,13 @@ class rental_uiprice_item extends rental_uicommon
 				phpgw::get_var('query'),
 				phpgw::get_var('search_option')
 				);
+				$object_count = count($result_objects); // TODO: Fix
 				break;
 		}
 
 		// Create an empty row set
 		$rows = array();
-		foreach ($records as $record) {
+		foreach ($result_objects as $record) {
 			if(isset($record))
 			{
 				if($record->has_permission(PHPGW_ACL_READ))
@@ -195,7 +199,7 @@ class rental_uiprice_item extends rental_uicommon
 				}
 			}
 		}
-		$data = array('results' => $rows, 'total_records' => count($rows));
+		$data = array('results' => $rows, 'total_records' => $object_count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 

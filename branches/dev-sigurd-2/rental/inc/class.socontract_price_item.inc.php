@@ -62,7 +62,7 @@ class rental_socontract_price_item extends rental_socommon
 		
 		$tables = "rental_contract_price_item";
 		$joins = '';
-
+		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
