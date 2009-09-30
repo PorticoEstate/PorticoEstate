@@ -45,11 +45,15 @@ abstract class rental_socommon
 	 */
 	protected function unmarshal($value, $type)
 	{
+		if($type == 'bool')
+		{
+			return (boolean)$value;
+		}
 		if($value === null || $value == 'NULL')
 		{
 			return null;
 		}
-		else if($type == 'int')
+		if($type == 'int')
 		{
 			return intval($value);
 		}

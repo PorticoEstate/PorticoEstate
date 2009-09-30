@@ -63,7 +63,7 @@ class rental_socontract_price_item extends rental_socommon
 		$tables = "rental_contract_price_item";
 		$joins = '';
 
-		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -76,7 +76,7 @@ class rental_socontract_price_item extends rental_socommon
 			$price_item->set_contract_id($this->unmarshal($this->db->f('contract_id'),'int'));
 			$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
-			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'boolean'));
+			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 			$price_item->set_area($this->unmarshal($this->db->f('area'),'float'));
 			$price_item->set_count($this->unmarshal($this->db->f('count'),'int'));
