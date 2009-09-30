@@ -1045,8 +1045,6 @@
 					{
 						$action='add';
 					}
-	_debug_array($values);
-	die();
 
 					$receipt = $this->bo->save($values,$action,$values_attribute);
 
