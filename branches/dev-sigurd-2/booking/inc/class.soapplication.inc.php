@@ -71,6 +71,23 @@
 			);
 		}
 
+		protected function doValidate($entity, booking_errorstack $errors)
+		{
+			$event_id = $entity['id'] ? $entity['id'] : -1;
+			// Make sure to_ > from_
+			foreach($entity['dates'] as $date)
+			{
+				$from_ = new DateTime($date['from_']);
+				$to_ = new DateTime($date['to_']);
+				$start = $from_->format('Y-m-d H:i');
+				$end = $to_->format('Y-m-d H:i');
+				if($from_ > $to_ || $from_ == $to_)
+				{
+					$errors['from_'] = lang('Invalid from date');
+				}
+			}
+		}
+
 		function get_building_info($id)
 		{
 			$this->db->limit_query("SELECT bb_building.id, bb_building.name FROM bb_building, bb_resource, bb_application_resource WHERE bb_building.id=bb_resource.building_id AND bb_resource.id=bb_application_resource.resource_id AND bb_application_resource.application_id=" . intval($id), 0, __LINE__, __FILE__, 1);
