@@ -20,7 +20,7 @@ class rental_soinvoice extends rental_socommon
 	
 	protected function get_id_field_name()
 	{
-		return 'rental_invoice.id';
+		return 'id';
 	}
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)

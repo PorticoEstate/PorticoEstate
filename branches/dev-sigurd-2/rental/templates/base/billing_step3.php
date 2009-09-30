@@ -1,5 +1,6 @@
 <?php
-	include("common.php");
+include("common.php");
+$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 ?>
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-document.png" /> <?php echo lang('invoice') ?></h1>
 <form action="#" method="post">
@@ -48,6 +49,28 @@
 					}
 					?>
 				</td>
+			</tr>
+			<tr>
+				<td><?php echo lang('sum') ?></td>
+				<td><?php echo number_format($billing_job->get_total_sum(), isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.((isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : 'NOK');?></td>
+			</tr>
+			<tr>
+				<td><?php echo lang('started') ?></td>
+				<td>
+					<?php echo date($date_format, $billing_job->get_timestamp_start()) ?>
+					<?php echo date('H:i:s', $billing_job->get_timestamp_start()) ?>
+				</td>
+			</tr>
+			<tr>
+				<td><?php echo lang('ended') ?></td>
+				<td>
+					<?php echo date($date_format, $billing_job->get_timestamp_stop()) ?>
+					<?php echo date('H:i:s', $billing_job->get_timestamp_stop()) ?>
+				</td>
+			</tr>
+			<tr>
+				<td><?php echo lang('success') ?></td>
+				<td><?php echo $billing_job->get_success() ? lang('yes') : lang('no') ?></td>
 			</tr>
 			<tr>
 				<td>&amp;nbsp;</td>

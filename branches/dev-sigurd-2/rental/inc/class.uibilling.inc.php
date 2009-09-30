@@ -86,6 +86,9 @@ class rental_uibilling extends rental_uicommon
 		}
 	}
 	
+	/**
+	 * Displays info about one single billing job.
+	 */
 	public function view()
 	{
 		if(!$this->isExecutiveOfficer())
@@ -96,7 +99,8 @@ class rental_uibilling extends rental_uicommon
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$data = array
 		(
-			'billing_job' => $billing_job
+			'billing_job' => $billing_job,
+			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index')))
 		);
 		$this->render('billing.php', $data);
 	}
@@ -157,36 +161,36 @@ class rental_uibilling extends rental_uicommon
 		return $this->yui_results($result_data, 'total_records', 'results');
 	}
 		
-		/**
-		 * Add action links and labels for the context menu of the list items
-		 *
-		 * @param $value pointer to
-		 * @param $key ?
-		 * @param $params [composite_id, type of query, editable]
-		 */
-		public function add_actions(&$value, $key, $params)
-		{
-			//Defining new columns
-			$value['ajax'] = array();
-			$value['actions'] = array();
-			$value['labels'] = array();
+	/**
+	 * Add action links and labels for the context menu of the list items
+	 *
+	 * @param $value pointer to
+	 * @param $key ?
+	 * @param $params [composite_id, type of query, editable]
+	 */
+	public function add_actions(&$value, $key, $params)
+	{
+		//Defining new columns
+		$value['ajax'] = array();
+		$value['actions'] = array();
+		$value['labels'] = array();
 
-			$query_type = $params[0];
-			
-			switch($query_type)
-			{
-				case 'all_billings':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('show');
-					break;
-				case 'invoices':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
-					$value['labels'][] = lang('show');
-					break;
-			}
+		$query_type = $params[0];
+		
+		switch($query_type)
+		{
+			case 'all_billings':
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
+				break;
+			case 'invoices':
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
+				$value['labels'][] = lang('show');
+				break;
 		}
+	}
 
 }
 ?>

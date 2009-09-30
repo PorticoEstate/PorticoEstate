@@ -255,6 +255,7 @@ showing	rental	no	Viser priselement
 show	rental	no	Vis
 shows_from	rental	no	Viser fra
 ssn	rental	no	Fødselsnummer
+started	no	rental	Startet
 status_before	rental	no	før
 status_date	rental	no	den
 status	rental	no	Status
