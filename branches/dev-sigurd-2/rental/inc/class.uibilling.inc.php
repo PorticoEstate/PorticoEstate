@@ -12,7 +12,8 @@ class rental_uibilling extends rental_uicommon
 	public $public_functions = array
 	(
 		'index'	=> true,
-		'query'	=> true
+		'query'	=> true,
+		'view'	=> true
 	);
 	
 	public function index()
@@ -85,6 +86,21 @@ class rental_uibilling extends rental_uicommon
 		}
 	}
 	
+	public function view()
+	{
+		if(!$this->isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}			
+		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+		$data = array
+		(
+			'billing_job' => $billing_job
+		);
+		$this->render('billing.php', $data);
+	}
+	
 	public function query()
 	{
 		if(!$this->isExecutiveOfficer())
@@ -136,11 +152,7 @@ class rental_uibilling extends rental_uicommon
 		$result_data = array('results' => $rows, 'total_records' => $object_count);
 		
 		//Add action column to each row in result table
-		array_walk(
-			$result_data['results'],
-			array($this, 'add_actions'), 
-			array()
-		);
+		array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
 
 		return $this->yui_results($result_data, 'total_records', 'results');
 	}
@@ -159,9 +171,21 @@ class rental_uibilling extends rental_uicommon
 			$value['actions'] = array();
 			$value['labels'] = array();
 
-			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
-			$value['labels'][] = lang('show');
+			$query_type = $params[0];
+			
+			switch($query_type)
+			{
+				case 'all_billings':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('show');
+					break;
+				case 'invoices':
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
+					$value['labels'][] = lang('show');
+					break;
+			}
 		}
 
 }

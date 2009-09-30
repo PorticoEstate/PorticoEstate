@@ -224,10 +224,11 @@
 		
 		public function serialize()
 		{
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return array(
 				'id'				=> $this->get_id(),
 				'contract_id'		=> $this->get_contract_id(),
-				'timestamp_created'	=> $this->get_timestamp_created(),
+				'timestamp_created'	=> date($date_format, $this->get_timestamp_created()),
 				'composite_name'	=> $this->get_composite_names(),
 				'party_name'		=> $this->get_party_names(),
 				'total_sum'			=> $this->get_total_sum()

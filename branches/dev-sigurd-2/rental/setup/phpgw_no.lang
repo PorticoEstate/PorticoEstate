@@ -70,6 +70,7 @@ create_shortcut	rental	no	Ny snarvei
 currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
 currency suffix	rental	no	Valuta suffix
+currency_thousands_separator	rental	no	.
 customer_account	rental	no	Kundenummer i Agresso
 dashboard_title	rental	no	Forside - Min arbeidsoversikt
 date_end	rental	no	Gjelder til

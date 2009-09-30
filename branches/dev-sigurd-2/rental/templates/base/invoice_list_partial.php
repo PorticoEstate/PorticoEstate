@@ -1,16 +1,27 @@
 <script type="text/javascript">
+	var formatPrice = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
+				suffix: " <?php echo isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK'; ?>",
+				thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ','; ?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2; ?>
+		    });
+		}
+	}
 	var columnDefs = [{
-		key: "description",
+		key: "contract_id",
 		label: "<?php echo lang('contract_id') ?>",
 	    sortable: false
 	},
 	{
-		key: "date_start",
+		key: "timestamp_created",
 		label: "<?php echo lang('Billing date') ?>",
 	    sortable: true
 	},
 	{
-		key: "date_end",
+		key: "composite_name",
 		label: "<?php echo lang('composite_name') ?>",
 	    sortable: true
 	},
@@ -20,8 +31,9 @@
 	    sortable: true
 	},
 	{
-		key: "date_end",
+		key: "total_sum",
 		label: "<?php echo lang('Total sum') ?>",
+		formatter: formatPrice,
 	    sortable: true
 	},
 	{

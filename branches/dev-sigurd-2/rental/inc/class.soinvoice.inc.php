@@ -44,10 +44,11 @@ class rental_soinvoice extends rental_socommon
 		}
 		$condition =  join(' AND ', $clauses);
 
-		$tables = "rental_invoice, rental_composite, rental_contract_party";
-		$joins .= "	{$this->left_join} rental_composite ON (rental_invoice.contract_id = rental_composite.contract_id)";
-		$joins = "	{$this->left_join} rental_contract_party ON (rental_invoice.contract_id = rental_contract_party.contract_id)";
-		$joins = "	{$this->left_join} rental_party ON (rental_contract_party.party_id = rental_party.id)";
+		$tables = "rental_invoice";
+		$joins = "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.contract_id = rental_invoice.contract_id)";
+		$joins .= "	{$this->left_join} rental_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
+		$joins .= "	{$this->left_join} rental_contract_party ON (rental_contract_party.contract_id = rental_invoice.contract_id)";
+		$joins .= "	{$this->left_join} rental_party ON (rental_contract_party.party_id = rental_party.id)";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_invoice.id)) AS count';
@@ -65,7 +66,7 @@ class rental_soinvoice extends rental_socommon
 	{
 		if($invoice == null)
 		{
-			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $contract_id, $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true));
+			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true));
 			$invoice->set_party_id($this->unmarshal($this->db->f('party_id'),'int'));
 		}
 		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
