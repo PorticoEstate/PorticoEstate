@@ -805,6 +805,71 @@
 		}
 
 
+		function initiate_event_lookup($data)
+		{
+			$event = array();
+			$event['name'] = $data['name'];
+			$event['event_name'] = $data['event_name']; // Human readable
+			if( isset($data['type']) && $data['type']=='view')
+			{
+				if(!isset($data['event']) || !$data['event'])
+				{
+//					return $event;
+				}
+
+				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('event_form'));
+			}
+
+			// If the record is not saved - issue a warning
+			if(isset($data['item_id']) || $data['item_id'])
+			{
+				$event['item_id'] = $data['item_id'];
+			}
+			else if(isset($data['location_code']) || $data['location_code'])
+			{
+				$event['item_id'] = execMethod('property.solocation.get_item_id', $data['location_code']);
+			}
+			else
+			{
+				$event['warning']			= lang('Warning: the record has to be saved in order to plan an event');
+			}
+
+			if(isset($event['value']) && $event['value'])
+			{
+				$event_object = execMethod('property.soevent.read_single', $event['value']);
+				$event['descr']			= $event_object['descr'];
+				$event['enabled']			= $event_object['enabled'] ? lang('yes') : lang('no');
+				$event['lang_enabled']		= lang('enabled');
+
+				$id = "property{$data['location']}::{$data['item_id']}::{$event['id']}";
+				$job = execMethod('phpgwapi.asyncservice.read', $id);
+
+				$event['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
+				$event['lang_next_run']	= lang('next run');
+				unset($event_object);
+				unset($id);
+				unset($job);
+			}
+
+			$event['event_link'] = $GLOBALS['phpgw']->link('/index.php',array
+			(
+				'menuaction'	=> 'property.uievent.edit',
+				'location'		=> $data['location'],
+				'attrib_id'		=> $event['id'],
+				'item_id'		=> isset($event['item_id']) ? $event['item_id'] : '',
+				'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
+			);
+
+			$event['function_name']	= 'lookup_'. $event['name'] .'()';
+
+			return $event;
+		}
+
+
 		function initiate_ui_alarm($data)
 		{
 			$boalarm		= CreateObject('property.boalarm');

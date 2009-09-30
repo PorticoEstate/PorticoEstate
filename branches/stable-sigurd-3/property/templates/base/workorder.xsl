@@ -654,7 +654,7 @@
 				</td>
 			</tr>
 
-
+				<xsl:call-template name="event_form"/>
 				<xsl:call-template name="vendor_form"/>
 				<xsl:call-template name="ecodimb_form"/>
 				<xsl:call-template name="b_account_form"/>
