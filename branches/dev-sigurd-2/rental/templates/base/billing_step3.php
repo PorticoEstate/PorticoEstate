@@ -70,7 +70,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 			</tr>
 			<tr>
 				<td><?php echo lang('success') ?></td>
-				<td><?php echo $billing_job->get_success() ? lang('yes') : lang('no') ?></td>
+				<td><?php echo $billing_job->is_success() ? lang('yes') : lang('no') ?></td>
 			</tr>
 			<tr>
 				<td>&amp;nbsp;</td>

@@ -272,6 +272,7 @@
 				'id'				=>	array('type' => 'auto', 'nullable' => false),
 				'total_sum'			=>	array('type' => 'float', 'precision' => '8'),
 				'success'			=>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'created_by'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp_stop'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'location_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
@@ -283,20 +284,21 @@
 			'fk' => array(
 				'phpgw_locations'		=> array('location_id' => 'location_id'),
 				'rental_billing_term'	=> array('term_id' => 'id'),
+				'phpgw_accounts'		=> array('created_by' => 'account_id')
 			),
 			'ix' => array(),
 			'uc' => array()
 		),
 		'rental_invoice' => array(
 			'fd' => array(
-				'id'				=>	array('type' => 'auto', 'nullable' => false),
-				'contract_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'billing_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'timestamp_created'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'timestamp_end'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'total_sum'			=>	array('type' => 'float', 'precision' => '8')
+				'id'				=> array('type' => 'auto', 'nullable' => false),
+				'contract_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'billing_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'party_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_created'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_start'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'timestamp_end'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'total_sum'			=> array('type' => 'float', 'precision' => '8')
 			),
 			'pk' => array('id'),
 			'fk' => array(

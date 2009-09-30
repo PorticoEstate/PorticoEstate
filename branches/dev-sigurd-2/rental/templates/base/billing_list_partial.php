@@ -27,6 +27,11 @@
 	    sortable: true
 	},
 	{
+		key: "created_by",
+		label: "<?php echo lang('run by') ?>",
+	    sortable: false
+	},
+	{
 		key: "actions",
 		hidden: true
 	},

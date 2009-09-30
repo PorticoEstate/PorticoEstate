@@ -231,6 +231,7 @@ reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
 reskontro	rental	no	Reskontronummer
 result_unit_number	rental	no	Resultatsenhet
+run by	rental	no	Utført av
 room	rental	no	Rom
 running	rental	no	Løpende
 save	rental	no	Lagre

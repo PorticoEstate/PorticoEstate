@@ -40,7 +40,7 @@ class rental_sobilling extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, total_sum, success, timestamp_start, timestamp_stop, location_id, term_id, year, month';
+			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, location_id, term_id, year, month';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY timestamp_stop DESC';
 		}
@@ -51,7 +51,7 @@ class rental_sobilling extends rental_socommon
 	{
 		if($billing == null)
 		{
-			$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('term_id', true), $this->db->f('year', true), $this->db->f('month', true));
+			$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('term_id', true), $this->db->f('year', true), $this->db->f('month', true), $this->db->f('created_by', true));
 			$billing->set_success($this->db->f('success', true));
 			$billing->set_total_sum($this->db->f('total_sum', true));
 			$billing->set_timestamp_start($this->db->f('timestamp_start', true));
@@ -70,7 +70,8 @@ class rental_sobilling extends rental_socommon
 		$values = array
 		(
 			$this->marshal($billing->get_total_sum(), 'float'),
-			$billing->get_success() ? 'true' : 'false',
+			$billing->is_success() ? 'true' : 'false',
+			$this->marshal($billing->get_created_by(), 'int'),
 			$this->marshal($billing->get_timestamp_start(), 'int'),
 			$this->marshal($billing->get_timestamp_stop(), 'int'),
 			$this->marshal($billing->get_location_id(), 'int'),
@@ -78,7 +79,7 @@ class rental_sobilling extends rental_socommon
 			$this->marshal($billing->get_year(), 'int'),
 			$this->marshal($billing->get_month(), 'int'),
 		);
-		$query ="INSERT INTO rental_billing(total_sum, success, timestamp_start, timestamp_stop, location_id, term_id, year, month) VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, location_id, term_id, year, month) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -93,7 +94,7 @@ class rental_sobilling extends rental_socommon
 	{
 		$values = array(
 			'total_sum = ' . $this->marshal($billing->get_total_sum(), 'float'),
-			"success = '" . ($billing->get_success() ? 'true' : 'false') . "'",
+			"success = '" . ($billing->is_success() ? 'true' : 'false') . "'",
 			'timestamp_start = ' . $this->marshal($billing->get_timestamp_start(), 'int'),
 			'timestamp_stop = ' . $this->marshal($billing->get_timestamp_stop(), 'int'),
 			'location_id = ' . $this->marshal($billing->get_location_id(), 'int'),
@@ -125,11 +126,11 @@ class rental_sobilling extends rental_socommon
 		return $this->billing_terms;
 	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, array $contracts_to_bill, array $contract_billing_start_date)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date)
 	{
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
-		$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month); // The billing job itself
+		$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month, $created_by); // The billing job itself
 		$billing->set_timestamp_start(time()); // Start of run
 		$this->store($billing); // Store job as it is
 		$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
