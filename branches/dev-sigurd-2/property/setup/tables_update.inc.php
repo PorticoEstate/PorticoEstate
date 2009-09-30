@@ -3754,3 +3754,26 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.571 to 0.9.17.572
+	* Add event workorders
+	* 
+	*/
+
+	$test[] = '0.9.17.571';
+	function property_upgrade0_9_17_571()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','event_id',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_event','attrib_id_', array('type' => 'varchar','precision' => 50,'default' => '0','nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_event SET attrib_id_ = attrib_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_event',array(),'attrib_id');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_event','attrib_id_','attrib_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.572';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

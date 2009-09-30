@@ -71,7 +71,7 @@
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->cats					= & $this->bo->cats;
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= '.project';
+			$this->acl_location			= '.project.workorder';
 			$this->acl_read 			= $this->acl->check('.project', PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check('.project', PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check('.project', PHPGW_ACL_EDIT, 'property');
@@ -757,6 +757,7 @@
 			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+			$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
 
 			$config->read();
 
@@ -1187,8 +1188,10 @@
 			
 			$event_criteria = array
 			(
-				'name'			=> 'event',
+				'location'		=> $this->acl_location,
+				'name'			=> 'event_id',
 				'event_name'	=> lang('schedule'),
+				'event_id'		=> $values['event_id'],
 				'item_id'		=> $id
 			);
 			$event_data=$this->bocommon->initiate_event_lookup($event_criteria);
