@@ -1045,8 +1045,6 @@
 					{
 						$action='add';
 					}
-	_debug_array($values);
-	die();
 
 					$receipt = $this->bo->save($values,$action,$values_attribute);
 
@@ -1091,22 +1089,25 @@
 							'deadline'			=> ''
 						);
 
-						foreach ($values['mail_address'] as $_account_id => $_address)
+						if (isset($values['mail_address']) && is_array($values['mail_address']))
 						{
-							if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+							foreach ($values['mail_address'] as $_account_id => $_address)
 							{
-								$rcpt = $GLOBALS['phpgw']->send->msg('email',$_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
-								$action_params['responsible'] = $_account_id;
-								execMethod('property.sopending_action.set_pending_action', $action_params);
-								if(!$rcpt)
+								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
-									$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
-									$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-									$bypass_error=true;
-								}
-								else
-								{
-									$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+									$rcpt = $GLOBALS['phpgw']->send->msg('email',$_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+									$action_params['responsible'] = $_account_id;
+									execMethod('property.sopending_action.set_pending_action', $action_params);
+									if(!$rcpt)
+									{
+										$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
+										$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+										$bypass_error=true;
+									}
+									else
+									{
+										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+									}
 								}
 							}
 						}
