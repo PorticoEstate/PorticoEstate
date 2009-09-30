@@ -48,18 +48,6 @@
 					'text'	=> $GLOBALS['phpgw']->translation->translate('parties', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uiparty.index') ),
 					'image'	=> array('rental', 'x-office-address-book')
-				),
-				'economy' => array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('economy', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uieconomy.index') ),
-					'image'	=> array('rental', 'x-office-spreadsheet'),
-				),
-				'reports' => array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('reports', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uireports.index') ),
-					'image'	=> array('rental', 'x-office-document'),
 				)
 			);
 

@@ -89,6 +89,7 @@ class rental_socomposite extends rental_socommon
 
 		$tables = "rental_composite";
 		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';

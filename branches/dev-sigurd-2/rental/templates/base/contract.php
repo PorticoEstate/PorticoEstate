@@ -45,7 +45,7 @@
 							 ?>
 							<select name="location_id" id="location_id">
 								<?php
-								$types = rental_contract::get_fields_of_responsibility();
+								$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 								foreach($types as $id => $label)
 								{
 						
