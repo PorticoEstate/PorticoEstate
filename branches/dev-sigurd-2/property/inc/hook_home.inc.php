@@ -33,17 +33,21 @@
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
 	$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 	$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
+	
+	$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_show_new_updated_tts'] == 'yes')
+	if ( isset($prefs['property']['mainscreen_show_new_updated_tts'])
+		&& $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 	{
 
-//		$GLOBALS['phpgw']->translation->add_app('property');
+		$tts = CreateObject('property.sotts');
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
+		$total_records = $tts->total_records;
 
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
-			'title'	=> lang('Helpdesk'),
+			'title'		=> isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title']? "{$prefs['property']['mainscreen_tts_title']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
 			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -68,13 +72,10 @@
 
 		foreach ( $var as $key => $value )
 		{
-			$portalbox->set_controls($key,$value);
+//			$portalbox->set_controls($key,$value);
 		}
 
-		$tts = CreateObject('property.sotts');
-
-		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'] : '';
-		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
+		$default_status 	= isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
 
 		$category_name = array(); // caching
 
@@ -109,16 +110,18 @@
 		unset($default_status);
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_1'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_1'] == 'yes')
+	if ( isset($prefs['property']['mainscreen_workorder_1'])
+		&& $prefs['property']['mainscreen_workorder_1'] == 'yes')
 	{
 
-//		$GLOBALS['phpgw']->translation->add_app('property');
+		$obj = CreateObject('property.soworkorder');
+		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+		$total_records = $obj->total_records;
 
-		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_1']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_1'] : '';
+		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
-			'title'	=> lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status}",
+			'title'	=> isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title']? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status}} ({$total_records})",
 			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -145,10 +148,6 @@
 		{
 //			$portalbox->set_controls($key,$value);
 		}
-
-		$obj = CreateObject('property.soworkorder');
-
-		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
 
 		$portalbox->data = array();
 		foreach ($workorders as $workorder)
@@ -166,16 +165,18 @@
 		unset($portalbox);
 		unset($default_status);
 	}
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_2'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_workorder_2'] == 'yes')
+	if ( isset($prefs['property']['mainscreen_workorder_2'])
+		&& $prefs['property']['mainscreen_workorder_2'] == 'yes')
 	{
 
-//		$GLOBALS['phpgw']->translation->add_app('property');
+		$obj = CreateObject('property.soworkorder');
+		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+		$total_records = $obj->total_records;
 
-		$default_status 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_2']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status_mainscreen_2'] : '';
+		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
-			'title'	=> lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status}",
+			'title'	=> isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title']? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status}} ({$total_records})",
 			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -202,10 +203,6 @@
 		{
 //			$portalbox->set_controls($key,$value);
 		}
-
-		$obj = CreateObject('property.soworkorder');
-
-		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
 
 		$portalbox->data = array();
 		foreach ($workorders as $workorder)
@@ -224,8 +221,8 @@
 		unset($default_status);
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals_request'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals_request'] == 'yes' )
+	if ( isset($prefs['property']['mainscreen_showapprovals_request'])
+		&& $prefs['property']['mainscreen_showapprovals_request'] == 'yes' )
 	{
 
 		$title = lang('approvals request');
@@ -316,8 +313,8 @@
 		unset($pending_approvals);
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showapprovals'] == 'yes' )
+	if ( isset($prefs['property']['mainscreen_showapprovals'])
+		&& $prefs['property']['mainscreen_showapprovals'] == 'yes' )
 	{
 
 		$title = lang('approvals');
@@ -410,8 +407,8 @@
 		unset($pending_approvals);
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['mainscreen_showvendor_reminder']  == 'yes' )
+	if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
+		&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
 	{
 
 		$title = lang('vendor reminder');

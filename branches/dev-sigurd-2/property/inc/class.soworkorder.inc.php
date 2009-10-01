@@ -35,6 +35,8 @@
 	class property_soworkorder
 	{
 
+		var $total_records = 0;
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -495,7 +497,7 @@
 				$sql2 = 'SELECT count(*) FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('count');//$this->db->f('0');
 			}
 			else
 			{
