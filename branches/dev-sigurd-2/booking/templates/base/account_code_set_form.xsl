@@ -91,7 +91,7 @@
 			<div class="clr"/>
 
 			<div class="form-buttons">
-				<input type="submit" value="{php:function('lang', phpgw:conditional(new_form, 'Export', 'Save'))}"/>
+				<input type="submit" value="{php:function('lang', phpgw:conditional(new_form, 'Create', 'Save'))}"/>
 				<a class="cancel" href="{account_code_set/cancel_link}">
 					<xsl:value-of select="php:function('lang', 'Cancel')" />
 				</a>

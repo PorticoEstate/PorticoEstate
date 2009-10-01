@@ -51,7 +51,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			</xsl:for-each>{hidden: true}];
 	YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
 		formatRow: YAHOO.booking.scheduleRowFormatter
-	});
+	}, true);
 });
 </script>
 

@@ -124,7 +124,7 @@ YAHOO.booking.setupInlineTablePaginator = function(container) {
 	return pag;
 };
 
-YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
+YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options, disablePagination) {
 	var Dom = YAHOO.util.Dom;
 	
 	var container = Dom.get(container);
@@ -132,11 +132,12 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options) {
 	var dataTableContainer = container.appendChild(document.createElement('div'));
 	
 	options = options || {};
-	options.paginator = YAHOO.booking.setupInlineTablePaginator(paginatorContainer);
 	options.dynamicData = true;
 	
-	url += 'results=' + options.paginator.getRowsPerPage() + '&';
-	
+	if(!disablePagination) {
+		options.paginator = YAHOO.booking.setupInlineTablePaginator(paginatorContainer);
+		url += 'results=' + options.paginator.getRowsPerPage() + '&';
+	}
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
