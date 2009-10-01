@@ -1213,7 +1213,7 @@
 			$need_approval = isset($config->config_data['workorder_approval']) ? $config->config_data['workorder_approval'] : '';
 
 			$supervisor_email = array();
-			if ($supervisor_id && ($need_approval=='yes'))
+			if ($supervisor_id && $need_approval)
 			{
 				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 				$supervisor_email[] = array

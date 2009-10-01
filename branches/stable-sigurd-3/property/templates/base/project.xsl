@@ -329,7 +329,7 @@
 		</xsl:for-each>
 	</script-->
 		<xsl:choose>
-			<xsl:when test="need_approval='yes'">
+			<xsl:when test="need_approval='1'">
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_ask_approval"/>
