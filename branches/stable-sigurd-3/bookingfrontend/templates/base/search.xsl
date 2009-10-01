@@ -88,9 +88,6 @@
 	                      </dd>
 	                    </xsl:if>
 	                  </dl>
-	                  <div class="moreInfo">
-	                    <a class="bui_single_view_link"><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute><xsl:value-of select="php:function('lang', 'More info')" /></a>
-	                  </div>
 	                </div>
 	                <div class="clr"></div>
 	              </div>

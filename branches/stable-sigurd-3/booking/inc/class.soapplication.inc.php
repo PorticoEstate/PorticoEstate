@@ -16,7 +16,7 @@
 					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
-					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
+					'customer_identifier_type' 		=> array('type' => 'string', 'required' => true),
 					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
 					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'owner_name'	=> array('type' => 'string', 'query' => true,
@@ -35,7 +35,7 @@
 					)),
 					'description'	=> array('type' => 'string', 'query' => true, 'required' => true),
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
-					'contact_email'	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
+					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
 					'audience' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
@@ -69,6 +69,23 @@
 					))
 				)
 			);
+		}
+
+		protected function doValidate($entity, booking_errorstack $errors)
+		{
+			$event_id = $entity['id'] ? $entity['id'] : -1;
+			// Make sure to_ > from_
+			foreach($entity['dates'] as $date)
+			{
+				$from_ = new DateTime($date['from_']);
+				$to_ = new DateTime($date['to_']);
+				$start = $from_->format('Y-m-d H:i');
+				$end = $to_->format('Y-m-d H:i');
+				if($from_ > $to_ || $from_ == $to_)
+				{
+					$errors['from_'] = lang('Invalid from date');
+				}
+			}
 		}
 
 		function get_building_info($id)

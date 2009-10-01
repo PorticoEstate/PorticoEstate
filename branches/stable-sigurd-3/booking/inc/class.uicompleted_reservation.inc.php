@@ -213,11 +213,20 @@ phpgw::import_class('booking.uicommon');
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
 				$reservation['exported'] = $reservation['exported'] ? 'Yes' : 'No';
-				$reservation['reservation_type'] = array(
-					'href' => $this->link_to('show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
-					'label' => lang($reservation['reservation_type']),
-				);
-				
+				if($reservation['reservation_type'] == 'event')
+				{
+					$reservation['reservation_type'] = array(
+						'href' => $this->link_to('edit', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
+						'label' => lang($reservation['reservation_type']),
+					);
+				}
+				else
+				{
+					$reservation['reservation_type'] = array(
+						'href' => $this->link_to('show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
+						'label' => lang($reservation['reservation_type']),
+					);
+				}
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
 				$reservation['customer_type'] = lang($reservation['customer_type']);

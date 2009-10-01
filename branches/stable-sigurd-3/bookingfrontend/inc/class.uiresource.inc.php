@@ -41,7 +41,7 @@
 		public function schedule()
 		{
             $resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding', 'bookingfrontend.uiresource', 'bookingfrontend.uisearch.index');
-			$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $building['id']));
+			$resource['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $resource['building_id'], 'building_name'=>$resource['building_name']));
 
             self::add_javascript('booking', 'booking', 'schedule.js');
             self::render_template('resource_schedule', array('resource' => $resource,));

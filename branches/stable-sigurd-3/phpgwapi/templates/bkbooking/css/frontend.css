@@ -77,7 +77,8 @@ ol#result .header {
     background-color: #eee;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-    padding: .1em 0em .25em .4em
+    padding: .1em 0em .25em .2em;
+    margin-top: .5em;
 }
 ol#result .details {
 }
