@@ -1343,7 +1343,7 @@
 
 			$need_approval = isset($config->config_data['project_approval'])?$config->config_data['project_approval']:'';
 			$supervisor_email = array();
-			if ($supervisor_id && ($need_approval=='yes'))
+			if ($supervisor_id && $need_approval)
 			{
 				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 				$supervisor_email[] = array
@@ -1606,7 +1606,7 @@
 				'lang_key_deliver'					=> lang('key deliver location'),
 				'lang_key_deliver_statustext'		=> lang('Select where to deliver the key'),
 
-				'need_approval'						=> isset($need_approval)?$need_approval:'',
+				'need_approval'						=> $need_approval,
 				'lang_ask_approval'					=> lang('Ask for approval'),
 				'lang_ask_approval_statustext'		=> lang('Check this to send a mail to your supervisor for approval'),
 				'value_approval_mail_address'		=> $supervisor_email,
