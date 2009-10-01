@@ -92,9 +92,17 @@
 				$this->cat_id = phpgw::get_var('cat_id');
 			}
 
+			switch ($this->location)
+			{
+				case '.project.workorder':
+					$cats_app_name = 'property.project';
+					break;
+					default:
+					$cats_app_name = "property{$this->location}";
+			}
 
 			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= "property{$this->location}";
+			$this->cats->app_name		= $cats_app_name;
 			$this->dateformat 			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 

@@ -46,6 +46,10 @@
 		var $order;
 		var $cat_id;
 		var $location_info = array();
+		protected $event_functions = array
+		(
+			'send_sms'	=> 'send SMS'
+		);
 	
 		function __construct($session=false)
 		{
@@ -410,15 +414,30 @@
 
 		public function get_action($selected = '')
 		{
-			$action_object					= CreateObject('property.socategory');
+/*			$action_object					= CreateObject('property.socategory');
 			$action_object->get_location_info('event_action',false);
 			$values					= $action_object->read(array('allrows'=> true));
-
+*/
 			$list = array(0 => lang('none'));
+/*
 			foreach($values as $entry)
 			{
 				$list[$entry['id']] = $entry['name'];
 			}
+*/
+			$list = array_merge($list,$this->event_functions);
+
 			return $this->sbox->getArrayItem('values[action]', $selected, $list, true);
+		}
+		
+		protected function send_sms()
+		{
+			$data = array
+			(
+				'p_num_text'	=> 'xxxxxxxx',//number
+				'message'		=> 'dette er en melding'
+			);
+
+			execMethod('sms.bosms.send_sms', $data);
 		}
 	}

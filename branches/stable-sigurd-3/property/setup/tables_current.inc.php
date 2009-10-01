@@ -510,7 +510,8 @@
 				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
 				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'paid_percent' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0)
+				'paid_percent' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0),
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1102,7 +1103,7 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'location_item_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'attrib_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => true),
+				'attrib_id' => array('type' => 'varchar','precision' => 50,'default' => '0','nullable' => true),
 				'responsible_id' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'action_id' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'descr' => array('type' => 'text','nullable' => True),

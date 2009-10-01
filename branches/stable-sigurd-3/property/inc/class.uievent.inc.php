@@ -418,7 +418,7 @@
 			}
 
 			$location	= phpgw::get_var('location');
-			$attrib_id	= phpgw::get_var('attrib_id', 'int');
+			$attrib_id	= phpgw::get_var('attrib_id');
 			$item_id	= phpgw::get_var('item_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
@@ -435,6 +435,7 @@
 				$values['attrib_id']	=  $attrib_id;
 				$values['item_id']		=  $item_id;
 				$attrib = $this->custom->get('property', $location, $attrib_id);
+				$field_name = $attrib ? $attrib['column_name'] : $attrib_id;
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
@@ -444,11 +445,11 @@
 					}
 					if(!isset($values['responsible']) || !$values['responsible'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
+		//				$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
 					}
 					if(!isset($values['action']) || !$values['action'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select an action'));									
+		//				$receipt['error'][]=array('msg'=>lang('Please select an action'));									
 					}
 					
 /*					if(isset($values['repeat_day']))
@@ -468,9 +469,9 @@
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->save($values,$action);
-
-						$js = "opener.document.form.{$attrib['column_name']}.value = '{$receipt['id']}';\n";
-						$js .= "opener.document.form.{$attrib['column_name']}_descr.value = '{$values['descr']}';\n";
+						
+						$js = "opener.document.form.{$field_name}.value = '{$receipt['id']}';\n";
+						$js .= "opener.document.form.{$field_name}_descr.value = '{$values['descr']}';\n";
 
 						if (isset($values['save']) && $values['save'])
 						{
@@ -489,8 +490,8 @@
 				else if ((isset($values['delete']) && $values['delete']))
 				{
 						$attrib = $this->custom->get('property', $location, $attrib_id);
-						$js = "opener.document.form.{$attrib['column_name']}.value = '';\n";
-						$js .= "opener.document.form.{$attrib['column_name']}_descr.value = '';\n";
+						$js = "opener.document.form.{$field_name}.value = '';\n";
+						$js .= "opener.document.form.{$field_name}_descr.value = '';\n";
 						if($this->delete($id))
 						{
 							$GLOBALS['phpgw']->js->add_event('load', $js);

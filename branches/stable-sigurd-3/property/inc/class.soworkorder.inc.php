@@ -35,6 +35,8 @@
 	class property_soworkorder
 	{
 
+		var $total_records = 0;
+
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -495,7 +497,7 @@
 				$sql2 = 'SELECT count(*) FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('count');//$this->db->f('0');
 			}
 			else
 			{
@@ -594,6 +596,7 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'cat_id'				=> $this->db->f('category'),
+					'event_id'				=> $this->db->f('event_id'),
 					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
 				);
 			}
@@ -841,13 +844,14 @@
 				$workorder['charge_tenant'],
 				$this->account,
 				$workorder['ecodimb'],
-				$workorder['cat_id']
+				$workorder['cat_id'],
+				$workorder['event_id']
 			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,event_id $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -953,7 +957,8 @@
 				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
 				'ecodimb'		=> $workorder['ecodimb'],
-				'category'		=> $workorder['cat_id']
+				'category'		=> $workorder['cat_id'],
+				'event_id'		=> $workorder['event_id']
 			);
 
 			if($workorder['status'] == 'closed')

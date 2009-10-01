@@ -808,8 +808,8 @@
 		function initiate_event_lookup($data)
 		{
 			$event = array();
-			$event['name'] = $data['name'];
-			$event['event_name'] = $data['event_name']; // Human readable
+			$event['name'] = $data['name']; // attribute name
+			$event['event_name'] = $data['event_name']; // Human readable description
 			if( isset($data['type']) && $data['type']=='view')
 			{
 				if(!isset($data['event']) || !$data['event'])
@@ -838,20 +838,22 @@
 				$event['warning']			= lang('Warning: the record has to be saved in order to plan an event');
 			}
 
-			if(isset($event['value']) && $event['value'])
+			if(isset($data['event_id']) && $data['event_id'])
 			{
-				$event_object = execMethod('property.soevent.read_single', $event['value']);
-				$event['descr']			= $event_object['descr'];
-				$event['enabled']			= $event_object['enabled'] ? lang('yes') : lang('no');
-				$event['lang_enabled']		= lang('enabled');
+				$event['value']			= $data['event_id'];
+				$event_info 			= execMethod('property.soevent.read_single', $data['event_id']);
+				$event['descr']			= $event_info['descr'];
+				$event['enabled']		= $event_info['enabled'] ? lang('yes') : lang('no');
+				$event['lang_enabled']	= lang('enabled');
 
-				$id = "property{$data['location']}::{$data['item_id']}::{$event['id']}";
-				$job = execMethod('phpgwapi.asyncservice.read', $id);
+				$job_id					= "property{$data['location']}::{$data['item_id']}::{$data['name']}";
+				$job					= execMethod('phpgwapi.asyncservice.read', $job_id);
 
-				$event['next']				= $GLOBALS['phpgw']->common->show_date($job[$id]['next'],$dateformat);
+				$event['next']			= $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'],$dateformat);
 				$event['lang_next_run']	= lang('next run');
-				unset($event_object);
-				unset($id);
+
+				unset($event_info);
+				unset($job_id);
 				unset($job);
 			}
 
@@ -859,7 +861,7 @@
 			(
 				'menuaction'	=> 'property.uievent.edit',
 				'location'		=> $data['location'],
-				'attrib_id'		=> $event['id'],
+				'attrib_id'		=> $event['name'],
 				'item_id'		=> isset($event['item_id']) ? $event['item_id'] : '',
 				'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
 			);
