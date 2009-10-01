@@ -50,16 +50,18 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			$type = phpgw::get_var('type');	
+			$type = phpgw::get_var('type');
 			switch($type)
 			{
 				case 'contracts_part': 						// Contracts for this party
-					$filters = array('party_id' => phpgw::get_var('party_id'));
+					$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
 					break;
 				case 'contracts_for_executive_officer': 	// Contracts for this executive officer
 					$filters = array('executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']);
 					break;
-				case 'ending_contracts' OR 'ended_contracts' OR 'last_edited':					
+				case 'ending_contracts':
+				case 'ended_contracts':
+				case 'last_edited':					
 					// Queries that depend on areas of responsibility
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
@@ -95,7 +97,7 @@
 				default:
 					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
 			}
-
+			
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
 			

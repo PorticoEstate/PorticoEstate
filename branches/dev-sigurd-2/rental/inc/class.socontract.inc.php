@@ -138,6 +138,7 @@ class rental_socontract extends rental_socommon
 		 * the end date is smaller than the target date
 		 */
 		if(isset($filters['contract_status']) && $filters['contract_status'] != 'all'){	
+			
 			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
 			{
 				$ts_query = strtotime($this->marshal($filters['status_date_hidden'],'int')); // target timestamp specified by user
@@ -157,7 +158,7 @@ class rental_socontract extends rental_socommon
 					$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
 					break;
 				case 'ended':
-					$filter_clauses[] = "contract.date_end < {$ts_query}'" ;
+					$filter_clauses[] = "contract.date_end < {$ts_query}" ;
 					break;
 			}
 		}
