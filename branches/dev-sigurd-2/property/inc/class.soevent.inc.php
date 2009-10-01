@@ -27,6 +27,11 @@
  	* @version $Id$
 	*/
 
+	/*
+	 * Import the datetime class for date processing
+	 */
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -296,5 +301,148 @@
 			}
 			return false;
 		}
-	}
 
+		//FIXME adapt from calendar	
+		function list_events($startYear,$startMonth,$startDay,$endYear=0,$endMonth=0,$endDay=0,$extra='',$tz_offset=0,$owner_id=0)
+		{
+			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
+		
+			$user_where = ' AND (phpgw_cal_user.cal_login in (';
+			if($owner_id)
+			{
+				$user_where .= implode(',',$owner_id);
+			}
+			else
+			{
+				$user_where .= $this->account;
+			}
+			$member_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
+			@reset($member_groups);
+			foreach ($member_groups as $key => $group_info)
+			{
+				$member[] = $group_info->id;		
+			}
+
+			@reset($member);
+	//		$user_where .= ','.implode(',',$member);
+			$user_where .= ')) ';
+
+
+			if($this->debug)
+			{
+				echo '<!-- '.$user_where.' -->'."\n";
+			}
+
+			$startDate = 'AND ( ( (phpgw_cal.datetime >= '.$datetime.') ';
+
+			$endDate = '';
+			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
+			{
+				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
+				$endDate .= 'AND (phpgw_cal.edatetime <= '.$edatetime.') ) '
+					. 'OR ( (phpgw_cal.datetime <= '.$datetime.') '
+					. 'AND (phpgw_cal.edatetime >= '.$edatetime.') ) '
+					. 'OR ( (phpgw_cal.datetime >= '.$datetime.') '
+					. 'AND (phpgw_cal.datetime <= '.$edatetime.') '
+					. 'AND (phpgw_cal.edatetime >= '.$edatetime.') ) '
+					. 'OR ( (phpgw_cal.datetime <= '.$datetime.') '
+					. 'AND (phpgw_cal.edatetime >= '.$datetime.') '
+					. 'AND (phpgw_cal.edatetime <= '.$edatetime.') ';
+			}
+			$endDate .= ') ) ';
+
+			$order_by = 'ORDER BY phpgw_cal.datetime ASC, phpgw_cal.edatetime ASC, phpgw_cal.priority ASC';
+			if($this->debug)
+			{
+				echo "SQL : ".$user_where.$startDate.$endDate.$extra."<br />\n";
+			}
+			return $this->get_event_ids(False,$user_where.$startDate.$endDate.$extra.$order_by);
+		}
+
+
+		function list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id=0)
+		{
+			$user_timezone = phpgwapi_datetime::user_timezone();
+
+			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
+			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
+			$sql = "AND (phpgw_cal.cal_type='M') "
+				. 'AND (phpgw_cal_user.cal_login IN (';
+			if($owner_id)
+			{
+				if(is_array($owner_id))
+				{
+					$ids = $owner_id;
+				}
+				else
+				{
+					$ids[] = $owner_id;
+				}
+			}
+			else
+			{
+				$ids =  (!$this->is_group ? array($this->owner) : $this->g_owner);
+			}
+
+			$sql .= (is_array($ids) && count($ids) ? implode(',', $ids) : 0);
+
+			$sql .= ') AND ((phpgw_cal_repeats.recur_enddate >= '.$starttime.') OR (phpgw_cal_repeats.recur_enddate=0))) '
+				. (strpos($this->filter,'private')?'AND phpgw_cal.is_public=0 ':'')
+				. ($this->cat_id?"AND phpgw_cal.category like '%".$this->cat_id."%' ":'')
+				. 'ORDER BY phpgw_cal.datetime ASC, phpgw_cal.edatetime ASC, phpgw_cal.priority ASC';
+
+			if($this->debug)
+			{
+				echo '<!-- SO list_repeated_events : SQL : '.$sql.' -->'."\n";
+			}
+
+			return $this->get_event_ids(True,$sql);
+		}
+
+		function get_event_ids($search_repeats=False,$extra='')
+		{
+			$from = $where = ' ';
+			if($search_repeats)
+			{
+				$from  = ', phpgw_cal_repeats ';
+				$where = 'AND (phpgw_cal_repeats.cal_id = phpgw_cal.cal_id) ';
+			}
+
+			$sql = 'SELECT DISTINCT phpgw_cal.cal_id,'
+					. 'phpgw_cal.datetime,phpgw_cal.edatetime,'
+					. 'phpgw_cal.priority '
+					. 'FROM phpgw_cal LEFT JOIN phpgw_cal_user on (phpgw_cal_user.cal_id = phpgw_cal.cal_id) '
+					. $from
+					. 'WHERE (phpgw_cal_user.cal_id = phpgw_cal.cal_id) '
+					. $where . $extra;
+	
+			if($this->debug)
+			{
+				echo "FULL SQL : ".$sql."<br />\n";
+			}
+		
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$retval = array();
+			if($this->_db->num_rows() == 0)
+			{
+				if($this->debug)
+				{
+					echo "No records found!<br />\n";
+				}
+				return $retval;
+			}
+	
+			while($this->_db->next_record())
+			{
+				$retval[] = intval($this->_db->f('cal_id'));
+			}
+			if($this->debug)
+			{
+				echo "Records found!<br />\n";
+			}
+			return $retval;
+		}
+
+
+	}

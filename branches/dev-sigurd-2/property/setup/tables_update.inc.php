@@ -3763,8 +3763,12 @@
 	$test[] = '0.9.17.571';
 	function property_upgrade0_9_17_571()
 	{
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_workorder');
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','event_id',array('type' => 'int','precision' => 4,'nullable' => True));
+		if(isset($metadata['event_id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','event_id',array('type' => 'int','precision' => 4,'nullable' => True));
+		}
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_event','attrib_id_', array('type' => 'varchar','precision' => 50,'default' => '0','nullable' => true));
 		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_event SET attrib_id_ = attrib_id');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_event',array(),'attrib_id');

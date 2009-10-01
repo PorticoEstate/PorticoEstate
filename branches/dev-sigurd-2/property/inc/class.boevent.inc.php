@@ -440,4 +440,175 @@
 
 			execMethod('sms.bosms.send_sms', $data);
 		}
+
+		function store_to_cache($params)
+		{
+			if(!is_array($params))
+			{
+				return False;
+			}
+
+			$syear = $params['syear'];
+			$smonth = $params['smonth'];
+			$sday = $params['sday'];
+			$eyear = (isset($params['eyear'])?$params['eyear']:0);
+			$emonth = (isset($params['emonth'])?$params['emonth']:0);
+			$eday = (isset($params['eday'])?$params['eday']:0);
+			$owner_id = (isset($params['owner'])?$params['owner']:0);
+			if($owner_id==0 && $this->is_group)
+			{
+				unset($owner_id);
+				$owner_id = $this->g_owner;
+				if($this->debug)
+				{
+					echo '<!-- owner_id in ('.implode($owner_id,',').') -->'."\n";
+				}
+			}
+			
+			if(!$eyear && !$emonth && !$eday)
+			{
+				$edate = mktime(23,59,59,$smonth + 1,$sday + 1,$syear);
+				$eyear = date('Y',$edate);
+				$emonth = date('m',$edate);
+				$eday = date('d',$edate);
+			}
+			else
+			{
+				if(!$eyear)
+				{
+					$eyear = $syear;
+				}
+				if(!$emonth)
+				{
+					$emonth = $smonth + 1;
+					if($emonth > 12)
+					{
+						$emonth = 1;
+						$eyear++;
+					}
+				}
+				if(!$eday)
+				{
+					$eday = $sday + 1;
+				}
+				$edate = mktime(23,59,59,$emonth,$eday,$eyear);
+			}
+			
+			if($this->debug)
+			{
+				echo '<!-- Start Date : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
+				echo '<!-- End   Date : '.sprintf("%04d%02d%02d",$eyear,$emonth,$eday).' -->'."\n";
+			}
+
+			if($owner_id)
+			{
+				$cached_event_ids = $this->so->list_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id);
+				$cached_event_ids_repeating = $this->so->list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id);
+			}
+			else
+			{
+				$cached_event_ids = $this->so->list_events($syear,$smonth,$sday,$eyear,$emonth,$eday);
+				$cached_event_ids_repeating = $this->so->list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday);
+			}
+
+			$c_cached_ids = count($cached_event_ids);
+			$c_cached_ids_repeating = count($cached_event_ids_repeating);
+
+			if($this->debug)
+			{
+				echo '<!-- events cached : '.$c_cached_ids.' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
+				echo '<!-- repeating events cached : '.$c_cached_ids_repeating.' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
+			}
+
+			$this->cached_events = array();
+			
+			if($c_cached_ids == 0 && $c_cached_ids_repeating == 0)
+			{
+				return;
+			}
+
+			if($c_cached_ids)
+			{
+				for($i=0;$i<$c_cached_ids;$i++)
+				{
+					$event = $this->so->read_entry($cached_event_ids[$i]);
+					$startdate = intval(date('Ymd',$this->maketime($event['start'])));
+					$enddate = intval(date('Ymd',$this->maketime($event['end'])));
+					$this->cached_events[$startdate][] = $event;
+					if($startdate != $enddate)
+					{
+						$start['year'] = intval(substr($startdate,0,4));
+						$start['month'] = intval(substr($startdate,4,2));
+						$start['mday'] = intval(substr($startdate,6,2));
+						for($j=$startdate,$k=0;$j<=$enddate;$k++,$j=intval(date('Ymd',mktime(0,0,0,$start['month'],$start['mday'] + $k,$start['year']))))
+						{
+							$c_evt_day = 0;
+							if(isset($this->cached_events[$j]) && is_array($this->cached_events[$j]))
+							{
+								$c_evt_day = count($this->cached_events[$j]);
+							}
+
+							if($this->debug)
+							{
+								echo 'Date: '.$j.' Count : '.$c_evt_day."\n";
+							}
+							if(!isset($this->cached_events[$j][$c_evt_day])
+								||$this->cached_events[$j][$c_evt_day]['id'] != $event['id'])
+							{
+								if($this->debug)
+								{
+									echo 'Adding Event for Date: '.$j."\n";
+								}
+								$this->cached_events[$j][] = $event;
+							}
+						}
+					}
+				}
+			}
+
+			$this->repeating_events = array();
+			if($c_cached_ids_repeating)
+			{
+				for($i=0;$i<$c_cached_ids_repeating;$i++)
+				{
+					$this->repeating_events[$i] = $this->so->read_entry($cached_event_ids_repeating[$i]);
+					if($this->debug)
+					{
+						echo '<!-- Cached Events ID: '.$cached_event_ids_repeating[$i].' ('.sprintf("%04d%02d%02d",$this->repeating_events[$i]['start']['year'],$this->repeating_events[$i]['start']['month'],$this->repeating_events[$i]['start']['mday']).') -->'."\n";
+					}
+				}
+//				$edate -= phpgwapi_datetime::user_timezone();
+//				for($date=mktime(0,0,0,$smonth,$sday,$syear) - phpgwapi_datetime::tz_offset;$date<=$edate;$date += 86400)
+				for($date=mktime(0,0,0,$smonth,$sday,$syear);$date<=$edate;$date += phpgwapi_datetime::SECONDS_IN_DAY)
+				{
+					if($this->debug)
+					{
+//						$search_date = $GLOBALS['phpgw']->common->show_date($date,'Ymd');
+						$search_date = date('Ymd',$date);
+						echo '<!-- Calling check_repeating_events('.$search_date.') -->'."\n";
+					}
+					$this->check_repeating_events($date);
+					if($this->debug)
+					{
+						echo '<!-- Total events found matching '.$search_date.' = '.count($this->cached_events[$search_date]).' -->'."\n";
+						for($i=0;$i<count($this->cached_events[$search_date]);$i++)
+						{
+							echo '<!-- Date: '.$search_date.' ['.$i.'] = '.$this->cached_events[$search_date][$i]['id'].' -->'."\n";
+						}
+					}
+				}
+			}
+			$retval = array();
+			for($j=date('Ymd',mktime(0,0,0,$smonth,$sday,$syear)),$k=0;$j<=date('Ymd',mktime(0,0,0,$emonth,$eday,$eyear));$k++,$j=date('Ymd',mktime(0,0,0,$smonth,$sday + $k,$syear)))
+			{
+				if(isset($this->cached_events[$j]) && is_array($this->cached_events[$j]))
+				{
+					$retval[$j] = $this->cached_events[$j];
+				}
+			}
+			return $retval;
+//			return $this->cached_events;
+		}
+
+
 	}
