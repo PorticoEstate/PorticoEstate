@@ -307,7 +307,7 @@
 		{
 			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
 		
-			$user_where = ' AND (phpgw_cal_user.cal_login in (';
+			$user_where = ' AND (fm_event.user_id in (';
 			if($owner_id)
 			{
 				$user_where .= implode(',',$owner_id);
@@ -333,25 +333,25 @@
 				echo '<!-- '.$user_where.' -->'."\n";
 			}
 
-			$startDate = 'AND ( ( (phpgw_cal.datetime >= '.$datetime.') ';
+			$startDate = 'AND ( ( (fm_event.start_date >= '.$datetime.') ';
 
 			$endDate = '';
 			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
 			{
 				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
-				$endDate .= 'AND (phpgw_cal.edatetime <= '.$edatetime.') ) '
-					. 'OR ( (phpgw_cal.datetime <= '.$datetime.') '
-					. 'AND (phpgw_cal.edatetime >= '.$edatetime.') ) '
-					. 'OR ( (phpgw_cal.datetime >= '.$datetime.') '
-					. 'AND (phpgw_cal.datetime <= '.$edatetime.') '
-					. 'AND (phpgw_cal.edatetime >= '.$edatetime.') ) '
-					. 'OR ( (phpgw_cal.datetime <= '.$datetime.') '
-					. 'AND (phpgw_cal.edatetime >= '.$datetime.') '
-					. 'AND (phpgw_cal.edatetime <= '.$edatetime.') ';
+				$endDate .= 'AND (fm_event.end_date <= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date <= '.$datetime.') '
+					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date >= '.$datetime.') '
+					. 'AND (fm_event.start_date <= '.$edatetime.') '
+					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date <= '.$datetime.') '
+					. 'AND (fm_event.end_date >= '.$datetime.') '
+					. 'AND (fm_event.end_date <= '.$edatetime.') ';
 			}
 			$endDate .= ') ) ';
 
-			$order_by = 'ORDER BY phpgw_cal.datetime ASC, phpgw_cal.edatetime ASC, phpgw_cal.priority ASC';
+			$order_by = 'ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 			if($this->debug)
 			{
 				echo "SQL : ".$user_where.$startDate.$endDate.$extra."<br />\n";
@@ -366,76 +366,38 @@
 
 			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
 			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
-			$sql = "AND (phpgw_cal.cal_type='M') "
-				. 'AND (phpgw_cal_user.cal_login IN (';
-			if($owner_id)
-			{
-				if(is_array($owner_id))
-				{
-					$ids = $owner_id;
-				}
-				else
-				{
-					$ids[] = $owner_id;
-				}
-			}
-			else
-			{
-				$ids =  (!$this->is_group ? array($this->owner) : $this->g_owner);
-			}
-
-			$sql .= (is_array($ids) && count($ids) ? implode(',', $ids) : 0);
-
-			$sql .= ') AND ((phpgw_cal_repeats.recur_enddate >= '.$starttime.') OR (phpgw_cal_repeats.recur_enddate=0))) '
-				. (strpos($this->filter,'private')?'AND phpgw_cal.is_public=0 ':'')
-				. ($this->cat_id?"AND phpgw_cal.category like '%".$this->cat_id."%' ":'')
-				. 'ORDER BY phpgw_cal.datetime ASC, phpgw_cal.edatetime ASC, phpgw_cal.priority ASC';
-
-			if($this->debug)
-			{
-				echo '<!-- SO list_repeated_events : SQL : '.$sql.' -->'."\n";
-			}
+			$sql = '(fm_event.repeat_type > 0) '
+				. 'AND ((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0))) '
+				. 'ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 
 			return $this->get_event_ids(True,$sql);
 		}
 
 		function get_event_ids($search_repeats=False,$extra='')
 		{
-			$from = $where = ' ';
+			$where = 'WHERE';
+			$repeat = '';
 			if($search_repeats)
 			{
-				$from  = ', phpgw_cal_repeats ';
-				$where = 'AND (phpgw_cal_repeats.cal_id = phpgw_cal.cal_id) ';
+				$repeat = 'WHERE (fm_event.repeat_type > 0) ';
+				$where = 'AND';
 			}
 
-			$sql = 'SELECT DISTINCT phpgw_cal.cal_id,'
-					. 'phpgw_cal.datetime,phpgw_cal.edatetime,'
-					. 'phpgw_cal.priority '
-					. 'FROM phpgw_cal LEFT JOIN phpgw_cal_user on (phpgw_cal_user.cal_id = phpgw_cal.cal_id) '
-					. $from
-					. 'WHERE (phpgw_cal_user.cal_id = phpgw_cal.cal_id) '
-					. $where . $extra;
-	
-			if($this->debug)
-			{
-				echo "FULL SQL : ".$sql."<br />\n";
-			}
-		
+			$sql = 'SELECT DISTINCT fm_event.id,'
+					. 'fm_event.start_date,fm_event.end_date'
+					. "FROM fm_event {$repeat} {$where} {$extra}";
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$retval = array();
 			if($this->_db->num_rows() == 0)
 			{
-				if($this->debug)
-				{
-					echo "No records found!<br />\n";
-				}
 				return $retval;
 			}
 	
 			while($this->_db->next_record())
 			{
-				$retval[] = intval($this->_db->f('cal_id'));
+				$retval[] = intval($this->_db->f('id'));
 			}
 			if($this->debug)
 			{
