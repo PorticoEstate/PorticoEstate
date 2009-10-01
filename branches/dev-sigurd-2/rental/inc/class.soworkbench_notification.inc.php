@@ -23,19 +23,47 @@ class rental_soworkbench_notification extends rental_socommon
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
-		//TODO filter account id
+		$clauses = array('1=1');
 		
-	$sql = "SELECT rnw.id as id, rc.location_id, rn.account_id, rn.message, rn.contract_id, rn.recurrence, rnw.date, rcr.title, rn.id as originated_from, rc.id as contract_id
-					FROM rental_notification_workbench rnw 
-					LEFT JOIN rental_notification rn ON (rnw.notification_id = rn.id)
-					LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
-					LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
-					WHERE 
-						( rnw.account_id = $account_id 
-						OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
-						AND rnw.dismissed = 'FALSE'
-					ORDER BY rnw.date ASC";
-	return $sql;
+		//Add columns to this array to include them in the query
+		$columns = array();
+		
+		// Default is sorting on date ascending
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": 'ORDER BY rnw.date ASC';
+		
+		if(isset($filters['account_id'])){
+			$account_id  =   $this->marshal($filters['account_id'],'int');
+		}
+		
+		if($return_count) // We should only return a count
+		{
+			$cols = 'COUNT(DISTINCT(contract.id)) AS count';
+		}
+		else
+		{
+			// ID and date from workbench table
+			$columns[] = 'rnw.id as id, rnw.date';
+			// The location (responsibility) and contract id from contract 
+			$columns[] = 'rc.location_id, rc.id as contract_id';
+			// The id for the notification origin, the account id, the contract id, the message, and the recurrence
+			$columns[] = 'rn.id as originated_from, rn.account_id, rn.message, rn.contract_id, rn.recurrence';
+			// The title of the field of responsibility for this notification (through contract)
+			$columns[] = 'rcr.title';
+			$cols = implode(',',$columns);
+		}
+		
+		$sql = "SELECT {$cols}
+				FROM rental_notification_workbench rnw 
+				{$this->left_join} rental_notification rn ON (rnw.notification_id = rn.id)
+				{$this->left_join} rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
+				{$this->left_join} rental_contract rc ON(rc.id = rn.contract_id)
+				WHERE 
+					( rnw.account_id = $account_id 
+					OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
+					AND rnw.dismissed = 'FALSE'
+				{$order}";
+		return $sql;
 	}
 	
 	protected function populate(int $notification_id, &$notification)

@@ -68,13 +68,13 @@ class rental_soparty extends rental_socommon
                     $like_clauses[] = "party.place $this->like $like_pattern";
                     break;
                 case "ssn":
-                    $like_clauses[] = "party.personal_identification_number = $search_for";
+                    $like_clauses[] = "party.personal_identification_number $this->like $like_pattern";
                     break;
                 case "organisation_number":
-                    $like_clauses[] = "party.organisation_number = $search_for";
+                    $like_clauses[] = "party.organisation_number $this->like $like_pattern";
                     break;
                 case "account":
-                    $like_clauses[] = "party.agresso_id = $search_for";
+                    $like_clauses[] = "party.agresso_id $this->like $like_pattern";
 				case "all":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
                     $like_clauses[] = "party.last_name $this->like $like_pattern";
@@ -83,11 +83,11 @@ class rental_soparty extends rental_socommon
                     $like_clauses[] = "party.address_2 $this->like $like_pattern";
                     $like_clauses[] = "party.postal_code $this->like $like_pattern";
                     $like_clauses[] = "party.place $this->like $like_pattern";
-					$like_clauses[] = "party.personal_identification_number = $search_for";
-                    $like_clauses[] = "party.organisation_number = $search_for";
-                    $like_clauses[] = "party.agresso_id = $search_for";
+					$like_clauses[] = "party.personal_identification_number $this->like $like_pattern";
+                    $like_clauses[] = "party.organisation_number $this->like $like_pattern";
+                    $like_clauses[] = "party.agresso_id $this->like $like_pattern";
                     $like_clauses[] = "party.comment $this->like $like_pattern";
-					$like_clauses[] = "party.reskontro = $like_pattern";
+					$like_clauses[] = "party.reskontro $this->like $like_pattern";
 					break;
 			}
 
@@ -105,17 +105,26 @@ class rental_soparty extends rental_socommon
 		if(isset($filters['party_type']))
 		{
 			$party_type = $this->marshal($filters['party_type'],'int');
-            $filter_clauses[] = "SELECT $columns
-					FROM rental_party
-					LEFT JOIN (
-						SELECT party_id, contract_id, location_id FROM rental_contract_party rcp
-						LEFT JOIN (
-							SELECT id, location_id FROM rental_contract
-						) c
-						ON (c.id = rcp.contract_id)
-					) contracts
-					ON (rental_party.id = contracts.party_id OR contracts.contract_id IS NULL)
-					WHERE location_id = $party_type";
+			if(isset($party_type) && $party_type > 0)
+			{
+            	$filter_clauses[] = "contract.location_id = $party_type";
+			}
+		}
+		
+		if(isset($filters['contract_id'])){
+			$contract_id = $this->marshal($filters['contract_id'],'int');
+			if(isset($contract_id) && $contract_id > 0)
+			{
+            	$filter_clauses[] = "c_p.contract_id = $contract_id";
+			}
+		}
+		
+		if(isset($filters['not_contract_id'])){
+			$contract_id = $this->marshal($filters['not_contract_id'],'int');
+			if(isset($contract_id) && $contract_id > 0)
+			{
+            	$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id}) OR c_p.contract_id IS NULL";
+			}
 		}
 
 		if(count($filter_clauses))
@@ -127,7 +136,7 @@ class rental_soparty extends rental_socommon
 
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(rental_party.id)) AS count';
+			$cols = 'COUNT(DISTINCT(party.id)) AS count';
 		}
 		else
 		{
@@ -150,19 +159,19 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.url';
 			$columns[] = 'party.account_number';
 			$columns[] = 'party.reskontro';
-			$columns[] = 'party.location_id';
+			$columns[] = 'party.location_id as org_location_id';
+			$columns[] = 'contract.location_id as resp_location_id';
 			$cols = implode(',',$columns);
 		}
-
-
+				
 		$tables = "rental_party party";
-		//$join_contract_type = 	$this->left_join.' rental_contract_responsibility type ON (type.location_id = contract.location_id)';
-		//$join_parties = $this->left_join.' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
-		//$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
-		//$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
-		//$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited;
-
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+		
+		$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id) 
+							{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
+		
+		$joins = $join_contracts;
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
 
@@ -188,80 +197,6 @@ class rental_soparty extends rental_socommon
 		else
 		{
 			return false;
-		}
-	}
-
-	protected function get_search_conditions($query, $search_option,$table_name, $prefix='')
-	{
-		if($query)
-		{
-			$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
-			switch($search_option){
-				case "id":
-					$like_clauses[] = "$table_name.id = $query";
-					break;
-				case "name":
-					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
-					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
-					$like_clauses[] = "$table_name.company_name $this->like $like_pattern";
-					break;
-				case "address":
-					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
-					$like_clauses[] = "$table_name.address_2 $this->like $like_pattern";
-					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
-					$like_clauses[] = "$table_name.place $this->like $like_pattern";
-					break;
-				case "ssn":
-					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
-					break;
-				case "organisation_number":
-					$like_clauses[] = "$table_name.organisation_number $this->like $like_pattern";
-				case "account":
-					$like_clauses[] = "$table_name.reskontro = $like_pattern";
-				case "all":
-					$like_clauses[] = "$table_name.first_name $this->like $like_pattern";
-					$like_clauses[] = "$table_name.last_name $this->like $like_pattern";
-					$like_clauses[] = "$table_name.address_1 $this->like $like_pattern";
-					$like_clauses[] = "$table_name.comment $this->like $like_pattern";
-					$like_clauses[] = "$table_name.address_2 $this->like $like_pattern";
-					$like_clauses[] = "$table_name.postal_code $this->like $like_pattern";
-					$like_clauses[] = "$table_name.place $this->like $like_pattern";
-					$like_clauses[] = "$table_name.personal_identification_number $this->like $like_pattern";
-					$like_clauses[] = "$table_name.organisation_number = $like_pattern";
-					$like_clauses[] = "$table_name.reskontro = $like_pattern";
-					break;
-			}
-		}
-		if(count($like_clauses) > 0)
-		{
-			return $prefix.' (' . join(' OR ', $like_clauses) . ')';
-		}
-		else
-		{
-			return '';
-		}
-			
-	}
-
-	protected function get_filter_conditions($filters,$table_name, $prefix='')
-	{
-			
-		if(isset($filters['contract_id']))
-		{
-			$filter_clauses[] = "($table_name.contract_id != ".$filters['contract_id']." OR $table_name.contract_id IS NULL)";
-		}
-			
-		if(isset($filters['party_type']) && $filters['party_type'] != 'all')
-		{
-			$filter_clauses[] = "$table_name.location_id = ".$filters['party_type'];
-		}
-		if(count($filter_clauses) > 0)
-		{
-			return $prefix.' '.join(' AND ', $filter_clauses);
-		}
-		else
-		{
-			return '';
 		}
 	}
 
@@ -306,28 +241,6 @@ class rental_soparty extends rental_socommon
             return false;
         }
 	}
-	
-	
-	/**
-	 * Get the parties not involved in this contract
-	 * 
-	 * TODO: make as filter
-	 * 
-	 * @param $contract_id the contract id
-	 * @return  A list of rental_party objects
-	 */
-	public function get_available_parties_for_contract($contract_id)
-	{
-		$sql = "SELECT DISTINCT party_id FROM rental_contract_party WHERE contract_id != $contract_id";
-		$this->db->query($sql);
-		$parties = array();
-		$parties_so = rental_party::get_so();
-		while($this->db->next_record()) { 
-			$party_id = $this->unmarshal($this->db->f('party_id', true), 'int'); 
-			$parties[] = $parties_so->get_single($party_id);
-		}
-		return $parties;
-	}
 
     protected function get_id_field_name()
     {
@@ -335,6 +248,7 @@ class rental_soparty extends rental_socommon
     }
     protected function populate(int $party_id, &$party)
     {
+ 
         if($party == null) {
             $party = new rental_party((int) $party_id);
 

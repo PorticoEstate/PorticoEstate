@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
@@ -28,6 +29,18 @@ class rental_uiparty extends rental_uicommon
 	 */
 	public function query()
 	{
+		// YUI variables for paging and sorting
+		$start_index	= phpgw::get_var('startIndex', 'int');
+		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+		$sort_field		= phpgw::get_var('sort');
+		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+		// Form variables
+		$search_for 	= phpgw::get_var('query');
+		$search_type	= phpgw::get_var('search_option');
+		// Create an empty result set
+		$result_objects = array();
+		$result_count = 0;
+		
 		//Create an empty result set
 		$parties = array();
 		
@@ -43,56 +56,22 @@ class rental_uiparty extends rental_uicommon
 		switch($type)
 		{
 			case 'included_parties': // ... get all parties incolved in the contract
-				if(isset($contract))
-				{
-					$parties = $contract->get_parties();
-				}
+				$filters = array('contract_id' => $contract_id);
 				break;
 			case 'not_included_parties': // ... get all parties not included in the contract
-				$parties = rental_party::get_all(
-				phpgw::get_var('startIndex'),
-				phpgw::get_var('results'),
-				phpgw::get_var('sort'),
-				phpgw::get_var('dir'),
-				phpgw::get_var('query'),
-				phpgw::get_var('search_option'),
-				array(
-					'party_type' => phpgw::get_var('party_type'),
-					'contract_id' => $contract_id
-				)
-				);
+				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
-			default:	// ... get all parties of a given type
-				$parties = rental_party::get_all(
-					phpgw::get_var('startIndex'),
-					phpgw::get_var('results'),
-					phpgw::get_var('sort'),
-					phpgw::get_var('dir'),
-					phpgw::get_var('query'),
-					phpgw::get_var('search_option'),
-					array(
-						'party_type' => phpgw::get_var('party_type')
-					),
-					false
-				);
-				$count = rental_party::get_all(
-					phpgw::get_var('startIndex'),
-					phpgw::get_var('results'),
-					phpgw::get_var('sort'),
-					phpgw::get_var('dir'),
-					phpgw::get_var('query'),
-					phpgw::get_var('search_option'),
-					array(
-						'party_type' => phpgw::get_var('party_type')
-					),
-					true
-				);
+			default: // ... get all parties of a given type
+				$filters = array('party_type' => phpgw::get_var('party_type'));
 				break;
 		}
 		
+		$result_objects = rental_soparty::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+		$result_count = rental_soparty::get_instance()->get_count($search_for, $search_type, $filters);
+		
 		// Create an empty row set
 		$rows = array();
-		foreach ($parties as $party) {
+		foreach ($result_objects as $party) {
 			if(isset($party))
 			{
 				if($party->has_permission(PHPGW_ACL_READ))
@@ -104,7 +83,7 @@ class rental_uiparty extends rental_uicommon
 
 		}
 		// ... add result data
-		$party_data = array('results' => $rows, 'total_records' => $count);
+		$party_data = array('results' => $rows, 'total_records' => $result_count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			

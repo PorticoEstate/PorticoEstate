@@ -95,6 +95,7 @@ every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
+export_to	rental	no	Eksporter
 external	rental	no	Eksterne kontraktsparter
 fax	rental	no	Faks
 field_of_responsibility	rental	no	Ansvarsområde

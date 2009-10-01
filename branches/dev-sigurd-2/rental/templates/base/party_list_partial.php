@@ -130,10 +130,16 @@
 			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 		</select>
 	</fieldset>
+	
+	
 </form>
 <?php
 	}
 ?>
-<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
+<fieldset>
+	<h3><?php echo lang('export') ?></h3>
+	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+</fieldset>
+
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
