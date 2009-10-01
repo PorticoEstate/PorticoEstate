@@ -155,5 +155,25 @@ class rental_sobilling extends rental_socommon
 		throw new UnexpectedValueException('Transaction failed.');
 	}
 	
+	/**
+	 * Helper method to check if a period has been billed before.
+	 * 
+	 * @param $contract_type
+	 * @param $billing_term
+	 * @param $year
+	 * @param $month
+	 * @return boolean true if the period has been billed before, false if not.
+	 */
+	public function has_been_billed($contract_type, $billing_term, $year, $month)
+	{
+		$sql = "SELECT COUNT(id) AS count FROM rental_billing WHERE location_id = {$this->marshal($contract_type,'int')} AND term_id = {$this->marshal($billing_term,'int')} AND year = {$this->marshal($year,'int')} AND month = {$this->marshal($month,'int')}";$result = $this->db->query($sql);
+		$result = $this->db->query($sql, __LINE__, __FILE__);
+		if($result && $this->db->next_record())
+		{
+			return ($this->unmarshal($this->db->f('count', true), 'int') > 0);
+		} 
+		return false;
+	}
+	
 }
 ?>

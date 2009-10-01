@@ -83,6 +83,11 @@
 				<td><input type="submit" name="next" value="<?php echo lang('next') ?>"/></td>
 			</tr>
 		</table>
+		<div>&amp;nbsp;</div>
+		<?php echo rental_uicommon::get_page_error($errorMsgs) ?>
+		<?php echo rental_uicommon::get_page_warning($warningMsgs) ?>
+		<?php echo rental_uicommon::get_page_message($infoMsgs) ?>
+		<div>&amp;nbsp;</div>
 	</div>
 </form>
 <?php 

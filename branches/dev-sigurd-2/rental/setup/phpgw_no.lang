@@ -263,6 +263,7 @@ status	rental	no	Status
 sum	rental	no	Sum
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
+the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
 thousands separator	rental	no	Skilletegn for tusen
 t_functions	rental	no	Funksjoner
 title	rental	no	Tittel

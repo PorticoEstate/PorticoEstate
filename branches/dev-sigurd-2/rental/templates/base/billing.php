@@ -72,8 +72,9 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 			</tr>
 		</table>
 		<div>&amp;nbsp;</div>
-		<?php echo rental_uicommon::get_page_error($error) ?>
-		<?php echo rental_uicommon::get_page_message($message) ?>
+		<?php echo rental_uicommon::get_page_error($errorMsgs) ?>
+		<?php echo rental_uicommon::get_page_warning($warningMsgs) ?>
+		<?php echo rental_uicommon::get_page_message($infoMsgs) ?>
 		<div>&amp;nbsp;</div>
 	</div>
 </form>

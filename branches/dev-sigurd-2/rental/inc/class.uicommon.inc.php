@@ -378,6 +378,23 @@
 			}
 		}
 		
+		public static function get_messages($messages, $message_type)
+		{
+			$output = '';
+			if(is_array($messages) && count($messages) > 0) // Array of messages
+			{
+				$output = "<div class=\"{$message_type}\">";
+				foreach($messages as $message)
+				{
+					$output .= "<p class=\"message\">{$message}</p>";
+				}
+				$output .= "</div>";
+			}
+			else if($messages) {
+				$output = "<div class=\"{$message_type}\"><p class=\"message\">{$messages}</p></div>";
+			}
+			return $output;
+		}
 		/**
 		 * Returns a html-formatted error message to display on top of the page.  If
 		 * no error is defined, an empty string is returned.
@@ -385,13 +402,21 @@
 		 * @param $error the error to display
 		 * @return string a html formatted error message
 		 */
-		public static function get_page_error($error)
+		public static function get_page_error($errors)
 		{
-			if ($error) {
-				return '<p class="error">' . $error . '</p>';
-			}
-			
-			return '';
+			return self::get_messages($errors, 'error');
+		}
+		
+		/**
+		 * Returns a html-formatted error message to display on top of the page.  If
+		 * no error is defined, an empty string is returned.
+		 * 
+		 * @param $error the error to display
+		 * @return string a html formatted error message
+		 */
+		public static function get_page_warning($warnings)
+		{
+			return self::get_messages($warnings, 'warning');
 		}
 		
 		/**
@@ -401,11 +426,9 @@
 		 * @param $message the message to display
 		 * @return string a html formatted info message
 		 */
-		public static function get_page_message($message)
+		public static function get_page_message($messages)
 		{
-			if ($message) {
-				return '<p class="info">' . $message . '</p>';
-			}
+			return self::get_messages($messages, 'info');
 		}
 
         /**
