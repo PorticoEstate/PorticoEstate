@@ -231,6 +231,7 @@ reports	rental	no	Rapporter
 reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
 reskontro	rental	no	Reskontronummer
+responsibility	rental	no	Ansvar
 result_unit_number	rental	no	Resultatsenhet
 run by	rental	no	Utført av
 room	rental	no	Rom
@@ -249,6 +250,7 @@ selected_composites	rental	no	Valgte leieobjekter
 selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer
 serial	rental	no	Løpenummer
+service	rental	no	Tjeneste
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
 showing_composite	rental	no	Leieobjekt

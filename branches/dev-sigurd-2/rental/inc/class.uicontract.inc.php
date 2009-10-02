@@ -273,7 +273,7 @@
 			{
 				if(isset($contract_id))
 				{
-					$contract = rental_contract::get($contract_id);
+					$contract = rental_socontract::get_instance()->get_single($contract_id);
 					if(!$contract->has_permission(PHPGW_ACL_EDIT))
 					{
 						unset($contract);
@@ -299,8 +299,10 @@
 					$contract->set_location_id(phpgw::get_var('location_id'));
 					$contract->set_term_id(phpgw::get_var('billing_term'));
 					$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
+					$contract->set_service_id(phpgw::get_var('service_id'));
+					$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
 					
-					if($contract->store())
+					if(rental_socontract::get_instance()->store($contract))
 					{
 						$message = lang('messages_saved_form');
 						$contract_id = $contract->get_id();

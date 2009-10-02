@@ -211,7 +211,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -259,6 +259,8 @@ class rental_socontract extends rental_socommon
 			$contract->set_last_edited_by_current_user($this->unmarshal($this->db->f('edited_on'),'int'));
 			$contract->set_location_id($this->unmarshal($this->db->f('location_id'),'int'));
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
+			$contract->set_service_id($this->unmarshal($this->db->f('service_id'),'string'));
+			$contract->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'),'string'));
 			
 		}
 		
@@ -382,8 +384,10 @@ class rental_socontract extends rental_socommon
 		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
 		$values[] = "comment = ". $this->marshal($contract->get_comment(), 'string');
 		$values[] = "last_updated = ".strtotime('now');
-
-		$result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		$values[] = "service_id = ". $this->marshal($contract->get_service_id(),'string');
+		$values[] = "responsibility_id = ". $this->marshal($contract->get_responsibility_id(),'string');
+		 
+		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		if(isset($result))
 		{
@@ -415,7 +419,7 @@ class rental_socontract extends rental_socommon
 			if($this->db->next_record())
 			{
 				$sql = "UPDATE rental_contract_last_edited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
-				var_dump($sql);
+				//var_dump($sql);
 			} 
 			else
 			{

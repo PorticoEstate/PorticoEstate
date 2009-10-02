@@ -147,6 +147,38 @@
 						?>
 						<br/>
 					</dd>
+					<dt>
+						<label for="service_id"><?php echo lang('service') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="service_id" id="service_id" value="<?php echo $contract->get_service_id(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_service_id();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="responsibility_id"><?php echo lang('responsibility') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="responsibility_id" id="responsibility_id" value="<?php echo $contract->get_responsibility_id(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_responsibility_id();
+						}
+						?>
+					</dd>
 				</dl>
 				<dl class="proplist-col">
 					<dt>

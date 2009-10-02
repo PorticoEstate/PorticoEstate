@@ -103,7 +103,9 @@
 				'created' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
 				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
                 'comment' =>            array('type' => 'text'),
-				'last_updated' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true) // timestamp
+				'last_updated' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
+				'service_id'	=>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true), //Tjeneste
+				'responsibility_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true)	//Ansvar
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -32,6 +32,8 @@
 		protected $comment;
 		protected $last_updated;
 		protected $bill_timestamps; // Keeps the bill timestamps for the contract - not a db property on the contract
+		protected $service_id;
+		protected $responsibility_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -116,6 +118,20 @@
 		}
 		
 		public function get_location_id() { return $this->location_id; }
+		
+		public function set_service_id($service_id)
+		{
+			$this->service_id = $service_id;
+		}
+		
+		public function get_service_id() { return $this->service_id; }
+		
+		public function set_responsibility_id($responsibility_id)
+		{
+			$this->responsibility_id = $responsibility_id;
+		}
+		
+		public function get_responsibility_id() { return $this->responsibility_id; }
 		
 		public function set_term_id(int $term_id)
 		{
@@ -453,7 +469,9 @@
 				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format.' h:i:s A', $this->get_last_edited_by_current_user()): '',
 				'permissions' => $this->get_permission_array(),
 				'payer_id' => $this->get_payer_id(),
-				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : ''
+				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : '',
+				'service_id' => $this->get_service_id(),
+				'responsibility_id' => $this->get_responsibility_id()
 			);
 		}
 		
