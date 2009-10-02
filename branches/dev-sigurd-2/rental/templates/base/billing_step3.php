@@ -4,11 +4,12 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 ?>
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-document.png" /> <?php echo lang('invoice') ?></h1>
 <form action="#" method="post">
+	<input type="hidden" name="id" value="<?php echo $billing_job->get_id() ?>"/>
 	<input type="hidden" name="step" value="3"/>
-	<input type="hidden" name="contract_type" value="<?php echo $contract_type ?>"/>
-	<input type="hidden" name="year" value="<?php echo $contract_type ?>"/>
-	<input type="hidden" name="month" value="<?php echo $month ?>"/>
-	<input type="hidden" name="billing_term" value="<?php echo $billing_term ?>"/>
+	<input type="hidden" name="contract_type" value="<?php echo $billing_job->get_location_id() ?>"/>
+	<input type="hidden" name="year" value="<?php echo $billing_job->get_year() ?>"/>
+	<input type="hidden" name="month" value="<?php echo $billing_job->get_month() ?>"/>
+	<input type="hidden" name="billing_term" value="<?php echo $billing_job->get_billing_term() ?>"/>
 	<div>
 		<table>
 			<tr>
@@ -18,7 +19,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 					foreach($fields as $id => $label)
 					{
-						if($id == $contract_type)
+						if($id == $billing_job->get_location_id())
 						{
 							echo lang($label);
 						}
@@ -28,11 +29,11 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 			</tr>
 			<tr>
 				<td><?php echo lang('year') ?></td>
-				<td><?php echo $year ?></td>
+				<td><?php echo $billing_job->get_year() ?></td>
 			</tr>
 			<tr>
 				<td><?php echo lang('month') ?></td>
-				<td><?php echo lang('month ' . $month . ' capitalized') ?></td>
+				<td><?php echo lang('month ' . $billing_job->get_month() . ' capitalized') ?></td>
 			</tr>
 			<tr>
 				<td>
@@ -42,7 +43,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 					<?php
 					foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 					{
-						if($term_id == $billing_term)
+						if($term_id == $billing_job->get_billing_term())
 						{
 							echo lang($term_title);
 						}
@@ -71,6 +72,19 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 			<tr>
 				<td><?php echo lang('success') ?></td>
 				<td><?php echo $billing_job->is_success() ? lang('yes') : lang('no') ?></td>
+			</tr>
+			<tr>
+				<td>&amp;nbsp;</td>
+				<td>
+					<select name="export_type">
+						<option value="agresso_gl07"><?php echo lang('Agresso GL07') ?></option>
+						<option value="agresso_lg04"><?php echo lang('Agresso LG04') ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>&amp;nbsp;</td>
+				<td><input type="submit" name="generate_export" value="<?php echo lang('Generate export') ?>"/></td>
 			</tr>
 			<tr>
 				<td>&amp;nbsp;</td>

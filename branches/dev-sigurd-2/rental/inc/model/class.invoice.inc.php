@@ -16,12 +16,16 @@
 		protected $timstamp_end; // End date of invoice
 		protected $invoice_price_items;
 		protected $total_sum;
+		protected $total_area;
+		protected $header;
+		protected $account_in; // 'Art' for the income side
+		protected $account_out; // 'Art' for the outlay side
 		protected $composite_names; // From party - not part of invoice db data
 		protected $party_names; // From party - not part of invoice db data
 		
 		public static $so;
 		
-		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum)
+		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out)
 		{
 			$this->id = (int)$id;
 			$this->billing_id = (int)$billing_id;
@@ -30,7 +34,11 @@
 			$this->timestamp_start = (int)$timestamp_start;
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_sum = (float)$total_sum;
+			$this->total_area = (float)$total_area;
 			$this->invoice_price_items = null;
+			$this->header = $header;
+			$this->account_in = $account_in;
+			$this->account_out = $account_out;
 			$this->composite_names = array();
 			$this->party_names = array();
 		}
@@ -101,12 +109,19 @@
 			$invoice_price_items[] = $invoice_price_item;
 		}
 		
-		public function set_total_sum($total_sum)
+		public function set_total_sum(float $total_sum)
 		{
-			$this->total_sum = $total_sum;
+			$this->total_sum = (float)$total_sum;
 		}
 		
 		public function get_total_sum(){ return $this->total_sum; }
+		
+		public function set_total_area(float $total_area)
+		{
+			$this->$total_area = (float)$total_area;
+		}
+		
+		public function get_total_area(){ return $this->total_area; }
 		
 		public function add_composite_name(string $name)
 		{
@@ -116,6 +131,27 @@
 			}
 		}
 		
+		public function set_header($header)
+		{
+			$this->header = $header;
+		}
+	
+		public function get_header(){ return $this->header; }
+		
+		public function set_account_in($account_in)
+		{
+			$this->account_in = $account_in;
+		}
+	
+		public function get_account_in(){ return $this->account_in; }
+			
+		public function set_account_out($account_out)
+		{
+			$this->account_out = $account_out;
+		}
+	
+		public function get_account_out(){ return $this->account_out; }
+
 		public function get_composite_names()
 		{
 			$names = '';
@@ -149,12 +185,13 @@
 				return null;
 			}
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
-			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0);
+			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_invoice_account_out());
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
 			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
 			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			$total_sum = 0;
+			$total_area = 0;
 			foreach($contract_price_items as $contract_price_item)
 			{
 				// We have to find the period the price item applies for on this invoice
@@ -216,8 +253,10 @@
 				rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
 				$invoice->add_invoice_price_item($invoice_price_item);
 				$total_sum += $invoice_price_item->get_total_price();
+				$total_area += $invoice_price_item->get_area();
 			}
 			$invoice->set_total_sum(round($total_sum, $decimals));
+			$invoice->set_total_area($total_area);
 			rental_soinvoice::get_instance()->store($invoice);
 			return $invoice;
 		}

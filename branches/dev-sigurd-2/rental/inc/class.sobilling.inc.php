@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.socommon');
+include_class('rental', 'agresso_gl07', 'inc/model/');
 
 class rental_sobilling extends rental_socommon
 {
@@ -175,5 +176,17 @@ class rental_sobilling extends rental_socommon
 		return false;
 	}
 	
+	public function get_export($billing_job, $export_format)
+	{
+		$exportable;
+		switch($export_format)
+		{
+			case 'agresso_gl07':
+				$exportable = new rental_agresso_gl07($billing_job);
+				break;
+		}
+		return $exportable->get_contents();
+	
+	}
 }
 ?>

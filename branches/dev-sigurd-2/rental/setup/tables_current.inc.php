@@ -300,7 +300,11 @@
 				'timestamp_created'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'timestamp_start'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'timestamp_end'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'total_sum'			=> array('type' => 'float', 'precision' => '8')
+				'total_sum'			=> array('type' => 'float', 'precision' => '8'),
+				'total_area'		=> array('type' => 'float', 'precision' => '8'),
+				'header'			=> array('type' => 'varchar','precision' => '255','nullable' => true),
+				'account_in'		=> array('type' => 'varchar','precision' => '255','nullable' => true),
+				'account_out'		=> array('type' => 'varchar','precision' => '255','nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

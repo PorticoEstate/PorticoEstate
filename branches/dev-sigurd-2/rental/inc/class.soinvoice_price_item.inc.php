@@ -25,12 +25,48 @@ class rental_soinvoice_price_item extends rental_socommon
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
-		throw new Exception("Not implemented");
+		$clauses = array('1=1');
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		if(isset($filters['invoice_id']))
+		{
+			$filter_clauses[] = "invoice_id = {$this->marshal($filters['invoice_id'],'int')}";
+		}
+		if(isset($filters['billing_id']))
+		{
+			$filter_clauses[] = "billing_id = {$this->marshal($filters['billing_id'],'int')}";
+		}
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+		$condition =  join(' AND ', $clauses);
+
+		$tables = "rental_invoice_price_item";
+		$joins = "	{$this->left_join} rental_invoice ON (rental_invoice.id = rental_invoice_price_item.invoice_id)";
+		if($return_count) // We should only return a count
+		{
+			$cols = 'COUNT(DISTINCT(rental_invoice_price_item.id)) AS count';
+		}
+		else
+		{
+			$cols = 'rental_invoice_price_item.id, invoice_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end';
+		}
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": 'ORDER BY rental_invoice_price_item.id ASC';
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
-	protected function populate(int $object_id, &$object)
+	protected function populate(int $price_item_id, &$price_item)
 	{
-		throw new Exception("Not implemented");
+		if($price_item == null)
+		{
+			$price_item = new rental_invoice_price_item(0, $this->db->f('id', true), $this->db->f('invoice_id', true), $this->db->f('title', true), $this->db->f('agresso_id', true), $this->db->f('is_area', true), $this->db->f('price', true), $this->db->f('area', true), $this->db->f('count', true), $this->db->f('date_start', true), $this->db->f('date_end', true));
+			$price_item->set_total_price($this->db->f('total_price', true));
+		}
+		return $price_item;
 	}
 	
 	public function add(&$invoice_price_item)

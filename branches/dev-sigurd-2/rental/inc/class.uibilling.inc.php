@@ -29,25 +29,18 @@ class rental_uibilling extends rental_uicommon
 		$warningMsgs = array();
 		$infoMsgs = array();
 		$step = null; // Used for overriding the user's selection and choose where to go by code
+		
 		// Step 3 - the billing job
-		if(phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
+		if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('generate_export') != null) // User clicked next on step 2
 		{
-			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
-			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
+			if(phpgw::get_var('generate_export') != null)
 			{
-				$billing_start_timestamps = array(); // Billing start timestamps for each of the contracts
-				foreach($contract_ids as $contract_id)
-				{
-					$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
-				}
-				$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps);
+				$billing_job_id = phpgw::get_var('id');
+				$billing_job = rental_sobilling::get_instance()->get_single($billing_job_id);
+				rental_sobilling::get_export($billing_job, phpgw::get_var('export_type'));
 				$data = array
 				(
 					'billing_job' => $billing_job,
-					'contract_type' => phpgw::get_var('contract_type'),
-					'billing_term' => phpgw::get_var('billing_term'),
-					'year' => phpgw::get_var('year'),
-					'month' => phpgw::get_var('month'),
 					'errorMsgs' => $errorMsgs,
 					'warningMsgs' => $warningMsgs,
 					'infoMsgs' => $infoMsgs
@@ -56,22 +49,43 @@ class rental_uibilling extends rental_uicommon
 			}
 			else
 			{
-				$errorMsgs[] = lang('No contracts were selected.');
-				$step = 2; // Go back to step 2
+				$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
+				if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
+				{
+					$billing_start_timestamps = array(); // Billing start timestamps for each of the contracts
+					foreach($contract_ids as $contract_id)
+					{
+						$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
+					}
+					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps);
+					$data = array
+					(
+						'billing_job' => $billing_job,
+						'errorMsgs' => $errorMsgs,
+						'warningMsgs' => $warningMsgs,
+						'infoMsgs' => $infoMsgs
+					);
+					$this->render('billing_step3.php', $data);
+					return;
+				}
+				else
+				{
+					$errorMsgs[] = lang('No contracts were selected.');
+					$step = 2; // Go back to step 2
+				}
 			}
 		}
-		// Step 2
-		else if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
+		// Step 2 - list of contracts that should be billed
+		if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
 			$contract_type = phpgw::get_var('contract_type');
 			$billing_term = phpgw::get_var('billing_term');
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
-			if(rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month))
+			if(rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
 			{
 				// We only give a warning and let the user go to step 2
 				$warningMsgs[] = lang('the period has been billed before.');
-				$errorMsgs = 'Tester ting ja';
 			}
 			$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
 			$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);

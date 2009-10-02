@@ -224,12 +224,36 @@ class rental_socomposite extends rental_socommon
 			"'".$composite->get_custom_place()."'"
 		);
 
-		$q ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
-		$result = $this->db->query($q);
+		$query ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$result = $this->db->query($query);
 
 		$composite_id = $this->db->get_last_insert_id('rental_composite', 'id');
 		$composite->set_id($composite_id);
 		return $composite_id;
+	}
+	
+	/**
+	 * HACK to return the location code for a given contract id. The metod
+	 * could've been more generalized, but the Agresso file format already
+	 * breaks the model of PE..
+	 * 
+	 * @param $contract_id int with id of contract.
+	 * @return string with location code, empty string if not found.
+	 */
+	public function get_building_location_code($contract_id)
+	{
+		$query = "SELECT location_code FROM rental_unit {$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_unit.composite_id) WHERE rental_contract_composite.contract_id = {$contract_id}";
+		$result = $this->db->limit_query($query, 0, __LINE__, __FILE__, 1);
+		
+		if($result && $this->db->next_record()) // Query ok
+		{
+			$location_code = $this->db->f('location_code', true);
+			if($location_code != null && $location_code != '')
+			{
+				return substr(str_replace('-', '', $location_code), 0, 6);
+			}
+		}
+		return '';
 	}
 	
 }

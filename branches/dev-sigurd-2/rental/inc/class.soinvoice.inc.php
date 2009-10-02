@@ -55,7 +55,7 @@ class rental_soinvoice extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, rental_composite.name AS composite_name, rental_party.first_name AS party_first_name, rental_party.last_name AS party_last_name, rental_party.company_name AS party_company_name';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, rental_composite.name AS composite_name, rental_party.first_name AS party_first_name, rental_party.last_name AS party_last_name, rental_party.company_name AS party_company_name';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -66,7 +66,7 @@ class rental_soinvoice extends rental_socommon
 	{
 		if($invoice == null)
 		{
-			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true));
+			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true), $this->db->f('total_area', true), $this->db->f('header', true), $this->db->f('account_in', true), $this->db->f('account_out', true));
 			$invoice->set_party_id($this->unmarshal($this->db->f('party_id'),'int'));
 		}
 		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
@@ -106,9 +106,13 @@ class rental_soinvoice extends rental_socommon
 			$this->marshal($invoice->get_timestamp_created(), 'int'),
 			$this->marshal($invoice->get_timestamp_start(), 'int'),
 			$this->marshal($invoice->get_timestamp_end(), 'int'),
-			$this->marshal($invoice->get_total_sum(), 'float')
+			$this->marshal($invoice->get_total_sum(), 'float'),
+			$this->marshal($invoice->get_total_area(), 'float'),
+			$this->marshal($invoice->get_header(), 'string'),
+			$this->marshal($invoice->get_account_in(), 'string'),
+			$this->marshal($invoice->get_account_out(), 'string')
 		);
-		$query ="INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum) VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -128,7 +132,11 @@ class rental_soinvoice extends rental_socommon
 			'timestamp_created = '	. $this->marshal($invoice->get_timestamp_created(), 'int'),
 			'timestamp_start = '	. $this->marshal($invoice->get_timestamp_start(), 'int'),
 			'timestamp_end = '		. $this->marshal($invoice->get_timestamp_end(), 'int'),
-			'total_sum = '			. $this->marshal($invoice->get_total_sum(), 'float')
+			'total_sum = '			. $this->marshal($invoice->get_total_sum(), 'float'),
+			'total_area = '			. $this->marshal($invoice->get_total_area(), 'float'),
+			'header = '				. $this->marshal($invoice->get_header(), 'string'),
+			'account_in = '			. $this->marshal($invoice->get_account_in(), 'string'),
+			'account_out = '		. $this->marshal($invoice->get_account_out(), 'string')
 		);
 		$result = $this->db->query('UPDATE rental_invoice SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__,__FILE__);
 	}

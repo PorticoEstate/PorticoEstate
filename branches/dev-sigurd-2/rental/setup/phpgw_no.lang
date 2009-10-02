@@ -8,6 +8,8 @@ add	rental	no	Legg til
 address	rental	no	Adresse
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso ID
+Agresso GL07	rental	no	Agresso GL07 - hovedbokstall
+Agresso LG04	rental	no	Agresso LG04 - fakturagrunnlag
 all	rental	no	Alle
 and	rental	no	og
 annually	rental	no	Årlig
