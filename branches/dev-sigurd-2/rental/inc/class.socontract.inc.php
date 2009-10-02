@@ -495,23 +495,19 @@ class rental_socontract extends rental_socommon
 		$values[] = $GLOBALS['phpgw_info']['user']['account_id'];
 		
 		
+		$cols[] = 'service_id';
+		$cols[] = 'responsibility_id';
+		$values[] = $this->marshal($contract->get_service_id(),'string');
+		$values[] = $this->marshal($contract->get_responsibility_id(),'string');
+		
+		
 		// Insert the new contract
-		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		
-		if($result)
-		{
-			$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
-			$contract->set_id($receipt['id']);
-			//var_dump();
-			return $receipt;
-		}
-		else
-		{
-			var_dump($q);
-			var_dump($result);
-		}
-		
+		$contract_id = $this->db->get_last_insert_id('rental_contract', 'id');
+		$contract->set_id($contract_id);
+		return $contract;
 	}
 	
 	/**

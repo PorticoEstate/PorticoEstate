@@ -271,7 +271,7 @@
 
 			if(isset($_POST['save_contract']))
 			{
-				if(isset($contract_id))
+				if(isset($contract_id) && $contract_id > 0)
 				{
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
 					if(!$contract->has_permission(PHPGW_ACL_EDIT))
