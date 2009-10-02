@@ -221,6 +221,7 @@ price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
 price_list	rental	no	Prisbok
 price	rental	no	Pris
+project_id	rental	no	Prosjektnummer
 propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
 property_id	rental	no	BKB Identifikator
 property	rental	no	Eiendom

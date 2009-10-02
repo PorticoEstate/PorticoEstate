@@ -111,7 +111,8 @@
 				'reference' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'invoice_header' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_in' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'account_out' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'account_out' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'project_id' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

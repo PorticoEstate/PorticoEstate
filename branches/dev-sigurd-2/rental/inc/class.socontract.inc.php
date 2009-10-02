@@ -211,7 +211,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -263,6 +263,9 @@ class rental_socontract extends rental_socommon
 			$contract->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'),'string'));
 			$contract->set_reference($this->unmarshal($this->db->f('reference'),'string'));
 			$contract->set_invoice_header($this->unmarshal($this->db->f('invoice_header'),'string'));
+			$contract->set_account_in($this->unmarshal($this->db->f('account_in'),'string'));
+			$contract->set_account_out($this->unmarshal($this->db->f('account_out'),'string'));
+			$contract->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
@@ -411,6 +414,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "invoice_header = ". $this->marshal($contract->get_invoice_header(),'string');
 		$values[] = "account_in = ".$this->marshal($contract->get_account_in(),'string');
 		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
+		$values[] = "project_id = ".$this->marshal($contract->get_project_id(),'string');
 		
 		 
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -536,6 +540,8 @@ class rental_socontract extends rental_socommon
 		$values[] = $this->marshal($contract->get_account_in(),'string');
 		$values[] = $this->marshal($contract->get_account_out(),'string');
 		
+		$cols[] = 'project_id';
+		$values[] = $this->marshal($contract->get_project_id(),'string');
 		
 		// Insert the new contract
 		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";

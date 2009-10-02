@@ -384,6 +384,32 @@
 						}
 						?>
 					</dd>
+					<dt>
+						<label for="project_id"><?php echo lang('project_id') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="project_id" id="project_id" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								echo '9'; // Default project number
+							}
+							else
+							{
+								echo $contract->get_project_id() ;
+							}
+							?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_project_id();
+						}
+						?>
+					</dd>
 				</dl>
                 <dl class="proplist-col">
                     <dt>

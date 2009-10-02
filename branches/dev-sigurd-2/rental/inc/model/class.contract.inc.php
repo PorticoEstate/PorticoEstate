@@ -38,6 +38,7 @@
 		protected $invoice_header;
 		protected $account_in;
 		protected $account_out;
+		protected $project_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -120,6 +121,13 @@
 			$this->field_of_responsibility_id = (int) $location_id;
 			$this->location_id = (int) $location_id;
 		}
+		
+		public function set_project_id($project_id)
+		{
+			$this->project_id = $project_id;
+		}
+	
+		public function get_project_id(){ return $this->project_id; }
 		
 		public function get_location_id() { return $this->location_id; }
 		
