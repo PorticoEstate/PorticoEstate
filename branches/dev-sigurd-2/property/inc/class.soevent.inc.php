@@ -119,14 +119,16 @@
 
 			if ($this->_db->next_record())
 			{
+				$start_date		= $this->_db->f('start_date');
+				$end_date		= $this->_db->f('end_date');				
 				$values = array
 				(
 					'id'				=> $this->_db->f('id'),
 					'descr'				=> $this->_db->f('descr', true),
-					'start_date'		=> $this->_db->f('start_date'),
+					'start_date'		=> $start_date,
 					'responsible'		=> $this->_db->f('responsible_id'),
 					'action'			=> $this->_db->f('action_id'),
-					'end_date'			=> $this->_db->f('end_date'),
+					'end_date'			=> $end_date,
 					'repeat_type'		=> $this->_db->f('repeat_type'),
 					'rpt_day'			=> $this->_db->f('repeat_day'),
 					'repeat_interval'	=> $this->_db->f('repeat_interval'),
@@ -138,7 +140,30 @@
 					'location_item_id'	=> $this->_db->f('location_item_id'),
 					'attrib_id'			=> $this->_db->f('attrib_id')
 				);
+
+				$values['start']['month']	= date('m',$start_date);
+				$values['start']['mday']	= date('d',$start_date);
+				$values['start']['year']	= date('Y',$start_date);
+				$values['start']['hour']	= date('G',$start_date);
+				$values['start']['min']		= date('i',$start_date);
+				$values['start']['sec']		= date('s',$start_date);
+
+				$values['end']['month']	= $end_date ? date('m',$end_date) : 0;
+				$values['end']['mday']	= $end_date ? date('d',$end_date) : 0;
+				$values['end']['year']	= $end_date ? date('Y',$end_date) : 0;
+				$values['end']['hour']	= $end_date ? date('G',$end_date) : 0;
+				$values['end']['min']	= $end_date ? date('i',$end_date) : 0;
+				$values['end']['sec']	= $end_date ? date('s',$end_date) : 0;
+
+				$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$id}'";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
+				{
+					$values['repeat_exception'][] = $this->_db->f('exception_time');
+				}
 			}
+
 			return $values;
 		}
 
@@ -307,7 +332,7 @@
 		{
 			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
 		
-			$user_where = ' AND (fm_event.user_id in (';
+			$user_where = ' WHERE (fm_event.user_id in (';
 			if($owner_id)
 			{
 				$user_where .= implode(',',$owner_id);
@@ -366,16 +391,16 @@
 
 			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
 			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
-			$sql = '(fm_event.repeat_type > 0) '
-				. 'AND ((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0))) '
+	//		$sql = '(fm_event.repeat_type > 0) '
+			$sql = '((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0)) '
 				. 'ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 
-			return $this->get_event_ids(True,$sql);
+			return $this->get_event_ids(true, $sql);
 		}
 
-		function get_event_ids($search_repeats=False,$extra='')
+		function get_event_ids($search_repeats = false, $extra = '')
 		{
-			$where = 'WHERE';
+	//		$where = 'WHERE';
 			$repeat = '';
 			if($search_repeats)
 			{
@@ -384,8 +409,8 @@
 			}
 
 			$sql = 'SELECT DISTINCT fm_event.id,'
-					. 'fm_event.start_date,fm_event.end_date'
-					. "FROM fm_event {$repeat} {$where} {$extra}";
+					. ' fm_event.start_date,fm_event.end_date'
+					. " FROM fm_event {$repeat} {$where} {$extra}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
