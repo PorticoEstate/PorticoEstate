@@ -308,9 +308,12 @@
 				'timestamp_end'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'total_sum'			=> array('type' => 'float', 'precision' => '8'),
 				'total_area'		=> array('type' => 'float', 'precision' => '8'),
-				'header'			=> array('type' => 'varchar','precision' => '255','nullable' => true),
-				'account_in'		=> array('type' => 'varchar','precision' => '255','nullable' => true),
-				'account_out'		=> array('type' => 'varchar','precision' => '255','nullable' => true)
+				'header'			=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
+				'account_in'		=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
+				'account_out'		=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
+				'service_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Tjeneste
+				'responsibility_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Ansvar
+				'project_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

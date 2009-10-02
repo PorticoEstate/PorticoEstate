@@ -22,10 +22,12 @@
 		protected $account_out; // 'Art' for the outlay side
 		protected $composite_names; // From party - not part of invoice db data
 		protected $party_names; // From party - not part of invoice db data
+		protected $service_id;
+		protected $responsibility_id;
 		
 		public static $so;
 		
-		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out)
+		public function __construct(int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out, string $service_id, string $responsibility_id)
 		{
 			$this->id = (int)$id;
 			$this->billing_id = (int)$billing_id;
@@ -39,6 +41,8 @@
 			$this->header = $header;
 			$this->account_in = $account_in;
 			$this->account_out = $account_out;
+			$this->service_id = $service_id;
+			$this->responsibility_id = $responsibility_id;
 			$this->composite_names = array();
 			$this->party_names = array();
 		}
@@ -149,8 +153,29 @@
 		{
 			$this->account_out = $account_out;
 		}
-	
+			
 		public function get_account_out(){ return $this->account_out; }
+		
+		public function set_service_id($service_id)
+		{
+			$this->service_id = $service_id;
+		}
+	
+		public function get_service_id(){ return $this->service_id; }
+		
+		public function set_responsibility_id($responsibility_id)
+		{
+			$this->responsibility_id = $responsibility_id;
+		}
+		
+		public function get_responsibility_id(){ return $this->responsibility_id; }
+		
+		public function set_project_id($project_id)
+		{
+			$this->project_id = $project_id;
+		}
+	
+		public function get_project_id(){ return $this->project_id; }
 
 		public function get_composite_names()
 		{
@@ -185,7 +210,7 @@
 				return null;
 			}
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
-			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_invoice_account_out());
+			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_account_out(), $contract->get_service_id(), $contract->get_responsibility_id());
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
 			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
