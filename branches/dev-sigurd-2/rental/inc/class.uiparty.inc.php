@@ -241,8 +241,8 @@ class rental_uiparty extends rental_uicommon
 		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
 		{
 			if(isset($party_id) && $party_id > 0)
-			{
-				$party = rental_party::get($party_id); 
+			{	
+				$party = rental_soparty::get_instance()->get_single($party_id); 
 			}
 			else
 			{

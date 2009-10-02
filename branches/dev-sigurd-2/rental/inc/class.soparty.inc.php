@@ -100,7 +100,11 @@ class rental_soparty extends rental_socommon
 
 		$filter_clauses = array();
 
-
+		if(isset($filters[$this->get_id_field_name()])){
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			$filter_clauses[] = "party.id = {$id}";
+		}
+		
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
 		{
