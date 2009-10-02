@@ -42,10 +42,10 @@
 					<dd>
 						<?php 
 							$contract_id = $contract->get_id();
-							if($editable && !isset($contract_id) || $contract_id <= 0) {
+							if($editable && (!isset($contract_id) || $contract_id <= 0)) {
 								
 							 ?>
-							 	<input type="hidden" name="location_id" id="location_id" value="<?php $contract->get_location_id() ?>"/>
+							 	<input type="hidden" name="location_id" id="location_id" value="<?php echo $contract->get_location_id() ?>"/>
 							 <?php 
 							}
 							echo lang($contract->get_contract_type_title());
@@ -343,7 +343,7 @@
 							if(!isset($cid) || $cid <= 0)
 							{
 								
-								rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
+								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
 							}
 							else
 							{
@@ -369,7 +369,7 @@
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
 							}
 							else
 							{
