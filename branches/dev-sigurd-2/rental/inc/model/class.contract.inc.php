@@ -34,6 +34,10 @@
 		protected $bill_timestamps; // Keeps the bill timestamps for the contract - not a db property on the contract
 		protected $service_id;
 		protected $responsibility_id;
+		protected $reference;
+		protected $invoice_header;
+		protected $account_in;
+		protected $account_out;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -139,6 +143,36 @@
 		}
 		
 		public function get_term_id() { return $this->term_id; }
+		
+		public function get_account_in() { return $this->account_in; }
+		
+		public function set_account_in($account_in)
+		{
+			$this->account_in = $account_in;
+		}
+		
+		public function get_account_out() { return $this->account_out; }
+		
+		public function set_account_out($account_out)
+		{
+			$this->account_out = $account_out;
+		}
+		
+		public function get_reference() { return $this->reference; }
+		
+		public function set_reference($reference)
+		{
+			$this->reference = $reference;
+		}
+		
+		public function get_invoice_header() { return $this->invoice_header; }
+		
+		public function set_invoice_header($invoice_header)
+		{
+			$this->invoice_header = $invoice_header;
+		}
+		
+		
 		
 		public function set_term_id_title($term_id_title)
 		{

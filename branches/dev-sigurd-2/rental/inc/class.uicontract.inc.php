@@ -195,7 +195,7 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id, $notification = null, string $message = null, string $error = null)
+		public function viewedit($editable, $contract_id, $location_id = null, $notification = null, string $message = null, string $error = null)
 		{
 			
 			if (isset($contract_id) && $contract_id > 0) {
@@ -231,6 +231,9 @@
 			{
 				if($this->isAdministrator() || $this->isExecutiveOfficer()){
 					$contract = new rental_contract();
+					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+					$contract->set_location_id($location_id);
+					$contract->set_contract_type_title($fields[$location_id]);
 					if ($contract) {
 						$data = array
 						(
@@ -266,6 +269,8 @@
 		public function edit()
 		{
 			$contract_id = (int)phpgw::get_var('id');
+			$location_id = (int)phpgw::get_var('location_id');
+			
 			$message = null;
 			$error = null;
 
@@ -282,8 +287,11 @@
 				}
 				else
 				{
-					if($this->isExecutiveOfficer() || $this->isAdministrator()){
+					if(isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator())){
 						$contract = new rental_contract();
+						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+						$contract->set_location_id($location_id);
+						$contract->set_contract_type_title($fields[$location_id]);
 					}
 				}
 				
@@ -296,11 +304,19 @@
 					$contract->set_security_amount(phpgw::get_var('security_amount'));
 					$contract->set_executive_officer_id(phpgw::get_var('executive_officer'));
 					$contract->set_comment(phpgw::get_var('comment'));
-					$contract->set_location_id(phpgw::get_var('location_id'));
+					
+					if(isset($location_id) && $location_id > 0)
+					{
+						$contract->set_location_id($location_id); // only present when new contract
+					}
 					$contract->set_term_id(phpgw::get_var('billing_term'));
 					$contract->set_billing_start_date(strtotime(phpgw::get_var('billing_start_date_hidden')));
 					$contract->set_service_id(phpgw::get_var('service_id'));
 					$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
+					$contract->set_reference(phpgw::get_var('reference'));
+					$contract->set_invoice_header(phpgw::get_var('invoice_header'));
+					$contract->set_account_in(phpgw::get_var('account_in'));
+					$contract->set_account_out(phpgw::get_var('account_out'));
 					
 					if(rental_socontract::get_instance()->store($contract))
 					{
@@ -342,7 +358,7 @@
 					$error = lang('permission_denied_edit_contract');
 				}
 			}
-			return $this->viewedit(true, $contract_id, $notification, $message, $error);
+			return $this->viewedit(true, $contract_id, $location_id,$notification, $message, $error);
 		}
 
 		/**
@@ -350,7 +366,11 @@
 		 */
 		public function add()
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit'));
+			$location_id = phpgw::get_var('location_id');
+			if(isset($location_id) && $location_id > 0)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id));
+			}
 		}
 
 		/**

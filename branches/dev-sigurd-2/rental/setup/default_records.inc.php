@@ -283,7 +283,7 @@ $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (14,'
 	// Bergen Rådhus
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (15,'1102-01')");
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_internal},'contract_type_internleie',90)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',90,'119001','119001')");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_out},'contract_type_eksternleie',90)");
 

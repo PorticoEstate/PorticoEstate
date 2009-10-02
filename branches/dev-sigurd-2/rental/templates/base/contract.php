@@ -41,38 +41,14 @@
 					</dt>
 					<dd>
 						<?php 
-							if($editable) {
+							$contract_id = $contract->get_id();
+							if($editable && !isset($contract_id) || $contract_id <= 0) {
+								
 							 ?>
-							<select name="location_id" id="location_id">
-								<?php
-								$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-								foreach($types as $id => $label)
-								{
-						
-									$names = $this->locations->get_name($id);
-									if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
-									{
-										if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
-										{
-										?>
-											<option 
-												value="<?php echo $id ?>"
-												<?php echo $id == $contract->get_location_id() ? 'selected=selected' : '';?>
-											>
-												<?php echo lang($label) ?>
-											</option>
-										<?php
-										}
-									}
-								}
-								?>
-							</select>
-							<?php 
+							 	<input type="hidden" name="location_id" id="location_id" value="<?php $contract->get_location_id() ?>"/>
+							 <?php 
 							}
-							else
-							{
-								echo lang($contract->get_contract_type_title());
-							}
+							echo lang($contract->get_contract_type_title());
 							?>
 					</dd>
 					<dt>
@@ -176,6 +152,38 @@
 						else
 						{
 							echo $contract->get_responsibility_id();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="reference"><?php echo lang('reference') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="reference" id="reference" value="<?php echo $contract->get_reference(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_reference();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="invoice_header"><?php echo lang('invoice_header') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="invoice_header" id="invoice_header" value="<?php echo $contract->get_invoice_header(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_invoice_header();
 						}
 						?>
 					</dd>
@@ -323,7 +331,59 @@
 						}
 						?>
 					</dd>
-					
+					<dt>
+						<label for="account_in"><?php echo lang('account_in') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="account_in" id="account_in" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								
+								rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
+							}
+							else
+							{
+								echo $contract->get_account_out(); 
+							}
+							?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_account_in();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="account_out"><?php echo lang('account_out') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="account_out" id="account_out" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+							}
+							else
+							{
+								echo $contract->get_account_out(); 
+							}
+							?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_account_out();
+						}
+						?>
+					</dd>
 				</dl>
                 <dl class="proplist-col">
                     <dt>

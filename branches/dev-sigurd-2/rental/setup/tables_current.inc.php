@@ -67,7 +67,9 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'location_id'	=>	array('type' => 'int','precision' => '4', 'nullable' => false),
 				'title'			=>	array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'notify_before' =>	array('type' => 'int','precision' => '4','nullable' => false)
+				'notify_before' =>	array('type' => 'int','precision' => '4','nullable' => false),
+				'account_in'	=> 	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'account_out'	=>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -105,7 +107,11 @@
                 'comment' =>            array('type' => 'text'),
 				'last_updated' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
 				'service_id'	=>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true), //Tjeneste
-				'responsibility_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true)	//Ansvar
+				'responsibility_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),	//Ansvar
+				'reference' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'invoice_header' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'account_in' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'account_out' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

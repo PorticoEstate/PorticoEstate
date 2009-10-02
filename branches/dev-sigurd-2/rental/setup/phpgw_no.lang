@@ -1,4 +1,6 @@
+account_in	rental	no	Inngående konto
 account_number	rental	no	Kontonummer
+account_out	rental	no	Utgående konto
 active_party	rental	no	Kontraktspart er aktiv
 active_plural	rental	no	Aktive
 active	rental	no	Aktiv
@@ -120,6 +122,7 @@ id	rental	no	ID
 in_operation	rental	no	I drift
 internal	rental	no	Interne kontraktsparter
 invoice	rental	no	Faktura
+invoice_header	rental	no	Kontraktsoverskrift
 is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 job_title	rental	no	Stillingstittel
@@ -224,6 +227,7 @@ property	rental	no	Eiendom
 quarterly	rental	no	Kvartalvis
 rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
+reference	rental	no	Deres ref
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
 remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord

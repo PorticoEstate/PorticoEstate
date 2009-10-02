@@ -9,7 +9,8 @@
 		function(e)
 		{
 	  	YAHOO.util.Event.stopEvent(e);
-		window.location = 'index.php?menuaction=rental.uicontract.add';
+	  	
+		window.location = 'index.php?menuaction=rental.uicontract.add&amp;location_id=' + document.getElementById('location_id').value;
     }
    );
 </script>
@@ -23,7 +24,29 @@ if($this->isAdministrator() || $this->isExecutiveOfficer())
 <fieldset>
 	<!-- New contract -->
 	<h3><?php echo lang('t_new_contract') ?></h3>
-	
+	<select name="location_id" id="location_id">
+		<?php
+		$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+		foreach($types as $id => $label)
+		{
+
+			$names = $this->locations->get_name($id);
+			if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+			{
+				if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+				{
+				?>
+					<option 
+						value="<?php echo $id ?>"
+					>
+						<?php echo lang($label) ?>
+					</option>
+				<?php
+				}
+			}
+		}
+		?>
+	</select>
 	<input type="submit" name="ctrl_add_rental_contract" id="ctrl_add_rental_contract" value="<?php echo lang('f_new_contract') ?>" />
 </fieldset>
 <?php

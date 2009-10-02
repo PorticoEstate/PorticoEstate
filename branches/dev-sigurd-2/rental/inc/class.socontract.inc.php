@@ -211,13 +211,13 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
-			$columns[] = 'type.title, type.notify_before';
+			$columns[] = 'type.title, type.notify_before, type.account_in, type.account_out';
 			$columns[] = 'last_edited.edited_on';
 			$columns[] = 'invoice.timestamp_end';	
 			$cols = implode(',',$columns);
@@ -261,7 +261,8 @@ class rental_socontract extends rental_socommon
 			$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'),'int'));
 			$contract->set_service_id($this->unmarshal($this->db->f('service_id'),'string'));
 			$contract->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'),'string'));
-			
+			$contract->set_reference($this->unmarshal($this->db->f('reference'),'string'));
+			$contract->set_invoice_header($this->unmarshal($this->db->f('invoice_header'),'string'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
@@ -319,6 +320,26 @@ class rental_socontract extends rental_socommon
 			$this->fields_of_responsibility = $results;
 		}
 		return $this->fields_of_responsibility;
+	}
+	
+	function get_default_account(int $location_id, bool $in){
+		if(isset($location_id) && $location_id > 0)
+		{
+			if($in)
+			{
+				$col = 'account_in';
+			}
+			else
+			{
+				$col = 'account_out';
+			}
+			
+			$sql = "SELECT {$col} FROM rental_contract_responsibility WHERE location_id = {$location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f($col,true);
+		}
+		return '';
 	}
 	
 	/**
@@ -386,6 +407,11 @@ class rental_socontract extends rental_socommon
 		$values[] = "last_updated = ".strtotime('now');
 		$values[] = "service_id = ". $this->marshal($contract->get_service_id(),'string');
 		$values[] = "responsibility_id = ". $this->marshal($contract->get_responsibility_id(),'string');
+		$values[] = "reference = ". $this->marshal($contract->get_reference(),'string');
+		$values[] = "invoice_header = ". $this->marshal($contract->get_invoice_header(),'string');
+		$values[] = "account_in = ".$this->marshal($contract->get_account_in(),'string');
+		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
+		
 		 
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
@@ -499,6 +525,16 @@ class rental_socontract extends rental_socommon
 		$cols[] = 'responsibility_id';
 		$values[] = $this->marshal($contract->get_service_id(),'string');
 		$values[] = $this->marshal($contract->get_responsibility_id(),'string');
+		
+		$cols[] = 'reference';
+		$cols[] = 'invoice_header';
+		$values[] = $this->marshal($contract->get_reference(),'string');
+		$values[] = $this->marshal($contract->get_invoice_header(),'string');
+		
+		$cols[] = 'account_in';
+		$cols[] = 'account_out';
+		$values[] = $this->marshal($contract->get_account_in(),'string');
+		$values[] = $this->marshal($contract->get_account_out(),'string');
 		
 		
 		// Insert the new contract
