@@ -184,7 +184,10 @@ if ( !extension_loaded('mcal') )
 			$criteria = array
 			(
 				'start_date'=>$values['start_date'],
-				'end_date'=>$values['end_date']
+				'end_date'=>$values['end_date'],
+				'appname' => 'property',
+				'location' => '.project.workorder',
+				'location_id' => 94
 			);
 //_debug_array($criteria);die();
 			$this->store_to_cache($criteria);
@@ -475,16 +478,28 @@ if ( !extension_loaded('mcal') )
 		/**
 		* Find recurring events
 		*
-		* @param array $date the date array to convert, must contain keys 'start_date', 'end_date'
+		* @param array $date the date array to convert, must contain keys 'start_date', 'end_date', 'appname', 'location'
 		* @return array events
 		*/
 
 		function store_to_cache($params)
-		{
-			
+		{			
 			if(!is_array($params))
 			{
 				return False;
+			}
+
+			if(!isset($params['location_id']) || !$params['location_id'])
+			{
+				if(!isset($params['appname']) || !$params['appname'] || !isset($params['location']) || !$params['location'])
+				{
+					throw new Exception("property_boevent::store_to_cache - Missing location info in input");
+				}
+				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			}
+			else
+			{
+				$location_id = $params['location_id'];
 			}
 
 			//The date string to convert - must match user's preferred date format
@@ -551,16 +566,23 @@ if ( !extension_loaded('mcal') )
 				echo '<!-- End   Date : '.sprintf("%04d%02d%02d",$eyear,$emonth,$eday).' -->'."\n";
 			}
 
-			if($owner_id)
-			{
-				$cached_event_ids = $this->so->list_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id);
-				$cached_event_ids_repeating = $this->so->list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id);
-			}
-			else
-			{
-				$cached_event_ids = $this->so->list_events($syear,$smonth,$sday,$eyear,$emonth,$eday);
-				$cached_event_ids_repeating = $this->so->list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday);
-			}
+			$find_criteria = array
+			(
+				'syear'			=> $syear,
+				'smonth'		=> $smonth,
+				'sday'			=> $sday,
+				'eyear'			=> $eyear,
+				'emonth'		=> $emonth,
+				'eday'			=> $eday,
+				'tz_offset'		=> 0,
+				'extra'			=> '',
+				'owner_id'		=> $owner_id,
+				'location_id'	=> $location_id
+			);
+
+			$cached_event_ids			= $this->so->list_events($find_criteria);
+			$cached_event_ids_repeating	= $this->so->list_repeated_events($find_criteria);
+			unset($find_criteria);
 
 			$c_cached_ids = count($cached_event_ids);
 			$c_cached_ids_repeating = count($cached_event_ids_repeating);

@@ -328,18 +328,34 @@
 		}
 
 		//FIXME adapt from calendar	
-		function list_events($startYear,$startMonth,$startDay,$endYear=0,$endMonth=0,$endDay=0,$extra='',$tz_offset=0,$owner_id=0)
+		function list_events($data = array())
 		{
+			$startYear		= $data['syear'];
+			$startMonth		= $data['smonth'];
+			$startDay		= $data['sday'];
+			$endYear		= $data['eyear'] ? $data['eyear'] : 0;
+			$endMonth		= $data['emonth'] ? $data['emonth'] : 0;
+			$endDay			= $data['eday'] ? $data['eday'] : 0;
+			$extra			= $data['eday'] ? $data['eday'] : '';
+			$tz_offset		= $data['tz_offset'] ? $data['tz_offset'] : 0;
+			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id	= $data['location_id'];
+
+			if(!$startYear || !$startMonth || !$startDay || ! $location_id)
+			{
+				throw new Exception("property_soevent::list_events - Missing start date info");
+			}
+
 			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
 		
-			$user_where = ' WHERE (fm_event.user_id in (';
+			$sql = ' WHERE (fm_event.user_id in (';
 			if($owner_id)
 			{
-				$user_where .= implode(',',$owner_id);
+				$sql .= implode(',',$owner_id);
 			}
 			else
 			{
-				$user_where .= $this->account;
+				$sql .= $this->account;
 			}
 			$member_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
 			@reset($member_groups);
@@ -349,22 +365,15 @@
 			}
 
 			@reset($member);
-	//		$user_where .= ','.implode(',',$member);
-			$user_where .= ')) ';
+	//		$sql .= ','.implode(',',$member);
+			$sql .= ')) ';
 
+			$sql .= 'AND ( ( (fm_event.start_date >= '.$datetime.') ';
 
-			if($this->debug)
-			{
-				echo '<!-- '.$user_where.' -->'."\n";
-			}
-
-			$startDate = 'AND ( ( (fm_event.start_date >= '.$datetime.') ';
-
-			$endDate = '';
 			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
 			{
 				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
-				$endDate .= 'AND (fm_event.end_date <= '.$edatetime.') ) '
+				$sql .= 'AND (fm_event.end_date <= '.$edatetime.') ) '
 					. 'OR ( (fm_event.start_date <= '.$datetime.') '
 					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
 					. 'OR ( (fm_event.start_date >= '.$datetime.') '
@@ -374,26 +383,36 @@
 					. 'AND (fm_event.end_date >= '.$datetime.') '
 					. 'AND (fm_event.end_date <= '.$edatetime.') ';
 			}
-			$endDate .= ') ) ';
+			$sql .= ") ) AND location_id = {$location_id}";
 
-			$order_by = 'ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
-			if($this->debug)
-			{
-				echo "SQL : ".$user_where.$startDate.$endDate.$extra."<br />\n";
-			}
-			return $this->get_event_ids(False,$user_where.$startDate.$endDate.$extra.$order_by);
+			$order_by = ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
+
+			return $this->get_event_ids(False,$sql.$extra.$order_by);
 		}
 
-
-		function list_repeated_events($syear,$smonth,$sday,$eyear,$emonth,$eday,$owner_id=0)
+		function list_repeated_events($data = array())
 		{
+			$syear			= $data['syear'];
+			$smonth			= $data['smonth'];
+			$sday			= $data['sday'];
+			$eyear			= $data['eyear'];
+			$emonth			= $data['emonth'];
+			$eday			= $data['eday'];
+			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id	= $data['location_id'];
+
+			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || ! $location_id)
+			{
+				throw new Exception("property_soevent::list_repeated_events - Missing date info");
+			}
+
 			$user_timezone = phpgwapi_datetime::user_timezone();
 
 			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
 			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
-	//		$sql = '(fm_event.repeat_type > 0) '
-			$sql = '((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0)) '
-				. 'ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
+			$sql = "(fm_event.location_id = {$location_id})"
+				. ' AND ((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0))'
+				. ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 
 			return $this->get_event_ids(true, $sql);
 		}
