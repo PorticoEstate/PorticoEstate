@@ -28,6 +28,7 @@ class rental_party extends rental_model
     protected $place;
 
     protected $phone;
+    protected $mobile_phone;
     protected $fax;
     protected $email;
     protected $url;
@@ -213,6 +214,13 @@ class rental_party extends rental_model
 	}
 
 	public function get_phone() { return $this->phone; }
+	
+	public function set_mobile_phone($mobile_phone)
+	{
+		$this->mobile_phone = $mobile_phone;
+	}
+
+	public function get_mobile_phone() { return $this->mobile_phone; }
 
 	public function set_fax($fax)
 	{
@@ -351,6 +359,7 @@ class rental_party extends rental_model
 			'postal_code' => $this->postal_code,
 		 	'place' => $this->place,
 			'phone' => $this->phone,
+			'mobile_phone' => $this->mobile_phone,
 			'fax' => $this->fax,
 			'email' => $this->email,
 			'url' => $this->url,

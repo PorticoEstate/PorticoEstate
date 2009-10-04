@@ -74,6 +74,12 @@
 					'text'	=> $GLOBALS['phpgw']->translation->translate('invoice', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-document')
+				),
+				'import'	=> array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('facilit_import', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'x-office-document')
 				)
 			);
 			

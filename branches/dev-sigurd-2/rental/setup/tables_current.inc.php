@@ -104,7 +104,7 @@
 				'executive_officer' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'created' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
 				'created_by' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-                'comment' =>            array('type' => 'text'),
+				'comment' =>            array('type' => 'text'),
 				'last_updated' =>		array('type' => 'int', 'precision' => '4', 'nullable' => true), // timestamp
 				'service_id'	=>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true), //Tjeneste
 				'responsibility_id' =>	array('type' => 'varchar', 'precision' => '255', 'nullable' => true),	//Ansvar
@@ -174,6 +174,7 @@
 					'postal_code' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'place' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'phone' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
+					'mobile_phone' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'fax' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'email' =>	array('type' => 'varchar','precision' => '45','nullable' => true),
 					'url' =>	array('type' => 'varchar','precision' => '45','nullable' => true),

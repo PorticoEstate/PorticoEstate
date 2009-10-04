@@ -270,6 +270,7 @@ class rental_uiparty extends rental_uicommon
 				$party->set_postal_code(phpgw::get_var('postal_code'));
 				$party->set_place(phpgw::get_var('place'));
 				$party->set_phone(phpgw::get_var('phone'));
+				$party->set_mobile_phone(phpgw::get_var('mobile_phone'));
 				$party->set_fax(phpgw::get_var('fax'));
 				$party->set_email(phpgw::get_var('email'));
 				$party->set_url(phpgw::get_var('url'));

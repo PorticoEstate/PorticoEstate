@@ -101,6 +101,7 @@ executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
 export_to	rental	no	Eksporter
 external	rental	no	Eksterne kontraktsparter
+facilit_import	rental	no	Import fra Facilit
 fax	rental	no	Faks
 field_of_responsibility	rental	no	Ansvarsområde
 filters 	rental	no	Filtre
@@ -152,6 +153,7 @@ messages_required_field	rental	no	Dette feltet er påkrevd
 messages_right_click_to_add	rental	no	Høyreklikk for å legge til
 messages_saved_form	rental	no	Informasjonen ble lagret.
 messages_string_too_long	rental	no	Teksten er for lang
+mobile_phone	rental	no	Mobiltelefon
 month 1	rental	no	januar
 month 2	rental	no	februar
 month 3	rental	no	mars

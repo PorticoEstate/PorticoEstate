@@ -158,6 +158,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.postal_code';
 			$columns[] = 'party.place';
 			$columns[] = 'party.phone';
+			$columns[] = 'party.mobile_phone';
 			$columns[] = 'party.fax';
 			$columns[] = 'party.email';
 			$columns[] = 'party.url';
@@ -189,12 +190,12 @@ class rental_soparty extends rental_socommon
 	function add(&$party)
 	{
 		// Insert a new party
-		$q ="INSERT INTO ".$this->table_name." (is_active) VALUES (true)";
+		$q ="INSERT INTO rental_party (is_active) VALUES (true)";
 		$result = $this->db->query($q);
 
 		if(isset($result)) {
 			// Set the new party ID
-			$party->set_id($this->db->get_last_insert_id($this->table_name, 'id'));
+			$party->set_id($this->db->get_last_insert_id('rental_party', 'id'));
 			// Forward this request to the update method
 			return $this->update($party);
 		}
@@ -225,6 +226,7 @@ class rental_soparty extends rental_socommon
 			'postal_code = '    . $this->marshal($party->get_postal_code(), 'string'),
 			'place = '          . $this->marshal($party->get_place(), 'string'),
 			'phone = '          . $this->marshal($party->get_phone(), 'string'),
+			'mobile_phone = '		. $this->marshal($party->get_mobile_phone(), 'string'),
 			'fax = '            . $this->marshal($party->get_fax(), 'string'),
 			'email = '          . $this->marshal($party->get_email(), 'string'),
 			'url = '            . $this->marshal($party->get_url(), 'string'),
@@ -234,7 +236,7 @@ class rental_soparty extends rental_socommon
 			'comment = '        . $this->marshal($party->get_comment(), 'string')
 			);
 
-        $result = $this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+        $result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
         if(isset($result))
         {
@@ -270,7 +272,7 @@ class rental_soparty extends rental_socommon
             $party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
             $party->set_location_id(    $this->unmarshal($this->db->f('location_id'), 'int'));
             $party->set_pid(            $this->unmarshal($this->db->f('personal_identification_number'), 'string'));
-            $party->set_phone(          $this->unmarshal($this->db->f('phone'), 'string'));
+            $party->set_mobile_phone(		$this->unmarshal($this->db->f('mobile_phone'), 'string'));
             $party->set_place(          $this->unmarshal($this->db->f('place'), 'string'));
             $party->set_postal_code(    $this->unmarshal($this->db->f('postal_code'), 'string'));
             $party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));

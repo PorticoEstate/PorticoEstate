@@ -189,6 +189,23 @@
 						?>
 					</dd>
 					<dt>
+						<label for="mobile_phone"><?php echo lang('mobile_phone') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+						?>
+							<input type="text" name="mobile_phone" id="mobile_phone" value="<?php echo $party->get_mobile_phone() ?>" />
+						<?php
+						}
+						else
+						{
+							echo $party->get_mobile_phone();
+						}
+						?>
+					</dd>
+					<dt>
 						<label for="fax"><?php echo lang('fax') ?></label>
 					</dt>
 					<dd>
