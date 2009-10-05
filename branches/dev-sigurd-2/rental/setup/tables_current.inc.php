@@ -336,8 +336,8 @@
 				'count'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'agresso_id'	=> array('type' => 'varchar','precision' => '45','nullable' => true),
 				'is_area'		=> array('type' => 'bool','nullable' => false,'default' => 'true'),
-				'price'			=> array('type' => 'float', 'precision' => 4,'nullable' => true),
-				'total_price'	=> array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'price'			=> array('type' => 'float', 'precision' => 8,'nullable' => true),
+				'total_price'	=> array('type' => 'float', 'precision' => 8,'nullable' => true),
 				'date_start'	=> array('type' => 'date'),
 				'date_end'		=> array('type' => 'date')
 			),
