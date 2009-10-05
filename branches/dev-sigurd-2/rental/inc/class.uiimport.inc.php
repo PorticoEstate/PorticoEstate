@@ -147,6 +147,7 @@
 				// Array keyed by contract id.  Assuming 1-1 even for link table.
 				$rentalobject_to_contract[$data[1]] = $data[0];
 			}
+			fclose($handle);
 			
 			/*
 			 * Read contracts
@@ -208,6 +209,16 @@
 				$contracts[$data[0]] = $contract;
 			}
 			fclose($handle);
+			
+			/*
+			 * Price items
+			 */
+			$handle = fopen($path . "/u_PriselementKontrakt.csv", "r");
+			while (($data = fgetcsv($handle, 1000, ",", "'")) !== false) {
+				// TODO: Have to combine this with PrisElementDetaljKontrakt
+				
+				// Create new price item if one doesn't exist in the admin price list
+			}
 			
 		}
 		
