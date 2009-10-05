@@ -3,6 +3,7 @@
 phpgw::import_class('rental.socommon');
 
 include_class('rental', 'party', 'inc/model/');
+include_class('rental', 'location_hierarchy', 'inc/locations/');
 
 class rental_soparty extends rental_socommon
 {
@@ -233,7 +234,8 @@ class rental_soparty extends rental_socommon
 			'account_number = ' . $this->marshal($party->get_account_number(), 'string'),
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
 			'is_active = '      . $this->marshal(($party->is_active() ? 'true' : 'false'), 'bool'),
-			'comment = '        . $this->marshal($party->get_comment(), 'string')
+			'comment = '        . $this->marshal($party->get_comment(), 'string'),
+			'location_id = '	. $this->marshal($party->get_location_id(), 'int')
 			);
 
         $result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -270,7 +272,7 @@ class rental_soparty extends rental_socommon
             $party->set_first_name(     $this->unmarshal($this->db->f('first_name'), 'string'));
             $party->set_is_active(      $this->unmarshal($this->db->f('is_active'), 'bool'));
             $party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
-            $party->set_location_id(    $this->unmarshal($this->db->f('location_id'), 'int'));
+            $party->set_location_id(    $this->unmarshal($this->db->f('org_location_id'), 'int'));
             $party->set_pid(            $this->unmarshal($this->db->f('personal_identification_number'), 'string'));
             $party->set_mobile_phone(		$this->unmarshal($this->db->f('mobile_phone'), 'string'));
             $party->set_place(          $this->unmarshal($this->db->f('place'), 'string'));

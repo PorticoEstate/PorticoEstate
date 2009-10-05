@@ -309,6 +309,56 @@
 						}
 						?>
 					</dd>
+					<dt>
+						<label for="location_id"><?php echo lang('party_location') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+						?>
+							<select name="location_id" id="location_id">
+								<option value=""><?php echo lang('no_party_location') ?></option>
+								<?php 
+									$city_counsil_departments =  location_hierarchy::get_hierarchy();
+									$party_location_id = $party->get_location_id();
+									foreach($city_counsil_departments as $department)
+									{
+										echo "<optgroup label='{$department->get_description()}'>";
+										$units = $department->get_result_units();
+										foreach($units as $unit)
+										{
+											$unit_location_id = $unit->get_location_id();
+											if($party_location_id == $unit_location_id)
+											{
+												echo "<option value='{$unit->get_location_id()}' selected=selected >{$unit->get_description()}</option>";
+											}
+											else
+											{
+												echo "<option value='{$unit->get_location_id()}'>{$unit->get_description()}</option>";
+											}
+										}
+										echo '</optgroup>';
+									}
+									
+								?>
+							</select>
+						<?php
+						}
+						else
+						{
+							$loc_id = $party->get_location_id();
+							if(isset($loc_id) && $loc_id > 0)
+							{
+								echo location_hierarchy::get_name_of_location($loc_id);
+							}
+							else
+							{
+								echo lang('no_party_location');
+							}
+						}
+						?>
+					</dd>
 				</dl>
 		        <dl class="proplist-col">
 					<dt>

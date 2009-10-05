@@ -4,6 +4,7 @@ phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
+include_class('rental', 'location_hierarchy', 'inc/locations/');
 
 class rental_uiparty extends rental_uicommon
 {
@@ -278,8 +279,9 @@ class rental_uiparty extends rental_uicommon
 				$party->set_reskontro(phpgw::get_var('reskontro'));
 				$party->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 				$party->set_comment(phpgw::get_var('comment'));
+				$party->set_location_id(phpgw::get_var('location_id'));
 				
-				if($party->store()) // ... and then try to store the object
+				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
 					$message = lang('messages_saved_form');	
 				}

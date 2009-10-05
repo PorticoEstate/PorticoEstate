@@ -147,10 +147,10 @@ class rental_party extends rental_model
 
 	public function set_location_id(int $location_id)
 	{
-		$this->location_id = (int)$ocation_id;
+		$this->location_id = (int)$location_id;
 	}
 
-	public function get_ocation_id() { return $this->location_id; }
+	public function get_location_id() { return $this->location_id; }
 
 	public function set_is_active(bool $is_active)
 	{
