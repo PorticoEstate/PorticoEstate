@@ -189,19 +189,6 @@
 	
 		public function get_timestamp_end(){ return $this->timestamp_end; }
 		
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
-		{
-			if (self::$so == null) {
-				self::$so = CreateObject('rental.soinvoice_price_item');
-			}
-			return self::$so;
-		}
-		
 		public function serialize()
 		{
 			return array();
