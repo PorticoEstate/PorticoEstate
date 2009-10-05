@@ -16,5 +16,12 @@ interface rental_exportable
 	 */
 	public function get_contents();
 	
+	/**
+	 * Must return what's missing on a contract before it can be exported.
+	 * 
+	 * @return array with missing billing info
+	 */
+	public function get_missing_billing_info($contract);
+	
 }
 ?>
