@@ -271,7 +271,7 @@
 			$end = $end->format('Y-m-d H:i');
 			$building_id = intval($building_id);
 			$results = array();
-			$this->db->query("SELECT DISTINCT(bb_event.id) AS id FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id IN(SELECT id FROM bb_resource WHERE building_id=$building_id)) WHERE ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end') OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end') OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))", __LINE__, __FILE__);
+			$this->db->query("SELECT DISTINCT(bb_event.id) AS id FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id IN(SELECT id FROM bb_resource WHERE building_id=$building_id)) WHERE bb_event.active=1 AND ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end') OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end') OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
