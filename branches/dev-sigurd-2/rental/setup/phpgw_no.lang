@@ -127,7 +127,7 @@ in_operation	rental	no	I drift
 internal	rental	no	Interne kontraktsparter
 Invalid location code for the building.	rental	no	Ugyldig enhetsnummer for bygg.
 invoice	rental	no	Faktura
-invoice_header	rental	no	Kontraktsoverskrift
+invoice_header	rental	no	Fakturaoverskrift
 is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 job_title	rental	no	Stillingstittel
