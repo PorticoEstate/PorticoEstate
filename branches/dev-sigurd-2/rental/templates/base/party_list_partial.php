@@ -82,10 +82,10 @@
 		?>)
 	);
 
-    function doExport() {
+    function party_export(ptype) {
         var select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_type');
         var option = select.options[select.selectedIndex].value;
-        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option;
+        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option+'<?php echo $url_add_on; ?>&type='+ptype;
     }
 
 </script>
@@ -101,8 +101,7 @@
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
 			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
-				<option value="all"><?php echo lang('all') ?></option>
-				<option value="id"><?php echo lang('id') ?></option>
+				<option value="all"><?php echo lang('all') ?></option>echo lang('id') ?></option>
 				<option value="name"><?php echo lang('name') ?></option>
 				<option value="address"><?php echo lang('address') ?></option>
 				<option value="ssn"><?php echo lang('ssn') ?></option>
@@ -138,7 +137,7 @@
 ?>
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
-	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+	<div id="export"><a href="javascript:party_export('<?php echo $list_id ?>')"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
 </fieldset>
 
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
