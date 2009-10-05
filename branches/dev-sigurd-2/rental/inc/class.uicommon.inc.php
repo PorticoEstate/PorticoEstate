@@ -440,9 +440,12 @@
             $list = $list[ResultSet][Result];
 
             $keys = array();
-            foreach($list[0] as $key => $value) {
-                if(!is_array($value)) {
-                    array_push($keys, $key);
+
+            if(count($list[0]) > 0) {
+                foreach($list[0] as $key => $value) {
+                    if(!is_array($value)) {
+                        array_push($keys, $key);
+                    }
                 }
             }
 
