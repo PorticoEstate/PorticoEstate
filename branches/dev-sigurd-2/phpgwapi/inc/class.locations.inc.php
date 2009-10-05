@@ -245,7 +245,7 @@
 		{
 			$location_id = (int) $location_id;
 
-			$sql = 'SELECT phpgw_applications.app_name, phpgw_locations.name'
+			$sql = 'SELECT phpgw_applications.app_name, phpgw_locations.name, phpgw_locations.descr'
 					. ' FROM phpgw_locations '
 					. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 					. " WHERE phpgw_locations.location_id = {$location_id}";
@@ -255,7 +255,8 @@
 				return array
 				(
 					'appname'	=> $this->_db->f('app_name', true),
-					'location'	=> $this->_db->f('name', true)
+					'location'	=> $this->_db->f('name', true),
+					'descr'		=> $this->_db->f('descr', true)
 				);
 			}
 
@@ -291,12 +292,42 @@
 					. " AND phpgw_locations.name {$this->_like} '{$location}%'"
 					. " AND phpgw_locations.name != '{$location}'"
 					. " AND phpgw_applications.app_name='{$appname}'";
-
+					
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			while ( $this->_db->next_record() )
 			{
 				$entries[$this->_db->f('location_id')] = $this->_db->f('name', true);
+			}
+			return $entries;
+		}
+		
+		/**
+		 * Get a list of locations that matches a given location pattern
+		 *
+		 * @param string $appname  the name of the module being looked up
+		 * @param string $location the location within the module to look up
+		 *
+		 * @return array map of locations (id => namne)
+		 */
+		public function get_subs_from_pattern($appname, $pattern)
+		{
+			$appname  = $this->_db->db_addslashes($appname);
+			$pattern  = $this->_db->db_addslashes($pattern);
+
+			$sql = 'SELECT phpgw_locations.location_id, phpgw_locations.name, phpgw_locations.descr'
+				. ' FROM phpgw_locations, phpgw_applications'
+				. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
+					. " AND phpgw_locations.name {$this->_like} '{$pattern}'"
+					. " AND phpgw_applications.app_name='{$appname}'";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			while ( $this->_db->next_record() )
+			{
+				$entries[] = array(
+					'location_id' => $this->_db->f('location_id'), 
+					'name' => $this->_db->f('name', true),
+					'descr' => $this->_db->f('descr',true)
+				);
 			}
 			return $entries;
 		}
