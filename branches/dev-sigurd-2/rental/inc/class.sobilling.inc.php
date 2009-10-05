@@ -126,8 +126,33 @@ class rental_sobilling extends rental_socommon
 		
 		return $this->billing_terms;
 	}
+	
+	public function get_missing_billing_info(int $billing_term, int $year, int $mont, array $contracts_to_bill, array $contract_billing_start_date, string $export_format)
+	{
+		$exportable = null;
+		$missing_billing_info = array();
+		switch($export_format)
+		{
+			case 'agresso_gl07':
+				$exportable = $export_format;
+				break;
+			default:
+				$missing_billing_info[] = 'Unknown export format.';
+				break;
+		}
+		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
+		{
+			$contract = rental_socontract::get_instance()->get_single($contract_id);
+			$info = ($export_format == 'agresso_gl07') ? rental_agresso_gl07::get_missing_billing_info($contract) : null;
+			if($info != null && count($info) > 0)
+			{
+				$missing_billing_info[$contract_id] = $info;
+			}
+		}
+		return $missing_billing_info;
+	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date, string $export_type)
 	{
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
@@ -178,15 +203,20 @@ class rental_sobilling extends rental_socommon
 	
 	public function get_export($billing_job, $export_format)
 	{
-		$exportable;
+		$exportable = null;
 		switch($export_format)
 		{
 			case 'agresso_gl07':
 				$exportable = new rental_agresso_gl07($billing_job);
 				break;
 		}
-		return $exportable->get_contents();
+		if($exportable != null)
+		{
+			return $exportable->get_contents();
+		}
+		return '';
 	
 	}
+	
 }
 ?>
