@@ -38,12 +38,13 @@ class rental_uibilling extends rental_uicommon
 			{
 				$billing_job_id = phpgw::get_var('id');
 				$billing_job = rental_sobilling::get_instance()->get_single($billing_job_id);
-				rental_sobilling::get_export($billing_job, phpgw::get_var('export_type'));
+				rental_sobilling::get_export($billing_job, phpgw::get_var('export_format'));
 				$data = array
 				(
 					'billing_job' => $billing_job,
 					'errorMsgs' => $errorMsgs,
 					'warningMsgs' => $warningMsgs,
+					'export_format'	=> phpgw::get_var('export_format'),
 					'infoMsgs' => $infoMsgs
 				);
 				$this->render('billing_step3.php', $data);
@@ -58,16 +59,37 @@ class rental_uibilling extends rental_uicommon
 					{
 						$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
 					}
-					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps);
-					$data = array
-					(
-						'billing_job' => $billing_job,
-						'errorMsgs' => $errorMsgs,
-						'warningMsgs' => $warningMsgs,
-						'infoMsgs' => $infoMsgs
-					);
-					$this->render('billing_step3.php', $data);
-					return;
+					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
+					var_dump($missing_billing_info);
+					if($missing_billing_info == null || count($missing_billing_info) == 0)
+					{
+						$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
+						$data = array
+						(
+							'billing_job' => $billing_job,
+							'export_format'	=> phpgw::get_var('export_format'),
+							'errorMsgs' => $errorMsgs,
+							'warningMsgs' => $warningMsgs,
+							'infoMsgs' => $infoMsgs
+						);
+						$this->render('billing_step3.php', $data);
+						return;
+					}
+					else // Incomplete biling info
+					{
+						foreach($missing_billing_info as $contract_id => $info_array)
+						{
+							if($info_array != null && count($info_array) > 0)
+							{
+								$errorMsgs[] = lang('Missing billing information.', $contract_id);
+								foreach($info_array as $info)
+								{
+									$errorMsgs[] = ' - ' . lang($info);
+								}
+							}
+						}
+						$step = 2; // Go back to step 2
+					}
 				}
 				else
 				{
@@ -97,6 +119,7 @@ class rental_uibilling extends rental_uicommon
 				'billing_term' => phpgw::get_var('billing_term'),
 				'year' => phpgw::get_var('year'),
 				'month' => phpgw::get_var('month'),
+				'export_format'	=> phpgw::get_var('export_format'),
 				'errorMsgs' => $errorMsgs,
 				'warningMsgs' => $warningMsgs,
 				'infoMsgs' => $infoMsgs
