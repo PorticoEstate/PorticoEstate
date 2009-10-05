@@ -84,9 +84,12 @@
 	);
 
     function doExport() {
-        window.location = 'index.php?menuaction=rental.uibilling.download';
+        window.location = 'index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>';
     }
 </script>
-<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
+<fieldset>
+	<h3><?php echo lang('export_to') ?></h3>
+	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+</fieldset>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>

@@ -11,9 +11,10 @@ class rental_uibilling extends rental_uicommon
 	
 	public $public_functions = array
 	(
-		'index'	=> true,
-		'query'	=> true,
-		'view'	=> true
+		'index'     => true,
+		'query'     => true,
+		'view'      => true,
+		'download'	=> true,
 	);
 	
 	public function index()
@@ -223,7 +224,7 @@ class rental_uibilling extends rental_uicommon
 				$value['labels'][] = lang('show');
 				break;
 		}
-	}
+    }
 
 }
 ?>

@@ -137,7 +137,7 @@
 	}
 ?>
 <fieldset>
-	<h3><?php echo lang('export') ?></h3>
+	<h3><?php echo lang('export_to') ?></h3>
 	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
 </fieldset>
 
