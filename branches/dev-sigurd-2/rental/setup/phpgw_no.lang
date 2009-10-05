@@ -1,3 +1,5 @@
+1-6 characters	rental	no	1-6 tegn
+6 characters	rental	no	6 tegn
 account_in	rental	no	Inngående konto
 account_number	rental	no	Kontonummer
 account_out	rental	no	Utgående konto
@@ -10,8 +12,8 @@ add	rental	no	Legg til
 address	rental	no	Adresse
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso ID
-Agresso GL07	rental	no	Agresso GL07 - hovedbokstall
-Agresso LG04	rental	no	Agresso LG04 - fakturagrunnlag
+agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
+agresso_lg04	rental	no	Agresso LG04 - fakturagrunnlag
 all	rental	no	Alle
 and	rental	no	og
 annually	rental	no	Årlig
@@ -99,6 +101,7 @@ every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
+Export format	rental	no	Eksportformat
 export_to	rental	no	Eksporter
 external	rental	no	Eksterne kontraktsparter
 facilit_import	rental	no	Import fra Facilit
@@ -122,6 +125,7 @@ house_number	rental	no	Husnummer
 id	rental	no	ID
 in_operation	rental	no	I drift
 internal	rental	no	Interne kontraktsparter
+Invalid location code for the building.	rental	no	Ugyldig enhetsnummer for bygg.
 invoice	rental	no	Faktura
 invoice_header	rental	no	Kontraktsoverskrift
 is_area	rental	no	Areal
@@ -153,6 +157,14 @@ messages_required_field	rental	no	Dette feltet er påkrevd
 messages_right_click_to_add	rental	no	Høyreklikk for å legge til
 messages_saved_form	rental	no	Informasjonen ble lagret.
 messages_string_too_long	rental	no	Teksten er for lang
+Missing account in.	rental	no	Inngående konto mangler.
+Missing account out.	rental	no	Utgående konto mangler.
+Missing billing information.	rental	no	Ufullstendig konteringsinformasjon for kontrakt med id %1. Dette må rettes for å kunne fakturere kontrakten.
+Missing project id.	rental	no	Prosjektnummer mangler.
+Missing responsibility id.	rental	no	Ansvar mangler.
+Missing service id.	rental	no	Tjeneste mangler.
+Missing system setting for project id.	rental	no	Systeminnstilling for prosjektnummer mangler.
+Missing system setting for responsibility id for the current user.	rental	no	Systeminnstilling for ansvar mangler.
 mobile_phone	rental	no	Mobiltelefon
 month 1	rental	no	januar
 month 2	rental	no	februar
@@ -187,6 +199,7 @@ next	rental	no	Neste
 nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet
 no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
+No contracts were selected.	rental	no	Du må velge minst én kontrakt for å faktuere.
 no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 no_value	rental	no	Ingen
 not_available	rental	no	Ikke tilgjengelig
@@ -198,6 +211,8 @@ occupied	rental	no	Opptatt
 of_total	rental	no	av totalt
 old_contract_id	rental	no	Gammelt kontraktsnummer
 ODS	rental	no	ODS
+One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
+One or more price items have an invalid Agresso id. Id must consist of one capital letter and three digits.	rental	no	Ett eller flere priselementer har en ugyldig Agresso-id. Iden må bestå av én stor bokstav og tre tall.
 organisation_number	rental	no	Organisasjonsnummer
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
@@ -224,6 +239,7 @@ price_item_type_area	rental	no	Areal
 price_list	rental	no	Prisbok
 price	rental	no	Pris
 project_id	rental	no	Prosjektnummer
+Project id can not be more than 6 characters.	rental	no	Prosjektnummer kan ikke være mer enn seks tegn.
 propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
 property_id	rental	no	BKB Identifikator
 property	rental	no	Eiendom
@@ -241,6 +257,7 @@ reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
 reskontro	rental	no	Reskontronummer
 responsibility	rental	no	Ansvar
+Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
 result_unit_number	rental	no	Resultatsenhet
 run by	rental	no	Utført av
 room	rental	no	Rom
@@ -260,6 +277,7 @@ selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer
 serial	rental	no	Løpenummer
 service	rental	no	Tjeneste
+Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
 showing_composite	rental	no	Leieobjekt
@@ -273,6 +291,8 @@ status_before	rental	no	før
 status_date	rental	no	den
 status	rental	no	Status
 sum	rental	no	Sum
+System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
+System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
 the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
@@ -291,6 +311,7 @@ under_dismissal	rental	no	Under oppsigelse
 under_planning	rental	no	Under planlegging
 update	rental	no	Oppdatér
 url	rental	no	Nettsted
+Unable to get a location code for the building.	rental	no	Klarte ikke å hente enhetsnummer for bygget.
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 weekly	rental	no	Ukentlig
