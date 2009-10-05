@@ -10,6 +10,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 	<input type="hidden" name="year" value="<?php echo $billing_job->get_year() ?>"/>
 	<input type="hidden" name="month" value="<?php echo $billing_job->get_month() ?>"/>
 	<input type="hidden" name="billing_term" value="<?php echo $billing_job->get_billing_term() ?>"/>
+	<input type="hidden" name="export_format" value="<?php echo $export_format ?>"/>
 	<div>
 		<table>
 			<tr>
@@ -74,13 +75,8 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 				<td><?php echo $billing_job->is_success() ? lang('yes') : lang('no') ?></td>
 			</tr>
 			<tr>
-				<td>&amp;nbsp;</td>
-				<td>
-					<select name="export_type">
-						<option value="agresso_gl07"><?php echo lang('Agresso GL07') ?></option>
-						<option value="agresso_lg04"><?php echo lang('Agresso LG04') ?></option>
-					</select>
-				</td>
+				<td><?php echo lang('Export format') ?></td>
+				<td><?php echo lang($export_format); ?></td>
 			</tr>
 			<tr>
 				<td>&amp;nbsp;</td>

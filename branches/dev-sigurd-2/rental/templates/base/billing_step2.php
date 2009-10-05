@@ -5,6 +5,7 @@
 	<input type="hidden" name="year" value="<?php echo $year ?>"/>
 	<input type="hidden" name="month" value="<?php echo $month ?>"/>
 	<input type="hidden" name="billing_term" value="<?php echo $billing_term ?>"/>
+	<input type="hidden" name="export_format" value="<?php echo $export_format ?>"/>
 	<div>
 		<table>
 			<tr>
@@ -45,6 +46,10 @@
 					}
 					?>
 				</td>
+			</tr>
+			<tr>
+				<td><?php echo lang('Export format') ?></td>
+				<td><?php echo lang($export_format); ?></td>
 			</tr>
 			<tr>
 				<td><input type="submit" name="previous" value="<?php echo lang('previous') ?>"/></td>

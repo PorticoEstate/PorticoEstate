@@ -79,6 +79,17 @@
 				</td>
 			</tr>
 			<tr>
+				<td>
+					<label for="export_format"><?php echo lang('Export format') ?></label>
+				</td>
+				<td>
+					<select name="export_format">
+						<option value="agresso_gl07"><?php echo lang('agresso_gl07') ?></option>
+						<option value="agresso_lg04"><?php echo lang('agresso_lg04') ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td>&amp;nbsp;</td>
 				<td><input type="submit" name="next" value="<?php echo lang('next') ?>"/></td>
 			</tr>
