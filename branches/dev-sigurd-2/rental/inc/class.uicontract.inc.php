@@ -1,8 +1,9 @@
 <?php
 	phpgw::import_class('rental.uicommon');
-	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.sobilling');
+	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.sodocument');
+	phpgw::import_class('rental.soinvoice');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');

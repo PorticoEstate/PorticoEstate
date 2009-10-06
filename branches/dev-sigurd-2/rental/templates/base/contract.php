@@ -6,8 +6,6 @@
 	$config->read();
 ?>
 
-
-
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 

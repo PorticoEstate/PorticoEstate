@@ -31,7 +31,7 @@ class rental_uiinvoice_price_item extends rental_uicommon
 		switch($query_type)
 		{
 			case 'invoice_price_items':
-				$filters = array('id' => phpgw::get_var('invoice_id'));
+				$filters = array('invoice_id' => phpgw::get_var('invoice_id'));
 				$result_objects = rental_soinvoice_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_soinvoice_price_item::get_instance()->get_count($search_for, $search_type, $filters);
 				break;

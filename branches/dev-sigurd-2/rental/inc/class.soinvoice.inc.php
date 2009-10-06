@@ -32,7 +32,7 @@ class rental_soinvoice extends rental_socommon
 		}
 		if(isset($filters['contract_id']))
 		{
-			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
+			$filter_clauses[] = "rental_invoice.contract_id = {$this->marshal($filters['contract_id'],'int')}";
 		}
 		if(isset($filters['billing_id']))
 		{
@@ -58,7 +58,7 @@ class rental_soinvoice extends rental_socommon
 			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, rental_composite.name AS composite_name, rental_party.first_name AS party_first_name, rental_party.last_name AS party_last_name, rental_party.company_name AS party_company_name';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ' ORDER BY rental_invoice.id DESC';
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
