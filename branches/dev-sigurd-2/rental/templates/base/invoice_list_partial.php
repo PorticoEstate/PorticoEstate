@@ -85,7 +85,11 @@
 		'<?php echo $list_id ?>_form',
 		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
-		'<?php echo $list_id ?>_paginator'
+		'<?php echo $list_id ?>_paginator',
+		'<?php echo $list_id ?>',
+		null,
+		null,
+		<?php echo $disable_left_click ? 'true' : 'false'; ?>
 	);
 
     function doExport() {
