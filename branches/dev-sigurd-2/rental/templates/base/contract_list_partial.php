@@ -88,8 +88,7 @@
 	);
 
 
-    function doExport() {
-        // TODO: Add support for status date
+    function contract_export(ctype) {
         var typeselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_contract_type');
         var typeoption = typeselect.options[typeselect.selectedIndex].value;
 
@@ -97,8 +96,10 @@
         var statusoption = statusselect.options[statusselect.selectedIndex].value;
 
         window.location = 'index.php?menuaction=rental.uicontract.download'+
+            '&type='+ctype+
             '&contract_type='+typeoption+
-            '&contract_status='+statusoption;
+            '&contract_status='+statusoption+
+            '<?php echo $url_add_on ?>';
     }
 </script>
 <?php
@@ -159,7 +160,7 @@
 
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
-	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+	<div id="export"><a href="javascript:contract_export('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
 </fieldset>
 
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
