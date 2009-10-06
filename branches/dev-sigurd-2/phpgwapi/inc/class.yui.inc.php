@@ -80,6 +80,10 @@
 					$load = array('container-min', 'dragdrop-min');
 					break;
 
+				case 'history':
+					$load = array('history-min');
+					break;
+
 				case 'utilities':
 					$load = array('container-min');
 					break;
