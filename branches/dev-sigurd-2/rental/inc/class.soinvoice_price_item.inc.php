@@ -55,7 +55,7 @@ class rental_soinvoice_price_item extends rental_socommon
 			$cols = 'rental_invoice_price_item.id, invoice_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": 'ORDER BY rental_invoice_price_item.id ASC';
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ($return_count ? '' : 'ORDER BY rental_invoice_price_item.id ASC');
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
