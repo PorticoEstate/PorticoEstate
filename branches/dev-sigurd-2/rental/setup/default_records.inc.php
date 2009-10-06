@@ -424,6 +424,20 @@ $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_i
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (7, 19, 'Renovasjon', 791.3, 0, 'Y903', true, 10.94, 8656.82, '2005-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (8, 19, 'Vedlikehold', 791.3, 0, 'Y905', true, 98.23, 77729.40, '2009-01-01', NULL)");
 
+	// Bergen Rådhus
+$oProc->query("INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, term_id, year, month, deleted, export_format) VALUES ('82508.85',true,{$rental_internal},1254549759,1254549759,NULL,{$loc_id_internal},1,2009,7,false,'agresso_gl07')");
+
+	// Bergen Rådhus
+$oProc->query("INSERT INTO rental_invoice(contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id) VALUES (19,1,10,1254549759,1246406400,1248998400,'82508.85','793.1','Gjelder kjeller, 1 og 9 etg (inkl fellesareal)','119001','119001','13000','013000','9')");
+
+	// Bergen Rådhus
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Administrasjon','Y900',true,'23.98','791.3',0,'1582.6','2009-07-01','2009-07-31')");
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Forsikring','Y901',true,'10.57','791.3',0,'696.34','2009-07-01','2009-07-31')");
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Kapitalkostnad','Y904',true,'1075.18','791.3',0,'70900.48','2009-07-01','2009-07-31')"); 
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Kom.avg. uten renovasjon','Y902',true,'32.29','791.3',0,'2128.6','2009-07-01','2009-07-31')"); 
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Renovasjon','Y903',true,'10.94','791.3',0,'720.08','2009-07-01','2009-07-31')");
+$oProc->query("INSERT INTO rental_invoice_price_item (invoice_id, title, agresso_id, is_area, price, area, count, total_price, date_start, date_end) VALUES (1,'Vedlikehold','Y905',true,'98.23','791.3',0,'6480.75','2009-07-01','2009-07-31')");
+
 $oProc->query("INSERT INTO rental_notification (location_id, contract_id, message, date, recurrence) VALUES ({$loc_id_internal},11,'Oppdatér leietaker med ny postadresse.',1250593658,0)");
 $oProc->query("INSERT INTO rental_notification (location_id, contract_id, message, date, recurrence) VALUES ({$loc_id_internal},13,'Leietaker tilbake fra ferie. Følg opp e-post sendt ut for to uker siden.',1250593658,0)");
 $oProc->query("INSERT INTO rental_notification (location_id, contract_id, message, date, recurrence) VALUES ({$loc_id_internal},15,'Kontrollér at priselementer er i henhold.',1250593658,0)");
