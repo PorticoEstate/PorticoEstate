@@ -473,7 +473,10 @@
 		    }
 			return array(
 				'total_records' => $total_records,
-				'results'		=> $results
+				'results'		=> $results,
+				'start'			=> $start,
+				'sort'			=> $sort,
+				'dir'			=> $dir
 			);
 		}
 		

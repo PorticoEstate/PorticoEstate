@@ -112,6 +112,7 @@
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
 			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('calendar');
@@ -414,6 +415,9 @@
 			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable' => $results['total_records'], 
+					'startIndex' => $results['start'], 
+					'sortKey' => $results['sort'], 
+					'sortDir' => $results['dir'], 
 					'Result' => $results['results']
 				)   
 			);  
