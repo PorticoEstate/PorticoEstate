@@ -1,19 +1,16 @@
 <?php
 	include_class('rental', 'contract', 'inc/model/');
-	include_class('rental', 'model', 'inc/model/');
+	include_class('rental', 'price_item', 'inc/model/');
 
 	/**
 	 * Represents a price item in an invoice. The data is typically built from
 	 * an instance of rental_contract_price_item.
 	 *
 	 */
-	class rental_invoice_price_item extends rental_model
+	class rental_invoice_price_item extends rental_price_item
 	{
 		protected $decimals;
-		protected $id;
 		protected $invoice_id;
-		protected $title;
-		protected $agresso_id;
 		protected $is_area;
 		protected $price_per_year;
 		protected $area;
@@ -40,33 +37,12 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 		
-		public function set_id($id)
-		{
-			$this->id = $id;
-		}
-	
-		public function get_id(){ return $this->id; }
-		
 		public function set_invoice_id(int $invoice_id)
 		{
 			$this->invoice_id = (int)$invoice_id;
 		}
-	
-		public function set_title(string $title)
-		{
-			$this->title = $title;
-		}
-	
-		public function get_title(){ return $this->title; }
-			
-		public function get_invoice_id(){ return $this->invoice_id; }
-			
-		public function set_agresso_id(string $agresso_id)
-		{
-			$this->agresso_id = $agresso_id;
-		}
-	
-		public function get_agresso_id(){ return $this->agresso_id; }
+		
+				public function get_invoice_id(){ return $this->invoice_id; }
 			
 		public function set_is_area(boolean $is_area)
 		{
@@ -191,7 +167,19 @@
 		
 		public function serialize()
 		{
-			return array();
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			return array
+				(
+					'title'				=> $this->get_title(),
+					'agresso_id'		=> $this->get_agresso_id(),
+					'is_area'			=> $this->get_type_text(),
+					'price'				=> $this->get_price(),
+					'area'				=> $this->get_area(),
+					'count'				=> $this->get_count(),
+					'total_price'		=> $this->get_total_price(),
+					'timestamp_start'	=> date($date_format, $this->get_timestamp_start()),
+					'timestamp_end'		=> date($date_format, $this->get_timestamp_end()),
+				);
 		}
 		
 	}

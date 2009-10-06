@@ -63,7 +63,7 @@ class rental_soinvoice_price_item extends rental_socommon
 	{
 		if($price_item == null)
 		{
-			$price_item = new rental_invoice_price_item(0, $this->db->f('id', true), $this->db->f('invoice_id', true), $this->db->f('title', true), $this->db->f('agresso_id', true), $this->db->f('is_area', true), $this->db->f('price', true), $this->db->f('area', true), $this->db->f('count', true), $this->db->f('date_start', true), $this->db->f('date_end', true));
+			$price_item = new rental_invoice_price_item(0, $this->db->f('id', true), $this->db->f('invoice_id', true), $this->db->f('title', true), $this->db->f('agresso_id', true), $this->db->f('is_area', true), $this->db->f('price', true), $this->db->f('area', true), $this->db->f('count', true), strtotime($this->db->f('date_start', true)), strtotime($this->db->f('date_end', true)));
 			$price_item->set_total_price($this->db->f('total_price', true));
 		}
 		return $price_item;
