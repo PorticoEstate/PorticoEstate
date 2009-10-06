@@ -121,7 +121,7 @@
 		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
-			'title'	=> isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title']? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status}} ({$total_records})",
+			'title'	=> isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title']? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
 			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -176,7 +176,7 @@
 		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
-			'title'	=> isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title']? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status}} ({$total_records})",
+			'title'	=> isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title']? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
 			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
