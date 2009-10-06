@@ -27,6 +27,7 @@ class rental_sobilling extends rental_socommon
 		{
 			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
+		$filter_clauses[] = "deleted = false";
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -41,7 +42,7 @@ class rental_sobilling extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, location_id, term_id, year, month';
+			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, term_id, year, month, export_format, export_data';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY timestamp_stop DESC';
 		}
@@ -57,6 +58,12 @@ class rental_sobilling extends rental_socommon
 			$billing->set_total_sum($this->db->f('total_sum', true));
 			$billing->set_timestamp_start($this->db->f('timestamp_start', true));
 			$billing->set_timestamp_stop($this->db->f('timestamp_stop', true));
+			$billing->set_timestamp_commit($this->db->f('timestamp_commit', true));
+			$billing->set_export_format($this->db->f('export_format', true));
+			if($this->db->f('export_data', true) != null)
+			{
+				$billing->set_generated_export(true);
+			}
 		}
 		return $billing;
 	}
@@ -75,12 +82,15 @@ class rental_sobilling extends rental_socommon
 			$this->marshal($billing->get_created_by(), 'int'),
 			$this->marshal($billing->get_timestamp_start(), 'int'),
 			$this->marshal($billing->get_timestamp_stop(), 'int'),
+			$this->marshal($billing->get_timestamp_commit(), 'int'),
 			$this->marshal($billing->get_location_id(), 'int'),
 			$this->marshal($billing->get_billing_term(), 'int'),
 			$this->marshal($billing->get_year(), 'int'),
 			$this->marshal($billing->get_month(), 'int'),
+			$billing->is_deleted() ? 'true' : 'false',
+			$this->marshal($billing->get_export_format(), 'string'),
 		);
-		$query ="INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, location_id, term_id, year, month) VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, term_id, year, month, deleted, export_format) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -98,10 +108,13 @@ class rental_sobilling extends rental_socommon
 			"success = '" . ($billing->is_success() ? 'true' : 'false') . "'",
 			'timestamp_start = ' . $this->marshal($billing->get_timestamp_start(), 'int'),
 			'timestamp_stop = ' . $this->marshal($billing->get_timestamp_stop(), 'int'),
+			'timestamp_commit = ' . $this->marshal($billing->get_timestamp_commit(), 'int'),
 			'location_id = ' . $this->marshal($billing->get_location_id(), 'int'),
 			'term_id = ' . $this->marshal($billing->get_billing_term(), 'int'),
 			'year = ' . $this->marshal($billing->get_year(), 'int'),
-			'month = ' . $this->marshal($billing->get_month(), 'int')
+			'month = ' . $this->marshal($billing->get_month(), 'int'),
+			"deleted = '" . ($billing->is_deleted() ? 'true' : 'false') . "'",
+			'export_format = ' . $this->marshal($billing->get_export_format(), 'string'),
 		);
 		$result = $this->db->query("UPDATE rental_billing SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__,__FILE__);
 	}
@@ -152,12 +165,13 @@ class rental_sobilling extends rental_socommon
 		return $missing_billing_info;
 	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date, string $export_type)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date, string $export_format)
 	{
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
 		$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month, $created_by); // The billing job itself
 		$billing->set_timestamp_start(time()); // Start of run
+		$billing->set_export_format($export_format);
 		$this->store($billing); // Store job as it is
 		$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
 		$counter = 0;
@@ -192,7 +206,7 @@ class rental_sobilling extends rental_socommon
 	 */
 	public function has_been_billed($contract_type, $billing_term, $year, $month)
 	{
-		$sql = "SELECT COUNT(id) AS count FROM rental_billing WHERE location_id = {$this->marshal($contract_type,'int')} AND term_id = {$this->marshal($billing_term,'int')} AND year = {$this->marshal($year,'int')} AND month = {$this->marshal($month,'int')}";$result = $this->db->query($sql);
+		$sql = "SELECT COUNT(id) AS count FROM rental_billing WHERE location_id = {$this->marshal($contract_type,'int')} AND term_id = {$this->marshal($billing_term,'int')} AND year = {$this->marshal($year,'int')} AND month = {$this->marshal($month,'int')} AND deleted = false";
 		$result = $this->db->query($sql, __LINE__, __FILE__);
 		if($result && $this->db->next_record())
 		{
@@ -201,10 +215,15 @@ class rental_sobilling extends rental_socommon
 		return false;
 	}
 	
-	public function get_export($billing_job, $export_format)
+	/**
+	 * Generates export data and stores in database.
+	 * 
+	 * @param $billing_job
+	 */
+	public function generate_export(&$billing_job)
 	{
 		$exportable = null;
-		switch($export_format)
+		switch($billing_job->get_export_format())
 		{
 			case 'agresso_gl07':
 				$exportable = new rental_agresso_gl07($billing_job);
@@ -212,10 +231,22 @@ class rental_sobilling extends rental_socommon
 		}
 		if($exportable != null)
 		{
-			return $exportable->get_contents();
+			$sql = "UPDATE rental_billing SET export_data = {$this->marshal($exportable->get_contents(),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
+			$result = $this->db->query($sql, __LINE__, __FILE__);
+			return true;
+		}
+		return false;
+	}
+	
+	public function get_export_data(int $billing_job_id)
+	{
+		$sql = "SELECT export_data FROM rental_billing WHERE id = {$this->marshal($billing_job_id,'int')}";
+		$result = $this->db->query($sql, __LINE__, __FILE__);
+		if($result && $this->db->next_record())
+		{
+			return $this->unmarshal($this->db->f('export_data', true), 'string');
 		}
 		return '';
-	
 	}
 	
 }

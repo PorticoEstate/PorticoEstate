@@ -279,16 +279,20 @@
 		),
 		'rental_billing' => array(
 			'fd' => array(
-				'id'				=>	array('type' => 'auto', 'nullable' => false),
-				'total_sum'			=>	array('type' => 'float', 'precision' => '8'),
-				'success'			=>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'id'				=> array('type' => 'auto', 'nullable' => false),
+				'total_sum'			=> array('type' => 'float', 'precision' => '8'),
+				'success'			=> array('type' => 'bool','nullable' => false,'default' => 'false'),
 				'created_by'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'timestamp_start'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'timestamp_stop'	=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'location_id'		=>	array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
-				'term_id'			=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'year'				=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'month'				=>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'timestamp_start'	=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'timestamp_stop'	=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'timestamp_commit'	=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
+				'term_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'year'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'month'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'deleted'			=> array('type' => 'bool', 'default' => 'false'),
+				'export_format'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'export_data'		=> array('type' => 'blob', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

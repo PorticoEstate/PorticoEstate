@@ -23,13 +23,18 @@
 	},
 	{
 		key: "timestamp_stop",
-		label: "<?php echo lang('ended') ?>",
+		label: "<?php echo lang('Run') ?>",
 	    sortable: true
 	},
 	{
 		key: "created_by",
 		label: "<?php echo lang('run by') ?>",
 	    sortable: false
+	},
+	{
+		key: "timestamp_commit",
+		label: "<?php echo lang('Commited') ?>",
+	    sortable: true
 	},
 	{
 		key: "actions",

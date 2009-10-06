@@ -11,10 +11,13 @@ class rental_uibilling extends rental_uicommon
 	
 	public $public_functions = array
 	(
-		'index'     => true,
-		'query'     => true,
-		'view'      => true,
-		'download'	=> true,
+		'index'     		=> true,
+		'query'			    => true,
+		'view'			    => true,
+		'delete'			=> true,
+		'commit'			=> true,
+		'download'			=> true,
+		'download_export'	=> true
 	);
 	
 	public function index()
@@ -32,69 +35,43 @@ class rental_uibilling extends rental_uicommon
 		$step = null; // Used for overriding the user's selection and choose where to go by code
 		
 		// Step 3 - the billing job
-		if((phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) || phpgw::get_var('generate_export') != null) // User clicked next on step 2
+		if(phpgw::get_var('step') == '2' && phpgw::get_var('next') != null) // User clicked next on step 2
 		{
-			if(phpgw::get_var('generate_export') != null)
+			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
+			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
 			{
-				$billing_job_id = phpgw::get_var('id');
-				$billing_job = rental_sobilling::get_instance()->get_single($billing_job_id);
-				rental_sobilling::get_export($billing_job, phpgw::get_var('export_format'));
-				$data = array
-				(
-					'billing_job' => $billing_job,
-					'errorMsgs' => $errorMsgs,
-					'warningMsgs' => $warningMsgs,
-					'export_format'	=> phpgw::get_var('export_format'),
-					'infoMsgs' => $infoMsgs
-				);
-				$this->render('billing_step3.php', $data);
+				$billing_start_timestamps = array(); // Billing start timestamps for each of the contracts
+				foreach($contract_ids as $contract_id)
+				{
+					$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
+				}
+				$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
+				if($missing_billing_info == null || count($missing_billing_info) == 0)
+				{
+					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.view', 'id' => $billing_job->get_id()));
+					return;
+				}
+				else // Incomplete biling info
+				{
+					foreach($missing_billing_info as $contract_id => $info_array)
+					{
+						if($info_array != null && count($info_array) > 0)
+						{
+							$errorMsgs[] = lang('Missing billing information.', $contract_id);
+							foreach($info_array as $info)
+							{
+								$errorMsgs[] = ' - ' . lang($info);
+							}
+						}
+					}
+					$step = 2; // Go back to step 2
+				}
 			}
 			else
 			{
-				$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
-				if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
-				{
-					$billing_start_timestamps = array(); // Billing start timestamps for each of the contracts
-					foreach($contract_ids as $contract_id)
-					{
-						$billing_start_timestamps[] = strtotime(phpgw::get_var('bill_start_date_' . $contract_id . '_hidden'));
-					}
-					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
-					if($missing_billing_info == null || count($missing_billing_info) == 0)
-					{
-						$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $billing_start_timestamps, phpgw::get_var('export_format'));
-						$data = array
-						(
-							'billing_job' => $billing_job,
-							'export_format'	=> phpgw::get_var('export_format'),
-							'errorMsgs' => $errorMsgs,
-							'warningMsgs' => $warningMsgs,
-							'infoMsgs' => $infoMsgs
-						);
-						$this->render('billing_step3.php', $data);
-						return;
-					}
-					else // Incomplete biling info
-					{
-						foreach($missing_billing_info as $contract_id => $info_array)
-						{
-							if($info_array != null && count($info_array) > 0)
-							{
-								$errorMsgs[] = lang('Missing billing information.', $contract_id);
-								foreach($info_array as $info)
-								{
-									$errorMsgs[] = ' - ' . lang($info);
-								}
-							}
-						}
-						$step = 2; // Go back to step 2
-					}
-				}
-				else
-				{
-					$errorMsgs[] = lang('No contracts were selected.');
-					$step = 2; // Go back to step 2
-				}
+				$errorMsgs[] = lang('No contracts were selected.');
+				$step = 2; // Go back to step 2
 			}
 		}
 		// Step 2 - list of contracts that should be billed
@@ -151,14 +128,64 @@ class rental_uibilling extends rental_uicommon
 		{
 			$this->render('permission_denied.php');
 			return;
-		}			
+		}
+		$errorMsgs = array();
+		$infoMsgs = array();
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+		if($billing_job == null) // Not found
+		{
+			$errorMsgs[] = lang('Could not find specified billing job.');
+		}
+		else if(phpgw::get_var('generate_export') != null) // User wants to generate export
+		{
+			if(rental_sobilling::get_instance()->generate_export($billing_job))
+			{
+				$infoMsgs[] = lang('Export generated.');
+			}
+			else
+			{
+				$errorMsgs = lang('Export failed.');
+			}
+		}
 		$data = array
 		(
 			'billing_job' => $billing_job,
-			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index')))
+			'errorMsgs' => $errorMsgs,
+			'infoMsgs' => $infoMsgs,
+			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index'))),
+			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''))))
 		);
 		$this->render('billing.php', $data);
+	}
+	
+	/**
+	 * Deletes an uncommited billing job.
+	 */
+	public function delete()
+	{
+		if(!$this->isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}
+		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+		$billing_job->set_deleted(true);
+		rental_sobilling::get_instance()->store($billing_job);
+	}
+	
+	/**
+	 * Commits a billing job. After it's commited it cannot be deleted.
+	 */
+	public function commit()
+	{
+		if(!$this->isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}			
+		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
+		$billing_job->set_timestamp_commit(time());
+		rental_sobilling::get_instance()->store($billing_job);
 	}
 	
 	public function query()
@@ -239,13 +266,37 @@ class rental_uibilling extends rental_uicommon
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
+				if($value['timestamp_commit'] == null || $value['timestamp_commit'] == '')
+				{
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete', 'id' => $value['id'])));
+					$value['labels'][] = lang('delete');
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit', 'id' => $value['id'])));
+					$value['labels'][] = lang('commit');
+				}
 				break;
 			case 'invoices':
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
 				$value['labels'][] = lang('show');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id']))) . '#price';
+				$value['labels'][] = lang('edit');
 				break;
 		}
+    }
+    
+    public function download_export()
+    {
+		if(!$this->isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}
+    	$browser = CreateObject('phpgwapi.browser');
+		$browser->content_header('export.txt','text/plain');
+		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 
 }

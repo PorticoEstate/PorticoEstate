@@ -53,6 +53,8 @@ close	rental	no	Lukk
 CSV	rental	no	CSV
 comment	rental	no	Kommentar
 comments	rental	no	Kommentarer
+Commit	rental	no	Avslutt
+Commited	rental	no	Avsluttet
 company	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
@@ -68,6 +70,7 @@ contract_type_internleie	rental	no	Internleie
 contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
+Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
 count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
 count_suffix	rental	no	stk
@@ -101,7 +104,9 @@ every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
+Export	failed.	rental	no	Eksporten feilet.
 Export format	rental	no	Eksportformat
+Export generated.	rental	no	Eksporten ble generert.
 export_to	rental	no	Eksporter
 external	rental	no	Eksterne kontraktsparter
 facilit_import	rental	no	Import fra Facilit
@@ -120,6 +125,7 @@ f_new_rc	rental	no	Nytt leieobjekt
 from	rental	no	Fra
 f_select_columns	rental	no	Velg kolonner
 gab	rental	no	GAB
+Generate export	rental	no	Generér eksport
 half-year	rental	no	Halvårig
 house_number	rental	no	Husnummer
 id	rental	no	ID
@@ -259,6 +265,7 @@ reskontro	rental	no	Reskontronummer
 responsibility	rental	no	Ansvar
 Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
 result_unit_number	rental	no	Resultatsenhet
+Run	rental	no	Kjørt
 run by	rental	no	Utført av
 room	rental	no	Rom
 running	rental	no	Løpende
@@ -290,6 +297,7 @@ started	no	rental	Startet
 status_before	rental	no	før
 status_date	rental	no	den
 status	rental	no	Status
+Success	rental	no	Suksess
 sum	rental	no	Sum
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.

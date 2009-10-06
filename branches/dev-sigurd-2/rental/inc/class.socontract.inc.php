@@ -195,7 +195,7 @@ class rental_socontract extends rental_socommon
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
 			$order = $order ? $order.' '.$specific_ordering : "ORDER BY {$specific_ordering}";
 		}
-			
+		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -211,7 +211,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -228,7 +228,7 @@ class rental_socontract extends rental_socommon
 		$join_parties = $this->left_join.' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
 		$join_composites = 		$this->left_join." rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id";
 		$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
-		$join_last_billed = $this->left_join.' rental_invoice invoice ON (contract.id = invoice.contract_id)';
+		$join_last_billed = "{$this->left_join} rental_invoice invoice ON (contract.id = invoice.contract_id) {$this->left_join} rental_billing billing ON (invoice.billing_id = billing.id)";
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited.' '.$join_last_billed;
 
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
@@ -269,7 +269,8 @@ class rental_socontract extends rental_socommon
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
-		if($timestamp_end)
+		$billing_deleted = $this->unmarshal($this->db->f('deleted'),'bool');
+		if($timestamp_end && !$billing_deleted)
 		{
 			$contract->add_bill_timestamp($timestamp_end);
 		}

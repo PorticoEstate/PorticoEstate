@@ -19,7 +19,10 @@ class rental_billing extends rental_model
 	protected $total_sum;
 	protected $timestamp_start;
 	protected $timestamp_stop;
+	protected $timestamp_commit;
+	protected $deleted;
 	protected $created_by;
+	protected $has_generated_export;
 	
 	public static $so;
 	
@@ -32,6 +35,8 @@ class rental_billing extends rental_model
 		$this->month = (int)$month;
 		$this->success = false;
 		$this->created_by = (int)$created_by;
+		$this->has_generated_export = false;
+		$this->deleted = false;
 	}
 	
 	public function get_id(){ return $this->id; }
@@ -74,6 +79,14 @@ class rental_billing extends rental_model
 	{
 		$this->success = (boolean)$success;
 	}
+	
+	public function set_timestamp_commit($timestamp_commit)
+	{
+		$this->timestamp_commit = $timestamp_commit;
+	}
+
+	public function get_timestamp_commit(){ return $this->timestamp_commit; }
+	
 
 	public function is_success(){ return $this->success; }
 
@@ -82,7 +95,28 @@ class rental_billing extends rental_model
 		$this->created_by = (int)$created_by;
 	}
 
+	public function set_deleted(boolean $deleted)
+	{
+		$this->deleted = (boolean)$deleted;
+	}
+
+	public function is_deleted(){ return $this->deleted; }
+
 	public function get_created_by(){ return $this->created_by; }
+	
+	public function has_generated_export(){ return $this->has_generated_export; }
+	
+	public function set_generated_export(boolean $has_generated_export)
+	{
+		$this->has_generated_export = (boolean)$has_generated_export;
+	}
+	
+	public function set_export_format($export_format)
+	{
+		$this->export_format = $export_format;
+	}
+
+	public function get_export_format(){ return $this->export_format; }
 	
 	public function serialize()
 	{
@@ -100,11 +134,17 @@ class rental_billing extends rental_model
 		$description .= lang('month ' . $this->get_month()) . ' ';
 		$description .= $this->get_year();
 		$account = $GLOBALS['phpgw']->accounts->get($this->get_created_by());
+		$timestamp_commit = '';
+		if($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
+		{
+			$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
+		}
 		return array(
 			'id'				=> $this->get_id(),
 			'description'		=> $description,
 			'total_sum'			=> $this->get_total_sum(),
 			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
+			'timestamp_commit'	=> $timestamp_commit,
 			'created_by'		=> "{$account->__get('firstname')} {$account->__get('lastname')}"
 		);
 	}
