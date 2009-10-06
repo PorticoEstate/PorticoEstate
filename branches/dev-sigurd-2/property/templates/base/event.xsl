@@ -9,7 +9,7 @@
 	</xsl:template>
 
 <!-- add / edit  -->
-	<xsl:template match="edit">	
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
@@ -153,6 +153,16 @@
 								</input>
 							</td>
 						</tr>			
+						<tr>
+							<td valign="top">
+				                <a>
+            				        <xsl:attribute name="href"><xsl:value-of select="link_schedule"/></xsl:attribute>
+            				        <xsl:value-of select="php:function('lang', 'plan')" />
+            				    </a>
+							</td>
+						</tr>
+
+
 					</table>
 				</div>
 

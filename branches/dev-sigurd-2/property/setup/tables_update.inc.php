@@ -3765,7 +3765,7 @@
 	{
 		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_workorder');
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		if(isset($metadata['event_id']))
+		if(!isset($metadata['event_id']))
 		{
 			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','event_id',array('type' => 'int','precision' => 4,'nullable' => True));
 		}

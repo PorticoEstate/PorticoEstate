@@ -190,7 +190,7 @@ if ( !extension_loaded('mcal') )
 				'location_id' => 94
 			);
 //_debug_array($criteria);die();
-			$this->store_to_cache($criteria);
+			$this->find_scedules($criteria);
 //_debug_array($this->cached_events);die();
 			return $values;
 		}
@@ -482,7 +482,7 @@ if ( !extension_loaded('mcal') )
 		* @return array events
 		*/
 
-		function store_to_cache($params)
+		function find_scedules($params)
 		{			
 			if(!is_array($params))
 			{
@@ -493,7 +493,7 @@ if ( !extension_loaded('mcal') )
 			{
 				if(!isset($params['appname']) || !$params['appname'] || !isset($params['location']) || !$params['location'])
 				{
-					throw new Exception("property_boevent::store_to_cache - Missing location info in input");
+					throw new Exception("property_boevent::find_scedules - Missing location info in input");
 				}
 				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			}
@@ -502,23 +502,16 @@ if ( !extension_loaded('mcal') )
 				$location_id = $params['location_id'];
 			}
 
-			//The date string to convert - must match user's preferred date format
-			$start_date_parts = phpgwapi_datetime::date_array($params['start_date']);
-			$end_date_parts = phpgwapi_datetime::date_array($params['end_date']);
+			if($params['start_date'])
+			{
+				$syear = date('Y',$params['start_date']);
+				$smonth = date('m',$params['start_date']);
+				$sday = date('d',$params['start_date']);
+			}
 
-			$syear = $start_date_parts['year'];
-			$smonth = $start_date_parts['month'];
-			$sday = $start_date_parts['day'];
-
-/*			$eyear = (isset($params['eyear'])?$params['eyear']:0);
-			$emonth = (isset($params['emonth'])?$params['emonth']:0);
-			$eday = (isset($params['eday'])?$params['eday']:0);
-*/
-
-			$eyear = $end_date_parts['year'];
-			$emonth = $end_date_parts['month'];
-			$eday = $end_date_parts['day'];
-
+			$eyear = $params['end_date'] ? date('Y',$params['end_date']) : 0;
+			$emonth = $params['end_date'] ? date('m',$params['end_date']) : 0;
+			$eday = $params['end_date'] ? date('d',$params['end_date']) : 0;
 
 			$owner_id = (isset($params['owner'])?$params['owner']:0);
 			if($owner_id==0 && $this->is_group)
@@ -931,5 +924,98 @@ if ( !extension_loaded('mcal') )
 				}
 				$this->cached_events[$date][] = $event;
 			}					
+		}
+
+		/**
+		* Find recurring events for a week
+		*
+		* @param int $id             id of the event in question
+		* @param int $datetime_start unix timestamp on start
+		* @return array schedule
+		*/
+
+		public function event_schedule_week($id, $datetime_start)
+		{
+			$event = $this->so->read_single($id);
+			$criteria = array
+			(
+				'start_date'		=> $datetime_start,
+				'end_date'			=> $datetime_start + (86400 * 7),
+				'location_id'		=> $event['location_id'],
+				'location_item_id'	=> $event['location_item_id']
+			);
+
+			$this->find_scedules($criteria);
+			return $this->cached_events;
+		}
+
+		public function get_schedule($id, $buildingmodule, $resourcemodule, $search = null)
+		{
+/*
+    [id] => 11
+    [active] => 1
+    [building_id] => 8
+    [name] => Bane 1
+    [type] => Location
+    [building_name] => Haukelandshallen
+    [building_street] => St.Olavsvei 50 
+    [building_city] => Bergen 
+    [building_district] => Årstad
+    [activity_name] => Idrett
+    [description] => 
+    [activity_id] => 2
+    [permission] => Array
+        (
+            [read] => 1
+            [create] => 1
+            [delete] => 1
+            [write] => Array
+                (
+                    [id] => 1
+                    [active] => 1
+                    [building_id] => 1
+                    [name] => 1
+                    [type] => 1
+                    [description] => 1
+                    [activity_id] => 1
+                )
+
+        )
+
+*/
+			$date = new DateTime(phpgw::get_var('date'));
+			// Make sure $from is a monday
+			if($date->format('w') != 1)
+			{
+				$date->modify('last monday');
+			}
+
+			$prev_date = clone $date;
+			$next_date = clone $date;
+			$prev_date->modify('-1 week');
+			$next_date->modify('+1 week');
+			$resource = $this->read_single($id);
+            if ($search)
+            {
+                $resource['buildings_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $search, "type" => "building"));
+            }
+            else
+            {
+                $resource['buildings_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $buildingmodule . '.index'));
+            }
+
+			$resource['building_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $buildingmodule . '.show', 'id' => $resource['building_id']));
+			$resource['resource_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.show', 'id' => $resource['id']));
+			$resource['date'] = $date->format('Y-m-d');
+			$resource['week'] = intval($date->format('W'));
+			$resource['year'] = intval($date->format('Y'));
+			$resource['prev_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule', 'id' => $resource['id'], 'date'=> $prev_date->format('Y-m-d')));
+			$resource['next_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule', 'id' => $resource['id'], 'date'=> $next_date->format('Y-m-d')));
+			for($i = 0; $i < 7; $i++)
+			{
+				$resource['days'][] = array('label' => sprintf('%s<br/>%s %s', lang($date->format('l')), lang($date->format('M')), $date->format('d')), 'key' => $date->format('D'));
+				$date->modify('+1 day');
+			}
+			return $resource;
 		}
 	}
