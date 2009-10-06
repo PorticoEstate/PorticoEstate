@@ -22,6 +22,7 @@
 		protected $account_out; // 'Art' for the outlay side
 		protected $composite_names; // From party - not part of invoice db data
 		protected $party_names; // From party - not part of invoice db data
+		protected $project_id;
 		protected $service_id;
 		protected $responsibility_id;
 		
@@ -213,6 +214,7 @@
 			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_account_out(), $contract->get_service_id(), $contract->get_responsibility_id());
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
+			$invoice->set_project_id($contract->get_project_id());
 			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
 			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			$total_sum = 0;

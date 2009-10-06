@@ -159,15 +159,15 @@
 				}
 				// We need to find what we're basing the price on
 				$amount = $this->is_area() ? $this->get_area() : $this->get_count();
-				
-				$price_per_year = $amount * $this->get_price();
-				$price_per_month =  $price_per_year / 12.0; // Price per month is the year price divided on twelve months
+				$rounded_element_price_per_month = round($this->get_price() / 12.0, $this->decimals); // We have to first _round_ the element price per month
+				$price_per_month = $rounded_element_price_per_month * $amount; // The price per month is the rounded element price multipied by the amount
 				$this->total_price = $price_per_month * $num_of_complete_months; // The total price for the complete months are just the monthly price multiplied by the number of months
+				$rounded_price_per_year = round($this->get_price() * $amount, $this->decimals);
 				foreach($incomplete_months as $day_factors) // Runs through all the incomplete months
 				{
-					$this->total_price += ($price_per_year / $day_factors[0]) * $day_factors[1];
+					$this->total_price += ($rounded_price_per_year / $day_factors[0]) * $day_factors[1];
 				}
-				// We round the total price for each item				
+				// We round the total price for each item
 				$this->total_price = round($this->total_price, $this->decimals);
 			}
 			return $this->total_price;

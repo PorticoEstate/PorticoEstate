@@ -68,6 +68,7 @@ class rental_soinvoice extends rental_socommon
 		{
 			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true), $this->db->f('total_area', true), $this->db->f('header', true), $this->db->f('account_in', true), $this->db->f('account_out', true), $this->db->f('service_id', true), $this->db->f('responsibility_id', true), $this->db->f('project_id', true));
 			$invoice->set_party_id($this->unmarshal($this->db->f('party_id'),'int'));
+			$invoice->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
 		}
 		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
 		$party_company_name = $this->unmarshal($this->db->f('party_company_name'),'string');

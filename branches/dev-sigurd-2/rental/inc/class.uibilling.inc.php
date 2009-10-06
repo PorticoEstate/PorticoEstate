@@ -141,6 +141,7 @@ class rental_uibilling extends rental_uicommon
 			if(rental_sobilling::get_instance()->generate_export($billing_job))
 			{
 				$infoMsgs[] = lang('Export generated.');
+				$billing_job->set_generated_export(true); // The template need to know that we've genereated the export
 			}
 			else
 			{

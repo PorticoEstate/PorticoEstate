@@ -149,7 +149,7 @@ class rental_agresso_gl07 implements rental_exportable
 			// The income side
 			foreach($price_items as $price_item) // Runs through all items
 			{
-				$this->lines[] = $this->get_line($invoice->get_account_in(), $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'], $invoice->get_service_id(), $building_location_code, $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'], $price_item->get_agresso_id(), $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+				$this->lines[] = $this->get_line($invoice->get_account_in(), $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'], $invoice->get_service_id(), $building_location_code, $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'], $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
 			}
 			// The receiver's outlay side
 			$this->lines[] = $this->get_line($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
@@ -192,8 +192,8 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%-25s", '')										// 15	tax_system
 			.sprintf("%-25s", "NOK")									// 16	currency
 			.sprintf("%02s", '')										// 17	dc_flag
-			.sprintf("%020s", round($amount, 2) * 100)					// 18	cur_amount
-			.sprintf("%020s", round($amount, 2) * 100)					// 19	amount
+			.$this->get_formatted_amount($amount)						// 18	cur_amount
+			.$this->get_formatted_amount($amount)						// 19	amount
 			.sprintf("%011s", '')										// 20	number_1
 			.sprintf("%020s", '')										// 21	value_1
 			.sprintf("%020s", '')										// 22	value_2
@@ -243,6 +243,16 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%-2s", '')										// 66
 			;
 	}
+	
+	protected function get_formatted_amount($amount)
+	{
+		$amount = round($amount, 2) * 100;
+		if($amount < 0) // Negative number
+		{
+			return '-' . sprintf("%019s", abs($amount)); // We have to have the sign at the start of the string
+		}
+		return sprintf("%020s", $amount);
+	} 
 	
 } 
 
