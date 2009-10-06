@@ -2,6 +2,7 @@
 phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.sodocument');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');

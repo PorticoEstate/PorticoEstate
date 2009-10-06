@@ -15,7 +15,8 @@
 	//	'rental_contract_metadata_item',	// Custom field storage for contracts
 		'rental_unit',						// Link table between property register and rental objects or composites
 	//	'rental_comment',					// Comments to rental composites and tenants
-		'rental_document_composite',
+		'rental_document',					// Holds document meta data for both contracts and parties
+		'rental_document_types',			// Document types
 		'rental_contract_last_edited',
 		'rental_contract_responsibility',
 		'rental_notification',				// Stores user notifications

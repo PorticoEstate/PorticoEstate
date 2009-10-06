@@ -526,6 +526,15 @@
 			<?php } ?>
 		</div>
 		<div id="documents">
+			<?php
+				$list_form = true;
+				$list_id = 'documents_for_contract';
+				$url_add_on = "&amp;type={$list_id}&amp;contract_id={$contract->get_id()}";
+				unset($extra_cols);
+				unset($editors);
+				unset($related);
+				include('document_list_partial.php'); 
+			?>
 		</div>
 		<div id="notifications">
 			<h3><?php echo lang('new_notification') ?></h3>

@@ -58,6 +58,7 @@ Commited	rental	no	Avsluttet
 company	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
+contract	renta	no	Kontrakt
 contract_id	rental	no	Kontraktsnummer
 contract_number	rental	no	Kontraktnummer
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
@@ -91,6 +92,7 @@ department	rental	no	Avdeling
 deposit	rental	no	Depositum
 description	rental	no	Beskrivelse
 details	rental	no	Detaljer
+document_type	rental	no	Dokumenttype
 documents	rental	no	Dokumenter
 economy	rental	no	Økonomi
 edit_contract	rental	no	Redigér kontrakt
@@ -114,6 +116,7 @@ fax	rental	no	Faks
 field_of_responsibility	rental	no	Ansvarsområde
 filters 	rental	no	Filtre
 Finish	rental	no	Avslutt
+fire_drawings	rental	no	Branntegninger
 firstname	rental	no	Fornavn
 first	rental	no	Første
 fixed	rental	no	Tidsbestemt
@@ -318,6 +321,7 @@ type	rental	no	Type
 under_dismissal	rental	no	Under oppsigelse
 under_planning	rental	no	Under planlegging
 update	rental	no	Oppdatér
+upload	rental	no	Last opp
 url	rental	no	Nettsted
 Unable to get a location code for the building.	rental	no	Klarte ikke å hente enhetsnummer for bygget.
 user_or_group	rental	no	Bruker/Gruppe

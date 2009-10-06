@@ -437,6 +437,9 @@ $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$rental_intern
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$rental_in},1250593658)");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$rental_out},1250593658)");
 
+$oProc->query("INSERT INTO rental_document_types (title) VALUES ('contract')");
+$oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
+
 $asyncservice = CreateObject('phpgwapi.asyncservice');
 $asyncservice->delete('rental_populate_workbench_notifications');
 $asyncservice->set_timer(

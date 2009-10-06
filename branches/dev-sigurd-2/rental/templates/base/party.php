@@ -407,7 +407,15 @@
 			?>
 		</div>
 		<div id="documents">
-			Documents
+			<?php
+				$list_form = true;
+				$list_id = 'documents_for_party';
+				$url_add_on = "&amp;type={$list_id}&amp;party_id={$party->get_id()}";
+				unset($extra_cols);
+				unset($editors);
+				unset($related);
+				include('document_list_partial.php'); 
+			?>
 		</div>
 	</div>
 </div>

@@ -47,21 +47,7 @@
 					array('composite_id','location_code')
 				)
 		),
-		'rental_document_composite' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
-				'description' => array('type' => 'text', 'nullable' => true),
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				"rental_composite" => array('owner_id' => 'id'),
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
+		
 		'rental_contract_responsibility' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -352,4 +338,33 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'rental_document_types' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_document' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'contract_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'party_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'title' =>  array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'description' => array('type' => 'text', 'nullable' => true),
+				'type_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_contract' => array('contract_id' => 'id'),
+				'rental_party' => array('party_id' => 'id'),
+				'rental_document_types' => array('type_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		)
 	);
