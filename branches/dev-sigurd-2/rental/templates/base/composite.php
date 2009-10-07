@@ -128,6 +128,7 @@
 				$list_id = 'available_areas';
 				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
 				unset($extra_cols);
+				$related = array('available_areas_ctrl_toggle_level');
 				include('unit_list_partial.php');
 			?>
 		</div>
@@ -142,6 +143,7 @@
 					array("key" => "party", "label" => lang('party'), "index" => 4),
 					array("key" => "old_contract_id", "label" => lang('old_contract_id'), "index" => 5)
 				);
+				unset($related);
 				include('contract_list_partial.php');
 			?>
 		</div>

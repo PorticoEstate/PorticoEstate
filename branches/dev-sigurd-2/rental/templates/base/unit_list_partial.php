@@ -109,6 +109,9 @@
 	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('filters') ?></h3>
+		<?
+		// TODO: We should get the levels dynamically
+		?>
 		<label for="ctrl_toggle_level"><?php echo lang('level') ?></label>
 		<select name="level" id="<?php echo $list_id ?>_ctrl_toggle_level">
 			<option value="1"><?php echo lang('property') ?></option>
