@@ -129,7 +129,6 @@ class rental_socomposite extends rental_socommon
 		// We get the data from the property module
 		$data = execMethod('property.bolocation.read_single', $location_code);
 		$level = -1;
-		$generic_name = '';
 		$names = array();
 		$levelFound = false;
 		for($i = 1; !$levelFound; $i++)
@@ -138,8 +137,7 @@ class rental_socomposite extends rental_socommon
 			if(array_key_exists($loc_name, $data))
 			{
 				$level = $i;
-				$generic_name = $data[$loc_name];
-				$names[$level] = $generic_name;
+				$names[$level] = $data[$loc_name];
 			}
 			else{
 				$levelFound = true;
@@ -152,7 +150,7 @@ class rental_socomposite extends rental_socommon
 			$gabinfo = array_shift($gabinfos);
 			$gab_id = $gabinfo['gab_id'];
 		}
-		$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $name, $level, $names);
+		$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
 		$location->set_address_1($data['street_name'].' '.$data['street_number']);
 		foreach($data['attributes'] as $attributes)
 		{

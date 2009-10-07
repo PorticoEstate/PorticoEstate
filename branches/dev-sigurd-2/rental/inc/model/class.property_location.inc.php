@@ -8,7 +8,6 @@ class rental_property_location
 {
 	protected $location_code; // The '1101-01' code
 	protected $gab_id;
-	protected $generic_name; // Generic name of location - typically from loc1_name
 	protected $level;
 	protected $names; // Names from the different levels
 	protected $address_1;
@@ -16,11 +15,10 @@ class rental_property_location
 	protected $area_gros;
 	protected $area_net;
 
-	public function __construct(string $location_code, string $gab_id, string $generic_name = null, $level = -1, array $names = null)
+	public function __construct(string $location_code, string $gab_id, $level = -1, array $names = null)
 	{
 		$this->location_code = $location_code;
 		$this->gab_id = $gab_id;
-		$this->generic_name = $generic_name;
 		$this->level = (int)$level;
 		$this->names = $names;
 		$this->area_gros = 0.0;
