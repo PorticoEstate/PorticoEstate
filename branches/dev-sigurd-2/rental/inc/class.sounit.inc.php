@@ -110,7 +110,7 @@ class rental_sounit extends rental_socommon
 	
 	public function add(&$unit)
 	{
-		$sql = "INSERT INTO rental_unit (composite_id, location_code) VALUES ({$unit->get_composite_id()}, {$unit->get_location()})";
+		$sql = "INSERT INTO rental_unit (composite_id, location_code) VALUES ({$unit->get_composite_id()}, '{$unit->get_location()}')";
 		$result = $this->db->query($sql);
 	}
 	
