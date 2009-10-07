@@ -77,7 +77,7 @@
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'included_areas': // Returns areas/units added to a specified composite
-					$filters = array('included_areas' => phpgw::get_var('id')); // Composite id
+					$filters = array('included_areas' => phpgw::get_var('composite_id')); // Composite id
 					$result_objects = rental_sounit::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_sounit::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
