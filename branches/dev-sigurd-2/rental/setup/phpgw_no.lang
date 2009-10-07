@@ -25,6 +25,7 @@ area decimal places	rental	no	Antall desimaler for arealer
 area suffix	rental	no	Areal suffix
 audience	rental	no	Målgrupper
 availability	rental	no	Tilgjengelighet
+available_areas	rental	no	Tilgjenglig areal
 available_at	rental	no	Ledig på dato
 available_composites	rental	no	Ledige leieobjekt
 available_composites	rental	no	Tilgjengelige leieobjekter
