@@ -112,7 +112,7 @@
 				array($this, 'add_actions'), 
 				array(													// Parameters (non-object pointers)
 					$contract_id,										// [1] The contract id
-					$type,												// [2] The type of query
+					$query_type,										// [2] The type of query
 					$editable,											// [3] Editable flag
 					$this->type_of_user,								// [4] User role			
 					isset($contract) ? $contract->serialize() : null,	// [5] Serialized contract
