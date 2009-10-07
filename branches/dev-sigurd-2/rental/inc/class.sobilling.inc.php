@@ -1,6 +1,7 @@
 <?php
 phpgw::import_class('rental.socommon');
 include_class('rental', 'agresso_gl07', 'inc/model/');
+include_class('rental', 'agresso_lg04', 'inc/model/');
 
 class rental_sobilling extends rental_socommon
 {
@@ -149,6 +150,9 @@ class rental_sobilling extends rental_socommon
 			case 'agresso_gl07':
 				$exportable = $export_format;
 				break;
+			case 'agresso_lg04':
+				$exportable = $export_format;
+				break;
 			default:
 				$missing_billing_info[] = 'Unknown export format.';
 				break;
@@ -156,7 +160,16 @@ class rental_sobilling extends rental_socommon
 		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
-			$info = ($export_format == 'agresso_gl07') ? rental_agresso_gl07::get_missing_billing_info($contract) : null;
+			$info = null;
+			switch($export_format)
+			{
+				case 'agresso_gl07':
+					$info = rental_agresso_gl07::get_missing_billing_info($contract);
+					break;
+				case 'agresso_lg04':
+					$info = rental_agresso_lg04::get_missing_billing_info($contract);
+					break;
+			}
 			if($info != null && count($info) > 0)
 			{
 				$missing_billing_info[$contract_id] = $info;
