@@ -12,6 +12,11 @@
 	    sortable: true
 	},
 	{
+		key: "name",
+		label: "<?php echo lang('name') ?>",
+	    sortable: true
+	},
+	{
 		key: "actions",
 		hidden: true
 	},
@@ -75,11 +80,9 @@
 	if($list_form)
 	{
 ?>
-<form enctype="multipart/form-data" action="?menuaction=rental.uidocument.add" method="POST">
+<form enctype="multipart/form-data" action="?menuaction=rental.uidocument.add<?php echo $upload_url_add_on ?>" method="POST">
 	<fieldset>
 		<h3><?php echo lang('upload')?></h3>
-		<input type="hidden" id="contract_id" name="contract_id" value="<?php isset($contract) ? $contract->get_id() : 0 ?>"/>
-		<input type="hidden" id="party_id" name="party_id" value="<?php isset($party) ? $party->get_id() : 0 ?>"/>
 		<input type="file" id="ctrl_upoad_path" name="file_path"/>
 		<?php echo lang('title')?>
 		<input type="text" id="document_title" name="document_title"/>

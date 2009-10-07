@@ -463,4 +463,3 @@ $asyncservice->set_timer(
 	null
 	);
 
-

@@ -5,7 +5,8 @@
 	(
 		'noheader'   	=> true,
 		'nonavbar'   	=> true,
-		'currentapp'	=> APP_NAME
+		'currentapp'	=> APP_NAME,
+		'enable_vfs_class' => True,
 	);
 
 	include('../header.inc.php');

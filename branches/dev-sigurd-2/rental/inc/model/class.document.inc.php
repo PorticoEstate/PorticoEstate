@@ -11,7 +11,12 @@ class rental_document extends rental_model
 	protected $contract_id;
 	protected $party_id;
 	
-
+	public function __construct(int $id = null)
+	{
+		$doc_id = intval($id);
+		parent::__construct($doc_id);
+	}
+	
 	public function set_title($title)
 	{
 		$this->title = $title;
