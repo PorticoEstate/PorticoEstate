@@ -1,5 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
+	<iframe id="yui-history-iframe" src="../phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<input id="yui-history-field" type="hidden"/>
 	
     <div id="content">
         <ul class="pathway">
@@ -19,30 +21,31 @@
 		- Søk ledig tid
 
 		<ul id="week-selector">
-			<li><a><xsl:attribute name="href"><xsl:value-of select="building/prev_link"/></xsl:attribute><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
-			<li><xsl:value-of select="php:function('lang', 'Week')"/>: <xsl:value-of select="building/week"/></li>
-			<li><a><xsl:attribute name="href"><xsl:value-of select="building/next_link"/></xsl:attribute><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
+			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
+			<li id="cal_container"/>
+			<li><a href="#" onclick="YAHOO.booking.nextWeek(); return false"><xsl:value-of select="php:function('lang', 'Next week')"/></a></li>
 		</ul>
 
         <div id="schedule_container"/>
     </div>
 
 <script type="text/javascript">
-var building_id = <xsl:value-of select="building/id"/>;
-var date = '<xsl:value-of select="building/date"/>';
 YAHOO.util.Event.addListener(window, "load", function() {
-    <![CDATA[
-    var url = 'index.php?menuaction=bookingfrontend.uibooking.building_schedule&date=' + date + '&building_id=' + building_id + '&phpgw_return_as=json&';
-]]>
-    var colDefs = [{key: 'time', label: '<xsl:value-of select="building/year"/>' + '<br/><xsl:value-of select="php:function('lang', 'Time')"/>'}, 
-                   {key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resource')"/>', formatter: YAHOO.booking.scheduleResourceColFormatter},
-			<xsl:for-each select="building/days">
-				{key: '<xsl:value-of select="key"/>', label: '<xsl:value-of select="label"/>', formatter: YAHOO.booking.frontendScheduleColorFormatter},
-			</xsl:for-each>{hidden: true}];
-    YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
-        formatRow: YAHOO.booking.scheduleRowFormatter
-    }, true);
+	YAHOO.booking.setupWeekPicker('cal_container');
+	YAHOO.booking.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
+	
+    var handleHistoryNavigation = function (state) {
+		YAHOO.booking.date = parseISO8601(state);
+		YAHOO.booking.renderSchedule('schedule_container', YAHOO.booking.datasourceUrl, YAHOO.booking.date, YAHOO.booking.frontendScheduleColorFormatter, true);
+    };
+    var initialRequest = YAHOO.util.History.getBookmarkedState("date") || '<xsl:value-of select="building/date"/>';
+    YAHOO.util.History.register("date", initialRequest, handleHistoryNavigation);
+    YAHOO.util.History.onReady(function() {
+		var state = YAHOO.util.History.getBookmarkedState("date") || initialRequest;
+		if(state)
+			handleHistoryNavigation(state);
+    });
+   	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
 });
 </script>
-
 </xsl:template>

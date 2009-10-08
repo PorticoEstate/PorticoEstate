@@ -205,16 +205,12 @@
 		public function schedule()
 		{
 			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'booking.uibuilding', 'booking.uiresource');
-
-			$lang['resource_schedule'] = lang('Resource schedule');
-			$lang['prev_week'] = lang('Previous week');
-			$lang['next_week'] = lang('Next week');
-			$lang['week'] = lang('Week');
-			$lang['buildings'] = lang('Buildings');
-			$lang['schedule'] = lang('Schedule');
-			$lang['time'] = lang('Time');
-
+			$resource['datasource_url'] = self::link(array(
+				'menuaction' => 'booking.uibooking.resource_schedule', 
+				'resource_id' => $resource['id'], 
+				'phpgw_return_as' => 'json',
+			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('resource_schedule', array('resource' => $resource, 'lang' => $lang));
+			self::render_template('resource_schedule', array('resource' => $resource));
 		}
 	}

@@ -25,6 +25,33 @@ YAHOO.booking.js_alias_method_chain(YAHOO.widget.DataTable, '_initConfigs', 'i18
 	return this._initConfigs_without_i18n(config);
 });
 
+function y2k(number) { return (number < 1000) ? number + 1900 : number; }
+YAHOO.booking.weeknumber = function(when) {
+	var year = when.getFullYear();
+	var month = when.getMonth();
+	var day = when.getDate();
+
+	var newYear = new Date(year,0,1);
+	var modDay = newYear.getDay();
+	if (modDay == 0) modDay=6; else modDay--;
+
+	var daynum = ((Date.UTC(y2k(year),when.getMonth(),when.getDate(),0,0,0) - Date.UTC(y2k(year),0,1,0,0,0)) /1000/60/60/24) + 1;
+
+  if (modDay < 4 ) {
+    var weeknum = Math.floor((daynum+modDay-1)/7)+1;
+  } else {
+    var weeknum = Math.floor((daynum+modDay-1)/7);
+    if (weeknum == 0) {
+      year--;
+      var prevNewYear = new Date(year,0,1);
+      var prevmodDay = prevNewYear.getDay();
+      if (prevmodDay == 0) prevmodDay = 6; else prevmodDay--;
+      if (prevmodDay < 4) weeknum = 53; else weeknum = 52;
+    }
+  }
+  return + weeknum;
+}
+
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
 	var d = string.match(new RegExp(regexp));

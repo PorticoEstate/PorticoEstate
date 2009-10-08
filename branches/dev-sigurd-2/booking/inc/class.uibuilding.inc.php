@@ -184,6 +184,11 @@
 		public function schedule()
 		{
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), "booking.uibuilding");
+			$building['datasource_url'] = self::link(array(
+				'menuaction' => 'booking.uibooking.building_schedule', 
+				'building_id' => $building['id'], 
+				'phpgw_return_as' => 'json',
+			));
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building));
 		}

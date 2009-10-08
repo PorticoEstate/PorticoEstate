@@ -18,6 +18,11 @@
 				'building_id' => $building['id'], 
 				'building_name' => $building['name'],
 			));
+			$building['datasource_url'] = self::link(array(
+				'menuaction' => 'bookingfrontend.uibooking.building_schedule', 
+				'building_id' => $building['id'], 
+				'phpgw_return_as' => 'json',
+			));
 
 			self::add_javascript('booking', 'booking', 'schedule.js');
 			self::render_template('building_schedule', array('building' => $building));
