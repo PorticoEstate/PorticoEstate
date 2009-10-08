@@ -32,6 +32,9 @@
 <body>
     <div id="wrapper">
     <div id="header">
+	<div id="login-bar">
+		<a href="{login_url}">{login_text}</a>
+	</div>
         <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
 		<form action="index.php" method="get" id="header-search" class="{header_search_class}">
 			<input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />

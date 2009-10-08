@@ -83,6 +83,7 @@
 
 	$_navbar_config			= json_encode($navbar_config);
 
+
 	$app = lang($app);
 	$tpl_vars = array
 	(
@@ -97,6 +98,17 @@
 		'lbl_search'   	=> lang('Search'),
 		'header_search_class'	=> ($_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
+	$bouser = CreateObject('bookingfrontend.bouser');
+	if($bouser->is_logged_in())
+	{
+		$tpl_vars['login_text'] = lang('Logout');
+		$tpl_vars['login_url'] = 'logout.php';
+	}
+	else
+	{
+		$tpl_vars['login_text'] = lang('Login');
+		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+	}
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 

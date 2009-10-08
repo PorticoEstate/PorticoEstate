@@ -2,16 +2,6 @@
 	<xsl:call-template name="yui_booking_i18n"/>
 	
 	<div id="content">
-		<ul id="metanav">
-			<xsl:choose>
-				<xsl:when test="organization/logged_on">
-					<a href="{organization/logoff_link}"><xsl:value-of select="php:function('lang', 'Log off')" /></a>
-				</xsl:when>
-				<xsl:otherwise>
-					<a href="{organization/login_link}"><xsl:value-of select="php:function('lang', 'Log on')" /></a>
-				</xsl:otherwise>
-			</xsl:choose>
-	    </ul>
 		<ul class="pathway">
 			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
 			<li>

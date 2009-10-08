@@ -27,37 +27,11 @@
 
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$bouser->log_in();
-	$forward = phpgw::get_var('phpgw_forward', 'int');
 
-	if($forward)
+	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
+	if(!$after)
 	{
-		$extra_vars['phpgw_forward'] =  $forward;
-		foreach($_GET as $name => $value)
-		{
-			if (preg_match('/phpgw_/',$name))
-			{
-				$extra_vars[$name] = phpgw::clean_value($value);
-			}
-		}
+		$after = 'menuaction=bookingfrontend.uisearch.index';
 	}
-	
-	$redirect = phpgw::get_var('redirect_menuaction', 'string');
-	
-	if($redirect) {
-		$matches = array();
-		$extra_vars['menuaction']  = $redirect;
-		foreach($_GET as $name => $value) {
-			if (preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction') {
-				$extra_vars[$matches[1]] = phpgw::clean_value($value);
-			}
-		}
-	}
-	
-	if (!isset($extra_vars['menuaction'])) {
-		$extra_vars['menuaction'] = 'bookingfrontend.uisearch.index';
-	}
-
-	$GLOBALS['phpgw']->hooks->process('login');
-
-	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $extra_vars);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $after);
 	exit;
