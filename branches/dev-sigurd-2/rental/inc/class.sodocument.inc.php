@@ -101,6 +101,14 @@ class rental_sodocument extends rental_socommon
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
+		if($sort_field == 'title')
+		{
+			$sort_field = 'rental_document.title';
+		}
+		else if($sort_field == 'type')
+		{
+			$sort_field = 'rental_document_types.title';
+		}
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
