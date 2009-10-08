@@ -3,12 +3,7 @@
 	
     <div id="content">
         <ul class="pathway">
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="building/buildings_link"/></xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Buildings')"/>
-                </a>
-            </li>
+			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
             <li>
                 <a>
                     <xsl:attribute name="href"><xsl:value-of select="building/building_link"/></xsl:attribute>
@@ -19,7 +14,6 @@
         </ul>
 
         <xsl:call-template name="msgbox"/>
-        <h4><xsl:value-of select="php:function('lang', 'Building schedule')"/></h4>
 		<ul id="week-selector">
 			<li><a><xsl:attribute name="href"><xsl:value-of select="building/prev_link"/></xsl:attribute><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
 			<li><xsl:value-of select="php:function('lang', 'Week')"/>: <xsl:value-of select="building/week"/></li>

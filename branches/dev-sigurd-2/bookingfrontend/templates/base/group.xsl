@@ -12,22 +12,17 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	    </ul>
-		
-		<div style='margin:0; padding: 0; line-height:0'><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></div>
-	
-		<h3>
-	        <ul class="pathway">
-	            <li><a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a></li>
-	            <li><xsl:value-of select="php:function('lang', 'Group')" /></li>
-	            <li><xsl:value-of select="group/name"/></li>
-	
-		        <xsl:if test="group/permission/write">
-		            <span class="loggedin">
-						<a href="{edit_self_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
-					</span>
-		        </xsl:if>
-	        </ul>
-		</h3>
+        <ul class="pathway">
+			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
+            <li><a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a></li>
+            <li><xsl:value-of select="group/name"/></li>
+
+	        <xsl:if test="group/permission/write">
+	            <span class="loggedin">
+					<a href="{edit_self_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
+				</span>
+	        </xsl:if>
+        </ul>
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist">

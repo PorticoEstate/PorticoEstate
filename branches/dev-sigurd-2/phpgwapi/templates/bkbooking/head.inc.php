@@ -95,7 +95,7 @@
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'navbar_config' => $_navbar_config,
 		'lbl_search'   	=> lang('Search'),
-		'lbl_help'   	=> lang('Help'),
+		'header_search_class'	=> ($_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

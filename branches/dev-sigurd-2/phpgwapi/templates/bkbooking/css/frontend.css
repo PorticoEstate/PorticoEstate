@@ -11,20 +11,18 @@ ul#metanav {
     list-style-type: none;
 	padding-top: 10px;
 }
-ul#sidebar {
-    float: left;
-    padding-left: 17px;
-	padding-top: 10px;
-    margin-left: 0;
-}
-ul#sidebar li {
-    list-style-type: none;
-}    
 ul#metanav a, ul#sidebar a { color: #700; }
 div#content {
-    margin: 0 2em 2em 150px;
+    margin: 0 2em;
     min-height: 500px;
 }
+#header-search  { 
+    float: right;
+    margin: -1.5em 2em 1em 1em;
+}
+#header-search.hidden  { display: none; }
+#header-search .query { width: 15em;}
+
 div#header {
     background: url(../images/header_bg.png) repeat-x;
     height: 129px;

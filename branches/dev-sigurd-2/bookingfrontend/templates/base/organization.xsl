@@ -12,19 +12,23 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	    </ul>
-		<br/>
-		<button onclick="window.location.href='{organization/start}'">
-            <xsl:value-of select="php:function('lang', 'Organization index')" />
-        </button>
-		
-		<h2>
-			<xsl:value-of select="organization/name"/>
-			<xsl:if test="organization/permission/write">
-				<span class="loggedin">
-					<a href="{organization/edit_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
-				</span>
-			</xsl:if>
-		</h2>
+		<ul class="pathway">
+			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
+			<li>
+				<a href="{resource/building_link}">
+					<xsl:value-of select="resource/building_name"/>
+				</a>
+			</li>
+			<li>
+                <xsl:value-of select="organization/name"/>
+			</li>
+		</ul>
+
+		<xsl:if test="organization/permission/write">
+			<span class="loggedin">
+				<a href="{organization/edit_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
+			</span>
+		</xsl:if>
 		
 		<xsl:if test="organization/description and normalize-space(organization/description)">
 			<dl class="proplist description">

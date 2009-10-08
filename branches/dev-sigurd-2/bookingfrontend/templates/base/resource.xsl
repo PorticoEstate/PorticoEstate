@@ -3,19 +3,12 @@
 	
 	<div id="content">
 		<ul class="pathway">
-			<li>
-				<xsl:value-of select="php:function('lang', 'Buildings')" />
-			</li>
+			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
 			<li>
 				<a href="{resource/building_link}">
 					<xsl:value-of select="resource/building_name"/>
 				</a>
 			</li>
-            <li>
-                <a href="{resource/resources_link}">
-                    <xsl:value-of select="php:function('lang', 'Resources')" />
-                </a>
-            </li>
 			<li>
                 <xsl:value-of select="resource/name"/>
 			</li>

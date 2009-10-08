@@ -32,14 +32,13 @@
 <body>
     <div id="wrapper">
     <div id="header">
-        <!-- <ul id="metanav">
-            <li><a href="login.php">Logga in</a></li>
-        </ul> -->
-        <div id="logo"></div>
+        <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
+		<form action="index.php" method="get" id="header-search" class="{header_search_class}">
+			<input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
+          	<input class="query
+" type="text" name="searchterm"/>
+      		<xsl:text> </xsl:text><input type="submit" value="{lbl_search}"/>
+		</form>
     </div>
 <div class="yui-skin-sam" id='frontend'>
   <div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
-  <ul id="sidebar">
-      <li><a href="index.php?menuaction=bookingfrontend.uisearch.index">{lbl_search}</a></li>
-      <li><a href="">{lbl_help}</a></li>
-  </ul>
