@@ -26,6 +26,13 @@ if($list_form)
 							<?php
 						}
 					}
+					else
+					{
+						$url_add_on .= "&amp;invoice_id=-1";
+						?>
+						<option value="-1"><?php echo lang('No invoices were found') ?></option>
+						<?php
+					}
 				?>
 			</select>
 		</fieldset>

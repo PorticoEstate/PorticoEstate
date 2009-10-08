@@ -210,6 +210,7 @@ nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet
 no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
 No contracts were selected.	rental	no	Du må velge minst én kontrakt for å faktuere.
+No invoices were found	rental	no	Ingen fakturaer funnet
 no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 no_value	rental	no	Ingen
 not_available	rental	no	Ikke tilgjengelig
