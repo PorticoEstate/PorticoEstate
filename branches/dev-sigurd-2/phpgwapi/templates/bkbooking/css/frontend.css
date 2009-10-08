@@ -164,11 +164,16 @@ div#help h2 {
 
 
 #cloud {
+    text-align: center;
     list-style-type: none;
     padding-left: 0;
     color: #888;
     margin: 3em 0;
+    font-size: 120%;
 }
+#cloud div { padding: .2em};
+#cloud strong { padding: .2em};
+
 #cloud li { display: inline; white-space: nowrap; padding: 0 .2em;}
 #cloud li.small { font-size: 100%;}
 #cloud li.medium { font-size: 130%;}
