@@ -175,17 +175,23 @@
 					}
 					break;
 				case 'included_areas':
-					$value['ajax'][] = true;
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
+					$value['labels'][] = lang('show');
 					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
 					{
+						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $contract_id, 'location_id' => $value['location_id'])));
 						$value['labels'][] = lang('remove');
 					}
 					break;
 				case 'available_areas':
-					$value['ajax'][] = true;
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
+					$value['labels'][] = lang('show');
 					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
 					{
+						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $contract_id, 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
 						$value['labels'][] = lang('add');
 					}
