@@ -11,7 +11,7 @@ class rental_soprice_item extends rental_socommon
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 
-	 * @return the storage object
+	 * @return rental_soprice_item the storage object
 	 */
 	public static function get_instance()
 	{
@@ -42,6 +42,32 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_price($this->get_field_value('price'));
 		
 		return $price_item;
+	}
+	
+	/**
+	 * Get the first price item matching the given title
+	 * 
+	 * @param string $title
+	 * @return rental_price_item
+	 */
+	function get_single_with_title($title)
+	{
+		$title = (string)$title;
+		
+		$sql = "SELECT * FROM " . $this->table_name . " WHERE title LIKE '" . $title . "' LIMIT 1";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		
+		if ($this->db->next_record()) {
+			$price_item = new rental_price_item($this->get_field_value('id'));
+			$price_item->set_title($this->get_field_value('title'));
+			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
+			$price_item->set_is_area($this->get_field_value('is_area'));
+			$price_item->set_price($this->get_field_value('price'));
+			
+			return $price_item;
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -281,5 +307,62 @@ class rental_soprice_item extends rental_socommon
 	function reset_contract_price_item($contract_id, $price_item_id)
 	{
 		//TODO: implement reset function
+	}
+	
+	protected function get_id_field_name()
+	{
+		return 'id';
+	}
+	
+	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+	{
+		$clauses = array('1=1');
+		
+		//Add columns to this array to include them in the query
+		$columns = array();
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		
+		$filter_clauses = array();
+		
+		if(isset($filters[$this->get_id_field_name()])){
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
+		}
+		
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+		
+		$condition =  join(' AND ', $clauses);
+		
+		if($return_count) // We should only return a count
+		{
+			$cols = 'COUNT(DISTINCT(id)) AS count';
+		}
+		else
+		{
+			$cols = '*';
+		}
+		
+		$tables = "rental_price_item";
+		$joins = '';
+		
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+	}
+	
+	protected function populate(int $price_item_id, &$price_item)
+	{
+		if($price_item == null)
+		{
+			$price_item = new rental_price_item($this->unmarshal($this->db->f('id'),'int'));
+			$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
+			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
+			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
+			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
+		}
+		return $price_item;
 	}
 }
