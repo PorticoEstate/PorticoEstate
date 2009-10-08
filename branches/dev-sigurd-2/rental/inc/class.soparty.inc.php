@@ -43,10 +43,20 @@ class rental_soparty extends rental_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-        if($ascending != null && $sort_field != null) {
-            $sort = $this->marshal($sort_field,'field');
-            $dir = $ascending ? 'ASC' : 'DESC';
-            $order = $sort ? "ORDER BY $sort $dir": '';
+        if($sort_field != null) {
+        	$dir = $ascending ? 'ASC' : 'DESC';
+        	if($sort_field == 'name')
+        	{
+        		$order = "ORDER BY party.last_name {$dir}, party.first_name {$dir}";
+        	}
+        	else
+        	{
+        		if($sort_field == 'address')
+        		{
+        			$sort_field = 'party.address_1';
+        		}
+            	$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
+        	}
         }
 		if($search_for)
 		{
@@ -176,7 +186,7 @@ class rental_soparty extends rental_socommon
 							{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
 		$joins = $join_contracts;
-		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
