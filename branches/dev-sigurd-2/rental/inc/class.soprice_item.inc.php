@@ -16,7 +16,7 @@ class rental_soprice_item extends rental_socommon
 	public static function get_instance()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('rental.sobilling');
+			self::$so = CreateObject('rental.soprice_item');
 		}
 		return self::$so;
 	}
