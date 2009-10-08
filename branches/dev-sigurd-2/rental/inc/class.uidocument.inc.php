@@ -8,10 +8,10 @@
 	{	
 		public $public_functions = array
 		(
-				'query'			=> true,
-				'add'			=> true,
+				'query'		=> true,
+				'add'		=> true,
 				'view'		=> true,
-				'delete'		=> true
+				'delete'	=> true
 			);
 		
 		public function __construct()
@@ -292,7 +292,7 @@
 		 * @param $error	an error message
 		 * @param $message	a user message
 		 */
-		private function redirect($document, $document_properties, $error, $message)
+		public function redirect($document, $document_properties, $error, $message)
 		{
 			if($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
 			{
