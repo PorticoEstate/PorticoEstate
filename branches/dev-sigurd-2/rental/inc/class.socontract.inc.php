@@ -416,7 +416,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "account_in = ".$this->marshal($contract->get_account_in(),'string');
 		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
 		$values[] = "project_id = ".$this->marshal($contract->get_project_id(),'string');
-		
+		$values[] = "old_contract_id = ".$this->marshal($contract->get_old_contract_id(),'string');
 		 
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
@@ -543,6 +543,19 @@ class rental_socontract extends rental_socommon
 		
 		$cols[] = 'project_id';
 		$values[] = $this->marshal($contract->get_project_id(),'string');
+		
+		$cols[] = 'old_contract_id';
+		$values[] = $this->marshal($contract->get_old_contract_id(),'string');
+		
+		$cols[] = 'comment';
+		$values[] = $this->marshal($contract->get_comment(),'string');
+		
+		if ($contract->get_security_type()) {
+			$cols[] = 'security_type';
+			$values[] = $this->marshal($contract->get_security_type(),'int');
+			$cols[] = 'security_amount';
+			$values[] = $this->marshal($contract->get_security_amount(),'string');
+		}
 		
 		// Insert the new contract
 		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
