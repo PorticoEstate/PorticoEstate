@@ -261,7 +261,7 @@ remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
 remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord
 rental_composite	rental	no	Leieobjekt
-rental	rental	no	Utleie
+Rental	rental	no	Leie
 reports	rental	no	Rapporter
 reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
