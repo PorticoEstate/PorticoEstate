@@ -13,8 +13,13 @@
 <div id="composite_tabview" class="yui-navset">
 	<ul class="yui-nav">
 		<li class="selected"><a href="#details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
+		
+		<?php if($composite->get_id() > 0) { ?>
+		
 		<li><a href="#elements"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-drawing-template.png" alt="icon" /> <?php echo lang('elements') ?></em></a></li>
 		<li><a href="#contracts"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('contracts') ?></em></a></li>
+
+		<?php } ?>
 	</ul>
 
 	<div class="yui-content">
@@ -113,6 +118,9 @@
 				</div>
 			</form>
 		</div>
+
+		<?php if($composite->get_id() > 0) { ?>
+
 		<div id="elements">
 			<h3><?php echo lang('added_areas') ?></h3>
 			<?php 
@@ -147,5 +155,7 @@
 				include('contract_list_partial.php');
 			?>
 		</div>
+		
+		<?php  } ?>
 	</div>
 </div>

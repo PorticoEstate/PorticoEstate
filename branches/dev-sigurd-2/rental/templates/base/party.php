@@ -18,8 +18,13 @@
 <div id="party_edit_tabview" class="yui-navset">
 	<ul class="yui-nav">
 		<li class="selected"><a href="#details_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/custom/contact.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
+		
+		<?php  if($party->get_id() > 0) { ?>
+		
 		<li><a href="#contracts_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('contracts') ?></em></a></li>
 		<li><a href="#documents_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
+
+		<?php } ?>
 	</ul>
 
 	<div class="yui-content">
@@ -393,6 +398,9 @@
 			</form>
 			
 		</div>
+		
+		<?php  if($party->get_id() > 0) { ?>
+		
 		<div id="contracts">
 			<?php
 			$list_form = true;
@@ -417,6 +425,8 @@
 				include('document_list_partial.php'); 
 			?>
 		</div>
+		
+		<?php } ?>
 	</div>
 </div>
 

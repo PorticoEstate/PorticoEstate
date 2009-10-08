@@ -23,12 +23,17 @@
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
 		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
+		
+		<?php if($contract->get_id() > 0) {?>
+		
 		<li><a href="#parties"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
 		<li><a href="#composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('composite') ?></em></a></li>
 		<li><a href="#price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
 		<li><a href="#invoice"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('invoice') ?></em></a></li>
 		<li><a href="#documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
 		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('notifications') ?></em></a></li>
+		
+		<?php } ?>
 	</ul>
 	<div class="yui-content">
 		<div class="details">
@@ -441,6 +446,9 @@
 				</div>
 			</form>
 		</div>
+		
+		<?php if($contract->get_id() > 0) {?>
+		
 		<div id="parties">
 			<h3><?php echo lang('selected_parties') ?></h3>
 			<?php
@@ -639,9 +647,7 @@
 			}
 			else
 			{
-				?>
-				<?php echo lang('log_in_to_add_notfications') ?>
-				<?php
+				echo lang('log_in_to_add_notfications');
 			}
 			?>
 			<h3><?php echo lang('contract_notifications') ?></h3>
@@ -655,5 +661,7 @@
 			include('notification_list.php');
 			?>
 		</div>
+		
+		<?php } ?>
 	</div>
 </div>
