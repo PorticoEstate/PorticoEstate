@@ -13,7 +13,7 @@
 	var columnDefs = [{
 		key: "contract_id",
 		label: "<?php echo lang('contract_id') ?>",
-	    sortable: false
+	    sortable: true
 	},
 	{
 		key: "timestamp_created",

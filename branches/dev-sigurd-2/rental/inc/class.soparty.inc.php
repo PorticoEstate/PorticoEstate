@@ -264,6 +264,7 @@ class rental_soparty extends rental_socommon
     {
         return 'party_id';
     }
+    
     protected function populate(int $party_id, &$party)
     {
  

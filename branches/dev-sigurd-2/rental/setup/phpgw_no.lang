@@ -1,8 +1,8 @@
 1-6 characters	rental	no	1-6 tegn
 6 characters	rental	no	6 tegn
-account_in	rental	no	Inngående konto
+account_in	rental	no	Art/konto inntektsside
 account_number	rental	no	Kontonummer
-account_out	rental	no	Utgående konto
+account_out	rental	no	Art/konto utgiftsside
 active_party	rental	no	Kontraktspart er aktiv
 active_plural	rental	no	Aktive
 active	rental	no	Aktiv

@@ -30,11 +30,6 @@ class rental_sounit extends rental_socommon
 		{
 			$filter_clauses[] = "composite_id = {$this->marshal($filters['included_areas'], 'int')}";
 		}
-		if(isset($filters['available_areas'])) // Areas/unitos available for composite
-		{
-			// TODO: How advanced should we build this one? And should dates for vacancy be included?
-			$filter_clauses[] = "composite_id != {$this->marshal($filters['available_areas'], 'int')}";
-		}
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);

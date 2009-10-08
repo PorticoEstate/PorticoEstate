@@ -37,7 +37,10 @@ class rental_agresso_lg04 implements rental_exportable
 		}
 		foreach($this->orders as $order)
 		{
-			$contents .= "{$order[0]}\n{$order[1]}\n{$order[2]}\n";
+			foreach($order as $line)
+			{
+				$contents .= "{$line}\n";
+			}
 		}
 		return $contents;
 	}
@@ -73,7 +76,7 @@ class rental_agresso_lg04 implements rental_exportable
 			}
 			// The receiver's outlay side
 			$this->orders[] = $this->get_order($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
-			// org. no, invoice id, bill year, bill month
+			// org. no, invoice id, bill year, bill month, account out, price items(amount=total price,article_description=title,article_code=agresso_id,), $responsibility, $service, $building_location_code, project id out
 		}
 	}
 	
@@ -93,17 +96,18 @@ class rental_agresso_lg04 implements rental_exportable
 	 * @param $bill_month
 	 * @return unknown_type
 	 */
-	protected function get_order($party_id, $order_id, $bill_year, $bill_month, $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id )
+	protected function get_order($party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project)
 	{
-		$header = 
+		$order = array();
+		$order[] =  // Header line
 			 '1'														//  1	accept_flag
-			.sprintf("%9s", '')											//		just white space??
+			.sprintf("%9s", '')											//		just white space..
 			.sprintf("%20s", '')										//  3	accountable
 			.sprintf("%160s", '')										//  4	address
-			.sprintf("%20s", '')										//		just white space??
+			.sprintf("%20s", '')										//		just white space..
 			.sprintf("%08s", '')										//  8	apar_id
 			.sprintf("%30s", '')										//  9	apar_name
-			.sprintf("%50s", '')										//		just white space??
+			.sprintf("%50s", '')										//		just white space..
 			.sprintf("%2s", '')											// 12	att_1_id
 			.sprintf("%2s", '')											// 13	att_2_id
 			.sprintf("%2s", '')											// 14	att_3_id
@@ -117,7 +121,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%2s", '')											// 22	client_ref
 			.sprintf("%-17s", "PE{$this->date_str}")					// 23	confirm_date
 			.sprintf("%1s", '')											// 24	control
-			.sprintf("%17s", '')										//		just white space??
+			.sprintf("%17s", '')										//		just white space..
 			.'NOK'														// 26	currency
 			.sprintf("%60s", '')										// 27	del_met_descr
 			.sprintf("%60s", '')										// 28	del_term_descr
@@ -127,22 +131,22 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%17s", "PE{$this->date_str}")						// 32	deliv_date
 			.sprintf("%8s", '')											// 33	deliv_method
 			.sprintf("%8s", '')											// 34	deliv_terms
-			.sprintf("%52s", '')										//		just white space??
-			.sprintf("%12s", '')										// 42	dim_value_1
+			.sprintf("%52s", '')										//		just white space..
+			.sprintf("%12s", $account)									// 42	dim_value_1
 			.sprintf("%12s", '')										// 43	dim_value_2
 			.sprintf("%12s", '')										// 44	dim_value_3
 			.sprintf("%12s", '')										// 45	dim_value_4
 			.sprintf("%12s", '')										// 46	dim_value_5
 			.sprintf("%12s", '')										// 47	dim_value_6
 			.sprintf("%12s", '')										// 48	dim_value_7
-			.sprintf("%17s", '')										//		just white space??
+			.sprintf("%17s", '')										//		just white space..
 			.sprintf("%017s", '')										// 51	exch_rate
 			.sprintf("%15s", $party_id)									// 52	ext_ord_ref
 			.sprintf("%6s", '')											// 53	intrule_id
-			.sprintf("%8s", '')											//		just white space??
+			.sprintf("%8s", '')											//		just white space..
 			.sprintf("%120s", '')										// 56	long_info1
 			.sprintf("%120s", '')										// 57	long_info2
-			.sprintf("%10s", '')										//		just white space??
+			.sprintf("%10s", '')										//		just white space..
 			.sprintf("%8s", '')											// 59	main_apar_id
 			.sprintf("%50s", '')										// 60?	mark_attention
 			.sprintf("%3s", '')											// 61	mark_ctry_cd
@@ -155,14 +159,14 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%02s", '').sprintf("%04s", $bill_year).sprintf("%02s", $bill_month)	// 69?	period
 			.sprintf("%30s", '')										// 70	place
 			.sprintf("%40s", '')										// 71	province
-			.sprintf("%12s", '')										//		just white space??
+			.sprintf("%12s", '')										//		just white space..
 			.sprintf("%8s", 'PE')										// 73	responsible
 			.sprintf("%8s", 'PE')										// 74	responsible2
-			.sprintf("%8s", '')											//		just white space??
+			.sprintf("%8s", '')											//		just white space..
 			.sprintf("%-08s", '')										// 76	sequence_ref
-			.sprintf("%80s", '')										//		just white space??
+			.sprintf("%80s", '')										//		just white space..
 			.'N'														// 79	status
-			.sprintf("%4s", '')											//		just white space??
+			.sprintf("%4s", '')											//		just white space..
 			.sprintf("%-08s", '')										// 83	template_id
 			.sprintf("%2s", '')											// 84	terms_id
 			.sprintf("%12s", '')										// 85	tekx1
@@ -170,15 +174,73 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%12s", '')										// 87	tekst3
 			.sprintf("%12s", '')										// 88	text4
 			.'42'														// 89	trans_type
-			.sprintf("%80s", '')										//		just white space??
+			.sprintf("%80s", '')										//		just white space..
 			.sprintf("%-09s", '')										// 93	voucher_ref
 			.'XX'														// 94	voucher_type
-			.sprintf("%4s", '')											//		just white space??
+			.sprintf("%4s", '')											//		just white space..
 			.sprintf("%15s", '')										// 96	zip_code
 		;
-		$item = '';
-		$text = '';
-		return array($header, $item, $text);
+		$item_counter = 0;
+		foreach($product_items as $item) // All products (=price items)
+		{
+			$order[] = // Product line
+				 sprintf("%1s", '')										//		just white space..
+				.sprintf("%8s", '')										//  2	account
+				.sprintf("%180s", '')									//		just white space..
+				.sprintf("%02s", '')									//  5	allocation_key
+				.get_formatted_amount($item['amount'])					//  6	amount
+				.'1'													//  7	amount_set
+				.sprintf("%38s", '')									//		just white space..
+				.sprintf("%35s", $item['article_description'])			// 10	art_descr
+				.sprintf("%15s", $item['article_code'])					// 11	article
+				.sprintf("%49s", '')									//		just white space..
+				.sprintf("%-12s", "PE{$this->date_str}")				// 20	batch_id
+				.'BY'													// 21	client
+				.sprintf("%20s", '')									//		just white space..
+				.sprintf("%017s", '')									// 25	cur_amount
+				.sprintf("%464s", '')									//		just white space..
+				.sprintf("%8s", $responsibility)						// 35	dim_1
+				.sprintf("%8s", $service)								// 36	dim_2
+				.sprintf("%8s", $building)								// 37	dim_3
+				.sprintf("%8s", '')										// 38	dim_4
+				.sprintf("%8s", $project)								// 39	dim_5
+				.sprintf("%4s", '')										// 40	dim_6
+				.sprintf("%4s", '')										// 41	dim_7
+				.sprintf("%72s", '')									//		just white space..
+				.sprintf("%017s", '')									// 49	disc_percent
+				.sprintf("%017s", '')									// 51?	exch_rate
+				.sprintf("%21s", '')									//		just white space..
+				.sprintf("%04s", ++$item_counter)						// 54	line_no
+				.sprintf("%4s", '')										// 55	location
+				.sprintf("%240s", '')									//		just white space..
+				.sprintf("%10s", '')									// 58	lot
+				.sprintf("%215s", '')									//		just white space..
+				.sprintf("%-9s", $order_id)								// 65	order_id
+				.sprintf("%4s", '')										//		just white space..
+				.sprintf("%02s", '').sprintf("%04s", $bill_year).sprintf("%02s", $bill_month)	// 69?	period
+				.sprintf("%70s", '')									//		just white space..
+				.sprintf("%12s", '')									// 72	rel_value
+				.sprintf("%16s", '')									//		just white space..
+				.sprintf("%-08s", '')									// 75	sequence_no
+				.sprintf("%8s", '')										//		just white space..
+				.sprintf("%20s", '')									// 77	serial_no
+				.sprintf("%60s", '')									//		just white space..
+				.'N'													// 79	status
+				.sprintf("%2s", '')										// 81	tax_code
+				.sprintf("%2s", '')										// 82	tax_system
+				.sprintf("%-08s", '')									// 83	template_id
+				.sprintf("%50s", '')									//		just white space..
+				.'42'													// 89	trans_type
+				.sprintf("%3s", '')										// 90	unit_code
+				.sprintf("%50s", '')									// 91	unit_descr
+				.sprintf("%-017s", 1*100)								// 92	value_1
+				.sprintf("%9s", '')										//		just white space..
+				.'XX'													// 94	voucher_type
+				.sprintf("%4s", '')										// 95	warehouse
+				.sprintf("%15s", '')										//		just white space..
+			;
+		}
+		return $order;
 	}
 	
 	protected function get_formatted_amount($amount)
@@ -186,9 +248,9 @@ class rental_agresso_lg04 implements rental_exportable
 		$amount = round($amount, 2) * 100;
 		if($amount < 0) // Negative number
 		{
-			return '-' . sprintf("%019s", abs($amount)); // We have to have the sign at the start of the string
+			return '-' . sprintf("%016s", abs($amount)); // We have to have the sign at the start of the string
 		}
-		return sprintf("%020s", $amount);
+		return sprintf("%017s", $amount);
 	} 
 	
 } 

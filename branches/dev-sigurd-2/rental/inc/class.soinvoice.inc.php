@@ -48,17 +48,30 @@ class rental_soinvoice extends rental_socommon
 		$joins = "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.contract_id = rental_invoice.contract_id)";
 		$joins .= "	{$this->left_join} rental_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		$joins .= "	{$this->left_join} rental_contract_party ON (rental_contract_party.contract_id = rental_invoice.contract_id)";
-		$joins .= "	{$this->left_join} rental_party ON (rental_contract_party.party_id = rental_party.id)";
+		$joins .= "	{$this->left_join} rental_party party ON (rental_contract_party.party_id = party.id)";
+		$order = '';
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_invoice.id)) AS count';
 		}
 		else
 		{
-			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, rental_composite.name AS composite_name, rental_party.first_name AS party_first_name, rental_party.last_name AS party_last_name, rental_party.company_name AS party_company_name';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, rental_composite.name AS composite_name, party.agresso_id AS party_agresso_id, party.personal_identification_number AS party_personal_identification_number, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.organisation_number AS party_organisation_number, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id';
+			$dir = $ascending ? 'ASC' : 'DESC';
+			if($sort_field == null || $sort_field == '') // Sort field no set
+			{
+				$sort_field = 'rental_invoice.id'; // Set to default
+			}
+			$sort_field = $this->marshal($sort_field, 'field');
+			if($sort_field == 'party_name')
+			{
+				$order = "ORDER BY party.last_name {$dir}, party.first_name {$dir}, party.company_name {$dir}";
+			}
+			else
+			{
+				$order = "ORDER BY {$sort_field} {$dir}";
+			}
 		}
-		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ' ORDER BY rental_invoice.id DESC';
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -67,33 +80,33 @@ class rental_soinvoice extends rental_socommon
 		if($invoice == null)
 		{
 			$invoice = new rental_invoice($this->db->f('id', true), $this->db->f('billing_id', true), $this->db->f('contract_id', true), $this->db->f('timestamp_created', true), $this->db->f('timestamp_start', true), $this->db->f('timestamp_end', true), $this->db->f('total_sum', true), $this->db->f('total_area', true), $this->db->f('header', true), $this->db->f('account_in', true), $this->db->f('account_out', true), $this->db->f('service_id', true), $this->db->f('responsibility_id', true), $this->db->f('project_id', true));
-			$invoice->set_party_id($this->unmarshal($this->db->f('party_id'),'int'));
-			$invoice->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
+			$invoice->set_party_id(		$this->unmarshal($this->db->f('party_id'),'int'));
+			$invoice->set_project_id(	$this->unmarshal($this->db->f('project_id'),'string'));
+			$party = new rental_party(	$this->unmarshal($this->db->f('party_id'),'int'));
+			$party->set_account_number( $this->unmarshal($this->db->f('party_account_number'), 'string'));
+            $party->set_address_1(      $this->unmarshal($this->db->f('party_address_1'), 'string'));
+            $party->set_address_2(      $this->unmarshal($this->db->f('party_address_2'), 'string'));
+            $party->set_agresso_id(     $this->unmarshal($this->db->f('party_agresso_id'), 'string'));
+            $party->set_comment(        $this->unmarshal($this->db->f('party_comment'), 'string'));
+            $party->set_company_name(   $this->unmarshal($this->db->f('party_company_name'), 'string'));
+            $party->set_department(     $this->unmarshal($this->db->f('party_department'), 'string'));
+            $party->set_email(          $this->unmarshal($this->db->f('party_email'), 'string'));
+            $party->set_fax(            $this->unmarshal($this->db->f('party_fax'), 'string'));
+            $party->set_first_name(     $this->unmarshal($this->db->f('party_first_name'), 'string'));
+            $party->set_is_active(      $this->unmarshal($this->db->f('party_is_active'), 'bool'));
+            $party->set_last_name(      $this->unmarshal($this->db->f('party_last_name'), 'string'));
+            $party->set_location_id(    $this->unmarshal($this->db->f('party_org_location_id'), 'int'));
+            $party->set_pid(            $this->unmarshal($this->db->f('party_personal_identification_number'), 'string'));
+            $party->set_mobile_phone(	$this->unmarshal($this->db->f('party_mobile_phone'), 'string'));
+            $party->set_place(          $this->unmarshal($this->db->f('party_place'), 'string'));
+            $party->set_postal_code(    $this->unmarshal($this->db->f('party_postal_code'), 'string'));
+            $party->set_reskontro(      $this->unmarshal($this->db->f('party_reskontro'), 'string'));
+            $party->set_title(          $this->unmarshal($this->db->f('party_title'), 'string'));
+            $party->set_url(            $this->unmarshal($this->db->f('party_url'), 'string'));
+			$invoice->set_party($party);
 		}
 		$invoice->add_composite_name($this->unmarshal($this->db->f('composite_name'),'string'));
-		$party_company_name = $this->unmarshal($this->db->f('party_company_name'),'string');
-		$party_first_name = $this->unmarshal($this->db->f('party_first_name'),'string');
-		$name = $this->unmarshal($this->db->f('party_last_name'),'string');
-		if($party_first_name != '') // Firstname is set
-		{
-			if($name != '') // There's a lastname
-			{
-				$name .= ', '; // Append comma
-			}
-			$name .= $party_first_name; // Append firstname
-		}
-		if($party_company_name != '') // There's a company name
-		{
-			if($name != '') // We've already got a name
-			{
-				$name .= " ({$party_company_name})"; // Append company name in parenthesis
-			}
-			else // No name
-			{
-				$name = $party_company_name; // Set name to company
-			}
-		}
-		$invoice->add_party_name($name);
+		
 		return $invoice;
 	}
 	

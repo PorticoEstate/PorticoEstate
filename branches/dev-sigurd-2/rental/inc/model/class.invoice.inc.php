@@ -11,6 +11,7 @@
 		protected $billing_id; // The billing job that created this invoice
 		protected $contract_id; // Contract that this invoice belongs to
 		protected $party_id; // Party that is the recepient of this invoice
+		protected $party;
 		protected $timestamp_created; // Billing date
 		protected $timstamp_start; // Start date of invoice
 		protected $timstamp_end; // End date of invoice
@@ -20,8 +21,7 @@
 		protected $header;
 		protected $account_in; // 'Art' for the income side
 		protected $account_out; // 'Art' for the outlay side
-		protected $composite_names; // From party - not part of invoice db data
-		protected $party_names; // From party - not part of invoice db data
+		protected $composite_names; // From composite - not part of invoice db data
 		protected $project_id;
 		protected $service_id;
 		protected $responsibility_id;
@@ -45,7 +45,6 @@
 			$this->service_id = $service_id;
 			$this->responsibility_id = $responsibility_id;
 			$this->composite_names = array();
-			$this->party_names = array();
 		}
 		
 		public function set_id($id)
@@ -83,6 +82,13 @@
 		}
 	
 		public function get_party_id(){ return $this->party_id; }
+
+		public function set_party(rental_party $party)
+		{
+			$this->party = $party;
+		}
+	
+		public function get_party(){ return $this->party; }
 		
 		public function set_timestamp_start($timestamp_start)
 		{
@@ -187,23 +193,6 @@
 			return $names;
 		}
 		
-		public function add_party_name(string $name)
-		{
-			if(!in_array($name, $this->party_names))
-			{
-				$this->party_names[] = $name;
-			}
-		}
-		
-		public function get_party_names()
-		{
-			$names = '';
-			foreach($this->party_names as $name) {
-				$names .= "{$name}<br/>";
-			}
-			return $names;
-		}
-		
 		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
 		{
 			if($timestamp_invoice_start > $timestamp_invoice_end) // Sanity check
@@ -290,13 +279,19 @@
 		
 		public function serialize()
 		{
+			$party_name = '';
+			if($this->get_party() != null)
+			{
+				$serialized_party = $this->get_party()->serialize();
+				$party_name = $serialized_party['name'];
+			}
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return array(
 				'id'				=> $this->get_id(),
 				'contract_id'		=> $this->get_contract_id(),
 				'timestamp_created'	=> date($date_format, $this->get_timestamp_created()),
 				'composite_name'	=> $this->get_composite_names(),
-				'party_name'		=> $this->get_party_names(),
+				'party_name'		=> $party_name,
 				'total_sum'			=> $this->get_total_sum()
 			);
 		}
