@@ -20,6 +20,12 @@ class rental_uibilling extends rental_uicommon
 		'download_export'	=> true
 	);
 	
+	public function __construct()
+	{
+		parent::__construct();
+		self::set_active_menu('admin::rental::billing');
+	}
+	
 	public function index()
 	{
 		if(!$this->isAdministrator())
