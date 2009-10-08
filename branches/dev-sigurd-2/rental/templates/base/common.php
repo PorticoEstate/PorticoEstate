@@ -146,17 +146,28 @@
 		//... create context menu for each record after the table has loaded the data
 		this.table.doAfterLoadData = function() {
 			var records = this.getRecordSet();
+			var validRecords = 0;
 			for(var i=0; i<records.getLength(); i++) {
 				var record = records.getRecord(i);
+				if(record == null)
+				{
+					continue;
+				}
+				else
+				{
+					validRecords++;
+				}
+					
 				// use a global counter to create unique names (even for the same datatable) for all context menues on the page
 				var menuName = this.container_id + "_cm_" + counter;
 				counter++;
 
 				//create a context menu that triggers on the HTML row element
-				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(i)});
+				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(validRecords -1 )});
 
 				//... add menu items with label and handler function for click events
 				var labels = record.getData().labels;
+				
 				for(var j in labels) {
 					record.menu.addItem({text: labels[j]},0);
 				}
@@ -174,7 +185,7 @@
 				);
 
 				//... render the menu on the related table row
-				record.menu.render(this.getTrEl(i));
+				record.menu.render(this.getTrEl(validRecords-1));
 
 				//... subscribe handler for click events
 				record.menu.clickEvent.subscribe(onContextMenuClick, this);
