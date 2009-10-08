@@ -14,6 +14,10 @@
         </ul>
 
         <xsl:call-template name="msgbox"/>
+
+		<button onclick="window.location.href='{building/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+		- Søk ledig tid
+
 		<ul id="week-selector">
 			<li><a><xsl:attribute name="href"><xsl:value-of select="building/prev_link"/></xsl:attribute><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
 			<li><xsl:value-of select="php:function('lang', 'Week')"/>: <xsl:value-of select="building/week"/></li>
@@ -21,9 +25,6 @@
 		</ul>
 
         <div id="schedule_container"/>
-		<a href="{building/application_link}">
-			<xsl:value-of select="php:function('lang', 'New booking application')"/>
-		</a>
     </div>
 
 <script type="text/javascript">

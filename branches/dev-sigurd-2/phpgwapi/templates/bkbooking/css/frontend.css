@@ -4,6 +4,7 @@ body {
     text-align: left;
     background: white;
 }
+button { padding: .3em .6em; margin: .4em 0;}
 a:link, a:visited { color: black;}
 div#wrapper {}
 ul#metanav {

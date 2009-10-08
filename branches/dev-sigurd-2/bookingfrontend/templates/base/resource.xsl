@@ -14,6 +14,11 @@
 			</li>
 		</ul>
 
+		<div>
+        	<button onclick="window.location.href='{resource/schedule_link}'"><xsl:value-of select="php:function('lang', 'Resource schedule')" /></button>
+- 				Søk ledig tid/informasjon om hva som skjer
+		</div>
+
 		<dl class="proplist-col main">
 			
 			<xsl:if test="resource/description and normalize-space(resource/description)">
@@ -21,23 +26,14 @@
 				<dd><xsl:value-of disable-output-escaping="yes" select="resource/description"/></dd>
 			</xsl:if>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
-			<dd><xsl:value-of select="resource/building_name"/></dd>
-			
-			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
-			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
-			
 			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
 				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
 				<dd><xsl:value-of select="resource/activity_name"/></dd>
 			</xsl:if>
 			
-			<div style='margin-top:1em'>
-		        <button onclick="window.location.href='{resource/schedule_link}'">
-		            <xsl:value-of select="php:function('lang', 'Resource schedule')" />
-		        </button>
-			</div>
-
+			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
+			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
+			
 			<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 			<div id="documents_container"/>
 		</dl>
@@ -54,7 +50,7 @@
 	YAHOO.util.Event.addListener(window, "load", function() {
 
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
-	var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'category', label: lang['category']}];
+	var colDefs = [{key: 'name', label: lang['Name']}];
 	YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 	
 	var url = 'index.php?menuaction=bookingfrontend.uidocument_resource.index_images&sort=name&filter_owner_id=' + resource_id + '&phpgw_return_as=json&';
