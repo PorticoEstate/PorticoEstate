@@ -78,14 +78,11 @@ class rental_soparty extends rental_socommon
                     $like_clauses[] = "party.postal_code $this->like $like_pattern";
                     $like_clauses[] = "party.place $this->like $like_pattern";
                     break;
-                case "ssn":
-                    $like_clauses[] = "party.personal_identification_number $this->like $like_pattern";
+                case "identifier":
+                    $like_clauses[] = "party.identifier $this->like $like_pattern";
                     break;
-                case "organisation_number":
-                    $like_clauses[] = "party.organisation_number $this->like $like_pattern";
-                    break;
-                case "account":
-                    $like_clauses[] = "party.agresso_id $this->like $like_pattern";
+                case "reskontro":
+                    $like_clauses[] = "party.reskontro $this->like $like_pattern";
 				case "all":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
                     $like_clauses[] = "party.last_name $this->like $like_pattern";
@@ -94,9 +91,7 @@ class rental_soparty extends rental_socommon
                     $like_clauses[] = "party.address_2 $this->like $like_pattern";
                     $like_clauses[] = "party.postal_code $this->like $like_pattern";
                     $like_clauses[] = "party.place $this->like $like_pattern";
-					$like_clauses[] = "party.personal_identification_number $this->like $like_pattern";
-                    $like_clauses[] = "party.organisation_number $this->like $like_pattern";
-                    $like_clauses[] = "party.agresso_id $this->like $like_pattern";
+					$like_clauses[] = "party.identifier $this->like $like_pattern";
                     $like_clauses[] = "party.comment $this->like $like_pattern";
 					$like_clauses[] = "party.reskontro $this->like $like_pattern";
 					break;
@@ -156,14 +151,12 @@ class rental_soparty extends rental_socommon
 		else
 		{
 			$columns[] = 'party.id AS party_id';
-			$columns[] = 'party.agresso_id';
-			$columns[] = 'party.personal_identification_number AS pid';
+			$columns[] = 'party.identifier';
 			$columns[] = 'party.first_name';
 			$columns[] = 'party.last_name';
 			$columns[] = 'party.title';
 			$columns[] = 'party.company_name';
 			$columns[] = 'party.department';
-			$columns[] = 'party.organisation_number AS orgno';
 			$columns[] = 'party.address_1';
 			$columns[] = 'party.address_2';
 			$columns[] = 'party.postal_code';
@@ -226,7 +219,7 @@ class rental_soparty extends rental_socommon
 	{
 		$id = intval($party->get_id());
 		$values = array(
-			'personal_identification_number = ' . $this->marshal($party->get_personal_identification_number(), 'string'),
+			'identifier = '		. $this->marshal($party->get_identifier(), 'string'),
 			'first_name = '     . $this->marshal($party->get_first_name(), 'string'),
 			'last_name =  '     . $this->marshal($party->get_last_name(), 'string'),
 			'title = '          . $this->marshal($party->get_title(), 'string'),
@@ -237,7 +230,7 @@ class rental_soparty extends rental_socommon
 			'postal_code = '    . $this->marshal($party->get_postal_code(), 'string'),
 			'place = '          . $this->marshal($party->get_place(), 'string'),
 			'phone = '          . $this->marshal($party->get_phone(), 'string'),
-			'mobile_phone = '		. $this->marshal($party->get_mobile_phone(), 'string'),
+			'mobile_phone = '	. $this->marshal($party->get_mobile_phone(), 'string'),
 			'fax = '            . $this->marshal($party->get_fax(), 'string'),
 			'email = '          . $this->marshal($party->get_email(), 'string'),
 			'url = '            . $this->marshal($party->get_url(), 'string'),
@@ -274,7 +267,6 @@ class rental_soparty extends rental_socommon
             $party->set_account_number( $this->unmarshal($this->db->f('account_number'), 'string'));
             $party->set_address_1(      $this->unmarshal($this->db->f('address_1'), 'string'));
             $party->set_address_2(      $this->unmarshal($this->db->f('address_2'), 'string'));
-            $party->set_agresso_id(     $this->unmarshal($this->db->f('agresso_id'), 'string'));
             $party->set_comment(        $this->unmarshal($this->db->f('comment'), 'string'));
             $party->set_company_name(   $this->unmarshal($this->db->f('company_name'), 'string'));
             $party->set_department(     $this->unmarshal($this->db->f('department'), 'string'));
@@ -284,8 +276,8 @@ class rental_soparty extends rental_socommon
             $party->set_is_active(      $this->unmarshal($this->db->f('is_active'), 'bool'));
             $party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
             $party->set_location_id(    $this->unmarshal($this->db->f('org_location_id'), 'int'));
-            $party->set_pid(            $this->unmarshal($this->db->f('personal_identification_number'), 'string'));
-            $party->set_mobile_phone(		$this->unmarshal($this->db->f('mobile_phone'), 'string'));
+            $party->set_identifier(		$this->unmarshal($this->db->f('identifier'), 'string'));
+            $party->set_mobile_phone(	$this->unmarshal($this->db->f('mobile_phone'), 'string'));
             $party->set_place(          $this->unmarshal($this->db->f('place'), 'string'));
             $party->set_postal_code(    $this->unmarshal($this->db->f('postal_code'), 'string'));
             $party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));

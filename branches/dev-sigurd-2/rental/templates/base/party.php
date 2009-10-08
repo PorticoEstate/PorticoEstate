@@ -33,19 +33,19 @@
 				<input type="hidden" name="id" value="<?php if($party->get_id()){ echo $party->get_id(); } else { echo '0'; }  ?>"/>
 				<dl class="proplist-col">
 					<dt>
-						<label for="personal_identification_number"><?php echo lang('ssn') ?> / <?php echo lang('organisation_number') ?></label>
+						<label for="identifier"><?php echo lang('ssn') ?> / <?php echo lang('organisation_number') ?> / <?php echo lang('agresso_id') ?></label>
 					</dt>
 					<dd>
 						<?php
 						if ($editable)
 						{
 						?>
-							<input type="text" name="personal_identification_number" id="personal_identification_number" value="<?php echo $party->get_personal_identification_number() ?>" />
+							<input type="text" name="identifier" id="identifier" value="<?php echo $party->get_identifier() ?>" />
 						<?php
 						}
 						else
 						{
-							echo $party->get_personal_identification_number();
+							echo $party->get_identifier();
 						}
 						?>
 					</dd>
@@ -279,7 +279,7 @@
 						?>
 					</dd>
 					<dt>
-						<label for="reskontro"><?php echo lang('customer_account') ?></label>
+						<label for="reskontro"><?php echo lang('reskontro') ?></label>
 					</dt>
 					<dd>
 						<?php

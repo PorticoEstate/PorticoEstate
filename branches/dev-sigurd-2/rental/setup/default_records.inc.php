@@ -338,19 +338,19 @@ $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id)
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (18,15)");
 $oProc->query("INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES (19,15)");
 
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('12345678901','Ola','Nordmann',true,'Bergensgt 5','5050','BERGEN')");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('23456789012','Kari','Nordmann',true,'Nordnesgt 7','5020','BERGEN')");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('34567890123','Per','Nordmann',true,'Solheimsviken 13','5008','BERGEN')");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('12345678901','Ola','Nordmann',true,'Bergensgt 5','5050','BERGEN')");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('23456789012','Kari','Nordmann',true,'Nordnesgt 7','5020','BERGEN')");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, is_active, address_1, postal_code, place) VALUES ('34567890123','Per','Nordmann',true,'Solheimsviken 13','5008','BERGEN')");
 	// Vitalitetssenteret
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0443','Åge','Nilssen','IDRETT Sentrum sør','Byrådsavdeling for oppvekst','ar564@bergen.kommune.no','R0443',true)");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0956','Berit','Tande','Bergenhus og Årstad kulturkontor','Byrådsavd. for kultur, næring og idrett','wb902@bergen.kommune.no','R0956',true)");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0443','Åge','Nilssen','IDRETT Sentrum sør','Byrådsavdeling for oppvekst','ar564@bergen.kommune.no','R0443',true)");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0956','Berit','Tande','Bergenhus og Årstad kulturkontor','Byrådsavd. for kultur, næring og idrett','wb902@bergen.kommune.no','R0956',true)");
 	// Gullstøltunet sykehjem
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active, location_id) VALUES ('R7552','Anna Milde','Thorbjørnsen','Gullstøltunet','Byrådsavd. for helse og omsorg','vk172@bergen.kommune.no','R7552',true,{$loc_id_ba_helse})");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, address_1, postal_code, place, phone, email, is_active) VALUES ('KF06','Øyvind','Berggreen','Gullstøltunet kjøkken','Øvre Kråkenes 111','5152','Bønes','55929846/48','vm152@bergen.kommune.no',true)");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, account_number, is_active, location_id) VALUES ('R7552','Anna Milde','Thorbjørnsen','Gullstøltunet','Byrådsavd. for helse og omsorg','vk172@bergen.kommune.no','R7552',true,{$loc_id_ba_helse})");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, address_1, postal_code, place, phone, email, is_active) VALUES ('KF06','Øyvind','Berggreen','Gullstøltunet kjøkken','Øvre Kråkenes 111','5152','Bønes','55929846/48','vm152@bergen.kommune.no',true)");
 	// Bergen Rådhus
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, is_active,location_id) VALUES ('R0401','Anne-Marit','Presterud','Gullstøltunet kjøkken','Byrådsavd. for barnehage og skole','jf684@bergen.kommune.no',true,{$loc_id_ba_barnehage})");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0300','Jan-Petter','Stoutland','BHO - Kommunaldirektørens stab','Byrådsavd. for helse og omsorg','gs256@bergen.kommune.no','R0300',true)");
-$oProc->query("INSERT INTO rental_party (personal_identification_number, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0130','Robert','Rastad','Seksjon informasjon','Byrådsleders avdeling','jg406@bergen.kommune.no','R0130',true)");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, is_active,location_id) VALUES ('R0401','Anne-Marit','Presterud','Gullstøltunet kjøkken','Byrådsavd. for barnehage og skole','jf684@bergen.kommune.no',true,{$loc_id_ba_barnehage})");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0300','Jan-Petter','Stoutland','BHO - Kommunaldirektørens stab','Byrådsavd. for helse og omsorg','gs256@bergen.kommune.no','R0300',true)");
+$oProc->query("INSERT INTO rental_party (identifier, first_name, last_name, company_name, department, email, account_number, is_active) VALUES ('R0130','Robert','Rastad','Seksjon informasjon','Byrådsleders avdeling','jg406@bergen.kommune.no','R0130',true)");
 
 	// Vitalitetssenteret
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (11, 4, true)");

@@ -261,7 +261,7 @@ class rental_uiparty extends rental_uicommon
 			if(isset($party)) // If a party object is created
 			{
 				// ... set all parameters
-				$party->set_personal_identification_number(phpgw::get_var('personal_identification_number'));
+				$party->set_identifier(phpgw::get_var('identifier'));
 				$party->set_first_name(phpgw::get_var('firstname'));
 				$party->set_last_name(phpgw::get_var('lastname'));
 				$party->set_title(phpgw::get_var('title'));

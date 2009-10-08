@@ -204,14 +204,14 @@
 				$pin = $this->decode($data[24]);
 				if (strlen($pin) == 11) {
 					// Fødselsnummer
-					$party->set_personal_identification_number($pin);
+					$party->set_identifier($pin);
 				} else if (strlen($pin) == 9) {
 					// Foretaksnummer.  Always 9?
 					// Do we need a new field here?
-					$party->set_personal_identification_number($pin);
+					$party->set_identifier($pin);
 				} else if (strlen($pin) == 6) {
 					// Agresso ID
-					$party->set_agresso_id($pin);
+					$party->set_identifier($pin);
 				}
 				
 				$party->set_comment($this->decode($data[26]));

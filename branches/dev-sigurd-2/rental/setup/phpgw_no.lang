@@ -11,7 +11,7 @@ added_areas	rental	no	Inkludert areal
 add	rental	no	Legg til
 address	rental	no	Adresse
 advance	rental	no	Forskudd
-agresso_id	rental	no	Agresso ID
+agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
 agresso_lg04	rental	no	Agresso LG04 - fakturagrunnlag
 all	rental	no	Alle
@@ -82,7 +82,6 @@ currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
 currency suffix	rental	no	Valuta suffix
 currency_thousands_separator	rental	no	.
-customer_account	rental	no	Kundenummer i Agresso
 dashboard_title	rental	no	Forside - Min arbeidsoversikt
 date_end	rental	no	Gjelder til
 date	rental	no	Dato
@@ -133,6 +132,7 @@ Generate export	rental	no	Generér eksport
 half-year	rental	no	Halvårig
 house_number	rental	no	Husnummer
 id	rental	no	ID
+Identifier	rental	no	Identifikator
 in_operation	rental	no	I drift
 internal	rental	no	Interne kontraktsparter
 Invalid location code for the building.	rental	no	Ugyldig enhetsnummer for bygg.
@@ -265,7 +265,7 @@ rental	rental	no	Utleie
 reports	rental	no	Rapporter
 reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
-reskontro	rental	no	Reskontronummer
+reskontro	rental	no	Reskontro
 responsibility	rental	no	Ansvar
 Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
 result_unit_number	rental	no	Resultatsenhet

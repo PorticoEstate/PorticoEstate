@@ -145,8 +145,7 @@
 		'rental_party' => array(
 				'fd' => array(
 					'id' =>             array('type' => 'auto', 'nullable' => false),
-					'agresso_id' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
-					'personal_identification_number' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
+					'identifier' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'first_name' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
 					'last_name' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'comment' =>        array('type' => 'text'),
@@ -154,7 +153,6 @@
 					'title' =>          array('type' => 'varchar','precision' => '255','nullable' => true),
 					'company_name' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'department' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
-					'organisation_number' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'address_1' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'address_2' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'postal_code' =>	array('type' => 'varchar','precision' => '255','nullable' => true),

@@ -10,8 +10,7 @@ class rental_party extends rental_model
 	public static $so;
 
     protected $id;
-    protected $agresso_id;
-    protected $personal_identification_number;
+    protected $identifier;
     protected $first_name;
     protected $last_name;
     protected $location_id;
@@ -101,35 +100,12 @@ class rental_party extends rental_model
 
 	public function get_id() { return $this->id; }
 
-	public function set_agresso_id($agresso_id)
+	public function set_identifier($identifier)
 	{
-		$this->agresso_id = $agresso_id;
+		$this->identifier = $identifier;
 	}
 
-	public function get_agresso_id() { return $this->agresso_id; }
-
-	public function set_personal_identification_number($personal_identification_number)
-	{
-		$this->personal_identification_number = $personal_identification_number;
-	}
-
-	public function get_personal_identification_number() { return $this->personal_identification_number; }
-
-    /**
-     * Alias for set_personal_identificiation_number()
-     *
-     * @param mixed $pid Personal ID number
-     */
-    public function set_pid($pid) {
-        $this->set_personal_identification_number($pid);
-    }
-
-    /**
-     * Alias for get_personal_identificiation_number()
-     *
-     * @return string Personal ID number
-     */
-    public function get_pid() { return $this->get_personal_identification_number(); }
+	public function get_identifier() { return $this->identifier; }
 
 	public function set_first_name($first_name)
 	{
@@ -347,7 +323,7 @@ class rental_party extends rental_model
 		return array(
 			'id' => $this->id,
 			'name' => $this->get_name(),
-			'personal_identification_number' => $this->personal_identification_number,
+			'identifier' => $this->identifier,
 			'firstname' => $this->first_name,
 			'lastname' => $this->last_name,
 			'title' => $this->title,

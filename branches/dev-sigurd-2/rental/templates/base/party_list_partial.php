@@ -33,8 +33,8 @@
 	},
 	{
 		key: "reskontro",
-		label: "<?php echo lang('customer_account') ?>",
-	    sortable: false
+		label: "<?php echo lang('reskontro') ?>",
+	    sortable: true
 	},
 	{
 		key: "actions",
@@ -101,12 +101,11 @@
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
 			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
-				<option value="all"><?php echo lang('all') ?></option>echo lang('id') ?></option>
+				<option value="all"><?php echo lang('all') ?></option>
 				<option value="name"><?php echo lang('name') ?></option>
 				<option value="address"><?php echo lang('address') ?></option>
-				<option value="ssn"><?php echo lang('ssn') ?></option>
-				<option value="organisation_number"><?php echo lang('organisation_number') ?></option>
-				<option value="account"><?php echo lang('customer_account') ?></option>
+				<option value="identifier"><?php echo lang('Identifier') ?></option>
+				<option value="reskontro"><?php echo lang('reskontro') ?></option>
 			</select>
 		</label>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
