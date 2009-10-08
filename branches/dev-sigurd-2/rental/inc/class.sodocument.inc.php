@@ -7,10 +7,6 @@ class rental_sodocument extends rental_socommon
 	public static $PARTY_DOCUMENTS = 'parties';
 	public static $CONTRACT_DOCUMENTS = 'contracts';
 	
-	protected static $root = '/rental';
-	protected static $contract_folder = '/contracts';
-	protected static $parties_folder = '/parties';
-	
 	protected static $so;
 	protected $document_types; // Used for caching the values
 	
