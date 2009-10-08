@@ -31,7 +31,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT * FROM " . $this->table_name . " WHERE id = " . $id;
+		$sql = "SELECT * FROM rental_price_item WHERE id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -54,7 +54,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$title = (string)$title;
 		
-		$sql = "SELECT * FROM " . $this->table_name . " WHERE title LIKE '" . $title . "' LIMIT 1";
+		$sql = "SELECT * FROM rental_price_item WHERE title LIKE '" . $title . "' LIMIT 1";
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		
 		if ($this->db->next_record()) {
