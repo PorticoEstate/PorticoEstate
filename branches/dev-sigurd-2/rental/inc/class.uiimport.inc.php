@@ -103,7 +103,7 @@
 			// Import contracts
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contracts')) {
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
-				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites));
+				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts(phpgwapi_cache::session_get('rental', 'facilit_composites'), phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')));
 				$this->import_button_label = "Continue to import price items";
 				return;
 			}
@@ -122,42 +122,6 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_price_items');
-		}
-		
-		protected function import_price_items($contracts)
-		{
-			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
-			// This is an array keyed by the main price item ID
-			$detail_price_item = array();
-			
-			$handle = fopen($path . "/u_PriselementDetaljKontrakt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
-				$detail_price_item[$data[1]] = array(
-					'price' => $data[2],
-					'amount' => $data[3],
-					'date_start' => strtotime($this->decode($data[4])),
-					'date_end' => strtotime($this->decode($data[5]))
-				);
-			}
-			
-			fclose($handle);
-		
-			$handle = fopen($path . "/u_PrisElementKontrakt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
-				// Create new admin price item if one doesn't exist in the admin price list
-				// Add new price item to contract with correct reference from the $contracts array
-				// Remember fields from detail price item.
-			}
-			
-			fclose($handle);
 		}
 		
 		protected function import_parties()
@@ -200,19 +164,10 @@
 				
 				$party->set_reskontro($this->decode($data[23]));
 				
+				// TODO: PIN/AgressoID/CompanyID should go to the same field
+				
 				// Fødselsnr/Foretaksnr/AgressoID
-				$pin = $this->decode($data[24]);
-				if (strlen($pin) == 11) {
-					// Fødselsnummer
-					$party->set_identifier($pin);
-				} else if (strlen($pin) == 9) {
-					// Foretaksnummer.  Always 9?
-					// Do we need a new field here?
-					$party->set_identifier($pin);
-				} else if (strlen($pin) == 6) {
-					// Agresso ID
-					$party->set_identifier($pin);
-				}
+				$party->set_identifier($this->decode($data[24]));
 				
 				$party->set_comment($this->decode($data[26]));
 				
@@ -258,9 +213,10 @@
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
 					$loc1 = $this->decode($data[1]);
 					$loc1 = $this->format_location_code($loc1);
-					echo 'Adding unit with location code ' . $loc1 . '\n';
+					
+					
 					// Add units only if composite stored ok.
-					rental_sounit::get_instance()->add(new rental_unit(null, $composite->get_id(), $loc1));
+					rental_sounit::get_instance()->store(new rental_unit(null, $composite->get_id(), $loc1));
 					
 					// Add composite to collection of composite so we can refer to it later.
 					$composites[$data[0]] = $composite->get_id();
@@ -288,7 +244,7 @@
 			$first_line = fgetcsv($handle, 0, ",", "'");
 			
 			while (($data = $this->getcsv($handle)) !== false) {
-				// Array keyed by contract id.  Assuming 1-1 even for link table.
+				// Array with Facilit Contract ID => Facilit composite ID
 				$rentalobject_to_contract[$data[1]] = $data[0];
 			}
 			
@@ -299,7 +255,7 @@
 			return $rentalobject_to_contract;
 		}
 		
-		protected function import_contracts($composites)
+		protected function import_contracts($composites, $rentalobject_to_contract)
 		{
 			$contracts = array();
 			
@@ -319,6 +275,7 @@
 				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
 				
+				print_r("Imported contract " . $this->decode($data[5]) . "\n");
 				$contract->set_old_contract_id($this->decode($data[5]));
 				
 				$term = $data[10];
@@ -359,15 +316,21 @@
 				// Set the location ID according to what the user selected
 				$contract->set_location_id(phpgw::get_var("location_id"));
 				
+				// Add rental composite to contract
+					//$composite_id = $rentalobject_to_contract[$data[0]];
+					//$composite = new rental_composite($composites[$composite_id]);
+					//$contract->add_composite(new rental_composite($rentalobject_to_contract[$data[0]]));
+					
 				// Store contract
 				if (rental_socontract::get_instance()->store($contract)) {
 					$contracts[$data[0]] = $contract->get_id();
 					
-					// Add rental composite to contract
-					//$composite_id = $rentalobject_to_contract[$data[0]];
-					//$composite = new rental_composite($composites[$composite_id]);
-					$contract->add_composite($contract->get_id(), $rentalobject_to_contract[$data[0]]);	
-			
+					if (isset($rentalobject_to_contract[$data[0]])) {
+						// Add rental composite to contract
+						$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
+						rental_socontract::get_instance()->add_composite($contract->get_id(), $composite_id);
+					}
+					
 					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . ")";
 				} else {
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
@@ -377,6 +340,42 @@
 			fclose($handle);
 			
 			return $contracts;
+		}
+		
+		protected function import_price_items($contracts)
+		{
+			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
+			// This is an array keyed by the main price item ID
+			$detail_price_item = array();
+			
+			$handle = fopen($this->path . "/u_PrisElementDetaljKontrakt.csv", "r");
+			
+			// Read the first line to get the headers out of the way
+			$this->getcsv($handle);
+			
+			while (($data = $this->getcsv($handle)) !== false) {
+				$detail_price_item[$data[1]] = array(
+					'price' => $data[2],
+					'amount' => $data[3],
+					'date_start' => strtotime($this->decode($data[4])),
+					'date_end' => strtotime($this->decode($data[5]))
+				);
+			}
+			
+			fclose($handle);
+		
+			$handle = fopen($this->path . "/u_PrisElementKontrakt.csv", "r");
+			
+			// Read the first line to get the headers out of the way
+			$this->getcsv($handle);
+			
+			while (($data = $this->getcsv($handle)) !== false) {
+				// Create new admin price item if one doesn't exist in the admin price list
+				// Add new price item to contract with correct reference from the $contracts array
+				// Remember fields from detail price item.
+			}
+			
+			fclose($handle);
 		}
 		
 		/**
