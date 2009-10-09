@@ -14,7 +14,7 @@ change	common	no	Endre
 charset	common	no	utf-8
 clear	common	no	Clear
 clear form	common	no	Tøm skjema
-configure access permissions	rental	no	Tilgangskontroll
+configure access permissions	common	no	Tilgangskontroll
 configuration	common	no	Konfigurasjon
 copy	common	no	Kopier
 create	common	no	Lag
