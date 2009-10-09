@@ -241,6 +241,9 @@ class rental_sobilling extends rental_socommon
 			case 'agresso_gl07':
 				$exportable = new rental_agresso_gl07($billing_job);
 				break;
+			case 'agresso_lg04':
+				$exportable = new rental_agresso_lg04($billing_job);
+				break;
 		}
 		if($exportable != null)
 		{
