@@ -85,7 +85,7 @@
 
 	// Initiating the data source
 	setDataSource(
-			'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
+			'index.php?menuaction=rental.uiunit.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
 			columnDefs,
 			'<?php echo $list_id ?>_form',
 			[],
@@ -123,10 +123,6 @@
 
 		<label class="toolbar_element_label" for="available_date"><?php echo lang('available_at') ?></label>
 		<?php echo $GLOBALS['phpgw']->yuical->add_listener("{$list_id}_available_date", $notification_date); ?>
-
-
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
 </form>
 <?php 

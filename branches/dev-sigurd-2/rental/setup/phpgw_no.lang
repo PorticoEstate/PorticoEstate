@@ -14,7 +14,9 @@ advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
 agresso_lg04	rental	no	Agresso LG04 - fakturagrunnlag
+add_location	rental	no	Legg enhet til leieobjektet
 all	rental	no	Alle
+all_locations	rental	no	Enheter fra eiendomsregisteret
 and	rental	no	og
 annually	rental	no	Årlig
 area_gros	rental	no	Bruttoareal
@@ -134,6 +136,7 @@ house_number	rental	no	Husnummer
 id	rental	no	ID
 Identifier	rental	no	Identifikator
 in_operation	rental	no	I drift
+included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
 Invalid location code for the building.	rental	no	Ugyldig enhetsnummer for bygg.
 invoice	rental	no	Faktura
@@ -322,6 +325,7 @@ total_price	rental	no	Total pris
 type	rental	no	Type
 under_dismissal	rental	no	Under oppsigelse
 under_planning	rental	no	Under planlegging
+units	rental	no	Enheter
 update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted

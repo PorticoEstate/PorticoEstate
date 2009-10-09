@@ -33,15 +33,7 @@
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('rc', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.index') ),
-					'image'	=> array('rental', 'go-home'),
-					'children' => array(
-						'orphan_units' => array
-						(
-							'text'	=> $GLOBALS['phpgw']->translation->translate('orphan_units', array(), true),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.orphan_units') ),
-							'image'	=> array('rental', 'edit-clear'),
-						)
-					)
+					'image'	=> array('rental', 'go-home')
 				),
 				'parties' => array
 				(

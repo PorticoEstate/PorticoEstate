@@ -29,7 +29,7 @@ class rental_unit extends rental_model
 	}
 
 	public function get_location(){ return $this->location; }
-
+	
 	public function get_location_code()
 	{
 		if($this->location != null)
@@ -45,12 +45,13 @@ class rental_unit extends rental_model
 	 * @return string with data about the object.
 	 */
 	public function __toString() {
-        return "unit[id:{$this->get_id()},composite id:{$this->composite_id},location:{$this->get_location()}]";
+        return "unit[id:{$this->get_id()},composite id:{$this->composite_id},location:{$this->get_location_code()}]";
 	}
 	
     public function serialize()
 	{
 		$result = array();
+		$result['id'] = $this->get_id();
 		$result['composite_id'] = $this->get_composite_id();
 		$location = $this->get_location();
 		if($location != null)
@@ -60,6 +61,5 @@ class rental_unit extends rental_model
 		
 		return $result;
 	}
-	
 }
 ?>

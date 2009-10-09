@@ -8,7 +8,12 @@
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?> <em><?php echo $composite->get_name() ?></em></h1>
+<div class="identifier-header">
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?></h1>
+	<div>
+		<label><?php echo lang('name') ?> </label><?php echo $composite->get_name() ?>
+	</div>
+</div>
 
 <div id="composite_tabview" class="yui-navset">
 	<ul class="yui-nav">
@@ -16,7 +21,7 @@
 		
 		<?php if($composite->get_id() > 0) { ?>
 		
-		<li><a href="#elements"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-drawing-template.png" alt="icon" /> <?php echo lang('elements') ?></em></a></li>
+		<li><a href="#elements"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-drawing-template.png" alt="icon" /> <?php echo lang('units') ?></em></a></li>
 		<li><a href="#contracts"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('contracts') ?></em></a></li>
 
 		<?php } ?>
@@ -122,22 +127,22 @@
 		<?php if($composite->get_id() > 0) { ?>
 
 		<div id="elements">
-			<h3><?php echo lang('added_areas') ?></h3>
+			<h3><?php echo lang('included_units') ?></h3>
 			<?php 
 				$list_form = false; 
-				$list_id = 'included_areas';
-				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
+				$list_id = 'included_units';
+				$url_add_on = '&amp;composite_id='.$composite->get_id();
 				unset($extra_cols);
 				include('unit_list_partial.php');
 			?>
-			<h3><?php echo lang('available_areas') ?></h3>
+			<h3><?php echo lang('all_locations') ?></h3>
 			<?php 
 				$list_form = true; 
-				$list_id = 'available_areas';
-				$url_add_on = '&amp;type='.$list_id.'&amp;composite_id='.$composite->get_id();
+				$list_id = 'property_uilocations';
+				$url_add_on = '&amp;composite_id='.$composite->get_id();
 				unset($extra_cols);
-				$related = array('available_areas_ctrl_toggle_level');
-				include('unit_list_partial.php');
+				$related = array('included_units');
+				include('property_location_partial.php');
 			?>
 		</div>
 		<div id="contracts">

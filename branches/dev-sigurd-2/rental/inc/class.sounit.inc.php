@@ -26,9 +26,9 @@ class rental_sounit extends rental_socommon
 	{
 		$clauses = array('1=1');
 		$filter_clauses = array();
-		if(isset($filters['included_areas'])) // Areas/units already added to composite
+		if(isset($filters['composite_id'])) // Areas/units already added to composite
 		{
-			$filter_clauses[] = "composite_id = {$this->marshal($filters['included_areas'], 'int')}";
+			$filter_clauses[] = "composite_id = {$this->marshal($filters['composite_id'], 'int')}";
 		}
 		if(count($filter_clauses))
 		{
@@ -105,8 +105,9 @@ class rental_sounit extends rental_socommon
 	 */
 	protected function add(&$unit)
 	{
-		$sql = "INSERT INTO rental_unit (composite_id, location_code) VALUES ({$unit->get_composite_id()}, '{$unit->get_location()}')";
+		$sql = "INSERT INTO rental_unit (composite_id, location_code) VALUES ({$this->marshal($unit->get_composite_id(), 'int')}, '{$unit->get_location_code()}')";
 		$result = $this->db->query($sql);
+		return $result ? true : false;
 	}
 	
 	/**
@@ -117,10 +118,11 @@ class rental_sounit extends rental_socommon
 		// There's never anything to update on a unit
 	}
 
-	public function delete(int $composite_id, string $location_code)
+	public function delete(int $unit_id)
 	{
-		$sql ="DELETE FROM rental_unit WHERE composite_id = {$this->marshal($composite_id, 'int')} AND location_code = {$this->marshal($location_code, 'string')}";
-		return $this->db->query($sql);
+		$sql ="DELETE FROM rental_unit WHERE id = {$this->marshal($unit_id, 'int')}";
+		$result = $this->db->query($sql);
+		return $result ? true : false;
 	}
 	
 }

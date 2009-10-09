@@ -344,26 +344,29 @@
 		 */
 		function add_unit()
 		{
-			if(!$this->isExecutiveOfficer())
+			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
-			$composite_id = (int)phpgw::get_var('id');
+			
+			$composite_id = (int)phpgw::get_var('composite_id');
+			
 			if(isset($composite_id) && $composite_id > 0)
 			{
-				$composite = rental_composite::get($composite_id);
-
-				if (isset($composite)) {
-					$location_id = (int)phpgw::get_var('location_id');
-					$loc1 = (int)phpgw::get_var('loc1');
-					$composite->add_new_unit(new rental_property($loc1, $location_id));
-					//$composite->store();
-				}
+				$location_code = phpgw::get_var('location_code');
+				$level = (int)phpgw::get_var('level');
+				
+				
+				$property_location = new rental_property_location($location_code, '', $level);
+				
+				$unit = new rental_unit(0,$composite_id,$property_location);
+				
+				$result = rental_sounit::get_instance()->store($unit);
+				
+				return $result ? true : false;
 			}
-			
-
-			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit', 'id' => $composite_id, 'active_tab' => 'area'));
+			return false;
 		}
 
 		/**
@@ -373,16 +376,15 @@
 		 */
 		function remove_unit()
 		{
-			if(!$this->isExecutiveOfficer())
+			if(!($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
 				$this->render('permission_denied.php', array('message' => lang('permission_denied')));
 				return;
 			}
-			$composite_id = (int)phpgw::get_var('id');
-			$location_code = phpgw::get_var('location_id');
-			if($composite_id > 0 && isset($location_code))
+			$unit_id = (int)phpgw::get_var('id');
+			if(isset($unit_id) && $unit_id > 0 )
 			{
-				rental_sounit::get_instance()->delete($composite_id, $location_code);
+				rental_sounit::get_instance()->delete($unit_id);
 			}
 		}
 
