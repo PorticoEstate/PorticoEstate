@@ -66,6 +66,14 @@ class rental_agresso_lg04 implements rental_exportable
 		{
 			// We need all price items in the invoice
 			$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
+			$composite_name = '';
+			// We need to get the composites to get a composite name for the Agresso export
+			$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id()));
+			if($composites != null && count($composites) > 0)
+			{
+				$keys = array_keys($composites);
+				$composite_name = $composites[$keys[0]]->get_name();
+			}
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
 			$price_item_data = array();
@@ -77,7 +85,7 @@ class rental_agresso_lg04 implements rental_exportable
 				$data['article_code'] = $price_item->get_agresso_id();
 				$price_item_data[] = $data;
 			}
-			$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id());
+			$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name);
 		}
 	}
 	
@@ -192,8 +200,8 @@ class rental_agresso_lg04 implements rental_exportable
 				.$this->get_formatted_amount($item['amount'])			//  6	amount
 				.'1'													//  7	amount_set
 				.sprintf("%38s", '')									//		just white space..
-				.sprintf("%35s", $item['article_description'])			// 10	art_descr
-				.sprintf("%15s", $item['article_code'])					// 11	article
+				.sprintf("%-35s", $item['article_description'])			// 10	art_descr
+				.sprintf("%-15s", $item['article_code'])					// 11	article
 				.sprintf("%49s", '')									//		just white space..
 				.sprintf("%-12s", "PE{$this->date_str}")				// 20	batch_id
 				.'BY'													// 21	client
@@ -241,7 +249,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%15s", '')									//		just white space..
 			;
 			$order[] = // Text line
-				 sprintf("%345s", '')									//		just white space..
+				 sprintf("%346s", '')									//		just white space..
 				.sprintf("%-12s", "PE{$this->date_str}")				// 20	batch_id
 				.'BY'													// 21	client
 				.sprintf("%692s", '')									//		just white space..
