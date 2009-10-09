@@ -12,7 +12,7 @@ class rental_soparty extends rental_socommon
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 
-	 * @return the storage object
+	 * @return rental_soparty the storage object
 	 */
 	public static function get_instance()
 	{

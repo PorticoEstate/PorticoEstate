@@ -86,14 +86,76 @@ class rental_socontract_price_item extends rental_socommon
 		return $price_item;
 	}
 	
+	/**
+	 * Add a new contract_price_item to the database.  Adds the new insert id to the object reference.
+	 * 
+	 * @param $price_item the contract_price_item to be added
+	 * @return mixed receipt from the db operation
+	 */
 	protected function add(&$price_item)
 	{
+		$price = $price_item->get_price() ? $price_item->get_price() : 0;
+		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
 		
+		// Build a db-friendly array of the composite object
+		$values = array(
+			$price_item->get_price_item_id(),
+			$price_item->get_contract_id(),
+			'\'' . $price_item->get_title() . '\'',
+			'\'' . $price_item->get_agresso_id() . '\'',
+			($price_item->is_area() ? "true" : "false"),
+			$price,
+			$price_item->get_area(),
+			$price_item->get_count(),
+			$total_price,
+			$this->marshal($price_item->get_date_start(), 'date'),
+			$this->marshal($price_item->get_date_end(), 'date')
+		);
+		
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'date_start', 'date_end');
+		
+		$q ="INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$result = $this->db->query($q);
+		$receipt['id'] = $this->db->get_last_insert_id("rental_contract_price_item", 'id');
+		
+		$price_item->set_id($receipt['id']);
+		
+		return $receipt;
 	}
 	
+	/**
+	 * Update the database values for an existing contract price item.
+	 * 
+	 * @param $price_item the contract price item to be updated
+	 * @return result receipt from the db operation
+	 */
 	protected function update($price_item)
 	{
+		$id = intval($price_item->get_id());
 		
+		$price = $price_item->get_price() ? $price_item->get_price() : 0;
+		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		
+		// Build a db-friendly array of the composite object
+		$values = array(
+			$price_item->get_price_item_id(),
+			$price_item->get_contract_id(),
+			'\'' . $price_item->get_title() . '\'',
+			$price_item->get_area(),
+			$price_item->get_count(),
+			'\'' . $price_item->get_agresso_id() . '\'',
+			($price_item->is_area() ? "true" : "false"),
+			$price,
+			$total_price,
+			$this->marshal($price_item->get_date_start(), 'date'),
+			$this->marshal($price_item->get_date_end(), 'date')
+		);
+				
+		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		
+		$receipt['id'] = $id;
+		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
+		return $receipt;
 	}
 	
 }

@@ -205,7 +205,6 @@ class rental_soprice_item extends rental_socommon
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
-
 		return $receipt;
 	}
 	

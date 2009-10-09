@@ -107,7 +107,9 @@
 			// Import contracts
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contracts')) {
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
-				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts(phpgwapi_cache::session_get('rental', 'facilit_composites'), phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')));
+				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
+				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
+				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties));
 				$this->import_button_label = "Continue to import price items";
 				return;
 			}
@@ -120,12 +122,7 @@
 				return;
 			}
 			
-			// We're done with the import, so clear all session variables so we're ready for a new one
-			phpgwapi_cache::session_clear('rental', 'facilit_parties');
-			phpgwapi_cache::session_clear('rental', 'facilit_composites');
-			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
-			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
-			phpgwapi_cache::session_clear('rental', 'facilit_price_items');
+			
 		}
 		
 		protected function import_parties()
@@ -258,7 +255,7 @@
 			return $rentalobject_to_contract;
 		}
 		
-		protected function import_contracts($composites, $rentalobject_to_contract)
+		protected function import_contracts($composites, $rentalobject_to_contract, $parties)
 		{
 			$contracts = array();
 			
@@ -278,7 +275,6 @@
 				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
 				
-				print_r("Imported contract " . $this->decode($data[5]) . "\n");
 				$contract->set_old_contract_id($this->decode($data[5]));
 				
 				$term = $data[10];
@@ -332,6 +328,12 @@
 						// Add rental composite to contract
 						$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 						rental_socontract::get_instance()->add_composite($contract->get_id(), $composite_id);
+					}
+					
+					if (!$this->is_null($data[2])) {
+						// Add party to contract
+						$party_id = $parties[$this->decode($data[2])];
+						rental_socontract::get_instance()->add_party($contract->get_id(), $party_id);
 					}
 					
 					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . ")";
@@ -418,6 +420,9 @@
 				
 				// Tie the price item to the contract it belongs to
 				$price_item->set_contract_id($contracts[$this->decode($data[1])]);
+				
+				print_r($price_item);
+				print_r("\n");
 				// .. and save
 				rental_socontract_price_item::get_instance()->store($price_item);
 			}
