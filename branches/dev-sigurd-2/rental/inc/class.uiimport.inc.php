@@ -4,11 +4,15 @@
 	phpgw::import_class('rental.socomposite');
 	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.sounit');
+	phpgw::import_class('rental.soprice_item');
+	phpgw::import_class('rental.socontract_price_item');
 	
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
+	include_class('rental', 'price_item', 'inc/model/');
+	include_class('rental', 'contract_price_item', 'inc/model/');
 
 	class rental_uiimport extends rental_uicommon
 	{
@@ -170,7 +174,6 @@
 				$party->set_identifier($this->decode($data[24]));
 				
 				$party->set_comment($this->decode($data[26]));
-				
 				
 				// Store party and log message
 				if (rental_soparty::get_instance()->store($party)) {
@@ -346,7 +349,7 @@
 		{
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
-			$detail_price_item = array();
+			$detail_price_items = array();
 			
 			$handle = fopen($this->path . "/u_PrisElementDetaljKontrakt.csv", "r");
 			
@@ -354,12 +357,19 @@
 			$this->getcsv($handle);
 			
 			while (($data = $this->getcsv($handle)) !== false) {
-				$detail_price_item[$data[1]] = array(
+				$detail_price_items[$data[1]] = array(
 					'price' => $data[2],
 					'amount' => $data[3],
-					'date_start' => strtotime($this->decode($data[4])),
-					'date_end' => strtotime($this->decode($data[5]))
+					'date_start' => null,
+					'date_end' => null
 				);
+				
+				if (!$this->is_null($data[4])) {
+					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+				}
+				if (!$this->is_null($data[5])) {
+					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
+				}
 			}
 			
 			fclose($handle);
@@ -373,6 +383,43 @@
 				// Create new admin price item if one doesn't exist in the admin price list
 				// Add new price item to contract with correct reference from the $contracts array
 				// Remember fields from detail price item.
+				
+				$title = $this->decode($data[3]);
+				
+				$admin_price_item = rental_soprice_item::get_instance()->get_single_with_title($title);
+				
+				// Add new admin price item if one with this title doesn't already exist
+				if (!$admin_price_item) {
+					$facilit_id = $this->decode($data[0]);
+					
+					$admin_price_item = new rental_price_item();
+					$admin_price_item->set_title($title);
+					$admin_price_item->set_agresso_id($this->decode($data[12]));
+					// TODO: This assumes 1 for AREA, and anything else for count.  is this correct?
+					$admin_price_item->set_is_area($this->decode($data[12]) == '4');
+					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
+					rental_soprice_item::get_instance()->store($admin_price_item);
+				}
+				
+				// Create a new contract price item that we can tie to our contract
+				$price_item = new rental_contract_price_item();
+				
+				$price_item->set_price_item_id($admin_price_item->get_id());
+				$price_item->set_price($detail_price_items[$facilit_id]['price']);
+				
+				if ($admin_price_item->is_area()) {
+					$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+				} else {
+					$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+				}
+				
+				$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
+				$price_item->set_date_end($detail_price_items[$facilit_id]['date_end']);
+				
+				// Tie the price item to the contract it belongs to
+				$price_item->set_contract_id($contracts[$this->decode($data[1])]);
+				// .. and save
+				rental_socontract_price_item::get_instance()->store($price_item);
 			}
 			
 			fclose($handle);

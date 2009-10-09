@@ -23,7 +23,7 @@
 		 * 
 		 * @param int $id the id of this price item
 		 */
-		public function __construct($id)
+		public function __construct($id = 0)
 		{
 			parent::__construct($id);
 			/*

@@ -35,11 +35,11 @@ class rental_soprice_item extends rental_socommon
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
-		$price_item = new rental_price_item($this->get_field_value('id'));
-		$price_item->set_title($this->get_field_value('title'));
-		$price_item->set_agresso_id($this->get_field_value('agresso_id'));
-		$price_item->set_is_area($this->get_field_value('is_area'));
-		$price_item->set_price($this->get_field_value('price'));
+		$price_item = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
+		$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+		$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
+		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		
 		return $price_item;
 	}
@@ -54,15 +54,15 @@ class rental_soprice_item extends rental_socommon
 	{
 		$title = (string)$title;
 		
-		$sql = "SELECT * FROM rental_price_item WHERE title LIKE '" . $title . "' LIMIT 1";
+		$sql = "SELECT * FROM rental_price_item WHERE title LIKE '" . $title . "'";
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		
 		if ($this->db->next_record()) {
-			$price_item = new rental_price_item($this->get_field_value('id'));
-			$price_item->set_title($this->get_field_value('title'));
-			$price_item->set_agresso_id($this->get_field_value('agresso_id'));
-			$price_item->set_is_area($this->get_field_value('is_area'));
-			$price_item->set_price($this->get_field_value('price'));
+			$price_item = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
+			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
+			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			
 			return $price_item;
 		}
@@ -175,9 +175,9 @@ class rental_soprice_item extends rental_socommon
 		
 		$cols = array('title', 'agresso_id', 'is_area', 'price');
 		
-		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
-		$receipt['id'] = $this->db->get_last_insert_id($this->table_name, 'id');
+		$receipt['id'] = $this->db->get_last_insert_id("rental_price_item", 'id');
 		
 		$price_item->set_id($receipt['id']);
 		
@@ -201,7 +201,7 @@ class rental_soprice_item extends rental_socommon
 			'price = ' . $price_item->get_price()
 		);
 				
-		$this->db->query('UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
 		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
