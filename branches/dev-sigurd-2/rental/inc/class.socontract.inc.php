@@ -47,7 +47,11 @@ class rental_socontract extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		if($sort_field == null || $sort_field == '')
+		{
+			$sort_field = 'contract.id';
+		}
+		$order = "ORDER BY {$sort_field} {$dir}";
 		
 		// Search for based on search type
 		if($search_for)
@@ -206,6 +210,7 @@ class rental_socontract extends rental_socommon
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(contract.id)) AS count';
+			$order = ''; // No ordering
 		}
 		else
 		{
