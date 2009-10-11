@@ -49,12 +49,12 @@
 		'<?php echo $list_id ?>_paginator'
 	);
 
-    function doExport() {
+    function composite_export() {
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
 
         window.location = 'index.php?menuaction=rental.uicomposite.download'+
-            '&is_active='+availabilityoption;
+            '&is_active='+availabilityoption+'<?php echo $url_add_on ?>';
     }
 </script>
 
@@ -104,6 +104,15 @@
 <?php
 	} // end if($list_form)
 ?>
-<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png"/></a></div>
+<fieldset>
+	<h3><?php echo lang('export_to') ?></h3>
+	<?php
+	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
+	?>
+	<div id="export">
+		<a href="javascript:composite_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as %1', $export_format) ?>"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>
+	</div>
+</fieldset>
+
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
