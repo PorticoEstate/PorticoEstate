@@ -136,7 +136,14 @@
 ?>
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
-	<div id="export"><a href="javascript:party_export('<?php echo $list_id ?>')"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+	<?php 
+	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
+	?>
+	<div id="export">
+		<a href="javascript:party_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as %1', $export_format) ?>"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>
+		&amp;nbsp;&amp;nbsp;
+		<a href="index.php?menuaction=rental.uiparty.download_agresso" title="<?php echo lang('Download Agresso import file') ?>"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-document.png"/></a>
+	</div>
 </fieldset>
 
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

@@ -25,6 +25,7 @@ class rental_party extends rental_model
     protected $address_2;
     protected $postal_code;
     protected $place;
+    protected $postal_country_code;
 
     protected $phone;
     protected $mobile_phone;
@@ -40,6 +41,7 @@ class rental_party extends rental_model
 	public function __construct($id = 0)
 	{
 		$this->id = $id;
+		$this->postal_country_code = 'NO'; // TODO: How should we handle this one? The Agresso CS15 format needs to know the country code, but currently the rental module only support Norwegian addresses. And we have no idea which standard Agresso uses for country codes..
 	}
 
 	/**
@@ -183,6 +185,13 @@ class rental_party extends rental_model
 	}
 
 	public function get_place() { return $this->place; }
+	
+	public function set_postal_country_code($postal_country_code)
+	{
+		$this->postal_country_code = $postal_country_code;
+	}
+
+	public function get_postal_country_code(){ return $this->postal_country_code; }
 
 	public function set_phone($phone)
 	{

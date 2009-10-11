@@ -96,6 +96,8 @@ description	rental	no	Beskrivelse
 details	rental	no	Detaljer
 document_type	rental	no	Dokumenttype
 documents	rental	no	Dokumenter
+Download Agresso import file	rental	no	Last ned Agresso-importfil (CS15)
+Download as %1	rental	no	Last tabellen i %1-format
 economy	rental	no	Økonomi
 edit_contract	rental	no	Redigér kontrakt
 edit	rental	no	Redigér

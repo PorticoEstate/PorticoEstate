@@ -11,12 +11,13 @@ class rental_uiparty extends rental_uicommon
 {
 	public $public_functions = array
 	(
-			'add'		=> true,
-			'edit'		=> true,
-			'index'		=> true,
-			'query'		=> true,
-			'view'		=> true,
-			'download'	=> true
+			'add'				=> true,
+			'edit'				=> true,
+			'index'				=> true,
+			'query'				=> true,
+			'view'				=> true,
+			'download'			=> true,
+			'download_agresso'	=> true
 	);
 
 	public function __construct()
@@ -302,5 +303,12 @@ class rental_uiparty extends rental_uicommon
 			)	
 		);
 	}
+	
+	public function download_agresso(){
+		$browser = CreateObject('phpgwapi.browser');
+		$browser->content_header('export.txt','text/plain');
+		print rental_soparty::get_instance()->get_export_data();
+	}
+	
 }
 ?>

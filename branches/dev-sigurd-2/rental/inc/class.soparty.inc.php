@@ -2,6 +2,7 @@
 
 phpgw::import_class('rental.socommon');
 
+include_class('rental', 'agresso_cs15', 'inc/model/');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
 
@@ -280,5 +281,13 @@ class rental_soparty extends rental_socommon
 
 		return $party;
 	}
+	
+	public function get_export_data()
+	{
+		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, null);
+		$exportable = new rental_agresso_cs15($parties);
+		return $exportable->get_contents();
+	}
+	
 }
 ?>

@@ -175,18 +175,18 @@ class rental_agresso_gl07 implements rental_exportable
 	protected function get_line($account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month)
 	{
 		return
-			 sprintf("%-25s", "PE{$this->date_str}")					//  1	batch_id
+			 sprintf("%-25.25s", "PE{$this->date_str}")					//  1	batch_id
 			.sprintf("%-25s", 'BI')										//  2	interface
 			.sprintf("%-25s", 'HL')										//  3	voucher_type
 			.sprintf("%-2s", 'GL')										//  4	trans_type
 			.sprintf("%-25s", 'BY')										//  5	client
-			.sprintf("%-25s", strtoupper($account))						//  6	account
-			.sprintf("%-25s", strtoupper($responsibility))				//  7	dim_1
-			.sprintf("%-25s", strtoupper($service))						//  8	dim_2
-			.sprintf("%-25s", strtoupper($building))					//  9	dim_3
+			.sprintf("%-25.25s", strtoupper($account))					//  6	account
+			.sprintf("%-25.25s", strtoupper($responsibility))			//  7	dim_1
+			.sprintf("%-25.25s", strtoupper($service))					//  8	dim_2
+			.sprintf("%-25.25s", strtoupper($building))					//  9	dim_3
 			.sprintf("%-25s", '')										// 10	dim_4
-			.sprintf("%-25s", strtoupper($project))						// 11	dim_5
-			.sprintf("%-25s", strtoupper($part_no))						// 12	dim_6
+			.sprintf("%-25.25s", strtoupper($project))					// 11	dim_5
+			.sprintf("%-25.25s", strtoupper($part_no))					// 12	dim_6
 			.sprintf("%-25s", '')										// 13	dim_7
 			.sprintf("%-25s", '0')										// 14	tax_code
 			.sprintf("%-25s", '')										// 15	tax_system
@@ -198,11 +198,11 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%020s", '')										// 21	value_1
 			.sprintf("%020s", '')										// 22	value_2
 			.sprintf("%020s", '')										// 23	value_3
-			.sprintf("%-255s", $description)							// 24	description
+			.sprintf("%-255.255s", $description)						// 24	description
 			.sprintf("%-8s", '')										// 25	trans_date
 			.$this->date_str											// 26	voucher_date
 			.sprintf("%015s", '')										// 27	voucher_no
-			.sprintf("%04s", $bill_year).sprintf("%02s", $bill_month)	// 28	period
+			.sprintf("%04.4s", $bill_year).sprintf("%02.2s", $bill_month)	// 28	period
 			.sprintf("%-8s", '')										// 29
 			.sprintf("%-8s", '')										// 30
 			.sprintf("%-8s", '')										// 31
@@ -210,7 +210,7 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%-8s", '')										// 33
 			.sprintf("%-8s", '')										// 34
 			.sprintf("%-8s", '')										// 35
-			.sprintf("%-15s", $contract_id)								// 36	order_id
+			.sprintf("%-15.15s", $contract_id)							// 36	order_id
 			.sprintf("%-27s", '')										// 37
 			.sprintf("%-2s", '')										// 38
 			.sprintf("%-1s", '')										// 39
@@ -249,9 +249,9 @@ class rental_agresso_gl07 implements rental_exportable
 		$amount = round($amount, 2) * 100;
 		if($amount < 0) // Negative number
 		{
-			return '-' . sprintf("%019s", abs($amount)); // We have to have the sign at the start of the string
+			return '-' . sprintf("%019.19s", abs($amount)); // We have to have the sign at the start of the string
 		}
-		return sprintf("%020s", $amount);
+		return sprintf("%020.20s", $amount);
 	} 
 	
 } 
