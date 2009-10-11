@@ -211,13 +211,13 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
-			$columns[] = 'type.title, type.notify_before, type.account_in, type.account_out';
+			$columns[] = 'type.title, type.notify_before';
 			$columns[] = 'last_edited.edited_on';
 			$columns[] = 'invoice.timestamp_end';	
 			$cols = implode(',',$columns);
@@ -450,7 +450,6 @@ class rental_socontract extends rental_socommon
 			if($this->db->next_record())
 			{
 				$sql = "UPDATE rental_contract_last_edited SET edited_on=$ts_now WHERE contract_id = $contract_id AND account_id = $account_id";
-				//var_dump($sql);
 			} 
 			else
 			{
