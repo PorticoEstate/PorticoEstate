@@ -135,6 +135,7 @@ half-year	rental	no	Halvårig
 house_number	rental	no	Husnummer
 id	rental	no	ID
 Identifier	rental	no	Identifikator
+import_log_messages	rental	no	Import log
 in_operation	rental	no	I drift
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter

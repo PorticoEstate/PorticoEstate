@@ -12,7 +12,8 @@
 <div id="messageHolder"></div>
 
 <form action="index.php?menuaction=rental.uiimport.index" method="post">
-	<label for="path">Path to facilit dump:</label> <input type="text" name="facilit_path" id="facilit_path" value="/home/notroot/FacilitExport" /><br />
+<fieldset>
+	<label for="path">Path to facilit dump:</label> <input type="text" name="facilit_path" id="facilit_path" value="<?php echo $facilit_path ?>" size="60"/>
 	<label for="path">Location for the imported contracts:</label>
 	<select name="location_id" id="location_id">
 		<?php
@@ -26,46 +27,52 @@
 				if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
 				{
 				?>
-					<option 
-						value="<?php echo $id ?>"
-					>
-						<?php echo lang($label) ?>
-					</option>
+					<option value="<?php echo $id ?>"<?php if ($location_id == $id) { echo ' selected="selected"'; } ?>><?php echo lang($label) ?></option>
 				<?php
 				}
 			}
 		}
 		?>
-	</select><br />
-	<input type="submit" value="<?php echo $button_label; ?>" />
+	</select>
+	<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" />
+	</fieldset>
+	<fieldset>
+		<input type="submit" name="cancelsubmit" value="Cancel and reset import" />
+	</fieldset>
 	
-	<?php if ($messages) { ?>
-	<ul class="errors">
-	<?php
-		foreach ($messages as $message) {
-			echo '<li>' . $message . '</li>';
-		}
-	?>
-	</ul>
-	<?php } ?>
-	
-	<?php if ($warnings) { ?>
-	<ul class="warnings">
-	<?php
-		foreach ($warnings as $warning) {
-			echo '<li>' . $warning . '</li>';
-		}
-	?>
-	</ul>
-	<?php } ?>
-	
-	<?php if ($errors) { ?>
-	<ul class="errors">
-	<?php
-		foreach ($errors as $error) {
-			echo '<li>' . $error . '</li>';
-		}
-	?>
-	</ul>
+	<?php if ($messages || $warnings || $errors) { ?>
+		
+		<h2><?php echo lang('import_log_messages') ?></h2>
+		
+		<?php if ($messages) { ?>
+		<ul>
+		<?php
+			foreach ($messages as $message) {
+				echo '<li class="info">' . $message . '</li>';
+			}
+		?>
+		</ul>
+		<?php } ?>
+		
+		<?php if ($warnings) { ?>
+		<ul>
+		<?php
+			foreach ($warnings as $warning) {
+				echo '<li class="warning">Warning: ' . $warning . '</li>';
+			}
+		?>
+		</ul>
+		<?php } ?>
+		
+		<?php if ($errors) { ?>
+		<ul>
+		<?php
+			foreach ($errors as $error) {
+				echo '<li class="error">Error: ' . $error . '</li>';
+			}
+		?>
+		</ul>
+		<?php } ?>
+		
 	<?php } ?>
 </form>

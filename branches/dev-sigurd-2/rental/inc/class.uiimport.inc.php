@@ -49,24 +49,35 @@
 
 		public function index()
 		{
+			setlocale(LC_ALL, 'no_NO');
+			
 			// Set the submit button label to its initial state
 			$this->import_button_label = "Start import";
 			
-			$path = phpgw::get_var("facilit_path");
-			if ($path) {
+			$path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
+			if (phpgw::get_var("importsubmit")) {
 				$this->path = $path;
 				$messages = array();
 				$warnings = array();
 				$errors = array();
-				setlocale(LC_ALL, 'no_NO');
 				$result = $this->import($path);
+			} else if (phpgw::get_var("cancelsubmit")) {
+				// User cancelled import, clear session variables so we're ready to start over
+				phpgwapi_cache::session_clear('rental', 'facilit_parties');
+				phpgwapi_cache::session_clear('rental', 'facilit_composites');
+				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
+				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
+				phpgwapi_cache::session_clear('rental', 'facilit_price_items');
 			}
 			
 			$this->render('facilit_import.php', array(
 				'messages' => $this->messages,
 				'warnings' => $this->warnings,
 				'errors' => $this->errors, 
-				'button_label' => $this->import_button_label));
+				'button_label' => $this->import_button_label,
+				'facilit_path' => $path,
+				'location_id' => phpgw::get_var("location_id"))
+			);
 		}
 		
 		/**
