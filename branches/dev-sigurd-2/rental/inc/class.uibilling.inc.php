@@ -154,6 +154,11 @@ class rental_uibilling extends rental_uicommon
 				$errorMsgs = lang('Export failed.');
 			}
 		}
+		else if(phpgw::get_var('commit') != null) // User wants to commit/close billing so that it cannot be deleted
+		{
+			$billing_job->set_timestamp_commit(time());
+			rental_sobilling::get_instance()->store($billing_job);
+		}
 		$data = array
 		(
 			'billing_job' => $billing_job,
