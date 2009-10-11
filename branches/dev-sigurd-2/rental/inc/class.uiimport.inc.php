@@ -57,9 +57,9 @@
 			$path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
 			if (phpgw::get_var("importsubmit")) {
 				$this->path = $path;
-				$messages = array();
-				$warnings = array();
-				$errors = array();
+				$this->messages = array();
+				$this->warnings = array();
+				$this->errors = array();
 				$result = $this->import($path);
 			} else if (phpgw::get_var("cancelsubmit")) {
 				// User cancelled import, clear session variables so we're ready to start over
@@ -68,6 +68,8 @@
 				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 				phpgwapi_cache::session_clear('rental', 'facilit_price_items');
+				
+				$this->messages = array("Import reset");
 			}
 			
 			$this->render('facilit_import.php', array(
@@ -91,9 +93,7 @@
 		 */
 		public function import()
 		{
-			// TODO: Don't read first line
-			
-			// TODO: Fill error messages in sub functions
+			// TODO: For each import type, check what we need as a minimum information for each before saving
 			
 			// Import rental parties
 			if (!phpgwapi_cache::session_get('rental', 'facilit_parties')) {
@@ -194,10 +194,9 @@
 					// Add party to collection of parties keyed by its facilit ID so we can refer to it later.
 					$facilit_id = $data[17];
 					$parties[$facilit_id] = $party->get_id();
-					
-					$this->messages[] = "Successfully added party " . $party->get_last_name() . ", " . $party->get_first_name() . " (" . $party->get_id() . ")";
+					$this->messages[] = "Successfully added party " . $party->get_name() . " (" . $party->get_id() . ")";
 				} else {
-					$this->errors[] = "Failed to store party " . $party->get_last_name() . ", " . $party->get_first_name();
+					$this->errors[] = "Failed to store party " . $party->get_name();
 				}
 			}
 			
@@ -332,18 +331,15 @@
 				// Set the location ID according to what the user selected
 				$contract->set_location_id(phpgw::get_var("location_id"));
 				
-				// Add rental composite to contract
-					//$composite_id = $rentalobject_to_contract[$data[0]];
-					//$composite = new rental_composite($composites[$composite_id]);
-					//$contract->add_composite(new rental_composite($rentalobject_to_contract[$data[0]]));
-					
 				// Store contract
 				if (rental_socontract::get_instance()->store($contract)) {
 					$contracts[$data[0]] = $contract->get_id();
 					
-					if (isset($rentalobject_to_contract[$data[0]])) {
+					$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
+					
+					// Check if this contract has a composite
+					if (!$this->is_null($rentalobject_to_contract[$data[0]]) && !$this->is_null($composite_id)) {
 						// Add rental composite to contract
-						$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 						rental_socontract::get_instance()->add_composite($contract->get_id(), $composite_id);
 					}
 					
@@ -405,6 +401,7 @@
 				
 				$title = $this->decode($data[3]);
 				
+				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
 				$admin_price_item = rental_soprice_item::get_instance()->get_single_with_title($title);
 				
 				// Add new admin price item if one with this title doesn't already exist
@@ -449,7 +446,7 @@
 					// .. and save
 					rental_socontract_price_item::get_instance()->store($price_item);
 				} else {
-					$this->messages[] = "Skipped price item with no contract attached: " . join(", ", $data);
+					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 				
 				
