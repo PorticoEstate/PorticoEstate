@@ -95,6 +95,7 @@ class rental_agresso_lg04 implements rental_exportable
 	 */
 	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text)
 	{
+		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$order = array();
 		$order[] =  // Header line
 			 '1'														//  1	accept_flag

@@ -73,6 +73,7 @@ class rental_agresso_cs15 implements rental_exportable
 	 */
 	protected function get_line($name, $identifier, $address, $country_code, $postal_place, $phone, $postal_code)
 	{
+		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		return
 			 '1'														//  1	full_record
 			.'I'														//  2	change_status

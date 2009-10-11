@@ -174,6 +174,7 @@ class rental_agresso_gl07 implements rental_exportable
 	 */
 	protected function get_line($account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month)
 	{
+		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		return
 			 sprintf("%-25.25s", "PE{$this->date_str}")					//  1	batch_id
 			.sprintf("%-25s", 'BI')										//  2	interface
