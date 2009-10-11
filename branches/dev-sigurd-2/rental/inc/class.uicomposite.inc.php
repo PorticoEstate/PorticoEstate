@@ -356,14 +356,9 @@
 			{
 				$location_code = phpgw::get_var('location_code');
 				$level = (int)phpgw::get_var('level');
-				
-				
 				$property_location = new rental_property_location($location_code, '', $level);
-				
 				$unit = new rental_unit(0,$composite_id,$property_location);
-				
 				$result = rental_sounit::get_instance()->store($unit);
-				
 				return $result ? true : false;
 			}
 			return false;
