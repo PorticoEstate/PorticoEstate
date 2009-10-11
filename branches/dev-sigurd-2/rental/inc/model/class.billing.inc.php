@@ -87,6 +87,16 @@ class rental_billing extends rental_model
 
 	public function get_timestamp_commit(){ return $this->timestamp_commit; }
 	
+	/**
+	 * Convenience method for checking if a billing job has been commited or
+	 * not. Checks if the timestamp for commit has been set.
+	 * 
+	 * @return boolean true if job has been commited, false if not.
+	 */
+	public function is_commited()
+	{
+		return $this->timestamp_commit != null && $this->timestamp_commit != '';
+	}
 
 	public function is_success(){ return $this->success; }
 
