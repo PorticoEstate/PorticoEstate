@@ -44,11 +44,11 @@
 		
 		<h2><?php echo lang('import_log_messages') ?></h2>
 		
-		<?php if ($messages) { ?>
+		<?php if ($errors) { ?>
 		<ul>
 		<?php
-			foreach ($messages as $message) {
-				echo '<li class="info">' . $message . '</li>';
+			foreach ($errors as $error) {
+				echo '<li class="error">Error: ' . $error . '</li>';
 			}
 		?>
 		</ul>
@@ -64,11 +64,11 @@
 		</ul>
 		<?php } ?>
 		
-		<?php if ($errors) { ?>
+		<?php if ($messages) { ?>
 		<ul>
 		<?php
-			foreach ($errors as $error) {
-				echo '<li class="error">Error: ' . $error . '</li>';
+			foreach ($messages as $message) {
+				echo '<li class="info">' . $message . '</li>';
 			}
 		?>
 		</ul>
