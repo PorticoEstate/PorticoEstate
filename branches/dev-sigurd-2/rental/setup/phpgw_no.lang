@@ -13,7 +13,7 @@ address	rental	no	Adresse
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
-agresso_lg04	rental	no	Agresso LG04 - fakturagrunnlag
+agresso_lg04	rental	no	Agresso LG04 - salgsordrer
 add_location	rental	no	Legg enhet til leieobjektet
 all	rental	no	Alle
 all_locations	rental	no	Enheter fra eiendomsregisteret
