@@ -256,7 +256,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%19s", '')									//		just white space..
 			;
 		}
-		return $order;
+		return str_replace(array("\n", "\r"), '', $order);
 	}
 	
 	protected function get_formatted_amount($amount)
