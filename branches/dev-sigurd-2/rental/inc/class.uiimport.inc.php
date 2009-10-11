@@ -67,7 +67,8 @@
 				phpgwapi_cache::session_clear('rental', 'facilit_composites');
 				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
-				phpgwapi_cache::session_clear('rental', 'facilit_price_items');
+				phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
+				phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
 				
 				$this->messages = array("Import reset");
 			}
@@ -122,15 +123,24 @@
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
 				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties));
-				$this->import_button_label = "Continue to import price items";
+				$this->import_button_label = "Continue to import contract price items";
 				return;
 			}
 			
 			// Import price items
-			if (!phpgwapi_cache::session_get('rental', 'facilit_price_items')) {
+			if (!phpgwapi_cache::session_get('rental', 'facilit_contract_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
-				phpgwapi_cache::session_set('rental', 'facilit_price_items', $this->import_price_items($contracts));
-				$this->import_button_label = "Import done"; // Not really - events will be after this
+				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
+				$this->import_button_label = "Continue to import composite price items"; // Not really - events will be after this
+				return;
+			}
+			
+		// Import price items
+			if (!phpgwapi_cache::session_get('rental', 'facilit_composite_price_items')) {
+				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
+				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
+				phpgwapi_cache::session_set('rental', 'facilit_composite_price_items', $this->import_composite_price_items($contracts, $rentalobject_to_contract));
+				$this->import_button_label = "Import done";
 				//return;
 			}
 			
@@ -139,7 +149,8 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
-			phpgwapi_cache::session_clear('rental', 'facilit_price_items');
+			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
+			phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
 		}
 		
 		protected function import_parties()
@@ -347,6 +358,8 @@
 						// Add party to contract
 						$party_id = $parties[$this->decode($data[2])];
 						rental_socontract::get_instance()->add_party($contract->get_id(), $party_id);
+						// Set this party to be the contract invoice recipient
+						rental_socontract::get_instance()->set_payer($contract->get_id(), $party_id);
 					}
 					
 					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . ")";
@@ -360,7 +373,7 @@
 			return $contracts;
 		}
 		
-		protected function import_price_items($contracts)
+		protected function import_contract_price_items($contracts)
 		{
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
@@ -445,6 +458,105 @@
 					$price_item->set_contract_id($contract_id);
 					// .. and save
 					rental_socontract_price_item::get_instance()->store($price_item);
+					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
+				} else {
+					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
+				}
+				
+				
+			}
+			
+			fclose($handle);
+		}
+		
+		protected function import_composite_price_items($contracts, $rentalobject_to_contract)
+		{
+			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
+			// This is an array keyed by the main price item ID
+			$detail_price_items = array();
+			
+			$handle = fopen($this->path . "/u_PrisElementDetaljLeieobjekt.csv", "r");
+			
+			// Read the first line to get the headers out of the way
+			$this->getcsv($handle);
+			
+			while (($data = $this->getcsv($handle)) !== false) {
+				$detail_price_items[$data[1]] = array(
+					'price' => $data[2],
+					'amount' => $data[3],
+					'date_start' => null
+				);
+				
+				if (!$this->is_null($data[4])) {
+					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+				}
+			}
+			
+			fclose($handle);
+		
+			$handle = fopen($this->path . "/u_PrisElementLeieobjekt.csv", "r");
+			
+			// Read the first line to get the headers out of the way
+			$this->getcsv($handle);
+			
+			while (($data = $this->getcsv($handle)) !== false) {
+				// Create new admin price item if one doesn't exist in the admin price list
+				// Add new price item to contract with correct reference from the $contracts array
+				// Remember fields from detail price item.
+				
+				$title = $this->decode($data[2]);
+				
+				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
+				$admin_price_item = rental_soprice_item::get_instance()->get_single_with_title($title);
+				
+				// Add new admin price item if one with this title doesn't already exist
+				if (!$admin_price_item) {
+					$facilit_id = $this->decode($data[0]);
+					
+					$admin_price_item = new rental_price_item();
+					$admin_price_item->set_title($title);
+					$admin_price_item->set_agresso_id($this->decode($data[11]));
+					// TODO: Assumes composite price items always regards area
+					$admin_price_item->set_is_area(true);
+					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
+					rental_soprice_item::get_instance()->store($admin_price_item);
+				}
+				
+				$contract_id = null;
+				foreach ($rentalobject_to_contract as $facilit_contract_id => $facilit_composite_id) {
+					if ($facilit_composite_id == $this->decode($data[1])) {
+						$contract_id = $facilit_contract_id;
+					}
+				}
+				
+				$contract_id = $contracts[$contract_id];
+				
+				if ($contract_id) {
+					// Create a new contract price item that we can tie to our contract
+					$price_item = new rental_contract_price_item();
+					
+					// Copy fields from admin price item first
+					$price_item->set_title($admin_price_item->get_title());
+					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
+					$price_item->set_is_area($admin_price_item->is_area());
+					$price_item->set_price($admin_price_item->get_price());
+					
+					// Tie this price item to its parent admin price item
+					$price_item->set_price_item_id($admin_price_item->get_id());
+					
+					if ($admin_price_item->is_area()) {
+						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+					} else {
+						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+					}
+					
+					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
+					
+					// Tie the price item to the contract it belongs to
+					$price_item->set_contract_id($contract_id);
+					// .. and save
+					rental_socontract_price_item::get_instance()->store($price_item);
+					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
 					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
