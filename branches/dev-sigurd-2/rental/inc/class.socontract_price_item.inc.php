@@ -8,7 +8,7 @@ class rental_socontract_price_item extends rental_socommon
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 
-	 * @return the storage object
+	 * @return rental_socontract_price_item the storage object
 	 */
 	public static function get_instance()
 	{
@@ -107,12 +107,20 @@ class rental_socontract_price_item extends rental_socommon
 			$price,
 			$price_item->get_area(),
 			$price_item->get_count(),
-			$total_price,
-			$this->marshal($price_item->get_date_start(), 'date'),
-			$this->marshal($price_item->get_date_end(), 'date')
+			$total_price
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'date_start', 'date_end');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		
+		if ($price_item->get_date_start()) {
+			$values[] = $this->marshal(date('Y-m-d', $price_item->get_date_start()), 'date');
+			$cols[] = 'date_start';
+		}
+		
+		if ($price_item->get_date_end()) {
+			$values[] = $this->marshal(date('Y-m-d', $price_item->get_date_end()), 'date');
+			$cols[] = 'date_end';
+		}
 		
 		$q ="INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);

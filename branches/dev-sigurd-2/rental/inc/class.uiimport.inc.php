@@ -13,6 +13,7 @@
 	include_class('rental', 'property_location', 'inc/model/');
 	include_class('rental', 'price_item', 'inc/model/');
 	include_class('rental', 'contract_price_item', 'inc/model/');
+	include_class('rental', 'property_location', 'inc/model/');
 
 	class rental_uiimport extends rental_uicommon
 	{
@@ -119,10 +120,15 @@
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_price_items', $this->import_price_items($contracts));
 				$this->import_button_label = "Import done"; // Not really - events will be after this
-				return;
+				//return;
 			}
 			
-			
+			// We're done with the import, so clear all session variables so we're ready for a new one
+			phpgwapi_cache::session_clear('rental', 'facilit_parties');
+			phpgwapi_cache::session_clear('rental', 'facilit_composites');
+			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
+			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
+			phpgwapi_cache::session_clear('rental', 'facilit_price_items');
 		}
 		
 		protected function import_parties()
@@ -142,7 +148,7 @@
 				$party = new rental_party();
 
 				// Fill in first/last name if applicable, otherwise use Foretaksnavn
-				if ($this->is_null($data[0])) {
+				if (!$this->is_null($data[0])) {
 					$party->set_first_name($this->decode($data[0]));
 					$party->set_last_name($this->decode($data[1]));
 				} else {
@@ -216,7 +222,7 @@
 					
 					
 					// Add units only if composite stored ok.
-					rental_sounit::get_instance()->store(new rental_unit(null, $composite->get_id(), $loc1));
+					rental_sounit::get_instance()->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
 					
 					// Add composite to collection of composite so we can refer to it later.
 					$composites[$data[0]] = $composite->get_id();
@@ -403,28 +409,39 @@
 					rental_soprice_item::get_instance()->store($admin_price_item);
 				}
 				
-				// Create a new contract price item that we can tie to our contract
-				$price_item = new rental_contract_price_item();
+				$contract_id = $contracts[$this->decode($data[1])];
 				
-				$price_item->set_price_item_id($admin_price_item->get_id());
-				$price_item->set_price($detail_price_items[$facilit_id]['price']);
-				
-				if ($admin_price_item->is_area()) {
-					$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+				if ($contract_id) {
+					// Create a new contract price item that we can tie to our contract
+					$price_item = new rental_contract_price_item();
+					
+					// Copy fields from admin price item first
+					$price_item->set_title($admin_price_item->get_title());
+					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
+					$price_item->set_is_area($admin_price_item->is_area());
+					$price_item->set_price($admin_price_item->get_price());
+					
+					// Tie this price item to its parent admin price item
+					$price_item->set_price_item_id($admin_price_item->get_id());
+					
+					if ($admin_price_item->is_area()) {
+						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+					} else {
+						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+					}
+					
+					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
+					$price_item->set_date_end($detail_price_items[$facilit_id]['date_end']);
+					
+					// Tie the price item to the contract it belongs to
+					$price_item->set_contract_id($contract_id);
+					// .. and save
+					rental_socontract_price_item::get_instance()->store($price_item);
 				} else {
-					$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+					$this->messages[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 				
-				$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
-				$price_item->set_date_end($detail_price_items[$facilit_id]['date_end']);
 				
-				// Tie the price item to the contract it belongs to
-				$price_item->set_contract_id($contracts[$this->decode($data[1])]);
-				
-				print_r($price_item);
-				print_r("\n");
-				// .. and save
-				rental_socontract_price_item::get_instance()->store($price_item);
 			}
 			
 			fclose($handle);
@@ -497,7 +514,7 @@
 		 */
 		protected function is_null($value)
 		{
-			return (trim($data[0]) != "" && $data != "<NULL>" && $data != "''");
+			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
 		}
 	}
 ?>
