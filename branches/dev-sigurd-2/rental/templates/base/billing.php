@@ -96,8 +96,13 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 					{
 						?>
 						<td><a href="<?php echo $download_link ?>"><?php echo lang('Download export') ?></a></td>
-						<td><input type="submit" name="commit" value="<?php echo lang('Commit') ?>"/></td>
-						<?php 
+						<?php
+						if(!$billing_job->is_commited())
+						{
+							?>
+							<td><input type="submit" name="commit" value="<?php echo lang('Commit') ?>"/></td>
+							<?php
+						}
 					}
 					else
 					{
