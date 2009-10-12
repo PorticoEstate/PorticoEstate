@@ -52,10 +52,16 @@ YAHOO.booking.bookingToHtml = function(booking) {
 		var link = 'index.php?menuaction=booking.uiallocation.edit&id=' + booking.id;
 	}
 	else if(booking.type == 'event') {
-		var link = 'index.php?menuaction=booking.uievent.edit&id=' + booking.id;
+//		var link = 'index.php?menuaction=booking.uievent.edit&id=' + booking.id;
+		var link = booking.link;
 	}
 	else {
 		var link = null;
+	}
+
+	if(booking.exception == true)
+	{
+		booking.name = booking.lang_exception;
 	}
 	var html = YAHOO.booking.link(booking.name, link, 12);
 	if(booking.type == 'event' && booking.conflicts) {

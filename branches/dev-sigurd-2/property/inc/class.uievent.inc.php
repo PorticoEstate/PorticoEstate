@@ -644,7 +644,7 @@
 //	_debug_array(json_decode($data));die();
 
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'property.uievent', 'property.uiresource');
+			$resource = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'property.uievent', 'property.uievent');
 
 			$lang['resource_schedule'] = lang('Resource schedule');
 			$lang['prev_week'] = lang('Previous week');
@@ -667,30 +667,53 @@
 			$timestamp = $datetime->date_to_timestamp($date);
 	    
 			$schedules = $this->bo->event_schedule_week(phpgw::get_var('resource_id', 'int'), $timestamp);
-_debug_array($schedules);die();
 
 			$total_records = 0;
-			foreach($schedules as $date => &$set)
+			foreach($schedules as $_date => $set)
 			{
 				if(count($set) > $total_records)
 				{
 					$total_records = count($set);
 				}
-				foreach ($set as &$schedule)
+			}
+
+			$lang_exception	 = lang('exception');
+			$values = array();
+			for($i = 0; $i < $total_records; $i++)
+			{
+				$values[$i] = array
+				(
+					'resource'			=> 'descr',
+					'resource_id'		=> 11,
+					'time'				=> $i+1,
+					'_from'				=> '16:30',
+					'_to'				=> '17:00'
+				);
+
+				foreach($schedules as $_date => $set)
 				{
-					$schedule['link'] = $this->link(array('menuaction' => 'booking.uievent.show', 'id' => $schedule['id']));
+					$__date = substr($_date,0,4) . '-' . substr($_date,4,2) . '-' . substr($_date,6,2);
+					$date = new DateTime($__date);
+					$day_of_week = $date->format('D');
+					$values[$i][$day_of_week] = array
+					(
+						'exception' => $set[$i]['exception'],
+						'lang_exception' => $lang_exception,
+						'type' => 'event',
+						'name' => $set[$i]['descr'],
+						'link' => $this->link(array('menuaction' => 'booking.uievent.show', 'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
+					);
 				}
 			}
-//_debug_array($total_records);die();
 
 			$data = array
 			(
 				'ResultSet' => array(
 					"totalResultsAvailable" => $total_records, 
-					"Result" => $schedules
+					"Result" => $values
 				)
 			);
-_debug_array($data);die();
+//_debug_array($data);die();
 			return $data;
 
 		}

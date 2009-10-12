@@ -850,8 +850,9 @@ if ( !extension_loaded('mcal') )
 
 			if(isset($event['repeat_exception']))
 			{
-				$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4))) - phpgwapi_datetime::user_timezone();
-				while($inserted == False && list($key,$exception_time) = each($event['recur_exception']))
+//				$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4))) - phpgwapi_datetime::user_timezone();
+				$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4)));
+				while($inserted == false && list($key,$exception_time) = each($event['repeat_exception']))
 				{
 					if($this->debug)
 					{
@@ -859,11 +860,25 @@ if ( !extension_loaded('mcal') )
 					}
 					if($exception_time == $event_time)
 					{
-						$inserted = True;
+//_debug_array(date('Y-m-d',$event_time));die();
+//						_debug_array($event);
+//						_debug_array($this->cached_events);die();
+//						$inserted = true;
+						$event['exception'] = true;
+
+/*
+						for($i=0;$i<count($this->cached_events[$date]);$i++)
+						{
+							if($this->cached_events[$date][$i]['id'] == $event['id'])
+							{
+							die();
+							}
+						}
+*/
 					}
 				}
 			}
-			if(isset($this->cached_events[$date]) && $this->cached_events[$date] && $inserted == False)
+			if(isset($this->cached_events[$date]) && $this->cached_events[$date] && $inserted == false)
 			{
 				
 				if($this->debug)
@@ -892,7 +907,7 @@ if ( !extension_loaded('mcal') )
 						break;
 					}
 					/* This puts all spanning events across multiple days up at the top. */
-					if($this->cached_events[$date][$i]['recur_type'] == MCAL_RECUR_NONE)
+					if($this->cached_events[$date][$i]['repeat_type'] == MCAL_RECUR_NONE)
 					{
 						if($this->cached_events[$date][$i]['start']['mday'] != $day && $this->cached_events[$date][$i]['end']['mday'] >= $day)
 						{
@@ -923,7 +938,7 @@ if ( !extension_loaded('mcal') )
 					echo '<!-- Adding event ID: '.$event['id'].' to cached_events -->'."\n";
 				}
 				$this->cached_events[$date][] = $event;
-			}					
+			}
 		}
 
 		/**
@@ -940,7 +955,7 @@ if ( !extension_loaded('mcal') )
 			$criteria = array
 			(
 				'start_date'		=> $datetime_start,
-				'end_date'			=> $datetime_start + (86400 * 7),
+				'end_date'			=> $datetime_start + (86400 * 6),
 				'location_id'		=> $event['location_id'],
 				'location_item_id'	=> $event['location_item_id']
 			);
