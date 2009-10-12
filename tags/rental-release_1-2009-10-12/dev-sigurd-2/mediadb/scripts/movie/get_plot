@@ -1,0 +1,3 @@
+#!/bin/tcsh -f
+
+grep "Plot Outline:" details | sed -f sed_plot

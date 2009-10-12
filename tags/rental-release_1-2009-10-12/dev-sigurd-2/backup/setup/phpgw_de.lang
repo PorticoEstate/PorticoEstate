@@ -1,0 +1,54 @@
+Absolute path of the directory to store the backup script	backup	de	Absoluter Pfad des Verzeichnisses zum speichern des Datensicherungs-Skriptes
+Archive type	backup	de	Archiv Typ
+Backup	common	de	Datensicherung
+Backup administration	common	de	Administration der Datensicherung
+bzip2	admin	de	bzip2
+Configuration backup	backup	de	Konfiguration der Datensicherung
+Configuration localhost	backup	de	Konfiguration des lokalen Rechners
+Create backups of your data ?	backup	de	Erstellen von Datensicherungen ?
+daily	backup	de	t&auml;glich
+directory locations	admin	de	Verzeichnispfade
+directory names	admin	de	Verzeichnisnamen
+interval	backup	de	Intervall
+Select interval	backup	de	Intervall ausw&auml;hlen
+Data	backup	de	Daten
+SQL	backup	de	SQL
+LDAP	common	de	LDAP
+ldap database	admin	de	LDAP Datenbank
+E-MAIL	backup	de	E-MAIL
+nfs	backup	de	NFS
+operating system	backup	de	Betriebssystem
+pgsql	admin	de	PostgreSQL
+php cgi	admin	de	php cgi
+please enter username and password for remote connection !	backup	de	Bitte Benutzername and Paßwort für die Verbindung angeben !
+please enter the path of the backup dir and/or enable showing archives in phpGroupWare !	backup	de	Bitte den Pfad zum Sicherungsverzeichnis angeben und/oder das anzeigen der Archive in phpGroupWare aktivieren !
+please select an application for transport to the remote host !	backup	de	bitte ein Programm zum Transport zum entfernten Host auswählen !
+please set the path to a local dir to store the backup script !	backup	de	Bitte den Pfad eines lokalen Verzeichnisses zum speichern des Datensicherungs-Skriptes angeben !
+please specify the path to the backup directory !	backup	de	Bitte den Pfad zum Sicherungsverzeichnis angeben ! 
+please specify the ip of the remote host !	backup	de	Bitte den entfernten Host spezifizieren !
+program locations	admin	de	Programmpfade
+configuration remote host	backup	de	Konfiguration des entfernten Hosts
+save backup locally ?	backup	de	Daten lokal sichern ?
+save backup to a remote host ?	backup	de	Daten auf einen entfernten Host sichern ?
+select archive type	backup	de	Archiv Typ auswählen
+select transport application	backup	de	Transport Programm auswählen
+settings	admin	de	Einstellungen
+show backup archives in phpGroupWare ?	backup	de	Datensicherungs-Archive in phpGroupWare anzeigen ?
+smbmount	backup	de	SMBMOUNT
+tar	admin	de	tar
+tar.gz	backup	de	tar.gz
+tar.bz2	backup	de	tar.bz2
+the backup application is not configured for showing the archives in phpGroupWare yet !	backup	de	Die Datensicherung ist noch nicht zum anzeigen der Archive in phpGroupWare konfiguriert worden !
+the directory to store the backup script must be outside of the webservers *DocumentRoot* !	backup	de	Das Verzeichnis zum speichern des Datensicherungs-Skriptes muß sich außerhalb des Webservers *DocumentRoot* befinden !
+the ftp connection failed ! Please check your configuration !	backup	de	Die ftp Verbindung schlug fehl ! Bitte die Konfiguration überprüfen !
+transport application	backup	de	Transport Programm
+absolute path of the backup directory	backup	de	Absoluter Pfad des Backup-Verzeichnisses
+ip or hostname	backup	de	IP oder Rechnername
+monthly	backup	de	monatlich
+mysql	admin	de	MySQL
+no backup archives available !	backup	de	Es sind keine Datensicherungs-Archive vorhanden !
+number of stored backup versions	backup	de	Anzahl der gespeicherten Datensicherungs Versionen
+user	backup	de	Benutzer
+password	backup	de	Paßwort
+weekly	backup	de	wöchentlich
+zip	common	de	zip

@@ -1,0 +1,177 @@
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	lv	/kb direktorija neeksistē un nevar tikt izveidota, palūdz administratoru pārbaudīt vispārējo konfigurāciju
+action	phpbrain	lv	Darbība
+add articles	phpbrain	lv	Pievienot rakstus
+add link	phpbrain	lv	PIevienot saiti
+add question	phpbrain	lv	Pievienot jautājumu
+added file %1	phpbrain	lv	Pievienota %1 datne
+added link %1	phpbrain	lv	PIevienota %1 saite
+added related articles %1	phpbrain	lv	PIevienoti saistītie raksti %1
+advanced search	phpbrain	lv	Uzlabota meklēšana
+all articles	phpbrain	lv	Visi raksti
+answer	phpbrain	lv	atbilde
+anytime	phpbrain	lv	jebakad
+anywhere in the article	phpbrain	lv	Jebkur rakstā
+article	phpbrain	lv	Raksts
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	lv	Raksts pievienots datubāzei, tagad tu vari pievienot datnes un saites, vai saistīt ar citiem  rakstiem
+article created	phpbrain	lv	Raksts izveidots
+article deleted	phpbrain	lv	Raksts izdzēsts
+article deleted successfully	phpbrain	lv	Raksts veiksmīgi izdzēsts
+article edited	phpbrain	lv	Raksts rediģēts
+article has been published	phpbrain	lv	Raksts publicēts
+article id	phpbrain	lv	Raksts ID
+articles added	phpbrain	lv	Raksti pievienoti
+articles deleted successfully	phpbrain	lv	Raksti veiksmīgi izdzēsti
+articles have been published	phpbrain	lv	Raksti tika publicēti
+articles in %1	phpbrain	lv	Raksti %1
+articles in %1 and all its subcategories	phpbrain	lv	Raksti %1 un visas to apakškategorijas
+articles not classified under any category	phpbrain	lv	Raksti nav klasificēti nevienā kategorijā
+ascendent	phpbrain	lv	Pieaugošs
+attach file	phpbrain	lv	Pievienot datni
+attached files	phpbrain	lv	Pievienota datne
+average rating	phpbrain	lv	Vidējais iedalījums
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	lv	Bāzes direktorija neeksistē, lūdzu pajautā administratoram, lai pārbauda globālo konfigurāciju
+before submiting a question, please search in the knowledge base first	phpbrain	lv	Pirms iesniegt jautājumu, lūdzu pameklē zināšanu bāzē
+by answering this question you will help to get the answer quicker the next time	phpbrain	lv	Atbildot uz šo jautājumu, tu palīdzēsi iegūt atbildi ātrāk nākamreiz
+comment	phpbrain	lv	komentārs
+comment and rating have been published	phpbrain	lv	Komentārs un novērtējums ir publicēts
+comment could not be inserted in the database	phpbrain	lv	Komentāru nevajadzētu novietot datubāzē
+comment has been deleted	phpbrain	lv	Komentārs tika izdzēsts
+comment has been published	phpbrain	lv	Komentārs tika publicēts
+comment has been submited for revision	phpbrain	lv	Komentārs tika iesniegts revidentam
+comment has been submited for revision and rating will be published	phpbrain	lv	Komentārs tika iesniegts revidentam un vērtējums tiks publicēts
+comments	phpbrain	lv	Komentāri
+create a new article to answer the question asked by %1 in %2	phpbrain	lv	Izveidot jaunu rakstu, lai atbildētu uz jautājumiem, ko uzdeva %1 %2
+created by %1 on %2	phpbrain	lv	Izveidoja %1 uz %2
+creation date	phpbrain	lv	Izveiodšanas datums
+date	phpbrain	lv	Datums
+delete article	phpbrain	lv	Dzēst rakstu
+delete selected	phpbrain	lv	Dzēst atzīmēto
+deleted relation to article %1	phpbrain	lv	Dzēst saiti uz rakstu %1
+descendent	phpbrain	lv	Dilstošs
+details	phpbrain	lv	Rekvizīti
+e-mail has been sent	phpbrain	lv	e-pasts tika nosūtīts
+edit article	phpbrain	lv	Rediģēt rakstu
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	lv	Ievadīt vienu vai divus vārdus, lai aprakstītu rezultātu, vai arī uzraksti raksta numuru, ja tu to zini
+error deleting article from database	phpbrain	lv	Kļūda dzēšot rakstu no datubāzes
+error deleting link	phpbrain	lv	Kļūda dzēšot saiti
+error downloading file	phpbrain	lv	Kļūda lejupielādējot datni
+error locating files directory	phpbrain	lv	Kļūda novietojot datņu direktoriju
+error moving file to directory	phpbrain	lv	Kļūda pārvietojot datni direktorijā
+error publishing comment	phpbrain	lv	Kļūda publicējot komentāru
+error retrieving article	phpbrain	lv	Kļūda atjaunojot rakstu
+error trying to delete comment	phpbrain	lv	Kļūda mēģīnājumā dzēst komentāru
+error trying to delete question	phpbrain	lv	Kļūda mēģinot džest jautājumu
+error trying to edit article	phpbrain	lv	Kļūda mēģinot rediģēt rakstu
+error trying to publish article	phpbrain	lv	Kļūda mēģinot publicēŧ rakstu
+error: file doesn't exist in the database	phpbrain	lv	Kļūda: datne neeksistē datubāzē
+excellent	phpbrain	lv	Izcili
+failure trying to delete the file	phpbrain	lv	Neveiksmīgs mēģinājums dzēst datni
+file could be deleted from server but not from database	phpbrain	lv	Datne var tikt izdzēsta no servera, bet ne no datubāzes
+file has been successfully uploaded	phpbrain	lv	Datne tika veiksmīgi ielādēta
+file was already missing from server, and was deleted from the database	phpbrain	lv	Datne jau trūka uz servera un tika izdzēsta no datubāzes
+file was deleted successfully	phpbrain	lv	Datne veksmīgi izdzēsta
+file wasn't in server and it couldn't be deleted from the database	phpbrain	lv	Datne nebija uz servera,tāpēc nevarēja tikt izdzēsta no datubāzes
+find results	phpbrain	lv	Meklēt rezultātus
+have to be approved first	common	lv	VIspirms jānovērtē
+history	phpbrain	lv	Vēsture
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	lv	Ja tu nevari atrast atbildes uz tavām problēmām zinašanu bāzē, apraksti to zemāk
+if you wish, you can comment this article here	phpbrain	lv	Ja vēļies, apraksti rakstu šeit
+in %1	phpbrain	lv	%1
+in the text	phpbrain	lv	tekstā
+in the title	phpbrain	lv	virsrakstā
+in the topic	phpbrain	lv	rakstā
+include subcategories	phpbrain	lv	Iekļaut apakškategorijas
+keywords	phpbrain	lv	atslēgasvārdi
+knowledge base article #%1	phpbrain	lv	Zināšanu bāzes raksts #%1
+knowledge base configuration	common	lv	Zināšanu bāzes konfigurācija
+last modification by %1 on %2	phpbrain	lv	Pēdējās izmaiņas %2 veica %1
+latest	phpbrain	lv	Pēdējais
+latest comments	phpbrain	lv	Pēdējie komentāri
+leave empty to automatically generate an id	phpbrain	lv	Atstāj tukšu, lai automātiski ģenerētu ID
+link could not be added	phpbrain	lv	Saite nevar tikt pievienota
+link deleted successfully	phpbrain	lv	Saite veiksmīgi izdzēsta
+link has been added	phpbrain	lv	Saite pievienota
+links	phpbrain	lv	Saites
+links & files	phpbrain	lv	Saites un datnes
+mail article	phpbrain	lv	Pasta raksts
+main view	phpbrain	lv	Galvenais skats
+maintain articles	phpbrain	lv	Uzturēt rakstus
+maintain questions	phpbrain	lv	Uzturēt jautājumus
+maximum number of comments to show:	phpbrain	lv	Maksimālais rādāmo komentātu skaits
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	lv	Maksimālais galvenajā skatā rādāmo populārāko, pēdējo rakstu un neatbildēto jautājumu skaits:
+modification date	phpbrain	lv	Parveidošanas datums
+most viewed	phpbrain	lv	Vairāk rādītie
+new article	phpbrain	lv	Jauns raksts
+nobody has rated this article so far	phpbrain	lv	Pagaidām neviens nav novērtējis šo rakstu
+none	phpbrain	lv	Neviens
+nothing was uploaded!	phpbrain	lv	Nekas netika ielādēts
+number of results per page	phpbrain	lv	Rezultātu skaits
+ocurrences	phpbrain	lv	Notikumi
+or browse the categories	phpbrain	lv	Vai meklē kategorijas
+order results by	phpbrain	lv	Sakārto rezultātus pēc
+past %1 months	phpbrain	lv	pēc %1 mēnešiem
+past year	phpbrain	lv	pēc gada
+people have rated this article	phpbrain	lv	cilvēki novērtējuši šo rakstu
+phpbrain	common	lv	Zināšanu bāze
+please rate the pertinence and quality of this article	phpbrain	lv	Lūdzu novērtē šī raksta piemērotību un kvalitāti
+please try again	phpbrain	lv	Lūdzu mēģini vēlreiz
+poor	phpbrain	lv	Slikti
+printer view	phpbrain	lv	Printera skats
+problem relating articles	phpbrain	lv	Problēma saistot rakstus
+publication date	phpbrain	lv	Publicēšanas datums
+publish	phpbrain	lv	Publicēt
+publish articles automatically?	common	lv	Publicēt rakstus automātiski?
+publish comments automatically?	common	lv	Publicēt komentārus automātiski?
+publish questions automatically?	common	lv	Publicēt jautājumus automātiski?
+publish selected	phpbrain	lv	PUblicēt atzīmētos
+question deleted successfully	phpbrain	lv	Jautājumi veiksmīgi izdzēsti
+questions deleted successfully	phpbrain	lv	Jautājumi veiksmīgi izdzēsti
+rating has been submited	phpbrain	lv	Vērtējums tika iesniegts
+rating invalid	phpbrain	lv	Nederīgs vērtējums
+recipient	phpbrain	lv	Saņēmējs
+related articles in the knowledge base	phpbrain	lv	Saistītie raksti zināšanu bāzē
+relation with article was removed successfully	phpbrain	lv	Relācija ar rakstu tika veiksmīgi pārvietota
+removed file %1	phpbrain	lv	Pārvietoja datni %1
+removed link %1	phpbrain	lv	Pārvietoja saiti %1
+reply-to	phpbrain	lv	Atbildēt
+search in all the knowledge base	phpbrain	lv	Meklēt visās zināšanu bāzēs
+search results	phpbrain	lv	Meklēšanas rezultāti
+see more questions	phpbrain	lv	Skatīt vairāk jautājumus
+select articles	phpbrain	lv	Atzīmēt rakstus
+show all comments	phpbrain	lv	Rādīt visus komentārus
+show articles belonging to:	phpbrain	lv	Rādīt, ar kuriem rakstiem saistīts
+show messages in category	phpbrain	lv	Rādīt ziņojuma kategoriju
+submit comment	phpbrain	lv	Iesniegt komentāru
+submit comment and rating	phpbrain	lv	Iesniegt komentāru un vērtējumu
+suggested category	phpbrain	lv	Piedāvāta kategorija
+summary	phpbarin	lv	Kopsavilkums
+that file already exists	phpbrain	lv	Tā datne jau eksistē
+the article is empty	phpbrain	lv	Raksts ir tukšs
+the file was already missing in the server	phpbrain	lv	Serverī trūkst datnes
+the following errors occurred	phpbrain	lv	Notika sekojošas kļūdas
+the present category and all subcategories under it	phpbrain	lv	Pašreizējas kategorijas un visas apakškategorijas zem tā
+the present category only	phpbrain	lv	Tikai pašreizēja kategorija
+there are no articles	phpbrain	lv	Nav raksta
+this article hasn't yet been published in the knowledge base	phpbrain	lv	Šis raksts vēl nav publicēts zināšanu bāzē
+title	phpbrain	lv	VIrsraksts
+to create categories, press 'edit categories' in the preferences menu	phpbrain	lv	Lai izveidotu kategorijas, nospied "Rediģēt kategorijas" izvēles izvēlnē
+topic	phpbrain	lv	Raksts(Topic)
+unable to add rating to database	phpbrain	lv	Nevar pievienot vērtējumu datubāzei
+unanswered questions	phpbrain	lv	Neatbildētie jautajumi
+unpublished	phpbrain	lv	nepublicēts
+upload	phpbrain	lv	Ielādēt
+user	phpbrain	lv	Lietotājs
+user preferences	phpbrain	lv	Lietotāja iestatījumi
+views	phpbrain	lv	skati
+was it easy to find this article using the above search string?	phpbrain	lv	Vai bija viegli atrast šo rakstu lietojot meklēšanas virkni?
+with all the words	phpbrain	lv	Ar visiem vārdiem
+with at least one of the words	phpbrain	lv	Ar vismaz vienu no vardiem
+with the exact phrase	phpbrain	lv	Ar tiešu frāzi
+without the words	phpbrain	lv	Bez vārdiem
+you are in %1	phpbrain	lv	Tu esi %1
+you have already qualified this article	phpbrain	lv	Tu jau esi kvalificējis šo rakstu
+you have not the proper permissions to do that	phpbrain	lv	Tev nav piemērotu atļauju to darīt
+you must enter a title	phpbrain	lv	Tev jāievada virsraksts
+you must enter a topic	phpbrain	lv	Tev jāievada temats
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	lv	Tavs jautājums tiks aizsūtīts, bet tiks publicēts tikai pēc lietotāja ar publicēšanas tiesībām apstiprinājuma.
+your question will be published immediately	phpbrain	lv	Tavi jautājumi tiks nekavējoties publicēti

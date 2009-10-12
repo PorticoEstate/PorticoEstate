@@ -1,0 +1,57 @@
+action	tts	pt	Ação
+additional notes	tts	pt	Notas adicionais
+add new ticket	tts	pt	Adicionar um novo ticket
+add ticket	tts	pt	Adicionar ticket
+admin options	admin	pt	Opções de administração
+assigned from	tts	pt	Designado de
+assigned to	tts	pt	Designado para
+assign to	tts	pt	Designar a
+billable hours changed	tts	pt	Horas taxadas alteradas
+billable hours rate	tts	pt	Valor de horas taxadas
+billable hours	tts	pt	Horas taxadas
+billable rate changed	tts	pt	Valor da taxa alterado
+billable rate	tts	pt	Valor da taxa
+category changed	tts	pt	Categoria alterada
+clear form	tts	pt	Limpar formulário
+closed	tts	pt	Fechado
+create new ticket	tts	pt	Criar novo ticket
+creates a new ticket, returns ticket_id	tts	pt	Cria um novo, retorna o número de identificação do ticket
+creates a struct of tickets	tts	pt	Cria uma estrutura de tickets
+date opened	tts	pt	Data da abertura
+detail	tts	pt	Detalhes
+force	tts	pt	Forçar
+group ownership changed	tts	pt	Grupo alterado
+in progress	tts	pt	Em progresso
+latest note added	tts	pt	Última nota adicionada
+new ticket	tts	pt	Novo ticket
+new value	tts	pt	Novo valor
+no additional notes	tts	pt	Nenhuma nota adicional
+no notes for this ticket	tts	pt	Nenhuma nota para este ticket
+not assigned	tts	pt	Não designado
+no tickets found	tts	pt	Nenhum ticket encontrado
+old value	tts	pt	Antigo Valor
+open date	tts	pt	Data de abertura
+opened by	tts	pt	Aberto por
+opened	tts	pt	Aberto
+open	tts	pt	Abrir
+original ticket details	tts	pt	Detalhes originais do Ticket
+priority changed	tts	pt	Prioridade alterada
+priority	tts	pt	Prioridade
+prio	tts	pt	Prioridade
+re-assigned	tts	pt	Redesignado
+re-opened	tts	pt	Reaberto
+status/date closed	tts	pt	Status/Data do fechamento
+subject changed	tts	pt	Assunto alterado
+ticket has been updated	tts	pt	Ticket foi atualizado
+tickets open %1	tts	pt	Tickets abertos %1
+tickets total %1	tts	pt	Total de tickets %1
+ticket	tts	pt	Ticket
+to go back to the tts index, click <a href= %1 >here</a>	tts	pt	Para voltar para a página principal do TTS, clique <a href="%1">aqui</a>
+total billable	tts	pt	Total a cobrar
+trouble ticket system	common	pt	Sistema de tickets de processos
+tts	common	pt	Sistema de tickets de processos
+tts preferences	tts	pt	Sistema de tickets de processos - preferências
+use email notification	tts	pt	Usar notificação por email
+view all tickets	tts	pt	Exibir todos tickets
+view job detail	tts	pt	Exibir detalhe da tarefa
+view only open tickets	tts	pt	Exibir somente tickets abertos

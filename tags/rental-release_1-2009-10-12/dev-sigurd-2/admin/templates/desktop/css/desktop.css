@@ -1,0 +1,159 @@
+/**
+* phpGroupWare desktop template admin specific styles
+* @author Dave Hall dave.hall at skwashd.com
+* @copyright Copyright (C) 2006 Free Software Foundation http://www.fsf.org/
+* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+* @version $Id: desktop.css 16557 2006-03-22 13:02:56Z skwashd $
+*/
+#admin_controls
+{
+	background-color: transparent;
+	float: right;
+	margin: 0px 0px 0px 10px;
+	width: 180px;
+}
+
+#admin_controls #move_top
+{
+	margin-top: 100px;
+}
+
+#admin_controls button
+{
+	display: block;
+	margin-bottom: 10px;
+	overflow: hidden;
+	width: 120px;
+}
+
+#admin_custom_fields
+{
+	margin: 0px auto;
+	width: 640px;
+}
+
+#admin_custom_fields  table
+{
+	height: 275px;
+	width: 450px;
+}
+
+#admin_custom_fields  thead
+{
+	height: 20px;
+}
+
+#admin_custom_fields  tbody
+{
+	height: 255px;
+	overflow: auto;
+}
+
+#admin_custom_fields  #search, #admin_custom_fields  #filter
+{
+	width: 200px;
+}
+
+#admin_custom_fields label
+{
+	width: 60px;
+}
+
+#fields_dialog_add, #fields_dialog_edit
+{
+	height: 400px;
+	width: 600px;
+}
+
+#fields_add_panel_1, #fields_add_panel_2, #fields_add_panel_3, #fields_add_panel_4
+{
+	display: none;
+}
+
+#add_apply
+{
+	display: none;
+}
+
+
+.admin_list
+{  
+	display: block;
+	list-style: none;
+	margin: 20px;
+	padding: 0px;
+}
+
+.admin_list li
+{
+	display: block;
+	font-weight: bold;
+	width: 100%;
+	margin: 0px;
+	padding: 15px 5px 2px 5px;
+}
+
+.admin_list ul
+{
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.admin_list ul li
+{
+	font-weight: normal;
+	padding: 3px 5px;
+}
+
+.admin_list li img
+{
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+.admin_action
+{
+	width: 60px;
+}
+
+.admin_group_name
+{
+	width: 400px;
+}
+
+table a, table a:hover
+{
+	color: #000;
+}
+
+.admin_apps_list
+{
+	border: 1px solid #9f9284;
+	display: block;
+	height: 350px;
+	list-style: none;
+	margin: 1px;
+	overflow: auto;
+	padding: 0px;
+	width: 300px;
+}
+
+.admin_apps_list li
+{
+	margin: 0px;
+	width: 284px;
+}
+
+.admin_apps_list .th
+{
+	border-bottom: 1px solid #aa9c8f;
+	background-color: #efebe7;
+}
+
+.admin_apps_list .th span
+{
+	border-right: 1px solid #aa9c8f;
+	display: table-cell;
+	width: 180px;
+}

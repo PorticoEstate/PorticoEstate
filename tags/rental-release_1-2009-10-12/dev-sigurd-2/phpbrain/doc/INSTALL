@@ -1,0 +1,15 @@
+KnowledgeBase Install
+
+KnowledgeBase is a phpGroupWare application designed to run on all versions from 0.9.14 to 0.9.16.  Please grab phpGroupWare from http://phpgroupware.org
+
+The application uses the normal phpgw setup3 install process.
+
+KnowledgeBase will run any version of PHP from 4.1.0 and up.
+
+KnowledgeBase has been tested on both pgsql and mysql.
+
+KnowledgeBase is register_globals = off and error_reporting = E_ALL compliant.
+
+Post Install Instructions for mySQL users:
+Please run the follow command from with in mySQL:
+ALTER TABLE phpgw_kb_faq ADD FULLTEXT(text,keywords,title);

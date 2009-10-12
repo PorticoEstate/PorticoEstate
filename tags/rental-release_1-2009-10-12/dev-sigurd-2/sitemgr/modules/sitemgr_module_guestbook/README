@@ -1,0 +1,35 @@
+This module is the result of a test. I wanted to know what it takes to
+implement this classical examples of textbooks about dynamic webpages
+with sitemgr. I think the result shows that the idea behind sitemgr, a
+framwork for modules inside an application that is itself inside
+another framwork (phpGroupWare), is not very efficient, at least the
+way sitemgr implements it. And the poor reponse from users to sitemgr
+since I proposed this modularized architecture probably shows the same
+thing. These are the problems I encountered, and could not solve in a
+satisfactory way:
+
+- I did not find a way how a module could define its own database
+tables, and those be installed in a simple way like phpgw's setup
+does, but without blessing the module into an independent
+application (what I did, since I did not know how to do better).
+
+- In sitemgr's architecture there are two interfaces for a model: One
+for contributors defining a block for which the module is a producer,
+one for administrators defining properties that limit the options
+contributors have or the way a module behaves. It works, but it seems
+to restrictive, since you have to play tricks if you want to use it
+for simple tasks like defining guestbooks.
+
+- Sitemgr and maybe phpgroupware in general lack a simple model for
+security and ACL. Sure phpgroupware has its ACL class, but it is not
+easy to use it in a simple way, so that you can apply it to different
+objects in a coherent manner. Or it might be my failure to grasp how I
+should phpgroupware's ACL better. Sitemgr has its ACL for categories,
+but I did not find a simple way how to extend this to the objects that
+may appear on the website.
+
+Anyway, here is what I have come up with, and if you stumble about
+this, and are curious and courageous, try it for yourself (read
+INSTALL in order to know how). If you want to make something actually
+usable from it, tell me about it!
+
