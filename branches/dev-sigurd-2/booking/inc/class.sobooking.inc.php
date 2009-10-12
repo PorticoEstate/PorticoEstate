@@ -92,7 +92,7 @@
 					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
 					 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 			if($this->db->next_record()) {
-				return $this->db->f('id', true);
+				return $this->db->f('id', false);
 			}
 			else {
 				return null;
@@ -177,7 +177,7 @@
 					$this->db->query("SELECT count(1) FROM bb_allocation_resource 
 									WHERE allocation_id = $allocation_id AND resource_id IN ($rids)", __LINE__, __FILE__);
 					$this->db->next_record();
-					if($this->db->f('count', true) != count($entity['resources']))
+					if($this->db->f('count', false) != count($entity['resources']))
 					{
 						$errors['booking'] = lang("The booking uses resources not in the containing allocation");
 					}
@@ -200,7 +200,7 @@
 			$this->db->query("SELECT resource_id FROM bb_booking_resource WHERE booking_id IN ($ids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('resource_id', false), 'int');
 			}
 			return $results;
 		}
@@ -216,7 +216,7 @@
 			$this->db->query("SELECT resource_id FROM bb_allocation_resource WHERE allocation_id IN ($ids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('resource_id', false), 'int');
 			}
 			return $results;
 		}
@@ -232,7 +232,7 @@
 			$this->db->query("SELECT resource_id FROM bb_event_resource WHERE event_id IN ($ids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('resource_id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('resource_id', false), 'int');
 			}
 			return $results;
 		}
@@ -246,7 +246,7 @@
 			$this->db->query("SELECT bb_allocation.id AS id FROM bb_allocation JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1) WHERE bb_season.building_id=$building_id AND ((bb_allocation.from_ >= '$start' AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start' AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
@@ -260,7 +260,7 @@
 			$this->db->query("SELECT bb_booking.id AS id FROM bb_booking JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1) WHERE bb_season.building_id=$building_id AND ((bb_booking.from_ >= '$start' AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start' AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start' AND bb_booking.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
@@ -274,7 +274,7 @@
 			$this->db->query("SELECT DISTINCT(bb_event.id) AS id FROM bb_event JOIN bb_event_resource ON (bb_event.id=event_id AND resource_id IN(SELECT id FROM bb_resource WHERE building_id=$building_id)) WHERE bb_event.active=1 AND ((bb_event.from_ >= '$start' AND bb_event.from_ < '$end') OR (bb_event.to_ > '$start' AND bb_event.to_ <= '$end') OR (bb_event.from_ < '$start' AND bb_event.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
@@ -288,7 +288,7 @@
 			$this->db->query("SELECT id FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
@@ -302,7 +302,7 @@
 			$this->db->query("SELECT id FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}
@@ -316,7 +316,7 @@
 			$this->db->query("SELECT id FROM bb_event JOIN bb_event_resource ON (event_id=id AND resource_id=$resource_id) WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end') OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start' AND to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->_unmarshal($this->db->f('id', true), 'int');
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
 			}
 			return $results;
 		}

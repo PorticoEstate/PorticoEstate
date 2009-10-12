@@ -95,8 +95,8 @@
 			{
 				return False;
 			}
-			return array('id' => $this->db->f('id', true),
-						 'name' => $this->db->f('name', true));
+			return array('id' => $this->db->f('id', false),
+						 'name' => $this->db->f('name', false));
 		}
 		
 		/**
@@ -120,7 +120,7 @@
 							               HAVING count(season_id)=$nrids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$season_id = $this->_unmarshal($this->db->f('id', true), 'int');
+				$season_id = $this->_unmarshal($this->db->f('id', false), 'int');
 				if (CreateObject('booking.soseason')->timespan_within_season($season_id, new DateTime($from_), new DateTime($to_)))
 				{
 					return true;

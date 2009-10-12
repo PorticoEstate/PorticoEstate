@@ -58,8 +58,8 @@
 			{
 				return False;
 			}
-			return array('id' => $this->db->f('id', true),
-						 'name' => $this->db->f('name', true));
+			return array('id' => $this->db->f('id', false),
+						 'name' => $this->db->f('name', false));
 		}
 
 		protected function doValidate($entity, booking_errorstack $errors)

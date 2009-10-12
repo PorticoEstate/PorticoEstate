@@ -271,7 +271,7 @@
 										$type = $params['type'];
 									}
 									
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type);
+									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -283,13 +283,13 @@
 							$row[$field] = array();
 							while ($this->db->next_record())
 							{
-								$row[$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+								$row[$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
 							}
 						}
 					}
 					else
 					{
-						$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+						$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type']);
 					}
 				}
 				return $row;
@@ -410,7 +410,7 @@
 				$row = array();
 				foreach($this->fields as $field => $params)
 				{
-					$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type']);
+					$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type']);
 				}
 				$results[] = $row;
 			}
@@ -439,7 +439,7 @@
 	    					$row[$field] = array();
 	    					while ($this->db->next_record())
 	    					{
-	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
+	    					    $id = $this->_unmarshal($this->db->f($key, false), 'int');
 								$data = array();
 								foreach($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{	
@@ -451,7 +451,7 @@
 										$type = $params['type'];
 									}
 										
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type);
+									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
 								}
 								$row[$field][] = $data;
 	    						$results[$id_map[$id]][$field][] = $data;
@@ -464,8 +464,8 @@
 	    					$row[$field] = array();
 	    					while ($this->db->next_record())
 	    					{
-	    					    $id = $this->_unmarshal($this->db->f($key, true), 'int');
-	    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type']);
+	    					    $id = $this->_unmarshal($this->db->f($key, false), 'int');
+	    						$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
 	    					}
 						}
     				}
@@ -657,7 +657,6 @@
 			}
 			
 			$this->db->query(join($update_queries, ";\n"), __LINE__, __FILE__);
-			
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
 			return $receipt;
