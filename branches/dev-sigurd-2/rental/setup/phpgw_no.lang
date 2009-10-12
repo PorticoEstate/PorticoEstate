@@ -245,6 +245,7 @@ panels	rental	no	Vinduer
 parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
 party	rental	no	Kontraktspart
+party_location	rental	no	Intern organisasjonstihørighet
 party_type	rental	no	Type kontraktspart
 period	rental	no	Periode
 permission_denied_edit_contract	rental	no	You do not have the sufficient privileges to edit this contract
