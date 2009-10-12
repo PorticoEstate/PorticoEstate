@@ -240,3 +240,5 @@ Download	booking	no	Last ner
 Invoice Data Exports	booking	no	Fakturaexporter
 Internal	booking	no	Intern
 External	booking	no	Extern
+Start date must be after %1	booking	no	Fradato må være etter %1
+To date must be before %1	booking	no	Tildato må være før %1

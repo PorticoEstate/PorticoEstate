@@ -331,17 +331,38 @@
 			$season['wtemplate_link'] = self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id']));
 			$result = array();
 			$step = 1;
+			$errors = array();
+			$from_ = $season['from_'];
+			$to_ = $season['to_'];
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
 				$from_ = phpgw::get_var('from_', 'POST');
 				$to_ = phpgw::get_var('to_', 'POST');
-				$result = $this->bo->generate_allocation($season_id, 
-														 new DateTime($from_),
-														 new DateTime($to_),
-														 $step == 3);
+				if($from_ < $season['from_'])
+				{
+					$errors['from_'] = lang('Start date must be after %1', pretty_timestamp($season['from_']));
+				}
+				if($to_ > $season['to_'])
+				{
+					$errors['to_'] = lang('To date must be before %1', pretty_timestamp($season['to_']));
+				}
+				if($errors)
+				{
+					$step = 1;
+				}
+				else
+				{
+					$result = $this->bo->generate_allocation($season_id, 
+															 new DateTime($from_),
+															 new DateTime($to_),
+															 $step == 3);
+				}
 			}
-			self::render_template('season_generate', array('season' => $season, 'result'=>$result, 'step' => $step, 'from_' => $from_, 'to_' => $to_));
+			$this->flash_form_errors($errors);
+			self::render_template('season_generate', array('season' => $season, 
+								  'result'=>$result, 'step' => $step, 
+								  'from_' => $from_, 'to_' => $to_));
 		}
 
 	}
