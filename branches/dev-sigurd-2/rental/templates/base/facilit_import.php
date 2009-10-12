@@ -34,7 +34,7 @@
 		}
 		?>
 	</select>
-	<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" />
+	<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" <?php if ($button_label == "Import done") { echo ' disabled="disabled"'; } ?> />
 	</fieldset>
 	<fieldset>
 		<input type="submit" name="cancelsubmit" value="Cancel and reset import" />
