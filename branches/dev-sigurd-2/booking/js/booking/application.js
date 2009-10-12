@@ -54,8 +54,9 @@ populateResourceTable = function(building_id, selection) {
 	 });
 }
 
-removeDateRow = function() {
+removeDateRow = function(e) {
 	this.parentNode.parentNode.removeChild(this.parentNode);
+	YAHOO.util.Event.stopEvent(e);
 }
 
 var createFromToDatePickerSection = function(containerEl) {
@@ -113,6 +114,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		var a = div.getElementsByTagName('a')[0];
 		a.onclick = removeDateRow;
 		YAHOO.booking.setupDatePickers();
+		YAHOO.util.Event.stopEvent(e);
 	}); 
 	
 	
