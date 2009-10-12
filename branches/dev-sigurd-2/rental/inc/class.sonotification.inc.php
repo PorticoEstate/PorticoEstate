@@ -44,6 +44,8 @@ class rental_sonotification extends rental_socommon
 		LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
 		LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
 		WHERE deleted = 'FALSE' AND $condition $order";
+		
+		return $sql;
 	}
 	
 	protected function populate(int $notification_id, &$notification)
@@ -86,11 +88,11 @@ class rental_sonotification extends rental_socommon
 			$values[] = $notification->get_location_id();
 		}
 		
-		$q ="INSERT INTO ".$this->table_name." (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		$q ="INSERT INTO rental_notification (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		if($result)
 		{
-			$notification->set_id($this->db->get_last_insert_id($this->table_name, 'id'));
+			$notification->set_id($this->db->get_last_insert_id('rental_notification', 'id'));
 			$this->populate_workbench_notifications();
 			return true;
 		}
@@ -134,10 +136,10 @@ class rental_sonotification extends rental_socommon
 		//Iterate through all notifications
 		while ($this->db->next_record()) 
 		{
+			$result_id = $this->unmarshal($this->db->f('id', true), 'int'); // The id of object
 			// Create notification object
-			$notification = $this->read_notification();
+			$notification = $this->populate($result_id, $notification);;
 
-			
 			// Calculate timestamps the notification date, target date (default: today) and last notified
 			$notification_date = date("Y-m-d",$notification->get_date());
 			

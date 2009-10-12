@@ -200,7 +200,7 @@
 						}
 						else if(isset($contract))
 						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id()));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'tab' => 'documents'));
 						}
 					}
 					else

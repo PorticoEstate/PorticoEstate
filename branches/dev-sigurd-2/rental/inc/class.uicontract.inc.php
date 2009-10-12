@@ -4,6 +4,7 @@
 	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.sodocument');
 	phpgw::import_class('rental.soinvoice');
+	phpgw::import_class('rental.sonotification');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -335,7 +336,7 @@
 			}
 			else if(isset($_POST['add_notification']))
 			{
-				$contract = rental_contract::get($contract_id);
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
 				if($contract->has_permission(PHPGW_ACL_EDIT))
 				{
 					$account_id = phpgw::get_var('notification_target');
@@ -346,7 +347,7 @@
 						$date = strtotime($date);
 					}
 					$notification = new rental_notification(-1, $account_id, $location_id, $contract_id, $date, phpgw::get_var('notification_message'), phpgw::get_var('notification_recurrence'));
-					if ($notification->store())
+					if (rental_sonotification::get_instance()->store($notification))
 					{
 						$message = lang('messages_saved_form');
 						$notification = null; // We don't want to display the date/message when it was sucessfully stored.
@@ -508,9 +509,9 @@
 			$composite_id = (int)phpgw::get_var('composite_id');
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
-			if($contract->has_permission(PHPGW_ACL_EDIT))
+			if(isset($contract) && $contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				return $so_contract->remove_composite($contract_id. $composite_id);
+				return $so_contract->remove_composite($contract_id, $composite_id);
 			}
 			return false;
 		}

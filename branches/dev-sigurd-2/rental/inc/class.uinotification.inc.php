@@ -1,5 +1,7 @@
 <?php
 phpgw::import_class('rental.uicommon');
+phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.sonotification');
 
 class rental_uinotification extends rental_uicommon
 {
@@ -34,15 +36,15 @@ class rental_uinotification extends rental_uicommon
 		switch($query_type)
 		{
 			case 'notifications':
-				$filters = array('contract_id' => phpgw::get_var('contract_id'));
+				$filters = array('contract_id' => $contract_id);
 				break;
 			case 'notifications_for_user':
 				$filters = array('account_id' => $GLOBALS['phpgw_info']['user']['account_id']);
 				break;
 		}
 		
-		$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-		$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
+		$result_objects = rental_sonotification::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+		$result_count = rental_sonotification::get_instance()->get_count($search_for, $search_type, $filters);
 		
 		//Serialize the contracts found
 		$rows = array();
