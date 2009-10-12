@@ -216,7 +216,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -271,7 +271,10 @@ class rental_socontract extends rental_socommon
 			$contract->set_account_in($this->unmarshal($this->db->f('account_in'),'string'));
 			$contract->set_account_out($this->unmarshal($this->db->f('account_out'),'string'));
 			$contract->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
-			$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer'),'string'));
+			$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer'),'int'));
+			$contract->set_term_id($this->unmarshal($this->db->f('term_id'),'int'));
+			$contract->set_security_type($this->unmarshal($this->db->f('security_type'),'int'));
+			$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'),'string'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');

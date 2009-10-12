@@ -261,7 +261,7 @@
 						<label for="security_amount"><?php echo lang('security_amount') ?></label>
 					</dt>
 					<dd>
-						<label for="security_amount"><?php echo lang('currency_prefix') ?></label>
+						<label for="security_amount"><?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'] ?></label>
 						<?php
 						if ($editable) {
 						?>
@@ -314,6 +314,7 @@
 					<dd>
 						<?php
 						$billing_start_date = $contract->get_billing_start_date();
+						
 						if($billing_start_date == null || $billing_start_date == '') // No date set
 						{
 							// ..so we try to use the start date of the contract if any
@@ -328,12 +329,14 @@
 								$billing_start_date = time();
 							}
 						}
+						
+						$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
 						if($editable)
 						{
 							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
 						}
 						else{ // Non-ediable
-							echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
+							echo $billing_start_date;
 						}
 						?>
 					</dd>
