@@ -85,7 +85,19 @@
     function party_export(ptype) {
         var select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_type');
         var option = select.options[select.selectedIndex].value;
-        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option+'<?php echo $url_add_on; ?>&type='+ptype;
+
+        var sSelect = document.getElementById('<?php echo $list_id ?>_ctr_toggle_party_fields');
+        var sOption = sSelect.options[sSelect.selectedIndex].value;
+
+        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+        <?php
+        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
+         * even though the search only affects one of the data tables.
+         * F.ex on /index.php?menuaction=rental.uicontract.edit&id=1 -> Parties
+         */
+        ?>
+        
+        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option+'<?php echo $url_add_on; ?>&type='+ptype+'&query='+query+'&search_option='+sOption;
     }
 
 </script>
