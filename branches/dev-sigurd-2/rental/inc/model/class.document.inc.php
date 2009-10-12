@@ -73,7 +73,7 @@ class rental_document extends rental_model
 			'title' => $this->get_title(),
 			'description' => $this->get_description(),
 			'name' => $this->get_name(),
-			'type' => $this->get_type()
+			'type' => lang($this->get_type())
 		);
 	}
 }
