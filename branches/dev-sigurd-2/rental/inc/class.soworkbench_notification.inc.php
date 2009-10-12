@@ -18,7 +18,7 @@ class rental_soworkbench_notification extends rental_socommon
 	
 	protected function get_id_field_name()
 	{
-		return 'notification_id';
+		return 'id';
 	}
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
@@ -38,7 +38,8 @@ class rental_soworkbench_notification extends rental_socommon
 		
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(contract.id)) AS count';
+			$cols = 'COUNT(DISTINCT(rnw.id)) AS count';
+			$order = '';
 		}
 		else
 		{
@@ -63,6 +64,7 @@ class rental_soworkbench_notification extends rental_socommon
 					OR rnw.account_id IN (SELECT group_id FROM phpgw_group_map WHERE account_id = $account_id) )
 					AND rnw.dismissed = 'FALSE'
 				{$order}";
+		//var_dump($sql);
 		return $sql;
 	}
 	
@@ -86,7 +88,11 @@ class rental_soworkbench_notification extends rental_socommon
 	
 	function add(&$notification)
 	{
-		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ($account_id, $date, $notification_id,'FALSE')";
+		$account_id = $this->marshal($notification->get_account_id(),'int');
+		$date = $this->marshal($notification->get_date(),'int');
+		$notification_id = $this->marshal($notification->get_originated_from(),'int');
+		
+		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ({$account_id},{$date},{$notification_id},'FALSE')"; 
 		$result = $this->db->query($sql);
 		
 		if($result) { return true; }

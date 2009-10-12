@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('rental.socommon');
+phpgw::import_class('rental.soworkbench_notification');
 
 include_class('rental', 'notification', 'inc/model/');
 
@@ -245,8 +246,21 @@ class rental_sonotification extends rental_socommon
 				foreach($unique_account_ids as $unique_account) {
 					if($unique_account && $unique_account > 0)
 					{
-							//TODO create workbench notification objects and add through SO
-						//$this->add_workbench_notification($unique_account,$ts_today,$notification_id);
+						
+						$notification = new rental_notification
+						(
+							0,					// No notification identifier
+							$unique_account,
+							0,					// No location identifier
+							$this->unmarshal($this->db->f('contract_id', true), 'int'),
+							$ts_today,
+							null,
+							null,
+							null,
+							null,
+							$notification_id
+						);
+						rental_soworkbench_notification::get_instance()->store($notification);
 					}		
 				}
 				

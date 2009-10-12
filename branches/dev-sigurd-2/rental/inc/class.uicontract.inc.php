@@ -90,6 +90,8 @@
 							break;
 						case 'last_edited': 				// Contracts that are last edited in areas of resposibility
 							$filters = array('contract_type' => $comma_seperated_ids);
+							$sort_field = 'contract.last_updated';
+							$sort_ascending = false;
 							break;
 					}
 					

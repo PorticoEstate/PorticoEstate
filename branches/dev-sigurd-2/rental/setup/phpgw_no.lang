@@ -131,6 +131,8 @@ f_new_party	rental	no	Ny kontraktspart
 f_new_price_item	rental	no	Nytt priselement
 f_new_rc	rental	no	Nytt leieobjekt
 from	rental	no	Fra
+frontpage_was_reset	rental	no	Oppsettet på forsiden ble nullstilt
+frontpage_reset_setup	rental	no	Nullstill oppsett 
 f_select_columns	rental	no	Velg kolonner
 gab	rental	no	GAB
 Generate export	rental	no	Generér eksport

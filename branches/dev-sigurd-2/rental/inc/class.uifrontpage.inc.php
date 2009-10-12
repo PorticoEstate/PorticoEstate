@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('rental.uicommon');
+	phpgw::import_class('rental.socontract');
 
 	class rental_uifrontpage extends rental_uicommon
 	{
@@ -29,6 +30,13 @@
 					$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
 					$GLOBALS['phpgw']->preferences->read();
 					$GLOBALS['phpgw']->preferences->add('rental','rental_frontpage_panel_'.$panel,$panel_config,'user');
+					$GLOBALS['phpgw']->preferences->save_repository();
+					break;
+				case 'reset_panel_settings':
+					$panel = phpgw::get_var('name');
+					$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
+					$GLOBALS['phpgw']->preferences->read();
+					$GLOBALS['phpgw']->preferences->delete('rental','rental_frontpage_panel_'.$panel,'','user');
 					$GLOBALS['phpgw']->preferences->save_repository();
 					break;
 			}

@@ -4,8 +4,11 @@
 <script>
 
 
+
+
 YAHOO.util.Event.addListener(window, "load", function() {
 	var panels = new Array();
+	
 	createPanel = function(element,visibility,x,y){
 		var panel = new YAHOO.widget.Panel(element + "_panel",{close: false, constraintoviewport: false});
 		panel.name = element;
@@ -36,13 +39,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			panel.visible = false;
 			panel.hide();
 		}
+		return panel;
 	}
 
 
 
 
 	<?php
-	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','availableComposites','notifications');
+	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','notifications');
 	$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
 	$preferences = $GLOBALS['phpgw']->preferences->read();
 		//var_dump($preferences);
@@ -59,13 +63,45 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		else
 		{
 	?>
-		createPanel('<?php echo $panel ?>',true,0,0);
+		panel = createPanel('<?php echo $panel ?>',false,0,0);
 	<?php
 		}
 	}
 	?>
 
+	var resetPanelConfigurations = function(event){
+		var pans = this;
+		var reset_completed = false;
+		var number_of_panels = pans.length;
+		var number_of_resets_completed = 0;
+		
+		for(var i=0; i<pans.length; i++){
+			var p = pans[i];
 
+			var ajaxFailure = function(event){
+				var element = document.getElementById('messageHolder');
+				element.innerHTML ='<p class="message"><?php echo lang('reset_failed') ?></p>';
+			}
+
+			var ajaxSuccess = function(event){
+				number_of_resets_completed++;
+				if(number_of_resets_completed == number_of_panels)
+				{
+					document.location = '<? echo html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.index', 'message' => lang('frontpage_was_reset')))) ?>';
+				}
+			}
+
+			var request = YAHOO.util.Connect.asyncRequest(
+				'GET',
+				'<?php echo html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.query','type' => 'reset_panel_settings'))) ?>' + 
+				'&name=' + p.name,
+				{
+					success: ajaxSuccess,
+					failure: ajaxFailure
+				}
+			);
+		}
+	}
 
 	var savePanelConfigurations = function(event){
 		var pans = this;
@@ -101,6 +137,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 					failure: ajaxFailure
 				}
 			);
+			
 		}
 
 		var element = document.getElementById('messageHolder');
@@ -114,12 +151,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	}
 
 	new YAHOO.widget.Button('saveSetup',{onclick: {fn:savePanelConfigurations, scope: panels}});
-	//new YAHOO.widget.Button('createShortcut',{onclick: {fn:createShortcut}});
+	new YAHOO.widget.Button('resetSetup',{onclick: {fn:resetPanelConfigurations, scope: panels}});
 });
 
 </script>
 <?php echo rental_uicommon::get_page_error($error) ?>
-<?php echo rental_uicommon::get_page_message($message) ?>
+<?php echo rental_uicommon::get_page_message(phpgw::get_var('message')) ?>
 
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/places/user-desktop.png" /> <?php echo lang('dashboard_title') ?></h1>
 
@@ -130,11 +167,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	<button type="button" id="workingOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('working_on') ?></button>
 	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('executive_officer_for') ?></button>
 	<button type="button" id="endingContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_under_dismissal') ?></button>
-	<button type="button" id="availableComposites_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" /> <?php echo lang('available_composites') ?></button>
 	<button type="button" id="notifications_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" /> <?php echo lang('notifications') ?></button>
 	<!-- <button type="button" id="shortcuts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-jump.png" /> <?php echo lang('shortcuts') ?></button> -->
 	&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
 	<button type="button" id="saveSetup"><?php echo lang('save_setup') ?></button>
+	<button type="button" id="resetSetup"><?php echo lang('frontpage_reset_setup') ?></button>
 </fieldset>
 
 
@@ -151,8 +188,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
 				array("key" => "composite", "label" => lang('composite'), "index" => 1),
-				array("key" => "party", "label" => lang('party'), "index" => 2),
-				array("key" => "last_edited_by_current_user", "label" => lang('last_edited_by_current_user'), "index" => 3),
+				array("key" => "last_edited_by_current_user", "label" => lang('last_edited_by_current_user'), "index" => 2),
 				array("key" => "last_updated", "label" => lang('last_updated'), "sortable" => true,"index" => 3)
 			);
 			$hide_cols = array("id","date_start","date_end");
@@ -193,17 +229,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		?>
 	</div>
 </div>
-<div id="availableComposites_panel">
-	<div class="hd"><!-- <img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/go-home.png" />  --> <?php echo lang('available_composites') ?></div>
-    <div class="bd">
-	<?php
-		$list_form = false;
-		$list_id = 'available_composites';
-		$url_add_on = '&amp;type='.$list_id;
-		include('composite_list_partial.php');
-	?>
-	</div>
-</div>
+
 <div id="notifications_panel">
 	<div class="hd"><!-- <img style="" src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/appointment-new.png" alt="icon" /> --> <?php echo lang('notifications') ?> </div>
     <div class="bd">
@@ -217,12 +243,3 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		?>
 	</div>
 </div>
-
-<!--
-<div id="shortcuts_panel">
-	<div class="hd"><h2><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-jump.png" /> <?php echo lang('notifications') ?></h2></div>
-    <div class="bd">
-
-	</div>
-</div>
- -->

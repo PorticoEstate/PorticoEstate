@@ -2,6 +2,7 @@
 phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sonotification');
+phpgw::import_class('rental.soworkbench_notification');
 
 class rental_uinotification extends rental_uicommon
 {
@@ -37,15 +38,17 @@ class rental_uinotification extends rental_uicommon
 		{
 			case 'notifications':
 				$filters = array('contract_id' => $contract_id);
+				$result_objects = rental_sonotification::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$result_count = rental_sonotification::get_instance()->get_count($search_for, $search_type, $filters);	
 				break;
 			case 'notifications_for_user':
 				$filters = array('account_id' => $GLOBALS['phpgw_info']['user']['account_id']);
+				$result_objects = rental_soworkbench_notification::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$result_count = rental_soworkbench_notification::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 		}
 		
-		$result_objects = rental_sonotification::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-		$result_count = rental_sonotification::get_instance()->get_count($search_for, $search_type, $filters);
-		
+				
 		//Serialize the contracts found
 		$rows = array();
 		foreach ($result_objects as $result) {
@@ -59,7 +62,7 @@ class rental_uinotification extends rental_uicommon
 		}
 		
 		//Add context menu columns (actions and labels)
-		array_walk($rows, array($this, 'add_actions'), array($type,isset($contract) ? $contract->serialize() : null ));
+		array_walk($rows, array($this, 'add_actions'), array($query_type,isset($contract) ? $contract->serialize() : null ));
 
 		//Build a YUI result from the data
 		$result_data = array('results' => $rows, 'total_records' => $result_count);
@@ -81,11 +84,11 @@ class rental_uinotification extends rental_uicommon
 
 		$type = $params[0];
 		$serialized_contract = $params[1];
-		
+			
 		switch($type)
 		{
 			case 'notifications':
-				if($serialized_contract['permissions'][PHPGW_ACL_DELETE])
+				if($serialized_contract['permissions'][PHPGW_ACL_EDIT])
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.delete_notification', 'id' => $value['id'], 'contract_id' => $value['contract_id'])));
@@ -93,7 +96,7 @@ class rental_uinotification extends rental_uicommon
 				}
 				break;
 			case 'notifications_for_user':
-				if($serialized_contract['permissions'][PHPGW_ACL_EDIT])
+				if($value['permissions'][PHPGW_ACL_EDIT])
 				{
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
@@ -104,7 +107,7 @@ class rental_uinotification extends rental_uicommon
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.dismiss_notification', 'id' => $value['id'])));
 				$value['labels'][] = lang('remove_from_workbench');
 				
-				if($serialized_contract['permissions'][PHPGW_ACL_DELETE])
+				if($value['permissions'][PHPGW_ACL_EDIT])
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.dismiss_notification_for_all', 'id' => $value['originated_from'], 'contract_id' => $value['contract_id'])));
