@@ -110,7 +110,7 @@ class rental_socontract extends rental_socommon
 
 		// Contracts of type
 		if(isset($filters['contract_type']) && $filters['contract_type'] != 'all'){
-			$type = $this->marshal($filters['contract_type'],'string');
+			$type = $this->marshal($filters['contract_type'],'field');
 			$filter_clauses[] = "contract.location_id IN ($type)";
 		}
 		
@@ -639,7 +639,7 @@ class rental_socontract extends rental_socommon
 	 */
 	function remove_composite($contract_id, $composite_id)
 	{
-		$q = "DELETE FROM rental_contract_composite WHERE contract_id = $contract_id AND composite_id = $composite_id";
+		$q = "DELETE FROM rental_contract_composite WHERE contract_id = {$contract_id} AND composite_id = {$composite_id}";
 		$result = $this->db->query($q);
 		if($result)
 		{
