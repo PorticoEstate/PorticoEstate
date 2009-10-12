@@ -271,6 +271,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_account_in($this->unmarshal($this->db->f('account_in'),'string'));
 			$contract->set_account_out($this->unmarshal($this->db->f('account_out'),'string'));
 			$contract->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
+			$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer'),'string'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
