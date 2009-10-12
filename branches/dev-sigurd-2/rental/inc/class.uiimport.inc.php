@@ -211,6 +211,8 @@
 				}
 			}
 			
+			$this->messages[] = "Successfully imported " . count($parties) . " contract parties.";
+			
 			fclose($handle);
 			
 			return $parties;
@@ -253,6 +255,8 @@
 					$this->errors[] = "Failed to store composite " . $composite->get_name();
 				}
 			}
+			
+			$this->messages[] = "Successfully imported " . count($composites) . " composites.";
 			
 			fclose($handle);
 			
@@ -367,6 +371,8 @@
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
 				}
 			}
+			
+			$this->messages[] = "Successfully imported " . count($contracts) . " contracts.";
 			
 			fclose($handle);
 			
