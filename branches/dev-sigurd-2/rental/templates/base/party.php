@@ -22,7 +22,7 @@
 		<?php  if($party->get_id() > 0) { ?>
 		
 		<li><a href="#contracts_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('contracts') ?></em></a></li>
-		<li><a href="#documents_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
+		<li <?php echo (phpgw::get_var('tab') == 'documents') ?  'class="selected"' : ""?>><a href="#documents_party"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
 
 		<?php } ?>
 	</ul>
@@ -419,6 +419,7 @@
 				$list_form = true;
 				$list_id = 'documents_for_party';
 				$url_add_on = "&amp;type={$list_id}&amp;party_id={$party->get_id()}";
+				$upload_url_add_on = "&amp;party_id={$party->get_id()}";
 				unset($extra_cols);
 				unset($editors);
 				unset($related);

@@ -153,7 +153,7 @@
 			{
 				//Load party
 				$party = rental_socontract::get_instance()->get_single($party_id);
-				if($this->isAdministrator() || $this->isExecutiveOfficer())
+				if(!($this->isAdministrator() || $this->isExecutiveOfficer()))
 				{
 					$this->render('permission_denied.php');
 					return;
@@ -196,7 +196,7 @@
 					{
 						if(isset($party))
 						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id()));		
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit', 'id' => $party->get_id(), 'tab' => 'documents'));		
 						}
 						else if(isset($contract))
 						{
