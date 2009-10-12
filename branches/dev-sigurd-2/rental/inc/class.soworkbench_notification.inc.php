@@ -112,7 +112,7 @@ class rental_soworkbench_notification extends rental_socommon
 	 */
 	public function dismiss_notification($id)
 	{
-		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = $id";
+		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE id = {$id}";
 		$result = $this->db->query($sql);
 		
 		if($result) { return true; }
@@ -126,7 +126,7 @@ class rental_soworkbench_notification extends rental_socommon
 	 */
 	public function dismiss_notification_for_all($id)
 	{
-		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = $id";
+		$sql = "UPDATE rental_notification_workbench SET dismissed = 'TRUE' WHERE notification_id = {$id}";
 		$result = $this->db->query($sql);
 		
 		if($result) { return true; }

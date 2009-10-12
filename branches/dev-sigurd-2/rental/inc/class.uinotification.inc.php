@@ -4,11 +4,17 @@ phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sonotification');
 phpgw::import_class('rental.soworkbench_notification');
 
+/**
+ * Controller class for notifications (both contract and workbench notifications)
+ */
 class rental_uinotification extends rental_uicommon
 {
 	public $public_functions = array
 	(
-		'query'		=> true
+		'query'		=> true,
+		'delete_notification' => true,
+		'dismiss_notification' => true,
+		'dismiss_notification_for_all' => true
 	);
 	
 	public function query()
@@ -126,10 +132,10 @@ class rental_uinotification extends rental_uicommon
 	{
 		$notification_id = (int)phpgw::get_var('id');
 		$contract_id = (int)phpgw::get_var('contract_id');
-		$contract = rental_contract::get($contract_id);
+		$contract = rental_socontract::get_instance()->get_single($contract_id);
 		if($contract->has_permission(PHPGW_ACL_EDIT))
 		{	
-			rental_notification::delete_notification($notification_id);
+			rental_sonotification::get_instance()->delete_notification($notification_id);
 			return true;
 		}
 		return false;
@@ -144,10 +150,7 @@ class rental_uinotification extends rental_uicommon
 	public function dismiss_notification()
 	{
 		$notification_id = (int)phpgw::get_var('id');
-		
-		//TODO: should we check to see if the notification exists on the current users workbench? 
-		
-		rental_notification::dismiss_notification($notification_id,strtotime('now'));
+		return rental_soworkbench_notification::get_instance()->dismiss_notification($notification_id,strtotime('now'));
 	}
 	
 	/**
@@ -162,13 +165,11 @@ class rental_uinotification extends rental_uicommon
 		//the source notification
 		$notification_id = (int)phpgw::get_var('id');
 		$contract_id = (int)phpgw::get_var('contract_id');
-		$contract = rental_contract::get($contract_id);
-
-		//TODO: should we check to see if the notification exists on the current users workbench? 
+		$contract = rental_socontract::get_instance()->get_single($contract_id);
 					
 		if($contract->has_permission(PHPGW_ACL_EDIT))
 		{
-			rental_notification::dismiss_notification_for_all($notification_id);
+			rental_soworkbench_notification::get_instance()->dismiss_notification_for_all($notification_id);
 			return true;
 		}
 		return false;
