@@ -50,30 +50,36 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$type		= isset($data['type']) ? $data['type'] : '';
-				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
-			}
 
-			$standard = array();
-			if (!$table = $this->select_table($type))
+			if(!isset($data['location_id']) || !$data['location_id'])
 			{
-				return $standard;
-			}
-
-			if ($order)
-			{
-				$ordermethod = " ORDER BY $order $sort";
+				if(!isset($data['appname']) || !$data['appname'] || !isset($data['location']) || !$data['location'])
+				{
+					throw new Exception("property_soevent::read - Missing location info in input");
+				}
+				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id ASC';
+				$location_id = $data['location_id'];
 			}
+
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+
+			if(!isset($data['location_item_id']) || !$data['location_item_id'])
+			{
+				throw new Exception("property_soevent::read - Missing location_item_id in input");
+			}
+
+			$location_item_id	= $data['location_item_id'];
+
+			$events = array();
+
+			$table = 'fm_event';
 
 			if($query)
 			{
@@ -98,13 +104,13 @@
 
 			while ($this->_db->next_record())
 			{
-				$standard[] = array
+				$events[] = array
 				(
 					'id'	=> $this->_db->f('id'),
 					'descr'	=> $this->_db->f('descr')
 				);
 			}
-			return $standard;
+			return $events;
 		}
 
 		function read_single($id)

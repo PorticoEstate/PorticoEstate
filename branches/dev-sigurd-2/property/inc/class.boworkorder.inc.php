@@ -475,6 +475,16 @@
 				$workorder['p'][$workorder['p_entity_id']]['p_cat_name'] = $category['name'];
 			}
 
+			$event_criteria = array
+			(
+				'appname'		=> 'property',
+				'location'		=> '.project.workorder',
+				'location_item_id'	=> $workorder_id
+			);
+
+			$events = execMethod('property.soevent.read', $event_criteria);
+			$workorder['event_id'] = $events ? $events[0]['id'] : '';
+
 			return $workorder;
 		}
 

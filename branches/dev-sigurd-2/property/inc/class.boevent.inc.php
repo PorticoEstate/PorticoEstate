@@ -73,6 +73,13 @@ if ( !extension_loaded('mcal') )
 		(
 			'send_sms'	=> 'send SMS'
 		);
+
+		var $public_functions = array
+		(
+			'event_schedule_data'		=> true,
+			'event_schedule_week_data'	=> true
+		);
+
 	
 		function __construct($session=false)
 		{
@@ -941,63 +948,8 @@ if ( !extension_loaded('mcal') )
 			}
 		}
 
-		/**
-		* Find recurring events for a week
-		*
-		* @param int $id             id of the event in question
-		* @param int $datetime_start unix timestamp on start
-		* @return array schedule
-		*/
-
-		public function event_schedule_week($id, $datetime_start)
+		public function init_schedule_week($id, $buildingmodule, $resourcemodule, $search = null)
 		{
-			$event = $this->so->read_single($id);
-			$criteria = array
-			(
-				'start_date'		=> $datetime_start,
-				'end_date'			=> $datetime_start + (86400 * 6),
-				'location_id'		=> $event['location_id'],
-				'location_item_id'	=> $event['location_item_id']
-			);
-
-			$this->find_scedules($criteria);
-			return $this->cached_events;
-		}
-
-		public function get_schedule($id, $buildingmodule, $resourcemodule, $search = null)
-		{
-/*
-    [id] => 11
-    [active] => 1
-    [building_id] => 8
-    [name] => Bane 1
-    [type] => Location
-    [building_name] => Haukelandshallen
-    [building_street] => St.Olavsvei 50 
-    [building_city] => Bergen 
-    [building_district] => Årstad
-    [activity_name] => Idrett
-    [description] => 
-    [activity_id] => 2
-    [permission] => Array
-        (
-            [read] => 1
-            [create] => 1
-            [delete] => 1
-            [write] => Array
-                (
-                    [id] => 1
-                    [active] => 1
-                    [building_id] => 1
-                    [name] => 1
-                    [type] => 1
-                    [description] => 1
-                    [activity_id] => 1
-                )
-
-        )
-
-*/
 			$date = new DateTime(phpgw::get_var('date'));
 			// Make sure $from is a monday
 			if($date->format('w') != 1)
@@ -1024,13 +976,160 @@ if ( !extension_loaded('mcal') )
 			$resource['date'] = $date->format('Y-m-d');
 			$resource['week'] = intval($date->format('W'));
 			$resource['year'] = intval($date->format('Y'));
-			$resource['prev_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule', 'id' => $resource['id'], 'date'=> $prev_date->format('Y-m-d')));
-			$resource['next_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule', 'id' => $resource['id'], 'date'=> $next_date->format('Y-m-d')));
+			$resource['prev_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week', 'id' => $resource['id'], 'date'=> $prev_date->format('Y-m-d')));
+			$resource['next_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $resourcemodule . '.schedule_week', 'id' => $resource['id'], 'date'=> $next_date->format('Y-m-d')));
 			for($i = 0; $i < 7; $i++)
 			{
 				$resource['days'][] = array('label' => sprintf('%s<br/>%s %s', lang($date->format('l')), lang($date->format('M')), $date->format('d')), 'key' => $date->format('D'));
 				$date->modify('+1 day');
 			}
 			return $resource;
+		}
+
+
+		/**
+		* Find recurring events for a week
+		*
+		* @return array schedule
+		*/
+
+		public function event_schedule_week_data()
+		{
+//		    $date = new DateTime(phpgw::get_var('date')); Use this one when moving to php 5.3
+
+			$datetime = CreateObject('phpgwapi.datetime');
+			$date = $datetime->convertDate(phpgw::get_var('date'), 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$datetime_start = $datetime->date_to_timestamp($date);
+	    
+			$id = phpgw::get_var('resource_id', 'int');
+	
+			$event = $this->so->read_single($id);
+			$criteria = array
+			(
+				'start_date'		=> $datetime_start,
+				'end_date'			=> $datetime_start + (86400 * 6),
+				'location_id'		=> $event['location_id'],
+				'location_item_id'	=> $event['location_item_id']
+			);
+
+			$this->find_scedules($criteria);
+			$schedules =  $this->cached_events;
+
+			$total_records = 0;
+			foreach($schedules as $_date => $set)
+			{
+				if(count($set) > $total_records)
+				{
+					$total_records = count($set);
+				}
+			}
+
+			$lang_exception	 = lang('exception');
+			$values = array();
+			for($i = 0; $i < $total_records; $i++)
+			{
+				$values[$i] = array
+				(
+					'resource'			=> 'descr',
+					'resource_id'		=> 11,
+					'time'				=> $i+1,
+					'_from'				=> '16:30',
+					'_to'				=> '17:00'
+				);
+
+				foreach($schedules as $_date => $set)
+				{
+					$__date = substr($_date,0,4) . '-' . substr($_date,4,2) . '-' . substr($_date,6,2);
+					$date = new DateTime($__date);
+					$day_of_week = $date->format('D');
+					$values[$i][$day_of_week] = array
+					(
+						'exception' => $set[$i]['exception'],
+						'lang_exception' => $lang_exception,
+						'type' => 'event',
+						'name' => $set[$i]['descr'],
+						'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
+					);
+				}
+			}
+
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $total_records, 
+					"Result" => $values
+				)
+			);
+//_debug_array($data);die();
+			return $data;
+
+		}
+
+		/**
+		* Find recurring events for a period defined by the event
+		*
+		* @return array schedule
+		*/
+
+		public function event_schedule_data()
+		{
+			$id = phpgw::get_var('id', 'int');
+	
+			$event = $this->so->read_single($id);
+
+			$criteria = array
+			(
+				'start_date'		=> $event['start_date'],
+				'end_date'			=> $event['end_date'],
+				'location_id'		=> $event['location_id'],
+				'location_item_id'	=> $event['location_item_id']
+			);
+
+			$this->find_scedules($criteria);
+			$schedules =  $this->cached_events;
+
+			$total_records = 0;
+
+			$lang_exception	 = lang('exception');
+			$values = array();
+
+			$i = 1;
+			foreach($schedules as $_date => $set)
+			{
+				$__date = substr($_date,0,4) . '-' . substr($_date,4,2) . '-' . substr($_date,6,2);
+				$date = phpgwapi_datetime::convertDate($__date, 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+				foreach($set as $entry)
+				{
+					$values[] = array
+					(
+						'resource'			=> 'descr',
+						'resource_id'		=> 11,
+						'time'				=> $i,
+						'_from'				=> '16:30',
+						'_to'				=> '17:00',
+						'date'				=> array
+						(
+							'exception' => $entry['exception'],
+							'lang_exception' => $lang_exception,
+							'type' => 'event',
+							'name' => $date,
+							'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
+						)
+					);
+
+					$i++;
+				}
+			}
+
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $total_records, 
+					"Result" => $values
+				)
+			);
+
+			return $data;
 		}
 	}
