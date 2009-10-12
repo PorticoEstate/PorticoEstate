@@ -233,6 +233,7 @@ else
 	$rental_manager		= $GLOBALS['phpgw']->accounts->name2id('rental_manager');
 }
 
+/*
 //Default rental composites
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Herdla fuglereservat','Pip pip')");
 $oProc->query("INSERT INTO rental_composite (name,description) VALUES ('Fløibanen','Tut tut')");
@@ -290,7 +291,7 @@ $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (15,'
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (16,'3405-01')");
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (17,'1129-01')");
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (18,'VE01-01-15')");
-
+*/
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',90,'119001','119001')");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',90, '15')");
@@ -299,7 +300,7 @@ $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly'
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('half-year','6')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','4')");
-
+/*
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1253491200,".strtotime('2009-01-15').",{$loc_id_out},2,{$rental_out}, 1250593658, {$rental_out})");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1230768000,1607731200,".strtotime('2009-01-15').",{$loc_id_internal},2,{$rental_internal}, 1250593658, {$rental_internal})");
 $oProc->query("INSERT INTO rental_contract (date_start, date_end, billing_start, location_id, term_id, executive_officer, created, created_by) VALUES (1199145600,1850169600,".strtotime('2008-01-15').",{$loc_id_in},2,{$rental_in}, 1250593658, {$rental_in})");
@@ -388,7 +389,7 @@ $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_paye
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (20, 11, true)");
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (21, 12, true)");
 $oProc->query("INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES (22, 13, true)");
-
+*/
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', 'Y900', true, 23.00)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Parkeringsplass', '124246242', false, 50.00)");
@@ -402,7 +403,7 @@ $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price)
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Felleskostnader', 'BEAA02', false, 70000)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
 $oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
-
+/*
 	// Vitalitetssenteret
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (2, 11, 'Administrasjon', 1712, 0, 'Y900', true, 23.98, 41053.76, '2009-01-01', NULL)");
 $oProc->query("INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES (4, 11, 'Forsikring', 1712, 0, 'Y901', true, 10.57, 18095.84, '2009-01-01', NULL)");
@@ -484,6 +485,7 @@ $oProc->query("INSERT INTO rental_notification_workbench (account_id, notificati
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (2,{$rental_internal},1250593658)");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (1,{$rental_in},1250593658)");
 $oProc->query("INSERT INTO rental_contract_last_edited VALUES (3,{$rental_out},1250593658)");
+*/
 
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('contract')");
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
