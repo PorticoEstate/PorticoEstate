@@ -12,29 +12,29 @@
 <div id="messageHolder"></div>
 
 <form action="index.php?menuaction=rental.uiimport.index" method="post">
-<fieldset>
-	<label for="path">Path to facilit dump:</label> <input type="text" name="facilit_path" id="facilit_path" value="<?php echo $facilit_path ?>" size="60"/>
-	<label for="path">Location for the imported contracts:</label>
-	<select name="location_id" id="location_id">
-		<?php
-		$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-		foreach($types as $id => $label)
-		{
-
-			$names = $this->locations->get_name($id);
-			if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+	<fieldset>
+		<label for="path">Path to facilit dump:</label> <input type="text" name="facilit_path" id="facilit_path" value="<?php echo $facilit_path ?>" size="60"/>
+		<label for="path">Location for the imported contracts:</label>
+		<select name="location_id" id="location_id">
+			<?php
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($types as $id => $label)
 			{
-				if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+	
+				$names = $this->locations->get_name($id);
+				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-				?>
-					<option value="<?php echo $id ?>"<?php if ($location_id == $id) { echo ' selected="selected"'; } ?>><?php echo lang($label) ?></option>
-				<?php
+					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+					{
+					?>
+						<option value="<?php echo $id ?>"<?php if ($location_id == $id) { echo ' selected="selected"'; } ?>><?php echo lang($label) ?></option>
+					<?php
+					}
 				}
 			}
-		}
-		?>
-	</select>
-	<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" <?php if ($button_label == "Import done") { echo ' disabled="disabled"'; } ?> />
+			?>
+		</select>
+		<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" <?php if ($button_label == "Import done") { echo ' disabled="disabled"'; } ?> />
 	</fieldset>
 	<fieldset>
 		<input type="submit" name="cancelsubmit" value="Cancel and reset import" />
