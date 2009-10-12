@@ -49,12 +49,12 @@
 		'<?php echo $list_id ?>_paginator'
 	);
 
-    function composite_export() {
+    function composite_export(compType) {
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
 
-        window.location = 'index.php?menuaction=rental.uicomposite.download'+
-            '&is_active='+availabilityoption+'<?php echo $url_add_on ?>';
+        window.location = 'index.php?menuaction=rental.uicomposite.download'+'<?php echo $url_add_on ?>'+
+            '&is_active='+availabilityoption+'&type='+compType;
     }
 </script>
 
