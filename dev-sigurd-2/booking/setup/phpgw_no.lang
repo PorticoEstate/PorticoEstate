@@ -1,0 +1,244 @@
+current activities	booking	no	Aktiviteter
+-- select an activity --	booking	no	Velg en aktivitet
+1. why?	booking	no	1. Hvorfor?
+2. where?	booking	no	2. Hvor?
+3. when?	booking	no	3. Når?
+4. who?	booking	no	4. Hvem?
+accept application	booking	no	Godta søknaden
+accepted	booking	no	Akseptert
+account	booking	no	Bruker
+actions	booking	no	Handling
+active	booking	no	Aktiv
+active applications	booking	no	Aktive søknader
+activity	booking	no	Aktivitet
+add a comment	booking	no	Legg til en kommentar
+add another date	booking	no	Legg til dato
+add boundary	booking	no	Legg til rammetid
+add comment	booking	no	Legg til kommentar
+add document	booking	no	Legg til dokument
+add new event	booking	no	Legg til arrangement
+add permission	booking	no	Legg til rettighet
+admin 1	booking	no	Bookingansvarlig 1
+admin 2	booking	no	Bookingansvarlig 2
+admins	booking	no	Bookingansvarliga
+age group	booking	no	Aldersgruppe
+agegroup	booking	no	Aldersgruppe
+allocation	booking	no	Tildeling
+allocations	booking	no	Tildelingar
+allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
+allocations that can be created (%1)	booking	no	Tildelingar som kan lages
+application	booking	no	Søknad
+applications	booking	no	Søknader
+apr	booking	no	april
+archived	booking	no	Arkivert
+audience	booking	no	Målgruppe
+aug	booking	no	august
+bookable resources	booking	no	Bookbare ressurser
+booking	booking	no	Booking
+booking district	booking	no	Bydel
+booking name	booking	no	Navn på booking
+bookings	booking	no	Bookinger
+boundaries	booking	no	Rammetid
+building	booking	no	Bygg/anlegg
+building name	booking	no	Bygg/anlegg
+building schedule	booking	no	Kalender
+buildings	booking	no	Bygg/anlegg
+bygning	booking	no	Bygg/anlegg
+cancel	booking	no	Avbryt
+cancelled	booking	no	Avbestilt
+case officer	booking	no	Saksbehandler
+category	booking	no	Kategori
+choose a date	booking	no	Velg dato
+choose a date	booking	no	Velg en dato
+choose file	booking	no	Velg dokument
+city	booking	no	Poststed
+click to sort ascending	booking	no	Klikk for å sortere stigende
+click to sort descending	booking	no	Klikk for å sortere synkende
+contact	booking	no	Kontakt
+contact 1	booking	no	Kontakt 1
+contact 2	booking	no	Kontakt 2
+contact information	booking	no	Kontaktinformasjon 
+cost	booking	no	Pris
+create	booking	no	Lagre
+created	booking	no	Opprettet
+dashboard	booking	no	Skrivebord
+day of the week	booking	no	Ukedag
+dec	booking	no	desember
+description	booking	no	Beskrivelse
+district	booking	no	Bydel
+document	booking	no	Dokument
+document name	booking	no	Dokumentnavn
+documents	booking	no	Dokumenter
+drawing	booking	no	Tegning
+edit	booking	no	Rediger
+edit agegroup group	booking	no	Rediger aldersgruppe
+edit allocation	booking	no	Rediger tildeling
+edit Audience group	booking	no	Rediger målgruppe
+edit booking	booking	no	Rediger booking
+edit event	booking	no	Rediger arrangement
+edit organization	booking	no	Rediger organisasjon
+editer	booking	no	Rediger
+equipment	booking	no	Utstyr
+equipment name	booking	no	Utstyr
+event	booking	no	Arrangement
+events	booking	no	Arrangementer
+feb	booking	no	februar
+female	booking	no	Kvinne
+filnavn	booking	no	Dokument
+found %1 results	booking	no	%1 treffer
+fr	booking	no	fr.
+from	booking	no	Fra
+generate allocations	booking	no	Lag tildelning
+generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
+go back to the template week	booking	no	Gå tilbake til ukeplan
+group	booking	no	Gruppe/Lag
+history and comments (%1)	booking	no	Historikk (%1)
+hms document	booking	no	HMS dokument
+homepage	booking	no	Hjemmeside
+id	booking	no	ID
+inactivate	booking	no	Inaktivert
+inactive	booking	no	Inaktiv
+invoice information	booking	no	Faktura informasjon 
+jan	booking	no	januar
+jul	booking	no	juli
+jun	booking	no	juni
+last modified	booking	no	Sist endret
+joading...	booking	no	Laster...
+location	booking	no	Lokale
+male	booking	no	Mann
+mar	booking	no	mars
+may	booking	no	mai
+mo	booking	no	ma.
+modified	booking	no	Endret
+more info	booking	no	Mer informasjon
+name	booking	no	Navn
+new	booking	no	Ny
+new activity	booking	no	Ny aktivitet
+new age group	booking	no	Ny aldersgruppe
+new allocation	booking	no	Ny tildelning
+new application	booking	no	Ny søknad
+new audience group	booking	no	Ny målgruppe
+new booking	booking	no	Ny booking
+new booking application	booking	no	Ny søknad
+new building	booking	no	Nytt bygg/anlegg
+new building permission	booking	no	Nye rettigheter bygg/anlegg
+new contact	booking	no	Ny kontakt
+new document	booking	no	Nye dokumenter
+new equipment	booking	no	Nytt utstyr
+new event	booking	no	Ny arrangement
+new group	booking	no	Ny gruppe
+new organization	booking	no	Ny organisajon
+new resource	booking	no	Ny ressurs
+new root permission	booking	no	Nye systemrettigheter
+new season	booking	no	Ny sesong
+new season permission	booking	no	Nye rettigheter sesong
+next	booking	no	Neste
+next week	booking	no	Neste uke
+no Data.	booking	no	Ingen treff.
+no description yet	booking	no	Beskrivelse manglar
+no parents	booking	no	Ingen overordnet
+no records found.	booking	no	Ingen treff.
+no records found.	booking	no	Inget funnet!
+nov	booking	no	november
+number of participants	booking	no	Antall deltakere
+oct	booking	no	oktober
+of	booking	no	av
+officer	booking	no	Saksbehandler
+organization	booking	no	Organisasjon
+organization number	booking	no	Organisasjonnummer
+organizations	booking	no	Organisasjoner
+other	booking	no	Annet
+parent activity	booking	no	Overordnet kategori
+parent id	booking	no	Overordnet id
+permissions	booking	no	Rettigheter
+phone	booking	no	Telefon
+picture	booking	no	Bilde
+planning	booking	no	Planlegging
+prev	booking	no	Forrige
+preview	booking	no	Forhåndsvisning
+previous week	booking	no	Forige uke
+price list	booking	no	Prisliste
+primary admin	booking	no	Kontaktperson 1
+primary contact	booking	no	Kontaktperson 1
+published	booking	no	Publisert
+reject application	booking	no	Avslå søknad
+rejected	booking	no	Avvist
+resource	booking	no	Ressurs
+resource name	booking	no	Ressurs
+resource schedule	booking	no	Ressurskalender
+resource type	booking	no	Type
+resources	booking	no	Ressurser
+role	booking	no	Rolle
+root permissions	booking	no	Systemrettigheter
+Sa	booking	no	lø.
+schedule	booking	no	Ukeplan
+season	booking	no	Sesong
+season name	booking	no	Sesong
+seasons	booking	no	Sesonger
+secondary admin	booking	no	Kontaktperson 2
+select a building first	booking	no	Velg bygg/anlegg først
+select category...	booking	no	Velg en kategori...
+select role...	booking	no	Velg rolle...
+sep	booking	no	september
+settings	booking	no	Innstillinger
+show only active	booking	no	Skjul
+showing items	booking	no	Viser
+showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
+social security number	booking	no	Fødselsnummer (11 siffer)
+Ssn	booking	no	Fødselsnummer (11 siffer)
+status	booking	no	Status
+street	booking	no	Gate
+su	booking	no	sø
+submit	booking	no	Lagre
+successfully created (%1) allocations:	booking	no	(%1) tildelingar lagret
+surname	booking	no	Etternavn
+target audience	booking	no	Målgruppe
+telephone	booking	no	Telefon
+terms and conditions	booking	no	Juridiske betingelser
+th	booking	no	to.
+to	booking	no	Til
+tu	booking	no	ti.
+upload document	booking	no	Last opp dokument
+user	booking	no	Bruker
+we	booking	no	on.
+week	booking	no	Uke
+week day	booking	no	Ukedag
+week template	booking	no	Ukeplan
+when	booking	no	Når
+when?	booking	no	Når?
+where	booking	no	Hvor
+where?	booking	no	Hvor?
+who	booking	no	Hvem
+who?	booking	no	Hvem?
+why	booking	no	Hvorfor
+why?	booking	no	Hvorfor?
+zip code	booking	no	Postnummer
+postal city	booking	no	Poststed
+team leaders	booking	no	Ansvarliga gruppledare
+team leader 1	booking	no	Ansvarlig gruppledare 1
+team leader 2	booking	no	Ansvarlig gruppledare 2
+regulation	booking	no	Reglemang
+Object No.	booking	no	Objektnr.
+Article	booking	no	Artikkel
+Unit No.	booking	no	Fagavdelningsnr.
+Unit Prefix	booking	no	Fagavdelnings kode (for buntnummeret)
+Invoice Instruction	booking	no	Topptekst til faktura
+Responsible Code	booking	no	Ansvarssted
+Service	booking	no	Tjeneste
+Project No.	booking	no	Prosjektnr.
+Account Codes	booking	no	Konteringsstrenger
+Account Codes	booking	no	Konteringsstreng
+New Account Codes	booking	no	Ny konteringsstreng
+- Actions -	booking	no	- Valg -
+Create allocation	booking	no	Lag tildeling
+Create booking	booking	no	Lag booking
+Create event	booking	no	Lag arrangement
+Loading...	booking	no	Laster...
+Back to season	booking	no	Gå tilbake til sesong
+Field %1 is required	booking	no	Feltet %1 kreves
+Download	booking	no	Last ner
+Invoice Data Exports	booking	no	Fakturaexporter
+Internal	booking	no	Intern
+External	booking	no	Extern
+Start date must be after %1	booking	no	Fradato må være etter %1
+To date must be before %1	booking	no	Tildato må være før %1
