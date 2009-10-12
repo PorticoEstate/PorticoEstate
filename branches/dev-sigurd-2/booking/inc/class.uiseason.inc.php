@@ -119,6 +119,8 @@
 			
 			foreach($seasons['results'] as &$season) {
 				$season['status'] = lang($season['status']);
+				$season['from_'] = pretty_timestamp($season['from_']);
+				$season['to_'] = pretty_timestamp($season['to_']);
 			}
 			
 			return $this->yui_results($seasons);
