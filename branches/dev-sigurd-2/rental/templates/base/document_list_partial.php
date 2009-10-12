@@ -79,6 +79,8 @@
 <?php
 	if($list_form)
 	{
+		if($editable)
+		{
 ?>
 <form enctype="multipart/form-data" action="?menuaction=rental.uidocument.add<?php echo $upload_url_add_on ?>" method="POST">
 	<fieldset>
@@ -98,6 +100,9 @@
 		<input type="submit" id="ctrl_upload_button" value="<?php echo lang('upload') ?>" />
 	</fieldset>
 </form>
+		<?php 
+		}
+		?>
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
 		<!-- Search -->
