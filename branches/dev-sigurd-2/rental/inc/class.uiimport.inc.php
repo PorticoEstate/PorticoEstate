@@ -6,6 +6,7 @@
 	phpgw::import_class('rental.sounit');
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
+	phpgw::import_class('rental.sonotification');
 	
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
@@ -14,6 +15,7 @@
 	include_class('rental', 'price_item', 'inc/model/');
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
+	include_class('rental', 'notification', 'inc/model/');
 
 	class rental_uiimport extends rental_uicommon
 	{
@@ -69,6 +71,7 @@
 				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 				phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
 				phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
+				phpgwapi_cache::session_clear('rental', 'facilit_events');
 				
 				$this->messages = array("Import reset");
 			}
@@ -94,26 +97,32 @@
 		 */
 		public function import()
 		{
+			$steps = 7;
 			// TODO: For each import type, check what we need as a minimum information for each before saving
+			
+			// TODO: Remove after testing
+			//phpgwapi_cache::session_set('rental', 'facilit_parties', true);
+			//phpgwapi_cache::session_set('rental', 'facilit_composites', true);
+			
 			
 			// Import rental parties
 			if (!phpgwapi_cache::session_get('rental', 'facilit_parties')) {
 				phpgwapi_cache::session_set('rental', 'facilit_parties', $this->import_parties());
-				$this->import_button_label = "Continue to import composites";
+				$this->import_button_label = "2/{$steps}: Continue to import composites";
 				return;
 			}
 			
 			// Import composites and units
 			if (!phpgwapi_cache::session_get('rental', 'facilit_composites')) {
 				phpgwapi_cache::session_set('rental', 'facilit_composites', $this->import_composites());
-				$this->import_button_label = "Continue to import composite-to-contract link table";
+				$this->import_button_label = "3/{$steps}: Continue to import composite-to-contract link table";
 				return;
 			}
 			
 			// Import composite to contract link table.  Assumes 1-1 link.
 			if (!phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')) {
 				phpgwapi_cache::session_set('rental', 'facilit_rentalobject_to_contract', $this->import_rentalobject_to_contract());
-				$this->import_button_label = "Continue to import contracts";
+				$this->import_button_label = "4/{$steps}: Continue to import contracts";
 				return;
 			}
 			
@@ -123,7 +132,7 @@
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
 				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties));
-				$this->import_button_label = "Continue to import contract price items";
+				$this->import_button_label = "5/{$steps}: Continue to import contract price items";
 				return;
 			}
 			
@@ -131,15 +140,23 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contract_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
-				$this->import_button_label = "Continue to import composite price items"; // Not really - events will be after this
+				$this->import_button_label = "6/{$steps}: Continue to import composite price items"; // Not really - events will be after this
 				return;
 			}
 			
-		// Import price items
+			// Import price items
 			if (!phpgwapi_cache::session_get('rental', 'facilit_composite_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_set('rental', 'facilit_composite_price_items', $this->import_composite_price_items($contracts, $rentalobject_to_contract));
+				$this->import_button_label = "7/{$steps}: Continue to import events";
+				return;
+			}
+			
+			// Import events
+			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
+				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
+				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
 				$this->import_button_label = "Import done";
 				//return;
 			}
@@ -150,7 +167,7 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
-			phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
+			phpgwapi_cache::session_clear('rental', 'facilit_facilit_events');
 		}
 		
 		protected function import_parties()
@@ -473,6 +490,8 @@
 			}
 			
 			fclose($handle);
+			
+			return true;
 		}
 		
 		protected function import_composite_price_items($contracts, $rentalobject_to_contract)
@@ -564,14 +583,60 @@
 					rental_socontract_price_item::get_instance()->store($price_item);
 					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
-					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
+					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 				
 				
 			}
 			
 			fclose($handle);
+			
+			return true;
 		}
+		
+		protected function import_events($contracts)
+		{			
+			$handle = fopen($this->path . "/u_Hendelse.csv", "r");
+			
+			// Read the first line to get the headers out of the way
+			$this->getcsv($handle);
+			
+			while(($data = $this->getcsv($handle)) !== false) {
+				$type_id = $data[2];
+				
+				// We do not import adjustments.  And only import if there is a title.
+				if ($type_id != 1 && $type_id != '1' && !$this->is_null($data[3])) {
+					$date = strtotime($this->decode($data[7]));
+					$contract_id = $contracts[$data[1]];
+					$location_id = phpgw::get_var("location_id");
+					
+					$title = $this->decode($data[3]);
+					if (!$this->is_null($data[4])) {
+						$title .= " " . $this->decode($data[4]);
+					}
+					
+					$repeating = ($data[7] == '0');
+					$interval = $data[8];
+					
+					if ($repeating && ($interval > 1) || ($contract_id == 0)) {
+						$this->warnings[] = "Skipping price item " . $data[0] . " because the repeat interval is larger than 1 year or it has no contract.";
+					} else {
+						// All is good, store notification
+						$notification = new rental_notification(null, null, $location_id, $contract_id, $date, $title);
+						if (rental_sonotification::get_instance()->store($notification)) {
+							$this->messages[] = "Successfully imported event '" . $notification->get_message() . "'";
+						} else {
+							$this->errors[] = "Error importing event " . $notification->get_message();
+						}
+					}
+				} else {
+					$this->warnings[] = "Skipping price item " . $data[0] . " because it has no title or is an adjustment (regulering).";
+				}
+			}
+			
+			return true;
+		}
+			
 		
 		/**
 		 * Read the next line from the given file handle and parse it to CSV according to the rules set up
