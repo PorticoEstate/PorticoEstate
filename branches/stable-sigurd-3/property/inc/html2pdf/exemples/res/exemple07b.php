@@ -1,9 +1,10 @@
 <page orientation="paysage" footer="">
+	<bookmark title="Document" level="0" ></bookmark>
 	<a name="document_reprise"></a>
 	<table cellspacing="0" style="width: 100%;">
 		<tr>
 			<td style="width: 10%;">
-				<img style="width: 100%" src="../_fpdf/tutorial/logo.png" alt="Logo fpdf" >
+				<img style="width: 100%" src="./res/logoHTMLtoPDF.gif" alt="Logo fpdf" >
 			</td>
 			<td style="width: 80%; text-align: center; text-decoration: underline; font-weight: bold; font-size: 20pt;">
 				<span style="font-size: 10pt"><br></span>
@@ -37,7 +38,7 @@
 			<td style="width: 4%"></td>
 			<td style="width: 37% ">
 				<table cellspacing="0" style="width: 100%; border: solid 2px #000000; font-size: 12pt;">
-					<tr><td style="width: 40%;">Référence  :	</td><td style="width: 60%;">71326</td></tr>
+					<tr><td style="width: 40%;">Référence :		</td><td style="width: 60%;">71326</td></tr>
 					<tr><td style="width: 40%;">Client :		</td><td style="width: 60%;">M. Albert Dupont</td></tr>
 					<tr><td style="width: 40%;">Adresse :		</td><td style="width: 60%;">Résidence perdue<br>1, rue sans nom<br>00 000 - Pas de Ville</td></tr>
 					<tr><td style="width: 40%;">TEL : 			</td><td style="width: 60%;">33 (0) 1 00 00 00 00</td></tr>
@@ -58,17 +59,15 @@
 			<td style="width:55%;">
 				<table cellspacing="0" style="padding: 1px; width: 100%; border: solid 2px #000000; font-size: 11pt; ">
 					<tr>
-						<th style="width: 100%; text-align: center; border: solid 1px #000000;">
+						<th style="width: 100%; text-align: center; border: solid 1px #000000;" colspan="4">
 							Partie réservée à Spipu Corp
 						</th>
 					</tr>
 					<tr>
-						<th style="width: 100%; text-align: center; border: solid 1px #000000;">
+						<th style="width: 100%; text-align: center; border: solid 1px #000000;" colspan="4">
 							QUANTITE PREVUE AU CHARGEMENT
 						</th>
 					</tr>
-				</table>
-				<table cellspacing="0" style="padding: 1px; width: 100%; border: solid 2px #000000; text-align: center; font-size: 10pt">
 					<tr>
 						<th style="width: 15%; border: solid 1px #000000;">Produit</th>
 						<th style="width: 55%; border: solid 1px #000000;">Designation</th>
@@ -132,17 +131,15 @@ $i=0;
 			<td style="width: 37%;">
 				<table cellspacing="0" style="padding: 1px; width: 100%; border: solid 2px #000000; font-size: 11pt; ">
 					<tr>
-						<th style="width: 100%; text-align: center; border: solid 1px #000000;">
+						<th style="width: 100%; text-align: center; border: solid 1px #000000;" colspan="2">
 							Partie réservée à l'entrepôt
 						</th>
 					</tr>
 					<tr>
-						<th style="width: 100%; text-align: center; border: solid 1px #000000;">
+						<th style="width: 100%; text-align: center; border: solid 1px #000000;" colspan="2">
 							QUANTITE PREVUE AU CHARGEMENT
 						</th>
 					</tr>
-				</table>
-				<table cellspacing="0" style="padding: 1px; width: 100%; border: solid 2px #000000; text-align: center; font-size: 10pt">
 					<tr>
 						<th style="width: 50%; border: solid 1px #000000;">Produit neuf				</th>
 						<th style="width: 50%; border: solid 1px #000000;">Produit à reconditionner	</th>

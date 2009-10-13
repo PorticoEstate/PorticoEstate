@@ -4,7 +4,7 @@ err03	Código HTML no válido, una etiqueta tiene un cierre de más : <b>&lt;[[OTHE
 err04	Código HTML no válido, las etiquetas no estan cerradas en el orden correcto.<br>Estado : <pre>[[OTHER]]</pre>
 err05	Código HTML no válido, todas las etiquetas deben tener su cierre.<br>Estado : <pre>[[OTHER]]</pre>
 err06	Imposible cargar la imagen <b>[[OTHER]]</b>
-err07	El contenido de una etiqueta DT no encaja en una sola página
+err07	El contenido de una etiqueta TD no encaja en una sola página
 txt01	ERROR n°
 txt02	Fichero :
 txt03	Línea :
@@ -12,3 +12,8 @@ pdf01	Documento generado el [[date_d]]/[[date_m]]/[[date_y]]
 pdf02	Documento generado a las [[date_h]]:[[date_i]]
 pdf03	Documento generado el [[date_d]]/[[date_m]]/[[date_y]] a las [[date_h]]:[[date_i]]
 pdf04	Página [[current]]/[[nb]]
+pdf05	Los formularios requieren el uso de Adobe Reader 9
+vue01	ENCABEZADO
+vue02	PIE DE PÁGINA
+vue03	PÁGINA
+vue04	Visualización
