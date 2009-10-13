@@ -43,9 +43,9 @@
                 <div class="autocomplete">
                 <select name="parent_id" id="field_parent_id">
                 <option value="0"><xsl:value-of select="php:function('lang', 'No parent')"/></option>
-                <xsl:for-each select="dropdown/results">
+                <xsl:for-each select="activities">
                 				<option>
-								<xsl:if test="../../activity/parent_id = id">
+								<xsl:if test="../activity/parent_id = id">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 								</xsl:if>
                 				<xsl:attribute name="value">
