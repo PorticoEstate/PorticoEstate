@@ -809,10 +809,10 @@
 		}
 
 		/**
-		* Convert a date string to a unix timestamp
+		* Convert a date string to an array containing date parts
 		*
 		* @param string $datestr the date string to convert - must match user's preferred date format
-		* @return int unix timestamp
+		* @return array date parts: year,month and day
 		*/
 		public static function date_array($datestr)
 		{

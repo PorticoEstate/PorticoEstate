@@ -596,7 +596,6 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'cat_id'				=> $this->db->f('category'),
-					'event_id'				=> $this->db->f('event_id'),
 					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
 				);
 			}
@@ -844,14 +843,13 @@
 				$workorder['charge_tenant'],
 				$this->account,
 				$workorder['ecodimb'],
-				$workorder['cat_id'],
-				$workorder['event_id']
+				$workorder['cat_id']
 			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,event_id $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -957,8 +955,7 @@
 				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
 				'ecodimb'		=> $workorder['ecodimb'],
-				'category'		=> $workorder['cat_id'],
-				'event_id'		=> $workorder['event_id']
+				'category'		=> $workorder['cat_id']
 			);
 
 			if($workorder['status'] == 'closed')

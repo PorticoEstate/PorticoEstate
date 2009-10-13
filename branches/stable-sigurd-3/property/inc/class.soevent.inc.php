@@ -27,6 +27,11 @@
  	* @version $Id$
 	*/
 
+	/*
+	 * Import the datetime class for date processing
+	 */
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -45,30 +50,36 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$type		= isset($data['type']) ? $data['type'] : '';
-				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
-			}
 
-			$standard = array();
-			if (!$table = $this->select_table($type))
+			if(!isset($data['location_id']) || !$data['location_id'])
 			{
-				return $standard;
-			}
-
-			if ($order)
-			{
-				$ordermethod = " ORDER BY $order $sort";
+				if(!isset($data['appname']) || !$data['appname'] || !isset($data['location']) || !$data['location'])
+				{
+					throw new Exception("property_soevent::read - Missing location info in input");
+				}
+				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id ASC';
+				$location_id = $data['location_id'];
 			}
+
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+
+			if(!isset($data['location_item_id']) || !$data['location_item_id'])
+			{
+				throw new Exception("property_soevent::read - Missing location_item_id in input");
+			}
+
+			$location_item_id	= $data['location_item_id'];
+
+			$events = array();
+
+			$table = 'fm_event';
 
 			if($query)
 			{
@@ -93,13 +104,13 @@
 
 			while ($this->_db->next_record())
 			{
-				$standard[] = array
+				$events[] = array
 				(
 					'id'	=> $this->_db->f('id'),
 					'descr'	=> $this->_db->f('descr')
 				);
 			}
-			return $standard;
+			return $events;
 		}
 
 		function read_single($id)
@@ -114,14 +125,16 @@
 
 			if ($this->_db->next_record())
 			{
+				$start_date		= $this->_db->f('start_date');
+				$end_date		= $this->_db->f('end_date');				
 				$values = array
 				(
 					'id'				=> $this->_db->f('id'),
 					'descr'				=> $this->_db->f('descr', true),
-					'start_date'		=> $this->_db->f('start_date'),
+					'start_date'		=> $start_date,
 					'responsible'		=> $this->_db->f('responsible_id'),
 					'action'			=> $this->_db->f('action_id'),
-					'end_date'			=> $this->_db->f('end_date'),
+					'end_date'			=> $end_date,
 					'repeat_type'		=> $this->_db->f('repeat_type'),
 					'rpt_day'			=> $this->_db->f('repeat_day'),
 					'repeat_interval'	=> $this->_db->f('repeat_interval'),
@@ -133,7 +146,30 @@
 					'location_item_id'	=> $this->_db->f('location_item_id'),
 					'attrib_id'			=> $this->_db->f('attrib_id')
 				);
+
+				$values['start']['month']	= date('m',$start_date);
+				$values['start']['mday']	= date('d',$start_date);
+				$values['start']['year']	= date('Y',$start_date);
+				$values['start']['hour']	= date('G',$start_date);
+				$values['start']['min']		= date('i',$start_date);
+				$values['start']['sec']		= date('s',$start_date);
+
+				$values['end']['month']	= $end_date ? date('m',$end_date) : 0;
+				$values['end']['mday']	= $end_date ? date('d',$end_date) : 0;
+				$values['end']['year']	= $end_date ? date('Y',$end_date) : 0;
+				$values['end']['hour']	= $end_date ? date('G',$end_date) : 0;
+				$values['end']['min']	= $end_date ? date('i',$end_date) : 0;
+				$values['end']['sec']	= $end_date ? date('s',$end_date) : 0;
+
+				$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$id}'";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while ($this->_db->next_record())
+				{
+					$values['repeat_exception'][] = $this->_db->f('exception_time');
+				}
 			}
+
 			return $values;
 		}
 
@@ -296,5 +332,129 @@
 			}
 			return false;
 		}
-	}
 
+		//FIXME adapt from calendar	
+		function list_events($data = array())
+		{
+			$startYear		= $data['syear'];
+			$startMonth		= $data['smonth'];
+			$startDay		= $data['sday'];
+			$endYear		= $data['eyear'] ? $data['eyear'] : 0;
+			$endMonth		= $data['emonth'] ? $data['emonth'] : 0;
+			$endDay			= $data['eday'] ? $data['eday'] : 0;
+			$extra			= $data['eday'] ? $data['eday'] : '';
+			$tz_offset		= $data['tz_offset'] ? $data['tz_offset'] : 0;
+			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id	= $data['location_id'];
+
+			if(!$startYear || !$startMonth || !$startDay || ! $location_id)
+			{
+				throw new Exception("property_soevent::list_events - Missing start date info");
+			}
+
+			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
+		
+			$sql = ' WHERE (fm_event.user_id in (';
+			if($owner_id)
+			{
+				$sql .= implode(',',$owner_id);
+			}
+			else
+			{
+				$sql .= $this->account;
+			}
+			$member_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
+			@reset($member_groups);
+			foreach ($member_groups as $key => $group_info)
+			{
+				$member[] = $group_info->id;		
+			}
+
+			@reset($member);
+	//		$sql .= ','.implode(',',$member);
+			$sql .= ')) ';
+
+			$sql .= 'AND ( ( (fm_event.start_date >= '.$datetime.') ';
+
+			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
+			{
+				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
+				$sql .= 'AND (fm_event.end_date <= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date <= '.$datetime.') '
+					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date >= '.$datetime.') '
+					. 'AND (fm_event.start_date <= '.$edatetime.') '
+					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
+					. 'OR ( (fm_event.start_date <= '.$datetime.') '
+					. 'AND (fm_event.end_date >= '.$datetime.') '
+					. 'AND (fm_event.end_date <= '.$edatetime.') ';
+			}
+			$sql .= ") ) AND location_id = {$location_id}";
+
+			$order_by = ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
+
+			return $this->get_event_ids(False,$sql.$extra.$order_by);
+		}
+
+		function list_repeated_events($data = array())
+		{
+			$syear			= $data['syear'];
+			$smonth			= $data['smonth'];
+			$sday			= $data['sday'];
+			$eyear			= $data['eyear'];
+			$emonth			= $data['emonth'];
+			$eday			= $data['eday'];
+			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id	= $data['location_id'];
+
+			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || ! $location_id)
+			{
+				throw new Exception("property_soevent::list_repeated_events - Missing date info");
+			}
+
+			$user_timezone = phpgwapi_datetime::user_timezone();
+
+			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
+			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
+			$sql = "(fm_event.location_id = {$location_id})"
+				. ' AND ((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0))'
+				. ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
+
+			return $this->get_event_ids(true, $sql);
+		}
+
+		function get_event_ids($search_repeats = false, $extra = '')
+		{
+	//		$where = 'WHERE';
+			$repeat = '';
+			if($search_repeats)
+			{
+				$repeat = 'WHERE (fm_event.repeat_type > 0) ';
+				$where = 'AND';
+			}
+
+			$sql = 'SELECT DISTINCT fm_event.id,'
+					. ' fm_event.start_date,fm_event.end_date'
+					. " FROM fm_event {$repeat} {$where} {$extra}";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$retval = array();
+			if($this->_db->num_rows() == 0)
+			{
+				return $retval;
+			}
+	
+			while($this->_db->next_record())
+			{
+				$retval[] = intval($this->_db->f('id'));
+			}
+			if($this->debug)
+			{
+				echo "Records found!<br />\n";
+			}
+			return $retval;
+		}
+
+
+	}

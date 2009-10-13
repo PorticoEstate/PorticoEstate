@@ -27,13 +27,14 @@
  	* @version $Id$
 	*/
 	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('property.uicommon');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_uievent
+	class property_uievent extends property_uicommon
 	{
 		var $grants;
 		var $start;
@@ -46,14 +47,17 @@
 
 		var $public_functions = array
 		(
-			'index'  => true,
-			'view'   => true,
-			'edit'   => true,
-			'delete' => true
+			'index'		=> true,
+			'view'		=> true,
+			'edit'		=> true,
+			'delete'	=> true,
+			'schedule'	=> true,
+			'schedule_week'	=> true
 		);
 
 		function __construct()
 		{
+			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boevent',true);
@@ -527,6 +531,15 @@
 				'id'			=> $id
 			);
 
+			$link_schedule_data = array
+			(
+				'menuaction'	=> 'property.uievent.schedule_week',
+				'location'		=> $location,
+				'attrib_id'		=> $attrib_id,
+				'item_id'		=> $item_id,
+				'id'			=> $id
+			);
+
 //_debug_array($link_data);
 
 			$tabs = array();
@@ -548,6 +561,7 @@
 
 			$data = array
 			(
+				'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
 				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'			=> lang('Select date'),
 
@@ -621,5 +635,41 @@
 
 			return $this->bo->delete($id);
 		}
+
+
+		public function schedule()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$id = phpgw::get_var('id', 'int', 'GET');
+
+			$resource = $this->bo->read_single($id);
+			$resource['cols'][] = array('label' => lang('date'), 'key' => 'date');
+
+			$lang['resource_schedule'] = lang('Resource schedule');
+			$lang['schedule'] = lang('Schedule');
+			$lang['time'] = lang('Time');
+
+			self::add_javascript('property', 'yahoo', 'schedule.js');
+			self::render_template('event_schedule', array('resource' => $resource, 'lang' => $lang));
+		}
+
+		public function schedule_week()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$id = phpgw::get_var('id', 'int', 'GET');
+			$resource = $this->bo->init_schedule_week($id, 'property.uievent', 'property.uievent');
+
+			$lang['resource_schedule'] = lang('Resource schedule');
+			$lang['prev_week'] = lang('Previous week');
+			$lang['next_week'] = lang('Next week');
+			$lang['week'] = lang('Week');
+			$lang['buildings'] = lang('Buildings');
+			$lang['schedule'] = lang('Schedule');
+			$lang['time'] = lang('Time');
+
+			self::add_javascript('property', 'yahoo', 'schedule.js');
+			self::render_template('event_schedule_week', array('resource' => $resource, 'lang' => $lang));
+		}
+
 	}
 
