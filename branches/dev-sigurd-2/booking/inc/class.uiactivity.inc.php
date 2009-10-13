@@ -29,6 +29,10 @@
 			{
 				foreach($children[$parent_id] as $activity)
 				{
+					if($activity['active'] == false)
+					{
+						continue;
+					}
 					$node = array(
 						"type"=>"text", 
 						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 
@@ -51,9 +55,9 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
-			$resources = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
+			$activities = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
 			$children = array();
-			foreach($resources['results'] as $activity)
+			foreach($activities['results'] as $activity)
 			{
 				if(!array_key_exists($activity['id'], $children))
 				{
@@ -76,9 +80,9 @@
 
 		public function index_json()
 		{
-			$resources = $this->bo->read();
-			array_walk($resources["results"], array($this, "_add_links"), "booking.uiactivity.show");
-			return $this->yui_results($resources);
+			$activities = $this->bo->read();
+			array_walk($activities["results"], array($this, "_add_links"), "booking.uiactivity.show");
+			return $this->yui_results($activities);
 		}
 
 		public function add()
@@ -111,8 +115,6 @@
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
 			$dropdown = $this->bo->read();
 			$activity['id'] = $id;
-			$activity['resource_link'] = self::link(array('menuaction' => 'booking.uiactivity.show', 'id' => $activity['id']));
-			$activity['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$activity['activities_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
 			$activity['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$errors = array();
@@ -122,7 +124,7 @@
 				{
 					$_POST['parent_id'] = null;
 				}
-								$activity = array_merge($activity, extract_values($_POST, array('name', 'description', 'parent_id')));
+				$activity = array_merge($activity, extract_values($_POST, array('name', 'active', 'description', 'parent_id')));
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{

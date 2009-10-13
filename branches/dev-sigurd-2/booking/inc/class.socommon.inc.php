@@ -196,8 +196,8 @@
 		{
 			$type = strtolower($type);
 			if( 
-				 ($value === null || $value == $this->db_null) 
-				 || ($type != 'string' && strlen(trim($value)) === 0) /* phpgw always returns empty strings (i.e '') for null values */
+				 ($value === null)
+				 || ($type != 'string' && (strlen(trim($value)) === 0)) /* phpgw always returns empty strings (i.e '') for null values */
 			  ) 
 			{				
 				return null;

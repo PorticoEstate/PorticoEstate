@@ -6,6 +6,7 @@
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => TRUE),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => FALSE),
 				'description' => array('type' => 'varchar','precision' => '10000','nullable' => FALSE),
+				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 			),
 			'pk' => array('id'),
 			'fk' => array(
