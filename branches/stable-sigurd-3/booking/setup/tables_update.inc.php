@@ -1847,3 +1847,18 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.74';
+	function booking_upgrade0_1_74()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"ALTER TABLE bb_activity ADD COLUMN active INT DEFAULT 1 NOT NULL"
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.75';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

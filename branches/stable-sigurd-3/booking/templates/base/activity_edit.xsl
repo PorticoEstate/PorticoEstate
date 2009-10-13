@@ -13,6 +13,23 @@
                     <xsl:attribute name="value"><xsl:value-of select="activity/name"/></xsl:attribute>
                 </input>
             </dd>
+            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')" /></label></dt>
+            <dd>
+                <select id="field_active" name="active">
+                    <option value="1">
+                    	<xsl:if test="activity/active=1">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Active')" />
+                    </option>
+                    <option value="0">
+                    	<xsl:if test="activity/active=0">
+                    		<xsl:attribute name="selected">checked</xsl:attribute>
+                    	</xsl:if>
+                        <xsl:value-of select="php:function('lang', 'Inactive')" />
+                    </option>
+                </select>
+            </dd>
             
             <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')"/></label></dt>
             <dd>
@@ -26,9 +43,9 @@
                 <div class="autocomplete">
                 <select name="parent_id" id="field_parent_id">
                 <option value="0"><xsl:value-of select="php:function('lang', 'No parent')"/></option>
-                <xsl:for-each select="dropdown/results">
+                <xsl:for-each select="activities">
                 				<option>
-								<xsl:if test="../../activity/parent_id = id">
+								<xsl:if test="../activity/parent_id = id">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 								</xsl:if>
                 				<xsl:attribute name="value">

@@ -112,6 +112,7 @@
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
 			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('calendar');
@@ -305,6 +306,7 @@
 			$data['yui_booking_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
+					'WEEKDAYS_FULL' => json_encode(lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
 					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 				),
 				'DataTable' => array(
@@ -323,6 +325,9 @@
 				),
 				'common' => array(
 					'LBL_NAME' => json_encode(lang('Name')),
+					'LBL_TIME' => json_encode(lang('Time')),
+					'LBL_WEEK' => json_encode(lang('Week')),
+					'LBL_RESOURCE' => json_encode(lang('Resource')),
 				),
 			);
 		}
@@ -414,6 +419,9 @@
 			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable' => $results['total_records'], 
+					'startIndex' => $results['start'], 
+					'sortKey' => $results['sort'], 
+					'sortDir' => $results['dir'], 
 					'Result' => $results['results']
 				)   
 			);  

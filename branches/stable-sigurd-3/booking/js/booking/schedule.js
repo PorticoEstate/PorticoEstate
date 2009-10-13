@@ -105,3 +105,66 @@ YAHOO.booking.scheduleRowFormatter = function(elTr, oRecord) {
 	}
 	return true; 
 };
+
+YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, includeResource) {
+	var container = YAHOO.util.Dom.get(container);
+	container.innerHTML = '';
+	url += '&date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+
+	var lang = {
+		WEEKDAYS_FULL: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+		MONTHS_LONG: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		LBL_TIME: 'Time',
+		LBL_RESOURCE: 'Resource',
+		LBL_WEEK: 'Week'
+	};
+	YAHOO.booking.lang('Calendar', lang);
+	YAHOO.booking.lang('common', lang);
+	YAHOO.booking.oButton.set('label', lang['LBL_WEEK'] + ' ' + YAHOO.booking.weeknumber(date));
+
+	var colDefs = [{key: 'time', label: date.getFullYear() +'<br/>' + lang['LBL_TIME']}];
+	if(includeResource)
+		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: YAHOO.booking.scheduleResourceColFormatter});
+    var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	for(var i=0; i < 7; i++) {
+		var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		d.setDate(d.getDate() + i);
+		var x = i < 6 ? i+1: 0;
+		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br/>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter});
+	}
+	YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
+		formatRow: YAHOO.booking.scheduleRowFormatter
+	}, true);
+}
+YAHOO.booking.prevWeek = function() {
+	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() - 7);
+	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
+	YAHOO.util.History.navigate('date', state);
+}
+YAHOO.booking.nextWeek = function() {
+	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() + 7);
+	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
+	YAHOO.util.History.navigate('date', state);
+}
+YAHOO.booking.setupWeekPicker = function(container) {
+	var Dom = YAHOO.util.Dom;
+	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
+	var oButton = new YAHOO.widget.Button({type: "menu", id: Dom.generateId(), menu: oCalendarMenu, container: container});
+	YAHOO.booking.oButton = oButton;
+	oButton.on("appendTo", function () {
+		oCalendarMenu.setBody(" ");
+		oCalendarMenu.body.id = Dom.generateId();
+	});
+	oButton.on("click", function () {
+		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), oCalendarMenu.body.id, {START_WEEKDAY: 1});
+		oCalendar.cfg.setProperty("pagedate", (YAHOO.booking.date.getMonth()+1) + "/" + YAHOO.booking.date.getFullYear());
+		oCalendar.render();
+		oCalendar.selectEvent.subscribe(function (p_sType, p_aArgs) {
+			if (p_aArgs) {
+				var aDate = p_aArgs[0][0];
+				YAHOO.util.History.navigate('date', aDate[0] + '-' + aDate[1] + '-' + aDate[2]);
+			}
+			oCalendarMenu.hide();
+		}, this, true);
+	});
+}

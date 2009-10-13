@@ -16,6 +16,8 @@
 </func:function>
 
 <xsl:template match="data">
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
@@ -175,20 +177,6 @@
 		</xsl:attribute>
         <xsl:apply-templates select="toolbar"/>
 	</form>
-	
-	<script type="text/javascript">
-	YAHOO.booking.preSerializeQueryFormListeners = new Array();
-	
- 	YAHOO.booking.addPreSerializeQueryFormListener = function(func) {
-		YAHOO.booking.preSerializeQueryFormListeners.push(func);
-	}
-	
-	YAHOO.booking.preSerializeQueryForm = function(form) {
-		for (var key in YAHOO.booking.preSerializeQueryFormListeners) {
-			YAHOO.booking.preSerializeQueryFormListeners[key](form);
-		}
-	}
-	</script>
 </xsl:template>
 
 <xsl:template match="datatable">

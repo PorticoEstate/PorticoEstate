@@ -4,6 +4,7 @@ body {
     text-align: left;
     background: white;
 }
+button { padding: .3em .6em; margin: .4em 0;}
 a:link, a:visited { color: black;}
 div#wrapper {}
 ul#metanav {
@@ -11,20 +12,18 @@ ul#metanav {
     list-style-type: none;
 	padding-top: 10px;
 }
-ul#sidebar {
-    float: left;
-    padding-left: 17px;
-	padding-top: 10px;
-    margin-left: 0;
-}
-ul#sidebar li {
-    list-style-type: none;
-}    
 ul#metanav a, ul#sidebar a { color: #700; }
 div#content {
-    margin: 0 2em 2em 150px;
+    margin: 0 2em;
     min-height: 500px;
 }
+#header-search  { 
+    float: right;
+    margin: -1.5em 1em 1em 1em;
+}
+#header-search.hidden  { display: none; }
+#header-search .query { width: 15em;}
+
 div#header {
     background: url(../images/header_bg.png) repeat-x;
     height: 129px;
@@ -50,7 +49,11 @@ ul.nav a { color: inherit; }
 ul.nav li { display: inline;}
 ul.nav li:before { content: '⇒ '; font-size: 90%; color: #444;}
 ul.nav li:first-child:before { display: none; }
-
+#login-bar {
+    clear: right;
+    float: right;
+    padding: .5em 1em 0 0;
+}
 form#search {
     text-align: center;
     padding-top: 5em;
@@ -166,11 +169,16 @@ div#help h2 {
 
 
 #cloud {
+    text-align: center;
     list-style-type: none;
     padding-left: 0;
     color: #888;
     margin: 3em 0;
+    font-size: 120%;
 }
+#cloud div { padding: .2em};
+#cloud strong { padding: .2em};
+
 #cloud li { display: inline; white-space: nowrap; padding: 0 .2em;}
 #cloud li.small { font-size: 100%;}
 #cloud li.medium { font-size: 130%;}

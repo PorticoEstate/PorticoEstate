@@ -176,7 +176,7 @@
 				{
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
-					$this->bo->send_notification($application, true);
+					$this->bo->send_notification($application, false);
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}

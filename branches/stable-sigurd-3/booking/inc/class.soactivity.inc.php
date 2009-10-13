@@ -10,7 +10,8 @@
 					'id'	=>		array('type' => 'int'),
 					'parent_id'	=>	array('type' => 'int', 'required' => false),
 					'name'	=>		array('type' => 'string',	'query' => true, 'required' => true),
-					'description'	=>	array('type' => 'string', 'query' => true)
+					'description'	=>	array('type' => 'string', 'query' => true),
+					'active' => array('type' => 'int', 'required' => true)
 				)
 			);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];

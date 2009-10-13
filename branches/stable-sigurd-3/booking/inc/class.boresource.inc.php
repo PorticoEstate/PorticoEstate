@@ -150,7 +150,7 @@
             else {
                 $resource['buildings_link'] = self::link(array('menuaction' => $buildingmodule . '.index'));
             }
-			$resource['building_link'] = self::link(array('menuaction' => $buildingmodule . '.show', 'id' => $resource['building_id']));
+			$resource['building_link'] = self::link(array('menuaction' => $buildingmodule . '.schedule', 'id' => $resource['building_id']));
 			$resource['resource_link'] = self::link(array('menuaction' => $resourcemodule . '.show', 'id' => $resource['id']));
 			$resource['date'] = $date->format('Y-m-d');
 			$resource['week'] = intval($date->format('W'));

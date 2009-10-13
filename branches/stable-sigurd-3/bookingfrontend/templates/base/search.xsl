@@ -32,6 +32,22 @@
       </div>
     </form>
 	
+	<xsl:if test="not(search)">	
+		<div id="cloud">
+			<div>Velkommen til <strong>Bergen kommunes</strong> bestillersystem.</div>
+			<div>Her finner du informasjon om bygg, anlegg</div>
+			<div>som leies ut av <strong>Kultur</strong> og <strong>idrett</strong>.</div>
+			<div>Bruk <strong>søkefeltet</strong> til å finne det du ønsker informasjon om.</div>
+			<div>Det enkelte bygg, anlegg har en <strong>kalender</strong> hvor du får</div>
+			<div>ovrsikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
+			<div>Ønsker du å søke om leie/bruk gjør du det fra kalendern.</div>
+		
+			<div>Du kan også finne <strong>informasjon</strong> om aktiviteter,</div>
+			<div>åpen hall, <strong>publikumstid</strong> i svømmehaller og <strong>kulturarrangementer</strong>.</div>
+		
+		</div>
+	</xsl:if>
+	
 	<xsl:if test="search">	
  	   <div id="result">
 	      <h5>

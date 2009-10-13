@@ -22,19 +22,23 @@
 			self::set_active_menu('booking::settings::activity');
 		}
 		
-		function treeitem($children, $parent_id)
+		function treeitem($children, $parent_id, $show_all)
 		{
 			$nodes = array();
 			if(is_array($children[$parent_id]))
 			{
 				foreach($children[$parent_id] as $activity)
 				{
+					if($activity['active'] == false && $show_all == false)
+					{
+						continue;
+					}
 					$node = array(
 						"type"=>"text", 
 						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit', 
 						                           'id' => $activity['id'])), 'target' => '_self', 
 						                           'label' => $activity['name'], 
-						                           'children' => $this->treeitem($children, $activity['id'])
+						                           'children' => $this->treeitem($children, $activity['id'], $show_all)
 					);
 					if (!$this->bo->allow_write($activity)) {
 						unset($node['href']);
@@ -48,12 +52,10 @@
 		
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
-			}
-			$resources = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
+			$show_all = phpgw::get_var('show_all') || false;
+			$activities = $this->bo->so->read(array('sort'=>'name', 'dir'=>'ASC'));
 			$children = array();
-			foreach($resources['results'] as $activity)
+			foreach($activities['results'] as $activity)
 			{
 				if(!array_key_exists($activity['id'], $children))
 				{
@@ -65,20 +67,17 @@
 				}				
 				$children[$activity['parent_id']][] = $activity;
 			}
-			$treedata = json_encode($this->treeitem($children, null));
+			$treedata = json_encode($this->treeitem($children, null, $show_all));
 			phpgwapi_yui::load_widget('treeview');
+			$links = array(
+				'show_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => 'true')),
+				'hide_inactive' => self::link(array('menuaction' => 'booking.uiactivity.index', 'show_all' => ''))
+			);
 			if ($this->bo->allow_create())
 			{
-				$navi['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
+				$links['add'] = self::link(array('menuaction' => 'booking.uiactivity.add'));
 			}
-			self::render_template('activities', array('treedata' => $treedata, 'navi' => $navi));
-		}
-
-		public function index_json()
-		{
-			$resources = $this->bo->read();
-			array_walk($resources["results"], array($this, "_add_links"), "booking.uiactivity.show");
-			return $this->yui_results($resources);
+			self::render_template('activities', array('treedata' => $treedata, 'links' => $links, 'show_all' => $show_all));
 		}
 
 		public function add()
@@ -91,6 +90,7 @@
 					$_POST['parent_id'] = null;
 				}
 				$activity = extract_values($_POST, array('name', 'description', 'parent_id'));
+				$activity['active'] = '1';
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{
@@ -99,9 +99,10 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$dropdown = $this->bo->read();
+			$activities = $this->bo->fetch_activities();
+			$activities = $activities['results'];
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-			self::render_template('activity_new', array('activity' => $activity, 'dropdown' => $dropdown));
+			self::render_template('activity_new', array('activity' => $activity, 'activities' => $activities));
 		}
 
 		public function edit()
@@ -109,10 +110,9 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$activity = $this->bo->read_single($id);
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
-			$dropdown = $this->bo->read();
+			$activities = $this->bo->fetch_activities();
+			$activities = $activities['results'];
 			$activity['id'] = $id;
-			$activity['resource_link'] = self::link(array('menuaction' => 'booking.uiactivity.show', 'id' => $activity['id']));
-			$activity['resources_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$activity['activities_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
 			$activity['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$errors = array();
@@ -122,7 +122,7 @@
 				{
 					$_POST['parent_id'] = null;
 				}
-								$activity = array_merge($activity, extract_values($_POST, array('name', 'description', 'parent_id')));
+				$activity = array_merge($activity, extract_values($_POST, array('name', 'active', 'description', 'parent_id')));
 				$errors = $this->bo->validate($activity);
 				if(!$errors)
 				{
@@ -132,6 +132,6 @@
 			}
 			$this->flash_form_errors($errors);
 			$activity['cancel_link'] = self::link(array('menuaction' => 'booking.uiactivity.index'));
-			self::render_template('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'dropdown' => $dropdown));
+			self::render_template('activity_edit', array('activity' => $activity, 'parent' => $parent_activity, 'activities' => $activities));
 		}
 	}

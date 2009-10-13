@@ -29,9 +29,7 @@
 	            <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
 	            <dd>
 	                <div class="date-picker">
-	                <input id="field_from" name="from_" type="text">
-	                    <xsl:attribute name="value"><xsl:value-of select="season/from_"/></xsl:attribute>
-	                </input>
+	                	<input id="field_from" name="from_" type="text" value="{from_}"/>
 	                </div>
 	            </dd>
 			</dl>
@@ -39,9 +37,7 @@
 	            <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
 	            <dd>
 	                <div class="date-picker">
-	                <input id="field_to" name="to_" type="text">
-	                    <xsl:attribute name="value"><xsl:value-of select="season/to_"/></xsl:attribute>
-	                </input>
+	                	<input id="field_to" name="to_" type="text" value="{to_}"/>
 	                </div>
 	            </dd>
 	        </dl>

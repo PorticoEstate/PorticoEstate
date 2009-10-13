@@ -25,6 +25,33 @@ YAHOO.booking.js_alias_method_chain(YAHOO.widget.DataTable, '_initConfigs', 'i18
 	return this._initConfigs_without_i18n(config);
 });
 
+function y2k(number) { return (number < 1000) ? number + 1900 : number; }
+YAHOO.booking.weeknumber = function(when) {
+	var year = when.getFullYear();
+	var month = when.getMonth();
+	var day = when.getDate();
+
+	var newYear = new Date(year,0,1);
+	var modDay = newYear.getDay();
+	if (modDay == 0) modDay=6; else modDay--;
+
+	var daynum = ((Date.UTC(y2k(year),when.getMonth(),when.getDate(),0,0,0) - Date.UTC(y2k(year),0,1,0,0,0)) /1000/60/60/24) + 1;
+
+  if (modDay < 4 ) {
+    var weeknum = Math.floor((daynum+modDay-1)/7)+1;
+  } else {
+    var weeknum = Math.floor((daynum+modDay-1)/7);
+    if (weeknum == 0) {
+      year--;
+      var prevNewYear = new Date(year,0,1);
+      var prevmodDay = prevNewYear.getDay();
+      if (prevmodDay == 0) prevmodDay = 6; else prevmodDay--;
+      if (prevmodDay < 4) weeknum = 53; else weeknum = 52;
+    }
+  }
+  return + weeknum;
+}
+
 parseISO8601 = function (string) {
 	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
 	var d = string.match(new RegExp(regexp));
@@ -44,15 +71,46 @@ YAHOO.booking.serializeForm = function(formID) {
 		var e = form.elements[i];
 		if(e.type=='checkbox' || e.type=='radio') {
 			if(e.checked) {
-				values.push(e.name + '=' + e.value);
+				values.push(e.name + '=' + encodeURIComponent(e.value));
 			}
 		} 
 		else if(e.name) {
-			values.push(e.name + '=' + e.value);
+			values.push(e.name + '=' + encodeURIComponent(e.value));
 		}
 	}
 	return values.join('&');
 };
+
+YAHOO.booking.fillForm = function(formID, params) {
+	var form = YAHOO.util.Dom.get(formID);
+	var values = [];
+	for(var i=0; i < form.elements.length; i++) {
+		var e = form.elements[i];
+		if((e.type=='checkbox' || e.type=='radio') && params[e.name]) {
+			e.checked = true;
+		} 
+		else if(e.name && params[e.name] != undefined) {
+			e.value = params[e.name];
+			if(e._update) { // Is this connected to a date picker?
+				e._update();
+			}
+		}
+	}
+	return values.join('&');
+};
+
+YAHOO.booking.parseQS = function(qs) {
+	qs = qs.replace(/\+/g, ' ');
+	var args = qs.split('&');
+	var params = {};
+	for (var i = 0; i < args.length; i++) {
+		var pair = args[i].split('=');
+		var name = decodeURIComponent(pair[0]);
+		var value = (pair.length==2) ? decodeURIComponent(pair[1]) : name;
+		params[name] = value;
+	}
+	return params;
+}
 
 YAHOO.booking.formatLink = function(elCell, oRecord, oColumn, oData) { 
 	var name = oRecord.getData(oColumn.key);
@@ -167,6 +225,7 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options, dis
 		
 		return data;
 	};
+	return {dataTable: myDataTable, dataSource: myDataSource};
 };
 
 YAHOO.booking.inlineImages = function(container, url, options)
@@ -337,13 +396,15 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 		oButton.setStyle('display', 'none');
 	//oButton._input.setAttribute('type', 'hidden');
 	oButton._input.style.display = 'none';
-	if(oButton._input.value) {
+	if(oButton._input.value)
 		oButton._date = parseISO8601(oButton._input.value);
-	}
 	else
 		oButton._date = new Date(1, 1, 1);
 	oButton._input._update = function() {
-		oButton._date = parseISO8601(oButton._input.value);
+		if(oButton._input.value)
+			oButton._date = parseISO8601(oButton._input.value);
+		else
+			oButton._date = new Date(1, 1, 1);
 		oButton._update(false);
 	};
 	oButton._update = function(fire_update_event) {
