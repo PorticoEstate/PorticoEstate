@@ -167,6 +167,7 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
+			phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_facilit_events');
 		}
 		
@@ -418,11 +419,11 @@
 				
 				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
 				$admin_price_item = $soprice_item->get_single_with_title($title);
+
+				$facilit_id = $this->decode($data[0]);
 				
 				// Add new admin price item if one with this title doesn't already exist
-				if (!$admin_price_item) {
-					$facilit_id = $this->decode($data[0]);
-					
+				if ($admin_price_item == null) {
 					$admin_price_item = new rental_price_item();
 					$admin_price_item->set_title($title);
 					$admin_price_item->set_agresso_id($this->decode($data[12]));
@@ -449,8 +450,10 @@
 					
 					if ($admin_price_item->is_area()) {
 						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
 					}
 					
 					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
@@ -497,7 +500,6 @@
 			}
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementLeieobjekt.csv");
-			
 			foreach ($datalines as $data) {
 				// Create new admin price item if one doesn't exist in the admin price list
 				// Add new price item to contract with correct reference from the $contracts array
@@ -509,7 +511,7 @@
 				$admin_price_item = $soprice_item->get_single_with_title($title);
 				
 				// Add new admin price item if one with this title doesn't already exist
-				if (!$admin_price_item) {
+				if ($admin_price_item == null) {
 					$facilit_id = $this->decode($data[0]);
 					
 					$admin_price_item = new rental_price_item();
@@ -522,8 +524,9 @@
 				}
 				
 				$contract_id = null;
+				$decoded_data_1 = $this->decode($data[1]);
 				foreach ($rentalobject_to_contract as $facilit_contract_id => $facilit_composite_id) {
-					if ($facilit_composite_id == $this->decode($data[1])) {
+					if ($facilit_composite_id == $decoded_data_1) {
 						$contract_id = $facilit_contract_id;
 					}
 				}
@@ -545,8 +548,10 @@
 					
 					if ($admin_price_item->is_area()) {
 						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
 					}
 					
 					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
@@ -554,7 +559,7 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					$soprice_item->store($price_item);
+					$socontract_price_item->store($price_item);
 					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
 					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);
