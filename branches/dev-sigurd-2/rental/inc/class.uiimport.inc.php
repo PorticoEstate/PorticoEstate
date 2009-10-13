@@ -172,17 +172,15 @@
 		
 		protected function import_parties()
 		{
-			$parties = array();
-			
-			// Open the Facilit file containing rental parties
-			$handle = fopen($this->path . "/u_PersonForetak.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
+			$start_time = time();
+			$soparty = rental_soparty::get_instance();
+			$parties = array();			
+			$datalines = $this->getcsvdata($this->path . "/u_PersonForetak.csv", true);
+			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			$counter = 1;
+			
 			// Loop through each line of the file, parsing CSV data to a php array
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				// Create a new rental party we can fill with info from this line from the file
 				$party = new rental_party();
 
@@ -218,7 +216,7 @@
 				$party->set_comment($this->decode($data[26]));
 				
 				// Store party and log message
-				if (rental_soparty::get_instance()->store($party)) {
+				if ($soparty->store($party)) {
 					// Add party to collection of parties keyed by its facilit ID so we can refer to it later.
 					$facilit_id = $data[17];
 					$parties[$facilit_id] = $party->get_id();
@@ -228,23 +226,21 @@
 				}
 			}
 			
-			$this->messages[] = "Successfully imported " . count($parties) . " contract parties.";
-			
-			fclose($handle);
+			$this->messages[] = "Successfully imported " . count($parties) . " contract parties. (" . (time() - $start_time) . " seconds)";
 			
 			return $parties;
 		}
 		
 		protected function import_composites()
 		{
+			$start_time = time();
+			$socomposite = rental_socomposite::get_instance();
+			$sounit = rental_sounit::get_instance();
 			$composites = array();
+			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt.csv");
+			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			
-			$handle = fopen($this->path . "/u_Leieobjekt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				$composite = new rental_composite();
 				
 				$composite->set_description($this->decode($data[3]));
@@ -255,14 +251,14 @@
 				$composite->set_is_active($data[19] == "1");
 				
 				// Store composite
-				if (rental_socomposite::get_instance()->store($composite)) {
+				if ($socomposite->store($composite)) {
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
 					$loc1 = $this->decode($data[1]);
 					$loc1 = $this->format_location_code($loc1);
 					
 					
 					// Add units only if composite stored ok.
-					rental_sounit::get_instance()->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
+					$sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
 					
 					// Add composite to collection of composite so we can refer to it later.
 					$composites[$data[0]] = $composite->get_id();
@@ -273,9 +269,7 @@
 				}
 			}
 			
-			$this->messages[] = "Successfully imported " . count($composites) . " composites.";
-			
-			fclose($handle);
+			$this->messages[] = "Successfully imported " . count($composites) . " composites (" . (time() - $start_time) . " seconds)";
 			
 			return $composites;
 		}
@@ -283,20 +277,12 @@
 		protected function import_rentalobject_to_contract()
 		{
 			$rentalobject_to_contract = array();
+			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt_Kontrakt.csv");
 			
-			$handle = fopen($this->path . "/u_Leieobjekt_Kontrakt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			$first_line = fgetcsv($handle, 0, ",", "'");
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				// Array with Facilit Contract ID => Facilit composite ID
 				$rentalobject_to_contract[$data[1]] = $data[0];
 			}
-			
-			fclose($handle);
 			
 			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract links";
 			
@@ -305,14 +291,13 @@
 		
 		protected function import_contracts($composites, $rentalobject_to_contract, $parties)
 		{
+			$start_time = time();
+			$socontract = rental_socontract::get_instance();
 			$contracts = array();
+			$datalines = $this->getcsvdata($this->path . "/u_Kontrakt.csv");
+			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			
-			$handle = fopen($this->path . "/u_Kontrakt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				$contract = new rental_contract();
 				
 				// TODO: link this with previously imported rental party. 
@@ -364,7 +349,7 @@
 				$contract->set_location_id(phpgw::get_var("location_id"));
 				
 				// Store contract
-				if (rental_socontract::get_instance()->store($contract)) {
+				if ($socontract->store($contract)) {
 					$contracts[$data[0]] = $contract->get_id();
 					
 					$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
@@ -372,15 +357,15 @@
 					// Check if this contract has a composite
 					if (!$this->is_null($rentalobject_to_contract[$data[0]]) && !$this->is_null($composite_id)) {
 						// Add rental composite to contract
-						rental_socontract::get_instance()->add_composite($contract->get_id(), $composite_id);
+						$socontract->add_composite($contract->get_id(), $composite_id);
 					}
 					
 					if (!$this->is_null($data[2])) {
 						// Add party to contract
 						$party_id = $parties[$this->decode($data[2])];
-						rental_socontract::get_instance()->add_party($contract->get_id(), $party_id);
+						$socontract->add_party($contract->get_id(), $party_id);
 						// Set this party to be the contract invoice recipient
-						rental_socontract::get_instance()->set_payer($contract->get_id(), $party_id);
+						$socontract->set_payer($contract->get_id(), $party_id);
 					}
 					
 					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . ")";
@@ -389,25 +374,24 @@
 				}
 			}
 			
-			$this->messages[] = "Successfully imported " . count($contracts) . " contracts.";
-			
-			fclose($handle);
+			$this->messages[] = "Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
 			
 			return $contracts;
 		}
 		
 		protected function import_contract_price_items($contracts)
 		{
+			$start_time = time();
+			$soprice_item = rental_soprice_item::get_instance();
+			$socontract_price_item = rental_socontract_price_item::get_instance();
+			$soprice_item = rental_soprice_item::get_instance();
+			
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
 			$detail_price_items = array();
+			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljKontrakt.csv");
 			
-			$handle = fopen($this->path . "/u_PrisElementDetaljKontrakt.csv", "r");
-			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				$detail_price_items[$data[1]] = array(
 					'price' => $data[2],
 					'amount' => $data[3],
@@ -423,14 +407,9 @@
 				}
 			}
 			
-			fclose($handle);
-		
-			$handle = fopen($this->path . "/u_PrisElementKontrakt.csv", "r");
+			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
 			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				// Create new admin price item if one doesn't exist in the admin price list
 				// Add new price item to contract with correct reference from the $contracts array
 				// Remember fields from detail price item.
@@ -438,7 +417,7 @@
 				$title = $this->decode($data[3]);
 				
 				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
-				$admin_price_item = rental_soprice_item::get_instance()->get_single_with_title($title);
+				$admin_price_item = $soprice_item->get_single_with_title($title);
 				
 				// Add new admin price item if one with this title doesn't already exist
 				if (!$admin_price_item) {
@@ -450,7 +429,7 @@
 					// TODO: This assumes 1 for AREA, and anything else for count.  is this correct?
 					$admin_price_item->set_is_area($this->decode($data[12]) == '4');
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					rental_soprice_item::get_instance()->store($admin_price_item);
+					$soprice_item->store($admin_price_item);
 				}
 				
 				$contract_id = $contracts[$this->decode($data[1])];
@@ -480,32 +459,32 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					rental_socontract_price_item::get_instance()->store($price_item);
+					$socontract_price_item->store($price_item);
 					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
 					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 				
-				
 			}
 			
-			fclose($handle);
+			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
 			
 			return true;
 		}
 		
 		protected function import_composite_price_items($contracts, $rentalobject_to_contract)
 		{
+			$start_time = time();
+			$soprice_item = rental_soprice_item::get_instance();
+			$socontract_price_item = rental_socontract_price_item::get_instance();
+			
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
 			$detail_price_items = array();
 			
-			$handle = fopen($this->path . "/u_PrisElementDetaljLeieobjekt.csv", "r");
+			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljLeieobjekt.csv");
 			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				$detail_price_items[$data[1]] = array(
 					'price' => $data[2],
 					'amount' => $data[3],
@@ -517,14 +496,9 @@
 				}
 			}
 			
-			fclose($handle);
-		
-			$handle = fopen($this->path . "/u_PrisElementLeieobjekt.csv", "r");
+			$datalines = $this->getcsvdata($this->path . "/u_PrisElementLeieobjekt.csv");
 			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
-			
-			while (($data = $this->getcsv($handle)) !== false) {
+			foreach ($datalines as $data) {
 				// Create new admin price item if one doesn't exist in the admin price list
 				// Add new price item to contract with correct reference from the $contracts array
 				// Remember fields from detail price item.
@@ -532,7 +506,7 @@
 				$title = $this->decode($data[2]);
 				
 				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
-				$admin_price_item = rental_soprice_item::get_instance()->get_single_with_title($title);
+				$admin_price_item = $soprice_item->get_single_with_title($title);
 				
 				// Add new admin price item if one with this title doesn't already exist
 				if (!$admin_price_item) {
@@ -544,7 +518,7 @@
 					// TODO: Assumes composite price items always regards area
 					$admin_price_item->set_is_area(true);
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					rental_soprice_item::get_instance()->store($admin_price_item);
+					$soprice_item->store($admin_price_item);
 				}
 				
 				$contract_id = null;
@@ -580,28 +554,28 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					rental_socontract_price_item::get_instance()->store($price_item);
+					$soprice_item->store($price_item);
 					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
 					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 				
-				
 			}
 			
-			fclose($handle);
+			$this->messages[] = "Imported composite price items. (" . (time() - $start_time) . " seconds)";
 			
 			return true;
 		}
 		
 		protected function import_events($contracts)
-		{			
-			$handle = fopen($this->path . "/u_Hendelse.csv", "r");
+		{
+			$start_time = time();
 			
-			// Read the first line to get the headers out of the way
-			$this->getcsv($handle);
+			$sonotification = rental_sonotification::get_instance();
 			
-			while(($data = $this->getcsv($handle)) !== false) {
+			$datalines = $this->getcsvdata($this->path . "/u_Hendelse.csv");
+			
+			foreach ($datalines as $data) {
 				$type_id = $data[2];
 				
 				// We do not import adjustments.  And only import if there is a title.
@@ -623,7 +597,7 @@
 					} else {
 						// All is good, store notification
 						$notification = new rental_notification(null, null, $location_id, $contract_id, $date, $title);
-						if (rental_sonotification::get_instance()->store($notification)) {
+						if ($sonotification->store($notification)) {
 							$this->messages[] = "Successfully imported event '" . $notification->get_message() . "'";
 						} else {
 							$this->errors[] = "Error importing event " . $notification->get_message();
@@ -634,7 +608,30 @@
 				}
 			}
 			
+			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
+			
 			return true;
+		}
+		
+		protected function getcsvdata($path, $skipfirstline = true)
+		{
+			// Open the csv file
+			$handle = fopen($path, "r");
+			
+			if ($skipfirstline) {
+				// Read the first line to get the headers out of the way
+				$this->getcsv($handle);
+			}
+			
+			$result = array();
+			
+			while(($data = $this->getcsv($handle)) !== false) {
+				$result[] = $data;
+			}
+			
+			fclose($handle);
+			
+			return $result;
 		}
 			
 		

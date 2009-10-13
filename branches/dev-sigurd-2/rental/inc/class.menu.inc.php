@@ -20,7 +20,6 @@
 					'group'	=> 'office'
 				)
 			);
-
 			$menus['navigation'] =  array
 			(
 				'contracts' => array
@@ -71,7 +70,7 @@
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('facilit_import', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-document')
+					'image'	=> array('rental', 'document-save')
 				)
 			);
 			
