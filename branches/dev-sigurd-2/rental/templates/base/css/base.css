@@ -387,7 +387,7 @@ h1 em {
 	font-style:italic;
 }
 
-.info, .error, .warning {
+div.info, div.error, div.warning {
 	font-weight: normal;
 	margin:10px;
 	padding:5px;
