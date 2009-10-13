@@ -248,7 +248,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>
-				<xsl:when test="attributes_values !=''">
+				<xsl:when test="value_id !=''">
 					<tr>
 						<td class="th_text" valign ="top">
 							<a href="{link_pdf}" target="_blank">PDF</a>
