@@ -53,8 +53,13 @@
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
 
+        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+
+        var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_search_option');
+        var sOption = sSelect.options[sSelect.selectedIndex].value;
+
         window.location = 'index.php?menuaction=rental.uicomposite.download'+'<?php echo $url_add_on ?>'+
-            '&is_active='+availabilityoption+'&type='+compType;
+            '&is_active='+availabilityoption+'&type='+compType+'&query='+query+'&search_option='+sOption;
     }
 </script>
 
@@ -69,7 +74,7 @@
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
 		<label for="ctrl_search_option"><?php echo lang('search_where') ?></label>
-		<select name="search_option" id="ctrl_search_option">
+		<select name="search_option" id="<?php echo $list_id ?>_ctrl_search_option">
 			<option value="all"><?php echo lang('all') ?></option>
 			<option value="id"><?php echo lang('serial') ?></option>
 			<option value="name"><?php echo lang('name') ?></option>

@@ -448,6 +448,11 @@
                     }
                 }
             }
+            
+            // Remove newlines from output
+            for($i = 0; $i < count($list); $i++) {
+            	$list[$i] = preg_replace("/[\n\r]/","",$list[$i]);
+            }
 
             // Use keys as headings
             $headings = $keys;

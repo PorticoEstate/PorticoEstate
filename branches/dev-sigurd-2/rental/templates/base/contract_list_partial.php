@@ -95,11 +95,18 @@
         var statusselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_contract_status');
         var statusoption = statusselect.options[statusselect.selectedIndex].value;
 
+        var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_search_type');
+        var sOption = sSelect.options[sSelect.selectedIndex].value;
+
+        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+
         window.location = 'index.php?menuaction=rental.uicontract.download'+
             '&type='+ctype+
             '&contract_type='+typeoption+
             '&contract_status='+statusoption+
-            '<?php echo $url_add_on ?>';
+            '<?php echo $url_add_on ?>'+
+            '&query='+query+
+            '&search_option='+sOption;
     }
 </script>
 <?php
@@ -110,10 +117,10 @@
 	<fieldset>
 		<!-- Search -->
 		<h3><?php echo lang('search_options') ?></h3>
-		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="ctrl_search_query" type="text" name="query" />
-		<label for="ctr_toggle_search_type"><?php echo lang('search_where') ?></label>
-		<select name="search_option" id="ctr_toggle_seach_type">
+		<label for="<?php echo $list_id ?>_ctrl_search_query"><?php echo lang('search_for') ?></label>
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" />
+		<label for="<?php echo $list_id ?>_ctrl_toggle_search_type"><?php echo lang('search_where') ?></label>
+		<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_search_type">
 			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 			<option value="id"><?php echo lang('id') ?></option>
 			<option value="party_name"><?php echo lang('party_name') ?></option>
