@@ -3,10 +3,15 @@
  * Logiciel : exemple d'utilisation de HTML2PDF
  * 
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
- * Distribué sous la licence GPL. 
+ * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
+ * 
+ * isset($_GET['vuehtml']) n'est pas obligatoire
+ * il permet juste d'afficher le résultat au format HTML
+ * si le paramètre 'vuehtml' est passé en paramètre _GET
  */
+ 
  $generate = isset($_GET['make_pdf']);
  $nom = isset($_GET['nom']) ? $_GET['nom'] : 'inconnu';
  
@@ -32,7 +37,7 @@
 <br>
 Ceci est un exemple de génération de PDF via un bouton :)<br>
 <br>
-<img src="<?php echo 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']); ?>/res/exemple09.png.php?px=5&amp;py=20" alt="" ><br>
+<img src="<?php echo 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']); ?>/res/exemple09.png.php?px=5&amp;py=20" alt="image_php" ><br>
 <br>
 <?php if ($generate) { ?>
 Bonjour <b><?php echo $nom; ?></b>, ton nom peut s'écrire : <br>
@@ -45,9 +50,9 @@ Bonjour <b><?php echo $nom; ?></b>, ton nom peut s'écrire : <br>
 	{
 		$content = ob_get_clean();
 		require_once(dirname(__FILE__).'/../html2pdf.class.php');
-		$pdf = new HTML2PDF('P','A4', 'fr');
-		$pdf->WriteHTML($content);
-		$pdf->Output();
+		$html2pdf = new HTML2PDF('P','A4', 'fr');
+		$html2pdf->WriteHTML($content);
+		$html2pdf->Output('exemple09.pdf');
 		exit;
 	}
 ?>

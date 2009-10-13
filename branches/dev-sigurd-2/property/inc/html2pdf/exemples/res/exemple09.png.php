@@ -10,7 +10,7 @@
 	
 	$width	= 100;
 	$height	= 100;
-	$im = imagecreatetruecolor  ($width, $height);
+	$im = imagecreatetruecolor($width, $height);
 	
 	for($y=0; $y<$height; $y+= $py)
 	{

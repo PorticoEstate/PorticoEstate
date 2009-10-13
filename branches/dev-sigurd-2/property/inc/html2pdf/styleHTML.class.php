@@ -3,10 +3,10 @@
  * Logiciel : HTML2PDF - classe styleHTML
  * 
  * Convertisseur HTML => PDF, utilise fpdf de Olivier PLATHEY 
- * Distribué sous la licence GPL. 
+ * Distribué sous la licence LGPL. 
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
- * @version		3.11 - 28/08/2008
+ * @version		3.25 - 07/10/2009
  */
  
 if (!defined('__CLASS_STYLEHTML__'))
@@ -21,6 +21,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 		var $table		= array();		// tableau d'empilement pour historisation des niveaux
 		var $pdf		= null;			// référence au PDF parent
 		var $htmlColor	= array();		// liste des couleurs HTML
+		var $onlyLeft	= false;		// indique si on est dans un sous HTML et qu'on bloque à gauche
+		
 		/**
 		 * Constructeur
 		 *
@@ -28,20 +30,20 @@ if (!defined('__CLASS_STYLEHTML__'))
 		 * @return	null
 		 */
 		function styleHTML(&$pdf)
-    	{
-    		$this->init();		// initialisation
-    		$this->pdf = &$pdf;
-    	}
-    	
+		{
+			$this->init();		// initialisation
+			$this->pdf = &$pdf;
+		}
+		
  		/**
 		 * Initialisation du style
 		 *
 		 * @return	null
 		 */
 		function init()
-    	{
-    		$color = array();
-    		$color['AliceBlue']			= '#F0F8FF';
+		{
+			$color = array();
+			$color['AliceBlue']			= '#F0F8FF';
 			$color['AntiqueWhite']		= '#FAEBD7';
 			$color['Aqua']				= '#00FFFF';
 			$color['Aquamarine']		= '#7FFFD4';
@@ -193,19 +195,20 @@ if (!defined('__CLASS_STYLEHTML__'))
 			foreach($color as $key => $val) $this->htmlColor[strtolower($key)] = $val;			
 			unset($color);
 			
-    		$this->table = array();
-    		
-    		$this->value = array();
-    		$this->initStyle();
+			$this->table = array();
+			
+			$this->value = array();
+			$this->initStyle();
 			
 			// initialisation des styles sans héritages
 			$this->resetStyle();
-    	}
-    	
-    	function initStyle()
-    	{
-     		$this->value['id_balise']			= 'body';		// balise
-    		$this->value['id_name']				= null;			// name
+		}
+		
+		function initStyle()
+		{
+	 		$this->value['id_balise']			= 'body';		// balise
+			$this->value['id_name']				= null;			// name
+			$this->value['id_id']				= null;			// id
 			$this->value['id_class']			= null;			// class
 			$this->value['id_lst']				= array('*');	// lst de dependance
 			$this->value['mini-size']			= 1.;			// rapport de taille	spécifique aux sup, sub
@@ -216,15 +219,12 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['font-underline']		= false;
 			$this->value['font-overline']		= false;
 			$this->value['font-linethrough']	= false;
+			$this->value['text-transform']		= 'none';
 			$this->value['font-size']			= $this->ConvertToMM('10pt');
 			$this->value['text-indent']			= 0;
 			$this->value['text-align']			= 'left';
 			$this->value['vertical-align']		= 'middle';
-			$this->value['color']				= array(0, 0, 0);
-			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
-			$this->value['border']				= array();
-			$this->value['padding']				= array();
-			$this->value['margin']				= array();
+			$this->value['line-height']			= 'normal';
 
 			$this->value['position']			= null;
 			$this->value['x']					= null;
@@ -237,19 +237,33 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['left']				= null;
 			$this->value['float']				= null;
 			$this->value['display']				= null;
+			$this->value['rotate']				= null;
+
+			$this->value['color']				= array(0, 0, 0);
+			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
+			$this->value['border']				= array();
+			$this->value['padding']				= array();
+			$this->value['margin']				= array();
+			$this->value['margin-auto']			= false;
+
+			$this->value['list-style-type']		= '';
+			$this->value['list-style-image']	= '';
 
 			$this->value['xc']					= null;
 			$this->value['yc']					= null;
-    	}
-    	
-  		/**
+		}
+		
+		/**
 		 * Initialisation des styles sans héritages
 		 *
 		 * @param	string	balise HTML
 		 * @return	null
 		 */
 		function resetStyle($balise = '')
-    	{
+		{
+			$collapse = isset($this->value['border']['collapse']) ? $this->value['border']['collapse'] : false;
+			if (!in_array($balise, array('tr', 'td', 'th'))) $collapse = false;
+			
 			$this->value['position']			= null;
 			$this->value['x']					= null;
 			$this->value['y']					= null;
@@ -261,20 +275,34 @@ if (!defined('__CLASS_STYLEHTML__'))
 			$this->value['left']				= null;
 			$this->value['float']				= null;
 			$this->value['display']				= null;
+			$this->value['rotate']				= null;
 			$this->value['background']			= array('color' => null, 'image' => null, 'position' => null, 'repeat' => null);
 			$this->value['border']	= array(
 										't' => $this->readBorder('none'),
 										'r' => $this->readBorder('none'),
 										'b' => $this->readBorder('none'),
-										'l' => $this->readBorder('none')
+										'l' => $this->readBorder('none'),
+										'radius' => array(0, 0),
+										'collapse' => $collapse,
 									);
-									
+
+			if (!in_array($balise, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6')))
 			$this->value['margin']	= array(
 									't' => 0,
 									'r' => 0,
 									'b' => 0,
 									'l' => 0
 								);
+			$this->value['margin-auto'] = false;
+			
+			if (in_array($balise, array('div')))
+				$this->value['vertical-align']	 = 'top';
+
+			if (in_array($balise, array('ul', 'li')))
+			{
+				$this->value['list-style-type']		= '';
+				$this->value['list-style-image']	= '';
+			}
 
 			if (!in_array($balise, array('tr', 'td')))
 			{
@@ -294,17 +322,30 @@ if (!defined('__CLASS_STYLEHTML__'))
 										'l' => $this->ConvertToMM('1px')
 									);
 			}
+			
+			if ($balise=='hr')
+			{
+				$this->value['border']	= array(
+										't' => $this->readBorder('solid 1px #000000'),
+										'r' => $this->readBorder('solid 1px #000000'),
+										'b' => $this->readBorder('solid 1px #000000'),
+										'l' => $this->readBorder('solid 1px #000000'),
+										'radius' => array(0, 0),
+										'collapse' => false,
+									);
+				$this->ConvertBackground('#FFFFFF', $this->value['background']);
+			}
 
 			$this->value['xc']					= null;
 			$this->value['yc']					= null;
 		}
-    	
-  		/**
+		
+		/**
 		 * Initialisation de la font PDF
 		 *
 		 * @return	null
 		 */
-	   	function FontSet()
+		function FontSet()
 		{
 			$b = ($this->value['font-bold']			? 'B' : '');
 			$i = ($this->value['font-italic']		? 'I' : '');
@@ -350,6 +391,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 			}
 		}
 
+		function restorePosition(&$current_x, &$current_y)
+		{
+			if ($this->value['y']==$current_y) $current_y = $this->value['yc'];
+		}
+		
 		function setPosition(&$current_x, &$current_y)
 		{
 			$this->value['xc'] = $current_x;
@@ -357,11 +403,27 @@ if (!defined('__CLASS_STYLEHTML__'))
 			
 			if ($this->value['position']=='relative' || $this->value['position']=='absolute')
 			{
-				if ($this->value['right']!==null)	$x = $this->getLastWidth(true) - $this->value['right'] - $this->value['width']; 
-				else								$x = $this->value['left'];
+				if ($this->value['right']!==null)
+				{
+					$x = $this->getLastWidth(true) - $this->value['right'] - $this->value['width'];
+					if ($this->value['margin']['r']) $x-= $this->value['margin']['r'];
+				} 
+				else
+				{
+					$x = $this->value['left'];
+					if ($this->value['margin']['l']) $x+= $this->value['margin']['l'];
+				}
 				
-				if ($this->value['bottom']!==null)	$y = $this->getLastHeight(true) - $this->value['bottom'] - $this->value['height']; 	
-				else								$y = $this->value['top'];
+				if ($this->value['bottom']!==null)
+				{
+					$y = $this->getLastHeight(true) - $this->value['bottom'] - $this->value['height'];
+					if ($this->value['margin']['b']) $y-= $this->value['margin']['b'];
+				} 	
+				else
+				{
+					$y = $this->value['top'];
+					if ($this->value['margin']['t']) $y+= $this->value['margin']['t'];
+				}
 								
 				if ($this->value['position']=='relative')
 				{
@@ -373,14 +435,13 @@ if (!defined('__CLASS_STYLEHTML__'))
 					$this->value['x'] = $this->getLastAbsoluteX()+$x;
 					$this->value['y'] = $this->getLastAbsoluteY()+$y;					
 				}
-
-				if ($this->value['margin']['l'])	$this->value['x']+= $this->value['margin']['l'];
-				if ($this->value['margin']['t'])	$this->value['y']+= $this->value['margin']['t'];
 			}
 			else
 			{
 				$this->value['x'] = $current_x;
 				$this->value['y'] = $current_y;	
+				if ($this->value['margin']['l'])	$this->value['x']+= $this->value['margin']['l'];
+				if ($this->value['margin']['t'])	$this->value['y']+= $this->value['margin']['t'];
 			}
 			
 			$current_x = $this->value['x'];
@@ -398,27 +459,41 @@ if (!defined('__CLASS_STYLEHTML__'))
 		{
 			// preparation
 			$balise = strtolower($balise);
-			$name	= isset($param['name'])		? strtolower($param['name'])	: null;
-			$class	= isset($param['class'])	? strtolower($param['class'])	: null;
-			
+			$id		= isset($param['id'])		? strtolower(trim($param['id']))	: null; if (!$id)	$id		= null;
+			$name	= isset($param['name'])		? strtolower(trim($param['name']))	: null; if (!$name)	$name	= null;
+
+			// lecture de la propriete classe
+			$class = array();
+			$tmp	= isset($param['class'])	? preg_replace('/[\s]+/', ' ', strtolower($param['class']))	: '';
+			$tmp = explode(' ', $tmp);
+			foreach($tmp as $k => $v)
+			{
+				$v = trim($v);
+				if ($v) $class[] = $v;
+			}
+
 			// identification de la balise et des styles direct qui pourraient lui être appliqués
 			$this->value['id_balise']	= $balise;
 			$this->value['id_name']		= $name;
+			$this->value['id_id']		= $id;
 			$this->value['id_class']	= $class;
 			$this->value['id_lst']		= array();
 			$this->value['id_lst'][] = '*';
 			$this->value['id_lst'][] = $balise;
-			if ($class)
+			if (count($class))
 			{
-				$this->value['id_lst'][] = '*.'.$class;
-				$this->value['id_lst'][] = '.'.$class;
-				$this->value['id_lst'][] = $balise.'.'.$class;
+				foreach($class as $v)
+				{ 
+					$this->value['id_lst'][] = '*.'.$v;
+					$this->value['id_lst'][] = '.'.$v;
+					$this->value['id_lst'][] = $balise.'.'.$v;
+				}
 			}
-			if ($name)
+			if ($id)
 			{
-				$this->value['id_lst'][] = '*#'.$name;
-				$this->value['id_lst'][] = '#'.$name;
-				$this->value['id_lst'][] = $balise.'#'.$name;
+				$this->value['id_lst'][] = '*#'.$id;
+				$this->value['id_lst'][] = '#'.$id;
+				$this->value['id_lst'][] = $id.'#'.$id;
 			}
 
 			// style CSS
@@ -426,16 +501,26 @@ if (!defined('__CLASS_STYLEHTML__'))
 
 			// on ajoute le style propre à la balise
 			$styles = array_merge($styles, $param['style']);
+			if (isset($param['allwidth']) && !isset($styles['width'])) $styles['width'] = '100%';
 
 			// mise à zero des styles non hérités
 			$this->resetStyle($balise);
 					
 			// interpreration des nouvelles valeurs
 			$correct_width = false;
+			$no_width = true;
+
 			foreach($styles as $nom => $val)
 			{
 				switch($nom)
 				{
+					case 'font-family':
+						$val = explode(',', $val);
+						$val = trim($val[0]);
+
+						if ($val) $this->value['font-family'] = $val;
+						break;
+						
 					case 'font-weight':
 						$this->value['font-bold'] = ($val=='bold');
 						break;
@@ -455,6 +540,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 						$this->value['text-indent']			= $this->ConvertToMM($val);
 						break;
 					
+					case 'text-transform':
+						if (!in_array($val, array('none', 'capitalize', 'uppercase', 'lowercase'))) $val = 'none';
+						$this->value['text-transform']		= $val;
+						break;
+						
 					case 'font-size':
 						$val = $this->ConvertToMM($val, $this->value['font-size']);
 						if ($val) $this->value['font-size'] = $val;
@@ -463,6 +553,14 @@ if (!defined('__CLASS_STYLEHTML__'))
 					case 'color':
 						$res = null;
 						$this->value['color'] = $this->ConvertToRVB($val, $res);
+						
+						if ($balise=='hr')
+						{
+							$this->value['border']['l']['color'] = $this->value['color'];
+							$this->value['border']['t']['color'] = $this->value['color'];
+							$this->value['border']['r']['color'] = $this->value['color'];
+							$this->value['border']['b']['color'] = $this->value['color'];
+						}
 						break;
 					
 					case 'text-align':
@@ -476,12 +574,22 @@ if (!defined('__CLASS_STYLEHTML__'))
 					case 'width':
 						$this->value['width'] = $this->ConvertToMM($val, $this->getLastWidth());
 						if ($this->value['width'] && substr($val, -1)=='%') $correct_width=true;
+						$no_width = false;
 						break;
 					
 					case 'height':
 						$this->value['height'] = $this->ConvertToMM($val, $this->getLastHeight());
 						break;
 				
+					case 'line-height':
+						if (preg_match('/^[0-9\.]+$/isU', $val)) $val = floor($val*100).'%';
+						$this->value['line-height'] = $val;
+						break;
+					case 'rotate':
+						if (!in_array($val, array(0, -90, 90, 180, 270, -180, -270))) $val = null;
+						if ($val<0) $val+= 360;
+						$this->value['rotate'] = $val;
+						break;
 					case 'padding':
 						$val = explode(' ', $val);
 						foreach($val as $k => $v)
@@ -525,6 +633,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 						break;
 												
 					case 'margin':
+						if ($val=='auto')
+						{
+							$this->value['margin-auto'] = true;
+							break;	
+						}
 						$val = explode(' ', $val);
 						foreach($val as $k => $v)
 						{
@@ -587,6 +700,26 @@ if (!defined('__CLASS_STYLEHTML__'))
 						if ($val[3]) $this->value['border']['l']['type'] = $val[3];
 						break;
 
+					case 'border-top-style':
+						if (in_array($val, array('solid', 'dotted', 'dashed'))) 
+							$this->value['border']['t']['type'] = $val;
+						break;
+
+					case 'border-right-style':
+						if (in_array($val, array('solid', 'dotted', 'dashed'))) 
+							$this->value['border']['r']['type'] = $val;
+						break;
+
+					case 'border-bottom-style':
+						if (in_array($val, array('solid', 'dotted', 'dashed'))) 
+							$this->value['border']['b']['type'] = $val;
+						break;
+
+					case 'border-left-style':
+						if (in_array($val, array('solid', 'dotted', 'dashed'))) 
+							$this->value['border']['l']['type'] = $val;
+						break;
+
 					case 'border-color':
 						$res = false;
 						$val = preg_replace('/,[\s]+/', ',', $val); 
@@ -606,6 +739,30 @@ if (!defined('__CLASS_STYLEHTML__'))
 						
 						break;
 
+					case 'border-top-color':
+						$res = false;
+						$val = $this->ConvertToRVB($val, $res); 
+						if ($res) $this->value['border']['t']['color'] = $val;
+						break;
+
+					case 'border-right-color':
+						$res = false;
+						$val = $this->ConvertToRVB($val, $res); 
+						if ($res) $this->value['border']['r']['color'] = $val;
+						break;
+
+					case 'border-bottom-color':
+						$res = false;
+						$val = $this->ConvertToRVB($val, $res); 
+						if ($res) $this->value['border']['b']['color'] = $val;
+						break;
+
+					case 'border-left-color':
+						$res = false;
+						$val = $this->ConvertToRVB($val, $res); 
+						if ($res) $this->value['border']['l']['color'] = $val;
+						break;
+						
 					case 'border-width':
 						$val = explode(' ', $val);
 						foreach($val as $val_k => $val_v)
@@ -618,6 +775,52 @@ if (!defined('__CLASS_STYLEHTML__'))
 						if ($val[1]) $this->value['border']['r']['width'] = $val[1];
 						if ($val[2]) $this->value['border']['b']['width'] = $val[2];
 						if ($val[3]) $this->value['border']['l']['width'] = $val[3];
+						break;
+
+					case 'border-top-width':
+						$val = $this->ConvertToMM($val, 0);; 
+						if ($val) $this->value['border']['t']['width'] = $val;
+						break;
+
+					case 'border-right-width':
+						$val = $this->ConvertToMM($val, 0);; 
+						if ($val) $this->value['border']['r']['width'] = $val;
+						break;
+
+					case 'border-bottom-width':
+						$val = $this->ConvertToMM($val, 0);; 
+						if ($val) $this->value['border']['b']['width'] = $val;
+						break;
+
+					case 'border-left-width':
+						$val = $this->ConvertToMM($val, 0);; 
+						if ($val) $this->value['border']['l']['width'] = $val;
+						break;
+											
+					case 'border-collapse':
+						if ($balise=='table') $this->value['border']['collapse'] = ($val=='collapse');
+						break;
+						
+					case 'border-radius':
+						// nettoyage des valeurs
+						$val = explode(' ', $val);
+						foreach($val as $k => $v)
+						{
+							$v = trim($v);
+							if ($v)
+							{
+								$v = $this->ConvertToMM($v, 0);
+								if ($v) $val[$k] = $v;
+								else	unset($val[$k]);
+							}
+							else	unset($val[$k]);	
+						}
+						$val = array_values($val);
+						
+						if (!isset($val[1]) && isset($val[0])) $val[1] = $val[0];
+						if (count($val)==2)
+							$this->value['border']['radius'] = array($val[0], $val[1]);
+
 						break;
 						
 					case 'border-top':
@@ -683,30 +886,59 @@ if (!defined('__CLASS_STYLEHTML__'))
 						$this->value[$nom] = $val;
 						break;
 
+					case 'list-style':
+					case 'list-style-type':
+					case 'list-style-image':
+						if ($nom=='list-style') $nom = 'list-style-type';
+						$this->value[$nom] = $val;
+						break;
+				
 					default:
 						break;	
 				}				
 			}
 
+			if ($this->onlyLeft) $this->value['text-align'] = 'left';
+			
 			// correction de la largeur pour correspondre au modèle de boite quick
-			if ($correct_width)
+			if ($no_width && in_array($balise, array('div')) && $this->value['position']!='absolute')
 			{
-				$this->value['width']-= $this->value['padding']['l'] + $this->value['padding']['r'];
-				$this->value['width']-= $this->value['border']['l']['width'] + $this->value['border']['r']['width'];
-				if (in_array($balise, array('table', 'th', 'td')))
-				{
-					$this->value['width']-= $this->ConvertToMM(isset($param['cellspacing']) ? $param['cellspacing'] : '2px');
-				}
-				if ($this->value['width']<0) $this->value['width']=0;
+				$this->value['width'] = $this->getLastWidth();
+				$this->value['width']-= $this->value['margin']['l'] + $this->value['margin']['r'];
 			}
 			else
 			{
-				if ($this->value['border']['l']['width']) { $this->value['width']	+= $this->value['border']['l']['width']; }
-				if ($this->value['border']['r']['width']) { $this->value['width']	+= $this->value['border']['r']['width']; }			
+				if ($correct_width)
+				{
+					if (!in_array($balise, array('table', 'div', 'hr')))
+					{
+						$this->value['width']-= $this->value['padding']['l'] + $this->value['padding']['r'];
+						$this->value['width']-= $this->value['border']['l']['width'] + $this->value['border']['r']['width'];
+					}
+					if (in_array($balise, array('th', 'td')))
+					{
+						$this->value['width']-= $this->ConvertToMM(isset($param['cellspacing']) ? $param['cellspacing'] : '2px');
+					}
+					if ($this->value['width']<0) $this->value['width']=0;
+				}
+				else
+				{
+					if ($this->value['width'])
+					{
+						if ($this->value['border']['l']['width'])	$this->value['width']	+= $this->value['border']['l']['width'];
+						if ($this->value['border']['r']['width'])	$this->value['width']	+= $this->value['border']['r']['width'];			
+						if ($this->value['padding']['l'])			$this->value['width']	+= $this->value['padding']['l'];
+						if ($this->value['padding']['r'])			$this->value['width']	+= $this->value['padding']['r'];
+					}		
+				}
 			}
-			if ($this->value['border']['b']['width']) { $this->value['height']	+= $this->value['border']['b']['width']; }
-			if ($this->value['border']['t']['width']) { $this->value['height']	+= $this->value['border']['t']['width']; }
-			
+			if ($this->value['height'])
+			{
+				if ($this->value['border']['b']['width']) { $this->value['height']	+= $this->value['border']['b']['width']; }
+				if ($this->value['border']['t']['width']) { $this->value['height']	+= $this->value['border']['t']['width']; }
+				if ($this->value['padding']['b'])			$this->value['height']	+= $this->value['padding']['b'];
+				if ($this->value['padding']['t'])			$this->value['height']	+= $this->value['padding']['t'];		
+			}			
 			
 			if ($this->value['top']!=null)		$this->value['top']		= $this->ConvertToMM($this->value['top'],		$this->getLastHeight(true));
 			if ($this->value['bottom']!=null)	$this->value['bottom']	= $this->ConvertToMM($this->value['bottom'],	$this->getLastHeight(true));
@@ -715,6 +947,18 @@ if (!defined('__CLASS_STYLEHTML__'))
 			
 			if ($this->value['top'] && $this->value['bottom'] && $this->value['height'])	$this->value['bottom']	= null;
 			if ($this->value['left'] && $this->value['right'] && $this->value['width'])		$this->value['right']	= null;
+		}
+		
+ 		/**
+		 * Récupération de la hauteur de ligne courante
+		 *
+		 * @return	float	hauteur en mm
+		 */
+		function getLineHeight()
+		{
+			$val = $this->value['line-height'];
+			if ($val=='normal') $val = '108%';
+			return $this->ConvertToMM($val, $this->value['font-size']);
 		}
 		
  		/**
@@ -763,6 +1007,21 @@ if (!defined('__CLASS_STYLEHTML__'))
 			return $this->pdf->h - $this->pdf->tMargin - $this->pdf->bMargin;
 		}
 		
+		function getFloat()
+		{
+			if ($this->value['float']=='left')	return 'left';
+			if ($this->value['float']=='right')	return 'right';
+			return null;
+		}
+		
+		function getParentBalise()
+		{
+			$nb = count($this->table);
+			if ($nb>0)
+				return $this->table[$nb-1]['id_balise'];
+			return null;
+		}
+		
 		function getLastAbsoluteX()
 		{
 			for($k=count($this->table); $k>0; $k--)
@@ -776,7 +1035,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		{
 			for($k=count($this->table); $k>0; $k--)
 			{
-				if ($this->table[$k-1]['x'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
+				if ($this->table[$k-1]['y'] && $this->table[$k-1]['position']) return $this->table[$k-1]['y'];
 			}
 			return $this->pdf->tMargin;
 		}
@@ -841,7 +1100,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 			// si on est pas à la premiere etape, on doit analyse toutes les sous etapes			
 			if ($next!==null && $this->getReccursiveStyle($key, $lst, '')) return true;
 		
-			// aucun  style trouvé	
+			// aucun style trouvé	
 			return false;	
 		}
 		
@@ -853,7 +1112,7 @@ if (!defined('__CLASS_STYLEHTML__'))
 		 */
 		function readBorder($val)
 		{
-			$none = array('type' => 'none', 'width' => 0, 'color' =>  array(0, 0, 0));
+			$none = array('type' => 'none', 'width' => 0, 'color' => array(0, 0, 0));
 
 			// valeurs par défault
 			$type	= 'solid';
@@ -975,7 +1234,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 		function ConvertBackgroundPosition($val, &$res)
 		{
 			$val = explode(' ', $val);
-			if (count($val)<1) $val[1] = 'center';
+			if (count($val)<2)
+			{
+				if (!$val[0]) return null;
+				$val[1] = 'center';
+			}
 			if (count($val)>2) return null;
 
 			$x = 0;
@@ -987,8 +1250,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 			else if ($val[0]=='right')	$x = '100%';
 			else if ($val[0]=='top')	$y = '0%';
 			else if ($val[0]=='bottom')	$y = '100%';
-			else if (preg_match('/^[-]?[0-9\.]+$/isU',	$val[0])) $x = $val[0];
 			else if (preg_match('/^[-]?[0-9\.]+%$/isU',	$val[0])) $x = $val[0];
+			else if ($this->ConvertToMM($val[0])) $x = $this->ConvertToMM($val[0]);
 			else $res = false;
 			
 			if ($val[1]=='left')		$x = '0%';
@@ -996,8 +1259,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 			else if ($val[1]=='top')	$y = '0%';
 			else if ($val[1]=='center')	$y = '50%';
 			else if ($val[1]=='bottom')	$y = '100%';
-			else if (preg_match('/^[-]?[0-9\.]+$/isU',	$val[1])) $y = $val[1];
 			else if (preg_match('/^[-]?[0-9\.]+%$/isU',	$val[1])) $y = $val[1];
+			else if ($this->ConvertToMM($val[1])) $y = $this->ConvertToMM($val[1]);
 			else $res = false;
 
 			$val[0] = $x;
@@ -1095,6 +1358,8 @@ if (!defined('__CLASS_STYLEHTML__'))
 			// on remplace tous les espaces, tab, \r, \n, par des espaces uniques
 			$code = preg_replace('/[\s]+/', ' ', $code);
 
+			// on enlève les commentaires
+			$code = preg_replace('/\/\*.*?\*\//s', '', $code);
 
 			// on analyse chaque style
 			preg_match_all('/([^{}]+){([^}]*)}/isU', $code, $match);
@@ -1110,7 +1375,11 @@ if (!defined('__CLASS_STYLEHTML__'))
 				foreach($styles as $style)
 				{
 					$tmp = explode(':', $style);
-					if (count($tmp)==2)	$stl[trim(strtolower($tmp[0]))] = trim($tmp[1]);
+					if (count($tmp)>1)
+					{
+						$cod = $tmp[0]; unset($tmp[0]); $tmp = implode(':', $tmp); 
+						$stl[trim(strtolower($cod))] = trim($tmp);
+					}
 				}
 				
 				// décomposition des noms par les ,
@@ -1169,9 +1438,22 @@ if (!defined('__CLASS_STYLEHTML__'))
 					$tmp[trim(strtolower($match[1][$k]))] = trim($match[2][$k]);
 
 				// si de type text/css => on garde
-				if (isset($tmp['type']) && strtolower($tmp['type'])=='text/css' && isset($tmp['href']) && is_file($tmp['href']))
+				if (isset($tmp['type']) && strtolower($tmp['type'])=='text/css' && isset($tmp['href']))
 				{
-					$style.= file_get_contents($tmp['href'])."\n";
+					$content = @file_get_contents($tmp['href']);
+					$url = $tmp['href'];
+					if (strpos($url, 'http://')!==false)
+					{
+						$url = str_replace('http://', '', $url);
+						$url = explode('/', $url);
+						$url_main = 'http://'.$url[0].'/';
+						$url_self = $url; unset($url_self[count($url_self)-1]); $url_self = 'http://'.implode('/', $url_self).'/';
+
+						$content = preg_replace('/url\(([^\\\\][^)]*)\)/isU', 'url('.$url_self.'$1)', $content);
+						$content = preg_replace('/url\((\\\\[^)]*)\)/isU', 'url('.$url_main.'$1)', $content);
+					}
+
+					$style.= $content."\n";
 				}
 			}
 
@@ -1192,4 +1474,3 @@ if (!defined('__CLASS_STYLEHTML__'))
 		}
 	}
 }
-?>

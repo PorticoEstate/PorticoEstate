@@ -12,13 +12,13 @@ div.minifiche
 	font-weight:		normal;
 	background-image:	url(./res/exemple10a.gif);
 }
-div.minifiche img.icone		{ position: absolute; border: none; left:   5px; top:   5px; width: 240px; height: 128px; overflow: hidden; }
-div.minifiche div.zone1		{ position: absolute; border: none; left: 257px; top:   8px; width: 188px; height:  14px; overflow: hidden; text-align: center;	font-weight: bold; }
-div.minifiche div.zone2		{ position: absolute; border: none; left: 315px; top:  28px; width: 131px; height:  14px; overflow: hidden; text-align: left;	font-weight: normal; }
-div.minifiche div.zone3		{ position: absolute; border: none; left: 315px; top:  48px; width: 131px; height:  14px; overflow: hidden; text-align: left;	font-weight: normal;}
-div.minifiche div.zone4		{ position: absolute; border: none; left: 315px; top:  68px; width: 131px; height:  14px; overflow: hidden; text-align: left;	font-weight: normal; }
-div.minifiche div.zone5		{ position: absolute; border: none; left: 315px; top:  88px; width: 131px; height:  14px; overflow: hidden; text-align: left;	font-weight: normal; }
-div.minifiche div.download	{ position: absolute; border: none; left: 257px; top: 108px; width: 188px; height:  22px; overflow: hidden; text-align: center;	font-weight: normal; }
+div.minifiche img.icone		{ position: absolute; border: none; left: 5px;		top: 5px; width: 240px;		height: 128px;	overflow: hidden; }
+div.minifiche div.zone1		{ position: absolute; border: none; left: 257px;	top: 8px; width: 188px;		height: 14px;	padding-top: 1px; overflow: hidden; text-align: center;	font-weight: bold; }
+div.minifiche div.zone2		{ position: absolute; border: none; left: 315px;	top: 28px; width: 131px;	height: 14px;	padding-top: 1px; overflow: hidden; text-align: left;	font-weight: normal; }
+div.minifiche div.zone3		{ position: absolute; border: none; left: 315px;	top: 48px; width: 131px;	height: 14px;	padding-top: 1px; overflow: hidden; text-align: left;	font-weight: normal;}
+div.minifiche div.zone4		{ position: absolute; border: none; left: 315px;	top: 68px; width: 131px;	height: 14px;	padding-top: 1px; overflow: hidden; text-align: left;	font-weight: normal; }
+div.minifiche div.zone5		{ position: absolute; border: none; left: 315px;	top: 88px; width: 131px;	height: 14px;	padding-top: 1px; overflow: hidden; text-align: left;	font-weight: normal; }
+div.minifiche div.download	{ position: absolute; border: none; left: 257px;	top: 108px; width: 188px;	height: 22px;	overflow: hidden; text-align: center;	font-weight: normal; }
 
 -->
 </style>
@@ -48,12 +48,12 @@ div.minifiche div.download	{ position: absolute; border: none; left: 257px; top:
 	</table>
 	<hr>
 	<div class="minifiche" >
-		<img class="icone"	src="./res/exemple10b.jpg" alt="HTML2PDF"  >
+		<img class="icone"	src="./res/exemple10b.jpg" alt="HTML2PDF" >
 		<div class="zone1">HTML2PDF</div>
 		<div class="zone2">PHP</div>
 		<div class="zone3">Utilitaire</div>
-		<div class="zone4">3.11</div>
-		<div class="zone5">01/09/2008</div>
+		<div class="zone4">1.00</div>
+		<div class="zone5">01/01/1901</div>
 		<div class="download"><img src="./res/exemple10c.gif" alt="" style="border: none;"></div>
 	</div>
 	<hr>
@@ -79,7 +79,6 @@ div.main
 {
 	padding:	0;
 	margin:		0;
-	font-family:	verdana;
 	position:		relative;
 	left:			50%;
 	margin-left:	-80mm;
@@ -108,11 +107,11 @@ div.main a:hover
 -->
 </style>
 	<div class="main">
-		<div style="position: absolute; top: 5mm; left: 5mm; font-size:12pt; ">Spipu.net</div><br>
-		<div style="position: absolute; bottom: 5mm; right: 5mm; font-size:12pt; ">(c)2008 Spipu</div>
+		<div style="position: absolute; top: 5mm; left: 5mm; font-size:12pt;text-align: left;">Spipu.net</div><br>
+		<div style="position: absolute; bottom: 5mm; right: 5mm; font-size:12pt;  text-align: right; ">(c)2009 Spipu</div>
 		<br><br><br>
 		<a href="http://cineblog.spipu.net/"	>Cineblog by Spipu				</a><br><br>
-		<a href="http://html2pdf.spipu.net/"	>HTML2PDF						</a><br><br>
+		<a href="http://html2pdf.fr/"			>HTML2PDF						</a><br><br>
 		<a href="http://lambda.spipu.net/"		>Lambda Finder					</a><br><br>
 		<a href="http://open.spipu.net/"		>Gestion des Opens - Yaronet	</a><br><br>
 		<a href="http://perso.spipu.net/"		>A propos de moi				</a><br><br>
