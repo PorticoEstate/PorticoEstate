@@ -197,7 +197,7 @@ class rental_socontract extends rental_socommon
 			$filter_clauses[] = "billing_start <= {$timestamp_end}";
 			
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
-			$order = $order ? $order.' '.$specific_ordering : "ORDER BY {$specific_ordering}";
+			$order = $order ? $order.', '.$specific_ordering : "ORDER BY {$specific_ordering}";
 		}
 		
 		if(count($filter_clauses))
