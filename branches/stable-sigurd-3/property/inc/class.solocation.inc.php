@@ -131,6 +131,20 @@
 				);
 			}
 
+			$sql = "SELECT count(*) as hits FROM fm_project WHERE location_code $this->like '$location_code%'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index','query'=> $location_code, 'criteria_id' => 4)), //criteria 4 is for location_code
+					'name'		=> lang('project') . " [{$hits}]",
+					'descr'		=> lang('project')
+				);
+			}
+
 			$sql = "SELECT count(*) as hits FROM fm_gab_location WHERE location_code $this->like '$location_code%'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
