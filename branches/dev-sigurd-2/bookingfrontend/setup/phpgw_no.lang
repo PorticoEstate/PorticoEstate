@@ -100,7 +100,7 @@ homepage	bookingfrontend	no	Hjemmeside
 id	bookingfrontend	no	ID
 inactivate	bookingfrontend	no	Inaktivert
 inactive	bookingfrontend	no	Inaktiv
-invoice information	bookingfrontend	no	Faktura informasjon 
+invoice information	bookingfrontend	no	Fakturainformasjon 
 jan	bookingfrontend	no	januar
 jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
@@ -222,7 +222,7 @@ postal city	bookingfrontend	no	Poststed
 team leaders	bookingfrontend	no	Ansvarliga gruppledare
 team leader 1	bookingfrontend	no	Ansvarlig gruppledare 1
 team leader 2	bookingfrontend	no	Ansvarlig gruppledare 2
-regulation	bookingfrontend	no	Reglemang
+regulation	bookingfrontend	no	Reglement
 Object No.	bookingfrontend	no	Objektnr.
 Article	bookingfrontend	no	Artikkel
 Unit No.	bookingfrontend	no	Fagavdelningsnr.

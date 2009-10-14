@@ -334,11 +334,13 @@
 			$errors = array();
 			$from_ = $season['from_'];
 			$to_ = $season['to_'];
+			$interval = 1;
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
 				$from_ = phpgw::get_var('from_', 'POST');
 				$to_ = phpgw::get_var('to_', 'POST');
+				$interval = phpgw::get_var('field_interval', 'POST');
 				if($from_ < $season['from_'])
 				{
 					$errors['from_'] = lang('Start date must be after %1', pretty_timestamp($season['from_']));
@@ -356,12 +358,14 @@
 					$result = $this->bo->generate_allocation($season_id, 
 															 new DateTime($from_),
 															 new DateTime($to_),
+															 $interval,
 															 $step == 3);
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::render_template('season_generate', array('season' => $season, 
-								  'result'=>$result, 'step' => $step, 
+								  'result' => $result, 'step' => $step,
+								  'interval' => $interval,
 								  'from_' => $from_, 'to_' => $to_));
 		}
 

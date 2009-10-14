@@ -244,3 +244,8 @@ Start date must be after %1	booking	no	Fradato må være etter %1
 To date must be before %1	booking	no	Tildato må være før %1
 Add Activity	booking	no	Ny Aktivitet
 Completed	booking	no	Klar for fakturering
+1 week	booking	no	1 uke
+2 weeks	booking	no	2 uker
+3 weeks	booking	no	3 uker
+4 weeks	booking	no	4 uker
+Interval	booking	no	Interval
