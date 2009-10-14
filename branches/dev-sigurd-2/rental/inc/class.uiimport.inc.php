@@ -249,7 +249,7 @@
 				$composite->set_custom_address_1($this->decode($data[7]));
 				$composite->set_custom_postcode($this->decode($data[8]));
 				
-				$composite->set_is_active($data[19] == "1");
+				$composite->set_is_active($data[19] == "-1");
 				
 				// Store composite
 				if ($socomposite->store($composite)) {
