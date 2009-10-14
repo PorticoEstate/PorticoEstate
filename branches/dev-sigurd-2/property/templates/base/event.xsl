@@ -221,7 +221,7 @@
 					   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 		    			<tr>
 		    				<td width="79%" class="center" align="left">
-		    					<xsl:value-of select="lang_alarm"/>
+								<xsl:value-of select="php:function('lang', 'alarm')" />
 		    				</td>
 		    			</tr>
 

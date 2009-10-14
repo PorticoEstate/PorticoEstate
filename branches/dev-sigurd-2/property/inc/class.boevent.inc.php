@@ -678,6 +678,7 @@ if ( !extension_loaded('mcal') )
 					$retval[$j] = $this->cached_events[$j];
 				}
 			}
+//_debug_array($this->cached_events);die();
 			return $retval;
 //			return $this->cached_events;
 		}
