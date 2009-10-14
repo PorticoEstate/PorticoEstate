@@ -327,7 +327,7 @@
 
 			// ... create a paginator for this datasource
 			var pag = new YAHOO.widget.Paginator({
-				rowsPerPage: 25,
+				rowsPerPage: 10,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
 				firstPageLinkLabel: '<< <?php echo lang(first) ?>',

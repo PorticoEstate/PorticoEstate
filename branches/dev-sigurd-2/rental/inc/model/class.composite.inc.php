@@ -46,6 +46,24 @@
 		}
 		
 		/**
+		 * Checks if a unit is already added to the composite.
+		 * 
+		 * @param $location_code string with location code.
+		 * @return boolean true if unit is added, false if not.
+		 */
+		public function contains_unit($location_code)
+		{
+			foreach($this->units as $unit)
+			{
+				if($location_code == $unit->get_location_code())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		/**
 		 * Remove a given rental unit from this rental_composite. Note that the composite is not updated
 		 * in the database until store() is called.
 		 * 
