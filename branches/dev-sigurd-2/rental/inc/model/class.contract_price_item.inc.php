@@ -199,16 +199,4 @@
 			);
 		}
 		
-		/**
-		 * Return a single rental_price_item object based on the provided id
-		 * 
-		 * @param $id rental price item id
-		 * @return rental_price_item
-		 */
-		public static function get($id)
-		{
-			$so = self::get_so();
-			
-			return $so->get_single_contract_price_item($id);
-		}
 	}

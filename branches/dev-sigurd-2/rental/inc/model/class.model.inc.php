@@ -115,6 +115,30 @@ abstract class rental_model
 		return $this->validation_errors;
 	}
 
+	/**
+	 * Gets the value of the class attribute with the given name.  As such this function translates from
+	 * string to variable.
+	 *
+	 * @param $field the name of the class attribute to get
+	 * @return mixed the value of the attribute
+	 */
+	public function get_field($field)
+	{
+		return $this->{"$field"};
+	}
+
+	/**
+	 * Sets the value of the class attribute with the given name.  As such this function translates from
+	 * string to variable name.
+	 *
+	 * @param $field the name of the class attribute to set
+	 * @param $value the value to set
+	 */
+	public function set_field($field, $value)
+	{
+		$this->{"$field"} = $value;
+	}
+
 	public abstract function serialize();
 	
 }
