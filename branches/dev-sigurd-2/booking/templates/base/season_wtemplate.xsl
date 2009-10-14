@@ -243,7 +243,7 @@ YAHOO.booking.updateSchedule = function() {
 
 	YAHOO.booking.inlineTableHelper('schedule_container', weekUrl, colDefs, {
 		formatRow: YAHOO.booking.scheduleRowFormatter
-	});
+	}, true);
 }
 
 
