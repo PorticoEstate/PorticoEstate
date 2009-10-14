@@ -260,7 +260,8 @@
 			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_category 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
-			$default_status 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'');
+			//FIXME: differentiate mainsreen and helpdesk if this should be used.
+			$default_status 	= '';//isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status']:'';
 			$start_date 		= urldecode($this->start_date);
 			$end_date 			= urldecode($this->end_date);
 
