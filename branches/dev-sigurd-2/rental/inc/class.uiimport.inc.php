@@ -65,7 +65,7 @@
 				$result = $this->import($path);
 			} else if (phpgw::get_var("cancelsubmit")) {
 				// User cancelled import, clear session variables so we're ready to start over
-				phpgwapi_cache::session_clear('rental', 'facilit_parties');
+				//phpgwapi_cache::session_clear('rental', 'facilit_parties');
 				phpgwapi_cache::session_clear('rental', 'facilit_composites');
 				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
@@ -162,7 +162,7 @@
 			}
 			
 			// We're done with the import, so clear all session variables so we're ready for a new one
-			phpgwapi_cache::session_clear('rental', 'facilit_parties');
+			//phpgwapi_cache::session_clear('rental', 'facilit_parties');
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
@@ -254,9 +254,15 @@
 				// Store composite
 				if ($socomposite->store($composite)) {
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
-					$loc1 = $this->decode($data[1]);
-					$loc1 = $this->format_location_code($loc1);
 					
+					if (phpgw::get_var("location_id") == '1176') {
+						// Get internal composite location code from different field
+						$loc1 = $this->decode($data[5]);
+					} else {
+						$loc1 = $this->decode($data[1]);
+					}
+					
+					$loc1 = $this->format_location_code($loc1);
 					
 					// Add units only if composite stored ok.
 					$sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
