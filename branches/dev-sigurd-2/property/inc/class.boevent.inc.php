@@ -1103,18 +1103,14 @@ if ( !extension_loaded('mcal') )
 				{
 					$values[] = array
 					(
-						'resource'			=> 'descr',
-						'resource_id'		=> 11,
 						'time'				=> $i,
-						'_from'				=> '16:30',
-						'_to'				=> '17:00',
 						'date'				=> array
 						(
 							'exception' => $entry['exception'],
 							'lang_exception' => $lang_exception,
 							'type' => 'event',
 							'name' => $date,
-							'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
+							'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
 						)
 					);
 
