@@ -98,7 +98,7 @@ homepage	booking	no	Hjemmeside
 id	booking	no	ID
 inactivate	booking	no	Inaktivert
 inactive	booking	no	Inaktiv
-invoice information	booking	no	Faktura informasjon 
+invoice information	booking	no	Fakturainformasjon 
 jan	booking	no	januar
 jul	booking	no	juli
 jun	booking	no	juni
@@ -217,7 +217,7 @@ postal city	booking	no	Poststed
 team leaders	booking	no	Ansvarliga gruppledare
 team leader 1	booking	no	Ansvarlig gruppledare 1
 team leader 2	booking	no	Ansvarlig gruppledare 2
-regulation	booking	no	Reglemang
+regulation	booking	no	Reglement
 Object No.	booking	no	Objektnr.
 Article	booking	no	Artikkel
 Unit No.	booking	no	Fagavdelningsnr.
