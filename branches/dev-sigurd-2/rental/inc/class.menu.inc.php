@@ -13,7 +13,7 @@
 			(
 				'rental' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('rental', array(), true),
+					'text'	=> lang('rental'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uifrontpage.index') ),
 					'image'	=> array('rental', 'user-home'),
 					'order'	=> 10,
@@ -24,19 +24,19 @@
 			(
 				'contracts' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('contracts', array(), true),
+					'text'	=> lang('contracts'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontract.index') ),
 					'image'	=> array('rental', 'text-x-generic')
 				),
 				'composites' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('rc', array(), true),
+					'text'	=> lang('rc'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicomposite.index') ),
 					'image'	=> array('rental', 'go-home')
 				),
 				'parties' => array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('parties', array(), true),
+					'text'	=> lang('parties'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uiparty.index') ),
 					'image'	=> array('rental', 'x-office-address-book')
 				)
@@ -51,7 +51,7 @@
 				),
 				'price_item_list'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('price_list', array(), true),
+					'text'	=> lang('price_list'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-spreadsheet')
 				),
@@ -62,13 +62,13 @@
 				),
 				'billing'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('invoice', array(), true),
+					'text'	=> lang('invoice'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-document')
 				),
 				'import'	=> array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('facilit_import', array(), true),
+					'text'	=> lang('facilit_import'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'document-save')
 				)
@@ -80,12 +80,12 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'text'	=> lang('Preferences'),
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'rental', 'type'=> 'user') )
 				),
 				array
 				(
-				'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+				'text'	=> lang('Grant Access'),
 				'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app'=> 'rental'))
 				)
 			);
