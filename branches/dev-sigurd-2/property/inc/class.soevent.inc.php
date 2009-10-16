@@ -456,5 +456,43 @@
 			return $retval;
 		}
 
+		public function set_exceptions($data = array())
+		{
+			if(!isset($data['event_id']) || !$data['event_id'])
+			{
+					throw new Exception("property_soevent::set_exceptions - Missing event_id in input");
+			}
 
+			foreach ($data['alarm'] as $exception_id)
+			{
+				$exception_time = mktime(13,0,0,intval(substr($exception_id,4,2)),intval(substr($exception_id,6,2)),intval(substr($exception_id,0,4)));
+				if($data['exception'])
+				{
+					$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					if ($this->_db->next_record())
+					{
+						continue;
+					}
+					else
+					{
+						$vals = array
+						(
+							$data['event_id'],
+							$exception_time,
+							$this->account,
+							phpgwapi_datetime::user_localtime(),
+						);						
+  						$vals	= $this->_db->validate_insert($vals);
+						$this->_db->query("INSERT INTO fm_event_exception (event_id, exception_time, user_id, entry_date) VALUES ({$vals})",__LINE__,__FILE__);
+					}
+				
+				}
+				else
+				{
+					$sql = "DELETE FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+				}
+			}
+		}
 	}

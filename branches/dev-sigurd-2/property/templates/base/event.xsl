@@ -168,6 +168,34 @@
 
 					</table>
 				</div>
+				<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
+				<div id="plan">
+					<form method="post" name="alarm" action="{$edit_url}">
+					   <input type="hidden" name="values[location_id]" value="{value_location_id}" ></input>
+					   <input type="hidden" name="values[location_item_id]" value="{value_location_item_id}" ></input>
+					   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
+		    			<tr>
+		    				<td width="79%" class="center" align="left">
+								<xsl:value-of select="php:function('lang', 'alarm')" />
+		    				</td>
+		    			</tr>
+
+			      <!-- DataTable 0 EDIT -->
+					<tr>
+				    	<td class="center" align="left" colspan="10">
+				    		<div id="datatable-container_0"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="center" align="center" colspan="10">
+							<div id="datatable-buttons_0"></div>
+						</td>
+					</tr>
+			      <!-- <xsl:call-template name="alarm_form"/>  -->
+
+				   	  </table>
+					</form>
+				</div>
 
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<tr height="50">
@@ -208,6 +236,33 @@
 			</div>
 		</form>
 		</div>
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+		    var td_count = <xsl:value-of select="td_count" />;
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					permission		:	<xsl:value-of select="permission"/>,
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
+
 	</xsl:template>
 
 	<xsl:template match="schedule" xmlns:php="http://php.net/xsl">
@@ -217,7 +272,8 @@
 				<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 				<div id="general">
 					<form method="post" name="alarm" action="{$edit_url}">
-					   <input type="hidden" name="values[entity_id]" value="{value_s_agreement_id}" ></input>
+					   <input type="hidden" name="values[location_id]" value="{value_location_id}" ></input>
+					   <input type="hidden" name="values[location_item_id]" value="{value_location_item_id}" ></input>
 					   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
 		    			<tr>
 		    				<td width="79%" class="center" align="left">
@@ -232,7 +288,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="center" align="right" colspan="10">
+						<td class="center" align="center" colspan="10">
 							<div id="datatable-buttons_0"></div>
 						</td>
 					</tr>

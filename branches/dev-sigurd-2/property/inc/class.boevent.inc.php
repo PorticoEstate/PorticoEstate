@@ -1129,4 +1129,13 @@ if ( !extension_loaded('mcal') )
 
 			return $data;
 		}
+
+		public function set_exceptions($data = array())
+		{
+			if(!isset($data['event_id']) || !$data['event_id'])
+			{
+					throw new Exception("property_boevent::set_exceptions - Missing event_id info in input");
+			}
+			$this->so->set_exceptions($data);
+		}
 	}

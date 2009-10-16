@@ -53,7 +53,6 @@
 			'delete'	=> true,
 			'schedule'	=> true,
 			'schedule2'	=> true,
-			'schedule3'	=> true,	
 			'schedule_week'	=> true
 		);
 
@@ -548,13 +547,15 @@
 
 			phpgwapi_yui::tabview_setup('general_edit_tabview');
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$tabs['repeat']	= array('label' => lang('repeat'), 'link' => '#repeat');
+			$tabs['repeat']		= array('label' => lang('repeat'), 'link' => '#repeat');
+			$schedule = array();
+			if ($id)
+			{
+				$tabs['plan']		= array('label' => lang('plan'), 'link' => '#plan');
+				$schedule = $this->schedule2();
+			}
 
-/*
-			$GLOBALS['phpgw']->jscal->add_listener('values_start_date');
-			$GLOBALS['phpgw']->jscal->add_listener('values_end_date');
-			$start_date = $GLOBALS['phpgw']->jscal->input('values_start_date', $date, $format = 'input', lang('start date'));
-*/
+
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
@@ -621,6 +622,7 @@
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 			);
 
+			$data = array_merge($schedule, $data);
 			$appname	=  lang('event');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
@@ -658,61 +660,26 @@
 
 
 
-		function schedule3()
+		function schedule2()
 		{
 
-			$id				= phpgw::get_var('id'); // in case of bigint
-
-			if(!$this->acl_add && !$this->acl_edit)
-			{
-			//	$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $id));
-			}
-
+			$id = phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
-
 
 			if (is_array($values))
 			{
-
-				if($values['delete_alarm'] && count($values['alarm']))
+				if($values['alarm'])
 				{
-					if(!$receipt['error'])
-					{
-						$receipt = $boalarm->delete_alarm('s_agreement',$values['alarm']);
-					}
-
-				}
-				else if(($values['enable_alarm'] || $values['disable_alarm']) && count($values['alarm']))
-				{
-
-					if(!$receipt['error'])
-					{
-						$receipt = $boalarm->enable_alarm('s_agreement',$values['alarm'],$values['enable_alarm']);
-					}
-
-				}
-				else if($values['add_alarm'])
-				{
-					$time = intval($values['time']['days'])*24*3600 +
-						intval($values['time']['hours'])*3600 +
-						intval($values['time']['mins'])*60;
-
-					if ($time > 0)
-					{
-						$receipt = $boalarm->add_alarm('s_agreement',$this->bo->read_event(array('s_agreement_id'=>$id)),$time,$values['user_id']);
-					}
-
-				}
-				else if (!$values['save'] && !$values['apply'] && !$values['update'])
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.index', 'role'=> $this->role));
+					$receipt = $this->bo->set_exceptions(
+						array(
+						'event_id' => $id,
+						'alarm' => array_keys($values['alarm']),
+						'exception' => !!$values['disable_alarm']));
 				}
 			}
 
 
 //------------------------------get data
-			$id = phpgw::get_var('id', 'int');
-	
 			$event = $this->bo->so->read_single($id);
 
 			$criteria = array
@@ -725,10 +692,11 @@
 
 			$this->bo->find_scedules($criteria);
 			$schedules =  $this->bo->cached_events;
-
+//_debug_array($schedules);die();
 			$total_records = 0;
 
 			$lang_exception	 = lang('exception');
+
 			$values = array();
 
 			$i = 1;
@@ -744,6 +712,7 @@
 					(
 						'number'			=> $i,
 						'time'				=> $date,
+						'alarm_id'			=> $_date,
 						'enabled'			=> isset($entry['exception']) && $entry['exception']==true ? '' : 1,
 						'location_id' 		=> $entry['location_id'],
 						'location_item_id'	=> $entry['location_item_id'],
@@ -801,9 +770,9 @@
 				'name'   => "0",
 				'values'   => json_encode($values),
 				'total_records' => count($values),
-				'is_paginator' => 0,
+				'is_paginator' => 1,
 				'permission'=> '""',
-				'footer'  => 0
+				'footer'  => 1
 			);
 
 			$myColumnDefs[0] = array
@@ -811,10 +780,12 @@
 				'name'   => "0",
 				'values'  => json_encode(array( 
 					array('key' => 'number', 'label'=>'#', 'sortable'=>true,'resizeable'=>true,'width'=>20),
-					array('key' => 'time', 'label'=>lang('time'), 'sortable'=>true,'resizeable'=>true,'width'=>140),
-			  		array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
-			  		array('key' => 'event_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
-			  		array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)))
+					array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
+					array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),					
+					array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),					
+			  		array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>30),
+			  		array('key' => 'alarm_id','label'=> 'alarm_id','sortable'=>true,'resizeable'=>true,'hidden'=>false),
+			  		array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
 			  );
 
 			$myButtons[0] = array
@@ -823,7 +794,6 @@
 				'values'  => json_encode(array( 
 					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 			  		array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-		//	  		array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=> lang('delete'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 			  		))
 			);
 
@@ -840,14 +810,16 @@
 
 			$data = array
 			(
-				'td_count'					=> $td_count,
+				'td_count'					=> 6,
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'base_java_url'				=> json_encode(array('menuaction' => "property.uievent.schedule2",'id'=>$id)),
 				'datatable'					=> $datavalues,
 				'myColumnDefs'				=> $myColumnDefs,
 				'myButtons'					=> $myButtons,
 
-				'link_import'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.import', 'tab' => 'items')),
+				'value_location_id'			=> $event['location_id'],
+				'value_location_item_id'	=> $event['location_item_id'],
+
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -869,121 +841,16 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
+	//		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.schedule', 'property' );
+			return $data;
 		}
 
-
- 		public function schedule2()
-		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('attributes_form', 'files'));
-			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
-						'vendor_id'	=> $s_agreement['vendor_id'],
-						'vendor_name'	=> $s_agreement['vendor_name']));
-
-			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $s_agreement['b_account_id'],
-						'b_account_name'	=> $s_agreement['b_account_name']));
-
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
-						'ecodimb'			=> $s_agreement['ecodimb'],
-						'ecodimb_descr'		=> $s_agreement['ecodimb_descr']));
-
-			$alarm_data=$this->bocommon->initiate_ui_alarm(array(
-						'acl_location'=>$this->acl_location,
-						'alarm_type'	=> 's_agreement',
-						'type'		=> 'form',
-						'text'		=> 'Email notification',
-						'times'		=> $times,
-						'id'		=> $id,
-						'method'	=> $method,
-						'data'		=> $data,
-						'account_id'=> $account_id
-						));
-
-
-			$alarm_data['values'] = array();
-			$datavalues[0] = array
-			(
-				'name'   => "0",
-				'values'   => json_encode($alarm_data['values']),
-				'total_records' => count($alarm_data['values']),
-				'is_paginator' => 0,
-				'permission'=> '""',
-				'footer'  => 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'   => "0",
-				'values'  => json_encode(array( array('key' => 'time', 'label'=>$alarm_data['header'][0]['lang_time'], 'sortable'=>true,'resizeable'=>true,'width'=>140),
-				array('key' => 'text', 'label'=>$alarm_data['header'][0]['lang_text'], 'sortable'=>true,'resizeable'=>true,'width'=>340),
-				array('key' => 'user', 'label'=>$alarm_data['header'][0]['lang_user'], 'sortable'=>true,'resizeable'=>true,'width'=>200),
-				array('key' => 'enabled','label'=>$alarm_data['header'][0]['lang_enabled'],'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>60),
-				array('key' => 'alarm_id','label'=>"dummy",'sortable'=>true,'resizeable'=>true,'hidden'=>true),
-				array('key' => 'select','label'=>$alarm_data['header'][0]['lang_select'], 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>60)))
-			);
-
-			$myButtons[0] = array
-			(
-				'name'   => "0",
-				'values'  => json_encode(array( array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=>$alarm_data['alter_alarm'][0]['lang_enable'], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-				array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>$alarm_data['alter_alarm'][0]['lang_disable'], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-				array('id' =>'values[delete_alarm]','type'=>'buttons', 'value'=>'Delete', 'label'=>$alarm_data['alter_alarm'][0]['lang_delete'], 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-				))
-			);
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uievent.schedule2',
-				'id'		=>		$id
-			);
-
-
-			$data = array
-			(
-				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'				=> json_encode(array('menuaction' => "property.uievent.schedule2",'id'=>$id)),
-				'datatable'					=> $datavalues,
-				'myColumnDefs'				=> $myColumnDefs,
-				'myButtons'					=> $myButtons,
-
-				'alarm_data'				=> $alarm_data,
-				'lang_alarm'				=> lang('Alarm'),
-
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'td_count'					=> 0,
-			);
-
-//_debug_array($data);die;
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.schedule', 'property' );
-
-		}
-
+ 
 		public function schedule_week()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
