@@ -549,10 +549,11 @@
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 			$tabs['repeat']		= array('label' => lang('repeat'), 'link' => '#repeat');
 			$schedule = array();
+
 			if ($id)
 			{
 				$tabs['plan']		= array('label' => lang('plan'), 'link' => '#plan');
-				$schedule = $this->schedule2();
+				$schedule = $this->schedule2($id);
 			}
 
 
@@ -660,10 +661,12 @@
 
 
 
-		function schedule2()
+		function schedule2($id = 0)
 		{
-
-			$id = phpgw::get_var('id', 'int');
+			if(!$id)
+			{
+				$id = phpgw::get_var('id', 'int');
+			}
 			$values			= phpgw::get_var('values');
 
 			if (is_array($values))
