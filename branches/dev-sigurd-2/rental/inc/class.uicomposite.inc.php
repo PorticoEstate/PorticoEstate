@@ -33,7 +33,7 @@
 		{
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables

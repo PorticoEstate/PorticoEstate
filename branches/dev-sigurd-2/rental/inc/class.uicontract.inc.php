@@ -44,7 +44,7 @@
 		{
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 1000);
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables
@@ -113,10 +113,7 @@
 			foreach ($result_objects as $result) {
 				if(isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
-					{
-						$rows[] = $result->serialize();
-					}
+					$rows[] = $result->serialize();
 				}
 			}
 
@@ -142,49 +139,32 @@
 			$value['labels'] = array();
 
 			$type = $params[0];
-			$permissions = $value['permissions'];
-			
 			
 			switch($type)
 			{
 				case 'last_edited_by':
-					if($permissions[PHPGW_ACL_EDIT])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit_contract');
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit_contract');
 					break;
 				case 'contracts_for_executive_officer':
-					if($permissions[PHPGW_ACL_EDIT])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit_contract');
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit_contract');
 					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
-					if($permissions[PHPGW_ACL_EDIT])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit_contract');
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit_contract');
 					break;
 				default:
-					if($permissions[PHPGW_ACL_EDIT])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit');
-					}
-					if($permissions[PHPGW_ACL_READ])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-						$value['labels'][] = lang('show');		
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit');
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('show');	
 				}
 		}
 
