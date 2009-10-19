@@ -964,8 +964,8 @@ minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
 month	property	no	Måned
-Monthly (by day)	property	no	Månedldig (dag)
-Monthly (by date)	property	no	Månedldig (dato)
+Monthly (by day)	property	no	Månedlig (dag)
+Monthly (by date)	property	no	Månedlig (dato)
 muliple checkbox	property	no	Flervalgs avkrysningsknapp
 muliple radio	property	no	Flervalgs radioknapp
 multiple checkbox	property	no	Flervalgs avkrysningsknapp

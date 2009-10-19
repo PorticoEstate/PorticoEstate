@@ -50,25 +50,25 @@
 
 		function read($data)
 		{
-
 			if(!isset($data['location_id']) || !$data['location_id'])
 			{
 				if(!isset($data['appname']) || !$data['appname'] || !isset($data['location']) || !$data['location'])
 				{
 					throw new Exception("property_soevent::read - Missing location info in input");
 				}
-				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+				$location_id = $GLOBALS['phpgw']->locations->get_id($data['appname'], $data['location']);
 			}
 			else
 			{
-				$location_id = $data['location_id'];
+				$location_id = (int) $data['location_id'];
 			}
 
-			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query		= isset($data['query']) ? $data['query'] : '';
-			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-			$order		= isset($data['order']) ? $data['order'] : '';
-			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$location_item_id 	= isset($data['location_item_id']) && $data['location_item_id'] ? (int)$data['location_item_id'] : '';
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				= isset($data['query']) ? $data['query'] : '';
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order				= isset($data['order']) ? $data['order'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 
 			if(!isset($data['location_item_id']) || !$data['location_item_id'])
 			{
@@ -81,14 +81,21 @@
 
 			$table = 'fm_event';
 
+			$filtermethod = "WHERE location_id = {$location_id}";
+			
+			if($location_item_id)
+			{
+				$filtermethod .= " AND location_item_id = {$location_item_id}";
+			}
+			
 			if($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
-				$querymethod = " WHERE id $this->_like '%$query%' OR descr $this->_like '%$query%'";
+				$querymethod = " AND id $this->_like '%$query%' OR descr $this->_like '%$query%'";
 			}
 
-			$sql = "SELECT * FROM $table $querymethod";
+			$sql = "SELECT * FROM {$table} {$filtermethod} {$querymethod}";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
@@ -136,7 +143,7 @@
 					'action'			=> $this->_db->f('action_id'),
 					'end_date'			=> $end_date,
 					'repeat_type'		=> $this->_db->f('repeat_type'),
-					'rpt_day'			=> $this->_db->f('repeat_day'),
+					'rpt_day'			=> (int)$this->_db->f('repeat_day'),
 					'repeat_interval'	=> $this->_db->f('repeat_interval'),
 					'enabled'			=> $this->_db->f('enabled'),
 					'user_id'			=> $this->_db->f('user_id'),
@@ -336,24 +343,25 @@
 		//FIXME adapt from calendar	
 		function list_events($data = array())
 		{
-			$startYear		= $data['syear'];
-			$startMonth		= $data['smonth'];
-			$startDay		= $data['sday'];
-			$endYear		= $data['eyear'] ? $data['eyear'] : 0;
-			$endMonth		= $data['emonth'] ? $data['emonth'] : 0;
-			$endDay			= $data['eday'] ? $data['eday'] : 0;
-			$extra			= $data['eday'] ? $data['eday'] : '';
-			$tz_offset		= $data['tz_offset'] ? $data['tz_offset'] : 0;
-			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
-			$location_id	= $data['location_id'];
+			$startYear			= $data['syear'];
+			$startMonth			= $data['smonth'];
+			$startDay			= $data['sday'];
+			$endYear			= $data['eyear'] ? $data['eyear'] : 0;
+			$endMonth			= $data['emonth'] ? $data['emonth'] : 0;
+			$endDay				= $data['eday'] ? $data['eday'] : 0;
+			$extra				= $data['extra'] ? $data['extra'] : '';
+			$tz_offset			= $data['tz_offset'] ? $data['tz_offset'] : 0;
+			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id		= (int) $data['location_id'];
+			$location_item_id	= (int) $data['location_item_id'];
 
-			if(!$startYear || !$startMonth || !$startDay || ! $location_id)
+			if(!$startYear || !$startMonth || !$startDay || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_events - Missing start date info");
 			}
 
-			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
-		
+//			$datetime = mktime(0,0,0,$startMonth,$startDay,$startYear) - $tz_offset;
+			$datetime = mktime(13,0,0,$startMonth,$startDay,$startYear);		
 			$sql = ' WHERE (fm_event.user_id in (';
 			if($owner_id)
 			{
@@ -378,7 +386,8 @@
 
 			if($endYear != 0 && $endMonth != 0 && $endDay != 0)
 			{
-				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
+//				$edatetime = mktime(23,59,59,intval($endMonth),intval($endDay),intval($endYear)) - $tz_offset;
+				$edatetime = mktime(13,0,0,intval($endMonth),intval($endDay),intval($endYear));
 				$sql .= 'AND (fm_event.end_date <= '.$edatetime.') ) '
 					. 'OR ( (fm_event.start_date <= '.$datetime.') '
 					. 'AND (fm_event.end_date >= '.$edatetime.') ) '
@@ -389,7 +398,7 @@
 					. 'AND (fm_event.end_date >= '.$datetime.') '
 					. 'AND (fm_event.end_date <= '.$edatetime.') ';
 			}
-			$sql .= ") ) AND location_id = {$location_id}";
+			$sql .= ") ) AND location_id = {$location_id} AND location_item_id = {$location_item_id}";
 
 			$order_by = ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 
@@ -398,16 +407,16 @@
 
 		function list_repeated_events($data = array())
 		{
-			$syear			= $data['syear'];
-			$smonth			= $data['smonth'];
-			$sday			= $data['sday'];
-			$eyear			= $data['eyear'];
-			$emonth			= $data['emonth'];
-			$eday			= $data['eday'];
-			$owner_id		= $data['owner_id'] ? $data['owner_id'] : 0;
-			$location_id	= $data['location_id'];
-
-			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || ! $location_id)
+			$syear				= $data['syear'];
+			$smonth				= $data['smonth'];
+			$sday				= $data['sday'];
+			$eyear				= $data['eyear'];
+			$emonth				= $data['emonth'];
+			$eday				= $data['eday'];
+			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
+			$location_id		= (int) $data['location_id'];
+			$location_item_id	= (int) $data['location_item_id'];
+			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_repeated_events - Missing date info");
 			}
@@ -416,7 +425,7 @@
 
 			$starttime = mktime(0,0,0,$smonth,$sday,$syear) - $user_timezone;
 			$endtime = mktime(23,59,59,$emonth,$eday,$eyear) - $user_timezone;
-			$sql = "(fm_event.location_id = {$location_id})"
+			$sql = "(fm_event.location_id = {$location_id} AND fm_event.location_item_id = {$location_item_id})"
 				. ' AND ((fm_event.end_date >= '.$starttime.') OR (fm_event.end_date=0))'
 				. ' ORDER BY fm_event.start_date ASC, fm_event.end_date ASC';
 
@@ -456,5 +465,43 @@
 			return $retval;
 		}
 
+		public function set_exceptions($data = array())
+		{
+			if(!isset($data['event_id']) || !$data['event_id'])
+			{
+					throw new Exception("property_soevent::set_exceptions - Missing event_id in input");
+			}
 
+			foreach ($data['alarm'] as $exception_id)
+			{
+				$exception_time = mktime(13,0,0,intval(substr($exception_id,4,2)),intval(substr($exception_id,6,2)),intval(substr($exception_id,0,4)));
+				if($data['exception'])
+				{
+					$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					if ($this->_db->next_record())
+					{
+						continue;
+					}
+					else
+					{
+						$vals = array
+						(
+							$data['event_id'],
+							$exception_time,
+							$this->account,
+							phpgwapi_datetime::user_localtime(),
+						);						
+  						$vals	= $this->_db->validate_insert($vals);
+						$this->_db->query("INSERT INTO fm_event_exception (event_id, exception_time, user_id, entry_date) VALUES ({$vals})",__LINE__,__FILE__);
+					}
+				
+				}
+				else
+				{
+					$sql = "DELETE FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+				}
+			}
+		}
 	}

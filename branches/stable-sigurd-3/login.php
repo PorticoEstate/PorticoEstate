@@ -63,11 +63,50 @@
 		$passwd = $_SERVER['PHP_AUTH_PW'];
 	}
 	
-	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
+	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']) && (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 	{
-		$submit = true;
 		$login  = $_SERVER['REMOTE_USER'];
 		$passwd = '';
+//------------------Start login ntlm
+
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $skip_auth = true);
+
+		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
+		{
+			$cd_array=array();
+			if($GLOBALS['phpgw']->session->cd_reason)
+			{
+				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
+			}
+			$cd_array['skip_remote'] = true;
+
+			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+			exit;
+		}
+
+		$forward = phpgw::get_var('phpgw_forward');
+		if($forward)
+		{
+			$extra_vars['phpgw_forward'] =  $forward;
+			foreach($_GET as $name => $value)
+			{
+				if (ereg('phpgw_',$name))
+				{
+					$name = urlencode($name);
+					$extra_vars[$name] = urlencode($value);
+				}
+			}
+		}
+		if ( !isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'] )
+		{
+			$uilogin->check_langs();
+		}
+		$extra_vars['cd'] = 'yes';
+		
+		$GLOBALS['phpgw']->hooks->process('login');
+		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
+
+//----------------- End login ntlm
 	}
 
 	# Apache + mod_ssl style SSL certificate authentication

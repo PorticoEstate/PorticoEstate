@@ -52,12 +52,13 @@
 			'edit'		=> true,
 			'delete'	=> true,
 			'schedule'	=> true,
+			'schedule2'	=> true,
 			'schedule_week'	=> true
 		);
 
 		function __construct()
 		{
-			parent::__construct();
+//			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boevent',true);
@@ -546,13 +547,16 @@
 
 			phpgwapi_yui::tabview_setup('general_edit_tabview');
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
-			$tabs['repeat']	= array('label' => lang('repeat'), 'link' => '#repeat');
+			$tabs['repeat']		= array('label' => lang('repeat'), 'link' => '#repeat');
+			$schedule = array();
 
-/*
-			$GLOBALS['phpgw']->jscal->add_listener('values_start_date');
-			$GLOBALS['phpgw']->jscal->add_listener('values_end_date');
-			$start_date = $GLOBALS['phpgw']->jscal->input('values_start_date', $date, $format = 'input', lang('start date'));
-*/
+			if ($id)
+			{
+				$tabs['plan']		= array('label' => lang('plan'), 'link' => '#plan');
+				$schedule = $this->schedule2($id);
+			}
+
+
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
 			$jscal->add_listener('values_end_date');
@@ -619,6 +623,7 @@
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 			);
 
+			$data = array_merge($schedule, $data);
 			$appname	=  lang('event');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
@@ -644,6 +649,7 @@
 
 			$resource = $this->bo->read_single($id);
 			$resource['cols'][] = array('label' => lang('date'), 'key' => 'date');
+			$resource['cols'][] = array('label' => lang('exception'), 'key' => 'exception');
 
 			$lang['resource_schedule'] = lang('Resource schedule');
 			$lang['schedule'] = lang('Schedule');
@@ -653,6 +659,201 @@
 			self::render_template('event_schedule', array('resource' => $resource, 'lang' => $lang));
 		}
 
+
+
+		function schedule2($id = 0)
+		{
+			if(!$id)
+			{
+				$id = phpgw::get_var('id', 'int');
+			}
+			$values			= phpgw::get_var('values');
+
+			if (is_array($values))
+			{
+				if($values['alarm'])
+				{
+					$receipt = $this->bo->set_exceptions(
+						array(
+						'event_id' => $id,
+						'alarm' => array_keys($values['alarm']),
+						'exception' => !!$values['disable_alarm']));
+				}
+			}
+
+
+//------------------------------get data
+			$event = $this->bo->so->read_single($id);
+
+			$criteria = array
+			(
+				'start_date'		=> $event['start_date'],
+				'end_date'			=> $event['end_date'],
+				'location_id'		=> $event['location_id'],
+				'location_item_id'	=> $event['location_item_id']
+			);
+
+			$this->bo->find_scedules($criteria);
+			$schedules =  $this->bo->cached_events;
+//_debug_array($schedules);die();
+			$total_records = 0;
+
+			$lang_exception	 = lang('exception');
+
+			$values = array();
+
+			$i = 1;
+			foreach($schedules as $_date => $set)
+			{
+				$__date = substr($_date,0,4) . '-' . substr($_date,4,2) . '-' . substr($_date,6,2);
+				$date = phpgwapi_datetime::convertDate($__date, 'Y-m-d', $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+				foreach($set as $entry)
+				{
+
+					$values[] = array
+					(
+						'number'			=> $i,
+						'time'				=> $date,
+						'alarm_id'			=> $_date,
+						'enabled'			=> isset($entry['exception']) && $entry['exception']==true ? '' : 1,
+						'location_id' 		=> $entry['location_id'],
+						'location_item_id'	=> $entry['location_item_id'],
+						'url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
+					);
+
+					$i++;
+				}
+			}
+
+//------------------------------end get data
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uis_agreement.edit',
+				'id'		=> $id,
+				'role'		=> $this->role
+			);
+
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+
+			$link_download = array
+			(
+				'menuaction'	=> 'property.uis_agreement.download',
+				'id'		=> $id
+			);
+
+			$tabs = array();
+
+
+			//----------JSON CODE ----------------------------------------------
+
+
+			//---GET ALARM
+			if( phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if(count($values))
+				{
+					return json_encode($values);
+				}
+				else
+				{
+					return "";
+				}
+			}
+
+			//--------------------JSON code-----
+
+
+			//------- alarm--------
+			$datavalues[0] = array
+			(
+				'name'   => "0",
+				'values'   => json_encode($values),
+				'total_records' => count($values),
+				'is_paginator' => 1,
+				'permission'=> '""',
+				'footer'  => 1
+			);
+
+			$myColumnDefs[0] = array
+			(
+				'name'   => "0",
+				'values'  => json_encode(array( 
+					array('key' => 'number', 'label'=>'#', 'sortable'=>true,'resizeable'=>true,'width'=>20),
+					array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
+					array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),					
+					array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),					
+			  		array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>30),
+			  		array('key' => 'alarm_id','label'=> 'alarm_id','sortable'=>true,'resizeable'=>true,'hidden'=>false),
+			  		array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
+			  );
+
+			$myButtons[0] = array
+			(
+			  	'name'   => "0",
+				'values'  => json_encode(array( 
+					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+			  		array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+			  		))
+			);
+
+			$td_count = 0;
+
+//--------------------------------------------JSON CODE------------
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uievent.schedule2',
+				'id'		=>		$id
+			);
+
+
+			$data = array
+			(
+				'td_count'					=> 6,
+				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'base_java_url'				=> json_encode(array('menuaction' => "property.uievent.schedule2",'id'=>$id)),
+				'datatable'					=> $datavalues,
+				'myColumnDefs'				=> $myColumnDefs,
+				'myButtons'					=> $myButtons,
+
+				'value_location_id'			=> $event['location_id'],
+				'value_location_item_id'	=> $event['location_item_id'],
+
+
+				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
+			);
+
+//_debug_array($data);die;
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
+	//		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.schedule', 'property' );
+			return $data;
+		}
+
+ 
 		public function schedule_week()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

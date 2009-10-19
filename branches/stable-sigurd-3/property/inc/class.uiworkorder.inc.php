@@ -1322,7 +1322,15 @@
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
 			{
-				$link_claim = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check', 'project_id' => $project['project_id']));
+				$claim = execMethod('property.sotenant_claim.read',array('project_id' => $project['project_id']));
+				if($claim)
+				{
+					$link_claim = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.edit', 'claim_id' => $claim[0]['claim_id']));
+				}
+				else
+				{
+					$link_claim = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.check', 'project_id' => $project['project_id']));
+				}
 			}
 
 			$catetory = $this->cats->return_single($project['cat_id']);

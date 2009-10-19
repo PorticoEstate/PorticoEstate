@@ -188,17 +188,8 @@ if ( !extension_loaded('mcal') )
 				$values['next'] = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'],$dateformat);
 			}
 
-			$criteria = array
-			(
-				'start_date'=>$values['start_date'],
-				'end_date'=>$values['end_date'],
-				'appname' => 'property',
-				'location' => '.project.workorder',
-				'location_id' => 94
-			);
-//_debug_array($criteria);die();
 			$this->find_scedules($criteria);
-//_debug_array($this->cached_events);die();
+
 			return $values;
 		}
 
@@ -403,8 +394,8 @@ if ( !extension_loaded('mcal') )
 				0	=> 'None',
 				1	=> 'Daily',
 				2	=> 'Weekly',
-				3	=> 'Monthly (by day)',
-				4	=> 'Monthly (by date)',
+				3	=> 'Monthly (by date)',
+				4	=> 'Monthly (by day)',
 				5	=> 'Yearly'
 			);
 
@@ -502,12 +493,18 @@ if ( !extension_loaded('mcal') )
 				{
 					throw new Exception("property_boevent::find_scedules - Missing location info in input");
 				}
-				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+				$location_id = $GLOBALS['phpgw']->locations->get_id($params['appname'], $params['location']);
 			}
 			else
 			{
 				$location_id = $params['location_id'];
 			}
+
+			if(!isset($params['location_item_id']) || !$params['location_item_id'])
+			{
+					throw new Exception("property_boevent::find_scedules - Missing location_item_id in input");
+			}
+			$location_item_id = $params['location_item_id'];
 
 			if($params['start_date'])
 			{
@@ -568,87 +565,88 @@ if ( !extension_loaded('mcal') )
 
 			$find_criteria = array
 			(
-				'syear'			=> $syear,
-				'smonth'		=> $smonth,
-				'sday'			=> $sday,
-				'eyear'			=> $eyear,
-				'emonth'		=> $emonth,
-				'eday'			=> $eday,
-				'tz_offset'		=> 0,
-				'extra'			=> '',
-				'owner_id'		=> $owner_id,
-				'location_id'	=> $location_id
+				'syear'				=> $syear,
+				'smonth'			=> $smonth,
+				'sday'				=> $sday,
+				'eyear'				=> $eyear,
+				'emonth'			=> $emonth,
+				'eday'				=> $eday,
+				'tz_offset'			=> 0,
+				'extra'				=> '',
+				'owner_id'			=> $owner_id,
+				'location_id'		=> $location_id,
+				'location_item_id'	=> $location_item_id
 			);
 
 			$cached_event_ids			= $this->so->list_events($find_criteria);
 			$cached_event_ids_repeating	= $this->so->list_repeated_events($find_criteria);
+//_debug_array($cached_event_ids_repeating);die();
 			unset($find_criteria);
-
-			$c_cached_ids = count($cached_event_ids);
-			$c_cached_ids_repeating = count($cached_event_ids_repeating);
 
 			if($this->debug)
 			{
-				echo '<!-- events cached : '.$c_cached_ids.' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
-				echo '<!-- repeating events cached : '.$c_cached_ids_repeating.' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
+				echo '<!-- events cached : '.count($cached_event_ids).' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
+				echo '<!-- repeating events cached : '.count($cached_event_ids_repeating).' : for : '.sprintf("%04d%02d%02d",$syear,$smonth,$sday).' -->'."\n";
 			}
 
 			$this->cached_events = array();
 			
-			if($c_cached_ids == 0 && $c_cached_ids_repeating == 0)
+			if(!$cached_event_ids && !$cached_event_ids_repeating)
 			{
 				return;
 			}
 
-			if($c_cached_ids)
-			{
-				for($i=0;$i<$c_cached_ids;$i++)
-				{
-					$event = $this->so->read_single($cached_event_ids[$i]);
-					$startdate = intval(date('Ymd',$event['start_date']));
-					$enddate = intval(date('Ymd',$event['end_date']));
-					$this->cached_events[$startdate][] = $event;
-					if($startdate != $enddate)
-					{
-						$start['year'] = intval(substr($startdate,0,4));
-						$start['month'] = intval(substr($startdate,4,2));
-						$start['mday'] = intval(substr($startdate,6,2));
-						for($j=$startdate,$k=0;$j<=$enddate;$k++,$j=intval(date('Ymd',mktime(0,0,0,$start['month'],$start['mday'] + $k,$start['year']))))
-						{
-							$c_evt_day = 0;
-							if(isset($this->cached_events[$j]) && is_array($this->cached_events[$j]))
-							{
-								$c_evt_day = count($this->cached_events[$j]);
-							}
 
+			foreach($cached_event_ids as $cached_event_id)
+			{
+				$event = $this->so->read_single($cached_event_id);
+				$startdate = intval(date('Ymd',$event['start_date']));
+				$enddate = intval(date('Ymd',$event['end_date']));
+				$this->cached_events[$startdate][] = $event;
+				if($startdate != $enddate && !$cached_event_ids_repeating)
+				{
+					$start['year'] = intval(substr($startdate,0,4));
+					$start['month'] = intval(substr($startdate,4,2));
+					$start['mday'] = intval(substr($startdate,6,2));
+					for($j=$startdate,$k=0;$j<=$enddate;$k++,$j=intval(date('Ymd',mktime(0,0,0,$start['month'],$start['mday'] + $k,$start['year']))))
+					{
+						$c_evt_day = 0;
+						if(isset($this->cached_events[$j]) && is_array($this->cached_events[$j]))
+						{
+							$c_evt_day = count($this->cached_events[$j])-1;
+						}
+						if($this->debug)
+						{
+							echo 'Date: '.$j.' Count : '.count($this->cached_events[$j])."\n";
+						}
+
+						if(!isset($this->cached_events[$j][$c_evt_day])
+							||$this->cached_events[$j][$c_evt_day]['id'] != $event['id'])
+						{
 							if($this->debug)
 							{
-								echo 'Date: '.$j.' Count : '.$c_evt_day."\n";
+								echo "Adding Event ID {$event['id']} for Date: {$j}</br>";
 							}
-							if(!isset($this->cached_events[$j][$c_evt_day])
-								||$this->cached_events[$j][$c_evt_day]['id'] != $event['id'])
-							{
-								if($this->debug)
-								{
-									echo 'Adding Event for Date: '.$j."\n";
-								}
-								$this->cached_events[$j][] = $event;
-							}
+							$this->cached_events[$j][] = $event;
 						}
 					}
 				}
 			}
 
 			$this->repeating_events = array();
-			if($c_cached_ids_repeating)
+			if($cached_event_ids_repeating)
 			{
-				for($i=0;$i<$c_cached_ids_repeating;$i++)
+//_debug_array($cached_event_ids_repeating);die();
+				$i = 0;
+				foreach($cached_event_ids_repeating as $cached_event_id)
 				{
-					$this->repeating_events[$i] = $this->so->read_single($cached_event_ids_repeating[$i]);
+					$this->repeating_events[] = $this->so->read_single($cached_event_id);
+
 					if($this->debug)
 					{
-						echo '<!-- Cached Events ID: '.$cached_event_ids_repeating[$i].' ('.sprintf("%04d%02d%02d",$this->repeating_events[$i]['start']['year'],$this->repeating_events[$i]['start']['month'],$this->repeating_events[$i]['start']['mday']).') -->'."\n";
+						echo 'Cached Events ID: '.$cached_event_id.' ('.sprintf("%04d%02d%02d",$this->repeating_events[$i]['start']['year'],$this->repeating_events[$i]['start']['month'],$this->repeating_events[$i]['start']['mday']).')</br>';
 					}
+					$i++;
 				}
 //				$edate -= phpgwapi_datetime::user_timezone();
 //				for($date=mktime(0,0,0,$smonth,$sday,$syear) - phpgwapi_datetime::tz_offset;$date<=$edate;$date += 86400)
@@ -657,12 +655,12 @@ if ( !extension_loaded('mcal') )
 					if($this->debug)
 					{
 						$search_date = date('Ymd',$date);
-						echo '<!-- Calling check_repeating_events('.$search_date.') -->'."\n";
+						echo 'Calling check_repeating_events('.$search_date.')</br>';
 					}
 					$this->check_repeating_events($date);
 					if($this->debug)
 					{
-						echo '<!-- Total events found matching '.$search_date.' = '.count($this->cached_events[$search_date]).' -->'."\n";
+						echo 'Total events found matching '.$search_date.' = '.count($this->cached_events[$search_date]).'</br>';
 						for($i=0;$i<count($this->cached_events[$search_date]);$i++)
 						{
 							echo '<!-- Date: '.$search_date.' ['.$i.'] = '.$this->cached_events[$search_date][$i]['id'].' -->'."\n";
@@ -678,6 +676,7 @@ if ( !extension_loaded('mcal') )
 					$retval[$j] = $this->cached_events[$j];
 				}
 			}
+//_debug_array($this->cached_events);die();
 			return $retval;
 //			return $this->cached_events;
 		}
@@ -690,7 +689,8 @@ if ( !extension_loaded('mcal') )
 			$search_date_month = date('m',$datetime);
 			$search_date_day = date('d',$datetime);
 			$search_date_dow = date('w',$datetime);
-			$search_beg_day = mktime(0,0,0,$search_date_month,$search_date_day,$search_date_year);
+			$search_date_week = date('YW',$datetime);
+			$search_beg_day = mktime(13,0,0,$search_date_month,$search_date_day,$search_date_year);
 			if($this->debug)
 			{
 				echo '<!-- Search Date Full = '.$search_date_full.' -->'."\n";
@@ -702,6 +702,7 @@ if ( !extension_loaded('mcal') )
 				if($this->repeating_events[$i]['repeat_type'] !=0)
 				{
 					$rep_events = $this->repeating_events[$i];
+
 					$id = $rep_events['id'];
 					$rep_events['start']['month']	= date('m',$rep_events['start_date']);
 					$rep_events['start']['mday']	= date('d',$rep_events['start_date']);
@@ -709,6 +710,7 @@ if ( !extension_loaded('mcal') )
 
 //					$event_beg_day = mktime(0,0,0,$rep_events['start']['month'],$rep_events['start']['mday'],$rep_events['start']['year']);
 					$event_beg_day = $rep_events['start_date'];
+					$event_beg_week = date('YW',$rep_events['start_date']);
 
 					if(isset($rep_events['end_date']) && $rep_events['end_date'])
 					{
@@ -774,39 +776,56 @@ if ( !extension_loaded('mcal') )
 								}
 							break;
 							case MCAL_RECUR_WEEKLY:
-								if (floor(($search_beg_day - $event_beg_day)/604800) % $freq)
+								$test = (($search_beg_day - $event_beg_day)/604800)/$freq;
+								$test_subtract = floor($test);
+
+								//if (floor(($search_beg_day - $event_beg_day)/604800) % $freq)
+								if(!$rep_events['rpt_day'])
 								{
-									continue;
+									if(!($test - $test_subtract))
+									{
+										$this->sort_event($rep_events,$search_date_full);
+									}
 								}
-								$check = 0;
-								switch($search_date_dow)
+								else
 								{
-									case 0:
-										$check = MCAL_M_SUNDAY;
-										break;
-									case 1:
-										$check = MCAL_M_MONDAY;
-										break;
-									case 2:
-										$check = MCAL_M_TUESDAY;
-										break;
-									case 3:
-										$check = MCAL_M_WEDNESDAY;
-										break;
-									case 4:
-										$check = MCAL_M_THURSDAY;
-										break;
-									case 5:
-										$check = MCAL_M_FRIDAY;
-										break;
-									case 6:
-										$check = MCAL_M_SATURDAY;
-										break;
-								}
-//FIXME: recur_data - ???
-								if ($rep_events['recur_data'] & $check)
-								{
-									$this->sort_event($rep_events,$search_date_full);
+									$test = ($search_date_week - $event_beg_week)/$freq;
+									$test_subtract = floor($test);
+									if(($test - $test_subtract))
+									{
+										continue;
+									}
+
+									$check = 0;
+									switch($search_date_dow)
+									{
+										case 0:
+											$check = MCAL_M_SUNDAY;
+											break;
+										case 1:
+											$check = MCAL_M_MONDAY;
+											break;
+										case 2:
+											$check = MCAL_M_TUESDAY;
+											break;
+										case 3:
+											$check = MCAL_M_WEDNESDAY;
+											break;
+										case 4:
+											$check = MCAL_M_THURSDAY;
+											break;
+										case 5:
+											$check = MCAL_M_FRIDAY;
+											break;
+										case 6:
+											$check = MCAL_M_SATURDAY;
+											break;
+									}
+
+									if ($rep_events['rpt_day'] & $check)
+									{
+										$this->sort_event($rep_events,$search_date_full);
+									}
 								}
 								break;
 							case MCAL_RECUR_MONTHLY_WDAY:
@@ -1103,18 +1122,14 @@ if ( !extension_loaded('mcal') )
 				{
 					$values[] = array
 					(
-						'resource'			=> 'descr',
-						'resource_id'		=> 11,
 						'time'				=> $i,
-						'_from'				=> '16:30',
-						'_to'				=> '17:00',
 						'date'				=> array
 						(
 							'exception' => $entry['exception'],
 							'lang_exception' => $lang_exception,
 							'type' => 'event',
 							'name' => $date,
-							'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $set[$i]['location_id'], 'location_item_id' => $set[$i]['location_item_id']))
+							'link' => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
 						)
 					);
 
@@ -1131,5 +1146,14 @@ if ( !extension_loaded('mcal') )
 			);
 
 			return $data;
+		}
+
+		public function set_exceptions($data = array())
+		{
+			if(!isset($data['event_id']) || !$data['event_id'])
+			{
+					throw new Exception("property_boevent::set_exceptions - Missing event_id info in input");
+			}
+			$this->so->set_exceptions($data);
 		}
 	}

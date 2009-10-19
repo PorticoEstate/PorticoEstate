@@ -9,6 +9,7 @@
  * @version		3.25 - 07/10/2009
  */
 
+date_default_timezone_set('Europe/Oslo');
 if (!defined('__CLASS_HTML2PDF__'))
 {
 	define('__CLASS_HTML2PDF__', '3.25');

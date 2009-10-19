@@ -63,6 +63,8 @@
 			$status	= phpgw::get_var('status');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows= phpgw::get_var('allrows', 'bool');
+			$project_id	= phpgw::get_var('project_id', 'int');
+			$this->project_id = $project_id;
 
 			if ($start)
 			{
@@ -172,9 +174,11 @@
 
 		function read($data = array())
 		{
+			$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
+
 			$claim = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'status' => $this->status,'cat_id' => $this->cat_id,
-											'allrows'=>$this->allrows,'project_id' => $data['project_id']));
+											'allrows'=>$this->allrows,'project_id' => $project_id));
 			$this->total_records = $this->so->total_records;
 
 			foreach ($claim as &$entry)

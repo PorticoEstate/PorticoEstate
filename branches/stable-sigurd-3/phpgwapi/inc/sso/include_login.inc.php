@@ -408,6 +408,10 @@
 			$this->tmpl->set_var('version', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
 			$this->tmpl->set_var('cd', $this->check_logoutcode($cd) );
 			$this->tmpl->set_var('last_loginid', $last_loginid);
+			if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
+			{
+				$this->tmpl->set_var('skip_remote', true);				
+			}
 
 			$this->tmpl->set_var('lang_username', $lang['username']);
 			$this->tmpl->set_var('lang_password', $lang['password']);

@@ -78,6 +78,7 @@
 			$this->status		= $this->bo->status;
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
+			$this->project_id	= $this->bo->project_id;
 		}
 
 		function save_sessiondata()
@@ -128,6 +129,7 @@
 	    											."sort: '{$this->sort}',"
  	                        						."order: '{$this->order}',"
  	                        						."status: '{$this->status}',"
+ 	                        						."project_id: '{$this->project_id}'," 	                        						
  	                        						."query: '{$this->query}'";
 
 				$datatable['config']['allow_allrows'] = true;
@@ -140,6 +142,7 @@
 					'cat_id'	=> $this->cat_id,
 					'filter'	=> $this->filter,
 					'status_id'	=> $this->status_id,
+					'project_id'=> $this->project_id,
 					'query'		=> $this->query
 				);
 
