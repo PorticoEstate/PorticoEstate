@@ -1,6 +1,9 @@
 <?php
 phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.soprice_item');
+phpgw::import_class('rental.socontract_price_item');
+phpgw::import_class('rental.socontract');
 
 include_class('rental', 'price_item', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
@@ -173,15 +176,9 @@ class rental_uiprice_item extends rental_uicommon
 				break;
 			case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
 			default:
-				$result_objects = rental_price_item::get_all(
-				phpgw::get_var('startIndex'),
-				phpgw::get_var('results'),
-				phpgw::get_var('sort'),
-				phpgw::get_var('dir'),
-				phpgw::get_var('query'),
-				phpgw::get_var('search_option')
-				);
-				$object_count = count($result_objects); // TODO: Fix
+				$filters = array();
+				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 		}
 
@@ -190,12 +187,8 @@ class rental_uiprice_item extends rental_uicommon
 		foreach ($result_objects as $record) {
 			if(isset($record))
 			{
-				if($record->has_permission(PHPGW_ACL_READ))
-				{
-					// ... add a serialized record if read permission
-					$rows[] = $record->serialize();
-		
-				}
+				// ... add a serialized record
+				$rows[] = $record->serialize();
 			}
 		}
 		$data = array('results' => $rows, 'total_records' => $object_count);
@@ -209,9 +202,7 @@ class rental_uiprice_item extends rental_uicommon
 			array(
 				phpgw::get_var('id'),
 				$type,
-				$editable,
-				$this->type_of_user,
-				isset($contract) ? $contract->serialize() : null
+				$editable
 			)
 		);
 		return $this->yui_results($data, 'total_records', 'results');
@@ -234,35 +225,27 @@ class rental_uiprice_item extends rental_uicommon
 		$contract_id = $params[0];
 		$type = $params[1];
 		$editable = $params[2];
-		$user_is = $params[3];
-		$serialized_contract= $params[4];
-		
-		// Get permissions on contract
-		if(isset($serialized_contract))
-		{
-			$permissions = $serialized_contract['permissions'];
-		}
 
 		// Depending on the type of query: set an ajax flag and define the action and label for each row
 		switch($type)
 		{
 			case 'included_price_items':
-				if($permissions[PHPGW_ACL_EDIT] && ($editable == true))
+				if($editable == true)
 				{
 					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_price_item', 'price_item_id' => $value['id'], 'contract_id' => $serialized_contract['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id)));
 					$value['labels'][] = lang('remove');
 
 					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.reset_price_item', 'price_item_id' => $value['id'], 'contract_id' => $serialized_contract['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.reset_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id)));
 					$value['labels'][] = lang('reset');
 				}
 				break;
 			case 'not_included_price_items':
-				if($permissions[PHPGW_ACL_EDIT] && ($editable == true))
+				if($editable == true)
 				{
 					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $serialized_contract['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id)));
 					$value['labels'][] = lang('add');
 				}
 				break;
@@ -271,12 +254,9 @@ class rental_uiprice_item extends rental_uicommon
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 
-				if($user_is[ADMINISTRATOR])
-				{
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit');
-				}
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
+				$value['labels'][] = lang('edit');
 		}
 	}
 }

@@ -77,13 +77,8 @@ class rental_uiparty extends rental_uicommon
 		foreach ($result_objects as $party) {
 			if(isset($party))
 			{
-				if($party->has_permission(PHPGW_ACL_READ))
-				{
-					// ... add a serialized party if read permission
-					$rows[] = $party->serialize($contract);
-				}
+				$rows[] = $party->serialize($contract);
 			}
-
 		}
 		// ... add result data
 		$party_data = array('results' => $rows, 'total_records' => $result_count);
@@ -126,12 +121,6 @@ class rental_uiparty extends rental_uicommon
 		$editable = $params[3];
 		$user_is = $params[4];
 		
-		// Get permissions on contract
-		if(isset($serialized_contract))
-		{
-			$permissions = $serialized_contract['permissions'];
-		}
-		
 		// Depending on the type of query: set an ajax flag and define the action and label for each row
 		switch($type)
 		{
@@ -140,7 +129,7 @@ class rental_uiparty extends rental_uicommon
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 
-				if($permissions[PHPGW_ACL_EDIT] && $editable == true)
+				if($editable == true)
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
@@ -158,7 +147,7 @@ class rental_uiparty extends rental_uicommon
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 					
-				if($permissions[PHPGW_ACL_EDIT] && $editable == true)
+				if($editable == true)
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));

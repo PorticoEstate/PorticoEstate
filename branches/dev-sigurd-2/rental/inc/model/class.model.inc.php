@@ -79,7 +79,7 @@ abstract class rental_model
 	 * 
 	 * @return an array with permissions [PERMISSION_BITMASK => true/false]
 	 */
-	protected function get_permission_array(){
+	public function get_permission_array(){
 		$location_name = $this->get_field_of_responsibility_name();
 		return array (
 			PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_READ),

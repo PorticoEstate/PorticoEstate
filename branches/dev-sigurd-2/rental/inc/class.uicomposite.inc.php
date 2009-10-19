@@ -45,10 +45,6 @@
 			
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
-			if(isset($contract_id))
-			{
-				$contract = rental_socontract::get_instance()->get_single($contract_id);
-			}
 			
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
@@ -91,11 +87,7 @@
 			foreach($result_objects as $result) {
 				if(isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ))
-					{
-						// ... add a serialized result
-						$rows[] = $result->serialize();
-					}
+					$rows[] = $result->serialize();
 				}
 			}
 			
@@ -111,9 +103,7 @@
 				array(													// Parameters (non-object pointers)
 					$contract_id,										// [1] The contract id
 					$query_type,										// [2] The type of query
-					$editable,											// [3] Editable flag
-					$this->type_of_user,								// [4] User role			
-					isset($contract) ? $contract->serialize() : null,	// [5] Serialized contract
+					$editable											// [3] Editable flag			
 				)
 			);
 
@@ -138,14 +128,6 @@
 			$contract_id = $params[0];
 			$type = $params[1];
 			$editable = $params[2];
-			$user_is = $params[3];
-			$serialized_contract= $params[4];
-
-			// Get permissions on contract
-			if(isset($serialized_contract))
-			{
-				$permissions = $serialized_contract['permissions'];
-			}
 			
 			// Depending on the type of query: set an ajax flag and define the action and label for each row
 			switch($type)
@@ -154,7 +136,7 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
+					if($editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.remove_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
@@ -165,18 +147,15 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
-					{
-						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
-						$value['labels'][] = lang('add');
-					}
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
+					$value['labels'][] = lang('add');
 					break;
 				case 'included_areas':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
 					$value['labels'][] = lang('show');
-					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
+					if($editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $contract_id, 'location_id' => $value['location_id'])));
@@ -187,22 +166,18 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
 					$value['labels'][] = lang('show');
-					if($user_is[EXECUTIVE_OFFICER] && $editable == true)
+					if($editable == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'id' => $contract_id, 'location_id' => $value['location_id'], 'loc1' => $value['loc1'])));
 						$value['labels'][] = lang('add');
 					}
 					break;
-				case 'orphan_units':
-					// TODO: What should this one really do?
-					// No actions
-					break;
 				case 'contracts':
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($permissions[PHPGW_ACL_EDIT] && $editable == true)
+					if($editable == true)
 					{
 						$value['ajax'][] = false;
 						$value['actions']['edit_contract'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
@@ -213,13 +188,9 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-
-					if($user_is[EXECUTIVE_OFFICER])
-					{
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit');
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit');
 			}
 		}
 

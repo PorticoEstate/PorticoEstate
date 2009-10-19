@@ -59,16 +59,14 @@
 			foreach ($result_objects as $result) {
 				if(isset($result))
 				{
-					if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
-					{
-						$rows[] = $result->serialize();
-					}
+					$rows[] = $result->serialize();
 				}
 			}
 			
-		
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->serialize() : null, $this->type_of_user));
+			array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
 				
 			
 			//Build a YUI result from the data
@@ -96,29 +94,25 @@
 			$value['labels'][] = lang('view_document');
 			
 			$type = $params[0];
-			$serialized_contract = $params[1];
+			$edit_permission = $params[1];
 			$user_is = $params[2];
-			
-			// Get permissions on contract
-			if(isset($serialized_contract))
-			{
-				$permissions = $serialized_contract['permissions'];
-			}
+			$editable = $params[3];
 			
 			switch($type)
 			{
 				case 'documents_for_contract':
-					if($permissions[PHPGW_ACL_EDIT]) {
+					if($edit_permission && $editable) {
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
 						$value['labels'][] = lang('delete_document');
 					}
 					break;
 				case 'documents_for_party':
-					
+					if($user_is[EXECUTIVE_OFFICER] && $editable) {
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
-						$value['labels'][] = lang('delete_document');	
+						$value['labels'][] = lang('delete_document');
+					}
 					break;
 			}
 		}

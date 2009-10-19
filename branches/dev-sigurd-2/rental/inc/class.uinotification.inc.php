@@ -33,10 +33,6 @@ class rental_uinotification extends rental_uicommon
 		
 		//Retrieve a contract identifier and load corresponding contract
 		$contract_id = phpgw::get_var('contract_id');
-		if(isset($contract_id))
-		{
-			$contract = rental_socontract::get_instance()->get_single($contract_id);
-		}
 		
 		//Retrieve the type of query and perform type specific logic
 		$query_type = phpgw::get_var('type');
@@ -60,15 +56,14 @@ class rental_uinotification extends rental_uicommon
 		foreach ($result_objects as $result) {
 			if(isset($result))
 			{
-				if($result->has_permission(PHPGW_ACL_READ)) // check for read permission
-				{
-					$rows[] = $result->serialize();
-				}
+				$rows[] = $result->serialize();
 			}
 		}
 		
+		$editable = phpgw::get_var('editable') == 'true' ? true : false;
+		
 		//Add context menu columns (actions and labels)
-		array_walk($rows, array($this, 'add_actions'), array($query_type,isset($contract) ? $contract->serialize() : null ));
+		array_walk($rows, array($this, 'add_actions'), array($query_type, $editable));
 
 		//Build a YUI result from the data
 		$result_data = array('results' => $rows, 'total_records' => $result_count);
@@ -89,12 +84,12 @@ class rental_uinotification extends rental_uicommon
 		$value['labels'] = array();
 
 		$type = $params[0];
-		$serialized_contract = $params[1];
+		$editable = $params[1];
 			
 		switch($type)
 		{
 			case 'notifications':
-				if($serialized_contract['permissions'][PHPGW_ACL_EDIT])
+				if($editable)
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.delete_notification', 'id' => $value['id'], 'contract_id' => $value['contract_id'])));
@@ -102,23 +97,18 @@ class rental_uinotification extends rental_uicommon
 				}
 				break;
 			case 'notifications_for_user':
-				if($value['permissions'][PHPGW_ACL_EDIT])
-				{
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
-					$value['labels'][] = lang('edit_contract');
-				}
-				
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id'])));
+				$value['labels'][] = lang('view_contract');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id'])));
+				$value['labels'][] = lang('edit_contract');
 				$value['ajax'][] = true;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.dismiss_notification', 'id' => $value['id'])));
 				$value['labels'][] = lang('remove_from_workbench');
-				
-				if($value['permissions'][PHPGW_ACL_EDIT])
-				{
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.dismiss_notification_for_all', 'id' => $value['originated_from'], 'contract_id' => $value['contract_id'])));
-					$value['labels'][] = lang('remove_from_all_workbenches');
-				}
+				$value['ajax'][] = true;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uinotification.dismiss_notification_for_all', 'id' => $value['originated_from'], 'contract_id' => $value['contract_id'])));
+				$value['labels'][] = lang('remove_from_all_workbenches');
 				break;
 		}
 	}
