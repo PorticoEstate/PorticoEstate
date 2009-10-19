@@ -38,6 +38,7 @@
 			<!-- BEGIN loging_block -->
 			<label for="login">{lang_username}:</label>
 			<input type="text" value="{last_loginid}" name="login" id="login"{login_read_only}>
+			<input type="hidden" name="skip_remote" value="{skip_remote}">
 			<!-- END loging_block -->
 			<!-- BEGIN domain_from_host -->
 				@{logindomain}<input type="hidden" name="logindomain" value="{logindomain}">

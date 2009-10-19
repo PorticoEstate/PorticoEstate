@@ -19,7 +19,7 @@
 	{
 		$partial_url = 'phpgwapi/inc/sso/login_server.php';
 	}
-$_SERVER['REMOTE_USER'] = 'sigurd';
+
 	/* Program starts here */
 	$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
@@ -63,12 +63,11 @@ $_SERVER['REMOTE_USER'] = 'sigurd';
 		$passwd = $_SERVER['PHP_AUTH_PW'];
 	}
 	
-	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']))
+	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']) && (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 	{
-		$submit = true;
 		$login  = $_SERVER['REMOTE_USER'];
 		$passwd = '';
-//------------------Start test code
+//------------------Start login ntlm
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $skip_auth = true);
 
@@ -79,7 +78,8 @@ $_SERVER['REMOTE_USER'] = 'sigurd';
 			{
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
-// FIXME: add parameter to $cd_array to stop SSO - and allow standard login.
+			$cd_array['skip_remote'] = true;
+
 			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
 		}
@@ -92,7 +92,6 @@ $_SERVER['REMOTE_USER'] = 'sigurd';
 			{
 				if (ereg('phpgw_',$name))
 				{
-					//$extra_vars[$name] = $value;
 					$name = urlencode($name);
 					$extra_vars[$name] = urlencode($value);
 				}
@@ -105,16 +104,9 @@ $_SERVER['REMOTE_USER'] = 'sigurd';
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-//		$GLOBALS['phpgw']->translation->populate_cache(); // moved to sesssion::verify()
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
 
-
-
-//----------------- End test code
-
-
-
-
+//----------------- End login ntlm
 	}
 
 	# Apache + mod_ssl style SSL certificate authentication
