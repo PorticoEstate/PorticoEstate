@@ -182,11 +182,13 @@
 		{
 			$send = CreateObject('phpgwapi.send');
 
-			if (strlen(trim($body)) == 0) {
+			if (strlen(trim($body)) == 0) 
+			{
 				return false;
 			}
 
-			if (strlen($receiver) > 0) {
+			if (strlen($receiver) > 0) 
+			{
 				$send->msg('email', $receiver, $subject, $body);
 			}
 		}

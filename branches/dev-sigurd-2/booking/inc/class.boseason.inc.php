@@ -131,13 +131,11 @@
 				}
 				if ($date->format('N') == 7) // sunday
 				{
-					if ($interval == 1)
-						$date->modify('+0 days');
 					if ($interval == 2)
 						$date->modify('+7 days');
-					if ($interval == 3)
+					elseif ($interval == 3)
 						$date->modify('+14 days');
-					if ($interval == 4)
+					elseif ($interval == 4)
 						$date->modify('+21 days');
 				}
 

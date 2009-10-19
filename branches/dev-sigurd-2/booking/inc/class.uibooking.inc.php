@@ -198,12 +198,15 @@
 		{
 			$send = CreateObject('phpgwapi.send');
 
-			if (strlen(trim($body)) == 0) {
+			if (strlen(trim($body)) == 0) 
+			{
 				return false;
 			}
 
-			foreach($group['contacts'] as $contact) {
-				if (strlen($contact['email']) > 0) {
+			foreach($group['contacts'] as $contact) 
+			{
+				if (strlen($contact['email']) > 0) 
+				{
 					$send->msg('email', $contact['email'], $subject, $body);
 				}
 			}
