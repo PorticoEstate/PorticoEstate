@@ -19,7 +19,7 @@
 	{
 		$partial_url = 'phpgwapi/inc/sso/login_server.php';
 	}
-
+$_SERVER['REMOTE_USER'] = 'sigurd';
 	/* Program starts here */
 	$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
@@ -68,6 +68,53 @@
 		$submit = true;
 		$login  = $_SERVER['REMOTE_USER'];
 		$passwd = '';
+//------------------Start test code
+
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $skip_auth = true);
+
+		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
+		{
+			$cd_array=array();
+			if($GLOBALS['phpgw']->session->cd_reason)
+			{
+				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
+			}
+// FIXME: add parameter to $cd_array to stop SSO - and allow standard login.
+			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+			exit;
+		}
+
+		$forward = phpgw::get_var('phpgw_forward');
+		if($forward)
+		{
+			$extra_vars['phpgw_forward'] =  $forward;
+			foreach($_GET as $name => $value)
+			{
+				if (ereg('phpgw_',$name))
+				{
+					//$extra_vars[$name] = $value;
+					$name = urlencode($name);
+					$extra_vars[$name] = urlencode($value);
+				}
+			}
+		}
+		if ( !isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'] )
+		{
+			$uilogin->check_langs();
+		}
+		$extra_vars['cd'] = 'yes';
+		
+		$GLOBALS['phpgw']->hooks->process('login');
+//		$GLOBALS['phpgw']->translation->populate_cache(); // moved to sesssion::verify()
+		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
+
+
+
+//----------------- End test code
+
+
+
+
 	}
 
 	# Apache + mod_ssl style SSL certificate authentication
