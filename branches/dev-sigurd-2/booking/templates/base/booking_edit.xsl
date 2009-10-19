@@ -138,6 +138,14 @@
 				</table>
 			</dd>
 		</dl>
+		<div style="clear: both" />
+		<dl class="form">
+			<dt><label for="field_mail"><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></label></dt>
+			<dd>
+				<label><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></label><br />
+				<textarea id="field_mail" name="mail" class="full-width"></textarea>
+			</dd>
+		</dl>
         <div class="form-buttons">
             <input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>

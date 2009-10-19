@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.boorganization');
 
 	class booking_uiallocation extends booking_uicommon
 	{
@@ -16,6 +17,7 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.boallocation');
+			$this->organization_bo    = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost',
 								  'building_id', 'building_name', 
@@ -128,6 +130,21 @@
 			self::render_template('allocation_new', array('allocation' => $allocation));
 		}
 
+		private function send_mailnotification_to_organization($organization, $subject, $body)
+		{
+			$send = CreateObject('phpgwapi.send');
+
+			if (strlen(trim($body)) == 0) {
+				return false;
+			}
+
+			foreach($organization['contacts'] as $contact) {
+				if (strlen($contact['email']) > 0) {
+					$send->msg('email', $contact['email'], $subject, $body);
+				}
+			}
+		}
+
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -138,11 +155,13 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$allocation = array_merge($allocation, extract_values($_POST, $this->fields));
+				$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
 				$errors = $this->bo->validate($allocation);
 				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->update($allocation);
+						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not update object due to insufficient permissions');

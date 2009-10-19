@@ -24,9 +24,9 @@ admins	booking	no	Bookingansvarliga
 age group	booking	no	Aldersgruppe
 agegroup	booking	no	Aldersgruppe
 allocation	booking	no	Tildeling
-allocations	booking	no	Tildelingar
+allocations	booking	no	Tildelinger
 allocations colliding with existing bookings or allocations (%1)	booking	no	Dobbel-booking som IKKE lagres
-allocations that can be created (%1)	booking	no	Tildelingar som kan lages
+allocations that can be created (%1)	booking	no	Tildelinger som kan lages
 application	booking	no	Søknad
 applications	booking	no	Søknader
 apr	booking	no	april
@@ -115,7 +115,7 @@ name	booking	no	Navn
 new	booking	no	Ny
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
-new allocation	booking	no	Ny tildelning
+new allocation	booking	no	Ny tildeling
 new application	booking	no	Ny søknad
 new audience group	booking	no	Ny målgruppe
 new booking	booking	no	Ny booking
@@ -125,7 +125,7 @@ new building permission	booking	no	Nye rettigheter bygg/anlegg
 new contact	booking	no	Ny kontakt
 new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
-new event	booking	no	Ny arrangement
+new event	booking	no	Nytt arrangement
 new group	booking	no	Ny gruppe
 new organization	booking	no	Ny organisajon
 new resource	booking	no	Ny ressurs
@@ -190,7 +190,7 @@ status	booking	no	Status
 street	booking	no	Gate
 su	booking	no	sø
 submit	booking	no	Lagre
-successfully created (%1) allocations:	booking	no	(%1) tildelingar lagret
+successfully created (%1) allocations:	booking	no	(%1) tildelinger lagret
 surname	booking	no	Etternavn
 target audience	booking	no	Målgruppe
 telephone	booking	no	Telefon
@@ -249,3 +249,9 @@ Completed	booking	no	Klar for fakturering
 3 weeks	booking	no	3 uker
 4 weeks	booking	no	4 uker
 Interval	booking	no	Interval
+Text written in the text area below will be sent as an email to all registered contact persons.	booking	no	Tekst skrevet i feltet nedenfor vil bli sendt som e-post til alle registrerte kontaktpersoner.
+Inform contact persons	booking	no	Informer kontaktpersoner
+Back to Dashboard	booking	no	Tilbake til Skrivebord
+Booking changed	booking	no	En booking har blitt endret
+Allocation changed	booking	no	En tildeling har blitt endret
+Event changed	booking	no	Et arrangement har blitt endret
