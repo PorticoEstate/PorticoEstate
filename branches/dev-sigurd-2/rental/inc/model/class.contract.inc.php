@@ -509,7 +509,6 @@
 				'party' => $this->get_party_name(),
 				'old_contract_id' => $this->get_old_contract_id(),
 				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format.' h:i:s A', $this->get_last_edited_by_current_user()): '',
-				'permissions' => $this->get_permission_array(),
 				'payer_id' => $this->get_payer_id(),
 				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : '',
 				'service_id' => $this->get_service_id(),
