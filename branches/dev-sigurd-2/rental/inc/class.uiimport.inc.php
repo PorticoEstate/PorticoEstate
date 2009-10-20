@@ -391,7 +391,6 @@
 			$start_time = time();
 			$soprice_item = rental_soprice_item::get_instance();
 			$socontract_price_item = rental_socontract_price_item::get_instance();
-			$soprice_item = rental_soprice_item::get_instance();
 			
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
@@ -434,7 +433,7 @@
 					$admin_price_item->set_title($title);
 					$admin_price_item->set_agresso_id($this->decode($data[12]));
 					// TODO: This assumes 1 for AREA, and anything else for count.  is this correct?
-					$admin_price_item->set_is_area($this->decode($data[12]) == '4');
+					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
 					$soprice_item->store($admin_price_item);
 				}
@@ -516,10 +515,11 @@
 				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
 				$admin_price_item = $soprice_item->get_single_with_title($title);
 				
+				$facilit_id = $this->decode($data[0]);
+				
 				// Add new admin price item if one with this title doesn't already exist
 				if ($admin_price_item == null) {
-					$facilit_id = $this->decode($data[0]);
-					
+
 					$admin_price_item = new rental_price_item();
 					$admin_price_item->set_title($title);
 					$admin_price_item->set_agresso_id($this->decode($data[11]));
@@ -528,6 +528,7 @@
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
 					$soprice_item->store($admin_price_item);
 				}
+				
 				
 				$contract_id = null;
 				$decoded_data_1 = $this->decode($data[1]);
