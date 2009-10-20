@@ -134,7 +134,7 @@ class rental_soparty extends rental_socommon
 			$contract_id = $this->marshal($filters['not_contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
-				$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id}) OR c_p.contract_id IS NULL";
+				$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id} OR contract_id IS NULL)";
 			}
 		}
 
@@ -180,7 +180,6 @@ class rental_soparty extends rental_socommon
 		{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 
 		$joins = $join_contracts;
-
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
