@@ -166,6 +166,12 @@ class rental_socontract_price_item extends rental_socommon
 		return $receipt;
 	}
 	
+	/**
+	 * Select total sum of all "active" price-items on a contract.
+	 * 
+	 * @param $contract_id	the id of the contract to generate total price on 
+	 * @return total_price	the total price
+	 */
 	public function get_total_price($contract_id){
 		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND ((date('now') BETWEEN date_start AND date_end) OR (date_start < date('now') AND date_end is null))");
 		if($this->db->next_record()){
