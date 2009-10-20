@@ -6,6 +6,7 @@
 	phpgw::import_class('rental.soinvoice');
 	phpgw::import_class('rental.sonotification');
 	phpgw::import_class('rental.soprice_item');
+	phpgw::import_class('rental.socontract_price_item');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
