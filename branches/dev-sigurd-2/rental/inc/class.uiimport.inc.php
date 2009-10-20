@@ -244,16 +244,43 @@
 			foreach ($datalines as $data) {
 				$composite = new rental_composite();
 				
-				$composite->set_description($this->decode($data[3]));
-				$composite->set_name($this->decode($data[6]));
-				$composite->set_custom_address_1($this->decode($data[7]));
+				// Use the first address line as name if no name
+				$name = $this->decode($data[26]);
+				$address1 = $this->decode($data[6]);
+				if(!isset($name)){
+					$name = $address1;
+				}
+				
+				$composite->set_name($name);
+				$composite->set_custom_address_1($address1);
+				$composite->set_custom_address_2($this->decode($data[7]));
 				$composite->set_custom_postcode($this->decode($data[8]));
+				$composite->set_description($this->decode($data[3]));
 				
 				$composite->set_is_active($data[19] == "-1");
 				
 				// Store composite
 				if ($socomposite->store($composite)) {
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
+					
+					/* TODO: waiting on feedback on property module content
+					Code for getting correct location code
+					
+					$composite_number = $this->decode($data[1]);
+					$property_identifier = $this->decode($data[4]);
+					$building_identifier = $this->decode($data[5]);
+					$farm_number = $this->decode($data[27]);
+					$use_number = $this->decode($data[28]);
+					
+					$location_code = $this->get_location_code
+					(
+						$composite_number,
+						$property_identifier,
+						$building_identifier,
+						$farm_number,
+						$use_number
+					);*/
+					
 					
 					if (phpgw::get_var("location_id") == '1176') {
 						// Get internal composite location code from different field
@@ -347,7 +374,7 @@
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
 				$ansvar_tjeneste = $this->decode($data[26]);
-				$ansvar_tjeneste_components = split(".", $ansvar_tjeneste);
+				$ansvar_tjeneste_components = explode(".", $ansvar_tjeneste);
 				$contract->set_responsibility_id($ansvar_tjeneste_components[0]);
 				$contract->set_service_id($ansvar_tjeneste_components[1]);
 				// TODO: Check other types of contracts.  The above is correct for internal
@@ -657,6 +684,51 @@
 		protected function getcsv($handle)
 		{
 			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
+		}
+		
+		protected function get_location_code($composite_number,$property_identifier,$building_identifier,$farm_number,$use_number)
+		{
+			$location_code = '';
+			
+			// 1. Check that the property identifier consists of 4 numbers
+			// ... is the length 4 characters (?)
+			$correct_length = strlen($property_identifier) == 4 ? true : false;
+			// ... is it a number (?)
+			$integer_value_property = ((int) $property_identifier) > 0 ? true : false;
+			
+			if($correct_length && $integer_value_property)
+			{
+				$location_code = $property_identifier;
+				
+				// 1.1 Check the building identifier for consistency (6 numbers and match property identifier)
+				$correct_length = strlen($building_identifier) == 6 ? true : false;
+				$integer_value_building = ((int) $building_identifier) > 0 ? true : false;
+				
+				if($correct_length && $integer_value_building)
+				{
+					if(substr($building_identifier,0,3) == $property_identifier)
+					{
+						$building = substr($building_identifier,4,5);
+						
+					}
+					
+				}
+				
+			}
+			
+			
+			
+			
+			
+			// 1.2 Check the composite number for a building identifier (6 numbers after punctuation)
+			
+			
+			// 2 If no location code, check the farm- and use number (fm_gab_location.gab_id)
+			
+			
+			// 3 Check for an existing property given the location code
+			
+			
 		}
 		
 		/**
