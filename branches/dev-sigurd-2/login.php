@@ -11,6 +11,11 @@
 	* @version $Id$
 	*/
 
+	 if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
+	 {
+	 		$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	 }
+	 
 	require_once 'phpgwapi/inc/sso/include_login.inc.php';
 
 	$partial_url = 'login.php';
@@ -69,7 +74,7 @@
 		$passwd = '';
 //------------------Start login ntlm
 
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd, $skip_auth = true);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 		if (! isset($GLOBALS['sessionid']) || ! $GLOBALS['sessionid'])
 		{
@@ -177,6 +182,7 @@
 			{
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
+			$cd_array['skip_remote'] = true;
 			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
 		}
