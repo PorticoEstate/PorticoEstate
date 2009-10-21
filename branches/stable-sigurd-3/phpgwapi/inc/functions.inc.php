@@ -461,6 +461,12 @@ HTML;
 		$GLOBALS['phpgw_info']['server']['auth_type'] = $GLOBALS['phpgw_remote_user'];
 	}
 
+	// In the case remote_user fails
+	if(isset($GLOBALS['phpgw_remote_user_fallback']) && !empty($GLOBALS['phpgw_remote_user_fallback']))
+	{
+		$GLOBALS['phpgw_info']['server']['auth_type'] = $GLOBALS['phpgw_remote_user_fallback'];
+	}
+
 	// Remove this and I will make sure that you lose important parts of your anatomy - skwashd
 	$GLOBALS['RAW_REQUEST'] = $_REQUEST; // if you really need the raw value
 	$to_cleans = array('_GET', '_POST', '_COOKIE', '_REQUEST');

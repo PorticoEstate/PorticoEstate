@@ -247,6 +247,7 @@
 			}
 
 			if ( phpgwapi_globally_denied::user($this->_account_lid)
+				|| !$accounts->name2id($this->_account_lid)
 				|| ( !$skip_auth && !$GLOBALS['phpgw']->auth->authenticate($this->_account_lid, $this->_passwd) )
 				|| get_class($accounts->get($accounts->name2id($this->_account_lid)))
 					== phpgwapi_account::CLASS_TYPE_GROUP )
