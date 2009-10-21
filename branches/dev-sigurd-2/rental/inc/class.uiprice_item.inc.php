@@ -200,7 +200,7 @@ class rental_uiprice_item extends rental_uicommon
 			$data['results'], 
 			array($this, 'add_actions'), 
 			array(
-				phpgw::get_var('id'),
+				$contract_id,
 				$type,
 				$editable
 			)
