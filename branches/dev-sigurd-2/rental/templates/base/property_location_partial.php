@@ -98,6 +98,13 @@
 
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
+		<!-- Search -->
+		<h3><?php echo lang('search_options') ?></h3>
+		<label for="<?php echo $list_id ?>_ctrl_search_query"><?php echo lang('search_for') ?></label>
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" />
+		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
+	</fieldset>
+	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('filters') ?></h3>
 		<label for="<?php echo $list_id ?>_ctrl_toggle_level"><?php echo lang('level') ?></label>
