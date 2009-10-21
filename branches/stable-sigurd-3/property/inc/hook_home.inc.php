@@ -41,6 +41,7 @@
 		&& $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 	{
 
+		$default_status 	= isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
 		$tts = CreateObject('property.sotts');
 		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
 		$total_records = $tts->total_records;
@@ -74,8 +75,6 @@
 		{
 //			$portalbox->set_controls($key,$value);
 		}
-
-		$default_status 	= isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
 
 		$category_name = array(); // caching
 
@@ -114,11 +113,11 @@
 		&& $prefs['property']['mainscreen_workorder_1'] == 'yes')
 	{
 
+		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
 		$obj = CreateObject('property.soworkorder');
 		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
 		$total_records = $obj->total_records;
 
-		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
 			'title'	=> isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title']? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
@@ -169,11 +168,11 @@
 		&& $prefs['property']['mainscreen_workorder_2'] == 'yes')
 	{
 
+		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
 		$obj = CreateObject('property.soworkorder');
 		$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
 		$total_records = $obj->total_records;
 
-		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
 			'title'	=> isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title']? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
