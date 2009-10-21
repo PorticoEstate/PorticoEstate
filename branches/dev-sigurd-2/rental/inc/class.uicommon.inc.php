@@ -314,12 +314,12 @@
 			foreach($extra_cols as $col){
 				$literal  = '{';
 				$literal .= 'key: "' . $col['key'] . '",';
-				$literal .= 'label: "' . $col['label'] . '",';
+				$literal .= 'label: "' . $col['label'] . '"';
 				if (isset($col['formatter'])) {
-					$literal .= 'formatter: ' . $col['formatter'] . ',';
+					$literal .= ',formatter: ' . $col['formatter'];
 				}
 				if (isset($col['parser'])) {
-					$literal .= 'parser: ' . $col['parser'] . ',';
+					$literal .= ',parser: ' . $col['parser'];
 				}
 				$literal .= '}';
 				
