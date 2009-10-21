@@ -5,15 +5,15 @@
 	},
 	{
 		key: "date",
-		label: "<?php echo lang('date') ?>",
+		label: "<?php echo lang('date') ?>"
 	},
 	{
 		key: "message",
-		label: "<?php echo lang('message') ?>",
+		label: "<?php echo lang('message') ?>"
 	},
 	{
 		key: "recurrence",
-		label: "<?php echo lang('recurrence') ?>",
+		label: "<?php echo lang('recurrence') ?>"
 	},
 	{
 		key: "name",
