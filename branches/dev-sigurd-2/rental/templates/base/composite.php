@@ -89,7 +89,7 @@
 				<dl class="proplist-col">
 					<dt><?php echo lang('serial') ?></dt>
 					<dd><?php echo $composite->get_id() ?></dd>
-					<dt><?php echo lang('area_gros') ?>></dt>
+					<dt><?php echo lang('area_gros') ?></dt>
 					<dd><?php echo $composite->get_area_gros().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt><?php echo lang('area_net') ?></dt>
 					<dd><?php echo $composite->get_area_net().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
@@ -134,15 +134,17 @@
 				$url_add_on = '&amp;composite_id='.$composite->get_id();
 				unset($extra_cols);
 				include('unit_list_partial.php');
-			?>
-			<h3><?php echo lang('all_locations') ?></h3>
-			<?php 
+
+				
+            if ($editable) { 
+			    echo '<h3>'.lang('all_locations').'</h3>';
 				$list_form = true; 
 				$list_id = 'property_uilocations';
 				$url_add_on = '&amp;composite_id='.$composite->get_id();
 				unset($extra_cols);
 				$related = array('included_units');
 				include('property_location_partial.php');
+			}
 			?>
 		</div>
 		<div id="contracts">
