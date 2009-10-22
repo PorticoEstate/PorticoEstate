@@ -139,7 +139,7 @@ class rental_socomposite extends rental_socommon
 				if(strpos($location_code, '.') === false)
 				{
 					// We get the data from the property module
-					$data = @execMethod('property.bolocation.read_single', $location_code);
+					$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
 					if($data != null)
 					{
 						$level = -1;
@@ -158,7 +158,7 @@ class rental_socomposite extends rental_socommon
 							}
 						}
 						$gab_id = '';
-						$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'sallrows' => true));
+						$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
 						if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 						{
 							$gabinfo = array_shift($gabinfos);

@@ -55,7 +55,7 @@ class rental_sounit extends rental_socommon
 	{
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 		// We get the data from the property module
-		$data = execMethod('property.bolocation.read_single', $location_code);
+		$data = execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
 		$level = -1;
 		$names = array();
 		$levelFound = false;
@@ -72,7 +72,7 @@ class rental_sounit extends rental_socommon
 			}
 		}
 		$gab_id = '';
-		$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'sallrows' => true));
+		$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
 		if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 		{
 			$gabinfo = array_shift($gabinfos);
