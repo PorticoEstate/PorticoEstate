@@ -617,8 +617,18 @@
 			return $location;
 		}
 
-		function read_single($location_code='',$extra=array())
+		function read_single($data='',$extra=array())
 		{
+			if(is_array($data))
+			{
+				$location_code	= $data['location_code'];
+				$extra 			= $data['extra'];
+			}
+			else
+			{
+				$location_code = $data;
+			}
+
 			$location_array = split('-',$location_code);
 			$type_id= count($location_array);
 
