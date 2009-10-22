@@ -145,8 +145,8 @@ class rental_socontract extends rental_socommon
 			
 			if(isset($filters['status_date_hidden']) && $filters['status_date_hidden'] != "")
 			{
-				$ts_query = strtotime($this->marshal($filters['status_date_hidden'],'int')); // target timestamp specified by user
-			} 
+				$ts_query = strtotime($filters['status_date_hidden']); // target timestamp specified by user
+			}
 			else
 			{
 				$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)

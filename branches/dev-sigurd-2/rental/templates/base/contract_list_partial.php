@@ -74,7 +74,7 @@
 		'index.php?menuaction=rental.uicontract.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_contract_status','<?php echo $list_id ?>_ctrl_toggle_contract_type','<?php echo $list_id ?>_status_date'],
+		['<?php echo $list_id ?>_ctrl_toggle_contract_status','<?php echo $list_id ?>_ctrl_toggle_contract_type','date_status'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -140,7 +140,7 @@
 			<option value="ended"><?php echo lang('ended') ?></option>
 			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 		</select>
-		<label class="toolbar_element_label" for="calendarPeriodFrom" id="label_contract_status"><?php echo lang('date') ?></label>
+		<label class="toolbar_element_label" for="date_status" id="label_contract_status"><?php echo lang('date') ?></label>
 		<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_status', $notification_date); ?>
 	</fieldset>
 
