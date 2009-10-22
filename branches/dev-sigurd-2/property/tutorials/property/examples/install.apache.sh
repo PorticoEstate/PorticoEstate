@@ -27,11 +27,11 @@ FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.82"
 
 # Download: http://xmlsoft.org/downloads.html
-LIBXMLTAR="libxml2-2.7.3.tar.gz"
-LIBXML="libxml2-2.7.3"
+LIBXMLTAR="libxml2-2.7.6.tar.gz"
+LIBXML="libxml2-2.7.6"
 
-LIBXSLTAR="libxslt-1.1.24.tar.gz"
-LIBXSL="libxslt-1.1.24"
+LIBXSLTAR="libxslt-1.1.26.tar.gz"
+LIBXSL="libxslt-1.1.26"
 
 # Download: ftp://ftp.cac.washington.edu/imap/
 IMAPTAR="imap-2007e.tar.Z"
@@ -45,8 +45,8 @@ PHP_PREFIX="/usr/local"
 #  * @var               string APACHE, APACHETAR
 #  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.12.tar.gz"
-APACHE="httpd-2.2.12"
+APACHETAR="httpd-2.2.14.tar.gz"
+APACHE="httpd-2.2.14"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
@@ -65,6 +65,7 @@ PHP="php-5.3.0"
 #  */
 EACCELERATORTAR="eaccelerator-0.9.6-rc1.tar.bz2"
 EACCELERATOR="eaccelerator-0.9.6-rc1"
+$PHP_PREFIX = "/usr/local"
 
 # APC as Alternative:
 # Download: http://pecl.php.net/package/APC
@@ -79,7 +80,7 @@ rm $LIBXML -rf &&\
 rm $LIBXSL -rf &&\
 rm $IMAP -rf &&\
 rm $PHP -rf &&\
-rm $APC -rf &&\
+rm $EACCELERATOR -rf &&\
 rm $APACHE -rf &&\
 
 # perform the install
@@ -90,12 +91,12 @@ tar -xzf $LIBXSLTAR &&\
 gunzip -c $IMAPTAR | tar xf - &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-tar -xzf $APCTAR &&\
+bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
 cd $FREETDS &&\
 ./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
 --enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
-gmake &&\
-gmake install &&\
+make &&\
+make install &&\
 touch /usr/local/freetds/include/tds.h &&\
 touch /usr/local/freetds/lib/libtds.a &&\
 cd ../$IMAP &&\
