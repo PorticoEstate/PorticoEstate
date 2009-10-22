@@ -26,3 +26,12 @@
 		}
 
 	}
+
+	class booking_boapplication_association extends booking_bocommon
+	{
+		function __construct()
+		{
+			parent::__construct();
+			$this->so = new booking_soapplication_association();
+		}
+	}

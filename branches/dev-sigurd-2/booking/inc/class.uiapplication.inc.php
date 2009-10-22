@@ -9,6 +9,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'associated'	=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
 		
@@ -21,6 +22,7 @@
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->event_bo = CreateObject('booking.boevent');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications');
@@ -107,11 +109,25 @@
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
+				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
+		}
+
+		public function associated()
+		{
+			$associations = $this->assoc_bo->read();
+			foreach($associations['results'] as &$association)
+			{
+				$association['from_'] = pretty_timestamp($association['from_']);
+				$association['to_'] = pretty_timestamp($association['to_']);
+				$association['link'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.edit', 'id'=>$association['id']));
+				$association['type'] = lang($association['type']);
+			}
+			return $this->yui_results($associations);
 		}
 
 		private function _combine_dates($from_, $to_)
@@ -270,6 +286,7 @@
 			$event[] = array('from_', $date['from_']);
 			$event[] = array('to_', $date['to_']);
 			$event[] = array('cost', '0');
+			$event[] = array('application_id', $application['id']);
 			$copy = array(
 				'activity_id', 'description', 'contact_name',
 				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name'

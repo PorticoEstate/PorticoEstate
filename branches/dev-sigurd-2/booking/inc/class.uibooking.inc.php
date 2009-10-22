@@ -28,7 +28,7 @@
 			$this->group_bo    = CreateObject('booking.bogroup');
 			self::set_active_menu('booking::applications::bookings');
 			$this->fields = array('allocation_id', 'activity_id', 'resources',
-								  'building_id', 'building_name', 
+								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
 			                      'from_', 'to_', 'audience', 'active', 'cost');
@@ -241,6 +241,7 @@
 			self::add_javascript('booking', 'booking', 'booking.js');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $booking['application_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();

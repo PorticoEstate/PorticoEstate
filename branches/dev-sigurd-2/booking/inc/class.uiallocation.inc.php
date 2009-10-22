@@ -19,7 +19,7 @@
 			$this->bo = CreateObject('booking.boallocation');
 			$this->organization_bo    = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::applications::allocations');
-			$this->fields = array('resources', 'cost',
+			$this->fields = array('resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
@@ -175,6 +175,7 @@
 			self::add_javascript('booking', 'booking', 'allocation.js');
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
+			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
 			self::render_template('allocation_edit', array('allocation' => $allocation));
 		}
 		

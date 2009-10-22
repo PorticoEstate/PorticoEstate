@@ -100,6 +100,10 @@
 	        </button>
 		</xsl:if>
 		<dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated bookings')" /></dt>
+			<dd><div id="associated_container"/></dd>
+		</dl>
+		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">
 				<dt>
@@ -153,13 +157,21 @@
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To')"/>;
+	var app_id = <xsl:value-of select="application/id"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+    var url2 = 'index.php?menuaction=booking.uiapplication.associated&phpgw_return_as=json&id=' + app_id;
 ]]>
     var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
+    var colDefs = [
+	{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+	{key: 'type', label: lang['Type']},
+	{key: 'from_', label: lang['From']},
+	{key: 'to_', label: lang['To']}];
+    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
 });
 </script>
 

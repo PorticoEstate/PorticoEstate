@@ -129,3 +129,17 @@
 			return false;
 		}
 	}
+
+	class booking_soapplication_association extends booking_socommon
+	{
+		function __construct()
+		{
+			parent::__construct('bb_application_association', 
+				array(
+					'id'					=> array('type' => 'int'),
+					'application_id'		=> array('type' => 'int'),
+					'type'	=> array('type' => 'string', 'required' => true),
+					'from_'	=> array('type' => 'timestamp'),
+					'to_'	=> array('type' => 'timestamp')));
+		}
+	}
