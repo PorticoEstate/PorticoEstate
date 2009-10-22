@@ -109,7 +109,6 @@
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
-				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 			}
