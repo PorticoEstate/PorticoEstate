@@ -100,7 +100,7 @@
 	        </button>
 		</xsl:if>
 		<dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated bookings')" /></dt>
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated items')" /></dt>
 			<dd><div id="associated_container"/></dd>
 		</dl>
 		<dl class="proplist">
@@ -135,12 +135,19 @@
 			</dt>
 			</xsl:if>
 			<xsl:if test="application/status='NEW'">
-			<dt>
-				<form method="POST">
-					<input type="hidden" name="status" value="ACCEPTED"/>
-					<input type="submit" value="{php:function('lang', 'Accept application')}"/>
-				</form>
-			</dt>
+				<xsl:if test="num_associations='0'">
+					<input type="submit" disabled="" value="{php:function('lang', 'Accept application')}"/>
+					<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
+				</xsl:if>
+				<xsl:if test="num_associations!='0'">
+					<dt>
+						<form method="POST">
+							<input type="hidden" name="status" value="ACCEPTED"/>
+							<input type="submit" 
+								   value="{php:function('lang', 'Accept application')}"/>
+						</form>
+					</dt>
+				</xsl:if>
 			</xsl:if>
 			<xsl:if test="application/status='ACCEPTED'">
 			<dt>
@@ -150,7 +157,7 @@
 				</form>
 			</dt>
 			</xsl:if>
-			<dd><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
+			<dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 		</dl>
 		</xsl:if>
     </div>
