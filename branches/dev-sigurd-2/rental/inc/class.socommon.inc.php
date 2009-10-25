@@ -115,7 +115,7 @@ abstract class rental_socommon
 	 * @return array of objects. May return an empty
 	 * array, never null. The array keys are the respective index numbers.
 	 */
-	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $allrows)
+	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
 		$results = array();
 		
@@ -131,18 +131,9 @@ abstract class rental_socommon
 		{
 			$start_index = 0;
 		}
-
+		
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		if(!$allrows)
-		{
-			$num_rows = $start_index + $num_of_objects;
-			$this->db->limit_query($sql,$start_index,__LINE__, __FILE__,$num_rows);
-//			$this->db->query($sql,__LINE__, __FILE__);
-		}
-		else
-		{
-			$this->db->query($sql,__LINE__, __FILE__);
-		}
+		$this->db->query($sql,__LINE__, __FILE__);
 
 		while ($this->db->next_record()) // Runs through all of the results
 		{
