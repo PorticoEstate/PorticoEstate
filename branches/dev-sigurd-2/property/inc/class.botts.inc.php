@@ -533,10 +533,15 @@
 						case 'T': $type = lang('Category changed'); break;
 						case 'S': $type = lang('Subject changed'); break;
 						case 'H': $type = lang('Billable hours changed'); break;
-						case 'B': $type = lang('Billable rate changed'); break;
+						case 'B': $type = lang('Budget changed'); break;
+	//					case 'B': $type = lang('Billable rate changed'); break;
 						case 'F': $type = lang('finnish date changed'); break;
 						case 'IF': $type = lang('Initial finnish date'); break;
 						case 'L': $type = lang('Location changed'); break;
+						case 'M':
+							$type = lang('Sendt by email to');
+							$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+							break;
 						default: break;
 					}
 
@@ -659,6 +664,31 @@
 		}
 
 
+		function get_address_element($location_code = '')
+		{
+			$address_element = array();
+			if($location_code)
+			{
+				$solocation 		= CreateObject('property.solocation');
+				$custom = createObject('property.custom_fields');
+				$location_data 		= $solocation->read_single($location_code);
+
+				$type_id=count(explode('-',$location_code));
+				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$i=0;
+				foreach($fm_location_cols as $location_entry)
+				{
+					if($location_entry['lookup_form'])
+					{
+						$address_element[$i]['text']=$location_entry['input_text'];
+						$address_element[$i]['value']=$location_data[$location_entry['column_name']];
+					}
+					$i++;
+				}
+			}
+			return $address_element;
+		}
+		
 		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='')
 		{
 			$this->send			= CreateObject('phpgwapi.send');
@@ -667,28 +697,7 @@
 
 			$ticket	= $this->so->read_single($id);
 
-			if($ticket['location_code'])
-			{
-				$solocation 		= CreateObject('property.solocation');
-				$custom = createObject('property.custom_fields');
-				$location_data 		= $solocation->read_single($ticket['location_code']);
-
-				$type_id=count(explode('-',$ticket['location_code']));
-				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
-				$i=0;
-				if (isset($fm_location_cols) AND is_array($fm_location_cols))
-				{
-					foreach($fm_location_cols as $location_entry)
-					{
-						if($location_entry['lookup_form'])
-						{
-							$address_element[$i]['text']=$location_entry['input_text'];
-							$address_element[$i]['value']=$location_data[$location_entry['column_name']];
-						}
-						$i++;
-					}
-				}
-			}
+			$address_element = $this->get_address_element($ticket['location_code']);
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
 			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);

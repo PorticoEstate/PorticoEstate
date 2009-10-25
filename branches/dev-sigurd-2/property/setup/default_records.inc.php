@@ -62,6 +62,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function) VALUES ({$app_id}, '.project.request', 'Request', 1, 1)");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_function, allow_c_attrib, c_attrib_table) VALUES ({$app_id}, '.ticket', 'Helpdesk', 1, 1, 1, 'fm_tts_tickets')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.ticket.external', 'Helpdesk External user')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.ticket.order', 'Helpdesk ad hock order')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.invoice', 'Invoice')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.document', 'Documents')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.drawing', 'Drawing')");
