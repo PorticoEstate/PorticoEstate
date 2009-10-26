@@ -87,7 +87,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				number_of_resets_completed++;
 				if(number_of_resets_completed == number_of_panels)
 				{
-					document.location = '<? echo html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.index', 'message' => lang('frontpage_was_reset')))) ?>';
+					document.location = '<?php echo html_entity_decode(self::link(array('menuaction' => 'rental.uifrontpage.index', 'message' => lang('frontpage_was_reset')))) ?>';
 				}
 			}
 
