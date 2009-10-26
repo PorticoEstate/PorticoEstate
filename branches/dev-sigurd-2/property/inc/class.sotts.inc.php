@@ -714,7 +714,7 @@
 			if ($old_budget != $ticket['budget'])
 			{
 				$this->fields_updated = true;
-				$this->db->query("update fm_tts_tickets set budget='" . $ticket['budget']
+				$this->db->query("UPDATE fm_tts_tickets set budget='" . $ticket['budget']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
 			}

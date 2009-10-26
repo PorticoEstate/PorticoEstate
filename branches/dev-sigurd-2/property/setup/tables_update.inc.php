@@ -3798,7 +3798,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','order_descr',array('type' => 'text','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','b_account_id',array('type' => 'varchar','precision' => '20','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','ecodimb',array('type' => 'int','precision' => 4,'nullable' => True));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','budget',array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','budget',array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','actual_cost',array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

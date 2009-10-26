@@ -861,7 +861,14 @@
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'finnish_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'finnish_date2' => array('type' => 'int','precision' => '4','nullable' => True),
-				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True)
+				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'order_id' => array('type' => 'int','precision' => 8,'nullable' => True),
+				'vendor_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'order_descr' => array('type' => 'text','nullable' => True),
+				'b_account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'budget' => array('type' => 'int','precision' => '4','nullable' => True),
+				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
 			),
 			'pk' => array('id'),
 			'ix' => array(),
