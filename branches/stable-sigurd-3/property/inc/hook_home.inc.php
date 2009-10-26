@@ -94,9 +94,157 @@
 				}
 			}
 
+			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
 			$portalbox->data[] = array
 			(
-				'text' => "{$ticket['address']} :: {$ticket['subject']}",
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+
+		unset($tts);
+		unset($portalbox);
+		unset($category_name);
+		unset($default_status);
+	}
+
+
+	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_2'])
+		&& $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
+	{
+
+		$default_status 	= isset($prefs['property']['tts_status_2']) ? $prefs['property']['tts_status_2'] : '';
+		$tts = CreateObject('property.sotts');
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
+		$total_records = $tts->total_records;
+
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'		=> isset($prefs['property']['mainscreen_tts_title_2']) && $prefs['property']['mainscreen_tts_title_2']? "{$prefs['property']['mainscreen_tts_title_2']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$category_name = array(); // caching
+
+		$portalbox->data = array();
+		foreach ($tickets as $ticket)
+		{
+			if(!$ticket['subject'])
+			{
+				if(!isset($category_name[$ticket['cat_id']]))
+				{
+					$ticket['subject']= execMethod('property.botts.get_category_name', $ticket['cat_id']);
+					$category_name[$ticket['cat_id']] = $ticket['subject'];
+				}
+				else
+				{
+					$ticket['subject'] = $category_name[$ticket['cat_id']];
+				}
+			}
+
+			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
+			$portalbox->data[] = array
+			(
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+
+		unset($tts);
+		unset($portalbox);
+		unset($category_name);
+		unset($default_status);
+	}
+
+
+	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_3'])
+		&& $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
+	{
+
+		$default_status 	= isset($prefs['property']['tts_status_3']) ? $prefs['property']['tts_status_3'] : '';
+		$tts = CreateObject('property.sotts');
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
+		$total_records = $tts->total_records;
+
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'		=> isset($prefs['property']['mainscreen_tts_title_3']) && $prefs['property']['mainscreen_tts_title_3']? "{$prefs['property']['mainscreen_tts_title_3']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$category_name = array(); // caching
+
+		$portalbox->data = array();
+		foreach ($tickets as $ticket)
+		{
+			if(!$ticket['subject'])
+			{
+				if(!isset($category_name[$ticket['cat_id']]))
+				{
+					$ticket['subject']= execMethod('property.botts.get_category_name', $ticket['cat_id']);
+					$category_name[$ticket['cat_id']] = $ticket['subject'];
+				}
+				else
+				{
+					$ticket['subject'] = $category_name[$ticket['cat_id']];
+				}
+			}
+			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
+			$portalbox->data[] = array
+			(
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
 			);
 		}
