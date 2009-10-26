@@ -97,7 +97,13 @@
          */
         ?>
         
-        window.location = 'index.php?menuaction=rental.uiparty.download&party_type='+option+'<?php echo $url_add_on; ?>&type='+ptype+'&query='+query+'&search_option='+sOption;
+        window.location = 'index.php?menuaction=rental.uiparty.download'+
+            '&amp;party_type='+option+
+            '<?php echo $url_add_on; ?>'+
+            '&amp;type='+ptype+
+            '&amp;query='+query+
+            '&amp;search_option='+sOption+
+            '&amp;results=100';
     }
 
 </script>

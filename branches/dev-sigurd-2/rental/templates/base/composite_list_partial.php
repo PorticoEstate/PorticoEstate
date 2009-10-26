@@ -58,8 +58,13 @@
         var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_search_option');
         var sOption = sSelect.options[sSelect.selectedIndex].value;
 
-        window.location = 'index.php?menuaction=rental.uicomposite.download'+'<?php echo $url_add_on ?>'+
-            '&is_active='+availabilityoption+'&type='+compType+'&query='+query+'&search_option='+sOption;
+        window.location = 'index.php?menuaction=rental.uicomposite.download'+
+            '<?php echo $url_add_on ?>'+
+            '&amp;is_active='+availabilityoption+
+            '&amp;type='+compType+
+            '&amp;query='+query+
+            '&amp;search_option='+sOption+
+            '&amp;results=100';
     }
 </script>
 

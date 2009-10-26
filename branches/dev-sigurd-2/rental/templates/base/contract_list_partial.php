@@ -101,12 +101,13 @@
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 
         window.location = 'index.php?menuaction=rental.uicontract.download'+
-            '&type='+ctype+
-            '&contract_type='+typeoption+
-            '&contract_status='+statusoption+
+            '&amp;type='+ctype+
+            '&amp;contract_type='+typeoption+
+            '&amp;contract_status='+statusoption+
             '<?php echo $url_add_on ?>'+
-            '&query='+query+
-            '&search_option='+sOption;
+            '&amp;query='+query+
+            '&amp;search_option='+sOption+
+            '&amp;results=100';
     }
 </script>
 <?php
