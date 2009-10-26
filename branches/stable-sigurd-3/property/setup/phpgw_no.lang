@@ -936,6 +936,7 @@ lookup	property	no	Slå opp
 lookup tenant	property	no	Slå opp leietaker
 lowest	property	no	Lavest
 mailing method is not chosen! (admin section)	property	no	Mail metode er ikke valgt! (admin seksjon)
+make order	property	no	Lag bestilling
 manage	property	no	Forvalte
 manage groups	property	no	Administrere grupper
 manage users	property	no	Administrere brukere

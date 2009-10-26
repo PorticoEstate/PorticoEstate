@@ -766,7 +766,7 @@
 	</xsl:template>
 
 <!-- view -->
-	<xsl:template match="view">
+	<xsl:template match="view" xmlns:php="http://php.net/xsl">
 		<script language="JavaScript">
 			self.name="first_Window";
 			function generate_order()
@@ -1105,6 +1105,140 @@
 					<xsl:call-template name="file_upload"/>
 				</xsl:when>
 			</xsl:choose>
+
+			<xsl:choose>
+				<xsl:when test="access_order = 1">
+					<xsl:choose>
+						<xsl:when test="value_order_id=''">
+							<tr>
+								<td>
+						            <xsl:value-of select="php:function('lang', 'make order')" />
+								</td>
+								<td>
+									<input type="checkbox" name="values[make_order]" value="True">
+										<xsl:attribute name="title">
+								            <xsl:value-of select="php:function('lang', 'make order')" />
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
+					<xsl:choose>
+						<xsl:when test="value_order_id!=''">
+						<tr>
+							<td>
+					            <xsl:value-of select="php:function('lang', 'order id')" />
+							</td>
+							<td>
+								<xsl:value-of select="value_order_id"/>
+							</td>
+						</tr>
+
+						<xsl:call-template name="vendor_form"/>
+						<xsl:call-template name="ecodimb_form"/>
+						<xsl:call-template name="b_account_form"/>
+
+						<tr>
+							<td valign="top">
+			            		<xsl:value-of select="php:function('lang', 'budget')" />
+							</td>
+							<td>
+								<input type="text" name="values[budget]" value="{value_budget}">
+									<xsl:attribute name="title">
+					            		<xsl:value-of select="php:function('lang', 'Enter the budget')" />
+									</xsl:attribute>
+								</input>
+								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+					            <xsl:value-of select="php:function('lang', 'actual cost')" />
+							</td>
+							<td>
+								<xsl:value-of select="value_actual_cost"/>
+								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+            					<xsl:value-of select="php:function('lang', 'description')" />
+							</td>
+							<td>
+								<textarea cols="60" rows="10" name="values[order_descr]" wrap="virtual">
+									<xsl:attribute name="title">
+		    			        		<xsl:value-of select="php:function('lang', 'description')" />
+									</xsl:attribute>
+									<xsl:value-of select="value_order_descr"/>
+								</textarea>
+							</td>
+						</tr>
+						<xsl:choose>
+							<xsl:when test="need_approval='1'">
+								<tr>
+									<td valign="top">
+    					        		<xsl:value-of select="php:function('lang', 'ask for approval')" />
+									</td>
+									<td>
+										<table>
+											<xsl:for-each select="value_approval_mail_address" >
+												<tr>
+													<td>
+														<input type="checkbox" name="values[approval][{id}]" value="True">
+															<xsl:attribute name="title">
+																<xsl:value-of select="//lang_ask_approval_statustext"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="text" name="values[mail_address][{id}]" value="{address}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="//lang_ask_approval_statustext"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</tr>
+											</xsl:for-each>
+										</table>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>
+						<tr>
+							<td>
+					            <xsl:value-of select="php:function('lang', 'send order')" />
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input type="checkbox" name="values[send_order]" value="True">
+												<xsl:attribute name="title">
+										            <xsl:value-of select="php:function('lang', 'send order')" />
+												</xsl:attribute>
+											</input>
+										</td>
+										<td>										            
+											<select name="values[vendor_email]">
+												<xsl:attribute name="title">
+										            <xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
+												</xsl:attribute>
+												<option value="">
+													<xsl:value-of select="php:function('lang', 'select email')" />
+												</option>
+												<xsl:apply-templates select="vendor_email"/>
+											</select>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
 		</table>
 </div>
 <div id="history">
@@ -1623,6 +1757,18 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="vendor_email">
+	<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
+		<xsl:choose>
+			<xsl:when test="selected">
+				<option value="{$email}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{$email}"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

@@ -328,6 +328,13 @@
 				$ticket['finnish_date']		= $this->db->f('finnish_date');
 				$ticket['finnish_date2']	= $this->db->f('finnish_date2');
 				$ticket['contact_id']		= $this->db->f('contact_id');
+				$ticket['order_id']			= $this->db->f('order_id');
+				$ticket['vendor_id']		= $this->db->f('vendor_id');
+				$ticket['b_account_id']		= $this->db->f('b_account_id');
+				$ticket['order_descr']		= $this->db->f('order_descr', true);
+				$ticket['ecodimb']			= $this->db->f('ecodimb');
+				$ticket['budget']			= $this->db->f('budget');
+				$ticket['actual_cost']		= $this->db->f('actual_cost');
 
 				$user_id=(int)$this->db->f('user_id');
 				$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='$user_id' ");
@@ -514,11 +521,12 @@
 			** P - Priority change
 			** T - Category change
 			** S - Subject change
-			** B - Billing rate
+			** B - Budget
 			** H - Billing hours
 			** F - finnish date
 			** C% - Status changed
 			** L - Location changed
+			** M - Mail sent to vendor
 			*/
 
 			if ($old_status != $ticket['status'])
@@ -570,6 +578,7 @@
 			$oldpriority 		= $this->db->f('priority');
 			$oldcat_id 			= $this->db->f('cat_id');
 			$old_status  		= $this->db->f('status');
+			$old_budget  		= $this->db->f('budget');
 		//	$old_billable_hours	= $this->db->f('billable_hours');
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject		= $this->db->f('subject');
@@ -602,11 +611,12 @@
 			** P - Priority change
 			** T - Category change
 			** S - Subject change
-			** B - Billing rate
+			** B - Budget change
 			** H - Billing hours
 			** F - finnish date
 			** C% - Status change
 			** L - Location changed
+			** M - Mail sent to vendor
 			*/
 
 			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
@@ -701,14 +711,14 @@
 				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
 			}
 
-	/*		if ($old_billable_hours != $ticket['billable_hours'])
+			if ($old_budget != $ticket['budget'])
 			{
 				$this->fields_updated = true;
-				$this->db->query("update fm_tts_tickets set billable_hours='" . $ticket['billable_hours']
+				$this->db->query("UPDATE fm_tts_tickets set budget='" . $ticket['budget']
 					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
+				$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
 			}
-
+	/*
 			if ($old_billable_rate != $ticket['billable_rate'])
 			{
 				$this->fields_updated = true;
@@ -806,6 +816,25 @@
 				}
 				unset($interlink);
 			}
+
+
+			if(isset($ticket['make_order']) && $ticket['make_order'])
+			{
+				$order_id = execMethod('property.socommon.increment_id', 'order');
+				if($order_id)
+				{
+					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id} WHERE id={$id}",__LINE__,__FILE__);
+				}
+			}
+
+			$value_set					= array();
+			$value_set['vendor_id']		= $ticket['vendor_id'];
+			$value_set['b_account_id']	= $ticket['b_account_id'];
+			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
+			$value_set['ecodimb']		= $ticket['ecodimb'];
+			$value_set['budget']		= $ticket['budget'];
+			$value_set					= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 

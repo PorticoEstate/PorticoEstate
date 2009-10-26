@@ -684,6 +684,7 @@
 			$vendor_id=(int)$vendor_id;
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
 			$this->db->query("select column_name from phpgw_cust_attribute WHERE location_id = {$location_id} AND datatype='email'",__LINE__,__FILE__);
+			$email_list = array();
 			while ($this->db->next_record())
 			{
 				$this->db2->query("select " . $this->db->f('column_name') . " from fm_vendor where id=$vendor_id",__LINE__,__FILE__);

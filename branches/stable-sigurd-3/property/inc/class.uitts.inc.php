@@ -1801,6 +1801,11 @@
 			$id = phpgw::get_var('id', 'int', 'GET');
 			$values = phpgw::get_var('values');
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
+			$values['ecodimb']			= phpgw::get_var('ecodimb');
+			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
@@ -1826,6 +1831,12 @@
 				}
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				{
+					$values['budget'] = (int)$values['budget'];
+					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+				}
 
 				if(isset($values['takeover']) && $values['takeover'])
 				{
@@ -2118,12 +2129,210 @@
 			);
 			
 			//----------------------------------------------datatable settings--------			
-						$data = array
+			
+			// -------- start order section
+			$order_read 			= $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
+			$order_add 				= $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
+			$order_edit 			= $this->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
+			
+			$access_order = false;
+			if($order_read || $order_add || $order_edit)
+			{
+				$access_order = true;
+			}
+
+			if($order_read)
+			{
+				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
+						'vendor_id'			=> $ticket['vendor_id'],
+						'vendor_name'		=> $ticket['vendor_name']));
+
+				$vendor_email = execMethod('property.sowo_hour.get_email', $ticket['vendor_id']);
+
+				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $ticket['b_account_id'] ? $ticket['b_account_id'] : $ticket['b_account_id'],
+						'b_account_name'	=> $ticket['b_account_name'],
+						'disabled'			=> !!$ticket['b_account_id']));
+
+				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
+					(
+						'ecodimb'			=> $ticket['ecodimb'] ? $ticket['ecodimb'] : $ticket['ecodimb'],
+						'ecodimb_descr'		=> $ticket['ecodimb_descr'],
+						'disabled'			=> !!$ticket['ecodimb']
+					)
+				);
+			
+				// approval
+				$supervisor_id = 0;
+
+				if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+					&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
+				{
+					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				}
+
+				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
+
+				$supervisor_email = array();
+				if ($supervisor_id && $need_approval)
+				{
+					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+					$supervisor_email[] = array
+					(
+						'id'	  => $supervisor_id,
+						'address' => $prefs['email'],
+					);
+					if ( isset($prefs['approval_from']) )
+					{
+						$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+						if(isset($prefs2['email']))
+						{
+							$supervisor_email[] = array
+							(
+								'id'	  => $prefs['approval_from'],
+								'address' => $prefs2['email'],
+							);
+							$supervisor_email = array_reverse($supervisor_email);
+						}
+						unset($prefs2);
+					}
+					unset($prefs);
+				}
+				// approval					
+			}
+
+
+			if(isset($values['send_order']) && $values['send_order'])
+			{
+				if(isset($values['vendor_email']) && $values['vendor_email'])
+				{
+					$subject = lang(order).": ". $id;
+				//	$body = lang('Category').': '. $this->bo->get_category_name($ticket['cat_id']) ."\n";
+					$body .= lang('Location').': '. $ticket['location_code'] ."\n";
+					$body .= lang('Address').': '. $ticket['address'] ."\n";
+
+					$address_element = $this->bo->get_address_element($ticket['location_code']);
+
+					foreach($address_element as $address_entry)
+					{
+						$body .= $address_entry['text'].': '. $address_entry['value'] ."\n";
+					}
+
+					$body .= "\n {$ticket['order_descr']}\n";
+
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					{
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+
+						$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+						$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+						$bcc = '';
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+						if($rcpt)
+						{
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+							$historylog	= CreateObject('property.historylog','tts');
+							$historylog->add('M',$id,"{$values['vendor_email']}");
+							$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
+							$action_params = array
+							(
+								'appname'			=> 'property',
+								'location'			=> '.ticket',
+								'id'				=> $id,
+								'responsible'		=> $values['vendor_id'],
+								'responsible_type'  => 'vendor',
+								'action'			=> 'remind',
+								'remark'			=> '',
+								'deadline'			=> ''
+							);
+				
+							$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
+						}
+					}
+					else
+					{
+						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
+					}
+				}
+			}
+			// start approval
+			if ($values['approval'] && $values['mail_address'] && $this->bo->config->config_data['workorder_approval'])
+			{
+				$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
+				$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+				$subject = lang(Approval).": ". $id;
+				$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id)).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
+
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				{
+					if (!is_object($GLOBALS['phpgw']->send))
+					{
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+					}
+
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.ticket',
+						'id'				=> $id,
+						'responsible'		=> '',
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+					$bcc = '';//$coordinator_email;
+					foreach ($values['mail_address'] as $_account_id => $_address)
+					{
+						if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+						{
+							$action_params['responsible'] = $_account_id;
+							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+							if($rcpt)
+							{
+								$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+							}
+
+							 execMethod('property.sopending_action.set_pending_action', $action_params);
+						}
+					}
+				}
+				else
+				{
+					$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
+				}
+			}
+	
+			// end approval
+
+			// -------- end order section
+
+
+			$data = array
 			(
+				'access_order'				=> $access_order,
+				'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'value_order_id'			=> $ticket['order_id'],
+				'value_order_descr'			=> $ticket['order_descr'],
+				'vendor_data'				=> $vendor_data,
+				'b_account_data'			=> $b_account_data,
+				'ecodimb_data' 				=> $ecodimb_data,
+				'value_budget'				=> $ticket['budget'],
+				'value_actual_cost'			=> $ticket['actual_cost'],
+				'need_approval'				=> $need_approval,
+				'value_approval_mail_address'=> $supervisor_email,
+				'vendor_email'				=> $vendor_email,
+
 				'contact_data'				=> $contact_data,
 				'lookup_type'				=> $lookup_type,
 				'simple'					=> $this->_simple,
-				'show_finnish_date'		=> $this->_show_finnish_date,
+				'show_finnish_date'			=> $this->_show_finnish_date,
 				'tabs'						=> self::_generate_tabs(true),
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'					=> $datavalues,
