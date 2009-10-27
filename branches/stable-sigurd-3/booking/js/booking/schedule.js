@@ -107,6 +107,9 @@ YAHOO.booking.scheduleRowFormatter = function(elTr, oRecord) {
 };
 
 YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, includeResource) {
+	// Make sure date is a Monday
+	while(date.getDay() != 1)
+		date.setDate(date.getDate()-1);
 	var container = YAHOO.util.Dom.get(container);
 	container.innerHTML = '';
 	url += '&date=' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();

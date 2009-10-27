@@ -104,7 +104,7 @@
 			);
 		}
 
-		function generate_allocation($season_id, $date, $to, $write=false)
+		function generate_allocation($season_id, $date, $to, $interval, $write=false)
 		{
 			$this->authorize_write($season_id);
 			$valid = array();
@@ -129,7 +129,19 @@
 					else
 						throw new UnexpectedValueException('Encountered an unexpected validation error');
 				}
-				if($date->format('Y-m-d') == $to->format('Y-m-d'))
+				if ($date->format('N') == 7) // sunday
+				{
+					if ($interval == 2)
+						$date->modify('+7 days');
+					elseif ($interval == 3)
+						$date->modify('+14 days');
+					elseif ($interval == 4)
+						$date->modify('+21 days');
+				}
+
+				$date->modify('+1 day');
+
+				if($date->format('Y-m-d') > $to->format('Y-m-d'))
 				{
 					if($write)
 					{
@@ -142,7 +154,6 @@
 					}
 					return array('valid' => $valid, 'invalid'=>$invalid);
 				}
-				$date->modify('+1 day');
 			}
 			while(true);
 

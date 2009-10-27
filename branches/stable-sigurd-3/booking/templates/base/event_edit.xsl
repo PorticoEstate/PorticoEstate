@@ -1,14 +1,14 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
-
-	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit event')"/></dt>
-	</dl>
+        <ul class="pathway">
+            <li><xsl:value-of select="php:function('lang', 'Events')" /></li>
+            <li><a href="">#<xsl:value-of select="event/id"/></a></li>
+        </ul>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 
     <form action="" method="POST">
-		<dl class="form">
+		<dl class="form-col">
             <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
             <dd>
                 <select id="field_active" name="active">
@@ -27,6 +27,15 @@
                 </select>
             </dd>
 		</dl>
+		<dl class="form-col">
+            <dt><label><xsl:value-of select="php:function('lang', 'Application')"/></label></dt>
+            <dd>
+				<xsl:if test="event/application_id != ''">
+					<a href="{event/application_link}">#<xsl:value-of select="event/application_id"/></a>
+				</xsl:if>
+            </dd>
+		</dl>
+		<div class="clr"/>
         <dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Why')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
@@ -159,10 +168,18 @@
                 </input>
             </dd>
         </dl>
-			<dl class="form-col">
-				<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
-				<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
-			</dl>
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
+			<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
+		</dl>
+		<div style="clear: both" />
+		<dl class="form">
+			<dt><label for="field_mail"><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></label></dt>
+			<dd>
+				<label><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></label><br />
+				<textarea id="field_mail" name="mail" class="full-width"></textarea>
+			</dd>
+		</dl>
         <div class="form-buttons">
             <input type="submit">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>

@@ -186,9 +186,13 @@ YAHOO.booking.inlineTableHelper = function(container, url, colDefs, options, dis
 	var Dom = YAHOO.util.Dom;
 	
 	var container = Dom.get(container);
-	var paginatorContainer = container.appendChild(document.createElement('div'));
-	var dataTableContainer = container.appendChild(document.createElement('div'));
-	
+	if(!disablePagination) {
+		var paginatorContainer = container.appendChild(document.createElement('div'));
+		var dataTableContainer = container.appendChild(document.createElement('div'));
+	}
+	else {
+		dataTableContainer = container;
+	}
 	options = options || {};
 	options.dynamicData = true;
 	

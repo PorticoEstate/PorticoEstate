@@ -8,6 +8,7 @@
 	<xsl:call-template name="yui_booking_i18n"/>
 
     <form action="" method="POST">
+		<input type="hidden" name="application_id" value="{event/application_id}"/>
         <dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Why')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>

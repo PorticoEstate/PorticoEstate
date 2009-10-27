@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('phpgwapi.send');
 
 	class booking_uievent extends booking_uicommon
 	{
@@ -23,7 +24,7 @@
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'description',
-								  'resources', 'cost',
+								  'resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
 								  'contact_name', 'contact_email', 'contact_phone',
 			                      'from_', 'to_', 'active', 'audience');
@@ -154,7 +155,6 @@
 				array_set_default($event, 'agegroups', array());
 				
 				list($event, $errors) = $this->extract_and_validate($event);
-				
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($event);
@@ -177,6 +177,21 @@
 			self::render_template('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
+		private function send_mailnotification($receiver, $subject, $body)
+		{
+			$send = CreateObject('phpgwapi.send');
+
+			if (strlen(trim($body)) == 0) 
+			{
+				return false;
+			}
+
+			if (strlen($receiver) > 0) 
+			{
+				$send->msg('email', $receiver, $subject, $body);
+			}
+		}
+
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -188,18 +203,21 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
+
 				
 				list($event, $errors) = $this->extract_and_validate($event);
 				
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($event);
+					$this->send_mailnotification('orose@localhost', lang('Event changed'), phpgw::get_var('mail', 'POST'));
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
+			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id'=> $event['application_id']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];

@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('phpgwapi.send');
 
 	class booking_uibooking extends booking_uicommon
 	{
@@ -24,9 +25,10 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
+			$this->group_bo    = CreateObject('booking.bogroup');
 			self::set_active_menu('booking::applications::bookings');
 			$this->fields = array('allocation_id', 'activity_id', 'resources',
-								  'building_id', 'building_name', 
+								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
 			                      'from_', 'to_', 'audience', 'active', 'cost');
@@ -192,6 +194,24 @@
 			self::render_template('booking_new', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
+		private function send_mailnotification_to_group($group, $subject, $body)
+		{
+			$send = CreateObject('phpgwapi.send');
+
+			if (strlen(trim($body)) == 0) 
+			{
+				return false;
+			}
+
+			foreach($group['contacts'] as $contact) 
+			{
+				if (strlen($contact['email']) > 0) 
+				{
+					$send->msg('email', $contact['email'], $subject, $body);
+				}
+			}
+		}
+
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -204,11 +224,13 @@
 				$booking = array_merge($booking, extract_values($_POST, $this->fields));
 				$booking['allocation_id'] = $booking['allocation_id'] ? $booking['allocation_id'] : null;
 				$this->agegroup_bo->extract_form_data($booking);
+				$group = $this->group_bo->read_single(intval(phpgw::get_var('group_id', 'GET')));
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->update($booking);
+						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$booking['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not update object due to insufficient permissions');
@@ -219,6 +241,7 @@
 			self::add_javascript('booking', 'booking', 'booking.js');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $booking['application_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();

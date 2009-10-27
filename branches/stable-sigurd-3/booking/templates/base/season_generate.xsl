@@ -40,7 +40,39 @@
 	                	<input id="field_to" name="to_" type="text" value="{to_}"/>
 	                </div>
 	            </dd>
-	        </dl>
+			</dl>
+			<div style="clear: both" />
+			<dl class="form">
+				<dt><label for="field_interval"><xsl:value-of select="php:function('lang', 'Interval')" /></label></dt>
+				<dd>
+					<select id="field_interval" name="field_interval">
+						<option value="1">
+							<xsl:if test="interval=1">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="php:function('lang', '1 week')" />
+						</option>
+						<option value="2">
+							<xsl:if test="interval=2">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="php:function('lang', '2 weeks')" />
+						</option>
+						<option value="3">
+							<xsl:if test="interval=3">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="php:function('lang', '3 weeks')" />
+						</option>
+						<option value="4">
+							<xsl:if test="interval=4">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="php:function('lang', '4 weeks')" />
+						</option>
+					</select>
+				</dd>
+			</dl>
 	        <div class="form-buttons">
 	            <input type="submit" name="calculate">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Preview')" /></xsl:attribute>

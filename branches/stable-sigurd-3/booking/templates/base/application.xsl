@@ -100,6 +100,10 @@
 	        </button>
 		</xsl:if>
 		<dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated items')" /></dt>
+			<dd><div id="associated_container"/></dd>
+		</dl>
+		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">
 				<dt>
@@ -131,12 +135,19 @@
 			</dt>
 			</xsl:if>
 			<xsl:if test="application/status='NEW'">
-			<dt>
-				<form method="POST">
-					<input type="hidden" name="status" value="ACCEPTED"/>
-					<input type="submit" value="{php:function('lang', 'Accept application')}"/>
-				</form>
-			</dt>
+				<xsl:if test="num_associations='0'">
+					<input type="submit" disabled="" value="{php:function('lang', 'Accept application')}"/>
+					<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
+				</xsl:if>
+				<xsl:if test="num_associations!='0'">
+					<dt>
+						<form method="POST">
+							<input type="hidden" name="status" value="ACCEPTED"/>
+							<input type="submit" 
+								   value="{php:function('lang', 'Accept application')}"/>
+						</form>
+					</dt>
+				</xsl:if>
 			</xsl:if>
 			<xsl:if test="application/status='ACCEPTED'">
 			<dt>
@@ -146,20 +157,28 @@
 				</form>
 			</dt>
 			</xsl:if>
-			<dd><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
+			<dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 		</dl>
 		</xsl:if>
     </div>
 
 <script type="text/javascript">
     var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To')"/>;
+	var app_id = <xsl:value-of select="application/id"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+    var url2 = 'index.php?menuaction=booking.uiapplication.associated&phpgw_return_as=json&filter_application_id=' + app_id;
 ]]>
     var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
+    var colDefs = [
+	{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
+	{key: 'type', label: lang['Type']},
+	{key: 'from_', label: lang['From']},
+	{key: 'to_', label: lang['To']}];
+    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
 });
 </script>
 
