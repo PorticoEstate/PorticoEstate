@@ -236,3 +236,13 @@ Account Codes	bookingfrontend	no	Konteringsstreng
 Field %1 is required	bookingfrontend	no	Feltet %1 kreves
 Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format
 Building users	bookingfrontend	no	Brukere av bygg/anlegg
+Ssn	booking	no	Fødselsnummer (11 siffer)
+Interval	bookingfrontend	no	Interval
+Recurring booking	bookingfrontend	no	Gjenta booking
+Repeat until	bookingfrontend	no	Gjenta til
+1 week	bookingfrontend	no	1 uke
+2 weeks	bookingfrontend	no	2 uker
+3 weeks	bookingfrontend	no	3 uker
+4 weeks	bookingfrontend	no	4 uker
+Select a group	bookingfrontend	no	Velg Gruppe/Lag
+Bookings that can be created	bookingfrontend	no	Bookinger som kan lages

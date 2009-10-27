@@ -39,7 +39,7 @@
 			<div>som leies ut av <strong>Kultur</strong> og <strong>idrett</strong>.</div>
 			<div>Bruk <strong>søkefeltet</strong> til å finne det du ønsker informasjon om.</div>
 			<div>Det enkelte bygg, anlegg har en <strong>kalender</strong> hvor du får</div>
-			<div>ovrsikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
+			<div>oversikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
 			<div>Ønsker du å søke om leie/bruk gjør du det fra kalendern.</div>
 		
 			<div>Du kan også finne <strong>informasjon</strong> om aktiviteter,</div>
