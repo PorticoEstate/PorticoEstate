@@ -174,7 +174,7 @@ class rental_socontract_price_item extends rental_socommon
 	 */
 	public function get_total_price($contract_id){
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND (date_start <= {$ts_query} AND date_end >= {$ts_query}) OR (date_start <= {$ts_query} AND (date_end is null OR date_end = 0))");
+		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND ((date_start <= {$ts_query} AND date_end >= {$ts_query}) OR (date_start <= {$ts_query} AND (date_end is null OR date_end = 0)))");
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');
 			return $total_price;
