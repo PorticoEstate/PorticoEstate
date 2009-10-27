@@ -1953,6 +1953,7 @@
 				'id'		=> $id
 			);
 
+/*
 			$table_header_history[] = array
 			(
 				'lang_date'		=> lang('Date'),
@@ -1968,7 +1969,7 @@
 				'lang_user'		=> lang('User'),
 				'lang_note'		=> lang('Note'),
 			);
-
+*/
 //_debug_array($ticket['location_data']);
 
 			if($ticket['origin'] || $ticket['target'])
@@ -2072,10 +2073,10 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => value_count,	label=>'#',			sortable=>true,resizeable=>true),
-									       			array(key => value_date,	label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => value_user,	label=>lang('User'),sortable=>true,resizeable=>true),
-		       				       					array(key => value_note,	label=>lang('Note'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,resizeable=>true),
+									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
 			);		
 			$datavalues[1] = array
 			(
@@ -2088,11 +2089,11 @@
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,	label=>lang('Date'),	sortable=>true,resizeable=>true),
-									       			array(key => value_user,	label=>lang('User'),	sortable=>true,resizeable=>true),
-									       			array(key => value_action,	label=>lang('Action'),	sortable=>true,resizeable=>true),
-									       			array(key => value_old_value,label=>lang('old value'),	sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date',	'label'=>lang('Date'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user',	'label'=>lang('User'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action',	'label'=>lang('Action'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)))
 			);	
 			
 			
@@ -2102,14 +2103,16 @@
 			
 			for($z=0; $z<count($ticket['files']); $z++)
 			{				
-				if ($link_to_files != '') {
+				if ($link_to_files != '')
+				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
 				}
-				else {
+				else
+				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
 				}				
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
-			}									
+			}							
 
 			$datavalues[2] = array
 			(
@@ -2124,8 +2127,8 @@
 			$myColumnDefs[2] = array
        		(
        			'name'		=> "2",
-       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 			
 			//----------------------------------------------datatable settings--------			
@@ -2316,129 +2319,90 @@
 
 			$data = array
 			(
-				'access_order'				=> $access_order,
-				'currency'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-				'value_order_id'			=> $ticket['order_id'],
-				'value_order_descr'			=> $ticket['order_descr'],
-				'vendor_data'				=> $vendor_data,
-				'b_account_data'			=> $b_account_data,
-				'ecodimb_data' 				=> $ecodimb_data,
-				'value_budget'				=> $ticket['budget'],
-				'value_actual_cost'			=> $ticket['actual_cost'],
-				'need_approval'				=> $need_approval,
-				'value_approval_mail_address'=> $supervisor_email,
-				'vendor_email'				=> $vendor_email,
+				'access_order'					=> $access_order,
+				'currency'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'value_order_id'				=> $ticket['order_id'],
+				'value_order_descr'				=> $ticket['order_descr'],
+				'vendor_data'					=> $vendor_data,
+				'b_account_data'				=> $b_account_data,
+				'ecodimb_data' 					=> $ecodimb_data,
+				'value_budget'					=> $ticket['budget'],
+				'value_actual_cost'				=> $ticket['actual_cost'],
+				'need_approval'					=> $need_approval,
+				'value_approval_mail_address'	=> $supervisor_email,
+				'vendor_email'					=> $vendor_email,
 
-				'contact_data'				=> $contact_data,
-				'lookup_type'				=> $lookup_type,
-				'simple'					=> $this->_simple,
-				'show_finnish_date'			=> $this->_show_finnish_date,
-				'tabs'						=> self::_generate_tabs(true),
-				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'					=> $datavalues,
-				'myColumnDefs'				=> $myColumnDefs,
+				'contact_data'					=> $contact_data,
+				'lookup_type'					=> $lookup_type,
+				'simple'						=> $this->_simple,
+				'show_finnish_date'				=> $this->_show_finnish_date,
+				'tabs'							=> self::_generate_tabs(true),
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
 			
-				'value_origin'				=> $ticket['origin'],
-				'value_target'				=> $ticket['target'],
-				'lang_finnish_date'			=> lang('finnish date'),
-				'value_finnish_date'		=> $ticket['finnish_date'],
-				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
-				'lang_finnish_date_statustext'		=> lang('Select the estimated date for closing the task'),
+				'value_origin'					=> $ticket['origin'],
+				'value_target'					=> $ticket['target'],
+				'value_finnish_date'			=> $ticket['finnish_date'],
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'				=> lang('Select date'),
 
-				'link_entity'				=> $link_entity,
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'link_entity'					=> $link_entity,
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
-				'location_data'				=> $location_data,
-				'lang_location_code'			=> lang('Location Code'),
+				'location_data'					=> $location_data,
 
-				'lang_ticket'				=> lang('Ticket'),
-				'table_header_additional_notes'		=> $table_header_additional_notes,
-				'table_header_history'			=> $table_header_history,
-				'lang_status'				=> lang('Status'),
-				'status_name'				=> 'values[status]',
-				'value_status'				=> $ticket['status'],
-				'status_list'				=> $this->bo->get_status_list($ticket['status']),
-				'lang_status_statustext'		=> lang('Set the status of the ticket'),
+				'status_name'					=> 'values[status]',
+				'value_status'					=> $ticket['status'],
+				'status_list'					=> $this->bo->get_status_list($ticket['status']),
 
-				'lang_no_user'				=> lang('Select user'),
+				'lang_no_user'					=> lang('Select user'),
 				'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
-				'select_user_name'			=> 'values[assignedto]',
-				'value_assignedto_id'		=> $ticket['assignedto'],
-				'user_list'					=> $this->bocommon->get_user_list_right2('select',4,$ticket['assignedto'],$this->acl_location),
+				'select_user_name'				=> 'values[assignedto]',
+				'value_assignedto_id'			=> $ticket['assignedto'],
+				'user_list'						=> $this->bocommon->get_user_list_right2('select',4,$ticket['assignedto'],$this->acl_location),
 
-				'lang_group'				=> lang('Group'),
-				'lang_no_group'				=> lang('No group'),
-				'group_list'				=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
-				'select_group_name'			=> 'values[group_id]',
-				'value_group_id'			=> $ticket['group_id'],
+				'lang_no_group'					=> lang('No group'),
+				'group_list'					=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+				'select_group_name'				=> 'values[group_id]',
+				'value_group_id'				=> $ticket['group_id'],
 
-				'lang_takeover'				=> (isset($values['assignedto']) && $values['assignedto'] != $this->account)  || (!isset($values['assignedto']) || !$values['assignedto']) ? lang('take over') : '',
-				'lang_takeover_statustext'	=> lang('Take over the assignment for this ticket'),
+				'lang_takeover'					=> (isset($values['assignedto']) && $values['assignedto'] != $this->account)  || (!isset($values['assignedto']) || !$values['assignedto']) ? lang('take over') : '',
 
-				'lang_priority'				=> lang('Priority'),
-				'value_priority'			=> $ticket['priority'],
+				'value_priority'				=> $ticket['priority'],
 				'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
 				'select_priority_name'			=> 'values[priority]',
-				'priority_list'				=> $this->bo->get_priority_list($ticket['priority']),
+				'priority_list'					=> $this->bo->get_priority_list($ticket['priority']),
 
-				'lang_no_cat'				=> lang('no category'),
-				'value_cat_id'				=> $this->cat_id,
-				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
-				'lang_category'				=> lang('category'),
+				'lang_no_cat'					=> lang('no category'),
+				'value_cat_id'					=> $this->cat_id,
+				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
 				'value_category_name'			=> $ticket['category_name'],
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$form_link),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index')),
-				'value_subject'				=> $ticket['subject'],
-				'lang_subject_statustext'		=> lang('update subject'),
-				'value_id'				=> '[ #'. $id . ' ] - ',
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$form_link),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index')),
+				'value_subject'					=> $ticket['subject'],
 
-				'lang_details'				=> lang('Details'),
-				'value_details'				=> $ticket['details'],
-				'lang_details_statustext'		=> lang('Add new comments'),
+				'value_id'						=> '[ #'. $id . ' ] - ',
 
-				'lang_additional_notes'			=> lang('Additional notes'),
+				'value_details'					=> $ticket['details'],
 
-				'lang_new_note'				=> lang('New Note'),
-				'lang_opendate'				=> lang('Open Date'),
-				'value_opendate'			=> $ticket['entry_date'],
-
-				'lang_assignedfrom'			=> lang('Assigned from'),
+				'value_opendate'				=> $ticket['entry_date'],
 				'value_assignedfrom'			=> $ticket['user_name'],
-				'lang_assignedto'			=> lang('Assigned to'),
 				'value_assignedto_name'			=> isset($ticket['assignedto_name'])?$ticket['assignedto_name']:'',
 
-				'lang_no_additional_notes'		=> lang('No additional notes'),
-				'lang_history'				=> lang('History'),
-				'lang_no_history'			=> lang('No history for this record'),
-				'additional_notes'			=> $additional_notes,
-				'record_history'			=> $record_history,
-				'request_link'				=> $request_link,
-				'order_link'				=> $order_link,
-				'add_to_project_link'		=> $add_to_project_link,
-
-				'lang_generate_request'			=> lang('Generate Request'),
-				'lang_generate_request_statustext'	=> lang('click this to generate a request with this information'),
-				'lang_generate_project'			=> lang('generate new project'),
-				'lang_generate_project_statustext'	=> lang('click this to generate a project with this information'),
-
-				'lang_add_to_project'			=> lang('add to project'),
-				'lang_add_to_project_statustext'	=> lang('click this to add an order to an existing project'),
-
-
-				'lang_save'				=> lang('save'),
-				'lang_name'				=> lang('name'),
-				'lang_done'				=> lang('done'),
-				'lang_contact_phone'			=> lang('Contact phone'),
-				'contact_phone'				=> $ticket['contact_phone'],
-				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?true:''),
-				'lang_mailnotification'			=> lang('Send e-mail'),
-				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
-				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
-				'fileupload'				=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
+				'additional_notes'				=> $additional_notes,
+				'record_history'				=> $record_history,
+				'request_link'					=> $request_link,
+				'order_link'					=> $order_link,
+				'add_to_project_link'			=> $add_to_project_link,
+				'lang_name'						=> lang('name'),
+				'contact_phone'					=> $ticket['contact_phone'],
+				'mailnotification'				=> isset($this->bo->config->config_data['mailnotification'])?true:'',
+				'pref_send_mail'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:'',
+				'fileupload'					=> isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:'',
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'					=> (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:''),
+				'link_to_files'					=> isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'',
 				'files'							=> isset($ticket['files'])?$ticket['files']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
@@ -2447,7 +2411,6 @@
 				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
-
 			);
 
 			//---datatable settings--------------------
