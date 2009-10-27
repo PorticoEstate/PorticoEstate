@@ -450,7 +450,8 @@
             }
             
             // Remove newlines from output
-            for($i = 0; $i < count($list); $i++) {
+            $count = count($list);
+            for($i = 0; $i < $count; $i++) {
             	$list[$i] = preg_replace("/[\n\r]/","",$list[$i]);
             }
 
