@@ -3808,3 +3808,27 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.573 to 0.9.17.574
+	* Alter field definition
+	* 
+	*/
+
+	$test[] = '0.9.17.573';
+	function property_upgrade0_9_17_573()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_history','history_status',array('type' => 'varchar','precision' => '3','nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','title',array('type' => 'varchar','precision' => '100','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_document','title',array('type' => 'varchar','precision' => '100','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.574';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+

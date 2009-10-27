@@ -745,7 +745,7 @@
 		'fm_request' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'title' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'title' => array('type' => 'varchar','precision' => '100','nullable' => True),
 				'project_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
 				'p_entity_id' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -1294,7 +1294,7 @@
 		'fm_document' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-				'title' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'title' => array('type' => 'varchar','precision' => '100','nullable' => True),
 				'document_name' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'link' => array('type' => 'text','nullable' => True),
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => True),
@@ -1387,7 +1387,7 @@
 				'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'history_appname' => array('type' => 'varchar','precision' => '64','nullable' => False),
 				'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
-				'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+				'history_status' => array('type' => 'varchar','precision' => '3','nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
 				'history_old_value' => array('type' => 'text','nullable' => true),
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
