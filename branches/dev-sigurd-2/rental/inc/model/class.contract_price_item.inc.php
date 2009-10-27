@@ -177,6 +177,7 @@
 		public function serialize()
 		{	
 			$currency_prefix = $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			return array(
 				'id' => $this->get_id(),
 				'price_item_id' => $this->get_price_item_id(),
@@ -193,9 +194,10 @@
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not
 				// happy about empty values if a custom parser is set, so we use the YUI built
-				// in "date" parser which requires a format like: 2009/07/30 to work.
-				'date_start' => str_replace("-", "/", $this->get_date_start()),
-				'date_end' => str_replace("-", "/", $this->get_date_end())
+				// in "date" parser which requires a format like: 2009/07/30 to work. 
+				// EHL: Removed 2009-10-27, due to change to int datatype. 
+				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):'',  
+				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):''
 			);
 		}
 		

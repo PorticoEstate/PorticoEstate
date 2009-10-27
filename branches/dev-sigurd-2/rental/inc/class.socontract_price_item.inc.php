@@ -80,8 +80,8 @@ class rental_socontract_price_item extends rental_socommon
 			$price_item->set_area($this->unmarshal($this->db->f('area'),'float'));
 			$price_item->set_count($this->unmarshal($this->db->f('count'),'int'));
 			$price_item->set_total_price($this->unmarshal($this->db->f('total_price'),'float'));
-			$price_item->set_date_start($this->unmarshal($this->db->f('date_start'),'date'));
-			$price_item->set_date_end($this->unmarshal($this->db->f('date_end'),'date'));
+			$price_item->set_date_start($this->unmarshal($this->db->f('date_start'),'int'));
+			$price_item->set_date_end($this->unmarshal($this->db->f('date_end'),'int'));
 		}
 		return $price_item;
 	}
@@ -113,12 +113,12 @@ class rental_socontract_price_item extends rental_socommon
 		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
 		
 		if ($price_item->get_date_start()) {
-			$values[] = $this->marshal(date('Y-m-d', $price_item->get_date_start()), 'date');
+			$values[] = $this->marshal($price_item->get_date_start(), 'int');
 			$cols[] = 'date_start';
 		}
 		
 		if ($price_item->get_date_end()) {
-			$values[] = $this->marshal(date('Y-m-d', $price_item->get_date_end()), 'date');
+			$values[] = $this->marshal($price_item->get_date_end(), 'int');
 			$cols[] = 'date_end';
 		}
 		
@@ -155,8 +155,8 @@ class rental_socontract_price_item extends rental_socommon
 			($price_item->is_area() ? "true" : "false"),
 			$price,
 			$total_price,
-			$this->marshal($price_item->get_date_start(), 'date'),
-			$this->marshal($price_item->get_date_end(), 'date')
+			$this->marshal($price_item->get_date_start(), 'int'),
+			$this->marshal($price_item->get_date_end(), 'int')
 		);
 				
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -173,7 +173,8 @@ class rental_socontract_price_item extends rental_socommon
 	 * @return total_price	the total price
 	 */
 	public function get_total_price($contract_id){
-		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND ((date('now') BETWEEN date_start AND date_end) OR (date_start < date('now') AND date_end is null))");
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND (date_start <= {$ts_query} AND date_end >= {$ts_query}) OR (date_start <= {$ts_query} AND (date_end is null OR date_end = 0))");
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');
 			return $total_price;

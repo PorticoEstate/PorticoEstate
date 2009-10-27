@@ -213,8 +213,8 @@
 				'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
 				'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
 				'total_price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
-				'date_start' => 	array('type' => 'date'),
-				'date_end' => 		array('type' => 'date')
+				'date_start' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'date_end' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
