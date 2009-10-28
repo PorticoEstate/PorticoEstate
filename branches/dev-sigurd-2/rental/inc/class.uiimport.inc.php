@@ -475,7 +475,8 @@
 					$price_item->set_title($admin_price_item->get_title());
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
 					$price_item->set_is_area($admin_price_item->is_area());
-					$price_item->set_price($admin_price_item->get_price());
+					//$price_item->set_price($admin_price_item->get_price());
+                    $price_item->set_price($detail_price_items[$facilit_id]['price']);
 					
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
