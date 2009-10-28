@@ -203,14 +203,13 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
-
 				
 				list($event, $errors) = $this->extract_and_validate($event);
 				
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($event);
-					$this->send_mailnotification('orose@localhost', lang('Event changed'), phpgw::get_var('mail', 'POST'));
+					$this->send_mailnotification($event['contact_email'], lang('Event changed'), phpgw::get_var('mail', 'POST'));
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 				}
 			}
