@@ -7,6 +7,7 @@
 		(
 			'building_schedule' =>  true,
 			'resource_schedule' =>  true,
+			'info'				=>	true,
 			'add' =>				true,
 			'show' =>				true,
 			'edit' =>				true,
@@ -16,19 +17,26 @@
 		{
 			parent::__construct();
 			$this->group_bo = CreateObject('booking.bogroup');
+			$this->resource_bo = CreateObject('booking.boresource');
 			$this->allocation_bo = CreateObject('booking.boallocation');
 			$this->season_bo = CreateObject('booking.boseason');
 			$this->building_bo = CreateObject('booking.bobuilding');
+		}
+
+		private function item_link(&$item, $key)
+		{
+			if(in_array($item['type'], array('allocation', 'booking', 'allocation')))
+				$item['info_url'] = $this->link(array('menuaction' => 'bookingfrontend.ui'.$item['type'].'.info', 'id' => $item['id']));
 		}
 
 		public function building_schedule()
 		{
 		    $date = new DateTime(phpgw::get_var('date'));
 			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
-			foreach($bookings['results'] as &$booking)
+			foreach($bookings['results'] as &$row)
 			{
-				$booking['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $booking['resource_id']));
-				$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $booking['resource_id']));
+				array_walk($row, array($this, 'item_link'));
 			}
 			$data = array
 			(
@@ -221,5 +229,24 @@
 			$groups = $groups['results'];
 			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'groups' => $groups));
 		}
-
+		
+		public function info()
+		{
+			$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
+			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
+			$booking['resources'] = $resources['results'];
+			$res_names = array();
+			foreach($booking['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$booking['resource_info'] = join(', ', $res_names);
+			$booking['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $booking['resources'][0]['building_id']));
+			$booking['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $booking['group']['organization_id']));
+			$booking['group_link'] = self::link(array('menuaction' => 'bookingfrontend.uigroup.show', 'id' => $booking['group']['id']));
+			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
+			self::render_template('booking_info', array('booking'=>$booking));
+			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
 	}

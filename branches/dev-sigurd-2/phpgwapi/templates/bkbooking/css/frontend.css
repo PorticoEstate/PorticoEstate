@@ -199,12 +199,11 @@ dl.tooltip dd {
     float: left;
 }
 
-div.color1 { background: #ccf;}
-div.color2 { background: #cfc;}
-div.color3 { background: #fcc;}
-div.color4 { background: #ffb;}
-div.color5 { background: #bff;}
-div.color6 { background: #fbf;}
+div.info:hover { 
+    background-image: url(../images/info.png);
+    background-repeat: no-repeat;
+    background-position: 100% 0%;
+}
 
 dl.contactinfo {}
 dl.contactinfo dt {

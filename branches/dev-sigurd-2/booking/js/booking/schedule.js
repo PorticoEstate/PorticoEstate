@@ -1,9 +1,14 @@
 colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6'];
 colorMap = {};
 
+YAHOO.booking.shorten = function(text, max) {
+	if(max && text.length > max)
+		text = text.substr(text, max) + '...';
+	return text;
+}
+
 YAHOO.booking.link = function(label, link, max) {
-	if(max && label.length > max)
-		label = label.substr(label, max) + '...';
+	label = YAHOO.booking.shorten(label, max);
 	if(link)
 		return '<a href="' + link + '">' + label + '</a>';
 	else
@@ -25,24 +30,34 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 			colorMap[booking.name] = colors.length ? colors.shift() : 'color6';
 		}
 		var color = colorMap[booking.name];
+		YAHOO.util.Dom.addClass(elCell, 'info');
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
-		if(booking.type == 'booking') {
-			var link = 'index.php?menuaction=bookingfrontend.uibooking.edit&id=' + booking.id;
-		}
-		else if(booking.type == 'allocation') {
-			var from_ = booking.date + ' ' + booking.from_;
-			var to_ = booking.date + ' ' + booking.to_;
-			var link = 'index.php?menuaction=bookingfrontend.uibooking.add&allocation_id=' + booking.id + '&from_=' + from_ + '&to_=' + to_;
-		}
-		else
-			var link = null;
-		elCell.innerHTML = YAHOO.booking.link(booking.name, link, 12);
+		elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking); return false; };
 	}
 	else {
 		elCell.innerHTML = '...';
 	}
 };
+
+YAHOO.booking.showBookingInfo = function(booking) {
+	var overlay = new YAHOO.widget.Overlay("overlay-info", { xy:[300,300],
+														visible:true,
+														width:"300px" } );
+	var callback = {
+		success : function(o) {
+			overlay.setBody(o.responseText);
+		},
+		failure : function(o) {
+			overlay.hide();
+			alert('Failed to load booking details page');
+		}
+	}
+	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&'), callback);
+	overlay.setBody('<img src="http://l.yimg.com/a/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
+	overlay.render(document.body);
+}
 
 YAHOO.booking.bookingToHtml = function(booking) { 
 	if(booking.type == 'booking') {
@@ -171,3 +186,9 @@ YAHOO.booking.setupWeekPicker = function(container) {
 		}, this, true);
 	});
 }
+
+YAHOO.booking.closeOverlay = function() {
+	var o = YAHOO.util.Dom.get('overlay-info');
+	o.parentNode.removeChild(o);
+}
+
