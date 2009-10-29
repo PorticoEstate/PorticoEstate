@@ -248,3 +248,9 @@ dl.contactinfo dd {
 #agegroup, #agegroup td, #agegroup th { width: 1%; }
 #agegroup td, #agegroup th { padding: .1em .3em;}
 #agegroup td input { width: 3em; }
+
+#overlay-info h3 { margin: 0 0 .5em 0; }
+#overlay-info dt { font-style: italic; }
+#overlay-info dd { padding-left: 2em; }
+#overlay-info .close { float: right; }
+#overlay-info .actions { margin-top: .5em;}

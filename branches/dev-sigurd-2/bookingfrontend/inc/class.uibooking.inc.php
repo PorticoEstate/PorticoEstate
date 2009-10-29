@@ -25,7 +25,7 @@
 
 		private function item_link(&$item, $key)
 		{
-			if(in_array($item['type'], array('allocation', 'booking', 'allocation')))
+			if(in_array($item['type'], array('allocation', 'booking', 'event')))
 				$item['info_url'] = $this->link(array('menuaction' => 'bookingfrontend.ui'.$item['type'].'.info', 'id' => $item['id']));
 		}
 
@@ -245,6 +245,7 @@
 			$booking['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $booking['resources'][0]['building_id']));
 			$booking['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $booking['group']['organization_id']));
 			$booking['group_link'] = self::link(array('menuaction' => 'bookingfrontend.uigroup.show', 'id' => $booking['group']['id']));
+			$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit', 'id' => $booking['id']));
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
 			self::render_template('booking_info', array('booking'=>$booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome

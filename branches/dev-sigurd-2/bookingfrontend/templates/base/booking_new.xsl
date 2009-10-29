@@ -169,9 +169,8 @@
             <input type="submit">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>
 			</input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')"/>
+            <a class="cancel" href="" onclick="history.back(1); return false">
+                <xsl:value-of select="php:function('lang', 'Go back')"/>
             </a>
         </div>
     </form>
