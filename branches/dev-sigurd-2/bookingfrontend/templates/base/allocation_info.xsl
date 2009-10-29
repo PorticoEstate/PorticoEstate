@@ -15,6 +15,6 @@
 		</dd>
 	</dl>
 	<div class="actions">
-		<button onclick="location.href='{allocation/add_link}'">Create a new booking on this allocation</button>
+		<button onclick="location.href='{allocation/add_link}'"><xsl:value-of select="php:function('lang', 'Create new booking')"/></button>
 	</div>
 </xsl:template>
