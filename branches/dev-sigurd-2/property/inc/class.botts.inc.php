@@ -223,7 +223,8 @@
 				'B' => lang('Billing rate'),
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
-				'SC' => lang('Status changed')
+				'SC' => lang('Status changed'),
+				'M' => lang('Sendt by email to')
 			);
 
 			$custom_status	= $this->so->get_custom_status();

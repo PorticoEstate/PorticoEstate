@@ -826,7 +826,10 @@
 				'id' => array('type' => 'auto','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'color' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'closed' => array('type' => 'int','precision' => '2','nullable' => True)
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+				'approved' => array('type' => 'int','precision' => '2','nullable' => True),
+				'in_progress' => array('type' => 'int','precision' => '2','nullable' => True),
+				'delivered' => array('type' => 'int','precision' => '2','nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

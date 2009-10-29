@@ -3831,4 +3831,25 @@
 	}
 
 
+	/**
+	* Update property version from 0.9.17.574 to 0.9.17.575
+	* Add variants of closed and approved-status for tickets
+	* 
+	*/
 
+	$test[] = '0.9.17.574';
+	function property_upgrade0_9_17_574()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets','status',array('type' => 'varchar','precision' => '3','nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','approved',array('type' => 'int','precision' => 2,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','in_progress',array('type' => 'int','precision' => 2,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','delivered',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.575';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

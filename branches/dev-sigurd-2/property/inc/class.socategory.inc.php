@@ -938,10 +938,28 @@
 							),
 							array
 							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
 								'name' => 'closed',
 								'descr' => lang('closed'),
 								'type' => 'checkbox'
-							),
+							)
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),

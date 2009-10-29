@@ -2073,7 +2073,7 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,resizeable=>true),
+       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,'resizeable'=>true),
 									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
 									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
 		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
@@ -2212,17 +2212,20 @@
 				{
 					$subject = lang(order).": ". $id;
 				//	$body = lang('Category').': '. $this->bo->get_category_name($ticket['cat_id']) ."\n";
-					$body .= lang('Location').': '. $ticket['location_code'] ."\n";
+					$body = lang('order id').": {$id}<br>";
+					$body .= lang('from').': '.  $GLOBALS['phpgw_info']['user']['fullname'] ."<br>";					
+					$body .= lang('Location').': '. $ticket['location_code'] ."<br>";
 					$body .= lang('Address').': '. $ticket['address'] ."\n";
 
 					$address_element = $this->bo->get_address_element($ticket['location_code']);
 
 					foreach($address_element as $address_entry)
 					{
-						$body .= $address_entry['text'].': '. $address_entry['value'] ."\n";
+						$body .= $address_entry['text'].': '. $address_entry['value'] ."<br>";
 					}
 
-					$body .= "\n {$ticket['order_descr']}\n";
+					$body .= '<h2>' . lang('description') .'</h2>';
+					$body .= nl2br($ticket['order_descr']);
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
