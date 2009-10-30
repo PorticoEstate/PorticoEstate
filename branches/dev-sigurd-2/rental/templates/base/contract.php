@@ -9,8 +9,6 @@
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 
-
-
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
 	<div>

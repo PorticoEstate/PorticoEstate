@@ -37,7 +37,8 @@
 	}
 
 	YAHOO.rental.formatDate = function(elCell, oRecord, oColumn, oData) {
-		if (oData && oData != "Invalid Date") {
+		if (oData && oData != "Invalid Date" && oData != "NaN") {
+			//alert("oDate: " + oData);
 			var my_date = Math.round(Date.parse(oData) / 1000);
 			elCell.innerHTML = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>', my_date);
 		} else {
@@ -241,9 +242,23 @@
 			// Translate to unix time if the editor is a calendar.
 			if (oArgs.editor._sType == 'date') {
 				var selectedDate = oArgs.editor.calendar.getSelectedDates()[0];
+				//alert("selDate1: " + selectedDate);
 				// Make sure we're at midnight GMT
-				selectedDate = selectedDate.toString().split(" ").slice(0, 4).join(" ") + " 00:00:00 GMT";
+				selectedDate = selectedDate.toString().split(" ");
+				//for(var e=0;e<selectedDate.length;e++){
+				//	alert("element " + e + ": " + selectedDate[e]);
+				//}
+				if(selectedDate[3] = "00:00:00"){
+					//alert("seldate skal byttes!");
+					selectedDate = selectedDate.slice(0,3).join(" ") + " " + selectedDate[5] + " 00:00:00 GMT"; 
+				}
+				else{
+					selectedDate = selectedDate.slice(0,4).join(" ") + " 00:00:00 GMT";
+				}
+				//selectedDate = selectedDate.toString().split(" ").slice(0, 4).join(" ") + " 00:00:00 GMT";
+				//alert("selDate2: " + selectedDate);
 				var value = Math.round(Date.parse(selectedDate) / 1000);
+				//alert("selDate3 value: " + value);
 			}
 
 			var request = YAHOO.util.Connect.asyncRequest(
