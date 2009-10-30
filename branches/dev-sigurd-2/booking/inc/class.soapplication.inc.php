@@ -9,11 +9,13 @@
 				array(
 					'id'		=> array('type' => 'int', 'query' => true),
 					'active'	=> array('type' => 'int'),
+					'display_in_dashboard' => array('type' => 'int'),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),
 					'owner_id'	=> array('type' => 'int', 'required' => true),
+					'case_officer_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => true),
@@ -66,7 +68,14 @@
 							'table' => 'bb_application_resource',
 							'key' => 'application_id',
 							'column' => 'resource_id'
-					))
+					)),
+					'case_officer_name'	=> array('type' => 'string', 'query' => true,
+						'join' => array(
+							'table' => 'phpgw_accounts',
+							'fkey' => 'case_officer_id',
+							'key' => 'account_id',
+							'column' => 'account_lid'
+					)),
 				)
 			);
 		}

@@ -158,6 +158,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
+				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1), 
 				'status' => array('type' => 'text', 'nullable'=> False),
 				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
@@ -168,6 +169,7 @@
 				'contact_phone' => array('type' => 'text', 'nullable' => False),
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'case_officer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
@@ -176,6 +178,7 @@
 			'fk' => array(
 				'bb_activity' => array('activity_id' => 'id'),
 				'phpgw_accounts' => array('owner_id' => 'account_id'),
+				'phpgw_accounts' => array('case_officer_id' => 'account_id'),
 			),
 			'ix' => array(),
 			'uc' => array()
