@@ -866,6 +866,7 @@
 					<xsl:value-of select="value_assignedfrom"/>
 				</td>
 			</tr>
+<!--
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'Assigned to')" />
@@ -874,34 +875,8 @@
 					<xsl:value-of select="value_assignedto_name"/>
 				</td>
 			</tr>
-			<tr>
-				<td class="th_text" valign="top">
-					<xsl:value-of select="php:function('lang', 'Priority')" />
-				</td>
-				<td valign="top">
-					<xsl:value-of select="value_priority"/>
-				</td>
-			</tr>
-			<tr>
-				<td class="th_text" valign="top">
-					<xsl:value-of select="php:function('lang', 'category')" />
-				</td>
-				<td valign="top">
-					<xsl:value-of select="value_category_name"/>
-				</td>
-			</tr>
+-->
 			<xsl:call-template name="contact_form"/>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="php:function('lang', 'status')" />
-				</td>
-				<td>
-					<xsl:for-each select="status_list[selected='selected']" >
-						<xsl:value-of select="name"/>
-						<xsl:if test="position() != last()">, </xsl:if>
-					</xsl:for-each>
-				</td>
-			</tr>
 
 			<xsl:for-each select="value_target" >
 				<tr>
@@ -1146,7 +1121,7 @@
 
 						<tr>
 							<td valign="top">
-			            		<xsl:value-of select="php:function('lang', 'budget')" />
+			            		<xsl:value-of select="php:function('lang', 'cost estimate')" />
 							</td>
 							<td>
 								<input type="text" name="values[budget]" value="{value_budget}">
@@ -1196,11 +1171,9 @@
 															</xsl:attribute>
 														</input>
 													</td>
-													<td>
-														<input type="text" name="values[mail_address][{id}]" value="{address}">
-															<xsl:attribute name="title">
-																<xsl:value-of select="//lang_ask_approval_statustext"/>
-															</xsl:attribute>
+													<td valign='top'>
+														<xsl:value-of select="address"/>
+														<input type="hidden" name="values[mail_address][{id}]" value="{address}">
 														</input>
 													</td>
 												</tr>

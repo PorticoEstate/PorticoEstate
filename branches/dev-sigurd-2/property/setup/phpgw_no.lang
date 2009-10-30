@@ -345,6 +345,7 @@ copy request ?	property	no	kopier anmodning ?
 copy workorder ?	property	no	Kopier arbeidsordre ?
 correct error	property	no	Rett opp feil
 cost	property	no	kostnad
+cost estimate	property	no	Kostnadsestimat
 cost - either budget or calculation	property	no	Beløp - enten budsjett eller kalkulalasjon
 cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
@@ -1047,7 +1048,7 @@ opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
-order id	property	no	Ordre nr
+order id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
 other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt-faktor

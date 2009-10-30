@@ -217,6 +217,7 @@
 	create_select_box('Default district-filter','default_district',$_districts,'Your default district-filter ');
 
 	create_input_box('Your Cellphone','cellphone');
+	create_input_box('RessursNr','ressursnr');
 
 	create_select_box('Workorder Approval From','approval_from',$_accounts,'If you need approval from your supervisor for projects/workorders');
 
