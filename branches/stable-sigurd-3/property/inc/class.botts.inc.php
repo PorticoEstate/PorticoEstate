@@ -223,7 +223,8 @@
 				'B' => lang('Billing rate'),
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
-				'SC' => lang('Status changed')
+				'SC' => lang('Status changed'),
+				'M' => lang('Sendt by email to')
 			);
 
 			$custom_status	= $this->so->get_custom_status();
@@ -673,15 +674,29 @@
 				$custom = createObject('property.custom_fields');
 				$location_data 		= $solocation->read_single($location_code);
 
+				$location_types = execMethod('property.soadmin_location.select_location_type');
 				$type_id=count(explode('-',$location_code));
+
+				for ($i=1; $i<$type_id+1; $i++)
+				{
+					$address_element[] = array
+					(
+						'text' => $location_types[($i-1)]['name'],
+						'value'=> $location_data["loc{$i}_name"]
+					);
+				}
+
 				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$i=0;
 				foreach($fm_location_cols as $location_entry)
 				{
 					if($location_entry['lookup_form'])
 					{
-						$address_element[$i]['text']=$location_entry['input_text'];
-						$address_element[$i]['value']=$location_data[$location_entry['column_name']];
+						$address_element[] = array
+						(
+							'text' => $location_entry['input_text'],
+							'value'=> $location_data[$location_entry['column_name']]
+						);
 					}
 					$i++;
 				}

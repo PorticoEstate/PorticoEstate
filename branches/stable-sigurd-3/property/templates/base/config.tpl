@@ -262,6 +262,12 @@
      </select>
     </td>
    </tr>
+   <tr class="row_oon">
+    <td>{lang_order_email_footer}:</td>
+    <td>
+     <input name="newsettings[order_email_footer]" value="{value_order_email_footer}" size="40">
+    </td>
+   </tr>
 
 <!--
 groupnotification

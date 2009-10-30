@@ -169,6 +169,13 @@
 				}
 			}
 
+			//if nothing found - and you want to close
+			if( isset($data['close']) && $data['close'] )
+			{
+				return 0;
+			}
+
+
 			$values= array
 			(
 				$item_id,								//item_id

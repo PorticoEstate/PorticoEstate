@@ -2073,7 +2073,7 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,resizeable=>true),
+       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,'resizeable'=>true),
 									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
 									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
 		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
@@ -2210,19 +2210,47 @@
 			{
 				if(isset($values['vendor_email']) && $values['vendor_email'])
 				{
-					$subject = lang(order).": ". $id;
+					$subject = lang(workorder).": {$ticket['order_id']}";
 				//	$body = lang('Category').': '. $this->bo->get_category_name($ticket['cat_id']) ."\n";
-					$body .= lang('Location').': '. $ticket['location_code'] ."\n";
-					$body .= lang('Address').': '. $ticket['address'] ."\n";
+					$body = lang('order id').": {$ticket['order_id']}<br>";
+					$body .= lang('from').': ';
+					if(isset($this->bo->config->config_data['org_name']))
+					{
+						$body .= "{$this->bo->config->config_data['org_name']}::";
+					}
+					$body .= "{$GLOBALS['phpgw_info']['user']['fullname']}<br>";
+					$body .= "RessursNr: {$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr']}<br>";
+		//			$body .= lang('Location').': '. $ticket['location_code'] ."<br>";
+					$body .= lang('Address').': '. $ticket['address'] ."<br>";
 
 					$address_element = $this->bo->get_address_element($ticket['location_code']);
 
 					foreach($address_element as $address_entry)
 					{
-						$body .= $address_entry['text'].': '. $address_entry['value'] ."\n";
+						$body .= $address_entry['text'].': '. $address_entry['value'] ."<br>";
 					}
 
-					$body .= "\n {$ticket['order_descr']}\n";
+					if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
+					{
+						$body .= lang(contact).': '. $contact_data['value_contact_name'];
+					}
+					if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+					{
+						$body .= "/ <a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+					}
+					if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+					{
+						$body .= " / {$contact_data['value_contact_tel']}<br>";
+					}
+
+					if(isset($this->bo->config->config_data['order_email_footer']))
+					{
+						$body .= "{$this->bo->config->config_data['order_email_footer']}<br>";
+					}
+
+					$body .= '<h2>' . lang('description') .'</h2>';
+					$body .= nl2br($ticket['order_descr']);
+
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -2234,7 +2262,12 @@
 						$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 						$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-						$bcc = '';
+						$bcc = $coordinator_email;
+						if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+						{
+							$bcc .= ";{$contact_data['value_contact_email']}";
+						}
+
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 						if($rcpt)
 						{
@@ -2269,8 +2302,8 @@
 				$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 				$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-				$subject = lang(Approval).": ". $id;
-				$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id)).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
+				$subject = lang(Approval).": ".$ticket['order_id'];
+				$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id)).'">' . lang('Workorder %1 needs approval',$ticket['order_id']) .'</a>';
 
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{

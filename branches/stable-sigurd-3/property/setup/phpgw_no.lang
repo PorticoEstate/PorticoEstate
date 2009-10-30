@@ -345,6 +345,7 @@ copy request ?	property	no	kopier anmodning ?
 copy workorder ?	property	no	Kopier arbeidsordre ?
 correct error	property	no	Rett opp feil
 cost	property	no	kostnad
+cost estimate	property	no	Kostnadsestimat
 cost - either budget or calculation	property	no	Beløp - enten budsjett eller kalkulalasjon
 cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
@@ -1047,7 +1048,7 @@ opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
-order id	property	no	Ordre nr
+order id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
 other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt-faktor
@@ -1442,7 +1443,7 @@ select where to fetch the key	property	no	velk hvor nøkkel kan hentes
 select year	property	no	Velg år
 send	property	no	Send
 send e-mail	property	no	Send epost
-send order	property	no	send ordre
+send order	property	no	Send ordre
 sendt by email to	property	no	send med e-post til
 send the following sms-message to %1 to update status for this order:	property	no	Send følgende SMS-melding til %1 for å oppdatere status for denne ordren:
 send this order by email	property	no	send denne ordren med e-post

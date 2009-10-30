@@ -547,6 +547,7 @@
 					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
 					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
+				$this->check_pending_action($ticket, $id);
 			}
 
 			$this->db->transaction_commit();
@@ -664,6 +665,7 @@
 					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
 					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
+				$this->check_pending_action($ticket, $id);
 			}
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
@@ -867,5 +869,53 @@
 				}
 			}
 			return $receipt;
+		}
+
+		function check_pending_action($ticket,$id)
+		{
+			$status = (int)trim($ticket['status'], 'C');
+			$this->db->query("SELECT * FROM fm_tts_status WHERE id = '{$status}'");
+
+			$this->db->next_record();
+
+			if ($this->db->f('approved') )
+			{
+				$action_params = array
+				(
+					'appname'			=> 'property',
+					'location'			=> '.ticket',
+					'id'				=> $id,
+					'responsible'		=> $this->account,
+					'responsible_type'  => 'user',
+					'action'			=> 'approval',
+					'remark'			=> '',
+					'deadline'			=> ''
+				);
+
+				execMethod('property.sopending_action.close_pending_action', $action_params);
+				unset($action_params);
+			}
+			if ($this->db->f('in_progress') )
+			{
+				$action_params = array
+				(
+					'appname'			=> 'property',
+					'location'			=> '.ticket',
+					'id'				=> $id,
+					'responsible'		=> $ticket['vendor_id'],
+					'responsible_type'  => 'vendor',
+					'action'			=> 'remind',
+					'remark'			=> '',
+					'deadline'			=> ''
+				);
+
+				execMethod('property.sopending_action.close_pending_action', $action_params);
+				unset($action_params);
+			}
+
+			if ($this->db->f('delivered') )
+			{
+				//close
+			}
 		}
 	}
