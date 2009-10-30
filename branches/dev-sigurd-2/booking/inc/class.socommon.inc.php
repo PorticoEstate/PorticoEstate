@@ -113,6 +113,7 @@
 		{
 			$cols = array();
 			$joins = array();
+			
 			foreach($this->fields as $field => $params)
 			{
 				if($params['manytomany'])
@@ -121,8 +122,9 @@
 				}
 				else if($params['join'])
 				{
-					$cols[] = "{$params['join']['table']}_{$params['join']['column']}.{$params['join']['column']} AS {$field}";
-					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$params['join']['table']}_{$params['join']['column']} ON({$params['join']['table']}_{$params['join']['column']}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+					$join_table_alias = "{$params['join']['table']}_{$params['join']['column']}_{$field}";
+					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
+					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
 				}
 				else 
 				{
