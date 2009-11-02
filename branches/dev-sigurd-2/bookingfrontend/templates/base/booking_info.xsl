@@ -17,7 +17,9 @@
 			<a href="{booking/group_link}"><xsl:value-of select="booking/group/name"/></a>
 		</dd>
 	</dl>
-	<div class="actions">
-		<button onclick="location.href='{booking/edit_link}'"><xsl:value-of select="php:function('lang', 'Edit booking')"/></button>
-	</div>
+	<xsl:if test="booking/edit_link">
+		<div class="actions">
+			<button onclick="location.href='{booking/edit_link}'"><xsl:value-of select="php:function('lang', 'Edit booking')"/></button>
+		</div>
+	</xsl:if>
 </xsl:template>

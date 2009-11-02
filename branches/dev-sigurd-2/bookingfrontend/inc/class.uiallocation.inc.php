@@ -29,7 +29,9 @@
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $allocation['organization_id']));
-			$allocation['add_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.add', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_']));
+			$bouser = CreateObject('bookingfrontend.bouser');
+			if($bouser->is_organization_admin($allocation['organization_id']))
+				$allocation['add_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.add', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_']));
 			$allocation['when'] = pretty_timestamp($allocation['from_']).' - '.pretty_timestamp($allocation['to_']);
 			self::render_template('allocation_info', array('allocation'=>$allocation));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
