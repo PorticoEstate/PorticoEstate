@@ -11,6 +11,7 @@
 			'add' =>				true,
 			'show' =>				true,
 			'edit' =>				true,
+			'report_numbers' =>		true,
 		);
 
 		public function __construct()
@@ -97,6 +98,7 @@
 				$booking['active'] = '1';
 				$booking['cost'] = 0;
 				$booking['completed'] = '0';
+				$booking['reminder'] = '1';
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
@@ -195,6 +197,46 @@
 					'groups' => $groups)
 				);
 			}
+		}
+
+		public function report_numbers()
+		{
+			$step = 1;
+			$id = intval(phpgw::get_var('id', 'GET'));
+			$booking = $this->bo->read_single($id);
+			$agegroups = $this->agegroup_bo->fetch_age_groups();
+			$agegroups = $agegroups['results'];
+			$building = $this->building_bo->read_single($booking['building_id']);
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				//reformatting the post variable to fit the booking object
+				$i = 0;
+				$temp_agegroup = array();
+				foreach(phpgw::get_var('male', 'POST') as $agegroup_id => $value)
+				{
+					$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
+					$temp_agegroup[$i]['male'] = $value;
+					$i++;
+				}
+
+				$i = 0;
+				foreach(phpgw::get_var('female', 'POST') as $agegroup_id => $value)
+				{
+					$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
+					$temp_agegroup[$i]['female'] = $value;
+					$i++;
+				}
+				$booking['agegroups'] = $temp_agegroup;
+				$booking['reminder'] = 2; // status set to delivered
+				$errors = $this->bo->validate($booking);
+				if(!$errors)
+				{
+					$receipt = $this->bo->update($booking);
+					$step++;
+				}
+			}
+			self::render_template('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 		}
 
 		public function edit()

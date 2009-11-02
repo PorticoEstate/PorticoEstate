@@ -31,7 +31,7 @@
 								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 
-			                      'from_', 'to_', 'audience', 'active', 'cost');
+			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder');
 		}
 		
 		public function index()
@@ -169,12 +169,14 @@
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
 				$this->agegroup_bo->extract_form_data($booking);
+				$booking['secret'] = $this->generate_secret();
+
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->add($booking);
-						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id']));
+						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id'], 'secret'=>$booking['secret']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}

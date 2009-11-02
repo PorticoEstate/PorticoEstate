@@ -147,6 +147,19 @@
 					</xsl:for-each>
 				</table>
 			</dd>
+			<dt><label for="field_reminder"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></label></dt>
+			<dd>
+				<select name="reminder" id="field_reminder">
+					<xsl:if test="booking/reminder = 1">
+						<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+					</xsl:if>
+					<xsl:if test="booking/reminder = 0">
+						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+					</xsl:if>
+				</select>
+			</dd>
 		</dl>
 		<div style="clear: both" />
 		<dl class="form">

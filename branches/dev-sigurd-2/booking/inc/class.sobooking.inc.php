@@ -18,6 +18,8 @@
 					'season_id'		=> array('type' => 'int', 'required' => true),
 					'cost'		=> array('type' => 'decimal', 'required' => true),
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
+					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
+					'secret'	=> array('type' => 'string', 'required' => true),
 					'activity_name'	=> array('type' => 'string',
 						  'query' => true,
 						  'join' => array(

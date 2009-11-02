@@ -172,7 +172,23 @@
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
 		</dl>
-		<div style="clear: both" />
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></dt>
+			<dt style="visibility: hidden;">!</dt>
+			<dd>
+				<select name="reminder" id="field_reminder">
+					<xsl:if test="event/reminder = 0">
+						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+					</xsl:if>
+					<xsl:if test="event/reminder = 1">
+						<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+					</xsl:if>
+				</select>
+			</dd>
+		</dl>
+		<div class="clr"/>
 		<dl class="form">
 			<dt><label for="field_mail"><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></label></dt>
 			<dd>

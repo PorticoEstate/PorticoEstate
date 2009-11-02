@@ -27,7 +27,7 @@
 								  'resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
 								  'contact_name', 'contact_email', 'contact_phone',
-			                      'from_', 'to_', 'active', 'audience');
+			                      'from_', 'to_', 'active', 'audience', 'reminder');
 		}
 		
 		public function index()
@@ -153,12 +153,13 @@
 				$event['completed'] = '0';
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
+				$event['secret'] = $this->generate_secret();
 				
 				list($event, $errors) = $this->extract_and_validate($event);
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($event);
-					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id']));
+					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret']));
 				}
 			}
 			$this->flash_form_errors($errors);

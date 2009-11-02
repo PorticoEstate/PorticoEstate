@@ -1900,3 +1900,25 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.77';
+	function booking_upgrade0_1_77()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN reminder INT NOT NULL DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN secret TEXT");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_booking SET secret = substring(md5(from_::text || id::text || group_id::text) from 0 for 11)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ALTER COLUMN secret SET NOT NULL;");
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN reminder INT NOT NULL DEFAULT 1");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN secret TEXT");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET secret = substring(md5(from_::text || id::text || activity_id::text) from 0 for 11)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ALTER COLUMN secret SET NOT NULL;");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.78';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

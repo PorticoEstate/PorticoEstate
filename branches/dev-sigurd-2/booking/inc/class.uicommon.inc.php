@@ -172,6 +172,11 @@
 		protected function ui_session_get($key) {
 			return $this->session_get(get_class($this).'_'.$key);
 		}
+
+		protected function generate_secret($length = 10)
+		{
+			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
+		}
 		
 		public function add_js_event($event, $js) {
 			$GLOBALS['phpgw']->js->add_event($event, $js);

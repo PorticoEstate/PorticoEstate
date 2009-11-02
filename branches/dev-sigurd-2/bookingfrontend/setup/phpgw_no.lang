@@ -246,5 +246,11 @@ Repeat until	bookingfrontend	no	Gjenta til
 4 weeks	bookingfrontend	no	4 uker
 Select a group	bookingfrontend	no	Velg Gruppe/Lag
 Bookings that can be created	bookingfrontend	no	Bookinger som kan lages
+<<<<<<< .mine
+Please enter correct numbers for the event	bookingfrontend	no	Vennlist oppgi korrekt deltakertall
+Report numbers	bookingfrontend	no	Rapporter deltakertall
+Thank you	bookingfrontend	no	Takk
+The data was successfully updated	bookingfrontend	no	Dataene ble oppdatert uten feil
+=======
 Close	bookingfrontend	no	Lukke
-Create new booking	bookingfrontend	no	Lag ny booking
+Create new booking	bookingfrontend	no	Lag ny booking>>>>>>> .r4031

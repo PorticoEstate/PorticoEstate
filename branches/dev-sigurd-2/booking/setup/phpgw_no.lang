@@ -255,3 +255,6 @@ Back to Dashboard	booking	no	Tilbake til Skrivebord
 Booking changed	booking	no	En booking har blitt endret
 Allocation changed	booking	no	En tildeling har blitt endret
 Event changed	booking	no	Et arrangement har blitt endret
+send reminder for participants statistics	booking	no	Purring brukerstatistikk
+Send reminder	booking	no	Send purring
+Do not send reminder	booking	no	Ikke send purring
