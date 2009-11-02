@@ -108,7 +108,11 @@
 		protected function is_table_field_def(&$field_def) {
 			return !($field_def['join'] || $field_def['manytomany']);
 		}
-
+		
+		protected function build_join_table_alias($field, array $params) {
+			return "{$params['join']['table']}_{$params['join']['column']}_{$field}";
+		}
+		
 		public function _get_cols_and_joins()
 		{
 			$cols = array();
@@ -122,7 +126,7 @@
 				}
 				else if($params['join'])
 				{
-					$join_table_alias = "{$params['join']['table']}_{$params['join']['column']}_{$field}";
+					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
 					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
 				}
@@ -309,7 +313,7 @@
 				{
 					if($params['query'])
 					{
-						$table = $params['join'] ? $params['join']['table'].'_'.$params['join']['column'] : $this->table_name;
+						$table = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
 						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
@@ -397,7 +401,6 @@
 			$order = $sort ? "ORDER BY $sort $dir ": '';
 			
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-			
 			if ($results) 
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -682,13 +685,15 @@
 			
 			$duplicates = $this->read(array('filters' => $filters, 'results' => 1));
 			
-			if ($duplicates['total_records'] == 0) return true;
-			
-			if (isset($entity['id']) && $duplicates['total_records'] == 1 && $duplicates['results'][0]['id'] == $entity['id']) {
-				return true;
+			if (!array_key_exists('results', $duplicates) || (is_array($duplicates['results']) && count($duplicates['results']) <= 0)) {
+				return true; //Values are unique: found no other entity matching the values, so values must be valid
 			}
 			
-			return false;
+			if (isset($entity['id']) && (is_array($duplicates['results']) && count($duplicates['results']) > 0) && $duplicates['results'][0]['id'] == $entity['id']) {
+				return true; //Values are unique since the values uniquely identified this entity and no other entity
+			}
+			
+			return false; //No, values are not unique
 		}
 		
 		public function create_error_stack($errors = array())
