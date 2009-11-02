@@ -15,6 +15,8 @@
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'type'			=> array('type' => 'string', 'query' => true, 'required' => true),
+					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
+					'activity_id'			=> array('type' => 'int', 'required' => false),
 					'building_name'	=> array('type' => 'string',
 						  'query'		=> true,
 						  'join' 		=> array(
@@ -53,9 +55,7 @@
 							'fkey' 		=> 'activity_id',
 							'key' 		=> 'id',
 							'column' 	=> 'name'
-					)),
-					'description'			=> array('type' => 'string', 'query' => true, 'required' => false),
-					'activity_id'			=> array('type' => 'int', 'required' => false)
+					))
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

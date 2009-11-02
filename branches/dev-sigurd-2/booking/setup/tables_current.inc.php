@@ -21,6 +21,7 @@
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'string', 'nullable' => False),
+				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => True),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
 				'street' => array('type' => 'varchar','precision' => '255', 'nullable' => False, 'default'=>''),

@@ -31,6 +31,16 @@
 
 				<dt><label for="homepage"><xsl:value-of select="php:function('lang', 'Homepage')" /></label></dt>
 				<dd><input name="homepage" type="text" value="{building/homepage}"/></dd>
+
+				<dt><label for="location_code"><xsl:value-of select="php:function('lang', 'Location Code')" /></label></dt>
+				<dd>
+
+					<div class="autocomplete">
+						<input id="field_location_code" name="location_code" type="hidden" value="{building/location_code}"/>
+						<input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}"/>
+						<div id="location_code_container"/>
+					</div>
+				</dd>
 			</dl>
 
 			<dl class="form-col">
@@ -101,8 +111,11 @@
 	<script type="text/javascript">
 		<![CDATA[
 		YAHOO.util.Event.addListener(window, "load", function() {
-		YAHOO.booking.rtfEditorHelper('field_description');
-		});
+			YAHOO.booking.rtfEditorHelper('field_description');
+
+    		YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uibuilding.properties&phpgw_return_as=json&',
+                                     	'field_location_code_name', 'field_location_code', 'location_code_container');
+			});
 		]]>
 	</script>
 </xsl:template>

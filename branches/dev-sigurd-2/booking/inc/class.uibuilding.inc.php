@@ -13,6 +13,7 @@
 			'show'			=>	true,
 			'edit'			=>	true,
 			'schedule'		=>	true,
+			'properties'	=>	true,
 			'toggle_show_inactive'	=>	true,
 			'find_buildings_used_by' => true,
 		);
@@ -25,10 +26,29 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code');
 		}
 		
-		public function find_buildings_used_by() {
+		public function properties()
+		{
+			$q = phpgw::get_var('query', 'str', 'REQUEST', null);
+			$type_id = count(split('-', $q));
+			$so = CreateObject('property.solocation');
+			$ret = $so->read(array('type_id' => $type_id, 'location_code'=>$q));
+			foreach($ret as &$r)
+			{
+				$name = array();
+				for($i=1; $i<=$type_id; $i++)
+					$name[] = $r['loc'.$i.'_name'];
+				$r['name'] = $r['location_code']. ' ('. join(', ', $name).')';
+				$r['id'] = $r['location_code'];
+			}
+			$locations = array('results'=>$ret, 'total_results'=>count($ret));
+			return $this->yui_results($locations);
+		}
+		
+		public function find_buildings_used_by()
+		{
 			if(!phpgw::get_var('phpgw_return_as') == 'json') { return; }
 			
 			if (($organization_id = phpgw::get_var('organization_id', 'int', 'REQUEST', null))) {
@@ -178,6 +198,7 @@
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
 			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
+			$building['location_link'] = self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $building['location_code']));
 			self::render_template('building', array('building' => $building));
 		}
 
