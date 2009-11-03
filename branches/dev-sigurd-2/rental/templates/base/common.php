@@ -248,8 +248,8 @@
 				//for(var e=0;e<selectedDate.length;e++){
 				//	alert("element " + e + ": " + selectedDate[e]);
 				//}
-				if(selectedDate[3] = "00:00:00"){
-					//alert("seldate skal byttes!");
+				if(selectedDate[3] == "00:00:00"){
+				//	alert("seldate skal byttes!");
 					selectedDate = selectedDate.slice(0,3).join(" ") + " " + selectedDate[5] + " 00:00:00 GMT"; 
 				}
 				else{
