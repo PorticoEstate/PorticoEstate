@@ -1931,10 +1931,39 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
 			"ALTER TABLE bb_building ADD COLUMN location_code TEXT;"
 		);
-		
+	
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.79';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.79';
+	function booking_upgrade0_1_79()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN frontend_modified timestamp");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.80';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.80';
+	function booking_upgrade0_1_80()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application_comment ADD COLUMN type TEXT NOT NULL DEFAULT 'comment'");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.81';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	

@@ -14,6 +14,7 @@
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),
+					'frontend_modified'	=> array('type' => 'timestamp'),
 					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'case_officer_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
@@ -39,6 +40,13 @@
 					'contact_name'	=> array('type' => 'string', 'query' => true, 'required'=> true),
 					'contact_email'	=> array('type' => 'string', 'required'=> true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone'	=> array('type' => 'string'),
+					'case_officer_name'	=> array('type' => 'string', 'query' => true,
+						'join' => array(
+							'table' => 'phpgw_accounts',
+							'fkey' => 'case_officer_id',
+							'key' => 'account_id',
+							'column' => 'account_lid'
+					)),
 					'audience' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_application_targetaudience',
@@ -61,20 +69,13 @@
 						  'manytomany' => array(
 							'table' => 'bb_application_comment',
 							'key' => 'application_id',
-							'column' => array('time', 'author', 'comment')
+							'column' => array('time', 'author', 'comment', 'type')
 					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_application_resource',
 							'key' => 'application_id',
 							'column' => 'resource_id'
-					)),
-					'case_officer_name'	=> array('type' => 'string', 'query' => true,
-						'join' => array(
-							'table' => 'phpgw_accounts',
-							'fkey' => 'case_officer_id',
-							'key' => 'account_id',
-							'column' => 'account_lid'
 					)),
 				)
 			);

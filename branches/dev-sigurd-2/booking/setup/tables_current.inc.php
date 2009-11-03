@@ -163,6 +163,7 @@
 				'status' => array('type' => 'text', 'nullable'=> False),
 				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
+				'frontend_modified' => array('type' => 'timestamp', 'nullable'=> True),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
@@ -317,7 +318,8 @@
 				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'time' => array('type' => 'timestamp', 'nullable' => False),
 				'author' => array('type' => 'text', 'nullable' => False),
-				'comment' => array('type' => 'text', 'nullable' => False)
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'comment'),
 			),
 			'pk' => array('id'),
 			'fk' => array(

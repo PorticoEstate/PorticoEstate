@@ -258,3 +258,20 @@ Event changed	booking	no	Et arrangement har blitt endret
 send reminder for participants statistics	booking	no	Purring brukerstatistikk
 Send reminder	booking	no	Send purring
 Do not send reminder	booking	no	Ikke send purring
+Last modified by public	booking	no	?Last modified by public
+In order to work with this application, you must first	booking	no	?In order to work with this application, you must first
+assign yourself	booking	no	?assign yourself
+as the case officer responsible for this application	booking	no	?as the case officer responsible for this application
+In order to work with this application, you must therefore first	booking	no	?In order to work with this application, you must therefore first
+Last modified by public	booking	no	?Last modified by public
+User '%s' was assigned	booking	no	?User '%s' was assigned
+User '%s' was unassigned	booking	no	?User '%s' was unassigned
+Show only applications assigned to me	booking	no	?Show only applications assigned to me
+Last modified by public	booking	no	?Last modified by public
+Confirm	application	booking no	?Confirm application
+One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	?One or more bookings, allocations or events needs to be created before an application can be Accepted
+Hide from my Dashboard until new activity occurs	booking	no	?Hide from my Dashboard until new activity occurs
+Display in my Dashboard	booking	no	?Display in my Dashboard
+Re-assign to me	booking	no	?Re-assign to me
+Assign to me	booking	no	?Assign to me
+Currently assigned to user:	booking	no	?Currently assigned to user:

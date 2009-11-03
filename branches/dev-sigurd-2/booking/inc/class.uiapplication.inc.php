@@ -1,8 +1,11 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.account_helper');
 
 	class booking_uiapplication extends booking_uicommon
 	{
+		const COMMENT_TYPE_OWNERSHIP='ownership';
+		
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -18,6 +21,7 @@
 		public function __construct()
 		{
 			parent::__construct();
+			self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->event_bo = CreateObject('booking.boevent');
@@ -30,6 +34,99 @@
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
 								  'active', 'accepted_documents');
+		}
+		
+		protected function is_assigned_to_current_user(&$application) {
+			$current_account_id = $this->current_account_id();
+			if (empty($current_account_id) || !isset($application['case_officer_id'])) { return false; }
+			return $application['case_officer_id'] == $current_account_id;
+		}
+		
+		protected function check_application_assigned_to_current_user(&$application) {
+			if (!$this->is_assigned_to_current_user($application)) {
+				throw new booking_unauthorized_exception('write', 'current user is not assigned to application');
+			}
+			
+			return true;
+		}
+		
+		protected function assign_to_current_user(&$application) {					
+			$current_account_id = $this->current_account_id();
+		 
+			if (!empty($current_account_id) && is_array($application) && 
+					!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id) 
+			{
+				$application['case_officer_id'] = $current_account_id;
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was assigned"), $this->current_account_fullname()));
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected function unassign_current_user(&$application) {						
+			$current_account_id = $this->current_account_id();
+		
+			if (!empty($current_account_id) && is_array($application) 
+					&& array_key_exists('case_officer_id', $application) 
+					&& $application['case_officer_id'] == $current_account_id) 
+			{
+				$application['case_officer_id'] = null;
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was unassigned"), $this->current_account_fullname()));
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected function set_display_in_dashboard(&$application, $bool, $options = array()) {
+			if (!is_bool($bool) || $application['display_in_dashboard'] === $bool) { return false; }
+			$options = array_merge(
+				array('force' => false),
+				$options
+			);
+			
+			if ($options['force'] === false && 
+					(!isset($application['case_officer_id']) || $application['case_officer_id'] != $this->current_account_id())
+			) 
+			{ 
+				return false; 
+			}
+			
+			$application['display_in_dashboard'] = ($bool === true ? 1 : 0);
+			return true;
+		}
+		
+		protected function add_comment(&$application, $comment, $type = 'comment') {
+			$application['comments'][] = array(
+				'time'=> 'now', 
+				'author'=>$this->current_account_fullname(), 
+				'comment'=>$comment,
+				'type' => $type
+			);
+		}
+		
+		protected function add_ownership_change_comment(&$application, $comment) {
+			$this->add_comment($application, $comment, self::COMMENT_TYPE_OWNERSHIP);
+		}
+		
+		/**
+		 * Filters application comments based on their types.
+		 * 
+		 *
+		 */
+		protected function filter_application_comments(array &$application, array $types) {
+			$types = array_fill_keys($types, true); //Convert to associative array with types as keys and values as true
+			
+			if (count($types) == 0 || !array_key_exists('comments', $application) || !is_array($application['comments'])) { 
+				return; 
+			}
+			
+			$filtered_comments = array();
+			foreach ($application['comments'] as &$comment) {
+				isset($types[$comment['type']]) AND $filtered_comments[] = $comment;
+			}
+			$application['comments'] = $filtered_comments;
 		}
 		
 		public function index()
@@ -111,6 +208,7 @@
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
+				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
@@ -153,6 +251,19 @@
 		protected function validate(&$entity) {
 			$errors = array_merge($this->validate_customer_identifier($entity), $this->bo->validate($entity));
 			return $errors;
+		}
+		
+		protected function set_case_officer(&$application) {
+			if (!empty($application['case_officer_id'])) {
+				$application['case_officer'] = array(
+					'id' => $application['case_officer_id'], 
+					'name' => $application['case_officer_name'],
+				);
+				
+				if ($application['case_officer_id'] == $this->current_account_id()) {
+					$application['case_officer']['is_current_user'] = true;
+				}
+			}
 		}
 		
 		protected function extract_form_data($defaults = array()) {
@@ -213,17 +324,19 @@
 			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-
 		public function edit()
-		{
+		{	
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
+			
+			$this->check_application_assigned_to_current_user($application);
+			
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
+			{	
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
 				
@@ -241,6 +354,9 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
+			
+			$this->set_case_officer($application);
+			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
@@ -304,33 +420,64 @@
 			}
 			return json_encode($event);
 		}
-
+		
+		protected function extract_display_in_dashboard_value() {
+			$val = phpgw::get_var('display_in_dashboard', 'int', 'POST', 0);
+			if ($val <= 0) return false;
+			if ($val >= 1) return true;
+			return false; //Not that I think that it is necessary to return here too, but who knows, I might have overlooked something.
+		}
+		
 		public function show()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
-
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['create'])
-			{
+			
+			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				if($_POST['create'])
+				{
+					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
+				}
+				
+				$update = false;
+				$notify = false;
+				
+				if(array_key_exists('assign_to_user', $_POST))
+				{
+					$update = $this->assign_to_current_user($application);
+				}
+				elseif(isset($_POST['unassign_user'])) 
+				{
+					if ($this->unassign_current_user($application)) {
+						$this->set_display_in_dashboard($application, true, array('force' => true));
+						$update = true;
+					}
+				}
+				elseif(isset($_POST['display_in_dashboard']))
+				{
+					$this->check_application_assigned_to_current_user($application);
+					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
+				}
+				elseif($_POST['comment'])
+				{				
+					$this->add_comment($application, $_POST['comment']);
+					$update = true;
+					$notify = true;
+				}
+				elseif($_POST['status'])
+				{
+					$this->check_application_assigned_to_current_user($application);
+					$application['status'] = $_POST['status'];
+					$update = true;
+					$notify = true;
+				}
+				
+				$update AND $receipt = $this->bo->update($application);
+				$notify AND $this->bo->send_notification($application);
+				
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
-
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['status'])
-			{
-				$application['status'] = $_POST['status'];
-				$receipt = $this->bo->update($application);
-				$this->bo->send_notification($application);
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
-			}
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
-			{
-				$application['comments'][] = array('time'=> 'now', 
-												   'author'=>$GLOBALS['phpgw_info']['user']['fullname'], 
-												   'comment'=>$_POST['comment']);
-				$receipt = $this->bo->update($application);
-				$this->bo->send_notification($application);
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
-			}
+			
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
@@ -343,6 +490,9 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$application['resource_ids'] = $resource_ids;
+			
+			$this->set_case_officer($application);
+			
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();

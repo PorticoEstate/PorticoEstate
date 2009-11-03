@@ -45,6 +45,8 @@
 	 */
 	function pretty_timestamp($date)
 	{
+		if (empty($date)) return "";
+		
 		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
 		{
 			$date = $date[0]->nodeValue;
@@ -186,6 +188,27 @@
 			$this->add_js_event('load', $js);
 		}
 		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_id() {
+			return booking_account_helper::current_account_id();
+		}
+		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_lid() {
+			return booking_account_helper::current_account_lid();
+		}
+		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_fullname() {
+			return booking_account_helper::current_account_fullname();
+		}
+		
 		public static function encoding()
 		{
 			return 'UTF-8';
@@ -207,7 +230,12 @@
 		{
 			if ($e instanceof booking_unauthorized_exception)
 			{
-				$message = htmlentities('HTTP/1.0 401 Unauthorized - '.$e->getMessage(), null, self::encoding());
+				$message = htmlentities('HTTP/1.0 401 Unauthorized to '.$e->get_operation(), null, self::encoding());
+				$exception_message = $e->getMessage();
+			
+				if (!empty($exception_message))
+					$message .= ' - '.htmlentities($exception_message, null, self::encoding());
+					
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else {
