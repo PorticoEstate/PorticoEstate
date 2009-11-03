@@ -360,6 +360,8 @@
 				{
 					//Includes a custom where-clause as a filter. Also replaces %%table%% 
 					//tokens with actual table_name in the clause.
+					$where_clauses = (array)$val;
+					if (count($where_clauses) == 0) { continue; }
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
