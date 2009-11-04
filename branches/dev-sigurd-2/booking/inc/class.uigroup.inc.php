@@ -172,12 +172,20 @@
 			foreach($groups["results"] as &$group) {
 				
 				$contact = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
+				$contact2 = (isset($group['contacts']) && isset($group['contacts'][1])) ? $group['contacts'][1] : null;
 				
 				if ($contact) {
 					$group += array(
 								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
 								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
 								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
+				if ($contact2) {
+					$group += array(
+								"secondary_contact_name"  => ($contact2["name"])  ? $contact2["name"] : '',
+								"secondary_contact_phone" => ($contact2["phone"]) ? $contact2["phone"] : '',
+								"secondary_contact_email" => ($contact2["email"]) ? $contact2["email"] : '',
 					);
 				}
 			}
