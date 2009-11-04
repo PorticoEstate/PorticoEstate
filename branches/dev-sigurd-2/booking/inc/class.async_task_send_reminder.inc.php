@@ -36,7 +36,8 @@
 		{
 			$sql = "SELECT distinct bo.id FROM bb_booking bo 
 				inner join bb_group_contact gc on gc.group_id = bo.group_id and trim(gc.email) <> ''
-				where bo.from_ > now() and bo.from_ < (now() + INTERVAL '".self::interval_length." minutes')";
+				where bo.from_ > now() and bo.from_ < (now() + INTERVAL '".self::interval_length." minutes')
+				and bo.reminder = 1";
 			$this->db->query($sql);
 			$bookings = $this->db->resultSet;
 
@@ -61,7 +62,8 @@
 		{
 			$sql = "SELECT id from bb_event
 				where from_ > now() and from_ < (now() + INTERVAL '".self::interval_length." minutes')
-				and trim(contact_email) <> ''";
+				and trim(contact_email) <> ''
+				and reminder = 1";
 			$this->db->query($sql);
 			$events = $this->db->resultSet;
 
