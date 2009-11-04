@@ -70,7 +70,7 @@
 		{
 			parent::doValidate($entity, $errors);
 			if (!isset($errors['type']) && !in_array($entity['type'], self::allowed_types(), true)) {
-				$errors['type'] = 'Invalid Resource Type';
+				$errors['type'] = lang('Invalid Resource Type');
 			}
 		}
 	}

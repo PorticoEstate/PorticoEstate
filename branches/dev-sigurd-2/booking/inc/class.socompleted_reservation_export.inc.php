@@ -83,14 +83,14 @@
 		{	
 			$exportable_reservations =& $this->get_completed_reservations_for($entity);
 			if (!$exportable_reservations) {
-				$errors['nothing_to_export'] = 'Nothing to export';
+				$errors['nothing_to_export'] = lang('Nothing to export');
 				return;
 			}
 			
 			foreach($exportable_reservations as &$reservation) {
 				if (!$this->get_customer_identifier_value_for($reservation) 
 				 	&& $this->get_cost_value($reservation['cost']) > 0 /* Exclude free reservations from this check */ ) { 
-					$errors['invalid_customer_ids'] = 'Unable to export: Missing a valid Customer ID on some rows';
+					$errors['invalid_customer_ids'] = lang('Unable to export: Missing a valid Customer ID on some rows');
 				}
 			}
 		}

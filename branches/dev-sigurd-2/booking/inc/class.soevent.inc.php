@@ -74,7 +74,7 @@
 			$end = $to_->format('Y-m-d H:i');
 			if($from_ > $to_)
 			{
-				$errors['from_'] = 'Invalid from date';
+				$errors['from_'] = lang('Invalid from date');
 			}
 			if($entity['resources'])
 			{

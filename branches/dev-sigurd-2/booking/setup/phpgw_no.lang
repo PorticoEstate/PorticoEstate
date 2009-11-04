@@ -138,7 +138,7 @@ no Data.	booking	no	Ingen treff.
 no description yet	booking	no	Beskrivelse manglar
 no parents	booking	no	Ingen overordnet
 no records found.	booking	no	Ingen treff.
-no records found.	booking	no	Inget funnet!
+no records found.	booking	no	Ingen funnet!
 nov	booking	no	november
 number of participants	booking	no	Antall deltakere
 oct	booking	no	oktober
@@ -276,3 +276,27 @@ Display in my Dashboard	booking	no	?Display in my Dashboard
 Re-assign to me	booking	no	?Re-assign to me
 Assign to me	booking	no	?Assign to me
 Currently assigned to user:	booking	no	?Currently assigned to user:
+Overlaps with existing event	booking	no	Overlapper med eksisterende arrangement
+Overlaps with existing allocation	booking	no	Overlapper med eksisterende tildeling
+Overlaps with existing booking	booking	no	Overlapper med eksisterende booking
+This booking is not within the selected season	booking	no	Denne bookingen ligger utenfor angitt sesong
+Invalid from date	booking	no	Ugyldig fradato
+This booking is outside the organization's allocated time	booking	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
+Overlaps other organizations allocation	booking	no	Overlapper med en annen organisasjons tildeling
+The booking uses resources not in the containing allocation	booking	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
+Field %1: Invalid format	booking	no	Felt %1: Ugyldig format
+Missing file for document	booking	no	Fil mangler
+Permission already exists	booking	no	Rettigheten finnes
+TO needs to be later than FROM	booking	no	TIL må komme etter FRA
+This boundary overlaps another boundary	booking	no	Denne rammetiden overlapper med en annen rammetid
+COST needs to be non-negative	booking	no	Pris kan ikke være negativ
+This allocation overlaps another allocation	booking	no	Denne tildelingen overlapper med en annen tildeling
+This allocation is outside season boundaries	booking	no	Denne tildelingen ligger utenfor sesongrammetiden
+Could not update object due to insufficient permissions	booking	no	Kunne ikke oppdatere objektet på grunn av manglende rettigheter
+Could not add object due to insufficient permissions	booking	no	Kunne ikke opprette objektet på grunn av manglende rettigheter
+Invalid parent activity	booking	no	Ugyldig foreldreaktivitet
+Invalid category	booking	no	Ugyldig kategori
+Invalid Resource Type	booking	no	Ugyldig ressurstype
+Invalid customer type	booking	no	Ugyldig kundetype
+Nothing to export	booking	no	Fant ingenting å eksportere
+Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader

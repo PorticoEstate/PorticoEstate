@@ -120,7 +120,7 @@
 			$end = $to_->format('Y-m-d H:i');
 			
 			if(strtotime($start) > strtotime($end)) {
-				$errors['from_'] = 'Invalid from date';
+				$errors['from_'] = lang('Invalid from date');
 				return; //No need to continue validation if dates are invalid
 			}
 

@@ -71,7 +71,7 @@
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			if (!in_array($entity['customer_type'], $this->get_customer_types())) {
-				$errors['customer_type'] = 'Invalid customer type';
+				$errors['customer_type'] = lang('Invalid customer type');
 			}
 		}
 		
