@@ -28,7 +28,8 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
-			$this->audience_bo = CreateObject('booking.boaudience');
+			$this->agegroup_bo = CreateObject('booking.boagegroup');
+			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::applications');
 			$this->fields = array('description', 'resources', 'activity_id', 
 								  'building_id', 'building_name', 'contact_name', 
@@ -175,6 +176,10 @@
 							'label' => lang('Status')
 						),
 						array(
+							'key' => 'what',
+							'label' => lang('What')
+						),
+						array(
 							'key' => 'created',
 							'label' => lang('Created')
 						),
@@ -209,6 +214,17 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
+				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
+				$application['resources'] = $application['resources']['results'];
+				if($application['resources'])
+				{
+					$names = array();
+					foreach($application['resources'] as $res)
+					{
+						$names[] = $res['name'];
+					}
+					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);

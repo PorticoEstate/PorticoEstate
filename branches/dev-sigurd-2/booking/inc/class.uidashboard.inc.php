@@ -15,6 +15,7 @@
 		{
          parent::__construct();
 			$this->bo = CreateObject('booking.boapplication');
+			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::dashboard');
 		}
 		
@@ -73,7 +74,7 @@
 						),
 						array(
 							'key' => 'status',
-							'label' => lang('Statusar')
+							'label' => lang('Status')
 						),
 						array(
 							'key' => 'created',
@@ -84,8 +85,8 @@
 							'label' => lang('Last modified')
 						),
 						array(
-							'key' => 'frontend_modified',
-							'label' => lang('Last modified by public')
+							'key' => 'what',
+							'label' => lang('What')
 						),
 						array(
 							'key' => 'activity_name',
@@ -118,6 +119,17 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
+				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
+				$application['resources'] = $application['resources']['results'];
+				if($application['resources'])
+				{
+					$names = array();
+					foreach($application['resources'] as $res)
+					{
+						$names[] = $res['name'];
+					}
+					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
