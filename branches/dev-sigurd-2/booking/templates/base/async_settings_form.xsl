@@ -24,6 +24,18 @@
 					&#160;
 					<label for="booking_async_task_update_reservation_state_enabled"><xsl:value-of select="php:function('lang', 'booking_async_task_update_reservation_state_enabled')" /></label>
 				</dt>
+				<dt>
+					<input type='checkbox' value='1' name="booking_async_task_send_reminder_enabled" id="field_booking_async_task_send_reminder_enabled">
+						<xsl:if test="settings/booking_async_task_send_reminder_enabled and settings/booking_async_task_send_reminder_enabled ='1'">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="not(settings/permission/write)">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+					</input>
+					&#160;
+					<label for="booking_async_task_send_reminder_enabled"><xsl:value-of select="php:function('lang', 'booking_async_task_send_reminder_enabled')" /></label>
+				</dt>
 			</dl>
 			
 			<div class="clr"/>

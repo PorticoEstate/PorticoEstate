@@ -47,25 +47,29 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$building = $this->building_bo->read_single($building_info['id']);
 
+			if ($event['secret'] != phpgw::get_var('secret', 'GET'))
+			{
+				$step = -1; // indicates that an error message should be displayed in the template
+				self::render_template('report_numbers', array('event_object' => $booking, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
+				return false;
+			}
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				//reformatting the post variable to fit the booking object
-				$i = 0;
 				$temp_agegroup = array();
-				foreach(phpgw::get_var('male', 'POST') as $agegroup_id => $value)
+				$sexes = array('male', 'female');
+				foreach($sexes as $sex)
 				{
-					$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
-					$temp_agegroup[$i]['male'] = $value;
-					$i++;
+					$i = 0;
+					foreach(phpgw::get_var($sex, 'POST') as $agegroup_id => $value)
+					{
+						$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
+						$temp_agegroup[$i][$sex] = $value;
+						$i++;
+					}
 				}
 
-				$i = 0;
-				foreach(phpgw::get_var('female', 'POST') as $agegroup_id => $value)
-				{
-					$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
-					$temp_agegroup[$i]['female'] = $value;
-					$i++;
-				}
 				$event['agegroups'] = $temp_agegroup;
 				$event['reminder'] = 2; // status set to delivered
 				$errors = $this->bo->validate($event);
@@ -75,7 +79,6 @@
 					$step++;
 				}
 			}
-
 			self::render_template('report_numbers', array('event_object' => $event, 'agegroups' => $agegroups, 'building' => $building, 'step' => $step));
 		}
 	}

@@ -153,10 +153,17 @@
 					<xsl:if test="booking/reminder = 1">
 						<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
 					</xsl:if>
 					<xsl:if test="booking/reminder = 0">
 						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+					</xsl:if>
+					<xsl:if test="booking/reminder = 2">
+						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						<option value="2" selected="selected"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
 					</xsl:if>
 				</select>
 			</dd>

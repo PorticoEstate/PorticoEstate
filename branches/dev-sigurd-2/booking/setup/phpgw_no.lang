@@ -258,6 +258,7 @@ Event changed	booking	no	Et arrangement har blitt endret
 send reminder for participants statistics	booking	no	Purring brukerstatistikk
 Send reminder	booking	no	Send purring
 Do not send reminder	booking	no	Ikke send purring
+User has responded to the reminder	booking	no	Brukeren har svart på påminnelsen
 Last modified by public	booking	no	?Last modified by public
 In order to work with this application, you must first	booking	no	?In order to work with this application, you must first
 assign yourself	booking	no	?assign yourself
