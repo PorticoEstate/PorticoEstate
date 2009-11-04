@@ -224,9 +224,16 @@
 				
 				$document['actions'] = $document_actions;
 			}
+			if (phpgw::get_var('no_images'))
+				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
 			return $this->yui_results($documents);
 		}
-		
+
+ 		private function is_image($document)
+		{
+			return $document['is_image'] == false;
+		}
+
 		public function index_images()
 		{
 			$images = $this->bo->read_images();
