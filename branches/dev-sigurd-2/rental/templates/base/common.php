@@ -163,15 +163,18 @@
 				var menuName = this.container_id + "_cm_" + counter;
 				counter++;
 
-				//create a context menu that triggers on the HTML row element
-				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(validRecords -1 )});
-
 				//... add menu items with label and handler function for click events
 				var labels = record.getData().labels;
+				//create a context menu that triggers on the HTML row element
+				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(validRecords -1 ),itemdata: labels, lazyload: true});
+
+				//... add menu items with label and handler function for click events
+//				var labels = record.getData().labels;
 				
-				for(var j in labels) {
-					record.menu.addItem({text: labels[j]},0);
-				}
+//				for(var j in labels) {
+//					//alert("labels: " + labels[j]);
+//					record.menu.addItem({text: labels[j]},0);
+//				}
 
 				//... toggle isVisible variable on menu to override handler on regular left click events
 				record.menu.showEvent.subscribe(function(){
@@ -185,11 +188,11 @@
 					record.menu
 				);
 
-				//... render the menu on the related table row
-				record.menu.render(this.getTrEl(validRecords-1));
-
 				//... subscribe handler for click events
 				record.menu.clickEvent.subscribe(onContextMenuClick, this);
+
+				//... render the menu on the related table row
+				record.menu.render(this.getTrEl(validRecords-1));
 			}
 		}
 
