@@ -2268,7 +2268,7 @@
 							$bcc .= ";{$contact_data['value_contact_email']}";
 						}
 
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', '' , true);
 						if($rcpt)
 						{
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
