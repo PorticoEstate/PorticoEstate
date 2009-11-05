@@ -300,3 +300,4 @@ Invalid Resource Type	booking	no	Ugyldig ressurstype
 Invalid customer type	booking	no	Ugyldig kundetype
 Nothing to export	booking	no	Fant ingenting å eksportere
 Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
+The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
