@@ -26,8 +26,8 @@
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->event_bo = CreateObject('booking.boevent');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->audience_bo = CreateObject('booking.boaudience');
 			$this->assoc_bo = new booking_boapplication_association();
-			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::applications');
