@@ -29,8 +29,8 @@
 			$this->audience_bo = CreateObject('booking.boaudience');
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
-      $this->resource_bo = CreateObject('booking.boresource');
-      $this->document_bo = CreateObject('booking.bodocument_building');
+			$this->resource_bo = CreateObject('booking.boresource');
+			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
 			$this->fields = array('description', 'resources', 'activity_id', 
 								  'building_id', 'building_name', 'contact_name', 
@@ -293,20 +293,20 @@
 
     protected function create_accepted_documents_comment_text($application)
     {
-      if (count($application['accepted_documents']) < 1)
-      {
-        return null;
-      }
-      $comment_text = lang('The user has accepted the following documents').': ';
-      foreach($application['accepted_documents'] as $doc)
-      {
-        $doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
-        $document = $this->document_bo->read_single($doc_id);
-        $comment_text .= $document['description'].' ('.$document['name'].'), ';
-      }
-      $comment_text = substr($comment_text, 0, -2);
+		if (count($application['accepted_documents']) < 1)
+		{
+			return null;
+		}
+		$comment_text = lang('The user has accepted the following documents').': ';
+		foreach($application['accepted_documents'] as $doc)
+		{
+			$doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
+			$document = $this->document_bo->read_single($doc_id);
+			$comment_text .= $document['description'].' ('.$document['name'].'), ';
+		}
+		$comment_text = substr($comment_text, 0, -2);
 
-      return $comment_text;
+		return $comment_text;
     }
 
     public function add()
@@ -326,16 +326,16 @@
 				$application['created'] = 'now';
 				$application['modified'] = 'now';
 				$application['secret'] = $this->generate_secret();
-        $application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 
 				$errors = $this->validate($application);
 				if(!$errors)
 				{
-          $comment_text = $this->create_accepted_documents_comment_text($application);
-          if ($comment_text)
-          {
-            $this->add_comment($application, $comment_text);
-          }
+					$comment_text = $this->create_accepted_documents_comment_text($application);
+					if ($comment_text)
+					{
+						$this->add_comment($application, $comment_text);
+					}
 
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
