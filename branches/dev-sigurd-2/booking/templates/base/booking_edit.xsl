@@ -55,12 +55,8 @@
             <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')"/></label></dt>
             <dd>
                 <div class="autocomplete">
-                    <input id="field_building_id" name="building_id" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/building_id"/></xsl:attribute>
-                    </input>
-                    <input id="field_building_name" name="building_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/building_name"/></xsl:attribute>
-                    </input>
+                    <input id="field_building_id" name="building_id" type="hidden" value="{booking/building_id}"/>
+                    <input id="field_building_name" name="building_name" type="text" value="{booking/building_name}"/>
                     <div id="building_container"/>
                 </div>
             </dd>
@@ -74,17 +70,21 @@
             </dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
+            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
             <dd>
                 <div class="autocomplete">
-                    <input id="field_group_id" name="group_id" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/group_id"/></xsl:attribute>
+                    <input id="field_org_id" name="organization_id" type="hidden">
+                        <xsl:attribute name="value"><xsl:value-of select="booking/organization_id"/></xsl:attribute>
                     </input>
-                    <input id="field_group_name" name="group_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/group_name"/></xsl:attribute>
+                    <input id="field_org_name" name="organization_name" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="booking/organization_name"/></xsl:attribute>
                     </input>
-                    <div id="group_container"/>
+                    <div id="org_container"/>
                 </div>
+            </dd>
+            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
+            <dd>
+                <div id="group_container"><xsl:value-of select="php:function('lang', 'Loading...')"/></div>
             </dd>
             <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')"/></label></dt>
             <dd>
@@ -190,6 +190,7 @@
 	
     <script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
+        YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
     </script>

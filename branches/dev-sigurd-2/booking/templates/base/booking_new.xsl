@@ -47,17 +47,21 @@
             </dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
+            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
             <dd>
                 <div class="autocomplete">
-                    <input id="field_group_id" name="group_id" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/group_id"/></xsl:attribute>
+                    <input id="field_org_id" name="organization_id" type="hidden">
+                        <xsl:attribute name="value"><xsl:value-of select="booking/organization_id"/></xsl:attribute>
                     </input>
-                    <input id="field_group_name" name="group_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="booking/group_name"/></xsl:attribute>
+                    <input id="field_org_name" name="organization_name" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="booking/organization_name"/></xsl:attribute>
                     </input>
-                    <div id="group_container"/>
+                    <div id="org_container"/>
                 </div>
+            </dd>
+            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
+            <dd>
+                <div id="group_container"><xsl:value-of select="php:function('lang', 'Select an organization first')"/></div>
             </dd>
             <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')"/></label></dt>
             <dd>
@@ -149,6 +153,7 @@
     </div>
     <script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
+        YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';
         YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
     </script>

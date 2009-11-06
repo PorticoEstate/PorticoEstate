@@ -169,6 +169,10 @@
 			$activities = $activities['results'];
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
+			$booking['organization_name'] = $allocation['organization_name'];
+
+
+
 			if ($step < 2) 
 			{
 				self::render_template('booking_new', array('booking' => $booking, 
@@ -249,6 +253,8 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
+			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
+			$booking['building_name'] = $booking['building']['name'];
 			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -273,8 +279,10 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
-			$groups = $groups['results'];
+			$group = $this->group_bo->so->read_single($booking['group_id']);
+			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$group['organization_id'], 'active'=>1)));
+			$groups =  $groups['results'];
+			$booking['organization_name'] = $group['organization_name'];
 			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'groups' => $groups));
 		}
 		
