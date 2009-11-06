@@ -99,6 +99,7 @@
 				$booking['cost'] = 0;
 				$booking['completed'] = '0';
 				$booking['reminder'] = '1';
+				$booking['secret'] = $this->generate_secret();
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
@@ -143,6 +144,7 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
+								$booking['secret'] = $this->generate_secret();
 								$receipt = $this->bo->add($booking);
 							}
 						}
