@@ -146,6 +146,32 @@
 
 		//... create context menu for each record after the table has loaded the data
 		this.table.doAfterLoadData = function() {
+			onContextMenuBeforeShow = function(p_sType, p_aArgs)
+			{
+				var oTarget = this.contextEventTarget;
+				if (this.getRoot() == this)
+				{
+					if(oTarget.tagName != "TD")
+					{
+						oTarget = YAHOO.util.Dom.getAncestorByTagName(oTarget, "td");
+					}
+					oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
+					oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
+					oSelectedTR.style.color = "black";
+					YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
+				}
+			}
+
+			onContextMenuHide = function(p_sType, p_aArgs)
+			{
+				if (this.getRoot() == this && oSelectedTR)
+				{
+					oSelectedTR.style.backgroundColor  = "" ;
+					oSelectedTR.style.color = "";
+					YAHOO.util.Dom.removeClass(oSelectedTR, prefixSelected);
+				}
+			}
+			
 			var records = this.getRecordSet();
 			var validRecords = 0;
 			for(var i=0; i<records.getLength(); i++) {
@@ -168,32 +194,16 @@
 				//create a context menu that triggers on the HTML row element
 				record.menu = new YAHOO.widget.ContextMenu(menuName,{trigger:this.getTrEl(validRecords -1 ),itemdata: labels, lazyload: true});
 
-				//... add menu items with label and handler function for click events
-//				var labels = record.getData().labels;
-				
-//				for(var j in labels) {
-//					//alert("labels: " + labels[j]);
-//					record.menu.addItem({text: labels[j]},0);
-//				}
-
-				//... toggle isVisible variable on menu to override handler on regular left click events
-				record.menu.showEvent.subscribe(function(){
-					this.isVisible = true;
-					},
-					record.menu
-				);
-				record.menu.hideEvent.subscribe(function(){
-					this.isVisible = false;
-					},
-					record.menu
-				);
-
 				//... subscribe handler for click events
 				record.menu.clickEvent.subscribe(onContextMenuClick, this);
+				record.menu.subscribe("beforeShow", onContextMenuBeforeShow);
+				record.menu.subscribe("hide", onContextMenuHide);
 
 				//... render the menu on the related table row
 				record.menu.render(this.getTrEl(validRecords-1));
 			}
+
+			
 		}
 
 		//... calback methods for handling ajax calls
@@ -293,11 +303,6 @@
 				var row = obj.table.getTrEl(e.target);
 				if(row) {
 					var record = obj.table.getRecord(row);
-
-					//... if the context menu for this table row is visible; do not handle
-					if(record.menu.isVisible){
-						return;
-					}
 
 					//... check whether this action should be an AJAX call
 					if(record.getData().ajax[0]) {
