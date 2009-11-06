@@ -165,15 +165,18 @@
 				$smtp->WordWrap = 76;
 			}
 
-			foreach($attachments as $key => $value)
+			if($attachments && is_array($attachments))
 			{
-				$smtp->AddAttachment
-				(
-					$value['file'],
-					utf8_decode($value['name']),
-					'base64',
-					$value['type']
-				);
+				foreach($attachments as $key => $value)
+				{
+					$smtp->AddAttachment
+					(
+						$value['file'],
+						utf8_decode($value['name']),
+						'base64',
+						$value['type']
+					);
+				}
 			}
 
 			if ( $GLOBALS['phpgw_info']['server']['smtp_auth'] == 'True' )
