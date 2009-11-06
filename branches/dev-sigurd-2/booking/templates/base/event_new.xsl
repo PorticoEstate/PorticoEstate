@@ -151,13 +151,13 @@
 			<dd>
 				<select name="reminder" id="field_reminder">
 					<xsl:choose>
-						<xsl:when test="event/reminder = 0">
-							<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-							<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-						</xsl:when>
-						<xsl:otherwise test="event/reminder = 1">
+						<xsl:when test="event/reminder = 1">
 							<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 							<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						</xsl:when>
+						<xsl:otherwise test="event/reminder = 0">
+							<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+							<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						</xsl:otherwise>
 					</xsl:choose>
 				</select>

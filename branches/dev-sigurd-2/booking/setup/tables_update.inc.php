@@ -1967,3 +1967,17 @@
 		}
 	}
 	
+	$test[] = '0.1.81';
+	function booking_upgrade0_1_81()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ALTER COLUMN reminder SET DEFAULT 0;");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ALTER COLUMN reminder SET DEFAULT 0;");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.82';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
