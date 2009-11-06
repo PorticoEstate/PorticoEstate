@@ -93,7 +93,7 @@
 					bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 					eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
 				</script>
-				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}])')">
+				<select name="create" onchange="if(this.selectedIndex==1) YAHOO.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) YAHOO.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}])">
 					<xsl:if test="not(../case_officer/is_current_user)">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>		
 					</xsl:if>

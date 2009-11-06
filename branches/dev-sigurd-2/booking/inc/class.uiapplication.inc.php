@@ -439,9 +439,11 @@
 			$event[] = array('to_', $date['to_']);
 			$event[] = array('cost', '0');
 			$event[] = array('application_id', $application['id']);
+			$event[] = array('reminder', '0');
 			$copy = array(
 				'activity_id', 'description', 'contact_name',
-				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name'
+				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
+				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
 			);
 			foreach($copy as $f)
 			{
