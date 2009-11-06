@@ -1888,9 +1888,6 @@
 //---------end files
 			$ticket = $this->bo->read_single($id);
 
-			$additional_notes = $this->bo->read_additional_notes($id);
-			$record_history = $this->bo->read_record_history($id);
-
 			$order_link				= '';
 			$add_to_project_link	= '';
 			$request_link			='';
@@ -1953,24 +1950,6 @@
 				'id'		=> $id
 			);
 
-/*
-			$table_header_history[] = array
-			(
-				'lang_date'		=> lang('Date'),
-				'lang_user'		=> lang('User'),
-				'lang_action'		=> lang('Action'),
-				'lang_new_value'	=> lang('New value')
-			);
-
-			$table_header_additional_notes[] = array
-			(
-				'lang_count'		=> '#',
-				'lang_date'		=> lang('Date'),
-				'lang_user'		=> lang('User'),
-				'lang_note'		=> lang('Note'),
-			);
-*/
-//_debug_array($ticket['location_data']);
 
 			if($ticket['origin'] || $ticket['target'])
 			{
@@ -2061,78 +2040,6 @@
 				$jscal->add_listener('values_finnish_date');
 			}
 
-			//---datatable settings---------------------------------------------------	
-			$datavalues[0] = array
-			(
-					'name'					=> "0",
-					'values' 				=> json_encode($additional_notes),
-					'total_records'			=> count($additional_notes),
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-			);					
-       		$myColumnDefs[0] = array
-       		(
-       			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
-		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
-			);		
-			$datavalues[1] = array
-			(
-					'name'					=> "1",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-			);					
-       		$myColumnDefs[1] = array
-       		(
-       			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array('key' => 'value_date',	'label'=>lang('Date'),	'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_user',	'label'=>lang('User'),	'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_action',	'label'=>lang('Action'),	'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
-		       				       					array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)))
-			);	
-			
-			
-			$link_to_files = (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
-			
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
-			
-			for($z=0; $z<count($ticket['files']); $z++)
-			{				
-				if ($link_to_files != '')
-				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
-				}
-				else
-				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
-				}				
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
-			}							
-
-			$datavalues[2] = array
-			(
-					'name'					=> "2",
-					'values' 				=> json_encode($content_files),
-					'total_records'			=> count($content_files),
-					'permission'   			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-			);
-
-			$myColumnDefs[2] = array
-       		(
-       			'name'		=> "2",
-       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-			);
-			
-			//----------------------------------------------datatable settings--------			
-			
 			// -------- start order section
 			$order_read 			= $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
 			$order_add 				= $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
@@ -2251,7 +2158,12 @@
 					$body .= '<h2>' . lang('description') .'</h2>';
 					$body .= nl2br($ticket['order_descr']);
 
-
+					if(isset($values['file_attach']) && is_array($values['file_attach']))
+					{
+						$bofiles	= CreateObject('property.bofiles');
+						$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
+						$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
+					}
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
 						if (!is_object($GLOBALS['phpgw']->send))
@@ -2268,12 +2180,12 @@
 							$bcc .= ";{$contact_data['value_contact_email']}";
 						}
 
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', '' , true);
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
 						if($rcpt)
 						{
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 							$historylog	= CreateObject('property.historylog','tts');
-							$historylog->add('M',$id,"{$values['vendor_email']}");
+							$historylog->add('M',$id,"{$values['vendor_email']}{$attachment_log}");
 							$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 							$action_params = array
 							(
@@ -2349,6 +2261,94 @@
 
 			// -------- end order section
 
+
+
+			$additional_notes = $this->bo->read_additional_notes($id);
+			$record_history = $this->bo->read_record_history($id);
+
+
+			//---datatable settings---------------------------------------------------	
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($additional_notes),
+					'total_records'			=> count($additional_notes),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);					
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
+			);		
+			$datavalues[1] = array
+			(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);					
+       		$myColumnDefs[1] = array
+       		(
+       			'name'		=> "1",
+       			'values'	=>	json_encode(array(	array('key' => 'value_date',	'label'=>lang('Date'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user',	'label'=>lang('User'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action',	'label'=>lang('Action'),	'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label'=>lang('New value'),'sortable'=>true,'resizeable'=>true)))
+			);	
+			
+			
+			$link_to_files = (isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'');
+			
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			
+			for($z=0; $z<count($ticket['files']); $z++)
+			{				
+				if ($link_to_files != '')
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$ticket['files'][$z]['directory'].'/'.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$ticket['files'][$z]['name'].'</a>';
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$ticket['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$ticket['files'][$z]['name'].'</a>';
+				}				
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="'.$ticket['files'][$z]['name'].'" title="'.lang('Check to attach file').'">';
+			}							
+
+			$datavalues[2] = array
+			(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
+			$attach_file_def = array
+			(
+       			array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+			);
+
+			if(isset($ticket['order_id']) && $ticket['order_id'])
+			{
+				$attach_file_def[] = array('key' => 'attach_file','label'=>lang('attach file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+			}
+
+			$myColumnDefs[2] = array
+       		(
+       			'name'		=> "2",
+       			'values'	=>	json_encode($attach_file_def)
+			);
+			
+			//----------------------------------------------datatable settings--------			
 
 			$data = array
 			(

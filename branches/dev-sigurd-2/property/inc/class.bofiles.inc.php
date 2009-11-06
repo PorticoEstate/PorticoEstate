@@ -299,7 +299,7 @@
 		{
 			$attachments = array();
 
-			foreach ($values['file_action'] as $file_name)
+			foreach ($values as $file_name)
 			{
 				$file = "{$this->fakebase}{$path}{$file_name}";
 
