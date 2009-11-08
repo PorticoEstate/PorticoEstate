@@ -34,7 +34,7 @@
 			$this->err['desc'] = ' ';
 		}
 
-		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='Message-Boundary',$attachments='')
+		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='Message-Boundary',$attachments=array(), $receive_notification = false)
 		{
 			if ($from == '')
 			{
@@ -48,12 +48,12 @@
 			switch( $service )
 			{
 				case 'email':
-					return $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary='Message-Boundary',$attachments);
+					return $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary='Message-Boundary', $attachments, $receive_notification);
 					break;
 			}
 		}
 
-		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $ignored,$attachments)
+		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $ignored,$attachments, $receive_notification)
 		{
 			$smtp = createObject('phpgwapi.mailer_smtp');
 			$from_array = split('<', $from);
@@ -145,6 +145,10 @@
 			$smtp->Subject = $subject;
 			$smtp->Body    = $body;
 			$smtp->AddCustomHeader('X-Mailer: phpGroupWare (http://www.phpgroupware.org)');
+			if($receive_notification)
+			{
+				$smtp->AddCustomHeader("Disposition-Notification-To: {$smtp->From}");
+			}
 			$smtp->Port = $GLOBALS['phpgw_info']['server']['smtp_port'] ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
 			$smtp->Host 	= $GLOBALS['phpgw_info']['server']['smtp_server'];
 			$smtp->Encoding = '8bit';
@@ -161,9 +165,9 @@
 				$smtp->WordWrap = 76;
 			}
 
-			if (isset($attachments) && is_array($attachments))
+			if($attachments && is_array($attachments))
 			{
-				while(list($key,$value) = each($attachments))
+				foreach($attachments as $key => $value)
 				{
 					$smtp->AddAttachment
 					(

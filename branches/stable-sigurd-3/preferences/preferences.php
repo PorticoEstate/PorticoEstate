@@ -162,7 +162,7 @@
 			}
 			$def_text = ($def_text != '') ? lang('default') . " $def_text" : '';
 		}
-		$t->set_var('row_value',"<input name=\"${GLOBALS['type']}[$name]\" value=\"" . htmlentities($default) . "\"$options />$def_text");
+		$t->set_var('row_value',"<input name=\"${GLOBALS['type']}[$name]\" value=\"" . htmlentities($default, ENT_COMPAT, 'UTF-8') . "\"$options />$def_text");
 		$t->set_var('row_name',lang($label));
 		$GLOBALS['phpgw']->nextmatchs->template_alternate_row_class($t);
 
@@ -551,11 +551,18 @@
 	$error = '';
 	if ( phpgw::get_var('submit', 'bool', 'POST') )
 	{
+//_debug_array($_POST);die();
 		if ( !isset($session_data['notifys']) )
 		{
 			$session_data['notifys'] = array();
 		}
-		
+
+		$account_id = phpgw::get_var('account_id', 'int', 'POST');
+		if(is_admin() && $account_id)
+		{
+			$GLOBALS['phpgw']->preferences->set_account_id($account_id, true);
+		}		
+
 		/* Don't use a switch here, we need to check some permissions durring the ifs */
 		if ($GLOBALS['type'] == 'user' || !($GLOBALS['type']))
 		{
@@ -571,6 +578,11 @@
 		{
 			$error = process_array($GLOBALS['phpgw']->preferences->forced, $forced,$session_data['notifys']);
 		}
+
+		if(is_admin() && $account_id)
+		{
+			$GLOBALS['phpgw']->preferences->set_account_id($GLOBALS['phpgw_info']['user']['account_id'], true);
+		}		
 
 		if (!is_admin() || $error)
 		{
@@ -595,7 +607,15 @@
 		&& $GLOBALS['type'] == 'user' 
 		&& $appname == 'preferences')
 	{
-		$GLOBALS['phpgw']->redirect_link('/preferences/preferences.php', array('appname' => $appname) );
+		$GLOBALS['phpgw']->redirect_link('/preferences/preferences.php', array('appname' => $appname, 'account_id' => $account_id) );
+	}
+	if(is_admin())
+	{
+		$account_id = phpgw::get_var('account_id', 'int');
+		if($account_id)
+		{
+			$GLOBALS['phpgw']->preferences->set_account_id($account_id, true);
+		}
 	}
 
 	$GLOBALS['phpgw_info']['flags']['app_header'] = $appname == 'preferences' ?
@@ -665,11 +685,45 @@
 
 		switch($GLOBALS['type'])
 		{
-			case 'user':    $selected = 0; break;
-			case 'default': $selected = 1; break;
-			case 'forced':  $selected = 2; break;
+			case 'user':
+				$selected = 0;
+				$account_id = phpgw::get_var('account_id', 'int', 'REQUEST', 0);
+				$accounts_at_location = $GLOBALS['phpgw']->acl->get_user_list_right(1, 'run', $appname);
+
+				$account_list = "<form method='POST' action=''>";
+				$account_list .= '<table><tr><td><select name="account_id" onChange="this.form.submit();">';
+				$account_list .= "<option value=''>" . lang('select user') . '</option>';
+				foreach ( $accounts_at_location as $var => $entry )
+				{
+					$account_list .= "<option value='{$entry['account_id']}'";
+					if ($entry['account_id'] == $account_id)
+					{
+						$account_list .= ' selected';
+					}
+					$account_list .= "> {$entry['account_lastname']} {$entry['account_firstname']}</option>";
+				}
+				$account_list .= '</select>';
+				$account_list .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
+				$account_list .= '</td></tr></table></form>';
+
+				$t->set_var('select_user', $account_list);
+
+				if($account_id)
+				{
+					$t->set_var('account_id', "<input type='hidden' name='account_id' value='{$account_id}'>");
+				}
+
+			    break;
+
+			case 'default':
+				$selected = 1;
+				break;
+			case 'forced':
+				$selected = 2;
+				break;
 		}
 		$t->set_var('tabs',$GLOBALS['phpgw']->common->create_tabs($tabs,$selected));
+
 	}
 	$t->set_var('lang_submit', lang('save'));
 	$t->set_var('lang_cancel', lang('cancel'));

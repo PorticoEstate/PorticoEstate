@@ -2,9 +2,9 @@
 
 <!-- BEGIN form -->
 {tabs}
-
+{select_user}
 <form method="POST" action="{action_url}">
-
+{account_id}
 	<!-- BEGIN list -->
 	<table id="prefs_list">
 		<thead>

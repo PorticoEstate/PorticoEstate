@@ -214,7 +214,7 @@
 				}
 			}
 
-			$sql = "SELECT fm_tts_tickets.* FROM fm_tts_tickets"
+			$sql = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
@@ -247,6 +247,7 @@
 				(
 					'id'				=> (int) $this->db->f('id'),
 					'subject'			=> $this->db->f('subject',true),
+					'loc1_name'			=> $this->db->f('loc1_name',true),
 					'location_code'		=> $this->db->f('location_code'),
 					'user_id'			=> $this->db->f('user_id'),
 					'address'			=> $this->db->f('address',true),

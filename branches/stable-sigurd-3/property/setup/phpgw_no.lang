@@ -179,6 +179,8 @@ asynchronous timed services	property	no	Planlagte oppgaver
 async method	property	no	async metode
 async method has been saved	property	no	async metode er lagret
 async services	property	no	Planlagte oppgaver
+attach file	property	no	legg til vedlegg
+attachments	property	no	Vedlegg
 attribute	property	no	Verdier
 attribute has been edited	property	no	Attributt er rettet
 attribute has been saved	property	no	Attributt er lagret
@@ -922,6 +924,7 @@ list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
 list workorder	property	no	List arbeidsordre
 location	property	no	Lokalisering
+loc1_name	property	no	Navn
 location changed	property	no	Lokalisering er endret
 location code	property	no	Lokaliserings kode
 location_code	property	no	Lokaliserings kode

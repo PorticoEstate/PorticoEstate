@@ -371,8 +371,7 @@
 	if ( isset($prefs['property']['mainscreen_showapprovals_request'])
 		&& $prefs['property']['mainscreen_showapprovals_request'] == 'yes' )
 	{
-
-		$title = lang('approvals request');
+		$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title']? "{$prefs['property']['mainscreen_showapprovals_request_title']} ({$total_records})" : lang('approvals request') . " ({$total_records})";
 	
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
@@ -454,6 +453,29 @@
 				'link' => $entry['url']
 			);
 		}
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.ticket',
+		//	'id'				=> $id,
+			'responsible'		=> '',
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> '',
+			'created_by'		=> $accound_id
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+		foreach ($pending_approvals as $entry)
+		{
+			$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
+			$portalbox->data[] = array
+			(
+				'text' => "{$responsible}: Melding venter på godkjenning: {$entry['item_id']}",
+				'link' => $entry['url']
+			);
+		}
 		
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
@@ -463,9 +485,7 @@
 	if ( isset($prefs['property']['mainscreen_showapprovals'])
 		&& $prefs['property']['mainscreen_showapprovals'] == 'yes' )
 	{
-
-		$title = lang('approvals');
-	
+		$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title']? "{$prefs['property']['mainscreen_showapprovals_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
@@ -548,6 +568,30 @@
 				'link' => $entry['url']
 			);
 		}
+
+		$action_params = array
+		(
+			'appname'			=> 'property',
+			'location'			=> '.ticket',
+		//	'id'				=> $id,
+			'responsible'		=> $accound_id,
+			'responsible_type'  => 'user',
+			'action'			=> 'approval',
+			'deadline'			=> '',
+			'created_by'		=> '',
+		);
+
+		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+//		$portalbox->data = array();
+		foreach ($pending_approvals as $entry)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => 'Melding venter på godkjenning: ' . $entry['item_id'],
+				'link' => $entry['url']
+			);
+		}
 		
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
@@ -559,7 +603,7 @@
 	{
 
 		$title = lang('vendor reminder');
-	
+		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(

@@ -1443,7 +1443,7 @@ HTML;
 					if(isset($values['file_action']) && is_array($values['file_action']))
 					{
 						$bofiles	= CreateObject('property.bofiles');
-						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values);
+						$attachments = $bofiles->get_attachments("/workorder/{$workorder_id}/", $values['file_action']);
 						$attachment_log = lang('attachments') . ': ' . implode(', ',$values['file_action']);
 					}
 

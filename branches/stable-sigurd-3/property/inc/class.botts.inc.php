@@ -682,7 +682,7 @@
 					$address_element[] = array
 					(
 						'text' => $location_types[($i-1)]['name'],
-						'value'=> $location_data["loc{$i}_name"]
+						'value'=> $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
 					);
 				}
 
