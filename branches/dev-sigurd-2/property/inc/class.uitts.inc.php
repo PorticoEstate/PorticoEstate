@@ -597,6 +597,7 @@
 			$uicols['name'][$i++] = 'id';
 			$uicols['name'][$i++] = 'bgcolor';
 			$uicols['name'][$i++] = 'subject';
+			$uicols['name'][$i++] = 'loc1_name';
 			$uicols['name'][$i++] = 'location_code';
 			$uicols['name'][$i++] = 'address';
 //			$uicols['name'][$i++] = 'user';
