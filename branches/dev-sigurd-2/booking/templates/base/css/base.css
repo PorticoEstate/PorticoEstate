@@ -67,6 +67,11 @@ dl.form-col dd textarea.full-width {
     width: 33em;
     height: 10em;
 }
+dl.form dd textarea.threecol-width,
+dl.form-col dd textarea.threecol-width {
+    width: 58em;
+    height: 5em;
+}
 dl.form dd input[type="text"],  dl.form dd .autocomplete,
 dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
     width: 15em;
