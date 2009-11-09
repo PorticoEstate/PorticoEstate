@@ -11,6 +11,8 @@
 									'name' 			=> 	array(	'type'		=> 'string',
 																'query' 	=> true,
 																'required' 	=> true ),
+									'sort' 			=> 	array(	'type'		=> 'int',
+																'required' 	=> true),
 									'description'	=> 	array(	'type'		=> 'string',
 																'query' 	=> true,
 																'required' 	=> false),

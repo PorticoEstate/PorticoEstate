@@ -1981,3 +1981,18 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.82';
+	function booking_upgrade0_1_82()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_targetaudience ADD COLUMN sort INT NOT NULL DEFAULT 0;");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_agegroup ADD COLUMN sort INT NOT NULL DEFAULT 0;");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.83';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -83,6 +83,10 @@
 					'source' => self::link(array('menuaction' => 'booking.uiagegroup.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'sort',
+							'label' => lang('Order')
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Name'),
 							'formatter' => 'YAHOO.booking.formatLink'
@@ -128,9 +132,10 @@
 		public function add()
 		{
 			$errors = array();
+			$agegroup = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$agegroup = extract_values($_POST, array('name', 'description'));
+				$agegroup = extract_values($_POST, array('name', 'sort', 'description'));
 				$agegroup['active'] = true;
 				$errors = $this->bo->validate($agegroup);
 				if(!$errors)
@@ -140,8 +145,8 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			
 			$agegroup['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
+			array_set_default($agegroup, 'sort', '0');
 			self::render_template('agegroup_new', array('agegroup' => $agegroup));
 		}
 
@@ -157,7 +162,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$resource = array_merge($resource, extract_values($_POST, array('name', 'description', 'active')));
+				$resource = array_merge($resource, extract_values($_POST, array('name', 'sort', 'description', 'active')));
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{

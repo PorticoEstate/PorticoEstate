@@ -39,6 +39,7 @@
 			'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => False),
 					'name' => array('type' => 'text', 'nullable' => False),
+					'sort' => array('type' => 'int', 'nullable' => False, 'default'=> 0), 
 					'description' => array('type' => 'text', 'nullable' => False),
 					'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
 				),
@@ -356,6 +357,7 @@
 			'fd' => array( 
 				'id' => array('type' => 'auto', 'nullable' => False), 
 				'name' => array('type' => 'text', 'nullable' => False), 
+				'sort' => array('type' => 'int', 'nullable' => False, 'default'=> 0), 
 				'description' => array('type' => 'text', 'nullable' => False), 
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1), 
 			), 

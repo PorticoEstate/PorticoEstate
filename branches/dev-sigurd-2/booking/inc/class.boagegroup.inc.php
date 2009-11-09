@@ -11,7 +11,7 @@
 		
 		function fetch_age_groups()
 		{
-			return $this->so->read(array('filters'=>array('active'=>'1')));
+			return $this->so->read(array('filters'=>array('active'=>'1'), 'sort'=>'sort'));
 		}
 
 		// Extract agegroup info from _POST into $data

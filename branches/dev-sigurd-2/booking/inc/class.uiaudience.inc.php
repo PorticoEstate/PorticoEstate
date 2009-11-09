@@ -99,6 +99,10 @@
 					'source' => self::link(array('menuaction' => 'booking.uiaudience.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'sort',
+							'label' => lang('Order')
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Target Audience'),
 							'formatter' => 'YAHOO.booking.formatLink'
@@ -146,9 +150,10 @@
 		public function add()
 		{
 			$errors = array();
+			$audience = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$audience = extract_values($_POST, array('name', 'description'));
+				$audience = extract_values($_POST, array('name', 'sort', 'description'));
 				$audience['active'] = 1;
 				$errors = $this->bo->validate($audience);
 				if(!$errors)
@@ -157,6 +162,7 @@
 					$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
 				}
 			}
+			array_set_default($audience, 'sort', '0');
 			$this->flash_form_errors($errors);
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
 			self::render_template('audience_new', array('audience' => $audience));
@@ -174,7 +180,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$audience = array_merge($audience, extract_values($_POST, array('name', 'description', 'active')));
+				$audience = array_merge($audience, extract_values($_POST, array('name', 'sort', 'description', 'active')));
 				$errors = $this->bo->validate($audience);
 				if(!$errors)
 				{

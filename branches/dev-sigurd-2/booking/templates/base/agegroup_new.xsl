@@ -14,6 +14,11 @@
                 </input>
             </dd>
 
+            <dt><label for="field_sort"><xsl:value-of select="php:function('lang', 'Sort order')" /></label></dt>
+            <dd>
+                <input id="field_sort" name="sort" type="text" value="{agegroup/sort}"/>
+            </dd>
+
             <dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
             <dd>
                 <textarea cols="5" rows="5" id="field_description" name="description"><xsl:value-of select="agegroup/description"/></textarea>
