@@ -107,10 +107,16 @@
 		'<?php echo $list_id ?>',
 		new Array(<?php
 			if(isset($related)){
-				foreach($related as $r){
-					echo "\"".$r."\"";
+					$tot_related = count($related);
+					$count_related = 0;
+					foreach($related as $r){
+						$count_related++;
+						echo "\"".$r."\"";
+						if($count_related < $tot_related){
+							echo ",";
+						}
+					}
 				}
-			}
 		?>),
 		'<?php echo $editor_action ?>'
 	);

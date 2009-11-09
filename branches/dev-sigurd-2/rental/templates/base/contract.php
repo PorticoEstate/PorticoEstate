@@ -496,13 +496,17 @@
 		<div id="price">
 			<h3><?php echo lang('selected_price_items') ?></h3>
 			<?php
-				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id()); 
-			?>
-			<strong><?php echo lang('total_price') ?>:</strong> <?php echo number_format($total_price, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : ' NOK';?> <br /><br />
+				$list_form = false;
+				$list_id = 'total_price';
+				unset($related);
+				$url_add_on = '&amp;contract_id='.$contract->get_id();
+				unset($extra_cols);
+
+				include('total_price_partial.php'); ?><br/>
 		 	<?php
 				$list_form = false;
 				$list_id = 'included_price_items';
-				$related = array('not_included_price_items');
+				$related = array('not_included_price_items','total_price');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
 					array("key" => "area", "label" => lang('area'), "index" => 4, "formatter" => "formatArea"),
@@ -531,7 +535,7 @@
 			<?php
 				$list_form = true;
 				$list_id = 'not_included_price_items';
-				$related = array('included_price_items');
+				$related = array('included_price_items','total_price');
 				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
 				unset($extra_cols);
 				unset($editors);

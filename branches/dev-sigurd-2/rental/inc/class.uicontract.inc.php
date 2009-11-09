@@ -32,7 +32,8 @@
 			'add_price_item'		=> true,
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
-			'download'              => true
+			'download'              => true,
+			'get_total_price'			=> true
 		);
 
 		public function __construct()
@@ -555,6 +556,13 @@
 				return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
 			}
 			return false;
+		}
+		public function get_total_price(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$total_price =  rental_socontract_price_item::get_instance()->get_total_price($contract_id);
+			$result_array = array('total_price' => $total_price);
+			$result_data = array('results' => $result_array, 'total_records' => 1);
+			return $this->yui_results($result_data, 'total_records', 'results');
 		}
 	}
 ?>
