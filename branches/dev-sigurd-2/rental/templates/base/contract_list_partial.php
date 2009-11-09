@@ -11,7 +11,7 @@
 	);
 
 	var columnDefs = [{
-		key: "id",
+		key: "old_contract_id",
 		label: "<?php echo lang('contract_id') ?>",
 	    sortable: true
 	},
