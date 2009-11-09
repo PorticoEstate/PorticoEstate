@@ -417,6 +417,21 @@
 						}
 						?>
 					</dd>
+					<dt>
+						<label for="name"><?php echo lang('due_date') ?></label>
+					</dt>
+					<dd>
+						<?php
+							$due_date = $contract->get_due_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_due_date()) : '-';
+							$due_date_yui = $contract->get_due_date() ? date('Y-m-d', $contract->get_due_date()) : '';
+							if ($editable) {
+								echo $GLOBALS['phpgw']->yuical->add_listener('due_date', $due_date);
+							} else {
+								echo $due_date;
+							}
+						?>
+						<br/>
+					</dd>
 				</dl>
                 <dl class="proplist-col">
                     <dt>

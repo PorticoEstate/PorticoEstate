@@ -278,6 +278,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_term_id($this->unmarshal($this->db->f('term_id'),'int'));
 			$contract->set_security_type($this->unmarshal($this->db->f('security_type'),'int'));
 			$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'),'string'));
+			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
