@@ -154,6 +154,13 @@
 					'image'	=> array('property', 'location'),
 				),
 				
+				'mailing' => array
+				(
+					'text'	=> lang('Send e-mail'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uisend_email.index')),
+					'image'	=> array('property', 'location'),
+				),
+				
 				'settings' => array
 				(
 					'text'	=> lang('Settings'),

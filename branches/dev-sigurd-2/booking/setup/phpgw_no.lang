@@ -1,5 +1,7 @@
 current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
+-- select a building --	booking	no	Velg en bygning
+-- select a season --	booking	no	Velg en sesong
 1. why?	booking	no	1. Hvorfor?
 2. where?	booking	no	2. Hvor?
 3. when?	booking	no	3. Når?
@@ -301,3 +303,10 @@ Invalid customer type	booking	no	Ugyldig kundetype
 Nothing to export	booking	no	Fant ingenting å eksportere
 Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
 The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
+Send e-mail	booking	no	Send e-post
+All fields are required	booking	no	Alle feltene må fylles ut
+Send e-mails	booking	no	Send e-post
+Recipients	booking	no	Mottakere
+Mail subject	booking	no	Emne
+Mail body	booking	no	Melding
+The emails were sent successfully	booking	no	E-postene ble sendt uten feil
