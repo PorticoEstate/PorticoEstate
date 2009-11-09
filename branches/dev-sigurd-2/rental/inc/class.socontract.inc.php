@@ -501,14 +501,23 @@ class rental_socontract extends rental_socommon
 	 */
 	function add(&$contract)
 	{
+        
+        $contract->set_id(self::get_new_id($contract->get_old_contract_id()));
+
 		// These are the columns we know we have or that are nullable
-		$cols = array('location_id', 'term_id');
+		$cols = array('location_id', 'term_id');//
 		
 		// Start making a db-formatted list of values of the columns we have to have
 		$values = array(
 			$this->marshal($contract->get_location_id(), 'int'),
 			$this->marshal($contract->get_term_id(), 'int')
 		);
+
+        // Set ID according to old contract id
+        $cols[] = 'id';
+        $values[] = $this->marshal($contract->get_id(), 'int');
+
+
 		
 		// Check values that can be null before trying to add them to the db-pretty list
 		if ($contract->get_billing_start_date()) {
@@ -569,8 +578,6 @@ class rental_socontract extends rental_socommon
 		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
 		
-		$contract_id = $this->db->get_last_insert_id('rental_contract', 'id');
-		$contract->set_id($contract_id);
 		return $contract;
 	}
 	
@@ -679,5 +686,15 @@ class rental_socontract extends rental_socommon
 		}
 		return false;
 	}
+
+    /**
+     * Convert old contract ID to new format
+     *
+     * @param $cid Old contract ID
+     * @return int New contract ID
+     */
+    public static function get_new_id($old) {
+        return (int) preg_replace('/[a-z]/i', '', $old);
+    }
 }
 ?>

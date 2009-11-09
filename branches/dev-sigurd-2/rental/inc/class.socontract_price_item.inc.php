@@ -96,7 +96,7 @@ class rental_socontract_price_item extends rental_socommon
 	{
 		$price = $price_item->get_price() ? $price_item->get_price() : 0;
 		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
-		
+
 		// Build a db-friendly array of the composite object
 		$values = array(
 			$price_item->get_price_item_id(),
@@ -123,6 +123,8 @@ class rental_socontract_price_item extends rental_socommon
 		}
 		
 		$q ="INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+        error_log("Querying: $q");
+
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_contract_price_item", 'id');
 		
@@ -158,7 +160,9 @@ class rental_socontract_price_item extends rental_socommon
 			$this->marshal($price_item->get_date_start(), 'int'),
 			$this->marshal($price_item->get_date_end(), 'int')
 		);
-				
+
+        error_log("Querying: ".'UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id");
+
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;

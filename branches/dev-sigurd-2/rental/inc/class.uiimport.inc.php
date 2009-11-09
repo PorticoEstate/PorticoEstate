@@ -341,8 +341,8 @@
 				$date_end = $this->decode($data[4]);
 				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
-				
-				$contract->set_old_contract_id($this->decode($data[5]));
+
+                $contract->set_old_contract_id($this->decode($data[5]));
 				
 				$term = $data[10];
 				switch ($term) {
@@ -402,7 +402,7 @@
 						$socontract->set_payer($contract->get_id(), $party_id);
 					}
 					
-					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . ")";
+					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
 				} else {
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
 				}
@@ -475,13 +475,13 @@
 					$price_item->set_title($admin_price_item->get_title());
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
 					$price_item->set_is_area($admin_price_item->is_area());
-					//$price_item->set_price($admin_price_item->get_price());
                     $price_item->set_price($detail_price_items[$facilit_id]['price']);
 					
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
+                        $this->messages[] = "Price item '$facilit_id'/'{$admin_price_item->get_id()}' is area based. Area is '{$detail_price_items[$facilit_id]['amount']}'";
 						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
@@ -495,8 +495,15 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					$socontract_price_item->store($price_item);
-					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
+                    error_log('Storing price item: '.$price_item->get_title().' '.$detail_price_items[$facilit_id]['amount'].'|'.$detail_price_items[$facilit_id]['price']);
+					if($socontract_price_item->store($price_item)) {
+                        error_log('Success!');
+                        $this->messages[] = "Successfully imported price item " . $price_item->get_title();
+                    }
+                    else {
+                        error_log('FAIL!');
+                        $this->warning[] = "Could not store price item " . $price_item->get_title();
+                    }
 				} else {
 					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
