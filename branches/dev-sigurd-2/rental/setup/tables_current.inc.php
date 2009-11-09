@@ -164,7 +164,8 @@
 					'url' =>            array('type' => 'varchar','precision' => '255','nullable' => true),
 					'account_number' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'reskontro' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
-					'location_id' =>    array('type' => 'int', 'precision' => '4', 'nullable' => true)
+					'location_id' =>    array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'result_unit_number' => array('type' => 'varchar','precision' => '255','nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),

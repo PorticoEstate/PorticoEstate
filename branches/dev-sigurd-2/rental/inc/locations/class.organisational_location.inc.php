@@ -19,4 +19,9 @@ abstract class organisational_location
 	
 	public abstract  static function get_identifier_from_name(string $name);
 	
+	public function get_level_identifier()
+	{
+		return $this->get_identifier_from_name($this->name);
+	}
+	
 }

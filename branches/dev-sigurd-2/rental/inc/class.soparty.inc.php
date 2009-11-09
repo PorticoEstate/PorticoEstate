@@ -5,6 +5,7 @@ phpgw::import_class('rental.socommon');
 include_class('rental', 'agresso_cs15', 'inc/model/');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
+include_class('rental', 'result_unit', 'inc/locations/');
 
 class rental_soparty extends rental_socommon
 {
@@ -84,6 +85,10 @@ class rental_soparty extends rental_socommon
 					break;
 				case "reskontro":
 					$like_clauses[] = "party.reskontro $this->like $like_pattern";
+					break;
+				case "result_unit_number":
+					$like_clauses[] = "party.result_unit_number $this->like $like_pattern";
+					break;
 				case "all":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
@@ -170,6 +175,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.account_number';
 			$columns[] = 'party.reskontro';
 			$columns[] = 'party.location_id as org_location_id';
+			$columns[] = 'party.result_unit_number';
 			$columns[] = 'contract.location_id as resp_location_id';
 			$cols = implode(',',$columns);
 		}
@@ -218,6 +224,19 @@ class rental_soparty extends rental_socommon
 	function update($party)
 	{
 		$id = intval($party->get_id());
+		
+		
+		$location_id = $this->marshal($party->get_location_id(), 'int');
+		
+		if($location_id)
+		{
+			$loc = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$name = $loc['location'];
+			$level_identifier = result_unit::get_identifier_from_name($name);
+		}
+		
+		$result_unit_number = $this->marshal($level_identifier, 'string');
+		
 		$values = array(
 			'identifier = '		. $this->marshal($party->get_identifier(), 'string'),
 			'first_name = '     . $this->marshal($party->get_first_name(), 'string'),
@@ -238,9 +257,10 @@ class rental_soparty extends rental_socommon
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
 			'is_active = '      . $this->marshal(($party->is_active() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
-			'location_id = '	. $this->marshal($party->get_location_id(), 'int')
+			'location_id = '	. $location_id,
+			'result_unit_number = ' . $result_unit_number
 		);
-
+		
 		$result = $this->db->query('UPDATE rental_party SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 			
 		return isset($result);

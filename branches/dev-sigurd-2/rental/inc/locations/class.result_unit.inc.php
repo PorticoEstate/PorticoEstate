@@ -2,9 +2,9 @@
 
 class result_unit extends organisational_location
 {
-	public static $pattern = '.ORG.BK.__.__';
+	public static $pattern = '.ORG.BK.__.____';
 	protected static $start_index = 11;
-	protected static $length_of_identifier = 2;
+	protected static $length_of_identifier = 4;
 	
 	public function __construct(int $location_id, string $name, string $description)
 	{

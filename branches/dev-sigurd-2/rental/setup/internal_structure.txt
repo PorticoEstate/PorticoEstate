@@ -1,0 +1,367 @@
+1;Byrådsleders avdeling;0130;Seksjon informasjon
+1;Byrådsleders avdeling;0133;Byrådsleders avdeling, stab
+1;Byrådsleders avdeling;0134;Kommuneadvokaten
+1;Byrådsleders avdeling;0136;Seksjon for samfunnssikkerhet og beredskap
+1;Byrådsleders avdeling;0137;Erstatningsutvalgets sekretariat
+1;Byrådsleders avdeling;0138;Torget
+1;Byrådsleders avdeling;0780;Bergen brannvesen
+2;Byrådsavd. for finans, konkurranse og eierskap;0210;BFKE - Kommunaldirektørens stab
+2;Byrådsavd. for finans, konkurranse og eierskap;0211;BFKE - Økonomiseksjonen
+2;Byrådsavd. for finans, konkurranse og eierskap;0212;Vikarservice
+2;Byrådsavd. for finans, konkurranse og eierskap;0213;IKT Drift
+2;Byrådsavd. for finans, konkurranse og eierskap;0214;Seksjon for konkurranse og utvikling
+2;Byrådsavd. for finans, konkurranse og eierskap;0215;Kemneren
+2;Byrådsavd. for finans, konkurranse og eierskap;0216;BFKE Oppfølgingsenheten
+2;Byrådsavd. for finans, konkurranse og eierskap;0218;BFKE - Fellesposter
+2;Byrådsavd. for finans, konkurranse og eierskap;0220;Lønns- og regnskapssenteret
+2;Byrådsavd. for finans, konkurranse og eierskap;0231;Arbeidsgiver/Forhandling
+2;Byrådsavd. for finans, konkurranse og eierskap;0235;Overformynderiet
+2;Byrådsavd. for finans, konkurranse og eierskap;0250;HR-seksjonen
+2;Byrådsavd. for finans, konkurranse og eierskap;0251;Yrkesopplæring
+2;Byrådsavd. for finans, konkurranse og eierskap;0280;Forliksrådet
+2;Byrådsavd. for finans, konkurranse og eierskap;0285;Bergen byarkiv
+2;Byrådsavd. for finans, konkurranse og eierskap;0289;Bergen Kommunale Bygg
+2;Byrådsavd. for finans, konkurranse og eierskap;0710;Bydrift
+3;Byrådsavd. for helse og inkludering;0135;Kontor for skjenkesaker
+3;Byrådsavd. for helse og inkludering;0300;BHI - Kommunaldirektørens stab
+3;Byrådsavd. for helse og inkludering;0301;BHI - sentrale tiltak
+3;Byrådsavd. for helse og inkludering;0310;Helse og sosial - fra bydelene
+3;Byrådsavd. for helse og inkludering;0370;Helsevernetaten
+3;Byrådsavd. for helse og inkludering;0373;Bergen legevakt
+3;Byrådsavd. for helse og inkludering;0374;MOKS
+3;Byrådsavd. for helse og inkludering;0375;Strax-huset
+3;Byrådsavd. for helse og inkludering;0376;Barnevernvakten
+3;Byrådsavd. for helse og inkludering;0377;Utekontakten
+3;Byrådsavd. for helse og inkludering;0379;Gjeldsrådgivere
+3;Byrådsavd. for helse og inkludering;0380;Private institusjoner for eldre
+3;Byrådsavd. for helse og inkludering;0381;Private virksomheter for utviklingshemmede
+3;Byrådsavd. for helse og inkludering;1130;Barneverntjenesten i Arna
+3;Byrådsavd. for helse og inkludering;1140;Helsestasjon og skolehelse i Arna
+3;Byrådsavd. for helse og inkludering;1510;Forvaltningsenheten i Arna
+3;Byrådsavd. for helse og inkludering;1514;Botjenester for utviklingshemmede i Arna
+3;Byrådsavd. for helse og inkludering;1515;Hjemmesykepleien i Arna
+3;Byrådsavd. for helse og inkludering;1540;Avdeling for psykisk helse - Arna
+3;Byrådsavd. for helse og inkludering;1552;Ergo- og fysioterapitjenesten i Arna
+3;Byrådsavd. for helse og inkludering;1554;NAV kommune - Arna
+3;Byrådsavd. for helse og inkludering;1571;Arna helseheim
+3;Byrådsavd. for helse og inkludering;2510;Hjelpemiddelhuset
+3;Byrådsavd. for helse og inkludering;2522;Sosialtjenesten i Bergenhus
+3;Byrådsavd. for helse og inkludering;2523;Barneverntjenesten i Bergenhus
+3;Byrådsavd. for helse og inkludering;2531;Helsestasjon og skolehelse i Bergenhus
+3;Byrådsavd. for helse og inkludering;2541;Ergo- og fysioterapitjenesten i Bergenhus
+3;Byrådsavd. for helse og inkludering;2560;Avdeling for psykisk helse - Bergenhus
+3;Byrådsavd. for helse og inkludering;2570;Botjenester for utviklingshemmede i Bergenhus
+3;Byrådsavd. for helse og inkludering;2600;Forvaltningsenheten i Bergenhus
+3;Byrådsavd. for helse og inkludering;2610;Hjemmesykepleien i Sentrum
+3;Byrådsavd. for helse og inkludering;2630;Hjemmesykepleien i Sandviken
+3;Byrådsavd. for helse og inkludering;2650;Kalfaret sykehjem
+3;Byrådsavd. for helse og inkludering;2651;Enkers aldershjem
+3;Byrådsavd. for helse og inkludering;2660;Engensenteret
+3;Byrådsavd. for helse og inkludering;2670;Ladegården sykehjem
+3;Byrådsavd. for helse og inkludering;3500;Helsestasjon og skolehelse i Fana
+3;Byrådsavd. for helse og inkludering;3510;Barneverntjenesten i Fana
+3;Byrådsavd. for helse og inkludering;3520;Avdeling for psykisk helse - Fana
+3;Byrådsavd. for helse og inkludering;3530;Storetveit sykehjem
+3;Byrådsavd. for helse og inkludering;3531;Øvsttunheimen sykehjem
+3;Byrådsavd. for helse og inkludering;3532;Hordnestunet
+3;Byrådsavd. for helse og inkludering;3533;Skjoldtunet sykehjem
+3;Byrådsavd. for helse og inkludering;3551;Hjemmesykepleien i  Fana
+3;Byrådsavd. for helse og inkludering;3552;Forvaltningsenheten i Fana
+3;Byrådsavd. for helse og inkludering;3553;Botjenester for utviklingshemmede i Fana
+3;Byrådsavd. for helse og inkludering;3562;Kompetanseenhet for utviklingshemmede, sone sør
+3;Byrådsavd. for helse og inkludering;3570;Sosialtjenesten i Fana
+3;Byrådsavd. for helse og inkludering;3590;Ergo- og fysioterapitjenesten i Fana
+3;Byrådsavd. for helse og inkludering;4510;Hjemmesykepleien i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4511;Forvaltningsenheten i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4512;Botjenester for utviklingshemmede i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4514;Avdeling for psykisk helse - Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4521;Fyllingsdalen sykehjem
+3;Byrådsavd. for helse og inkludering;4525;Løvåsen sykehjem
+3;Byrådsavd. for helse og inkludering;4531;NAV kommune - Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4532;Barneverntjenesten i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4540;Avlastningstjenester for utviklingshemmede
+3;Byrådsavd. for helse og inkludering;4541;Helsestasjon og skolehelse i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;4561;Ergo- og fysioterapitjenesten i Fyllingsdalen
+3;Byrådsavd. for helse og inkludering;5211;Laksevåg sosialtjeneste
+3;Byrådsavd. for helse og inkludering;5212;Ergo- og fysioterapitjenesten i Laksevåg
+3;Byrådsavd. for helse og inkludering;5220;Soltun aldershjem
+3;Byrådsavd. for helse og inkludering;5230;Hjemmesykepleien i Laksevåg
+3;Byrådsavd. for helse og inkludering;5251;Frieda  Fasmers Minne
+3;Byrådsavd. for helse og inkludering;5252;Lyngbøtunet
+3;Byrådsavd. for helse og inkludering;5300;Botjenester for utviklingshemmede i Laksevåg
+3;Byrådsavd. for helse og inkludering;5320;Kompetanseenhet for utviklingshemmede, sone vest
+3;Byrådsavd. for helse og inkludering;5350;Dagtjenester for utviklingshemmede
+3;Byrådsavd. for helse og inkludering;5400;Forvaltningsenheten i Laksevåg
+3;Byrådsavd. for helse og inkludering;5600;Avdeling for psykisk helse - Laksevåg
+3;Byrådsavd. for helse og inkludering;5700;Barneverntjenesten Laksevåg
+3;Byrådsavd. for helse og inkludering;5800;Helsestasjon og skolehelse i Laksevåg
+3;Byrådsavd. for helse og inkludering;6161;Barneverntjenesten i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6171;Helsestasjon og skolehelse i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6202;Forvaltningsenheten i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6210;Hjemmesykepleien i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6231;Ergo- og fysioterapitjenesten i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6240;NAV kommune - Ytrebygda
+3;Byrådsavd. for helse og inkludering;6510;Botjenester for utviklingshemmede i Ytrebygda
+3;Byrådsavd. for helse og inkludering;6550;Mildeheimen sykehjem
+3;Byrådsavd. for helse og inkludering;6700;Avdeling for psykisk helse - Ytrebygda
+3;Byrådsavd. for helse og inkludering;7020;Årstad servicesenter
+3;Byrådsavd. for helse og inkludering;7270;Helsestasjon og skolehelse i Årstad
+3;Byrådsavd. for helse og inkludering;7280;Barneverntjenesten i Årstad
+3;Byrådsavd. for helse og inkludering;7320;NAV kommune - Årstad
+3;Byrådsavd. for helse og inkludering;7330;Botreningssenteret på Gyldenpris
+3;Byrådsavd. for helse og inkludering;7341;Botjenester for utviklingshemmede i Årstad
+3;Byrådsavd. for helse og inkludering;7360;Ergo- og fysioterapitjenesten i Årstad
+3;Byrådsavd. for helse og inkludering;7370;Avdeling for psykisk helse - Årstad
+3;Byrådsavd. for helse og inkludering;7531;Forvaltningsenheten i  Årstad
+3;Byrådsavd. for helse og inkludering;7532;Hjemmesykepleien i Landås
+3;Byrådsavd. for helse og inkludering;7533;Hjemmesykepleien i Solheim
+3;Byrådsavd. for helse og inkludering;7551;Florida sykehjem
+3;Byrådsavd. for helse og inkludering;7552;Gullstøltunet
+3;Byrådsavd. for helse og inkludering;7553;Kolstihagen sykehjem
+3;Byrådsavd. for helse og inkludering;7554;Slettemarken sykehjem
+3;Byrådsavd. for helse og inkludering;7558;Fantoft omsorgssenter
+3;Byrådsavd. for helse og inkludering;7559;Gullstøltunet kjøkken
+3;Byrådsavd. for helse og inkludering;8510;Barneverntjenesten i Åsane
+3;Byrådsavd. for helse og inkludering;8513;Fengselshelsetjenesten
+3;Byrådsavd. for helse og inkludering;8514;Helsestasjon og skolehelse i Åsane
+3;Byrådsavd. for helse og inkludering;8515;Ergo- og fysioterapitjenesten i Åsane
+3;Byrådsavd. for helse og inkludering;8520;Myrsæter bo- og rehabiliteringssenter
+3;Byrådsavd. for helse og inkludering;8530;Furuhaugen bo- og avlastningssenter
+3;Byrådsavd. for helse og inkludering;8532;Sosialtjenesten i Åsane
+3;Byrådsavd. for helse og inkludering;8543;Åstveit sykehjem
+3;Byrådsavd. for helse og inkludering;8545;Ulset sykehjem
+3;Byrådsavd. for helse og inkludering;8556;Avdeling for psykisk helse - Åsane
+3;Byrådsavd. for helse og inkludering;8560;Midtbygda sjukeheim
+3;Byrådsavd. for helse og inkludering;8571;Botjenester for utviklingshemmede i Åsane - sone 1
+3;Byrådsavd. for helse og inkludering;8572;Botjenester for utviklingshemmede i Åsane - sone 2
+3;Byrådsavd. for helse og inkludering;8580;Forvaltningsenheten i Åsane
+3;Byrådsavd. for helse og inkludering;8590;Hjemmesykepleien i Åsane
+4;Byrådsavd. for barnehage og skole;0401;Politisk sekretariat
+4;Byrådsavd. for barnehage og skole;0409;Økonomi sentrale poster
+4;Byrådsavd. for barnehage og skole;0411;Private barnehager
+4;Byrådsavd. for barnehage og skole;0413;Private barneparker
+4;Byrådsavd. for barnehage og skole;0419;Nedlagte ansvarssteder
+4;Byrådsavd. for barnehage og skole;0450;Fagavdeling barnehage og skole
+4;Byrådsavd. for barnehage og skole;0453;Bergen Voksenopplæring
+4;Byrådsavd. for barnehage og skole;0454;Nygård skole
+4;Byrådsavd. for barnehage og skole;0455;Syns- og audiopedagogisk tjeneste
+4;Byrådsavd. for barnehage og skole;0456;Hålandsdalen leirskole
+4;Byrådsavd. for barnehage og skole;1221;Ytre Arna barne og ungdomskole
+4;Byrådsavd. for barnehage og skole;1222;Haugland skole
+4;Byrådsavd. for barnehage og skole;1223;Ådnamarka skole
+4;Byrådsavd. for barnehage og skole;1224;Indre Arna skole
+4;Byrådsavd. for barnehage og skole;1225;Garnes barneskole
+4;Byrådsavd. for barnehage og skole;1226;Garnes ungdomsskole
+4;Byrådsavd. for barnehage og skole;1228;Trengereid skole
+4;Byrådsavd. for barnehage og skole;1229;Lone skole
+4;Byrådsavd. for barnehage og skole;1231;Ytre Arna barnehage
+4;Byrådsavd. for barnehage og skole;1232;Bogane barnehage
+4;Byrådsavd. for barnehage og skole;1233;Arnatveit barnehage
+4;Byrådsavd. for barnehage og skole;1234;Arna familiebarnehage
+4;Byrådsavd. for barnehage og skole;1250;PPT i Arna
+4;Byrådsavd. for barnehage og skole;2221;Christi Krybbe skole
+4;Byrådsavd. for barnehage og skole;2222;Haukeland skole
+4;Byrådsavd. for barnehage og skole;2223;Hellen skole
+4;Byrådsavd. for barnehage og skole;2224;Krohnengen skole
+4;Byrådsavd. for barnehage og skole;2225;Møhlenpris skole
+4;Byrådsavd. for barnehage og skole;2226;Nordnes skole
+4;Byrådsavd. for barnehage og skole;2227;Rothaugen skole
+4;Byrådsavd. for barnehage og skole;2231;Nygårdsparken barnehage
+4;Byrådsavd. for barnehage og skole;2250;PPT i Bergenhus
+4;Byrådsavd. for barnehage og skole;2290;Alrekstad skole
+4;Byrådsavd. for barnehage og skole;2312;Øyjorden barnehage
+4;Byrådsavd. for barnehage og skole;2313;Mulesvingen barnehage
+4;Byrådsavd. for barnehage og skole;2322;Solbakken barnehage
+4;Byrådsavd. for barnehage og skole;2323;Kalfarveien barnehage
+4;Byrådsavd. for barnehage og skole;2324;Granebo Naturbarnehage
+4;Byrådsavd. for barnehage og skole;2325;Klosteret barnehage
+4;Byrådsavd. for barnehage og skole;2326;Marken barnehage
+4;Byrådsavd. for barnehage og skole;2327;Fredriksberg barnehage
+4;Byrådsavd. for barnehage og skole;2329;Rosetårnet barnehage
+4;Byrådsavd. for barnehage og skole;3220;Helldal skole
+4;Byrådsavd. for barnehage og skole;3221;Kaland/Samdal skole
+4;Byrådsavd. for barnehage og skole;3222;Kirkevoll skole
+4;Byrådsavd. for barnehage og skole;3223;Krokeide skole
+4;Byrådsavd. for barnehage og skole;3224;Midtun skole
+4;Byrådsavd. for barnehage og skole;3225;Nattland skole
+4;Byrådsavd. for barnehage og skole;3226;Nordvik skole
+4;Byrådsavd. for barnehage og skole;3227;Paradis skole
+4;Byrådsavd. for barnehage og skole;3228;Riple skole
+4;Byrådsavd. for barnehage og skole;3230;Skjold barnehage
+4;Byrådsavd. for barnehage og skole;3231;Ulsmåg barnehage
+4;Byrådsavd. for barnehage og skole;3232;Sandalsbotn barnehage
+4;Byrådsavd. for barnehage og skole;3233;Kloppedalsveien barnehage
+4;Byrådsavd. for barnehage og skole;3234;Idavollen barnehage
+4;Byrådsavd. for barnehage og skole;3235;Vallalia barnehage
+4;Byrådsavd. for barnehage og skole;3236;Apeltun barnehage
+4;Byrådsavd. for barnehage og skole;3237;Storetveit barnehage
+4;Byrådsavd. for barnehage og skole;3238;Rådalslien barnehage
+4;Byrådsavd. for barnehage og skole;3240;Skjold skole
+4;Byrådsavd. for barnehage og skole;3241;Smørås skole
+4;Byrådsavd. for barnehage og skole;3242;Ulsmåg skole
+4;Byrådsavd. for barnehage og skole;3243;Kringlebotn skole
+4;Byrådsavd. for barnehage og skole;3244;Hop oppveksttun skole
+4;Byrådsavd. for barnehage og skole;3245;Slåtthaug skole
+4;Byrådsavd. for barnehage og skole;3246;Storetveit skole
+4;Byrådsavd. for barnehage og skole;3247;Apeltun skole
+4;Byrådsavd. for barnehage og skole;3248;Tveiterås skole
+4;Byrådsavd. for barnehage og skole;3249;Rådalslien skole
+4;Byrådsavd. for barnehage og skole;3250;PPT i Fana
+4;Byrådsavd. for barnehage og skole;4210;Bønes skole
+4;Byrådsavd. for barnehage og skole;4211;Lyshovden oppveksttun - skole
+4;Byrådsavd. for barnehage og skole;4212;Løvås skole
+4;Byrådsavd. for barnehage og skole;4213;Sælen oppveksttun skole
+4;Byrådsavd. for barnehage og skole;4214;Varden skole
+4;Byrådsavd. for barnehage og skole;4215;Seljedalen skole
+4;Byrådsavd. for barnehage og skole;4216;Fjellsdalen skole
+4;Byrådsavd. for barnehage og skole;4220;Lynghaug skole
+4;Byrådsavd. for barnehage og skole;4221;Ortun skole
+4;Byrådsavd. for barnehage og skole;4230;Bønes barnehage
+4;Byrådsavd. for barnehage og skole;4231;Bjørgedalen barnehage
+4;Byrådsavd. for barnehage og skole;4232;Brinken barnehage
+4;Byrådsavd. for barnehage og skole;4234;Gullstølsbotn barnehage
+4;Byrådsavd. for barnehage og skole;4236;Sælen oppveksttun barnehage
+4;Byrådsavd. for barnehage og skole;4238;Nebbestølen barnehage
+4;Byrådsavd. for barnehage og skole;4239;Seljedalen barnehage
+4;Byrådsavd. for barnehage og skole;4241;PPT i Fyllingsdalen
+4;Byrådsavd. for barnehage og skole;4242;Løvås oppveksttun - barnehage
+4;Byrådsavd. for barnehage og skole;4243;Lyshovden oppvekstun - barnehage
+4;Byrådsavd. for barnehage og skole;4273;Myrholtet barnehage
+4;Byrådsavd. for barnehage og skole;5111;Alvøen skole
+4;Byrådsavd. for barnehage og skole;5112;Bjørndalsskogen skole
+4;Byrådsavd. for barnehage og skole;5113;Damsgård skole
+4;Byrådsavd. for barnehage og skole;5114;Holen skole
+4;Byrådsavd. for barnehage og skole;5115;Loddefjord skole
+4;Byrådsavd. for barnehage og skole;5116;Mathopen skole
+4;Byrådsavd. for barnehage og skole;5117;Nygårdslien skole
+4;Byrådsavd. for barnehage og skole;5118;Vadmyra skole
+4;Byrådsavd. for barnehage og skole;5120;Olsvik barnehage
+4;Byrådsavd. for barnehage og skole;5121;Grøntulien barnehage
+4;Byrådsavd. for barnehage og skole;5122;Haugatun barnehage
+4;Byrådsavd. for barnehage og skole;5123;Laksevåg barnehage
+4;Byrådsavd. for barnehage og skole;5124;Lyngfaret barnehage
+4;Byrådsavd. for barnehage og skole;5125;Norheim barnehage
+4;Byrådsavd. for barnehage og skole;5127;Sæterdal barnehage
+4;Byrådsavd. for barnehage og skole;5128;Vadmyra barnehage
+4;Byrådsavd. for barnehage og skole;5129;Skårungen barnehage
+4;Byrådsavd. for barnehage og skole;5130;PPT i Laksevåg
+4;Byrådsavd. for barnehage og skole;5170;Håstein skole
+4;Byrådsavd. for barnehage og skole;5171;Sandgotna skole
+4;Byrådsavd. for barnehage og skole;5172;Kjøkkelvik skole
+4;Byrådsavd. for barnehage og skole;5173;Olsvik skole
+4;Byrådsavd. for barnehage og skole;5174;Godvik skole
+4;Byrådsavd. for barnehage og skole;6111;Aurdalslia skole
+4;Byrådsavd. for barnehage og skole;6112;Hjellestad skole
+4;Byrådsavd. for barnehage og skole;6113;Liland skole
+4;Byrådsavd. for barnehage og skole;6114;Rå skole
+4;Byrådsavd. for barnehage og skole;6115;Skeie skole
+4;Byrådsavd. for barnehage og skole;6116;Skranevatnet skole
+4;Byrådsavd. for barnehage og skole;6117;Søreide skole
+4;Byrådsavd. for barnehage og skole;6118;Søråshøgda skole
+4;Byrådsavd. for barnehage og skole;6119;Ytrebygda skole
+4;Byrådsavd. for barnehage og skole;6121;Iristunet barnehage
+4;Byrådsavd. for barnehage og skole;6122;Nordås barnehage
+4;Byrådsavd. for barnehage og skole;6123;Eldsbakkane barnehage
+4;Byrådsavd. for barnehage og skole;6125;Aurdalslia barnehage
+4;Byrådsavd. for barnehage og skole;6126;Petedalsheia barnehage
+4;Byrådsavd. for barnehage og skole;6128;Ytrebygda barnehage
+4;Byrådsavd. for barnehage og skole;6150;PPT i Ytrebygda
+4;Byrådsavd. for barnehage og skole;7221;Fridalen skole
+4;Byrådsavd. for barnehage og skole;7222;Kronstad skole
+4;Byrådsavd. for barnehage og skole;7223;Landås skole
+4;Byrådsavd. for barnehage og skole;7224;Minde skole
+4;Byrådsavd. for barnehage og skole;7225;Slettebakken skole
+4;Byrådsavd. for barnehage og skole;7226;Ny Krohnborg skole
+4;Byrådsavd. for barnehage og skole;7227;Gimle skole
+4;Byrådsavd. for barnehage og skole;7231;Gyldenpris barnehage
+4;Byrådsavd. for barnehage og skole;7232;Mannsverk barnehage
+4;Byrådsavd. for barnehage og skole;7233;Minde barnehage
+4;Byrådsavd. for barnehage og skole;7234;Natlandsfjellet barnehage
+4;Byrådsavd. for barnehage og skole;7235;Pinnelien barnehage
+4;Byrådsavd. for barnehage og skole;7236;Ny Krohnborg barnehage
+4;Byrådsavd. for barnehage og skole;7237;Sletten barnehage
+4;Byrådsavd. for barnehage og skole;7238;Søre skogvei barnehage
+4;Byrådsavd. for barnehage og skole;7239;Øvrebø barnehage
+4;Byrådsavd. for barnehage og skole;7242;Montana barnehage
+4;Byrådsavd. for barnehage og skole;7243;Årstad Brannstasjon barnehage
+4;Byrådsavd. for barnehage og skole;7244;Kristianborg barnehage
+4;Byrådsavd. for barnehage og skole;7250;PPT i Årstad
+4;Byrådsavd. for barnehage og skole;8201;Blokkhaugen skole
+4;Byrådsavd. for barnehage og skole;8202;Breimyra ungdomskole
+4;Byrådsavd. for barnehage og skole;8203;Eidsvåg skole
+4;Byrådsavd. for barnehage og skole;8204;Flaktveit skole
+4;Byrådsavd. for barnehage og skole;8205;Haukedalen skole
+4;Byrådsavd. for barnehage og skole;8206;Haukås skole
+4;Byrådsavd. for barnehage og skole;8207;Hordvik skole
+4;Byrådsavd. for barnehage og skole;8208;Kalvatræet skole
+4;Byrådsavd. for barnehage og skole;8209;Kyrkjekrinsen skole
+4;Byrådsavd. for barnehage og skole;8210;Li skole
+4;Byrådsavd. for barnehage og skole;8211;Marikollen skole
+4;Byrådsavd. for barnehage og skole;8212;Mjølkeråen skole
+4;Byrådsavd. for barnehage og skole;8213;Rolland skole
+4;Byrådsavd. for barnehage og skole;8214;Salhus skole
+4;Byrådsavd. for barnehage og skole;8215;Tertnes skole
+4;Byrådsavd. for barnehage og skole;8216;Ulsetskogen skole
+4;Byrådsavd. for barnehage og skole;8217;Åstveit ungdomskole
+4;Byrådsavd. for barnehage og skole;8230;Bekkjarkrokane barnehage
+4;Byrådsavd. for barnehage og skole;8231;Blokkhaugen barnehage
+4;Byrådsavd. for barnehage og skole;8232;Ervik barnehage
+4;Byrådsavd. for barnehage og skole;8234;Langerinden barnehage
+4;Byrådsavd. for barnehage og skole;8235;Liakroken barnehage
+4;Byrådsavd. for barnehage og skole;8236;Morvikbotn barnehage
+4;Byrådsavd. for barnehage og skole;8238;Salhus barnehage
+4;Byrådsavd. for barnehage og skole;8239;Trollskogen barnehage
+4;Byrådsavd. for barnehage og skole;8240;Flaktveit barnehage
+4;Byrådsavd. for barnehage og skole;8242;Rolland-Ulsetåsen barnehage
+4;Byrådsavd. for barnehage og skole;8250;PPT i Åsane
+5;Byrådsavd. for byutvikling, næring og klima;0205;Næringsseksjonen
+5;Byrådsavd. for byutvikling, næring og klima;0510;BBNK - kommunaldirektørens stab
+5;Byrådsavd. for byutvikling, næring og klima;0511;BBNK - renovasjon
+5;Byrådsavd. for byutvikling, næring og klima;0515;BBOB Kommunaldirektørens stab
+5;Byrådsavd. for byutvikling, næring og klima;0520;Boligetaten
+5;Byrådsavd. for byutvikling, næring og klima;0521;Boligfinansiering
+5;Byrådsavd. for byutvikling, næring og klima;0530;Etat for byggesak og private planer
+5;Byrådsavd. for byutvikling, næring og klima;0540;Etat for plan og geodata
+5;Byrådsavd. for byutvikling, næring og klima;0550;Byantikvaren
+5;Byrådsavd. for byutvikling, næring og klima;0560;Grønn etat
+5;Byrådsavd. for byutvikling, næring og klima;0570;Driftsavdelinger - fra bydelene
+5;Byrådsavd. for byutvikling, næring og klima;0720;Samferdselsetaten
+5;Byrådsavd. for byutvikling, næring og klima;0730;Byggvedlikehold
+5;Byrådsavd. for byutvikling, næring og klima;0750;Vann- og avløpsetaten
+7;Byrådsavd. for kultur, kirke og idrett;0217;Trossamfunn
+7;Byrådsavd. for kultur, kirke og idrett;0440;Idrettsetaten
+7;Byrådsavd. for kultur, kirke og idrett;0446;FYSAK
+7;Byrådsavd. for kultur, kirke og idrett;0447;Idrett - BKKI
+7;Byrådsavd. for kultur, kirke og idrett;0448;Idrettsservice
+7;Byrådsavd. for kultur, kirke og idrett;0451;Bergen kulturskole
+7;Byrådsavd. for kultur, kirke og idrett;0950;BKKI stab
+7;Byrådsavd. for kultur, kirke og idrett;0951;KF kultur
+7;Byrådsavd. for kultur, kirke og idrett;0952;Seksjon for kunst og kultur
+7;Byrådsavd. for kultur, kirke og idrett;0953;Barnas Hus
+7;Byrådsavd. for kultur, kirke og idrett;0955;Bergen Offentlige Bibliotek
+7;Byrådsavd. for kultur, kirke og idrett;0956;Bergenhus og Årstad kulturkontor
+7;Byrådsavd. for kultur, kirke og idrett;0957;Arna og Åsane kulturkontor
+7;Byrådsavd. for kultur, kirke og idrett;0958;Fyllingsdalen og Laksevåg kulturkontor
+7;Byrådsavd. for kultur, kirke og idrett;0959;Fana og Ytrebygda kulturkontor
+8;Bystyrets organer;0800;Bystyrets kontor
+8;Bystyrets organer;0805;Kommunerevisjonen
+8;Bystyrets organer;0806;Byombudet
+8;Bystyrets organer;0808;Sekretariat for kontrollutvalget
+90;Fellesposter - bykassen;1000;Bydelsadministrasjon, Arna
+90;Fellesposter - bykassen;2000;Bergenhus bydeladministrasjon
+90;Fellesposter - bykassen;3000;Bydelsadministrasjon, Fana
+90;Fellesposter - bykassen;4000;Fyllingsdalen bydelsadministrasjon
+90;Fellesposter - bykassen;5000;Bydelsadministrasjon Laksevåg
+90;Fellesposter - bykassen;6000;Bydelsadministrasjon, Ytrebygda
+90;Fellesposter - bykassen;7000;Bydelsadministrasjon, Årstad
+90;Fellesposter - bykassen;8000;Åsane bydelsadministrasjon
+90;Fellesposter - bykassen;9001;Finans-fellesposter
+90;Fellesposter - bykassen;9002;Budsjett-fellesposter
+90;Fellesposter - bykassen;9003;Bedrift-fellesposter
+90;Fellesposter - bykassen;9004;LRS-regnskap -fellesposter
+90;Fellesposter - bykassen;9005;Regnskap-stab-fellesposter
+90;Fellesposter - bykassen;9006;Kemneren-fellesposter
+90;Fellesposter - bykassen;9010;BLED-fellesposter
+90;Fellesposter - bykassen;9030;BHI-fellesposter
+90;Fellesposter - bykassen;9040;BBS-fellesposter
+90;Fellesposter - bykassen;9100;LRS-lønn-fellesposter

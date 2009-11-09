@@ -34,31 +34,36 @@ unset($locations);
 
 
 //Create groups, users, add users to groups and set preferences
-
-
 $GLOBALS['phpgw']->locations->add('.',				'Root',			'rental',false);
-
 $GLOBALS['phpgw']->locations->add('.ORG',			'Locations for organisational units',				'rental',false);
-
 $GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Kommune',			'rental',false);
 
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01',		'Byrådsleders avdeling',							'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.02',		'Byrådsavd. for finans, konkurranse og omstilling',	'rental',false);
-$loc_id_ba_helse =
-$GLOBALS['phpgw']->locations->add('.ORG.BK.03',		'Byrådsavd. for helse og omsorg',					'rental',false);
-$loc_id_ba_barnehage =
-$GLOBALS['phpgw']->locations->add('.ORG.BK.04',		'Byrådsavd. for barnehage og skole',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.05',		'Byrådsavd. for klima, miljø og byutvikling',		'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.06',		'Byrådsavd. for byggesak og bydeler',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.07',		'Byrådsavd. for kultur, næring og idrett',			'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.08',		'Bystyrets organer',								'rental',false);
 
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.30',		'Seksjon informasjon',							'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.33',		'Byrådsleders avdeling, stab',					'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.34',		'Kommuneadvokaten',								'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.36',		'Etat for samfunnssikkerhet og beredskap',		'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.37',		'Erstatningsutvalgets sekretariat',				'rental',false);
-$GLOBALS['phpgw']->locations->add('.ORG.BK.01.38',		'Torget',										'rental',false);
+// Open the text file from the setup folder in the rental module of portico estate
+$lines = file(PHPGW_SERVER_ROOT."/rental/setup/internal_structure.txt");
+// Read the first line to get the headers out of the way
+$result = array();
+$dep_nr = '';
+$dep_name = '';
+
+// Loop through each line of the file, parsing CSV data to a php array
+foreach ($lines as $row) {
+	$columns = explode(';',$row);
+	if($dep_nr != $columns[0]){
+		$dep_nr = $columns[0];
+		$dep_name = $columns[1];
+		if(strlen($dep_nr) < 2){
+			$dep_nr = str_pad($dep_nr,2,"0",STR_PAD_LEFT);	
+		}
+		$GLOBALS['phpgw']->locations->add(".ORG.BK.{$dep_nr}",$dep_name,'rental',false);
+	}
+	$unit_nr = $columns[2];
+	$unit_name = $columns[3];
+	if(strlen($dep_nr) < 4){
+		$unit_nr = str_pad($unit_nr,2,"0",STR_PAD_LEFT);	
+	}
+	$GLOBALS['phpgw']->locations->add(".ORG.BK.{$dep_nr}.{$unit_nr}",$unit_name,'rental',false);
+}
 
 $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY',			'Fields of responsibilities',				'rental',false);
 
@@ -99,6 +104,18 @@ $acls = array
 	(
 		'appname'	=> 'rental',
 		'location'	=> 'run',
+		'rights'	=> 1
+	),
+	array
+	(
+		'appname'	=> 'property',
+		'location'	=> 'run',
+		'rights'	=> 1
+	),
+	array
+	(
+		'appname'	=> 'property',
+		'location'	=> '.',
 		'rights'	=> 1
 	)
 );

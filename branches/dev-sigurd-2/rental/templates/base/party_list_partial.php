@@ -124,6 +124,7 @@
 				<option value="address"><?php echo lang('address') ?></option>
 				<option value="identifier"><?php echo lang('Identifier') ?></option>
 				<option value="reskontro"><?php echo lang('reskontro') ?></option>
+				<option value="result_unit_number"><?php echo lang('result_unit_number') ?></option>
 			</select>
 		</label>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
