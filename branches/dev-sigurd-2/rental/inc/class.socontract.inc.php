@@ -161,6 +161,9 @@ class rental_socontract extends rental_socommon
 				case 'under_dismissal':
 					$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
 					break;
+				case 'closing_due_date':
+					$filter_clauses[] = "(contract.due_date - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
+					break;
 				case 'ended':
 					$filter_clauses[] = "contract.date_end < {$ts_query}" ;
 					break;
@@ -216,7 +219,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -426,6 +429,10 @@ class rental_socontract extends rental_socommon
 		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
 		$values[] = "project_id = ".$this->marshal($contract->get_project_id(),'string');
 		$values[] = "old_contract_id = ".$this->marshal($contract->get_old_contract_id(),'string');
+		
+		if($contract->get_due_date()) {
+			$values[] = "due_date = " . $this->marshal($contract->get_due_date(), 'int');
+		}
 		 
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
@@ -572,6 +579,11 @@ class rental_socontract extends rental_socommon
 			$values[] = $this->marshal($contract->get_security_type(),'int');
 			$cols[] = 'security_amount';
 			$values[] = $this->marshal($contract->get_security_amount(),'string');
+		}
+		
+		if ($contract->get_due_date()) {
+			$cols[] = 'due_date';
+			$values[] = $this->marshal($contract->get_due_date(), 'int');
 		}
 		
 		// Insert the new contract

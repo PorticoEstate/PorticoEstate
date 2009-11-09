@@ -39,6 +39,7 @@
 		protected $account_in;
 		protected $account_out;
 		protected $project_id;
+		protected $due_date;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -512,13 +513,25 @@
 				'payer_id' => $this->get_payer_id(),
 				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : '',
 				'service_id' => $this->get_service_id(),
-				'responsibility_id' => $this->get_responsibility_id()
+				'responsibility_id' => $this->get_responsibility_id(),
+				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): ''
 			);
 		}
 		
 		public static function export(string $name, bool $return)
 		{
 			
+		}
+		
+	
+		public function set_due_date($due_date)
+		{
+			$this->due_date = $due_date;
+		}
+	
+		public function get_due_date()
+		{
+			return $this->due_date;
 		}
 		
 	}

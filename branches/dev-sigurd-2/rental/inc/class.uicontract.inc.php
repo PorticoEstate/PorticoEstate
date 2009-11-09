@@ -67,7 +67,8 @@
 					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
-				case 'last_edited':					
+				case 'last_edited':	
+				case 'closing_due_date':				
 					// Queries that depend on areas of responsibility
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
@@ -95,6 +96,9 @@
 							$filters = array('contract_type' => $comma_seperated_ids);
 							$sort_field = 'contract.last_updated';
 							$sort_ascending = false;
+							break;
+						case 'closing_due_date':			//Contracts closing due date in areas of responsibility
+							$filters = array('contract_status' => 'closing_due_date', 'contract_type' => $comma_seperated_ids);
 							break;
 					}
 					

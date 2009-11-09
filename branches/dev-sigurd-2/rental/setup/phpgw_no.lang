@@ -74,6 +74,7 @@ contract_type_internleie	rental	no	Internleie
 contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
+contracts_closing_due_date	rental	no	Nær opsjonsfrist
 Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
 count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
@@ -99,6 +100,7 @@ documents	rental	no	Dokumenter
 Download Agresso import file	rental	no	Last ned Agresso-importfil (CS15)
 Download as %1	rental	no	Last tabellen i %1-format
 Download export	rental	no	Last ned eksporten
+due_date	rental	no	Opsjonsfrist
 economy	rental	no	Økonomi
 edit_contract	rental	no	Redigér kontrakt
 edit	rental	no	Redigér
