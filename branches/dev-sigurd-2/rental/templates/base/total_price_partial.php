@@ -16,7 +16,7 @@
 	{
 		key: "total_price",
 		formatter: formatPrice,
-		label: "<strong><?php echo lang('total_price') ?></strong>",
+		label: "<strong><?php echo lang('total_price') ?></strong>"
 	},
 	{
 		key: "actions",
