@@ -40,6 +40,7 @@
 		protected $account_out;
 		protected $project_id;
 		protected $due_date;
+		protected $total_price;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -514,7 +515,8 @@
 				'last_updated' => $this->get_last_updated() ? date($date_format.' h:i:s A', $this->get_last_updated()) : '',
 				'service_id' => $this->get_service_id(),
 				'responsibility_id' => $this->get_responsibility_id(),
-				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): ''
+				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
+				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id())
 			);
 		}
 		
@@ -532,6 +534,16 @@
 		public function get_due_date()
 		{
 			return $this->due_date;
+		}
+		
+		public function set_total_price($total_price)
+		{
+			$this->total_price = $total_price;
+		}
+	
+		public function get_total_price()
+		{
+			return $this->total_price;
 		}
 		
 	}
