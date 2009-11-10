@@ -29,27 +29,28 @@
 
         <xsl:call-template name="msgbox"/>
 		<xsl:call-template name="yui_booking_i18n"/>
-			
-			<div style="border: 3px solid red; padding: 3px 4px 3px 4px">
-				<xsl:choose>
-					<xsl:when test="not(application/case_officer)">
-						<xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
-						<xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
-						<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-					</xsl:when>
-					<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
-						<xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>'<xsl:text> </xsl:text><xsl:value-of select="application/case_officer/name"/>'.
-						<br/>
-						<xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
-						<xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
-						<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-			
+
+			<xsl:if test="not(frontend)">
+				<div style="border: 3px solid red; padding: 3px 4px 3px 4px">
+					<xsl:choose>
+						<xsl:when test="not(application/case_officer)">
+							<xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
+							<xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
+						</xsl:when>
+						<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
+							<xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>'<xsl:text> </xsl:text><xsl:value-of select="application/case_officer/name"/>'.
+							<br/>
+							<xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
+							<xsl:text> </xsl:text><a href="#assign"><xsl:value-of select="php:function('lang', 'assign yourself')"/></a><xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</xsl:if>
 					
         <dl class="proplist-col">
             <dt><xsl:value-of select="php:function('lang', 'Status')" /></dt>
@@ -146,10 +147,12 @@
 	            <xsl:value-of select="php:function('lang', 'Edit')" />
 	        </button>
 		</xsl:if>
-		<dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated items')" /></dt>
-			<dd><div id="associated_container"/></dd>
-		</dl>
+		<xsl:if test="not(frontend)">
+			<dl class="proplist">
+	            <dt class="heading"><xsl:value-of select="php:function('lang', 'Associated items')" /></dt>
+				<dd><div id="associated_container"/></dd>
+			</dl>
+		</xsl:if>
 		<dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
 			<xsl:for-each select="application/comments[author]">

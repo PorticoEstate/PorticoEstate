@@ -47,6 +47,6 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups));
+			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
 		}
 	}
