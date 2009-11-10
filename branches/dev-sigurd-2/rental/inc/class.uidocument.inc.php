@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.sodocument');
 	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.soparty');
 	include_class('rental', 'document', 'inc/model/');
 
 	class rental_uidocument extends rental_uicommon
@@ -63,7 +64,7 @@
 				}
 			}
 			
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			$editable = phpgw::get_var('editable') == '1' ? true : false;
 			
 			//Add context menu columns (actions and labels)
 			array_walk($rows, array($this, 'add_actions'), array($type, isset($contract) ? $contract->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
@@ -91,7 +92,7 @@
 			//view/download
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.view', 'id' => $value['id'])));
-			$value['labels'][] = lang('view_document');
+			$value['labels'][] = lang('view');
 			
 			$type = $params[0];
 			$edit_permission = $params[1];
@@ -104,14 +105,14 @@
 					if($edit_permission && $editable) {
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
-						$value['labels'][] = lang('delete_document');
+						$value['labels'][] = lang('delete');
 					}
 					break;
 				case 'documents_for_party':
 					if($user_is[EXECUTIVE_OFFICER] && $editable) {
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uidocument.delete', 'id' => $value['id'])));
-						$value['labels'][] = lang('delete_document');
+						$value['labels'][] = lang('delete');
 					}
 					break;
 			}
@@ -130,6 +131,7 @@
 			$contract_id = intval(phpgw::get_var('contract_id'));
 			$party_id = intval(phpgw::get_var('party_id'));
 			
+			$data = array();
 			// Check permissions if contract id is set
 			if(isset($contract_id) && $contract_id > 0)
 			{
@@ -137,19 +139,22 @@
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
 				if(!$contract->has_permission(PHPGW_ACL_EDIT))
 				{
-					$this->render('permission_denied.php');
+					$data['error'] = lang('permission_denied_add_document');
+					$this->render('permission_denied.php', $data);
 					return;
 				}
 			}
+			
 			
 			// Check permissions if party id is set
 			if(isset($party_id) && $party_id > 0)
 			{
 				//Load party
-				$party = rental_socontract::get_instance()->get_single($party_id);
+				$party = rental_soparty::get_instance()->get_single($party_id);
 				if(!($this->isAdministrator() || $this->isExecutiveOfficer()))
 				{
-					$this->render('permission_denied.php');
+					$data['error'] = lang('permission_denied_add_document');
+					$this->render('permission_denied.php', $data);
 					return;
 				}
 			}
@@ -157,7 +162,8 @@
 			// If no contract or party is loaded
 			if(!(isset($party) || isset($contract)))
 			{
-				$this->render('permission_denied.php');
+				$data['error'] = lang('error_no_contract_or_party');
+				$this->render('permission_denied.php', $data);
 				return;
 			}
 			

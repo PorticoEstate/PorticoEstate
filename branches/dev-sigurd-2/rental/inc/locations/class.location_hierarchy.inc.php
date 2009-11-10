@@ -30,7 +30,8 @@ class location_hierarchy
 	public static function get_name_of_location(int $location_id)
 	{
 		$location_name = $GLOBALS['phpgw']->locations->get_name($location_id);
-		return $location_name['descr'];
+		$result_unit_number = result_unit::get_identifier_from_name($location_name['location']);
+		return  $result_unit_number . " - " . $location_name['descr'];
 	}
 }
 ?>

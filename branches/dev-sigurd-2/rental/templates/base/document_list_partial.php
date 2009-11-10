@@ -60,7 +60,7 @@
 
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uidocument.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
+		'index.php?menuaction=rental.uidocument.query&amp;editable=<?php echo $editable ?>&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
 		['<?php echo $list_id ?>_ctrl_toggle_document_type'],

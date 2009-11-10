@@ -47,6 +47,7 @@ billing_unit	rental	no	Ansvar-/tjenestested
 bill	rental	no	Faktura
 bill2	rental	no	Fakturér
 building	rental	no	Bygg
+calculations_internal_investment	rental	no	Beregningsgrunnlag internleie/investeringer
 calculate_price_apiece	rental	no	Pris regnes per stk.
 calculate_price_per_area	rental	no	Pris regnes ut fra areal
 calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
@@ -61,7 +62,7 @@ Commited	rental	no	Avsluttet
 company	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
-contract	renta	no	Kontrakt
+contract	rental	no	Kontrakt
 contract_id	rental	no	Kontraktsnummer
 contract_number	rental	no	Kontraktnummer
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
@@ -108,6 +109,7 @@ elements_pr_page	rental	no	elementer per side
 elements	rental	no	Elementer
 email	renal	no	E-post
 ended	rental	no	Avsluttet
+error_no_contract_or_party	rental	no	Ingen kontrakt eller kontraktspart å utføre handlingen på
 events	rental	no	Hendelser
 every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
@@ -250,9 +252,10 @@ party	rental	no	Kontraktspart
 party_location	rental	no	Intern organisasjonstihørighet
 party_type	rental	no	Type kontraktspart
 period	rental	no	Periode
-permission_denied_edit_contract	rental	no	You do not have the sufficient privileges to edit this contract
-permission_denied_new_contract	rental	no	You do not have the sufficient privileges to create new contracts
-permission_denied_view_contract	rental	no	You do not have the sufficient prvileges to edit this contract
+permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å editere kontrakten
+permission_denied_new_contract	rental	no	Du mangler rettigheter for å legge til å opprette nye kontrakter
+permission_denied_view_contract	rental	no	Du mangler rettigheter for å legge til å se kontrakten
+permission_denied_add_document	rental	no	Du mangler rettigheter for å legge til et dokumenent
 phone	rental	no	Telefon
 postal_code_place	rental	no	Postnummer/-sted
 post_code	rental	no	Postnummer
