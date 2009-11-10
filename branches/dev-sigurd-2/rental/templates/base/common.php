@@ -77,8 +77,11 @@
 		for(var i=0; i<YAHOO.rental.datatables.length; i++){
 			var datatable = YAHOO.rental.datatables[i];
 
-			if(selected_datatable.related.indexOf(datatable.tid) > -1){
-				datatable.getDataSource().sendRequest('',{success:loaded,scope: datatable});
+			for(var j=0;j<selected_datatable.related.length;j++){
+				var curr_related = selected_datatable.related[j];
+				if(datatable.tid == curr_related){
+					datatable.getDataSource().sendRequest('',{success:loaded,scope: datatable});
+				}
 			}
 		}
 	}
