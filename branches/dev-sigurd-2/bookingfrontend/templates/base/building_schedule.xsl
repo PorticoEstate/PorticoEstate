@@ -17,7 +17,7 @@
 
         <xsl:call-template name="msgbox"/>
 
-		<button onclick="window.location.href='{building/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+		<button onclick="YAHOO.booking.newApplicationForm();"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
 		- Søk ledig tid
 
 		<ul id="week-selector">
@@ -33,6 +33,7 @@
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
+	YAHOO.booking.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
 	
     var handleHistoryNavigation = function (state) {
 		YAHOO.booking.date = parseISO8601(state);

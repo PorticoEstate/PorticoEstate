@@ -38,6 +38,8 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 	}
 	else {
 		elCell.innerHTML = '...';
+		var data = oRecord.getData();
+		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to); return false; };
 	}
 };
 
@@ -143,27 +145,42 @@ YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, incl
 	var colDefs = [{key: 'time', label: date.getFullYear() +'<br/>' + lang['LBL_TIME']}];
 	if(includeResource)
 		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: YAHOO.booking.scheduleResourceColFormatter});
+	YAHOO.booking.dates = {};
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	for(var i=0; i < 7; i++) {
 		var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		d.setDate(d.getDate() + i);
 		var x = i < 6 ? i+1: 0;
-		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br/>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter});
+		YAHOO.booking.dates[keys[x]] = d;
+		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br/>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, 'date': d});
 	}
 	YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
 		formatRow: YAHOO.booking.scheduleRowFormatter
 	}, true);
 }
+
 YAHOO.booking.prevWeek = function() {
 	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() - 7);
 	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
 	YAHOO.util.History.navigate('date', state);
 }
+
 YAHOO.booking.nextWeek = function() {
 	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() + 7);
 	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
 	YAHOO.util.History.navigate('date', state);
 }
+
+YAHOO.booking.newApplicationForm = function(date, _from, _to) {
+	date = date ? date : YAHOO.booking.date;
+	_from = _from ? '%20' + _from: '';
+	_to = _to ? '%20' + _to: '';
+	var url = YAHOO.booking.newApplicationUrl;
+	var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to;
+	window.location.href = url;
+}
+
 YAHOO.booking.setupWeekPicker = function(container) {
 	var Dom = YAHOO.util.Dom;
 	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
