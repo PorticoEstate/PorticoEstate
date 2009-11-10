@@ -167,8 +167,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	<button type="button" id="workingOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('working_on') ?></button>
 	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('executive_officer_for') ?></button>
 	<button type="button" id="endingContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_under_dismissal') ?></button>
-	<button type="button" id="notifications_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" /> <?php echo lang('notifications') ?></button>
 	<button type="button" id="contractsClosingDueDate_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_closing_due_date') ?></button>
+	<button type="button" id="notifications_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" /> <?php echo lang('notifications') ?></button>
 	<!-- <button type="button" id="shortcuts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-jump.png" /> <?php echo lang('shortcuts') ?></button> -->
 	&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
 	<button type="button" id="saveSetup"><?php echo lang('save_setup') ?></button>
@@ -250,7 +250,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
     <div class="bd">
 		<?php
 			$list_form = false;
-			$list_id = 'contracts_closing_due_date';
+			$list_id = 'closing_due_date';
 			$url_add_on = '&amp;type='.$list_id;
 			$extra_cols = array(
 				array("key" => "composite", "label" => lang('composite'), "index" => 1),
