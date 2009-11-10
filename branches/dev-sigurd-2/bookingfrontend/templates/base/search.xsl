@@ -28,7 +28,7 @@
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
-        F.eks. "<i>Haukelandshallen, Håndball</i>" eller "<i>Årstad Håndball</i>".
+        F.eks. "<i>Haukelandshallen, Håndball</i>" eller "<i>Nordnes bydelshus, kor</i>".
       </div>
     </form>
 	
