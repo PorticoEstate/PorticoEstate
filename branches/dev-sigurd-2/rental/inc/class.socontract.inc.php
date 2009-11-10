@@ -512,6 +512,11 @@ class rental_socontract extends rental_socommon
         
         $contract->set_id(self::get_new_id($contract->get_old_contract_id()));
 
+        // Contract has no old or new ID, get next ID available from DB
+        if($this->marshal($contract->get_id(), 'int') == 0) {
+            $new_id = $this->db->next_id('rental_contract');
+        }
+
 		// These are the columns we know we have or that are nullable
 		$cols = array('location_id', 'term_id');//
 		
@@ -521,9 +526,9 @@ class rental_socontract extends rental_socommon
 			$this->marshal($contract->get_term_id(), 'int')
 		);
 
-        // Set ID according to old contract id
+        // Set ID according to old contract id or generate a new one
         $cols[] = 'id';
-        $values[] = $this->marshal($contract->get_id(), 'int');
+        $values[] = $new_id ? $new_id : $this->marshal($contract->get_id(), 'int');
 
 
 		
@@ -570,7 +575,7 @@ class rental_socontract extends rental_socommon
 		$values[] = $this->marshal($contract->get_project_id(),'string');
 		
 		$cols[] = 'old_contract_id';
-		$values[] = $this->marshal($contract->get_old_contract_id(),'string');
+        $values[] = $new_id ? $this->marshal(self::get_old_id($new_id),'string') : $this->marshal($contract->get_old_contract_id(),'string');
 		
 		$cols[] = 'comment';
 		$values[] = $this->marshal($contract->get_comment(),'string');
@@ -708,6 +713,27 @@ class rental_socontract extends rental_socommon
      */
     public static function get_new_id($old) {
         return (int) preg_replace('/[a-z]/i', '', $old);
+    }
+
+    /**
+     * Get new contract ID in "old" format
+     *
+     * @param $cid New contract ID
+     * @return string "Old" contract ID
+     */
+    public static function get_old_id($cid, $prefix = 'K', $digits = 8) {
+        $length = strlen(''.$cid);
+
+        while($length != $digits) {
+            if($digits < $length) {
+                // If number of digits is lower that current length, this will loop forever, return null to stop it.
+                return null;
+            }
+            $cid = '0'.$cid;
+            $length = strlen(''.$cid);
+        }
+
+        return $prefix.$cid;
     }
 }
 ?>
