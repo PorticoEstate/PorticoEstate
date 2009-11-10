@@ -152,9 +152,11 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function query()
 	{
-		// YUI variables for paging
+		// YUI variables for paging and sorting
 		$start_index	= phpgw::get_var('startIndex', 'int');
 		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
+		$sort_field		= phpgw::get_var('sort');
+		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		//Create an empty result set
 		$records = array();
 		
