@@ -152,6 +152,9 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function query()
 	{
+		// YUI variables for paging
+		$start_index	= phpgw::get_var('startIndex', 'int');
+		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 		//Create an empty result set
 		$records = array();
 		
