@@ -604,6 +604,16 @@
 			return $value;
 		}
 		
+		protected function entity_update_sql($entity_id, array $values) {
+			array_walk($values, array($this, 'column_update_expression'));
+			return sprintf(
+				"UPDATE %s SET %s WHERE %s",
+				$this->table_name,
+				join(',', $values),
+				$this->primary_key_conditions($entity_id)
+			);
+		}
+		
 		function update($entry)
 		{
 			if (!isset($entry['id'])) {

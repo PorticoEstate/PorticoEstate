@@ -5,8 +5,9 @@ phpgw::import_class('booking.uicommon');
 	{	
 		public $public_functions = array
 		(
-			'index'			=>	true,
+			'index'			=> true,
 			'add'				=> true,
+			'show'			=> true
 		);
 
 		protected 
@@ -46,16 +47,23 @@ phpgw::import_class('booking.uicommon');
 		}
 		
 		protected function generate_files() {
-			//This will read the data using the values of the standard search filters in the ui index view
+			$filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
+			$filter_params = is_null($filter_to) ? array() : array('filter_to' => $filter_to);
+			
+			//This will read all of the list data using the values of the standard search filters in the ui index view
 			$exports = $this->bo->read_all();
 			
-			if (is_array($exports) && count($exports['results']) > 0) {
-				if ($this->generated_files_bo->generate_for($exports['results'])) {
-					$this->redirect_to('index', array('ui' => 'completed_reservation_export_file'));
-				}
+			if (!is_array($exports) || count($exports['results']) <= 0) {
+				$this->flash_form_errors(array('empty_list' => lang("Cannot generate files from empty list")));
+				$this->redirect_to('index', $filter_params);
 			}
 			
-			$this->flash_form_errors(array('nothing_to_export' => lang("Nothing to export")));
+			if (is_array($this->generated_files_bo->generate_for($exports['results']))) {
+				$this->redirect_to('index', array('ui' => 'completed_reservation_export_file'));
+			}
+			
+			$this->flash_form_errors(array('already_generated' => lang("The invoice data in this list already has generated files")));
+			$this->redirect_to('index', $filter_params);
 		}
 		
 		public function index()
@@ -102,15 +110,17 @@ phpgw::import_class('booking.uicommon');
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
-							// 'formatter' => 'YAHOO.booking.formatLink'
+							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'building_name',
+							'key' => 'building_id',
 							'label' => lang('Building'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
 						),
 						array(
-							'key' => 'season_name',
+							'key' => 'season_id',
 							'label' => lang('Season'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
 						),
 						array(
 							'key' => 'from_',
@@ -156,7 +166,49 @@ phpgw::import_class('booking.uicommon');
 				)
 			);
 			
+			$data['filters'] = extract_values($_GET, array("filter_to"));
+			
 			$this->render_template('datatable', $data);
+		}
+		
+		public function create_link_data($entity, $id_key, $label_key, $null_label, $ui, $action = 'show') {
+			$link_data = array(); 
+			
+			if (isset($entity[$id_key]) && !empty($entity[$id_key])) {
+				$link_data['label'] = $entity[$label_key];
+				$link_data['href'] = $this->link_to($action, array('ui' => $ui, 'id' => $entity[$id_key]));
+			} else {
+				$link_data['label'] = $null_label;
+			}
+			
+			return $link_data;
+		}
+		
+		public function create_link_data_by_ref(&$entity, $id_key, $label_key, $null_label, $ui, $action = 'show') { 
+			$entity[$id_key] = $this->create_link_data($entity, $id_key, $label_key, $null_label, $ui, $action);
+		}
+		
+		public function add_default_display_data(&$export) {
+			$this->create_link_data_by_ref($export, 'season_id', 'season_name', lang('All'), 'season');
+			$this->create_link_data_by_ref($export, 'building_id', 'building_name', lang('All'), 'building');
+			
+			$export['created_on'] = pretty_timestamp($export['created_on']);
+			$export['from_'] = pretty_timestamp($export['from_']);
+			$export['to_'] = pretty_timestamp($export['to_']);
+			$export['index_link'] = $this->link_to('index');
+			$this->add_export_configurations_display_data($export);
+		}
+		
+		public function add_export_configurations_display_data(&$export) {
+			if (is_array($export['export_configurations'])) {
+				foreach($export['export_configurations'] as $type => $conf) {
+					if (!is_string($type)) {
+						throw new LogicException("Invalid export configuration type");
+					}
+					
+					$export[$type] = $this->create_link_data($conf, 'export_file_id', 'export_file_id', lang('Not generated'), 'completed_reservation_export_file');
+				}
+			}
 		}
 
 		public function index_json()
@@ -165,31 +217,19 @@ phpgw::import_class('booking.uicommon');
 			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
 			foreach($exports["results"] as &$export) {
 				$export = $this->bo->initialize_entity($export);
-				
-				$export['from_'] = pretty_timestamp($export['from_']);
-				$export['to_'] = pretty_timestamp($export['to_']);
-				$export['created_on'] = pretty_timestamp($export['created_on']);
-				
-				foreach($export['export_configurations'] as $type => $conf) {
-					if (!is_string($type)) {
-						throw new LogicException("Invalid export configuration type");
-					}
-					
-					if (isset($conf['export_file_id']) && !empty($conf['export_file_id'])) {
-						$export[$type] = array(
-							'label' => (string)$conf['export_file_id'],
-							'href' => $this->link_to('show', array('ui' => 'completed_reservation_export_file', 'id' => $conf['export_file_id']))
-						);
-					} else {
-						$export[$type] = array('label' => "Not generated");
-					}
-				}
-				
-				$export['created_on'] = substr($export['created_on'], 0, 19);
+				$this->add_default_display_data($export);
 			}
 			
 			$results = $this->yui_results($exports);
 			return $results;
+		}
+		
+		public function show()
+		{
+			$export = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$this->add_default_display_data($export);
+			$this->add_template_file('helpers');
+			self::render_template('completed_reservation_export', array('export' => $export));
 		}
 		
 		protected function get_export_key() {

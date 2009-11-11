@@ -15,15 +15,17 @@
 				
 				$expired = $bo->find_expired();
 
-				if (!is_array($expired) || !isset($expired['results']) || count($expired['results']) <= 0) { continue; }
+				if (!is_array($expired) || !isset($expired['results'])) { continue; }
 
 				$db->transaction_begin();
-
-				foreach ($expired['results'] as $reservation) {
-					$completed_so->create_from($reservation_type, $reservation);
-				}
 				
-				$bo->complete_expired($expired['results']);
+				if (count($expired['results']) > 0) {
+					foreach ($expired['results'] as $reservation) {
+						$completed_so->create_from($reservation_type, $reservation);
+					}
+				
+					$bo->complete_expired($expired['results']);
+				}
 
 				$db->transaction_commit();
 			}

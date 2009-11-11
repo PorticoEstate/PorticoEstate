@@ -190,6 +190,11 @@
 		YAHOO.booking.setupDatasource = function() {
 			<xsl:if test="source">
 	            YAHOO.booking.dataSourceUrl = '<xsl:value-of select="source"/>';
+					YAHOO.booking.initialSortedBy = false;
+					YAHOO.booking.initialFilters = false;
+					<xsl:if test="sorted_by">
+						YAHOO.booking.initialSortedBy = {key: '<xsl:value-of select="sorted_by/key"/>', dir: '<xsl:value-of select="sorted_by/dir"/>'};
+					</xsl:if>
 	        </xsl:if>
 
 			YAHOO.booking.columnDefs = [

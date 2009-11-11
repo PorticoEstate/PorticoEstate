@@ -580,12 +580,15 @@
 				'article_description' => array('type' => 'varchar', 'precision' => '35', 'nullable' => False),
 				'building_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'building_name' => array('type' => 'text', 'nullable' => false),
+				'export_file_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'invoice_file_order_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
 				'bb_completed_reservation_export' => array('exported' => 'id'),
+				'bb_completed_reservation_export_file' => array('export_file_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

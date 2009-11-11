@@ -41,6 +41,8 @@
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
 					'building_id'			=> array('type' => 'string', 'required' => True),
 					'building_name'		=> array('type' => 'string', 'required' => True),
+					'export_file_id' 		=>  array('type' => 'int'),
+					'invoice_file_order_id' => array('type' => 'string'),
 					'season_name'	=> array('type' => 'string', 'query' => true,
 						  'join' => array(
 							'table' => 'bb_season',
@@ -269,5 +271,37 @@
 			$ids = join(', ', array_map(array($this, 'select_id'), $reservations));
 			$sql = "UPDATE $table_name SET exported = $with_export_id WHERE {$table_name}.id IN ($ids);";
 			return $db->query($sql, __LINE__, __FILE__);
+		}
+		
+		public function associate_with_export_file($id, $with_export_file_id, $and_invoice_file_order_id) {
+			if (empty($id)) {
+				throw new InvalidArgumentException("Invalid id");
+			}
+			
+			if (empty($with_export_file_id)) {
+				throw new InvalidArgumentException("Invalid export_file_id");
+			}
+			
+			if (empty($and_invoice_file_order_id)) {
+				throw new InvalidArgumentException("Invalid invoice_file_order_id");
+			}
+			
+			return $this->db->query(
+				$this->entity_update_sql($id, array('export_file_id' => $with_export_file_id, 'invoice_file_order_id' => $and_invoice_file_order_id)),
+				__LINE__, __FILE__
+			);
+		}
+		
+		public function count_reservations_for_export_file($id) {
+			$this->db->query(
+				"SELECT count(*) as c FROM {$this->table_name} WHERE export_file_id = ".$this->marshal_field_value('export_file_id', $id),
+				__LINE__, __FILE__
+			);
+			
+			if ($this->db->next_record()) {
+				return $this->_marshal($this->db->f('c', false), 'int');
+			}
+			
+			return 0;
 		}
 	}

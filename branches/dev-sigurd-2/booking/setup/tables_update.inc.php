@@ -2121,3 +2121,21 @@ EOT;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.87';
+	function booking_upgrade0_1_87()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();	
+		
+		$table = 'bb_completed_reservation';
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN export_file_id integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN invoice_file_order_id varchar(255)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD CONSTRAINT {$table}_export_file_id_fkey FOREIGN KEY (export_file_id) REFERENCES bb_completed_reservation_export_file(id)");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.88';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

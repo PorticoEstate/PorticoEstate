@@ -37,17 +37,37 @@
 			<dd><xsl:value-of select="reservation/cost"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Customer Type')" /></dt>
-			<dd><xsl:value-of select="reservation/customer_type"/></dd>
+			<dd><xsl:value-of select="php:function('lang', string(reservation/customer_type))"/></dd>
 			
 			<xsl:copy-of select="phpgw:booking_customer_identifier_show(reservation, 'Customer ID')"/>
+			
+			<dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
+			<dd><xsl:value-of select="reservation/from_"/></dd>
 		</dl>
 
 		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'Exported')" /></dt>
-			<dd><xsl:value-of select="phpgw:conditional(not(reservation/exported = ''), string('Yes'), string('No'))"/></dd>
+			<dd>
+				<xsl:if test="reservation/exported_link">
+					<a href="{reservation/exported_link}"><xsl:value-of select="reservation/exported"/></a>
+				</xsl:if>
+				<xsl:if test="not(reservation/exported_link)">
+					<xsl:value-of select="reservation/exported"/>
+				</xsl:if>
+			</dd>
 			
-			<dt><xsl:value-of select="php:function('lang', 'From')" /></dt>
-			<dd><xsl:value-of select="reservation/from_"/></dd>
+			<dt><xsl:value-of select="php:function('lang', 'Export File')" /></dt>
+			<dd>
+				<xsl:if test="reservation/export_file_id/href">
+					<a href="{reservation/export_file_id/href}"><xsl:value-of select="reservation/export_file_id/label"/></a>
+				</xsl:if>
+				<xsl:if test="not(reservation/export_file_id/href)">
+					<xsl:value-of select="reservation/export_file_id/label"/>
+				</xsl:if>
+			</dd>
+			
+			<dt><xsl:value-of select="php:function('lang', 'Order id')" /></dt>
+			<dd><xsl:value-of select="reservation/invoice_file_order_id"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'To')" /></dt>
 			<dd><xsl:value-of select="reservation/to_"/></dd>

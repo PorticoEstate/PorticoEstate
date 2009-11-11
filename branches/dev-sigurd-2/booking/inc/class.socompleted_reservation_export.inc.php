@@ -29,6 +29,7 @@
 					'total_items'			=> array('type' => 'int'), ////NOT NULL in database, but automatically computed in add method
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
 					key(booking_socommon::$AUTO_CREATED_BY) => current(booking_socommon::$AUTO_CREATED_BY),
+					'created_by_name' 	=> booking_socommon::$REL_CREATED_BY_NAME,
 					'season_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
 							'table' 		=> 'bb_season',
 							'fkey' 		=> 'season_id',
@@ -51,7 +52,6 @@
 								'export_file_id' => array('type' => 'int'),
 							)
 					)),
-					'created_by_name' => booking_socommon::$REL_CREATED_BY_NAME,
 				)
 			);
 		}
@@ -116,6 +116,29 @@
 		
 		public static function get_available_export_types() {
 			return array('internal', 'external');
+		}
+		
+		public function has_generated_file(&$export, $type) {
+			$this->initialize_entity($export);
+			
+			if (!isset($export['export_configurations']) || !is_array($export['export_configurations'])) {
+				throw new InvalidArgumentException("Missing or invalid export_configurations");
+			}
+			
+			if (!isset($export['export_configurations'][$type]) 
+					|| !is_array($export['export_configurations'][$type])) {
+				throw new InvalidArgumentException("Missing export configuration for type '{$type}'");
+			}
+			
+			if (!array_key_exists('export_file_id', $export['export_configurations'][$type])) {
+				throw new InvalidArgumentException("Missing export configuration file information");
+			}
+			
+			if (empty($export['export_configurations'][$type]['export_file_id'])) {
+				return false;
+			}
+			
+			return true;
 		}
 		
 		public function get_export_file_data($entity, $type) {
@@ -232,6 +255,8 @@
 		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
 		 */
 		public function export_external(array &$reservations, array $account_codes) {
+			$export_format = 'agresso';
+			
 			if (is_array($reservations)) {
 				if (count($external_reservations = array_filter($reservations, array($this, 'select_external'))) > 0) {
 					
@@ -240,19 +265,22 @@
 					}
 					
 					return $this->build_export_result(
+						$export_format,
 						count(array_filter($external_reservations, array($this, 'not_free'))),
 						$this->calculate_total_cost($external_reservations),
 						$this->format_agresso($external_reservations, $account_codes, $number_generator)
 					);
 				}
 			}
-			return $this->build_export_result(0, 0.0);
+			return $this->build_export_result($export_format, 0, 0.0);
 		}
 		
 		/**
 		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
 		 */
 		public function export_internal(array &$reservations, array $account_codes) {
+			$export_format = 'csv';
+			
 			if (is_array($reservations)) {
 				if (count($internal_reservations = array_filter($reservations, array($this, 'select_internal'))) > 0) {
 					
@@ -261,17 +289,18 @@
 					}
 					
 					return $this->build_export_result(
+						$export_format,
 						count(array_filter($internal_reservations, array($this, 'not_free'))),
 						$this->calculate_total_cost($internal_reservations),
 						$this->format_csv($internal_reservations, $account_codes, $number_generator)
 					);
 				}
 			}
-			return $this->build_export_result(0, 0.0);
+			return $this->build_export_result($export_format, 0, 0.0);
 		}
 		
-		protected function build_export_result($total_items, $total_cost, &$data = '') {
-			return array('total_items' => $total_items, 'total_cost' => $total_cost, 'data' => $data);
+		protected function build_export_result($export_format, $total_items, $total_cost, &$data = null) {
+			return array('total_items' => $total_items, 'total_cost' => $total_cost, 'export_format' => $export_format, 'export' => $data);
 		}
 		
 		public function format_cost($cost) {
@@ -291,7 +320,75 @@
 			return $cost;
 		}
 		
+		public function create_export_item_info(&$entity, $generated_order_id) {
+			if (!is_array($entity)) {
+				throw new InvalidArgumentException("Invalid entity");
+			}
+			
+			if (!isset($entity['id'])) {
+				throw new InvalidArgumentException("Invalid entity - missing id");
+			} 
+			
+			if (!isset($entity['reservation_id'])) {
+				throw new InvalidArgumentException("Invalid entity - missing reservation_id");
+			}
+			
+			if (!isset($entity['reservation_type'])) {
+				throw new InvalidArgumentException("Invalid entity - missing reservation_type");
+			}
+			
+			if (!isset($generated_order_id) || empty($generated_order_id)) {
+				throw new InvalidArgumentException("Invalid order_id");
+			}
+			
+			return array('id' => $entity['id'], 'reservation_id' => $entity['reservation_id'], 'reservation_type' => $entity['reservation_type'], 'invoice_file_order_id' => $generated_order_id);
+		}
+		
+		public function combine_export_data(array &$export_results) {
+			$combined_data = array();
+			$export_format = null;
+			$combine_method = null;
+			foreach($export_results as &$export_result) {
+				if (!isset($export_result['export_format']) || !is_string($export_result['export_format'])) {
+					throw new InvalidArgumentException('export_format must be specified');
+				}
+				
+				if ($export_format == null) {
+					$export_format = $export_result['export_format'];
+					$combine_method = array($this, sprintf('combine_%s_export_data', $export_format));
+				} elseif ($export_format != $export_result['export_format']) {
+					throw new InvalidArgumentException('Different export formats cannot be combined into a single result');
+				}
+				
+				if (!array_key_exists('export', $export_result)) {
+					throw new InvalidArgumentException('Missing export key');
+				}
+				
+				if (is_null($export_result['export'])) {
+					continue;
+				}
+				
+				if (!is_array($export_result['export']) || !isset($export_result['export']['data'])) {
+					throw new InvalidArgumentException('Missing export data');
+				}
+				
+				call_user_func_array($combine_method, array(&$combined_data, &$export_result['export']));
+			}
+			
+			return count($combined_data) > 0 ? join($combined_data, '') : '';
+		}
+		
+		protected function &combine_csv_export_data(array &$combined_data, $export) {
+			if (count($combined_data) == 0) {
+				$combined_data[] = $export['data']; //Insert with headers and all
+			} else {
+				$combined_data[] = "csv_break";
+				$combined_data[] = substr($export['data'], strpos($export['data'], "\n")+1); //Remove first line (i.e don't to repeat headers in file)
+			}
+		}
+		
 		public function format_csv(array &$reservations, array $account_codes, $sequential_number_generator) {
+			$export_info = array();
 			$output = array();
 			
 			$columns = array(
@@ -313,11 +410,13 @@
 			$output[] = $this->format_to_csv_line($columns);
 			
 			foreach ($reservations as $reservation) {
-				$reservation = array_map('utf8_decode', $reservation);
-				
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
 				}
+				$order_id = $sequential_number_generator->increment()->get_current();
+				$export_info[] = $this->create_export_item_info($reservation, $order_id);
+				
+				$reservation = array_map('utf8_decode', $reservation);
 				
 				$item = array();
 				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
@@ -338,14 +437,20 @@
 				$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				$item['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
-				$item['order_id'] = str_pad($sequential_number_generator->increment()->get_current(), 9, 0, STR_PAD_LEFT);
+				
+				$item['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
+				
 				$item['period'] = str_pad(substr('00'.date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 				$item['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
-
+				
 				$output[] = $this->format_to_csv_line(array_values($item));
 			}
 			
-			return join($output, '');
+			if (count($export_info) == 0) {
+				return null;
+			}
+			
+			return array('data' => join($output, ''), 'info' => $export_info);
 		}
 		
 		/**
@@ -400,8 +505,18 @@
 			return $write;
 		}
 		
+		protected function combine_agresso_export_data(array &$combined_data, $export) {
+			if (count($combined_data) == 0) {
+				$combined_data[] = $export['data'];
+			} else {
+				$combined_data[] = "\n";
+				$combined_data[] = $export['data'];
+			}
+		}
+		
 		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator) {
 			//$orders = array();
+			$export_info = array();
 			$output = array();
 			
 			/* NOTE: The specification states that values of type date
@@ -439,16 +554,17 @@
 			$responsible2 = str_pad(substr(strtoupper($responsible), 0, 8), 8, ' ');
 			$status = str_pad(substr(strtoupper('N'), 0, 1), 1, ' ');
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
-			$voucher_type = str_pad(substr(strtoupper('XX'), 0, 2), 2, ' ');
+			$voucher_type = str_pad(substr(strtoupper('FS'), 0, 2), 2, ' ');
 			
 			foreach($reservations as &$reservation) {
-				foreach($reservation as &$field) {
-					$field = utf8_decode($field);
-				}
-				
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
 				}
+				
+				$order_id = $sequential_number_generator->increment()->get_current();
+				$export_info[] = $this->create_export_item_info($reservation, $order_id);
+				
+				$reservation = array_map('utf8_decode', $reservation);
 				
 				//header level
 				$header = $this->get_agresso_row_template();
@@ -474,7 +590,7 @@
 				$header['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				
 				//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
-				$header['order_id'] = str_pad($sequential_number_generator->increment()->get_current(), 9, 0, STR_PAD_LEFT);
+				$header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
 				
 				$header['order_type'] = $order_type;
 				$header['pay_method'] = $pay_method;
@@ -546,7 +662,11 @@
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
 			}
 			
-			return implode("\n", $output);
+			if (count($export_info) == 0) {
+				return null;
+			}
+			
+			return array('data' => implode("\n", $output), 'info' => $export_info);
 		}
 		
 		protected function get_agresso_row_template() {

@@ -78,6 +78,7 @@ phpgw::import_class('booking.uicommon');
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 'created_on', 'dir' => 'desc'),
 					'field' => array(
 						array(
 							'key' => 'id',
