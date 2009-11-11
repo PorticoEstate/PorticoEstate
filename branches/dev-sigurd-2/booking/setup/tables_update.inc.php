@@ -2073,16 +2073,12 @@
 		
 		$table = "bb_completed_reservation_export";
 		
-		$queries = <<<EOT
-ALTER TABLE $table ADD COLUMN total_cost decimal(10,2);
-ALTER TABLE $table ADD COLUMN total_items integer;
-UPDATE $table SET total_cost=0.0;
-UPDATE $table SET total_items=0;
-ALTER TABLE $table ALTER COLUMN total_items SET NOT NULL;
-ALTER TABLE $table ALTER COLUMN total_cost SET NOT NULL;
-EOT;
-
-		$GLOBALS['phpgw_setup']->oProc->m_odb->query($queries);		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN total_cost decimal(10,2)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN total_items integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET total_cost=0.0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET total_items=0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ALTER COLUMN total_items SET NOT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ALTER COLUMN total_cost SET NOT NULL");
 		
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
