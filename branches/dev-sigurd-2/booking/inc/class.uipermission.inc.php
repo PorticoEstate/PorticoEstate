@@ -206,23 +206,7 @@
 				
 				$permission['actions'] = $permission_actions;
 			}
-			$data = array(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $permissions['total_records'], 
-					"Result" => $permissions['results']
-				)
-			);
-			
-			$actions = array();
-			
-			if ($this->bo->allow_create())
-			{
-				$actions['add'] = array('text' => lang('Add Permission'), 'href' => $this->get_object_typed_link('add'));
-			}
-			
-			$data['Actions'] = $actions;
-			
-			return $data;
+			return $this->yui_results($permissions);
 		}
 		
 		public function index_accounts()

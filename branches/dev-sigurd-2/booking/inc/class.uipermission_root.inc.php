@@ -140,13 +140,7 @@
 					$this->generate_link('delete', array('id' => $permission['id'])),
 				);
 			}
-			$data = array(
-				'ResultSet' => array(
-					"totalResultsAvailable" => $permissions['total_records'], 
-					"Result" => $permissions['results']
-				)
-			);
-			return $data;
+			return $this->yui_results($permissions);
 		}
 		
 		public function index_accounts()

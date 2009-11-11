@@ -8,7 +8,9 @@
 	<div id="toolbar">
 		<table class="yui-skin-sam" border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
 			<tr>
-				<td valign="top"><input id="new-button" type="link" value="{php:function('lang', 'Add Activity')}" href="{links/add}"/></td>
+				<xsl:if test="links/add">
+					<td valign="top"><input id="new-button" type="link" value="{php:function('lang', 'Add Activity')}" href="{links/add}"/></td>
+				</xsl:if>
 				<xsl:if test="not(show_all='1')">
 					<td valign="top"><input id="show-hide" type="link" value="{php:function('lang', 'Show all')}" href="{links/show_inactive}"/></td>
 				</xsl:if>
@@ -27,9 +29,10 @@
 <script type="text/javascript">
 YAHOO.util.Event.addListener(window, "load", function() {
 	var newButton = YAHOO.util.Dom.get('new-button');
-	new YAHOO.widget.Button(newButton, 
-	                        {type: 'link', 
-	                         href: newButton.getAttribute('href')});
+	if(newButton)
+		new YAHOO.widget.Button(newButton, 
+		                        {type: 'link', 
+		                         href: newButton.getAttribute('href')});
 	var showHideButton = YAHOO.util.Dom.get('show-hide');
 	new YAHOO.widget.Button(showHideButton, 
 	                        {type: 'link', 
