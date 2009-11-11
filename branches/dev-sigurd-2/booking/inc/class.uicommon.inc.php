@@ -365,8 +365,12 @@
 			);
 		}
 
-        public function render_template($files, $data)
-        {
+		public function add_template_helpers() {
+			$this->add_template_file('helpers');
+		}
+
+		public function render_template($files, $data)
+		{
 			if($this->flash_msgs) {
 				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
 			} else {
@@ -382,7 +386,7 @@
 			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));
 			$this->add_template_file($files);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
-        }
+		}
 
 		public function send_file($file_path, $options = array())
 		{

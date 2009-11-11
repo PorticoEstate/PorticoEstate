@@ -24,6 +24,7 @@
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
 					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
 					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
+					'customer_internal'					=> array('type' => 'int', 'required'=>true),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',

@@ -1,3 +1,20 @@
+<func:function name="phpgw:conditional">
+	<xsl:param name="test"/>
+	<xsl:param name="true"/>
+	<xsl:param name="false"/>
+
+	<func:result>
+		<xsl:choose>
+			<xsl:when test="$test">
+				<xsl:value-of select="$true"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$false"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</func:result>
+</func:function>
+
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
         
@@ -73,7 +90,10 @@
 		</dl>
 		<dl class="form-col">
 			<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
-
+			
+			<dt><label for="field_customer_internal"><xsl:value-of select="php:function('lang', 'Internal Customer')"/></label></dt>
+			<dd><xsl:copy-of select="phpgw:option_checkbox(organization/customer_internal, 'customer_internal')"/></dd>
+			
 			<dt><label for="field_street"><xsl:value-of select="php:function('lang', 'Street')"/></label></dt>
 			<dd><input id="field_street" name="street" type="text" value="{organization/street}"/></dd>
 

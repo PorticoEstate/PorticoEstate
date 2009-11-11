@@ -221,6 +221,19 @@
 			return isset($cache[$resource_id]) ? $cache[$resource_id] : null;
 		}
 		
+		/**
+		 * @param $entity				The completed reservation entity on which to set customer_type
+		 * @param $customer_info 	Either a organization or event entity containing the key 'customer_internal'
+		 */
+		protected function set_customer_type(&$entity, $customer_info) {
+			//Remember that the default value of customer_type is already
+			//set to 'external' so we only have to adjust customer_type
+			//when dealing with an internal customer
+			if (intval($customer_info['customer_internal']) == 1) {
+				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
+			}
+		}
+		
 		protected function set_organization(&$entity, &$organization) {
 			$entity['organization_id'] = $organization['id'];
 			$entity['customer_organization_number'] = $organization['organization_number'];
@@ -242,6 +255,7 @@
 			}
 
 			$this->set_organization($entity, $org);
+			$this->set_customer_type($entity, $org);
 			$this->copy_customer_identifier($org, $entity);
 		}
 		
@@ -258,10 +272,12 @@
 			}
 			
 			$this->set_organization($entity, $org);
+			$this->set_customer_type($entity, $org);
 			$this->copy_customer_identifier($org, $entity);
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
+			$this->set_customer_type($entity, $event);
 			$this->copy_customer_identifier($event, $entity);
 		}
 		

@@ -171,6 +171,9 @@
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
+			
+			<dt><label for="field_customer_internal"><xsl:value-of select="php:function('lang', 'Internal Customer')"/></label></dt>
+			<dd><xsl:copy-of select="phpgw:option_checkbox(event/customer_internal, 'customer_internal')"/></dd>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></dt>

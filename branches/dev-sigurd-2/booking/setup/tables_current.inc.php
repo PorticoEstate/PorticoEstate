@@ -82,6 +82,7 @@
 				'customer_number' => array('type' => 'string', 'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
+				'customer_internal' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -512,6 +513,7 @@
 				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
+				'customer_internal' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 			),
 			'pk' => array('id'),
 			'fk' => array(

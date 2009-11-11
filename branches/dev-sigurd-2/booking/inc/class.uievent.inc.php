@@ -24,10 +24,11 @@
 			$this->audience_bo = CreateObject('booking.boaudience');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'description',
-								  'resources', 'cost', 'application_id',
-								  'building_id', 'building_name', 
-								  'contact_name', 'contact_email', 'contact_phone',
-			                      'from_', 'to_', 'active', 'audience', 'reminder');
+										'resources', 'cost', 'application_id',
+										'building_id', 'building_name', 
+										'contact_name', 'contact_email', 'contact_phone',
+										'from_', 'to_', 'active', 'audience', 'reminder',
+										'customer_internal');
 		}
 		
 		public function index()
@@ -145,12 +146,14 @@
 		public function add()
 		{
 			$errors = array();
+			$event = array('customer_internal' => 1); 
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
-				$event = array(); 
 				$event['active'] = '1';
 				$event['completed'] = '0';
+				
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
@@ -174,7 +177,10 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
+			
 			$this->install_customer_identifier_ui($event);
+			
+			$this->add_template_helpers();
 			self::render_template('event_new', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
@@ -226,6 +232,8 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($event);
+			
+			$this->add_template_helpers();
 			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
