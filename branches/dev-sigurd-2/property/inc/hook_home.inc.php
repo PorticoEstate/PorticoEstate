@@ -43,7 +43,7 @@
 
 		$default_status 	= isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
 		$tts = CreateObject('property.sotts');
-		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => array($default_status, 'O')));
 		$total_records = $tts->total_records;
 
 		$portalbox = CreateObject('phpgwapi.listbox', array
