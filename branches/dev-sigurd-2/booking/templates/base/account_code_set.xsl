@@ -9,7 +9,7 @@
 				</a>
 			</li>
 			<li>
-				<xsl:value-of select="php:function('lang', string(account_code_set/name))"/>
+				<xsl:value-of select="account_code_set/name"/>
 			</li>
 		</ul>
 		
@@ -48,10 +48,12 @@
 			<div class="description"><xsl:value-of select="account_code_set/invoice_instruction"/></div>
 		</dl>
 
-		<div class="form-buttons">
-			<button onclick="window.location.href='{account_code_set/edit_link}'">
-				<xsl:value-of select="php:function('lang', 'Edit')" />
-			</button>
-		</div>
+		<xsl:if test="account_code_set/permission/write">
+			<div class="form-buttons">
+				<button onclick="window.location.href='{account_code_set/edit_link}'">
+					<xsl:value-of select="php:function('lang', 'Edit')" />
+				</button>
+			</div>
+		</xsl:if>
 	</div>
 </xsl:template>

@@ -106,7 +106,7 @@
 		</dl>
 
 		<div class="form-buttons">
-			<xsl:if test="not(reservation/exported) or reservation/exported = ''">
+			<xsl:if test="reservation/exported=php:function('lang', 'No') or reservation/exported = ''">
 				<button onclick="window.location.href='{reservation/edit_link}'">
 					<xsl:value-of select="php:function('lang', 'Edit')" />
 				</button>
