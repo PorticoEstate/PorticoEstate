@@ -63,22 +63,19 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
-				$user_id		= isset($data['user_id'])?$data['user_id']:'';
-				$query			= isset($data['query'])?$data['query']:'';
-				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order			= isset($data['order'])?$data['order']:'';
-				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
-				$allrows		= isset($data['allrows'])?$data['allrows']:'';
-				$start_date		= isset($data['start_date'])?$data['start_date']:'';
-				$end_date		= isset($data['end_date'])?$data['end_date']:'';
-				$external		= isset($data['external'])?$data['external']:'';
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
+			$user_id		= isset($data['user_id'])?$data['user_id']:'';
+			$query			= isset($data['query'])?$data['query']:'';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order			= isset($data['order'])?$data['order']:'';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+			$allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$start_date		= isset($data['start_date'])?$data['start_date']:'';
+			$end_date		= isset($data['end_date'])?$data['end_date']:'';
+			$external		= isset($data['external'])?$data['external']:'';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -167,6 +164,22 @@
 			else if($status_id == 'all')
 			{
 				//nothing
+			}
+			else if(is_array($status_id) && count($status_id))
+			{
+				$or = '';
+				$filtermethod .= "{$where} (";
+				
+				foreach ($status_id as $value)
+				{
+					$value = trim($value,'C');
+					$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
+					$or = ' OR';
+				}
+
+				$filtermethod .= ')';
+
+				$where = 'AND';
 			}
 			else
 			{
