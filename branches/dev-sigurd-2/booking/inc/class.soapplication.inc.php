@@ -20,7 +20,7 @@
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => true),
-					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
+					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required'=>false)), 'required' => false),
 					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'owner_name'	=> array('type' => 'string', 'query' => true,
 						  'join' 		=> array(

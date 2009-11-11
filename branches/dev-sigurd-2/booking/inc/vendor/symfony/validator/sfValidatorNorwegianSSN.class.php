@@ -31,15 +31,10 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfValidatorEmail.class.php 8835 2008-05-07 16:50:28Z nicolas $
  */
-class sfValidatorNorwegianSSN extends sfValidatorRegex
+class sfValidatorNorwegianSSN extends sfValidatorString
 {
 	public function __construct($options = array(), $messages = array())
 	{
-		if (!isset($messages['invalid']))
-		{
-			$messages['invalid'] = '%field% contains an invalid social security number';
-		}
-		
 		parent::__construct($options, $messages);
 	}
 	
@@ -50,7 +45,27 @@ class sfValidatorNorwegianSSN extends sfValidatorRegex
    */
   protected function configure($options = array(), $messages = array())
   {	
+	$this->addOption('full_required', true);
+    $this->addMessage('invalid', '%field% contains an invalid Norwegian social security number (11 digits)');
+    $this->addMessage('invalid2', '%field% contains an invalid Norwegian social security number (6 or 11 digits)');
     parent::configure($options, $messages);
-    $this->setOption('pattern', '/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/');
+  }
+
+  /**
+   * @see sfValidatorString
+   */
+  protected function doClean($value)
+  {
+    $clean = parent::doClean($value);
+
+	if($this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/', $clean))
+	{
+      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+	}
+	if(!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
+	{
+      throw new sfValidatorError($this, 'invalid2', array('value' => $value));
+	}
+    return $clean;
   }
 }

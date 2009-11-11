@@ -237,6 +237,7 @@ Field %1 is required	bookingfrontend	no	Feltet %1 kreves
 Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format
 Building users	bookingfrontend	no	Brukere av bygg/anlegg
 Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
+Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
 Interval	bookingfrontend	no	Interval
 Recurring booking	bookingfrontend	no	Gjenta booking
 Repeat until	bookingfrontend	no	Gjenta til

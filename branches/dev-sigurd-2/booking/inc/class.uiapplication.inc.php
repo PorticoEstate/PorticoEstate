@@ -365,6 +365,7 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
+			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
 			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
@@ -411,6 +412,7 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
+			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
 			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
