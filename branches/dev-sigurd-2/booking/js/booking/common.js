@@ -119,17 +119,17 @@ YAHOO.booking.formatLink = function(elCell, oRecord, oColumn, oData) {
 };
 
 YAHOO.booking.formatGenericLink = function() {
-	links = [];
-	nOfLinks = arguments.length;
+	var links = [];
+	var nOfLinks = arguments.length;
 	
 	for (var i=0; i < nOfLinks; i++) { links[i] = arguments[i]; }
 	
 	return function(elCell, oRecord, oColumn, oData)
 	{
-		nOfLinks = links.length;
-		data = oRecord.getData(oColumn.key);
+		var nOfLinks = links.length;
+		var data = oRecord.getData(oColumn.key);
 		
-		linksHtml = '';
+		var linksHtml = '';
 		if (nOfLinks > 0) {
 			//Use specified link names
 			for (var i=0; i < nOfLinks; i++) {
@@ -140,7 +140,11 @@ YAHOO.booking.formatGenericLink = function() {
 			}
 		} else {
 			//Get label from embedded data
-			linksHtml += '<div><a href="' + data['href'] + '">' + data['label'] + '</a></div>';
+			if (data['href'] != undefined && data['label'] != undefined) {
+				linksHtml += '<div><a href="' + data['href'] + '">' + data['label'] + '</a></div>';
+			} else if(data['href'] == undefined && data['label'] != undefined) {
+				linksHtml += '<div>'+data['label']+'</div>';
+			}
 		}
 		
 		elCell.innerHTML = linksHtml;

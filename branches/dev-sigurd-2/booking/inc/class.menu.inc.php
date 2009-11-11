@@ -152,6 +152,15 @@
 					'text'	=> lang('Invoice Data Exports'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index')),
 					'image'	=> array('property', 'location'),
+					'children' => array
+					(
+						'generated_files' => array
+						(
+							'text'	=> lang('Generated Files'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export_file.index')),
+							'image'	=> array('property', 'location'),
+						)
+					)
 				),
 				
 				'mailing' => array

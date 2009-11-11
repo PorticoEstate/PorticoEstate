@@ -4,24 +4,19 @@
 	class booking_socompleted_reservation_export extends booking_socommon
 	{
 		protected 
-			$file_storage,
 			$completed_reservation_so,
 			$completed_reservation_bo,
 			$account_code_set_so,
-			$customer_id;
-			
-		protected static $export_type_to_file_type_map = array(
-			'internal' => 'csv',
-			'external' => 'txt',
-		);
+			$customer_id,
+			$sequential_number_generator_so;
 		
 		function __construct()
 		{
-			$this->file_storage = CreateObject('booking.filestorage', $this);
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->completed_reservation_so = CreateObject('booking.socompleted_reservation');
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
 			$this->account_code_set_so = CreateObject('booking.soaccount_code_set');
+			$this->sequential_number_generator_so = CreateObject('booking.sobilling_sequential_number_generator');
 			
 			parent::__construct('bb_completed_reservation_export', 
 				array(
@@ -30,6 +25,8 @@
 					'building_id'    		=> array('type' => 'int'),
 					'from_'					=> array('type' => 'timestamp', 'required' => true),
 					'to_'						=> array('type' => 'timestamp', 'required' => true),
+					'total_cost'			=> array('type' => 'decimal'), //NOT NULL in database, but automatically computed in add method
+					'total_items'			=> array('type' => 'int'), ////NOT NULL in database, but automatically computed in add method
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
 					key(booking_socommon::$AUTO_CREATED_BY) => current(booking_socommon::$AUTO_CREATED_BY),
 					'season_name'	=> array('type' => 'string', 'query' => true, 'join' => array(
@@ -44,25 +41,19 @@
 							'key' 		=> 'id',
 							'column' 	=> 'name'
 					)),
-					'export_files' => array('manytomany' => array(
-							'table' => 'bb_completed_reservation_export_file',
+					'export_configurations' => array('manytomany' => array(
+							'table' => 'bb_completed_reservation_export_configuration',
 							'key' => 'export_id',
 							'column' => array(
 								'id' => array('type' => 'int'),
-								'filename' => array('type' => 'string'),
 								'type' => array('type' => 'string', 'required' => true),
 								'account_code_set_id' => array('type' => 'int', 'required' => true),
+								'export_file_id' => array('type' => 'int'),
 							)
 					)),
 					'created_by_name' => booking_socommon::$REL_CREATED_BY_NAME,
 				)
 			);
-		}
-		
-		protected function file_type_for_export_type($export_type) {
-			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
-						self::$export_type_to_file_type_map[$export_type] :
-						'txt';
 		}
 		
 		protected function _get_search_to_date(&$entity) {
@@ -98,81 +89,59 @@
 		function read_single($id)
 		{
 			$entity = parent::read_single($id);
+			$this->initialize_entity($entity);
+			return $entity;
+		}
+	 	
+		/**
+		 * Normalizes data on entity.
+		 */
+		public function initialize_entity(&$entity) {
+			if (isset($entity['__initialized__']) && $entity['__initialized__'] === true) { return $entity; }
 			
-			//re-index export files by their types
-			$export_files = array();
-			if (!(array_key_exists('export_files', $entity) && is_array($entity['export_files']))) {
+			$entity['__initialized__'] = true;
+			//re-index export configurations on their types
+			if (!(array_key_exists('export_configurations', $entity) && is_array($entity['export_configurations']))) {
 				return $entity;
 			}
 			
-			foreach($entity['export_files'] as $file) {
-				$export_files[$file['type']] = $file;
+			$export_configs = array();
+			foreach($entity['export_configurations'] as $conf) {
+				$export_configs[$conf['type']] = $conf;
 			}
-			$entity['export_files'] = $export_files;
+			$entity['export_configurations'] = $export_configs;
 			
 			return $entity;
 		}
 		
-		function get_export_file($entity, $type) {
-			$entity_file = null;
+		public static function get_available_export_types() {
+			return array('internal', 'external');
+		}
+		
+		public function get_export_file_data($entity, $type) {
+			$this->initialize_entity($entity);
 			
-			foreach($entity['export_files'] as $file) {
-				if ($file['type'] == $type) {
-					$entity_file = $file; 
-					break;
-				}
+			if (!isset($entity['export_configurations']) || !isset($entity['export_configurations'][$type]))
+			{
+				throw new InvalidArgumentException(sprintf("Missing export configuration of type '%s'", $type));
 			}
 			
-			if (!$entity_file) {
-				throw new InvalidArgumentException(sprintf('Could not locate export file of type "%s" for export id "%s"', $type, $entity['id']));
-			}
+			$export_conf = $entity['export_configurations'][$type];
+			$account_codes = $this->account_code_set_so->read_single($export_conf['account_code_set_id']);
 			
-			if (isset($entity_file['filename']) && !empty($entity_file['filename'])) {
-				return $this->file_storage->get($entity_file['filename']);
-			}
-			
-			if (!isset($entity_file['id'])) {
-				throw new LogicException('Export file is missing id');
+			if (!is_array($account_codes)) { 
+				throw new LogicException(sprintf("Unable to locate accounts codes for export file data"));
 			}
 			
 			$export_reservations =& $this->get_completed_reservations_for($entity['id']);
-			
-			$entity_file['filename'] = 'export_'.$entity_file['type'].'_'.$entity_file['id'].'.'.$this->file_type_for_export_type($entity_file['type']);
-			
-			$export_file = new booking_storage_object($entity_file['filename']);
-			
-			$account_codes = $this->account_code_set_so->read_single($entity_file['account_code_set_id']);
-			
-			$export_method = "export_{$entity_file['type']}";
+		
+			$export_method = "export_{$type}";
 			
 			if (!method_exists($this, $export_method)) {
-				throw new LogicException(sprintf('Cannot generate export for type "%s"', $entity_file['type']));
+				throw new LogicException(sprintf('Cannot generate export for type "%s"', $type));
 			}
 			
-			$export_file->set_data(
-				$this->$export_method($export_reservations, $account_codes)
-			);
-			
-			$this->db->transaction_begin();
-			$this->file_storage->attach($export_file)->persist();
-			$this->db_query(
-				"UPDATE {$this->fields['export_files']['manytomany']['table']} SET filename=".
-					$this->_marshal($entity_file['filename'], $this->fields['export_files']['manytomany']['column']['filename']['type']).
-					' WHERE id='.$entity_file['id'],
-				__LINE__, __FILE__
-			);
-			
-			if ($this->db->transaction_commit()) { 
-				return $export_file;
-			}
-			
-			try {
-				if ($export_file->exists()) {
-					$export_file->delete();
-				}
-			} catch (booking_unattached_storage_object $e) { }
-			
-			throw new UnexpectedValueException('Transaction failed.');
+			return array($export_conf, $this->$export_method($export_reservations, $account_codes));
 		}
 		
 		function add($entry) {
@@ -184,8 +153,11 @@
 			
 			$entry['from_'] = $export_reservations[0]['to_'];
 			$entry['to_'] = $export_reservations[count($export_reservations)-1]['to_'];
+			$entry['total_cost'] = $this->calculate_total_cost($export_reservations);
+			$entry['total_items'] = count(array_filter($export_reservations, array($this, 'not_free')));
 			
 			$this->db->transaction_begin();
+			
 			$receipt = parent::add($entry);
 			$entry['id'] = $receipt['id'];
 			$this->update_completed_reservations_exported_state($entry, $export_reservations);
@@ -236,6 +208,18 @@
 			return $this->customer_id->get_current_identifier_value($reservation);
 		}
 		
+		public function not_free($reservation) {
+			return $this->get_cost_value($reservation['cost']) > 0;
+		}
+		
+		public function calculate_total_cost(&$reservations) {
+			return array_reduce($reservations, array($this,"_rcost"), 0);
+		}
+		
+		public function _rcost($total_cost, $entity) {
+			return $total_cost+$this->get_cost_value($entity['cost']);
+		}
+		
 		public function select_external($reservation) {
 			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_EXTERNAL;
 		}
@@ -244,22 +228,50 @@
 			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_INTERNAL;
 		}
 		
+		/**
+		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
+		 */
 		public function export_external(array &$reservations, array $account_codes) {
 			if (is_array($reservations)) {
 				if (count($external_reservations = array_filter($reservations, array($this, 'select_external'))) > 0) {
-					return $this->format_agresso($external_reservations, $account_codes);
+					
+					if (!($number_generator = $this->sequential_number_generator_so->get_generator_instance('external'))) {
+						throw new UnexpectedValueException("Unable to find sequential number generator for external export");
+					}
+					
+					return $this->build_export_result(
+						count(array_filter($external_reservations, array($this, 'not_free'))),
+						$this->calculate_total_cost($external_reservations),
+						$this->format_agresso($external_reservations, $account_codes, $number_generator)
+					);
 				}
 			}
-			return '';
+			return $this->build_export_result(0, 0.0);
 		}
 		
+		/**
+		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
+		 */
 		public function export_internal(array &$reservations, array $account_codes) {
 			if (is_array($reservations)) {
 				if (count($internal_reservations = array_filter($reservations, array($this, 'select_internal'))) > 0) {
-					return $this->format_csv($internal_reservations, $account_codes);
+					
+					if (!($number_generator = $this->sequential_number_generator_so->get_generator_instance('internal'))) {
+						throw new UnexpectedValueException("Unable to find sequential number generator for internal export");
+					}
+					
+					return $this->build_export_result(
+						count(array_filter($internal_reservations, array($this, 'not_free'))),
+						$this->calculate_total_cost($internal_reservations),
+						$this->format_csv($internal_reservations, $account_codes, $number_generator)
+					);
 				}
 			}
-			return '';
+			return $this->build_export_result(0, 0.0);
+		}
+		
+		protected function build_export_result($total_items, $total_cost, &$data = '') {
+			return array('total_items' => $total_items, 'total_cost' => $total_cost, 'data' => $data);
 		}
 		
 		public function format_cost($cost) {
@@ -279,7 +291,7 @@
 			return $cost;
 		}
 		
-		public function format_csv(array &$reservations, array $account_codes) {
+		public function format_csv(array &$reservations, array $account_codes, $sequential_number_generator) {
 			$output = array();
 			
 			$columns = array(
@@ -326,7 +338,7 @@
 				$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				$item['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
-				$item['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT);
+				$item['order_id'] = str_pad($sequential_number_generator->increment()->get_current(), 9, 0, STR_PAD_LEFT);
 				$item['period'] = str_pad(substr('00'.date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 				$item['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
 
@@ -388,7 +400,7 @@
 			return $write;
 		}
 		
-		public function format_agresso(array &$reservations, array $account_codes) {
+		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator) {
 			//$orders = array();
 			$output = array();
 			
@@ -442,8 +454,7 @@
 				$header = $this->get_agresso_row_template();
 				$header['accept_flag'] = '1';
 				
-				/* TODO: Introduce a unique id if several transfers in one day?
-				 */
+				// TODO: Introduce a unique id if several transfers in one day?
 				$header['batch_id'] = $batch_id;
 				
 				$header['client'] = $client_id;
@@ -463,7 +474,7 @@
 				$header['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				
 				//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
-				$header['order_id'] = str_pad($reservation['id'], 9, 0, STR_PAD_LEFT);
+				$header['order_id'] = str_pad($sequential_number_generator->increment()->get_current(), 9, 0, STR_PAD_LEFT);
 				
 				$header['order_type'] = $order_type;
 				$header['pay_method'] = $pay_method;

@@ -1996,3 +1996,128 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.83';
+	function booking_upgrade0_1_83()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_completed_reservation_export_file";
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DROP TABLE $table");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DROP SEQUENCE seq_{$table}");
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			$table, array(
+				'fd' => array(
+					'id' 							=> array('type' => 'auto', 'nullable' => False),
+					'filename'				  	=> array('type' => 'text'),
+					'type'				   	=> array('type' => 'text', 'nullable' => False),
+					'total_cost' 				=> array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+					'total_items' 				=> array('type' => 'int','precision' => '4','nullable' => False),
+					'created_on' 				=> array('type' => 'timestamp', 'nullable' => False),
+					'created_by' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('created_by' => 'account_id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.84';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.84';
+	function booking_upgrade0_1_84()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_completed_reservation_export_configuration', array(
+				'fd' => array(
+					'id' 							=> array('type' => 'auto', 'nullable' => False),
+					'type'				   	=> array('type' => 'text', 'nullable' => False),
+					'export_id'				   => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'export_file_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => True),
+					'account_code_set_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_account_code_set' => array('account_code_set_id' => 'id'),
+					'bb_completed_reservation_export' => array('export_id' => 'id'),
+					'bb_completed_reservation_export_file' => array('export_file_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.85';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.85';
+	function booking_upgrade0_1_85()
+	{	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_completed_reservation_export";
+		
+		$queries = <<<EOT
+ALTER TABLE $table ADD COLUMN total_cost decimal(10,2);
+ALTER TABLE $table ADD COLUMN total_items integer;
+UPDATE $table SET total_cost=0.0;
+UPDATE $table SET total_items=0;
+ALTER TABLE $table ALTER COLUMN total_items SET NOT NULL;
+ALTER TABLE $table ALTER COLUMN total_cost SET NOT NULL;
+EOT;
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($queries);		
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.86';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.86';
+	function booking_upgrade0_1_86()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();	
+		
+		$table = "bb_billing_sequential_number_generator";
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_billing_sequential_number_generator', array(
+				'fd' => array(
+					'id' 		=> array('type' => 'auto', 'nullable' => False),
+					'name'   => array('type' => 'text', 'nullable' => False),
+					'value'	=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('name')
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO $table (name, value) VALUES('internal', 0)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO $table (name, value) VALUES('external', 34500000)");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.87';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -43,6 +43,14 @@
 			$this->like			= & $this->db->like;
 		}
 		
+		public function get_db() {
+			return $this->db;
+		}
+		
+		public function get_table_name() {
+			return $this->table_name;
+		}
+		
 		/**
 		 * Added because error reporting facilities in phpgw tries to serialize the PDO
 		 * instance in $this->db which causes an error. This method removes $this->db from the 

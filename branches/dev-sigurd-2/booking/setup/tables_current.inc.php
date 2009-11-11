@@ -608,16 +608,18 @@
 				'id' 						=> array('type' => 'auto', 'nullable' => False),
 				'season_id' 			=> array('type' => 'int', 'precision' => '4'),
 				'building_id' 			=> array('type' => 'int', 'precision' => '4'),
-				'from_' => array('type' => 'timestamp', 'nullable' => True), /*Should be automatically filled in sometimes*/
-				'to_' => array('type' => 'timestamp', 'nullable' => True),
-				'created_on' => array('type' => 'timestamp', 'nullable' => False),
-				'created_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' 					=> array('type' => 'timestamp', 'nullable' => True),
+				'to_' 					=> array('type' => 'timestamp', 'nullable' => True),
+				'total_cost' 			=> array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+				'total_items' 			=> array('type' => 'int','precision' => '4','nullable' => False),
+				'created_on' 			=> array('type' => 'timestamp', 'nullable' => False),
+				'created_by' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_building' => array('building_id' => 'id'),
 				'bb_season' => array('season_id' => 'id'),
-				'phpgw_accounts' => array('subject_id' => 'account_id'),
+				'phpgw_accounts' => array('created_by' => 'account_id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -646,16 +648,45 @@
 				'id' 							=> array('type' => 'auto', 'nullable' => False),
 				'filename'				  	=> array('type' => 'text'),
 				'type'				   	=> array('type' => 'text', 'nullable' => False),
-				'export_id'				   => array('type' => 'int', 'precision' => '4'),
-				'account_code_set_id'	=> array('type' => 'int', 'precision' => '4'),
+				'total_cost' 				=> array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
+				'total_items' 				=> array('type' => 'int','precision' => '4','nullable' => False),
+				'created_on' 				=> array('type' => 'timestamp', 'nullable' => False),
+				'created_by' 				=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('created_by' => 'account_id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_completed_reservation_export_configuration' => array(
+			'fd' => array(
+				'id' 							=> array('type' => 'auto', 'nullable' => False),
+				'type'				   	=> array('type' => 'text', 'nullable' => False),
+				'export_id'				   => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'export_file_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'account_code_set_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_account_code_set' => array('account_code_set_id' => 'id'),
 				'bb_completed_reservation_export' => array('export_id' => 'id'),
+				'bb_completed_reservation_export_file' => array('export_file_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'bb_billing_sequential_number_generator' => array(
+			'fd' => array(
+				'id' 		=> array('type' => 'auto', 'nullable' => False),
+				'name'   => array('type' => 'text', 'nullable' => False),
+				'value'	=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('name')
 		),
 	);
 ?>
