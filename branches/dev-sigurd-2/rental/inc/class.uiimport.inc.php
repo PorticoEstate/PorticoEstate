@@ -495,13 +495,10 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-                    error_log('Storing price item: '.$price_item->get_title().' '.$detail_price_items[$facilit_id]['amount'].'|'.$detail_price_items[$facilit_id]['price']);
 					if($socontract_price_item->store($price_item)) {
-                        error_log('Success!');
                         $this->messages[] = "Successfully imported price item " . $price_item->get_title();
                     }
                     else {
-                        error_log('FAIL!');
                         $this->warning[] = "Could not store price item " . $price_item->get_title();
                     }
 				} else {

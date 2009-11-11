@@ -123,7 +123,6 @@ class rental_socontract_price_item extends rental_socommon
 		}
 		
 		$q ="INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
-        error_log("Querying: $q");
 
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_contract_price_item", 'id');
