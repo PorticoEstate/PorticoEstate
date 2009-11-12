@@ -17,11 +17,11 @@
 	},
 	{
 		key: "name",
-		label: "<? echo lang('user_or_group') ?>"
+		label: "<?php echo lang('user_or_group') ?>"
 	},
 	{
 		key: "field_of_responsibility",
-		label: "<? echo lang('field_of_responsibility') ?>"
+		label: "<?php echo lang('field_of_responsibility') ?>"
 	},
 	{
 		key: "actions",
