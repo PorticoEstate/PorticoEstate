@@ -210,15 +210,17 @@
 
 <script type="text/javascript">
 var datestatus = document.getElementById('date_status');
-if(datestatus.addEventListener) {
-    datestatus.addEventListener('change', date_event, false);
-}
+if(datestatus != undefined && datestatus != null) {
+    if(datestatus.addEventListener) {
+        datestatus.addEventListener('change', date_event, false);
+    }
 
-function date_event() {
-    var hidden_date = document.getElementById('date_status_hidden');
-    if(hidden_date != undefined) {
-        var date = datestatus.value.split("/");
-        hidden_date.value = date[2]+"-"+date[1]+"-"+date[0];
+    function date_event() {
+        var hidden_date = document.getElementById('date_status_hidden');
+        if(hidden_date != undefined) {
+            var date = datestatus.value.split("/");
+            hidden_date.value = date[2]+"-"+date[1]+"-"+date[0];
+        }
     }
 }
 </script>
