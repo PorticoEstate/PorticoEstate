@@ -99,14 +99,15 @@
 				'account_in' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_out' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'project_id' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'due_date' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true) // opsjonsfrist
+				'due_date' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // opsjonsfrist
+				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
 					'phpgw_locations' => array('location_id' => 'location_id'),
 					'rental_billing_term' => array('term_id' => 'id'),
 					'phpgw_accounts' => array('executive_officer' => 'account_id'),
-					'phpgw_accounts' => array('created_by' => 'account_id'),
+					'phpgw_accounts' => array('created_by' => 'account_id')
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -366,5 +367,19 @@
 			),
 			'ix' => array(),
 			'uc' => array()
+		),
+		
+		'rental_contract_types' => array(
+				'fd' => array(
+					'id'			=> array('type' => 'auto', 'nullable' => false),
+					'label'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'rental_contract_responsibility' => array( 'responsibility_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
 		)
 	);

@@ -312,6 +312,7 @@
 					$contract->set_account_out(phpgw::get_var('account_out'));
 					$contract->set_project_id(phpgw::get_var('project_id'));
 					$contract->set_due_date(strtotime(phpgw::get_var('due_date')));
+					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					
 					if(rental_socontract::get_instance()->store($contract))
 					{

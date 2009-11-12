@@ -40,6 +40,7 @@
 		protected $account_out;
 		protected $project_id;
 		protected $due_date;
+		protected $contract_type_id;
 		protected $total_price;
 		protected $max_area;
 		
@@ -517,6 +518,7 @@
 				'service_id' => $this->get_service_id(),
 				'responsibility_id' => $this->get_responsibility_id(),
 				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
+				'contract_type_id' => $this->get_contract_type_id(),
 				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
 				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id())
 			);
@@ -556,6 +558,16 @@
 		public function get_max_area()
 		{
 			return $this->max_area;
+		}
+		
+		public function set_contract_type_id($contract_type_id)
+		{
+			$this->contract_type_id = $contract_type_id;
+		}
+	
+		public function get_contract_type_id()
+		{
+			return $this->contract_type_id;
 		}
 		
 	}

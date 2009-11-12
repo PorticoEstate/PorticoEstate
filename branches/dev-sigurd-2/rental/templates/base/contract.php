@@ -56,6 +56,35 @@
 							?>
 					</dd>
 					<dt>
+						<label for="contract_type"><?php echo lang('contract_type') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+							$current_contract_type_id = $contract->get_contract_type_id();
+							
+							?>
+							<select name="contract_type">
+								<option>Ingen type</option>
+								<?php
+								foreach(rental_socontract::get_instance()->get_contract_types($contract->get_location_id()) as $contract_type_id => $contract_type_label)
+								{
+									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".$contract_type_label."</option>";
+								}
+								?>
+							</select>
+							<?php
+						?>
+						<?php
+						}
+						else // Non-editable
+						{
+							echo lang($contract->get_contract_type_id());
+						}
+						?>
+					</dd>
+					<dt>
 						<label for="executive_officer"><?php echo lang('executive_officer') ?></label>
 					</dt>
 					<dd>
@@ -128,6 +157,114 @@
 						<br/>
 					</dd>
 					<dt>
+						<label for="due_date"><?php echo lang('due_date') ?></label>
+					</dt>
+					<dd>
+						<?php
+							$due_date = $contract->get_due_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_due_date()) : '-';
+							$due_date_yui = $contract->get_due_date() ? date('Y-m-d', $contract->get_due_date()) : '';
+							if ($editable) {
+								echo $GLOBALS['phpgw']->yuical->add_listener('due_date', $due_date);
+							} else {
+								echo $due_date;
+							}
+						?>
+						<br/>
+					</dd>
+					<dt>
+						<label for="invoice_header"><?php echo lang('invoice_header') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="invoice_header" id="invoice_header" value="<?php echo $contract->get_invoice_header(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_invoice_header();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="billing_term"><?php echo lang('billing_term') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+							$current_term_id = $contract->get_term_id();
+							?>
+							<select name="billing_term">
+								<?php
+								foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
+								{
+									echo "<option ".($current_term_id == $term_id ? 'selected="selected"' : "")." value=\"{$term_id}\">".lang($term_title)."</option>";
+								}
+								?>
+							</select>
+							<?php
+						?>
+						<?php
+						}
+						else // Non-editable
+						{
+							echo lang($contract->get_term_id_title());
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="billing_start_date"><?php echo lang('billing_start') ?></label>
+					</dt>
+					<dd>
+						<?php
+						$billing_start_date = $contract->get_billing_start_date();
+						
+						if($billing_start_date == null || $billing_start_date == '') // No date set
+						{
+							// ..so we try to use the start date of the contract if any
+							$contract_date = $contract->get_contract_date();
+							if($contract_date != null && $contract_date->has_start_date())
+							{
+								$billing_start_date = $contract_date->get_start_date();
+							}
+							else // No start date of contract
+							{
+								// ..so we use the today's date
+								$billing_start_date = time();
+							}
+						}
+						
+						$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
+						if($editable)
+						{
+							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
+						}
+						else{ // Non-ediable
+							echo $billing_start_date;
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="reference"><?php echo lang('reference') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="reference" id="reference" value="<?php echo $contract->get_reference(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_reference();
+						}
+						?>
+					</dd>
+				</dl>
+				<dl class="proplist-col">
+					<dt>
 						<label for="service_id"><?php echo lang('service') ?></label>
 					</dt>
 					<dd>
@@ -160,39 +297,84 @@
 						?>
 					</dd>
 					<dt>
-						<label for="reference"><?php echo lang('reference') ?></label>
+						<label for="account_in"><?php echo lang('account_in') ?></label>
 					</dt>
 					<dd>
 						<?php
 						if ($editable) {
 						?>
-							<input type="text" name="reference" id="reference" value="<?php echo $contract->get_reference(); ?>"/>
+							<input type="text" name="account_in" id="account_in" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								
+								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
+							}
+							else
+							{
+								echo $contract->get_account_in(); 
+							}
+							?>"/>
 						<?php
 						}
 						else
 						{
-							echo $contract->get_reference();
+							echo $contract->get_account_in();
 						}
 						?>
 					</dd>
 					<dt>
-						<label for="invoice_header"><?php echo lang('invoice_header') ?></label>
+						<label for="account_out"><?php echo lang('account_out') ?></label>
 					</dt>
 					<dd>
 						<?php
 						if ($editable) {
 						?>
-							<input type="text" name="invoice_header" id="invoice_header" value="<?php echo $contract->get_invoice_header(); ?>"/>
+							<input type="text" name="account_out" id="account_out" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+							}
+							else
+							{
+								echo $contract->get_account_out(); 
+							}
+							?>"/>
 						<?php
 						}
 						else
 						{
-							echo $contract->get_invoice_header();
+							echo $contract->get_account_out();
 						}
 						?>
 					</dd>
-				</dl>
-				<dl class="proplist-col">
+					<dt>
+						<label for="project_id"><?php echo lang('project_id') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="project_id" id="project_id" value="<?php 
+							$cid = $contract->get_id();
+							if(!isset($cid) || $cid <= 0)
+							{
+								echo '9'; // Default project number
+							}
+							else
+							{
+								echo $contract->get_project_id() ;
+							}
+							?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_project_id();
+						}
+						?>
+					</dd>
 					<dt>
 						<label for="security_type"><?php echo lang('security') ?></label>
 					</dt>
@@ -278,159 +460,6 @@
 							}
 						}
 						?>
-					</dd>
-					<dt>
-						<label for="billing_term"><?php echo lang('billing_term') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-							$current_term_id = $contract->get_term_id();
-							?>
-							<select name="billing_term">
-								<?php
-								foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
-								{
-									echo "<option ".($current_term_id == $term_id ? 'selected="selected"' : "")." value=\"{$term_id}\">".lang($term_title)."</option>";
-								}
-								?>
-							</select>
-							<?php
-						?>
-						<?php
-						}
-						else // Non-editable
-						{
-							echo lang($contract->get_term_id_title());
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="billing_start_date"><?php echo lang('billing_start') ?></label>
-					</dt>
-					<dd>
-						<?php
-						$billing_start_date = $contract->get_billing_start_date();
-						
-						if($billing_start_date == null || $billing_start_date == '') // No date set
-						{
-							// ..so we try to use the start date of the contract if any
-							$contract_date = $contract->get_contract_date();
-							if($contract_date != null && $contract_date->has_start_date())
-							{
-								$billing_start_date = $contract_date->get_start_date();
-							}
-							else // No start date of contract
-							{
-								// ..so we use the today's date
-								$billing_start_date = time();
-							}
-						}
-						
-						$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
-						if($editable)
-						{
-							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
-						}
-						else{ // Non-ediable
-							echo $billing_start_date;
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="account_in"><?php echo lang('account_in') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable) {
-						?>
-							<input type="text" name="account_in" id="account_in" value="<?php 
-							$cid = $contract->get_id();
-							if(!isset($cid) || $cid <= 0)
-							{
-								
-								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true);
-							}
-							else
-							{
-								echo $contract->get_account_in(); 
-							}
-							?>"/>
-						<?php
-						}
-						else
-						{
-							echo $contract->get_account_in();
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="account_out"><?php echo lang('account_out') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable) {
-						?>
-							<input type="text" name="account_out" id="account_out" value="<?php 
-							$cid = $contract->get_id();
-							if(!isset($cid) || $cid <= 0)
-							{
-								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
-							}
-							else
-							{
-								echo $contract->get_account_out(); 
-							}
-							?>"/>
-						<?php
-						}
-						else
-						{
-							echo $contract->get_account_out();
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="project_id"><?php echo lang('project_id') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable) {
-						?>
-							<input type="text" name="project_id" id="project_id" value="<?php 
-							$cid = $contract->get_id();
-							if(!isset($cid) || $cid <= 0)
-							{
-								echo '9'; // Default project number
-							}
-							else
-							{
-								echo $contract->get_project_id() ;
-							}
-							?>"/>
-						<?php
-						}
-						else
-						{
-							echo $contract->get_project_id();
-						}
-						?>
-					</dd>
-					<dt>
-						<label for="due_date"><?php echo lang('due_date') ?></label>
-					</dt>
-					<dd>
-						<?php
-							$due_date = $contract->get_due_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_due_date()) : '-';
-							$due_date_yui = $contract->get_due_date() ? date('Y-m-d', $contract->get_due_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('due_date', $due_date);
-							} else {
-								echo $due_date;
-							}
-						?>
-						<br/>
 					</dd>
 				</dl>
                 <dl class="proplist-col">

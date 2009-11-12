@@ -219,7 +219,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -279,6 +279,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_security_type($this->unmarshal($this->db->f('security_type'),'int'));
 			$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'),'string'));
 			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
+			$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'),int));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
@@ -434,6 +435,8 @@ class rental_socontract extends rental_socommon
 		if($contract->get_due_date()) {
 			$values[] = "due_date = " . $this->marshal($contract->get_due_date(), 'int');
 		}
+		
+		$values[] = "contract_type_id = ". $this->marshal($contract->get_contract_type_id(), 'int');
 		 
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
@@ -592,6 +595,11 @@ class rental_socontract extends rental_socommon
 			$values[] = $this->marshal($contract->get_due_date(), 'int');
 		}
 		
+		if($contract->get_contract_type_id()) {
+			$cols[] = 'contract_type_id';
+			$values[] = $this->marshal($contract->get_contract_type_id(), 'int');
+		}
+		
 		// Insert the new contract
 		$q ="INSERT INTO rental_contract (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		$result = $this->db->query($q);
@@ -734,6 +742,17 @@ class rental_socontract extends rental_socommon
         }
 
         return $prefix.$cid;
+    }
+    
+    public function get_contract_types($location_id){
+    	$q1="SELECT rct.id, rct.label FROM rental_contract_types rct, rental_contract_responsibility rcr WHERE rcr.location_id={$location_id} AND rct.responsibility_id=rcr.id";
+		$this->db->query($q1, __LINE__, __FILE__);
+		$results = array();
+		while($this->db->next_record()){
+			$results[$this->db->f('id')] = $this->db->f('label');
+		}
+		
+		return $results;
     }
 }
 ?>
