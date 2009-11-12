@@ -81,7 +81,6 @@
 		<label for="ctrl_search_option"><?php echo lang('search_where') ?></label>
 		<select name="search_option" id="<?php echo $list_id ?>_ctrl_search_option">
 			<option value="all"><?php echo lang('all') ?></option>
-			<option value="id"><?php echo lang('serial') ?></option>
 			<option value="name"><?php echo lang('name') ?></option>
 			<option value="address"><?php echo lang('address') ?></option>
 			<option value="property_id"><?php echo lang('property_id') ?></option>
