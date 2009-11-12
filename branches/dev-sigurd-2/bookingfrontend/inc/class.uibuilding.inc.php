@@ -12,6 +12,7 @@
 
 		public function schedule()
 		{
+			$backend = phpgw::get_var('backend', 'GET');
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
 			$building['application_link'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uiapplication.add', 
@@ -24,8 +25,15 @@
 				'phpgw_return_as' => 'json',
 			));
 
+			// the schedule can also be used from backend
+			// if so we want to change default date shown in the calendar
+			if ($backend == 'true')
+			{
+				$building['date'] = phpgw::get_var('date', 'GET');
+			}
+
 			self::add_javascript('booking', 'booking', 'schedule.js');
-			self::render_template('building_schedule', array('building' => $building));
+			self::render_template('building_schedule', array('building' => $building, 'backend' => $backend));
 		}
 		
 		public function show()

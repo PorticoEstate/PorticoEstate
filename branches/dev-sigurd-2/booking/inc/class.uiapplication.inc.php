@@ -532,6 +532,11 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
+
+			$cal_date = strtotime($application['dates'][0]['from_']);
+			$cal_date = date('Y-m-d', $cal_date);
+
+			$application['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building_info['id'], 'backend' => 'true', 'date' => $cal_date));
 			$resource_ids = '';
 			foreach($application['resources'] as $res)
 			{

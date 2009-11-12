@@ -74,8 +74,13 @@
 		</dl>
         <dl class="proplist-col">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Where?')" /></dt>
-            <dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
-            <dd><xsl:value-of select="application/building_name"/></dd>
+			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
+            <dd><xsl:value-of select="application/building_name"/>
+			(<a href="javascript: void(0)" 
+				onclick="window.open('/bookingfrontend/{application/schedule_link}', 
+					     '', 
+						   'width=1000, height=600'); 
+						      return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)</dd>
             <dd><div id="resources_container"/></dd>
         </dl>
         <dl class="proplist-col">

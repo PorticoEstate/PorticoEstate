@@ -3,22 +3,24 @@
 	<iframe id="yui-history-iframe" src="../phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	
-    <div id="content">
-        <ul class="pathway">
-			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
-            <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="building/building_link"/></xsl:attribute>
-                    <xsl:value-of select="building/name"/>
-                </a>
-            </li>
-            <li><xsl:value-of select="php:function('lang', 'Schedule')"/></li>
-        </ul>
+	<div id="content">
+		<xsl:if test="backend != 'true'">
+			<ul class="pathway">
+				<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
+				<li>
+					<a>
+						<xsl:attribute name="href"><xsl:value-of select="building/building_link"/></xsl:attribute>
+						<xsl:value-of select="building/name"/>
+					</a>
+				</li>
+				<li><xsl:value-of select="php:function('lang', 'Schedule')"/></li>
+			</ul>
 
-        <xsl:call-template name="msgbox"/>
+			<xsl:call-template name="msgbox"/>
 
-		<button onclick="YAHOO.booking.newApplicationForm();"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
-		- Søk ledig tid
+			<button onclick="YAHOO.booking.newApplicationForm();"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+			- Søk ledig tid
+		</xsl:if>
 
 		<ul id="week-selector">
 			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
