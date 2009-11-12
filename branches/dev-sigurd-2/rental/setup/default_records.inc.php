@@ -311,9 +311,9 @@ $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (16,'
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (17,'1129-01')");
 $oProc->query("INSERT INTO rental_unit(composite_id, location_code) VALUES (18,'VE01-01-15')");
 */
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',90,'119001','119001')");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before) VALUES ({$loc_id_in},'contract_type_innleie',90)");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',90, '15')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '15')");
 
 $oProc->query("INSERT INTO rental_contract_types (label, responsibility_id) VALUES ('Egne', 1)");
 $oProc->query("INSERT INTO rental_contract_types (label, responsibility_id) VALUES ('Innleie', 1)");

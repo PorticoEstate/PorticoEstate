@@ -24,6 +24,7 @@
 		// Admin tables
 		'rental_billing_term',
 		'rental_price_item',
+		'rental_contract_types'
 	//	'rental_custom_field_type',
 	//	'rental_rental_object_type'
 	);

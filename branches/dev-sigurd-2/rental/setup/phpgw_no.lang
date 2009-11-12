@@ -328,6 +328,7 @@ System setting for project id can not be more than 6 characters.	rental	no	Syste
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
+terminated_contracts	rental	no	Opphørt
 the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
 thousands separator	rental	no	Skilletegn for tusen
 t_functions	rental	no	Funksjoner

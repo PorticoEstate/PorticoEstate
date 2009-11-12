@@ -46,7 +46,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 
 	<?php
-	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','notifications','contractsClosingDueDate');
+	$panels = array('workingOnContracts','executiveOfficerOnContracts','endingContracts','notifications','contractsClosingDueDate','terminatedContracts');
 	$GLOBALS['phpgw']->preferences->account_id=$GLOBALS['phpgw_info']['user']['account_id'];
 	$preferences = $GLOBALS['phpgw']->preferences->read();
 		//var_dump($preferences);
@@ -168,6 +168,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('executive_officer_for') ?></button>
 	<button type="button" id="endingContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_under_dismissal') ?></button>
 	<button type="button" id="contractsClosingDueDate_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_closing_due_date') ?></button>
+	<button type="button" id="terminatedContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('terminated_contracts') ?></button>
 	<button type="button" id="notifications_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" /> <?php echo lang('notifications') ?></button>
 	<!-- <button type="button" id="shortcuts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-jump.png" /> <?php echo lang('shortcuts') ?></button> -->
 	&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
@@ -257,6 +258,22 @@ YAHOO.util.Event.addListener(window, "load", function() {
 				array("key" => "due_date", "label" => lang('due_date'), "index" => 2),
 			);
 			$hide_cols = array("date_start","id");
+			include('contract_list_partial.php');
+		?>
+	</div>
+</div>
+
+<div id="terminatedContracts_panel">
+	<div class="hd"><!-- <img style="" src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/text-x-generic.png" alt="icon" /> --> <?php echo lang('terminated_contracts') ?> </div>
+    <div class="bd">
+		<?php
+			$list_form = false;
+			$list_id = 'terminated_contracts';
+			$url_add_on = '&amp;type='.$list_id;
+			$extra_cols = array(
+				array("key" => "composite", "label" => lang('composite'), "index" => 1),
+			);
+			$hide_cols = array("date_start","id","total_price","max_area");
 			include('contract_list_partial.php');
 		?>
 	</div>
