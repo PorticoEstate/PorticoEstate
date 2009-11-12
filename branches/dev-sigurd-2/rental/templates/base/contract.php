@@ -418,7 +418,7 @@
 						?>
 					</dd>
 					<dt>
-						<label for="name"><?php echo lang('due_date') ?></label>
+						<label for="due_date"><?php echo lang('due_date') ?></label>
 					</dt>
 					<dd>
 						<?php

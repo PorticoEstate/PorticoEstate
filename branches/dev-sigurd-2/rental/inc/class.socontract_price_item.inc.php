@@ -184,5 +184,19 @@ class rental_socontract_price_item extends rental_socommon
 		}
 	}
 	
+	/**
+	 * Select max area of all "active" price-items on a contract.
+	 * 
+	 * @param $contract_id	the id of the contract to generate total price on 
+	 * @return max_area	the max area
+	 */
+	public function get_max_area($contract_id){
+		$this->db->query("SELECT max(area) AS max_area FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area");
+		if($this->db->next_record()){
+			$max_area = $this->db->f('max_area');
+			return $max_area;
+		}
+	}
+	
 }
 ?>

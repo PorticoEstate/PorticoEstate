@@ -41,6 +41,7 @@
 		protected $project_id;
 		protected $due_date;
 		protected $total_price;
+		protected $max_area;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -516,7 +517,8 @@
 				'service_id' => $this->get_service_id(),
 				'responsibility_id' => $this->get_responsibility_id(),
 				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
-				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id())
+				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
+				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id())
 			);
 		}
 		
@@ -544,6 +546,16 @@
 		public function get_total_price()
 		{
 			return $this->total_price;
+		}
+		
+		public function set_max_area($max_area)
+		{
+			$this->max_area = $max_area;
+		}
+	
+		public function get_max_area()
+		{
+			return $this->max_area;
 		}
 		
 	}

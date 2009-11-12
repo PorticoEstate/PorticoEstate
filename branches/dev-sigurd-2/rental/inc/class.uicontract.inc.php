@@ -569,5 +569,12 @@
 			$result_data = array('results' => $result_array, 'total_records' => 1);
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}
+		public function get_max_area(){
+			$contract_id = (int)phpgw::get_var('contract_id');
+			$total_price =  rental_socontract_price_item::get_instance()->get_max_area($contract_id);
+			$result_array = array('max_area' => $max_area);
+			$result_data = array('results' => $result_array, 'total_records' => 1);
+			return $this->yui_results($result_data, 'total_records', 'results');
+		}
 	}
 ?>

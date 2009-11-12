@@ -25,6 +25,7 @@ area_not_found	rental	no	Kunne ikke finne detaljer om arealet
 area	rental	no	Areal
 area decimal places	rental	no	Antall desimaler for arealer
 area suffix	rental	no	Areal suffix
+area_max	rental	no	Max areal
 audience	rental	no	Målgrupper
 availability	rental	no	Tilgjengelighet
 available_areas	rental	no	Tilgjenglig areal
@@ -162,7 +163,7 @@ last_updated	rental	no	Sist oppdatert
 level	rental	no	Nivå
 link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer
-log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus. 
+log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus.
 message	rental	no	Melding
 messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver	
 messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
