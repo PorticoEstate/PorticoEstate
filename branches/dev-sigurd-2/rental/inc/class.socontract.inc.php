@@ -62,7 +62,6 @@ class rental_socontract extends rental_socommon
 			$like_clauses = array();
 			switch($search_type){
 				case "id":
-					$like_clauses[] = "contract.id = $int_value_of_search";
 					$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
 					break;
 				case "party_name":
@@ -75,7 +74,6 @@ class rental_socontract extends rental_socommon
 					break;
 				case "all":
 					
-					$like_clauses[] = "contract.id = $int_value_of_search";
 					$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
 					$like_clauses[] = "contract.comment $this->like $like_pattern";
 					$like_clauses[] = "party.first_name $this->like $like_pattern";

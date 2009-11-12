@@ -12,8 +12,8 @@
 
 	// Defining columns for datatable
 	var columnDefs = [{
-		key: "id",
-		label: "<?php echo lang('id') ?>",
+		key: "identifier",
+		label: "<?php echo lang('organisation_or_ssn_number') ?>",
 	    sortable: true
 	},
 	{

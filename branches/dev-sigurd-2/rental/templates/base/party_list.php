@@ -11,9 +11,9 @@
 		'click',
 		function(e)
 		{
-	  	YAHOO.util.Event.stopEvent(e);
-	  	window.location = 'index.php?menuaction=rental.uiparty.add';
-    }
+            YAHOO.util.Event.stopEvent(e);
+            window.location = 'index.php?menuaction=rental.uiparty.add';
+        }
    );
 </script>
 

@@ -66,9 +66,6 @@ class rental_soparty extends rental_socommon
 			$like_pattern = "'%".$search_for."%'";
 			$like_clauses = array();
 			switch($search_type){
-				case "id":
-					$like_clauses[] = "party.id = $search_for";
-					break;
 				case "name":
 					$like_clauses[] = "party.first_name $this->like $like_pattern";
 					$like_clauses[] = "party.last_name $this->like $like_pattern";

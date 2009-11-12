@@ -157,7 +157,7 @@
 		<label for="<?php echo $list_id ?>_ctrl_toggle_search_type"><?php echo lang('search_where') ?></label>
 		<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_search_type">
 			<option value="all" selected="selected"><?php echo lang('all') ?></option>
-			<option value="id"><?php echo lang('id') ?></option>
+			<option value="id"><?php echo lang('contract_id') ?></option>
 			<option value="party_name"><?php echo lang('party_name') ?></option>
 			<option value="composite"><?php echo lang('composite_name') ?></option>
 		</select>

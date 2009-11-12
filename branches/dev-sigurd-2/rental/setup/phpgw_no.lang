@@ -241,6 +241,7 @@ ODS	rental	no	ODS
 One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
 One or more price items have an invalid Agresso id. Id must consist of one capital letter and three digits.	rental	no	Ett eller flere priselementer har en ugyldig Agresso-id. Iden må bestå av én stor bokstav og tre tall.
 organisation_number	rental	no	Organisasjonsnummer
+organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
 other_guarantee	rental	no	Annen garanti
