@@ -364,6 +364,11 @@
 					// TODO: What to use as reference here?  Currently using K-number
 					$this->warnings[] = "Price period of contract " . $this->decode($data[5]) . " is month.  Ignored.";
 				}
+
+                // Send warning if contract status is '3' (Under avslutning)
+                if($data[6] == 3) {
+                    $this->warnings[] = "Status of contract " . $this->decode($data[5]) . " is '".lang('contract_under_dismissal')."'";
+                }
 				
 				$contract->set_billing_start_date(strtotime($this->decode($data[16])));
 				

@@ -69,6 +69,7 @@ contract_number	rental	no	Kontraktnummer
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
 contracts	rental	no	Kontrakter
 contracts_under_dismissal	rental	no	Siste under avslutning
+contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
 contract_type_eksternleie	rental	no	Eksternleie
 contract_type_innleie	rental	no	Innleie
