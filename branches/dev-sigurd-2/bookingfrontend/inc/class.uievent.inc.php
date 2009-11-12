@@ -30,7 +30,7 @@
 				$res_names[] = $res['name'];
 			}
 			$event['resource_info'] = join(', ', $res_names);
-			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
+			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $event['resources'][0]['building_id']));
 			$event['when'] = pretty_timestamp($event['from_']).' - '.pretty_timestamp($event['to_']);
 			self::render_template('event_info', array('event'=>$event));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
