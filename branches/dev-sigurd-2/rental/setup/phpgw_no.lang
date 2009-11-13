@@ -87,6 +87,9 @@ count	rental	no	Antall
 count_suffix	rental	no	stk
 count_suffix	rental	no	stk
 create_shortcut	rental	no	Ny snarvei
+create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
+create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
+create_contract_contract_type_internleie	rental	no	Opprett internleiekontrakt
 currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
 currency suffix	rental	no	Valuta suffix

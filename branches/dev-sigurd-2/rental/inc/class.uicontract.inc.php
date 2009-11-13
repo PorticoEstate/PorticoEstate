@@ -328,6 +328,7 @@
 						$error = lang('messages_form_error');
 					}
 				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 			}
 			else if(isset($_POST['add_notification']))
 			{
@@ -378,45 +379,24 @@
 		 */
 		public function add_from_composite()
 		{
-			if($this->isExcutiveOfficer())
+			$contract = new rental_contract();
+			$contract->set_location_id(phpgw::get_var('responsibility_id'));
+			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
-				$contract = new rental_contract();
-				
-				// Sets the first location this user is executive officer (add access) for
-				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				foreach($types as $id => $label)
+				$so_contract = rental_socontract::get_instance();
+				if($so_contract->store($contract))
 				{
-					$names = $this->locations->get_name($id);
-					if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
-					{
-						if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
-						{
-							$contract->set_location_id($id);
-							break;
-						}
-					}
-				}
-				
-				if($contract->store())
-				{
-					// Get the composite object the user asked for from the DB
-					$composite = rental_composite::get(phpgw::get_var('composite_id'));
 					// Add that composite to the new contract
-					$contract->add_composite($composite);
+					$so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
 					
-					
-					
-					if($contract->store())
-					{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
-					}
-					else
-					{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
-					}
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
 				}
 			}
-			
+		
 			// If no executive officer 
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
 		}

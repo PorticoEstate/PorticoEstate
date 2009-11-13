@@ -521,6 +521,7 @@ class rental_socontract extends rental_socommon
         // Contract has no old or new ID, get next ID available from DB
         if($this->marshal($contract->get_id(), 'int') == 0) {
             $new_id = $this->db->next_id('rental_contract');
+            $contract->set_id($new_id);
         }
 
 		// These are the columns we know we have or that are nullable

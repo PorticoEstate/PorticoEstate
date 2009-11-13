@@ -95,6 +95,21 @@
 			$result_data = array('results' => $rows, 'total_records' => $object_count);
 			
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
+			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$create_types = array();
+			foreach($contract_types as $id => $label)
+			{
+	
+				$names = $this->locations->get_name($id);
+				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+					{
+						$create_types[] = array($id, $label);
+					}
+				}
+			}
 
 			//Add action column to each row in result table
 			array_walk(
@@ -103,7 +118,8 @@
 				array(													// Parameters (non-object pointers)
 					$contract_id,										// [1] The contract id
 					$query_type,										// [2] The type of query
-					$editable											// [3] Editable flag			
+					$editable,											// [3] Editable flag			
+					$create_types										// [4] Types of contract to create
 				)
 			);
 
@@ -128,6 +144,7 @@
 			$contract_id = $params[0];
 			$type = $params[1];
 			$editable = $params[2];
+			$create_types = $params[3];
 			
 			// Depending on the type of query: set an ajax flag and define the action and label for each row
 			switch($type)
@@ -191,6 +208,11 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
+					foreach($create_types as $create_type) {
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_from_composite', 'id' => $value['id'], 'responsibility_id' => $create_type[0])));
+						$value['labels'][] = lang('create_contract_'.$create_type[1]);
+					}
 			}
 		}
 
