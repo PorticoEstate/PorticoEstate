@@ -256,6 +256,7 @@
 				$composite->set_custom_address_2($this->decode($data[7]));
 				$composite->set_custom_postcode($this->decode($data[8]));
 				$composite->set_description($this->decode($data[3]));
+                $composite->set_object_type_id($this->decode($data[25]));
 				
 				$composite->set_is_active($data[19] == "-1");
 				
@@ -509,7 +510,7 @@
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-                        $this->messages[] = "Price item '$facilit_id'/'{$admin_price_item->get_id()}' is area based. Area is '{$detail_price_items[$facilit_id]['amount']}'";
+                        //$this->messages[] = "Price item '$facilit_id'/'{$admin_price_item->get_id()}' is area based. Area is '{$detail_price_items[$facilit_id]['amount']}'";
 						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {

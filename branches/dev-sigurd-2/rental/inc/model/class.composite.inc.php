@@ -19,6 +19,7 @@
 		protected $custom_house_number;
 		protected $custom_postcode;
 		protected $custom_place;
+        protected $object_type_id;
 		
 		protected $units;
 	
@@ -183,6 +184,14 @@
 			return $area;
 
 		}
+
+        public function set_object_type_id(int $obj_type) {
+            $this->object_type_id = $obj_type;
+        }
+
+        public function get_object_type_id() {
+            return (int) $this->object_type_id;
+        }
 		
 		/**
 		 * Return a string representation of the composite.

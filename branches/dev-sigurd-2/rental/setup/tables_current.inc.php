@@ -26,6 +26,7 @@
 					'postcode' =>			array('type' => 'varchar','precision' => '255'),
 					'place' =>				array('type' => 'varchar','precision' => '255'),
 					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
+                    'object_type_id' =>     array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => null),
 				),
 				'pk' => array('id'),
 				'fk' => array(),
