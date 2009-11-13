@@ -352,9 +352,12 @@
 					case 2: // Quarterly
 						$contract->set_term_id(4);
 						break;
-					case 3: // Yearly
-						$contract->set_term_id(2);
-						break;
+                    case 4: // Half-year
+                        $contract->set_term_id(3);
+                        break;
+                    case 5: // Yearly
+                        $contract->set_term_id(2);
+                        break;
 				}
 				
 				// What period the prices are calculated from.  4=month, 8=year
