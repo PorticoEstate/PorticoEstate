@@ -43,6 +43,9 @@
 		protected $contract_type_id;
 		protected $total_price;
 		protected $max_area;
+		protected $notify_before;
+		protected $notify_before_due_date;
+		protected $notify_after_termination_date;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -520,7 +523,8 @@
 				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
 				'contract_type_id' => $this->get_contract_type_id(),
 				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
-				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id())
+				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
+				'contract_status' => $this->get_contract_status()
 			);
 		}
 		
@@ -568,6 +572,75 @@
 		public function get_contract_type_id()
 		{
 			return $this->contract_type_id;
+		}
+		
+		public function set_notify_before($notify_before)
+		{
+			$this->notify_before = $notify_before;
+		}
+	
+		public function get_notify_before()
+		{
+			return $this->notify_before;
+		}
+		
+		public function set_notify_before_due_date($notify_before_due_date)
+		{
+			$this->notify_before_due_date = $notify_before_due_date;
+		}
+	
+		public function get_notify_before_due_date()
+		{
+			return $this->notify_before_due_date;
+		}
+
+		public function set_notify_after_termination_date($notify_after_termination_date)
+		{
+			$this->notify_after_termination_date = $notify_after_termination_date;
+		}
+	
+		public function get_notify_after_termination_date()
+		{
+			return $this->notify_after_termination_date;
+		}
+	
+		public function get_contract_status()
+		{
+			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			$ts_notify_before = $this->notify_before * 60 * 60 * 24;
+			$ts_notify_before_due_date = $this->notify_before_due_date * 60 * 60 * 24;
+			$ts_notify_after_termination_date = $this->notify_after_termination_date * 60 * 60 * 24;
+			$date_start = $this->get_contract_date()->get_start_date();
+			$date_end = $this->get_contract_date()->get_end_date();
+			
+			if(isset($date_start) && ($ts < $date_start || $date_start == ''))
+			{
+				return lang("under_planning");
+			}
+			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts > ($date_end - $ts_notify_before)) || !isset($date_end)))
+			{
+				return lang("active_single");
+			}
+			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts <= ($date_end - $ts_notify_before)) || !isset($date_end)))
+			{
+				return lang("under_dismissal");
+			}
+			else if(isset($due_date) && $this->due_date >= $ts && ($this->due_date - $notify_before_due_date) <= $ts)
+			{
+				return lang("closing_due_date");
+			}
+			else if(isset($date_end) && $date_end >= ($ts - $notify_after_termination_date) && $date_end < $ts)
+			{
+				return lang("terminated_contract");
+			}
+			else if(isset($date_end) && $date_end < $ts)
+			{
+				return lang("ended");
+			}
+			else
+			{
+				return lang("status_unknown");
+			}
 		}
 		
 	}

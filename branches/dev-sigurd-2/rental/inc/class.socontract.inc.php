@@ -228,7 +228,7 @@ class rental_socontract extends rental_socommon
 			$columns[] = 'c_t.is_payer';		
 			$columns[] = 'composite.id AS composite_id';
 			$columns[] = 'composite.name AS composite_name';
-			$columns[] = 'type.title, type.notify_before';
+			$columns[] = 'type.title, type.notify_before, type.notify_before_due_date, type.notify_after_termination_date';
 			$columns[] = 'last_edited.edited_on';
 			$columns[] = 'invoice.timestamp_end';	
 			$cols = implode(',',$columns);

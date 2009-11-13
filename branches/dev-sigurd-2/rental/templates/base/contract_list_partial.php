@@ -60,6 +60,10 @@
 		label: "<?php echo lang('area_max') ?>"
 	},
 	{
+		key: "contract_status",
+		label: "<?php echo lang('contract_status') ?>"
+	},
+	{
 		key: "actions",
 		hidden: true
 	},
