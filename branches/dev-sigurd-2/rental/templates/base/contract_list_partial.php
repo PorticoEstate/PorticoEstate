@@ -212,7 +212,7 @@
 var datestatus = document.getElementById('date_status');
 if(datestatus != undefined && datestatus != null) {
     if(datestatus.addEventListener) {
-        datestatus.addEventListener('change', date_event, false);
+        datestatus.addEventListener('change', 'date_event', false);
     }
 
     function date_event() {
