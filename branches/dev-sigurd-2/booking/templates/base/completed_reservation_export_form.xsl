@@ -30,14 +30,14 @@
 			<input name="season_name" type="hidden" id="field_season_name" value="{export/season_name}"/>
 			<dt><label for="field_season_id"><xsl:value-of select="php:function('lang', 'Season')" /></label></dt>
 			<dd>
-				<xsl:value-of select="phpgw:conditional((export/season_id and normalize-space(export/season_id)), export/season_name, php:function('lang', 'Alla'))"/>
+				<xsl:value-of select="phpgw:conditional((export/season_id and normalize-space(export/season_id)), export/season_name, php:function('lang', 'All'))"/>
 			</dd>
 			
 			<input name="building_id" type="hidden" id="field_building_id" value="{export/building_id}"/>
 			<input name="building_name" type="hidden" id="field_building_name" value="{export/building_name}"/>
 			<dt><label for="field_building_id"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
-				<xsl:value-of select="phpgw:conditional((export/building_id and normalize-space(export/building_id)), export/building_name, php:function('lang', 'Alla'))"/>
+				<xsl:value-of select="phpgw:conditional((export/building_id and normalize-space(export/building_id)), export/building_name, php:function('lang', 'All'))"/>
 			</dd>
 			
 			

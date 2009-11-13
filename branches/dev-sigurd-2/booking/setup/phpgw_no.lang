@@ -240,7 +240,7 @@ Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
 Field %1 is required	booking	no	Feltet %1 kreves
 Download	booking	no	Last ner
-Invoice Data Exports	booking	no	Fakturaexporter
+Invoice Data Exports	booking	no	Fakturaeksporter
 Internal	booking	no	Intern
 External	booking	no	Extern
 Start date must be after %1	booking	no	Fradato må være etter %1
@@ -311,3 +311,27 @@ Recipients	booking	no	Mottakere
 Mail subject	booking	no	Emne
 Mail body	booking	no	Melding
 The emails were sent successfully	booking	no	E-postene ble sendt uten feil
+What	booking	no	Hva
+Res. Type	booking	no	Type
+Cust. Type	booking	no	Kundetype
+Customer ID	booking	no	Kundeid
+Exported	booking	no	Eksportert
+Export File	booking	no	Eksportfil
+Order id	booking	no	Ordreid
+Export Settings	booking	no	Eksportinnstillinger
+Export	booking	no	Eksporter
+Not Generated	booking	no	Ikke generert
+Generated Files	booking	no	Genererte filer
+Generate files	booking	no	Generer filer
+All	booking	no	Alle
+Choose	booking	no	Velg
+Internal Account Codes	booking	no	interne kontokoder
+External Account Codes	booking	no	eksterne kontokoder
+Total Items	booking	no	Antall elementer
+Total Cost	booking	no	Totalsum
+Int. invoice file	booking	no	Intern fakturafil
+Ext. invoice file	booking	no	Ekstern fakturafil
+Asynchronous Tasks	booking	no	Systemjobber
+booking_async_task_update_reservation_state_enabled	booking	no	Oppdater reservasjonsstatus
+booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på bookinger og arrangementer
+Update	booking	no	Oppdater
