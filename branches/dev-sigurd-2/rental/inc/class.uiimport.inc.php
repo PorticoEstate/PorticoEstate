@@ -367,6 +367,10 @@
 					// TODO: What to use as reference here?  Currently using K-number
 					$this->warnings[] = "Price period of contract " . $this->decode($data[5]) . " is month.  Ignored.";
 				}
+                elseif($price_period == 5) {
+                    // The price period is 5, which is unknown.  We ignore this but print a warning.
+					$this->warnings[] = "Price period of contract " . $this->decode($data[5]) . " is unknown (value: 5).  Ignored.";
+                }
 
                 // Send warning if contract status is '3' (Under avslutning)
                 if($data[6] == 3) {
