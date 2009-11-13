@@ -588,7 +588,7 @@
 					'workorder_id'		=> $this->db->f('workorder_id'),
 					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
-					'calculation'		=> ($this->db->f('calculation')*(1+$this->db->f('addition')/100))+$this->db->f('rig_addition'),
+					'calculation'		=> $this->db->f('calculation'),
 					'vendor_id'			=> $this->db->f('vendor_id'),
 					'act_mtrl_cost'		=> $this->db->f('act_mtrl_cost'),
 					'act_vendor_cost'	=> $this->db->f('act_vendor_cost'),

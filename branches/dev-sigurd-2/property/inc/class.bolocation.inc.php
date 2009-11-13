@@ -641,7 +641,7 @@
 			{
 				$values['attributes'] = $this->custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$values = $this->so->read_single($location_code, $values);
-				$values = $this->custom->prepare($values, 'property','.location.' . $type_id, $extra['view']);
+				$values = $this->custom->prepare($values, 'property',".location.{$type_id}", $extra['view']);
 			}
 			else
 			{

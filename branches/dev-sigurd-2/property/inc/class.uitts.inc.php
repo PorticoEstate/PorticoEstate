@@ -62,7 +62,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::helpdesk';
 			if($this->tenant_id	= $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
-				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+	//			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			}
@@ -245,7 +245,7 @@
 		{
 			if($this->tenant_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
+//				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
 			}
 
 			if(!$this->acl_read)
@@ -1250,6 +1250,10 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
 			}
+			if($this->tenant_id)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.add2'));
+			}
 
 			$bolocation		= CreateObject('property.bolocation');
 
@@ -1601,7 +1605,7 @@
 				}
 			}
 
-			$values['location_data'] = $bolocation->read_single($values['location_code'],array('extra'=>array('tenant_id'=>$this->tenant_id)));
+			$values['location_data'] = $bolocation->read_single($values['location_code'],array('tenant_id'=>$this->tenant_id, 'view' => true));
 
 			$values['street_name'] = $values['location_data']['street_name'];
 			$values['street_number'] = $values['location_data']['street_number'];
@@ -1624,26 +1628,6 @@
 
 			if (isset($values['save']))
 			{
-
-// FIX this : relevant?
-/*				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
-
-				if(isset($insert_record_entity) && is_array($insert_record_entity))
-				{
-					for ($j=0;$j<count($insert_record_entity);$j++)
-					{
-						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-					}
-				}
-
-				while (is_array($insert_record['extra']) && list($key,$column) = each($insert_record['extra']))
-				{
-					if(isset($_POST[$key]) && $_POST[$key])
-					{
-						$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
-					}
-				}
-*/
 				if(!$values['subject'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please type a subject for this ticket !'));
@@ -1659,7 +1643,7 @@
 					$receipt = $this->bo->add($values);
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index2'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 				}
 				else
 				{
@@ -1688,102 +1672,41 @@
 				'menuaction'	=> 'property.uitts.add2'
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-			switch(substr($dateformat,0,1))
-			{
-				case 'M':
-					$dateformat_validate= "javascript:vDateType='1'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'1')";
-					break;
-				case 'y':
-					$dateformat_validate="javascript:vDateType='2'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'2')";
-					break;
-				case 'D':
-					$dateformat_validate="javascript:vDateType='3'";
-					$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
-					$onBlur		= "DateFormat(this,this.value,event,true,'3')";
-					break;
-			}
-
-
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
 			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
 
 			$data = array
 			(
-				'lang_dateformat' 					=> strtolower($dateformat),
-				'dateformat_validate'				=> $dateformat_validate,
-				'onKeyUp'							=> $onKeyUp,
-				'onBlur'							=> $onBlur,
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'						=> $location_data,
-				'lang_assign_to'					=> lang('Assign to'),
-				'lang_no_user'						=> lang('Select user'),
-				'lang_user_statustext'				=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
-				'select_user_name'					=> 'values[assignedto]',
-				'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['assignedto'],$this->acl_location),
-
-				'lang_group'						=> lang('Group'),
-				'lang_no_group'						=> lang('No group'),
-				'group_list'						=> $this->bocommon->get_group_list('select',$values['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
-				'select_group_name'					=> 'values[group_id]',
-
-				'lang_priority'						=> lang('Priority'),
-				'lang_priority_statustext'			=> lang('Select the priority the selection belongs to.'),
-				'select_priority_name'				=> 'values[priority]',
-				'priority_list'						=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
 
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index2')),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index')),
 				'lang_subject'						=> lang('Subject'),
 				'lang_subject_statustext'			=> lang('Enter the subject of this ticket'),
 
 				'lang_details'						=> lang('Details'),
 				'lang_details_statustext'			=> lang('Enter the details of this ticket'),
-				'lang_category'						=> lang('category'),
+
 				'lang_save'							=> lang('save'),
 				'lang_done'							=> lang('done'),
 				'value_details'						=> (isset($values['details'])?$values['details']:''),
 				'value_subject'						=> (isset($values['subject'])?$values['subject']:''),
 
-				'lang_finnish_date'					=> lang('finnish date'),
-				'value_finnish_date'				=> (isset($values['finnish_date'])?$values['finnish_date']:''),
-
 				'lang_done_statustext'				=> lang('Back to the ticket list'),
 				'lang_save_statustext'				=> lang('Save the ticket'),
-				'lang_no_cat'						=> lang('no category'),
-				'lang_town_statustext'				=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
-				'lang_part_of_town'					=> lang('Part of town'),
-				'lang_no_part_of_town'				=> lang('No part of town'),
-				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
-				'mailnotification'					=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
-				'lang_mailnotification'				=> lang('Send e-mail'),
-				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
-				'pref_send_mail'					=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 				'lang_contact_phone'				=> lang('contact phone'),
 				'lang_contact_phone_statustext'		=> lang('contact phone'),
-				'value_contact_phone'				=> (isset($values['contact_phone'])?$values['contact_phone']:''),
+				'value_contact_phone'				=> isset($values['contact_phone'])?$values['contact_phone']:'',
 
 				'lang_contact_email'				=> lang('contact email'),
 				'lang_contact_email_statustext'		=> lang('contact email'),
-				'value_contact_email'				=> (isset($values['contact_email'])?$values['contact_email']:''),
+				'value_contact_email'				=> isset($values['contact_email'])?$values['contact_email']:'',
 			);
 
-//_debug_array($data);
 			$appname					= lang('helpdesk');
-			$function_msg					= lang('add ticket');
+			$function_msg				= lang('add ticket');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add2' => $data));
@@ -1797,9 +1720,15 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+			$id = phpgw::get_var('id', 'int', 'GET');
+
+			if($this->tenant_id)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.view2', 'id' => $id ));
+			}
+
 			$bolocation	= CreateObject('property.bolocation');
 
-			$id = phpgw::get_var('id', 'int', 'GET');
 			$values = phpgw::get_var('values');
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 			$values['ecodimb']			= phpgw::get_var('ecodimb');
@@ -2670,7 +2599,7 @@
 				'value_category_name'			=> $ticket['category_name'],
 
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$form_link),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index2')),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uitts.index')),
 				'value_subject'					=> $ticket['subject'],
 				'lang_subject_statustext'		=> lang('update subject'),
 				'value_id'						=> '[ #'. $id . ' ] - ',

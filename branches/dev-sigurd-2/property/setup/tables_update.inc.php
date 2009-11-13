@@ -3853,3 +3853,24 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.575 to 0.9.17.576
+	* Add variants of closed and approved-status for tickets
+	* 
+	*/
+
+	$test[] = '0.9.17.575';
+	function property_upgrade0_9_17_575()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant','contact_email',array('type' => 'varchar','precision' => '64','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','contact_email',array('type' => 'varchar','precision' => '64','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.576';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -572,7 +572,7 @@
 					'descr'					=> stripslashes($this->db->f('descr')),
 					'status'				=> $this->db->f('status'),
 					'budget'				=> (int)$this->db->f('budget'),
-					'calculation'			=> $this->db->f('calculation')>0?($this->db->f('calculation')*(1+$this->db->f('addition')/100))+$this->db->f('rig_addition'):0,
+					'calculation'			=> $this->db->f('calculation'),
 					'b_account_id'			=> (int)$this->db->f('account_id'),
 					'addition_percentage'	=> (int)$this->db->f('addition'),
 					'addition_rs'			=> (int)$this->db->f('rig_addition'),
