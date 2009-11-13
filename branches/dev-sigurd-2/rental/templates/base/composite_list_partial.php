@@ -9,7 +9,7 @@
 		{
 			key: "location_code",
 			label: "<?php echo lang('location_code') ?>",
-			sortable: false
+			sortable: true
 		},
 		{
 			key: "name",
@@ -17,9 +17,9 @@
 		    sortable: true
 		},
 		{
-			key: "address",
+			key: "address_1",
 			label: "<?php echo lang('address') ?>",
-		    sortable: false
+		    sortable: true
 		},
 		{
 			key: "gab_id",
