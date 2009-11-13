@@ -147,6 +147,12 @@
 					</xsl:for-each>
 				</table>
 			</dd>
+			<dt><xsl:value-of select="php:function('lang', 'SMS total')" /></dt>
+			<dd>
+				<input type="text" name="sms_total">
+					<xsl:attribute name="value"><xsl:value-of select="booking/sms_total"/></xsl:attribute>
+				</input>
+			</dd>
 			<dt><label for="field_reminder"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></label></dt>
 			<dd>
 				<select name="reminder" id="field_reminder">

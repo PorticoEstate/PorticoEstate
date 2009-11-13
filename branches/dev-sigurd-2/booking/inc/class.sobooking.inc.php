@@ -17,6 +17,7 @@
 					'to_'		=> array('type' => 'timestamp', 'required'=> true),
 					'season_id'		=> array('type' => 'int', 'required' => true),
 					'cost'		=> array('type' => 'decimal', 'required' => true),
+					'sms_total'		=> array('type' => 'int', 'required' => false),
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
 					'secret'	=> array('type' => 'string', 'required' => true),

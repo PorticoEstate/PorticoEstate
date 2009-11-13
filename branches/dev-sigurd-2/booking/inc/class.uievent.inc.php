@@ -28,7 +28,7 @@
 										'building_id', 'building_name', 
 										'contact_name', 'contact_email', 'contact_phone',
 										'from_', 'to_', 'active', 'audience', 'reminder',
-										'customer_internal');
+										'sms_total', 'customer_internal');
 		}
 		
 		public function index()

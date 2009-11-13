@@ -21,6 +21,7 @@
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
 					'secret'	=> array('type' => 'string', 'required' => true),
+					'sms_total'		=> array('type' => 'int', 'required' => false),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
 					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
 					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),

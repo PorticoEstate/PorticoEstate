@@ -139,6 +139,12 @@
 					</xsl:for-each>
 				</table>
 			</dd>
+			<dt><xsl:value-of select="php:function('lang', 'SMS total')" /></dt>
+			<dd>
+				<input type="text" name="sms_total">
+					<xsl:attribute name="value"><xsl:value-of select="event/sms_total"/></xsl:attribute>
+				</input>
+			</dd>
 		</dl>
 		<div class="clr"/>
         <dl class="form-col">

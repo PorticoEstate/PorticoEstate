@@ -32,7 +32,7 @@
 								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
 			                      'group_id', 'group_name', 'organization_id', 'organization_name',
-			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder');
+			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder', 'sms_total');
 		}
 		
 		public function index()
