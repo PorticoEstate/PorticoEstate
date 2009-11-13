@@ -319,7 +319,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract links";
-			
+
 			return $rentalobject_to_contract;
 		}
 		
@@ -376,6 +376,22 @@
 				$contract->set_invoice_header($this->decode($data[17]));
 				
 				$contract->set_comment($this->decode($data[18]));
+
+                // Old->new ID mapping
+                $contract_types = array(
+                    2 => 2, // "Internleie - innleid" -> Innleie
+                    3 => 1, // "Internleie - egne" -> Egne
+                    4 => 8, // "Tidsbegrenset" -> Annen (ekstern)
+                    5 => 4, // "Internleie - KF" -> KF
+                    12=> 5, // "Eksten Feste" -> Feste
+                    13=> 7, // "Ekstern Leilighet" -> Leilighet
+                    14=> 8, // "Ekstern Annen" -> Annen
+                    15=> 3, // "Intern - I-kontrakt" -> Inversteringskontrakt
+                    17=> NULL, // "Innleie" -> null
+                    18=> 8, // "Ekstern KF" -> Annen
+                    19=> 8  // "Ekstern I-kontrakt" -> Annen
+                    );
+                $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
 				$ansvar_tjeneste = $this->decode($data[26]);
