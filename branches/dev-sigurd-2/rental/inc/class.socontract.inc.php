@@ -160,10 +160,12 @@ class rental_socontract extends rental_socommon
 					$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
 					break;
 				case 'closing_due_date':
-					$filter_clauses[] = "(contract.due_date - (type.notify_before_due_date * (24 * 60 * 60)))  <= {$ts_query}";
+					$filter_clauses[] = "contract.due_date >= {$ts_query} AND (contract.due_date - (type.notify_before_due_date * (24 * 60 * 60)))  <= {$ts_query}";
+					$order = "ORDER BY contract.due_date ASC";
 					break;
 				case 'terminated_contracts':
 					$filter_clauses[] = "contract.date_end >= ({$ts_query} - (type.notify_after_termination_date * (24 * 60 * 60))) AND contract.date_end < {$ts_query}";
+					$order = "ORDER BY contract.date_end DESC";
 					break;
 				case 'ended':
 					$filter_clauses[] = "contract.date_end < {$ts_query}" ;
