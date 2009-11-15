@@ -415,8 +415,8 @@
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
 			$tax = 1+($config->config_data['fm_tax'])/100;
-			$workorder['calculation']	=number_format($workorder['calculation']*$tax, 2, ',', '');
-			$workorder['actual_cost']	=number_format(($workorder['act_mtrl_cost']+$workorder['act_vendor_cost']), 2, ',', '');
+			$workorder['calculation']	= $workorder['calculation'] * $tax;
+			$workorder['actual_cost']	= $workorder['act_mtrl_cost'] + $workorder['act_vendor_cost'];
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;

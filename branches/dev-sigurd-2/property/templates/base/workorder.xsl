@@ -304,7 +304,7 @@
 
 <!-- add / edit -->
 
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -774,6 +774,16 @@
 					<xsl:value-of select="lang_incl_tax"/>
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="php:function('lang', 'sum estimated cost')" />
+				</td>
+				<td>
+					<xsl:value-of select="value_sum_estimated_cost"/>
+					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+				</td>
+			</tr>
+
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_actual_cost"/>

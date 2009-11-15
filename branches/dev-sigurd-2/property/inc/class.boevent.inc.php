@@ -188,7 +188,7 @@ if ( !extension_loaded('mcal') )
 				$values['next'] = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'],$dateformat);
 			}
 
-			$this->find_scedules($criteria);
+	//		$this->find_scedules($criteria);
 
 			return $values;
 		}

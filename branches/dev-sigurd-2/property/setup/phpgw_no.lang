@@ -353,7 +353,7 @@ cost - either budget or calculation	property	no	Beløp - enten budsjett eller ka
 cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
 could not find any location to save to!	property	no	Kunne ikke finne lokalisering å lagre til
-count	property	no	tell
+count	property	no	Antall
 custom	property	no	Tilpasset
 customer	property	no	Kunde
 custom function	property	no	Egendefinert funksjon
@@ -1514,6 +1514,7 @@ subject	property	no	Overskrift
 subject changed	property	no	Emne er endret
 subject has been updated	property	no	Overskrift er oppdatert
 submit the search string	property	no	Send søkestrengen
+sum estimated cost	property	no	Sum estimert kostnad
 sum orders	property	no	Sum bestilling
 sum	property	no	Sum
 sum calculation	property	no	Sum kalkulasjon

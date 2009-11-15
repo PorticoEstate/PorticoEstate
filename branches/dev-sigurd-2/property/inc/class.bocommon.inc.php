@@ -852,6 +852,29 @@
 				$event['next']			= $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'],$dateformat);
 				$event['lang_next_run']	= lang('next run');
 
+				$criteria = array
+				(
+					'start_date'		=> $event_info['start_date'],
+					'end_date'			=> $event_info['end_date'],
+					'location_id'		=> $event_info['location_id'],
+					'location_item_id'	=> $event_info['location_item_id']
+				);
+
+				$event['count'] = 0;
+				$boevent	= CreateObject('property.boevent');
+				$boevent->find_scedules($criteria);
+				$schedules =  $boevent->cached_events;
+				foreach($schedules as $day => $set)
+				{
+					foreach ($set as $entry)
+					{
+						if($entry['enabled'] && (!isset($entry['exception']) || !$entry['exception']==true))
+						{
+							$event['count']++;
+						}
+					}
+				}
+
 				unset($event_info);
 				unset($job_id);
 				unset($job);
