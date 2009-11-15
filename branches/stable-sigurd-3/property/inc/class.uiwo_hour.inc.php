@@ -466,7 +466,7 @@
 			$sum_tax	= ($sum_result + $addition_percentage + $workorder['addition_rs'])*$tax/100;
 			$total_sum	= $sum_result + $addition_percentage + $workorder['addition_rs'] + $sum_tax;
 
-			$this->bo->update_calculation(array('workorder_id'=>$workorder_id,'calculation'=>($sum_result+$addition_percentage)));
+			$this->bo->update_calculation(array('workorder_id'=>$workorder_id,'calculation'=>($sum_result+$addition_percentage+ $workorder['addition_rs'])));
 
 			$table_sum[] = array
 			(

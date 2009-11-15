@@ -625,35 +625,12 @@
 
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_priority"/>
-				</td>
-				<td>
-				<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
-				<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
-					<select name="{$select_priority_name}" class="forms" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-							<xsl:apply-templates select="priority_list"/>
-					</select>			
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<xsl:value-of select="lang_category"/>
-				</td>
-				<td>
-					<xsl:call-template name="categories"/>
-				</td>
-			</tr>
-
-			<tr>
-				<td valign="top">
 					<xsl:value-of select="lang_contact_phone"/>
 				</td>
 				<td>
 					<input type="text" name="values[extra][contact_phone]" value="{value_contact_phone}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_contact_phone_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_contact_phone_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -664,10 +641,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[extra][contact_email]" value="{value_contact_email}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_contact_email_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_contact_email_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -850,6 +825,7 @@
 				</xsl:when>
 			</xsl:choose>
 
+<!--
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'Open Date')" />
@@ -866,7 +842,7 @@
 					<xsl:value-of select="value_assignedfrom"/>
 				</td>
 			</tr>
-<!--
+
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'Assigned to')" />
@@ -892,6 +868,7 @@
 				</tr>
 			</xsl:for-each>
 
+<!--
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'details')" />
@@ -900,9 +877,11 @@
 					<xsl:value-of select="value_details"/>
 				</td>
 			</tr>
+
+-->
 			<tr>
 				<td class="th_text" valign="top">
-					<xsl:value-of select="php:function('lang', 'additional notes')" />
+					<xsl:value-of select="php:function('lang', 'details')" />
 				</td>
 				<xsl:choose>
 					<xsl:when test="additional_notes=''">
@@ -1518,6 +1497,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</tr>
+<!--
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_priority"/>
@@ -1542,7 +1522,7 @@
 					</select>			
 				</td>
 			</tr>
-<!--			<tr>
+			<tr>
 				<td>
 					<xsl:value-of select="lang_category"/>
 				</td>
@@ -1550,7 +1530,7 @@
 					<xsl:call-template name="categories"/>
 				</td>
 			</tr>
--->
+
 			<tr>
 				<td>
 					<xsl:value-of select="lang_finnish_date"/>
@@ -1569,6 +1549,7 @@
 					[<xsl:value-of select="lang_dateformat"/>]
 				</td>
 			</tr>
+-->
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_new_note"/>

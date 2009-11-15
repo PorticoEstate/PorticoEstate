@@ -333,6 +333,7 @@ consequence	property	no	Konsekvens
 consequential damage	property	no	Følgeskader
 consume	property	no	forbruk
 contact	property	no	Kontakt
+contact email	property	no	Epost
 contact phone	property	no	kontakt telefon
 contacts	common	no	Kontakter
 content	property	no	innhold
@@ -352,7 +353,7 @@ cost - either budget or calculation	property	no	Beløp - enten budsjett eller ka
 cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
 could not find any location to save to!	property	no	Kunne ikke finne lokalisering å lagre til
-count	property	no	tell
+count	property	no	Antall
 custom	property	no	Tilpasset
 customer	property	no	Kunde
 custom function	property	no	Egendefinert funksjon
@@ -1142,6 +1143,8 @@ please - select type order!	property	no	velg type bestilling
 please - select vendor!	property	no	velg leverandør
 please set a initial value !	property	no	sett initiell verdi
 please set a new index !	property	no	angi ny index
+Please set default assign to in preferences for user %1!	property	no	Angi standardverdi for ansvarlig saksbehandler for bruker %1
+Please set default category in preferences for user %1!	property	no	Angi standardverdi for kategori for bruker %1
 please type a subject for this ticket !	property	no	angi overskrift for denne meldingen
 popup calendar	property	no	Kalender
 post	property	no	post
@@ -1510,6 +1513,7 @@ subject	property	no	Overskrift
 subject changed	property	no	Emne er endret
 subject has been updated	property	no	Overskrift er oppdatert
 submit the search string	property	no	Send søkestrengen
+sum estimated cost	property	no	Sum estimert kostnad
 sum orders	property	no	Sum bestilling
 sum	property	no	Sum
 sum calculation	property	no	Sum kalkulasjon
@@ -1745,3 +1749,6 @@ you have to select the conversion for this import	property	no	Du må velge impor
 you have to select type of invoice	property	no	Du må velge art
 your message could not be sent!	property	no	Din melding kunne ikke sendes
 your message could not be sent by mail!	property	no	Din melding kunne ikke sendes med epost!
+usertype	common	no	Brukertype
+tenant	common	no	Leietaker
+internal	common	no	Intern

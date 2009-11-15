@@ -4,7 +4,7 @@
 		<xsl:apply-templates select="event_data"/>
 	</xsl:template>
 
-	<xsl:template match="event_data">
+	<xsl:template match="event_data" xmlns:php="http://php.net/xsl">
 		<script language="JavaScript">
 			self.name="first_Window";
 			function event_lookup_<xsl:value-of select="name"/>()
@@ -54,6 +54,13 @@
 										<xsl:value-of select="lang_enabled"/>
 										<xsl:text>: </xsl:text>
 										<xsl:value-of select="enabled"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<xsl:value-of select="php:function('lang', 'count')" />
+										<xsl:text>: </xsl:text>
+										<xsl:value-of select="count"/>
 									</td>
 								</tr>
 							</xsl:when>

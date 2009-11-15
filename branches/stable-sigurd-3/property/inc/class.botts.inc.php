@@ -444,6 +444,7 @@
 
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
+			$ticket['timestamp'] = $history_values[0]['datetime'];
 			$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
 			// Figure out when it was opened and last closed
 
@@ -487,8 +488,9 @@
 
 		function read_additional_notes($id)
 		{
+			$additional_notes = array();
 			$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
-			$i=1;
+			$i=2;
 			while (is_array($history_array) && list(,$value) = each($history_array))
 			{
 				$additional_notes[] = array
@@ -500,11 +502,7 @@
 					);
 				$i++;
 			}
-
-			if(isset ($additional_notes))
-			{
-				return $additional_notes;
-			}
+			return $additional_notes;
 		}
 
 

@@ -679,7 +679,7 @@
 			$this->db->query("UPDATE fm_vendor set email ='$to_email' where  id= '$vendor_id'",__LINE__,__FILE__);
 		}
 
-		function get_email($vendor_id)
+		function get_email($vendor_id = 0)
 		{
 			$vendor_id=(int)$vendor_id;
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.vendor');

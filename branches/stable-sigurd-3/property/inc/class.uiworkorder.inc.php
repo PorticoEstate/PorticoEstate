@@ -1194,7 +1194,20 @@
 				'event_id'		=> $values['event_id'],
 				'item_id'		=> $id
 			);
-			$event_data=$this->bocommon->initiate_event_lookup($event_criteria);
+			$event_data = $this->bocommon->initiate_event_lookup($event_criteria);
+
+			if(isset($event_data['count']) && $event_data['count'])
+			{
+				$sum_estimated_cost = $event_data['count'] * $values['calculation'];
+			}
+			else
+			{
+				$sum_estimated_cost = $values['calculation'];
+			}
+
+			$sum_estimated_cost		= number_format($sum_estimated_cost, 2, ',', '');
+			$values['calculation']	= number_format($values['calculation'], 2, ',', '');
+			$values['actual_cost']	= number_format($values['actual_cost'], 2, ',', '');
 
 			$link_data = array
 			(
@@ -1412,6 +1425,7 @@
 				'lang_incl_tax'							=> lang('incl tax'),
 				'lang_calculation'						=> lang('Calculation'),
 				'value_calculation'						=> (isset($values['calculation'])?$values['calculation']:''),
+				'value_sum_estimated_cost'				=> $sum_estimated_cost,
 
 				'actual_cost'							=> (isset($values['actual_cost'])?$values['actual_cost']:''),
 				'lang_actual_cost'						=> lang('Actual cost'),

@@ -138,6 +138,7 @@
 			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
 			{
 				$filtermethod .= $where . ' fm_tts_tickets.tenant_id=' . $tenant_id;
+				$where = 'AND';
 			}
 
 			if ($status_id == 'X')
@@ -154,11 +155,11 @@
 				{
 					if( ! $this->db->f('closed'))
 					{
-						$open .= "OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
+						$open .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
 					}
 				}
 
-				$filtermethod .= " $where (fm_tts_tickets.status='O' {$open})";
+				$filtermethod .= " $where (fm_tts_tickets.status='O'{$open})";
 				$where = 'AND';
 			}
 			else if($status_id == 'all')
@@ -233,7 +234,6 @@
 			. " $order_join"
 			. " $filtermethod $querymethod";
 
-//echo $sql;
 
 			if(!$dry_run)
 			{
@@ -334,6 +334,7 @@
 				$ticket['details']			= $this->db->f('details', true);
 				$ticket['location_code']	= $this->db->f('location_code');
 				$ticket['contact_phone']	= $this->db->f('contact_phone');
+				$ticket['contact_email']	= $this->db->f('contact_email',true);
 				$ticket['address']			= $this->db->f('address', true);
 				$ticket['tenant_id']		= $this->db->f('tenant_id');
 				$ticket['p_num']			= $this->db->f('p_num');
@@ -429,7 +430,7 @@
 
 			$values= array
 			(
-				$ticket['priority'],
+				isset($ticket['priority'])?$ticket['priority']:0,
 				$GLOBALS['phpgw_info']['user']['account_id'],
 				$ticket['assignedto'],
 				$ticket['group_id'],
@@ -661,7 +662,7 @@
 				}
 			}
 
-			if ($old_status != $ticket['status'])
+			if (isset($ticket['status']) && ($old_status != $ticket['status']))
 			{
 				$check_old_custom = (int) trim($old_status,'C');
 				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);

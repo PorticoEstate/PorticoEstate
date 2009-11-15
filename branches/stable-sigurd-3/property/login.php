@@ -86,28 +86,37 @@
 	{
 		switch($code)
 		{
-			case 1:
-				return lang('You have been successfully logged out');
-			case 2:
-				return lang('Sorry, your login has expired');
-			case 5:
-				return lang('Bad login or password');
-			case 99:
-				return lang('Blocked, too many attempts');
-			case 10:
-				$GLOBALS['phpgw']->sessions->phpgw_setcookie('sessionid');
-				$GLOBALS['phpgw']->sessions->phpgw_setcookie('kp3');
-				$GLOBALS['phpgw']->sessions->phpgw_setcookie('domain');
+				case 1:
+					return lang('You have been successfully logged out');
+				case 2:
+					return lang('Sorry, your login has expired');
+				case 5:
+					return lang('Bad login or password');
+				case 20:
+					return lang('Cannot find the mapping ! (please advice your adminstrator)');
+				case 21:
+					return lang('you had inactive mapping to %1 account', phpgw::get_var('phpgw_account', 'string', 'GET', ''));
+				case 22:
+					$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
+					return lang('you seemed to have an active session elsewhere for the domain "%1", now set to expired - please try again', phpgw::get_var('domain', 'string', 'COOKIE'));
+				case 99:
+					return lang('Blocked, too many attempts');
+				case 10:
+					$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
+					$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 
-				// fix for bug in php expired sessions not being cleared
-				if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
-				{
-					$GLOBALS['phpgw']->sessions->phpgw_setcookie(PHPGW_PHPSESSID);
-				}
+					// fix for bug php4 expired sessions bug
+					if($GLOBALS['phpgw_info']['server']['sessions_type'] == 'php')
+					{
+						$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
+					}
 
-				return lang('Your session could not be verified.');
-			default:
-				return '&nbsp;';
+					return lang('Your session could not be verified.');
+				default:
+					return '&nbsp;';
 		}
 	}
 
@@ -179,6 +188,11 @@
 	}
 
 	/* Program starts here */
+	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionphpgwsessid');
+//	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
+	$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
+	$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
+
 	$login = phpgw::get_var('login', 'string' , 'POST');
 	$passwd = phpgw::get_var('passwd', 'string' , 'POST');
 
@@ -249,8 +263,12 @@
 
 			$_passwd = md5($passwd);
 
-			$db->query("SELECT fm_tenant.id, phpgw_accounts.account_lid,phpgw_accounts.account_pwd  FROM fm_tenant $join phpgw_accounts ON fm_tenant.phpgw_account_id = phpgw_accounts.account_id WHERE fm_tenant.account_lid = '$login' AND "
-				. "fm_tenant.account_pwd='" . $_passwd . "' AND fm_tenant.account_status ='1'",__LINE__,__FILE__);
+			$db->query("SELECT fm_tenant.id, phpgw_accounts.account_lid,phpgw_accounts.account_pwd"
+				. " FROM fm_tenant {$join} phpgw_accounts ON fm_tenant.phpgw_account_id = phpgw_accounts.account_id"
+				. " WHERE phpgw_accounts.account_status = 'A' AND"
+				. " fm_tenant.account_lid = '{$login}' AND"
+				. " fm_tenant.account_pwd='{$_passwd}' AND"
+				. " fm_tenant.account_status =1",__LINE__,__FILE__);
 			$db->next_record();
 
 			if (!$db->f('account_lid'))
@@ -262,7 +280,7 @@
 			$tenant_id = $db->f('id');
 			$login = $db->f('account_lid');
 			$passwd = $db->f('account_pwd');
-
+//_debug_array($passwd);die();
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies']) && $GLOBALS['phpgw_info']['server']['usecookies'] )
 			{
 				$GLOBALS['phpgw']->session->phpgw_setcookie('last_usertype', phpgw::get_var('loginusertype') ,time()+1209600); /* For 2 weeks */
@@ -275,7 +293,7 @@
 			$login .= '@' . phpgw::get_var('logindomain', 'string', 'POST');
 		}
 
-		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '', true);
 
 		$GLOBALS['phpgw']->session->appsession('tenant_id','property',$tenant_id);
 
@@ -384,7 +402,7 @@
 	$tmpl->set_var(
 			array(
 				'usertype_from_hosts'	=> '',
-				'lang_usertype'		=> lang('Usertype')
+				'lang_usertype'		=> lang('usertype')
 			)
 		);
 
