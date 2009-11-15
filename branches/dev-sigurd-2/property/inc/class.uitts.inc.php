@@ -2196,7 +2196,21 @@
 			$additional_notes = $this->bo->read_additional_notes($id);
 			$record_history = $this->bo->read_record_history($id);
 
+			$notes = array
+			(
+				array
+				(
+					'value_count' => 1,
+					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
+					'value_user' => $ticket['user_name'],
+            		'value_note' => $ticket['details']
+				)
+			);
 
+
+			$additional_notes = array_merge($notes,$additional_notes);
+
+//_debug_Array($additional_notes);die();
 			//---datatable settings---------------------------------------------------	
 			$datavalues[0] = array
 			(

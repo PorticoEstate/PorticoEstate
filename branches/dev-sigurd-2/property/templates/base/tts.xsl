@@ -825,6 +825,7 @@
 				</xsl:when>
 			</xsl:choose>
 
+<!--
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'Open Date')" />
@@ -841,7 +842,7 @@
 					<xsl:value-of select="value_assignedfrom"/>
 				</td>
 			</tr>
-<!--
+
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'Assigned to')" />
@@ -867,6 +868,7 @@
 				</tr>
 			</xsl:for-each>
 
+<!--
 			<tr>
 				<td class="th_text" valign="top">
 					<xsl:value-of select="php:function('lang', 'details')" />
@@ -875,9 +877,11 @@
 					<xsl:value-of select="value_details"/>
 				</td>
 			</tr>
+
+-->
 			<tr>
 				<td class="th_text" valign="top">
-					<xsl:value-of select="php:function('lang', 'additional notes')" />
+					<xsl:value-of select="php:function('lang', 'details')" />
 				</td>
 				<xsl:choose>
 					<xsl:when test="additional_notes=''">

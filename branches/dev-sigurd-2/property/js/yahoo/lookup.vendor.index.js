@@ -29,6 +29,14 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			//category
+			eval("var path_values = "+base_java_url+"");
+			index = locate_in_array_options(0,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+
 			//focus initial
 			oMenuButton_0.focus();
 		}
