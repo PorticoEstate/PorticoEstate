@@ -832,8 +832,8 @@
 				$workorder['end_date'],
 				$workorder['status'],
 				$workorder['descr'],
-				$workorder['budget'],
-				$workorder['budget'],
+				(int) $workorder['budget'],
+				(int) $workorder['budget'],
 				$workorder['b_account_id'],
 				$workorder['addition_rs'],
 				$workorder['addition_percentage'],
@@ -907,20 +907,21 @@
 			$this->db->query("SELECT status,budget,calculation FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
+			$old_status = $this->db->f('status');
+			$old_budget = $this->db->f('budget');
+
 			if ($this->db->f('calculation') > 0)
 			{
+				$calculation = $this->db->f('calculation');
 				$config	= CreateObject('phpgwapi.config','property');
 				$config->read_repository();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
-				$combined_cost = $this->db->f('calculation')* $tax;
+				$combined_cost = $calculation * $tax;
 			}
 			else
 			{
 				$combined_cost = $workorder['budget'];
 			}
-
-			$old_status = $this->db->f('status');
-			$old_budget = $this->db->f('budget');
 
 			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ={$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
