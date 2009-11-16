@@ -185,20 +185,15 @@
 				// Create a new rental party we can fill with info from this line from the file
 				$party = new rental_party();
 
-				// Fill in first/last name if applicable, otherwise use Foretaksnavn
-				if (!$this->is_null($data[0])) {
-					$party->set_first_name($this->decode($data[0]));
-					$party->set_last_name($this->decode($data[1]));
-				} else {
-					$party->set_first_name($this->decode($data[2]));
-				}
-				
 				// Contact information
 				$party->set_address_1($this->decode($data[3]));
 				$party->set_address_2($this->decode($data[4]));
 				$party->set_postal_code($this->decode($data[5]));
 				$party->set_mobile_phone($this->decode($data[7]));
 				$party->set_phone($this->decode($data[8]));
+
+                $party->set_fax($this->decode($data[9]));
+                $party->set_title($this->decode($data[12]));
 				
 				// Company information
 				$party->set_company_name($this->decode($data[10]));
@@ -215,6 +210,37 @@
 				$party->set_identifier($this->decode($data[24]));
 				
 				$party->set_comment($this->decode($data[26]));
+
+                switch(strlen(''.$this->decode($data[24]))) {
+                    case 4: // Intern organisasjonstilknytning
+                        $party->set_company_name($this->decode($data[2]));
+                        $party->set_first_name(null);
+                        $party->set_last_name(null);
+                        break;
+                    case 6: // Foretak (agresso-id)
+                    case 9: // Foretak (org.nr)
+                        $party->set_company_name($this->decode($data[2]));
+                        $party->set_identifier($this->decode($data[24]));
+                        $party->set_first_name($this->decode($data[6]));
+                        $party->set_last_name(null);
+                        break;
+                    case 11: // Personnr
+                        if (!$this->is_null($data[0])) {
+                            $party->set_first_name($this->decode($data[0]));
+                            $party->set_last_name($this->decode($data[1]));
+                        } else {
+                            $company_name = explode(' ', $this->decode($data[2]), 2);
+                            $party->set_first_name($company_name[0]);
+                            $party->set_last_name($company_name[1]);
+                        }
+                        break;
+                    default:
+                        $party->set_first_name($this->decode($data[0]));
+                        $party->set_last_name($this->decode($data[1]));
+                        $party->set_company_name($this->decode($data[2]));
+                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Using default values for name/company name";
+                }
+
 				
 				// Store party and log message
 				if ($soparty->store($party)) {
