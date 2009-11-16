@@ -537,6 +537,11 @@
 			$cal_date = date('Y-m-d', $cal_date);
 
 			$application['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building_info['id'], 'backend' => 'true', 'date' => $cal_date));
+
+			//manipulating the link. we want to use the frontend module instead of backend for displaying the schedule
+			$pos = strpos($application['schedule_link'], '/index.php');
+			$application['schedule_link'] = substr_replace($application['schedule_link'], 'bookingfrontend/', $pos+1, 0);
+
 			$resource_ids = '';
 			foreach($application['resources'] as $res)
 			{

@@ -77,7 +77,7 @@
 			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
             <dd><xsl:value-of select="application/building_name"/>
 			(<a href="javascript: void(0)" 
-				onclick="window.open('bookingfrontend{application/schedule_link}', 
+				onclick="window.open('{application/schedule_link}', 
 					     '', 
 						   'width=1000, height=600'); 
 						      return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)</dd>
