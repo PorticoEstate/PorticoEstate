@@ -157,6 +157,7 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
+                $this->clean_up();
 				$this->import_button_label = "Import done";
 				//return;
 			}
@@ -848,5 +849,14 @@
 		{
 			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
 		}
+
+
+        /**
+         * Do end-of-import clean up
+         */
+        protected function clean_up() {
+            $socontract = rental_socontract::get_instance();
+            $socontract->clear_last_edited_table();
+        }
 	}
 ?>

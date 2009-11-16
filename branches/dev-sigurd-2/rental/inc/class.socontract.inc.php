@@ -781,5 +781,10 @@ class rental_socontract extends rental_socommon
 		
 		return $results;
     }
+
+    public function clear_last_edited_table() {
+        $q = "DELETE FROM rental_contract_last_edited";
+        $this->db->query($q, '', '', true);
+    }
 }
 ?>
