@@ -40,13 +40,16 @@
 
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
+		<?php if($contract->get_id() > 0) {?>
+
+		<li><a href="#composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('composite') ?></em></a></li>
+		<li><a href="#parties" ><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
+		<li><a href="#price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
+		<?php }?>
+		
 		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
 		
 		<?php if($contract->get_id() > 0) {?>
-		
-		<li><a href="#parties" ><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
-		<li><a href="#composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('composite') ?></em></a></li>
-		<li><a href="#price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
 		<li><a href="#invoice"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('invoice') ?></em></a></li>
 		<li <?php echo (phpgw::get_var('tab') == 'documents') ?  'class="selected"' : ""?>><a href="#documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
 		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('notifications') ?></em></a></li>
@@ -54,6 +57,98 @@
 		<?php } ?>
 	</ul>
 	<div class="yui-content">
+		<?php if($contract->get_id() > 0) {?>
+		<div id="composites">
+			<h3><?php echo lang('selected_composites') ?></h3>
+			<?php
+				$list_form = false;
+				$list_id = 'included_composites';
+				$related = array('not_included_composites');
+				$url_add_on = '&amp;type=included_composites&amp;contract_id='.$contract->get_id();
+				include('composite_list_partial.php'); ?>
+
+			<?php if ($editable) { ?>
+			<h3><?php echo lang('available_composites') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
+			<?php
+				$list_form = true;
+				$list_id = 'not_included_composites';
+				$related = array('included_composites');
+				$url_add_on = '&amp;type=not_included_composites&amp;contract_id='.$contract->get_id();
+				include('composite_list_partial.php'); ?>
+			<?php } ?>
+		</div>
+		<div id="parties">
+			<h3><?php echo lang('selected_parties') ?></h3>
+			<?php
+				$list_form = false;
+				$list_id = 'included_parties';
+				$extra_cols = array(array("key" => "is_payer", "label" => lang('is_payer'), "index" => 3));
+				$related = array('not_included_parties');
+				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
+				include('party_list_partial.php');
+				$extra_cols = array();
+			?>
+
+			<?php if ($editable) {?>
+			<h3><?php echo lang('available_parties') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
+			<?php
+				$list_form = true;
+				$list_id = 'not_included_parties';
+				$related = array('included_parties');
+				$url_add_on = '&amp;type=not_included_parties&amp;contract_id='.$contract->get_id();
+				include('party_list_partial.php'); ?>
+			<?php } ?>
+		</div>
+		<div id="price">
+			<h3><?php echo lang('selected_price_items') ?></h3>
+			<?php
+				$list_form = false;
+				$list_id = 'total_price';
+				unset($related);
+				$url_add_on = '&amp;contract_id='.$contract->get_id();
+				unset($extra_cols);
+
+				include('total_price_partial.php'); ?><br/>
+		 	<?php
+				$list_form = false;
+				$list_id = 'included_price_items';
+				$related = array('not_included_price_items','total_price');
+				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
+				$extra_cols = array(
+					array("key" => "area", "label" => lang('area'), "index" => 4, "formatter" => "formatArea"),
+					array("key" => "count", "label" => lang('count'), "index" => 5, "formatter" => "formatCount"),
+					array("key" => "total_price", "label" => lang('total_price'), "formatter" => "formatPrice", "index" => 6),
+					array("key" => "date_start", "label" => lang('date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
+					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
+				);
+
+				$editor_action = 'rental.uiprice_item.set_value';
+
+				if ($editable) {
+					$editors = array(
+						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
+						'date_start' => 'new YAHOO.widget.DateCellEditor()',
+						'date_end' => 'new YAHOO.widget.DateCellEditor()'
+					);
+				}
+
+				include('price_item_partial.php'); ?>
+			<?php if ($editable) { ?>
+			<h3><?php echo lang('available_price_items') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
+			<?php
+				$list_form = true;
+				$list_id = 'not_included_price_items';
+				$related = array('included_price_items','total_price');
+				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
+				unset($extra_cols);
+				unset($editors);
+				include('price_item_partial.php'); ?>
+			<?php } ?>
+		</div>
+		<?php }?>
 		<div class="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value="<?php echo $contract->get_id() ?>"/>
@@ -511,99 +606,7 @@
 				</div>
 			</form>
 		</div>
-		
-		<?php if($contract->get_id() > 0) {?>
-		
-		<div id="parties">
-			<h3><?php echo lang('selected_parties') ?></h3>
-			<?php
-				$list_form = false;
-				$list_id = 'included_parties';
-				$extra_cols = array(array("key" => "is_payer", "label" => lang('is_payer'), "index" => 3));
-				$related = array('not_included_parties');
-				$url_add_on = '&amp;type=included_parties&amp;contract_id='.$contract->get_id();
-				include('party_list_partial.php');
-				$extra_cols = array();
-			?>
-
-			<?php if ($editable) {?>
-			<h3><?php echo lang('available_parties') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
-			<?php
-				$list_form = true;
-				$list_id = 'not_included_parties';
-				$related = array('included_parties');
-				$url_add_on = '&amp;type=not_included_parties&amp;contract_id='.$contract->get_id();
-				include('party_list_partial.php'); ?>
-			<?php } ?>
-		</div>
-		<div id="composites">
-			<h3><?php echo lang('selected_composites') ?></h3>
-			<?php
-				$list_form = false;
-				$list_id = 'included_composites';
-				$related = array('not_included_composites');
-				$url_add_on = '&amp;type=included_composites&amp;contract_id='.$contract->get_id();
-				include('composite_list_partial.php'); ?>
-
-			<?php if ($editable) { ?>
-			<h3><?php echo lang('available_composites') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
-			<?php
-				$list_form = true;
-				$list_id = 'not_included_composites';
-				$related = array('included_composites');
-				$url_add_on = '&amp;type=not_included_composites&amp;contract_id='.$contract->get_id();
-				include('composite_list_partial.php'); ?>
-			<?php } ?>
-		</div>
-		<div id="price">
-			<h3><?php echo lang('selected_price_items') ?></h3>
-			<?php
-				$list_form = false;
-				$list_id = 'total_price';
-				unset($related);
-				$url_add_on = '&amp;contract_id='.$contract->get_id();
-				unset($extra_cols);
-
-				include('total_price_partial.php'); ?><br/>
-		 	<?php
-				$list_form = false;
-				$list_id = 'included_price_items';
-				$related = array('not_included_price_items','total_price');
-				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
-				$extra_cols = array(
-					array("key" => "area", "label" => lang('area'), "index" => 4, "formatter" => "formatArea"),
-					array("key" => "count", "label" => lang('count'), "index" => 5, "formatter" => "formatCount"),
-					array("key" => "total_price", "label" => lang('total_price'), "formatter" => "formatPrice", "index" => 6),
-					array("key" => "date_start", "label" => lang('date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
-					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
-				);
-
-				$editor_action = 'rental.uiprice_item.set_value';
-
-				if ($editable) {
-					$editors = array(
-						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'date_start' => 'new YAHOO.widget.DateCellEditor()',
-						'date_end' => 'new YAHOO.widget.DateCellEditor()'
-					);
-				}
-
-				include('price_item_partial.php'); ?>
-			<?php if ($editable) { ?>
-			<h3><?php echo lang('available_price_items') ?> (<?php echo lang('messages_right_click_to_add') ?>)</h3>
-			<?php
-				$list_form = true;
-				$list_id = 'not_included_price_items';
-				$related = array('included_price_items','total_price');
-				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
-				unset($extra_cols);
-				unset($editors);
-				include('price_item_partial.php'); ?>
-			<?php } ?>
-		</div>
+		<?php if($contract->get_id() > 0) {?>		
 		<div id="invoice">
 			<?php
 				$list_form = true;
