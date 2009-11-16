@@ -13,10 +13,28 @@
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
 	<div>
 		<label><?php echo lang('contract_number') ?> </label>
-		<?php if($contract->get_id() > 0) { echo $contract->get_id(); } else { echo lang('no_value'); }?>
 		<?php if($contract->get_old_contract_id()){ 
-			echo ' ('.$contract->get_old_contract_id().')'; 
+			echo $contract->get_old_contract_id(); 
 		} ?>
+		<br/>
+		<label><?php echo lang('parties') ?> </label>
+		<?php
+		 	echo $contract->get_party_name_as_list();
+		 ?>
+		 <br/>
+		<label><?php echo lang('last_updated') ?> </label>
+		<?php
+			echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_last_updated());
+		 ?>
+		<label>&nbsp;&nbsp;<?php echo lang('name') ?></label>
+		<?php
+		 	echo $contract->get_last_edited_by();
+		 ?>
+		<br/>
+		<label><?php echo lang('composite') ?> </label>
+		<?php
+		 	echo $contract->get_composite_name_as_list();
+		 ?>
 	</div>
 </div>
 

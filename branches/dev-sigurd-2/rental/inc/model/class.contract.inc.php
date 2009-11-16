@@ -250,10 +250,38 @@
 			return $names;
 		}
 		
+		public function get_party_name_as_list(){
+			$names = '';
+			$tot_parties = count($this->parties);
+			$count_parties = 0;
+			foreach($this->parties as $party) {
+				$count_parties++;
+				$names .= $party->get_name();
+				if($count_parties < $tot_parties){
+					$names .= ", ";
+				}
+			}
+			return $names;
+		}
+		
 		public function get_composite_name(){
 			$names = '';
 			foreach($this->composites as $composite) {
 				$names .= $composite->get_name()."<br/>";
+			}
+			return $names;
+		}
+		
+		public function get_composite_name_as_list(){
+			$names = '';
+			$tot_composites = count($this->composites);
+			$count_composites = 0;
+			foreach($this->composites as $composite) {
+				$count_composites++;
+				$names .= $composite->get_name();
+				if($count_composites < $tot_composites){
+					$names .= ", ";
+				}
 			}
 			return $names;
 		}
@@ -484,11 +512,11 @@
 			return $so->get_contracts($composite_id, $sort = null, $dir = '', $start = 0, $results = 1000, $status = null, $date = null);
 		}
 		
-		public static function get_last_edited_by()
+		public function get_last_edited_by()
 		{
 			$so = self::get_so();
-			$contracts = $so->get_last_edited_by();
-			return $contracts;
+			$contracts = $so->get_last_edited_by($this->get_id());
+			return $GLOBALS['phpgw']->accounts->id2name($contracts);
 		}
 		
 		/** 

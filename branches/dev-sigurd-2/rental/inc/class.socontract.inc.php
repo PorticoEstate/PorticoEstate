@@ -495,6 +495,21 @@ class rental_socontract extends rental_socommon
 		return false;
 	}
 	
+	public function get_last_edited_by($contract_id)
+	{
+		$sql = "SELECT account_id FROM rental_contract_last_edited where contract_id={$contract_id} ORDER by edited_on DESC";
+		$result = $this->db->limit_query($sql,0,null,null,1);
+		if(isset($result))
+		{
+			if($this->db->next_record())
+			{
+				$account_id = $this->db->f("account_id");
+			}
+			return $account_id;
+		}
+		return "";
+	}
+	
 	/**
 	 * This method markw the given contract with the current timestamp
 	 * 
