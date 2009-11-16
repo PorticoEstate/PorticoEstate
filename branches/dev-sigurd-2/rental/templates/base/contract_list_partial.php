@@ -81,7 +81,11 @@
 	<?php
 		if(isset($extra_cols)){
 			foreach($extra_cols as $col){
-				$literal = "{key: \"".$col["key"]."\",
+				if(isset($col["sortable"]))
+				{
+					$sortable_arg = "sortable: \"".$col["sortable"]."\",";
+				}
+				$literal = "{key: \"".$col["key"]."\",{$sortable_arg}
 						label: \"".$col["label"]."\"}";
 				if($col["index"]){
 					echo "columnDefs.splice(".$col["index"].", 0,".$literal.");";

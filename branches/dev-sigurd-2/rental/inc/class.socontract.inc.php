@@ -51,6 +51,12 @@ class rental_socontract extends rental_socommon
 		{
 			$sort_field = 'contract.id';
 		}
+		else if ($sort_field == 'party'){
+			$sort_field = "party.company_name {$dir}, party.last_name {$dir}, party.first_name";
+		}
+		else if ($sort_field == 'composite'){
+			$sort_field = "composite.name";
+		}
 		$order = "ORDER BY {$sort_field} {$dir}";
 		
 		// Search for based on search type
@@ -242,6 +248,8 @@ class rental_socontract extends rental_socommon
 		$join_last_billed = "{$this->left_join} rental_invoice invoice ON (contract.id = invoice.contract_id) {$this->left_join} rental_billing billing ON (invoice.billing_id = billing.id)";
 		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_last_edited.' '.$join_last_billed;
 
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
