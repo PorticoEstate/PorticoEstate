@@ -303,7 +303,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="checkbox" name="is_active" id="is_active" <?php if($party->is_active() || !($party->get_id())) { echo "checked='checked'";} ?>/>
+							<input type="checkbox" name="is_active" id="is_active" <?php if($party->is_active() || (!isset($party) || !($party->get_id()))) { echo "checked='checked'";} ?>/>
 						<?php
 						}
 						else
