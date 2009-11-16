@@ -117,6 +117,28 @@
 		}
 		
 		public function create_from($type, $reservation) {
+			if (!array_key_exists('resources', $reservation) 
+					|| !is_array($reservation['resources'])
+					|| count($reservation['resources']) <= 0) 
+			{
+				
+				//Note that the loggin is stupidly enough done in the database so if the transaction fails
+				//we may very well not get anything in the log
+				if(is_object($GLOBALS['phpgw']->log))
+				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text' => 'UnableToCompleteInvalidReservation: reservation of type %1 with id %2 was missing resources',
+						'p1'   => is_string($type) ? $type : "unknown",
+						'p2'	 => isset($reservation['id']) ? $reservation['id'] : 'unknown',
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+				}
+				
+				//People cannot very well be forced to pay for a resourceless reservation
+				return;
+			}
+			
 			$entity = array(
 				'reservation_type' 	=> $type, 
 				'reservation_id' 		=> $reservation['id'],
