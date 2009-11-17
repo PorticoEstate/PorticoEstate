@@ -210,12 +210,17 @@
 										foreach($accounts as $account)
 										{
 											$account_id = $account->__get('id');
-											$selected = '';
-											if($account_id == $executive_officer){
-												$selected = 'selected=\'selected\'';
+											$GLOBALS['phpgw']->acl->set_account_id($account_id);											
+											if($contract->has_permission(PHPGW_ACL_ADD))
+											{
+												$selected = '';
+												if($account_id == $executive_officer){
+													$selected = 'selected=\'selected\'';
+												}
+												echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
 											}
-											echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
 										}
+										$GLOBALS['phpgw']->acl->set_account_id(0); // Reset acl to current user
 									?>
 								</select>
 						<?php } else { 
