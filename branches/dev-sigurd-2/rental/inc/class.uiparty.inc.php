@@ -143,16 +143,15 @@ class rental_uiparty extends rental_uicommon
 				}
 				break;
 			case 'not_included_parties':
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-					
 				if($editable == true)
 				{
 					$value['ajax'][] = true;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_party', 'party_id' => $value['id'], 'contract_id' => $params[0])));
 					$value['labels'][] = lang('add');
 				}
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
 				break;
 			default:
 				$value['ajax'][] = false;
