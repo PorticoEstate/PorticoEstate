@@ -156,7 +156,7 @@ import_log_messages	rental	no	Import log
 in_operation	rental	no	I drift
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
-Invalid location code for the building.	rental	no	Ugyldig enhetsnummer for bygg.
+Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
 invoice	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
 is_area	rental	no	Areal
@@ -240,6 +240,7 @@ notifications	rental	no	Varsler
 notification_optgroup_groups	rental	no	Grupper
 notification_optgroup_users	rental	no	Brukere
 not_started	rental	no	Ikke startet
+object_number	rental	no	Objektnummer
 occupied	rental	no	Opptatt
 of_total	rental	no	av totalt
 old_contract_id	rental	no	Gammelt kontraktsnummer
@@ -355,7 +356,7 @@ units	rental	no	Enheter
 update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted
-Unable to get a location code for the building.	rental	no	Klarte ikke å hente enhetsnummer for bygget.
+Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 weekly	rental	no	Ukentlig

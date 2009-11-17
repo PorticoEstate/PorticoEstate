@@ -8,7 +8,7 @@
 		},
 		{
 			key: "location_code",
-			label: "<?php echo lang('location_code') ?>",
+			label: "<?php echo lang('object_number') ?>",
 			sortable: true
 		},
 		{
