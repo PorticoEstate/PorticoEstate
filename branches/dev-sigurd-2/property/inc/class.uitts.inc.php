@@ -2207,8 +2207,32 @@
 				)
 			);
 
-
 			$additional_notes = array_merge($notes,$additional_notes);
+			
+			if(isset($values['order_text']) && $ticket['order_id'])
+			{
+				foreach($values['order_text'] as $_text)
+				{
+					$ticket['order_descr'] .= "\n$_text";
+				}
+			}
+
+			$note_def = array
+			(
+				array('key' => 'value_count',	'label'=>'#',		'sortable'=>true,'resizeable'=>true),
+       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+      			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)
+			);
+
+			if($access_order)
+			{
+				$note_def[] = array('key' => 'order_text','label'=>lang('order text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+				foreach($additional_notes as &$note)
+				{
+					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
+				}
+			}
 
 //_debug_Array($additional_notes);die();
 			//---datatable settings---------------------------------------------------	
@@ -2223,10 +2247,7 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array('key' => 'value_count',	'label'=>'#',			'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-									       			array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
-		       				       					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)))
+				'values'	=>	json_encode($note_def)
 			);		
 			$datavalues[1] = array
 			(
@@ -2388,6 +2409,8 @@
 				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
 			);
 
 			//---datatable settings--------------------
