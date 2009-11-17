@@ -165,7 +165,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 <fieldset>
 	<h3><?php echo lang('panels') ?></h3>
 	<button type="button" id="workingOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('working_on') ?></button>
-	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('executive_officer_for') ?></button>
+	<button type="button" id="executiveOfficerOnContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('executive_officer') ?></button>
 	<button type="button" id="endingContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_under_dismissal') ?></button>
 	<button type="button" id="contractsClosingDueDate_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('contracts_closing_due_date') ?></button>
 	<button type="button" id="terminatedContracts_button"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" /> <?php echo lang('terminated_contracts') ?></button>

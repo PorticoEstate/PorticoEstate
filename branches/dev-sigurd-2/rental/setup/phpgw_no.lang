@@ -70,7 +70,7 @@ contract_id	rental	no	Kontraktsnummer
 contract_number	rental	no	Kontraktnummer
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
 contracts	rental	no	Kontrakter
-contracts_under_dismissal	rental	no	Siste under avslutning
+contracts_under_dismissal	rental	no	Kontrakter under avslutning
 contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
 contract_status	rental	no	Behandlingsstatus
@@ -80,7 +80,7 @@ contract_type_internleie	rental	no	Internleie
 contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
-contracts_closing_due_date	rental	no	Nær opsjonsfrist
+contracts_closing_due_date	rental	no	Kontrakter nær opsjonsfrist
 Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
 count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
@@ -336,7 +336,7 @@ System setting for responsibility id for the current user must be 6 characters.	
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
 terminated_contract	rental	no	Opphørt
-terminated_contracts	rental	no	Opphørt
+terminated_contracts	rental	no	Opphørte kontrakter
 the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
 thousands separator	rental	no	Skilletegn for tusen
 t_functions	rental	no	Funksjoner
@@ -359,6 +359,6 @@ Unable to get a location code for the building.	rental	no	Klarte ikke å hente e
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 weekly	rental	no	Ukentlig
-working_on	rental	no	Siste under arbeid
+working_on	rental	no	Kontrakter under arbeid
 year	rental	no	År
 your_notifications	rental	no	Dine varsler
