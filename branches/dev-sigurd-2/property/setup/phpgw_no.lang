@@ -263,6 +263,7 @@ check this to have the output to screen before import (recommended)	property	no	
 check this to notify your supervisor by email	property	no	Kryss av for å varsle din foresatte med epost
 check this to send a mail to your supervisor for approval	property	no	kryss av for å be din foresatte om godkjenning - epost
 check to activate custom function	property	no	Merk av for å aktivere egendefinert funksjon
+Check to add text to order	property	no	Merk for å legge teksten til i bestillingen
 check to delete file	property	no	Merk for å slette fil
 check to delete this request from this project	property	no	Merk for a slette dette tiltaket fra dette prosjektet
 check to inherit from this location	property	no	Merk av for å arve fra denne lokalisering
@@ -463,6 +464,7 @@ delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett arbeidsordre
 delivered	property	no	Levert
 description	property	no	Beskrivelse
+description order	property	no	Bestilling til leverandør
 descr	property	no	Beskrivelse
 details	property	no	Detaljer
 deviation	property	no	Avvik
@@ -1054,6 +1056,7 @@ open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
 order id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
+order text	property	no	Bestillingstekst
 other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt-faktor
 override fraction of common costs	property	no	Overstyringsfaktor for felleskostnader

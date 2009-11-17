@@ -1127,7 +1127,7 @@
 							<td>
 								<textarea cols="{textareacols}" rows="{textarearows}" name="values[order_descr]" wrap="virtual">
 									<xsl:attribute name="title">
-		    			        		<xsl:value-of select="php:function('lang', 'description')" />
+		    			        		<xsl:value-of select="php:function('lang', 'description order')" />
 									</xsl:attribute>
 									<xsl:value-of select="value_order_descr"/>
 								</textarea>
