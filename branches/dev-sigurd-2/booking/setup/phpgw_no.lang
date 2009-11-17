@@ -262,23 +262,21 @@ send reminder for participants statistics	booking	no	Purring brukerstatistikk
 Send reminder	booking	no	Send purring
 Do not send reminder	booking	no	Ikke send purring
 User has responded to the reminder	booking	no	Brukeren har svart på påminnelsen
-Last modified by public	booking	no	?Last modified by public
-In order to work with this application, you must first	booking	no	?In order to work with this application, you must first
-assign yourself	booking	no	?assign yourself
-as the case officer responsible for this application	booking	no	?as the case officer responsible for this application
-In order to work with this application, you must therefore first	booking	no	?In order to work with this application, you must therefore first
-Last modified by public	booking	no	?Last modified by public
-User '%s' was assigned	booking	no	?User '%s' was assigned
-User '%s' was unassigned	booking	no	?User '%s' was unassigned
-Show only applications assigned to me	booking	no	?Show only applications assigned to me
-Last modified by public	booking	no	?Last modified by public
-Confirm	application	booking no	?Confirm application
-One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	?One or more bookings, allocations or events needs to be created before an application can be Accepted
-Hide from my Dashboard until new activity occurs	booking	no	?Hide from my Dashboard until new activity occurs
-Display in my Dashboard	booking	no	?Display in my Dashboard
-Re-assign to me	booking	no	?Re-assign to me
-Assign to me	booking	no	?Assign to me
-Currently assigned to user:	booking	no	?Currently assigned to user:
+In order to work with this application, you must first	booking	no	For å jobbe med denne søknaden, må du først
+assign yourself	booking	no	bli saksbehander
+as the case officer responsible for this application.	booking	no	for denne søknaden
+In order to work with this application, you must therefore first	booking	no	For å jobbe med denne søknaden må du derfor først
+Last modified by public	booking	no	Sist endret av public
+User '%s' was assigned	booking	no	Brukeren '%s' ble saksbehandler
+User '%s' was unassigned	booking	no	Brukeren '%s' ble tatt av saken
+Show only applications assigned to me	booking	no	Vis bare mine søknader
+Confirm	application	booking no	Bekreft søknad
+One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	En eller flere bookinger, tildelinger eller arrangementer må lages før en søknad kan aksepteres
+Hide from my Dashboard until new activity occurs	booking	no	Ikke vis på mitt skrivebord før ny hendelse inntreffer
+Display in my Dashboard	booking	no	Vis på mitt skrivebord
+Re-assign to me	booking	no	Bli saksbehandler
+Assign to me	booking	no	Bli saksbehandler
+Currently assigned to user:	booking	no	Nåværende saksbehandler:
 Overlaps with existing event	booking	no	Overlapper med eksisterende arrangement
 Overlaps with existing allocation	booking	no	Overlapper med eksisterende tildeling
 Overlaps with existing booking	booking	no	Overlapper med eksisterende booking
@@ -336,3 +334,6 @@ booking_async_task_update_reservation_state_enabled	booking	no	Oppdater reservas
 booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på bookinger og arrangementer
 Update	booking	no	Oppdater
 Cannot generate files from empty list	booking	no	Kan ikke generere filer fra en tom liste
+Associated items	booking	no	Tilknyttede elementer
+Unassign me	booking	no	Gi fra meg søknaden
+Order	booking	no	Sortering
