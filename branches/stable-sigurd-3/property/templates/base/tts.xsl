@@ -1035,7 +1035,7 @@
     		        <xsl:value-of select="php:function('lang', 'new note')" />
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[note]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="{textareacols}" rows="{textarearows}" name="values[note]" wrap="virtual">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'add new comments')" />
 						</xsl:attribute>
@@ -1125,9 +1125,9 @@
             					<xsl:value-of select="php:function('lang', 'description')" />
 							</td>
 							<td>
-								<textarea cols="60" rows="10" name="values[order_descr]" wrap="virtual">
+								<textarea cols="{textareacols}" rows="{textarearows}" name="values[order_descr]" wrap="virtual">
 									<xsl:attribute name="title">
-		    			        		<xsl:value-of select="php:function('lang', 'description')" />
+		    			        		<xsl:value-of select="php:function('lang', 'description order')" />
 									</xsl:attribute>
 									<xsl:value-of select="value_order_descr"/>
 								</textarea>

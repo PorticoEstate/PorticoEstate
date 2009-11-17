@@ -66,6 +66,7 @@
 			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
 			$user_id		= isset($data['user_id'])?$data['user_id']:'';
+			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
@@ -200,6 +201,12 @@
 				$where = 'AND';
 			}
 
+			if ($owner_id > 0)
+			{
+				$filtermethod .= " $where fm_tts_tickets.user_id=" . (int)$owner_id;
+				$where = 'AND';
+			}
+
 			if ($district_id > 0)
 			{
 				$filtermethod .= " $where  district_id=" .(int)$district_id;
@@ -234,12 +241,11 @@
 			. " $order_join"
 			. " $filtermethod $querymethod";
 
-
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*) ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->query('SELECT count(*) as hits ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('hits');
 				$this->db->fetchmode = 'ASSOC';
 				if(!$allrows)
 				{

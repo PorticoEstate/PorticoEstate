@@ -75,7 +75,6 @@
 	create_select_box('Default ticket status','tts_status',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title');
 
-
 	create_select_box('show new/updated tickets on main screen 2','mainscreen_show_new_updated_tts_2',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status 2','tts_status_2',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_2');
@@ -83,6 +82,10 @@
 	create_select_box('show new/updated tickets on main screen 3','mainscreen_show_new_updated_tts_3',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status 3','tts_status_3',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_3');
+
+	create_select_box('show tickets on main screen initiated by user','mainscreen_show_new_updated_tts_4',$yes_and_no,'Link to tickets you have started');
+	create_select_box('Default ticket status 4','tts_status_4',$_status_tts,'The default status when entering the helpdesk and mainscreen');
+	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_4');
 
 	create_select_box('show pending vendor reminders on main screen','mainscreen_showvendor_reminder',$yes_and_no,'Reminder issued to vendors');
 	create_input_box('Custom title on pending vendor reminders','mainscreen_showvendor_reminder_title');
