@@ -83,7 +83,7 @@
 			<option value="all"><?php echo lang('all') ?></option>
 			<option value="name"><?php echo lang('name') ?></option>
 			<option value="address"><?php echo lang('address') ?></option>
-			<option value="property_id"><?php echo lang('property_id') ?></option>
+			<option value="property_id"><?php echo lang('object_number') ?></option>
 		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
