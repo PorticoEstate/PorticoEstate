@@ -46,7 +46,22 @@
 		'<?php echo $list_id ?>_form',
 		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
-		'<?php echo $list_id ?>_paginator'
+		'<?php echo $list_id ?>_paginator',
+		'<?php echo $list_id ?>',
+		new Array(<?php
+			if(isset($related)){
+					$tot_related = count($related);
+					$count_related = 0;
+					foreach($related as $r){
+						$count_related++;
+						echo "\"".$r."\"";
+						if($count_related < $tot_related){
+							echo ",";
+						}
+					}
+				}
+		?>),
+		'<?php echo $editor_action ?>'
 	);
 
     function composite_export(compType) {
