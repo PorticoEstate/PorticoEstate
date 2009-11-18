@@ -258,6 +258,27 @@
 	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
 	create_select_box('remove navbar','nonavbar',array('no' => 'No','yes' => 'Yes'),'Navigation bar is removed');
 	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV', 'ods' => 'ODS'),'Choose which format to export from the system for tables');
-	
-	$default = lang('regards') . "\n\n{$GLOBALS['phpgw_info']['user']['fullname']}";
-	create_text_area('signature on orders','order_signature',10,40,'',$default);
+
+	$default = 'Fra: __organisation__';
+	$default .= "\n" . 'Saksbehandler: __user_name__, ressursnr: __ressursnr__';
+	$default .= "\n";
+	$default .= "\n" . '__location__';
+	$default .= "\n";
+	$default .= "\n" . '[b]Beskrivelse av oppdraget:[/b]';
+	$default .= "\n" . '__order_description__';
+	$default .= "\n";
+	$default .= "\n" . '[b]Kontakt på bygget:[/b]';
+	$default .= "\n";
+	$default .= "\n" . '__contact_name__';
+	$default .= "\n" . '__contact_email__';
+	$default .= "\n" . '__contact_phone__';
+	$default .= "\n";
+	$default .= "\n" . '[b]Faktura må merkes med ordrenummer: __order_id__ og ressursnr.: __ressursnr__[/b]';
+	$default .= "\n";	
+	$default .= "\n" . 'Med hilsen';
+	$default .= "\n" . '__user_name__';
+	$default .= "\n" . '__user_phone__';
+	$default .= "\n" . '__user_email__';
+	$default .= "\n" . '__organisation__';
+
+	create_text_area('order email','order_email_template',10,60,'',$default);

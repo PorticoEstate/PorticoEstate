@@ -2045,48 +2045,87 @@
 
 			if(isset($values['send_order']) && $values['send_order'])
 			{
+
+
 				if(isset($values['vendor_email']) && $values['vendor_email'])
 				{
 					$subject = lang(workorder).": {$ticket['order_id']}";
-				//	$body = lang('Category').': '. $this->bo->get_category_name($ticket['cat_id']) ."\n";
-					$body = lang('order id').": {$ticket['order_id']}<br>";
-					$body .= lang('from').': ';
+
+					$organisation = '';
+					$contact_name = '';
+					$contact_email = '';
+					$contact_phone = '';
+
 					if(isset($this->bo->config->config_data['org_name']))
 					{
-						$body .= "{$this->bo->config->config_data['org_name']}::";
+						$organisation = $this->bo->config->config_data['org_name'];
 					}
-					$body .= "{$GLOBALS['phpgw_info']['user']['fullname']}<br>";
-					$body .= "RessursNr: {$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr']}<br>";
-		//			$body .= lang('Location').': '. $ticket['location_code'] ."<br>";
-					$body .= lang('Address').': '. $ticket['address'] ."<br>";
+
+					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+					$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+					$location = lang('Address'). ": {$ticket['address']}<br>";
 
 					$address_element = $this->bo->get_address_element($ticket['location_code']);
 
 					foreach($address_element as $address_entry)
 					{
-						$body .= $address_entry['text'].': '. $address_entry['value'] ."<br>";
+						$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
 					}
+
+					$location = rtrim($location, '<br>');
+
+					$order_description = $ticket['order_descr'];
 
 					if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
 					{
-						$body .= lang(contact).': '. $contact_data['value_contact_name'];
+						$contact_name = $contact_data['value_contact_name'];
 					}
 					if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 					{
-						$body .= "/ <a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+						$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
 					}
 					if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
 					{
-						$body .= " / {$contact_data['value_contact_tel']}<br>";
+						$contact_phone = $contact_data['value_contact_tel'];
 					}
 
-					if(isset($this->bo->config->config_data['order_email_footer']))
-					{
-						$body .= "{$this->bo->config->config_data['order_email_footer']}<br>";
-					}
+					$order_id = $ticket['order_id'];
 
-					$body .= '<h2>' . lang('description') .'</h2>';
-					$body .= nl2br($ticket['order_descr']);
+					$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
+					$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+
+					$body = nl2br(str_replace(array
+								(
+									'__organisation__',
+									'__user_name__',
+									'__user_phone__',
+									'__user_email__',
+									'__ressursnr__',
+									'__location__',
+									'__order_description__',
+									'__contact_name__',
+									'__contact_email__',
+									'__contact_phone__',
+									'__order_id__',
+									'[b]',
+									'[/b]'
+								),array
+								(
+									$organisation,
+									$user_name,
+									$user_phone,
+									$user_email,
+									$ressursnr,
+									$location,
+									$order_description,
+									$contact_name,
+									$contact_email,
+									$contact_phone,
+									$order_id,
+									'<b>',
+									'</b>'
+								),$order_email_template));
 
 					if(isset($values['file_attach']) && is_array($values['file_attach']))
 					{
