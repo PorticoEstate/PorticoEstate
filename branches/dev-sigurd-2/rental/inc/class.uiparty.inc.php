@@ -267,7 +267,7 @@ class rental_uiparty extends rental_uicommon
 				$party->set_url(phpgw::get_var('url'));
 				$party->set_account_number(phpgw::get_var('account_number'));
 				$party->set_reskontro(phpgw::get_var('reskontro'));
-				$party->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
+				$party->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
 				$party->set_comment(phpgw::get_var('comment'));
 				$party->set_location_id(phpgw::get_var('location_id'));
 				

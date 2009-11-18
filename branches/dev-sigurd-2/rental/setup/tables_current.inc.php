@@ -154,7 +154,7 @@
 					'first_name' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
 					'last_name' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'comment' =>        array('type' => 'text'),
-					'is_active' =>      array('type' => 'bool', 'nullable' => false, 'default' => 'true'),
+					'is_inactive' =>    array('type' => 'bool', 'nullable' => false),
 					'title' =>          array('type' => 'varchar','precision' => '255','nullable' => true),
 					'company_name' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'department' =>     array('type' => 'varchar','precision' => '255','nullable' => true),

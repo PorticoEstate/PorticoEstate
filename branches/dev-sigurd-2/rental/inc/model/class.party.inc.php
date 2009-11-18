@@ -14,7 +14,7 @@ class rental_party extends rental_model
     protected $first_name;
     protected $last_name;
     protected $location_id;
-    protected $is_active;
+    protected $is_inactive;
     protected $comment;
 
     protected $title;
@@ -130,12 +130,12 @@ class rental_party extends rental_model
 
 	public function get_location_id() { return $this->location_id; }
 
-	public function set_is_active(bool $is_active)
+	public function set_is_inactive(bool $is_inactive)
 	{
-		$this->is_active = (bool)$is_active;
+		$this->is_inactive = (bool)$is_inactive;
 	}
 
-	public function is_active() { return $this->is_active; }
+	public function is_inactive() { return $this->is_inactive; }
 
 	public function set_title($title)
 	{
@@ -351,7 +351,7 @@ class rental_party extends rental_model
 			'location_id' => $this->location_id,
 			'account_number' => $this->account_number,
 			'reskontro' => $this->reskontro,
-			'is_active' => $this->is_active,
+			'is_inactive' => $this->is_inactive,
 			'is_payer' => $is_payer
 		);
 	}

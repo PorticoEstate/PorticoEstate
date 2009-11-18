@@ -157,6 +157,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.identifier';
 			$columns[] = 'party.first_name';
 			$columns[] = 'party.last_name';
+			$columns[] = 'party.is_inactive';
 			$columns[] = 'party.title';
 			$columns[] = 'party.company_name';
 			$columns[] = 'party.department';
@@ -197,7 +198,7 @@ class rental_soparty extends rental_socommon
 	function add(&$party)
 	{
 		// Insert a new party
-		$q ="INSERT INTO rental_party (is_active) VALUES (true)";
+		$q ="INSERT INTO rental_party (is_inactive) VALUES (false)";
 		$result = $this->db->query($q);
 
 		if(isset($result)) {
@@ -252,7 +253,7 @@ class rental_soparty extends rental_socommon
 			'url = '            . $this->marshal($party->get_url(), 'string'),
 			'account_number = ' . $this->marshal($party->get_account_number(), 'string'),
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
-			'is_active = '      . $this->marshal(($party->is_active() ? 'true' : 'false'), 'bool'),
+			'is_inactive = '    . $this->marshal(($party->is_inactive() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
@@ -283,7 +284,7 @@ class rental_soparty extends rental_socommon
 			$party->set_email(          $this->unmarshal($this->db->f('email'), 'string'));
 			$party->set_fax(            $this->unmarshal($this->db->f('fax'), 'string'));
 			$party->set_first_name(     $this->unmarshal($this->db->f('first_name'), 'string'));
-			$party->set_is_active(      $this->unmarshal($this->db->f('is_active'), 'bool'));
+			$party->set_is_inactive(    $this->unmarshal($this->db->f('is_inactive'), 'bool'));
 			$party->set_last_name(      $this->unmarshal($this->db->f('last_name'), 'string'));
 			$party->set_location_id(    $this->unmarshal($this->db->f('org_location_id'), 'int'));
 			$party->set_identifier(		$this->unmarshal($this->db->f('identifier'), 'string'));

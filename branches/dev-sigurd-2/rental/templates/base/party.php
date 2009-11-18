@@ -295,25 +295,19 @@
 						}
 						?>
 					</dd>
-					<dt>
-						<label for="is_active"><?php echo lang('active_party') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-						?>
-							<input type="checkbox" name="is_active" id="is_active" <?php if($party->is_active() || (!isset($party) || !($party->get_id()))) { echo "checked='checked'";} ?>/>
-						<?php
-						}
-						else
-						{
-						?>
-							<input type="checkbox" name="is_active" id="is_active" disabled="disabled" <?php if($party->is_active()) { echo "checked='checked'";} ?> />
-						<?php
-						}
-						?>
-					</dd>
+					<?php if($editable) {?>
+						<dt>
+							<label for="is_inactive"><?php echo lang('inactive_party') ?></label>
+						</dt>
+						<dd>
+							<input type="checkbox" name="is_inactive" id="is_inactive" <?php if($party->is_inactive()) { echo "checked='checked'";} ?>/>
+						</dd>
+					<?php 
+					}else{ 
+					?>
+						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
+						<dd>&nbsp;</dd>
+					<?php }?>
 					<dt>
 						<label for="location_id"><?php echo lang('party_location') ?></label>
 					</dt>
