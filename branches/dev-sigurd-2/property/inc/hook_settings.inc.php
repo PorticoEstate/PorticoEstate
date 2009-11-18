@@ -258,3 +258,6 @@
 	create_select_box('show horisontal menues','horisontal_menus',array('no' => 'No','yes' => 'Yes'),'Horisontal menues are shown in top of page');
 	create_select_box('remove navbar','nonavbar',array('no' => 'No','yes' => 'Yes'),'Navigation bar is removed');
 	create_select_box('Tabel export format','export_format',array('excel' => 'Excel','csv' => 'CSV', 'ods' => 'ODS'),'Choose which format to export from the system for tables');
+	
+	$default = lang('regards') . "\n\n{$GLOBALS['phpgw_info']['user']['fullname']}";
+	create_text_area('signature on orders','order_signature',10,40,'',$default);
