@@ -42,6 +42,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('import');
+			set_time_limit(1500);
 		}
 		
 		public function query()
