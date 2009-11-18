@@ -37,8 +37,8 @@
 	}
 
 	YAHOO.rental.formatDate = function(elCell, oRecord, oColumn, oData) {
+		//alert("oDate: " + oData);
 		if (oData && oData != "Invalid Date" && oData != "NaN") {
-			//alert("oDate: " + oData);
 			var my_date = Math.round(Date.parse(oData) / 1000);
 			elCell.innerHTML = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>', my_date);
 		} else {

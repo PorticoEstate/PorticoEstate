@@ -177,7 +177,8 @@
 		public function serialize()
 		{	
 			$currency_prefix = $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'];
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			//$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date_format="Y/m/d";
 			return array(
 				'id' => $this->get_id(),
 				'price_item_id' => $this->get_price_item_id(),
