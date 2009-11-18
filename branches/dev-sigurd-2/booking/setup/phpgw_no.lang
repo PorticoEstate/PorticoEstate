@@ -337,3 +337,8 @@ Cannot generate files from empty list	booking	no	Kan ikke generere filer fra en 
 Associated items	booking	no	Tilknyttede elementer
 Unassign me	booking	no	Gi fra meg søknaden
 Order	booking	no	Sortering
+Completed reservations	booking	no	Fullførte reservasjoner
+Article Description	booking	no	Artikkelbeskrivelse
+Customer Type	booking	no	Kundetype
+Internal Customer	booking	no	Intern kunde
+SMS total	booking	no	SMS total
