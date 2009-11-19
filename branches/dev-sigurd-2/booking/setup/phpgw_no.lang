@@ -22,7 +22,7 @@ add new event	booking	no	Legg til arrangement
 add permission	booking	no	Legg til rettighet
 admin 1	booking	no	Bookingansvarlig 1
 admin 2	booking	no	Bookingansvarlig 2
-admins	booking	no	Bookingansvarliga
+admins	booking	no	Bookingansvarlige
 age group	booking	no	Aldersgruppe
 agegroup	booking	no	Aldersgruppe
 allocation	booking	no	Tildeling
@@ -124,6 +124,7 @@ new booking	booking	no	Ny booking
 new booking application	booking	no	Ny søknad
 new building	booking	no	Nytt bygg/anlegg
 new building permission	booking	no	Nye rettigheter bygg/anlegg
+New Resource Permission	booking	no	Nye rettigheter ressurs
 new contact	booking	no	Ny kontakt
 new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
@@ -301,6 +302,7 @@ Invalid Resource Type	booking	no	Ugyldig ressurstype
 Invalid customer type	booking	no	Ugyldig kundetype
 Nothing to export	booking	no	Fant ingenting å eksportere
 Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
+The invoice data in this list already has generated files	booking	no	Filene til fakturaene i listen har allerede blitt generert
 The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
 Send e-mail	booking	no	Send e-post
 All fields are required	booking	no	Alle feltene må fylles ut
@@ -365,3 +367,14 @@ Missing report-name	booking	no	Mangler raport-navn
 Invalid report-name	booking	no	Feil rapport-navn
 Missing configuration file	booking	no	Mangler konfigurasjonsfil
 Participants Per Age Group Per Month	booking	no	Deltagere per aldersgruppe per måned
+Location Code	booking	no	Lokasjonskode
+Edit Activity	booking	no	Rediger aktivitet
+No parent	booking	no	Ingen foreldreelement
+Sort order	booking	no	Sortering
+Edit target audience	booking	no	Rediger målgruppe
+Manager	booking	no	Administrator
+Edit document	booking	no	Rediger dokument
+Edit resource	booking	no	Rediger ressurs
+Edit Group	booking	no	Rediger gruppe
+Select Type	booking	no	Velg type
+Customer number	booking	no	Kundenummer

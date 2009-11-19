@@ -56,7 +56,7 @@
 				<dd>
 					<xsl:value-of select="node()"/>
 					<select name='type' id='field_type'>
-						<option value=''><xsl:value-of select="php:function('lang', 'Select Type...')" /></option>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
 						<xsl:for-each select="resource/types/*">
 							<option value="{local-name()}">
 								<xsl:if test="../../type = local-name()">
