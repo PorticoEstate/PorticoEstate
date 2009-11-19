@@ -169,6 +169,23 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uisend_email.index')),
 					'image'	=> array('property', 'location'),
 				),
+
+                'reportcenter' => array
+                (   
+                    'text'  => lang('Reports'),
+                    'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.index') ),
+                    'image' => array('property', 'location'),
+                    'children' => array
+                    (   
+                        'reports' => array
+                        (   
+                            'text'  => lang('Participants'),
+                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.participants') ),
+							'image' => array('property', 'location'),
+                        )       
+                    )       
+                ),      
+
 				
 				'settings' => array
 				(

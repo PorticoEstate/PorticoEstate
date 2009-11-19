@@ -217,14 +217,14 @@ why	booking	no	Hvorfor
 why?	booking	no	Hvorfor?
 zip code	booking	no	Postnummer
 postal city	booking	no	Poststed
-team leaders	booking	no	Ansvarliga gruppledare
-team leader 1	booking	no	Ansvarlig gruppledare 1
-team leader 2	booking	no	Ansvarlig gruppledare 2
+team leaders	booking	no	Ansvarlige gruppledere
+team leader 1	booking	no	Ansvarlig gruppeleder 1
+team leader 2	booking	no	Ansvarlig gruppeleder 2
 regulation	booking	no	Reglement
 Object No.	booking	no	Objektnr.
 Article	booking	no	Artikkel
-Unit No.	booking	no	Fagavdelningsnr.
-Unit Prefix	booking	no	Fagavdelnings kode (for buntnummeret)
+Unit No.	booking	no	Fagavdelingsnr.
+Unit Prefix	booking	no	Fagavdelingskode (for buntnummeret)
 Invoice Instruction	booking	no	Topptekst til faktura
 Responsible Code	booking	no	Ansvarssted
 Service	booking	no	Tjeneste
@@ -239,10 +239,10 @@ Create event	booking	no	Lag arrangement
 Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
 Field %1 is required	booking	no	Feltet %1 kreves
-Download	booking	no	Last ner
+Download	booking	no	Last ned
 Invoice Data Exports	booking	no	Fakturaeksporter
 Internal	booking	no	Intern
-External	booking	no	Extern
+External	booking	no	Ekstern
 Start date must be after %1	booking	no	Fradato må være etter %1
 To date must be before %1	booking	no	Tildato må være før %1
 Add Activity	booking	no	Ny Aktivitet
@@ -342,3 +342,26 @@ Article Description	booking	no	Artikkelbeskrivelse
 Customer Type	booking	no	Kundetype
 Internal Customer	booking	no	Intern kunde
 SMS total	booking	no	SMS total
+Type	booking	no	Type
+Participants	booking	no	Deltagere
+Format	booking	no	Format
+Create report	booking	no	Opprett rapport
+No buildings selected	booking	no	Du må velge minst en bygning
+Reports	booking	no	Rapporter
+Unable to set classpath	booking	no	Kunne ikke sette classpath
+Unable to perform chdir	booking	no	Kunne ikke utføre chdir
+Corrupt template	booking	no	Korrupt mal
+Unable to fill report	booking	no	Kunne ikke fylle rapporten
+Corrupt report object	booking	no	Korrupt rapport-objekt
+Unable to export to PDF	booking	no	Kunne ikke eksportere til PDF
+Unable to export to CSV	booking	no	Kunne ikke eksportere til CSV
+Unable to export to XLS	booking	no	Kunne ikke eskportere til XLS
+Unable to parse configuration	booking	no	Kunne ikke parse konfigurasjonen
+Invalid output-type provided	booking	no	Ugyldig output-type
+Unable to load the MySQL driver	booking	no	Kunne ikke laste inn MySQL-driver
+Unable to load the PostgreSQL driver	booking	no	Kunne ikke laste inn PostgreSQL-driver
+Unable to connect to database	booking	no	Kunne ikke koble seg mot DB
+Missing report-name	booking	no	Mangler raport-navn
+Invalid report-name	booking	no	Feil rapport-navn
+Missing configuration file	booking	no	Mangler konfigurasjonsfil
+Participants Per Age Group Per Month	booking	no	Deltagere per aldersgruppe per måned
