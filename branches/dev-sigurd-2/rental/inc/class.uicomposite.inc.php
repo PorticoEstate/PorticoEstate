@@ -305,6 +305,7 @@
 					$composite->set_custom_place(phpgw::get_var('place'));
 					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 					$composite->set_description(phpgw::get_var('description'));
+					$composite->set_rented_area(phpgw::get_var('rented_area'));
 					
 					if(rental_socomposite::get_instance()->store($composite))
 					{

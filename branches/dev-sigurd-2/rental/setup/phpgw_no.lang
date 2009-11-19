@@ -291,6 +291,7 @@ remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord
 remove_location	rental	no	Fjern enhet fra leieobjektet
 rental_composite	rental	no	Leieobjekt
 Rental	rental	no	Leie
+rented_area	rental	no	Utleid areal
 reports	rental	no	Rapporter
 reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill

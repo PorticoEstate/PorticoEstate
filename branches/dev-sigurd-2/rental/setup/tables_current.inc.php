@@ -20,6 +20,7 @@
 					'name' => 				array('type' => 'varchar','precision' => '255','nullable' => false),
 					'description' => 		array('type' => 'text'),
 					'is_active' => 			array('type' => 'bool','nullable' => false,'default' => 'true'),
+					'rented_area' =>		array('type' => 'float', 'precision' => 4,'nullable' => true),
 					'address_1' =>			array('type' => 'varchar','precision' => '255'),
 					'address_2' =>			array('type' => 'varchar','precision' => '255'),
 					'house_number' =>		array('type' => 'varchar','precision' => '255'),

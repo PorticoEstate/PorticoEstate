@@ -87,13 +87,20 @@
 				</dl>
 
 				<dl class="proplist-col">
-					<dt><?php echo lang('serial') ?></dt>
-					<dd><?php echo $composite->get_id() ?></dd>
 					<dt><?php echo lang('area_gros') ?></dt>
 					<dd><?php echo $composite->get_area_gros().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt><?php echo lang('area_net') ?></dt>
 					<dd><?php echo $composite->get_area_net().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
-
+					<dt><label for="rented_area"><?php echo lang('rented_area') ?></label></dt>
+					<dd>
+						<?php
+							if ($editable) {?>
+								<input type="text" name="rented_area" id="rented_area" value="<?php echo $composite->get_rented_area() ?>"/>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm';?>
+							<?php } else {?>
+								<?php echo $composite->get_rented_area()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm';?>
+							<?php }
+						?>
+					</dd>
 					<dt>
 						<label for="is_active"><?php echo lang('available?') ?></label>
 					</dt>
