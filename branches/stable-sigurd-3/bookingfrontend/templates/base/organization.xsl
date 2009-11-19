@@ -68,13 +68,17 @@
 	
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2')"/>;
 	
 		<![CDATA[
 		YAHOO.util.Event.addListener(window, "load", function() {
 			var url = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
 			var colDefs = [
-				{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'link', 'hidden': true}
+				{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, 
+				{key: 'link', 'hidden': true},
+				{key: 'activity_name', label: lang['Activity']},
+				{key: 'primary_contact_name', label: lang['Contact 1']},
+				{key: 'secondary_contact_name', label: lang['Contact 2']}
 			];
 			YAHOO.booking.inlineTableHelper('groups_container', url, colDefs);
 			

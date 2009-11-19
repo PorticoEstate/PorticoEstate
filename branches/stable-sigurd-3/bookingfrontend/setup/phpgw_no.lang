@@ -11,17 +11,17 @@ actions	bookingfrontend	no	Handling
 active	bookingfrontend	no	Aktiv
 active applications	bookingfrontend	no	Aktive søknader
 activity	bookingfrontend	no	Aktivitet
-add a comment	bookingfrontend	no	Legg til en komentar
+add a comment	bookingfrontend	no	Legg til en kommentar
 add another date	bookingfrontend	no	Legg til dato
 add boundary	bookingfrontend	no	Legg til rammetid
-add comment	bookingfrontend	no	Legg til komentar
+add comment	bookingfrontend	no	Legg til kommentar
 add document	bookingfrontend	no	Legg til dokument
 add new event	bookingfrontend	no	Legg til arrangement
 add permission	bookingfrontend	no	Legg til rettighet
 address	bookingfrontend	no	Besøksadresse
 admin 1	bookingfrontend	no	Bookingansvarlig 1
 admin 2	bookingfrontend	no	Bookingansvarlig 2
-admins	bookingfrontend	no	Bookingansvarliga
+admins	bookingfrontend	no	Bookingansvarlige
 age group	bookingfrontend	no	Aldersgruppe
 agegroup	bookingfrontend	no	Aldersgruppe
 allocation	bookingfrontend	no	Tildeling
@@ -219,9 +219,9 @@ why	bookingfrontend	no	Hvorfor
 why?	bookingfrontend	no	Hvorfor?
 zip code	bookingfrontend	no	Postnummer
 postal city	bookingfrontend	no	Poststed
-team leaders	bookingfrontend	no	Ansvarliga gruppledare
-team leader 1	bookingfrontend	no	Ansvarlig gruppledare 1
-team leader 2	bookingfrontend	no	Ansvarlig gruppledare 2
+team leaders	bookingfrontend	no	Ansvarlige gruppeledere
+team leader 1	bookingfrontend	no	Ansvarlig gruppeleder 1
+team leader 2	bookingfrontend	no	Ansvarlig gruppeleder 2
 regulation	bookingfrontend	no	Reglement
 Object No.	bookingfrontend	no	Objektnr.
 Article	bookingfrontend	no	Artikkel
@@ -236,3 +236,24 @@ Account Codes	bookingfrontend	no	Konteringsstreng
 Field %1 is required	bookingfrontend	no	Feltet %1 kreves
 Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format
 Building users	bookingfrontend	no	Brukere av bygg/anlegg
+Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
+Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
+Interval	bookingfrontend	no	Interval
+Recurring booking	bookingfrontend	no	Gjenta booking
+Repeat until	bookingfrontend	no	Gjenta til
+1 week	bookingfrontend	no	1 uke
+2 weeks	bookingfrontend	no	2 uker
+3 weeks	bookingfrontend	no	3 uker
+4 weeks	bookingfrontend	no	4 uker
+Select a group	bookingfrontend	no	Velg Gruppe/Lag
+Bookings that can be created	bookingfrontend	no	Bookinger som kan lages
+Please enter correct numbers for the event	bookingfrontend	no	Vennlist oppgi korrekt deltakertall
+Report numbers	bookingfrontend	no	Rapporter deltakertall
+Thank you	bookingfrontend	no	Takk
+The data was successfully updated	bookingfrontend	no	Dataene ble oppdatert uten feil
+Close	bookingfrontend	no	Lukke
+Create new booking	bookingfrontend	no	Lag ny booking
+You must accept to follow all terms and conditions of lease first.	bookingfrontend	no	Du må akseptere alle juridiske betingelser først.
+Invalid from date	bookingfrontend	no	Ugyldig fradato
+The user has accepted the following documents	bookingfrontend	no	Brukeren har akseptert følgende dokument
+Send	bookingfrontend	no	Send

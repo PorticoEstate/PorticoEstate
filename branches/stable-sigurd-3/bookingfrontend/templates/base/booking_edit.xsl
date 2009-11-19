@@ -2,7 +2,7 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Edit booking')"/></dt>
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
@@ -136,9 +136,8 @@
             <input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>
 			</input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')"/>
+            <a class="cancel" href="" onclick="history.back(1); return false">
+                <xsl:value-of select="php:function('lang', 'Go back')"/>
             </a>
         </div>
     </form>

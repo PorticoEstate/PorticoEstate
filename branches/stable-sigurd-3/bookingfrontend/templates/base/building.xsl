@@ -80,8 +80,8 @@
 				YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 				});
 				
-				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}];
+				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index&sort=name&no_images=1&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+				var colDefs = [{key: 'description', label: lang['Name'], formatter: YAHOO.booking.formatLink}];
 				YAHOO.booking.inlineTableHelper('documents_container', url, colDefs);
 				
 				var url = 'index.php?menuaction=bookingfrontend.uidocument_building.index_images&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';

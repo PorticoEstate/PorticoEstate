@@ -56,12 +56,28 @@
 		
 		public function is_organization_admin($organization_id = null)
 		{
+			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
+			return true;
+			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
 				return false;
 			}
 			$so = CreateObject('booking.soorganization');
 			$organization = $so->read_single($organization_id);
 			return $organization['organization_number'] == $this->orgnr;
+		}
+
+		public function is_group_admin($group_id = null)
+		{
+			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
+			return true;
+			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
+			if(!$this->is_logged_in()) {
+				return false;
+			}
+			$so = CreateObject('booking.sogroup');
+			$group = $so->read_single($group_id);
+			return $this->is_organization_admin($group['organization_id']);
 		}
 		
 		protected function write_user_orgnr_to_session()

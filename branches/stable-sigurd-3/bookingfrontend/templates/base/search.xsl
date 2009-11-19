@@ -28,7 +28,7 @@
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
-        F.eks. "<i>Haukelandshallen, Håndball</i>" eller "<i>Årstad Håndball</i>".
+        F.eks. "<i>Haukelandshallen, Håndball</i>" eller "<i>Nordnes bydelshus, kor</i>".
       </div>
     </form>
 	
@@ -39,8 +39,8 @@
 			<div>som leies ut av <strong>Kultur</strong> og <strong>idrett</strong>.</div>
 			<div>Bruk <strong>søkefeltet</strong> til å finne det du ønsker informasjon om.</div>
 			<div>Det enkelte bygg, anlegg har en <strong>kalender</strong> hvor du får</div>
-			<div>ovrsikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
-			<div>Ønsker du å søke om leie/bruk gjør du det fra kalendern.</div>
+			<div>oversikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
+			<div>Ønsker du å søke om leie/bruk gjør du det fra kalenderen.</div>
 		
 			<div>Du kan også finne <strong>informasjon</strong> om aktiviteter,</div>
 			<div>åpen hall, <strong>publikumstid</strong> i svømmehaller og <strong>kulturarrangementer</strong>.</div>
