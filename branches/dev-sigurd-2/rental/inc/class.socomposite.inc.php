@@ -68,7 +68,7 @@ class rental_socomposite extends rental_socommon
 		}
 
 		if(isset($filters['not_in_contract'])){
-			$filter_clauses[] = "rental_contract_composite.contract_id != ".$filters['not_in_contract'];
+			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
 		}
 		
 		if(isset($filters['contract_id']))
@@ -155,7 +155,7 @@ class rental_socomposite extends rental_socommon
 							}
 						}
 						$gab_id = '';
-						$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
+						$gabinfos  = @execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
 						if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
 						{
 							$gabinfo = array_shift($gabinfos);
