@@ -456,7 +456,7 @@
 
 			);
 
-			$vendor	= $this->contacts->read_single($table[0]['spvend_code'], array('attributes'=>array(array('column_name' => 'org_name'))));
+			$vendor	= $this->contacts->read_single($invoice_common['vendor_id'], array('attributes'=>array(array('column_name' => 'org_name'))));
 
 			foreach($vendor['attributes'] as $attribute)
 			{
@@ -469,24 +469,23 @@
 
 			$data = array
 			(
-				'artid'							=> $table[0]['artid'],
+				'artid'							=> $invoice_common['art'],
 				'lang_type'						=> lang('Type'),
-				'artid'							=> $table[0]['artid'],
 				'lang_bilagsnr'					=> lang('bilagsnr'),
-				'bilagsnr'						=> $table[0]['bilagsnr'],
+				'bilagsnr'						=> $invoice_common['bilagsnr'],
 				'lang_vendor'					=> lang('Vendor'),
 				'vendor_name'					=> $vendor_name,
-				'spvend_code'					=> $table[0]['spvend_code'],
+				'spvend_code'					=> $invoice_common['vendor_id'],
 				'lang_fakturadato'				=> lang('invoice date'),
-				'fakturadato'					=> $table[0]['fakturadato'],
+				'fakturadato'					=> $invoice_common['invoice_date'],
 				'lang_forfallsdato'				=> lang('Payment date'),
 				'forfallsdato'					=> $table[0]['forfallsdato'],
 				'lang_janitor'					=> lang('Janitor'),
-				'oppsynsmannid'					=> $table[0]['oppsynsmannid'],
+				'oppsynsmannid'					=> $invoice_common['janitor'],
 				'lang_supervisor'				=> lang('Supervisor'),
-				'saksbehandlerid'				=> $table[0]['saksbehandlerid'],
+				'saksbehandlerid'				=> $invoice_common['supervisor'],
 				'lang_budget_responsible'		=> lang('Budget Responsible'),
-				'budsjettansvarligid'			=> $table[0]['budsjettansvarligid'],
+				'budsjettansvarligid'			=> $invoice_common['budget_responsible'],
 				'lang_sum'						=> lang('Sum'),
 				'sum'							=> number_format($sum, 2, ',', ''),
 				'table_header'					=> $table_header,
