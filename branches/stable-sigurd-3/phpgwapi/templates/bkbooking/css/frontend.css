@@ -28,11 +28,22 @@ div#header {
     background: url(../images/header_bg.png) repeat-x;
     height: 129px;
 }
+div#header a {
+	float: left;
+}
 div#logo {
     background: url(../images/bergen_logo.png) no-repeat;
     width: 125px;
     height: 114px;
     margin-left: 10px;
+}
+div#centerimage {
+    background: url(../images/header_fg.png) no-repeat;
+	background-position: bottom center;
+	margin: 0 auto;
+	padding-top: 4px;
+	width: 876px;
+	height: 109px;
 }
 div#footer {
     border-top: 1px solid #aaa;
@@ -199,12 +210,11 @@ dl.tooltip dd {
     float: left;
 }
 
-div.color1 { background: #ccf;}
-div.color2 { background: #cfc;}
-div.color3 { background: #fcc;}
-div.color4 { background: #ffb;}
-div.color5 { background: #bff;}
-div.color6 { background: #fbf;}
+div.info:hover { 
+    background-image: url(../images/info.png);
+    background-repeat: no-repeat;
+    background-position: 100% 0%;
+}
 
 dl.contactinfo {}
 dl.contactinfo dt {
@@ -249,3 +259,10 @@ dl.contactinfo dd {
 #agegroup, #agegroup td, #agegroup th { width: 1%; }
 #agegroup td, #agegroup th { padding: .1em .3em;}
 #agegroup td input { width: 3em; }
+
+#overlay-info { padding: 1em; }
+#overlay-info h3 { margin: 0 0 .9em 0; }
+#overlay-info dt { font-style: italic; font-weight: bolder; font-size: 90%;}
+#overlay-info dd { padding-left: 2em; }
+#overlay-info .close { float: right; }
+#overlay-info .actions { margin-top: 1em;}
