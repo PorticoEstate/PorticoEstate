@@ -67,6 +67,11 @@ dl.form-col dd textarea.full-width {
     width: 33em;
     height: 10em;
 }
+dl.form dd textarea.threecol-width,
+dl.form-col dd textarea.threecol-width {
+    width: 58em;
+    height: 5em;
+}
 dl.form dd input[type="text"],  dl.form dd .autocomplete,
 dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
     width: 15em;
@@ -149,12 +154,12 @@ dl.proplist-col dd.address {
 #schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
 #schedule_container tr td:first-child { background: #eee; }
 #schedule_container tr.time td { border-top: 1px solid #444;}
-#schedule_container .color1 { background: #ccf;}
-#schedule_container .color2 { background: #cfc;}
-#schedule_container .color3 { background: #fcc;}
-#schedule_container .color4 { background: #ffb;}
-#schedule_container .color5 { background: #bff;}
-#schedule_container .color6 { background: #fbf;}
+#schedule_container .color1 { background-color: #ccf;}
+#schedule_container .color2 { background-color: #cfc;}
+#schedule_container .color3 { background-color: #fcc;}
+#schedule_container .color4 { background-color: #ffb;}
+#schedule_container .color5 { background-color: #bff;}
+#schedule_container .color6 { background-color: #fbf;}
 
 #boundary-table td, #boundary-table th { 
     padding: .1em .2em;
@@ -207,3 +212,11 @@ div.allocation-list
 	position: relative;
 	top: 6px;
 }
+
+.yui-overlay { 
+    background-color: white; 
+    border: 3px #999 inset;
+}
+.yui-overlay .hd { padding:5px; }
+.yui-overlay .bd { padding:5px; }
+.yui overlay .ft { padding:5px; }

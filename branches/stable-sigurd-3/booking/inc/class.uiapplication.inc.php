@@ -1,8 +1,11 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.account_helper');
 
 	class booking_uiapplication extends booking_uicommon
 	{
+		const COMMENT_TYPE_OWNERSHIP='ownership';
+		
 		public $public_functions = array
 		(
 			'index'			=>	true,
@@ -18,18 +21,114 @@
 		public function __construct()
 		{
 			parent::__construct();
+			self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->event_bo = CreateObject('booking.boevent');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->audience_bo = CreateObject('booking.boaudience');
 			$this->assoc_bo = new booking_boapplication_association();
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
-			$this->audience_bo = CreateObject('booking.boaudience');
+			$this->resource_bo = CreateObject('booking.boresource');
+			$this->document_bo = CreateObject('booking.bodocument_building');
 			self::set_active_menu('booking::applications');
 			$this->fields = array('description', 'resources', 'activity_id', 
 								  'building_id', 'building_name', 'contact_name', 
 								  'contact_email', 'contact_phone', 'audience',
 								  'active', 'accepted_documents');
+		}
+		
+		protected function is_assigned_to_current_user(&$application) {
+			$current_account_id = $this->current_account_id();
+			if (empty($current_account_id) || !isset($application['case_officer_id'])) { return false; }
+			return $application['case_officer_id'] == $current_account_id;
+		}
+		
+		protected function check_application_assigned_to_current_user(&$application) {
+			if (!$this->is_assigned_to_current_user($application)) {
+				throw new booking_unauthorized_exception('write', 'current user is not assigned to application');
+			}
+			
+			return true;
+		}
+		
+		protected function assign_to_current_user(&$application) {					
+			$current_account_id = $this->current_account_id();
+		 
+			if (!empty($current_account_id) && is_array($application) && 
+					!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id) 
+			{
+				$application['case_officer_id'] = $current_account_id;
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was assigned"), $this->current_account_fullname()));
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected function unassign_current_user(&$application) {						
+			$current_account_id = $this->current_account_id();
+		
+			if (!empty($current_account_id) && is_array($application) 
+					&& array_key_exists('case_officer_id', $application) 
+					&& $application['case_officer_id'] == $current_account_id) 
+			{
+				$application['case_officer_id'] = null;
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was unassigned"), $this->current_account_fullname()));
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected function set_display_in_dashboard(&$application, $bool, $options = array()) {
+			if (!is_bool($bool) || $application['display_in_dashboard'] === $bool) { return false; }
+			$options = array_merge(
+				array('force' => false),
+				$options
+			);
+			
+			if ($options['force'] === false && 
+					(!isset($application['case_officer_id']) || $application['case_officer_id'] != $this->current_account_id())
+			) 
+			{ 
+				return false; 
+			}
+			
+			$application['display_in_dashboard'] = ($bool === true ? 1 : 0);
+			return true;
+		}
+		
+		protected function add_comment(&$application, $comment, $type = 'comment') {
+			$application['comments'][] = array(
+				'time'=> 'now',
+				'author'=>$this->current_account_fullname(),
+				'comment'=>$comment,
+				'type' => $type
+			);
+		}
+		
+		protected function add_ownership_change_comment(&$application, $comment) {
+			$this->add_comment($application, $comment, self::COMMENT_TYPE_OWNERSHIP);
+		}
+		
+		/**
+		 * Filters application comments based on their types.
+		 * 
+		 *
+		 */
+		protected function filter_application_comments(array &$application, array $types) {
+			$types = array_fill_keys($types, true); //Convert to associative array with types as keys and values as true
+			
+			if (count($types) == 0 || !array_key_exists('comments', $application) || !is_array($application['comments'])) { 
+				return; 
+			}
+			
+			$filtered_comments = array();
+			foreach ($application['comments'] as &$comment) {
+				isset($types[$comment['type']]) AND $filtered_comments[] = $comment;
+			}
+			$application['comments'] = $filtered_comments;
 		}
 		
 		public function index()
@@ -78,6 +177,10 @@
 							'label' => lang('Status')
 						),
 						array(
+							'key' => 'what',
+							'label' => lang('What')
+						),
+						array(
 							'key' => 'created',
 							'label' => lang('Created')
 						),
@@ -111,6 +214,18 @@
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
+				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
+				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
+				$application['resources'] = $application['resources']['results'];
+				if($application['resources'])
+				{
+					$names = array();
+					foreach($application['resources'] as $res)
+					{
+						$names[] = $res['name'];
+					}
+					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
@@ -134,11 +249,6 @@
 			return array('from_' => $from_, 'to_' => $to_);
 		}
 
-		private function generate_secret($length = 10)
-		{
-			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
-		}
-		
 		protected function get_customer_identifier() {
 			return $this->customer_id;
 		}
@@ -160,15 +270,46 @@
 			return $errors;
 		}
 		
+		protected function set_case_officer(&$application) {
+			if (!empty($application['case_officer_id'])) {
+				$application['case_officer'] = array(
+					'id' => $application['case_officer_id'], 
+					'name' => $application['case_officer_name'],
+				);
+				
+				if ($application['case_officer_id'] == $this->current_account_id()) {
+					$application['case_officer']['is_current_user'] = true;
+				}
+			}
+		}
+		
 		protected function extract_form_data($defaults = array()) {
 			$entity = array_merge($defaults, extract_values($_POST, $this->fields));
 			$entity['agegroups'] = array();
 			$this->agegroup_bo->extract_form_data($entity);
 			$this->extract_customer_identifier($entity);
 			return $entity;
-		}
+    }
 
-		public function add()
+    protected function create_accepted_documents_comment_text($application)
+    {
+		if (count($application['accepted_documents']) < 1)
+		{
+			return null;
+		}
+		$comment_text = lang('The user has accepted the following documents').': ';
+		foreach($application['accepted_documents'] as $doc)
+		{
+			$doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
+			$document = $this->document_bo->read_single($doc_id);
+			$comment_text .= $document['description'].' ('.$document['name'].'), ';
+		}
+		$comment_text = substr($comment_text, 0, -2);
+
+		return $comment_text;
+    }
+
+    public function add()
 		{
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -186,12 +327,21 @@
 				$application['modified'] = 'now';
 				$application['secret'] = $this->generate_secret();
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+
 				$errors = $this->validate($application);
 				if(!$errors)
 				{
+					$comment_text = $this->create_accepted_documents_comment_text($application);
+					if ($comment_text)
+					{
+						$this->add_comment($application, $comment_text);
+					}
+
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 					$this->bo->send_notification($application, false);
+					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.\n".
+									  "A Case officer will review your application as soon as possible.\n\n"));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
@@ -214,21 +364,24 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
-			$this->install_customer_identifier_ui($application);	
+			$this->install_customer_identifier_ui($application);
+			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
 			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
-
 		public function edit()
-		{
+		{	
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
+			
+			$this->check_application_assigned_to_current_user($application);
+			
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
+			{	
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
 				
@@ -246,6 +399,9 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
+			
+			$this->set_case_officer($application);
+			
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
@@ -256,6 +412,7 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);	
+			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
 			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
 
@@ -286,9 +443,11 @@
 			$event[] = array('to_', $date['to_']);
 			$event[] = array('cost', '0');
 			$event[] = array('application_id', $application['id']);
+			$event[] = array('reminder', '0');
 			$copy = array(
 				'activity_id', 'description', 'contact_name',
-				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name'
+				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
+				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
 			);
 			foreach($copy as $f)
 			{
@@ -309,45 +468,89 @@
 			}
 			return json_encode($event);
 		}
-
+		
+		protected function extract_display_in_dashboard_value() {
+			$val = phpgw::get_var('display_in_dashboard', 'int', 'POST', 0);
+			if ($val <= 0) return false;
+			if ($val >= 1) return true;
+			return false; //Not that I think that it is necessary to return here too, but who knows, I might have overlooked something.
+		}
+		
 		public function show()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
-
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['create'])
-			{
+			
+			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				if($_POST['create'])
+				{
+					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
+				}
+				
+				$update = false;
+				$notify = false;
+				
+				if(array_key_exists('assign_to_user', $_POST))
+				{
+					$update = $this->assign_to_current_user($application);
+				}
+				elseif(isset($_POST['unassign_user'])) 
+				{
+					if ($this->unassign_current_user($application)) {
+						$this->set_display_in_dashboard($application, true, array('force' => true));
+						$update = true;
+					}
+				}
+				elseif(isset($_POST['display_in_dashboard']))
+				{
+					$this->check_application_assigned_to_current_user($application);
+					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
+				}
+				elseif($_POST['comment'])
+				{				
+					$this->add_comment($application, $_POST['comment']);
+					$update = true;
+					$notify = true;
+				}
+				elseif($_POST['status'])
+				{
+					$this->check_application_assigned_to_current_user($application);
+					$application['status'] = $_POST['status'];
+					$update = true;
+					$notify = true;
+				}
+				
+				$update AND $receipt = $this->bo->update($application);
+				$notify AND $this->bo->send_notification($application);
+				
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
 			}
-
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['status'])
-			{
-				$application['status'] = $_POST['status'];
-				$receipt = $this->bo->update($application);
-				$this->bo->send_notification($application);
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
-			}
-			if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['comment'])
-			{
-				$application['comments'][] = array('time'=> 'now', 
-												   'author'=>$GLOBALS['phpgw_info']['user']['fullname'], 
-												   'comment'=>$_POST['comment']);
-				$receipt = $this->bo->update($application);
-				$this->bo->send_notification($application);
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id']));
-			}
+			
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
 			$application['applications_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$application['edit_link'] = self::link(array('menuaction' => 'booking.uiapplication.edit', 'id' => $application['id']));
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
+
+			$cal_date = strtotime($application['dates'][0]['from_']);
+			$cal_date = date('Y-m-d', $cal_date);
+
+			$application['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building_info['id'], 'backend' => 'true', 'date' => $cal_date));
+
+			//manipulating the link. we want to use the frontend module instead of backend for displaying the schedule
+			$pos = strpos($application['schedule_link'], '/index.php');
+			$application['schedule_link'] = substr_replace($application['schedule_link'], 'bookingfrontend/', $pos+1, 0);
+
 			$resource_ids = '';
 			foreach($application['resources'] as $res)
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$application['resource_ids'] = $resource_ids;
+			
+			$this->set_case_officer($application);
+			
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();

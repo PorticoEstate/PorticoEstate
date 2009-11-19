@@ -124,8 +124,11 @@
 			}
 			$data = array(
 				 'ResultSet' => array(
-					"totalResultsAvailable" => $resources['total_records'], 
-					"Result"                => $resources['results'],
+					'totalResultsAvailable' => $resources['total_records'], 
+					'startIndex' => $resources['start'], 
+					'sortKey' => $resources['sort'], 
+					'sortDir' => $resources['dir'], 
+					'Result' => $resources['results']
 				)
 			);
 			return $data;

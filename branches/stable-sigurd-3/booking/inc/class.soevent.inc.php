@@ -19,9 +19,13 @@
 					'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 					'contact_phone' => array('type' => 'string'),
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
+					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
+					'secret'	=> array('type' => 'string', 'required' => true),
+					'sms_total'		=> array('type' => 'int', 'required' => false),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
 					'customer_ssn' 						=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'), 'required' => false),
 					'customer_organization_number' 	=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
+					'customer_internal'					=> array('type' => 'int', 'required'=>true),
 					'activity_name'	=> array('type' => 'string',
 						  'join' 		=> array(
 							'table' 	=> 'bb_activity',
@@ -72,7 +76,7 @@
 			$end = $to_->format('Y-m-d H:i');
 			if($from_ > $to_)
 			{
-				$errors['from_'] = 'Invalid from date';
+				$errors['from_'] = lang('Invalid from date');
 			}
 			if($entity['resources'])
 			{

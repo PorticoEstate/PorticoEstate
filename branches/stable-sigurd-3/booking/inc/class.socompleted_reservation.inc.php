@@ -41,6 +41,8 @@
 					'article_description' => array('type' => 'string', 'required' => True, 'nullable' => False, 'precision' => 35),
 					'building_id'			=> array('type' => 'string', 'required' => True),
 					'building_name'		=> array('type' => 'string', 'required' => True),
+					'export_file_id' 		=>  array('type' => 'int'),
+					'invoice_file_order_id' => array('type' => 'string'),
 					'season_name'	=> array('type' => 'string', 'query' => true,
 						  'join' => array(
 							'table' => 'bb_season',
@@ -71,7 +73,7 @@
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			if (!in_array($entity['customer_type'], $this->get_customer_types())) {
-				$errors['customer_type'] = 'Invalid customer type';
+				$errors['customer_type'] = lang('Invalid customer type');
 			}
 		}
 		
@@ -115,6 +117,28 @@
 		}
 		
 		public function create_from($type, $reservation) {
+			if (!array_key_exists('resources', $reservation) 
+					|| !is_array($reservation['resources'])
+					|| count($reservation['resources']) <= 0) 
+			{
+				
+				//Note that the loggin is stupidly enough done in the database so if the transaction fails
+				//we may very well not get anything in the log
+				if(is_object($GLOBALS['phpgw']->log))
+				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text' => 'UnableToCompleteInvalidReservation: reservation of type %1 with id %2 was missing resources',
+						'p1'   => is_string($type) ? $type : "unknown",
+						'p2'	 => isset($reservation['id']) ? $reservation['id'] : 'unknown',
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+				}
+				
+				//People cannot very well be forced to pay for a resourceless reservation
+				return;
+			}
+			
 			$entity = array(
 				'reservation_type' 	=> $type, 
 				'reservation_id' 		=> $reservation['id'],
@@ -219,6 +243,19 @@
 			return isset($cache[$resource_id]) ? $cache[$resource_id] : null;
 		}
 		
+		/**
+		 * @param $entity				The completed reservation entity on which to set customer_type
+		 * @param $customer_info 	Either a organization or event entity containing the key 'customer_internal'
+		 */
+		protected function set_customer_type(&$entity, $customer_info) {
+			//Remember that the default value of customer_type is already
+			//set to 'external' so we only have to adjust customer_type
+			//when dealing with an internal customer
+			if (intval($customer_info['customer_internal']) == 1) {
+				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
+			}
+		}
+		
 		protected function set_organization(&$entity, &$organization) {
 			$entity['organization_id'] = $organization['id'];
 			$entity['customer_organization_number'] = $organization['organization_number'];
@@ -240,6 +277,7 @@
 			}
 
 			$this->set_organization($entity, $org);
+			$this->set_customer_type($entity, $org);
 			$this->copy_customer_identifier($org, $entity);
 		}
 		
@@ -256,10 +294,12 @@
 			}
 			
 			$this->set_organization($entity, $org);
+			$this->set_customer_type($entity, $org);
 			$this->copy_customer_identifier($org, $entity);
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
+			$this->set_customer_type($entity, $event);
 			$this->copy_customer_identifier($event, $entity);
 		}
 		
@@ -269,5 +309,37 @@
 			$ids = join(', ', array_map(array($this, 'select_id'), $reservations));
 			$sql = "UPDATE $table_name SET exported = $with_export_id WHERE {$table_name}.id IN ($ids);";
 			return $db->query($sql, __LINE__, __FILE__);
+		}
+		
+		public function associate_with_export_file($id, $with_export_file_id, $and_invoice_file_order_id) {
+			if (empty($id)) {
+				throw new InvalidArgumentException("Invalid id");
+			}
+			
+			if (empty($with_export_file_id)) {
+				throw new InvalidArgumentException("Invalid export_file_id");
+			}
+			
+			if (empty($and_invoice_file_order_id)) {
+				throw new InvalidArgumentException("Invalid invoice_file_order_id");
+			}
+			
+			return $this->db->query(
+				$this->entity_update_sql($id, array('export_file_id' => $with_export_file_id, 'invoice_file_order_id' => $and_invoice_file_order_id)),
+				__LINE__, __FILE__
+			);
+		}
+		
+		public function count_reservations_for_export_file($id) {
+			$this->db->query(
+				"SELECT count(*) as c FROM {$this->table_name} WHERE export_file_id = ".$this->marshal_field_value('export_file_id', $id),
+				__LINE__, __FILE__
+			);
+			
+			if ($this->db->next_record()) {
+				return $this->_marshal($this->db->f('c', false), 'int');
+			}
+			
+			return 0;
 		}
 	}

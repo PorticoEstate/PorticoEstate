@@ -1,9 +1,14 @@
 colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6'];
 colorMap = {};
 
+YAHOO.booking.shorten = function(text, max) {
+	if(max && text.length > max)
+		text = text.substr(text, max) + '...';
+	return text;
+}
+
 YAHOO.booking.link = function(label, link, max) {
-	if(max && label.length > max)
-		label = label.substr(label, max) + '...';
+	label = YAHOO.booking.shorten(label, max);
 	if(link)
 		return '<a href="' + link + '">' + label + '</a>';
 	else
@@ -25,24 +30,36 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 			colorMap[booking.name] = colors.length ? colors.shift() : 'color6';
 		}
 		var color = colorMap[booking.name];
+		YAHOO.util.Dom.addClass(elCell, 'info');
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
-		if(booking.type == 'booking') {
-			var link = 'index.php?menuaction=bookingfrontend.uibooking.edit&id=' + booking.id;
-		}
-		else if(booking.type == 'allocation') {
-			var from_ = booking.date + ' ' + booking.from_;
-			var to_ = booking.date + ' ' + booking.to_;
-			var link = 'index.php?menuaction=bookingfrontend.uibooking.add&allocation_id=' + booking.id + '&from_=' + from_ + '&to_=' + to_;
-		}
-		else
-			var link = null;
-		elCell.innerHTML = YAHOO.booking.link(booking.name, link, 12);
+		elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking); return false; };
 	}
 	else {
 		elCell.innerHTML = '...';
+		var data = oRecord.getData();
+		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to); return false; };
 	}
 };
+
+YAHOO.booking.showBookingInfo = function(booking) {
+	var overlay = new YAHOO.widget.Overlay("overlay-info", { xy:[300,300],
+														visible:true,
+														width:"400px" } );
+	var callback = {
+		success : function(o) {
+			overlay.setBody(o.responseText);
+		},
+		failure : function(o) {
+			overlay.hide();
+			alert('Failed to load booking details page');
+		}
+	}
+	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&'), callback);
+	overlay.setBody('<img src="http://l.yimg.com/a/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
+	overlay.render(document.body);
+}
 
 YAHOO.booking.bookingToHtml = function(booking) { 
 	if(booking.type == 'booking') {
@@ -128,27 +145,42 @@ YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, incl
 	var colDefs = [{key: 'time', label: date.getFullYear() +'<br/>' + lang['LBL_TIME']}];
 	if(includeResource)
 		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: YAHOO.booking.scheduleResourceColFormatter});
+	YAHOO.booking.dates = {};
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	for(var i=0; i < 7; i++) {
 		var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		d.setDate(d.getDate() + i);
 		var x = i < 6 ? i+1: 0;
-		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br/>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter});
+		YAHOO.booking.dates[keys[x]] = d;
+		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br/>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, 'date': d});
 	}
 	YAHOO.booking.inlineTableHelper('schedule_container', url, colDefs, {
 		formatRow: YAHOO.booking.scheduleRowFormatter
 	}, true);
 }
+
 YAHOO.booking.prevWeek = function() {
 	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() - 7);
 	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
 	YAHOO.util.History.navigate('date', state);
 }
+
 YAHOO.booking.nextWeek = function() {
 	YAHOO.booking.date.setDate(YAHOO.booking.date.getDate() + 7);
 	var state = YAHOO.booking.date.getFullYear() + '-' + (YAHOO.booking.date.getMonth()+1) + '-' + YAHOO.booking.date.getDate();
 	YAHOO.util.History.navigate('date', state);
 }
+
+YAHOO.booking.newApplicationForm = function(date, _from, _to) {
+	date = date ? date : YAHOO.booking.date;
+	_from = _from ? '%20' + _from: '';
+	_to = _to ? '%20' + _to: '';
+	var url = YAHOO.booking.newApplicationUrl;
+	var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to;
+	window.location.href = url;
+}
+
 YAHOO.booking.setupWeekPicker = function(container) {
 	var Dom = YAHOO.util.Dom;
 	var oCalendarMenu = new YAHOO.widget.Overlay(Dom.generateId(), { visible: false});
@@ -171,3 +203,9 @@ YAHOO.booking.setupWeekPicker = function(container) {
 		}, this, true);
 	});
 }
+
+YAHOO.booking.closeOverlay = function() {
+	var o = YAHOO.util.Dom.get('overlay-info');
+	o.parentNode.removeChild(o);
+}
+

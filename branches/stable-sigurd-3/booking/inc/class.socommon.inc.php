@@ -43,6 +43,14 @@
 			$this->like			= & $this->db->like;
 		}
 		
+		public function get_db() {
+			return $this->db;
+		}
+		
+		public function get_table_name() {
+			return $this->table_name;
+		}
+		
 		/**
 		 * Added because error reporting facilities in phpgw tries to serialize the PDO
 		 * instance in $this->db which causes an error. This method removes $this->db from the 
@@ -108,11 +116,16 @@
 		protected function is_table_field_def(&$field_def) {
 			return !($field_def['join'] || $field_def['manytomany']);
 		}
-
+		
+		protected function build_join_table_alias($field, array $params) {
+			return "{$params['join']['table']}_{$params['join']['column']}_{$field}";
+		}
+		
 		public function _get_cols_and_joins()
 		{
 			$cols = array();
 			$joins = array();
+			
 			foreach($this->fields as $field => $params)
 			{
 				if($params['manytomany'])
@@ -121,8 +134,9 @@
 				}
 				else if($params['join'])
 				{
-					$cols[] = "{$params['join']['table']}_{$params['join']['column']}.{$params['join']['column']} AS {$field}";
-					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$params['join']['table']}_{$params['join']['column']} ON({$params['join']['table']}_{$params['join']['column']}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+					$join_table_alias = $this->build_join_table_alias($field, $params);
+					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
+					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
 				}
 				else 
 				{
@@ -307,7 +321,7 @@
 				{
 					if($params['query'])
 					{
-						$table = $params['join'] ? $params['join']['table'].'_'.$params['join']['column'] : $this->table_name;
+						$table = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
 						$column = $params['join'] ? $params['join']['column'] : $field;
 						if($params['type'] == 'int')
 						{
@@ -354,6 +368,8 @@
 				{
 					//Includes a custom where-clause as a filter. Also replaces %%table%% 
 					//tokens with actual table_name in the clause.
+					$where_clauses = (array)$val;
+					if (count($where_clauses) == 0) { continue; }
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
@@ -395,7 +411,6 @@
 			$order = $sort ? "ORDER BY $sort $dir ": '';
 			
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-			
 			if ($results) 
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -589,6 +604,16 @@
 			return $value;
 		}
 		
+		protected function entity_update_sql($entity_id, array $values) {
+			array_walk($values, array($this, 'column_update_expression'));
+			return sprintf(
+				"UPDATE %s SET %s WHERE %s",
+				$this->table_name,
+				join(',', $values),
+				$this->primary_key_conditions($entity_id)
+			);
+		}
+		
 		function update($entry)
 		{
 			if (!isset($entry['id'])) {
@@ -680,13 +705,15 @@
 			
 			$duplicates = $this->read(array('filters' => $filters, 'results' => 1));
 			
-			if ($duplicates['total_records'] == 0) return true;
-			
-			if (isset($entity['id']) && $duplicates['total_records'] == 1 && $duplicates['results'][0]['id'] == $entity['id']) {
-				return true;
+			if (!array_key_exists('results', $duplicates) || (is_array($duplicates['results']) && count($duplicates['results']) <= 0)) {
+				return true; //Values are unique: found no other entity matching the values, so values must be valid
 			}
 			
-			return false;
+			if (isset($entity['id']) && (is_array($duplicates['results']) && count($duplicates['results']) > 0) && $duplicates['results'][0]['id'] == $entity['id']) {
+				return true; //Values are unique since the values uniquely identified this entity and no other entity
+			}
+			
+			return false; //No, values are not unique
 		}
 		
 		public function create_error_stack($errors = array())

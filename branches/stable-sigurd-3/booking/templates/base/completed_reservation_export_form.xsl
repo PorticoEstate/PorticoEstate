@@ -30,14 +30,14 @@
 			<input name="season_name" type="hidden" id="field_season_name" value="{export/season_name}"/>
 			<dt><label for="field_season_id"><xsl:value-of select="php:function('lang', 'Season')" /></label></dt>
 			<dd>
-				<xsl:value-of select="phpgw:conditional((export/season_id and normalize-space(export/season_id)), export/season_name, php:function('lang', 'Alla'))"/>
+				<xsl:value-of select="phpgw:conditional((export/season_id and normalize-space(export/season_id)), export/season_name, php:function('lang', 'All'))"/>
 			</dd>
 			
 			<input name="building_id" type="hidden" id="field_building_id" value="{export/building_id}"/>
 			<input name="building_name" type="hidden" id="field_building_name" value="{export/building_name}"/>
 			<dt><label for="field_building_id"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
-				<xsl:value-of select="phpgw:conditional((export/building_id and normalize-space(export/building_id)), export/building_name, php:function('lang', 'Alla'))"/>
+				<xsl:value-of select="phpgw:conditional((export/building_id and normalize-space(export/building_id)), export/building_name, php:function('lang', 'All'))"/>
 			</dd>
 			
 			
@@ -47,7 +47,7 @@
 				<dd><xsl:value-of select="export/to_"/></dd>
 			</xsl:if>
 			
-			<input name="export_files[internal][type]" type="hidden" value="internal"/>
+			<input name="export_configurations[internal][type]" type="hidden" value="internal"/>
 			<dt>
 				<label for="field_account_code_set_internal_name">
 					<xsl:value-of select="php:function('lang', 'Choose')" /><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'Internal Account Codes')" />
@@ -55,8 +55,8 @@
 			</dt>
 			<dd>
 				<div class="autocomplete">
-					<input id="field_account_code_set_internal_id" name="export_files[internal][account_code_set_id]" type="hidden" value="{export/export_files/internal/account_code_set_id}"/>
-					<input id="field_account_code_set_internal_name" name="export_files[internal][account_code_set_name]" type="text" value="{export/export_files/internal/account_code_set_name}">
+					<input id="field_account_code_set_internal_id" name="export_configurations[internal][account_code_set_id]" type="hidden" value="{export/export_configurations/internal/account_code_set_id}"/>
+					<input id="field_account_code_set_internal_name" name="export_configurations[internal][account_code_set_name]" type="text" value="{export/export_configurations/internal/account_code_set_name}">
 						<xsl:if test="not(new_form)">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>
@@ -65,7 +65,7 @@
 				</div>
 			</dd>
 		
-			<input name="export_files[external][type]" type="hidden" value="external"/>
+			<input name="export_configurations[external][type]" type="hidden" value="external"/>
 			<dt>
 				<label for="field_account_code_set_external_name">
 					<xsl:value-of select="php:function('lang', 'Choose')" /><xsl:text> </xsl:text><xsl:value-of select="php:function('lang', 'External Account Codes')" />
@@ -73,8 +73,8 @@
 			</dt>
 			<dd>
 				<div class="autocomplete">
-					<input id="field_account_code_set_external_id" name="export_files[external][account_code_set_id]" type="hidden" value="{export/export_files/external/account_code_set_id}"/>
-					<input id="field_account_code_set_external_name" name="export_files[external][account_code_set_name]" type="text" value="{export/export_files/external/account_code_set_name}">
+					<input id="field_account_code_set_external_id" name="export_configurations[external][account_code_set_id]" type="hidden" value="{export/export_configurations/external/account_code_set_id}"/>
+					<input id="field_account_code_set_external_name" name="export_configurations[external][account_code_set_name]" type="text" value="{export/export_configurations/external/account_code_set_name}">
 						<xsl:if test="not(new_form)">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>

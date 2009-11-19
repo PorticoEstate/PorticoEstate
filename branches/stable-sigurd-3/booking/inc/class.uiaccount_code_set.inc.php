@@ -122,13 +122,13 @@ phpgw::import_class('booking.uicommon');
 				)
 			);
 			
-			//if ($this->bo->allow_create()) {
+			if ($this->bo->allow_create()) {
 				array_unshift($data['form']['toolbar']['item'], array(
 					'type' => 'link',
 					'value' => lang('New Account Codes'),
 					'href' => $this->link_to('add'),
 				));
-			//}
+			}
 			
 			self::render_template('datatable', $data);
 		}

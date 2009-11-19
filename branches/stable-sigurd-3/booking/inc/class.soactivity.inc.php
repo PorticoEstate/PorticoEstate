@@ -26,7 +26,7 @@
 			{
 				if($node_id == $entity['id'])
 				{
-					$errors['parent_id'] = 'Invalid parent activity';
+					$errors['parent_id'] = lang('Invalid parent activity');
 					break;
 				}
 				$next = $this->read_single($node_id);

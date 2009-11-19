@@ -1,5 +1,7 @@
 current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
+-- select a building --	booking	no	Velg en bygning
+-- select a season --	booking	no	Velg en sesong
 1. why?	booking	no	1. Hvorfor?
 2. where?	booking	no	2. Hvor?
 3. when?	booking	no	3. Når?
@@ -88,7 +90,7 @@ filnavn	booking	no	Dokument
 found %1 results	booking	no	%1 treffer
 fr	booking	no	fr.
 from	booking	no	Fra
-generate allocations	booking	no	Lag tildelning
+generate allocations	booking	no	Kopièr til kalender
 generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe/Lag
@@ -138,7 +140,7 @@ no Data.	booking	no	Ingen treff.
 no description yet	booking	no	Beskrivelse manglar
 no parents	booking	no	Ingen overordnet
 no records found.	booking	no	Ingen treff.
-no records found.	booking	no	Inget funnet!
+no records found.	booking	no	Ingen funnet!
 nov	booking	no	november
 number of participants	booking	no	Antall deltakere
 oct	booking	no	oktober
@@ -186,6 +188,7 @@ showing items	booking	no	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	no	Fødselsnummer (11 siffer)
 Ssn	booking	no	Fødselsnummer (11 siffer)
+Date of birth or SSN	booking	no	Fødselsdato eller fødselsnummer
 status	booking	no	Status
 street	booking	no	Gate
 su	booking	no	sø
@@ -237,7 +240,7 @@ Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
 Field %1 is required	booking	no	Feltet %1 kreves
 Download	booking	no	Last ner
-Invoice Data Exports	booking	no	Fakturaexporter
+Invoice Data Exports	booking	no	Fakturaeksporter
 Internal	booking	no	Intern
 External	booking	no	Extern
 Start date must be after %1	booking	no	Fradato må være etter %1
@@ -255,3 +258,87 @@ Back to Dashboard	booking	no	Tilbake til Skrivebord
 Booking changed	booking	no	En booking har blitt endret
 Allocation changed	booking	no	En tildeling har blitt endret
 Event changed	booking	no	Et arrangement har blitt endret
+send reminder for participants statistics	booking	no	Purring brukerstatistikk
+Send reminder	booking	no	Send purring
+Do not send reminder	booking	no	Ikke send purring
+User has responded to the reminder	booking	no	Brukeren har svart på påminnelsen
+In order to work with this application, you must first	booking	no	For å jobbe med denne søknaden, må du først
+assign yourself	booking	no	bli saksbehander
+as the case officer responsible for this application.	booking	no	for denne søknaden
+In order to work with this application, you must therefore first	booking	no	For å jobbe med denne søknaden må du derfor først
+Last modified by public	booking	no	Sist endret av public
+User '%s' was assigned	booking	no	Brukeren '%s' ble saksbehandler
+User '%s' was unassigned	booking	no	Brukeren '%s' ble tatt av saken
+Show only applications assigned to me	booking	no	Vis bare mine søknader
+Confirm	application	booking no	Bekreft søknad
+One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	En eller flere bookinger, tildelinger eller arrangementer må lages før en søknad kan aksepteres
+Hide from my Dashboard until new activity occurs	booking	no	Ikke vis på mitt skrivebord før ny hendelse inntreffer
+Display in my Dashboard	booking	no	Vis på mitt skrivebord
+Re-assign to me	booking	no	Bli saksbehandler
+Assign to me	booking	no	Bli saksbehandler
+Currently assigned to user:	booking	no	Nåværende saksbehandler:
+Overlaps with existing event	booking	no	Overlapper med eksisterende arrangement
+Overlaps with existing allocation	booking	no	Overlapper med eksisterende tildeling
+Overlaps with existing booking	booking	no	Overlapper med eksisterende booking
+This booking is not within the selected season	booking	no	Denne bookingen ligger utenfor angitt sesong
+Invalid from date	booking	no	Ugyldig fradato
+This booking is outside the organization's allocated time	booking	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
+Overlaps other organizations allocation	booking	no	Overlapper med en annen organisasjons tildeling
+The booking uses resources not in the containing allocation	booking	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
+Field %1: Invalid format	booking	no	Felt %1: Ugyldig format
+Missing file for document	booking	no	Fil mangler
+Permission already exists	booking	no	Rettigheten finnes
+TO needs to be later than FROM	booking	no	TIL må komme etter FRA
+This boundary overlaps another boundary	booking	no	Denne rammetiden overlapper med en annen rammetid
+COST needs to be non-negative	booking	no	Pris kan ikke være negativ
+This allocation overlaps another allocation	booking	no	Denne tildelingen overlapper med en annen tildeling
+This allocation is outside season boundaries	booking	no	Denne tildelingen ligger utenfor sesongrammetiden
+Could not update object due to insufficient permissions	booking	no	Kunne ikke oppdatere objektet på grunn av manglende rettigheter
+Could not add object due to insufficient permissions	booking	no	Kunne ikke opprette objektet på grunn av manglende rettigheter
+Invalid parent activity	booking	no	Ugyldig foreldreaktivitet
+Invalid category	booking	no	Ugyldig kategori
+Invalid Resource Type	booking	no	Ugyldig ressurstype
+Invalid customer type	booking	no	Ugyldig kundetype
+Nothing to export	booking	no	Fant ingenting å eksportere
+Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
+The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
+Send e-mail	booking	no	Send e-post
+All fields are required	booking	no	Alle feltene må fylles ut
+Send e-mails	booking	no	Send e-post
+Recipients	booking	no	Mottakere
+Mail subject	booking	no	Emne
+Mail body	booking	no	Melding
+The emails were sent successfully	booking	no	E-postene ble sendt uten feil
+What	booking	no	Hva
+Res. Type	booking	no	Type
+Cust. Type	booking	no	Kundetype
+Customer ID	booking	no	Kundeid
+Exported	booking	no	Eksportert
+Export File	booking	no	Eksportfil
+Order id	booking	no	Ordreid
+Export Settings	booking	no	Eksportinnstillinger
+Export	booking	no	Eksporter
+Not Generated	booking	no	Ikke generert
+Generated Files	booking	no	Genererte filer
+Generate files	booking	no	Generer filer
+All	booking	no	Alle
+Choose	booking	no	Velg
+Internal Account Codes	booking	no	interne kontokoder
+External Account Codes	booking	no	eksterne kontokoder
+Total Items	booking	no	Antall elementer
+Total Cost	booking	no	Totalsum
+Int. invoice file	booking	no	Intern fakturafil
+Ext. invoice file	booking	no	Ekstern fakturafil
+Asynchronous Tasks	booking	no	Systemjobber
+booking_async_task_update_reservation_state_enabled	booking	no	Oppdater reservasjonsstatus
+booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på bookinger og arrangementer
+Update	booking	no	Oppdater
+Cannot generate files from empty list	booking	no	Kan ikke generere filer fra en tom liste
+Associated items	booking	no	Tilknyttede elementer
+Unassign me	booking	no	Gi fra meg søknaden
+Order	booking	no	Sortering
+Completed reservations	booking	no	Fullførte reservasjoner
+Article Description	booking	no	Artikkelbeskrivelse
+Customer Type	booking	no	Kundetype
+Internal Customer	booking	no	Intern kunde
+SMS total	booking	no	SMS total

@@ -45,6 +45,8 @@
 	 */
 	function pretty_timestamp($date)
 	{
+		if (empty($date)) return "";
+		
 		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
 		{
 			$date = $date[0]->nodeValue;
@@ -172,6 +174,11 @@
 		protected function ui_session_get($key) {
 			return $this->session_get(get_class($this).'_'.$key);
 		}
+
+		protected function generate_secret($length = 10)
+		{
+			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
+		}
 		
 		public function add_js_event($event, $js) {
 			$GLOBALS['phpgw']->js->add_event($event, $js);
@@ -179,6 +186,27 @@
 		
 		public function add_js_load_event($js) {
 			$this->add_js_event('load', $js);
+		}
+		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_id() {
+			return booking_account_helper::current_account_id();
+		}
+		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_lid() {
+			return booking_account_helper::current_account_lid();
+		}
+		
+		/**
+		 * @see booking_account_helper
+		 */
+		public static function current_account_fullname() {
+			return booking_account_helper::current_account_fullname();
 		}
 		
 		public static function encoding()
@@ -202,7 +230,12 @@
 		{
 			if ($e instanceof booking_unauthorized_exception)
 			{
-				$message = htmlentities('HTTP/1.0 401 Unauthorized - '.$e->getMessage(), null, self::encoding());
+				$message = htmlentities('HTTP/1.0 401 Unauthorized to '.$e->get_operation(), null, self::encoding());
+				$exception_message = $e->getMessage();
+			
+				if (!empty($exception_message))
+					$message .= ' - '.htmlentities($exception_message, null, self::encoding());
+					
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";
 			} else {
@@ -332,8 +365,12 @@
 			);
 		}
 
-        public function render_template($files, $data)
-        {
+		public function add_template_helpers() {
+			$this->add_template_file('helpers');
+		}
+
+		public function render_template($files, $data)
+		{
 			if($this->flash_msgs) {
 				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
 			} else {
@@ -349,7 +386,7 @@
 			//$GLOBALS['phpgw']->xslttpl->add_file(array($files));
 			$this->add_template_file($files);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
-        }
+		}
 
 		public function send_file($file_path, $options = array())
 		{

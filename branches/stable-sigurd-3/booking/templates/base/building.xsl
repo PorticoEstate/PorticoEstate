@@ -33,6 +33,11 @@
 			
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
             <dd><xsl:value-of select="building/district"/></dd>
+
+			<xsl:if test="building/location_code">
+				<dt><xsl:value-of select="php:function('lang', 'Location Code')" /></dt>
+	            <dd><a href="{building/location_link}"><xsl:value-of select="building/location_code"/></a></dd>
+			</xsl:if>
         </dl>
         <dl class="proplist-col">
             <dt>

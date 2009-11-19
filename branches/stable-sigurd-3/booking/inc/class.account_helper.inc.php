@@ -2,10 +2,28 @@
 	class booking_account_helper {
 		const ADMIN_GROUP = 'Admins';
 		protected static $account_is_admin;
+		protected static $current_account_lid;
 		
+		/**
+		 * Returns the current user's account_id in the phpgw_accounts table
+		 */
 		public static function current_account_id()
 		{
 			return get_account_id();
+		}
+		
+		/**
+		 * Returns the current user's login name
+		 */
+		public function current_account_lid() {
+			return $GLOBALS['phpgw_info']['user']['account_lid'];
+		}
+		
+		/**
+		 * Returns the current user's full name
+		 */
+		public function current_account_fullname() {
+			return $GLOBALS['phpgw_info']['user']['fullname'];
 		}
 		
 		public static function current_account_memberships()

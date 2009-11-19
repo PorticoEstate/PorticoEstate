@@ -63,7 +63,14 @@ YAHOO.booking.initializeDataTable = function()
     if(baseUrl[baseUrl.length - 1] != '&') {
         baseUrl += '&';
     }
-	baseUrl += 'sort=' + fields[0] + '&results=' + pag.getRowsPerPage() + '&';
+    
+    if (YAHOO.booking.initialSortedBy) {
+      baseUrl += 'sort=' + YAHOO.booking.initialSortedBy.key + '&dir=' + YAHOO.booking.initialSortedBy.dir;
+    } else {
+      baseUrl += 'sort=' + fields[0];
+    }
+	
+	  baseUrl += '&results=' + pag.getRowsPerPage() + '&';
     var myDataSource = new YAHOO.util.DataSource(baseUrl);
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -82,7 +89,7 @@ YAHOO.booking.initializeDataTable = function()
         YAHOO.booking.columnDefs, myDataSource, {
             paginator: pag,
             dynamicData: true,
-            sortedBy: {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
+            sortedBy: YAHOO.booking.initialSortedBy || {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
     });
     var handleSorting = function (oColumn) {
         var sDir = this.getColumnSortDir(oColumn);
@@ -142,20 +149,22 @@ YAHOO.booking.initializeDataTable = function()
 		state += '&startIndex=' + start;
 		return state;
 	}
-    var handleHistoryNavigation = function (state) {
+
+	var handleHistoryNavigation = function (state) {
 		var params = YAHOO.booking.parseQS(state);
 		YAHOO.booking.fillForm('queryForm', params);
 		myDataSource.sendRequest(state, {success: function(sRequest, oResponse, oPayload) {
 			myDataTable.onDataReturnInitializeTable(sRequest, oResponse, pag);
 		}});
-    };
-    var initialRequest = History.getBookmarkedState("state") || '';
-    History.register("state", initialRequest, handleHistoryNavigation);
-    History.onReady(function() {
-		var state = History.getBookmarkedState("state");
+	};
+	
+	var initialRequest = History.getBookmarkedState("state") || getState();
+	History.register("state", initialRequest, handleHistoryNavigation);
+	History.onReady(function() {
+		var state = YAHOO.util.History.getCurrentState('state');
 		handleHistoryNavigation(state);
-    });
-   	History.initialize("yui-history-field", "yui-history-iframe");
+	});
+	History.initialize("yui-history-field", "yui-history-iframe");
 };
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.booking.initializeDataTable);

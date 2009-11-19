@@ -18,6 +18,7 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.boallocation');
 			$this->organization_bo    = CreateObject('booking.boorganization');
+			$this->building_bo    = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
@@ -152,7 +153,8 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$allocation = $this->bo->read_single($id);
-			$allocation['id'] = $id;
+			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
+			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

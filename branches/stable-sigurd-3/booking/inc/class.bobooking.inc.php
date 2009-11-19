@@ -18,6 +18,8 @@ function array_minus($a, $b)
 	
 	class booking_bobooking extends booking_bocommon_authorized
 	{
+		const ROLE_ADMIN = 'organization_admin';
+
 		function __construct()
 		{
 			parent::__construct();
@@ -49,16 +51,37 @@ function array_minus($a, $b)
 			return $parent_roles;
 		}
 		
+
+
+		/**
+		 * @see booking_bocommon_authorized
+		 */
+		protected function get_subject_roles($for_object = null, $initial_roles=array())
+		{
+			if ($this->current_app() == 'bookingfrontend') {
+				$bouser = CreateObject('bookingfrontend.bouser');
+				
+				$group_id = is_array($for_object) ? $for_object['group_id'] : (!is_null($for_object) ? $for_object : null);
+				
+				if ($bouser->is_group_admin($group_id)) {
+					$initial_roles[] = array('role' => self::ROLE_ADMIN);
+				}
+			}
+			
+			return parent::get_subject_roles($for_object, $initial_roles);
+		}
 		
 		/**
 		 * @see bocommon_authorized
 		 */
 		protected function get_object_role_permissions(array $forObject, $defaultPermissions)
 		{
-			if ($this->current_app() == 'bookingfrontend')
-			{
-				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
-				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['write'] = true;
+			if ($this->current_app() == 'bookingfrontend') {	             
+				$defaultPermissions[self::ROLE_ADMIN] = array
+				(
+					'create' => true,
+					'write' => true,
+				);
 			}
 			return array_merge(
 				array

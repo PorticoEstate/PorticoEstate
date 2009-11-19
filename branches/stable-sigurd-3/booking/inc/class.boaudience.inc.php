@@ -21,6 +21,6 @@
 
 		function fetch_target_audience()
 		{
-			return $this->so->read(array('filters'=>array('active'=>'1')));
+			return $this->so->read(array('filters'=>array('active'=>'1'), 'sort'=>'sort'));
 		}
 	}

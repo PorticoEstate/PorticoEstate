@@ -213,6 +213,9 @@
 		}
 		
 		public function set_data($data) {
+			if (!is_string($data)) {
+				throw new InvalidArgumentException("Data must be a string value");
+			}
 			$this->data = $data;
 			$this->dirty = true;
 		}

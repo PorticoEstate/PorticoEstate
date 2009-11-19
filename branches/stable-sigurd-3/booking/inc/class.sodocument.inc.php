@@ -139,7 +139,7 @@
 			}
 			
 			if (!in_array($document['category'], $this->defaultCategories)) {
-				$errors['category'] = 'Invalid category';
+				$errors['category'] = lang('Invalid category');
 			}
 		}
 		

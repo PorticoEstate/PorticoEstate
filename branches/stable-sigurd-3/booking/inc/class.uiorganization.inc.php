@@ -33,7 +33,7 @@
 								  'street', 'zip_code', 'city', 'district', 
 								  'description', 'contacts', 'active', 
 								  'organization_number', 'activity_id',
-								  'customer_number');
+								  'customer_number', 'customer_internal');
 								
 			
 		}
@@ -161,6 +161,8 @@
 		public function add()
 		{
 			$errors = array();
+			$organization = array('customer_internal' => 1);
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate(array('active' => 1));
@@ -178,6 +180,8 @@
 			
 			$this->install_customer_identifier_ui($organization);	
 			$this->use_yui_editor();
+			
+			$this->add_template_helpers();
 			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities));
 		}
 
@@ -213,6 +217,8 @@
 			
 			$this->install_customer_identifier_ui($organization);
 			$this->use_yui_editor();
+			
+			$this->add_template_helpers();
 			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities));
 		}
 		

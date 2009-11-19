@@ -25,13 +25,14 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
+			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->group_bo    = CreateObject('booking.bogroup');
 			self::set_active_menu('booking::applications::bookings');
 			$this->fields = array('allocation_id', 'activity_id', 'resources',
 								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
-			                      'group_id', 'group_name', 
-			                      'from_', 'to_', 'audience', 'active', 'cost');
+			                      'group_id', 'group_name', 'organization_id', 'organization_name',
+			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder', 'sms_total');
 		}
 		
 		public function index()
@@ -169,12 +170,14 @@
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
 				$this->agegroup_bo->extract_form_data($booking);
+				$booking['secret'] = $this->generate_secret();
+
 				$errors = $this->bo->validate($booking);
 				if(!$errors)
 				{
 					try {
 						$receipt = $this->bo->add($booking);
-						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id']));
+						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id'=>$receipt['id'], 'secret'=>$booking['secret']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
@@ -216,7 +219,11 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
-			$booking['id'] = $id;
+			$booking['group'] = $this->group_bo->so->read_single($booking['group_id']);
+			$booking['organization_id'] = $booking['group']['organization_id'];
+			$booking['organization_name'] = $booking['group']['organization_name'];
+			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
+			$booking['building_name'] = $booking['building']['name'];
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

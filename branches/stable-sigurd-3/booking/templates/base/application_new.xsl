@@ -25,7 +25,7 @@
 			</dd>
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
-				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
+				<textarea id="field_description" class="threecol-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
 		</dl>
 		<div class="clr"/>
@@ -150,7 +150,7 @@
 		</dl>
 		<div class="form-buttons">
 			<input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Create')"/></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send')"/></xsl:attribute>
 			</input>
 			<a class="cancel">
 				<xsl:attribute name="href"><xsl:value-of select="application/cancel_link"/></xsl:attribute>

@@ -25,7 +25,7 @@
 		}
 		
 		public static function getAvailableTasks() {
-			return array("booking.async_task_update_reservation_state");
+			return array('booking.async_task_update_reservation_state', 'booking.async_task_send_reminder');
 		}
 		
 		public static function create($task_class) {

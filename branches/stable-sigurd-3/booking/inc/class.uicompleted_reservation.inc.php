@@ -167,12 +167,8 @@ phpgw::import_class('booking.uicommon');
 							'label' => lang('Building'),
 						),
 						array(
-							'key' => 'from_',
-							'label' => lang('From'),
-						),
-						array(
-							'key' => 'to_',
-							'label' => lang('To'),
+							'key' => 'organization_name',
+							'label' => lang('Organization'),
 						),
 						array(
 							'key' => 'customer_type',
@@ -184,12 +180,30 @@ phpgw::import_class('booking.uicommon');
 							'sortable' => false,
 						),
 						array(
+							'key' => 'from_',
+							'label' => lang('From'),
+						),
+						array(
+							'key' => 'to_',
+							'label' => lang('To'),
+						),
+						array(
 							'key' => 'cost',
 							'label' => lang('Cost'),
 						),
 						array(
 							'key' => 'exported',
 							'label' => lang('Exported'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
+						),
+						array(
+							'key' => 'export_file_id',
+							'label' => lang('Export File'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
+						),
+						array(
+							'key' => 'invoice_file_order_id',
+							'label' => lang('Order id'),
 						),
 						array(
 							'key' => 'link',
@@ -212,21 +226,35 @@ phpgw::import_class('booking.uicommon');
 			$reservations = $this->bo->read();
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
-				$reservation['exported'] = $reservation['exported'] ? 'Yes' : 'No';
-				if($reservation['reservation_type'] == 'event')
+				
+				if (!empty($reservation['exported'])) 
 				{
-					$reservation['reservation_type'] = array(
-						'href' => $this->link_to('edit', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
-						'label' => lang($reservation['reservation_type']),
+					$reservation['exported'] = array(
+						'href' => $this->link_to('show', array('ui' => 'completed_reservation_export', 'id' => $reservation['exported'])),
+						'label' => (string)$reservation['exported'],
 					);
+				} else {
+					$reservation['exported'] = array('label' => lang('No'));
 				}
-				else
-				{
-					$reservation['reservation_type'] = array(
-						'href' => $this->link_to('show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
-						'label' => lang($reservation['reservation_type']),
+				
+				$reservation['reservation_type'] = array(
+					'href' => $this->link_to($reservation['reservation_type'] == 'event' ? 'edit' : 'show', array('ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id'])),
+					'label' => lang($reservation['reservation_type']),
+				);
+				
+				if (isset($reservation['export_file_id']) && !empty($reservation['export_file_id'])) {
+					$reservation['export_file_id'] = array(
+						'label' => (string)$reservation['export_file_id'],
+						'href' => $this->link_to('show', array('ui' => 'completed_reservation_export_file', 'id' => $reservation['export_file_id']))
 					);
+				} else {
+					$reservation['export_file_id'] = array('label' => lang("Not Generated"));
 				}
+				
+				if (empty($reservation['invoice_file_order_id'])) {
+					$reservation['invoice_file_order_id'] = lang("Not Generated");
+				}
+				
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
 				$reservation['customer_type'] = lang($reservation['customer_type']);
@@ -263,7 +291,27 @@ phpgw::import_class('booking.uicommon');
 				unset($reservation['organization_name']);
 			}
 			
-			$reservation['reservation_link'] = $this->link_to('show', array(
+			if (!empty($reservation['exported'])) 
+			{
+				$reservation['exported_link'] = $this->link_to('show', array('ui' => 'completed_reservation_export', 'id' => $reservation['exported']));
+			} else {
+				$reservation['exported'] = lang('No');
+			}
+			
+			if (!empty($reservation['export_file_id'])) {
+				$reservation['export_file_id'] = array(
+					'label' => (string)$reservation['export_file_id'],
+					'href' => $this->link_to('show', array('ui' => 'completed_reservation_export_file', 'id' => $reservation['export_file_id']))
+				);
+			} else {
+				$reservation['export_file_id'] = array('label' => lang("Not Generated"));
+			}
+			
+			if (empty($reservation['invoice_file_order_id'])) {
+				$reservation['invoice_file_order_id'] = lang("Not Generated");
+			}
+			
+			$reservation['reservation_link'] = $this->link_to($reservation['reservation_type'] == 'event' ? 'edit' : 'show', array(
 				'ui' => $reservation['reservation_type'], 'id' => $reservation['reservation_id']));
 			
 			$reservation['cancel_link'] = $this->link_to('show', array('id' => $reservation['id']));
