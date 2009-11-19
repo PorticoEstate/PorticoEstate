@@ -120,7 +120,7 @@ class rental_soparty extends rental_socommon
 			$party_type = $this->marshal($filters['party_type'],'int');
 			if(isset($party_type) && $party_type > 0)
 			{
-				$filter_clauses[] = "contract.location_id = $party_type";
+				$filter_clauses[] = "contract.location_id = {$party_type}";
 			}
 		}
 
@@ -128,7 +128,7 @@ class rental_soparty extends rental_socommon
 			$contract_id = $this->marshal($filters['contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
-				$filter_clauses[] = "c_p.contract_id = $contract_id";
+				$filter_clauses[] = "c_p.contract_id = {$contract_id}";
 			}
 		}
 
@@ -136,7 +136,7 @@ class rental_soparty extends rental_socommon
 			$contract_id = $this->marshal($filters['not_contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
 			{
-				$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id} OR contract_id IS NULL)";
+				$filter_clauses[] = "party.id NOT IN (SELECT party_id FROM rental_contract_party WHERE contract_id = {$contract_id} OR contract_id IS NULL) AND NOT party.is_inactive";
 			}
 		}
 
