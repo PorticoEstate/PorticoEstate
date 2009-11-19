@@ -786,5 +786,54 @@ class rental_socontract extends rental_socommon
         $q = "DELETE FROM rental_contract_last_edited";
         $this->db->query($q, '', '', true);
     }
+    public function copy_contract($contract_id, $old_contract_id){
+    	//queries for selecting composites, parties and price items for the contract to be copied
+    	$q_composites = "SELECT composite_id FROM rental_contract_composite WHERE contract_id={$old_contract_id}";
+    	$q_parties = "SELECT party_id, is_payer FROM rental_contract_party WHERE contract_id={$old_contract_id}";
+    	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price FROM rental_contract_price_item WHERE contract_id={$old_contract_id}";
+    	
+    	//composites
+    	$this->db->query($q_composites);
+    	while($this->db->next_record()){
+    		$composite_id = $this->unmarshal($this->db->f('composite_id'),'int');
+    		$composite_id = $this->marshal($composite_id, 'int');
+    		$sql = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ({$contract_id}, {$composite_id})";
+    		$this->db->query($sql);
+    	}
+    	
+    	//parties
+        $this->db->query($q_parties);
+    	while($this->db->next_record()){
+    		$party_id = $this->unmarshal($this->db->f('party_id'),'int');
+    		$party_id = $this->marshal($party_id, 'int');
+    		$is_payer = $this->unmarshal($this->db->f('is_payer'),'bool');
+    		$is_payer = $this->marshal($is_payer ? 'true' : 'false','bool');
+    		$sql = "INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES ({$contract_id}, {$party_id}, {$is_payer})";
+    		$this->db->query($sql);
+    	}
+    	
+    	//price items
+        $this->db->query($q_price_items);
+    	while($this->db->next_record()){
+    		$price_item_id = $this->unmarshal($this->db->f('price_item_id'),'int');
+    		$price_item_id = $this->marshal($price_item_id, 'int');
+    		$title = $this->unmarshal($this->db->f('title'),'string');
+    		$title = $this->marshal($title, 'string');
+    		$area = $this->unmarshal($this->db->f('area'),'float');
+    		$area = $this->marshal($area, 'float');
+    		$count = $this->unmarshal($this->db->f('count'),'int');
+    		$count = $this->marshal($count, 'int');
+    		$agresso_id = $this->unmarshal($this->db->f('agresso_id'),'string');
+    		$agresso_id = $this->marshal($agresso_id, 'string');
+    		$is_area = $this->unmarshal($this->db->f('is_area'),'bool');
+    		$is_area = $this->marshal($is_area ? 'true' : 'false','bool');
+    		$price = $this->unmarshal($this->db->f('price'),'float');
+    		$price = $this->marshal($price, 'float');
+    		$total_price = $this->unmarshal($this->db->f('total_price'),'float');
+    		$total_price = $this->marshal($total_price, 'float');
+    		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, null, null)";
+    		$this->db->query($sql);
+    	}
+    }
 }
 ?>

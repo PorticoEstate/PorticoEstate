@@ -20,6 +20,7 @@
 		(
 			'add'					=> true,
 			'add_from_composite'	=> true,
+			'copy_contract'			=> true,
 			'edit'					=> true,
 			'index'					=> true,
 			'query'					=> true,
@@ -174,7 +175,10 @@
 					$value['labels'][] = lang('edit');
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('show');	
+					$value['labels'][] = lang('show');
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
+					$value['labels'][] = lang('copy');		
 				}
 		}
 
@@ -388,6 +392,37 @@
 				{
 					// Add that composite to the new contract
 					$so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
+					
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+				}
+			}
+		
+			// If no executive officer 
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
+		}
+		
+			/**
+		 * Create a new contract tied to the composite provided in the composite_id parameter
+		 */
+		public function copy_contract()
+		{
+			$so_contract = rental_socontract::get_instance();
+			$contract = $so_contract->get_single(phpgw::get_var('id'));
+			if($contract->has_permission(PHPGW_ACL_EDIT))
+			{
+				$contract->set_id(null);
+				$contract->set_old_contract_id(null);
+				$contract->set_contract_date(null);
+				$contract->set_due_date(null);
+				$contract->set_billing_start_date(null);
+				if($so_contract->store($contract))
+				{
+					// copy the contract
+					$so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
 					
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
 				}
