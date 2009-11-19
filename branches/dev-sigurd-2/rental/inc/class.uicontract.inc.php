@@ -405,8 +405,8 @@
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_new_contract')));
 		}
 		
-			/**
-		 * Create a new contract tied to the composite provided in the composite_id parameter
+		/**
+		 * Create a new contract based on an existing contract
 		 */
 		public function copy_contract()
 		{
@@ -414,6 +414,7 @@
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
+				//reset id's and contract dates
 				$contract->set_id(null);
 				$contract->set_old_contract_id(null);
 				$contract->set_contract_date(null);
