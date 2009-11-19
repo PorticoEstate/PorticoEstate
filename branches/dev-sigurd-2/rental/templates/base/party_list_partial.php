@@ -32,11 +32,6 @@
 	    sortable: true
 	},
 	{
-		key: "reskontro",
-		label: "<?php echo lang('reskontro') ?>",
-	    sortable: true
-	},
-	{
 		key: "actions",
 		hidden: true
 	},

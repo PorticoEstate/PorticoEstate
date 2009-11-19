@@ -278,23 +278,6 @@
 						}
 						?>
 					</dd>
-					<dt>
-						<label for="reskontro"><?php echo lang('reskontro') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-						?>
-							<input type="text" name="reskontro" id="reskontro" value="<?php echo $party->get_reskontro() ?>" />
-						<?php
-						}
-						else
-						{
-							echo $party->get_reskontro();
-						}
-						?>
-					</dd>
 					<?php if($editable) {?>
 						<dt>
 							<label for="is_inactive"><?php echo lang('inactive_party') ?></label>
