@@ -217,7 +217,7 @@ class rental_socomposite extends rental_socommon
 			'place = \'' . $composite->get_custom_place() . '\'',
 			'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\'',
             'object_type_id = '.$composite->get_object_type_id(),
-			'rented_area = '.$composite->get_rented_area()
+			'rented_area = '.$this->marshal($composite->get_rented_area(),'float')
 		);
 
 		$result = $this->db->query('UPDATE rental_composite SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -234,6 +234,11 @@ class rental_socomposite extends rental_socommon
 	 */
 	public function add(&$composite)
 	{
+		$rented_area = $composite->get_rented_area();
+		if(!isset($rented_area) || $rented_area == ""){
+			$composite->set_rented_area(0);
+		}
+
 		// Build a db-friendly array of the composite object
 		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id', 'rented_area');
 		$values = array(
