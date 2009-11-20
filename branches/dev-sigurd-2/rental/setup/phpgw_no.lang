@@ -242,6 +242,7 @@ notification_optgroup_groups	rental	no	Grupper
 notification_optgroup_users	rental	no	Brukere
 not_started	rental	no	Ikke startet
 object_number	rental	no	Objektnummer
+objno_name_address	rental	no	Objektnummer/navn/adresse
 occupied	rental	no	Opptatt
 of_total	rental	no	av totalt
 old_contract_id	rental	no	Gammelt kontraktsnummer

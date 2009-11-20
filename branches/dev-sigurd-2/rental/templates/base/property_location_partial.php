@@ -102,6 +102,11 @@
 		<h3><?php echo lang('search_options') ?></h3>
 		<label for="<?php echo $list_id ?>_ctrl_search_query"><?php echo lang('search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" />
+		<label for="<?php echo $list_id ?>_ctrl_toggle_search_type"><?php echo lang('search_where') ?></label>
+		<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_search_type">
+			<option value="objno_name_address" selected="selected"><?php echo lang('objno_name_address') ?></option>
+			<option value="gab"><?php echo lang('gab') ?></option>
+		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 	</fieldset>
 	<fieldset>
