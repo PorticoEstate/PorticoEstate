@@ -126,7 +126,7 @@ class CustomJasperReport {
 
 		jrxls.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
 		jrxls.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
-		jrxls.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE);
+		//jrxls.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE); // the default is false
 		
 		try {
 			jrxls.exportReport();
