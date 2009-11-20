@@ -549,6 +549,12 @@
 				if ($contract_id) {
 					// Create a new contract price item that we can tie to our contract
 					$price_item = new rental_contract_price_item();
+
+                    // Get contract obj and add cLonnsArt as contract reference
+                    $socontract = rental_socontract::get_instance();
+                    $contract = $socontract->get_single($contract_id);
+                    $contract->set_reference($this->decode($data[13]));
+                    $socontract->store($contract);
 					
 					// Copy fields from admin price item first
 					$price_item->set_title($admin_price_item->get_title());
