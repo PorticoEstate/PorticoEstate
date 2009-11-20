@@ -26,6 +26,9 @@
 		protected $messages;
 		protected $warnings;
 		protected $errors;
+
+        // Archive of all messages, warnings and errors that has occured in all previous steps
+        protected $msgarchive;
 		
 		// File system path to import folder on server
 		protected $path;
@@ -35,7 +38,8 @@
 		
 		public $public_functions = array
 		(
-			'index'	=> true
+			'index'	=> true,
+            'download' => false
 		);
 
 		public function __construct()
@@ -43,6 +47,13 @@
 			parent::__construct();
 			self::set_active_menu('import');
 			set_time_limit(1500);
+            /*if (!phpgwapi_cache::session_get('rental', 'msgarchive')) {
+                $this->msgarchive = array(date().': Import started');
+                phpgwapi_cache::session_set('rental', 'msgarchive', $this->msgarchive);
+            }
+            else {
+                $this->msgarchive = phpgwapi_cache::session_get('rental', 'msgarchive');
+            }*/
 		}
 		
 		public function query()
@@ -196,6 +207,7 @@
 
                 $party->set_fax($this->decode($data[9]));
                 $party->set_title($this->decode($data[12]));
+                $party->set_email($this->decode($data[25]));
 				
 				// Company information
 				$party->set_company_name($this->decode($data[10]));
@@ -212,18 +224,27 @@
 				$party->set_identifier($this->decode($data[24]));
 				
 				$party->set_comment($this->decode($data[26]));
-
+                if(strlen($this->decode($data[6]) > 1)) {
+                    $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$this->decode($data[6]));
+                }
+                
+                // TODO: Do regex to check for only digits too, not just length
                 switch(strlen(''.$this->decode($data[24]))) {
                     case 4: // Intern organisasjonstilknytning
                         $party->set_company_name($this->decode($data[2]));
                         $party->set_first_name(null);
                         $party->set_last_name(null);
+                        
+                        // Get location ID
+                        $locations = $GLOBALS['phpgw']->locations;
+                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));
+                        $party->set_location_id($subs[0]['location_id']);
                         break;
                     case 6: // Foretak (agresso-id)
                     case 9: // Foretak (org.nr)
                         $party->set_company_name($this->decode($data[2]));
                         $party->set_identifier($this->decode($data[24]));
-                        $party->set_first_name($this->decode($data[6]));
+                        $party->set_first_name(null);
                         $party->set_last_name(null);
                         break;
                     case 11: // Personnr
@@ -240,7 +261,8 @@
                         $party->set_first_name($this->decode($data[0]));
                         $party->set_last_name($this->decode($data[1]));
                         $party->set_company_name($this->decode($data[2]));
-                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Using default values for name/company name";
+                        $party->set_is_inactive(true);
+                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Setting as inactive.";
                 }
 
 				
@@ -256,7 +278,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($parties) . " contract parties. (" . (time() - $start_time) . " seconds)";
-			
+			$this->save_messages();
 			return $parties;
 		}
 		
@@ -333,7 +355,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($composites) . " composites (" . (time() - $start_time) . " seconds)";
-			
+			$this->save_messages();
 			return $composites;
 		}
 		
@@ -348,7 +370,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract links";
-
+            $this->save_messages();
 			return $rentalobject_to_contract;
 		}
 		
@@ -466,7 +488,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
-			
+			$this->save_messages();
 			return $contracts;
 		}
 		
@@ -565,7 +587,7 @@
 			}
 			
 			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
-			
+			$this->save_messages();
 			return true;
 		}
 		
@@ -664,7 +686,7 @@
 			}
 			
 			$this->messages[] = "Imported composite price items. (" . (time() - $start_time) . " seconds)";
-			
+            $this->save_messages();
 			return true;
 		}
 		
@@ -710,7 +732,7 @@
 			}
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
-			
+			$this->save_messages();
 			return true;
 		}
 		
@@ -858,6 +880,25 @@
         protected function clean_up() {
             $socontract = rental_socontract::get_instance();
             $socontract->clear_last_edited_table();
+        }
+
+        public function download() {
+            $property_common = CreateObject('property.bocommon');
+            $output =  
+                    array_merge(
+                    phpgwapi_cache::session_get('rental', 'export_errors'),
+                    phpgwapi_cache::session_get('rental', 'export_warnings'),
+                    phpgwapi_cache::session_get('rental', 'export_messages'));
+            /*echo '<pre>';
+            print_r($output);
+            echo '</pre>';*/
+            $property_common->download($output,array('???'), array('Import log'));
+        }
+
+        private function save_messages() {
+            phpgwapi_cache::session_set('rental', 'export_errors', $this->errors);
+            phpgwapi_cache::session_set('rental', 'export_warnings', $this->warnings);
+            phpgwapi_cache::session_set('rental', 'export_messages', $this->messages);
         }
 	}
 ?>
