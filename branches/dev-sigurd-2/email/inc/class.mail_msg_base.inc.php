@@ -1433,7 +1433,7 @@
 				//@set_time_limit(60);
 				// login to INBOX because we know that always(?) should exist on an imap server and pop server
 				// after we are logged in we can get additional info that will lead us to the desired folder (if not INBOX)
-				$mailsvr_stream = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->open($mailsvr_callstr."INBOX", $user, $pass, '');
+				$mailsvr_stream = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->open($mailsvr_callstr."INBOX", $user, $pass, 0);
 				$pass = '';
 				
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): open returns $mailsvr_stream = ['.serialize($mailsvr_stream).']<br />'); } 
@@ -1743,7 +1743,7 @@
 				//@set_time_limit(60);
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: about to call dcom->open: $GLOBALS[phpgw_dcom_'.$acctnum.']->dcom->open('.$mailsvr_callstr."INBOX".', '.$user.', '.$pass.', )'.'<br />'); }
 				if ($this->debug_logins > 0) { $this->dbug->out('mail_msg: ensure_stream_and_folder('.__LINE__.'): <font color="red">MAIL SERVER COMMAND</font>'.'<br />'); } 
-				$mailsvr_stream = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->open($mailsvr_callstr."INBOX", $user, $pass, '');
+				$mailsvr_stream = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->open($mailsvr_callstr."INBOX", $user, $pass, 0);
 				$pass = '';
 				//@set_time_limit(0);
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: open returns $mailsvr_stream = ['.serialize($mailsvr_stream).']<br />'); } 

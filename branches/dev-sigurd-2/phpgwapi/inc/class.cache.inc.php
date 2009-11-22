@@ -311,7 +311,7 @@
 		 */
 		public static function user_clear($module, $id, $uid)
 		{
-			$db = true;
+			$db = false;
 			if($db)
 			{
 				return self::_user_clear_db($module, $id, $uid);
@@ -332,7 +332,7 @@
 		 */
 		public static function user_get($module, $id, $uid, $bypass = true, $compress = false)
 		{
-			$db = true;
+			$db = false;
 			if($db)
 			{
 				return self::_user_get_db($module, $id, $uid, $bypass, $compress);
@@ -354,7 +354,7 @@
 		 */
 		public static function user_set($module, $id, $value, $uid, $bypass = true, $compress = false)
 		{
-			$db = true;
+			$db = false;
 			if($db)
 			{
 				return self::_user_set_db($module, $id, $value, $uid, $bypass, $compress);
