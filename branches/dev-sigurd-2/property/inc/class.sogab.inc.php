@@ -141,7 +141,8 @@
 
 			if($check_payments)
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
+//				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
+				$sql = "SELECT DISTINCT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
 			}
 			else
 			{
