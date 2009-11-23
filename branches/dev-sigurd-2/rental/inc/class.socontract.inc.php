@@ -430,7 +430,7 @@ class rental_socontract extends rental_socommon
 			$values[] = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
 		
-		$values[] = "security_type = '" . $this->marshal($contract->get_security_type(), 'int') . "'";
+		$values[] = "security_type = " . $this->marshal($contract->get_security_type(), 'int');
 		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
 		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
 		$values[] = "comment = ". $this->marshal($contract->get_comment(), 'string');
