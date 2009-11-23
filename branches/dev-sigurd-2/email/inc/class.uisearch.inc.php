@@ -29,7 +29,7 @@
 			'search' => True
 		);
 
-		function uisearch()
+		function __construct()
 		{
 			// make sure we have msg object
 			$msg_bootstrap = CreateObject("email.msg_bootstrap");
@@ -37,32 +37,37 @@
 			$msg_bootstrap->ensure_mail_msg_exists('email.uisearch *constructor*', 0);
 			//return;
 
-			$this->flags_array = array (  'flg_all'         =>      lang('All'),
-                                		'flg_answered'          =>      lang('Answered'),
-						'flg_deleted'           =>      lang('Deleted'),
-                                                'flg_flagged'           =>      lang('Flagged'),
-						'flg_new'               =>      lang('New'),
-						'flg_old'               =>      lang('Old'),										     'flg_recent'            =>      lang('Recent'),
-						'flg_seen'              =>      lang('Seen'),
-					        'flg_unanswered'        =>      lang('Unanswered'),
-						'flg_undeleted'         =>      lang('Undeleted'),
-						'flg_unflagged'         =>      lang('Unflagged'),
-						'flg_unseen'            =>      lang('Unseen'),
-						);
-																																		  $this->month_array = array (  '01'                    =>      lang('Jan'),
-						'02'                    =>      lang('Feb'),
-						'03'                    =>      lang('Mar'),
-						'04'                    =>      lang('Apr'),
-						'05'                    =>      lang('May'),
-						'06'                    =>      lang('Jun'),
-						'07'                    =>      lang('Jul'),
-						'08'                    =>      lang('Aug'),
-						'09'                    =>      lang('Sep'),
-						'10'                    =>      lang('Oct'),
-						'11'                    =>      lang('Nov'),
-						'12'                    =>      lang('Dec')
-					);
-																			}
+			$this->flags_array = array 
+			(  
+				'flg_all'         		=>      lang('All'),
+				'flg_answered'          =>      lang('Answered'),
+				'flg_deleted'           =>      lang('Deleted'),
+				'flg_flagged'           =>      lang('Flagged'),
+				'flg_new'               =>      lang('New'),
+				'flg_old'               =>      lang('Old'),
+				'flg_recent'            =>      lang('Recent'),
+				'flg_seen'              =>      lang('Seen'),
+				'flg_unanswered'        =>      lang('Unanswered'),
+				'flg_undeleted'         =>      lang('Undeleted'),
+				'flg_unflagged'         =>      lang('Unflagged'),
+				'flg_unseen'            =>      lang('Unseen'),
+			);
+			$this->month_array = array 
+			(
+				'01'                    =>      lang('Jan'),
+				'02'                    =>      lang('Feb'),
+				'03'                    =>      lang('Mar'),
+				'04'                    =>      lang('Apr'),
+				'05'                    =>      lang('May'),
+				'06'                    =>      lang('Jun'),
+				'07'                    =>      lang('Jul'),
+				'08'                    =>      lang('Aug'),
+				'09'                    =>      lang('Sep'),
+				'10'                    =>      lang('Oct'),
+				'11'                    =>      lang('Nov'),
+				'12'                    =>      lang('Dec')
+			);
+		}
 
 		function form()
 		{
@@ -294,139 +299,148 @@
 
 			# have to loop for selected folders
 			for ($j=0;$j<count($GLOBALS['HTTP_POST_VARS']['folder_list']);$j++) 
-		
 			{
-				
+				$search_vars = array ();
+				$imap_search_str = '';
 
-			$search_vars = array ();
-			$imap_search_str = '';
+				# Get folder to search in
+				$search_vars['fldball']['folder'] = $GLOBALS['HTTP_POST_VARS']['folder_list'][$j];
+				// REMEMBER what account we are searching
+				$search_vars['fldball']['acctnum'] = $GLOBALS['phpgw']->msg->get_acctnum();
 
-			# Get folder to search in
-			$search_vars['fldball']['folder'] = $GLOBALS['HTTP_POST_VARS']['folder_list'][$j];
-			// REMEMBER what account we are searching
-			$search_vars['fldball']['acctnum'] = $GLOBALS['phpgw']->msg->get_acctnum();
-
-			# Get and process the textbox values
-			$search_vars['str']['SUBJECT'] = trim($GLOBALS['HTTP_POST_VARS']['search_subject']);
-			$search_vars['str']['BODY'] = trim($GLOBALS['HTTP_POST_VARS']['search_body']);
-			$search_vars['str']['FROM'] = trim($GLOBALS['HTTP_POST_VARS']['search_from']);
-			$search_vars['str']['TO'] = trim($GLOBALS['HTTP_POST_VARS']['search_to']);
-			$search_vars['str']['CC'] = trim($GLOBALS['HTTP_POST_VARS']['search_cc']);
-			$search_vars['str']['BCC'] = trim($GLOBALS['HTTP_POST_VARS']['search_bcc']);
-			$search_vars['str']['KEYWORD'] = trim($GLOBALS['HTTP_POST_VARS']['search_keyword']);
-			while (list($name, $value) = each($search_vars['str'])) {
-				if ($value != '') {
-					$value = addslashes($value);
-					$imap_search_str .= "$name \"$value\" ";
+				# Get and process the textbox values
+				$search_vars['str']['SUBJECT'] = trim($GLOBALS['HTTP_POST_VARS']['search_subject']);
+				$search_vars['str']['BODY'] = trim($GLOBALS['HTTP_POST_VARS']['search_body']);
+				$search_vars['str']['FROM'] = trim($GLOBALS['HTTP_POST_VARS']['search_from']);
+				$search_vars['str']['TO'] = trim($GLOBALS['HTTP_POST_VARS']['search_to']);
+				$search_vars['str']['CC'] = trim($GLOBALS['HTTP_POST_VARS']['search_cc']);
+				$search_vars['str']['BCC'] = trim($GLOBALS['HTTP_POST_VARS']['search_bcc']);
+				$search_vars['str']['KEYWORD'] = trim($GLOBALS['HTTP_POST_VARS']['search_keyword']);
+				while (list($name, $value) = each($search_vars['str']))
+				{
+					if ($value != '')
+					{
+						$value = addslashes($value);
+						$imap_search_str .= "$name \"$value\" ";
+					}
 				}
-			}
 		
-			# Process the flags
-			while (list($name, $value) = each($this->flags_array)) {
-				if ($GLOBALS['HTTP_POST_VARS'][$name] == "on") {
-					$imap_search_str .= strtoupper($value).' ';
+				# Process the flags
+				while (list($name, $value) = each($this->flags_array))
+				{
+					if ($GLOBALS['HTTP_POST_VARS'][$name] == "on")
+					{
+						$imap_search_str .= strtoupper($value).' ';
+					}
 				}
-			}
-			reset($this->flags_array);
+				reset($this->flags_array);
 		
-			# Process dates
-			if ($GLOBALS['HTTP_POST_VARS']['date_on'] == "on") {
-				$imap_search_str .= "ON \"".$GLOBALS['HTTP_POST_VARS']['date_on_month'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_on_day'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_on_year'];
-				$imap_search_str .= '" ';
-			}
-			if ($GLOBALS['HTTP_POST_VARS']['date_before'] == "on") {
-				$imap_search_str .= "BEFORE \"".$GLOBALS['HTTP_POST_VARS']['date_before_month'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_before_day'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_before_year'];
-				$imap_search_str .= '" ';
-			}
-			if ($GLOBALS['HTTP_POST_VARS']['date_after'] == "on") {
-				$imap_search_str .= "SINCE \"".$GLOBALS['HTTP_POST_VARS']['date_after_month'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_after_day'].'/';
-				$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_after_year'];
-				$imap_search_str .= '" ';
-			}
+				# Process dates
+				if ($GLOBALS['HTTP_POST_VARS']['date_on'] == "on")
+				{
+					$imap_search_str .= "ON \"".$GLOBALS['HTTP_POST_VARS']['date_on_month'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_on_day'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_on_year'];
+					$imap_search_str .= '" ';
+				}
+				if ($GLOBALS['HTTP_POST_VARS']['date_before'] == "on")
+				{
+					$imap_search_str .= "BEFORE \"".$GLOBALS['HTTP_POST_VARS']['date_before_month'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_before_day'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_before_year'];
+					$imap_search_str .= '" ';
+				}
+				if ($GLOBALS['HTTP_POST_VARS']['date_after'] == "on")
+				{
+					$imap_search_str .= "SINCE \"".$GLOBALS['HTTP_POST_VARS']['date_after_month'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_after_day'].'/';
+					$imap_search_str .= $GLOBALS['HTTP_POST_VARS']['date_after_year'];
+					$imap_search_str .= '" ';
+				}
 		
-			$imap_search_str = rtrim($imap_search_str);
+				$imap_search_str = rtrim($imap_search_str);
 			
-			$search_results = $GLOBALS['phpgw']->msg->phpgw_search($search_vars['fldball'], $imap_search_str, '');
+				$search_results = $GLOBALS['phpgw']->msg->phpgw_search($search_vars['fldball'], $imap_search_str, '');
 		
-			if (is_array($search_results)) {
-				$num_msg = count($search_results);
-			} else {
-				$num_msg = 0;
+				if (is_array($search_results))
+				{
+					$num_msg = count($search_results);
+				}
+				else
+				{
+					$num_msg = 0;
 				
-				# No messages found
-				echo '<br />'.lang("No message found in folder '%1'",$search_vars['fldball']['folder']).'<br /><br /><br />';
+					# No messages found
+					echo '<br />'.lang("No message found in folder '%1'",$search_vars['fldball']['folder']).'<br /><br /><br />';
 				
-				continue;
-			}
+					continue;
+				}
 
-			# Process the template for output
-			$t = $GLOBALS['phpgw']->template;
-			$t->set_file("search", "search_results.tpl");
- 			$t->set_var('lang_messages_found_in_folder',lang('Messages found in folder'));
- 			$t->set_var('lang_date',lang('Date'));
- 			$t->set_var('lang_size',lang('Size'));
- 			$t->set_var('lang_from',lang('From'));
- 			$t->set_var('lang_subject',lang('Subject'));
- 			$t->set_var('lang_move_selected_messages_into',lang('Move selected messages into'));
-			$t->set_var("num_msg", $num_msg);
-			$t->set_var('form_name', 'delmov_'.$search_vars['fldball']['folder']);	
+				# Process the template for output
+				$t = $GLOBALS['phpgw']->template;
+				$t->set_file("search", "search_results.tpl");
+ 				$t->set_var('lang_messages_found_in_folder',lang('Messages found in folder'));
+ 				$t->set_var('lang_date',lang('Date'));
+ 				$t->set_var('lang_size',lang('Size'));
+ 				$t->set_var('lang_from',lang('From'));
+ 				$t->set_var('lang_subject',lang('Subject'));
+ 				$t->set_var('lang_move_selected_messages_into',lang('Move selected messages into'));
+				$t->set_var("num_msg", $num_msg);
+				$t->set_var('form_name', 'delmov_'.$search_vars['fldball']['folder']);	
 
-			# set form action
-			$t->set_var('delmov_action', $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'email.boaction.delmov')));
-			$t->set_var("folder", $search_vars['fldball']['folder']);
+				# set form action
+				$t->set_var('delmov_action', $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'email.boaction.delmov')));
+				$t->set_var("folder", $search_vars['fldball']['folder']);
 
 	
-			# Get headers of each message in search results
-			$t->set_block("search", "search_result", "search_results");
-			for ($i=0;$i<$num_msg;$i++) {
+				# Get headers of each message in search results
+				$t->set_block("search", "search_result", "search_results");
+				for ($i=0;$i<$num_msg;$i++)
+				{		
+					$msgball['folder'] = $search_vars['fldball']['folder'];
+					$msgball['acctnum'] = $search_vars['fldball']['acctnum'];
+					$msgball['msgnum'] = $search_results[$i];
 		
-				$msgball['folder'] = $search_vars['fldball']['folder'];
-				$msgball['acctnum'] = $search_vars['fldball']['acctnum'];
-				$msgball['msgnum'] = $search_results[$i];
+					$header_info = $GLOBALS['phpgw']->msg->phpgw_header($msgball);
 		
-				$header_info = $GLOBALS['phpgw']->msg->phpgw_header($msgball);
+					# fill checkbox value
+					//$t->set_var('checkbox_val', 'msgball[msgnum]='.$search_results[$i].'&msgball[folder]='.urlencode($GLOBALS['phpgw']->msg->get_folder_long($search_vars['fldball']['folder'])).'&msgball[acctnum]='.$GLOBALS['phpgw']->msg->get_acctnum());
+					$t->set_var('checkbox_val', 'msgball[msgnum]='.$search_results[$i].'&msgball[folder]='.urlencode($GLOBALS['phpgw']->msg->get_folder_long($search_vars['fldball']['folder'])).'&msgball[acctnum]='.$search_vars['fldball']['acctnum']);
 		
-				# fill checkbox value
-				//$t->set_var('checkbox_val', 'msgball[msgnum]='.$search_results[$i].'&msgball[folder]='.urlencode($GLOBALS['phpgw']->msg->get_folder_long($search_vars['fldball']['folder'])).'&msgball[acctnum]='.$GLOBALS['phpgw']->msg->get_acctnum());
-				$t->set_var('checkbox_val', 'msgball[msgnum]='.$search_results[$i].'&msgball[folder]='.urlencode($GLOBALS['phpgw']->msg->get_folder_long($search_vars['fldball']['folder'])).'&msgball[acctnum]='.$search_vars['fldball']['acctnum']);
-		
-				$t->set_var("from", $header_info->fromaddress);
-				$msg_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'email.uimessage.message','msgball[msgnum]'=>$search_results[$i],'msgball[folder]'=>$search_vars['fldball']['folder'],'msgball[acctnum]'=>$search_vars['fldball']['acctnum']));
-				$t->set_var("msg_link", $msg_link);
-				$t->set_var("subject", $header_info->subject);
-				$t->set_var("date", strftime("%D", $header_info->udate));
-				$t->set_var("size", $header_info->Size);
+					$t->set_var("from", $header_info->fromaddress);
+					$msg_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'email.uimessage.message','msgball[msgnum]'=>$search_results[$i],'msgball[folder]'=>$search_vars['fldball']['folder'],'msgball[acctnum]'=>$search_vars['fldball']['acctnum']));
+					$t->set_var("msg_link", $msg_link);
+					$t->set_var("subject", $header_info->subject);
+					$t->set_var("date", strftime("%D", $header_info->udate));
+					$t->set_var("size", $header_info->Size);
 
-				$t->parse("search_results", "search_result", True);
-			}
-
-			# get folder list
-			$folder_list = $GLOBALS['phpgw']->msg->get_folder_list();
-			$t->set_block("search", "folder_list", "folders_list");
-			for ($i=0;$i<count($folder_list);$i++) {
-				if ($folder_list[$i]['folder_short'] != $search_vars['fldball']['folder']) {
-					$t->set_var('fld_link', '&folder='.urlencode($folder_list[$i]['folder_long']).'&acctnum='.$GLOBALS['phpgw']->msg->get_acctnum());
-					$t->set_var("fld_value", $folder_list[$i]['folder_short']);
-					$t->parse("folders_list", "folder_list", True);
+					$t->parse("search_results", "search_result", True);
 				}
-			}
 
-			for ($i=0;$i<count($folder_list);$i++) {
-				if ($folder_list[$i]['folder_short'] == $search_vars['fldball']['folder']) {
-					$t->set_var('folder_short', $folder_list[$i]['folder_short']);
+				# get folder list
+				$folder_list = $GLOBALS['phpgw']->msg->get_folder_list();
+				$t->set_block("search", "folder_list", "folders_list");
+				for ($i=0;$i<count($folder_list);$i++)
+				{
+					if ($folder_list[$i]['folder_short'] != $search_vars['fldball']['folder'])
+					{
+						$t->set_var('fld_link', '&folder='.urlencode($folder_list[$i]['folder_long']).'&acctnum='.$GLOBALS['phpgw']->msg->get_acctnum());
+						$t->set_var("fld_value", $folder_list[$i]['folder_short']);
+						$t->parse("folders_list", "folder_list", True);
+					}
 				}
-			}
+
+				for ($i=0;$i<count($folder_list);$i++)
+				{
+					if ($folder_list[$i]['folder_short'] == $search_vars['fldball']['folder'])
+					{
+						$t->set_var('folder_short', $folder_list[$i]['folder_short']);
+					}
+				}
 	
-
-			$t->pparse("output", "search");
+				$t->pparse("output", "search");
 
 			}
-
 			$GLOBALS['phpgw']->msg->end_request();
 			unset($GLOBALS['phpgw']->msg);
 		}	
@@ -459,5 +473,3 @@
 			return $ret;
 		}
 	}
-?>
-
