@@ -118,8 +118,8 @@ class email_service
 		$msg_bootstrap->ensure_mail_msg_exists('email.bofolder.folder', false);
 
 		$bopreferences = CreateObject('email.bopreferences');
-		$accts = $bopreferences->msg->a;
-
+//		$accts = $bopreferences->msg->a;
+		$accts = array();
 		$menu['folders'] = array();
 		foreach ( $accts as $id => $acct )
 		{

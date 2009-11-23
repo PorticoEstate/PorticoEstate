@@ -32,7 +32,7 @@
 			return imap_base64($text);
 		}
 
-		function close($stream,$flags='')
+		function close($stream,$flags=0)
 		{
 			return imap_close($stream,$flags);
 		}
@@ -218,7 +218,7 @@
 		function open($mailbox,$username,$password,$flags=0)
 		{
 			$mailbox = $this->utf7_encode($mailbox);
-			return @imap_open($mailbox, $username, $password, $flags);
+			return @imap_open($mailbox, $username, $password, $flags,2);
 		}
 
 		function qprint($message)
