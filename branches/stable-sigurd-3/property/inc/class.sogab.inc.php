@@ -185,21 +185,21 @@
 					$dateformat = 'd-m-Y';
 				}
 
-				for ($i=0;$i<count($gab_list);$i++)
+				foreach ($gab_list as &$entry)
 				{
-					$sql = "SELECT * FROM fm_ecobilagoverf WHERE item_id = '" . $gab_list[$i]['gab_id'] . "'";
+					$sql = "SELECT forfallsdato, belop FROM fm_ecobilagoverf WHERE item_id = '{$entry['gab_id']}' ORDER BY forfallsdato ASC";
 					$this->db->query($sql,__LINE__,__FILE__);
 					while ($this->db->next_record())
 					{
-						$gab_list[$i]['payment'][date($dateformat,strtotime($this->db->f('forfallsdato')))] = $this->db->f('belop');
+						$entry['payment'][date($dateformat,strtotime($this->db->f('forfallsdato')))] = $this->db->f('belop');
 						$payment_date[strtotime($this->db->f('forfallsdato'))] = date($dateformat,strtotime($this->db->f('forfallsdato')));
 					}
 
-					$sql = "SELECT * FROM fm_ecobilag WHERE item_id = '" . $gab_list[$i]['gab_id'] . "'";
+					$sql = "SELECT forfallsdato, belop FROM fm_ecobilag WHERE item_id = '{$entry['gab_id']}'";
 					$this->db->query($sql,__LINE__,__FILE__);
 					while ($this->db->next_record())
 					{
-						$gab_list[$i]['payment'][date($dateformat,strtotime($this->db->f('forfallsdato')))] = $this->db->f('belop');
+						$entry['payment'][date($dateformat,strtotime($this->db->f('forfallsdato')))] = $this->db->f('belop');
 						$payment_date[strtotime($this->db->f('forfallsdato'))] = date($dateformat,strtotime($this->db->f('forfallsdato')));
 					}
 
