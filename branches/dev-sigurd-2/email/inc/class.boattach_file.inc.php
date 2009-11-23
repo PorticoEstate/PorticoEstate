@@ -297,19 +297,20 @@
 					. '<br />';
 			}
 
-			$dh = dir($uploaddir);
-			while ( false !== ($file = $dh->dir() ) )
+			$dh = dir($this->uploaddir);
+
+			while ( false !== ($file = $dh->read() ) )
 			{
 				if (($file != '.')
 					&& ($file != '..')
 					&& (preg_match('/\.info/', $file)))
 				{
-					$file_info = file("{$uploaddir}/{$file}");
+					$file_info = file("{$this->uploaddir}/{$file}");
 
 					//get filesize in kb, but do not tell user a file is 0kb, because it is probably closer to 1kb
 					$real_file = str_replace('.info','',$file);
 
-					$real_file_size = (int) filesize("{$uploaddir}/{$real_file}");
+					$real_file_size = (int) filesize("{$this->uploaddir}/{$real_file}");
 					if ( $real_file_size / 1024 > 1 )
 					{
 						$real_file_size = ($real_file_size / 1024) . 'kb';
@@ -319,7 +320,7 @@
 						$real_file_size .= 'b';
 					}
 
-					if ($fup_debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file("{$uploaddir}/{$real_file}")); echo '</pre>'; } 
+					if ($fup_debug > 2) { echo 'FILE contents DUMP: <pre>'; print_r(file("{$this->uploaddir}/{$real_file}")); echo '</pre>'; } 
 					// for every file, fill the file list template with it
 					$GLOBALS['phpgw']->template->set_var('ckbox_delete_name', 'delete[]');
 					$GLOBALS['phpgw']->template->set_var('ckbox_delete_value', substr($file,0,-5));
@@ -438,4 +439,3 @@
 	
 	
 	}
-?>
