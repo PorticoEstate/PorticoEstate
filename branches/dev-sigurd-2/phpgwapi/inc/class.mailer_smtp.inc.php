@@ -29,6 +29,7 @@
 		public function __construct()
 		{
 			$this->IsSMTP(true);
+			$this->PluginDir = PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/';
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];
 			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port']) ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
 			$this->SMTPAuth = isset($GLOBALS['phpgw_info']['server']['smtpAuth']) && $GLOBALS['phpgw_info']['server']['smtpAuth'] == yes ? true : false;

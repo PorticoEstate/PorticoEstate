@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: addressbook-js.php 16351 2005-12-17 13:24:25Z skwashd $
+	* @version $Id: addressbook-js.php 18394 2008-02-02 10:34:41Z skwashd $
 	* @internal WARNING-> The sheer size of this stupid file is what shows why there is a
 	* @internal three tiered design in phpgw...sigh.... now im even gonna put some php
 	* @internal functions in here.... dont be mad, be critical and show me how to move to
@@ -41,9 +41,9 @@
 	$boxecoming=False;
 
 /*		This   exists if we clicked on a name to see its data from the database  */
-	$searchbox  = $GLOBALS['HTTP_POST_VARS']['searchbox'] ? $GLOBALS['HTTP_POST_VARS']['searchbox'] : $GLOBALS['HTTP_GET_VARS']['searchbox'];
+	$searchbox  = $_POST['searchbox'] ? $_POST['searchbox'] : $_GET['searchbox'];
 /*	This is the View More checkbox */
-	$viewmore = $GLOBALS['HTTP_POST_VARS']['viewmore'] ? $GLOBALS['HTTP_POST_VARS']['viewmore'] : $GLOBALS['HTTP_GET_VARS']['viewmore'];
+	$viewmore = $_POST['viewmore'] ? $_POST['viewmore'] : $_GET['viewmore'];
 	
 /*	
 	The next three are, respectively, the selected To:,cc and bcc  selectboxes. We need them to remember if
@@ -158,11 +158,11 @@
 	$GLOBALS['phpgw']->template->set_var('lang_select_cats',lang('Select category'));
 
 /*	This vars here are most important, they drive the search */
-	$start  = $GLOBALS['HTTP_POST_VARS']['start'] ? $GLOBALS['HTTP_POST_VARS']['start'] : $GLOBALS['HTTP_GET_VARS']['start'];
-	$filter  = $GLOBALS['HTTP_POST_VARS']['filter'] ? $GLOBALS['HTTP_POST_VARS']['filter'] : $GLOBALS['HTTP_GET_VARS']['filter'];
-	$cat_id  = $GLOBALS['HTTP_POST_VARS']['cat_id'] ? $GLOBALS['HTTP_POST_VARS']['cat_id'] : $GLOBALS['HTTP_GET_VARS']['cat_id'];
+	$start  = $_POST['start'] ? $_POST['start'] : $_GET['start'];
+	$filter  = $_POST['filter'] ? $_POST['filter'] : $_GET['filter'];
+	$cat_id  = $_POST['cat_id'] ? $_POST['cat_id'] : $_GET['cat_id'];
 	$cat_id = ($cat_id == -2)?"":$cat_id;
-	$order  = $GLOBALS['HTTP_POST_VARS']['order'] ? $GLOBALS['HTTP_POST_VARS']['order'] : $GLOBALS['HTTP_GET_VARS']['order'];
+	$order  = $_POST['order'] ? $_POST['order'] : $_GET['order'];
 	$GLOBALS['phpgw']->template->set_var('search_action',$GLOBALS['phpgw']->link('/'.$GLOBALS['phpgw_info']['flags']['currentapp'].'/addressbook-js.php',"sort=$sort&order=$order&filter=$filter&start=$start&cat_id=$cat_id"));
 	$GLOBALS['phpgw']->template->set_var('query',$query);
 	$GLOBALS['phpgw']->template->set_var('order',$order);

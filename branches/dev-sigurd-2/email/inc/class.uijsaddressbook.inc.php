@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.uijsaddressbook.inc.php 17706 2006-12-17 11:21:02Z sigurdne $
+	* @version $Id: class.uijsaddressbook.inc.php 18394 2008-02-02 10:34:41Z skwashd $
 	*/
 
 
@@ -230,10 +230,10 @@
 			$this->template->set_var('include_link',$GLOBALS['phpgw']->link("/email/inc/selectboxes.js"));
 			$this->template->set_var('font',$GLOBALS['phpgw_info']['theme']['font']);
 			//Get the hider values where needed
-			$this->hideto  = $GLOBALS['HTTP_POST_VARS']['hideto'] ? $GLOBALS['HTTP_POST_VARS']['hideto'] : $GLOBALS['HTTP_GET_VARS']['hideto'];
-			$this->hidecc  = $GLOBALS['HTTP_POST_VARS']['hidecc'] ? $GLOBALS['HTTP_POST_VARS']['hidecc'] : $GLOBALS['HTTP_GET_VARS']['hidecc'];
-			$this->hidebcc  = $GLOBALS['HTTP_POST_VARS']['hidebcc'] ? $GLOBALS['HTTP_POST_VARS']['hidebcc'] : $GLOBALS['HTTP_GET_VARS']['hidebcc'];
-			$this->cat_id  = $GLOBALS['HTTP_POST_VARS']['cat_id'] ? $GLOBALS['HTTP_POST_VARS']['cat_id'] : $GLOBALS['HTTP_GET_VARS']['cat_id'];
+			$this->hideto  = $_POST['hideto'] ? $_POST['hideto'] : $_GET['hideto'];
+			$this->hidecc  = $_POST['hidecc'] ? $_POST['hidecc'] : $_GET['hidecc'];
+			$this->hidebcc  = $_POST['hidebcc'] ? $_POST['hidebcc'] : $_GET['hidebcc'];
+			$this->cat_id  = $_POST['cat_id'] ? $_POST['cat_id'] : $_GET['cat_id'];
 			//Set the link to the main frame...see, this is what im talking about
 			//asd soon as this frameset is server to the browser it will go GET
 			//the given url which is a call to the public function show_mainframe
@@ -330,8 +330,8 @@
 			/* DEPRECATED We initialize this switch that tells the code if any comes with data in it */
 			$boxecoming=False;
 
-			$this->searchbox  = $GLOBALS['HTTP_POST_VARS']['searchbox'] ? $GLOBALS['HTTP_POST_VARS']['searchbox'] : $GLOBALS['HTTP_GET_VARS']['searchbox'];
-			$this->querycommand=$GLOBALS['HTTP_POST_VARS']['querycommand'] ? $GLOBALS['HTTP_POST_VARS']['querycommand'] : $GLOBALS['HTTP_GET_VARS']['querycommand'];
+			$this->searchbox  = $_POST['searchbox'] ? $_POST['searchbox'] : $_GET['searchbox'];
+			$this->querycommand=$_POST['querycommand'] ? $_POST['querycommand'] : $_GET['querycommand'];
 			if($this->querycommand=='cleanquery')//We have been ordered to clean the query
 			{
 				$this->searchbox="";
@@ -343,7 +343,7 @@
 					$this->searchbox=$GLOBALS['phpgw']->session->appsession('jsuibook_sbox','email');
 			}
 			/*      This is the View More checkbox */
-			$this->viewmore = $GLOBALS['HTTP_POST_VARS']['viewmore'] ? $GLOBALS['HTTP_POST_VARS']['viewmore'] : $GLOBALS['HTTP_GET_VARS']['viewmore'];
+			$this->viewmore = $_POST['viewmore'] ? $_POST['viewmore'] : $_GET['viewmore'];
 
 			/*      
 				The next three are, respectively, the selected To:,cc and bcc  selectboxes. We need them to remember if
@@ -352,14 +352,14 @@
 				just before submiting. BTW, this should come in post allways but its a good practice to allways try and 
 				get from both. Good thing about get_var in 0.9.15.
 			 */
-			$this->toselectbox=$GLOBALS['HTTP_POST_VARS']['toselectbox']? $GLOBALS['HTTP_POST_VARS']['toselectbox'] : $GLOBALS['HTTP_GET_VARS']['toselectbox'];
-			$this->ccselectbox=$GLOBALS['HTTP_POST_VARS']['ccselectbox']? $GLOBALS['HTTP_POST_VARS']['ccselectbox'] : $GLOBALS['HTTP_GET_VARS']['ccselectbox'];
-			$this->bccselectbox=$GLOBALS['HTTP_POST_VARS']['bccselectbox']? $GLOBALS['HTTP_POST_VARS']['bccselectbox'] : $GLOBALS['HTTP_GET_VARS']['bccselectbox'];
-			$this->nameselectbox  = $GLOBALS['HTTP_POST_VARS']['nameselect'] ? $GLOBALS['HTTP_POST_VARS']['nameselect'] : $GLOBALS['HTTP_GET_VARS']['nameselect'];
+			$this->toselectbox=$_POST['toselectbox']? $_POST['toselectbox'] : $_GET['toselectbox'];
+			$this->ccselectbox=$_POST['ccselectbox']? $_POST['ccselectbox'] : $_GET['ccselectbox'];
+			$this->bccselectbox=$_POST['bccselectbox']? $_POST['bccselectbox'] : $_GET['bccselectbox'];
+			$this->nameselectbox  = $_POST['nameselect'] ? $_POST['nameselect'] : $_GET['nameselect'];
 			//nameselect is the value of the first selection in the nameselectbox
 			$this->nameselect = $this->nameselectbox[0];
-			$this->start  = $GLOBALS['HTTP_POST_VARS']['start'] ? $GLOBALS['HTTP_POST_VARS']['start'] : $GLOBALS['HTTP_GET_VARS']['start'];
-			$this->filter  = $GLOBALS['HTTP_POST_VARS']['filter'] ? $GLOBALS['HTTP_POST_VARS']['filter'] : $GLOBALS['HTTP_GET_VARS']['filter'];
+			$this->start  = $_POST['start'] ? $_POST['start'] : $_GET['start'];
+			$this->filter  = $_POST['filter'] ? $_POST['filter'] : $_GET['filter'];
 			//To selectbox must be hidden,set variables acordinlgy....likewise for cc and bcc
 			if($this->hideto)
 			{
@@ -457,7 +457,7 @@
 				}
 			}
 			//Get our category id
-			$this->cat_id  = $GLOBALS['HTTP_POST_VARS']['cat_id'] ? $GLOBALS['HTTP_POST_VARS']['cat_id'] : $GLOBALS['HTTP_GET_VARS']['cat_id'];
+			$this->cat_id  = $_POST['cat_id'] ? $_POST['cat_id'] : $_GET['cat_id'];
 			//print "<br /> ".$this->cat_id;
 			//Check if we have to check in the cache
 			if($this->cat_id == -1)
@@ -486,9 +486,9 @@
 				$this->cat_id="";
 			}
 			//The order query field...NOT USED ATM
-			$this->order  = $GLOBALS['HTTP_POST_VARS']['order'] ? $GLOBALS['HTTP_POST_VARS']['order'] : $GLOBALS['HTTP_GET_VARS']['order'];
+			$this->order  = $_POST['order'] ? $_POST['order'] : $_GET['order'];
 			//So we remember the autocomplete's value
-			$this->searchautocomplete  = $GLOBALS['HTTP_POST_VARS']['searchautocomplete'] ? $GLOBALS['HTTP_POST_VARS']['searchautocomplete'] : $GLOBALS['HTTP_GET_VARS']['searchautocomplete'];
+			$this->searchautocomplete  = $_POST['searchautocomplete'] ? $_POST['searchautocomplete'] : $_GET['searchautocomplete'];
 			if(!$this->searchautocomplete&&($this->querycommand != 'cleanquery'))//again, not found in the vars, look for it in cache
 			{
 				$this->searchautocomplete=$GLOBALS['phpgw']->session->appsession('jsuibook_acbox','email');
@@ -499,7 +499,7 @@
 				$GLOBALS['phpgw']->session->appsession('jsuibook_acbox','email','');
 			}
 			//The sort field ... NOTUSED ATM
-			$this->sort = $GLOBALS['HTTP_POST_VARS']['sort'] ? $GLOBALS['HTTP_POST_VARS']['sort'] : $GLOBALS['HTTP_GET_VARS']['sort'];
+			$this->sort = $_POST['sort'] ? $_POST['sort'] : $_GET['sort'];
 			//Starnge.... i have no idea what does this do
 			$catid_string=($this->cat_id) ? "cat_id=".$this->cat_id : "";
 			
@@ -770,11 +770,11 @@
 		function set_destboxes()
 		{
 			
-			$this->toselectbox=$GLOBALS['HTTP_POST_VARS']['toselectbox']? $GLOBALS['HTTP_POST_VARS']['toselectbox'] : $GLOBALS['HTTP_GET_VARS']['toselectbox'];
-			$this->ccselectbox=$GLOBALS['HTTP_POST_VARS']['ccselectbox']? $GLOBALS['HTTP_POST_VARS']['ccselectbox'] : $GLOBALS['HTTP_GET_VARS']['ccselectbox'];
-			$this->bccselectbox=$GLOBALS['HTTP_POST_VARS']['bccselectbox']? $GLOBALS['HTTP_POST_VARS']['bccselectbox'] : $GLOBALS['HTTP_GET_VARS']['bccselectbox'];
-			$deleted=$GLOBALS['HTTP_POST_VARS']['deleted']? $GLOBALS['HTTP_POST_VARS']['deleted'] : $GLOBALS['HTTP_GET_VARS']['deleted'];
-			$forget_after=$GLOBALS['HTTP_POST_VARS']['forget_after']? $GLOBALS['HTTP_POST_VARS']['forget_after'] : $GLOBALS['HTTP_GET_VARS']['forget_after'];
+			$this->toselectbox=$_POST['toselectbox']? $_POST['toselectbox'] : $_GET['toselectbox'];
+			$this->ccselectbox=$_POST['ccselectbox']? $_POST['ccselectbox'] : $_GET['ccselectbox'];
+			$this->bccselectbox=$_POST['bccselectbox']? $_POST['bccselectbox'] : $_GET['bccselectbox'];
+			$deleted=$_POST['deleted']? $_POST['deleted'] : $_GET['deleted'];
+			$forget_after=$_POST['forget_after']? $_POST['forget_after'] : $_GET['forget_after'];
 			$this->bo=CreateObject("email.bojsaddressbook");
 		
 			$destboxes=array(
@@ -870,7 +870,7 @@
 						'userdata_t' => 'addressbook-js-bits.tpl'
 						));
 			$this->bo=CreateObject("email.bojsaddressbook");
-			$this->nameselect  = $GLOBALS['HTTP_POST_VARS']['nameselect'] ? $GLOBALS['HTTP_POST_VARS']['nameselect'] : $GLOBALS['HTTP_GET_VARS']['nameselect'];
+			$this->nameselect  = $_POST['nameselect'] ? $_POST['nameselect'] : $_GET['nameselect'];
 			$data = $this->bo->recordinfo($this->nameselect);
 			if(!$data)
 			{
@@ -960,4 +960,3 @@
 					
 		}
 	}
-?>
