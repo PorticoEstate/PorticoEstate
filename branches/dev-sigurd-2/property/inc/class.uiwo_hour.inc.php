@@ -1377,6 +1377,7 @@
 				
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/location_view'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/contact_view'));
 
 				$this->create_html->set_var('phpgw',array('email_data' => $email_data));
 
