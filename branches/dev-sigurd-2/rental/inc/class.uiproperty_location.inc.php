@@ -33,13 +33,6 @@
 				$q = phpgw::get_var('query');
 				$query = explode('/', $q);
 				//GAB search
-				/* $gabinfo = execMethod('property.sogab.read', array(
-					'gaards_nr' => $gaards_nr,
-					'bruksnr' => $bruksnr,
-					'feste_nr' => $feste_nr,
-					'seksjons_nr' => $seksjons_nr,
-					'allrows' => true));
-				 */
 				$property_sogab = new property_sogab();
 				$gabinfo = $property_sogab->read(array(
 					'gaards_nr' => empty($query[0])?'':$query[0],
@@ -48,11 +41,12 @@
 					'seksjons_nr' => empty($query[3])?'':$query[3],
 					'allrows' => true));
 				
+				//var_dump($gabinfo);
+				
 				foreach ($gabinfo as $gabelement){
-					$rows[] = $property_bolocation->read_single($gabelement['location_code']);
-					//var_dump($row);
-					//$row['gab'] = 
-					//$rows[] = $row;
+					$row = $property_bolocation->read_single($gabelement['location_code']);
+					$row['gab'] = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);  
+					$rows[] = $row;
 					//TODO: Add gabno for element 
 				}
 			}

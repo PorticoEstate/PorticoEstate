@@ -48,6 +48,11 @@
 			sortable: true
 		},
 		{
+			key: "gab",
+			label: "<? echo lang('gab');?>",
+			sortable: true
+		},
+		{
 			key: "actions",
 			hidden: true
 		},
