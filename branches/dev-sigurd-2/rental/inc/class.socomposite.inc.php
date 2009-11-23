@@ -232,13 +232,8 @@ class rental_socomposite extends rental_socommon
 	 */
 	public function add(&$composite)
 	{
-		$rented_area = $composite->get_rented_area();
-		if(!isset($rented_area) || $rented_area == ""){
-			$composite->set_rented_area(0);
-		}
-
 		// Build a db-friendly array of the composite object
-		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id', 'rented_area');
+		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id');
 		$values = array(
 			"'".$composite->get_name()."'",
 			"'".$composite->get_description()."'",
@@ -248,8 +243,7 @@ class rental_socomposite extends rental_socommon
 			"'".$composite->get_custom_house_number()."'",
 			"'".$composite->get_custom_postcode()."'",
 			"'".$composite->get_custom_place()."'",
-            $composite->get_object_type_id(),
-            $composite->get_rented_area()
+            $composite->get_object_type_id()
 		);
 
 		$query ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
