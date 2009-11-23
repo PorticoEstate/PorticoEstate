@@ -610,7 +610,7 @@ class rental_socontract extends rental_socommon
         $values[] = $new_id ? $this->marshal(self::get_old_id($new_id),'string') : $this->marshal($contract->get_old_contract_id(),'string');
 		
         $cols[] = 'rented_area';
-        $values =  $this->marshal($contract->get_rented_area(),'float');
+        $values[] =  $this->marshal($contract->get_rented_area(),'float');
         
 		$cols[] = 'comment';
 		$values[] = $this->marshal($contract->get_comment(),'string');
