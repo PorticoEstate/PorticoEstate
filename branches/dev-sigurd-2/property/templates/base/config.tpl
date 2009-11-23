@@ -101,6 +101,51 @@
 	 </table>
     </td>
    </tr>
+   <tr class="row_on">
+    <td>{lang_Mail_Notification}:</td>
+    <td>
+     <select name="newsettings[mailnotification]">
+      <option value="" {selected_mailnotification_}>NO</option>
+      <option value="1" {selected_mailnotification_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_Owner_Notification_Project}.</td>
+    <td>
+     <select name="newsettings[notify_project_owner]">
+      <option value="" {selected_notify_project_owner_}>NO</option>
+      <option value="1" {selected_notify_project_owner_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_Owner_Notification_TTS}.</td>
+    <td>
+     <select name="newsettings[ownernotification]">
+      <option value="" {selected_ownernotification_}>NO</option>
+      <option value="1" {selected_ownernotification_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_Assigned_Notification_TTS}.</td>
+    <td>
+     <select name="newsettings[assignednotification]">
+      <option value="" {selected_assignednotification_}>NO</option>
+      <option value="1" {selected_assignednotification_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_Group_Notification_TTS}.</td>
+    <td>
+     <select name="newsettings[groupnotification]">
+      <option value="" {selected_groupnotification_}>NO</option>
+      <option value="1" {selected_groupnotification_1}>YES</option>
+     </select>
+    </td>
+   </tr>
    <tr class="row_off">
     <td>{lang_TTS_file_upload}:</td>
     <td>
@@ -111,43 +156,7 @@
     </td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Mail_Notification_(TTS)}:</td>
-    <td>
-     <select name="newsettings[mailnotification]">
-      <option value="" {selected_mailnotification_}>NO</option>
-      <option value="1" {selected_mailnotification_1}>YES</option>
-     </select>
-    </td>
-   </tr>
-   <tr class="row_off">
-    <td>{lang_Owner_Notification_(TTS)}.</td>
-    <td>
-     <select name="newsettings[ownernotification]">
-      <option value="" {selected_ownernotification_}>NO</option>
-      <option value="1" {selected_ownernotification_1}>YES</option>
-     </select>
-    </td>
-   </tr>
-   <tr class="row_on">
-    <td>{lang_Assigned_Notification_(TTS)}.</td>
-    <td>
-     <select name="newsettings[assignednotification]">
-      <option value="" {selected_assignednotification_}>NO</option>
-      <option value="1" {selected_assignednotification_1}>YES</option>
-     </select>
-    </td>
-   </tr>
-   <tr class="row_off">
-    <td>{lang_Group_Notification_(TTS)}.</td>
-    <td>
-     <select name="newsettings[groupnotification]">
-      <option value="" {selected_groupnotification_}>NO</option>
-      <option value="1" {selected_groupnotification_1}>YES</option>
-     </select>
-    </td>
-   </tr>
-   <tr class="row_on">
-    <td>{lang_priority_levels_(TTS)}.</td>
+    <td>{lang_priority_levels_TTS}.</td>
     <td>
      <select name="newsettings[prioritylevels]">
       <option value="" {selected_prioritylevels_}>3</option>
@@ -157,7 +166,7 @@
     </td>
    </tr>
    <tr class="row_off">
-    <td>{lang_mandatory_title_(TTS)}.</td>
+    <td>{lang_mandatory_title_TTS}.</td>
     <td>
      <select name="newsettings[tts_mandatory_title]">
       <option value="" {selected_tts_mandatory_title_}>NO</option>
