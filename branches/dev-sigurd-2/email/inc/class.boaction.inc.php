@@ -61,9 +61,13 @@
 		
 		var $next_obj;
 		
-		function boaction()
+		public function __construct()
 		{
-			//return;
+			if ( !isset($GLOBALS['phpgw']->msg) || !is_object($GLOBALS['phpgw']->msg) )
+			{
+				$GLOBALS['phpgw']->msg = CreateObject("email.mail_msg");
+				$GLOBALS['phpgw']->msg->initialize_mail_msg();
+			}
 		}
 		
 		/*!
@@ -615,7 +619,7 @@
 				$this->next_obj->index();
 			}
 			// (e) cleanup
-			if (is_object($GLOBALS['phpgw']->msg))
+			if (isset($GLOBALS['phpgw']->msg) && is_object($GLOBALS['phpgw']->msg))
 			{
 				if ($this->debug > 0) { $GLOBALS['phpgw']->msg->dbug->out('email.boaction.delmov ('.__LINE__.'): oops, not LEFT yet, cleanup and unset ->msg object<br />'); }
 				// close down ALL mailserver streams
