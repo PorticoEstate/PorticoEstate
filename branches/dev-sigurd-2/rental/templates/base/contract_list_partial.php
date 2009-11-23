@@ -55,7 +55,7 @@
 		label: "<?php echo lang('total_price') ?>"
 	},
 	{
-		key: "max_area",
+		key: "area",
 		formatter: formatArea,
 		label: "<?php echo lang('area_max') ?>"
 	},

@@ -20,7 +20,6 @@
 					'name' => 				array('type' => 'varchar','precision' => '255','nullable' => false),
 					'description' => 		array('type' => 'text'),
 					'is_active' => 			array('type' => 'bool','nullable' => false,'default' => 'true'),
-					'rented_area' =>		array('type' => 'float', 'precision' => 4,'nullable' => true),
 					'address_1' =>			array('type' => 'varchar','precision' => '255'),
 					'address_2' =>			array('type' => 'varchar','precision' => '255'),
 					'house_number' =>		array('type' => 'varchar','precision' => '255'),
@@ -104,7 +103,8 @@
 				'account_out' =>		array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'project_id' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'due_date' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true), // opsjonsfrist
-				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)
+				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'rented_area' =>		array('type' => 'float', 'precision' => 4,'nullable' => true) //Utleid areal
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -11,7 +11,7 @@
 
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
-	<div>
+	<div style="float: left; width: 50%;">
 		<label><?php echo lang('contract_number') ?> </label>
 		<?php if($contract->get_old_contract_id()){ 
 			echo $contract->get_old_contract_id(); 
@@ -34,8 +34,22 @@
 		<label><?php echo lang('composite') ?> </label>
 		<?php
 		 	echo $contract->get_composite_name_as_list();
-		 ?>
+		 ?>		 
 	</div>
+	<div style="float: right; width: 50%;">
+	 
+	<?php 
+	if($contract->get_id() > 0) {
+		$list_form = false;
+		$list_id = 'total_price';
+		unset($related);
+		$url_add_on = '&amp;contract_id='.$contract->get_id();
+		unset($extra_cols);
+
+		include('total_price_partial.php');
+	}
+	?>
+		</div>
 </div>
 
 <div id="contract_tabview" class="yui-navset">
@@ -101,14 +115,7 @@
 		</div>
 		<div id="price">
 			<h3><?php echo lang('selected_price_items') ?></h3>
-			<?php
-				$list_form = false;
-				$list_id = 'total_price';
-				unset($related);
-				$url_add_on = '&amp;contract_id='.$contract->get_id();
-				unset($extra_cols);
-
-				include('total_price_partial.php'); ?><br/>
+			
 		 	<?php
 				$list_form = false;
 				$list_id = 'included_price_items';
@@ -554,7 +561,7 @@
 							}
 						}
 						?>
-					<dd>
+					</dd>
 					<dt>
 						<label for="security_amount"><?php echo lang('security_amount') ?></label>
 					</dt>
@@ -577,6 +584,16 @@
 								echo '0';
 							}
 						}
+						?>
+					</dd>
+					<dt><label for="rented_area"><?php echo lang('rented_area') ?></label></dt>
+					<dd>
+						<?php
+							if ($editable) {?>
+								<input type="text" name="rented_area" id="rented_area" value="<?php echo $contract->get_rented_area() ?>"/>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm';?>
+							<?php } else {?>
+								<?php echo $contract->get_rented_area()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm';?>
+							<?php }
 						?>
 					</dd>
 				</dl>

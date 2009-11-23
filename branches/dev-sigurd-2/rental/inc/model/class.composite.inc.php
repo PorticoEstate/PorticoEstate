@@ -12,7 +12,6 @@
 		protected $name;
 		protected $description;
 		protected $is_active;
-		protected $rented_area;
 		protected $has_custom_address;
 		// These are custom fields that may be set on the composite
 		protected $custom_address_1;
@@ -236,15 +235,9 @@
 				'address' => $addresses,
 				'gab_id' => $gab_ids,
 				'area_gros' => $this->get_area_gros(),
-				'area_net' => $this->get_area_net(),
-				'rented_area' => $this->get_rented_area()
+				'area_net' => $this->get_area_net()
 			);
 		}
-		public function set_rented_area($rented_area)
-		{
-			$this->rented_area = $rented_area;
-		}
 		
-		public function get_rented_area() { return $this->rented_area; } 
 	}
 ?>

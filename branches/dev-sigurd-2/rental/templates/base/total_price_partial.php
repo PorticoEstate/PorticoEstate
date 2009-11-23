@@ -12,11 +12,33 @@
 		}
 	}
 
+	var formatArea = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
+				suffix: " <?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?>",
+				thousandsSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; ?>",
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] : 2; ?>
+		    });
+		}
+	}
+
 	var columnDefs = [
 	{
 		key: "total_price",
 		formatter: formatPrice,
 		label: "<strong><?php echo lang('total_price') ?></strong>"
+	},
+	{
+		key: "area",
+		formatter: formatArea,
+		label: "<strong><?php echo lang('area') ?></strong>"
+	},
+	{
+		key: "price_per_unit",
+		formatter: formatPrice,
+		label: "<strong><?php echo lang('price_per_unit') ?></strong>"
 	},
 	{
 		key: "actions",

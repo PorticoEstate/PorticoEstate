@@ -276,6 +276,7 @@ previous	rental	no	Forrige
 price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
 price_list	rental	no	Prisbok
+price_per_unit	rental	no	Pris pr kvm
 price	rental	no	Pris
 project_id	rental	no	Prosjektnummer
 Project id can not be more than 6 characters.	rental	no	Prosjektnummer kan ikke være mer enn seks tegn.

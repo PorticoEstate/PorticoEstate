@@ -46,6 +46,7 @@
 		protected $notify_before;
 		protected $notify_before_due_date;
 		protected $notify_after_termination_date;
+		protected $rented_area;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -554,7 +555,8 @@
 				'contract_type_id' => $this->get_contract_type_id(),
 				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
 				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
-				'contract_status' => $this->get_contract_status()
+				'contract_status' => $this->get_contract_status(),
+				'rented_area' => $this->get_rented_area()
 			);
 		}
 		
@@ -672,6 +674,13 @@
 				return lang("status_unknown");
 			}
 		}
+		
+		public function set_rented_area($rented_area)
+		{
+			$this->rented_area = $rented_area;
+		}
+		
+		public function get_rented_area() { return $this->rented_area; } 
 		
 	}
 

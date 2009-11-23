@@ -228,7 +228,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -291,6 +291,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'),'string'));
 			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
 			$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'),int));
+			$contract->set_rented_area($this->unmarshal($this->db->f('rented_area'),'float'));
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');
@@ -442,6 +443,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
 		$values[] = "project_id = ".$this->marshal($contract->get_project_id(),'string');
 		$values[] = "old_contract_id = ".$this->marshal($contract->get_old_contract_id(),'string');
+		$values[] = "rented_area = ".$this->marshal($contract->get_rented_area(),'float');
 		
 		if($contract->get_due_date()) {
 			$values[] = "due_date = " . $this->marshal($contract->get_due_date(), 'int');
@@ -607,8 +609,13 @@ class rental_socontract extends rental_socommon
 		$cols[] = 'old_contract_id';
         $values[] = $new_id ? $this->marshal(self::get_old_id($new_id),'string') : $this->marshal($contract->get_old_contract_id(),'string');
 		
+        $cols[] = 'rented_area';
+        $values =  $this->marshal($contract->get_rented_area(),'float');
+        
 		$cols[] = 'comment';
 		$values[] = $this->marshal($contract->get_comment(),'string');
+		
+		
 		
 		if ($contract->get_security_type()) {
 			$cols[] = 'security_type';

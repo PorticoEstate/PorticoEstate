@@ -34,7 +34,7 @@
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
 			'download'              => true,
-			'get_total_price'			=> true
+			'get_total_price'		=> true
 		);
 
 		public function __construct()
@@ -321,6 +321,7 @@
 					$contract->set_project_id(phpgw::get_var('project_id'));
 					$contract->set_due_date(strtotime(phpgw::get_var('due_date')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
+					$contract->set_rented_area(phpgw::get_var('rented_area'));
 					
 					if(rental_socontract::get_instance()->store($contract))
 					{
@@ -583,13 +584,23 @@
 			}
 			return false;
 		}
+		
 		public function get_total_price(){
+			$so_contract = rental_socontract::get_instance();
+			$so_contract_price_item = rental_socontract_price_item::get_instance();
+			
 			$contract_id = (int)phpgw::get_var('contract_id');
-			$total_price =  rental_socontract_price_item::get_instance()->get_total_price($contract_id);
-			$result_array = array('total_price' => $total_price);
+			$total_price =  $so_contract_price_item->get_total_price($contract_id);
+			$contract = $so_contract->get_single($contract_id);
+			$area = $contract->get_rented_area();
+			
+			$price_per_unit = $total_price / $area;	
+			
+			$result_array = array('total_price' => $total_price, 'area' => $area, 'price_per_unit' => $price_per_unit);
 			$result_data = array('results' => $result_array, 'total_records' => 1);
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}
+		
 		public function get_max_area(){
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$total_price =  rental_socontract_price_item::get_instance()->get_max_area($contract_id);
