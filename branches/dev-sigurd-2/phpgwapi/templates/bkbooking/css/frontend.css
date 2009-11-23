@@ -42,8 +42,8 @@ div#centerimage {
 	background-position: bottom center;
 	margin: 0 auto;
 	padding-top: 4px;
-	width: 876px;
 	height: 109px;
+	overflow: hidden;
 }
 div#footer {
     border-top: 1px solid #aaa;
