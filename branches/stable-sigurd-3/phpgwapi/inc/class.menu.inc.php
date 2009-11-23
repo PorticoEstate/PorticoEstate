@@ -57,12 +57,12 @@
 
 			//$menu = null; 
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id);
+			$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id,true,true);
 
 			if ( !$menu )
 			{
 				$menu = self::load();
-				phpgwapi_cache::user_set('phpgwapi', 'menu', $menu, $account_id);
+				phpgwapi_cache::user_set('phpgwapi', 'menu', $menu, $account_id,true,true);
 			}
 
 			if ( !is_null($mtype) && isset($menu[$mtype]) )

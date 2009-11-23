@@ -1712,11 +1712,12 @@
 							$accountname = 'unknown accountname on ('.__LINE__.')';
 						}
 						
-						$return_list[$next_pos]['go_there_url'] = $GLOBALS['phpgw']->link(
-														'/index.php',
-														 'menuaction=email.uiindex.index'
-														.'&fldball[folder]=INBOX'
-														.'&fldball[acctnum]='.$this_acctnum);
+						$return_list[$next_pos]['go_there_url'] = $GLOBALS['phpgw']->link('/index.php', array
+															(
+															'menuaction' => 'email.uiindex.index',
+															'fldball[folder]' => 'INBOX',
+															'fldball[acctnum]' => $this_acctnum
+															));
 						$return_list[$next_pos]['go_there_href'] = '<a href="'.$return_list[$next_pos]['go_there_url'].'">'.lang('go').'</a>';
 					}
 					// NEXT: html encode the acctname string
@@ -1730,15 +1731,18 @@
 					$return_list[$next_pos]['display_string'] = '['.$this_acctnum.'] '.$accountname;
 					
 					// NEXT: control action links
-					$return_list[$next_pos]['edit_url'] = $GLOBALS['phpgw']->link(														'/index.php',
-														 'menuaction=email.uipreferences.ex_accounts_edit'
-														.'&ex_acctnum='.$this_acctnum);
+					$return_list[$next_pos]['edit_url'] = $GLOBALS['phpgw']->link('/index.php', array
+														(
+														 	'menuaction' => 'email.uipreferences.ex_accounts_edit',
+															'ex_acctnum' => $this_acctnum
+														));
 					$return_list[$next_pos]['edit_href'] = '<a href="'.$return_list[$next_pos]['edit_url'].'">'.lang('Edit').'</a>';
 
-					$return_list[$next_pos]['delete_url'] = $GLOBALS['phpgw']->link(
-														'/index.php',
-														 'menuaction=email.bopreferences.ex_accounts_delete'
-														.'&ex_acctnum='.$this_acctnum);
+					$return_list[$next_pos]['delete_url'] = $GLOBALS['phpgw']->link('/index.php', array
+														 (
+														 	'menuaction' => 'email.bopreferences.ex_accounts_delete',
+															'ex_acctnum' => $this_acctnum
+														));
 					$return_list[$next_pos]['delete_href'] = '<a href="'.$return_list[$next_pos]['delete_url'].'">'.lang('Delete').'</a>';
 				}
 			}

@@ -654,7 +654,7 @@
 					'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array(),
-			//	    'headers'			=> $uicols_add['name'],
+				    'headers'			=> $uicols_add['name'],
 				    'headers_all'		=> $uicols['name']
 	    		);
 

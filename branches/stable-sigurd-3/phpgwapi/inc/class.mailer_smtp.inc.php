@@ -31,6 +31,10 @@
 			$this->IsSMTP(true);
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];
 			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port']) ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
+			$this->SMTPAuth = isset($GLOBALS['phpgw_info']['server']['smtpAuth']) && $GLOBALS['phpgw_info']['server']['smtpAuth'] == yes ? true : false;
+			$this->SMTPSecure = isset($GLOBALS['phpgw_info']['server']['smtpSecure']) ? $GLOBALS['phpgw_info']['server']['smtpSecure'] : '';
+			$this->Username = isset($GLOBALS['phpgw_info']['server']['smtpUser']) ? $GLOBALS['phpgw_info']['server']['smtpUser'] : '';
+			$this->Password =  isset($GLOBALS['phpgw_info']['server']['smtpPassword']) ? $GLOBALS['phpgw_info']['server']['smtpPassword'] : '';
 			$this->Version = 'custom - phpGroupWare 1.73';
 		}
 	}

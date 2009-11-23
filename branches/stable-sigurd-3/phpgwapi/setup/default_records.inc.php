@@ -301,7 +301,8 @@
 		'sessions_timeout'		=> 1440,
 		'addressmaster'			=> -3,
 		'log_levels'			=> serialize(array('global_level' => 'E', 'module' => array(), 'user' => array())),
-		'freshinstall'			=> 1
+		'freshinstall'			=> 1,
+		'usecookies'			=> 'True'
 	);
 
 	foreach ( $values as $name => $val )

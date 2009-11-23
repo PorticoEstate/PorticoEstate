@@ -714,3 +714,16 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (n
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('remind', 'Remind', 'This is a reminder of task assigned')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_action_pending_category (num, name, descr) VALUES ('accept_delivery', 'Accept delivery', 'Please accept delivery on this item')");
 
+// Admin get full access
+$GLOBALS['phpgw']->acl->enable_inheritance = true;
+$aclobj =& $GLOBALS['phpgw']->acl;
+$admin_group		= $GLOBALS['phpgw']->accounts->name2id('admin');
+if($admin_group) // check if admin has been defined yet
+{
+	$aclobj->set_account_id($admin_group, true);
+	$aclobj->add('property', '.', 31);
+	$aclobj->add('property', 'run', 1);
+	$aclobj->save_repository();
+}
+
+
