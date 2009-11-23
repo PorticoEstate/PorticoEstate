@@ -93,7 +93,7 @@
 			return imap_fetchbody($stream,$msgnr,$partnr,$flags);
 		}
 
-		function header($stream,$msg_nr,$fromlength='',$tolength='',$defaulthost='')
+		function header($stream,$msg_nr,$fromlength=0,$tolength=0,$defaulthost='')
 		{
 			// do we need to temporarily switch to regular msg num sequence for this function?
 			if ($this->force_msg_uids == True)
@@ -251,7 +251,7 @@
 			return imap_search($stream,$criteria,$flags);
 		}
 		
-		function sort($stream,$criteria,$reverse='',$flags=0)
+		function sort($stream,$criteria,$reverse=0,$flags=0)
 		{
 			// do we force use of msg UID's 
 			if ( ($this->force_msg_uids == True)
