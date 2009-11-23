@@ -30,6 +30,10 @@ abstract class rental_socommon
 		{
 			return intval($value);
 		}
+		else if($type == 'float')
+		{
+			return floatval($value);
+		}
 		else if($type == 'field')
 		{
 			return $this->db->db_addslashes($value);
