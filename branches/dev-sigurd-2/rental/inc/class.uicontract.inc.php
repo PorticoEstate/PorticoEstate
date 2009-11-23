@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.sobilling');
 	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.socomposite');
 	phpgw::import_class('rental.sodocument');
 	phpgw::import_class('rental.soinvoice');
 	phpgw::import_class('rental.sonotification');
@@ -333,7 +334,7 @@
 						$error = lang('messages_form_error');
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
 			}
 			else if(isset($_POST['add_notification']))
 			{
@@ -393,8 +394,10 @@
 				{
 					// Add that composite to the new contract
 					$so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
+					$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
+					$message = lang('messages_new_contract_from_composite').' '.$comp_name;
 					
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
 				}
 				else
 				{
@@ -413,6 +416,7 @@
 		{
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
+			$old_contract_old_id = $contract->get_old_contract_id();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				//reset id's and contract dates
@@ -425,8 +429,8 @@
 				{
 					// copy the contract
 					$so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
-					
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_new_contract')));
+					$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
 				}
 				else
 				{

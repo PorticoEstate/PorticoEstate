@@ -182,6 +182,8 @@ messages_isint	rental	no	Feltet må inneholde et heltall
 messages_isnumeric	rental	no	Feltet må inneholde et tall
 messages_new_composite	rental	no	Leieobjektet er opprettet
 messages_new_contract	rental	no	Ny kontrakt lagt til
+messages_new_contract_copied	rental	no	Ny kontrakt lagt til basert på kontrakt
+messages_new_contract_from_composite	rental	no	Ny kontrakt lagt til basert på leieobjekt
 messages_new_party	rental	no	Kontraktspart er opprettet
 messages_not_valid_date	rental	no	Må være en gyldig dato
 messages_number_out_of_range	rental	no	Tallet er over eller under tillatte verdier
