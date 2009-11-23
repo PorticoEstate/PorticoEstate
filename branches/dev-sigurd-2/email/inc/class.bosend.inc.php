@@ -331,7 +331,7 @@
 		function send()
 		{
 			
-			$this->smtp = createObject('email.mail_smtp');
+			$this->smtp = createObject('phpgwapi.mailer_smtp');
 			
 			$this->prepare_message();
 
