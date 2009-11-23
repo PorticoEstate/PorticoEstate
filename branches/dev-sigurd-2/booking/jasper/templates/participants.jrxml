@@ -17,7 +17,7 @@
 		<parameter name="BUILDING_ID" class="java.lang.Integer"/>
 		<queryString>
 			<![CDATA[
-				SELECT to_char(bo.from_, 'YYYY-MM') AS month, ag.name AS aname, ba.male, ba.female, bu.id, bu.name 
+				SELECT to_char(bo.from_, 'YYYY-MM') AS month, ag.name AS aname, ba.male, ba.female, bu.id, bu.name, ag.sort as agegroup_sort
 				FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu 
 				WHERE ba.agegroup_id = ag.id 
 				AND ba.booking_id = bo.id
@@ -28,7 +28,18 @@
 				AND date_trunc('day' ,bo.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
 				AND date_trunc('day' ,bo.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND bu.id = $P{BUILDING_ID}
-				ORDER BY month desc, ag.sort
+				UNION
+				SELECT to_char(ev.from_, 'YYYY-MM') AS month, ag.name AS aname, ea.male, ea.female, bu.id, bu.name, ag.sort AS agegroup_sort
+				FROM bb_event ev
+				INNER JOIN bb_event_agegroup ea ON ea.event_id = ev.id
+				INNER JOIN bb_agegroup ag ON ag.id = ea.agegroup_id
+				INNER JOIN bb_event_resource er ON er.event_id = ev.id
+				INNER JOIN bb_resource re ON re.id = er.resource_id
+				INNER JOIN bb_building bu ON bu.id = re.building_id
+				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
+				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND bu.id = $P{BUILDING_ID}
+				ORDER BY month desc, agegroup_sort
 			]]>
 		</queryString>
 		<field name="month" class="java.lang.String"/>
@@ -43,15 +54,24 @@
 
 	<queryString>
 		<![CDATA[
-			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name 
-			FROM bb_booking bo, bb_allocation al, bb_season se, bb_building bu 
-			WHERE bo.allocation_id = al.id
-			AND al.season_id = se.id
-			AND se.building_id = bu.id
-			AND date_trunc('day' ,bo.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
-			AND date_trunc('day' ,bo.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			FROM bb_booking bo
+			INNER JOIN bb_allocation al ON al.id = bo.allocation_id
+			INNER JOIN bb_season se ON se.id = al.season_id
+			INNER JOIN bb_building bu ON bu.id = se.building_id
+			WHERE date_trunc('day', bo.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', bo.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
 			AND bu.id = ANY (string_to_array($P{BK_BUILDINGS}, ',')::int4[])
-			ORDER BY bu.name
+			UNION
+			SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
+			from bb_event ev
+			inner join bb_event_resource er on er.event_id = ev.id
+			inner join bb_resource re on re.id = er.resource_id
+			inner join bb_building bu on bu.id = re.building_id
+			WHERE date_trunc('day', ev.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
+			AND date_trunc('day', ev.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND bu.id = ANY (string_to_array($P{BK_BUILDINGS}, ',')::int4[])
+			order by building_name
 		]]>
 	</queryString>
 
@@ -153,6 +173,16 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
 								<textFieldExpression class="java.lang.String">$V{AgeGroup}</textFieldExpression>
 							</textField>
+							<staticText>
+								<reportElement x="0" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>M</text>
+							</staticText>
+							<staticText>
+								<reportElement x="40" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>K</text>
+							</staticText>
 						</cellContents>
 					</crosstabColumnHeader>
 					<crosstabTotalColumnHeader>
@@ -164,6 +194,16 @@
 								<reportElement x="0" y="0" width="80" height="50" style="Sans_Bold"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text>TOTAL</text>
+							</staticText>
+							<staticText>
+								<reportElement x="0" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>M</text>
+							</staticText>
+							<staticText>
+								<reportElement x="40" y="70" width="40" height="10" style="Sans_Bold"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text>K</text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>

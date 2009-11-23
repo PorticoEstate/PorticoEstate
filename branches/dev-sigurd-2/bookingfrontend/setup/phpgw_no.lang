@@ -87,7 +87,7 @@ events	bookingfrontend	no	Arrangementer
 feb	bookingfrontend	no	februar
 female	bookingfrontend	no	Kvinne
 filnavn	bookingfrontend	no	Dokument
-found %1 results	bookingfrontend	no	%1 treffer
+found %1 results	bookingfrontend	no	%1 treff
 fr	bookingfrontend	no	fr.
 from	bookingfrontend	no	Fra
 generate allocations	bookingfrontend	no	Lag tildelning
@@ -142,7 +142,7 @@ no Data.	bookingfrontend	no	Ingen treff.
 no description yet	bookingfrontend	no	Beskrivelse manglar
 no parents	bookingfrontend	no	Ingen overordnet
 no records found.	bookingfrontend	no	Ingen treff.
-no records found.	bookingfrontend	no	Inget funnet!
+no records found.	bookingfrontend	no	Ingen funnet!
 nov	bookingfrontend	no	november
 number of participants	bookingfrontend	no	Antall deltakere
 oct	bookingfrontend	no	oktober
