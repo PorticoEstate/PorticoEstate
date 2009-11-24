@@ -844,18 +844,19 @@ class rental_socontract extends rental_socommon
     }
     
     public function update_price_items($contract_id, $rented_area){
-    	$q_price_items = "SELECT * FROM rental_contract_price_item WHERE contract_id={$contract_id}";
+    	$q_price_items = "SELECT * FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area";
     	$this->db->query($q_price_items);
     	while($this->db->next_record()){
     		$price_item_id = $this->unmarshal($this->db->f('price_item_id'),'int');
     		$price_item_id = $this->marshal($price_item_id, 'int');
+    		$is_area = $this->unmarshal($this->db->f('is_area'),'bool');
     		$area = $this->marshal($area, 'float');
     		$price = $this->unmarshal($this->db->f('price'),'float');
     		$price = $this->marshal($price, 'float');
     		$total_price = ($rented_area * $price);
     		$total_price = $this->marshal($total_price, 'float');
     		$sql = "UPDATE rental_contract_price_item SET area={$rented_area}, total_price={$total_price} WHERE price_item_id={$price_item_id} AND contract_id={$contract_id}";
-    		$this->db->query($sql); 
+    		$this->db->query($sql);
     	}
     }
 }
