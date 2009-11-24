@@ -454,6 +454,8 @@
                     18=> 8, // "Ekstern KF" -> Annen
                     19=> 8  // "Ekstern I-kontrakt" -> Annen
                     );
+                $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
+
                 $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
@@ -469,10 +471,10 @@
 
                 $composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 
-                if($composite_id) {
+                // If composite_id has value and contract type is external
+                if($composite_id && in_array($contract->get_contract_type_id(), $external_types)) {
                     $socomposite = rental_socomposite::get_instance();
-                    $composite = $socomposite->get_single($composite_id);
-                    $contract->set_rented_area($composite->get_area());
+                    $contract->set_rented_area($socomposite->get_area($composite_id));
                 }
 				
 				// Store contract

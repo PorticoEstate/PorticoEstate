@@ -280,6 +280,18 @@ class rental_socomposite extends rental_socommon
 		}
 		return '';
 	}
+
+
+    public function get_area($composite_id) {
+        $sql = "SELECT area FROM rental_composite WHERE id = " . $this->marshal($composite_id, 'float');
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+		if ($this->db->next_record()) {
+			return $this->unmarshal($this->db->f('area', true), 'float');
+		}
+
+		return null;
+    }
 	
 }
 ?>
