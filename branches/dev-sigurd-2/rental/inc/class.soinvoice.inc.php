@@ -56,7 +56,7 @@ class rental_soinvoice extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, billing_id, rental_invoice.party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			if($sort_field == null || $sort_field == '') // Sort field no set
 			{
@@ -92,7 +92,7 @@ class rental_soinvoice extends rental_socommon
             $party->set_email(          $this->unmarshal($this->db->f('party_email'), 'string'));
             $party->set_fax(            $this->unmarshal($this->db->f('party_fax'), 'string'));
             $party->set_first_name(     $this->unmarshal($this->db->f('party_first_name'), 'string'));
-            $party->set_is_active(      $this->unmarshal($this->db->f('party_is_active'), 'bool'));
+            $party->set_is_inactive(     $this->unmarshal($this->db->f('party_in_active'), 'bool'));
             $party->set_last_name(      $this->unmarshal($this->db->f('party_last_name'), 'string'));
             $party->set_location_id(    $this->unmarshal($this->db->f('party_org_location_id'), 'int'));
             $party->set_identifier(     $this->unmarshal($this->db->f('party_identifier'), 'string'));

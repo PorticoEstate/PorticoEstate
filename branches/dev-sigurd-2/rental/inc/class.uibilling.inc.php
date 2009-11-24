@@ -28,12 +28,6 @@ class rental_uibilling extends rental_uicommon
 	
 	public function index()
 	{
-		if(!$this->isAdministrator())
-		{
-			$this->render('permission_denied.php');
-			return;
-		}
-		
 		// No messages so far
 		$errorMsgs = array();
 		$warningMsgs = array();
