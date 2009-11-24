@@ -46,7 +46,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('import');
-			set_time_limit(1500);
+			set_time_limit(3000);
             /*if (!phpgwapi_cache::session_get('rental', 'msgarchive')) {
                 $this->msgarchive = array(date().': Import started');
                 phpgwapi_cache::session_set('rental', 'msgarchive', $this->msgarchive);

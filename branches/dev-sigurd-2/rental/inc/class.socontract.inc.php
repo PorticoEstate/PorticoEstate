@@ -201,12 +201,12 @@ class rental_socontract extends rental_socommon
 			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
 			$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
 			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
-			$timestamp_start = strtotime("{$year}-{$month}-01");
+			//$timestamp_start = strtotime("{$year}-{$month}-01");
 			
 			$filter_clauses[] = "contract.term_id = {$billing_term_id}";
 			$filter_clauses[] = "date_start < $timestamp_end";
 			$filter_clauses[] = "(date_end IS NULL OR date_end >= {$timestamp_start})";
-			$filter_clauses[] = "billing_start <= {$timestamp_end}";
+			$filter_clauses[] = "billing_start < {$timestamp_end}";
 			
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
 			$order = $order ? $order.', '.$specific_ordering : "ORDER BY {$specific_ordering}";
@@ -841,6 +841,22 @@ class rental_socontract extends rental_socommon
     		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, null, null)";
     		$this->db->query($sql);
     	}
+    }
+    
+    public function get_months_in_term($term_id)
+    { 
+		$sql = "SELECT months FROM rental_billing_term WHERE id = {$term_id}";
+		$result = $this->db->query($sql);
+		if(!$result)
+		{
+			return 0;
+		}
+		if(!$this->db->next_record())
+		{
+			return 0;
+		}
+		$months = $this->unmarshal($this->db->f('months', true), 'int');
+		return $months;
     }
     
     public function update_price_items($contract_id, $rented_area){

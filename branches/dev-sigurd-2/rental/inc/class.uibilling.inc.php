@@ -83,9 +83,9 @@ class rental_uibilling extends rental_uicommon
 		// Step 2 - list of contracts that should be billed
 		if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
-			$contract_type = phpgw::get_var('contract_type');
-			$billing_term = phpgw::get_var('billing_term');
-			$year = phpgw::get_var('year');
+			$contract_type = phpgw::get_var('contract_type'); 
+			$billing_term = phpgw::get_var('billing_term'); 
+			$year = phpgw::get_var('year');  
 			$month = phpgw::get_var('month');
 			if(rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
 			{
@@ -108,7 +108,7 @@ class rental_uibilling extends rental_uicommon
 			);
 			$this->render('billing_step2.php', $data);
 		}
-		// Step 1 - billing job list
+		// Step 1 - List all billing jobs
 		else
 		{
 			$data = array
