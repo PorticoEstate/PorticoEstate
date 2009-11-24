@@ -169,8 +169,6 @@ class rental_socontract_price_item extends rental_socommon
 			$this->marshal($price_item->get_date_end(), 'int')
 		);
 
-        error_log("Querying: ".'UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id");
-
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
