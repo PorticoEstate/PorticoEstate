@@ -96,6 +96,15 @@ class rental_socontract_price_item extends rental_socommon
 	{
 		$price = $price_item->get_price() ? $price_item->get_price() : 0;
 		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		$contract = rental_socontract::get_instance()->get_single($price_item->get_contract_id);
+		$rented_area = 0;
+		if($price_item->is_area()){
+			$rented_area = $contract->get_rented_area();
+			if($rented_area == ''){
+				$rented_area = 0;
+			}
+			$total_price = ($rented_area * $price);
+		}
 
 		// Build a db-friendly array of the composite object
 		$values = array(
@@ -105,7 +114,7 @@ class rental_socontract_price_item extends rental_socommon
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
 			$price,
-			$price_item->get_area(),
+			$rented_area,
 			$price_item->get_count(),
 			$total_price
 		);

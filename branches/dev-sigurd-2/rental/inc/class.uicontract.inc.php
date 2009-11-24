@@ -272,6 +272,7 @@
 		{
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
+			$update_price_items = false;
 			
 			$message = null;
 			$error = null;
@@ -322,10 +323,19 @@
 					$contract->set_project_id(phpgw::get_var('project_id'));
 					$contract->set_due_date(strtotime(phpgw::get_var('due_date')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
-					$contract->set_rented_area(phpgw::get_var('rented_area'));
+					$old_rented_area = $contract->get_rented_area();
+					$new_rented_area = phpgw::get_var('rented_area');
+					if($old_rented_area != $new_rented_area){
+						$update_price_items = true;
+					}
+					$contract->set_rented_area($new_rented_area);
 					
-					if(rental_socontract::get_instance()->store($contract))
+					$so_contract = rental_socontract::get_instance();
+					if($so_contract->store($contract))
 					{
+						if($update_price_items){
+							$so_contract->update_price_items($contract->get_id(), $new_rented_area);
+						}
 						$message = lang('messages_saved_form');
 						$contract_id = $contract->get_id();
 					}
