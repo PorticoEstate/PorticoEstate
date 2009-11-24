@@ -7,7 +7,7 @@
 		{
 			parent::__construct('bb_application', 
 				array(
-					'id'		=> array('type' => 'int', 'query' => true),
+					'id'		=> array('type' => 'int'),
 					'active'	=> array('type' => 'int'),
 					'display_in_dashboard' => array('type' => 'int'),
 					'status'	=> array('type' => 'string', 'required' => true),
