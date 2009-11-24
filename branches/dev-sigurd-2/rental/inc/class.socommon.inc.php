@@ -53,14 +53,18 @@ abstract class rental_socommon
 		{
 			return (boolean)$value;
 		}
-		if($value === null || $value == 'NULL')
+		elseif($value === null || $value == 'NULL')
 		{
 			return null;
 		}
-		if($type == 'int')
+		elseif($type == 'int')
 		{
 			return intval($value);
 		}
+        elseif($type == 'float')
+        {
+            return floatval($value);
+        }
 		return $value;
 	}
 

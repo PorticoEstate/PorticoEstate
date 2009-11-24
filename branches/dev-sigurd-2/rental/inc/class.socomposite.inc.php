@@ -250,6 +250,7 @@ class rental_socomposite extends rental_socommon
 		);
 
 		$query ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+        error_log($query);
 		$result = $this->db->query($query);
 
 		$composite_id = $this->db->get_last_insert_id('rental_composite', 'id');

@@ -259,7 +259,7 @@ class rental_socontract extends rental_socommon
 
 	
 	function populate(int $contract_id, &$contract)
-	{ 
+	{
 		
 		if($contract == null ) // new contract
 		{
