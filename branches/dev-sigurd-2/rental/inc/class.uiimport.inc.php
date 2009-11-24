@@ -577,12 +577,16 @@
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
 					$price_item->set_is_area($admin_price_item->is_area());
                     $price_item->set_price($detail_price_items[$facilit_id]['price']);
+                    
+                    //get the contract's area
+                    $contract_rented_area = $contract->get_rented_area();
 					
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+						//$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_area($contract_rented_area);
 						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
@@ -595,7 +599,7 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					if($socontract_price_item->store($price_item)) {
+					if($socontract_price_item->import($price_item)) {
                         $this->messages[] = "Successfully imported price item " . $price_item->get_title();
                     }
                     else {

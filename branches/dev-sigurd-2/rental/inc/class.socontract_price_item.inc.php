@@ -87,6 +87,53 @@ class rental_socontract_price_item extends rental_socommon
 	}
 	
 	/**
+	 * Add a new contract_price_item to the database from import.  Adds the new insert id to the object reference.
+	 * 
+	 * @param $price_item the contract_price_item to be added
+	 * @return mixed receipt from the db operation
+	 */
+	public function import(&$price_item)
+	{
+		$price = $price_item->get_price() ? $price_item->get_price() : 0;
+		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		$rented_area = $price_item->get_area();
+
+		// Build a db-friendly array of the composite object
+		$values = array(
+			$price_item->get_price_item_id(),
+			$price_item->get_contract_id(),
+			'\'' . $price_item->get_title() . '\'',
+			'\'' . $price_item->get_agresso_id() . '\'',
+			($price_item->is_area() ? "true" : "false"),
+			$price,
+			$rented_area,
+			$price_item->get_count(),
+			$total_price
+		);
+		
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		
+		if ($price_item->get_date_start()) {
+			$values[] = $this->marshal($price_item->get_date_start(), 'int');
+			$cols[] = 'date_start';
+		}
+		
+		if ($price_item->get_date_end()) {
+			$values[] = $this->marshal($price_item->get_date_end(), 'int');
+			$cols[] = 'date_end';
+		}
+		
+		$q ="INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+
+		$result = $this->db->query($q);
+		$receipt['id'] = $this->db->get_last_insert_id("rental_contract_price_item", 'id');
+		
+		$price_item->set_id($receipt['id']);
+		
+		return $receipt;
+	}
+	
+	/**
 	 * Add a new contract_price_item to the database.  Adds the new insert id to the object reference.
 	 * 
 	 * @param $price_item the contract_price_item to be added
@@ -96,8 +143,8 @@ class rental_socontract_price_item extends rental_socommon
 	{
 		$price = $price_item->get_price() ? $price_item->get_price() : 0;
 		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		$rented_area = $price_item->get_area();
 		$contract = rental_socontract::get_instance()->get_single($price_item->get_contract_id);
-		$rented_area = 0;
 		if($price_item->is_area()){
 			$rented_area = $contract->get_rented_area();
 			if($rented_area == ''){
