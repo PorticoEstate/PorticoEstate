@@ -397,6 +397,12 @@
 				$date_end = $this->decode($data[4]);
 				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
+				
+				$contract->set_account_in(119001);
+				$contract->set_account_out(119001);
+				$contract->set_project_id(9);
+				
+				
 
                 $contract->set_old_contract_id($this->decode($data[5]));
 				
@@ -511,6 +517,7 @@
 			$start_time = time();
 			$soprice_item = rental_soprice_item::get_instance();
 			$socontract_price_item = rental_socontract_price_item::get_instance();
+			$socontract = rental_socontract::get_instance();
 			
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
@@ -563,13 +570,12 @@
 				if ($contract_id) {
 					// Create a new contract price item that we can tie to our contract
 					$price_item = new rental_contract_price_item();
-
-                    // Get contract obj and add cLonnsArt as contract reference
-                    $socontract = rental_socontract::get_instance();
-                    $contract = $socontract->get_single($contract_id);
-                    $contract->set_reference($this->decode($data[13]));
-                    $socontract->store($contract);
 					
+					$contract = $socontract->get_single($contract_id);
+
+                    // Set cLonnsArt for price item as contract reference
+					$socontract->import_contract_reference($contract_id,$this->decode($data[13]));
+				
 					// Copy fields from admin price item first
 					$price_item->set_title($admin_price_item->get_title());
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
@@ -619,6 +625,7 @@
 			$start_time = time();
 			$soprice_item = rental_soprice_item::get_instance();
 			$socontract_price_item = rental_socontract_price_item::get_instance();
+			$socontract = rental_socontract::get_instance();
 			
 			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
 			// This is an array keyed by the main price item ID
@@ -675,6 +682,9 @@
 				$contract_id = $contracts[$contract_id];
 				
 				if ($contract_id) {
+					
+					$contract = $socontract->get_single($contract_id);
+					
 					// Create a new contract price item that we can tie to our contract
 					$price_item = new rental_contract_price_item();
 					
@@ -688,7 +698,7 @@
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
+						$price_item->set_area($contract->get_rented_area());
 						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
@@ -700,7 +710,7 @@
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
 					// .. and save
-					$socontract_price_item->store($price_item);
+					$socontract_price_item->import($price_item);
 					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
 				} else {
 					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);

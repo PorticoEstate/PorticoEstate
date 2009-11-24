@@ -875,5 +875,14 @@ class rental_socontract extends rental_socommon
     		$this->db->query($sql);
     	}
     }
+    
+    public function import_contract_reference($contract_id, $reference)
+    {
+    	$reference = $this->marshal($reference,'string');
+    	$sql = "UPDATE rental_contract SET reference={$reference} WHERE id = {$contract_id}";
+    	$this->db->query($sql);
+    }
+    
+
 }
 ?>
