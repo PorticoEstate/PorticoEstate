@@ -27,6 +27,7 @@
 					'place' =>				array('type' => 'varchar','precision' => '255'),
 					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
                     'object_type_id' =>     array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => null),
+                    'area' =>               array('type' => 'float', 'precision' => 4,'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),

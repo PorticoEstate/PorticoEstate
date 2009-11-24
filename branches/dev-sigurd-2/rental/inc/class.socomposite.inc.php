@@ -97,7 +97,7 @@ class rental_socomposite extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active';
+			$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -124,6 +124,7 @@ class rental_socomposite extends rental_socommon
 			$composite->set_custom_house_number($this->unmarshal($this->db->f('house_number', true), 'string'));
 			$composite->set_custom_postcode($this->unmarshal($this->db->f('postcode', true), 'string'));
 			$composite->set_custom_place($this->unmarshal($this->db->f('place', true), 'string'));
+			$composite->set_area($this->unmarshal($this->db->f('area', true), 'float'));
 		}
 		// Location code
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
@@ -215,7 +216,8 @@ class rental_socomposite extends rental_socommon
 			'postcode = \'' . $composite->get_custom_postcode() . '\'',
 			'place = \'' . $composite->get_custom_place() . '\'',
 			'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\'',
-            'object_type_id = '.$composite->get_object_type_id()
+            'object_type_id = '.$composite->get_object_type_id(),
+            'area = ' . $this->marshal($composite->get_area(), 'float'),
 		);
 
 		$result = $this->db->query('UPDATE rental_composite SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -233,7 +235,7 @@ class rental_socomposite extends rental_socommon
 	public function add(&$composite)
 	{
 		// Build a db-friendly array of the composite object
-		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id');
+		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id', 'area');
 		$values = array(
 			"'".$composite->get_name()."'",
 			"'".$composite->get_description()."'",
@@ -243,7 +245,8 @@ class rental_socomposite extends rental_socommon
 			"'".$composite->get_custom_house_number()."'",
 			"'".$composite->get_custom_postcode()."'",
 			"'".$composite->get_custom_place()."'",
-            $composite->get_object_type_id()
+            $composite->get_object_type_id(),
+            $this->marshal($composite->get_area(), 'float')
 		);
 
 		$query ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";

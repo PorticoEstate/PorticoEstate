@@ -41,17 +41,6 @@
 	</fieldset>
 	
 	<?php if ($messages || $warnings || $errors) { ?>
-        <!--<script type="text/javascript">
-            function download() {
-                window.location = 'index.php?menuaction=rental.uiimport.download';
-            }
-        </script>
-
-        <fieldset>
-            <h3><?php echo lang('export_to') ?></h3>
-            <div id="export"><a href="javascript:download();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
-        </fieldset>-->
-
 		<h2><?php echo lang('import_log_messages') ?></h2>
 		
 		<?php if ($errors) { ?>

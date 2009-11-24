@@ -20,6 +20,7 @@
 		protected $custom_postcode;
 		protected $custom_place;
         protected $object_type_id;
+        protected $area;
 		
 		protected $units;
 	
@@ -191,6 +192,14 @@
 
         public function get_object_type_id() {
             return (int) $this->object_type_id;
+        }
+
+        public function set_area($area) {
+            $this->area = $area;
+        }
+
+        public function get_area() {
+            return $this->area;
         }
 		
 		/**

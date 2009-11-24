@@ -121,6 +121,7 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_parties')) {
 				phpgwapi_cache::session_set('rental', 'facilit_parties', $this->import_parties());
 				$this->import_button_label = "2/{$steps}: Continue to import composites";
+                $this->log_messages(1);
 				return;
 			}
 			
@@ -128,6 +129,7 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_composites')) {
 				phpgwapi_cache::session_set('rental', 'facilit_composites', $this->import_composites());
 				$this->import_button_label = "3/{$steps}: Continue to import composite-to-contract link table";
+                $this->log_messages(2);
 				return;
 			}
 			
@@ -135,6 +137,7 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')) {
 				phpgwapi_cache::session_set('rental', 'facilit_rentalobject_to_contract', $this->import_rentalobject_to_contract());
 				$this->import_button_label = "4/{$steps}: Continue to import contracts";
+                $this->log_messages(3);
 				return;
 			}
 			
@@ -145,6 +148,7 @@
 				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
 				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties));
 				$this->import_button_label = "5/{$steps}: Continue to import contract price items";
+                $this->log_messages(4);
 				return;
 			}
 			
@@ -153,6 +157,7 @@
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
 				$this->import_button_label = "6/{$steps}: Continue to import composite price items"; // Not really - events will be after this
+                $this->log_messages(5);
 				return;
 			}
 			
@@ -162,6 +167,7 @@
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_set('rental', 'facilit_composite_price_items', $this->import_composite_price_items($contracts, $rentalobject_to_contract));
 				$this->import_button_label = "7/{$steps}: Continue to import events";
+                $this->log_messages(6);
 				return;
 			}
 			
@@ -169,6 +175,7 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
+                $this->log_messages(7);
                 $this->clean_up();
 				$this->import_button_label = "Import done";
 				//return;
@@ -278,7 +285,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($parties) . " contract parties. (" . (time() - $start_time) . " seconds)";
-			$this->save_messages();
+
 			return $parties;
 		}
 		
@@ -307,6 +314,8 @@
 				$composite->set_custom_postcode($this->decode($data[8]));
 				$composite->set_description($this->decode($data[3]));
                 $composite->set_object_type_id($this->decode($data[25]));
+
+                $composite->set_area($this->decode($data[2]));
 				
 				$composite->set_is_active($data[19] == "-1");
 				
@@ -355,7 +364,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($composites) . " composites (" . (time() - $start_time) . " seconds)";
-			$this->save_messages();
+
 			return $composites;
 		}
 		
@@ -370,7 +379,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract links";
-            $this->save_messages();
+
 			return $rentalobject_to_contract;
 		}
 		
@@ -460,12 +469,19 @@
 				
 				// Set the location ID according to what the user selected
 				$contract->set_location_id(phpgw::get_var("location_id"));
+
+
+                $composite_id = $composites[$rentalobject_to_contract[$data[0]]];
+
+                if($composite_id) {
+                    $socomposite = rental_socomposite::get_instance();
+                    $composite = $socomposite->get_single($composite_id);
+                    $contract->set_rented_area($composite->get_area());
+                }
 				
 				// Store contract
 				if ($socontract->store($contract)) {
 					$contracts[$data[0]] = $contract->get_id();
-					
-					$composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 					
 					// Check if this contract has a composite
 					if (!$this->is_null($rentalobject_to_contract[$data[0]]) && !$this->is_null($composite_id)) {
@@ -488,7 +504,7 @@
 			}
 			
 			$this->messages[] = "Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
-			$this->save_messages();
+
 			return $contracts;
 		}
 		
@@ -566,7 +582,6 @@
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-                        //$this->messages[] = "Price item '$facilit_id'/'{$admin_price_item->get_id()}' is area based. Area is '{$detail_price_items[$facilit_id]['amount']}'";
 						$price_item->set_area($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
@@ -593,8 +608,8 @@
 			}
 			
 			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
-			$this->save_messages();
-			return true;
+
+            return true;
 		}
 		
 		protected function import_composite_price_items($contracts, $rentalobject_to_contract)
@@ -692,7 +707,7 @@
 			}
 			
 			$this->messages[] = "Imported composite price items. (" . (time() - $start_time) . " seconds)";
-            $this->save_messages();
+
 			return true;
 		}
 		
@@ -738,7 +753,7 @@
 			}
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
-			$this->save_messages();
+
 			return true;
 		}
 		
@@ -888,23 +903,16 @@
             $socontract->clear_last_edited_table();
         }
 
-        public function download() {
-            $property_common = CreateObject('property.bocommon');
-            $output =  
-                    array_merge(
-                    phpgwapi_cache::session_get('rental', 'export_errors'),
-                    phpgwapi_cache::session_get('rental', 'export_warnings'),
-                    phpgwapi_cache::session_get('rental', 'export_messages'));
-            /*echo '<pre>';
-            print_r($output);
-            echo '</pre>';*/
-            $property_common->download($output,array('???'), array('Import log'));
-        }
+        private function log_messages($step) {
+            $msgs = array_merge($this->errors, $this->warnings, $this->messages);
+            $path = phpgw::get_var("facilit_path");
 
-        private function save_messages() {
-            phpgwapi_cache::session_set('rental', 'export_errors', $this->errors);
-            phpgwapi_cache::session_set('rental', 'export_warnings', $this->warnings);
-            phpgwapi_cache::session_set('rental', 'export_messages', $this->messages);
+            if(is_dir($path.'/logs') || mkdir($path.'/logs')) {
+                file_put_contents("$path/logs/$step.log", implode(PHP_EOL, $msgs));
+            }
+            else { // Path not writeable
+
+            }
         }
 	}
 ?>
