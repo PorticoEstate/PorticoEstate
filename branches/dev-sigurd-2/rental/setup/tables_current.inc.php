@@ -52,7 +52,7 @@
 		
 		'rental_contract_responsibility' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
+				'id'            => array('type' => 'auto', 'nullable' => false),
 				'location_id'	=> array('type' => 'int','precision' => '4', 'nullable' => false),
 				'title'			=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'notify_before' => array('type' => 'int','precision' => '4','nullable' => false),
@@ -109,10 +109,10 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-					'phpgw_locations' => array('location_id' => 'location_id'),
-					'rental_billing_term' => array('term_id' => 'id'),
-					'phpgw_accounts' => array('executive_officer' => 'account_id'),
-					'phpgw_accounts' => array('created_by' => 'account_id')
+					'phpgw_locations' =>    array('location_id' => 'location_id'),
+					'rental_billing_term' =>array('term_id' => 'id'),
+					'phpgw_accounts' =>     array('executive_officer' => 'account_id'),
+					'phpgw_accounts' =>     array('created_by' => 'account_id')
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -126,7 +126,7 @@
 			'pk' => array('contract_id','account_id'),
 			'fk' => array(
 				'rental_contract' => array('contract_id' => 'id'),
-				'phpgw_accounts' => array('account_id' => 'account_id')
+				'phpgw_accounts' =>  array('account_id' => 'account_id')
 			),
 			'ix' => array(
 			),
@@ -142,7 +142,7 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-					'rental_contract' => array('contract_id' => 'id'),
+					'rental_contract' =>  array('contract_id' => 'id'),
 					'rental_composite' => array('composite_id' => 'id')
 			),
 			'ix' => array(),
@@ -152,7 +152,7 @@
 		'rental_party' => array(
 				'fd' => array(
 					'id' =>             array('type' => 'auto', 'nullable' => false),
-					'identifier' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
+					'identifier' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
 					'first_name' =>     array('type' => 'varchar','precision' => '255','nullable' => true),
 					'last_name' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'comment' =>        array('type' => 'text'),
@@ -183,13 +183,13 @@
 		'rental_contract_party' => array(
 			'fd' => array(
 				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'party_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'is_payer'	=>	array('type' => 'bool','nullable' => false, 'default' => 'false')
+				'party_id' =>       array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'is_payer'	=>      array('type' => 'bool','nullable' => false, 'default' => 'false')
 			),
 			'pk' => array('contract_id','party_id'),
 			'fk' => array(
-					'rental_contract' => array('contract_id' => 'id'),
-					'rental_party' => array('party_id' => 'id')
+					'rental_contract' =>    array('contract_id' => 'id'),
+					'rental_party' =>       array('party_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -197,11 +197,11 @@
 		// Price list
 		'rental_price_item' => array(
 				'fd' => array(
-					'id' =>	array('type' => 'auto', 'nullable' => false),
-					'title' =>	array('type' => 'varchar','precision' => '255','nullable' => false),
+					'id' =>         array('type' => 'auto', 'nullable' => false),
+					'title' =>      array('type' => 'varchar','precision' => '255','nullable' => false),
 					'agresso_id' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
-					'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true)
+					'price' =>      array('type' => 'float', 'precision' => 4,'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -211,23 +211,23 @@
 		// Price item related to contract
 		'rental_contract_price_item' => array(
 			'fd' => array(
-				'id' =>	array('type' => 'auto', 'nullable' => false),
+				'id' =>             array('type' => 'auto', 'nullable' => false),
 				'price_item_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'title' =>	array('type' => 'varchar','precision' => '255','nullable' => false),
-				'area' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
-				'count' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'agresso_id' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
-				'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
-				'price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'title' =>          array('type' => 'varchar','precision' => '255','nullable' => false),
+				'area' =>           array('type' => 'float', 'precision' => 4,'nullable' => true),
+				'count' =>          array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'agresso_id' => 	array('type' => 'varchar','precision' => '255','nullable' => true),
+				'is_area' =>        array('type' => 'bool','nullable' => false,'default' => 'true'),
+				'price' =>          array('type' => 'float', 'precision' => 4,'nullable' => true),
 				'total_price' =>	array('type' => 'float', 'precision' => 4,'nullable' => true),
 				'date_start' => 	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'date_end' => 		array('type' => 'int', 'precision' => '4', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'rental_price_item' => array('price_item_id' => 'id'),
-				'rental_contract' => array('contract_id' => 'id')
+				'rental_price_item' =>  array('price_item_id' => 'id'),
+				'rental_contract' =>    array('contract_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -376,9 +376,9 @@
 		
 		'rental_contract_types' => array(
 				'fd' => array(
-					'id'			=> array('type' => 'auto', 'nullable' => false),
-					'label'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-					'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'id' =>                 array('type' => 'auto', 'nullable' => false),
+					'label'	=>              array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'responsibility_id' =>  array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array(
