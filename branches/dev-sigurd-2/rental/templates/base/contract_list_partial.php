@@ -55,9 +55,9 @@
 		label: "<?php echo lang('total_price') ?>"
 	},
 	{
-		key: "area",
+		key: "rented_area",
 		formatter: formatArea,
-		label: "<?php echo lang('area_max') ?>"
+		label: "<?php echo lang('area') ?>"
 	},
 	{
 		key: "contract_status",

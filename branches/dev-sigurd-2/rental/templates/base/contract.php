@@ -135,7 +135,6 @@
 					$editors = array(
 						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'area' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'date_start' => 'new YAHOO.widget.DateCellEditor()',
 						'date_end' => 'new YAHOO.widget.DateCellEditor()'
