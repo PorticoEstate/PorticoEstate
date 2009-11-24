@@ -26,9 +26,6 @@
 		protected $messages;
 		protected $warnings;
 		protected $errors;
-
-        // Archive of all messages, warnings and errors that has occured in all previous steps
-        protected $msgarchive;
 		
 		// File system path to import folder on server
 		protected $path;
@@ -38,8 +35,7 @@
 		
 		public $public_functions = array
 		(
-			'index'	=> true,
-            'download' => false
+			'index'	=> true
 		);
 
 		public function __construct()
