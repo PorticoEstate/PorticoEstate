@@ -73,7 +73,7 @@
 				$result = $this->import($path);
 			} else if (phpgw::get_var("cancelsubmit")) {
 				// User cancelled import, clear session variables so we're ready to start over
-				//phpgwapi_cache::session_clear('rental', 'facilit_parties');
+				phpgwapi_cache::session_clear('rental', 'facilit_parties');
 				phpgwapi_cache::session_clear('rental', 'facilit_composites');
 				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
@@ -178,7 +178,7 @@
 			}
 			
 			// We're done with the import, so clear all session variables so we're ready for a new one
-			//phpgwapi_cache::session_clear('rental', 'facilit_parties');
+			phpgwapi_cache::session_clear('rental', 'facilit_parties');
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
@@ -386,7 +386,24 @@
 			$contracts = array();
 			$datalines = $this->getcsvdata($this->path . "/u_Kontrakt.csv");
 			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
-			
+
+            // Old->new ID mapping
+            $contract_types = array(
+                2 => 2, // "Internleie - innleid" -> Innleie
+                3 => 1, // "Internleie - egne" -> Egne
+                4 => 8, // "Tidsbegrenset" -> Annen (ekstern)
+                5 => 4, // "Internleie - KF" -> KF
+                12=> 5, // "Eksten Feste" -> Feste
+                13=> 7, // "Ekstern Leilighet" -> Leilighet
+                14=> 8, // "Ekstern Annen" -> Annen
+                15=> 3, // "Intern - I-kontrakt" -> Inversteringskontrakt
+                17=> NULL, // "Innleie" -> null
+                18=> 8, // "Ekstern KF" -> Annen
+                19=> 8  // "Ekstern I-kontrakt" -> Annen
+            );
+            $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
+
+
 			foreach ($datalines as $data) {
 				$contract = new rental_contract();
 				
@@ -443,25 +460,7 @@
 				
 				// Deres ref.
 				$contract->set_invoice_header($this->decode($data[17]));
-				
 				$contract->set_comment($this->decode($data[18]));
-
-                // Old->new ID mapping
-                $contract_types = array(
-                    2 => 2, // "Internleie - innleid" -> Innleie
-                    3 => 1, // "Internleie - egne" -> Egne
-                    4 => 8, // "Tidsbegrenset" -> Annen (ekstern)
-                    5 => 4, // "Internleie - KF" -> KF
-                    12=> 5, // "Eksten Feste" -> Feste
-                    13=> 7, // "Ekstern Leilighet" -> Leilighet
-                    14=> 8, // "Ekstern Annen" -> Annen
-                    15=> 3, // "Intern - I-kontrakt" -> Inversteringskontrakt
-                    17=> NULL, // "Innleie" -> null
-                    18=> 8, // "Ekstern KF" -> Annen
-                    19=> 8  // "Ekstern I-kontrakt" -> Annen
-                    );
-                $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
-
                 $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
@@ -582,16 +581,25 @@
 					$price_item->set_is_area($admin_price_item->is_area());
                     $price_item->set_price($detail_price_items[$facilit_id]['price']);
                     
-                    //get the contract's area
-                    $contract_rented_area = $contract->get_rented_area();
 					
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
+                        if(in_array($contract->get_contract_type_id(), array(5,7,8))) { // If contract is external
+                            // get area from external contract and save to price element
+                            $price_item->set_area($contract->get_rented_area());
+                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
+                        }
+                        else {
+                            // get area from price element and ave to both contract and pr.el.
+                            $price_item->set_area($detail_price_items[$facilit_id]['amount']);
+                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
+
+                            $contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
+                            $socontract->store($contract);
+                        }
 						//$price_item->set_area($detail_price_items[$facilit_id]['amount']);
-						$price_item->set_area($contract_rented_area);
-						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 					} else {
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
