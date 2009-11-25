@@ -54,8 +54,8 @@ APACHE="httpd-2.2.14"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.0.tar.bz2"
-PHP="php-5.3.0"
+PHPTAR="php-5.3.1.tar.bz2"
+PHP="php-5.3.1"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -157,6 +157,7 @@ export LDFLAGS=-lstdc++ &&\
  --with-pdo-sqlite\
  --with-sqlite\
  --with-pdo-pgsql\
+ --with-pdo-mysql\
  --with-openssl\
  --enable-mbstring\
  --with-mcrypt\

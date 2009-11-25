@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: class.mail_filters.inc.php 17909 2007-01-24 17:26:17Z Caeies $
+	* @version $Id: class.mail_filters.inc.php 18394 2008-02-02 10:34:41Z skwashd $
 	* @internal Based on AngleMail http://www.anglemail.org/
 	*/
 
@@ -64,19 +64,19 @@
 		function distill_filter_args()
 		{
 			// do we have data
-			if  (!isset($GLOBALS['HTTP_POST_VARS'][$this->submit_flag]))
+			if  (!isset($_POST[$this->submit_flag]))
 			{
 				if ($this->debug_level > 0) { echo 'mail_filters: distill_filter_args: NO data submitted<br />'."\r\n"; }
 				return Array();
 			}
 			
 			// look for top level "filter_X" array
-			while(list($key,$value) = each($GLOBALS['HTTP_POST_VARS']))
+			while(list($key,$value) = each($_POST))
 			{
 				if (strstr($key, 'filter_'))
 				{
 					// put the raw data dor this particular filter into a local var
-					$filter_X = $GLOBALS['HTTP_POST_VARS'][$key];
+					$filter_X = $_POST[$key];
 					if ($this->debug_level > 0) { echo 'mail_filters: distill_filter_args: filter_X dump <strong><pre>'; print_r($filter_X); echo "</pre></strong>\r\n"; }
 					
 					// prepare to fill your structured array

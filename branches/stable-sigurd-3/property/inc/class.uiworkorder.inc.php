@@ -998,7 +998,7 @@
 				}
 				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
 				 && $config->config_data['mailnotification'] 
-				 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'] == 1)
+				 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 				{
 					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 					{

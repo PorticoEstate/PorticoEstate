@@ -1200,7 +1200,7 @@
 		@discussion Debug with flag "debug_wrapper_dcom_calls" 
 		@access public
 		*/
-		function phpgw_search($fldball='', $criteria='', $flags='', $display_error = true)
+		function phpgw_search($fldball='', $criteria='', $flags=0, $display_error = true)
 		{
 			if ($this->debug_wrapper_dcom_calls > 0) { $this->dbug->out('mail_msg(_wrappers): phpgw_search ('.__LINE__.'): ENTERING, $fldball ['.serialize($fldball).']; $criteria ['.$criteria.']; $flags['.serialize($flags).'] <br />'); } 
 			$acctnum = (int)$fldball['acctnum'];
@@ -1224,7 +1224,7 @@
 			$fake_fldball['folder'] = $folder;
 			$this->ensure_stream_and_folder($fake_fldball, 'phpgw_search LINE '.__LINE__, $display_error);
 			$mailsvr_stream = $this->get_arg_value('mailsvr_stream', $acctnum);
-			
+
 			// now we have the stream and the desired folder open
 			if ($this->debug_wrapper_dcom_calls > 0) { $this->dbug->out('mail_msg(_wrappers): phpgw_search ('.__LINE__.'): calling $GLOBALS[phpgw_dcom_'.$acctnum.']->dcom->i_search($mailsvr_stream['.$mailsvr_stream.'], $criteria['.$criteria.'],$flags['.serialize($flags).']) <br />'); } 
 			$retval = $GLOBALS['phpgw_dcom_'.$acctnum]->dcom->i_search($mailsvr_stream,$criteria,$flags);
@@ -6019,4 +6019,3 @@ Array
 		
 		
 	}  // end class mail_msg_wrappers
-?>
