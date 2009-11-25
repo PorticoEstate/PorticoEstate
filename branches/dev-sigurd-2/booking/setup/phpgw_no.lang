@@ -378,3 +378,8 @@ Edit resource	booking	no	Rediger ressurs
 Edit Group	booking	no	Rediger gruppe
 Select Type	booking	no	Velg type
 Customer number	booking	no	Kundenummer
+Send	booking	no	Send
+Your application has now been registered and a confirmation email has been sent to you.	booking	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
+A Case officer will review your application as soon as possible.	booking	no	En saksbehandler vil behandle søknaden så fort som mulig.
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
+customer_organization_number is invalid	booking	no	Organisasjonsnummer er ugyldig

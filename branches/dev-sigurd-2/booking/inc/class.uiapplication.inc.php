@@ -363,6 +363,7 @@
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
+			$application['audience_json'] = json_encode($audience['results']);
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';

@@ -4,6 +4,7 @@ YAHOO.booking.RegulationsTable = function() {
 	this.container = 'regulation_documents';
 	this.selection = [];
 	this.doAcceptAll = false;
+	this.audience = [];
 };
 
 YAHOO.booking.RegulationsTable.prototype.update = function() {
@@ -32,6 +33,10 @@ YAHOO.booking.RegulationsTable.prototype.setResources = function(resources) {
 	this.resources = resources || [];
 };
 
+YAHOO.booking.RegulationsTable.prototype.setAudience = function(audience) {
+	this.audience = audience || [];
+};
+
 YAHOO.booking.RegulationsTable.prototype.setSelection = function(selection) {
 	this.selection = selection || [];
 };
@@ -52,6 +57,12 @@ populateResourceTable = function(building_id, selection) {
 		additional_fields: [{key: 'type', label: lang['Resource Type']}], 
 		onSelectionChanged: function(selectedItems) { regulationsTable.setResources(selectedItems); regulationsTable.update(); } 
 	 });
+}
+
+populateAudienceTable = function(building_id, selection) {
+    //YAHOO.booking.checkboxTableHelper('audience_container', 'index.php?menuaction=booking.uiaudience.index_json&sort=name&phpgw_return_as=json&',
+    YAHOO.booking.checkboxTableHelper('audience_container', 'index.php?menuaction=booking.uiaudience.index&phpgw_return_as=json',
+    'audience[]', selection);
 }
 
 removeDateRow = function(e) {
@@ -80,10 +91,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
     var building_id = Dom.get('field_building_id').value;
 	
     if(building_id) {
-      populateResourceTable(building_id, YAHOO.booking.initialSelection);
+		populateResourceTable(building_id, YAHOO.booking.initialSelection);
 		regulationsTable.setBuildingId(building_id);
 		regulationsTable.setResources(YAHOO.booking.initialSelection);
 		regulationsTable.setSelection(YAHOO.booking.initialDocumentSelection);
+		regulationsTable.setAudience(YAHOO.booking.initialAudience);
 		
 		if (YAHOO.booking.initialAcceptAllTerms) {
 			regulationsTable.checkAll();
@@ -91,6 +103,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		
 		regulationsTable.update();
     }
+	populateAudienceTable(building_id, YAHOO.booking.initialAudience);
+
     var ac = YAHOO.booking.autocompleteHelper('index.php?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&', 
                                               'field_building_name', 'field_building_id', 'building_container');
     // Update the resource table as soon a new building is selected

@@ -77,19 +77,7 @@
 			<div class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></div>
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 			<dd>
-				<ul>
-					<xsl:for-each select="audience">
-						<li>
-							<input type="checkbox" name="audience[]">
-								<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-								<xsl:if test="../application/audience=id">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:if>
-							</input>
-							<label><xsl:value-of select="name"/></label>
-						</li>
-					</xsl:for-each>
-				</ul>
+				<div id="audience_container">&nbsp;</div>
 			</dd>
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
 			<dd>
@@ -163,6 +151,7 @@
 		YAHOO.booking.initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		YAHOO.booking.initialAcceptAllTerms = false;
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
+		YAHOO.booking.initialAudience = <xsl:value-of select="application/audience_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
 	</script>
 </xsl:template>

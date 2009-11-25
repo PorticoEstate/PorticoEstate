@@ -105,7 +105,6 @@ jan	bookingfrontend	no	januar
 jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
 last modified	bookingfrontend	no	Sist endret
-joading...	bookingfrontend	no	Laster...
 location	bookingfrontend	no	Lokale
 log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
@@ -119,7 +118,7 @@ name	bookingfrontend	no	Navn
 new	bookingfrontend	no	Ny
 new activity	bookingfrontend	no	Ny aktivitet
 new age group	bookingfrontend	no	Ny aldersgruppe
-new allocation	bookingfrontend	no	Ny tildelning
+new allocation	bookingfrontend	no	Ny tildeling
 new application	bookingfrontend	no	Ny søknad
 new audience group	bookingfrontend	no	Ny målgruppe
 new booking	bookingfrontend	no	Ny booking
@@ -139,7 +138,7 @@ new season permission	bookingfrontend	no	Nye rettigheter sesong
 next	bookingfrontend	no	Neste
 next week	bookingfrontend	no	Neste uke
 no Data.	bookingfrontend	no	Ingen treff.
-no description yet	bookingfrontend	no	Beskrivelse manglar
+no description yet	bookingfrontend	no	Beskrivelse mangler
 no parents	bookingfrontend	no	Ingen overordnet
 no records found.	bookingfrontend	no	Ingen treff.
 no records found.	bookingfrontend	no	Ingen funnet!
@@ -261,3 +260,5 @@ Go back	bookingfrontend	no	Tilbake
 Your application has now been registered and a confirmation email has been sent to you.	bookingfrontend	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	bookingfrontend	no	En saksbehandler vil behandle søknaden så fort som mulig.
 Loading...	bookingfrontend	no	Laster...
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
+customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
