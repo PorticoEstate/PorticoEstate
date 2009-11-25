@@ -32,7 +32,7 @@ abstract class rental_socommon
 		}
 		else if($type == 'float')
 		{
-			return floatval($value);
+			return (float) str_replace(',', '.', $value);
 		}
 		else if($type == 'field')
 		{
