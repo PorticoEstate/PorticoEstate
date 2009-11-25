@@ -298,24 +298,25 @@
 			$jst->pparse('output', 'search_js');
 
 			# have to loop for selected folders
-			for ($j=0;$j<count($_POST['folder_list']);$j++) 
+			$ext_folder_list = phpgw::get_var('folder_list', 'array', 'POST', array());
+			for ($j=0;$j<count($ext_folder_list);$j++) 
 			{
 				$search_vars = array ();
 				$imap_search_str = '';
 
 				# Get folder to search in
-				$search_vars['fldball']['folder'] = $_POST['folder_list'][$j];
+				$search_vars['fldball']['folder'] = $ext_folder_list[$j];
 				// REMEMBER what account we are searching
 				$search_vars['fldball']['acctnum'] = $GLOBALS['phpgw']->msg->get_acctnum();
 
 				# Get and process the textbox values
-				$search_vars['str']['SUBJECT'] = trim($_POST['search_subject']);
-				$search_vars['str']['BODY'] = trim($_POST['search_body']);
-				$search_vars['str']['FROM'] = trim($_POST['search_from']);
-				$search_vars['str']['TO'] = trim($_POST['search_to']);
-				$search_vars['str']['CC'] = trim($_POST['search_cc']);
-				$search_vars['str']['BCC'] = trim($_POST['search_bcc']);
-				$search_vars['str']['KEYWORD'] = trim($_POST['search_keyword']);
+				$search_vars['str']['SUBJECT'] = trim(phpgw::get_var('search_subject'));
+				$search_vars['str']['BODY'] = trim(phpgw::get_var('search_body'));
+				$search_vars['str']['FROM'] = trim(phpgw::get_var('search_from'));
+				$search_vars['str']['TO'] = trim(phpgw::get_var('search_to'));
+				$search_vars['str']['CC'] = trim(phpgw::get_var('search_cc'));
+				$search_vars['str']['BCC'] = trim(phpgw::get_var('search_bcc'));
+				$search_vars['str']['KEYWORD'] = trim(phpgw::get_var('search_keyword'));
 				while (list($name, $value) = each($search_vars['str']))
 				{
 					if ($value != '')
@@ -328,7 +329,7 @@
 				# Process the flags
 				while (list($name, $value) = each($this->flags_array))
 				{
-					if ($_POST[$name] == "on")
+					if (phpgw::get_var($name) == "on")
 					{
 						$temp = explode('_', $name);
 						$imap_search_str .= strtoupper($temp[1]).' ';
@@ -337,29 +338,29 @@
 				reset($this->flags_array);
 		
 				# Process dates
-				if ($_POST['date_on'] == "on")
+				if (phpgw::get_var('date_on') == "on")
 				{
-					$imap_search_str .= "ON \"".$_POST['date_on_month'].'/';
-					$imap_search_str .= $_POST['date_on_day'].'/';
-					$imap_search_str .= $_POST['date_on_year'];
+					$imap_search_str .= "ON \"".phpgw::get_var('date_on_month').'/';
+					$imap_search_str .= phpgw::get_var('date_on_day').'/';
+					$imap_search_str .= phpgw::get_var('date_on_year');
 					$imap_search_str .= '" ';
 				}
-				if ($_POST['date_before'] == "on")
+				if (phpgw::get_var('date_before') == "on")
 				{
-					$imap_search_str .= "BEFORE \"".$_POST['date_before_month'].'/';
-					$imap_search_str .= $_POST['date_before_day'].'/';
-					$imap_search_str .= $_POST['date_before_year'];
+					$imap_search_str .= "BEFORE \"".phpgw::get_var('date_before_month').'/';
+					$imap_search_str .= phpgw::get_var('date_before_day').'/';
+					$imap_search_str .= phpgw::get_var('date_before_year');
 					$imap_search_str .= '" ';
 				}
-				if ($_POST['date_after'] == "on")
+				if (phpgw::get_var('date_after') == "on")
 				{
-					$imap_search_str .= "SINCE \"".$_POST['date_after_month'].'/';
-					$imap_search_str .= $_POST['date_after_day'].'/';
-					$imap_search_str .= $_POST['date_after_year'];
+					$imap_search_str .= "SINCE \"".phpgw::get_var('date_after_month').'/';
+					$imap_search_str .= phpgw::get_var('date_after_day').'/';
+					$imap_search_str .= phpgw::get_var('date_after_year');
 					$imap_search_str .= '" ';
 				}
 		
-				$imap_search_str = rtrim($imap_search_str);			
+				$imap_search_str = rtrim($imap_search_str);
 				$search_results = $GLOBALS['phpgw']->msg->phpgw_search($search_vars['fldball'], $imap_search_str, 0);
 
 				if (is_array($search_results))

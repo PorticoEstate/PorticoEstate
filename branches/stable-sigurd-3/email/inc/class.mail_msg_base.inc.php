@@ -4437,7 +4437,7 @@ HTML;
 		*/
 		function ascii2utf($text = '')
 		{	
-			if ($text == utf8_encode($text))
+			if ((function_exists('mb_detect_encoding') && mb_detect_encoding($text) == 'UTF-8'))
 			{
 				return $text;
 			}
