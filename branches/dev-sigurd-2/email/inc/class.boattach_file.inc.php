@@ -116,8 +116,8 @@
 		{
 			if ($this->debug > 2) { echo 'emai.boattach_file.attach ('.__LINE__.'): $GLOBALS[phpgw]->msg->ref_POST data DUMP<pre>'; print_r($GLOBALS['phpgw']->msg->ref_POST);  echo '</pre>'; }
 			
-			$this->control_data['action'] = htmlentities(get_var('action', array('POST') ) );
-			$this->control_data['delete'] = get_var('delete', array('POST') );
+			$this->control_data['action'] = htmlentities(phpgw::get_var('action', 'string', 'POST' ) );
+			$this->control_data['delete'] = phpgw::get_var('delete', 'array', 'POST' );
 			
 			if ($this->debug > 2) { echo 'emai.boattach_file.attach ('.__LINE__.'): $this->control_data DUMP<pre>'; print_r($this->control_data);  echo '</pre>'; }
 		}
