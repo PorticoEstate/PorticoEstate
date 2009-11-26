@@ -6,8 +6,8 @@
 
     <form action="" method="POST">
 		<input type="hidden" name="step" value="{step}"/>
-		<input type="hidden" name="season" value="{season}"/>
-		<input type="hidden" name="building" value="{building}"/>
+		<input type="hidden" name="season_id" value="{season}"/>
+		<input type="hidden" name="building_id" value="{building}"/>
 		<input type="hidden" name="mailbody" value="{mailbody}"/>
 		<input type="hidden" name="mailsubject" value="{mailsubject}"/>
 

@@ -14,26 +14,12 @@
 		{
 			parent::__construct();
 			
-			$this->building_bo = CreateObject('booking.bobuilding');
-			$this->season_bo = CreateObject('booking.boseason');
-			$this->bo = CreateObject('booking.bobooking');
-			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->agegroup_bo = CreateObject('booking.boagegroup');
-			$this->audience_bo = CreateObject('booking.boaudience');
-			$this->group_bo    = CreateObject('booking.bogroup');
 			self::set_active_menu('booking::mailing');
-			$this->fields = array('allocation_id', 'activity_id', 'resources',
-								  'building_id', 'building_name', 'application_id',
-								  'season_id', 'season_name', 
-			                      'group_id', 'group_name', 
-			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder');
 		}
 		
 		public function index()
 		{
 			$errors = array();
-			$buildings = $this->building_bo->read();
-			$seasons = $this->season_bo->read();
 			$cancel_link = self::link(array('menuaction' => 'booking.uisend_email.index'));
 			$step = 1;
 
@@ -41,8 +27,8 @@
 			{
 				$step = phpgw::get_var('step', 'POST');
 				$step++;
-				$building =  phpgw::get_var('building', 'POST');
-				$season =  phpgw::get_var('season', 'POST');
+				$building =  phpgw::get_var('building_id', 'POST');
+				$season =  phpgw::get_var('season_id', 'POST');
 				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
 				$mailbody =  phpgw::get_var('mailbody', 'POST');
 				$contacts = null;
@@ -73,11 +59,10 @@
 			}
 
 			$this->flash_form_errors($errors);
+			self::add_javascript('booking', 'booking', 'email_send.js');
 			if ($step == 1)
 				self::render_template('email_index', 
-					array('buildings' => $buildings['results'], 
-					'seasons' => $seasons['results'], 
-					'building' => $building,
+					array('building' => $building,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
 					'mailbody' => $mailbody,

@@ -128,6 +128,7 @@ phpgw::import_class('booking.uicommon');
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export_file.show");
 			foreach($export_files["results"] as &$export_file) {
 				$export_file['created_on'] = pretty_timestamp(substr($export_file['created_on'], 0, 19));
+				$export_file['type'] = lang($export_file['type']);
 				
 				$export_file['download'] = array(
 					'label' => lang('Download'), 
@@ -142,6 +143,7 @@ phpgw::import_class('booking.uicommon');
 		public function show()
 		{
 			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$export_file['type'] = lang($export_file['type']);
 			$this->add_default_display_data($export_file);
 			self::render_template('completed_reservation_export_file', array('export_file' => $export_file));
 		}

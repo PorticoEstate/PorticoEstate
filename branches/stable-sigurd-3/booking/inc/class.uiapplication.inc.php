@@ -340,8 +340,8 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 					$this->bo->send_notification($application, false);
-					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.\n".
-									  "A Case officer will review your application as soon as possible.\n\n"));
+					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
+								 lang("A Case officer will review your application as soon as possible."));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
@@ -363,6 +363,7 @@
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
+			$application['audience_json'] = json_encode($audience['results']);
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';

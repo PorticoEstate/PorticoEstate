@@ -3,14 +3,14 @@
 define('JAVA_BIN', '/usr/bin/java');
 
 // path to JasperEngine.class
-define('JASPER_BIN', '/var/www/bk/dev-sigurd-2/booking/jasper/bin/');
+define('JASPER_BIN', PHPGW_SERVER_ROOT.'/booking/jasper/bin/');
 
 # path to the Jasper libraries
 # N.B. should always end with a /
-define ('JASPER_LIBS', '/var/www/bk/dev-sigurd-2/booking/jasper/lib/');
+define ('JASPER_LIBS', PHPGW_SERVER_ROOT.'/booking/jasper/lib/');
 
 # path to the Jasper config file (containing the connection and report-list)
-define ('JASPER_CONFIG', '/var/www/bk/dev-sigurd-2/booking/jasper/jasper_config.xml');
+define ('JASPER_CONFIG', PHPGW_SERVER_ROOT.'/booking/jasper/jasper_config.xml');
 
 
 function jasper_wrapper($parameters, $output_type, $report_name, &$err) 

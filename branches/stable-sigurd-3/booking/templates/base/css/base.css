@@ -185,6 +185,7 @@ dl.proplist-col dd.address {
 #agegroup {
     background: #eee;
     white-space: nowrap;
+	border: 1px solid #7F7F7F;
 }
 #agegroup, #agegroup td, #agegroup th { width: 1%; }
 #agegroup td, #agegroup th { padding: .1em .3em;}

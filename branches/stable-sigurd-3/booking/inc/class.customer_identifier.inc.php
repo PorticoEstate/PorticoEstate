@@ -4,7 +4,7 @@
 	class booking_customer_identifier {
 		const TYPE_SSN = 'ssn';
 		const TYPE_ORGANIZATION_NUMBER = 'organization_number';
-		
+
 		protected $field_prefix='customer_';
 		protected $identifier_type_field;
 		
@@ -137,7 +137,13 @@
 					if (all_cust_fields[field_type] == undefined) { return; }
 
 					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
+					if (all_cust_fields[field_type].name == 'customer_ssn') {
+						all_cust_fields[field_type].value = '6 siffer (DDMMÅÅ) eller 11 siffer';
+					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
+						all_cust_fields[field_type].value = '9 siffer';
+					}
 					all_cust_fields[field_type].focus();
+					all_cust_fields[field_type].select();
 				}
 				
 				Event.addListener(select_input, 'change', function(e) {

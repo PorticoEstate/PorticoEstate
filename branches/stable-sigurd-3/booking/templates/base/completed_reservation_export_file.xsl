@@ -10,7 +10,7 @@
 		
 		<dl class="proplist-col">
 			<dt><xsl:value-of select="php:function('lang', 'Type')" /></dt>
-			<dd><xsl:value-of select="php:function('lang', string(export_file/type))"/></dd>
+			<dd><xsl:value-of select="export_file/type"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Total Items')" /></dt>
 			<dd><xsl:value-of select="export_file/total_items"/></dd>

@@ -44,9 +44,7 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 };
 
 YAHOO.booking.showBookingInfo = function(booking) {
-	var overlay = new YAHOO.widget.Overlay("overlay-info", { xy:[300,300],
-														visible:true,
-														width:"400px" } );
+	var overlay = new YAHOO.widget.Overlay("overlay-info", { fixedcenter:true, visible:true, width:"400px" } );
 	var callback = {
 		success : function(o) {
 			overlay.setBody(o.responseText);
