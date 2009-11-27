@@ -2,7 +2,7 @@
 /**
  * Helper function for the terminally lazy
  *
- * @version $Id: simple_call.php 11 2009-03-17 09:17:49Z ggiunta $
+ * @version $Id$
  * @copyright (c) 2006-2009 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  */

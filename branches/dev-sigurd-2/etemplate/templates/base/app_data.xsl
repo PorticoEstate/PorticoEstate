@@ -1,4 +1,4 @@
-<!-- $Id: app_data.xsl 17915 2007-02-04 13:53:48Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template match="phpgw">
 	<xsl:variable name="webserver_url"><xsl:value-of select="webserver_url"/></xsl:variable>

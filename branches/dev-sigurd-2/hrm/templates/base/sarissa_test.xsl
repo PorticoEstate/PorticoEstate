@@ -1,4 +1,4 @@
-<!-- $Id: sarissa_test.xsl 16988 2006-08-22 08:38:11Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:apply-templates select="list"/>

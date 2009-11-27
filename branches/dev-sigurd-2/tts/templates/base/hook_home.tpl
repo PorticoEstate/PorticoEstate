@@ -1,4 +1,4 @@
-<!-- $Id: hook_home.tpl 15621 2005-01-11 15:00:19Z fipsfuchs $ -->
+<!-- $Id$ -->
 <!-- BEGIN tts_list -->
   <table width="100%" cellspacing="1" cellpadding="1" border="0">
    <tr bgcolor="{tts_head_bgcolor}">

@@ -1,4 +1,4 @@
-<!-- $Id: search.body.tpl 16894 2006-07-23 06:32:28Z skwashd $ -->
+<!-- $Id$ -->
 <table width="100%" border=0>
 <tr><td>
 

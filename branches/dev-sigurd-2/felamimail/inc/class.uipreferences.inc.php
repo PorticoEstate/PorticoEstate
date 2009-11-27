@@ -12,7 +12,7 @@
 	* option) any later version.                                                *
 	\***************************************************************************/
 
-	/* $Id: class.uipreferences.inc.php 25608 2008-06-11 07:15:38Z leithoff $ */
+	/* $Id$ */
 
 	phpgw::import_class('felamimail.html');	
 	require_once(PHPGW_INCLUDE_ROOT.'/felamimail/inc/class.felamimail_bosignatures.inc.php');

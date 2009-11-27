@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.cyrusimap.inc.php 23158 2006-12-31 12:00:54Z lkneschke $ */
+	/* $Id$ */
 	
 	include_once(PHPGW_SERVER_ROOT."/emailadmin/inc/class.defaultimap.inc.php");
 	

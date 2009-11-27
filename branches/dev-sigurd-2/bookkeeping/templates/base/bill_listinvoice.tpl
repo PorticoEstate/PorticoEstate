@@ -1,4 +1,4 @@
-<!-- $Id: bill_listinvoice.tpl 16496 2006-03-12 10:48:44Z skwashd $ -->
+<!-- $Id$ -->
 
 {app_header}
 

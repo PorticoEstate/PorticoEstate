@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.uifelamimail.inc.php 25573 2008-06-06 07:19:46Z leithoff $ */
+	/* $Id$ */
 
 	class uifelamimail
 	{

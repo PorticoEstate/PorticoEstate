@@ -1,4 +1,4 @@
-<!-- $Id: contact_form.xsl 2588 2009-04-14 11:00:02Z sigurd $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="contact_form">
 		<xsl:apply-templates select="contact_data"/>

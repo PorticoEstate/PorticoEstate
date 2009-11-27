@@ -7,7 +7,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: functions.inc.php 17039 2006-08-30 16:27:50Z skwashd $
+	* @version $Id$
 	* @internal Based on Aeromail http://the.cushman.net/
 	*/
 	

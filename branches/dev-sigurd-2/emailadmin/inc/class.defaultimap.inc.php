@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.defaultimap.inc.php 25643 2008-06-19 11:51:53Z leithoff $ */
+	/* $Id$ */
 
 	require_once PHPGW_INCLUDE_ROOT.'/felamimail/inc/egw-pear/Net/IMAP.php';
 

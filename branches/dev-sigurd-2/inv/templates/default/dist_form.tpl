@@ -1,4 +1,4 @@
-<!-- $Id: dist_form.tpl 9969 2002-04-15 23:03:39Z ceb $ -->
+<!-- $Id$ -->
 
 {app_header}
 

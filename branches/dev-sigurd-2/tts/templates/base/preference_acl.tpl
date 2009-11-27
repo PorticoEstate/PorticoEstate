@@ -1,4 +1,4 @@
-<!-- $Id: preference_acl.tpl 15621 2005-01-11 15:00:19Z fipsfuchs $ -->
+<!-- $Id$ -->
 {errors}
 {title}
 <table border="0" align="center" width="70%">

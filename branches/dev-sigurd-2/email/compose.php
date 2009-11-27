@@ -9,7 +9,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: compose.php 17706 2006-12-17 11:21:02Z sigurdne $
+	* @version $Id$
 	* @internal Based on Aeromail http://the.cushman.net/
 	*/
 	

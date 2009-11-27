@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.defaultsmtp.inc.php 22738 2006-10-26 09:46:39Z lkneschke $ */
+	/* $Id$ */
 
 	class defaultsmtp
 	{

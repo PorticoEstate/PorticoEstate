@@ -1,4 +1,4 @@
-<!-- $Id: no_access.xsl 16753 2006-05-23 13:02:42Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template match="no_access">
 		<xsl:choose>

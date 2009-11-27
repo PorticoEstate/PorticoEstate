@@ -6,7 +6,7 @@
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
  * @package get
  * @subpackage office
- * @version $Id: ged_common_functions.inc.php 18466 2008-02-02 13:52:39Z maat $
+ * @version $Id$
  */
 
 /**

@@ -1,4 +1,4 @@
-<!-- $Id: head.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN head -->
 {row}<br />
 <!-- END head -->

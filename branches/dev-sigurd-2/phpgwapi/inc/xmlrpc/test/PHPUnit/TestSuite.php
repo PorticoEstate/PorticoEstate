@@ -15,7 +15,7 @@
  * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @copyright  2002-2005 Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: TestSuite.php 44 2009-08-04 21:33:50Z ggiunta $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/PHPUnit
  * @since      File available since Release 1.0.0
  */

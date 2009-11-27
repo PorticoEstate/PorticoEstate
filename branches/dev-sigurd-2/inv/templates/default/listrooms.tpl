@@ -1,4 +1,4 @@
-<!-- $Id: listrooms.tpl 5496 2001-06-05 01:09:33Z bettina $ -->
+<!-- $Id$ -->
 <p><b>&nbsp;&nbsp;&nbsp;{title_action}</b><br>
 <hr noshade width="98%" align="center" size="1">
 <center>

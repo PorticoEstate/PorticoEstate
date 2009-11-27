@@ -1,4 +1,4 @@
-<!-- $Id: edit.xsl 15719 2005-02-11 00:29:41Z ceb $ -->
+<!-- $Id$ -->
 
 	<xsl:template match="edit">
 		<form method="post">

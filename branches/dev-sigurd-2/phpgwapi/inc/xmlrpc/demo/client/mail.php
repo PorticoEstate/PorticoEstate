@@ -66,6 +66,6 @@ Body <textarea rows="7" cols="60" name="mailmsg">Your message here</textarea><br
 <input type="Submit" value="Send"/>
 </form>
 <hr/>
-<em>$Id: mail.php 2 2009-03-16 20:22:51Z ggiunta $</em>
+<em>$Id$</em>
 </body>
 </html>

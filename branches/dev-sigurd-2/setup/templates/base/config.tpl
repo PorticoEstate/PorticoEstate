@@ -1,4 +1,4 @@
-<!-- $Id: config.tpl 17321 2006-10-03 14:05:03Z Caeies $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN header -->
  

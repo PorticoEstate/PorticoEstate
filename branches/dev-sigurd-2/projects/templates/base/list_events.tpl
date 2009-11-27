@@ -1,4 +1,4 @@
-<!-- $Id: list_events.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 {message}
 <table width="60%" border="0" cellpadding="2" cellspacing="2" align="center">
 	<tr bgcolor="{th_bg}">

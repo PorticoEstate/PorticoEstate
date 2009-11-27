@@ -1,4 +1,4 @@
-<!-- $Id: search_field.xsl 15664 2005-01-18 23:51:15Z ceb $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="search_field">
 		<xsl:apply-templates select="search_data"/>

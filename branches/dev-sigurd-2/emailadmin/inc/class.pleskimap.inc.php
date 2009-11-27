@@ -27,7 +27,7 @@
 * under the terms of the GNU General Public License as published by the     *
 * Free Software Foundation; version 2 of the License.                       *
 \***************************************************************************/
-/* $Id: class.pleskimap.inc.php 24219 2007-06-28 05:59:34Z ralfbecker $ */
+/* $Id$ */
 
 include_once(PHPGW_SERVER_ROOT."/emailadmin/inc/class.defaultimap.inc.php");
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: controller.php 11 2009-03-17 09:17:49Z ggiunta $
+ * @version $Id$
  * @author Gaetano Giunta
  * @copyright (C) 2005-2009 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt

@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.socaching.inc.php 22548 2006-09-29 04:25:20Z lkneschke $ */
+	/* $Id$ */
 
 	class socaching
 	{

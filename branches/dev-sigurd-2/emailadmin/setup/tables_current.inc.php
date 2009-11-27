@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
  	\**************************************************************************/
 
-	/* $Id: tables_current.inc.php 25549 2008-06-04 07:00:28Z leithoff $ */
+	/* $Id$ */
 
 	$phpgw_baseline = array(
 		'egw_emailadmin' => array(

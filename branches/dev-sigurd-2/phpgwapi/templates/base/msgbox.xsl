@@ -1,4 +1,4 @@
-<!-- $Id: msgbox.xsl 16444 2006-02-22 10:10:26Z skwashd $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="msgbox">
 		<xsl:if test="msgbox_data/msgbox_text != ''">

@@ -33,7 +33,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.		    *
 	\***************************************************************************/
 
-	/* $Id: class.uiwidgets.inc.php 25550 2008-06-04 07:02:41Z leithoff $ */
+	/* $Id$ */
 
 	phpgw::import_class('felamimail.html');	
 	/**

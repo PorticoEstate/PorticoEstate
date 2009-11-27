@@ -1,4 +1,4 @@
-<!-- $Id: countries.xsl 16652 2006-04-13 22:41:11Z ceb $ -->
+<!-- $Id$ -->
 
 <xsl:template match="country_filter">
 	<xsl:variable name="select_url"><xsl:value-of select="select_url"/></xsl:variable>

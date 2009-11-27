@@ -1,4 +1,4 @@
-<!-- $Id: header.tpl 16901 2006-07-23 08:01:18Z skwashd $ -->
+<!-- $Id$ -->
 <p>
 <table border="0" width=100%>
 <tr>

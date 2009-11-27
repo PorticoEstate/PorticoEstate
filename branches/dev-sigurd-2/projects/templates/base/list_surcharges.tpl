@@ -1,4 +1,4 @@
-<!-- $Id: list_surcharges.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <center>
 <table border="0" cellpadding="2" cellspacing="2" align="center">
 	<tr height="5"><td></td></tr>

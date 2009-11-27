@@ -12,7 +12,7 @@
 	* option) any later version.                                                *
 	\***************************************************************************/
 
-	/* $Id: class.bofelamimail.inc.php 25705 2008-07-08 12:24:33Z leithoff $ */
+	/* $Id$ */
 
 	/**
 	* the core logic of FeLaMiMail

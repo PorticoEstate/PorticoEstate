@@ -1,4 +1,4 @@
-<!-- $Id: header.tpl 16496 2006-03-12 10:48:44Z skwashd $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN projects_header -->
 

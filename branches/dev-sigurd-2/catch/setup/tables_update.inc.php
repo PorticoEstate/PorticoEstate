@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package catch
 	* @subpackage setup
- 	* @version $Id: tables_update.inc.php 1956 2008-12-14 14:10:10Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

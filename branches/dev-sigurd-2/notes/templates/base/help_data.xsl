@@ -1,4 +1,4 @@
-<!-- $Id: help_data.xsl 18363 2007-11-30 13:25:06Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="help_data">
 		<xsl:apply-templates select="xhelp"/>

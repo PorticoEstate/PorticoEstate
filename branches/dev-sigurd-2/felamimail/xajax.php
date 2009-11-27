@@ -9,7 +9,7 @@
 	*  Free Software Foundation; either version 2 of the License.              *
 	\**************************************************************************/
 
-	/* $Id: xajax.php 22585 2006-04-06 05:09:48Z ralfbecker $ */
+	/* $Id$ */
 
 	require_once('./inc/xajax.inc.php');
 

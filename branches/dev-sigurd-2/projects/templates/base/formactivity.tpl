@@ -1,4 +1,4 @@
-<!-- $Id: formactivity.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <center>
 {pref_message}<br>{message}
 <table width="75%" border="0" cellspacing="2" cellpadding="2">

@@ -1,4 +1,4 @@
-<!-- $Id: form.tpl,v 1.6 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <script language="JavaScript">
 	var parent_project_members = new Array();
 	{parent_project_members}

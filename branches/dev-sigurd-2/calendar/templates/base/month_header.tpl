@@ -1,4 +1,4 @@
-<!-- $Id: month_header.tpl 17655 2006-12-08 19:55:56Z sigurdne $ -->
+<!-- $Id$ -->
 <!-- BEGIN monthly_header -->
  <tr colspan="{cols}" width="{col_width}%">
 {column_header}</tr>

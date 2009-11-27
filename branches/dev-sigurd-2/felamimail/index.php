@@ -11,7 +11,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: index.php 18876 2005-07-23 15:52:49Z ralfbecker $ */
+	/* $Id$ */
 
 	// this is to get css inclusion working
 	$_GET['menuaction']	= 'felamimail.uifelamimail.viewMainScreen';

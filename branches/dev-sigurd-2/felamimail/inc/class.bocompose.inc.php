@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.bocompose.inc.php 25705 2008-07-08 12:24:33Z leithoff $ */
+	/* $Id$ */
 
 	class bocompose
 	{

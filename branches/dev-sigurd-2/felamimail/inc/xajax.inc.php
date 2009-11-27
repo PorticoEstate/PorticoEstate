@@ -29,7 +29,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
  * @package xajax
- * @version $Id: xajax.inc.php 23068 2006-12-19 07:12:49Z ralfbecker $
+ * @version $Id$
  * @copyright Copyright (c) 2005-2006  by Jared White & J. Max Wilson
  * @license http://www.gnu.org/copyleft/lesser.html#SEC3 LGPL License
  */

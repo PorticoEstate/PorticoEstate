@@ -29,6 +29,6 @@
 	}
 ?>
 <hr/>
-<em>$Id: which.php 2 2009-03-16 20:22:51Z ggiunta $</em>
+<em>$Id$</em>
 </body>
 </html>

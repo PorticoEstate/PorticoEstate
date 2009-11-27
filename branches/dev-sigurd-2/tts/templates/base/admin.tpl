@@ -1,4 +1,4 @@
-<!-- $Id: admin.tpl 15621 2005-01-11 15:00:19Z fipsfuchs $ -->
+<!-- $Id$ -->
 <!-- BEGIN tts_select_options -->
     <option value="{tts_optionvalue}" {tts_optionselected}>{tts_optionname}</option>
 <!-- END tts_select_options -->

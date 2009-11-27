@@ -8,7 +8,7 @@
   * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
   * @package demo
   * @subpackage demo
-   * @version $Id: class.uinewdesign.inc.php 1433 2008-07-16 12:02:46Z janaage@hikt.no $
+   * @version $Id$
   */
 
   phpgw::import_class('phpgwapi.yui');

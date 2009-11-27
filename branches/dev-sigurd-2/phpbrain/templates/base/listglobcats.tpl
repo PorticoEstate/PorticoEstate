@@ -1,4 +1,4 @@
-<!-- $Id: listglobcats.tpl 16714 2006-05-09 05:49:38Z skwashd $ -->
+<!-- $Id$ -->
 
 	<center>
 		<table border="0" cellspacing="2" cellpadding="2">

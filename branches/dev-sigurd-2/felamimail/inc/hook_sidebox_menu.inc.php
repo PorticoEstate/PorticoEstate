@@ -11,7 +11,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 	
-	/* $Id: hook_sidebox_menu.inc.php 25550 2008-06-04 07:02:41Z leithoff $ */
+	/* $Id$ */
 
  /*
 	This hookfile is for generating an app-specific side menu used in the idots

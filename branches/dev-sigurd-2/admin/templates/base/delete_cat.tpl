@@ -1,4 +1,4 @@
-<!-- $Id: delete_cat.tpl 15566 2004-12-30 07:38:14Z skwashd $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN form -->
 <br>

@@ -4,7 +4,7 @@
 	* @copyright Copyright (C) 2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package notes
-	* @version $Id: class.examples.inc.php 1175 2008-06-08 21:14:00Z sigurd $
+	* @version $Id$
 	*/
 
 	/*

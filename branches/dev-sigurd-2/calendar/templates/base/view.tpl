@@ -1,4 +1,4 @@
-<!-- $Id: view.tpl 17645 2006-12-07 15:18:15Z sigurdne $ -->
+<!-- $Id$ -->
 <!-- BEGIN view_event -->
 <center>
  <table border="0" width="90%">

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: action.php 37 2009-07-31 23:35:33Z ggiunta $
+ * @version $Id$
  * @author Gaetano Giunta
  * @copyright (C) 2005-2009 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt

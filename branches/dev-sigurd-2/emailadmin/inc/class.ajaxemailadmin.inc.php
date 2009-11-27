@@ -10,7 +10,7 @@
 	* by the Free Software Foundation.                                          *
 	\***************************************************************************/
 
-	/* $Id: class.ajaxemailadmin.inc.php 25568 2008-06-05 14:09:00Z leithoff $ */
+	/* $Id$ */
 
 	class ajaxemailadmin
 	{

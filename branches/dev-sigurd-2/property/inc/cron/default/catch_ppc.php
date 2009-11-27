@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage catch
- 	* @version $Id: catch_ppc.php 1993 2008-12-25 12:54:58Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

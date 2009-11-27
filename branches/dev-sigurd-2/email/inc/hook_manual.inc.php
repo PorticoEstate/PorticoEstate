@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
 	* @subpackage hooks
-	* @version $Id: hook_manual.inc.php 15941 2005-05-11 14:08:27Z powerstat $
+	* @version $Id$
 	*/
 
 	$file = Array(

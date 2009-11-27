@@ -1,4 +1,4 @@
-<!-- $Id: search.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN search -->
 <table width="90%">
  <tr><td colspan="2" align="center" bgcolor="{th_bg}"><b>{quantity}</b></td></tr>

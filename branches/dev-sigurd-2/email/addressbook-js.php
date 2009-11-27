@@ -6,7 +6,7 @@
 	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package email
-	* @version $Id: addressbook-js.php 18394 2008-02-02 10:34:41Z skwashd $
+	* @version $Id$
 	* @internal WARNING-> The sheer size of this stupid file is what shows why there is a
 	* @internal three tiered design in phpgw...sigh.... now im even gonna put some php
 	* @internal functions in here.... dont be mad, be critical and show me how to move to

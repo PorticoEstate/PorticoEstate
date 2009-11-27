@@ -1,4 +1,4 @@
-<!-- $Id: nextmatchs.xsl 16734 2006-05-15 13:22:39Z sigurdne $ -->
+<!-- $Id$ -->
 
 <xsl:template name="nextmatchs">
 	<xsl:variable name="allow_allrows"><xsl:value-of select="allow_allrows"/></xsl:variable>

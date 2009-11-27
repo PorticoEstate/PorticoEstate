@@ -8,7 +8,7 @@
  * @subpackage db
  * @author Ralf Becker <RalfBecker-AT-outdoor-training.de>
  * @copyright (c) 2003-8 by Ralf Becker <RalfBecker-AT-outdoor-training.de>
- * @version $Id: class.egw_db.inc.php 25150 2008-03-22 12:32:24Z ralfbecker $
+ * @version $Id$
  */
 
 /**

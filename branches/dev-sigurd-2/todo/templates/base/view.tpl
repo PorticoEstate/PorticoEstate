@@ -1,4 +1,4 @@
-<!-- $Id: view.tpl 15955 2005-05-12 17:44:12Z fipsfuchs $ -->
+<!-- $Id$ -->
 <p>&nbsp;&nbsp;&nbsp;<b>{lang_todo_action}</b><br>
 <hr noshade width="98%" align="center" size="1">
 <center>

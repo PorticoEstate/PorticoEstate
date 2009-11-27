@@ -1,4 +1,4 @@
-<!-- $Id: week_new.tpl 17799 2006-12-28 04:28:01Z skwashd $ -->
+<!-- $Id$ -->
 <table border="0" width="100%" cols="5">
  <tr>
   <td align="left" valign="top" width="20%">

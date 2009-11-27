@@ -1,4 +1,4 @@
-<!-- $Id: view_dist.tpl 9980 2002-04-17 20:33:52Z ceb $ -->
+<!-- $Id$ -->
 
 {app_header}
 

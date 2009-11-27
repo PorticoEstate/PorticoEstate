@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.uisieve.inc.php 25569 2008-06-05 14:09:24Z leithoff $ */
+	/* $Id$ */
 
 	class uisieve
 	{

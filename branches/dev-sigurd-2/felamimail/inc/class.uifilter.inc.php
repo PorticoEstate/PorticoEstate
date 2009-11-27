@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.uifilter.inc.php 18876 2005-07-23 15:52:49Z ralfbecker $ */
+	/* $Id$ */
 
 	class uifilter
 	{

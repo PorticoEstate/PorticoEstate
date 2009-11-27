@@ -8,7 +8,7 @@
 	* Free Software Foundation; version 2 of the License                       *
 	\**************************************************************************/
 
-	/* $Id: hook_notifywindow.inc.php 23418 2007-02-14 12:49:47Z lkneschke $ */
+	/* $Id$ */
 
 	$d1 = strtolower(substr(APP_INC,0,3));
 	if($d1 == 'htt' || $d1 == 'ftp' )

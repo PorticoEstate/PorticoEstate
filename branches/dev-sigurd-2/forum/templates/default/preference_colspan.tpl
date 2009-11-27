@@ -1,4 +1,4 @@
-<!-- $Id: preference_colspan.tpl 6773 2001-07-14 01:26:51Z jengo $ -->
+<!-- $Id$ -->
 <tr bgcolor="{bg_color}">
         <td>{string}</td>
         <td align="center">{read_lang}</td>

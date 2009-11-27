@@ -1,4 +1,4 @@
-<!-- $Id: msg.tpl 16907 2006-07-23 10:42:06Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN msg -->
 <table cellpadding="1" cellspacing="1" width="95%" align="center"><form>
   <tr>

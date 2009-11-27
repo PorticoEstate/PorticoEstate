@@ -12,7 +12,7 @@
 	* option) any later version.                                                *
 	\***************************************************************************/
 
-	/* $Id: class.ajaxfelamimail.inc.php 25641 2008-06-19 08:04:49Z leithoff $ */
+	/* $Id$ */
 
 	class ajaxfelamimail {
 		// which profile to use(currently only 0 is supported)

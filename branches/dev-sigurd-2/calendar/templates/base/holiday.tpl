@@ -1,4 +1,4 @@
-<!-- $Id: holiday.tpl 17669 2006-12-11 10:07:35Z sigurdne $ -->
+<!-- $Id$ -->
 <!-- BEGIN form -->
 <center>
 {message}<br />

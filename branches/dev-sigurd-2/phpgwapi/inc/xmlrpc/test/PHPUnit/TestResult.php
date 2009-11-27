@@ -15,7 +15,7 @@
  * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @copyright  2002-2005 Sebastian Bergmann <sb@sebastian-bergmann.de>
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: TestResult.php 2 2009-03-16 20:22:51Z ggiunta $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/PHPUnit
  * @since      File available since Release 1.0.0
  */

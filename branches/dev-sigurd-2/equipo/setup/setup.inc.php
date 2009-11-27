@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package demo
 	* @subpackage setup
- 	* @version $Id: setup.inc.php 752 2008-02-13 13:53:17Z sigurd $
+ 	* @version $Id$
 	*/
 
 	$setup_info['equipo']['name']      = 'equipo';
