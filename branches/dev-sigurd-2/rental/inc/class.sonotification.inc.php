@@ -29,6 +29,10 @@ class rental_sonotification extends rental_socommon
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		
 		if(isset($filters))
 		{
 			foreach($filters as $column => $value)
@@ -37,11 +41,20 @@ class rental_sonotification extends rental_socommon
 			}
 		}
 		
+		if($return_count) // We should only return a count
+		{
+			$cols = 'COUNT(DISTINCT(rn.id)) AS count';
+		}
+		else
+		{
+			$cols = 'rn.id AS notification_id, rn.location_id, rn.account_id, rn.contract_id, rn.message, rn.date, rn.last_notified, rn.recurrence, rn.deleted, rcr.title, rc.location_id';
+		}
+		
 		$condition =  join(' AND ', $clauses);
 		
-		$order = $sort ? "ORDER BY $sort $dir ": '';
+		//$order = $sort ? "ORDER BY $sort $dir ": '';
 		
-		$sql = "SELECT rn.*, rcr.title, rc.location_id FROM rental_notification rn
+		$sql = "SELECT {$cols} FROM rental_notification rn
 		LEFT JOIN rental_contract_responsibility rcr ON (rcr.location_id = rn.location_id)
 		LEFT JOIN rental_contract rc ON(rc.id = rn.contract_id)
 		WHERE deleted = 'FALSE' AND $condition $order";
@@ -52,7 +65,7 @@ class rental_sonotification extends rental_socommon
 	protected function populate(int $notification_id, &$notification)
 	{
 		$notification =  new rental_notification(
-			$this->unmarshal($this->db->f('id', true), 'int'), 
+			$this->unmarshal($this->db->f('notification_id', true), 'int'), 
 			$this->unmarshal($this->db->f('account_id', true), 'int'),
 			$this->unmarshal($this->db->f('location_id', true), 'int'),
 			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
