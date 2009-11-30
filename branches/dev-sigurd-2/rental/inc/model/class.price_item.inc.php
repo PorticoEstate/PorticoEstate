@@ -14,6 +14,7 @@
 		protected $agresso_id;
 		protected $is_area;
 		protected $price;
+		protected $is_inactive;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -75,6 +76,25 @@
 		{
 			$this->is_area = (boolean)$is_area;
 		}
+		
+		public function is_inactive()
+		{
+			return $this->is_inactive;
+		}
+		
+		public function get_status_text()
+		{
+			if ($this->is_inactive()) {
+				return lang('price_item_inactive');
+			} else {
+				return lang('price_item_active');
+			}
+		}
+
+		public function set_is_inactive($is_inactive)
+		{
+			$this->is_inactive = (boolean)$is_inactive;
+		}
 
 		public function get_price()
 		{
@@ -101,6 +121,7 @@
 				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
+				'is_inactive' => $this->get_status_text(),
 				'price' => $this->get_price()
 			);
 		}

@@ -201,6 +201,7 @@
 					'title' =>      array('type' => 'varchar','precision' => '255','nullable' => false),
 					'agresso_id' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
+					'is_inactive' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
 					'price' =>      array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true)
 				),
 				'pk' => array('id'),

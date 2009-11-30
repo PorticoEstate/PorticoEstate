@@ -61,6 +61,20 @@
 				}
 			?>
 		</dd>
+		<dt>
+			<label for="is_inactive"><?php echo lang('is_inactive') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+				<?php if(rental_soprice_item::get_instance()->has_active_contract($price_item->get_id())){?>
+					<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?> disabled="disabled"/><?php echo lang('price_element_in_use') ?>
+				<?php }else{?>
+					<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?>/>
+			<?php }
+				}else{?>
+				<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?> disabled="disabled"/>
+			<?php }?>
+		</dd>
 	</dl>
 
 	<?php

@@ -95,6 +95,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			
 			$results[] = $price_item;
@@ -170,12 +171,14 @@ class rental_soprice_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
+			($price_item->is_inactive() ? "true" : "false"),
 			$price
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'price');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		var_dump($q);
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_price_item", 'id');
 		
@@ -198,6 +201,7 @@ class rental_soprice_item extends rental_socommon
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
+			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
 			'price = ' . $price_item->get_price()
 		);
 				
@@ -343,6 +347,9 @@ class rental_soprice_item extends rental_socommon
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
 		}
+		if(isset($filters['price_item_status'])){
+			$filter_clauses[] = "NOT is_inactive";
+		}
 		
 		if(count($filter_clauses))
 		{
@@ -374,8 +381,21 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 		}
 		return $price_item;
+	}
+	
+	function has_active_contract(int $price_item_id)
+	{
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		$q = "SELECT rpi.* FROM rental_price_item rpi, rental_contract_price_item rcpi, rental_contract rc WHERE rpi.id = {$price_item_id} AND rcpi.price_item_id = rpi.id AND rc.id = rcpi.contract_id AND rc.date_start <= {$ts_query} AND (rc.date_end >= {$ts_query} OR rc.date_end IS NULL)";
+		$this->db->query($q);
+		if($this->db->next_record())
+		{
+			return true;
+		}
+		return false;
 	}
 }

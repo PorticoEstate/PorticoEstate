@@ -48,14 +48,14 @@
 	// Defining columns for datatable
 	var columnDefs = [
 		{
-			key: "title",
-			label: "<?php echo lang('name') ?>",
-		  sortable: true
-		},
-		{
 			key: "agresso_id",
 			label: "<?php echo lang('agresso_id') ?>",
 		  sortable: false
+		},
+		{
+			key: "title",
+			label: "<?php echo lang('name') ?>",
+		  sortable: true
 		},
 		{
 			key: "is_area",

@@ -72,8 +72,9 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_title(phpgw::get_var('title'));
 			$price_item->set_agresso_id(phpgw::get_var('agresso_id'));
 			$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
+			$price_item->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
-			if ($price_item->store()) {
+			if (rental_soprice_item::get_instance()->store($price_item)) {
 				return $this->viewedit(true, $price_item, lang('messages_saved_form'));
 			} else {
 				return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
@@ -99,7 +100,7 @@ class rental_uiprice_item extends rental_uicommon
 		if ($title) {
 			$price_item = new rental_price_item();
 			$price_item->set_title($title);
-			if ($price_item->store()) {
+			if (rental_soprice_item::get_instance()->store($price_item)) {
 				// The object was stored, forward to edit it further
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprice_item.edit', 'id' => $price_item->get_id()));
 			}
@@ -181,7 +182,7 @@ class rental_uiprice_item extends rental_uicommon
 				break;
 			case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
 			default:
-				$filters = array();
+				$filters = array('price_item_status' => 'active');
 				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 				break;

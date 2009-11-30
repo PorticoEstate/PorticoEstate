@@ -53,26 +53,31 @@
 
 	// Defining columns for datatable
 	var columnDefs = [
+          {
+        	key: "agresso_id",
+        	label: "<?php echo lang('agresso_id') ?>",
+          sortable: false
+        },
 		{
 			key: "title",
 			label: "<?php echo lang('name') ?>",
 		  sortable: true
 		},
 		{
-			key: "agresso_id",
-			label: "<?php echo lang('agresso_id') ?>",
-		  sortable: false
-		},
-		{
 			key: "is_area",
 			label: "<?php echo lang('type') ?>",
-		  sortable: true
+		  	sortable: true
 		},
 		{
 			key: "price",
 			label: "<?php echo lang('price') ?>",
 			sortable: true,
 			formatter: formatPrice
+		},
+		{
+			key: "is_inactive",
+			label: "<?php echo lang('status') ?>",
+		  	sortable: true
 		},
 		{
 			key: "actions",

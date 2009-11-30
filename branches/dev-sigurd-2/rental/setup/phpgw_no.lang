@@ -163,6 +163,7 @@ invoice	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
 is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
+is_inactive	rental	no	Inaktiv
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr
 last_edited_by_current_user	rental	no	Din siste endring
@@ -278,9 +279,12 @@ post_place	rental	no	Sted
 previous	rental	no	Forrige
 price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
+price_item_inactive	rental	no	Inaktiv
+price_item_active	rental	no	Aktiv
 price_list	rental	no	Prisbok
 price_per_unit	rental	no	Pris pr kvm
 price	rental	no	Pris
+price_element_in_use	rental	no	Priselementet er i bruk på en aktiv kontrakt
 project_id	rental	no	Prosjektnummer
 Project id can not be more than 6 characters.	rental	no	Prosjektnummer kan ikke være mer enn seks tegn.
 propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
