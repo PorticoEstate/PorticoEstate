@@ -3874,3 +3874,129 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+
+    /**
+	* Update property version from 0.9.17.576 to 0.9.17.577
+	* Add BIM tables
+	*
+	*/
+
+	$test[] = '0.9.17.576';
+	function property_upgrade0_9_17_576()
+	{
+		$tables = array
+		(
+			'property_items' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'parent_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_item_catalogs' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_catalog_groups' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'nat_group_no' => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
+					'bpn' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_catalog_group_attribs' => array
+			(
+				'fd' => array
+				(
+					'catalog_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'attrib_def_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('catalog_group_id', 'attrib_def_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_attrib_defs' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'descrptn' => array('type' => 'text', 'nullable' => false),
+					'data_type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'munit' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_attribs' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'attrib_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'val_num' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'val_str' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'created_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'expired_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		foreach ( $tables as $table => $def )
+		{
+			$GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.577';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
