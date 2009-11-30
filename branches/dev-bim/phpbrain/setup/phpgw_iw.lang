@@ -1,0 +1,195 @@
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	iw	לא קיימת ולא ניתן ליצור אותה. נא לבקש מהמנהל לבדוק את התצורה הגלובלית /kb המחיצה
+action	phpbrain	iw	פעולה
+actions	phpbrain	iw	פעולות
+add articles	phpbrain	iw	הוסף מאמרים
+add link	phpbrain	iw	הוסף קישור
+add question	phpbrain	iw	הוסף שאלה
+added file %1	phpbrain	iw	קובץ %1 נוסף
+added link %1	phpbrain	iw	קישור %1 נוסף
+added related articles %1	phpbrain	iw	מאמרים קשואים %1 נוספו
+advanced search	phpbrain	iw	חיפוש מתקדם
+all articles	phpbrain	iw	כל המאמרים
+answer	phpbrain	iw	תשובה
+anytime	phpbrain	iw	בכל זמן
+anywhere in the article	phpbrain	iw	בכל מקום במאמר
+article	phpbrain	iw	מאמר
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	iw	המאמר הוכנס לבסיס הנתונים, כעת ניתן לצרף אליו קבצים או קישורים, או יחס למאמרים אחרים
+article created	phpbrain	iw	המאמר נוצר
+article deleted	phpbrain	iw	המאמר נמחק
+article deleted successfully	phpbrain	iw	המאמר נמחק בהצלחה
+article edited	phpbrain	iw	המאמר נערך
+article has been published	phpbrain	iw	המאמר הוצא לאור
+article id	phpbrain	iw	זיהוי מאמר
+articles added	phpbrain	iw	מאמרים נוספו
+articles deleted successfully	phpbrain	iw	המאמרים נמחקו בהצלחה
+articles have been published	phpbrain	iw	המאמרים הוצאו לאור
+articles in %1	phpbrain	iw	מאמרים ב-%1
+articles in %1 and all its subcategories	phpbrain	iw	מאמרים ב-%1 ובכל תתי-הקטגוריות שלה
+articles not classified under any category	phpbrain	iw	מאמרים שלא שויחו לקטגוריה כלשהי
+ascendent	phpbrain	iw	הורים
+attach file	phpbrain	iw	צרף קובץ
+attached files	phpbrain	iw	קבצים מצורפים
+average rating	phpbrain	iw	דירוג ממוצע
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	iw	מחיצה בסיסית לא קיימת. נא לבקש מהמנהל לבדוק את התצורה הגלובלית
+before submiting a question, please search in the knowledge base first	phpbrain	iw	לפני הגשת שאלה, נא לחפש קודם את התשובה במאגר הידע
+by answering this question you will help to get the answer quicker the next time	phpbrain	iw	התשובה לשאלה זו יזרז את מתן התשובה מהר יותר בפעם הבאה
+check spelling	phpbrain	iw	בדוק איות
+comment	phpbrain	iw	הערה
+comment and rating have been published	phpbrain	iw	ההערה והדירוג הוצוא לאור
+comment could not be inserted in the database	phpbrain	iw	לא הצלחתי להכניס את ההערה לבסיס הנתונים
+comment has been deleted	phpbrain	iw	ההערה נמחקה
+comment has been published	phpbrain	iw	ההערה הוצא לאור
+comment has been submited for revision	phpbrain	iw	ההערה הוגשה לתיקון
+comment has been submited for revision and rating will be published	phpbrain	iw	ההערה הוגשה לתיקון והדירוג יוצא לאור
+comments	phpbrain	iw	הערות
+configuration	phpbrain	iw	תצורה
+confirm	phpbrain	iw	אישור
+correct the errors and press confirm	phpbrain	iw	תקן את השגיאות ולחץ אישור
+create a new article to answer the question asked by %1 in %2	phpbrain	iw	צור מאמר חדש העונה על השאלה שנשאלה על ידי %1ב-%2
+created by %1 on %2	phpbrain	iw	נוצר על ידי %1 ב-%2
+creation	phpbrain	iw	יצירה
+creation date	phpbrain	iw	תאריך יצירה
+date	phpbrain	iw	תאריך
+delete article	phpbrain	iw	מחק מאמר
+delete selected	phpbrain	iw	מחק נבחרים
+deleted relation to  article %1	phpbrain	iw	מחיקת יחס למאמר %1
+deleted relation to article %1	phpbrain	iw	מחיקת יחס למאמר %1
+descendent	phpbrain	iw	ילדים
+details	phpbrain	iw	פרטים
+e-groupware knowledge base article attached	phpbrain	iw	eGroupWare מצורף מאמר של מאגר הידע של
+e-mail has been sent	phpbrain	iw	דוא"ל נשלח
+edit article	phpbrain	iw	ערוך מאמר
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	iw	הכנס מילה אחת או שתיים המתארים את העניין, או ציין את מספר המאמר אם הוא ידוע
+error deleting article from database	phpbrain	iw	שגיאה במחיקת המאמר מבסיס הנתונים
+error deleting link	phpbrain	iw	שגיאה במחיקת הקישור
+error downloading file	phpbrain	iw	שגיאה בהורדת הקובץ
+error locating files directory	phpbrain	iw	שגיאה במציאת המחיצה של הקבצים
+error moving file to directory	phpbrain	iw	שגיאה בהעברת הקובץ למחיצה
+error publishing comment	phpbrain	iw	שגיאה בהוצאת ההערה לאור
+error retrieving article	phpbrain	iw	שגיאה בשליפת המאמר
+error trying to delete comment	phpbrain	iw	שגיאה בניסיון למחוק הערה
+error trying to delete question	phpbrain	iw	שגיאה בניסיון למחוק שאלה
+error trying to edit article	phpbrain	iw	שגיאה בניסיון לערוך מאמר
+error trying to publish article	phpbrain	iw	שגיאה בניסיון להוציא את המאמר לאור
+error: file doesn't exist in the database	phpbrain	iw	שגיאה: הקובץ לא קיים בבסיס הנתוני=ם
+excellent	phpbrain	iw	מעולה
+failure trying to delete the file	phpbrain	iw	כשלום בניסיון למחוק את הקובץ
+file could be deleted from server but not from database	phpbrain	iw	הקובץ נמחק מהשרת אבל לא מבסיס הנתונים
+file has been successfully uploaded	phpbrain	iw	הקובץ העלה בהצלחה
+file was already missing from server, and was deleted from the database	phpbrain	iw	הקובץ היה כבר חסר מהשרת ונמחק מבסיס הנתונים
+file was deleted successfully	phpbrain	iw	הקובץ נמחק בהצלחה
+file wasn't in server and it couldn't be deleted from the database	phpbrain	iw	הקובץ לא נמצא בשרת ולא ניתן למחיקה מבסיס הנתונים
+find results	phpbrain	iw	מצא תוצאות
+global categories	phpbrain	iw	קטגוריות גובליות
+have to be approved first	common	iw	חייב קודם אישור
+history	phpbrain	iw	היסטוריה
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	iw	אם לא מצאת פתרון לבעיה במאדר הידע, אנא תאר אןתה למטה
+if you wish, you can comment this article here	phpbrain	iw	אפשר להעיר הערה על המאמר כאן
+in %1	phpbrain	iw	ב-%1
+in the text	phpbrain	iw	בטקסט
+in the title	phpbrain	iw	בקובץ
+in the topic	phpbrain	iw	בנושא
+include subcategories	phpbrain	iw	כולל תתי-קטגוריות
+keywords	phpbrain	iw	מלות מפתח
+knowledge base article #%1	phpbrain	iw	מאמר #%1 במאגר הידע
+knowledge base configuration	common	iw	תצורת מאגר הידע
+last modification by %1 on %2	phpbrain	iw	שינוי אחרון על ידי %1 ב-%2
+latest	phpbrain	iw	אחרון
+latest comments	phpbrain	iw	הערות אחרונות
+leave empty to automatically generate an id	phpbrain	iw	השאר ריק כדי לחולל זיהוי אוטומטית
+link could not be added	phpbrain	iw	לא הצלחתי להוסיף את הקישור
+link deleted successfully	phpbrain	iw	הקישור נמחק בהצלחה
+link has been added	phpbrain	iw	הקישור נוסף
+links	phpbrain	iw	קישורים
+links & files	phpbrain	iw	קישורים וקבצים
+mail article	phpbrain	iw	שלח מאמר
+main view	phpbrain	iw	תצוגה ראשית
+maintain articles	phpbrain	iw	אחזקת מאמרים
+maintain questions	phpbrain	iw	אחזקת שאלות
+maximum number of comments to show:	phpbrain	iw	כמות ההערות המירבית להציג
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	iw	:הכמות המירבית של צאצרים פופולרים, מאמרים אחרונים ושאלות ללא מענה להציג בתצוגה הראשית
+modification date	phpbrain	iw	תאריך שינוי
+most viewed	phpbrain	iw	הנצפה ביותר
+new article	phpbrain	iw	מאמר חדש
+nobody has rated this article so far	phpbrain	iw	עד עכשיו, אף אחד לא דירג מאמר זה
+none	phpbrain	iw	ללא
+nothing was uploaded!	phpbrain	iw	לא הועלה כלום
+number of results per page	phpbrain	iw	כמות התוצאות
+ocurrences	phpbrain	iw	מופעים
+or browse the categories	phpbrain	iw	או עיין בקטגוריות
+order results by	phpbrain	iw	סדר תוצאות לפי
+outstanding published questions	phpbrain	iw	שאלות מוצאות לאור יוצאות מהכלל
+past %1 months	phpbrain	iw	%1 החודשים האחרונים
+past year	phpbrain	iw	השנה האחרונה
+people have rated this article	phpbrain	iw	אנשים דירגו מאמר זה
+phpbrain	common	iw	מאגר הידע
+please rate the pertinence and quality of this article	phpbrain	iw	אנא דרג את רמת הקשר לענין ואיכות מאמר זה
+please try again	phpbrain	iw	נא לנסות שוב
+poor	phpbrain	iw	חלש
+printer view	phpbrain	iw	תצוגה מקדימה של הדפסה
+problem relating articles	phpbrain	iw	בעיה בהקמת היחסים של המאמרים
+publication date	phpbrain	iw	תאריך הוצאה לאור
+publish	phpbrain	iw	הוצא לאור
+publish articles automatically?	common	iw	?הוצא מאמרים לאור אוטומטית
+publish comments automatically?	common	iw	?הוצא הערות לאור אוטומטית
+publish questions automatically?	common	iw	?הוצא שאלות לאור אוטומטית
+publish selected	phpbrain	iw	הוצא מובחרים לאור
+published	phpbrain	iw	הוצא לאור
+question deleted successfully	phpbrain	iw	השאלה נמחקה בהצלחה
+questions deleted successfully	phpbrain	iw	השאלות נמחקו בהצלחה
+rating has been submited	phpbrain	iw	הדירוג הוגש
+rating invalid	phpbrain	iw	דירוג לא חוקי
+recipient	phpbrain	iw	נמען
+related articles in the knowledge base	phpbrain	iw	צאצרים קשורים מאגר הידע
+relation with article was removed successfully	phpbrain	iw	היחס למאמר הוסר בהצלחה
+removed file %1	phpbrain	iw	מחקתי קובץ %1
+removed link %1	phpbrain	iw	מחקתי קישור %1
+reply-to	phpbrain	iw	מענה אל
+search in all the knowledge base	phpbrain	iw	חפש בכל מאגר הידע
+search results	phpbrain	iw	תוצאות החיפוש
+see more questions	phpbrain	iw	ראה עוד שאלות
+see more questions...	phpbrain	iw	...ראה עוד שאלות
+select articles	phpbrain	iw	בחר מאמרים
+show all comments	phpbrain	iw	הצג את כל ההערות
+show articles belonging to:	phpbrain	iw	:הצג מאמרים השייכים ל
+show messages in category	phpbrain	iw	הצג הודעות בקטגוריה
+submit comment	phpbrain	iw	הגש הערה
+submit comment and rating	phpbrain	iw	הגש הערה ודירוג
+suggested category	phpbrain	iw	קטגוריה מוצעת
+summary	phpbarin	iw	סיכום
+that file already exists	phpbrain	iw	הקובץ כבר קיים
+the article doesn't have spell errors	phpbrain	iw	אין שגיאות כתיב במאמר
+the article id must be a number	phpbrain	iw	זיהוי המאמר חייב ליהיות מספרי
+the article is empty	phpbrain	iw	המאמר ריק
+the file was already missing in the server	phpbrain	iw	הקובץ היה כבר חסר מהשרת
+the following errors occurred	phpbrain	iw	אירעו השגיאות הבאות
+the mail server returned:	phpbrain	iw	:שרת הדואר הגיב
+the present category and all subcategories under it	phpbrain	iw	הקטגוריה הנוכחית וכל תתי-הקטגוריות תחתיה
+the present category only	phpbrain	iw	רק הקטגוריה הנוכחית
+there are no articles	phpbrain	iw	אין מאמרים
+there are no articles available	phpbrain	iw	אין מאמרים זמינים
+this article hasn't yet been published in the knowledge base	phpbrain	iw	מאמר זה עדיין לא הוצא לאור במאגר הידע
+title	phpbrain	iw	כותרת
+to create categories, press 'edit categories' in the preferences menu	phpbrain	iw	כדי ליצור קטגוריות לחץ 'ערוך קטגוריות' בתפריט עדיפויות
+topic	phpbrain	iw	נושא
+unable to add rating to database	phpbrain	iw	לא מצליח להוסיף דירוג לבסיס הנתונים
+unanswered questions	phpbrain	iw	שאלות ללא מענה
+unpublished	phpbrain	iw	לא הוצאו לאור
+upload	phpbrain	iw	העלה
+user	phpbrain	iw	משתמש
+user preferences	phpbrain	iw	עדיפויות משתמש
+views	phpbrain	iw	תצוגות
+was it easy to find this article using the above search string?	phpbrain	iw	?האם היה לך קל למצוא את המאמר בעזרת מחרוזת חיפוש זו
+when navigating through categories, choose whether the list of articles shown corresponds only to the present category, or the present category and all categories under it.	phpbrain	iw	כאשר מנווטים בין הקטגוריות, בחר באם רשימת המאמרים מתאימה רק לקטגוריה הנוכחית , או גם לכל תתי-הקטגוריות תחתיה
+with all the words	phpbrain	iw	עם כל המילים
+with at least one of the words	phpbrain	iw	עם מלה אחת לפחות
+with the exact phrase	phpbrain	iw	עם הפראזה המדויקת
+without the words	phpbrain	iw	בלי המילים
+you are in %1	phpbrain	iw	אתה נמצא ב%1
+you have already qualified this article	phpbrain	iw	כבר האמתת מאמר זה
+you have not the proper permissions to do that	phpbrain	iw	אין לך הרשאות מתאימות
+you must enter a title	phpbrain	iw	עליך להכניס כותרת
+you must enter a topic	phpbrain	iw	עליך להכניס נושא
+your message could not be sent!	phpbrain	iw	!לא ניתן לשלוח את ההודעה שלך
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	iw	השאלה שלך יישלח, אבל יוצא לאור רק לאחר אישור של משתמש בעל הרשאות הוצאה לאור
+your question will be published immediately	phpbrain	iw	שאלתך יוצא לאור מיד

@@ -1,0 +1,189 @@
+/kb directory does not exist and could not be created, please ask the adminstrator to check the global configuration	phpbrain	da	/Vidensbase bibliotek eksisterer ikke og kunne ikke dannes. Bed Administrator om at checke global configuration.
+action	phpbrain	da	Hændelse
+actions	phpbrain	da	Hændelser
+add articles	phpbrain	da	Tilføj artikler
+add link	phpbrain	da	Tilføj link
+add question	phpbrain	da	Tilføj spørgsmål
+added file %1	phpbrain	da	tilføjet fil %1
+added link %1	phpbrain	da	Tilføjet link %1
+added related articles %1	phpbrain	da	Tilføjet relaterede artikler %1
+advanced search	phpbrain	da	Avanceret søgning
+all articles	phpbrain	da	Alle artikler
+answer	phpbrain	da	svar
+anytime	phpbrain	da	Enhver tid
+anywhere in the article	phpbrain	da	Hvor som helst i artikel
+article	phpbrain	da	Artikel
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	da	Artikel tilføjet database, du kan nu vedhæfte filer eller links, eller relatere til andre artikler
+article created	phpbrain	da	Artikel skabt
+article deleted	phpbrain	da	Artikel slettet
+article deleted successfully	phpbrain	da	Artikel slettet succesfuldt
+article edited	phpbrain	da	Artikel redigeret
+article has been published	phpbrain	da	Artikel publiceret
+article id	phpbrain	da	Artikel ID
+articles added	phpbrain	da	Artikler  tilføjet
+articles deleted successfully	phpbrain	da	Artikler slettet succesfuldt
+articles have been published	phpbrain	da	Artikler er publiceret
+articles in %1	phpbrain	da	Artikler i %1
+articles in %1 and all its subcategories	phpbrain	da	Artikler i %1 og alle under-kategorier
+articles not classified under any category	phpbrain	da	Artikler ikke klassificeret under nogen kategori
+ascendent	phpbrain	da	Stigende
+attach file	phpbrain	da	Vedhæft fil
+attached files	phpbrain	da	Vedhæft filer
+average rating	phpbrain	da	Gennemsnit vurdering
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	da	Base bibliotek eksisterer ikke. Spørg Administrator for check af global konfiguration
+before submiting a question, please search in the knowledge base first	phpbrain	da	Før du stiller et spørgsmål - venligst check videns-base først
+by answering this question you will help to get the answer quicker the next time	phpbrain	da	Ved at svare på dettespørgsmål, vil du hjælpe til med at få hurtigere svar næste gang
+comment	phpbrain	da	Kommentar
+comment and rating have been published	phpbrain	da	Kommentar og vurdering er publiceret
+comment could not be inserted in the database	phpbrain	da	Kommenar kunne ikke indsættes i database
+comment has been deleted	phpbrain	da	Kommentar slettet
+comment has been published	phpbrain	da	Kommentar publiceret
+comment has been submited for revision	phpbrain	da	Kommentar afsendt til revision
+comment has been submited for revision and rating will be published	phpbrain	da	Kommentar afsendt til revision og vurdering vil blive publiceret
+comments	phpbrain	da	Kommentarer
+configuration	phpbrain	da	Konfiguration
+create a new article to answer the question asked by %1 in %2	phpbrain	da	Opret ny artikel til svar - spurgt af %1 i %2
+created by %1 on %2	phpbrain	da	Oprettet af %1 på %2
+creation	phpbrain	da	Oprettet
+creation date	phpbrain	da	Oprettet dato
+delete article	phpbrain	da	Slet artikel
+delete selected	phpbrain	da	Slet valgte
+deleted relation to  article %1	phpbrain	da	Slettet relation til artikel %1
+deleted relation to article %1	phpbrain	da	Slettet relation til artikel %1
+descendent	phpbrain	da	Faldende
+details	phpbrain	da	Detaljer
+e-groupware knowledge base article attached	phpbrain	da	E-GroupWare videns-base artikel vedhæftet
+e-mail has been sent	phpbrain	da	E-mail sendt
+edit article	phpbrain	da	Rediger artikel
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	da	Skriv et eller to ord for at beskrive denne udgave, eller skriv artikelnummeret hvsi du kender det.
+error deleting article from database	phpbrain	da	Fejl ved sletning af artikel fra database
+error deleting link	phpbrain	da	Fejl ved sletning af link
+error downloading file	phpbrain	da	Fejl ved download af fil
+error locating files directory	phpbrain	da	Fejl ved lokalisering af bibliotek
+error moving file to directory	phpbrain	da	Fejl ved flytning til bibliotek
+error publishing comment	phpbrain	da	Fejl ved publicering af dokument
+error retrieving article	phpbrain	da	Fejl ved at hente artikel
+error trying to delete comment	phpbrain	da	Fejl ved sletning af kommentar
+error trying to delete question	phpbrain	da	Fejl ved sletning af spørgsmål
+error trying to edit article	phpbrain	da	Fejl ved redigering af artikel
+error trying to publish article	phpbrain	da	Fejl ved publicering af artikel
+error: file doesn't exist in the database	phpbrain	da	Fejl: Filen eksisterer ikke i databasen
+excellent	phpbrain	da	Strålende
+failure trying to delete the file	phpbrain	da	fejl ved sletning af fil
+file could be deleted from server but not from database	phpbrain	da	Fil kunne slettes fra serveren, men ikke fra databasen
+file has been successfully uploaded	phpbrain	da	Filen er uploadet
+file was already missing from server, and was deleted from the database	phpbrain	da	filen manglede allerede på serveren, og er slettet fra databasen
+file was deleted successfully	phpbrain	da	Fil slettet
+file wasn't in server and it couldn't be deleted from the database	phpbrain	da	Filen var ikke på serveren og kunne ikke slettes fra databasen
+find results	phpbrain	da	Find resultater
+global categories	phpbrain	da	Globale kategorier
+have to be approved first	common	da	Skal godkendes først
+history	phpbrain	da	Historisk
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	da	Hvis du ikke kan finde svar på dit problem i videns-basen, beskriv det nedenfor
+if you wish, you can comment this article here	phpbrain	da	Hvis du ønsker det, kan du kommentere artiklen her
+in %1	phpbrain	da	i %1
+in the text	phpbrain	da	i teksten
+in the title	phpbrain	da	i titlen
+in the topic	phpbrain	da	i emnet
+include subcategories	phpbrain	da	Inkluder under-kategorier
+keywords	phpbrain	da	Nøgleord
+knowledge base article #%1	phpbrain	da	Videns-base artikel #%1
+knowledge base configuration	common	da	Videns-base konfigurering
+last modification by %1 on %2	phpbrain	da	Sidste opdatering af %1 på %2
+latest	phpbrain	da	Sidste
+latest comments	phpbrain	da	Sidste kommentarer
+leave empty to automatically generate an id	phpbrain	da	Eferlad tom for automatisk at generere et ID
+link could not be added	phpbrain	da	Link kunne ikke tilføjes
+link deleted successfully	phpbrain	da	Link slettet
+link has been added	phpbrain	da	Link er tilføjet
+links	phpbrain	da	Links
+links & files	phpbrain	da	Links & filer
+mail article	phpbrain	da	Mail artikel
+main view	phpbrain	da	Hoved view
+maintain articles	phpbrain	da	vedligehold artikler
+maintain questions	phpbrain	da	Vedligehold spørgsmål
+maximum number of comments to show:	phpbrain	da	Max. antal kommentarer at vise:
+maximum number of most popular articles, latest articles and unanswered questions to show in the main view:	phpbrain	da	Max. antal af Mest populære artikler, sidste artikler og ubesvarede spørgsmål til visning på forsiden:
+modification date	phpbrain	da	Opdateret dato
+most viewed	phpbrain	da	Mest vist
+new article	phpbrain	da	Ny artikel
+nobody has rated this article so far	phpbrain	da	Ingen har vurderet denne artikel indtil nu
+nothing was uploaded!	phpbrain	da	Ingenting uploaded
+number of results per page	phpbrain	da	Antal resultater
+ocurrences	phpbrain	da	Forekomster
+or browse the categories	phpbrain	da	eller browse kategorierne
+order results by	phpbrain	da	Sorter resultater ved
+outstanding published questions	phpbrain	da	Enestående publicerede spørgsmål
+past %1 months	phpbrain	da	over %1måneder
+past year	phpbrain	da	forrige år
+people have rated this article	phpbrain	da	Nogen har vurderet denne artikel
+phpbrain	common	da	Videns-base
+please rate the pertinence and quality of this article	phpbrain	da	Vurder 'pertinence' og kvalitet af denne artikel
+please try again	phpbrain	da	Prøv igen
+poor	phpbrain	da	Dårlig
+printer view	phpbrain	da	Printer udgave
+problem relating articles	phpbrain	da	Preblom med at relatere artikler
+publication date	phpbrain	da	Publiceret dato
+publish	phpbrain	da	Publicer
+publish articles automatically?	common	da	Publicer artikler automatisk?
+publish comments automatically?	common	da	Publicer kommentarer automatisk?
+publish questions automatically?	common	da	Publiver spørgsmål automatisk?
+publish selected	phpbrain	da	Publicer valgte
+published	phpbrain	da	Publicerede
+question deleted successfully	phpbrain	da	Spørgsmål slettet
+questions deleted successfully	phpbrain	da	Spørgsmål slettet
+rating has been submited	phpbrain	da	Vurdering afsendt
+rating invalid	phpbrain	da	Forkert vurdering
+recipient	phpbrain	da	Modtager
+related articles in the knowledge base	phpbrain	da	Relaterede artikler i Videns-base
+relation with article was removed successfully	phpbrain	da	Relation med artikel fjernet
+removed file %1	phpbrain	da	Fjernet fil %1
+removed link %1	phpbrain	da	Fjernet link %1
+reply-to	phpbrain	da	Svar til
+search in all the knowledge base	phpbrain	da	Søg i hele Videns-basen
+search results	phpbrain	da	Søg i resultater
+see more questions	phpbrain	da	Se flere spørgsmål
+see more questions...	phpbrain	da	Se flere spørgsmål ...
+select articles	phpbrain	da	Vælg artikler
+show all comments	phpbrain	da	Vis alle kommentarer
+show articles belonging to:	phpbrain	da	Vis artikler tilhørende:
+show messages in category	phpbrain	da	Vis beskeder i kategori
+submit comment	phpbrain	da	Afsend kommentar
+submit comment and rating	phpbrain	da	Afsend kommentar og vurdering
+suggested category	phpbrain	da	Foreslået kategori
+summary	phpbarin	da	Opsummering
+that file already exists	phpbrain	da	Filen eksisterer allerede
+the article id must be a number	phpbrain	da	Artikel ID skal være et nummer
+the article is empty	phpbrain	da	Artiklen er tom
+the file was already missing in the server	phpbrain	da	Filen mangler allerede på serveren
+the following errors occurred	phpbrain	da	Følgende fejl opstod
+the mail server returned:	phpbrain	da	Mail server returnerede:
+the present category and all subcategories under it	phpbrain	da	Aktuel kategori og alle under-kategorier under denne
+the present category only	phpbrain	da	Kun aktuel kategori
+there are no articles	phpbrain	da	Der er ingen artikler
+there are no articles available	phpbrain	da	Der er ingen artikler tilgængelige
+this article hasn't yet been published in the knowledge base	phpbrain	da	Denne artikel er endnu ikke publiceret i Videns-basen
+title	phpbrain	da	Titel
+to create categories, press 'edit categories' in the preferences menu	phpbrain	da	For at oprette kategorier, tryk 'Rediger kategorier' i præference menuen
+topic	phpbrain	da	Emne
+unable to add rating to database	phpbrain	da	Ikke i stand til at tilføje vurdering til databasen
+unanswered questions	phpbrain	da	Ubesvarede spørgsmål
+unpublish	phpbrain	da	Af-publicer
+unpublished	phpbrain	da	ikke-publiceret
+user preferences	phpbrain	da	Bruger præferencer
+views	phpbrain	da	views
+was it easy to find this article using the above search string?	phpbrain	da	Var det nemt at finde denne artikel ved brug af ovenstående søgestreng
+when navigating through categories, choose whether the list of articles shown corresponds only to the present category, or the present category and all categories under it.	phpbrain	da	Når du manøvrerer mellem kategorierene, vælg om listen af artikler korosponderer kun med aktuel kategori eller med aktuel kategori og alle kategorier under denne.
+with all the words	phpbrain	da	Med alle ord
+with at least one of the words	phpbrain	da	Med mindst eet af ordene
+with the exact phrase	phpbrain	da	med eksakt udtryk
+without the words	phpbrain	da	Uden ordene
+you are in %1	phpbrain	da	Du er i %1
+you have already qualified this article	phpbrain	da	Du har allerede kvalificeret denne artikel
+you have not the proper permissions to do that	phpbrain	da	Du har ikke de nødvendige rettigheder til at gøre det
+you must enter a title	phpbrain	da	Du skal angive en titel
+you must enter a topic	phpbrain	da	Du skal angive et emne
+your message could not be sent!	phpbrain	da	Din besked kunne ikke afsendes
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	da	Dit spørgsmål vil blive afsendt, men vil først blive publiceret efter godkendelse af en bruger med ret til at publicere.
+your question will be published immediately	phpbrain	da	Dit spørgsmål vil blive publiceret straks
+

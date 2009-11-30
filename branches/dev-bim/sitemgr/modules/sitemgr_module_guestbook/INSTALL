@@ -1,0 +1,16 @@
+Move this directory to the root directory of your phpgroupware
+installation and go into setup and install it like a phpgroupware
+application.
+Inside sitemgr, you have to go to 'Manage site-wide module properties'
+and check if the module guestbook appears in the list of selectable
+modules, otherwise click on 'Register new modules' to register it. If
+it still does not appear, check if the file
+class.module_guestbook.inc.php is in the directory sitemgr/modules.
+Once you have added the module guestbook to the liste of permitted
+modules, select it in one of the select lists on the right, and click
+on "Configure". In the following interface you can define guestbooks,
+your contributors can choose from. There is a checkbox for configuring if
+contributors can define their own guestbooks.
+All guestbooks are accessible for contributors everywhere on your
+site. In the real world, it would be necessary to make them visible
+only on specific categories, or for specific content areas.

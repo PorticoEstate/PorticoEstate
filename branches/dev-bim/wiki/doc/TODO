@@ -1,0 +1,16 @@
+-------------
+AxisWiki TODO
+-------------
+
+- Make it so pages are never locked for phpgw administrators
+- Add Lock/Unlock toggle on each page for administrators
+- docbook coversion: http://www.docbook.org/wiki/moin.cgi/Wt2Db
+- hook prefs
+- /help
+- phpgw auto-detect
+- database abstraction
+
+the following should be mostly synchronized with the canonical Tavi group at http://tavi.sf.net
+*group support
+**notification groups.  Users can sign up to receive email notifications of one or more Wiki docs.  They can select to be automatically notified of all changes, or of just at the editor's discretion.  Edit page will have a notification button listing each username, and a button optionally selecting the current page's notification group.
+*User can request a list of all docs in the whole Wiki which have been modified within a certain date range.

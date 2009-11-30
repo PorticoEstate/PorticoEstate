@@ -1,0 +1,83 @@
+/**
+ * Tooltip Style Sheet
+ * Author Dirk Schaller <dschaller@probusiness.de>
+ * Copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
+ * License http://www.fsf.org/licenses/gpl.html GNU General Public License
+ * Version $Id: tooltip.css 17630 2006-12-03 18:31:43Z sigurdne $
+ */
+ 
+/* styles for tooltip link */
+a.tooltip, a.tooltip:link, a.tooltip:visited, a.tooltip:active
+{
+	position: relative; 
+	text-decoration: none;
+	cursor: help; 
+	padding: 0;
+	z-index: 100;
+}
+
+/* styles for tooltip link on hover */
+a.tooltip:hover
+{
+	background: transparent;
+	z-index: 101;
+}
+
+/* styles for tooltip container */
+a.tooltip span.tooltip
+{
+	display: none;
+	z-index: 100;
+}
+
+/* styles for tooltip container on hover */
+a.tooltip:hover span.tooltip
+{
+	position: absolute;
+	display: block;
+	top: 25px;
+  	left: -90px;
+	width: 130px;
+	padding: 4px 5px 4px 5px;
+	margin: 0px;
+	background: #FFFFCC;
+	border: 1px solid #000000;
+	z-index: 101;
+	text-decoration: none;
+	text-align: left;
+	color: #000000;
+	-moz-border-radius: 10px;
+}
+
+/* styles for tooltip headline */
+span.tooltip_headline
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+/* styles for tooltip line (separator beetween headline and conent) */
+span.tooltip_line
+{
+	display: block;
+	border-top: 1px solid #000000;
+	font-size: 2px;
+}
+
+/* styles for tooltip content */
+span.tooltip_content
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+}
+
+/* styles for predefined help and info tooltip link*/
+span.helptooltip, span.infotooltip
+{
+	padding: 1px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+	color: #000066;
+}

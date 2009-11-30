@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>World writable files and keeping your configuration safe</h2>
+				<p>
+					Obviously having files that any user on your system, including 
+					the anonymous "nobody" user that apache runs under, can write 
+					to is a security risk. First we'll talk about what files phpGroupWare 
+					wants to be world writable and why, then we'll talk about how to 
+					manage the risks this imposes. Last we'll discuss some myths and other 
+					concerns. Some other phpgw applications might introduce other files and 
+					risks, hopefully what we talk about here will give you enough knowledge 
+					to recognize them and reduce any vulnerabilities.
+				</p>
+				<p>
+					As discussed earlier, having a world writable file in you web root is 
+					a rather serious security risk, especially if that file will accept raw 
+					user data. It becomes trivial for someone to add php code or any type of 
+					script or cgi code your server supports and execute it on your system. 
+					Risk is reduced slightly because it would be executed as the "anonymous" 
+					nobody user that apache runs under but still would allow access to your 
+					header.inc.php and thus your database, as well as access to /etc/* where 
+					all sorts of fun and dangerous information could be abused. So in phpgw 
+					the only files required to be writable at all are under the files directory, 
+					and that's only if your planning on using the Filemanager or apps that use 
+					the VFS. Hopefully we've removed this risk by moving the files dir outside 
+					of the web root so that cannot be accessed directly and thus not executed. 
+					As for the header.inc.php, it never really needs to be world writable, 
+					but it can be convenient to make it so when you have to change something 
+					in the header manager. After making the changes the files should have the 
+					world write permissions removed. It does need to be world readable but the 
+					risk is reduced since the file is php and if accessed directly will be 
+					parsed on the server and send nothing to the client at all.
+				</p>
+				<h3>Myths and Truths</h3>
+				<p>
+					"the phpgroupware directory needs to be mode 777" Ack! no! this makes 
+					your whole tree world writable! all it takes is one malicious user to 
+					upload a file that edits the login files to record all logins and passwords 
+					for later abuse and your done for, start working on that resume.
+				</p>
+				<p>
+					"the phpgroupware directory needs to be owned by the same user apache runs under" 
+					Very false! this is in essence the same thing as mode 777!
+				</p>
+				<p>
+					"have the tree owned by apache's user and mode 700 is safer" well, not 
+					exactly. Having the header.inc.php owned by apache's user and mode 400 is 
+					about as safe as you can get since then other system users can't read your 
+					config, but now root need to maintain this file, which is just not ideal.
+				</p>
+				<p>
+					"having php pipe certain files like Excel and Word files causes 
+					problems, direct access is needed" At one time, yes, but that should 
+					all be fixed. You know the risks now so that's your call if you want to 
+					grant direct access..
+				</p>
+				<h3>Why install as a starndard user?</h3>
+				<p>
+					On my servers I maintain the main websites as regular users, including 
+					file ownership. This is more secure because even if the site is somehow 
+					comprimised, only a user account is affected. Now, if the site is maintained 
+					as root, well, I don't even wanna think about that. Also, using vhosts, 
+					this allows me to make users for each web site and let other people maintain 
+					the site without ever having to worry about root access. "root" priveledges 
+					are very rarely needed to install any web based application that runs on 
+					apache, why take the risk doing it anyway when it's not any harder to install 
+					as a user. For this HOWTO I used a regular user account's web space, but I 
+					could have just as easily put phpgroupware into it's own directory under 
+					that user account and made an apache alias or a simple softlink (ln -s) to 
+					have the site show up as http://server/phpgroupware/. This would even 
+					allow me to assign a user to maintain just the phpgw install and nothing 
+					else on the server if I so wanted.
+				</p>
+				<h3>Virtual Hosts on Apache</h3>
+				<p>
+					For information about running phpGroupWare in a virtual host, please refer to
+					<a href="../phpgw-apache.conf.html">doc/phpgw-apache.conf</a>.  This document
+					all includes some apache security options when running phpGroupWare.
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,3 @@
+#!/bin/tcsh -f
+
+grep "Genre" details | sed -f sed_genre

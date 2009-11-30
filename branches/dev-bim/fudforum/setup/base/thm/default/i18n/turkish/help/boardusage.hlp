@@ -1,0 +1,125 @@
+TOPIC_TITLE: <a name="bsearch">Nasýl arama yapabilirim?</a>
+TOPIC_HELP: Yönetici tarafýndan engellenmediði sürece forumdaki <a href="{ROOT}?t=search&%_rsid%" class="GenLink">iletilerde arama</a> yapabilirsiniz.
+Ýleti aramayý kullanýrken, aranmasýný istediðiniz anahtar sözcükleri belirttikten sonra, bu sözcüklerin nerede aranmasýný belirtmeniz
+de mümkün. Ýsterseniz iletinin sadece konu kýsmýnda, isterseniz iletinin hem konu hem de gövde bölümlerinde arama yapabilirsiniz.
+Aramanýzýn tüm forumlarda yapýlmasýný istemiyorsanýz, arama yapmak istediðiniz forumu da belirtebilirsiniz.
+<br>
+Ayrýca forumun diðer üyelerini kullanýcý isimleri veya e-mektup adreslerini ile <a href="{ROOT}?t=finduser&%_rsid%" class="GenLink">kullanýcý arama formunu</a>
+kullanarak arayabilirsiniz.
+
+
+TOPIC_TITLE: <a name="email">Diðer forum üyelerine e-mektup gönderebilir miyim?</a>
+TOPIC_HELP: <tr><td class="ForumBackground"><table cellspacing=2 cellpadding=2 width="100%" class="dashed"><tr><td class="GenText">
+Yönetici tarafýndan engellenmediði sürece, diðer forum üyeleri ile e-mektup yoluyla iletiþim kurabilirsiniz.<br>
+Bir üyeye e-mektup göndermek için, üye listesinden bulup <b>Ýletiþim</b> düðmesine, veya basitçe gönderilen
+iletilerdeki <b>E-mektup</b> düðmesine týklatabilirsiniz. Bu sizi yeni bir sayfaya yönlendirir, ve göndereceðiniz
+e-mektubunu konu ve gövde kýsmýný oluþturabilirsiniz. Bitirdiðinizde, basitce <b>Gönder</b> düðmesine týklatýn, ve e-mektubunuz
+gönderilecektir.
+<br><br>
+Forum üyelerine e-mektup göndermeye ek olarak, beðendiðiniz bir sayfayýnýn linkini arkadaþýnýza bir açýklama ile birlikte <b>Arkadaþýna gönder</b>
+linkini kullanarak gönderebilirsiniz. Bu link forumun zincir ve ileti görüntüleme sayfalarýnda bulunabilir.
+</td></tr></table></td></tr>
+
+
+TOPIC_TITLE: <a name="pmsg">Özel ileti nedir ve nasýl özel ileti gönderebilirim?</a> 
+TOPIC_HELP: Eðer yönetici Özel Ýleti sistemini engellemediyse, forumdaki bir veya daha fazla kullanýcýya özel iletiler gönderebilirsiniz.
+Özel Ýleti sistemine eriþmek için, basitçe sayfanýn üst köþesinde bulunan <a href="{ROOT}?t=pmsg&%_rsid%" class="GenLink">özel Ýletiler</a> linkine
+týklatabilirsiniz. Eðer okunmamýþ özel iletileriniz varsa, bu link size kaç tane okunmamýþ iletiniz olduðunu bildirecektir.
+<p>
+<b>Özel Ýleti Yollama</b><br>
+Özel ileti yollama, e-mektup yollamaya çok benziyor, iletiyi yollamak istediðniz kiþiyi belirtin, konuyu ve iletiyi yazdýktan sonra Gönder'i
+týklatýn. Ýki link daha var, bunlardan  <b>Arkadaþ Listesinden Seç</b> linki iletiyi göndermek istediðiniz üyeyi arkadaþ listenizden
+seçerek kolayca bulabilmenizi, <b>Kullanýcý Bul</b> linki ise tüm forum üyeleri arasýndan iletinizi göndermek istediðiniz üyeyi
+belirlemenizi saðlýyor. Gönderdiðiniz her iletinin bir kopyasý <b>Giden</b> klasörüne daha sonra hatýrlayabilmeniz için kopyalanacak, isterseniz
+daha sonra bu iletileri silebilirsiniz.
+<p>
+Farkýnda olmanýz gereken 3 klasör daha var:
+<p>
+<b>Gelen</b> klasörü size gönderilen iletilerin bulunduðu posta kutunuz görevindeki klasördür. Her ileti, okunup okunmadýðýný belirten bir
+göstergeye sahiptir. Ýletinin kim tarafýndan gönderildiði, gönderen kiþinin o anda baðlý olup olmadýðý, iletinin gönderildiði tarih gibi bilgiler de
+ek olarak belirtilir.
+<p>
+<b>Taslak</b> klasörü henüz gönderilmemiþ iletileri bulundurur. Ýletinin üzerine týklattýðýnýzda düzeltme moduna geçersiniz, böylece
+göndermeden önce iletinin üzerinde deðiþiklik yapma olanaðýnýz olur. Ýleti gönderildikten sonra TASLAK klasöründen silinip GÝDEN klasörüne
+taþýnýr.
+<p>
+<b>Çöp</b> klasörü sildiðiniz iletilerin bulunduðu klasördür. Diðer klasörlerden sildiðiniz iletiler önce çöp kutusuna taþýnýr, çöp kutusundan
+silinen iletiler, kalýcý olarak silinir.
+<p>
+<b>Ýleti Takibi</b><p>
+Herhangi bir ileti gönderdiðinizde bir alýndý bilgisi isteðinde bulunma olanýðýnýz var. Alýcý iletiyi okuduðunda bunu size haber veren bir sistem iletisi
+alýrsýnýz.
+<br>
+Bununla birlikte, böyle bir istekte bulunduðunuzda alýcýnýn bu isteði reddetme seçeneði var, dolayýsýyla bir alýndý bilgisi isteðinde bulunmanýza
+raðmen bu bilgi gelmemesi iletinizin okunmadýðý anlamýna gelmeyebilir.
+
+
+TOPIC_TITLE: <a name="mlist">Üye Listesi nedir?</a>
+TOPIC_HELP: Üye Listesi forum üzerindeki tüm üyelerin bir listesidir. Üye listesini 3 deðiþik þekilde sýralayabilirsiniz:
+Kullanýcý isimlerine göre alfabetik olarak, gönderilen ileti sayýsýna göre ve kayýt tarihine göre.
+<br><br>
+Üye Listesinde ayrýca arama yapabilmeniz de mümkün, belirli bir üyeyi kullanýcý ismine veya e-mektup adresine göre arayabilirsiniz.
+
+TOPIC_TITLE:<a name="ann">Duyurular ve Yapýþkan iletiler nedir?</a>
+TOPIC_HELP: Yöneticiler ve denetmenler tarafýndan oluþturulabilen bazý özel iletiler vardýr. Bu iletiler belirli bir süre boyunca forumun en üst kýsmýnda
+dururlar. Genellikle kullanýcýlarý belirli bir olay veya kurallar hakkýnda bilgilendirmek amacýyla kullanýlýrlar.
+
+
+TOPIC_TITLE: <a name="rate">Zincirleri deðerlendirebilir miyim?</a>
+TOPIC_HELP: Bazý zincirler için bir "Beðeni" durumunun görüntülendiðini farketmiþsinizdir. Eðer yönetici tarafýndan izin verildiyse, bir zincirin deðerlendirilmesine
+katkýda bulunabilirsiniz. Ýletinin görüntülendiði sayfanýn alt kýsmýnda yer alan <b>Zinciri Deðerlendir</b> seçim kutusunu kullanarak 1-5 (5 en yüksek derece olmak üzere) arasinda bir deðerlendirme yapabilirsiniz.
+
+
+TOPIC_TITLE: <a name="ref">Tanýtýmlar nedir?</a>
+TOPIC_HELP: Tanýtýmlar bölümünde, sizin veya diðer forum üyeleri tarafýndan forumun tanýtýmýnýn/önerisinin yapýldýðý üyeleri görebilirsiniz. Bu tanýtýmlar
+otomatik olarak takip edilir, eðer birine forumun tanýtýmýný yapan bir URL gönderdiyseniz, ve o kiþi bu URL'yi kullanarak kayýt olduysa, o kiþiye
+tanýtým yapan kiþi siz olmuþ olacaksýnýz. Tanýtým yaptýðýnýz kiþilerin listesi kiþisel bilgileriniz sayfasýnda yer alan Tanýtýmlar bölümünden
+görüntülenebilir.
+
+TOPIC_TITLE: <a name="syndicate">Bu forumdan haber baþlýklarý yayýnlamak</a>
+TOPIC_HELP:
+Yönetici tarafýndan izin verilmiþse, FUDforum XML (rdf) yoluyla bu forumdaki veriyi haber baþlýklarý þeklinde yayýnlamanýzý saðlar. RDF temel olarak
+3 kipte çalýþýr, ileti yayýnlama, zincir yayýnlama ve kullanýcý bilgisi yayýnlama. Her iþlem kipinde, çekmek istediðiniz verinin
+tipi ile ilgili belirtebileceðiniz bir kaç parametre vardýr. Aþaðýda her bir kip için kullanýlabilecek parametrelerin açýklamasýný
+bulabilirsiniz.<br />
+<br /><br />
+<h4><u><b>'m' kipi (iletiler)</b></u></h4>
+<blockquote>
+	<table border=0 cellspacing=1 cellpadding=3>
+		<tr><td class="GenText"><i>cat<i></td><td class="GenText">Sadece bu numaralý kategorideki iletileri al.</td></tr>
+		<tr><td class="GenText"><i>frm<i></td><td class="GenText">Sadece bu numaralý forumdaki iletileri al.</td></tr>
+		<tr><td class="GenText"><i>th<i></td><td class="GenText">Sadece bu numaralý zincirdeki iletileri al.</td></tr>
+		<tr><td class="GenText"><i>id<i></td><td class="GenText">Bu numaralý iletiyi al (Tek bir ileti)</td></tr>
+		<tr><td class="GenText"><i>ds<i></td><td class="GenText">Sadece bu tarihten sonra gönderilmiþ iletileri al (unix timestamp biçimi).</td></tr>
+		<tr><td class="GenText"><i>de<i></td><td class="GenText">Sadece bu tarihten önce gönderilmiþ iletileri al (unix timestamp biçimi).</td></tr>
+		<tr><td class="GenText"><i>n</i></td><td class="GenText">En fazla <i>n</i> tane ileti al.</td></tr>
+		<tr><td class="GenText"><i>o</i></td><td class="GenText">Ýletilerin alýnmaya baþlanacaðý ofset.</td></tr>
+		<tr><td class="GenText"><i>l</i></td><td class="GenText">Ýletileri en yeniden en eskiye sýrala.</td></tr>
+	</table>
+</blockquote>
+<h4><u><b>'t' kipi (zincirler)</b></u></h4>
+<blockquote>
+	<table border=0 cellspacing=1 cellpadding=3>
+		<tr><td class="GenText"><i>cat<i></td><td class="GenText">Sadece bu numaralý kategorideki zincirleri al.</td></tr>
+		<tr><td class="GenText"><i>frm<i></td><td class="GenText">Sadece bu numaralý forumdaki zincirleri al.</td></tr>
+		<tr><td class="GenText"><i>id<i></td><td class="GenText">Bu numaralý zinciri al (Tek bir zincir)</td></tr>
+		<tr><td class="GenText"><i>ds<i></td><td class="GenText">Sadece son ileti gönderilme tarihi bu tarihten sonra olan zincirleri al (unix timestamp biçimi).</td></tr>
+		<tr><td class="GenText"><i>de<i></td><td class="GenText">Sadece son ileti gönderilme tarihi bu tarihten önce olan zincirleri al (unix timestamp biçimi)</td></tr>
+		<tr><td class="GenText"><i>n</i></td><td class="GenText">En fazla <i>n</i> tane zincir al.</td></tr>
+		<tr><td class="GenText"><i>o</i></td><td class="GenText">Zincirlerin alýnmaya baþlanacaðý ofset.</td></tr>
+		<tr><td class="GenText"><i>l</i></td><td class="GenText">Zincirleri en yeniden en eskiye sýrala.</td></tr>
+	</table>
+</blockquote>
+<h4><u><b>'u' kipi (kullanýcýlar) <i>**engellenmiþ olabilir**</i></b></u></h4>
+<blockquote>
+	<table border=0 cellspacing=1 cellpadding=3>
+		<tr><td class="GenText"><i>pc</i></td><td class="GenText">Kullanýcýlarý gönderdikleri ileti sayýsýna göre en çoktan en aza sýrala.</td></tr>
+		<tr><td class="GenText"><i>rd</i></td><td class="GenText">Kullanýcýlarý kayýt tarihlerine göre en yeniden en eskiye sýrala.</td></tr>
+		<tr><td class="GenText"><i>cl</i></td><td class="GenText">Sadece þu anda baðlý olan kullanýcýlarý göster.</td></tr>
+		<tr><td class="GenText"><i>n</i></td><td class="GenText">En fazla <i>n</i> tane kullanýcý al.</td></tr>
+		<tr><td class="GenText"><i>o</i></td><td class="GenText">Kullanýcýlarýn alýnmaya baþlanacaðý ofset.</td></tr>
+	</table>
+</blockquote>
+<b>Örnek:</b><br />
+Bu link bu forumdaki 10 en yeni iletiyi alacaktýr:<br />
+<a href="rdf.php?mode=m&l=1&n=10" target="_blank">rdf.php?mode=m&l=1&n=10</a>

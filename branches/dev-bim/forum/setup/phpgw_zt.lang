@@ -1,0 +1,37 @@
+add forum	forum	zt	新增討論區
+all forums, user posts, and topics in this category will be lost!	forum	zt	這個分類下的所有討論區、使用者文章及主題將會被移除！
+all user posts and topics will be lost!	forum	zt	屬所有的使用者文章及主題將會被移除！
+are you sure you want to delete this category?	forum	zt	您確定要移除這個分類嗎？
+are you sure you want to delete this forum?	forum	zt	您確定要移除這個討論區嗎？
+author	forum	zt	作者
+belongs to category	forum	zt	屬於分類
+category description	forum	zt	分類說明
+category name	forum	zt	分類名稱
+change forum settings	admin	zt	更動討論區設定
+collapse threads	forum	zt	折疊討論串
+create new category	forum	zt	建立新的分類
+current categories and sub forums	forum	zt	目前的分類及子討論區
+email replies to this thread, to the address above	forum	zt	這個討論串的所有回覆皆使用電子郵件送至上列地址
+forum	common	zt	討論區
+forum administration	admin	zt	討論區管理
+forum description	forum	zt	討論區說明
+forum name	forum	zt	討論區名稱
+forums	forum	zt	討論區
+latest reply	forum	zt	最後回復
+new category	forum	zt	新增分類
+new forum	forum	zt	新增討論區
+new topic	forum	zt	新增主題
+no category	forum	zt	無分類
+normal view	forum	zt	正常檢視
+replies	forum	zt	回覆
+reply to this message	forum	zt	回覆此文章
+return to admin	forum	zt	回到系統管理
+return to forums	forum	zt	回到討論區
+topic	forum	zt	主題
+update category	forum	zt	更新分類
+update forum	forum	zt	更新討論區
+view threads	forum	zt	檢視討論串
+view collapse	forum	zt	折疊檢視
+your email	forum	zt	您的電子郵件地址
+your name	forum	zt	您的姓名
+

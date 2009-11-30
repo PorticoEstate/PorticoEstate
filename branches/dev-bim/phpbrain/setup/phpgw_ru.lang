@@ -1,0 +1,112 @@
+action	phpbrain	ru	Действие
+add articles	phpbrain	ru	Добавит Статью
+add link	phpbrain	ru	Добавить ссылку
+add question	phpbrain	ru	Задать вопрос
+added file %1	phpbrain	ru	Добавлен файл %1
+added link %1	phpbrain	ru	Добавлена ссылка %1
+advanced search	phpbrain	ru	Расширенный поиск
+all articles	phpbrain	ru	Все статьи
+answer	phpbrain	ru	ответ
+anywhere in the article	phpbrain	ru	В любом месте статьи
+article	phpbrain	ru	Статья
+article added to database, you can now attach files or links, or relate to other articles	phpbrain	ru	Статья добавлена в базу данных. Теперь вы можете прикрепить файл или ссылку или соотнести с другими статьями
+article created	phpbrain	ru	Статья создана
+article deleted	phpbrain	ru	Статья удалена
+article deleted successfully	phpbrain	ru	Статья успешно удалена
+article edited	phpbrain	ru	Статья отредактирована
+article has been published	phpbrain	ru	Статья была опубликована
+article id	phpbrain	ru	ID статьи
+articles added	phpbrain	ru	Статьи добавлены
+articles deleted successfully	phpbrain	ru	Статьи успешно удалены
+articles have been published	phpbrain	ru	Статьи опубликованы
+articles in %1	phpbrain	ru	Статьи в %1
+articles in %1 and all its subcategories	phpbrain	ru	Статьи в %1 и всех подкатегориях
+articles not classified under any category	phpbrain	ru	Статья не относится ни  к одной категории
+attach file	phpbrain	ru	Прикрепленный файл
+attached files	phpbrain	ru	Прикрепленные файлы
+average rating	phpbrain	ru	Средний рейтинг
+base directory does not exist, please ask the adminstrator to check the global configuratio	phpbrain	ru	Базовая директория не существует, свяжитесь с администратором для проверки общих установок
+before submiting a question, please search in the knowledge base first	phpbrain	ru	Перед тем как отправить ваш вопрос, поищите в Базе Знаний.
+by answering this question you will help to get the answer quicker the next time	phpbrain	ru	Ответив на этот вопрос, вы поможете быстрее найти ответ на него в следующий раз
+comment	phpbrain	ru	комментарий
+comment and rating have been published	phpbrain	ru	Комментарий и рейтинг были опубликованы
+comment could not be inserted in the database	phpbrain	ru	Комментарий не может быть помещен в базу данных
+comment has been deleted	phpbrain	ru	Комментарий был удален
+comment has been published	phpbrain	ru	Комментарий был опубликован
+comments	phpbrain	ru	Комментарии
+created by %1 on %2	phpbrain	ru	Автор %1 дата создания %2
+creation date	phpbrain	ru	Дата создания
+date	phpbrain	ru	Дата
+delete article	phpbrain	ru	Удалить статью
+delete selected	phpbrain	ru	Удалить отмеченное
+e-mail has been sent	phpbrain	ru	e-mail был отправлен
+edit article	phpbrain	ru	Редактировать статью
+enter one or two words describing the issue, or type the article number if you know it	phpbrain	ru	Введите одно или два слова, которые наиболее описывают ваш запрос, или введите номер статьи, если Вы его знаете
+error deleting article from database	phpbrain	ru	Ошибка удаление статьи из базы данных
+error deleting link	phpbrain	ru	Ошибка удаления ссылки
+error downloading file	phpbrain	ru	Ошибка скачивания файла
+error: file doesn't exist in the database	phpbrain	ru	Ошибка: файл отсутствует в базе данных
+excellent	phpbrain	ru	Отлично
+file could be deleted from server but not from database	phpbrain	ru	Файл может быть удален с сервера, но не из базы данных
+file has been successfully uploaded	phpbrain	ru	Файл был удачно загружен
+file was deleted successfully	phpbrain	ru	Файл был успешно удален
+find results	phpbrain	ru	Поиск результатов
+history	phpbrain	ru	История
+if you can't find answers to your problem in the knowledge base, describe it below	phpbrain	ru	Если вы не можете найти ответ в Базе знаний, то опишите интересующую вас проблему ниже
+if you wish, you can comment this article here	phpbrain	ru	Если вы желаете, то можете оставить ваши комментарии здесь
+in %1	phpbrain	ru	в %1
+in the text	phpbrain	ru	в тексте
+in the title	phpbrain	ru	в заголовке
+include subcategories	phpbrain	ru	включая подкатегории
+keywords	phpbrain	ru	Ключевые слова
+knowledge base article #%1	phpbrain	ru	Статья Базы Знаний &#8470;%1
+knowledge base configuration	common	ru	Конфигурация Базы Знаний
+last modification by %1 on %2	phpbrain	ru	Последние изменения внесены %1 (дата правки %2)
+latest	phpbrain	ru	Последние
+latest comments	phpbrain	ru	Последние комментарии
+leave empty to automatically generate an id	phpbrain	ru	Оставьте пустой для автоматической генерации ID
+link could not be added	phpbrain	ru	Ссылка не может быть добавлена
+link deleted successfully	phpbrain	ru	Ссылка успешно удалена
+link has been added	phpbrain	ru	Ссылка была добавлена
+links	phpbrain	ru	Ссылки
+links & files	phpbrain	ru	Ссылки и файлы
+mail article	phpbrain	ru	Отправить по e-mail
+main view	phpbrain	ru	Главная
+maintain articles	phpbrain	ru	Управление Статьями
+maintain questions	phpbrain	ru	Управление Вопросами
+maximum number of comments to show:	phpbrain	ru	Максимально показывать комментариев:
+modification date	phpbrain	ru	Дата редактирования
+most viewed	phpbrain	ru	Наиболее просматриваемые
+new article	phpbrain	ru	Добавить Статью
+number of results per page	phpbrain	ru	Количество результатов выводимых на страницу
+order results by	phpbrain	ru	Сортировать результаты по
+phpbrain	common	ru	База Знаний
+please try again	phpbrain	ru	Попробуйте еще раз
+poor	phpbrain	ru	Плохо
+printer view	phpbrain	ru	Версия для печати
+publication date	phpbrain	ru	Дата публикации
+publish	phpbrain	ru	Опубликовать
+publish selected	phpbrain	ru	Опубликовать выбранное
+search in all the knowledge base	phpbrain	ru	Поиск по всей Базе Знаний
+search results	phpbrain	ru	Результаты поиска
+select articles	phpbrain	ru	Выбирите статьи
+show all comments	phpbrain	ru	Показать все комментарии
+show messages in category	phpbrain	ru	Показать сообщения в категории
+submit comment	phpbrain	ru	Отправить комментарий
+submit comment and rating	phpbrain	ru	Отправить комментарий и рейтинг
+summary	phpbarin	ru	Кратко
+the present category and all subcategories under it	phpbrain	ru	Текущая категория и все подкатегории связанные с ней
+to create categories, press 'edit categories' in the preferences menu	phpbrain	ru	Для создания категорий выбирике 'Редактировать Категории' в меню Настроек
+topic	phpbrain	ru	Тема
+unable to add rating to database	phpbrain	ru	Невозможно добавить рейтинг в базу данных
+unanswered questions	phpbrain	ru	Неотвеченные вопросы
+user	phpbrain	ru	Пользователь
+views	phpbrain	ru	просмотров
+with all the words	phpbrain	ru	Содержащих все слова
+with at least one of the words	phpbrain	ru	Содержащих хотя бы одно слово
+with the exact phrase	phpbrain	ru	Содержащих точную фразу
+without the words	phpbrain	ru	Не содержащих слова
+you are in %1	phpbrain	ru	Вы находитесь в разделе %1
+you have not the proper permissions to do that	phpbrain	ru	У вас нет прав для выполнения данного действия
+your question will be posted, but only will be published after approval by a user with publishing rights	phpbrain	ru	Ваш вопрос будет отправлен, но будет опубликован только после утверждения пользователем с соответствующими на это правами
+your question will be published immediately	phpbrain	ru	Ваш вопрос будет незамедлительно опубликован

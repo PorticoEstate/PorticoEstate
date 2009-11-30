@@ -1,0 +1,28 @@
+are you sure you want to delete %1 ?	ftp	no	Vil du virkelig slette %1 ?
+attempt to create a directory with empty name	ftp	no	Forsøk å lage et directory uten navn
+cancel	ftp	no	avbryt
+cd	ftp	no	cd
+connect	ftp	no	Connect
+create new directory	ftp	no	Laget nytt dir
+delete	ftp	no	slette
+failed to connect to %1 with user %2 and password %3	ftp	no	Kunne ikke connecte til %1 med bruker %2 og passord %3
+failed to create directory %1	ftp	no	Kunne ikke lage nytt direcotory %1
+failed to delete %1	ftp	no	Kunne ikke slette %1
+failed to rename %1 to %2	ftp	no	Kunne ikke rename %1 til %2
+failed to upload %1	ftp	no	Kunne ikke uploade %1
+ftp client	ftp	no	Ftp Klient
+ftp server	ftp	no	Ftp Server
+logout/relogin	ftp	no	logout/relogin
+password	ftp	no	Passord
+rename	ftp	no	rename %
+rename from	ftp	no	Rename fra
+rename to	ftp	no	til
+renamed	ftp	no	Renamed %1 til %2
+save	ftp	no	lagre
+save to filemanager	ftp	no	lagre til filmanager
+successfully created directory %1	ftp	no	Laget %1
+successfully deleted %1	ftp	no	Slettet %1
+successfully uploaded %1	ftp	no	Suksessfullt uploaded %1
+upload	ftp	no	upload
+username	ftp	no	Brukernavne
+view	ftp	no	vis

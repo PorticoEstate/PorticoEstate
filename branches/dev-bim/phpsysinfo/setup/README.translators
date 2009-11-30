@@ -1,0 +1,5 @@
+Edit/create phpsysinfo/includes/lang/XX.php files.  We will also feed these 
+back upstream to the phpsysinfo project - http://sf.net/projects/phpsysinfo.
+
+There should only be 2 phrases translated using the phpGW lang system for
+this app.

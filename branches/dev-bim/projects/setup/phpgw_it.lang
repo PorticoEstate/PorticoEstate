@@ -1,0 +1,184 @@
+account	projects	it	Account
+accountancy	common	it	Accountancy
+active	projects	it	Attivo
+activities	projects	it	Attività
+activities list	projects	it	Lista attività
+activity	projects	it	Attività
+activity %1 has been added !	projects	it	L'attività %1 è stata aggiunta!
+activity %1 has been updated !	projects	it	L'attività %1 è stata aggiornata!
+activity id	projects	it	ID Attività
+add activity	projects	it	Aggiungi Attività
+add job	projects	it	Aggiungi Lavoro
+add project	projects	it	Aggiungi progetto
+add project hours	projects	it	Aggiungi ore di progetto
+add work hours	projects	it	Aggiungi ore di lavoro
+administrator	projects	it	Amministratore
+all	projects	it	Tutto
+all delivery notes	projects	it	Tutte le note di consegna
+all invoices	projects	it	Tutte le fatture
+archive	projects	it	Archivio
+arial	projects	it	Arial
+bill per hour	projects	it	Costo per ora
+bill per workunit	projects	it	Costo per unità di lavoro
+billable activities	projects	it	Attività fatturabili
+billed	projects	it	Fatturato
+billed only	projects	it	Solo Fatturato
+billing	projects	it	Fatturazione
+bookable activities	projects	it	Attività contabilizzabili
+bookkeeper	projects	it	Responsabile contabile
+bookkeeping	common	it	Contabilità
+budget	projects	it	Budget
+calculate	projects	it	Esegui Calcoli
+closed	projects	it	Chiuso
+coordinator	projects	it	Coordinatore
+courier new	projects	it	Courier new
+create delivery	projects	it	Crea Bolla
+create invoice	projects	it	Crea Fattura
+customer	projects	it	Cliente
+delete hours	projects	it	Cancella ore
+deliveries	projects	it	Consegne
+delivery	projects	it	Consegna
+delivery %1 has been created !	projects	it	La Consegna %1 è stata creata!
+delivery %1 has been updated !	projects	it	La Consegna %1 è stata modificata!
+delivery date	projects	it	Data Consegna
+delivery id	projects	it	ID Consegna
+delivery list	projects	it	Lista Consegne
+delivery note	projects	it	Nota Consegna
+delivery note for project	projects	it	Nota di Consegna per progetto
+delivery notes	projects	it	Note di Consegna
+description can not exceed 255 characters in length !	projects	it	La descrizione non può essere più lunga di 255 caratteri!
+description can not exceed 8000 characters in length !	projects	it	La descrizione non può essere più lunga di 8000 caratteri!
+do you also want to delete all sub projects ?	projects	it	Vuoi Cancellare anche tutti i sottoprogetti?
+edit activity	projects	it	Modifica Attività
+edit job	projects	it	Modifica Lavoro
+edit project	projects	it	Modifica Progetto
+edit project administrator list	projects	it	Modifica lista amministratori progetto
+edit project bookkeeper list	projects	it	Modifica lista responsabili contabili
+edit project hours	projects	it	Modifica ore di progetto
+edit work hours	projects	it	Modifica ore di lavoro
+employee	projects	it	Impiegato
+ending date can not be after main projects ending date !	projects	it	La data di fine non può essere successiva alla data di fine del progetto
+ending date can not be before start date	projects	it	La data di fine non può precedere la data d'inizio
+error in calculation sum does not match !	projects	it	Errore nei calcoli, la somma non corrisponde
+exactly accounting	projects	it	
+generate activity id ?	projects	it	Generare ID Attività?
+generate delivery id ?	projects	it	Generare ID Consegna?
+generate invoice id ?	projects	it	Generare ID Fattura?
+generate job id ?	projects	it	Generare ID Lavoro?
+generate project id ?	projects	it	Generare ID Progetto?
+georgia	projects	it	Georgia
+helvetica	projects	it	Helvetica
+hours	projects	it	Ore
+id can not exceed 19 characters in length !	projects	it	L'ID non può essere più lungo di 19 caratteri!
+id can not exceed 25 characters in length !	projects	it	L'ID non può essere più lungo di 25 caratteri!
+invoice	projects	it	Fattura
+invoice %1 has been created !	projects	it	La Fattura %1 è stata creata!
+invoice %1 has been updated !	projects	it	La Fattura %1 è stata aggiornata!
+invoice date	projects	it	Data Fattura
+invoice for project	projects	it	Fattura per progetto
+invoice id	projects	it	ID Fattura
+invoice layout	projects	it	Layout Fattura
+invoice list	projects	it	Lista Fatture
+invoices	projects	it	Fatture
+invoicing of work time	projects	it	Fatturazione del tempo lavorato
+job	projects	it	Lavoro
+job archive	projects	it	Archivio Lavori
+job date	projects	it	Data Lavoro
+job description	projects	it	Descrizione Lavoro
+job has been added !	projects	it	Il lavoro è stato aggiunto!
+job has been updated !	projects	it	Il lavoro è stato aggiornato!
+job id	projects	it	ID Job
+job list	projects	it	Lista Lavori
+jobs	projects	it	Lavori
+large	projects	it	Grande
+main project:	projects	it	Progetto principale
+minutes per workunit	projects	it	Minuti per unità di lavoro
+net	projects	it	rete
+new project	projects	it	Nuovo progetto
+nonactive	projects	it	Non Attivo
+number	projects	it	Numero
+open	projects	it	Aperto
+overall	projects	it	Complessivo
+per hour	projects	it	per ora
+per hour/workunit	projects	it	per ora/unità di lavoro
+per workunit	projects	it	per unità di lavoro
+please choose activities for that project first !	projects	it	Scegliere prima le attività per questo progetto!
+please enter a remark !	projects	it	Inserire le osservazioni!
+please enter an id !	projects	it	Inserire un ID!
+please enter the bill !	projects	it	Inserire la fattura!
+please enter the minutes per workunit !	projects	it	Inserire i minuti per unità di lavoro!
+please set the minutes per workunit for each activity now !	projects	it	Impstare i minuti per unità di lavoro per ogni attività, adesso!
+please set your preferences for this application !	projects	it	Impostare le preferenze per questa applicazione
+position	projects	it	Posizione
+preferences for accountancy	projects	it	Preference per l'accountancy
+print delivery	projects	it	Stampa nota di consegna
+print invoice	projects	it	Stampa fattura
+project	projects	it	Progetto
+project archive	projects	it	Archivio Progetti
+project billing	projects	it	Fatturazione Progetto
+project delivery	projects	it	Consegne Progetto
+project id	projects	it	ID Progetto
+project list	projects	it	Lista Progetti
+project name	projects	it	Nome Progetto
+project preferences	projects	it	Preferenze progetto
+project statistic	projects	it	Statistica Progetto
+project statistics	projects	it	Statistiche Progetto
+projects	common	it	Progetti
+projects preferences	preferences	it	Preferenze progetti
+remark	projects	it	Osservazioni
+remark can not exceed 8000 characters in length !	projects	it	Le osservazioni non possono essere più lunghe di 8000 caratteri
+remark required	projects	it	Osservazioni Richieste
+select	projects	it	Selezione
+select font	projects	it	Seleziona Font
+select font size for customer address	projects	it	Seleziona la dimensione del carattere per l'indirizzo del cliente
+select font size for own address	projects	it	Seleziona la dimensione del carattere per il proprio indirizzo
+select groups	projects	it	Selezione gruppi
+select main project	projects	it	Selezione progetto principale
+select own address	projects	it	Selezione del proprio indirizzo
+select per button !	projects	it	Selezionare con il pulsante
+select project	projects	it	Seleziona progetto
+select tax for work time	projects	it	Seleziona tasse per tempo lavorato
+select users	projects	it	Selezione utenti
+short description	projects	it	Descrizione breve
+small	projects	it	Piccolo
+sorry, no preferences to set for you :)	projects	it	Spiacente,  non ci sono preferenze da impostare
+start date can not be before main projects start date !	projects	it	La data d'inizio non può precedere la data d'inizio del progetto principale
+statistic	projects	it	Statistica
+statistics	projects	it	Statistiche
+sum	projects	it	Totale
+sum hours	projects	it	Somma ore
+sum net	projects	it	Totale netto
+sum workunits	projects	it	Somma Unità di Lavoro
+tahoma	projects	it	Tahoma
+tax	projects	it	IVA
+that id has been used already !	projects	it	Questo ID è già stato utilizzato
+the delivery note contains no items !	projects	it	La nota di Consegna non contiene nessun elemento!
+the invoice contains no items !	projects	it	La Fattura non Contiene nessun Elemento
+times new roman	projects	it	Times New Roman
+title can not exceed 255 characters in length !	projects	it	Il Titolo nonpuò essere più lungo di 255 caratteri!
+update delivery	projects	it	Modifica Consegna
+update invoice	projects	it	Modifica Fattura
+user statistic	projects	it	Statistica Utente
+user statistics	projects	it	Statistiche Utente
+username / group	projects	it	Username/Gruppo
+verdana	projects	it	Verdana
+very large	projects	it	Molto Grande
+very small	projects	it	Molto Piccolo
+view job	projects	it	Visualizza Lavoro
+view project	projects	it	Visualizza Progetto
+view work hours	projects	it	Visualizza Ore di Lavoro
+work date	projects	it	Data Lavoro
+work hours	projects	it	Ore Lavoro
+work hours archive	projects	it	Archivio Ore Lavorate
+work hours list	projects	it	Lista Ore Lavoro
+work time	projects	it	Tempo di Lavoro
+workunit	projects	it	Unità di Lavoro
+workunits	projects	it	Unità di Lavoro
+written by:	projects	it	Srcitto da:
+you have entered an invalid date !	projects	it	E' stata inserita una data non valida!
+you have entered an invalid end date !	projects	it	E' stata inserita una data di fine non valida!
+you have entered an invalid start date !	projects	it	E' stata inserita una data d'inizio non valida!
+you have no customer selected !	projects	it	Non è stato selezionato il cliente!
+you have selected an invalid activity !	projects	it	E' stata selezionata una attività non valida!
+you have to create a delivery or invoice first !	projects	it	Bisogna creare prima una consegna o una fattura!
+

@@ -1,0 +1,3 @@
+#!/bin/tcsh -f
+
+grep "Tagline:" details | sed -f sed_tagline

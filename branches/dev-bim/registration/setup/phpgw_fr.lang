@@ -1,0 +1,37 @@
+account password retrieval	registration	fr	Récupération de mot de passe
+account registration	registration	fr	Enregistrement de compte
+address	registration	fr	Adresse
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	fr	Après avoir entré votre nom d'utilisateur, les intructions pour changer votre mot de passe vont vous être envoyées par EMail à l'adresse que vous avez donné en vous enregistrant.
+change password for user	registration	fr	Changer le mot de passe pour l'utilisateur
+checkbox	registration	fr	Boîte à cocher
+current fields:	registration	fr	Champs actuels:
+dropdown	registration	fr	Boîte de sélection
+enter your new password	registration	fr	Entrez votre nouveau mot de passe
+gender	registration	fr	Genre
+i have read the terms and conditions and agree by them.	registration	fr	J'ai lu les termes et conditions et je les accepte.
+name (blank unless text, textarea, dropdown, checkbox; else alphanumeric only)	registration	fr	Nom (vide ou alors Texte, Zone de texte, Boîte de sélection, Boîte à cocher; sinon alphanumérique seulement)
+order	registration	fr	Ordre
+phone	registration	fr	Téléphone
+phpgroupware - account registration	registration	fr	phpGroupWare - Enregistrement de comptes
+re-enter password	registration	fr	Ré-entrez le mot de passe
+re-enter your password	registration	fr	Ré-entrez votre mot de passe
+registration	common	fr	Enregistrement
+remove	registration	fr	Enlever
+report all problems and abuse to	registration	fr	Rapporter tous les problèmes et abus à
+required	registration	fr	Nécessaire
+sorry, that username does not exist.	registration	fr	Désolé, ce nom d'utilisateur n'existe pas.
+sorry, that username is already taken.	registration	fr	Désolé, ce nom d'utilisateur est déjà pris.
+textarea	registration	fr	Zone de texte
+the passwords you entered don't match	registration	fr	Les mots de passe que vous avez entré ne correspondent pas
+the two passwords are not the same	registration	fr	Les deux mots de passe ne sont pas les mêmes
+type	registration	fr	Type
+update/add	registration	fr	Mettre à jour/Ajouter
+values (for dropdown only; comma separated)	registration	fr	Valeurs (For Boîte de sélection seulement; séparé par des virgules)
+wrong session	registration	fr	Mauvaise session
+you have entered an invalid birthday	registration	fr	Vous avez entré un anniversaire invalide
+you have entered an invalid email address	registration	fr	Vous avez entré une adresse EMail invalide
+you must enter a password	registration	fr	Vous devez entrer un mot de passe
+you must enter a username	registration	fr	Vous devez entrer un nom d'utilisateur
+you must fill in all of the required fields	registration	fr	Vous devez remplir tous les champs demandés
+you specified a value for 	registration	fr	Vous avez spécifié une valeur pour
+zip/postal	registration	fr	Code ZIP/Postal
