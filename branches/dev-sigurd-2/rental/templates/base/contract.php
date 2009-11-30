@@ -315,9 +315,9 @@
 					</dt>
 					<dd>
 						<?php
+						$current_term_id = $contract->get_term_id();
 						if ($editable)
 						{
-							$current_term_id = $contract->get_term_id();
 							?>
 							<select name="billing_term">
 								<?php
@@ -333,7 +333,7 @@
 						}
 						else // Non-editable
 						{
-							echo lang($contract->get_term_id_title());
+							echo lang(rental_socontract::get_instance()->get_term_label($current_term_id));
 						}
 						?>
 					</dd>
