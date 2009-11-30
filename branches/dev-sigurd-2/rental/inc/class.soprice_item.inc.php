@@ -283,12 +283,14 @@ class rental_soprice_item extends rental_socommon
 		$price_item = $this->get_single($price_item_id);
 		$contract = rental_socontract::get_instance()->get_single($contract_id);
 		$rented_area = 0;
+		$total_price = 0;
 		if($price_item->is_area()){
 			$rented_area = $contract->get_rented_area();
 			if($rented_area == ''){
 				$rented_area = 0;
 			}
 			$total_price = ($rented_area * $price_item->get_price());
+			//var_dump($total_price, $rented_area, $price_item->get_price());
 		}
 		if($price_item)
 		{
@@ -303,6 +305,7 @@ class rental_soprice_item extends rental_socommon
 				$total_price
 			);
 			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
+			//var_dump($q);
 			$result = $this->db->query($q);
 			if($result)
 			{
