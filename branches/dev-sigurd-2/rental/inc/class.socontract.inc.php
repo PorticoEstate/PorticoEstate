@@ -788,6 +788,17 @@ class rental_socontract extends rental_socommon
 		
 		return $results;
     }
+    
+    public function get_contract_type_label($contract_type_id){
+    	$q1="SELECT rct.label FROM rental_contract_types rct WHERE rct.id={$contract_type_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		$results = "";
+		while($this->db->next_record()){
+			$result = $this->db->f('label');
+		}
+		
+		return $result;
+    }
 
     public function clear_last_edited_table() {
         $q = "DELETE FROM rental_contract_last_edited";

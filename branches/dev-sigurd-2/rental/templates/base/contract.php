@@ -179,10 +179,9 @@
 					</dt>
 					<dd>
 						<?php
+						$current_contract_type_id = $contract->get_contract_type_id();
 						if ($editable)
 						{
-							$current_contract_type_id = $contract->get_contract_type_id();
-							
 							?>
 							<select name="contract_type">
 								<option>Ingen type</option>
@@ -199,7 +198,7 @@
 						}
 						else // Non-editable
 						{
-							echo lang($contract->get_contract_type_id());
+							echo rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id);
 						}
 						?>
 					</dd>
