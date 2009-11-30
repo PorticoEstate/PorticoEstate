@@ -189,11 +189,17 @@
 			// set a higher timeout for big messages
 			@set_time_limit(120);
 			#$smtp->SMTPDebug = 10;
-			if(!$smtp->Send())
+			try
+			{
+				$smtp->Send();
+			}
+			catch (phpmailerException $e)
 			{
 				$this->errorInfo = $smtp->ErrorInfo;
+				throw $e;
 				return false;
 			}
+
 			return true;
 		}
 	

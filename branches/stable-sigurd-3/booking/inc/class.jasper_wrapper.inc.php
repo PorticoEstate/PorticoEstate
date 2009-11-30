@@ -28,9 +28,10 @@ function jasper_wrapper($parameters, $output_type, $report_name, &$err)
 		return 102;
 	}
 
-	$cmd = sprintf("CLASSPATH=%s %s JasperEngine -p %s -t %s -n %s %s",
+	$cmd = sprintf("CLASSPATH=%s %s -D%s JasperEngine -p %s -t %s -n %s %s",
 					$java_classpath,
 					JAVA_BIN,
+					'java.awt.headless=true', // To run the environment with a headless implementation (when apache-user can't connect to X11)
 					$parameters,
 					$output_type,
 					$report_name,

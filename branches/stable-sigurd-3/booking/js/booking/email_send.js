@@ -1,6 +1,6 @@
 populateSeasonTable = function(building_id, selection) {
-    YAHOO.booking.radioTableHelper('season_container', 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
-    'season_id', selection);
+    YAHOO.booking.checkboxTableHelper('season_container', 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' +  building_id + '&phpgw_return_as=json&',
+    'seasons[]', selection);
 }
 
 YAHOO.util.Event.addListener(window, "load", function() {
