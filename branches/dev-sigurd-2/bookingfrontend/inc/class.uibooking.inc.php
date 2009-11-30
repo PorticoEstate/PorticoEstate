@@ -36,7 +36,7 @@
 			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
 			foreach($bookings['results'] as &$row)
 			{
-				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $booking['resource_id']));
+				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule', 'id' => $row['resource_id']));
 				array_walk($row, array($this, 'item_link'));
 			}
 			$data = array
