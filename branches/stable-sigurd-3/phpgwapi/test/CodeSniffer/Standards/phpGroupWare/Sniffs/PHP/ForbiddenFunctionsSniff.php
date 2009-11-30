@@ -12,7 +12,7 @@
  * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
  * @copyright 2008 Free Software Foundation Inc http://fsf.org
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: ForbiddenFunctionsSniff.php,v 1.6 2008/02/01 03:19:54 squiz Exp $
+ * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 

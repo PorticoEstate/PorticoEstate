@@ -1,4 +1,4 @@
-<!-- $Id: nntp.tpl 16400 2006-02-14 08:48:21Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN nntp_header -->
 <script>
 function check_all()

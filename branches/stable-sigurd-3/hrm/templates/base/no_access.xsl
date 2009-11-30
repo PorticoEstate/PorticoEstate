@@ -1,4 +1,4 @@
-<!-- $Id: no_access.xsl 16275 2005-12-01 14:37:55Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

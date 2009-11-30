@@ -8,7 +8,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.juical.inc.php 2580 2009-04-07 13:43:43Z sigurd $
+	* @version $Id$
 	*/
 
 	/**

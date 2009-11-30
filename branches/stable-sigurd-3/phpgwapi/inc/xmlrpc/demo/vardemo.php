@@ -88,6 +88,6 @@ And turned it into nylon", "base64"
 	print "</pre>\n";
 ?>
 <hr/>
-<em>$Id: vardemo.php 2 2009-03-16 20:22:51Z ggiunta $</em>
+<em>$Id$</em>
 </body>
 </html>

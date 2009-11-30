@@ -14,7 +14,7 @@
  * @copyright 2008 Richard Sternagel <richard.sternagel@1und1.de>
  * @copyright 2008 Free Software Foundation Inc http://fsf.org
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: LineLengthSniff.php,v 1.15 2007/11/26 22:11:49 squiz Exp $
+ * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  * @link      http://www.stubbles.net/browser/trunk/src/main/php/org/stubbles/codeSniffer/Stubbles/Sniffs/WhiteSpace/stubDisallowTrailingWhitespaceSniff.php?rev=1280&format=txt
  */
@@ -35,7 +35,7 @@
  * @copyright 2008 Richard Sternagel <richard.sternagel@1und1.de>
  * @copyright 2008 Free Software Foundation Inc http://fsf.org
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: LineLengthSniff.php,v 1.15 2007/11/26 22:11:49 squiz Exp $
+ * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 class phpGroupWare_Sniffs_Files_disallowTrailingWhitespaceSniff implements PHP_CodeSniffer_Sniff

@@ -2,7 +2,7 @@
 /**
  * Verify compatibility level of current php install with php-xmlrpc lib
  *
- * @version $Id: verify_compat.php 38 2009-07-31 23:36:31Z ggiunta $
+ * @version $Id$
  * @author Gaetano Giunta
  * @copyright (C) 2006-2009 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt

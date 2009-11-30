@@ -18,7 +18,7 @@
 * Free Software Foundation; either version 2 of the License, or (at your    *
 * option) any later version.                                                *
 \***************************************************************************/
-/* $Id: class.smtpplesk.inc.php 24219 2007-06-28 05:59:34Z ralfbecker $ */
+/* $Id$ */
 
 include_once(PHPGW_SERVER_ROOT."/emailadmin/inc/class.defaultsmtp.inc.php");
 include_once(PHPGW_SERVER_ROOT."/emailadmin/inc/class.pleskimap.inc.php");

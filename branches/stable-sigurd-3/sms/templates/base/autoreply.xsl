@@ -1,4 +1,4 @@
-<!-- $Id: autoreply.xsl 16787 2006-06-05 16:47:46Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

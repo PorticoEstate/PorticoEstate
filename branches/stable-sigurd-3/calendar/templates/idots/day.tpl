@@ -1,4 +1,4 @@
-<!-- $Id: day.tpl 15968 2005-05-15 06:57:38Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN day -->
 {printer_friendly}
 <table border="0" width="100%">

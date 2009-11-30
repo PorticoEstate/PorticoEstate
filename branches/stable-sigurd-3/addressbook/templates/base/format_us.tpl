@@ -1,4 +1,4 @@
-<!-- $Id: format_us.tpl 15977 2005-05-15 13:34:30Z skwashd $ -->
+<!-- $Id$ -->
 
 <table border="0" cellpadding="2" cellspacing="2">
 	<tr>

@@ -1,4 +1,4 @@
-<!-- $Id: delete.xsl 16737 2006-05-16 06:58:45Z ceb $ -->
+<!-- $Id$ -->
 
 <xsl:template match="delete">
 	<xsl:variable name="delete_url"><xsl:value-of select="delete_url"/></xsl:variable>

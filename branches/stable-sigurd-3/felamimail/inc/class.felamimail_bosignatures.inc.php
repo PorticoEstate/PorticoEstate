@@ -11,7 +11,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.bopreferences.inc.php 23423 2007-02-15 09:44:40Z lkneschke $ */
+	/* $Id$ */
 
 	require_once(PHPGW_INCLUDE_ROOT.'/felamimail/inc/class.felamimail_signatures.inc.php');
 	 

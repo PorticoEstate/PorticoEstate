@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class.Script.inc.php 25670 2008-06-30 07:47:16Z leithoff $
+ * $Id$
  *
  * Copyright 2002 Stephen Grier <stephengrier@users.sourceforge.net>
  *

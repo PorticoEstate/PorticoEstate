@@ -1,4 +1,4 @@
-<!-- $Id: addressbook.tpl 17716 2006-12-18 11:02:13Z sigurdne $ -->
+<!-- $Id$ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <HTML LANG="en">
 	<head>

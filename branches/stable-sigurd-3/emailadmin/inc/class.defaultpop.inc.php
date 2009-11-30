@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.defaultpop.inc.php 19408 2005-10-14 10:10:06Z ralfbecker $ */
+	/* $Id$ */
 
 	class defaultpop
 	{

@@ -8,7 +8,7 @@
 	*  Free Software Foundation; version 2 of the License.                     *
 	\**************************************************************************/
 
-	/* $Id: setup.inc.php 25641 2008-06-19 08:04:49Z leithoff $ */
+	/* $Id$ */
 
 	$setup_info['felamimail']['name']      		= 'felamimail';
 	$setup_info['felamimail']['title']     		= 'FeLaMiMail';

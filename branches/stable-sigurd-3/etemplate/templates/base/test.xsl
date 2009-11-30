@@ -1,4 +1,4 @@
-<!-- $Id: test.xsl 17936 2007-02-10 16:03:46Z sigurdne $ -->
+<!-- $Id$ -->
 
 <xsl:template match="PHPGW">
 	<xsl:value-of select="label"/>

@@ -8,7 +8,7 @@
  *
  * Please do not copy this file verbatim into your production server.
  *
- * @version $Id: server.php 54 2009-09-05 15:14:26Z ggiunta $
+ * @version $Id$
  **/
 
 // give user a chance to see the source for this server instead of running the services

@@ -2,7 +2,7 @@
 /**
  * Benchamrking suite for the PHP-XMLRPC lib
  * @author Gaetano Giunta
- * @version $Id: benchmark.php 52 2009-08-05 10:15:23Z ggiunta $
+ * @version $Id$
  * @copyright (c) 2005-2009 G. Giunta
  * @license code licensed under the BSD License: http://phpxmlrpc.sourceforge.net/license.txt
  *

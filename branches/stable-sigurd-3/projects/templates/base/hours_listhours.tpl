@@ -1,4 +1,4 @@
-<!-- $Id: hours_listhours.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <script type="text/javascript">
 
 	function hideColumn (colIndex)

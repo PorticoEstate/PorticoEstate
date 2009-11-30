@@ -9,7 +9,7 @@
  * @copyright 2001-2008 by RalfBecker@outdoor-training.de
  * @package api
  * @subpackage html
- * @version $Id: class.html.inc.php 25275 2008-04-15 12:23:32Z ralfbecker $
+ * @version $Id$
  */
 
 /**

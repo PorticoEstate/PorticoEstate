@@ -1,4 +1,4 @@
-<!-- $Id: list_accountmasters.tpl 15566 2004-12-30 07:38:14Z skwashd $ -->
+<!-- $Id$ -->
 <center>
 <table width="80%" border="0" cellpadding="2" cellspacing="2">	
 	<tr>

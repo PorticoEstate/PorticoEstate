@@ -1,4 +1,4 @@
-<!-- $Id: stats_gant.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 
 <script language="JavaScript">
 	self.name="first_Window";

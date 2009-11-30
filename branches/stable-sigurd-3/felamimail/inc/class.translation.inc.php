@@ -8,7 +8,7 @@
  * Copyright (C) 2000, 2001 Joseph Engo
  * @license http://opensource.org/licenses/lgpl-license.php LGPL - GNU Lesser General Public License
  * @package api
- * @version $Id: class.translation.inc.php 25094 2008-03-15 15:30:15Z ralfbecker $
+ * @version $Id$
  */
 
 // define the maximal length of a message_id, all message_ids have to be unique

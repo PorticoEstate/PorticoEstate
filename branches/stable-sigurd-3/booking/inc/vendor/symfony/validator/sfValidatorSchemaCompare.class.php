@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorSchemaCompare.class.php 10802 2008-08-12 07:10:53Z fabien $
+ * @version    SVN: $Id$
  */
 class sfValidatorSchemaCompare extends sfValidatorSchema
 {

@@ -1,4 +1,4 @@
-<!-- $Id: overlap.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN overlap -->
 <center><br />
 <table>

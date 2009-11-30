@@ -1,4 +1,4 @@
-<!-- $Id: listdist.tpl 9957 2002-04-14 22:27:31Z ceb $ -->
+<!-- $Id$ -->
 
 {app_header}
 

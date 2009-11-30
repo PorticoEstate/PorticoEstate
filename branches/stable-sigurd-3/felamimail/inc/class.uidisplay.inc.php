@@ -26,7 +26,7 @@
 	*
 	*/
 
-	/* $Id: class.uidisplay.inc.php 25705 2008-07-08 12:24:33Z leithoff $ */
+	/* $Id$ */
 
 	phpgw::import_class('felamimail.html');
 

@@ -1,4 +1,4 @@
-<!-- $Id: preferences.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <br/><br/><br/><br/>
 <center>
 <table border="0" cellspacing="2" cellpadding="2">

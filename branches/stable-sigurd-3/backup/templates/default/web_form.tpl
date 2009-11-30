@@ -1,4 +1,4 @@
-<!-- $Id: web_form.tpl 12522 2003-04-26 20:53:21Z ceb $ -->
+<!-- $Id$ -->
 
 <center>
 <table border="0" width="79%" cellpadding="2" cellspacing="2">

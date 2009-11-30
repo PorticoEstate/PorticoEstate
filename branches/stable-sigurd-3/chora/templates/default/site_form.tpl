@@ -1,4 +1,4 @@
-<!-- $Id: site_form.tpl 3772 2001-04-02 17:23:50Z milosch $ -->
+<!-- $Id$ -->
 <!-- BEGIN form -->
 <center>
 <table border="0" width="80%" cellspacing="2" cellpadding="2">

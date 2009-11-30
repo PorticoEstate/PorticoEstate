@@ -1,4 +1,4 @@
-<!-- $Id: delete.tpl 15955 2005-05-12 17:44:12Z fipsfuchs $ -->
+<!-- $Id$ -->
 <center>
 <table border="0" with="65%">
 <form method="POST" action="{actionurl}">

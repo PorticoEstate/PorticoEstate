@@ -8,7 +8,7 @@
  * @author     Dave Hall <dave.hall@skwashd.com>
  * @copyright  2008 Dave Hall
  * @license    http://www.gnu.org/licenses/gpl.html GPLv3 or later
- * @version    SVN: $Id: $
+ * @version    SVN: $Id$
  * @link       http://davehall.com.au
  */
 

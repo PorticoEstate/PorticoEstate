@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.uicompose.inc.php 25686 2008-07-03 07:10:24Z leithoff $ */
+	/* $Id$ */
 
 	phpgw::import_class('felamimail.html');	
 

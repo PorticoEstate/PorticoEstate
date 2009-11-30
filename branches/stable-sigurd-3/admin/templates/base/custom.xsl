@@ -1,4 +1,4 @@
-<!-- $Id: custom.xsl 17379 2006-10-09 11:51:50Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="custom">
 		<xsl:choose>

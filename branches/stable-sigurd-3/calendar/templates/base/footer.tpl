@@ -1,4 +1,4 @@
-<!-- $Id: footer.tpl 16925 2006-07-28 03:30:44Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN footer_table -->
        <br clear="all">
        <hr clear="all">

@@ -10,7 +10,7 @@
  * @author    Dave Hall <skwashd@phpgroupware.org>
  * @copyright 2008 Free Software Foundation, Inc http://fsf.org
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: coding-standard-tutorial.xml,v 1.6 2007/10/15 03:28:17 squiz Exp $
+ * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 

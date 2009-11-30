@@ -1,4 +1,4 @@
-<!-- $Id: select_ticket.xsl 17712 2006-12-17 23:29:29Z skwashd $ -->
+<!-- $Id$ -->
 
 <xsl:template match="select_ticket">
 	<form action="{url_form_action}" method="post">

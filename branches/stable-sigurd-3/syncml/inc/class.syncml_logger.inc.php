@@ -7,7 +7,7 @@
 	 * @copyright Copyright (c) 2007 Free Software Foundation, Inc.
 	 * @license   GNU General Public License 3 or later
 	 * @package   syncml
-	 * @version   $Id: class.sodatabase.inc.php 18394 2008-02-02 10:34:41Z skwashd $
+	 * @version   $Id$
 	 */
 
 	/**

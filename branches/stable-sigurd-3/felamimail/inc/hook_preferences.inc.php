@@ -9,7 +9,7 @@
 *  Free Software Foundation; version 2 of the License. 			   *
 \**************************************************************************/
 
-/* $Id: hook_preferences.inc.php 25569 2008-06-05 14:09:24Z leithoff $ */
+/* $Id$ */
 
 {
 	// Only Modify the $file and $title variables.....

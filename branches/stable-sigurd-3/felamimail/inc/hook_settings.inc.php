@@ -12,7 +12,7 @@
 	/* $Id$ */
 
 
-	/* $Id: hook_settings.inc.php 25517 2008-05-27 08:49:02Z leithoff $ */
+	/* $Id$ */
 	$folderList = array();
 	
 	$this->bofelamimail = CreateObject('felamimail.bofelamimail','utf-8');

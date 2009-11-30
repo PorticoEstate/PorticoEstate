@@ -1,4 +1,4 @@
-<!-- $Id: category_form.tpl 17820 2006-12-28 13:23:14Z skwashd $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN form -->
 <br>

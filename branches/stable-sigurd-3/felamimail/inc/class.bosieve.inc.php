@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.uisieve.inc.php,v 1.24 2005/11/30 08:29:45 ralfbecker Exp $ */
+	/* $Id$ */
 
 	require_once 'Net/Sieve.php';
 

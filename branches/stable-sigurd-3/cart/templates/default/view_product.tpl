@@ -1,4 +1,4 @@
-<!-- $Id: view_product.tpl 9701 2002-03-11 11:04:57Z milosch $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN view -->
 

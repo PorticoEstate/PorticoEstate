@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorChoiceMany.class.php 11668 2008-09-19 14:02:36Z fabien $
+ * @version    SVN: $Id$
  */
 class sfValidatorChoiceMany extends sfValidatorChoice
 {

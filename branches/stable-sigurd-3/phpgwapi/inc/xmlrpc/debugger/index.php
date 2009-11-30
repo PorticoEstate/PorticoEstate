@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php 2 2009-03-16 20:22:51Z ggiunta $
+// $Id$
   $query = '';
   if (isset($_GET['run']))
   {

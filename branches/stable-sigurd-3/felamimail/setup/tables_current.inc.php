@@ -9,7 +9,7 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-  /* $Id: tables_current.inc.php 25641 2008-06-19 08:04:49Z leithoff $ */
+  /* $Id$ */
 
 	$phpgw_baseline = array(
 		'egw_felamimail_displayfilter' => array(

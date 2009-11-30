@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package newdesign
 	* @subpackage core
- 	* @version $Id: class.menu.inc.php 1433 2008-07-16 12:02:46Z janaage@hikt.no $
+ 	* @version $Id$
 	*/
 
 	/**

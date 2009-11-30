@@ -1,4 +1,4 @@
-<!-- $Id: header.tpl,v 1.2 2006/12/05 19:40:45 sigurdne Exp $ -->
+<!-- $Id$ -->
 <!-- BEGIN projects_header -->
 <table border="0" width="100%" cellpadding="2" cellspacing="2">
 	<tr width="100%">

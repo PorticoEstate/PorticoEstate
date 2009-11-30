@@ -10,7 +10,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.socaching.inc.php,v 1.21 2005/11/04 18:37:37 ralfbecker Exp $ */
+	/* $Id$ */
 
 	class felamimail_signatures
 	{

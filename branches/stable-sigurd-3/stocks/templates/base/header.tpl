@@ -1,4 +1,4 @@
-<!-- $Id: header.tpl 15658 2005-01-17 16:02:16Z ceb $ -->
+<!-- $Id$ -->
 
 <!-- BEGIN stock_header -->
 

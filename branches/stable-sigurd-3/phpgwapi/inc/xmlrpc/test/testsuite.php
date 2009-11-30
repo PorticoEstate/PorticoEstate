@@ -1,5 +1,5 @@
 <?php
-	/* $Id: testsuite.php 55 2009-09-05 15:18:25Z ggiunta $ */
+	/* $Id$ */
 
 	include(getcwd().'/parse_args.php');
 

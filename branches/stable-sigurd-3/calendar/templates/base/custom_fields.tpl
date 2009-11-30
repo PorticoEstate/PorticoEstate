@@ -1,4 +1,4 @@
-<!-- $Id: custom_fields.tpl 17681 2006-12-12 19:27:47Z sigurdne $ -->
+<!-- $Id$ -->
 <!-- BEGIN custom_fields -->
 {lang_error}<br />
 <form action="{action_url}" method="post">

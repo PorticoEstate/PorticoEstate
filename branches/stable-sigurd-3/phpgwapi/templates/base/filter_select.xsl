@@ -1,4 +1,4 @@
-<!-- $Id: filter_select.xsl 15664 2005-01-18 23:51:15Z ceb $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="filter_select">
 		<xsl:apply-templates select="filter_data"/>

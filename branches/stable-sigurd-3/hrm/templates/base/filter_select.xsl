@@ -1,4 +1,4 @@
-<!-- $Id: filter_select.xsl 16273 2005-11-30 17:07:22Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="filter_select">
 	<xsl:variable name="lang_filter_statustext"><xsl:value-of select="lang_filter_statustext"/></xsl:variable>

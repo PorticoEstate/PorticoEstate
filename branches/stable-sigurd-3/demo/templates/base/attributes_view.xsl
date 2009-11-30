@@ -1,4 +1,4 @@
-<!-- $Id: attributes_view.xsl 17559 2006-11-19 19:04:33Z sigurdne $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="attributes_view">
 		<xsl:apply-templates select="attributes_values"/>

@@ -12,7 +12,7 @@
 	* option) any later version.                                                *
 	\***************************************************************************/
 
-	/* $Id: class.ajaxfelamimail.inc.php 21848 2006-06-15 21:50:59Z ralfbecker $ */
+	/* $Id$ */
 
 	phpgw::import_class('phpgwapi.sql_criteria');
 	class ajax_contacts {

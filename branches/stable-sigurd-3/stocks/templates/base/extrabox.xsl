@@ -1,4 +1,4 @@
-<!-- $Id: extrabox.xsl 15658 2005-01-17 16:02:16Z ceb $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="extrabox">
 		<xsl:apply-templates select="xextrabox"/>

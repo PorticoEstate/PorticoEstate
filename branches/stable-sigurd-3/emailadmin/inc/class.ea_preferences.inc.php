@@ -8,7 +8,7 @@
 	* under the terms of the GNU General Public License as published by the     *
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
-	/* $Id: class.bopreferences.inc.php,v 1.26 2005/11/28 18:00:18 lkneschke Exp $ */
+	/* $Id$ */
 
 	class ea_preferences
 	{

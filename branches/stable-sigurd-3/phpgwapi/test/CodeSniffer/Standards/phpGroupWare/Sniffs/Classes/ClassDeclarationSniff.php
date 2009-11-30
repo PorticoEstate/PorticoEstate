@@ -11,7 +11,7 @@
  * @author	  Sigurd Nes <sigurdne@online.no>
  * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: ClassDeclarationSniff.php,v 1.4 2007/12/05 03:31:45 squiz Exp $
+ * @version   CVS: $Id$
  * @link	  http://pear.php.net/package/PHP_CodeSniffer
  */
 

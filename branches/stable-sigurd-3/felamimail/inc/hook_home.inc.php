@@ -9,7 +9,7 @@
 	*  option) any later version.                                              *
 	\**************************************************************************/
 
-	/* $Id: hook_home.inc.php 25518 2008-05-27 08:49:28Z leithoff $ */
+	/* $Id$ */
 
 	$homedisplay = isset($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['mainscreen_showmail'])?intval($GLOBALS['phpgw_info']['user']['preferences']['felamimail']['mainscreen_showmail']):0;
 	if($homedisplay > 0) {

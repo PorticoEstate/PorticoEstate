@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package projects
 	* @subpackage core
- 	* @version $Id: class.menu.inc.php 1013 2008-05-20 06:44:35Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

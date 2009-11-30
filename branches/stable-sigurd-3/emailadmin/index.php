@@ -9,7 +9,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-	/* $Id: index.php 25568 2008-06-05 14:09:00Z leithoff $ */
+	/* $Id$ */
 
 	$_GET['menuaction']     = 'emailadmin.emailadmin_ui.listProfiles';
 

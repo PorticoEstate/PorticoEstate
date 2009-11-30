@@ -1,4 +1,4 @@
-<!-- $Id: import.body.tpl 16894 2006-07-23 06:32:28Z skwashd $ -->
+<!-- $Id$ -->
 <form enctype="multipart/form-data" method="post" action="{FORM_ACTION}">
  <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
  <table border=0 bgcolor="#EEEEEE" align="center" width=60%>

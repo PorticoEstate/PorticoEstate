@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: update_workorder_status.php 1043 2008-05-26 17:19:31Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

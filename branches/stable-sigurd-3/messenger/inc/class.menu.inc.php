@@ -7,7 +7,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package messenger
 	* @subpackage ???
- 	* @version $Id: class.menu.inc.php 1781 2008-11-02 19:51:19Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/*

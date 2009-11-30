@@ -9,7 +9,7 @@
 	* Free Software Foundation; either version 2 of the License, or (at your    *
 	* option) any later version.                                                *
 	\***************************************************************************/
-	/* $Id: class.postfixldap.inc.php 22439 2006-09-16 09:19:43Z ralfbecker $ */
+	/* $Id$ */
 
 	include_once(PHPGW_SERVER_ROOT."/emailadmin/inc/class.defaultsmtp.inc.php");
 

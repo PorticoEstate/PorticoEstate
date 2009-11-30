@@ -1,4 +1,4 @@
-<!-- $Id: user.xsl 17803 2006-12-28 04:55:30Z skwashd $ -->
+<!-- $Id$ -->
 
 	<xsl:template name="app_data">
 		<xsl:choose>

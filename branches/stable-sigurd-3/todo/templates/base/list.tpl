@@ -1,4 +1,4 @@
-<!-- $Id: list.tpl 17816 2006-12-28 10:39:45Z skwashd $ -->
+<!-- $Id$ -->
 <!-- BEGIN page_header -->
 <h1>{lang_action}</h1>
 <center>

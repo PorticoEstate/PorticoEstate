@@ -9,7 +9,7 @@
 *  under the terms of the GNU General Public License as published by the   *
 *  Free Software Foundation; version 2 of the License.                     *
 \**************************************************************************/
-/* $Id: index.php 18876 2005-07-23 15:52:49Z ralfbecker $ */
+/* $Id$ */
 
 /***************************************************************************
 * 

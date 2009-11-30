@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package catch
 	* @subpackage config
- 	* @version $Id: class.soconfig.inc.php 1014 2008-05-20 06:45:13Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**
