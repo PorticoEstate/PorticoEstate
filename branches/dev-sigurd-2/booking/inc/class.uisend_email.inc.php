@@ -28,7 +28,7 @@
 				$step = phpgw::get_var('step', 'POST');
 				$step++;
 				$building =  phpgw::get_var('building_id', 'POST');
-				$season =  phpgw::get_var('season_id', 'POST');
+				$season =  implode(',', phpgw::get_var('seasons', 'POST'));
 				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
 				$mailbody =  phpgw::get_var('mailbody', 'POST');
 				$contacts = null;
@@ -104,7 +104,7 @@
 				INNER JOIN bb_season se ON se.id = alo.season_id AND se.active = 1
 				INNER JOIN bb_building bu ON bu.id = se.building_id AND bu.active = 1
 				WHERE alo.active = 1 
-				AND se.id = $season_id
+				AND se.id in($season_id)
 				AND bu.id = $building_id
 				UNION
 				SELECT DISTINCT gc.name, gc.email
@@ -114,7 +114,7 @@
 				INNER JOIN bb_building bu ON bu.id = se.building_id AND bu.active = 1
 				INNER JOIN bb_group_contact gc ON gc.group_id = bo.group_id AND trim(gc.email) <> ''
 				WHERE bo.active = 1 
-				AND se.id = $season_id
+				AND se.id in($season_id)
 				AND bu.id = $building_id
 				ORDER BY name";
 			$db->query($sql);
