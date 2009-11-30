@@ -28,7 +28,14 @@
 				$step = phpgw::get_var('step', 'POST');
 				$step++;
 				$building =  phpgw::get_var('building_id', 'POST');
-				$season =  implode(',', phpgw::get_var('seasons', 'POST'));
+				if (is_array(phpgw::get_var('seasons', 'POST')))
+				{
+					$season =  implode(',', phpgw::get_var('seasons', 'POST'));
+				}
+				else
+				{
+					$season =  phpgw::get_var('seasons', 'POST');
+				}
 				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
 				$mailbody =  phpgw::get_var('mailbody', 'POST');
 				$contacts = null;
@@ -53,8 +60,11 @@
 				elseif ($step == 3)
 				{
 					$contacts = $this->get_email_addresses($building, $season);
-					$this->send_emails($contacts, $mailsubject, $mailbody);
-					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt'));
+					$result = $this->send_emails($contacts, $mailsubject, $mailbody);
+					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt', 
+						'ok' => count($result['ok']),
+						'failed' => count($result['failed'])
+					));
 				}
 			}
 
@@ -80,17 +90,30 @@
 
 		public function receipt()
 		{
-			self::render_template('email_receipt');
+			$ok_count =  phpgw::get_var('ok', 'GET');
+			$fail_count =  phpgw::get_var('failed', 'GET');
+			self::render_template('email_receipt',
+				array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}
 
 		private function send_emails($contacts, $subject, $body)
 		{
 			$send = CreateObject('phpgwapi.send');
+			$result = array();
 
 			foreach($contacts as $contact)
 			{
-				$send->msg('email', $contact['email'], $subject, $body);
+				try
+				{
+					$send->msg('email', $contact['email'], $subject, $body);
+					$result['ok'][] = $contact; 
+				}
+				catch (phpmailerException $e)
+				{
+					$result['failed'][] = $contact; 
+				}
 			}
+			return $result;
 		}
 
 		private function get_email_addresses($building_id, $season_id)
