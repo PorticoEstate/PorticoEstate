@@ -874,6 +874,35 @@
 					}
 				}
 			}
+
+
+            $menus['navigation']['item'] = array
+            (
+                'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.index')),
+                'text'	=> lang('BIM_Items'),
+                'image'	=> array('property', 'custom'),
+                'children'	=> array_merge(array
+                (
+                    'index'		=> array
+                    (
+                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.index')),
+                        'text'	=> lang('Register')
+                    ),
+                    'foo'       => array
+                    (
+                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.foo')),
+                        'text'	=> lang('Foo')
+                    ),
+                    'bar'		=> array
+                    (
+                        'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.bar')),
+                        'text'	=> lang('Bar'),
+                        'image'	=> array('property', 'project_tenant_claim')
+                    )
+                ))
+            );
+
+
 			unset($entity_list);
 			unset($entity);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
