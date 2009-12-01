@@ -749,7 +749,7 @@
 
 					if($params['required'] && $sub_entity_count == 0)
 					{
-						$errors[$field] = lang("Field %1 is required", $field);
+						$errors[$field] = lang("Field %1 is required", lang($field));
 					}
 					continue;
 				}
@@ -757,14 +757,14 @@
 				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
 				if($params['required'] && (!isset($v) || ($v !== '0' && empty($v))))
 				{
-					$errors[$error_key] = lang("Field %1 is required", $error_key);
+					$errors[$error_key] = lang("Field %1 is required", lang($error_key));
 					$empty = true;
 				}
 				if($params['type'] == 'date' && !empty($entity[$field]))
 				{
 					$date = date_parse($entity[$field]);
 					if(!$date || count($date['errors']) > 0) {
-						$errors[$error_key] = lang("Field %1: Invalid format", $error_key);
+						$errors[$error_key] = lang("Field %1: Invalid format", lang($error_key));
 					}
 				}
 				
@@ -786,6 +786,19 @@
 			$this->preValidate($entity);
 			$this->_validate($entity, $this->fields, $errors);
 			$this->doValidate($entity, $errors);
+
+			// replace several agegroups error messages with one
+			// gives nicer output
+			foreach($errors->getArrayCopy() as $key => $value)
+			{
+				// key starts with agegroups
+				if (strncmp($key, 'agegroups', strlen('agegroups')) == 0)
+				{
+					unset($errors[$key]);
+					$errors['agegroups'][0] = lang("Field %1 is required", lang('number of participants'));
+				}
+			}
+
 			return $errors->getArrayCopy();
 		}
 		
