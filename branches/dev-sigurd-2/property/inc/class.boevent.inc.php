@@ -370,7 +370,7 @@ if ( !extension_loaded('mcal') )
 				$this->so->cron_log(array
 					(
 						'cron'		=> true, // or false for manual...
-						'action'	=> $data['action'],
+						'action'	=> isset($data['action']) && $data['action'] ? $data['action'] : 'dummy',
 						'message'	=> $message
 					)
 				);
