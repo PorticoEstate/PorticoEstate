@@ -56,7 +56,7 @@
 			'download'  	=> true
 		);
 
-		function property_uigab()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location::gabnr';
@@ -81,7 +81,7 @@
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->allrows				= $this->bo->allrows;
-			$this->gab_insert_level			= $this->bo->gab_insert_level;
+			$this->gab_insert_level		= $this->bo->gab_insert_level;
 
 		}
 
