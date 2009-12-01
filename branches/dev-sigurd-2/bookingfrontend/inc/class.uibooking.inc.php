@@ -56,6 +56,7 @@
 			foreach($bookings['results'] as &$booking)
 			{
 				$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
+				array_walk($booking, array($this, 'item_link'));
 			}
 			$data = array
 			(
