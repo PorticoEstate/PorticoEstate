@@ -232,8 +232,8 @@ Service	bookingfrontend	no	Tjeneste
 Project No.	bookingfrontend	no	Prosjektnr.
 Account Codes	bookingfrontend	no	Konteringsstrenger
 Account Codes	bookingfrontend	no	Konteringsstreng
-Field %1 is required	bookingfrontend	no	Feltet %1 kreves
-Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format
+Field %1 is required	bookingfrontend	no	Feltet '%1' må fylles ut
+Field %1: Invalid format	bookingfrontend	no	Feltet '%1': ugyldig format
 Building users	bookingfrontend	no	Brukere av bygg/anlegg
 Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
 Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
@@ -262,3 +262,12 @@ A Case officer will review your application as soon as possible.	bookingfrontend
 Loading...	bookingfrontend	no	Laster...
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
+Used buildings	bookingfrontend	no	Bygg/anlegg som brukes
+Add group	bookingfrontend	no	Ny gruppe
+Internal Customer	bookingfrontend	no	Intern kunde
+Customer number	bookingfrontend	no	Kundenummer
+activity_id	bookingfrontend	no	Aktivitet
+contact_email	bookingfrontend	no	E-post
+contact_name	bookingfrontend	no	Navn
+customer_identifier_type	bookingfrontend	no	Fakturainformasjon
+group_id	bookingfrontend	no	Gruppe/Lag

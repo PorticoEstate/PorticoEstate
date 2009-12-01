@@ -395,20 +395,18 @@
 			$current_prefs_user = $this->bocommon->create_preferences('property',$alarm['owner']);
 			$current_user_address=$current_prefs_user['email'];
 
-			$headers = "Return-Path: <". $current_user_address .">\r\n";
-			$headers .= "From: " . $current_user_name . "<" . $current_user_address .">\r\n";
-//			$headers .= "Bcc: " . $current_user_name . "<" . $current_user_address .">\r\n";
-			$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-			$headers .= "MIME-Version: 1.0\r\n";
-
 	//-----------from--------
 		// build body
-			$body  = '';
-			$body .= lang('Alarm').' #'.$alarm['event_id']."\n";
+			
+			$info = explode(':', $alarm['id']);
+			
+			$body = lang('Alarm').' #'.$alarm['event_id']."\n";
 			$body .= lang('Name').': '.$alarm['event_name']."\n";
+			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$info[0]}.edit", 'id'=> $info[1])).'">' . $alarm['event_name'] ."</a>\n";
 			if(!is_array($alarm['time']))
 			{
-				$body .= lang('Deadline').': '. $GLOBALS['phpgw']->common->show_date(($alarm['time']+$alarm['offset'])) ."\n";
+				$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$body .= lang('Deadline').': '. $GLOBALS['phpgw']->common->show_date(($alarm['time']+$alarm['offset']),$dateformat) ."\n";
 			}
 			$body .= lang('Assigned To').': '.$GLOBALS['phpgw']->accounts->id2name($alarm['owner'])."\n";
 
@@ -446,7 +444,8 @@
 
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
-				$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'txt');
+				$body = nl2br($body);
+				$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, $bcc,$current_user_address,$current_user_name,'html');
 			}
 			else
 			{

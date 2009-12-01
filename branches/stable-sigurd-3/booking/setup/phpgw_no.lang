@@ -87,11 +87,11 @@ events	booking	no	Arrangementer
 feb	booking	no	februar
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
-found %1 results	booking	no	%1 treffer
+found %1 results	booking	no	%1 treff
 fr	booking	no	fr.
 from	booking	no	Fra
-generate allocations	booking	no	Kopièr til kalender
-generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
+generate allocations	booking	no	Kopier til kalender
+generate allocations from week template	booking	no	Lag tildelinger fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe/Lag
 history and comments (%1)	booking	no	Historikk (%1)
@@ -239,7 +239,7 @@ Create booking	booking	no	Lag booking
 Create event	booking	no	Lag arrangement
 Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
-Field %1 is required	booking	no	Feltet %1 kreves
+Field %1 is required	booking	no	Feltet '%1' må fylles ut
 Download	booking	no	Last ned
 Invoice Data Exports	booking	no	Fakturaeksporter
 Internal	booking	no	Intern
@@ -348,7 +348,7 @@ Type	booking	no	Type
 Participants	booking	no	Deltagere
 Format	booking	no	Format
 Create report	booking	no	Opprett rapport
-No buildings selected	booking	no	Du må velge minst en bygning
+No buildings selected	booking	no	Du må velge minst et bygg/anlegg
 Reports	booking	no	Rapporter
 Unable to set classpath	booking	no	Kunne ikke sette classpath
 Unable to perform chdir	booking	no	Kunne ikke utføre chdir
@@ -384,3 +384,19 @@ A Case officer will review your application as soon as possible.	booking	no	En s
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	booking	no	Organisasjonsnummer er ugyldig
 Select an organization first	booking	no	Velg organisasjon først
+Add Resource	booking	no	Ny ressurs
+%1 e-mails were sent successfully	booking	no	%1 e-poster ble sendt
+%1 e-mails were not sent successfully	booking	no	%1 e-poster kunne ikke sendes (ugyldig adresse)
+activity_id	booking	no	Aktivitet
+contact_email	booking	no	E-post
+contact_name	booking	no	Navn
+customer_identifier_type	booking	no	Fakturainformasjon
+group_id	booking	no	Gruppe/Lag
+organization_id	booking	no	Organisasjon
+season_id	booking	no	Sesong
+from_	booking	no	Fra
+to_	booking	no	Til
+owner_id	booking	no	Eier
+object_id	booking	no	Objekt
+building_id	booking	no	Bygg/anlegg
+subject_id	booking	no	Bruker
