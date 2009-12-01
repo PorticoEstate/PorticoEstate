@@ -795,10 +795,9 @@
 				if (strncmp($key, 'agegroups', strlen('agegroups')) == 0)
 				{
 					unset($errors[$key]);
-					$errors['agegroups'][0] = lang("Field %1 is required", lang('number of participants'));
+					$errors['agegroups'] = lang("Field %1 is required", lang('number of participants'));
 				}
 			}
-
 			return $errors->getArrayCopy();
 		}
 		
