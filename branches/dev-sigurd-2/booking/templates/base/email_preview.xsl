@@ -29,10 +29,6 @@
 			<input type="submit" name="sendmail">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send e-mails')"/></xsl:attribute>
 			</input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>
 		</div>
     </form>
     </div>
