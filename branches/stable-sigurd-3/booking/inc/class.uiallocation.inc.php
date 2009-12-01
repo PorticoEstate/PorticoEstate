@@ -144,7 +144,13 @@
 			{
 				if (strlen($contact['email']) > 0) 
 				{
-					$send->msg('email', $contact['email'], $subject, $body);
+					try
+					{
+						$send->msg('email', $contact['email'], $subject, $body);
+					}
+					catch (phpmailerException $e)
+					{
+					}
 				}
 			}
 		}

@@ -20,7 +20,6 @@
 		public function index()
 		{
 			$errors = array();
-			$cancel_link = self::link(array('menuaction' => 'booking.uisend_email.index'));
 			$step = 1;
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')

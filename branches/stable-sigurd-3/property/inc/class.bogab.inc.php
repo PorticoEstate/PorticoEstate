@@ -40,6 +40,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $gab_insert_level;
 
 		var $public_functions = array
 		(
@@ -50,11 +51,11 @@
 			'check_perms'		=> true
 		);
 
-		function property_bogab($session=false)
+		function __construct($session=false)
 		{
-			$this->solocation 	= CreateObject('property.solocation');
-			$this->so 		= CreateObject('property.sogab');
-
+			$this->solocation 			= CreateObject('property.solocation');
+			$this->so 					= CreateObject('property.sogab');
+			$this->gab_insert_level		= $this->so->gab_insert_level;
 			if ($session)
 			{
 				$this->read_sessiondata();
