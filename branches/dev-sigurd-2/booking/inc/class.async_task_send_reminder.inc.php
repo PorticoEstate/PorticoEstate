@@ -53,7 +53,14 @@
 				$contacts = $this->db->resultSet;
 				foreach($contacts as $contact) 
 				{
-					$this->send->msg('email', $contact['email'], $subject, $body);
+					try
+					{
+						$this->send->msg('email', $contact['email'], $subject, $body);
+					} 
+					catch (phpmailerException $e)
+					{
+						// do nothing. nowhere to log or display error messages
+					}
 				}
 			}
 		}

@@ -195,7 +195,13 @@
 
 			if (strlen($receiver) > 0) 
 			{
-				$send->msg('email', $receiver, $subject, $body);
+				try
+				{
+					$send->msg('email', $receiver, $subject, $body);
+				}
+				catch (phpmailerException $e)
+				{
+				}
 			}
 		}
 
