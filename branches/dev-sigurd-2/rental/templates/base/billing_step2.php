@@ -230,6 +230,31 @@ var toggleAll = function (target_tag_name, source_tag_name)
 		</div>
 		
 		<script type="text/javascript">
+
+		var formatPrice = function(elCell, oRecord, oColumn, oData) {
+			if (oData != undefined) {
+				elCell.innerHTML = YAHOO.util.Number.format( oData,
+				{
+					suffix: " <?php echo isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK'; ?>",
+					thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
+					decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ','; ?>",
+					decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2; ?>
+			    });
+			}
+		}
+
+		var formatArea = function(elCell, oRecord, oColumn, oData) {
+			if (oData != undefined && oData != 0) {
+				elCell.innerHTML = YAHOO.util.Number.format( oData,
+				{
+					suffix: " <?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?>",
+					thousandsSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; ?>",
+					decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';?>",
+					decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] : 2; ?>
+			    });
+			}
+		}
+		
 			var contractDataSource = new YAHOO.util.DataSource(YAHOO.util.Dom.get("contractTable"));
 			contractDataSource.responseType = YAHOO.util.DataSource.TYPE_HTMLTABLE;
 			contractDataSource.responseSchema = {

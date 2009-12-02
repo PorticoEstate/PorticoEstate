@@ -189,9 +189,17 @@ class rental_sobilling extends rental_socommon
 		$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
 		$counter = 0;
 		$total_sum = 0;
+		
+		// Get the number of months in selected term for contract
+		$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
+		
+		// The billing should start from the first date of the periode (term) we're billing for
+		$first_day_of_selected_month = strtotime($year . '-' . $month . '-01');
+		$bill_from_timestamp = strtotime('-'.($months-1).' month', $first_day_of_selected_month); 
+		
 		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 		{
-			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, inarray($contracts_overriding_billing_start,$contract_id) ? true : false, $billing_end_timestamp); // Creates an invoice of the contract
+			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contracts_overriding_billing_start,$contract_id) ? true : false,$bill_from_timestamp, $billing_end_timestamp); // Creates an invoice of the contract
 			if($invoice != null)
 			{
 				$total_sum += $invoice->get_total_sum();

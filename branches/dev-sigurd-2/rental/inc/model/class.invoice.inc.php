@@ -193,14 +193,21 @@
 			return $names;
 		}
 		
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, int $timestamp_invoice_start, int $timestamp_invoice_end)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end)
 		{
 			if($timestamp_invoice_start > $timestamp_invoice_end) // Sanity check
 			{
 				return null;
 			}
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
+			
+			if($override)
+			{
+				$timestamp_invoice_start = $contract->get_billing_start_date();
+			}
+			
 			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_account_out(), $contract->get_service_id(), $contract->get_responsibility_id());
+			
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
 			$invoice->set_project_id($contract->get_project_id());

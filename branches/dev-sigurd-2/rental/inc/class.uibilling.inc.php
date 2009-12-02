@@ -84,18 +84,16 @@ class rental_uibilling extends rental_uicommon
 			}
 			$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
 			$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			
-			
+	
 			$socontract_price_item = rental_socontract_price_item::get_instance();
-			for($i = 0; $i < count($contracts) ; $i++)
-			{
-				$contract = $contracts[$i];
+			foreach($contracts as $id => $contract)
+			{	
 				if(isset($contract))
 				{
 					$total_price = $socontract_price_item->get_total_price($contract->get_id());
 					if(isset($total_price) && $total_price <= 0)
 					{
-						$contracts[$i] = null;
+						$contracts[$id] = null;
 					}
 					else
 					{
