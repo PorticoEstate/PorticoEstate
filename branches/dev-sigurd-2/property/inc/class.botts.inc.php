@@ -832,6 +832,7 @@
 
 			if ($this->config->config_data['ownernotification'] && $ticket['user_id'])
 			{
+
 				// add owner to recipients
 				$members[] = array('account_id' => $ticket['user_id'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']));
 			}
@@ -872,14 +873,25 @@
 				$to = current($toarray);
 			}
 
-			$body = str_replace("\n" ,"</br>",$body);
-			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+			$body = nl2br($body);
+
+			if($to)
 			{
-				$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'html');
-			}
-			else
-			{
-				$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				{
+					try
+					{
+						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'html');
+					}
+					catch (phpmailerException $e)
+					{
+						$receipt['error'][] = array('msg' => $e->getMessage());
+					}
+				}
+				else
+				{
+					$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+				}
 			}
 
 			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
