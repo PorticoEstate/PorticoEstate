@@ -3887,40 +3887,24 @@
 	{
 		$tables = array
 		(
-			'property_items' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-					'parent_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-			'property_item_catalogs' => array
+            'property_attrib_defs' => array
 			(
 				'fd' => array
 				(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'descr' => array('type' => 'text', 'nullable' => false),
-					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'descrptn' => array('type' => 'text', 'nullable' => false),
+					'data_type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'munit' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 			),
-
-			'property_catalog_groups' => array
+            
+            'property_catalog_groups' => array
 			(
 				'fd' => array
 				(
@@ -3935,6 +3919,42 @@
 				'uc' => array()
 			),
 
+            'property_item_catalogs' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array('property_catalog_groups' => array('group_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+			'property_items' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'parent_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array('property_items' => array('parent_id' => 'id'),
+                              'property_item_catalogs' => array('catalog_id' => 'id'),
+                              'fm_locations' => array('location_id' => 'id'),
+                              'fm_vendor' => array('vendor_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+
 			'property_catalog_group_attribs' => array
 			(
 				'fd' => array
@@ -3944,24 +3964,8 @@
 					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('catalog_group_id', 'attrib_def_id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-			'property_attrib_defs' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'descrptn' => array('type' => 'text', 'nullable' => false),
-					'data_type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'munit' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
+				'fk' => array('property_catalog_groups' => array('catalog_group_id' => 'id'),
+                              'property_attrib_defs' => array('attrib_def_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
@@ -3981,7 +3985,8 @@
 					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'fk' => array(),
+				'fk' => array('property_attrib_defs' => array('attrib_def_id' => 'id'),
+                              'property_items' => array('item_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			)
