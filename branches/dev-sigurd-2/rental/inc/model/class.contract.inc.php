@@ -536,6 +536,10 @@
 		public function serialize()
 		{
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(!isset($this->total_price))
+			{
+				$this->total_price =  rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
+			}
 			return array(
 				'id' => $this->get_id(),
 				'date_start' => $this->get_contract_date() && $this->get_contract_date()->has_start_date() ? date($date_format, $this->get_contract_date()->get_start_date()): '',
@@ -553,8 +557,9 @@
 				'responsibility_id' => $this->get_responsibility_id(),
 				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
 				'contract_type_id' => $this->get_contract_type_id(),
-				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
-				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
+				'total_price' => $this->total_price,
+				//'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
+				'max_area' =>	$this->rented_area,
 				'contract_status' => $this->get_contract_status(),
 				'rented_area' => $this->get_rented_area()
 			);

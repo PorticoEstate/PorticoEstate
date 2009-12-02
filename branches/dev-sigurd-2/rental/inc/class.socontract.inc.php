@@ -57,7 +57,16 @@ class rental_socontract extends rental_socommon
 		else if ($sort_field == 'composite'){
 			$sort_field = "composite.name";
 		}
-		$order = "ORDER BY {$sort_field} {$dir}";
+		
+		//Contracts for billing should always be sorted on biling start
+		if(isset($filters['contracts_for_billing']))
+		{
+			$order = "ORDER BY contract.billing_start ASC";	
+		}
+		else
+		{
+			$order = "ORDER BY {$sort_field} {$dir}";
+		}
 		
 		// Search for based on search type
 		if($search_for)

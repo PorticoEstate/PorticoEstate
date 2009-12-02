@@ -1,4 +1,19 @@
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-document.png" /> <?php echo lang('invoice') ?></h1>
+
+<script>
+
+var toggleAll = function (target_tag_name, source_tag_name)
+{
+	var source_check_box = document.getElementsByName(source_tag_name);
+	var target_check_boxes = document.getElementsByName(target_tag_name);
+	for(var i=0; i<target_check_boxes.length; i++)
+	{
+		target_check_boxes[i].checked = source_check_box[0].checked;
+	}
+	
+}
+</script>
+
 <form action="#" method="post">
 	<input type="hidden" name="step" value="2"/>
 	<input type="hidden" name="contract_type" value="<?php echo $contract_type ?>"/>
@@ -61,6 +76,7 @@
 		<?php echo rental_uicommon::get_page_warning($warningMsgs) ?>
 		<?php echo rental_uicommon::get_page_message($infoMsgs) ?>
 		<div>&amp;nbsp;</div>
+		
 		<div id="contractContainer">
 		    <table id="contractTable">
 		        <thead>
@@ -71,12 +87,26 @@
 						<th><?php echo lang('composite_name') ?></th>
 						<th><?php echo lang('party_name') ?></th>
 						<th><?php echo lang('billing_start') ?></th>
+						<th><?php echo lang('total_price') ?></th>
+						<th><?php echo lang('area') ?></th>
 						<th><?php echo lang('override') ?></th>
 						<th><?php echo lang('bill2') ?></th>
 		            </tr>
 		        </thead>
 		        <tbody>
-					<?php
+		        	<tr>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"></div></td>
+						<td><div class="yui-dt-liner"><input type="checkbox" name="toggle_billing_start" onClick="toggleAll('override_start_date[]','toggle_billing_start')"/>&nbsp;<?php echo lang('all') ?></div></td>
+						<td><div class="yui-dt-liner"><input type="checkbox" name="toggle_included_contracts" onClick="toggleAll('contract[]','toggle_included_contracts')" />&nbsp;<?php echo lang('all') ?></div></td>
+					</tr>
+						<?php
 					if($contracts != null && count($contracts) > 0)
 					{
 						$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -91,19 +121,22 @@
 						// Run through all contracts selected for billing 
 						foreach ($contracts as $contract)
 						{
-							// Find the last day of the last period the contract was billed before the specified date
-							$last_bill_timestamp = $contract->get_last_invoice_timestamp($bill_from_timestamp); 
-							
-							// If the contract has not been billed before, select the billing start date
-							if($last_bill_timestamp == null) 
+							if(isset($contract))
 							{
-								$next_bill_timestamp = $contract->get_billing_start_date();
-							}
-							else
-							{ 
-								// ... select the next that day that the contract should be billed from
-								$next_bill_timestamp = strtotime('+1 day', $last_bill_timestamp); 
-							}
+							
+								// Find the last day of the last period the contract was billed before the specified date
+								$last_bill_timestamp = $contract->get_last_invoice_timestamp($bill_from_timestamp); 
+								
+								// If the contract has not been billed before, select the billing start date
+								if($last_bill_timestamp == null) 
+								{
+									$next_bill_timestamp = $contract->get_billing_start_date();
+								}
+								else
+								{ 
+									// ... select the next that day that the contract should be billed from
+									$next_bill_timestamp = strtotime('+1 day', $last_bill_timestamp); 
+								}
 							?>
 							<tr>
 								<td><div class="yui-dt-liner"><?php echo $contract->get_old_contract_id() ?></div></td>
@@ -137,6 +170,16 @@
 								?>
 								<td>
 									<div class="yui-dt-liner">
+										<?php echo $contract->get_total_price() ?>
+									</div>
+								</td>
+								<td>
+									<div class="yui-dt-liner">
+										<?php echo $contract->get_rented_area() ?>
+									</div>
+								</td>
+								<td>
+									<div class="yui-dt-liner">
 								<?php 
 									if($next_bill_timestamp != $bill_from_timestamp)
 									{
@@ -161,6 +204,7 @@
 								</td>
 								</tr>
 							<?php
+							}
 						}
 					}
 					else
@@ -171,6 +215,8 @@
 							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
 							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
 							<td><div class="yui-dt-liner"><?php echo lang('no_contracts_found') ?></div></td>
+							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
+							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
 							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
 							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
 							<td><div class="yui-dt-liner">&amp;nbsp;</div></td>
@@ -193,6 +239,8 @@
 			            {key:"<?php echo lang('composite_name') ?>"},
 			            {key:"<?php echo lang('party_name') ?>"},
 			            {key:"<?php echo lang('billing_start') ?>"},
+			            {key:"<?php echo lang('total_price') ?>"},
+			            {key:"<?php echo lang('area') ?>"},
 			            {key:"<?php echo lang('override') ?>"},
 			            {key:"<?php echo lang('bill2') ?>"}]
 			};
@@ -203,6 +251,8 @@
 					            {key:"<?php echo lang('composite_name') ?>"},
 					            {key:"<?php echo lang('party_name') ?>"},
 					            {key:"<?php echo lang('billing_start') ?>"},
+					            {key:"<?php echo lang('total_price') ?>"},
+					            {key:"<?php echo lang('area') ?>"},
 					            {key:"<?php echo lang('override') ?>"},
 					            {key:"<?php echo lang('bill2') ?>"}];
 			

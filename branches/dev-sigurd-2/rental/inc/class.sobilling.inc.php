@@ -141,7 +141,7 @@ class rental_sobilling extends rental_socommon
 		return $this->billing_terms;
 	}
 	
-	public function get_missing_billing_info(int $billing_term, int $year, int $mont, array $contracts_to_bill, array $contract_billing_start_date, string $export_format)
+	public function get_missing_billing_info(int $billing_term, int $year, int $mont, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format)
 	{
 		$exportable = null;
 		$missing_billing_info = array();
@@ -178,7 +178,7 @@ class rental_sobilling extends rental_socommon
 		return $missing_billing_info;
 	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contract_billing_start_date, string $export_format)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format)
 	{
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
@@ -191,7 +191,7 @@ class rental_sobilling extends rental_socommon
 		$total_sum = 0;
 		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 		{
-			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, $contract_billing_start_date[$counter++], $billing_end_timestamp); // Creates an invoice of the contract
+			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, inarray($contracts_overriding_billing_start,$contract_id) ? true : false, $billing_end_timestamp); // Creates an invoice of the contract
 			if($invoice != null)
 			{
 				$total_sum += $invoice->get_total_sum();
