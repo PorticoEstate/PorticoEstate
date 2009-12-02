@@ -194,7 +194,7 @@ status	booking	no	Status
 street	booking	no	Gate
 su	booking	no	sø
 submit	booking	no	Lagre
-successfully created (%1) allocations:	booking	no	(%1) tildelinger lagret
+successfully created %1 allocations:	booking	no	%1 tildelinger lagret
 surname	booking	no	Etternavn
 target audience	booking	no	Målgruppe
 telephone	booking	no	Telefon
@@ -271,7 +271,8 @@ Last modified by public	booking	no	Sist endret av public
 User '%s' was assigned	booking	no	Brukeren '%s' ble saksbehandler
 User '%s' was unassigned	booking	no	Brukeren '%s' ble tatt av saken
 Show only applications assigned to me	booking	no	Vis bare mine søknader
-Confirm	application	booking no	Bekreft søknad
+Confirm application	booking	no	Bekreft søknad
+confirmed	booking	no	Bekreftet
 One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	En eller flere bookinger, tildelinger eller arrangementer må lages før en søknad kan aksepteres
 Hide from my Dashboard until new activity occurs	booking	no	Ikke vis på mitt skrivebord før ny hendelse inntreffer
 Display in my Dashboard	booking	no	Vis på mitt skrivebord
@@ -400,3 +401,5 @@ owner_id	booking	no	Eier
 object_id	booking	no	Objekt
 building_id	booking	no	Bygg/anlegg
 subject_id	booking	no	Bruker
+export_configurations[external][account_code_set_id]	booking	no	Velg eksterne kontokoder
+export_configurations[internal][account_code_set_id]	booking	no	Velg interne kontokoder

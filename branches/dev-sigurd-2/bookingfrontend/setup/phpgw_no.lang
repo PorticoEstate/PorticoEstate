@@ -271,3 +271,4 @@ contact_email	bookingfrontend	no	E-post
 contact_name	bookingfrontend	no	Navn
 customer_identifier_type	bookingfrontend	no	Fakturainformasjon
 group_id	bookingfrontend	no	Gruppe/Lag
+dates	bookingfrontend	no	Fra/Til
