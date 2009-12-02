@@ -608,7 +608,10 @@
 			$contract = $so_contract->get_single($contract_id);
 			$area = $contract->get_rented_area();
 			
-			$price_per_unit = $total_price / $area;	
+			if(isset($area) && $area > 0)
+			{
+				$price_per_unit = $total_price / $area;
+			}
 			
 			$result_array = array('total_price' => $total_price, 'area' => $area, 'price_per_unit' => $price_per_unit);
 			$result_data = array('results' => $result_array, 'total_records' => 1);
