@@ -402,28 +402,23 @@
                 19=> 8  // "Ekstern I-kontrakt" -> Annen
             );
             $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
+            $internal_types = array($contract_types[2],$contract_types[3],$contract_types[5],$contract_types[15]);
 
 
 			foreach ($datalines as $data) {
 				$contract = new rental_contract();
 				
 				// TODO: link this with previously imported rental party. 
-				$personId = $this->decode($data[2]);
+				$personId = $this->decode($data[2]);						//nPersonForetakId
 				
-				$date_start = $this->decode($data[3]);
-				$date_end = $this->decode($data[4]);
+				$date_start = $this->decode($data[3]);						//dFra
+				$date_end = $this->decode($data[4]);						//dTil
 				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
-				
-				$contract->set_account_in(119001);
-				$contract->set_account_out(119001);
-				$contract->set_project_id(9);
-				
-				
 
-                $contract->set_old_contract_id($this->decode($data[5]));
+                $contract->set_old_contract_id($this->decode($data[5]));	//cKontraktnr
 				
-				$term = $data[10];
+				$term = $data[10];											//nTermin
 				switch ($term) {
 					case 1: // Monthly
 						$contract->set_term_id(1);
@@ -440,7 +435,7 @@
 				}
 				
 				// What period the prices are calculated from.  4=month, 8=year
-				$price_period = $data[14];
+				$price_period = $data[14];										//nPrisPeriode
 				if ($price_period == 4) {
 					// The price period is month.  We ignore this but print a warning.
 					// TODO: What to use as reference here?  Currently using K-number
@@ -456,19 +451,18 @@
                     $this->warnings[] = "Status of contract " . $this->decode($data[5]) . " is '".lang('contract_under_dismissal')."'";
                 }
 				
-				$contract->set_billing_start_date(strtotime($this->decode($data[16])));
+				$contract->set_billing_start_date(strtotime($this->decode($data[16])));		//dFakturaFraDato
 				
 				// Deres ref.
-				$contract->set_invoice_header($this->decode($data[17]));
-				$contract->set_comment($this->decode($data[18]));
-                $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);
+				$contract->set_invoice_header($this->decode($data[17]));					//cFakturaRef
+				$contract->set_comment($this->decode($data[18]));							//cMerknad
+                $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);	
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
-				$ansvar_tjeneste = $this->decode($data[26]);
+				$ansvar_tjeneste = $this->decode($data[26]);								//cSikkerhetsTekst
 				$ansvar_tjeneste_components = explode(".", $ansvar_tjeneste);
 				$contract->set_responsibility_id($ansvar_tjeneste_components[0]);
 				$contract->set_service_id($ansvar_tjeneste_components[1]);
-				// TODO: Check other types of contracts.  The above is correct for internal
 				
 				// Set the location ID according to what the user selected
 				$contract->set_location_id(phpgw::get_var("location_id"));
@@ -477,14 +471,32 @@
                 $composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 
                 // If composite_id has value and contract type is external
-                if($composite_id && in_array($contract->get_contract_type_id(), $external_types)) {
-                    $socomposite = rental_socomposite::get_instance();
-                    $contract->set_rented_area($socomposite->get_area($composite_id));
+                if(in_array($contract->get_contract_type_id(), $external_types)) {
+                	//specific logic for external responsibility area
+                	if($composite_id)
+                	{
+                		// Get the rented area for this contract from the composite
+                    	$socomposite = rental_socomposite::get_instance();
+                    	$contract->set_rented_area($socomposite->get_area($composite_id));
+                	}	
+                } else if(in_array($contract->get_contract_type_id(), $internal_types)) {
+                	//specific logic for internal responsibility area
+                	
+                	// Set default values accounts and project id
+                	$contract->set_account_in(119001);
+					$contract->set_account_out(119001);
+					$contract->set_project_id(9);
+					
+					// Get the rented area from the contract
+					$contract->set_rented_area($this->decode($data[22]));
+                } else {
+                	// Get the rented area from the contract
+                	$contract->set_rented_area($this->decode($data[22]));
                 }
 				
 				// Store contract
 				if ($socontract->store($contract)) {
-					$contracts[$data[0]] = $contract->get_id();
+					$contracts[$data[0]] = $contract->get_id(); // Map contract ids in Facilit and PE contract id (should be the same)
 					
 					// Check if this contract has a composite
 					if (!$this->is_null($rentalobject_to_contract[$data[0]]) && !$this->is_null($composite_id)) {
@@ -492,7 +504,7 @@
 						$socontract->add_composite($contract->get_id(), $composite_id);
 					}
 					
-					if (!$this->is_null($data[2])) {
+					if (!$this->is_null($data[2])) { //nPersonForetakId
 						// Add party to contract
 						$party_id = $parties[$this->decode($data[2])];
 						$socontract->add_party($contract->get_id(), $party_id);
@@ -523,12 +535,14 @@
 			$detail_price_items = array();
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljKontrakt.csv");
 			
-			foreach ($datalines as $data) {
-				$detail_price_items[$data[1]] = array(
-					'price' => $data[2],
-					'amount' => $data[3],
-					'date_start' => null,
-					'date_end' => null
+			
+			foreach ($datalines as $data) {			//Felt fra 'PrisElementDetaljKontrakt'
+				$detail_price_items[$data[1]] = 	//Priselementid
+				array(
+					'price' => $data[2],			//nPris
+					'amount' => $data[3],			//nMengde
+					'date_start' => null,			//dGjelderFra	
+					'date_end' =>  null				//dGjelderTil
 				);
 				
 				if (!$this->is_null($data[4])) {
@@ -546,34 +560,46 @@
 				// Add new price item to contract with correct reference from the $contracts array
 				// Remember fields from detail price item.
 				
-				$title = $this->decode($data[3]);
+				// The Agresso-ID is unique for price items
+				$id = $this->decode($data[12]);									//cVarenr
 				
-				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
-				$admin_price_item = $soprice_item->get_single_with_title($title);
-
-				$facilit_id = $this->decode($data[0]);
+				$admin_price_item = null;
 				
-				// Add new admin price item if one with this title doesn't already exist
-				if ($admin_price_item == null) {
-					$admin_price_item = new rental_price_item();
-					$admin_price_item->set_title($title);
-					$admin_price_item->set_agresso_id($this->decode($data[12]));
-					// TODO: This assumes 1 for AREA, and anything else for count.  is this correct?
-					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);
-					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					$soprice_item->store($admin_price_item);
+				if(isset($id))
+				{
+					$admin_price_item = $soprice_item->get_single_with_id($id);
 				}
 				
-				$contract_id = $contracts[$this->decode($data[1])];
+				$facilit_id = $this->decode($data[0]);							//nPrisElementId
+				
+				// Create a new admin price item, store it if it har a new unique agresso-id. First price item with unique 
+				// agresso-id determines title, area or "nr of items", and the price (from the price item details)
+				if ($admin_price_item == null) {
+					$admin_price_item = new rental_price_item();
+					$admin_price_item->set_title($this->decode($data[3]));								//cPrisElementNavn
+					$admin_price_item->set_agresso_id($id);												//cVareNr
+					// This assumes 1 for AREA, and anything else for count, even blanks
+					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);		//nMengdeTypeId
+					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
+					
+					if(isset($id))
+					{
+						$soprice_item->store($admin_price_item);
+						$this->messages[] = "Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
+					}
+				}
+				
+				$contract_id = $contracts[$this->decode($data[1])];				//nKontraktId
 				
 				if ($contract_id) {
 					// Create a new contract price item that we can tie to our contract
 					$price_item = new rental_contract_price_item();
 					
+					// Retrieve the contract
 					$contract = $socontract->get_single($contract_id);
 
                     // Set cLonnsArt for price item as contract reference
-					$socontract->import_contract_reference($contract_id,$this->decode($data[13]));
+					$socontract->import_contract_reference($contract_id,$this->decode($data[13]));	//cLonnsArt
 				
 					// Copy fields from admin price item first
 					$price_item->set_title($admin_price_item->get_title());
@@ -586,41 +612,57 @@
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-                        if(in_array($contract->get_contract_type_id(), array(5,7,8))) { // If contract is external
-                            // get area from external contract and save to price element
+                        
+                            $rented_area = $contract->get_rented_area();
+                            if(isset($rented_area))
+                            {
+                            	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
+                            	{
+                            		$this->warning[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract." ;
+                            	}
+                            }
+                            else
+                            {
+                            	//Store price item area on contract if the contract has no area (not from contract)
+                            	$contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
+                            	//Store the contract
+                           		$socontract->store($contract);
+                            }
+              
+                        	
+                        	// Set the the contract area on the price item
                             $price_item->set_area($contract->get_rented_area());
-                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
-                        }
-                        else {
-                            // get area from price element and ave to both contract and pr.el.
-                            $price_item->set_area($detail_price_items[$facilit_id]['amount']);
-                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
 
-                            $contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
-                            $socontract->store($contract);
-                        }
-						//$price_item->set_area($detail_price_items[$facilit_id]['amount']);
-					} else {
+                            //Calculate the total price for the price item
+                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
+                        
+					} 
+					else 
+					{
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
 					}
 					
 					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
 					$price_item->set_date_end($detail_price_items[$facilit_id]['date_end']);
-					
+				
 					// Tie the price item to the contract it belongs to
 					$price_item->set_contract_id($contract_id);
+					
+					// Tie this price item to its parent admin price item
+					$price_item->set_price_item_id($admin_price_item->get_id());
+					
 					// .. and save
 					if($socontract_price_item->import($price_item)) {
-                        $this->messages[] = "Successfully imported price item " . $price_item->get_title();
+                        $this->messages[] = "Successfully imported price item {$id} for contract {$contract_id}";
                     }
                     else {
-                        $this->warning[] = "Could not store price item " . $price_item->get_title();
+                        $this->warning[] = "Could not store price item {$id} - " . $price_item->get_title();
                     }
 				} else {
 					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
-				
 			}
 			
 			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
@@ -642,10 +684,11 @@
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljLeieobjekt.csv");
 			
 			foreach ($datalines as $data) {
-				$detail_price_items[$data[1]] = array(
-					'price' => $data[2],
-					'amount' => $data[3],
-					'date_start' => null
+				$detail_price_items[$data[1]] = 	//nPrisElementId
+				array(
+					'price' => $data[2],			//nPris
+					'amount' => $data[3],			//nMengde
+					'date_start' => null			//dGjelderFra
 				);
 				
 				if (!$this->is_null($data[4])) {
@@ -655,38 +698,45 @@
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementLeieobjekt.csv");
 			foreach ($datalines as $data) {
-				// Create new admin price item if one doesn't exist in the admin price list
-				// Add new price item to contract with correct reference from the $contracts array
-				// Remember fields from detail price item.
 				
-				$title = $this->decode($data[2]);
+				// The Agresso-ID is unique for price items
+				$id = $this->decode($data[11]);									//cVarenr
 				
-				// TODO: Is it right to use the title as the key?  Should it maybe be AgressoID, or both in combination?
-				$admin_price_item = $soprice_item->get_single_with_title($title);
+				$admin_price_item = null;
 				
-				$facilit_id = $this->decode($data[0]);
+				if(isset($id))
+				{
+					$admin_price_item = $soprice_item->get_single_with_id($id);
+				}
 				
-				// Add new admin price item if one with this title doesn't already exist
+				$facilit_id = $this->decode($data[0]);							//nPrisElementId
+				
+				// Create a new admin price item, store it if it har a new unique agresso-id. First price item with unique 
+				// agresso-id determines title, area or "nr of items", and the price (from the price item details)
 				if ($admin_price_item == null) {
-
 					$admin_price_item = new rental_price_item();
-					$admin_price_item->set_title($title);
-					$admin_price_item->set_agresso_id($this->decode($data[11]));
-					// TODO: Assumes composite price items always regards area
-					$admin_price_item->set_is_area(true);
+					$admin_price_item->set_title($this->decode($data[2]));								//cPrisElementNavn
+					$admin_price_item->set_agresso_id($id);												//cVareNr
+					// This assumes 1 for AREA, and anything else for count, even blanks
+					$admin_price_item->set_is_area($this->decode($data[3]) == '1' ? true : false);		//nMengdeTypeId
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					$soprice_item->store($admin_price_item);
+					
+					if(isset($id))
+					{
+						$soprice_item->store($admin_price_item);
+						$this->messages[] = "Stored price item {$id} with title " . $admin_price_item->get_title() . " in 'Prisbok'";
+					}
 				}
 				
 				
+				//TODO: Document this snippet
 				$contract_id = null;
-				$decoded_data_1 = $this->decode($data[1]);
+				$decoded_data_1 = $this->decode($data[1]);		//nLeieobjektId
 				foreach ($rentalobject_to_contract as $facilit_contract_id => $facilit_composite_id) {
 					if ($facilit_composite_id == $decoded_data_1) {
 						$contract_id = $facilit_contract_id;
 					}
 				}
-				
 				$contract_id = $contracts[$contract_id];
 				
 				if ($contract_id) {
@@ -706,9 +756,33 @@
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
 					if ($admin_price_item->is_area()) {
-						$price_item->set_area($contract->get_rented_area());
-						$price_item->set_total_price($price_item->get_area() * $price_item->get_price());
-					} else {
+                            $rented_area = $contract->get_rented_area();
+                            if(isset($rented_area))
+                            {
+                            	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
+                            	{
+                            		$this->warning[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract." ;
+                            	}
+                            }
+                            else
+                            {
+                            	//Store price item area on contract if the contract has no area (not from contract)
+                            	$contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
+                            	//Store the contract
+                           		$socontract->store($contract);
+                            }
+              
+                        	
+                        	// Set the the contract area on the price item
+                            $price_item->set_area($contract->get_rented_area());
+
+                            //Calculate the total price for the price item
+                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
+                       
+					} 
+					else 
+					{
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
 						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
 					}
@@ -719,9 +793,9 @@
 					$price_item->set_contract_id($contract_id);
 					// .. and save
 					$socontract_price_item->import($price_item);
-					$this->messages[] = "Successfully imported price item " . $price_item->get_title();
+					$this->messages[] = "Successfully imported price item {$id}" . $price_item->get_title();
 				} else {
-					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);
+					$this->warnings[] = "Skipped price item  with no contract attached: " . join(", ", $data);
 				}
 				
 			}

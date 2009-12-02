@@ -71,6 +71,30 @@ class rental_soprice_item extends rental_socommon
 	}
 	
 	/**
+	 * Get the first price item matching the given agresso-id
+	 * @param string $id
+	 * @return rental_price_item
+	 */
+	function get_single_with_id($id)
+	{
+		$id = (string)$id;
+		$sql = "SELECT * FROM rental_price_item WHERE agresso_id LIKE '" . $id . "'";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		
+		if ($this->db->next_record()) {
+			$price_item = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
+			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
+			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			
+			return $price_item;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Get a list of price_item objects matching the specific filters
 	 * 
 	 * @param $start search result offset

@@ -207,7 +207,7 @@
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('agresso_id')
 		),
 		// Price item related to contract
 		'rental_contract_price_item' => array(
