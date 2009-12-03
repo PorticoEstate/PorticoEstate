@@ -23,7 +23,6 @@ class rental_uibilling extends rental_uicommon
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('admin::rental::billing');
 	}
 	
 	public function index()
@@ -73,7 +72,18 @@ class rental_uibilling extends rental_uicommon
 		// Step 2 - list of contracts that should be billed
 		if($step == 2 || (phpgw::get_var('step') == '1' && phpgw::get_var('next') != null) || phpgw::get_var('step') == '3' && phpgw::get_var('previous') != null) // User clicked next on step 1 or previous on step 3
 		{
-			$contract_type = phpgw::get_var('contract_type'); 
+			$contract_type = phpgw::get_var('contract_type');
+			
+			$names = $this->locations->get_name($contract_type);
+			if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+			{
+				if(!$this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+				{
+					$this->render('permission_denied.php');
+					return;
+				}
+			}
+			
 			$billing_term = phpgw::get_var('billing_term'); 
 			$year = phpgw::get_var('year');  
 			$month = phpgw::get_var('month');

@@ -20,13 +20,24 @@
 					'group'	=> 'office'
 				)
 			);
+			
+			$billing = array (
+			array
+				(
+					'text'	=> lang('invoice_menu'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'x-office-document')
+				)
+			);
+			
 			$menus['navigation'] =  array
 			(
 				'contracts' => array
 				(
 					'text'	=> lang('contracts'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uicontract.index') ),
-					'image'	=> array('rental', 'text-x-generic')
+					'image'	=> array('rental', 'text-x-generic'),
+					'children'	=> $billing
 				),
 				'composites' => array
 				(
@@ -59,12 +70,6 @@
 				(
 					'text'	=> lang('Configure Access Permissions'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'rental') )
-				),
-				'billing'	=> array
-				(
-					'text'	=> lang('invoice'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-document')
 				),
 				'import'	=> array
 				(
