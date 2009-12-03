@@ -111,9 +111,8 @@ class rental_uiprice_item extends rental_uicommon
 
 	public function set_value()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
 			return;
 		}
 
