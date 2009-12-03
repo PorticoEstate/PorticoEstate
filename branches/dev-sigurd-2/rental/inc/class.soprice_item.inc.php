@@ -196,7 +196,7 @@ class rental_soprice_item extends rental_socommon
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
 			($price_item->is_inactive() ? "true" : "false"),
-			$price
+			str_replace(',','.',$price)
 		);
 		
 		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price');
@@ -226,7 +226,7 @@ class rental_soprice_item extends rental_socommon
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
 			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
-			'price = ' . $price_item->get_price()
+			'price = ' . str_replace(',','.',$price_item->get_price())
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -249,18 +249,18 @@ class rental_soprice_item extends rental_socommon
 		$values = array(
 			'price_item_id = ' . $price_item->get_price_item_id(),
 			'contract_id = ' . $price_item->get_contract_id(),
-			'area = ' . $price_item->get_area(),
-			'count = ' . $price_item->get_count(),
+			'area = ' . str_replace(',','.',$price_item->get_area()),
+			'count = ' . str_replace(',','.',$price_item->get_count()),
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
-			'price = ' . $price_item->get_price()
+			'price = ' . str_replace(',','.',$price_item->get_price())
 		);
 		
 		if ($price_item->is_area()) {
-			$values[] = 'total_price = ' . ($price_item->get_area() * $price_item->get_price());
+			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_area() * $price_item->get_price()));
 		} else {
-			$values[] = 'total_price = ' . ($price_item->get_count() * $price_item->get_price());
+			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_count() * $price_item->get_price()));
 		}
 		
 		if ($price_item->get_date_start()) {
@@ -326,11 +326,11 @@ class rental_soprice_item extends rental_socommon
 				$price_item_id,
 				$contract_id,
 				"'" . $price_item->get_title() . "'",
-				$rented_area,
+				str_replace(',','.',$rented_area),
 				"'" . $price_item->get_agresso_id() . "'",
 				$price_item->is_area() ? 'true' : 'false',
-				$price_item->get_price(),
-				$total_price
+				str_replace(',','.',$price_item->get_price()),
+				str_replace(',','.',$total_price)
 			);
 			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
 			//var_dump($q);

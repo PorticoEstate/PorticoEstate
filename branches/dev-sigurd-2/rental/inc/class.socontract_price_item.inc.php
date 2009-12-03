@@ -105,10 +105,10 @@ class rental_socontract_price_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$rented_area,
-			$price_item->get_count(),
-			$total_price
+			str_replace(',','.',$price),
+			str_replace(',','.',$rented_area),
+			str_replace(',','.',$price_item->get_count()),
+			str_replace(',','.',$total_price)
 		);
 		
 		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
@@ -160,10 +160,10 @@ class rental_socontract_price_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$rented_area,
-			$price_item->get_count(),
-			$total_price
+			str_replace(',','.',$price),
+			str_replace(',','.',$rented_area),
+			str_replace(',','.',$price_item->get_count()),
+			str_replace(',','.',$total_price)
 		);
 		
 		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
@@ -206,12 +206,12 @@ class rental_socontract_price_item extends rental_socommon
 			$price_item->get_price_item_id(),
 			$price_item->get_contract_id(),
 			'\'' . $price_item->get_title() . '\'',
-			$price_item->get_area(),
-			$price_item->get_count(),
+			str_replace(',','.',$price_item->get_area()),
+			str_replace(',','.',$price_item->get_count()),
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$total_price,
+			str_replace(',','.',$price),
+			str_replace(',','.',$total_price),
 			$this->marshal($price_item->get_date_start(), 'int'),
 			$this->marshal($price_item->get_date_end(), 'int')
 		);
