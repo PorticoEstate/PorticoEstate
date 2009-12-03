@@ -488,10 +488,10 @@
 					$contract->set_project_id(9);
 					
 					// Get the rented area from the contract
-					$contract->set_rented_area($this->decode($data[22]));
+					$contract->set_rented_area($this->decode($data[21]));
                 } else {
                 	// Get the rented area from the contract
-                	$contract->set_rented_area($this->decode($data[22]));
+                	$contract->set_rented_area($this->decode($data[21]));
                 }
 				
 				// Store contract
