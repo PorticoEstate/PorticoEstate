@@ -105,7 +105,7 @@
 		 */
 		public function import()
 		{
-			$steps = 7;
+			$steps = 6;
 			// TODO: For each import type, check what we need as a minimum information for each before saving
 			
 			// TODO: Remove after testing
@@ -152,26 +152,26 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contract_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
-				$this->import_button_label = "6/{$steps}: Continue to import composite price items"; // Not really - events will be after this
+				$this->import_button_label = "6/{$steps}: Continue to import events"; 
                 $this->log_messages(5);
 				return;
 			}
 			
-			// Import price items
-			if (!phpgwapi_cache::session_get('rental', 'facilit_composite_price_items')) {
+			// Import price items - This information should not be imported
+			/*if (!phpgwapi_cache::session_get('rental', 'facilit_composite_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				phpgwapi_cache::session_set('rental', 'facilit_composite_price_items', $this->import_composite_price_items($contracts, $rentalobject_to_contract));
 				$this->import_button_label = "7/{$steps}: Continue to import events";
                 $this->log_messages(6);
 				return;
-			}
+			}*/
 			
 			// Import events
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
-                $this->log_messages(7);
+                $this->log_messages(6);
                 $this->clean_up();
 				$this->import_button_label = "Import done";
 				//return;
@@ -183,7 +183,7 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
-			phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
+			//phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_facilit_events');
 		}
 		
