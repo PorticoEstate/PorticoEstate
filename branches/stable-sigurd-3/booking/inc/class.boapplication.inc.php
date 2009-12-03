@@ -19,10 +19,17 @@
 			else
 				$subject = "Søknad #{$application[id]} endret/oppdatert";
 			$link = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiapplication.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
-			$link = 'http://193.161.160.114' . $link; // FIXME: Temporary
+			$link = 'http://'.$_SERVER['HTTP_HOST'] . $link;
 			$link = str_replace('&amp;', '&', $link);
 			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
-			$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@bergen.kommune.no', 'Bergen Booking', 'plain');
+			try
+			{
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@bergen.kommune.no', 'Bergen Booking', 'plain');
+			}
+			catch (phpmailerException $e)
+			{
+				// TODO: Inform user if something goes wrong
+			}
 		}
 		
 		public function read_dashboard_data($for_case_officer_id = null) {

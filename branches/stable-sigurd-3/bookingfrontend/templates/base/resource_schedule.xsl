@@ -38,6 +38,7 @@
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
+	YAHOO.booking.newApplicationUrl = '<xsl:value-of select="resource/application_link"/>';
 	
     var handleHistoryNavigation = function (state) {
 		YAHOO.booking.date = parseISO8601(state);

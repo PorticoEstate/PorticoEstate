@@ -201,6 +201,7 @@
 				}
 				catch (phpmailerException $e)
 				{
+					// TODO: Inform user if something goes wrong
 				}
 			}
 		}
