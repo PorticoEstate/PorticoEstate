@@ -154,12 +154,16 @@ dl.proplist-col dd.address {
 #schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
 #schedule_container tr td:first-child { background: #eee; }
 #schedule_container tr.time td { border-top: 1px solid #444;}
-#schedule_container .color1 { background-color: #ccf;}
-#schedule_container .color2 { background-color: #cfc;}
-#schedule_container .color3 { background-color: #fcc;}
-#schedule_container .color4 { background-color: #ffb;}
-#schedule_container .color5 { background-color: #bff;}
-#schedule_container .color6 { background-color: #fbf;}
+#schedule_container .color1  { background-color: #ccf;}
+#schedule_container .color2  { background-color: #cfc;}
+#schedule_container .color3  { background-color: #fcc;}
+#schedule_container .color4  { background-color: #ffb;}
+#schedule_container .color5  { background-color: #bff;}
+#schedule_container .color6  { background-color: #fbf;}
+#schedule_container .color7  { background-color: #DE6D6D;} /* indianred */
+#schedule_container .color8  { background-color: #F0F0F0;} /* gray */
+#schedule_container .color9  { background-color: #6495ED;} /* cornflowerblue */
+#schedule_container .color10 { background-color: #90EE90;} /* lightgreen */
 
 #boundary-table td, #boundary-table th { 
     padding: .1em .2em;
