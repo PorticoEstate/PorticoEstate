@@ -16,6 +16,7 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
 
 class CustomJasperReport {
 
@@ -126,6 +127,7 @@ class CustomJasperReport {
 
 		jrxls.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
 		jrxls.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		jrxls.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
 		//jrxls.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE); // the default is false
 		
 		try {
