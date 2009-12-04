@@ -3885,111 +3885,146 @@
 	$test[] = '0.9.17.576';
 	function property_upgrade0_9_17_576()
 	{
+        $GLOBALS['phpgw']->locations->add('.admin.item', 'Items administration', 'property');
+
 		$tables = array
 		(
-            'property_attrib_defs' => array
+            'property_data_type' => array
+            (
+                'fd' => array(
+                    'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                    'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+                    'function_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+                ),
+                'pk' => array('id'),
+                'fk' => array(),
+                'ix' => array(),
+				'uc' => array()
+            ),
+
+
+            'property_catalog' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => false),
+					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+
+            'property_attr_def' => array
 			(
 				'fd' => array
 				(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
 					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'descrptn' => array('type' => 'text', 'nullable' => false),
-					'data_type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'munit' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'description' => array('type' => 'text', 'nullable' => false),
+					'data_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'unit_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
 				),
 				'pk' => array('id'),
-				'fk' => array(),
+				'fk' => array('property_data_type' => array('data_type_id' => 'id') ,'fm_standard_unit' => array('unit_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
-            
-            'property_catalog_groups' => array
+
+            'property_attr_value' => array
 			(
 				'fd' => array
 				(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'nat_group_no' => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
-					'bpn' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-            'property_item_catalogs' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'descr' => array('type' => 'text', 'nullable' => false),
-					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
-				),
-				'pk' => array('id'),
-				'fk' => array('property_catalog_groups' => array('group_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-			'property_items' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-					'parent_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				),
-				'pk' => array('id'),
-				'fk' => array('property_items' => array('parent_id' => 'id'),
-                              'property_item_catalogs' => array('catalog_id' => 'id'),
-                              'fm_locations' => array('location_id' => 'id'),
-                              'fm_vendor' => array('vendor_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-			'property_catalog_group_attribs' => array
-			(
-				'fd' => array
-				(
-					'catalog_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'attrib_def_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
-				),
-				'pk' => array('catalog_group_id', 'attrib_def_id'),
-				'fk' => array('property_catalog_groups' => array('catalog_group_id' => 'id'),
-                              'property_attrib_defs' => array('attrib_def_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-			'property_attribs' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'attrib_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'val_num' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'val_str' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'val_num' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'val_str' => array('type' => 'text', 'nullable' => true),
 					'created_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 					'expired_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'fk' => array('property_attrib_defs' => array('attrib_def_id' => 'id'),
-                              'property_items' => array('item_id' => 'id')),
+				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
-			)
+			),
+
+
+            'property_group' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'nat_group_no' => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
+					'bpn' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'parent_group' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+                    'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array('property_group' => array('parent_group' => 'id'), 'property_catalog' => array('catalog_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+
+			'property_item' => array
+			(
+				'fd' => array
+				(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array('property_group' => array('group_id' => 'id'),
+                              'fm_locations' => array('location_id' => 'id'),
+                              'fm_vendor' => array('vendor_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+
+            'property_item_attr' => array
+			(
+				'fd' => array
+				(
+					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'attr_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'value_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('item_id', 'attr_def_id'),
+				'fk' => array('property_item' => array('item_id' => 'id'),
+                              'property_attr_def' => array('attr_def_id' => 'id'),
+                              'property_attr_value' => array('value_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+
+
+			'property_group_attr' => array
+			(
+				'fd' => array
+				(
+					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'attr_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'value_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+				),
+				'pk' => array('group_id', 'attr_def_id'),
+				'fk' => array('property_group' => array('group_id' => 'id'),
+                              'property_attr_def' => array('attr_def_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();

@@ -189,12 +189,14 @@
 		'fm_responsibility_contact',
 		'fm_action_pending',
 		'fm_action_pending_category',
-        /*'property_items',
-        'property_item_catalogs',
-        'property_catalog_groups',
-        'property_catalog_group_attribs',
-        'property_attrib_defs',
-        'property_attribs'*/
+        'property_catalog',
+        'property_group',
+        'property_item',
+        'property_data_type',
+        'property_attr_def',
+        'property_attr_value',
+        'property_group_attr',
+        'property_item_attr'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
