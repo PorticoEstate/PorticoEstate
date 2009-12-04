@@ -407,3 +407,6 @@ p.message {
 	border:1px solid #9F6000;
 	color:#9F6000;
 }
+.yui-calendar td.calcell {
+	border:0px !important;
+}
