@@ -511,6 +511,7 @@ function closeCalender(event)
 
 function clearCalendar(event)
 {
+	YAHOO.util.Event.stopEvent(event);
 	this.clear();
 	document.getElementById(this.inputFieldID).value = '';
 	document.getElementById(this.hiddenField).value = '';
