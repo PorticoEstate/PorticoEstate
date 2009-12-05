@@ -154,12 +154,26 @@ dl.proplist-col dd.address {
 #schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
 #schedule_container tr td:first-child { background: #eee; }
 #schedule_container tr.time td { border-top: 1px solid #444;}
-#schedule_container .color1 { background-color: #ccf;}
-#schedule_container .color2 { background-color: #cfc;}
-#schedule_container .color3 { background-color: #fcc;}
-#schedule_container .color4 { background-color: #ffb;}
-#schedule_container .color5 { background-color: #bff;}
-#schedule_container .color6 { background-color: #fbf;}
+#schedule_container .color1  { background-color: #ccf;}
+#schedule_container .color2  { background-color: #cfc;}
+#schedule_container .color3  { background-color: #fcc;}
+#schedule_container .color4  { background-color: #ffb;}
+#schedule_container .color5  { background-color: #bff;}
+#schedule_container .color6  { background-color: #fbf;}
+#schedule_container .color7  { background-color: #de6d6d;} /* indianred */
+#schedule_container .color8  { background-color: #f0f0f0;} /* gray */
+#schedule_container .color9  { background-color: #6495ed;} /* cornflowerblue */
+#schedule_container .color10 { background-color: #90ee90;} /* lightgreen */
+#schedule_container .color11 { background-color: #eee8aa;} /* palegoldenrod */
+#schedule_container .color12 { background-color: #afeeee;} /* paleturquoise */
+#schedule_container .color13 { background-color: #ffb6c1;} /* lightpink */
+#schedule_container .color14 { background-color: #f0e68c;} /* khaki */
+#schedule_container .color15 { background-color: #66cdaa;} /* mediumaquamarine */
+#schedule_container .color16 { background-color: #ffe4c4;} /* bisque */
+#schedule_container .color17 { background-color: #ffa500;} /* orange */
+#schedule_container .color18 { background-color: #bdb76b;} /* darkkhaki */
+#schedule_container .color19 { background-color: #32cd32;} /* limegreen */
+#schedule_container .color20 { background-color: #ffe4b5;} /* moccasin */
 
 #boundary-table td, #boundary-table th { 
     padding: .1em .2em;

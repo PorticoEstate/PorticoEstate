@@ -17,7 +17,12 @@
     <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Path_to_Invoice_Export_file}: ({lang_mandatory})<br>
+    <td>{lang_Path_to_Invoice_import_files}:<br>
+    {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
+    <td><input name="newsettings[import_path]" value="{value_import_path}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_Path_to_Invoice_Export_files}: ({lang_mandatory})<br>
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
     <td><input name="newsettings[export_path]" value="{value_export_path}"></td>
    </tr>

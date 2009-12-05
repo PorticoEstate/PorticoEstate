@@ -74,9 +74,45 @@
 			$this->datetimeformat	= $this->db->datetime_format();
 		}
 
-		function import($invoice_common,$download)
+		public function import($invoice_common,$download)
 		{
-			$tsvfile	= $invoice_common['tsvfile'];
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$dirname = $config->config_data['import_path'];
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+ 					{
+						continue;
+					}
+
+					$file_list[] = (string) "{$dirname}/{$file}";
+				}
+			}
+
+			foreach($file_list as $file)
+			{
+				$this->import_single($file);
+			}
+		}
+
+		function import_single($file)
+		{
 			$valid_data= False;
 			$bilagsnr = $this->invoice->next_bilagsnr();
 
@@ -84,7 +120,7 @@
 
 			$xmlparse = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('UTF-8');
-			$var_result = $xmlparse->parseFile($tsvfile);
+			$var_result = $xmlparse->parseFile($file);
 
 			set_time_limit(300);
 
@@ -251,7 +287,8 @@
 					$i++;
 				}
 			}
-
+_debug_array($buffer);
+die();
 			if(!$download)
 			{
 				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
