@@ -45,6 +45,9 @@
 		var $soXport;
 		var $invoice;
 		var $meter_table;
+		var $bilagsnr_0 = 0;
+		var $bilagsnr_1 = 0;
+		var $bilagsnr_2 = 0;
 
 		var $import = array(
 			'Bestilling' => 'pmwrkord_code', 
@@ -79,23 +82,17 @@
 
 		function import_conv()
 		{
-
-			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->soXport 		= CreateObject($this->currentapp.'.soXport');	
-			$this->invoice 		= CreateObject($this->currentapp.'.boinvoice');
-			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->soXport 		= CreateObject('property.soXport');	
+			$this->invoice 		= CreateObject('property.boinvoice');
+			$this->bocommon		= CreateObject('property.bocommon');
 			$this->dateformat	= $this->bocommon->dateformat;
 			$this->datetimeformat	= $this->bocommon->datetimeformat;
-			$this->next_bilagsnr	= $this->invoice->next_bilagsnr();
 			$this->config = CreateObject('phpgwapi.config','property');
 			$this->config->read_repository();
 			$this->meter_table = $this->config->config_data['meter_table'];
 
-		//	$this->db 		= $GLOBALS['phpgw']->db;
-			$this->db           	= $this->bocommon->new_db();
+			$this->db		= $this->bocommon->new_db();
 			$this->join		= $this->bocommon->join;
-
-
 		}
 
 		function import($invoice_common,$download)
@@ -154,7 +151,7 @@
 
 			if(!$download)
 			{
-				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
+				$buffer = $this->import_end_file($buffer);
 			}
 
 			$this->header = array('Fakt. Nr','Måler nr','Konto','Objekt','MVA','Tjeneste','Belop [kr]','Omr','Adresse');
@@ -193,6 +190,18 @@
 					$value = str_replace('kr','',$value);
 					$value = str_replace(' ','',$value);
 					$value = str_replace(',','.',$value);
+
+
+					if($value < 0)
+					{
+						$buffer[$this->id]['artid'] = 2;					
+						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_2();
+					}
+					else
+					{
+						$buffer[$this->id]['artid'] = $invoice_common['art'];
+						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_1();
+					}
 
 					if( $invoice_common['art'] == 2 ) // kreditnota
 					{
@@ -252,7 +261,6 @@
 				}
 
 				$buffer[$this->id][$name] = $value;
-				$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr;
 				$buffer[$this->id]['fakturanr'] = $invoice_common['invoice_num'];
 				$buffer[$this->id]['dima'] = $dima;
 				$buffer[$this->id]['loc1'] = $loc1;
@@ -266,7 +274,7 @@
 				$buffer[$this->id]['forfallsdato'] = $payment_date;
 				$buffer[$this->id]['periode'] = $invoice_common['smonth'];
 				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
-				$buffer[$this->id]['artid'] = $invoice_common['art'];
+
 				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;
 				$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
 				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
@@ -304,11 +312,69 @@
 			return $maalerinfo;
 		}
 
-		function import_end_file($buffer,$bilagsnr)
+		function import_end_file($buffer)
 		{
 			$num	= $this->soXport->add($buffer);
-			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $bilagsnr);
+			
+			$_bilagsnr = array();
+			if($this->bilagsnr_1)
+			{
+				$_bilagsnr[] = $this->bilagsnr_1;
+			}
+			if($this->bilagsnr_2)
+			{
+				$_bilagsnr[] = $this->bilagsnr_2;
+			}
+			
+			$bilagsnr = max($_bilagsnr);
+			$this->db->query("UPDATE fm_idgenerator SET VALUE ={$bilagsnr} WHERE name = 'Bilagsnummer'");
+
+			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. implode(',', $_bilagsnr));
 			return $receipt;
+		}
+
+		protected function next_bilagsnr_1()
+		{
+			if ($this->bilagsnr_1)
+			{
+				return $this->bilagsnr_1;
+			}
+			else
+			{
+				if(!$this->bilagsnr_0)
+				{
+					$this->bilagsnr_0 = $this->invoice->next_bilagsnr();
+					$this->bilagsnr_1 = $this->bilagsnr_0;
+				}
+				else
+				{
+					$this->bilagsnr_1 = $this->bilagsnr_0 + 1;				
+				}
+
+				return $this->bilagsnr_1;
+			}
+		}
+
+		protected function next_bilagsnr_2()
+		{
+			if ($this->bilagsnr_2)
+			{
+				return $this->bilagsnr_2;
+			}
+			else
+			{
+				if(!$this->bilagsnr_0)
+				{
+					$this->bilagsnr_0 = $this->invoice->next_bilagsnr();
+					$this->bilagsnr_2 = $this->bilagsnr_0;
+				}
+				else
+				{
+					$this->bilagsnr_2 = $this->bilagsnr_0 + 1;				
+				}
+
+				return $this->bilagsnr_2;
+			}
 		}
 	}
 ?>
