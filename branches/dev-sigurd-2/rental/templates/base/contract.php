@@ -211,7 +211,7 @@
 									<option value=""><?php echo lang('nobody') ?></option>
 									<?php
 										$executive_officer = $contract->get_executive_officer_id();
-										$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+										$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts',-1,'','account_lastname');
 										foreach($accounts as $account)
 										{
 											$account_id = $account->__get('id');
@@ -256,8 +256,9 @@
 						<?php
 							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '-';
 							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);
+							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);?>
+						<?php if ($editable) {
+								echo $start_date_cal;
 							} else {
 								echo $start_date;
 							}
@@ -271,12 +272,13 @@
 						<?php
 							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '-';
 							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
+							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
+						?>
+						<?php if ($editable) {
+								echo $end_date_cal;
 							} else {
 								echo $end_date;
-							}
-						?>
+						 }?>
 						<br/>
 					</dd>
 					<dt>
