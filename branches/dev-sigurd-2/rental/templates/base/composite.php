@@ -52,15 +52,15 @@
 						<?php
 							if (!$editable && $composite->has_custom_address()) {
 								// In view mode the custom address should be displayed if it's filled in
-								echo $composite->get_custom_address_1() . "<br />";
+								echo $composite->get_custom_address_1();
 								if ($composite->get_custom_address_2()) {
-									echo ', ' . $composite->get_custom_address_2();
+									echo ',<br/>' . $composite->get_custom_address_2();
 								}
 								if ($composite->get_custom_house_number()) {
-									echo ' ' . $composite->get_custom_house_number();
+									echo ',<br/>' . $composite->get_custom_house_number();
 								}
 								if ($composite->get_custom_postcode()) {
-									echo '<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
+									echo ',<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
 								}
 							}
 							else if (!$editable){
