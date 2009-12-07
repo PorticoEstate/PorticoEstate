@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage import
- 	* @version $Id: Import_fra_basware_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
+ 	* @version $Id$
 	*/
 
 	/**
@@ -34,8 +34,9 @@
 	 */
 
 
-	class import_conv
+	class  Import_fra_basware_X205
 	{
+		var	$function_name = 'Import_fra_basware_X205';
 		var $mvakode=0;
 		var $kildeid=1;
 		var $splitt=0;
@@ -61,11 +62,12 @@
 
 		var $header = array('Bilagsnr','Fakturanr','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
 
-		function import_conv()
+		function __construct()
 		{
 			$this->soXport			= CreateObject('property.soXport');	
 			$this->invoice			= CreateObject('property.soinvoice');
 			$this->responsible		= CreateObject('property.soresponsible');
+			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db				= & $GLOBALS['phpgw']->db;
 			$this->join				= & $this->db->join;
 			$this->left_join		= & $this->db->left_join;
@@ -74,9 +76,75 @@
 			$this->datetimeformat	= $this->db->datetime_format();
 		}
 
-		public function import($invoice_common,$download)
+		function pre_run($data='')
 		{
+			if($data['enabled']==1)
+			{
+				$confirm	= true;
+				$cron		= true;
+			}
+			else
+			{
+				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+				$execute	= phpgw::get_var('execute', 'bool', 'GET');
+			}
 
+			if ($confirm)
+			{
+				$this->execute($cron);
+			}
+			else
+			{
+				$this->confirm($execute=false);
+			}
+		}
+
+		function confirm($execute='')
+		{
+			$link_data = array
+			(
+				'menuaction' => 'property.custom_functions.index',
+				'function'	=>$this->function_name,
+				'execute'	=> $execute,
+			);
+
+
+			if(!$execute)
+			{
+				$lang_confirm_msg 	= lang('do you want to perform this action');
+			}
+
+			$lang_yes			= lang('yes');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
+
+
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+
+			$data = array
+			(
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiasync.index')),
+				'run_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'message'				=> $this->receipt['message'],
+				'lang_confirm_msg'		=> $lang_confirm_msg,
+				'lang_yes'				=> $lang_yes,
+				'lang_yes_statustext'	=> 'Importer faktura fra Basware',
+				'lang_no_statustext'	=> 'tilbake',
+				'lang_no'				=> lang('no'),
+				'lang_done'				=> 'Avbryt',
+				'lang_done_statustext'	=> 'tilbake'
+			);
+
+			$appname		= lang('location');
+			$function_msg	= 'Importer faktura fra Basware';
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('confirm' => $data));
+			$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		public function execute($cron='')
+		{
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read();
 			$dirname = $config->config_data['import_path'];
@@ -107,11 +175,32 @@
 
 			foreach($file_list as $file)
 			{
-				$this->import_single($file);
+				$this->import($file);
 			}
+
+			if(!$cron)
+			{
+				$this->confirm($execute=false);
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+
+			$insert_values= array(
+				$cron,
+				date($this->bocommon->datetimeformat),
+				$this->function_name,
+				implode(',',(array_keys($msgbox_data)))
+				);
+
+			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+
+			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+					. "VALUES ($insert_values)";
+			$this->db->query($sql,__LINE__,__FILE__);
+
 		}
 
-		function import_single($file)
+		function import($file)
 		{
 			$valid_data= False;
 			$bilagsnr = $this->invoice->next_bilagsnr();
