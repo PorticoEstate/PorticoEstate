@@ -57,7 +57,12 @@
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
-
+			
+			$exp_param 	= phpgw::get_var('export');
+			$export = false;
+			if(isset($exp_param)){
+				$export=true;
+			}
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
@@ -128,9 +133,11 @@
 					$rows[] = $result->serialize();
 				}
 			}
-
-			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type));
+			
+			if(!$export){
+				//Add context menu columns (actions and labels)
+				array_walk($rows, array($this, 'add_actions'), array($type));
+			}
 
 			//Build a YUI result from the data
 			$result_data = array('results' => $rows, 'total_records' => $result_count);
