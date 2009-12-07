@@ -130,50 +130,48 @@ class rental_socomposite extends rental_socommon
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 		if(!$composite->contains_unit($location_code))
 		{
+			//composite inneholder ikke unit -> legg den til
 			$location = null;
 			try
 			{
-				if(strpos($location_code, '.') === false)
+				// We get the data from the property module
+				$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
+				//var_dump($data);
+				if($data != null)
 				{
-					// We get the data from the property module
-					$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
-					if($data != null)
+					$level = -1;
+					$names = array();
+					$levelFound = false;
+					for($i = 1; !$levelFound; $i++)
 					{
-						$level = -1;
-						$names = array();
-						$levelFound = false;
-						for($i = 1; !$levelFound; $i++)
+						$loc_name = 'loc'.$i.'_name';
+						if(array_key_exists($loc_name, $data))
 						{
-							$loc_name = 'loc'.$i.'_name';
-							if(array_key_exists($loc_name, $data))
-							{
-								$level = $i;
-								$names[$level] = $data[$loc_name];
-							}
-							else{
-								$levelFound = true;
-							}
+							$level = $i;
+							$names[$level] = $data[$loc_name];
+							$levelFound = true;
 						}
-						$gab_id = '';
-						$gabinfos  = @execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
-						if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+					}
+					$gab_id = '';
+					$gabinfos  = @execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
+					if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+					{
+						$gabinfo = array_shift($gabinfos);
+						$gab_id = $gabinfo['gab_id'];
+					}
+					$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
+					$location->set_address_1($data['street_name'].' '.$data['street_number']);
+					//$location->set_address_1($data['address']);
+					foreach($data['attributes'] as $attributes)
+					{
+						switch($attributes['column_name'])
 						{
-							$gabinfo = array_shift($gabinfos);
-							$gab_id = $gabinfo['gab_id'];
-						}
-						$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
-						$location->set_address_1($data['street_name'].' '.$data['street_number']);
-						foreach($data['attributes'] as $attributes)
-						{
-							switch($attributes['column_name'])
-							{
-								case 'area_gross':
-									$location->set_area_gros($attributes['value']);
-									break;
-								case 'area_net':
-									$location->set_area_net($attributes['value']);
-									break;
-							}
+							case 'area_gross':
+								$location->set_area_gros($attributes['value']);
+								break;
+							case 'area_net':
+								$location->set_area_net($attributes['value']);
+								break;
 						}
 					}
 				}

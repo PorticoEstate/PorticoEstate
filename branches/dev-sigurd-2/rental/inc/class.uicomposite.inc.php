@@ -306,7 +306,7 @@
 				{
 					$composite->set_name(phpgw::get_var('name'));
 					$composite->set_custom_address_1(phpgw::get_var('address_1'));
-					$composite->set_has_custom_address($composite->get_custom_address_1() != null && $composite->get_custom_address_1() != '' ? true : false);
+					$composite->set_has_custom_address(phpgw::get_var('has_custom_address') == 'on' ? true : false);
 					$composite->set_custom_house_number(phpgw::get_var('house_number'));
 					$composite->set_custom_address_2(phpgw::get_var('address_2'));
 					$composite->set_custom_postcode(phpgw::get_var('postcode'));

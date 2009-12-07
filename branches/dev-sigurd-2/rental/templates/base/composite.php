@@ -46,7 +46,7 @@
 					</dd>
 
 					<dt>
-						<label for="name"><?php echo lang('address') ?></label>
+						<label for="name"><?php echo lang('address');if (!$editable && $composite->has_custom_address()){echo " (<font style='color:red;'>" . lang('custom_address') . "</font>)";} ?></label>
 					</dt>
 					<dd>
 						<?php
@@ -73,6 +73,12 @@
 					</dd>
 
 					<?php if ($editable) { // Only show custom address fields if we're in edit mode ?>
+					<dt>
+						<label for="has_custom_address"><?php echo lang('has_custom_address') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="has_custom_address" id="has_custom_address"<?php echo $composite->has_custom_address() ? ' checked="checked"' : '' ?>/>
+					</dd>
 					<dt>
 						<label for="address_1"><?php echo lang('overridden_address') ?></label> / <label for="house_number"><?php echo lang('house_number') ?></label>
 					</dt>
