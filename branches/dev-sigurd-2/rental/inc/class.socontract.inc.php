@@ -381,6 +381,28 @@ class rental_socontract extends rental_socommon
 		return '';
 	}
 	
+	function get_default_project_number(int $location_id)
+	{
+		if(isset($location_id) && $location_id > 0)
+		{
+			$sql = "SELECT project_number FROM rental_contract_responsibility WHERE location_id = {$location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('project_number',true);
+		}	
+	}
+	
+	function get_responsibility_title(int $location_id)
+	{
+		if(isset($location_id) && $location_id > 0)
+		{
+			$sql = "SELECT title FROM rental_contract_responsibility WHERE location_id = {$location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('title',true);
+		}	
+	}
+	
 	/**
 	 * Returns the range of year there are contracts. That is, the array
 	 * returned contains reversed chronologically all the years from the earliest start
@@ -480,7 +502,7 @@ class rental_socontract extends rental_socommon
 	 * @param $contract_id
 	 * @return true if the contract was marker, false otherwise
 	 */
-	private function last_edited_by($contract_id){
+	public function last_edited_by($contract_id){
 		$account_id = $GLOBALS['phpgw_info']['user']['account_id']; // current user
 		$ts_now = strtotime('now');
 		
@@ -527,7 +549,7 @@ class rental_socontract extends rental_socommon
 	 * @param $contract_id
 	 * @return true if the contract was marked, false otherwise
 	 */
-	private function last_updated($contract_id){
+	public function last_updated($contract_id){
 		$ts_now = strtotime('now');
 		$sql = "UPDATE rental_contract SET last_updated=$ts_now";
 		$result = $this->db->query($sql);

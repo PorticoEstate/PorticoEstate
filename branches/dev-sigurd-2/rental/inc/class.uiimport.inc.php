@@ -33,6 +33,8 @@
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
 		
+		protected $defalt_values;
+		
 		public $public_functions = array
 		(
 			'index'	=> true
@@ -43,6 +45,7 @@
 			parent::__construct();
 			self::set_active_menu('import');
 			set_time_limit(3000);
+			
             /*if (!phpgwapi_cache::session_get('rental', 'msgarchive')) {
                 $this->msgarchive = array(date().': Import started');
                 phpgwapi_cache::session_set('rental', 'msgarchive', $this->msgarchive);
@@ -142,7 +145,11 @@
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
-				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties));
+				$location_id = phpgw::get_var("location_id");
+				$defalt_values['account_in'] = rental_socontract::get_instance()->get_default_account($location_id, true); //IN
+				$defalt_values['account_out'] = rental_socontract::get_instance()->get_default_account($location_id, false); //OUT
+				$defalt_values['project_number'] = rental_socontract::get_instance()->get_default_project_number($location_id); //PROJECTNUMBER
+				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties, $defalt_values));
 				$this->import_button_label = "5/{$steps}: Continue to import contract price items";
                 $this->log_messages(4);
 				return;
@@ -178,7 +185,7 @@
 			}
 			
 			// We're done with the import, so clear all session variables so we're ready for a new one
-			phpgwapi_cache::session_clear('rental', 'facilit_parties');
+			//phpgwapi_cache::session_clear('rental', 'facilit_parties');
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
@@ -192,6 +199,15 @@
 			$start_time = time();
 			$soparty = rental_soparty::get_instance();
 			$parties = array();			
+			
+			//Check to see if there is any parties in the database. If so, do not store these 
+			$alreay_imported_parties = false;
+			$number_of_parties = $soparty->get_number_of_parties();
+			if($number_of_parties > 0)
+			{
+				return;
+			}
+			
 			$datalines = $this->getcsvdata($this->path . "/u_PersonForetak.csv", true);
 			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			$counter = 1;
@@ -268,14 +284,16 @@
                         $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Setting as inactive.";
                 }
 
-				
 				// Store party and log message
-				if ($soparty->store($party)) {
+				if ($soparty->store($party)) 
+				{
 					// Add party to collection of parties keyed by its facilit ID so we can refer to it later.
 					$facilit_id = $data[17];
 					$parties[$facilit_id] = $party->get_id();
 					$this->messages[] = "Successfully added party " . $party->get_name() . " (" . $party->get_id() . ")";
-				} else {
+				} 
+				else 
+				{
 					$this->errors[] = "Failed to store party " . $party->get_name();
 				}
 			}
@@ -289,6 +307,7 @@
 		{
 			$start_time = time();
 			$socomposite = rental_socomposite::get_instance();
+			$socontract = rental_socontract::get_instance();
 			$sounit = rental_sounit::get_instance();
 			$composites = array();
 			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt.csv");
@@ -305,9 +324,12 @@
 				}
 				
 				$composite->set_name($name);
-				$composite->set_custom_address_1($address1);
-				$composite->set_custom_address_2($this->decode($data[7]));
-				$composite->set_custom_postcode($this->decode($data[8]));
+				
+				//TODO: Custom addresses is the exception ( addresses can be retrieved from the property module)
+				//$composite->set_custom_address_1($address1);
+				//$composite->set_custom_address_2($this->decode($data[7]));
+				//$composite->set_custom_postcode($this->decode($data[8]));
+				
 				$composite->set_description($this->decode($data[3]));
                 $composite->set_object_type_id($this->decode($data[25]));
 
@@ -317,35 +339,100 @@
 				
 				// Store composite
 				if ($socomposite->store($composite)) {
+					
+					
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
+					$title = $socontract->get_responsibility_title(phpgw::get_var("location_id"));
 					
-					/* TODO: waiting on feedback on property module content
-					Code for getting correct location code
-					
-					$composite_number = $this->decode($data[1]);
-					$property_identifier = $this->decode($data[4]);
-					$building_identifier = $this->decode($data[5]);
-					$farm_number = $this->decode($data[27]);
-					$use_number = $this->decode($data[28]);
-					
-					$location_code = $this->get_location_code
-					(
-						$composite_number,
-						$property_identifier,
-						$building_identifier,
-						$farm_number,
-						$use_number
-					);*/
-					
-					
-					if (phpgw::get_var("location_id") == '1176') {
-						// Get internal composite location code from different field
-						$loc1 = $this->decode($data[5]);
-					} else {
-						$loc1 = $this->decode($data[1]);
+					if($title == 'contract_type_internleie')
+					{
+						$building_identifier = $this->decode($data[1]);
+						$correct_length = strlen($building_identifier) == 6 ? true : false;
+						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
+						if($correct_length && $integer_value_property)
+						{
+							$loc1 = substr_replace($building_identifier,"-",4,0);
+						} 
+						else 
+						{
+							//Give a warning
+							$loc1 = $building_identifier;
+							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers.";
+						}
 					}
-					
-					$loc1 = $this->format_location_code($loc1);
+					else if($title == 'contract_type_eksternleie')
+					{
+						$identifier = $this->decode($data[1]);
+						$parts = explode('.',$identifier);
+						if(count($parts) == 2) // 4.4
+						{
+							//Should consist of two parts of four characters each: xxxx.xxxx
+							$correct_length1 = strlen($parts[0]) == 4 ? true : false;
+							$correct_length2 = strlen($parts[1]) == 4 ? true : false;
+							if($correct_length1 && $correct_length2)
+							{
+								$loc1 = substr_replace($identifier,"-",4,1);
+							}
+							else
+							{
+								$loc1 = $this->decode($data[4]);;
+								$this->warnings[] = "Composite (external contract) have wrong object-number ({$identifier}). Should consist of 2 parts xxxx.xxxx. Both of size 4. Using property number instead ({$loc1})";
+							}
+							
+						}
+						else if(count($parts) == 3) // 4.6.4
+						{
+							$building_identifier = $parts[1];
+							$correct_length = strlen($building_identifier) == 6 ? true : false;
+							$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
+							if($correct_length && $integer_value_property)
+							{
+								$loc1 = substr_replace($building_identifier,"-",4,0);
+							}
+							else
+							{
+								//Give a warning
+								$loc1 = $identifier;
+								$this->warnings[] = "Composite (external contract) has wrong object-number ({$loc1}). Should consist of 3 parts xxxx.xxxxxx.xxxx. The second part should be 6 numbers.";
+							}
+						}
+						else
+						{
+							//Give a warning
+							$loc1 = $this->decode($data[4]);
+							$this->warnings[] = "Composite (external contract) has wrong object-number ({$identifier}). Should consist of 2 (xxxx.xxxx) or 3 parts (xxxx.xxxxxx.xxxx). Using property number instead ({$loc1})";
+						}
+					}
+					else if($title == 'contract_type_innleie')
+					{
+						$building_identifier = $this->decode($data[5]);
+						$correct_length = strlen($building_identifier) == 6 ? true : false;
+						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
+						if($correct_length && $integer_value_property)
+						{
+							$loc1 = substr_replace($building_identifier,"-",4,0);
+						}
+						else // Use the property identifier if the building identifier is in wrong format
+						{
+							$property_identifier = $this->decode($data[4]);
+							$correct_length = strlen($property_identifier) == 4 ? true : false;
+							if($correct_length)
+							{
+								$loc1 = $property_identifier;
+								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}). Should consist of 6 numbers. Using property number instead ({$loc1})";
+						
+							}
+							else
+							{
+								$loc1 = $this->decode($data[1]);;
+								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}) and property identifier ({$property_identifier}). Should consist of 6 or 4 numbers. Using old identifier instead ({$loc1})"; 
+							}
+						}		
+					}
+					else
+					{
+						$this->errors[] = "The type of import ({$title}) is invalid";
+					}
 					
 					// Add units only if composite stored ok.
 					$sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
@@ -379,7 +466,7 @@
 			return $rentalobject_to_contract;
 		}
 		
-		protected function import_contracts($composites, $rentalobject_to_contract, $parties)
+		protected function import_contracts($composites, $rentalobject_to_contract, $parties, $default_values)
 		{
 			$start_time = time();
 			$socontract = rental_socontract::get_instance();
@@ -401,6 +488,7 @@
                 18=> 8, // "Ekstern KF" -> Annen
                 19=> 8  // "Ekstern I-kontrakt" -> Annen
             );
+            
             $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
             $internal_types = array($contract_types[2],$contract_types[3],$contract_types[5],$contract_types[15]);
 
@@ -479,20 +567,17 @@
                     	$socomposite = rental_socomposite::get_instance();
                     	$contract->set_rented_area($socomposite->get_area($composite_id));
                 	}	
-                } else if(in_array($contract->get_contract_type_id(), $internal_types)) {
-                	//specific logic for internal responsibility area
-                	
-                	// Set default values accounts and project id
-                	$contract->set_account_in(119001);
-					$contract->set_account_out(119001);
-					$contract->set_project_id(9);
-					
-					// Get the rented area from the contract
-					$contract->set_rented_area($this->decode($data[21]));
-                } else {
+                } 
+                else 
+                {
                 	// Get the rented area from the contract
                 	$contract->set_rented_area($this->decode($data[21]));
                 }
+                
+                //Get the account in/out and project number from database
+                $contract->set_account_in($default_values['account_in']);
+				$contract->set_account_out($default_values['account_out']);
+				$contract->set_project_id($default_values['project_number']);
 				
 				// Store contract
 				if ($socontract->store($contract)) {
@@ -512,7 +597,7 @@
 						$socontract->set_payer($contract->get_id(), $party_id);
 					}
 					
-					$this->messages[] = "Successfully added contract for property " . $contract->get_composite_name() . " (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
+					$this->messages[] = "Successfully added contract (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
 				} else {
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
 				}
@@ -606,6 +691,12 @@
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
 					$price_item->set_is_area($admin_price_item->is_area());
                     $price_item->set_price($detail_price_items[$facilit_id]['price']);
+                    
+                    // Give a warning if a contract has a price element of type area with are like 1
+                   	if($price_item->is_area() && ($detail_price_items[$facilit_id]['amount'] == '1'))
+                   	{
+                   		$this->warning[] = "Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
+                   	}
                     
 					
 					// Tie this price item to its parent admin price item
@@ -883,79 +974,6 @@
 		protected function getcsv($handle)
 		{
 			return fgetcsv($handle, 1000, self::DELIMITER, self::ENCLOSING);
-		}
-		
-		protected function get_location_code($composite_number,$property_identifier,$building_identifier,$farm_number,$use_number)
-		{
-			$location_code = '';
-			
-			// 1. Check that the property identifier consists of 4 numbers
-			// ... is the length 4 characters (?)
-			$correct_length = strlen($property_identifier) == 4 ? true : false;
-			// ... is it a number (?)
-			$integer_value_property = ((int) $property_identifier) > 0 ? true : false;
-			
-			if($correct_length && $integer_value_property)
-			{
-				$location_code = $property_identifier;
-				
-				// 1.1 Check the building identifier for consistency (6 numbers and match property identifier)
-				$correct_length = strlen($building_identifier) == 6 ? true : false;
-				$integer_value_building = ((int) $building_identifier) > 0 ? true : false;
-				
-				if($correct_length && $integer_value_building)
-				{
-					if(substr($building_identifier,0,3) == $property_identifier)
-					{
-						$building = substr($building_identifier,4,5);
-						
-					}
-					
-				}
-				
-			}
-			
-			
-			
-			
-			
-			// 1.2 Check the composite number for a building identifier (6 numbers after punctuation)
-			
-			
-			// 2 If no location code, check the farm- and use number (fm_gab_location.gab_id)
-			
-			
-			// 3 Check for an existing property given the location code
-			
-			
-		}
-		
-		/**
-		 * Format a given location code according to the rule xxxx-xx-xx-xx...
-		 * 
-		 * @param string $value A location code as a continuous string without - delimiters
-		 * @return string The formatted location code
-		 */
-		protected function format_location_code($value)
-		{
-			$length = strlen($value);
-			$i = 0;
-			
-			$result = array();
-			
-			while ($i < $length) {
-				if ($i == 0) {
-					// The four first characters should be in one group
-					$result[] = substr($value, $i, 4);
-					$i += 4;
-				} else {
-					// .. after that it's all 2 characters per group
-					$result[] = substr($value, $i, 2);
-					$i += 2;
-				}
-			}
-			
-			return join("-", $result);
 		}
 		
 		/**

@@ -306,5 +306,14 @@ class rental_soparty extends rental_socommon
 		return $exportable->get_contents();
 	}
 	
+	public function get_number_of_parties()
+	{
+		$q ="SELECT COUNT(id) FROM rental_party";
+		$result = $this->db->query($q);
+		$this->db->query($sql, __LINE__, __FILE__);
+		$this->db->next_record();
+		return (int) $this->db->f('count',true);
+	}
+	
 }
 ?>
