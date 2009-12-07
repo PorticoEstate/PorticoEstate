@@ -59,7 +59,8 @@
 				'notify_before_due_date' => array('type' => 'int','precision' => '4','nullable' => false),
 				'notify_after_termination_date' => array('type' => 'int','precision' => '4','nullable' => false),
 				'account_in'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'account_out'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'account_out'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'project_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -254,7 +254,7 @@ else
 	$rental_manager		= $GLOBALS['phpgw']->accounts->name2id('rental_manager');
 }
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001','9')");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '15')");
 
