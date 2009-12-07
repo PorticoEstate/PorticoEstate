@@ -485,7 +485,7 @@
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo '9'; // Default project number
+								echo rental_socontract::get_instance()->get_default_project_number($contract->get_location_id(), false);
 							}
 							else
 							{
