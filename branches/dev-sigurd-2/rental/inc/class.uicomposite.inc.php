@@ -46,6 +46,12 @@
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
 			
+			$exp_param 	= phpgw::get_var('export');
+			$export = false;
+			if(isset($exp_param)){
+				$export=true;
+			}
+			
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
 			switch($query_type)
@@ -110,18 +116,20 @@
 					}
 				}
 			}
-
-			//Add action column to each row in result table
-			array_walk(
-				$result_data['results'],
-				array($this, 'add_actions'), 
-				array(													// Parameters (non-object pointers)
-					$contract_id,										// [1] The contract id
-					$query_type,										// [2] The type of query
-					$editable,											// [3] Editable flag			
-					$create_types										// [4] Types of contract to create
-				)
-			);
+			
+			if(!$export){
+				//Add action column to each row in result table
+				array_walk(
+					$result_data['results'],
+					array($this, 'add_actions'), 
+					array(													// Parameters (non-object pointers)
+						$contract_id,										// [1] The contract id
+						$query_type,										// [2] The type of query
+						$editable,											// [3] Editable flag			
+						$create_types										// [4] Types of contract to create
+					)
+				);
+			}
 
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}

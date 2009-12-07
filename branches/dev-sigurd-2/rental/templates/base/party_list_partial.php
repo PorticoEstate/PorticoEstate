@@ -99,6 +99,7 @@
             '&amp;query='+query+
             '&amp;search_option='+sOption+
             '&amp;results=100';
+        	'&amp;export=true';
     }
 
 </script>

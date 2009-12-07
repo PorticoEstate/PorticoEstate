@@ -47,6 +47,12 @@ class rental_uiparty extends rental_uicommon
 		//Create an empty result set
 		$parties = array();
 		
+		$exp_param 	= phpgw::get_var('export');
+		$export = false;
+		if(isset($exp_param)){
+			$export=true;
+		}
+		
 		//Retrieve a contract identifier and load corresponding contract
 		$contract_id = phpgw::get_var('contract_id');
 		if(isset($contract_id))
@@ -84,18 +90,20 @@ class rental_uiparty extends rental_uicommon
 		$party_data = array('results' => $rows, 'total_records' => $result_count);
 
 		$editable = phpgw::get_var('editable') == 'true' ? true : false;
-			
-		array_walk(
-			$party_data['results'], 
-			array($this, 'add_actions'), 
-			array(													// Parameters (non-object pointers)
-				$contract_id,										// [1] The contract id
-				$type,												// [2] The type of query
-				isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
-				$editable,											// [4] Editable flag
-				$this->type_of_user									// [5] User role			
-			)
-		);
+
+		if(!$export){
+			array_walk(
+				$party_data['results'], 
+				array($this, 'add_actions'), 
+				array(													// Parameters (non-object pointers)
+					$contract_id,										// [1] The contract id
+					$type,												// [2] The type of query
+					isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
+					$editable,											// [4] Editable flag
+					$this->type_of_user									// [5] User role			
+				)
+			);
+		}
 		
 		
 		return $this->yui_results($party_data, 'total_records', 'results');
