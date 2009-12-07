@@ -63,6 +63,12 @@
 									echo '<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
 								}
 							}
+							else if (!$editable){
+								//no custom address
+								foreach($composite->get_units() as $unit){
+									echo $unit->get_location()->get_address_1();
+								}
+							}
 						?>
 					</dd>
 
