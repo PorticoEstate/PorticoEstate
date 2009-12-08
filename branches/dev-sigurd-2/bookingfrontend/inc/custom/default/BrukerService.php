@@ -157,7 +157,7 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl="/home/sn5607/Desktop/wsdl/BrukerService-v1.wsdl", $options=array())
+		public function __construct($wsdl='', $options=array())
 		{
 			foreach(self::$classmap as $wsdlClassName => $phpClassName)
 			{

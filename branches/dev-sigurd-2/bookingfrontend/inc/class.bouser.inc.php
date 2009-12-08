@@ -23,11 +23,22 @@
 			return $this->module;
 		}
 		
-		public function log_in()
+		public function log_in($orgnr)
 		{
 			$this->log_off();
-			$this->orgnr = $this->get_user_orgnr_from_auth_header();
-			if ($this->is_logged_in()) {
+			$this->orgnr = $orgnr;//$this->get_user_orgnr_from_auth_header();
+
+			try 
+			{
+				createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($orgnr);
+			}
+			catch (sfValidatorError $e)
+			{
+//				return null;
+			}
+
+			if ($this->is_logged_in())
+			{
 				$this->write_user_orgnr_to_session();
 			}
 			return $this->is_logged_in();
@@ -46,6 +57,10 @@
 		
 		public function get_user_orgnr()
 		{
+			if(!$this->orgnr)
+			{
+				$this->orgnr = $this->get_user_orgnr_from_session();
+			}
 			return $this->orgnr;
 		}
 		
@@ -82,10 +97,13 @@
 		
 		protected function write_user_orgnr_to_session()
 		{
-			if (!$this->is_logged_in()) {
+			if (!$this->is_logged_in())
+			{
 				throw new LogicException('Cannot write orgnr to session unless user is logged on');
 			}
+
 			phpgwapi_cache::session_set($this->get_module(), self::ORGNR_SESSION_KEY, $this->get_user_orgnr());
+//_debug_array(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));die();
 		}
 		
 		protected function clear_user_orgnr_from_session()
@@ -95,8 +113,12 @@
 		
 		protected function get_user_orgnr_from_session()
 		{
+//_debug_array($this->get_module());
+//_debug_array(self::ORGNR_SESSION_KEY);
+//_debug_array(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));die();
 			try {
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));
+//die($this->get_user_orgnr());
 			} catch (sfValidatorError $e) {
 				return null;
 			}
