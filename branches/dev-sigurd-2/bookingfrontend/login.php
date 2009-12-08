@@ -43,21 +43,28 @@
 
 	$wsdl = 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
 
-/*
-	$BrukerService	= new BrukerService($wsdl, $options);
-	$ctx			= new UserContext();
+	try
+	{
+		$BrukerService	= new BrukerService($wsdl, $options);
+	}
+	catch(Exception $e)
+	{
+		echo $e->getMessage();
+	}
+	$login = '';
+	if(isset($BrukerService) && $BrukerService)
+	{
+		$ctx			= new UserContext();
 
-	$ctx->Appid = 'portico';
-	$ctx->onBehalfOfId= $userId;
-	$ctx->userId = $userId;
-	$ctx->Transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
+		$ctx->Appid = 'portico';
+		$ctx->onBehalfOfId= $userId;
+		$ctx->userId = $userId;
+		$ctx->Transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
 
-	$Bruker = $BrukerService->retrieveBruker($ctx);
-	$login = $Bruker->ou; // organisasjons nr
-*/
+		$Bruker = $BrukerService->retrieveBruker($ctx);
+		$login = $Bruker->ou; // organisasjons nr
+	}
 
-//	$login = 'bookingguest';
-	$login = '975621375';
 	$_SERVER['REMOTE_USER'] = $login;
 
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);		
