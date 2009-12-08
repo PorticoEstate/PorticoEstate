@@ -96,6 +96,9 @@ currency suffix	rental	no	Valuta suffix
 currency_thousands_separator	rental	no	.
 custom_address	rental	no	overstyrt
 dashboard_title	rental	no	Forside - Min arbeidsoversikt
+DATATABLE_MSG_EMPTY	rental	no	Ingen data
+DATATABLE_MSG_ERROR	rental	no	Datafeil
+DATATABLE_MSG_LOADING	rental	no	Laster data
 date_end	rental	no	Gjelder til
 date	rental	no	Dato
 date_start	rental	no	Gjelder fra

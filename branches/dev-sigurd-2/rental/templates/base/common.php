@@ -126,7 +126,10 @@
 			this.source,
 			{
 				paginator: this.paginator,
-				dynamicData: true
+				dynamicData: true,
+				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
+				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
+				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
 			}
 		);
 
