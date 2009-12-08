@@ -17,7 +17,7 @@
 		    sortable: true
 		},
 		{
-			key: "address_1",
+			key: "address",
 			label: "<?php echo lang('address') ?>",
 		    sortable: true
 		},

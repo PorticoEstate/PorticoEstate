@@ -100,9 +100,9 @@
 
 				<dl class="proplist-col">
 					<dt><?php echo lang('area_gros') ?></dt>
-					<dd><?php echo $composite->get_area_gros().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
+					<dd><?php echo $composite->get_area_gros()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt><?php echo lang('area_net') ?></dt>
-					<dd><?php echo $composite->get_area_net().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
+					<dd><?php echo $composite->get_area_net()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt>
 						<label for="is_active"><?php echo lang('available?') ?></label>
 					</dt>
@@ -141,6 +141,7 @@
 				$list_form = false; 
 				$list_id = 'included_units';
 				$url_add_on = '&amp;composite_id='.$composite->get_id();
+				$editable = false;
 				unset($extra_cols);
 				include('unit_list_partial.php');
 

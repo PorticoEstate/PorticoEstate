@@ -35,6 +35,8 @@
 			$result_objects = rental_sounit::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_sounit::get_instance()->get_count($search_for, $search_type, $filters);
 			
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+			
 			//Serialize the documents found
 			$rows = array();
 			foreach ($result_objects as $result) {
@@ -48,7 +50,7 @@
 			}
 			
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($composite_id));
+			array_walk($rows, array($this, 'add_actions'), array($composite_id, $editable));
 			//Build a YUI result from the data
 			//
 			$result_data = array('results' => $rows, 'total_records' => count($rows));	
@@ -71,14 +73,18 @@
 			$value['labels'] = array();
 			
 			$composite_id = $params[0];
+			$editable = $params[1];
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view' , 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('show');
 			
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $value['id'])));
-			$value['labels'][] = lang('remove_location');
+			if($editable == true)
+			{
+				$value['ajax'][] = true;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.remove_unit', 'id' => $value['id'])));
+				$value['labels'][] = lang('remove_location');
+			}
 			
 		}
 	}
