@@ -4,9 +4,9 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'disable_template_class' => true,
-		'login'                  => true,
-		'currentapp'             => 'login',
+		'currentapp'             => 'logout',
 		'noheader'   		 	 => true,
+		'nofooter'               => true,
 		'nonavbar'   			 => true,
 	);
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
@@ -17,7 +17,7 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 	
-	$sessionid = phpgw::get_var('phpgwsessid');
+	$sessionid = phpgw::get_var('bookingfrontendsession');
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	
@@ -25,6 +25,10 @@
 	{
 		$frontend_user = CreateObject('bookingfrontend.bouser');
 		$frontend_user->log_off();
+
+		execMethod('phpgwapi.menu.clear');
+		$GLOBALS['phpgw']->hooks->process('logout');
+		$GLOBALS['phpgw']->session->destroy($sessionid);
 	}
 	
 	$forward = phpgw::get_var('phpgw_forward', 'int');

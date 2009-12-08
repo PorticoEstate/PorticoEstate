@@ -103,6 +103,7 @@
 				{
 					if($bOutputHTML)
 					{
+						print('<br>SQL:<pre>' . $sAllTableSQL . '</pre><br>');
 						print('<br>Failed generating script for <b>' . $sTableName . '</b><br>');
 						echo '<pre style="text-align: left;">'.$sTableName.' = '; print_r($aTableDef); echo "</pre>\n";
 					}
