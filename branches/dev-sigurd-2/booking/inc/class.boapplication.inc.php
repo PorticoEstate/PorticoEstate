@@ -24,7 +24,7 @@
 			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@bergen.kommune.no', 'Bergen Booking', 'plain');
+				$send->msg('email', $application['contact_email'], $subject, $body);
 			}
 			catch (phpmailerException $e)
 			{
