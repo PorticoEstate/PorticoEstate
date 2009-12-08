@@ -103,7 +103,6 @@
 			}
 
 			phpgwapi_cache::session_set($this->get_module(), self::ORGNR_SESSION_KEY, $this->get_user_orgnr());
-//_debug_array(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));die();
 		}
 		
 		protected function clear_user_orgnr_from_session()
@@ -113,12 +112,8 @@
 		
 		protected function get_user_orgnr_from_session()
 		{
-//_debug_array($this->get_module());
-//_debug_array(self::ORGNR_SESSION_KEY);
-//_debug_array(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));die();
 			try {
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean(phpgwapi_cache::session_get($this->get_module(), self::ORGNR_SESSION_KEY));
-//die($this->get_user_orgnr());
 			} catch (sfValidatorError $e) {
 				return null;
 			}
