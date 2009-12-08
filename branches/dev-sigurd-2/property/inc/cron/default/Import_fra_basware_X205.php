@@ -37,6 +37,7 @@
 	class  Import_fra_basware_X205
 	{
 		var	$function_name = 'Import_fra_basware_X205';
+		var $auto_tax = true;
 		var $mvakode=0;
 		var $kildeid=1;
 		var $splitt=0;
@@ -224,7 +225,7 @@
 				{
 					$_data = $entry['INVOICE'][0]['INVOICEHEADER'][0];
 				
-//_debug_array($_data);
+_debug_array($_data);
 //die();
 
 					$_data['KEY']; // => 1400050146
@@ -257,11 +258,11 @@
 
 					if( $belop < 0 )
 					{
-						$invoice_common['art'] = 2;
+						$buffer[$i]['artid'] = 2;
 					}
-					if( $invoice_common['art'] == 2 ) // kreditnota
+					else
 					{
-						$belop = -1 * abs($belop);
+						$buffer[$i]['artid'] = 1;					
 					}
 
 					$kidnr 	= $_data['KIDNO'];
@@ -281,21 +282,13 @@
 
 					$order_info = $this->get_order_info($order_id);
 
-					if(isset($invoice_common['dim_b']) && $invoice_common['dim_b'])
-					{
-						$buffer[$i]['dimb'] = $invoice_common['dim_b'];
-					}
-					else
-					{
-						$buffer[$i]['dimb'] = $order_info['dimb'];
-					}
-
+					$buffer[$i]['dimb'] = $order_info['dimb'];
 					$buffer[$i]['dima'] = $order_info['dima'];
 					$buffer[$i]['loc1'] = $order_info['loc1'];
 
 					$buffer[$i]['mvakode'] = $this->mvakode;
 
-					if($buffer[$i]['dima'] && (isset($invoice_common['auto_tax']) && $invoice_common['auto_tax']))
+					if($buffer[$i]['dima'] && $this->auto_tax)
 					{
 						$mvakode = $this->soXport->auto_tax($buffer[$i]['dima']);
 					
@@ -305,21 +298,15 @@
 						}
 					}
 
-					if(isset($invoice_common['vendor_id']) && $invoice_common['vendor_id'])
+					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
 					{
-						$vendor_id = $invoice_common['vendor_id'];
+						$receipt['error'][] = array('msg' => 'Manglende eller ikke treff på ordreNr');
 					}
-					else if ($order_id)
-					{
-						$vendor_id = $order_info['vendor_id'];
-					}
-					else
-					{
-						$vendor_id = $_data['SUPPLIER.CODE'];
-					}
+
+					$vendor_id = $order_info['vendor_id'];
 					
 					
-					if(isset($invoice_common['auto_tax']) && $invoice_common['auto_tax'])
+					if($this->auto_tax)
 					{
 						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
 						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
@@ -335,53 +322,35 @@
 					$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
 					$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
 					$buffer[$i]['regtid'] = $regtid;
-					$buffer[$i]['artid'] = $invoice_common['art'];
+
 					$buffer[$i]['spvend_code'] = $vendor_id;
 
-					$oppsynsmannid = '';
-					if(isset($invoice_common['janitor']) && $invoice_common['janitor'])
+					if(isset($order_info['janitor']) && $order_info['janitor'])
 					{
-						$oppsynsmannid = $invoice_common['janitor'];
-					}
-					else if($order_info['janitor'])
-					{
-						$oppsynsmannid = $order_info['janitor'];				
+						$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
 					}
 
-					$saksbehandlerid = '';
-					if(isset($invoice_common['supervisor']) && $invoice_common['supervisor'])
+					if(isset($order_info['supervisor']) && $order_info['supervisor'])
 					{
-						$saksbehandlerid = $invoice_common['supervisor'];
-					}
-					else if($order_info['supervisor'])
-					{
-						$saksbehandlerid = $order_info['supervisor'];	
+						$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
 					}
 
-					$budsjettansvarligid = '';
-					if(isset($invoice_common['budget_responsible']) && $invoice_common['budget_responsible'])
+					if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
 					{
-						$budsjettansvarligid = $invoice_common['budget_responsible'];
-					}
-					else if($order_info['budget_responsible'])
-					{
-						$budsjettansvarligid = $order_info['budget_responsible'];
+						$buffer[$i]['budsjettansvarligid']	= $order_info['budget_responsible'];
 					}
 
-					$buffer[$i]['oppsynsmannid']		= $oppsynsmannid;
-					$buffer[$i]['saksbehandlerid']		= $saksbehandlerid;
-					$buffer[$i]['budsjettansvarligid']	= $budsjettansvarligid;
-
-					$bilagsnr++;
 					$i++;
 				}
 			}
+
+			if(!isset($receipt['error']) || !$receipt['error'])
+			{
+				$buffer = $this->import_end_file($buffer);
+			}
+_debug_array($receipt);
 _debug_array($buffer);
 die();
-			if(!$download)
-			{
-				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
-			}
 
 			return $buffer;
 		}
@@ -424,10 +393,9 @@ die();
 		}
 
 
-		function import_end_file($buffer,$bilagsnr)
+		function import_end_file($buffer)
 		{
 			$num	= $this->soXport->add($buffer);
-			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $bilagsnr);
-			return $receipt;
+			$this->receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $buffer[0]['bilagsnr']);
 		}
 	}
