@@ -71,7 +71,7 @@ class rental_uiparty extends rental_uicommon
 				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
 			default: // ... get all parties of a given type
-				$filters = array('party_type' => phpgw::get_var('party_type'));
+				$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
 		}
 		

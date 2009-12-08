@@ -27,11 +27,6 @@
 	    sortable: true
 	},
 	{
-		key: "phone",
-		label: "<?php echo lang('phone') ?>",
-	    sortable: true
-	},
-	{
 		key: "actions",
 		hidden: true
 	},
@@ -64,7 +59,7 @@
 		'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_party_type','<?php echo $list_id ?>_ctrl_toggle_party_fields','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_active','<?php echo $list_id ?>_ctrl_toggle_party_type','<?php echo $list_id ?>_ctrl_toggle_party_fields','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -140,6 +135,12 @@
 				?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
 			}
 			?>
+			<option value="all" selected="selected"><?php echo lang('all') ?></option>
+		</select>
+		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('status') ?></label>
+		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
+			<option value="active"><?php echo lang('active') ?></option>
+			<option value="inactive"><?php echo lang('inactive') ?></option>
 			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 		</select>
 	</fieldset>

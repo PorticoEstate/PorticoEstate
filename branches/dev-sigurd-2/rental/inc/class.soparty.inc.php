@@ -123,6 +123,18 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "contract.location_id = {$party_type}";
 			}
 		}
+		
+		if(isset($filters['active']))
+		{
+			if($filters['active'] == 'active')
+			{
+				$filter_clauses[] = "NOT party.is_inactive";
+			} 
+			else if($filters['active'] == 'inactive')
+			{
+				$filter_clauses[] = "party.is_inactive = TRUE";
+			} 
+		}
 
 		if(isset($filters['contract_id'])){
 			$contract_id = $this->marshal($filters['contract_id'],'int');

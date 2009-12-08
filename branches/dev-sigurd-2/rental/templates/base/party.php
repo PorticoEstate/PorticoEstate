@@ -33,7 +33,9 @@
 				<input type="hidden" name="id" value="<?php if($party->get_id()){ echo $party->get_id(); } else { echo '0'; }  ?>"/>
 				<dl class="proplist-col">
 					<dt>
-						<label for="identifier"><?php echo lang('ssn') ?> / <?php echo lang('organisation_number') ?> / <?php echo lang('agresso_id') ?></label>
+						<?php if($party->get_identifier() || $editable) { ?>
+						<label for="identifier"><?php echo lang('identifier') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -49,8 +51,11 @@
 						}
 						?>
 					</dd>
+					
 					<dt>
+						<?php if($party->get_first_name() || $editable) { ?>
 						<label for="firstname"><?php echo lang('firstname') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -67,7 +72,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_last_name() || $editable) { ?>
 						<label for="lastname"><?php echo lang('lastname') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -84,7 +91,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_title() || $editable) { ?>
 						<label for="title"><?php echo lang('job_title') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -101,7 +110,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_company_name() || $editable) { ?>
 						<label for="company_name"><?php echo lang('company') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -118,7 +129,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_department() || $editable) { ?>
 						<label for="department"><?php echo lang('department') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -135,7 +148,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_address_1() || $party->get_address_2() || $editable) { ?>
 						<label for="address1"><?php echo lang('address') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -150,13 +165,18 @@
 						else
 						{
 							echo $party->get_address_1();
-							echo "<br/>";
-							echo $party->get_address_2();
+							if($party->get_address_2())
+							{
+								echo "<br/>";
+								echo $party->get_address_2();
+							}
 						}
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_postal_code() || $party->get_place() || $editable) { ?>
 						<label for="postal_code"><?php echo lang('postal_code_place') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -169,7 +189,7 @@
 						}
 						else
 						{
-							echo $party->get_postal_code();
+							echo $party->get_postal_code() . " ";
 							echo $party->get_place();
 						}
 						?>
@@ -177,7 +197,9 @@
 				</dl>
 				<dl class="proplist-col">
 					<dt>
+						<?php if($party->get_phone() || $editable) { ?>
 						<label for="phone"><?php echo lang('phone') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -194,7 +216,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_mobile_phone() || $editable) { ?>
 						<label for="mobile_phone"><?php echo lang('mobile_phone') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -211,7 +235,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_fax() || $editable) { ?>
 						<label for="fax"><?php echo lang('fax') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -228,7 +254,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_email() || $editable) { ?>
 						<label for="email"><?php echo lang('email') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -245,7 +273,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_url() || $editable) { ?>
 						<label for="url"><?php echo lang('url') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -262,7 +292,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_account_number	() || $editable) { ?>
 						<label for="account_number"><?php echo lang('account_number') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -292,7 +324,9 @@
 						<dd>&nbsp;</dd>
 					<?php }?>
 					<dt>
+						<?php if($party->get_location_id() || $editable) {?>
 						<label for="location_id"><?php echo lang('party_location') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -340,17 +374,19 @@
 							{
 								echo location_hierarchy::get_name_of_location($loc_id);
 							}
-							else
+							/*else
 							{
 								echo lang('no_party_location');
-							}
+							}*/
 						}
 						?>
 					</dd>
 				</dl>
 		        <dl class="proplist-col">
 					<dt>
+						<?php if($party->get_comment() || $editable) { ?>
 						<label for="comment"><?php echo lang('comment') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php

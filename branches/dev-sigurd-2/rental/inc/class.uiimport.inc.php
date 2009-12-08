@@ -218,77 +218,75 @@
 				$party = new rental_party();
 
 				// Contact information
-				$party->set_address_1($this->decode($data[3]));
-				$party->set_address_2($this->decode($data[4]));
-				$party->set_postal_code($this->decode($data[5]));
-				$party->set_mobile_phone($this->decode($data[7]));
-				$party->set_phone($this->decode($data[8]));
+				$party->set_address_1($this->decode($data[3]));		//cAdresse1
+				$party->set_address_2($this->decode($data[4]));		//cAdresse2
+				$party->set_postal_code($this->decode($data[5]));	//cPostnr
+				$party->set_mobile_phone($this->decode($data[7]));	//cMobil
+				$party->set_phone($this->decode($data[8]));			//cTelefon
 
-                $party->set_fax($this->decode($data[9]));
-                $party->set_title($this->decode($data[12]));
-                $party->set_email($this->decode($data[25]));
+                $party->set_fax($this->decode($data[9]));			//cTelefaks
+                $party->set_title($this->decode($data[12]));		//cArbeidstittel
+                $party->set_email($this->decode($data[25]));		//cEpost
 				
 				// Company information
-				$party->set_company_name($this->decode($data[10]));
-				$party->set_department($this->decode($data[11]));
+				$party->set_company_name($this->decode($data[10]));	//cArbeidsgiver
+				$party->set_department($this->decode($data[11]));	//cAvdeling
 				
 				// Account number.  Can be a variety of things.  TODO: check this out.  4 digits at least on internal.
-				$party->set_account_number($this->decode($data[14]));
+				$party->set_account_number($this->decode($data[14]));	//cBankkontonr
 				
-				$party->set_reskontro($this->decode($data[23]));
-				
-				// TODO: PIN/AgressoID/CompanyID should go to the same field
+				$party->set_reskontro($this->decode($data[23]));		//cReskontronr
 				
 				// Fødselsnr/Foretaksnr/AgressoID
-				$party->set_identifier($this->decode($data[24]));
+				$party->set_identifier($this->decode($data[24]));		//cPersonForetaknr
 				
-				$party->set_comment($this->decode($data[26]));
-                if(strlen($this->decode($data[6]) > 1)) {
-                    $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$this->decode($data[6]));
+				$party->set_comment($this->decode($data[26]));			//cMerknad
+                if(strlen($this->decode($data[6]) > 1)) {				
+                    $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$this->decode($data[6]));	//cKontaktPerson
                 }
                 
                 // TODO: Do regex to check for only digits too, not just length
-                switch(strlen(''.$this->decode($data[24]))) {
+                switch(strlen(''.$this->decode($data[24]))) {	//cPersonForetaknr
                     case 4: // Intern organisasjonstilknytning
-                        $party->set_company_name($this->decode($data[2]));
+                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn
                         $party->set_first_name(null);
                         $party->set_last_name(null);
                         
                         // Get location ID
                         $locations = $GLOBALS['phpgw']->locations;
-                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));
+                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));	//cPersonForetaknr
                         $party->set_location_id($subs[0]['location_id']);
                         break;
                     case 6: // Foretak (agresso-id)
                     case 9: // Foretak (org.nr)
-                        $party->set_company_name($this->decode($data[2]));
-                        $party->set_identifier($this->decode($data[24]));
+                        $party->set_company_name($this->decode($data[2]));	//cEtternavn
+                        $party->set_identifier($this->decode($data[24]));	//cPersonForetaknr
                         $party->set_first_name(null);
                         $party->set_last_name(null);
                         break;
                     case 11: // Personnr
                         if (!$this->is_null($data[0])) {
-                            $party->set_first_name($this->decode($data[0]));
-                            $party->set_last_name($this->decode($data[1]));
+                            $party->set_first_name($this->decode($data[0]));	//cFornavn
+                            $party->set_last_name($this->decode($data[1]));		//cEtternavn
                         } else {
-                            $company_name = explode(' ', $this->decode($data[2]), 2);
-                            $party->set_first_name($company_name[0]);
-                            $party->set_last_name($company_name[1]);
+                            $company_name = explode(' ', $this->decode($data[2]), 2);	//cEtternavn
+                            $party->set_first_name($company_name[0]);					//cFornavn
+                            $party->set_last_name($company_name[1]);					//cEtternavn
                         }
                         break;
                     default:
-                        $party->set_first_name($this->decode($data[0]));
-                        $party->set_last_name($this->decode($data[1]));
-                        $party->set_company_name($this->decode($data[2]));
+                        $party->set_first_name($this->decode($data[0]));		//cFornavn
+                        $party->set_last_name($this->decode($data[1]));			//cEtternavn
+                        $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
                         $party->set_is_inactive(true);
-                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Setting as inactive.";
+                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Setting as inactive.";	//cPersonForetaknr
                 }
 
 				// Store party and log message
 				if ($soparty->store($party)) 
 				{
 					// Add party to collection of parties keyed by its facilit ID so we can refer to it later.
-					$facilit_id = $data[17];
+					$facilit_id = $data[17];	//nPersonForetakId
 					$parties[$facilit_id] = $party->get_id();
 					$this->messages[] = "Successfully added party " . $party->get_name() . " (" . $party->get_id() . ")";
 				} 
