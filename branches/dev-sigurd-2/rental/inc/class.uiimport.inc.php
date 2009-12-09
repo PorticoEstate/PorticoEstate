@@ -217,69 +217,80 @@
 				// Create a new rental party we can fill with info from this line from the file
 				$party = new rental_party();
 
-				// Contact information
-				$party->set_address_1($this->decode($data[3]));		//cAdresse1
-				$party->set_address_2($this->decode($data[4]));		//cAdresse2
-				$party->set_postal_code($this->decode($data[5]));	//cPostnr
-				$party->set_mobile_phone($this->decode($data[7]));	//cMobil
-				$party->set_phone($this->decode($data[8]));			//cTelefon
-
-                $party->set_fax($this->decode($data[9]));			//cTelefaks
-                $party->set_title($this->decode($data[12]));		//cArbeidstittel
-                $party->set_email($this->decode($data[25]));		//cEpost
-				
-				// Company information
-				$party->set_company_name($this->decode($data[10]));	//cArbeidsgiver
-				$party->set_department($this->decode($data[11]));	//cAvdeling
-				
-				// Account number.  Can be a variety of things.  TODO: check this out.  4 digits at least on internal.
-				$party->set_account_number($this->decode($data[14]));	//cBankkontonr
-				
-				$party->set_reskontro($this->decode($data[23]));		//cReskontronr
+				$identifier = $this->decode($data[24]); //cPersonForetaknr
+				//Removed whitespace characters
+				$identifier = str_replace(' ','',''.$identifier);
+				//Check for only digits
+				$int_value_of_identifier = (int) $identifier;
 				
 				// Fødselsnr/Foretaksnr/AgressoID
-				$party->set_identifier($this->decode($data[24]));		//cPersonForetaknr
+				$party->set_identifier($identifier);		
 				
+				// Default information
+				$party->set_address_1($this->decode($data[3]));			//cAdresse1
+				$party->set_address_2($this->decode($data[4]));			//cAdresse2
+				$party->set_postal_code($this->decode($data[5]));		//cPostnr
+				$party->set_mobile_phone($this->decode($data[7]));		//cMobil
+				$party->set_phone($this->decode($data[8]));				//cTelefon
+                $party->set_fax($this->decode($data[9]));				//cTelefaks
+                $party->set_title($this->decode($data[12]));			//cArbeidstittel
+                $party->set_email($this->decode($data[25]));			//cEpost
+				$party->set_company_name($this->decode($data[10]));		//cArbeidsgiver
+				$party->set_department($this->decode($data[11]));		//cAvdeling
+				$party->set_account_number($this->decode($data[14]));	//cBankkontonr
+				$party->set_reskontro($this->decode($data[23]));		//cReskontronr
 				$party->set_comment($this->decode($data[26]));			//cMerknad
-                if(strlen($this->decode($data[6]) > 1)) {				
+                
+				// Insert contract person in comment if present
+				if(strlen($this->decode($data[6]) > 1)) {				
                     $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$this->decode($data[6]));	//cKontaktPerson
                 }
                 
-                // TODO: Do regex to check for only digits too, not just length
-                switch(strlen(''.$this->decode($data[24]))) {	//cPersonForetaknr
-                    case 4: // Intern organisasjonstilknytning
-                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn
-                        $party->set_first_name(null);
-                        $party->set_last_name(null);
-                        
-                        // Get location ID
-                        $locations = $GLOBALS['phpgw']->locations;
-                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));	//cPersonForetaknr
-                        $party->set_location_id($subs[0]['location_id']);
-                        break;
-                    case 6: // Foretak (agresso-id)
-                    case 9: // Foretak (org.nr)
-                        $party->set_company_name($this->decode($data[2]));	//cEtternavn
-                        $party->set_identifier($this->decode($data[24]));	//cPersonForetaknr
-                        $party->set_first_name(null);
-                        $party->set_last_name(null);
-                        break;
-                    case 11: // Personnr
-                        if (!$this->is_null($data[0])) {
-                            $party->set_first_name($this->decode($data[0]));	//cFornavn
-                            $party->set_last_name($this->decode($data[1]));		//cEtternavn
-                        } else {
-                            $company_name = explode(' ', $this->decode($data[2]), 2);	//cEtternavn
-                            $party->set_first_name($company_name[0]);					//cFornavn
-                            $party->set_last_name($company_name[1]);					//cEtternavn
-                        }
-                        break;
-                    default:
-                        $party->set_first_name($this->decode($data[0]));		//cFornavn
-                        $party->set_last_name($this->decode($data[1]));			//cEtternavn
-                        $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
-                        $party->set_is_inactive(true);
-                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format: ".$this->decode($data[24]).". Setting as inactive.";	//cPersonForetaknr
+                // If the identifier contains only numbers
+                if($int_value_of_identifier > 0 )
+                {
+	                switch(strlen(''.$identifier)) {	
+	                    case 4: // Intern organisasjonstilknytning
+	                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn
+	                        $party->set_first_name(null);
+	                        $party->set_last_name(null);
+	                        
+	                        // Get location ID
+	                        $locations = $GLOBALS['phpgw']->locations;
+	                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));	//cPersonForetaknr
+	                        $party->set_location_id($subs[0]['location_id']);
+	                        break;
+	                    case 6: // Foretak (agresso-id)
+	                    case 9: // Foretak (org.nr)
+	                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn  
+	                        $party->set_first_name(null);
+	                        $party->set_last_name(null);
+	                        break;
+	                    case 11: // Personnr
+	                        if (!$this->is_null($data[0])) {
+	                            $party->set_first_name($this->decode($data[0]));	//cFornavn
+	                            $party->set_last_name($this->decode($data[1]));		//cEtternavn
+	                        } else {
+	                            $company_name = explode(' ', $this->decode($data[2]), 2);	//cForetaksnavn
+	                            $party->set_first_name($company_name[0]);					//cFornavn
+	                            $party->set_last_name($company_name[1]);					//cEtternavn
+	                        }
+	                        break;
+	                    default:
+	                        $party->set_first_name($this->decode($data[0]));		//cFornavn
+	                        $party->set_last_name($this->decode($data[1]));			//cEtternavn
+	                        $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
+	                        $party->set_is_inactive(true);
+	                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format (only numbers): {$identifier}. Setting as inactive.";	//cPersonForetaknr
+	                }
+                }
+                else
+                {
+                	$party->set_first_name($this->decode($data[0]));		//cFornavn
+                    $party->set_last_name($this->decode($data[1]));			//cEtternavn
+                    $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
+                    $party->set_is_inactive(true);
+                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format (with non-numeric characters): {$identifier}. Setting as inactive.";	//cPersonForetaknr
                 }
 
 				// Store party and log message
@@ -315,36 +326,28 @@
 				$composite = new rental_composite();
 				
 				// Use the first address line as name if no name
-				$name = $this->decode($data[26]);
-				$address1 = $this->decode($data[6]);
+				$name = $this->decode($data[26]);		//cLeieobjektnavn
+				$address1 = $this->decode($data[6]);	//cAdresse1
 				if(!isset($name)){
 					$name = $address1;
 				}
 				
 				$composite->set_name($name);
-				
-				//TODO: Custom addresses is the exception ( addresses can be retrieved from the property module)
-				//$composite->set_custom_address_1($address1);
-				//$composite->set_custom_address_2($this->decode($data[7]));
-				//$composite->set_custom_postcode($this->decode($data[8]));
-				
-				$composite->set_description($this->decode($data[3]));
-                $composite->set_object_type_id($this->decode($data[25]));
-
-                $composite->set_area($this->decode($data[2]));
-				
-				$composite->set_is_active($data[19] == "-1");
+				$composite->set_description($this->decode($data[3]));		//cLeieobjektBeskrivelse
+                $composite->set_object_type_id($this->decode($data[25]));	//nLeieobjektTypeId
+                $composite->set_area($this->decode($data[2]));				//nMengde
+				$composite->set_is_active($data[19] == "-1");				//bTilgjengelig
 				
 				// Store composite
 				if ($socomposite->store($composite)) {
 					
-					
+					$set_custom_address = false;
 					// Convert location code to the correct format, xxxx-xx-xx-xx...
 					$title = $socontract->get_responsibility_title(phpgw::get_var("location_id"));
 					
 					if($title == 'contract_type_internleie')
 					{
-						$building_identifier = $this->decode($data[1]);
+						$building_identifier = $this->decode($data[1]);								//cLeieobjektnr
 						$correct_length = strlen($building_identifier) == 6 ? true : false;
 						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
 						if($correct_length && $integer_value_property)
@@ -355,12 +358,13 @@
 						{
 							//Give a warning
 							$loc1 = $building_identifier;
-							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers.";
+							$set_custom_address = true;
+							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers. Setting custom address.";
 						}
 					}
 					else if($title == 'contract_type_eksternleie')
 					{
-						$identifier = $this->decode($data[1]);
+						$identifier = $this->decode($data[1]);										//cLeieobjektnr
 						$parts = explode('.',$identifier);
 						if(count($parts) == 2) // 4.4
 						{
@@ -373,8 +377,9 @@
 							}
 							else
 							{
-								$loc1 = $this->decode($data[4]);;
-								$this->warnings[] = "Composite (external contract) have wrong object-number ({$identifier}). Should consist of 2 parts xxxx.xxxx. Both of size 4. Using property number instead ({$loc1})";
+								$loc1 = $this->decode($data[4]);									//cInstNr
+								$set_custom_address = true;
+								$this->warnings[] = "Composite (external contract) have wrong object-number ({$identifier}). Should consist of 2 parts xxxx.xxxx. Both of size 4. Using property number instead ({$loc1}). Setting custom address.";
 							}
 							
 						}
@@ -386,24 +391,27 @@
 							if($correct_length && $integer_value_property)
 							{
 								$loc1 = substr_replace($building_identifier,"-",4,0);
+								$loc1 = $loc1 . "-" . $parts[2]; //Adding sequence number
 							}
 							else
 							{
 								//Give a warning
 								$loc1 = $identifier;
-								$this->warnings[] = "Composite (external contract) has wrong object-number ({$loc1}). Should consist of 3 parts xxxx.xxxxxx.xxxx. The second part should be 6 numbers.";
+								$set_custom_address = true;
+								$this->warnings[] = "Composite (external contract) has wrong object-number ({$loc1}). Should consist of 3 parts xxxx.xxxxxx.xxxx. The second part should be 6 numbers. Setting custom address.";
 							}
 						}
 						else
 						{
 							//Give a warning
-							$loc1 = $this->decode($data[4]);
-							$this->warnings[] = "Composite (external contract) has wrong object-number ({$identifier}). Should consist of 2 (xxxx.xxxx) or 3 parts (xxxx.xxxxxx.xxxx). Using property number instead ({$loc1})";
+							$loc1 = $this->decode($data[4]);										//cInstNr
+							$set_custom_address = true;
+							$this->warnings[] = "Composite (external contract) has wrong object-number ({$identifier}). Should consist of 2 (xxxx.xxxx) or 3 parts (xxxx.xxxxxx.xxxx). Using property number instead ({$loc1}). Setting custom address.";
 						}
 					}
 					else if($title == 'contract_type_innleie')
 					{
-						$building_identifier = $this->decode($data[5]);
+						$building_identifier = $this->decode($data[5]);								//cByggNr
 						$correct_length = strlen($building_identifier) == 6 ? true : false;
 						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
 						if($correct_length && $integer_value_property)
@@ -412,24 +420,35 @@
 						}
 						else // Use the property identifier if the building identifier is in wrong format
 						{
-							$property_identifier = $this->decode($data[4]);
+							$property_identifier = $this->decode($data[4]);							//cInstNr
 							$correct_length = strlen($property_identifier) == 4 ? true : false;
 							if($correct_length)
 							{
 								$loc1 = $property_identifier;
-								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}). Should consist of 6 numbers. Using property number instead ({$loc1})";
+								$set_custom_address = true;
+								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}). Should consist of 6 numbers. Using property number instead ({$loc1}). Setting custom address.";
 						
 							}
 							else
 							{
-								$loc1 = $this->decode($data[1]);;
-								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}) and property identifier ({$property_identifier}). Should consist of 6 or 4 numbers. Using old identifier instead ({$loc1})"; 
+								$loc1 = $this->decode($data[1]);									//cLeieobjektnr
+								$set_custom_address = true;
+								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}) and property identifier ({$property_identifier}). Should consist of 6 or 4 numbers. Using old identifier instead ({$loc1}). Setting custom address."; 
 							}
 						}		
 					}
 					else
 					{
 						$this->errors[] = "The type of import ({$title}) is invalid";
+					}
+					
+					if($set_custom_address)
+					{
+						// Set address
+						$composite->set_custom_address_1($address1);
+						$composite->set_custom_address_2($this->decode($data[7]));
+						$composite->set_custom_postcode($this->decode($data[8]));
+						$composite->set_has_custom_address(true);
 					}
 					
 					// Add units only if composite stored ok.
@@ -542,7 +561,7 @@
 				// Deres ref.
 				$contract->set_invoice_header($this->decode($data[17]));					//cFakturaRef
 				$contract->set_comment($this->decode($data[18]));							//cMerknad
-                $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);	
+                $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);	//
 				
 				// Ansvar/Tjenestested: F.eks: 080400.13000
 				$ansvar_tjeneste = $this->decode($data[26]);								//cSikkerhetsTekst
