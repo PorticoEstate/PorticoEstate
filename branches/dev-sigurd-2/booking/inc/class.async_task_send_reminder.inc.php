@@ -9,8 +9,6 @@
 	
 	class booking_async_task_send_reminder extends booking_async_task
 	{
-		// this value should be the same as the crontab interval for this script
-		// to be sure that the reminders are only sent once per event/booking
 		const interval_length = '60'; // in minutes
 
 		public function __construct()
@@ -56,6 +54,8 @@
 					try
 					{
 						$this->send->msg('email', $contact['email'], $subject, $body);
+						$booking['reminder'] = 3; // status set to 'sent, not responded to'
+						$receipt = $this->booking_bo->update($booking);
 					} 
 					catch (phpmailerException $e)
 					{
@@ -83,7 +83,16 @@
 
 				$body = $this->create_body_text($event['from_'], $event['to_'], $building['name'], '', $event['id'], $event['secret'], 'event');
 				$subject = 'Rapporter deltakertall';
-				$this->send->msg('email', $event['contact_email'], $subject, $body);
+				try
+				{
+					$this->send->msg('email', $event['contact_email'], $subject, $body);
+					$event['reminder'] = 3; // status set to 'sent, not responded to'
+					$receipt = $this->event_bo->update($event);
+				}
+				catch (phpmailerException $e)
+				{
+					// do nothing. nowhere to log or display error messages
+				}
 			}
 		}
 
@@ -99,7 +108,7 @@
 			$body .= "\nVennlist oppgi korrekt deltakertall\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor\n\n%URL%";
 
-			$body = str_replace('%URL%', $GLOBALS['phpgw_info']['server'].'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
+			$body = str_replace('%URL%', $GLOBALS['phpgw_info']['server']['webserver_url'].'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
 			$body = str_replace('%WHO%', $who, $body);
 			$body = str_replace('%WHERE%', $where, $body);
 			$body = str_replace('%WHEN%', pretty_timestamp($from).' - '.pretty_timestamp($to), $body);

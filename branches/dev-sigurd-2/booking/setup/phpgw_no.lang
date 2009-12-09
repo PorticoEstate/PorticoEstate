@@ -263,6 +263,7 @@ send reminder for participants statistics	booking	no	Purring brukerstatistikk
 Send reminder	booking	no	Send purring
 Do not send reminder	booking	no	Ikke send purring
 User has responded to the reminder	booking	no	Brukeren har svart på påminnelsen
+Reminder sent. Not responded to	booking	no	Purring sendt. Ikke besvart
 In order to work with this application, you must first	booking	no	For å jobbe med denne søknaden, må du først
 assign yourself	booking	no	bli saksbehander
 as the case officer responsible for this application.	booking	no	for denne søknaden
