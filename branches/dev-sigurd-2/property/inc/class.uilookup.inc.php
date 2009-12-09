@@ -214,11 +214,11 @@
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(contact_id,contact_name),
-				'sort_field'	=>	array(person_id,last_name),
-				'formatter'		=>	array('',''),
-				'descr'			=>	array(lang('ID'),lang('Name'))
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('contact_id','contact_name','is_user'),
+				'sort_field'	=>	array('person_id','last_name'),
+				'formatter'		=>	array('','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'), lang('is user'))
 			);
 
 			$addressbook_list = array();
@@ -232,13 +232,15 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							if ($uicols['name'][$i] == 'contact_name'){
-								$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry['per_last_name'] . ', ' . $addressbook_entry['per_first_name'];
-							}
-							else {
-								$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry[$uicols['name'][$i]];
-							}
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						if ($uicols['name'][$i] == 'contact_name')
+						{
+							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry['per_last_name'] . ', ' . $addressbook_entry['per_first_name'];
+						}
+						else
+						{
+							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $addressbook_entry[$uicols['name'][$i]];
+						}
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}

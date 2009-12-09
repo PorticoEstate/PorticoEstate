@@ -138,9 +138,27 @@
 			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
 			$this->total_records = $addressbook->get_count_persons($criteria);
 
-			$entries = $addressbook->get_persons($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+			$contacts = $addressbook->get_persons($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
 
-			return $entries;
+			$accounts = $GLOBALS['phpgw']->accounts->get_list();
+			$user_contacts = array();
+
+			foreach($accounts as $account)
+			{
+				if(isset($account->person_id) && $account->person_id)
+				{
+					$user_contacts[] = $account->person_id;
+				}
+			}
+			foreach($contacts as &$contact)
+			{
+				if (in_array($contact['contact_id'], $user_contacts) )
+				{
+					$contact['is_user'] = 'X';
+				}
+			}
+
+			return $contacts;
 		}
 
 
