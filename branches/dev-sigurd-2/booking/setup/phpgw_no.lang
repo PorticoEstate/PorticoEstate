@@ -348,7 +348,7 @@ SMS total	booking	no	SMS total
 Type	booking	no	Type
 Participants	booking	no	Deltagere
 Format	booking	no	Format
-Create report	booking	no	Opprett rapport
+Create report	booking	no	Lag rapport
 No buildings selected	booking	no	Du må velge minst et bygg/anlegg
 Reports	booking	no	Rapporter
 Unable to set classpath	booking	no	Kunne ikke sette classpath
@@ -366,6 +366,9 @@ Unable to load the PostgreSQL driver	booking	no	Kunne ikke laste inn PostgreSQL-
 Unable to connect to database	booking	no	Kunne ikke koble seg mot DB
 Missing report-name	booking	no	Mangler raport-navn
 Invalid report-name	booking	no	Feil rapport-navn
+Missing connection-string	booking	no	Connection string mangler
+Missing DB-username	booking	no	Databasenavn mangler
+Missing DB-password	booking	no	Databasepassord mangler
 Missing configuration file	booking	no	Mangler konfigurasjonsfil
 Participants Per Age Group Per Month	booking	no	Deltagere per aldersgruppe per måned
 Location Code	booking	no	Lokasjonskode
@@ -403,3 +406,4 @@ building_id	booking	no	Bygg/anlegg
 subject_id	booking	no	Bruker
 export_configurations[external][account_code_set_id]	booking	no	Velg eksterne kontokoder
 export_configurations[internal][account_code_set_id]	booking	no	Velg interne kontokoder
+new target audience	booking	no	Ny målgruppe

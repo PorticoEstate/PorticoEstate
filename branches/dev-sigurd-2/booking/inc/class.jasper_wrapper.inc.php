@@ -28,13 +28,31 @@ function jasper_wrapper($parameters, $output_type, $report_name, &$err)
 		return 102;
 	}
 
-	$cmd = sprintf("CLASSPATH=%s %s -D%s JasperEngine -p %s -t %s -n %s %s",
+	$db_host = $GLOBALS['phpgw_info']['server']['db_host'];
+	$db_name = $GLOBALS['phpgw_info']['server']['db_name'];
+	$db_user = $GLOBALS['phpgw_info']['server']['db_user'];
+	$db_pass = $GLOBALS['phpgw_info']['server']['db_pass'];
+	$connection_string = "";
+
+	if ($GLOBALS['phpgw_info']['server']['db_type'] == "postgres") 
+	{
+		$connection_string = "jdbc:postgresql://".$db_host.":5432/".$db_name;
+	} 
+	elseif ($GLOBALS['phpgw_info']['server']['db_type'] == "mysql") 
+	{
+		$connection_string = "jdbc:postgresql://".$db_host.":3306/".$db_name;
+	}
+
+	$cmd = sprintf("CLASSPATH=%s %s -D%s JasperEngine -p %s -t %s -n %s -d %s -u %s -P %s %s",
 					$java_classpath,
 					JAVA_BIN,
 					'java.awt.headless=true', // To run the environment with a headless implementation (when apache-user can't connect to X11)
 					$parameters,
 					$output_type,
 					$report_name,
+					$connection_string,
+					$db_user,
+					$db_pass,
 					JASPER_CONFIG);
 
 	exec($cmd, $cmd_output, $retval);
@@ -98,6 +116,18 @@ function jasper_wrapper($parameters, $output_type, $report_name, &$err)
 
 		case 214:
 			$err['invalid rname'] = lang('Missing configuration file');
+			break;
+
+		case 215:
+			$err['missing cs'] = lang('Missing connection-string');
+			break;
+
+		case 216:
+			$err['missing du'] = lang('Missing DB-username');
+			break;
+
+		case 217:
+			$err['missing dp'] = lang('Missing DB-password');
 			break;
 
 		case 0:
