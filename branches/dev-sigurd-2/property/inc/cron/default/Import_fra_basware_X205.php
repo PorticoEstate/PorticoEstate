@@ -44,8 +44,8 @@
 		var $soXport;
 		var $invoice;
 		var $bestiller = 85; //cat_id for rolle
-		var $attestant = 84; //cat_id for rolle
-		var $budsjettansvarlig = 83; //cat_id for rolle
+		var $attestant = 83; //cat_id for rolle
+		var $budsjettansvarlig = 82; //cat_id for rolle
 
 		var $import = array(
 			'Bilagsnr' => 'bilagsnr', 
@@ -174,9 +174,30 @@
 				}
 			}
 
-			foreach($file_list as $file)
+			if(is_writable("{$dirname}/archive"))
 			{
-				$this->import($file);
+				foreach($file_list as $file)
+				{
+					$bilagsnr = $this->import($file);
+					if ($bilagsnr)
+					{
+						// move file
+						$_file = basename($file);
+						$movefrom = "{$dirname}/{$_file}";
+						$moveto = "{$dirname}/archive/{$_file}";
+
+						$ok = @rename($movefrom, $moveto);
+						if(!$ok) // Should never happen.
+						{
+							$this->invoice->delete($bilagsnr);
+							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
+						}
+					}
+				}
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");			
 			}
 
 			if(!$cron)
@@ -186,14 +207,15 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-			$insert_values= array(
+			$insert_values= array
+			(
 				$cron,
 				date($this->bocommon->datetimeformat),
 				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
+				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
+			);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
@@ -225,7 +247,7 @@
 				{
 					$_data = $entry['INVOICE'][0]['INVOICEHEADER'][0];
 				
-_debug_array($_data);
+//_debug_array($_data);
 //die();
 
 					$_data['KEY']; // => 1400050146
@@ -300,7 +322,7 @@ _debug_array($_data);
 
 					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
 					{
-						$receipt['error'][] = array('msg' => 'Manglende eller ikke treff på ordreNr');
+						$this->receipt['error'][] = array('msg' => 'Manglende eller ikke treff på ordreNr');
 					}
 
 					$vendor_id = $order_info['vendor_id'];
@@ -344,15 +366,14 @@ _debug_array($_data);
 				}
 			}
 
-			if(!isset($receipt['error']) || !$receipt['error'])
-			{
-				$buffer = $this->import_end_file($buffer);
-			}
-_debug_array($receipt);
-_debug_array($buffer);
-die();
+//_debug_array($buffer);
+//_debug_array($this->receipt);
 
-			return $buffer;
+			if(!isset($this->receipt['error']) || !$this->receipt['error'])
+			{
+				return $this->import_end_file($buffer);
+			}
+			return false;
 		}
 
 		function get_order_info($order_id = '')
@@ -374,14 +395,16 @@ die();
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 			
-			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
-			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
-			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+//			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
+//			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
+//			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
 
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
 			$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
+
 			$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 
 			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
@@ -395,7 +418,12 @@ die();
 
 		function import_end_file($buffer)
 		{
-			$num	= $this->soXport->add($buffer);
-			$this->receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $buffer[0]['bilagsnr']);
+			$num = $this->soXport->add($buffer);
+			if($num > 0)
+			{
+				$this->receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $buffer[0]['bilagsnr']);
+				return $buffer[0]['bilagsnr'];
+			}
+			return false;
 		}
 	}
