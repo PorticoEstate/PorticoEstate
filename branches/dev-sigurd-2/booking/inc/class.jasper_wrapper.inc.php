@@ -28,10 +28,14 @@ function jasper_wrapper($parameters, $output_type, $report_name, &$err)
 		return 102;
 	}
 
-	$db_host = $GLOBALS['phpgw_info']['server']['db_host'];
-	$db_name = $GLOBALS['phpgw_info']['server']['db_name'];
-	$db_user = $GLOBALS['phpgw_info']['server']['db_user'];
-	$db_pass = $GLOBALS['phpgw_info']['server']['db_pass'];
+	$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];
+	$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
+	$crypto = createObject('phpgwapi.crypto',array($_key, $_iv));
+
+	$db_host = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']);
+	$db_name = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_name']);
+	$db_user = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']);
+	$db_pass = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']);
 	$connection_string = "";
 
 	if ($GLOBALS['phpgw_info']['server']['db_type'] == "postgres") 
@@ -56,8 +60,7 @@ function jasper_wrapper($parameters, $output_type, $report_name, &$err)
 					JASPER_CONFIG);
 
 	exec($cmd, $cmd_output, $retval);
-
-	//  echo $cmd . ":retval: " . $retval;
+//  echo $cmd . ":retval: " . $retval;
 	//  exit(0);
 
 	switch ($retval) 
