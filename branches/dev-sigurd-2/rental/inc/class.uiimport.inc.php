@@ -391,7 +391,7 @@
 							if($correct_length && $integer_value_property)
 							{
 								$loc1 = substr_replace($building_identifier,"-",4,0);
-								$loc1 = $loc1 . "-" . $parts[2]; //Adding sequence number
+								//$loc1 = $loc1 . "-" . $parts[2]; //Adding sequence number
 							}
 							else
 							{
