@@ -99,8 +99,7 @@
 			$body .= "\nVennlist oppgi korrekt deltakertall\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor\n\n%URL%";
 
-			// FIXME: Change url
-			$body = str_replace('%URL%', 'http://bk.localhost/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
+			$body = str_replace('%URL%', $GLOBALS['phpgw_info']['server'].'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
 			$body = str_replace('%WHO%', $who, $body);
 			$body = str_replace('%WHERE%', $where, $body);
 			$body = str_replace('%WHEN%', pretty_timestamp($from).' - '.pretty_timestamp($to), $body);
