@@ -236,7 +236,7 @@
 			CreateRowChecked("transfer_idClass");
 			td_empty(4);
 			td_sum(values_ds.sum);
-			td_empty(5);
+			td_empty(6);
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
 			myfoot.setAttribute("id","myfoot");

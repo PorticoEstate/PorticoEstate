@@ -1237,34 +1237,42 @@
 
 			$uicols = array (
 				array(
-					'col_name'=>workorder		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
+					'col_name'=>'workorder'		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
 				array(
 					'col_name'=>'project_group','label'=>lang('project group'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'close_order',	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>paid_percent,	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'paid_percent',	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'change_tenant',	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'invoice_id',		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>budget_Account,	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'visible'=>true),
+					'col_name'=>'budget_Account',	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'visible'=>true),
 				array(
-					'col_name'=>sum,			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
+					'col_name'=>'sum',			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
 				array(
-					'col_name'=>dim_A,			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
+					'col_name'=>'dim_A',			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
 				array(
-					'col_name'=>dim_B,			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'dim_B',			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>dim_D,			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'dim_D',			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Tax_code,		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'Tax_code',		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Remark,			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'Remark',			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>counter,		'visible'=>false)
+					'col_name'=>'external_ref'		,'label'=>lang('external_ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
+				array(
+					'col_name'=>'counter',		'visible'=>false)
 				);
+
+
+			$config		= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$baseurl_invoice = isset($config->config_data['baseurl_invoice']) && $config->config_data['baseurl_invoice'] ? $config->config_data['baseurl_invoice'] : '';
+			$lang_picture = lang('picture');
 
 			$j=0;
 			//---- llena DATATABLE-ROWS con los valores del READ
@@ -1465,7 +1473,19 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						elseif($i == 13)
+						elseif(($i == 13))
+						{
+							if(isset($invoices['external_ref']) && $invoices['external_ref'])
+							{
+							//	$json_row[$uicols[$i]['col_name']] = " <a target='_blank' href='".$baseurl_invoice. $invoices['external_ref']."'>{$lang_picture}</a>";
+								$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('".$baseurl_invoice. $invoices['external_ref']. "','640','800')\" >{$lang_picture}</a>";
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+							}
+						}
+						elseif($i == 14)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
 						}					
