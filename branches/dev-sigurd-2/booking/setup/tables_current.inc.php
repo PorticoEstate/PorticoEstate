@@ -191,7 +191,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
-				'application_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'application_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
