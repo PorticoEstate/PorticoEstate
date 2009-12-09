@@ -125,7 +125,6 @@
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
 			
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
 			//Serialize the contracts found
 			$rows = array();
@@ -138,7 +137,7 @@
 			
 			if(!$export){
 				//Add context menu columns (actions and labels)
-				array_walk($rows, array($this, 'add_actions'), array($type, $editable));
+				array_walk($rows, array($this, 'add_actions'), array($type));
 			}
 
 			//Build a YUI result from the data
@@ -160,7 +159,6 @@
 			$value['labels'] = array();
 
 			$type = $params[0];
-			$editable = $params[1];
 			
 			switch($type)
 			{
@@ -181,19 +179,15 @@
 					$value['labels'][] = lang('edit_contract');
 					break;
 				default:
-					if($editable){
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-						$value['labels'][] = lang('edit');
-					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('edit');
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					if($editable){
-						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
-						$value['labels'][] = lang('copy');
-					}		
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
+					$value['labels'][] = lang('copy');
 				}
 		}
 
