@@ -944,9 +944,9 @@
 						// All is good, store notification
 						$notification = new rental_notification(null, null, $location_id, $contract_id, $date, $title);
 						if ($sonotification->store($notification)) {
-							$this->messages[] = "Successfully imported event '" . $notification->get_message() . "'";
+							$this->messages[] = "Successfully imported event '" . $notification->get_message() . "' for contract {$contract_id}";
 						} else {
-							$this->errors[] = "Error importing event " . $notification->get_message();
+							$this->errors[] = "Error importing event " . $notification->get_message() . " for contract {$contract_id}";
 						}
 					}
 				} else {
