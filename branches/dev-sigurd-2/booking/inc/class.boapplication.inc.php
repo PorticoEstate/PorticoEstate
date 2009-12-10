@@ -24,7 +24,7 @@
 			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body);
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
 			}
 			catch (phpmailerException $e)
 			{

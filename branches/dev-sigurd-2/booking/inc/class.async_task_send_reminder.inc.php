@@ -53,9 +53,11 @@
 				{
 					try
 					{
-						$this->send->msg('email', $contact['email'], $subject, $body);
-						$booking['reminder'] = 3; // status set to 'sent, not responded to'
-						$receipt = $this->booking_bo->update($booking);
+						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+						
+						// status set to 'sent, not responded to'
+						$sql = "update bb_booking set reminder = 3 where id = ".$booking['id'];
+						$this->db->query($sql);
 					} 
 					catch (phpmailerException $e)
 					{
@@ -85,9 +87,11 @@
 				$subject = 'Rapporter deltakertall';
 				try
 				{
-					$this->send->msg('email', $event['contact_email'], $subject, $body);
-					$event['reminder'] = 3; // status set to 'sent, not responded to'
-					$receipt = $this->event_bo->update($event);
+					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+					
+					// status set to 'sent, not responded to'
+					$sql = "update bb_event set reminder = 3 where id = ".$event['id'];
+					$this->db->query($sql);
 				}
 				catch (phpmailerException $e)
 				{
