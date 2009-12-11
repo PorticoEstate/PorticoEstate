@@ -11,6 +11,7 @@
 <div class="identifier-header">
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?></h1>
 	<div>
+		<a class="cancel" href="<?php echo $cancel_link;?>"><button>&laquo;&nbsp;<?php echo lang('composite_back');?></button></a><br/>
 		<label><?php echo lang('name') ?> </label><?php echo $composite->get_name() ?>
 	</div>
 </div>
@@ -124,9 +125,6 @@
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_composite" value="' . lang('save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('back') . '</a>';
 						}
 					?>
 				</div>

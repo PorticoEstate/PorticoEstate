@@ -11,6 +11,7 @@
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('party') ?></h1>
 	<div>
+		<a class="cancel" href="<?php echo $cancel_link;?>"><button>&laquo;&nbsp;<?php echo lang('party_back');?></button></a><br/>
 		<label><?php echo lang('name'); ?></label>
 		 <?php if($party->get_name()){ echo $party->get_name(); } else { echo lang('no_value'); }?>
 	</div>
@@ -407,9 +408,6 @@
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_party" value="' . lang('save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('back') . '</a>';
 						}
 					?>
 				</div>

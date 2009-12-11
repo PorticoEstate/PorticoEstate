@@ -65,7 +65,9 @@ Commited	rental	no	Avsluttet
 company	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
+composite_back	rental	no	Leieobjektsliste
 contract	rental	no	Kontrakt
+contract_back	rental	no	Kontraktsliste
 contract_id	rental	no	Kontraktsnummer
 contract_number	rental	no	Kontraktnummer
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
@@ -270,6 +272,7 @@ panels	rental	no	Vinduer
 parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
 party	rental	no	Kontraktspart
+party_back	rental	no	Kontraktspartliste
 party_location	rental	no	Intern organisasjonstihørighet
 party_type	rental	no	Type kontraktspart
 period	rental	no	Periode
