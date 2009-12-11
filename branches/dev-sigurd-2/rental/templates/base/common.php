@@ -127,6 +127,10 @@
 			{
 				paginator: this.paginator,
 				dynamicData: true,
+				<?php
+					$populate = phpgw::get_var('populate_form'); 
+					echo isset($populate)? 'initialLoad: false,':''
+				?>
 				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
 				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
 				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
@@ -374,6 +378,16 @@
 			this.wrapper = new dataSourceWrapper(source_properties, pag);
 			i+=1;
 
+			<?php
+				$populate = phpgw::get_var('populate_form');
+				if(isset($populate)){?>
+					var qs = YAHOO.rental.serializeForm(source_properties.form);
+				    this.wrapper.source.liveData = this.wrapper.url + qs + '&';
+				    this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+				    	this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
+				    }, scope: this});
+			<?php }
+			?>
 
 			// XXX: Create generic column picker for all datasources
 

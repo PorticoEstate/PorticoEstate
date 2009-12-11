@@ -104,18 +104,27 @@
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">
+<?php
+	$populate = phpgw::get_var('populate_form');
+	if(isset($populate)){
+		$q = phpgwapi_cache::session_get('rental', 'party_query');
+		$s_type = phpgwapi_cache::session_get('rental', 'party_search_type');
+		$p_type = phpgwapi_cache::session_get('rental', 'party_type');
+		$status = phpgwapi_cache::session_get('rental', 'party_status');
+	} 
+?>
 	<fieldset>
 		<!-- Search -->
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
 		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
 			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
-				<option value="all"><?php echo lang('all') ?></option>
-				<option value="name"><?php echo lang('name') ?></option>
-				<option value="address"><?php echo lang('address') ?></option>
-				<option value="identifier"><?php echo lang('Identifier') ?></option>
-				<option value="reskontro"><?php echo lang('reskontro') ?></option>
-				<option value="result_unit_number"><?php echo lang('result_unit_number') ?></option>
+				<option value="all" <?php echo ($s_type == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+				<option value="name" <?php echo ($s_type == 'name') ? 'selected' : ''?>><?php echo lang('name') ?></option>
+				<option value="address" <?php echo ($s_type == 'address') ? 'selected' : ''?>><?php echo lang('address') ?></option>
+				<option value="identifier" <?php echo ($s_type == 'identifier') ? 'selected' : ''?>><?php echo lang('Identifier') ?></option>
+				<option value="reskontro" <?php echo ($s_type == 'reskontro') ? 'selected' : ''?>><?php echo lang('reskontro') ?></option>
+				<option value="result_unit_number" <?php echo ($s_type == 'result_unit_number') ? 'selected' : ''?>><?php echo lang('result_unit_number') ?></option>
 			</select>
 		</label>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
@@ -128,20 +137,20 @@
 		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('type') ?></label>
 
 		<select name="party_type" id="<?php echo $list_id ?>_ctrl_toggle_party_type">
+			<option value="all"><?php echo lang('all') ?></option>
 			<?php
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			foreach($types as $id => $label)
 			{
-				?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
+				?><option value="<?php echo $id ?>" <?php echo ($p_type == $id) ? 'selected' : ''?>><?php echo lang($label) ?></option><?php
 			}
 			?>
-			<option value="all" selected="selected"><?php echo lang('all') ?></option>
 		</select>
 		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('status') ?></label>
 		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
-			<option value="active"><?php echo lang('active') ?></option>
-			<option value="inactive"><?php echo lang('inactive') ?></option>
-			<option value="all" selected="selected"><?php echo lang('all') ?></option>
+			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('active') ?></option>
+			<option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''?>><?php echo lang('inactive') ?></option>
 		</select>
 	</fieldset>
 	

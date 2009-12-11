@@ -119,6 +119,11 @@
 					break;
 				case 'all_contracts':
 				default:
+					phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
+					phpgwapi_cache::session_set('rental', 'contract_search_type', $search_type);
+					phpgwapi_cache::session_set('rental', 'contract_status', phpgw::get_var('contract_status'));
+					phpgwapi_cache::session_set('rental', 'contract_status_date', phpgw::get_var('date_status'));
+					phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
 					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
 			}
 			
@@ -180,10 +185,10 @@
 					break;
 				default:
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'populate_form' => 'yes')));
 					$value['labels'][] = lang('edit');
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'populate_form' => 'yes')));
 					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
@@ -231,7 +236,7 @@
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => phpgw::get_var('populate_form'))),
 					);
 					
 					$this->render('contract.php', $data);

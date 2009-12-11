@@ -72,6 +72,9 @@
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'all_composites': // ... all composites, filters (active and vacant)
+					phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
+					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
+					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
 					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
@@ -211,10 +214,10 @@
 					break;
 				default:
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'], 'populate_form' => 'yes')));
 					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'], 'populate_form' => 'yes')));
 					$value['labels'][] = lang('edit');
 					foreach($create_types as $create_type) {
 						$value['ajax'][] = false;
@@ -264,7 +267,7 @@
 					array (
 						'composite' 	=> $composite,
 						'editable' => false,
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => phpgw::get_var('populate_form')))
 					)
 				);	
 			}
@@ -330,7 +333,7 @@
 					'editable' => true,
 					'message' => isset($message) ? $message : phpgw::get_var('message'),
 					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index')),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => phpgw::get_var('populate_form'))),
 				)	
 			);
 			

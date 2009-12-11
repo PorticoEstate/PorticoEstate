@@ -71,6 +71,10 @@ class rental_uiparty extends rental_uicommon
 				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
 			default: // ... get all parties of a given type
+				phpgwapi_cache::session_set('rental', 'party_query', $search_for);
+				phpgwapi_cache::session_set('rental', 'party_search_type', $search_type);
+				phpgwapi_cache::session_set('rental', 'party_type', phpgw::get_var('party_type'));
+				phpgwapi_cache::session_set('rental', 'party_status', phpgw::get_var('active'));
 				$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
 		}
@@ -163,13 +167,13 @@ class rental_uiparty extends rental_uicommon
 				break;
 			default:
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'], 'populate_form' => 'yes')));
 				$value['labels'][] = lang('show');
 					
 				if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 				{
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'], 'populate_form' => 'yes')));
 					$value['labels'][] = lang('edit');
 				}
 				break;
@@ -217,7 +221,7 @@ class rental_uiparty extends rental_uicommon
 				array (
 					'party' 	=> $party,
 					'editable' => false,
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => phpgw::get_var('populate_form'))),
 				)
 			);
 		}
@@ -295,7 +299,7 @@ class rental_uiparty extends rental_uicommon
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error'),
-				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index')),
+				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => phpgw::get_var('populate_form'))),
 			)	
 		);
 	}

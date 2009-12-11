@@ -158,17 +158,27 @@
 	{
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
+<?php
+	$populate = phpgw::get_var('populate_form');
+	if(isset($populate)){
+		$q = phpgwapi_cache::session_get('rental', 'contract_query');
+		$s_type = phpgwapi_cache::session_get('rental', 'contract_search_type');
+		$status = phpgwapi_cache::session_get('rental', 'contract_status');
+		$status_date_hidden = phpgwapi_cache::session_get('rental', 'contract_status_date');
+		$c_type = phpgwapi_cache::session_get('rental', 'contract_type');
+	} 
+?>
 	<fieldset>
 		<!-- Search -->
 		<h3><?php echo lang('search_options') ?></h3>
 		<label for="<?php echo $list_id ?>_ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" />
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" value="<?php echo isset($q) ? $q : ''?>"/>
 		<label for="<?php echo $list_id ?>_ctrl_toggle_search_type"><?php echo lang('search_where') ?></label>
 		<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_search_type">
-			<option value="all" selected="selected"><?php echo lang('all') ?></option>
-			<option value="id"><?php echo lang('contract_id') ?></option>
-			<option value="party_name"><?php echo lang('party_name') ?></option>
-			<option value="composite"><?php echo lang('composite_name') ?></option>
+			<option value="all" <?php echo ($s_type == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="id" <?php echo ($s_type == 'id') ? 'selected' : ''?>><?php echo lang('contract_id') ?></option>
+			<option value="party_name" <?php echo ($s_type == 'party_name') ? 'selected' : ''?>><?php echo lang('party_name') ?></option>
+			<option value="composite" <?php echo ($s_type == 'composite') ? 'selected' : ''?>><?php echo lang('composite_name') ?></option>
 		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
@@ -178,11 +188,11 @@
 		<!-- Status and date filters -->
 		<h3><?php echo lang('status') ?></h3>
 		<select name="contract_status" id="<?php echo $list_id ?>_ctrl_toggle_contract_status" >
-			<option value="under_planning"><?php echo lang('under_planning') ?></option>
-			<option value="active"><?php echo lang('active_plural') ?></option>
-			<option value="under_dismissal"><?php echo lang('under_dismissal') ?></option>
-			<option value="ended"><?php echo lang('ended') ?></option>
-			<option value="all" selected="selected"><?php echo lang('all') ?></option>
+			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="under_planning" <?php echo ($status == 'under_planning') ? 'selected' : ''?>><?php echo lang('under_planning') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('active_plural') ?></option>
+			<option value="under_dismissal" <?php echo ($status == 'under_dismissal') ? 'selected' : ''?>><?php echo lang('under_dismissal') ?></option>
+			<option value="ended" <?php echo ($status == 'ended') ? 'selected' : ''?>><?php echo lang('ended') ?></option>
 		</select>
 		<label class="toolbar_element_label" for="date_status" id="label_contract_status"><?php echo lang('date') ?></label>
 		<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_status', $notification_date); ?>
@@ -193,14 +203,14 @@
 		<h3><?php echo lang('filters') ?></h3>
 			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?php echo lang('type') ?></label>
 			<select name="contract_type" id="<?php echo $list_id ?>_ctrl_toggle_contract_type">
+				<option value="all"><?php echo lang('all') ?></option>
 				<?php
 				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 				foreach($types as $id => $label)
 				{
-					?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
+					?><option value="<?php echo $id ?>" <?php echo ($c_type == $id) ? 'selected' : ''?>><?php echo lang($label) ?></option><?php
 				}
 				?>
-				<option value="all" selected="selected"><?php echo lang('all') ?></option>
 			</select>
 	</fieldset>
 </form>
