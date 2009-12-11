@@ -6,7 +6,7 @@
      */
     class property_boitem extends property_boattribute_owner
     {
-        private $installed_date;
+        private $installed_date, $group;
 
         public function __construct($installed_date = null)
         {
@@ -25,6 +25,16 @@
         public function get_installed_date()
         {
             return (int) $this->installed_date;
+        }
+
+        public function set_group(property_group $group)
+        {
+            $this->group = $group;
+        }
+
+        public function get_group()
+        {
+            return $this->group;
         }
         
     }
