@@ -167,13 +167,13 @@ class rental_uiparty extends rental_uicommon
 				break;
 			default:
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'], 'populate_form' => 'yes')));
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 					
 				if($user_is[ADMINISTRATOR] || $user_is[EXECUTIVE_OFFICER])
 				{
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'], 'populate_form' => 'yes')));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 				}
 				break;

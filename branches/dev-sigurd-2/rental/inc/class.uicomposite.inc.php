@@ -214,10 +214,10 @@
 					break;
 				default:
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'], 'populate_form' => 'yes')));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'], 'populate_form' => 'yes')));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 					foreach($create_types as $create_type) {
 						$value['ajax'][] = false;
