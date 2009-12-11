@@ -236,7 +236,7 @@
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => phpgw::get_var('populate_form'))),
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes')),
 					);
 					
 					$this->render('contract.php', $data);

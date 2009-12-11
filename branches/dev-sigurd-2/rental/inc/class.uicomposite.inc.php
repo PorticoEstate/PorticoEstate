@@ -267,7 +267,7 @@
 					array (
 						'composite' 	=> $composite,
 						'editable' => false,
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => phpgw::get_var('populate_form')))
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes'))
 					)
 				);	
 			}
@@ -333,7 +333,7 @@
 					'editable' => true,
 					'message' => isset($message) ? $message : phpgw::get_var('message'),
 					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => phpgw::get_var('populate_form'))),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes')),
 				)	
 			);
 			

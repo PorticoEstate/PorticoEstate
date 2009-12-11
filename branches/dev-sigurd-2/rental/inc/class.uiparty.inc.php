@@ -221,7 +221,7 @@ class rental_uiparty extends rental_uicommon
 				array (
 					'party' 	=> $party,
 					'editable' => false,
-					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => phpgw::get_var('populate_form'))),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
 				)
 			);
 		}
@@ -299,7 +299,7 @@ class rental_uiparty extends rental_uicommon
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error'),
-				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => phpgw::get_var('populate_form'))),
+				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
 			)	
 		);
 	}
