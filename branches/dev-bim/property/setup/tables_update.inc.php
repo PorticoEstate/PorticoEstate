@@ -4033,10 +4033,11 @@
 		{
 			$GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
 		}
-
+        
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.577';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
+
 	}
