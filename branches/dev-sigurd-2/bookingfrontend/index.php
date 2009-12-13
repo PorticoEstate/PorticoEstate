@@ -48,7 +48,20 @@
 		$login = "bookingguest";
 		$passwd = "bkbooking";
 		$_POST['submitit'] = "";
+
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+		if(!$GLOBALS['sessionid'])
+		{
+			$lang_denied = lang('Anonymous access not correctly configured');
+			if($GLOBALS['phpgw']->session->reason)
+			{
+				$lang_denied = $GLOBALS['phpgw']->session->reason;
+			}
+			echo <<<HTML
+				<div class="error">$lang_denied</div>
+HTML;
+			$GLOBALS['phpgw']->common->phpgw_exit(True);
+		}
 	}
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'bookingfrontend';
 
