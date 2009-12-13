@@ -30,18 +30,22 @@
 
 	require_once PHPGW_SERVER_ROOT.'/bookingfrontend/inc/custom/default/BrukerService.php';
 
+	$config		= CreateObject('phpgwapi.config','bookingfrontend');
+	$config->read();
+	$soap_parameter = isset($config->config_data['soap_parameter']) && $config->config_data['soap_parameter'] ? $config->config_data['soap_parameter'] : '';// 
+
 	$options = array();
 	$options['soap_version'] = SOAP_1_1;
-	$options['location']	= 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
-	$options['uri']			= 'http://soat1a.srv.bergenkom.no';
+	$options['location']	= isset($config->config_data['soap_location']) && $config->config_data['soap_location'] ? $config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
+	$options['uri']			= isset($config->config_data['soap_uri']) && $config->config_data['soap_uri'] ? $config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
 	$options['trace']		= 1;
-	$options['proxy_host']	= '';
-	$options['proxy_port']	= '';
-	$options['encoding']	= 'UTF-8';
-	$options['login']		= 'portal';
-	$options['password']	= 'ocean9';
+	$options['proxy_host']	= isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'] ? $config->config_data['soap_proxy_host'] : '';// '';
+	$options['proxy_port']	= isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'] ? $config->config_data['soap_proxy_port'] : '';// '';
+	$options['encoding']	= isset($config->config_data['soap_encoding']) && $config->config_data['soap_encoding'] ? $config->config_data['soap_encoding'] : '';// 'UTF-8';
+	$options['login']		= isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';// 'portal';
+	$options['password']	= isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';// 'ocean9';
 
-	$wsdl = 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
+	$wsdl = isset($config->config_data['soap_wsdl']) && $config->config_data['soap_wsdl'] ? $config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
 
 	try
 	{

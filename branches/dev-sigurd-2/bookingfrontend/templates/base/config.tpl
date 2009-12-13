@@ -16,6 +16,38 @@
 			<td>{lang_custom_login_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_location}:</td>
+			<td><input name="newsettings[soap_location]" value="{value_soap_location}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_uri}:</td>
+			<td><input name="newsettings[soap_uri]" value="{value_soap_uri}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_proxy_host}:</td>
+			<td><input name="newsettings[soap_proxy_host]" value="{value_soap_proxy_host}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_proxy_port}:</td>
+			<td><input name="newsettings[soap_proxy_port]" value="{value_soap_proxy_port}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_encoding}:</td>
+			<td><input name="newsettings[soap_encoding]" value="{value_soap_encoding}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_login}:</td>
+			<td><input name="newsettings[soap_login]" value="{value_soap_login}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_password}:</td>
+			<td><input name="newsettings[soap_password]" value="{value_soap_password}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_soap_client_wsdl}:</td>
+			<td><input name="newsettings[soap_wsdl]" value="{value_soap_wsdl}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
