@@ -459,12 +459,24 @@
 			$contacts	= CreateObject('property.soactor');
 			$contacts->role='vendor';
 
-			$vendor_data	= $contacts->read_single(array('actor_id'=>$vendor_id));
+			$criteria = array
+			(
+				'attributes' => array
+				(
+					array
+					(
+						'column_name' => 'org_name'
+					)
+				)
+			);
+
+			$vendor_data	= $contacts->read_single($vendor_id, $criteria);
+
 			if(is_array($vendor_data))
 			{
 				foreach($vendor_data['attributes'] as $attribute)
 				{
-					if($attribute['name']=='org_name')
+					if($attribute['column_name']=='org_name')
 					{
 						return $attribute['value'];
 					}
@@ -474,26 +486,53 @@
 
 		function set_responsible($values,$user_id='',$b_account_id='')
 		{
+			$responsible		= CreateObject('property.soresponsible');
+			if (!$values['budget_responsible'])
+			{
+//		var $bestiller = 85; //cat_id for rolle
+//		var $attestant = 83; //cat_id for rolle
+//		var $budsjettansvarlig = 82; //cat_id for rolle
+
+				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => 82);//$this->budsjettansvarlig); //anviser
+				$budget_responsible_contact_id		= $responsible->get_responsible($criteria_budget_responsible);
+				$budget_responsible_user_id			= $responsible->get_contact_user_id($budget_responsible_contact_id);
+				$values['budget_responsible']		= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+				$values['budsjettansvarligid']		= $values['budget_responsible'];
+			}
+
 			if (!$values['budget_responsible'])
 			{
 				$values['budget_responsible'] = $this->soXport->get_responsible($b_account_id);
 				$values['budsjettansvarligid'] = $values['budget_responsible'];
 			}
 
-			$acl 	= CreateObject('phpgwapi.acl',$user_id);
-			if($acl->check('.invoice', 32, 'property') && !$acl->check('.invoice', 64, 'property')):
-			{
-				$values['janitor']	= $GLOBALS['phpgw']->accounts->id2name($user_id);
-				$values['oppsynsmannid']	= $values['janitor'];
-			}
-	//		elseif((!$acl->check('.invoice', 32, 'property') && $acl->check('.invoice', 64, 'property')) || ($acl->check('.invoice', 32, 'property') && $acl->check('.invoice', 64, 'property'))):
-			elseif($acl->check('.invoice', 64, 'property')):
-			{
-				$values['supervisor']	= $GLOBALS['phpgw']->accounts->id2name($user_id);
-				$values['saksbehandlerid']	= $values['supervisor'];
-			}
-			endif;
 
+			if(!$values['supervisor'])
+			{
+				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => 83);//$this->attestant); // attestere
+				$supervisor_contact_id				= $responsible->get_responsible($criteria_supervisor);
+				$supervisor_user_id					= $responsible->get_contact_user_id($supervisor_contact_id);
+				$values['supervisor']				= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+				$values['saksbehandlerid']			= $values['supervisor'];
+			}
+
+			$values['janitor']				= $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+			$values['oppsynsmannid']		= $values['janitor'];
+
+			if(!$values['supervisor'])
+			{
+				$acl 	= CreateObject('phpgwapi.acl',$user_id);
+				if($acl->check('.invoice', 32, 'property') && !$acl->check('.invoice', 64, 'property'))
+				{
+					$values['janitor']	= $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+					$values['oppsynsmannid']	= $values['janitor'];
+				}
+				else if($acl->check('.invoice', 64, 'property'))
+				{
+					$values['supervisor']	= $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+					$values['saksbehandlerid']	= $values['supervisor'];
+				}
+			}
 			return $values;
 		}
 	}
