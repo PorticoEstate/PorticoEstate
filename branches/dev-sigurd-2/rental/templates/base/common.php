@@ -588,7 +588,7 @@ function onCalendarSelect(type,args,array){
 	}
 	document.getElementById(array[0]).value = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
-	if (array[3] != undefined && !array[3]) {
+	if (cal_postOnChange || (array[3] != undefined && !array[3])) {
 		document.getElementById('ctrl_search_button').click();
 	}
 

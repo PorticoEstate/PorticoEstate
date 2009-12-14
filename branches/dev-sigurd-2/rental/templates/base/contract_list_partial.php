@@ -228,18 +228,23 @@
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
 
 <script type="text/javascript">
-var datestatus = document.getElementById('date_status');
+var cal_postOnChange=true;
+/*var datestatus = document.getElementById('date_status');
 if(datestatus != undefined && datestatus != null) {
+	alert("tester1");
     function date_event() {
+        alert("i date_event");
         var hidden_date = document.getElementById('date_status_hidden');
         if(hidden_date != undefined) {
             var date = datestatus.value.split("/");
             hidden_date.value = date[2]+"-"+date[1]+"-"+date[0];
+            alert(this);
         }
     }
 
     if(datestatus.addEventListener) {
+        alert("adding event listener");
         datestatus.addEventListener('change', date_event, false);
     }
-}
+}*/
 </script>
