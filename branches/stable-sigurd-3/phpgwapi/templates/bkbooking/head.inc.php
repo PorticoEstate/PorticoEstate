@@ -108,6 +108,14 @@
 	{
 		$tpl_vars['login_text'] = lang('Login');
 		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+		$config		= CreateObject('phpgwapi.config','bookingfrontend');
+		$config->read();
+		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
+		if($login_parameter)
+		{
+			$login_parameter = ltrim($login_parameter, '&');
+			$tpl_vars['login_url'] .= "&{$login_parameter}";
+		}
 	}
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

@@ -5,53 +5,39 @@ import java.sql.DriverManager;
 
 class JasperConnection {
 
-	private String name;
-	private String host;
-	private String db;
-	private String port;
-	private String dbname;
+	private String connection_string;
 	private String username;
 	private String password;
-
+	private int db_type;
+	
+	private final static int DUMMYCONNECTION = 0;
+	private final static int MYSQLCONNECTION = 1;
+	private final static int POSTGRESQLCONNECTION = 2;
+	
 	// the real connection object
 	private java.sql.Connection connection;
 
-	public JasperConnection(String name, String host, String db, String port,
-			String dbname, String username, String password) {
+	public JasperConnection(String connection_string, String username, String password) {
 
-		this.name = name;
-		this.host = host;
-		this.db = db;
-		this.port = port;
-		this.dbname = dbname;
+		this.connection_string = connection_string;
 		this.username = username;
 		this.password = password;
-
+		
+		// use this ugly hack to determine DB type
+		if (this.connection_string.startsWith("jdbc:mysql:")) {
+			this.db_type = JasperConnection.MYSQLCONNECTION;
+		} else if (this.connection_string.startsWith("jdbc:postgresql:")) {
+			this.db_type = JasperConnection.POSTGRESQLCONNECTION;
+		} else {
+			this.db_type = JasperConnection.DUMMYCONNECTION;
+		}
+		
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
-	/*
-	 * public String getHost() { return this.host; }
-	 * 
-	 * public String getDb() { return this.db; }
-	 * 
-	 * public String getPort() { return this.port; }
-	 * 
-	 * public String getDBName() { return this.dbname; }
-	 * 
-	 * public String getUsername() { return this.username; }
-	 * 
-	 * public String getPassword() { return this.password; }
-	 */
-
+	
 	public java.sql.Connection makeConnection() {
 
-		String connection_url = null;
-
-		if (this.db.equalsIgnoreCase("mysql")) {
+		if (this.db_type == MYSQLCONNECTION) {
 
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -63,11 +49,9 @@ class JasperConnection {
 
 			}
 
-			connection_url = "jdbc:mysql://" + this.host + ":" + this.port
-					+ "/" + this.dbname;
 
 			try {
-				connection = DriverManager.getConnection(connection_url,
+				connection = DriverManager.getConnection(this.connection_string,
 						this.username, this.password);
 			} catch (Exception ex) {
 
@@ -77,7 +61,7 @@ class JasperConnection {
 
 			}
 
-		} else if (this.db.equalsIgnoreCase("postgresql")) { // postgresql
+		} else if (this.db_type == POSTGRESQLCONNECTION) { // postgresql
 
 			try {
 				Class.forName("org.postgresql.Driver").newInstance();
@@ -89,11 +73,8 @@ class JasperConnection {
 
 			}
 
-			connection_url = "jdbc:postgresql://" + this.host + ":" + this.port
-					+ "/" + this.dbname;
-
 			try {
-				connection = DriverManager.getConnection(connection_url,
+				connection = DriverManager.getConnection(this.connection_string,
 						this.username, this.password);
 			} catch (Exception ex) {
 

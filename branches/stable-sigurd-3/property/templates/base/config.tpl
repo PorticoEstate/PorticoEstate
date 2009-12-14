@@ -31,6 +31,10 @@
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
     <td><input name="newsettings[export_pre_path]" value="{value_export_pre_path}"></td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_baseurl_to_invoice_image}:</td>
+    <td><input name="newsettings[baseurl_invoice]" value="{value_baseurl_invoice}"></td>
+   </tr>
    <tr class="row_on">
     <td>{lang_invoice_export_method}:</td>
     <td>

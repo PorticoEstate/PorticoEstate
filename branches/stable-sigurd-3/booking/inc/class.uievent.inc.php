@@ -197,7 +197,7 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body);
+					$send->msg('email', $receiver, $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
 				}
 				catch (phpmailerException $e)
 				{

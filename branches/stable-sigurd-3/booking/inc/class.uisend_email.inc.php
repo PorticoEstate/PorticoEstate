@@ -104,7 +104,7 @@
 			{
 				try
 				{
-					$send->msg('email', $contact['email'], $subject, $body);
+					$send->msg('email', $contact['email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
 					$result['ok'][] = $contact; 
 				}
 				catch (phpmailerException $e)

@@ -15,27 +15,24 @@ import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
 
 class CustomJasperReport {
 
 	private String name;
 	private String source;
-	private JasperConnection connection;
 
 	private JasperPrint jasperPrint;
 
-	public CustomJasperReport(String name, String source, JasperConnection connection) {
+	public CustomJasperReport(String name, String source) {
 
 		this.name = name;
 		this.source = source;
-		this.connection = connection;
 		this.jasperPrint = null;
 
 	}
 
-	public void generateReport(HashMap<String, String> parameters) {
+	public void generateReport(HashMap<String, String> parameters, JasperConnection jc) {
 
 		JasperReport jasperReport = null;
 		// Map parameters = new HashMap();
@@ -48,7 +45,7 @@ class CustomJasperReport {
 			System.exit(201);
 		}
 
-		Connection connection = this.connection.makeConnection();
+		Connection connection = jc.makeConnection();
 
 		try {
 
@@ -128,7 +125,6 @@ class CustomJasperReport {
 		jrxls.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
 		jrxls.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
 		jrxls.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-		//jrxls.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE); // the default is false
 		
 		try {
 			jrxls.exportReport();

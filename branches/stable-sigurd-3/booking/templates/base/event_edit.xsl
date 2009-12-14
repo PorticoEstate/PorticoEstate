@@ -190,16 +190,25 @@
 						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 					<xsl:if test="event/reminder = 1">
 						<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 					<xsl:if test="event/reminder = 2">
 						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2" selected="selected"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
+					</xsl:if>
+					<xsl:if test="event/reminder = 3">
+						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3" selected="selected"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 				</select>
 			</dd>

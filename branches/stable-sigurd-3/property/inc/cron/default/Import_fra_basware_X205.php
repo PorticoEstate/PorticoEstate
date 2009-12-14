@@ -37,14 +37,15 @@
 	class  Import_fra_basware_X205
 	{
 		var	$function_name = 'Import_fra_basware_X205';
+		var $auto_tax = true;
 		var $mvakode=0;
 		var $kildeid=1;
 		var $splitt=0;
 		var $soXport;
 		var $invoice;
 		var $bestiller = 85; //cat_id for rolle
-		var $attestant = 84; //cat_id for rolle
-		var $budsjettansvarlig = 83; //cat_id for rolle
+		var $attestant = 83; //cat_id for rolle
+		var $budsjettansvarlig = 82; //cat_id for rolle
 
 		var $import = array(
 			'Bilagsnr' => 'bilagsnr', 
@@ -173,9 +174,30 @@
 				}
 			}
 
-			foreach($file_list as $file)
+			if(is_writable("{$dirname}/archive"))
 			{
-				$this->import($file);
+				foreach($file_list as $file)
+				{
+					$bilagsnr = $this->import($file);
+					if ($bilagsnr)
+					{
+						// move file
+						$_file = basename($file);
+						$movefrom = "{$dirname}/{$_file}";
+						$moveto = "{$dirname}/archive/{$_file}";
+
+						$ok = @rename($movefrom, $moveto);
+						if(!$ok) // Should never happen.
+						{
+							$this->invoice->delete($bilagsnr);
+							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
+						}
+					}
+				}
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");			
 			}
 
 			if(!$cron)
@@ -185,14 +207,15 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-			$insert_values= array(
+			$insert_values= array
+			(
 				$cron,
 				date($this->bocommon->datetimeformat),
 				$this->function_name,
-				implode(',',(array_keys($msgbox_data)))
-				);
+				$this->db->db_addslashes(implode(',',(array_keys($msgbox_data))))
+			);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
@@ -257,11 +280,11 @@
 
 					if( $belop < 0 )
 					{
-						$invoice_common['art'] = 2;
+						$buffer[$i]['artid'] = 2;
 					}
-					if( $invoice_common['art'] == 2 ) // kreditnota
+					else
 					{
-						$belop = -1 * abs($belop);
+						$buffer[$i]['artid'] = 1;					
 					}
 
 					$kidnr 	= $_data['KIDNO'];
@@ -281,21 +304,13 @@
 
 					$order_info = $this->get_order_info($order_id);
 
-					if(isset($invoice_common['dim_b']) && $invoice_common['dim_b'])
-					{
-						$buffer[$i]['dimb'] = $invoice_common['dim_b'];
-					}
-					else
-					{
-						$buffer[$i]['dimb'] = $order_info['dimb'];
-					}
-
+					$buffer[$i]['dimb'] = $order_info['dimb'];
 					$buffer[$i]['dima'] = $order_info['dima'];
 					$buffer[$i]['loc1'] = $order_info['loc1'];
 
 					$buffer[$i]['mvakode'] = $this->mvakode;
 
-					if($buffer[$i]['dima'] && (isset($invoice_common['auto_tax']) && $invoice_common['auto_tax']))
+					if($buffer[$i]['dima'] && $this->auto_tax)
 					{
 						$mvakode = $this->soXport->auto_tax($buffer[$i]['dima']);
 					
@@ -305,21 +320,15 @@
 						}
 					}
 
-					if(isset($invoice_common['vendor_id']) && $invoice_common['vendor_id'])
+					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
 					{
-						$vendor_id = $invoice_common['vendor_id'];
+						$this->receipt['error'][] = array('msg' => 'Manglende eller ikke treff på ordreNr');
 					}
-					else if ($order_id)
-					{
-						$vendor_id = $order_info['vendor_id'];
-					}
-					else
-					{
-						$vendor_id = $_data['SUPPLIER.CODE'];
-					}
+
+					$vendor_id = $order_info['vendor_id'];
 					
 					
-					if(isset($invoice_common['auto_tax']) && $invoice_common['auto_tax'])
+					if($this->auto_tax)
 					{
 						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
 						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
@@ -335,55 +344,36 @@
 					$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
 					$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
 					$buffer[$i]['regtid'] = $regtid;
-					$buffer[$i]['artid'] = $invoice_common['art'];
+
 					$buffer[$i]['spvend_code'] = $vendor_id;
 
-					$oppsynsmannid = '';
-					if(isset($invoice_common['janitor']) && $invoice_common['janitor'])
+					if(isset($order_info['janitor']) && $order_info['janitor'])
 					{
-						$oppsynsmannid = $invoice_common['janitor'];
-					}
-					else if($order_info['janitor'])
-					{
-						$oppsynsmannid = $order_info['janitor'];				
+						$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
 					}
 
-					$saksbehandlerid = '';
-					if(isset($invoice_common['supervisor']) && $invoice_common['supervisor'])
+					if(isset($order_info['supervisor']) && $order_info['supervisor'])
 					{
-						$saksbehandlerid = $invoice_common['supervisor'];
-					}
-					else if($order_info['supervisor'])
-					{
-						$saksbehandlerid = $order_info['supervisor'];	
+						$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
 					}
 
-					$budsjettansvarligid = '';
-					if(isset($invoice_common['budget_responsible']) && $invoice_common['budget_responsible'])
+					if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
 					{
-						$budsjettansvarligid = $invoice_common['budget_responsible'];
-					}
-					else if($order_info['budget_responsible'])
-					{
-						$budsjettansvarligid = $order_info['budget_responsible'];
+						$buffer[$i]['budsjettansvarligid']	= $order_info['budget_responsible'];
 					}
 
-					$buffer[$i]['oppsynsmannid']		= $oppsynsmannid;
-					$buffer[$i]['saksbehandlerid']		= $saksbehandlerid;
-					$buffer[$i]['budsjettansvarligid']	= $budsjettansvarligid;
-
-					$bilagsnr++;
 					$i++;
 				}
 			}
-_debug_array($buffer);
-die();
-			if(!$download)
-			{
-				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
-			}
 
-			return $buffer;
+//_debug_array($buffer);
+//_debug_array($this->receipt);
+
+			if(!isset($this->receipt['error']) || !$this->receipt['error'])
+			{
+				return $this->import_end_file($buffer);
+			}
+			return false;
 		}
 
 		function get_order_info($order_id = '')
@@ -405,14 +395,16 @@ die();
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 			
-			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
-			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
-			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+//			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
+//			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
+//			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
 
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
 			$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
+
 			$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 
 			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
@@ -424,10 +416,14 @@ die();
 		}
 
 
-		function import_end_file($buffer,$bilagsnr)
+		function import_end_file($buffer)
 		{
-			$num	= $this->soXport->add($buffer);
-			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $bilagsnr);
-			return $receipt;
+			$num = $this->soXport->add($buffer);
+			if($num > 0)
+			{
+				$this->receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $buffer[0]['bilagsnr']);
+				return $buffer[0]['bilagsnr'];
+			}
+			return false;
 		}
 	}
