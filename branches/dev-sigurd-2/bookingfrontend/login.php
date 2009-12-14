@@ -18,20 +18,26 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 
+	$config		= CreateObject('phpgwapi.config','bookingfrontend');
+	$config->read();
+	$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'OSSO-USER-DN';
+	$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
+
 	$headers = getallheaders();
-	if(isset($headers['Authorization']) && ereg('Basic',$headers['Authorization']))
+//  Test data
+//	$headers[$header_key] = 'cn=30034502192,cn=users, dc=bergen,dc=kommune,dc=no';
+
+	if(isset($headers[$header_key]) && $headers[$header_key])
 	{
-		$tmp = $headers['Authorization'];
-		$tmp = str_replace(' ','',$tmp);
-		$tmp = str_replace('Basic','',$tmp);
-		$auth = base64_decode(trim($tmp));
-		list($userId,$password) = split(':',$auth);
+		$matches = array();
+		preg_match_all($header_regular_expression,$headers[$header_key], $matches);
+//		_debug_array($matches);
+		$userId = $matches[1][0];
+//		_debug_array($userId); die();
 	}
 
 	require_once PHPGW_SERVER_ROOT.'/bookingfrontend/inc/custom/default/BrukerService.php';
 
-	$config		= CreateObject('phpgwapi.config','bookingfrontend');
-	$config->read();
 	$soap_parameter = isset($config->config_data['soap_parameter']) && $config->config_data['soap_parameter'] ? $config->config_data['soap_parameter'] : '';// 
 
 	$options = array();

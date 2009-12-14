@@ -13,8 +13,16 @@
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
 		<tr class="row_on">
-			<td>{lang_custom_login_parameter}:</td>
+			<td>{lang_custom_login_url_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_header_key}:</td>
+			<td><input name="newsettings[header_key]" value="{value_header_key}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_login_header_regular_expression}:</td>
+			<td><input name="newsettings[header_regular_expression]" value="{value_header_regular_expression}"></td>
 		</tr>
 		<tr class="row_on">
 			<td>{lang_login_soap_client_location}:</td>
