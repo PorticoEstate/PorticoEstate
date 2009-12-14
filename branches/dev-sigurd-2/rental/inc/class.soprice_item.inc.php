@@ -40,6 +40,7 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		
 		return $price_item;
 	}
@@ -63,6 +64,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			
 			return $price_item;
 		}
@@ -121,6 +123,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			
 			$results[] = $price_item;
 		}
@@ -196,10 +199,11 @@ class rental_soprice_item extends rental_socommon
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
 			($price_item->is_inactive() ? "true" : "false"),
-			str_replace(',','.',$price)
+			str_replace(',','.',$price),
+			'\'' . $price_item->get_responsibility_id() . '\''
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price', 'responsibility_id');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		var_dump($q);
@@ -226,7 +230,8 @@ class rental_soprice_item extends rental_socommon
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
 			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
-			'price = ' . str_replace(',','.',$price_item->get_price())
+			'price = ' . str_replace(',','.',$price_item->get_price()),
+			'responsibility_id = \'' . $price_item->get_responsibility_id() . '\''
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -407,6 +412,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		}
 		return $price_item;
 	}

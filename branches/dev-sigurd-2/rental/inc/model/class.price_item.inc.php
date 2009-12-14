@@ -15,6 +15,7 @@
 		protected $is_area;
 		protected $price;
 		protected $is_inactive;
+		protected $responsibility_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -122,7 +123,8 @@
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
 				'is_inactive' => $this->get_status_text(),
-				'price' => $this->get_price()
+				'price' => $this->get_price(),
+				'responsibility_id' => $this->get_responsibility_id()
 			);
 		}
 
@@ -187,5 +189,15 @@
 			*/
 
 			return $valid;
+		}
+
+		public function get_responsibility_id()
+		{
+			return $this->responsibility_id;
+		}
+
+		public function set_responsibility_id($responsibility_id)
+		{
+			$this->responsibility_id = $responsibility_id;
 		}
 	}

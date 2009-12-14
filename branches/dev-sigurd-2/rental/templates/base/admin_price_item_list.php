@@ -16,6 +16,29 @@
 		<h3><?php echo lang('t_new_price_item') ?></h3>
 		<label for="ctrl_add_price_item_name"><?php echo lang('name') ?></label>
 		<input type="text" id="ctrl_add_price_item_name" name="ctrl_add_price_item_name"/>
+		<select name="responsibility_id" id="responsibility_id">
+			<?php
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($types as $id => $label)
+			{
+	
+				$names = $this->locations->get_name($id);
+				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+					{
+					?>
+						<option 
+							value="<?php echo $id ?>"
+						>
+							<?php echo lang($label) ?>
+						</option>
+					<?php
+					}
+				}
+			}
+			?>
+		</select>
 		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?php echo lang('f_new_price_item') ?>" />
 	</fieldset>
 	<?php
@@ -34,7 +57,8 @@
 		{
 	  	YAHOO.util.Event.stopEvent(e);
 	  	newName = document.getElementById('ctrl_add_price_item_name').value;
-			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName;
+	  	resp_id = document.getElementById('responsibility_id').value;
+			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName + '&amp;responsibility_id=' + resp_id;
 		}
 	);
 

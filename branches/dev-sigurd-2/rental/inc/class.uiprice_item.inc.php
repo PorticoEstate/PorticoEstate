@@ -97,9 +97,11 @@ class rental_uiprice_item extends rental_uicommon
 		}
 			
 		$title = phpgw::get_var('price_item_title');
+		$responsibility_id = phpgw::get_var('responsibility_id');
 		if ($title) {
 			$price_item = new rental_price_item();
 			$price_item->set_title($title);
+			$price_item->set_responsibility_id($responsibility_id);
 			if (rental_soprice_item::get_instance()->store($price_item)) {
 				// The object was stored, forward to edit it further
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprice_item.edit', 'id' => $price_item->get_id()));
