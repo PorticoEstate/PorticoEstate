@@ -379,6 +379,9 @@ class rental_soprice_item extends rental_socommon
 		if(isset($filters['price_item_status'])){
 			$filter_clauses[] = "NOT is_inactive";
 		}
+		if(isset($filters['responsibility_id'])){
+			$filter_clauses[] = "responsibility_id='" . $filters['responsibility_id'] . "'";
+		}
 		
 		if(count($filter_clauses))
 		{

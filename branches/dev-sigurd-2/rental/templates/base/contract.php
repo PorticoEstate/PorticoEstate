@@ -149,7 +149,7 @@
 				$list_form = true;
 				$list_id = 'not_included_price_items';
 				$related = array('included_price_items','total_price');
-				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
+				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id(). '&amp;responsibility_id='.$contract->get_location_id();
 				unset($extra_cols);
 				unset($editors);
 				include('price_item_partial.php'); ?>
