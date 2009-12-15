@@ -57,7 +57,7 @@ $list_id = 'all_contracts';
 $url_add_on = '&amp;type='.$list_id;
 $editable = false;
 $extra_cols = array(
-	array("key" => "type", "label" => lang('title'), "index" => 3),
+	array("key" => "type", "label" => lang('responsibility'), "index" => 3),
 	array("key" => "composite", "label" => lang('composite'), "sortable"=>'true', "index" => 4),
 	array("key" => "party", "label" => lang('party'), "sortable"=>'true', "index" => 5)
 );
