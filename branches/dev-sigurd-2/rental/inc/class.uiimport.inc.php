@@ -532,19 +532,11 @@
 					$this->errors[] = "The type of import ({$title}) is invalid";
 				}
 				
-				if($set_custom_address)
-				{
-					// Set address
-					$composite->set_custom_address_1($address1);
-					$composite->set_custom_address_2($this->decode($data[7]));
-					$composite->set_custom_postcode($this->decode($data[8]));
-					$composite->set_has_custom_address(true);
-				}
-
-				//Get 
-				$comps = $socomposite->get(0, 1, null, null, null, null, array('location_code' => $loc1));
 				
-				$composite = $comps[0];
+
+				//Retrieve 
+				//$comps = $socomposite->get(0, 1, null, null, null, null, array('location_code' => $loc1));
+				//$composite = $comps[0];
 				
 				if(!isset($composite))
 				{
@@ -556,6 +548,15 @@
 					$address1 = $this->decode($data[6]);	//cAdresse1
 					if(!isset($name)){
 						$name = $address1;
+					}
+					
+					if($set_custom_address)
+					{
+						// Set address
+						$composite->set_custom_address_1($address1);
+						$composite->set_custom_address_2($this->decode($data[7]));
+						$composite->set_custom_postcode($this->decode($data[8]));
+						$composite->set_has_custom_address(true);
 					}
 					
 					$composite->set_name($name);
