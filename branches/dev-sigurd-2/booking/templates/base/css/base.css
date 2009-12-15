@@ -46,12 +46,12 @@ ul.pathway li {
 }
 ul.pathway li:first-child { background: none; padding-left: 0;}
 
-dl.form, dl.form-col {
+dl.form, dl.form-col, dl.form-2col {
     margin: 1em 1em 1em 0;
-		padding-right: 1em;
+	padding-right: 1em;
 }
 
-dl.form dt, dl.form-col dt {
+dl.form dt, dl.form-col dt, dl.form-2col dt {
     font-style: italic;
     font-weight: bolder;
     margin: .5em 0 .1em 0;
@@ -60,6 +60,10 @@ dl.form dt, dl.form-col dt {
 dl.form dd textarea,
 dl.form-col dd textarea {
     width: 15em;
+    height: 6em;
+}
+dl.form-2col dd textarea {
+    width: 36em;
     height: 6em;
 }
 dl.form dd textarea.full-width,
@@ -77,11 +81,12 @@ dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
     width: 15em;
 }
 dl.form dd .autocomplete,
-dl.form-col dd .autocomplete {
+dl.form-col dd .autocomplete,
+dl.form-2col dd .autocomplete {
     padding-bottom: 2em;
 }
 
-dl.form dt.heading, dl.form-col dt.heading, div.heading,
+dl.form dt.heading, dl.form-col dt.heading, dl.form-2col dt.heading, div.heading,
 dl.proplist dt.heading, dl.proplist-col dt.heading {
     color: #448;
     font-weight: normal;
@@ -111,6 +116,10 @@ dl.form-col {
     float: left;
 }
 
+dl.form-2col {
+    width: 38em;
+    float: left;
+}
 .form-buttons {
     clear: both;
     padding-top: 2em;

@@ -2,10 +2,11 @@ current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
 -- select a season --	booking	no	Velg en sesong
-1. why?	booking	no	1. Hvorfor?
-2. where?	booking	no	2. Hvor?
-3. when?	booking	no	3. Når?
-4. who?	booking	no	4. Hvem?
+why?	booking	no	Hvorfor?
+where?	booking	no	Hvor?
+when?	booking	no	Når?
+who?	booking	no	Hvem?
+how many?	booking	no	Hvor mange?
 accept application	booking	no	Godta søknaden
 accepted	booking	no	Akseptert
 account	booking	no	Bruker
