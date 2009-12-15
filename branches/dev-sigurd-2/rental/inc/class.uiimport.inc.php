@@ -201,6 +201,7 @@
 			$parties = array();			
 			
 			//Check to see if there is any parties in the database. If so, do not store these 
+			//... double checking to  ensure that the user has not logged out and in again during import
 			$alreay_imported_parties = false;
 			$number_of_parties = $soparty->get_number_of_parties();
 			if($number_of_parties > 0)
@@ -214,6 +215,11 @@
 			
 			// Loop through each line of the file, parsing CSV data to a php array
 			foreach ($datalines as $data) {
+				if(count($data) <= 30)
+				{
+					continue;
+				}
+				
 				// Create a new rental party we can fill with info from this line from the file
 				$party = new rental_party();
 
@@ -281,7 +287,7 @@
 	                        $party->set_last_name($this->decode($data[1]));			//cEtternavn
 	                        $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
 	                        $party->set_is_inactive(true);
-	                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format (only numbers): {$identifier}. Setting as inactive.";	//cPersonForetaknr
+	                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";	//cPersonForetaknr
 	                }
                 }
                 else
@@ -290,7 +296,7 @@
                     $party->set_last_name($this->decode($data[1]));			//cEtternavn
                     $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
                     $party->set_is_inactive(true);
-                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format (with non-numeric characters): {$identifier}. Setting as inactive.";	//cPersonForetaknr
+                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";	//cPersonForetaknr
                 }
 
 				// Store party and log message
@@ -315,152 +321,274 @@
 		protected function import_composites()
 		{
 			$start_time = time();
+			
+			// Storage objects
 			$socomposite = rental_socomposite::get_instance();
 			$socontract = rental_socontract::get_instance();
 			$sounit = rental_sounit::get_instance();
+			
+			// Array for mapping the composite ids to the facilit ids
 			$composites = array();
+			
+			//Read source data
 			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt.csv");
 			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			
 			foreach ($datalines as $data) {
-				$composite = new rental_composite();
 				
-				// Use the first address line as name if no name
-				$name = $this->decode($data[26]);		//cLeieobjektnavn
-				$address1 = $this->decode($data[6]);	//cAdresse1
-				if(!isset($name)){
-					$name = $address1;
+				if(count($data) <= 34)
+				{
+					continue;
 				}
 				
-				$composite->set_name($name);
-				$composite->set_description($this->decode($data[3]));		//cLeieobjektBeskrivelse
-                $composite->set_object_type_id($this->decode($data[25]));	//nLeieobjektTypeId
-                $composite->set_area($this->decode($data[2]));				//nMengde
-				$composite->set_is_active($data[19] == "-1");				//bTilgjengelig
+				//If the composite differs in terms of object number the custom address should be set (default false) 
+				$set_custom_address = false;
 				
-				// Store composite
-				if ($socomposite->store($composite)) {
+				//Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
+				$title = $socontract->get_responsibility_title(phpgw::get_var("location_id"));
+				
+				// Variable for the location code (objektnummer)
+				$loc1 = null;
+				
+				//Three columns for detemining the correct object number
+				$object_identifier = trim($this->decode($data[1]));		//cLeieobjektnr
+				$property_identifier = trim($this->decode($data[4]));		//cInstNr
+				$building_identifier = trim($this->decode($data[5]));		//cByggNr
+				
+				
+				if($title == 'contract_type_internleie')
+				{
+					$property_ok = false;
 					
-					$set_custom_address = false;
-					// Convert location code to the correct format, xxxx-xx-xx-xx...
-					$title = $socontract->get_responsibility_title(phpgw::get_var("location_id"));
-					
-					if($title == 'contract_type_internleie')
+					//Priority 1: The property identifier (most up to date)
+					if(isset($property_identifier))
 					{
-						$building_identifier = $this->decode($data[1]);								//cLeieobjektnr
-						$correct_length = strlen($building_identifier) == 6 ? true : false;
-						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
-						if($correct_length && $integer_value_property)
+						$correct_length_property = strlen($property_identifier) == 4 ? true : false;
+						$integer_value_property = ((int) $property_identifier) > 0 ? true : false;
+						if($correct_length_property && $integer_value_property)
 						{
-							$loc1 = substr_replace($building_identifier,"-",4,0);
-						} 
-						else 
-						{
-							//Give a warning
-							$loc1 = $building_identifier;
-							$set_custom_address = true;
-							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers. Setting custom address.";
+							$loc1 = $property_identifier;
+							$property_ok = true;
 						}
 					}
-					else if($title == 'contract_type_eksternleie')
-					{
-						$identifier = $this->decode($data[1]);										//cLeieobjektnr
-						$parts = explode('.',$identifier);
-						if(count($parts) == 2) // 4.4
+	
+					//Priority 2: Use the object identifier
+					if(isset($object_identifier))
+					{	
+						$correct_length = strlen($object_identifier) == 6 ? true : false;
+						$integer_value = ((int) $object_identifier) > 0 ? true : false;
+
+						if($correct_length && $integer_value)
 						{
-							//Should consist of two parts of four characters each: xxxx.xxxx
-							$correct_length1 = strlen($parts[0]) == 4 ? true : false;
-							$correct_length2 = strlen($parts[1]) == 4 ? true : false;
-							if($correct_length1 && $correct_length2)
+							if($property_ok)
 							{
-								$loc1 = substr_replace($identifier,"-",4,1);
+								 // ... add only the building number if the property number is ok
+								$loc1 = $loc1 . "-" . substr($object_identifier, 4, 2);
 							}
 							else
 							{
-								$loc1 = $this->decode($data[4]);									//cInstNr
-								$set_custom_address = true;
-								$this->warnings[] = "Composite (external contract) have wrong object-number ({$identifier}). Should consist of 2 parts xxxx.xxxx. Both of size 4. Using property number instead ({$loc1}). Setting custom address.";
-							}
-							
-						}
-						else if(count($parts) == 3) // 4.6.4
-						{
-							$building_identifier = $parts[1];
-							$correct_length = strlen($building_identifier) == 6 ? true : false;
-							$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
-							if($correct_length && $integer_value_property)
-							{
-								$loc1 = substr_replace($building_identifier,"-",4,0);
-								//$loc1 = $loc1 . "-" . $parts[2]; //Adding sequence number
-							}
-							else
-							{
-								//Give a warning
-								$loc1 = $identifier;
-								$set_custom_address = true;
-								$this->warnings[] = "Composite (external contract) has wrong object-number ({$loc1}). Should consist of 3 parts xxxx.xxxxxx.xxxx. The second part should be 6 numbers. Setting custom address.";
+								// ... just use the object identifier if not
+								$loc1 = substr_replace($object_identifier,"-",4,0);	
 							}
 						}
 						else
 						{
-							//Give a warning
-							$loc1 = $this->decode($data[4]);										//cInstNr
+							// Using non-conforming object identifier. Gives a warning.
+							$loc1 = $object_identifier;
 							$set_custom_address = true;
-							$this->warnings[] = "Composite (external contract) has wrong object-number ({$identifier}). Should consist of 2 (xxxx.xxxx) or 3 parts (xxxx.xxxxxx.xxxx). Using property number instead ({$loc1}). Setting custom address.";
+							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers. Setting custom address.";
 						}
 					}
-					else if($title == 'contract_type_innleie')
+					else if($property_ok)
 					{
-						$building_identifier = $this->decode($data[5]);								//cByggNr
-						$correct_length = strlen($building_identifier) == 6 ? true : false;
-						$integer_value_property = ((int) $building_identifier) > 0 ? true : false;
-						if($correct_length && $integer_value_property)
-						{
-							$loc1 = substr_replace($building_identifier,"-",4,0);
-						}
-						else // Use the property identifier if the building identifier is in wrong format
-						{
-							$property_identifier = $this->decode($data[4]);							//cInstNr
-							$correct_length = strlen($property_identifier) == 4 ? true : false;
-							if($correct_length)
-							{
-								$loc1 = $property_identifier;
-								$set_custom_address = true;
-								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}). Should consist of 6 numbers. Using property number instead ({$loc1}). Setting custom address.";
+						//If no object number, only property number
+						$set_custom_address = true;
+						$this->warnings[] = "Composite (internal contract) have no object-number ({$object_identifier}). Using property identifier. Setting custom address.";
+					}
+					
+					if(!isset($loc1))
+					{
+						// No data exist to determine the object number
+						$this->warnings[] = "No data exist to determine the object number. Setting custom address.";
+						$set_custom_address = true;
+					}
+				}
+				else if($title == 'contract_type_eksternleie')
+				{
+					// Two forms for object number (xxxx.xxxx) AND (xxxx.xxxxxx.xxxx)
+					$parts = explode('.',$object_identifier);
+					
+					for( $i = 0; $i < count($parts); $i++)
+					{
+						$parts[$i] = trim($parts[$i]);
+					}
+					
+					if(count($parts) == 2) // (xxxx.xxxx)
+					{	
+						//Checking parts for correct length
+						$correct_length1 = strlen($parts[0]) == 4 ? true : false;
+						$correct_length2 = strlen($parts[1]) == 4 ? true : false;
 						
+						if($correct_length1 && $correct_length2)
+						{	
+							//If the first part contains any characters from the alphabet
+							if(!is_numeric($parts[0]))
+							{
+								// ... relace the punctuation with an '-'
+								$loc1 = $parts[0] . "-" . $parts[1];
+							}
+						}
+					}
+					else if(count($parts) == 3) // (xxxx.xxxxxx.xxxx)
+					{
+						$correct_length = strlen($parts[1]) == 6 ? true : false;
+						$correct_length_property = strlen($property_identifier) == 4 ? true : false;
+						
+						if($correct_length && is_numeric($parts[1]))
+						{
+							if(isset($property_identifier) && $correct_length_property)
+							{
+								 // ... add only the building number if the property number is ok
+								$loc1 = $property_identifier . "-" . substr($parts[1], 4, 2);
 							}
 							else
 							{
-								$loc1 = $this->decode($data[1]);									//cLeieobjektnr
-								$set_custom_address = true;
-								$this->warnings[] = "Composite (innleie kontrakt) lacks building identifier ({$building_identifier}) and property identifier ({$property_identifier}). Should consist of 6 or 4 numbers. Using old identifier instead ({$loc1}). Setting custom address."; 
+								// ... insert a '-' at position 4 if not
+								$loc1 = substr_replace($parts[1],"-",4,0);
 							}
-						}		
-					}
-					else
-					{
-						$this->errors[] = "The type of import ({$title}) is invalid";
+						}
 					}
 					
-					if($set_custom_address)
+					// If the object identifier is non-conforming
+					
+					// Alernative 1: Try to use the buiding identifier 
+					if(!isset($loc1) && isset($building_identifier))
 					{
-						// Set address
-						$composite->set_custom_address_1($address1);
-						$composite->set_custom_address_2($this->decode($data[7]));
-						$composite->set_custom_postcode($this->decode($data[8]));
-						$composite->set_has_custom_address(true);
+						$correct_length = strlen($building_identifier) == 6 ? true : false;
+						if($correct_length && is_numeric($building_identifier))
+						{
+							$loc1 = substr_replace($building_identifier,"-",4,0);
+							$set_custom_address = true;
+							$this->warnings[] = "Composite (external) lacks conforming object number ({$object_identifier}). Using building identifier ({$loc1}). Setting custom address.";
+						}
+					} 
+						
+					// Alternative 2: Try to use the property identifier
+					if(!isset($loc1) && isset($property_identifier))
+					{
+						$correct_length = strlen($property_identifier) == 4 ? true : false;
+						if($correct_length)
+						{
+							//Give a warning
+							$loc1 = $property_identifier;
+							$set_custom_address = true;
+							$this->warnings[] = "Composite (external) lacks conforming object number ({$object_identifier}). Using property identifier ({$loc1}). Setting custom address.";
+						}	
 					}
+					
+					 // Alternative 3: Use the non-conforming object number	
+					if(!isset($loc1))
+					{
+						$loc1 = $object_identifier;
+						$set_custom_address = true;
+						$this->warnings[] = "Composite (external) lacks data to create an object number. Using object number ({$loc1}) Setting custom address.";
+					}
+				}
+				else if($title == 'contract_type_innleie')
+				{
+					$correct_length = strlen($building_identifier) == 6 ? true : false;
+					$integer_value = ((int) $building_identifier) > 0 ? true : false;
+					$correct_length_property = strlen($property_identifier) == 4 ? true : false;
+					if($correct_length && $integer_value)
+					{
+						if(isset($property_identifier) && $correct_length_property)
+						{
+							 // ... add only the building number if the property number is ok
+							$loc1 = $property_identifier . "-" . substr($building_identifier, 4, 2);
+						}
+						else
+						{
+							$loc1 = substr_replace($building_identifier,"-",4,0);
+							
+						}
+					}
+					else if(isset($property_identifier) && $correct_length_property)
+					{
+						 // ... add only the building number if the property number is ok
+						$loc1 = $property_identifier;
+						$set_custom_address = true;
+						$this->warnings[] = "Composite (innleie) has non-conforming building identifier ({$building_identifier}). Using property identifier instead ({$loc1}). Setting custom address.";
+					}
+					
+					if(!isset($loc1))
+					{
+						$loc1 = $object_identifier;								
+						$set_custom_address = true;
+						$this->warnings[] = "Composite (innleie) lacks building identifier/property identifier ({$building_identifier}/{$property_identifier}). Using object identifier instead ({$loc1}). Setting custom address."; 
+					}	
+				}
+				else
+				{
+					$this->errors[] = "The type of import ({$title}) is invalid";
+				}
+				
+				if($set_custom_address)
+				{
+					// Set address
+					$composite->set_custom_address_1($address1);
+					$composite->set_custom_address_2($this->decode($data[7]));
+					$composite->set_custom_postcode($this->decode($data[8]));
+					$composite->set_has_custom_address(true);
+				}
+
+				//Get 
+				$comps = $socomposite->get(0, 1, null, null, null, null, array('location_code' => $loc1));
+				
+				$composite = $comps[0];
+				
+				if(!isset($composite))
+				{
+				
+					$composite = new rental_composite();
+					
+					// Use the first address line as name if no name
+					$name = $this->decode($data[26]);		//cLeieobjektnavn
+					$address1 = $this->decode($data[6]);	//cAdresse1
+					if(!isset($name)){
+						$name = $address1;
+					}
+					
+					$composite->set_name($name);
+					$composite->set_description($this->decode($data[3]));		//cLeieobjektBeskrivelse
+	                $composite->set_object_type_id($this->decode($data[25]));	//nLeieobjektTypeId
+	                $composite->set_area($this->decode($data[2]));				//nMengde
+					$composite->set_is_active($data[19] == "-1");				//bTilgjengelig
+				
+					// Store composite
+					if ($socomposite->store($composite)) {
+						// Add composite to collection of composite so we can refer to it later.
+						$composites[$data[0]] = $composite->get_id();
 					
 					// Add units only if composite stored ok.
-					$sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
-					
-					// Add composite to collection of composite so we can refer to it later.
-					$composites[$data[0]] = $composite->get_id();
-					
-					$this->messages[] = "Successfully added composite " . $composite->get_name() . " (" . $composite->get_id() . ")";
-				} else {
-					$this->errors[] = "Failed to store composite " . $composite->get_name();
+						$res = $sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
+						$this->messages[] = "Successfully added composite " . $composite->get_name() . " (" . $composite->get_id() . ")";
+						if($res)
+						{
+							$this->messages[] = "Successfully added unit " . $loc1 . " to composite (" . $composite->get_id() . ")";
+						}
+						
+					} else {
+						$this->errors[] = "Failed to store composite " . $composite->get_name();
+					}
 				}
+				else
+				{
+					$this->messages[] = "Loaded already existing composite " . $composite->get_name() . " (" . $composite->get_id() . ") with ";
+					// Add composite to collection of composite so we can refer to it later.
+					$composites[$data[0]] = $composite->get_id();	
+				}
+				
+				
 			}
 			
 			$this->messages[] = "Successfully imported " . count($composites) . " composites (" . (time() - $start_time) . " seconds)";
@@ -511,6 +639,11 @@
 
 
 			foreach ($datalines as $data) {
+				if(count($data) <= 27)
+				{
+					continue;
+				}
+				
 				$contract = new rental_contract();
 				
 				// TODO: link this with previously imported rental party. 
@@ -639,6 +772,10 @@
 			
 			
 			foreach ($datalines as $data) {			//Felt fra 'PrisElementDetaljKontrakt'
+				if(count($data) <= 10)
+				{
+					continue;
+				}
 				$detail_price_items[$data[1]] = 	//Priselementid
 				array(
 					'price' => $data[2],			//nPris
@@ -658,6 +795,10 @@
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
 			
 			foreach ($datalines as $data) {
+				if(count($data) <= 24)
+				{
+					continue;
+				}
 				// Create new admin price item if one doesn't exist in the admin price list
 				// Add new price item to contract with correct reference from the $contracts array
 				// Remember fields from detail price item.
@@ -683,6 +824,7 @@
 					// This assumes 1 for AREA, and anything else for count, even blanks
 					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);		//nMengdeTypeId
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
+					$admin_price_item->set_responsibility_id(phpgw::get_var("location_id"));
 					
 					if(isset($id))
 					{
@@ -763,10 +905,10 @@
 					
 					// .. and save
 					if($socontract_price_item->import($price_item)) {
-                        $this->messages[] = "Successfully imported price item {$id} for contract {$contract_id}";
+                        $this->messages[] = "Successfully imported price item ({$id}) for contract {$contract_id}";
                     }
                     else {
-                        $this->warning[] = "Could not store price item {$id} - " . $price_item->get_title();
+                        $this->warning[] = "Could not store price item ({$id}) - " . $price_item->get_title();
                     }
 				} else {
 					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);

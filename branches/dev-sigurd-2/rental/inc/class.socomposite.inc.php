@@ -71,6 +71,10 @@ class rental_socomposite extends rental_socommon
 			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
 		}
 		
+		if(isset($filters['location_code'])){
+			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
+		}
+		
 		if(isset($filters['contract_id']))
 		{
 			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
@@ -101,7 +105,7 @@ class rental_socomposite extends rental_socommon
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
+		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
