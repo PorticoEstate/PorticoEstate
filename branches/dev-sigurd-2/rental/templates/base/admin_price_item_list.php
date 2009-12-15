@@ -104,6 +104,11 @@
 		  	sortable: true
 		},
 		{
+			key: "responsibility_title",
+			label: "<?php echo lang('responsibility') ?>",
+		  	sortable: true
+		},
+		{
 			key: "actions",
 			hidden: true
 		},

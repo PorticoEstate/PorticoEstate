@@ -22,7 +22,12 @@
 				}
 			?>
 		</dd>
-
+		<dt>
+			<label for="name"><?php echo lang('field_of_responsibility') ?></label>
+		</dt>
+		<dd>
+			<?php echo lang($price_item->get_responsibility_title()); ?>
+		</dd>
 		<dt>
 			<label for="agresso_id"><?php echo lang('agresso_id') ?></label>
 			<?php echo rental_uicommon::get_field_error($price_item, 'agresso_id') ?>

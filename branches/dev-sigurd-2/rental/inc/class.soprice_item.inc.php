@@ -31,7 +31,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT * FROM rental_price_item WHERE id = " . $id;
+		$sql = "SELECT rpi.*, type.title AS resp_title FROM rental_price_item rpi left join rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id) WHERE rpi.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -41,6 +41,7 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 		
 		return $price_item;
 	}
@@ -55,7 +56,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$title = (string)$title;
 		
-		$sql = "SELECT * FROM rental_price_item WHERE title LIKE '" . $title . "'";
+		$sql = "SELECT rpi.*, type.title AS resp_title FROM rental_price_item left join rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id) WHERE rpi.title LIKE '" . $title . "'";
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		
 		if ($this->db->next_record()) {
@@ -65,6 +66,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 			
 			return $price_item;
 		}
@@ -123,7 +125,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
-			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			
 			$results[] = $price_item;
 		}
@@ -200,7 +202,7 @@ class rental_soprice_item extends rental_socommon
 			($price_item->is_area() ? "true" : "false"),
 			($price_item->is_inactive() ? "true" : "false"),
 			str_replace(',','.',$price),
-			'\'' . $price_item->get_responsibility_id() . '\''
+			$price_item->get_responsibility_id()
 		);
 		
 		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price', 'responsibility_id');
@@ -231,7 +233,7 @@ class rental_soprice_item extends rental_socommon
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
 			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price()),
-			'responsibility_id = \'' . $price_item->get_responsibility_id() . '\''
+			'responsibility_id = ' . $price_item->get_responsibility_id()
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -380,7 +382,7 @@ class rental_soprice_item extends rental_socommon
 			$filter_clauses[] = "NOT is_inactive";
 		}
 		if(isset($filters['responsibility_id'])){
-			$filter_clauses[] = "responsibility_id='" . $filters['responsibility_id'] . "'";
+			$filter_clauses[] = "responsibility_id=" . $filters['responsibility_id'];
 		}
 		
 		if(count($filter_clauses))
@@ -392,15 +394,16 @@ class rental_soprice_item extends rental_socommon
 		
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$cols = 'COUNT(DISTINCT(rpi.id)) AS count';
 		}
 		else
 		{
-			$cols = '*';
+			$cols = 'rpi.*, type.title AS resp_title';
 		}
 		
-		$tables = "rental_price_item";
-		$joins = '';
+		$tables = "rental_price_item rpi";
+		$join_responsibility = 	$this->left_join.' rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id)';
+		$joins = $join_responsibility;
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -415,7 +418,8 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
-			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 		}
 		return $price_item;
 	}

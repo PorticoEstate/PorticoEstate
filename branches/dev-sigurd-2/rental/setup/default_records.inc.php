@@ -286,7 +286,7 @@ $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterl
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
 
-$oProc->query("INSERT INTO rental_price_item (id,title, agresso_id, is_area,is_inactive,price,responsibility_id) VALUES (0,'Unknown', 'UNKNOWN', false,false, 0, 'UNKNOWN')");
+$oProc->query("INSERT INTO rental_price_item (id,title, agresso_id, is_area,is_inactive,price,responsibility_id) VALUES (0,'Unknown', 'UNKNOWN', false,false, 0, 0)");
 
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('contracts')");
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
