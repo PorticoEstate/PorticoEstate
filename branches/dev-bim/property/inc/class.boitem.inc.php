@@ -27,7 +27,7 @@
             return (int) $this->installed_date;
         }
 
-        public function set_group(property_group $group)
+        public function set_group(property_bogroup $group)
         {
             $this->group = $group;
         }

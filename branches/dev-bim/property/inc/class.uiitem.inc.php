@@ -21,7 +21,7 @@
 
         function index()
         {
-            $datatable = $this->so->get_items();
+            $datatable = $this->so->get();
             $datatable = $this->so->populate($datatable);
 /*
             phpgwapi_yui::load_widget('datatable');

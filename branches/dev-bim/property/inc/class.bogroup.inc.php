@@ -7,7 +7,7 @@
      */
     class property_bogroup extends property_boattribute_owner
     {
-        private $name, $bpn, $nat_group_no;
+        private $name, $bpn, $nat_group_no, $catalog;
 
         public function __construct()
         {
@@ -42,6 +42,16 @@
         public function set_nat_group_no($nat_group_no)
         {
             $this->nat_group_no = $nat_group_no;
+        }
+
+        public function get_catalog()
+        {
+            return $this->catalog;
+        }
+
+        public function set_catalog(property_bocatalog $catalog)
+        {
+            $this->catalog = $catalot;
         }
 
 
