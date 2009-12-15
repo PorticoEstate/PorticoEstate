@@ -381,7 +381,8 @@
 				'fd' => array(
 					'id' =>                 array('type' => 'auto', 'nullable' => false),
 					'label'	=>              array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-					'responsibility_id' =>  array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'responsibility_id' =>  array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'account' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(

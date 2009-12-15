@@ -263,9 +263,9 @@ $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) 
 $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'Investeringskontrakt', 1)");
 $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'KF', 1)");
 $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'Andre', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (6, 'Feste', 3)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (7, 'Leilighet', 3)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (8, 'Annen', 3)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'Feste', 3, '1520')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'Leilighet', 3, '1530')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'Annen', 3, '1510')");
 
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
