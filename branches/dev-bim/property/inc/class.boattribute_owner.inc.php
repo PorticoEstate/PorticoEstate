@@ -3,29 +3,27 @@
      * Description of classboattrobjectinc
      *
      * @author Espen
+     * @abstract
      */
-    class property_boattribute_owner
+    abstract class property_boattribute_owner
     {
-        private $attributes;
-
+        protected $attributes;
 
         /**
          * Set the value of a given attribute.
          * If used on a group the attribute will be added if not already existing
-         * and (default) value will be set to new value.
+         * and (default) value will be set.
          * 
          * If used on an item it will override the value set by the group.
          * Attributes not already set on the group, however, cannot be set on
          * an item and will return false.
          *
+         * @abstract
          * @param string $attr_def
          * @param mixed $attr_value
          * @return bool FALSE if failed, TRUE otherwise.
          */
-        public function set_attribute($attr_def, $attr_value)
-        {
-            
-        }
+        public abstract function set_attribute($attr_def, $attr_value);
 
 
         /**
@@ -36,7 +34,7 @@
          */
         public function get_attribute($attr_def)
         {
-            
+            return (isset($this->attributes[$attr_def]) ? $this->attributes[$attr_def] : null);
         }
 
 
@@ -60,12 +58,9 @@
          * If used on an item it will only be removed from the item, which will
          * then inherit the attribute from the group it belongs to.
          *
+         * @abstract
          * @param string $attr_def
-         * @return void
          */
-        public function remove_attribute($attr_def)
-        {
-            
-        }
+        public abstract function remove_attribute($attr_def);
     }
 
