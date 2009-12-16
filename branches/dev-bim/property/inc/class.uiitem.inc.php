@@ -14,7 +14,7 @@
 
         function __construct()
         {
-            $this->so = new property_soitem();
+            $this->so = property_soitem::singleton();
         }
 
 
