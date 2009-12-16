@@ -29,7 +29,7 @@ class rental_uiprice_item extends rental_uicommon
 
 	public function index()
 	{
-		if(!$this->isAdministrator())
+		if(!$this->isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -42,7 +42,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function view()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -57,7 +57,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function edit()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -90,7 +90,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function add()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
