@@ -115,6 +115,7 @@
 				{
 					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
 					{
+						// adding allowed contract_types for context menu creation
 						$create_types[] = array($id, $label);
 					}
 				}
