@@ -1,5 +1,8 @@
 <?php
 
+include_class('property', 'sogroup', 'inc/');
+include_class('property', 'boitem', 'inc/');
+
     /**
      * Description of soitem
      *
@@ -40,12 +43,7 @@
                 'i.group_id',
                 'i.location_id',
                 'i.vendor_id',
-                'i.installed'/*,
-                'g.name',
-                'g.nat_group_no AS ngno',
-                'g.bpn',
-                'g.parent_group',
-                'g.catalog_id'*/);
+                'i.installed');
             $from_tables = array('property_item i');
             $joins = array(
                 //$this->db->left_join.' property_group g ON i.group_id = g.id',
@@ -72,11 +70,6 @@
                 $items[$i]['location_id']    = $this->db->f('location_id');
                 $items[$i]['vendor_id']      = $this->db->f('vendor_id');
                 $items[$i]['installed_date'] = $this->db->f('installed');
-                /*$items[$i]['group_name']   = $this->db->f('name');
-                $items[$i]['group_ngno']     = $this->db->f('ngno');
-                $items[$i]['group_bpn']      = $this->db->f('bpn');
-                $items[$i]['group_parent']   = $this->db->f('parent_group');
-                $items[$i]['group_catalog_id'] = $this->db->f('catalog_id');*/
 
                 $i++;
             }
@@ -99,12 +92,12 @@
             }
 
             $return_objects = array();
-            $sogroup = property_sogroup::get_instance();
+            $sogroup = property_sogroup::singleton();
 
             foreach($items as $item)
             {
                 $item_obj = new property_boitem($items['installed_date']);
-                $item_obj->set_group($sogroup->get_group(null, null, $item['group_id']));
+                $item_obj->set_group($sogroup->get($item['group_id']));
 
                 $return_objects[] = $item_obj;
             }
