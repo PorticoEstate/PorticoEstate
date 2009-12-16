@@ -10,7 +10,7 @@
         protected $attributes;
 
         /**
-         * Set the value of a given attribute.
+         * Set the value-object of a given attribute.
          * If used on a group the attribute will be added if not already existing
          * and (default) value will be set.
          * 
@@ -20,10 +20,10 @@
          *
          * @abstract
          * @param string $attr_def
-         * @param mixed $attr_value
+         * @param property_boattribute $attr
          * @return bool FALSE if failed, TRUE otherwise.
          */
-        public abstract function set_attribute($attr_def, $attr_value);
+        public abstract function set_attribute($attr_def, property_boattribute $attr);
 
 
         /**
@@ -34,7 +34,7 @@
          */
         public function get_attribute($attr_def)
         {
-            return (isset($this->attributes[$attr_def]) ? $this->attributes[$attr_def] : null);
+            return ($this->attributes[$attr_def] instanceof property_boattribute ? $this->attributes[$attr_def] : null);
         }
 
 
