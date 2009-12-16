@@ -370,9 +370,13 @@ class rental_soprice_item extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
+		if($sort_field == 'responsibility_title'){
+			$sort_field = 'responsibility_id';
+		}
 		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
 		
 		$filter_clauses = array();
+		$filter_clauses[] = "responsibility_id > 0";
 		
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
