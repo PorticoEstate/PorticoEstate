@@ -208,7 +208,7 @@ class rental_soprice_item extends rental_socommon
 		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'price', 'responsibility_id');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
-		var_dump($q);
+		
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_price_item", 'id');
 		

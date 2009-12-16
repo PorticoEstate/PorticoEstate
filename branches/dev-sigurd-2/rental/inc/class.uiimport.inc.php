@@ -29,6 +29,7 @@
 		
 		// File system path to import folder on server
 		protected $path;
+		protected $location_id;
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -44,7 +45,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('import');
-			set_time_limit(3000); //Set the time limit for this request oto 3000 seconds
+			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
 		}
 		
 		/**
@@ -74,17 +75,53 @@
 				// Get the path for user input or use a default path
 				$this->path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
 				phpgwapi_cache::session_set('rental', 'import_path', $this->path);
-				phpgwapi_cache::session_set('rental', 'import_path_folder','/Ekstern');
-				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				$location_id = array_search('contract_type_eksternleie', $types);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_eksternleie', 'location_id' => $location_id));
+				//phpgwapi_cache::session_set('rental', 'import_path_folder','/Ekstern');
+				//$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+				//$location_id = array_search('contract_type_eksternleie', $types);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'true'));
 			} 
 			else if(phpgw::get_var("importstep"))
 			{
-				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . phpgwapi_cache::session_get('rental', 'import_path_folder');
-				$result = $this->import(); // Do import step, result determines if finished for this area
+				echo "<ul>";
+				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+				$this->location_id = array_search('contract_type_eksternleie', $types);
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Ekstern';
 				
-				if(phpgw::get_var("importstep") == 'contract_type_eksternleie' && $result == '6') {
+				$result = $this->import(); // Do import step, result determines if finished for this area
+				echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
+				while($result != '6')
+				{
+					$result = $this->import();
+					echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
+					flush();
+				}
+				
+				$this->location_id = array_search('contract_type_internleie', $types);
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Intern';
+				
+				$result = $this->import(); // Do import step, result determines if finished for this area
+				echo '<li class="info">Internleie: finished step ' .$result. '</li>';
+				while($result != '6')
+				{
+					$result = $this->import();
+					echo '<li class="info">Internleie: finished step ' .$result. '</li>';
+					flush();
+				}
+				
+				$this->location_id = array_search('contract_type_innleie', $types);
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Innleie';
+				
+				$result = $this->import(); // Do import step, result determines if finished for this area
+				echo '<li class="info">Innleie: finished step ' .$result. '</li>';
+				while($result != '6')
+				{
+					$result = $this->import();
+					echo '<li class="info">Innleie: finished step ' .$result. '</li>';
+					flush();
+				}
+				echo "</ul>";
+				
+				/*if(phpgw::get_var("importstep") == 'contract_type_eksternleie' && $result == '6') {
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$location_id = array_search('contract_type_internleie', $types);
 					phpgwapi_cache::session_set('rental', 'import_path_folder','/Intern');
@@ -132,7 +169,7 @@
 					//flush();
 					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => phpgw::get_var("importstep"), 'location_id' => phpgw::get_var("location_id")));	
 					return;
-				}	
+				}	*/
 			}
 			
 			//Render import page
@@ -142,7 +179,7 @@
 				'errors' => $this->errors, 
 				'button_label' => $this->import_button_label,
 				'facilit_path' => $path,
-				'location_id' => phpgw::get_var("location_id"))
+				'location_id' => $this->location_id)
 			);
 		}
 		
@@ -157,6 +194,7 @@
 		 */
 		public function import()
 		{
+					
 			$steps = 6;
 			
 			/* Import logic:
@@ -207,7 +245,7 @@
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
 				$parties = phpgwapi_cache::session_get('rental', 'facilit_parties');
-				$location_id = phpgw::get_var("location_id");
+				$location_id = $this->location_id;
 				$defalt_values['account_in'] = rental_socontract::get_instance()->get_default_account($location_id, true); //IN
 				$defalt_values['account_out'] = rental_socontract::get_instance()->get_default_account($location_id, false); //OUT
 				$defalt_values['project_number'] = rental_socontract::get_instance()->get_default_project_number($location_id); //PROJECTNUMBER
@@ -401,7 +439,7 @@
 				$set_custom_address = false;
 				
 				//Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
-				$title = $socontract->get_responsibility_title(phpgw::get_var("location_id"));
+				$title = $socontract->get_responsibility_title($this->location_id);
 				
 				// Variable for the location code (objektnummer)
 				$loc1 = null;
@@ -768,7 +806,7 @@
 				$contract->set_service_id($ansvar_tjeneste_components[1]);
 				
 				// Set the location ID according to what the user selected
-				$contract->set_location_id(phpgw::get_var("location_id"));
+				$contract->set_location_id($this->location_id);
 
 
                 $composite_id = $composites[$rentalobject_to_contract[$data[0]]];
@@ -889,7 +927,7 @@
 					// This assumes 1 for AREA, and anything else for count, even blanks
 					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);		//nMengdeTypeId
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					$admin_price_item->set_responsibility_id(phpgw::get_var("location_id"));
+					$admin_price_item->set_responsibility_id($this->location_id);
 					
 					if(isset($id))
 					{
@@ -1000,7 +1038,7 @@
 				if ($type_id != 1 && $type_id != '1' && !$this->is_null($data[3])) {
 					$date = strtotime($this->decode($data[7]));
 					$contract_id = $contracts[$data[1]];
-					$location_id = phpgw::get_var("location_id");
+					$location_id = $this->location_id;
 					
 					$title = $this->decode($data[3]);
 					if (!$this->is_null($data[4])) {
