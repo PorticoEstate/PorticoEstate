@@ -122,16 +122,6 @@
 			<option value="non_active" <?php echo ($status == 'non_active') ? 'selected' : ''?>><?php echo lang('out_of_operation') ?></option>
 			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
 		</select>
-		<?
-		/* XXX: Why is this included? Have we ever checked for available composites?
-		<label for="ctrl_toggle_occupancy_of_rental_composites"><?php echo lang('and') ?></label>
-		<select name="occupancy" id="<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites">
-			<option value="vacant"><?php echo lang('vacant') ?></option>
-			<option value="occupied"><?php echo lang('occupied') ?></option>
-			<option value="both"><?php echo lang('all') ?></option>
-		</select>
-		*/
-		?>
 	</fieldset>
 </form>
 <?php
