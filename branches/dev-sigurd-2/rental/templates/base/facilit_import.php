@@ -14,7 +14,7 @@
 <form action="index.php?menuaction=rental.uiimport.index" method="post">
 	<fieldset>
 		<label for="path">Path to facilit dump:</label> <input type="text" name="facilit_path" id="facilit_path" value="<?php echo $facilit_path ?>" size="60"/>
-		<label for="path">Location for the imported contracts:</label>
+		<!-- <label for="path">Location for the imported contracts:</label>
 		<select name="location_id" id="location_id">
 			<?php
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -33,12 +33,14 @@
 				}
 			}
 			?>
-		</select>
+		</select>-->
 		<input type="submit" name="importsubmit" value="<?php echo $button_label; ?>" <?php if ($button_label == "Import done") { echo ' disabled="disabled"'; } ?> />
+		 
 	</fieldset>
-	<fieldset>
+	<!-- <fieldset>
 		<input type="submit" name="cancelsubmit" value="<?php echo lang('import_reset'); ?>" />
 	</fieldset>
+	 -->
 	
 	<?php if ($messages || $warnings || $errors) { ?>
 		<h2><?php echo lang('import_log_messages') ?></h2>

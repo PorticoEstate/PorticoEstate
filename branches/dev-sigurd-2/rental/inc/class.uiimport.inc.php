@@ -44,49 +44,98 @@
 		{
 			parent::__construct();
 			self::set_active_menu('import');
-			set_time_limit(3000);
-			
-            /*if (!phpgwapi_cache::session_get('rental', 'msgarchive')) {
-                $this->msgarchive = array(date().': Import started');
-                phpgwapi_cache::session_set('rental', 'msgarchive', $this->msgarchive);
-            }
-            else {
-                $this->msgarchive = phpgwapi_cache::session_get('rental', 'msgarchive');
-            }*/
+			set_time_limit(3000); //Set the time limit for this request oto 3000 seconds
 		}
 		
+		/**
+		 * Dummy method
+		 * @see rental/inc/rental_uicommon#query()
+		 */
 		public function query()
 		{
 			// Do nothing
 		}
 
+		/**
+		 * Public method. 
+		 * 
+		 * @return unknown_type
+		 */
 		public function index()
 		{
 			setlocale(LC_ALL, 'no_NO');
 			
 			// Set the submit button label to its initial state
 			$this->import_button_label = "Start import";
-			
-			$path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
-			if (phpgw::get_var("importsubmit")) {
-				$this->path = $path;
-				$this->messages = array();
-				$this->warnings = array();
-				$this->errors = array();
-				$result = $this->import($path);
-			} else if (phpgw::get_var("cancelsubmit")) {
-				// User cancelled import, clear session variables so we're ready to start over
-				phpgwapi_cache::session_clear('rental', 'facilit_parties');
-				phpgwapi_cache::session_clear('rental', 'facilit_composites');
-				phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
-				phpgwapi_cache::session_clear('rental', 'facilit_contracts');
-				phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
-				phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
-				phpgwapi_cache::session_clear('rental', 'facilit_events');
+
+			// If the parameter 'importsubmit' exist (submit button in import form), set path
+			if (phpgw::get_var("importsubmit")) 
+			{
+				// Get the path for user input or use a default path
+				$this->path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
+				phpgwapi_cache::session_set('rental', 'import_path', $this->path);
+				phpgwapi_cache::session_set('rental', 'import_path_folder','/Ekstern');
+				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+				$location_id = array_search('contract_type_eksternleie', $types);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_eksternleie', 'location_id' => $location_id));
+			} 
+			else if(phpgw::get_var("importstep"))
+			{
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . phpgwapi_cache::session_get('rental', 'import_path_folder');
+				$result = $this->import(); // Do import step, result determines if finished for this area
 				
-				$this->messages = array("Import reset");
+				if(phpgw::get_var("importstep") == 'contract_type_eksternleie' && $result == '6') {
+					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+					$location_id = array_search('contract_type_internleie', $types);
+					phpgwapi_cache::session_set('rental', 'import_path_folder','/Intern');
+					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
+					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
+					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_internleie', 'location_id' => $location_id));
+					return;
+				} 
+				else if(phpgw::get_var("importstep") == 'contract_type_internleie' && $result == '6') 
+				{
+					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+					$location_id = array_search('contract_type_innleie', $types);
+					phpgwapi_cache::session_set('rental', 'import_path_folder','/Innleie');
+					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
+					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
+					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_innleie', 'location_id' => $location_id));
+					return;
+				} 
+				else if(phpgw::get_var("importstep") == 'contract_type_innleie' && $result == '6')
+				{
+					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
+					$import_messages[] = "Import finished";
+					$this->messages = $import_messages;
+				}
+				else
+				{
+					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
+					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
+					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
+					$url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => phpgw::get_var("importstep"), 'location_id' => phpgw::get_var("location_id")));	
+					$header = lang('facilit_import');
+					$p = RENTAL_TEMPLATE_PATH;
+					echo "<html>\n<head>\n<title>Import fra Facilit</title>";
+					echo "\n<meta http-equiv=\"refresh\" content=\"0; URL=$url\">";
+					echo "\n</head>\n<body>";
+					echo "<h1><img src='{$p}images/32x32/actions/document-save.png' /> {$header}</h1>";
+					echo "<ul>";
+					foreach ($import_messages as $message) {
+						echo '<li class="info">' . $message . '</li>';
+					}
+					echo "</ul>";
+					echo "\n</body>\n</html>";
+					//flush();
+					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => phpgw::get_var("importstep"), 'location_id' => phpgw::get_var("location_id")));	
+					return;
+				}	
 			}
 			
+			//Render import page
 			$this->render('facilit_import.php', array(
 				'messages' => $this->messages,
 				'warnings' => $this->warnings,
@@ -101,7 +150,7 @@
 		 * Import Facilit data to Portico Estate's rental module
 		 * The function assumes CSV files have been uploaded to a location on the server reachable by the
 		 * web server user.  The CSV files must correspond to the table names from Facilit, as exported
-		 * from Access.  Field should be enclosed in single quotes and separated by comma.  The CSV files
+		 * from Access. Field should be enclosed in single quotes and separated by comma.  The CSV files
 		 * must contain the column headers on the first line.
 		 * 
 		 * @return unknown_type
@@ -109,38 +158,51 @@
 		public function import()
 		{
 			$steps = 6;
-			// TODO: For each import type, check what we need as a minimum information for each before saving
 			
-			// TODO: Remove after testing
-			//phpgwapi_cache::session_set('rental', 'facilit_parties', true);
-			//phpgwapi_cache::session_set('rental', 'facilit_composites', true);
+			/* Import logic:
+			 * 
+			 * 1. Do step logic if the session variable is not set
+			 * 2. Set step result on session
+			 * 3. Set label for import button
+			 * 4. Log messages for this step
+			 *  
+			 */
+			
+			$this->messages = array();
+			$this->warnings = array();
+			$this->errors = array();
 			
 			
-			// Import rental parties
+			// Import contract parts
+			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_parties')) {
-				phpgwapi_cache::session_set('rental', 'facilit_parties', $this->import_parties());
+				phpgwapi_cache::session_set('rental', 'facilit_parties', $this->import_parties()); 
 				$this->import_button_label = "2/{$steps}: Continue to import composites";
                 $this->log_messages(1);
-				return;
+				return '1';
 			}
 			
 			// Import composites and units
+			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_composites')) {
 				phpgwapi_cache::session_set('rental', 'facilit_composites', $this->import_composites());
 				$this->import_button_label = "3/{$steps}: Continue to import composite-to-contract link table";
                 $this->log_messages(2);
-				return;
+				return '2';
 			}
 			
 			// Import composite to contract link table.  Assumes 1-1 link.
+			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')) {
 				phpgwapi_cache::session_set('rental', 'facilit_rentalobject_to_contract', $this->import_rentalobject_to_contract());
 				$this->import_button_label = "4/{$steps}: Continue to import contracts";
                 $this->log_messages(3);
-				return;
+				return '3';
 			}
 			
 			// Import contracts
+			// Prerequisites: Composites, parties, contract to composite bindings, and default values for accounts/project number for 
+			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contracts')) {
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
@@ -152,29 +214,23 @@
 				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties, $defalt_values));
 				$this->import_button_label = "5/{$steps}: Continue to import contract price items";
                 $this->log_messages(4);
-				return;
+				return '4';
 			}
 			
 			// Import price items
+			// Prerequisites: Contracts
+			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contract_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
 				$this->import_button_label = "6/{$steps}: Continue to import events"; 
                 $this->log_messages(5);
-				return;
+				return '5';
 			}
 			
-			// Import price items - This information should not be imported
-			/*if (!phpgwapi_cache::session_get('rental', 'facilit_composite_price_items')) {
-				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
-				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
-				phpgwapi_cache::session_set('rental', 'facilit_composite_price_items', $this->import_composite_price_items($contracts, $rentalobject_to_contract));
-				$this->import_button_label = "7/{$steps}: Continue to import events";
-                $this->log_messages(6);
-				return;
-			}*/
-			
 			// Import events
+			// Prerequistes: Contracts
+			// Step result
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
@@ -183,15 +239,15 @@
 				$this->import_button_label = "Import done";
 				//return;
 			}
-			
+
 			// We're done with the import, so clear all session variables so we're ready for a new one
 			//phpgwapi_cache::session_clear('rental', 'facilit_parties');
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
-			//phpgwapi_cache::session_clear('rental', 'facilit_composite_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_facilit_events');
+			return '6';
 		}
 		
 		protected function import_parties()
@@ -538,56 +594,56 @@
 				//$comps = $socomposite->get(0, 1, null, null, null, null, array('location_code' => $loc1));
 				//$composite = $comps[0];
 				
-				if(!isset($composite))
-				{
+				//if(!isset($composite))
+				//{
 				
-					$composite = new rental_composite();
-					
-					// Use the first address line as name if no name
-					$name = $this->decode($data[26]);		//cLeieobjektnavn
-					$address1 = $this->decode($data[6]);	//cAdresse1
-					if(!isset($name)){
-						$name = $address1;
-					}
-					
-					if($set_custom_address)
-					{
-						// Set address
-						$composite->set_custom_address_1($address1);
-						$composite->set_custom_address_2($this->decode($data[7]));
-						$composite->set_custom_postcode($this->decode($data[8]));
-						$composite->set_has_custom_address(true);
-					}
-					
-					$composite->set_name($name);
-					$composite->set_description($this->decode($data[3]));		//cLeieobjektBeskrivelse
-	                $composite->set_object_type_id($this->decode($data[25]));	//nLeieobjektTypeId
-	                $composite->set_area($this->decode($data[2]));				//nMengde
-					$composite->set_is_active($data[19] == "-1");				//bTilgjengelig
+				$composite = new rental_composite();
 				
-					// Store composite
-					if ($socomposite->store($composite)) {
-						// Add composite to collection of composite so we can refer to it later.
-						$composites[$data[0]] = $composite->get_id();
-					
-					// Add units only if composite stored ok.
-						$res = $sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
-						$this->messages[] = "Successfully added composite " . $composite->get_name() . " (" . $composite->get_id() . ")";
-						if($res)
-						{
-							$this->messages[] = "Successfully added unit " . $loc1 . " to composite (" . $composite->get_id() . ")";
-						}
-						
-					} else {
-						$this->errors[] = "Failed to store composite " . $composite->get_name();
-					}
+				// Use the first address line as name if no name
+				$name = $this->decode($data[26]);		//cLeieobjektnavn
+				$address1 = $this->decode($data[6]);	//cAdresse1
+				if(!isset($name)){
+					$name = $address1;
 				}
+				
+				if($set_custom_address)
+				{
+					// Set address
+					$composite->set_custom_address_1($address1);
+					$composite->set_custom_address_2($this->decode($data[7]));
+					$composite->set_custom_postcode($this->decode($data[8]));
+					$composite->set_has_custom_address(true);
+				}
+				
+				$composite->set_name($name);
+				$composite->set_description($this->decode($data[3]));		//cLeieobjektBeskrivelse
+                $composite->set_object_type_id($this->decode($data[25]));	//nLeieobjektTypeId
+                $composite->set_area($this->decode($data[2]));				//nMengde
+				$composite->set_is_active($data[19] == "-1");				//bTilgjengelig
+			
+				// Store composite
+				if ($socomposite->store($composite)) {
+					// Add composite to collection of composite so we can refer to it later.
+					$composites[$data[0]] = $composite->get_id();
+				
+					// Add units only if composite stored ok.
+					$res = $sounit->store(new rental_unit(null, $composite->get_id(), new rental_property_location($loc1, null)));
+					$this->messages[] = "Successfully added composite " . $composite->get_name() . " (" . $composite->get_id() . ")";
+					if($res)
+					{
+						$this->messages[] = "Successfully added unit " . $loc1 . " to composite (" . $composite->get_id() . ")";
+					}
+					
+				} else {
+					$this->errors[] = "Failed to store composite " . $composite->get_name();
+				}
+				/*}
 				else
 				{
 					$this->messages[] = "Loaded already existing composite " . $composite->get_name() . " (" . $composite->get_id() . ") with ";
 					// Add composite to collection of composite so we can refer to it later.
 					$composites[$data[0]] = $composite->get_id();	
-				}
+				}*/
 				
 				
 			}
@@ -612,6 +668,14 @@
 			return $rentalobject_to_contract;
 		}
 		
+		/**
+		 * Step 4: import the contracts from the file 'u_Kontrakt.csv'
+		 * @param $composites	array mapping facilit ids and protico ids for composites
+		 * @param $rentalobject_to_contract	array mapping composites and contracts
+		 * @param $parties	array
+		 * @param $default_values
+		 * @return unknown_type
+		 */
 		protected function import_contracts($composites, $rentalobject_to_contract, $parties, $default_values)
 		{
 			$start_time = time();
@@ -921,141 +985,6 @@
             return true;
 		}
 		
-		protected function import_composite_price_items($contracts, $rentalobject_to_contract)
-		{
-			$start_time = time();
-			$soprice_item = rental_soprice_item::get_instance();
-			$socontract_price_item = rental_socontract_price_item::get_instance();
-			$socontract = rental_socontract::get_instance();
-			
-			// Read priselementdetaljkontrakt list first so we can create our complete price items in the next loop
-			// This is an array keyed by the main price item ID
-			$detail_price_items = array();
-			
-			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljLeieobjekt.csv");
-			
-			foreach ($datalines as $data) {
-				$detail_price_items[$data[1]] = 	//nPrisElementId
-				array(
-					'price' => $data[2],			//nPris
-					'amount' => $data[3],			//nMengde
-					'date_start' => null			//dGjelderFra
-				);
-				
-				if (!$this->is_null($data[4])) {
-					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
-				}
-			}
-			
-			$datalines = $this->getcsvdata($this->path . "/u_PrisElementLeieobjekt.csv");
-			foreach ($datalines as $data) {
-				
-				// The Agresso-ID is unique for price items
-				$id = $this->decode($data[11]);									//cVarenr
-				
-				$admin_price_item = null;
-				
-				if(isset($id))
-				{
-					$admin_price_item = $soprice_item->get_single_with_id($id);
-				}
-				
-				$facilit_id = $this->decode($data[0]);							//nPrisElementId
-				
-				// Create a new admin price item, store it if it har a new unique agresso-id. First price item with unique 
-				// agresso-id determines title, area or "nr of items", and the price (from the price item details)
-				if ($admin_price_item == null) {
-					$admin_price_item = new rental_price_item();
-					$admin_price_item->set_title($this->decode($data[2]));								//cPrisElementNavn
-					$admin_price_item->set_agresso_id($id);												//cVareNr
-					// This assumes 1 for AREA, and anything else for count, even blanks
-					$admin_price_item->set_is_area($this->decode($data[3]) == '1' ? true : false);		//nMengdeTypeId
-					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
-					
-					if(isset($id))
-					{
-						$soprice_item->store($admin_price_item);
-						$this->messages[] = "Stored price item {$id} with title " . $admin_price_item->get_title() . " in 'Prisbok'";
-					}
-				}
-				
-				
-				//TODO: Document this snippet
-				$contract_id = null;
-				$decoded_data_1 = $this->decode($data[1]);		//nLeieobjektId
-				foreach ($rentalobject_to_contract as $facilit_contract_id => $facilit_composite_id) {
-					if ($facilit_composite_id == $decoded_data_1) {
-						$contract_id = $facilit_contract_id;
-					}
-				}
-				$contract_id = $contracts[$contract_id];
-				
-				if ($contract_id) {
-					
-					$contract = $socontract->get_single($contract_id);
-					
-					// Create a new contract price item that we can tie to our contract
-					$price_item = new rental_contract_price_item();
-					
-					// Copy fields from admin price item first
-					$price_item->set_title($admin_price_item->get_title());
-					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
-					$price_item->set_is_area($admin_price_item->is_area());
-					$price_item->set_price($admin_price_item->get_price());
-					
-					// Tie this price item to its parent admin price item
-					$price_item->set_price_item_id($admin_price_item->get_id());
-					
-					if ($admin_price_item->is_area()) {
-                            $rented_area = $contract->get_rented_area();
-                            if(isset($rented_area))
-                            {
-                            	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
-                            	{
-                            		$this->warning[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
-                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract." ;
-                            	}
-                            }
-                            else
-                            {
-                            	//Store price item area on contract if the contract has no area (not from contract)
-                            	$contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
-                            	//Store the contract
-                           		$socontract->store($contract);
-                            }
-              
-                        	
-                        	// Set the the contract area on the price item
-                            $price_item->set_area($contract->get_rented_area());
-
-                            //Calculate the total price for the price item
-                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
-                       
-					} 
-					else 
-					{
-						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
-						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
-					}
-					
-					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
-					
-					// Tie the price item to the contract it belongs to
-					$price_item->set_contract_id($contract_id);
-					// .. and save
-					$socontract_price_item->import($price_item);
-					$this->messages[] = "Successfully imported price item {$id}" . $price_item->get_title();
-				} else {
-					$this->warnings[] = "Skipped price item  with no contract attached: " . join(", ", $data);
-				}
-				
-			}
-			
-			$this->messages[] = "Imported composite price items. (" . (time() - $start_time) . " seconds)";
-
-			return true;
-		}
-		
 		protected function import_events($contracts)
 		{
 			$start_time = time();
@@ -1177,7 +1106,7 @@
 
         private function log_messages($step) {
             $msgs = array_merge($this->errors, $this->warnings, $this->messages);
-            $path = phpgw::get_var("facilit_path");
+            $path = $this->path;
 
             if(is_dir($path.'/logs') || mkdir($path.'/logs')) {
                 file_put_contents("$path/logs/$step.log", implode(PHP_EOL, $msgs));
