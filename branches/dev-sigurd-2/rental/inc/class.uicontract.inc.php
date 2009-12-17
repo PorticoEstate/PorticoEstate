@@ -338,6 +338,9 @@
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					$old_rented_area = $contract->get_rented_area();
 					$new_rented_area = phpgw::get_var('rented_area');
+					if(!isset($new_rented_area)){
+						$new_rented_area = 0;
+					}
 					if($old_rented_area != $new_rented_area){
 						$update_price_items = true;
 					}
