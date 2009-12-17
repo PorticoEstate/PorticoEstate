@@ -40,6 +40,7 @@
 		'currentapp'	=> 'login', // To stop functions.inc.php from validating the session
 	);
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
 	include_once('../header.inc.php');
 
 	// Make sure we're always logged in
