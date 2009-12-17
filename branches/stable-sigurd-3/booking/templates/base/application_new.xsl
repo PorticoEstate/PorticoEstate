@@ -6,8 +6,8 @@
 	<xsl:call-template name="yui_booking_i18n"/>
 
 	<form action="" method="POST" id='application_form'>
-		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></div>
+		<dl class="form-2col">
+			<div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -25,12 +25,40 @@
 			</dd>
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
-				<textarea id="field_description" class="threecol-width" name="description"><xsl:value-of select="application/description"/></textarea>
+				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
+			</dd>
+		</dl>
+		<dl class="form-col">
+			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
+			<dd>
+				<table id="agegroup">
+					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
+					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
+					<xsl:for-each select="agegroups">
+						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+						<tr>
+							<th><xsl:value-of select="name"/></th>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+							<td>
+								<input type="text">
+									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</table>
 			</dd>
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '2. Where?')" /></div>
+			<div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
 			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
@@ -49,7 +77,7 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '3. When?')" /></div>
+			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
 			<div id="dates-container">
 				<xsl:for-each select="application/dates">
 					<div class="date-container">
@@ -74,35 +102,10 @@
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></div>
+			<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 			<dd>
 				<div id="audience_container">&nbsp;</div>
-			</dd>
-			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
-			<dd>
-				<table id="agegroup">
-					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
-					<xsl:for-each select="agegroups">
-						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-						<tr>
-							<th><xsl:value-of select="name"/></th>
-							<td>
-								<input type="text">
-									<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
-								</input>
-							</td>
-							<td>
-								<input type="text">
-									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</xsl:for-each>
-				</table>
 			</dd>
 		</dl>
 		<div class="clr"/>

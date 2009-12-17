@@ -1,9 +1,10 @@
 current activities	bookingfrontend	no	Aktiviteter
 -- select an activity --	bookingfrontend	no	Velg en aktivitet
-1. why?	bookingfrontend	no	1. Hvorfor?
-2. where?	bookingfrontend	no	2. Hvor?
-3. when?	bookingfrontend	no	3. Når?
-4. who?	bookingfrontend	no	4. Hvem?
+why?	bookingfrontend	no	Hvorfor?
+where?	bookingfrontend	no	Hvor?
+when?	bookingfrontend	no	Når?
+who?	bookingfrontend	no	Hvem?
+how many?	bookingfrontend	no	Hvor mange?
 accept application	bookingfrontend	no	Godta søknaden
 accepted	bookingfrontend	no	Akseptert
 account	bookingfrontend	no	Bruker

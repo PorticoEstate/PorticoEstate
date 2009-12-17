@@ -2352,16 +2352,15 @@
 			if($add_invoice && is_array($values))
 			{
 
-				if($values['order_id'] && !ctype_digit($values['order_id'])):
+				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter an integer for order!'));
 					unset($values['order_id']);
 				}
-				elseif($values['order_id']):
+				else if($values['order_id'])
 				{
 					$order=true;
 				}
-				endif;
 
 				if (!$values['amount'])
 				{

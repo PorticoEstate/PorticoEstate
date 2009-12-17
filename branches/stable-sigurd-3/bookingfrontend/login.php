@@ -38,8 +38,6 @@
 
 	require_once PHPGW_SERVER_ROOT.'/bookingfrontend/inc/custom/default/BrukerService.php';
 
-	$soap_parameter = isset($config->config_data['soap_parameter']) && $config->config_data['soap_parameter'] ? $config->config_data['soap_parameter'] : '';// 
-
 	$options = array();
 	$options['soap_version'] = SOAP_1_1;
 	$options['location']	= isset($config->config_data['soap_location']) && $config->config_data['soap_location'] ? $config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
