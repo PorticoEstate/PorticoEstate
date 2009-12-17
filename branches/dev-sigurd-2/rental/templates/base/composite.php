@@ -139,7 +139,7 @@
 				$list_form = false; 
 				$list_id = 'included_units';
 				$url_add_on = '&amp;composite_id='.$composite->get_id();
-				$editable = false;
+				//$editable = false;
 				unset($extra_cols);
 				include('unit_list_partial.php');
 
