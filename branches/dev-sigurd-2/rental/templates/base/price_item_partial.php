@@ -118,7 +118,8 @@
 					}
 				}
 		?>),
-		'<?php echo $editor_action ?>'
+		'<?php echo $editor_action ?>',
+		true
 	);
 </script>
 

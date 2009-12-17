@@ -172,13 +172,13 @@
 						$value['labels'][] = lang('remove');
 					}
 					break;
-				case 'not_included_composites':
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
-					$value['labels'][] = lang('add');
+				case 'not_included_composites':	//does not show unless editable
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
+					$value['labels'][] = lang('add');
 					break;
 				case 'included_areas':
 					$value['ajax'][] = false;
