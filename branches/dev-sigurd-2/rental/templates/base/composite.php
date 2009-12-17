@@ -11,7 +11,7 @@
 <div class="identifier-header">
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?></h1>
 	<div>
-		<a class="cancel" href="<?php echo $cancel_link;?>"><button>&laquo;&nbsp;<?php echo lang('composite_back');?></button></a><br/>
+		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo lang('composite_back');?></button><br/>
 		<label><?php echo lang('name') ?> </label><?php echo $composite->get_name() ?>
 	</div>
 </div>
