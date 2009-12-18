@@ -22,11 +22,23 @@
 			);
 			
 			$billing = array (
-			array
+				'invoice' => array
 				(
 					'text'	=> lang('invoice_menu'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-document')
+				),
+				'price_item_list'	=> array
+				(
+					'text'	=> lang('price_list'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'x-office-spreadsheet')
+				),
+				'regulation'	=> array
+				(
+					'text'	=> lang('regulation'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiregulation.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'x-office-spreadsheet')
 				)
 			);
 			
@@ -59,12 +71,6 @@
 				(
 					'text'	=> lang('Configuration'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'rental') )
-				),
-				'price_item_list'	=> array
-				(
-					'text'	=> lang('price_list'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-spreadsheet')
 				),
 				'acl'	=> array
 				(
