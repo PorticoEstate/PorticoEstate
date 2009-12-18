@@ -305,6 +305,10 @@ class rental_socontract extends rental_socommon
 			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
 			$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'),int));
 			$contract->set_rented_area($this->unmarshal($this->db->f('rented_area'),'float'));
+			$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'),'int'));
+			$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'),'int'));
+			$contract->set_notify_after_termination_date($this->unmarshal($this->db->f('notify_after_termination_date'),'int'));
+			
 		}
 		
 		$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'),'int');

@@ -561,6 +561,7 @@
 				//'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
 				'max_area' =>	$this->rented_area,
 				'contract_status' => $this->get_contract_status(),
+				'contract_notification_status' => $this->get_contract_notification_status(),
 				'rented_area' => $this->get_rented_area()
 			);
 		}
@@ -640,8 +641,8 @@
 		{
 			return $this->notify_after_termination_date;
 		}
-	
-		public function get_contract_status()
+		
+		public function get_contract_notification_status()
 		{
 			$ts = strtotime(date('Y-m-d')); // timestamp for today
 			$ts_notify_before = $this->notify_before * 60 * 60 * 24;
@@ -650,33 +651,64 @@
 			$date_start = $this->get_contract_date()->get_start_date();
 			$date_end = $this->get_contract_date()->get_end_date();
 			
-			if(isset($date_start) && ($ts < $date_start || $date_start == ''))
+			$status = array();
+			
+			if(isset($date_end) && ($date_end >= $ts) && ($ts >= ($date_end - $ts_notify_before)))	
 			{
-				return lang("under_planning");
+				// If contract has end date which is in the future and notification date is today or in the past
+				$status[] = lang("under_dismissal");	// CONTRACT UNDER DISMISSAL
 			}
-			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts > ($date_end - $ts_notify_before)) || !isset($date_end)))
+			
+			if(isset($date_end) && ($date_end < $ts) && ($ts < ($date_end + $ts_notify_after_termination_date))) 
 			{
-				return lang("active_single");
+				// If the contract has end date shich is in the past and the end date is within a given time ago 
+				$status[] =  lang("terminated_contract");	// CONTRACT UNDER TERMINATION
 			}
-			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts <= ($date_end - $ts_notify_before)) || !isset($date_end)))
+			
+			if(isset($this->due_date) && ($this->due_date >= $ts) && ($ts >= ($this->due_date - $ts_notify_before_due_date)))
 			{
-				return lang("under_dismissal");
+				// If the contract has a due date which is in the future and the due date is today or within a given time in the future
+				$status[] = lang("closing_due_date");	// CLOSING DUE DATE
 			}
-			else if(isset($due_date) && $this->due_date >= $ts && ($this->due_date - $notify_before_due_date) <= $ts)
+			
+			if(count($status) > 0)
 			{
-				return lang("closing_due_date");
-			}
-			else if(isset($date_end) && $date_end >= ($ts - $notify_after_termination_date) && $date_end < $ts)
-			{
-				return lang("terminated_contract");
-			}
-			else if(isset($date_end) && $date_end < $ts)
-			{
-				return lang("ended");
+				return implode("<br/>",$status);
 			}
 			else
 			{
-				return lang("status_unknown");
+				return '';
+			}
+		}
+	
+		public function get_contract_status()
+		{
+			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			
+			$date_start = $this->get_contract_date()->get_start_date();
+			$date_end = $this->get_contract_date()->get_end_date();
+			
+			if(isset($date_start) && ($ts < $date_start || $date_start == ''))								
+			{
+				// If contract has start date AND (today is before start date OR empty start date)
+				return lang("under_planning");		// CONTRACT UNDER PLANNING
+			}
+			
+			else if(isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))								
+			{	
+				// else ... if contract has start date AND start date is today or in the past AND 
+				// (contract has end date OR end date is in the future)	
+				return lang("active_single");		// ACTIVE CONTRACT											
+			}
+			else if(isset($date_end) && $ts > $date_end)
+			{
+				//else ... if contract has end date AND end date is in the past
+				return  lang("ended"); 				// ENDED CONTRACT
+			}
+			else
+			{
+				//else we do not know the contract status
+				return lang("status_unknown");		// UNKNOWN STATUS
 			}
 		}
 		

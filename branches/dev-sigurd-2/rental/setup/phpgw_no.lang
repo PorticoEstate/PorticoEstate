@@ -75,7 +75,7 @@ contracts	rental	no	Kontrakter
 contracts_under_dismissal	rental	no	Kontrakter under avslutning
 contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
-contract_status	rental	no	Behandlingsstatus
+contract_status	rental	no	Status
 contract_type_eksternleie	rental	no	Eksternleie
 contract_type_innleie	rental	no	Innleie
 contract_type_internleie	rental	no	Internleie
