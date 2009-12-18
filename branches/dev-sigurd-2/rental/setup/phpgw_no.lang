@@ -248,6 +248,7 @@ no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 no_party_location	rental	no	Ingen intern organisasjonstilhørighet
 no_value	rental	no	Ingen
 not_available	rental	no	Ikke tilgjengelig
+notification_status	rental	no	Varsel
 notifications	rental	no	Varsler
 notification_optgroup_groups	rental	no	Grupper
 notification_optgroup_users	rental	no	Brukere
@@ -301,6 +302,7 @@ property	rental	no	Eiendom
 quarterly	rental	no	Kvartalvis
 rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
+regulation	rental	no	Regulering
 reference	rental	no	Deres ref
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
@@ -355,7 +357,7 @@ System setting for project id can not be more than 6 characters.	rental	no	Syste
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv
 target_none	rental	no	Ingen
-terminated_contract	rental	no	Opphørt
+terminated_contract	rental	no	Under opphør
 terminated_contracts	rental	no	Opphørte kontrakter
 the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
 thousands separator	rental	no	Skilletegn for tusen
