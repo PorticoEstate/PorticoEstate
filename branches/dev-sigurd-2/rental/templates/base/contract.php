@@ -649,6 +649,16 @@
 			?>
 		</div>
 		<div id="notifications">
+			<h3><?php echo lang('contract_notifications') ?></h3>
+			<?php
+			$list_form = false;
+			$list_id = 'rental_notifications';
+			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
+			$disable_left_click = true;
+			unset($extra_cols);
+			unset($editors);
+			include('notification_list.php');
+			?>
 			<h3><?php echo lang('new_notification') ?></h3>
 			<?php
 			if ($editable) {
@@ -744,16 +754,6 @@
 			{
 				echo lang('log_in_to_add_notfications');
 			}
-			?>
-			<h3><?php echo lang('contract_notifications') ?></h3>
-			<?php
-			$list_form = false;
-			$list_id = 'rental_notifications';
-			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
-			$disable_left_click = true;
-			unset($extra_cols);
-			unset($editors);
-			include('notification_list.php');
 			?>
 		</div>
 		
