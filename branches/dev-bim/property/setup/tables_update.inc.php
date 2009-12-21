@@ -4056,9 +4056,9 @@
             'property_attr_group' => array
             (
                 'fd' => array(
-                    'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-                    'sort' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+                    'id' =>     array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                    'name' =>   array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+                    'sort' =>   array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
                 ),
                 'pk' => array('id'),
                 'fk' => array(),
@@ -4068,9 +4068,9 @@
             'property_attr_choice' => array
             (
                 'fd' => array(
-                    'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'value' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-                    'attr_def_id' => array('type' => 'integer', 'precision' => 4, 'nullable' => false)
+                    'id' =>         array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                    'value_id' =>   array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'attr_def_id' =>array('type' => 'int', 'precision' => 4, 'nullable' => false)
                 ),
                 'pk' => array('id'),
                 'fk' => array('property_attr_def' => array('attr_def_id' => 'id')),
@@ -4081,7 +4081,7 @@
 
         $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-        foreach ( $tables as $table => $def )
+        foreach ($tables as $table => $def)
         {
             $GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
         }
