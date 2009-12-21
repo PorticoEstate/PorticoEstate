@@ -13,9 +13,14 @@
 
 	 if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
 	 {
-	 		$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	 	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
 	 }
-	 
+
+	if(isset($_GET['logout']) && $_GET['logout']) // In case a user logged in via SSO - actively logs out
+	{
+	 	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';	
+	}	 
+
 	require_once 'phpgwapi/inc/sso/include_login.inc.php';
 
 	$partial_url = 'login.php';
