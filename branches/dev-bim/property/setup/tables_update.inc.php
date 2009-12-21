@@ -4040,4 +4040,69 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 
-	}
+
+        /**
+        * Update property version from 0.9.17.576 to 0.9.17.577
+        * Add BIM tables
+        *
+        */
+
+        $test[] = '0.9.17.577';
+        function property_upgrade0_9_17_577()
+        {
+            $tables = array
+            (
+                'property_attr_group' => array
+                (
+                    'fd' => array(
+                        'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                        'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+                        'sort' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+                    ),
+                    'pk' => array('id'),
+                    'fk' => array(),
+                    'ix' => array(),
+                    'uc' => array()
+                ),
+                'property_attr_choice' => array
+                (
+                    'fd' => array(
+                        'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                        'value' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+                        'attr_def_id' => array('type' => 'integer', 'precision' => 4, 'nullable' => false)
+                    ),
+                    'pk' => array('id'),
+                    'fk' => array('property_attr_def' => array('attr_def_id' => 'id')),
+                    'ix' => array(),
+                    'uc' => array()
+                )
+            );
+
+            $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+            foreach ( $tables as $table => $def )
+            {
+                $GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
+            }
+
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_def','description',array('type' => 'text','nullable' => true));
+
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','created_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','created_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','expired_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','expired_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+
+            $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_catalog', 'description', array('type' => 'text','nullable' => true));
+
+            // Add FK column
+            $GLOBALS['phpgw_setup']->oProc->AddColumn('property_attr_def','attr_group_id',array('type' => 'int', 'precision' => 4, 'nullable' => false));
+            $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');
+
+            if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+            {
+                $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.578';
+                return $GLOBALS['setup_info']['property']['currentver'];
+            }
+        }
+
+    }
