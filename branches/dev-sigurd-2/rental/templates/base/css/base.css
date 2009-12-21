@@ -410,3 +410,9 @@ p.message {
 .yui-calendar td.calcell {
 	border:0px !important;
 }
+.yui-skin-sam .yui-dt TABLE TH{
+	border: none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD{
+	border: none !important;
+}
