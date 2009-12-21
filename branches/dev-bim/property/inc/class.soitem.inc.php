@@ -1,7 +1,7 @@
 <?php
 
-include_class('property', 'sogroup', 'inc/');
-include_class('property', 'boitem', 'inc/');
+phpgw::import_class('property.sogroup');
+phpgw::import_class('property.boitem');
 
     /**
      * Description of soitem
@@ -18,6 +18,9 @@ include_class('property', 'boitem', 'inc/');
         }
 
 
+        /**
+         * @return property_soitem
+         */
         public static function singleton()
         {
             if (!isset(self::$instance))
@@ -103,5 +106,25 @@ include_class('property', 'boitem', 'inc/');
             }
 
             return $return_objects;
+        }
+
+
+        /**
+         * Save changes on an item to database or insert a new one if ID is empty.
+         *
+         * @param property_boitem $obj
+         */
+        public function save(property_boitem $obj)
+        {
+            // If item has an ID, do an update, otherwise, do an insert
+            $ins_or_upd = ($obj->get_id() != null ? 'UPDATE' : 'INSERT INTO');
+            $table = 'property_item';
+            $cols = array('id', 'group_id', 'location_id', 'vendor_id', 'installed');
+            $values = array($obj->get_id(),
+                $obj->get_group()->get_id(),
+                $obj->get_location_id(),
+                $obj->get_vendor_id(),
+                $obj->get_installed_date());
+            
         }
     }

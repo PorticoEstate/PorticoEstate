@@ -14,6 +14,9 @@
         }
 
 
+        /**
+         * @return property_soitem
+         */
         public static function singleton()
         {
             if (!isset(self::$instance))
@@ -60,12 +63,12 @@
             $this->db->query($sql);
             $i = 0;
             while($this->db->next_record()) {
-                $items[$i]['id']             = $this->db->f('id');
-                $items[$i]['name']    = $this->db->f('name');
-                $items[$i]['ngno']     = $this->db->f('nat_group_no');
-                $items[$i]['bpn']      = $this->db->f('bpn');
-                $items[$i]['parent']   = $this->db->f('parent_group');
-                $items[$i]['catalog_id'] = $this->db->f('catalog_id');
+                $items[$i]['id']        = $this->db->f('id');
+                $items[$i]['name']      = $this->db->f('name');
+                $items[$i]['ngno']      = $this->db->f('nat_group_no');
+                $items[$i]['bpn']       = $this->db->f('bpn');
+                $items[$i]['parent']    = $this->db->f('parent_group');
+                $items[$i]['catalog_id']= $this->db->f('catalog_id');
 
                 $i++;
             }
@@ -100,4 +103,6 @@
 
             return $return_objects;
         }
+
+        
     }

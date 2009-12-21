@@ -7,13 +7,21 @@
      */
     class property_bogroup extends property_boattribute_owner
     {
-        private $name, $bpn, $nat_group_no, $catalog;
+        private $id, $name, $bpn, $nat_group_no, $catalog;
 
         public function __construct()
         {
 
         }
 
+        public function get_id() {
+            return $this->id;
+        }
+
+        public function set_id($id) {
+            $this->id = $id;
+        }
+        
         public function get_name()
         {
             return $this->name;
