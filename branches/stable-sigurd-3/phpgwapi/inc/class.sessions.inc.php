@@ -272,16 +272,6 @@
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->_account_id;
 			$accounts->set_account($this->_account_id);
 
-
-// test for illegal characters
-$sn=session_name();
-if(isset($_GET[$sn])) if(strlen($_GET[$sn])!=32) unset($_GET[$sn]);
-if(isset($_POST[$sn])) if(strlen($_POST[$sn])!=32) unset($_POST[$sn]);
-if(isset($_COOKIE[$sn])) if(strlen($_COOKIE[$sn])!=32) unset($_COOKIE[$sn]);
-if(isset($PHPSESSID)) if(strlen($PHPSESSID)!=32) unset($PHPSESSID);
-// test for illegal characters
-
-
 			session_start();
 			$this->_sessionid = session_id();
 

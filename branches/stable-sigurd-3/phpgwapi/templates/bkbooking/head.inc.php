@@ -96,7 +96,7 @@
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'navbar_config' => $_navbar_config,
 		'lbl_search'   	=> lang('Search'),
-		'header_search_class'	=> ($_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'header_search_class'	=> (isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())

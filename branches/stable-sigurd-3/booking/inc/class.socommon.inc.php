@@ -87,7 +87,10 @@
 				
 				foreach($this->fields as $field => $params)
 				{
-					if($params['join']) { continue; }
+					if(isset($params['join']) && $params['join'])
+					{
+						continue;
+					}
 					$this->cols[] = $field;
 				}
 			}
@@ -128,11 +131,11 @@
 			
 			foreach($this->fields as $field => $params)
 			{
-				if($params['manytomany'])
+				if(isset($params['manytomany']) && $params['manytomany'])
 				{
 					continue;
 				}
-				else if($params['join'])
+				else if(isset($params['join']) && $params['join'])
 				{
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
@@ -342,7 +345,7 @@
 			{
 				if($this->fields[$key])
 				{
-					$table = $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
+					$table = isset($this->fields[$key]['join']) && $this->fields[$key]['join'] ? $this->fields[$key]['table'].'_'.$params['join']['column'] : $this->table_name;
 					if(is_array($val) && count($val) == 0)
 					{
 						$clauses[] = '1=0';
