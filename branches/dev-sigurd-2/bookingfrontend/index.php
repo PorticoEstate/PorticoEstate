@@ -46,6 +46,7 @@
 	// Make sure we're always logged in
 	if (! $GLOBALS['phpgw']->session->verify())
 	{
+		session_destroy();
 		$login = "bookingguest";
 		$passwd = "bkbooking";
 		$_POST['submitit'] = "";
