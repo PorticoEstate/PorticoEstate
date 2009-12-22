@@ -188,6 +188,7 @@ HTML;
 
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
+	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
 	if ( !$invalid_data 
 		&& is_object($GLOBALS[$class])
 		&& isset($GLOBALS[$class]->public_functions) 
