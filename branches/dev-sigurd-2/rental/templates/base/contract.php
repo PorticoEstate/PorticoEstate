@@ -7,6 +7,7 @@
 ?>
 
 <?php echo rental_uicommon::get_page_error($error) ?>
+<?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 
 <div class="identifier-header">

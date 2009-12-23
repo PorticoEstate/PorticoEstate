@@ -380,6 +380,8 @@ url	rental	no	Nettsted
 Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
+warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
+warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
 weekly	rental	no	Ukentlig
 working_on	rental	no	Kontrakter under arbeid
 year	rental	no	År

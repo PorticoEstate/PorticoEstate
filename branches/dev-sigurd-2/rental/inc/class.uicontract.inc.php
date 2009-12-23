@@ -238,7 +238,7 @@
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
 						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes')),
 					);
-					
+					$contract->check_consistency();
 					$this->render('contract.php', $data);
 				}
 			}
@@ -334,7 +334,7 @@
 					$contract->set_account_in(phpgw::get_var('account_in'));
 					$contract->set_account_out(phpgw::get_var('account_out'));
 					$contract->set_project_id(phpgw::get_var('project_id'));
-					$contract->set_due_date(strtotime(phpgw::get_var('due_date')));
+					$contract->set_due_date(strtotime(phpgw::get_var('due_date_hidden')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					$old_rented_area = $contract->get_rented_area();
 					$new_rented_area = phpgw::get_var('rented_area');

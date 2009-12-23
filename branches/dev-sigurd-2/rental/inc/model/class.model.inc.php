@@ -5,6 +5,7 @@ include_class('rental', 'validator', 'inc/model/');
 abstract class rental_model
 {
 	protected $validation_errors = array();
+	protected $validation_warnings = array();
 	protected $field_of_responsibility_id;
 	protected $field_of_responsibility_name;
 	protected $permission_array;
@@ -104,6 +105,11 @@ abstract class rental_model
 	{
 		return true;
 	}
+	
+	public function check_consistency()
+	{
+		return true;
+	}	
 
 	public function set_validation_error(string $rule_name, string $error_language_key)
 	{
@@ -113,6 +119,16 @@ abstract class rental_model
 	public function get_validation_errors()
 	{
 		return $this->validation_errors;
+	}
+	
+	public function set_validation_warning(string $warning_language_key)
+	{
+		$this->validation_warnings[] = $warning_language_key;
+	}
+
+	public function get_validation_warnings()
+	{
+		return $this->validation_warnings;
 	}
 
 	/**

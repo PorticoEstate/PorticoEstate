@@ -717,7 +717,31 @@
 			$this->rented_area = $rented_area;
 		}
 		
-		public function get_rented_area() { return $this->rented_area; } 
+		public function get_rented_area() { return $this->rented_area; }
+
+		public function validates(){
+			if($this->get_id() == null || $this->get_id() < 1){
+				return false;
+			}
+			if($this->get_location_id() == null || $this->get_location_id() < 1){
+				return false;
+			}
+			return true;
+		}
+		public function check_consistency(){
+			if($this->get_contract_date()->has_start_date() && $this->get_billing_start_date() < $this->get_contract_date()->get_start_date()){
+				$this->set_validation_warning(lang('warning_billing_date_between'));
+			}
+			if($this->get_contract_date()->has_end_date() && $this->get_billing_start_date() > $this->get_contract_date()->get_end_date()){
+				$this->set_validation_warning(lang('warning_billing_date_between'));
+			}
+			if($this->get_contract_date()->has_start_date() && $this->get_due_date() < $this->get_contract_date()->get_start_date()){
+				$this->set_validation_warning(lang('warning_due_date_between'));
+			}
+			if($this->get_contract_date()->has_end_date() && $this->get_due_date() > $this->get_contract_date()->get_end_date()){
+				$this->set_validation_warning(lang('warning_due_date_between'));
+			}
+		}
 		
 	}
 
