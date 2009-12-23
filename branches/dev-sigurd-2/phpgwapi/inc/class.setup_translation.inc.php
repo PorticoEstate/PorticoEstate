@@ -32,7 +32,7 @@
 			$ConfigLang = phpgw::get_var('ConfigLang');
 			$this->set_userlang($ConfigLang);
 
-			$fn = PHPGW_SERVER_ROOT . "/phpgwapi/setup/phpgw_{$this->userlang}.lang";
+			$fn = PHPGW_SERVER_ROOT . "/setup/lang/phpgw_{$this->userlang}.lang";
 			if (!file_exists($fn))
 			{
 				$fn = PHPGW_SERVER_ROOT . '/phpgwapi/setup/phpgw_en.lang';
