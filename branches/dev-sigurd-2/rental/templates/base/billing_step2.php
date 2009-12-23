@@ -233,7 +233,7 @@ var toggleAll = function (target_tag_name, source_tag_name)
 
 		var formatPrice = function(elCell, oRecord, oColumn, oData) {
 			if (oData != undefined) {
-				elCell.innerHTML = YAHOO.util.Number.format( oData,
+				elCell.innerHTML = YAHOO.util.Number.format( elCell.value,
 				{
 					suffix: " <?php echo isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix'] ? $config->config_data['currency_suffix'] : 'NOK'; ?>",
 					thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
