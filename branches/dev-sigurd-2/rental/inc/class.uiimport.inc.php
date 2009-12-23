@@ -284,7 +284,7 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
-			phpgwapi_cache::session_clear('rental', 'facilit_facilit_events');
+			phpgwapi_cache::session_clear('rental', 'facilit_events');
 			return '6';
 		}
 		
@@ -320,8 +320,6 @@
 				$identifier = $this->decode($data[24]); //cPersonForetaknr
 				//Removed whitespace characters
 				$identifier = str_replace(' ','',''.$identifier);
-				//Check for only digits
-				$int_value_of_identifier = (int) $identifier;
 				
 				// Fødselsnr/Foretaksnr/AgressoID
 				$party->set_identifier($identifier);		
@@ -341,16 +339,22 @@
 				$party->set_reskontro($this->decode($data[23]));		//cReskontronr
 				$party->set_comment($this->decode($data[26]));			//cMerknad
                 
+				$contact_person = $this->decode($data[6]);
 				// Insert contract person in comment if present
-				if(strlen($this->decode($data[6]) > 1)) {				
-                    $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$this->decode($data[6]));	//cKontaktPerson
+				if(isset($contact_person)) {				
+                    $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$contact_person);	//cKontaktPerson
                 }
                 
-                // If the identifier contains only numbers
-                if($int_value_of_identifier > 0 )
-                {
-	                switch(strlen(''.$identifier)) {	
-	                    case 4: // Intern organisasjonstilknytning
+           		$valid_identifier = false;
+                switch(strlen(''.$identifier)) {	
+                    case 4: // Intern organisasjonstilknytning
+               			//Should be four number or on the form 'KFxx'     	
+                    	if(
+                    		is_numeric($identifier) 
+                    		|| 
+                    		((substr($identifier,0,2) == 'KF') && is_numeric(substr($identifier,2,2)))
+                    	)
+                    	{
 	                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn
 	                        $party->set_first_name(null);
 	                        $party->set_last_name(null);
@@ -359,14 +363,23 @@
 	                        $locations = $GLOBALS['phpgw']->locations;
 	                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));	//cPersonForetaknr
 	                        $party->set_location_id($subs[0]['location_id']);
-	                        break;
-	                    case 6: // Foretak (agresso-id)
-	                    case 9: // Foretak (org.nr)
+                    		$valid_identifier = true;
+                    	}
+                    	break;
+                    case 6: // Foretak (agresso-id)
+                    case 9: // Foretak (org.nr)
+                    	if(is_numeric($identifier))
+                    	{
 	                        $party->set_company_name($this->decode($data[2]));	//cForetaksnavn  
 	                        $party->set_first_name(null);
 	                        $party->set_last_name(null);
-	                        break;
-	                    case 11: // Personnr
+	                        
+	                        
+                    	}
+                    	break;
+                    case 11: // Personnr
+                    	if(is_numeric($identifier))
+                    	{
 	                        if (!$this->is_null($data[0])) {
 	                            $party->set_first_name($this->decode($data[0]));	//cFornavn
 	                            $party->set_last_name($this->decode($data[1]));		//cEtternavn
@@ -375,19 +388,16 @@
 	                            $party->set_first_name($company_name[0]);					//cFornavn
 	                            $party->set_last_name($company_name[1]);					//cEtternavn
 	                        }
-	                        break;
-	                    default:
-	                        $party->set_first_name($this->decode($data[0]));		//cFornavn
-	                        $party->set_last_name($this->decode($data[1]));			//cEtternavn
-	                        $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
-	                        $party->set_is_inactive(true);
-	                        $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";	//cPersonForetaknr
-	                }
+	                        $valid_identifier = true;
+	                       
+                    	}
+                    	break;
                 }
-                else
+                
+                if(!$valid_identifier)
                 {
-                	$party->set_first_name($this->decode($data[0]));		//cFornavn
-                    $party->set_last_name($this->decode($data[1]));			//cEtternavn
+                    $party->set_first_name($this->decode($data[0]));		//cFornavn
+                	$party->set_last_name($this->decode($data[1]));			//cEtternavn
                     $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
                     $party->set_is_inactive(true);
                     $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";	//cPersonForetaknr
@@ -710,9 +720,9 @@
 		 * Step 4: import the contracts from the file 'u_Kontrakt.csv'
 		 * @param $composites	array mapping facilit ids and protico ids for composites
 		 * @param $rentalobject_to_contract	array mapping composites and contracts
-		 * @param $parties	array
-		 * @param $default_values
-		 * @return unknown_type
+		 * @param $parties	array mapping party ids
+		 * @param $default_values	the default accounts and project numbers
+		 * @return array	of contracts
 		 */
 		protected function import_contracts($composites, $rentalobject_to_contract, $parties, $default_values)
 		{
@@ -737,28 +747,25 @@
                 19=> 8  // "Ekstern I-kontrakt" -> Annen
             );
             
-            $external_types = array($contract_types[12],$contract_types[13],$contract_types[14],$contract_types[18],$contract_types[19]);
-            $internal_types = array($contract_types[2],$contract_types[3],$contract_types[5],$contract_types[15]);
-
-
 			foreach ($datalines as $data) {
+				// Skip this contract if its data is incomplete 
 				if(count($data) <= 27)
 				{
 					continue;
 				}
 				
+				// Create a new contract object
 				$contract = new rental_contract();
 				
-				// TODO: link this with previously imported rental party. 
-				$personId = $this->decode($data[2]);						//nPersonForetakId
-				
+				// Set the contract dates
 				$date_start = $this->decode($data[3]);						//dFra
 				$date_end = $this->decode($data[4]);						//dTil
-				
 				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
 
-                $contract->set_old_contract_id($this->decode($data[5]));	//cKontraktnr
+                // Set the old contract identifier
+				$contract->set_old_contract_id($this->decode($data[5]));	//cKontraktnr
 				
+				// Set the contract biling term
 				$term = $data[10];											//nTermin
 				switch ($term) {
 					case 1: // Monthly
@@ -775,23 +782,23 @@
                         break;
 				}
 				
-				// What period the prices are calculated from.  4=month, 8=year
-				$price_period = $data[14];										//nPrisPeriode
+				// Report non-conforming price periods 
+				$price_period = $data[14];										//nPrisPeriode (4=month, 8=year)
 				if ($price_period == 4) {
 					// The price period is month.  We ignore this but print a warning.
-					// TODO: What to use as reference here?  Currently using K-number
-					$this->warnings[] = "Price period of contract " . $this->decode($data[5]) . " is month.  Ignored.";
+					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
 				}
                 elseif($price_period == 5) {
                     // The price period is 5, which is unknown.  We ignore this but print a warning.
-					$this->warnings[] = "Price period of contract " . $this->decode($data[5]) . " is unknown (value: 5).  Ignored.";
+					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
                 }
 
-                // Send warning if contract status is '3' (Under avslutning)
+                // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
                 if($data[6] == 3) {
-                    $this->warnings[] = "Status of contract " . $this->decode($data[5]) . " is '".lang('contract_under_dismissal')."'";
+                    $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
                 }
 				
+                // Set the billing start date for the contract
 				$contract->set_billing_start_date(strtotime($this->decode($data[16])));		//dFakturaFraDato
 				
 				// Deres ref.
@@ -805,45 +812,66 @@
 				$contract->set_responsibility_id($ansvar_tjeneste_components[0]);
 				$contract->set_service_id($ansvar_tjeneste_components[1]);
 				
-				// Set the location ID according to what the user selected
+				// Set the location identifier (responsibiity area)
 				$contract->set_location_id($this->location_id);
 
-
+				// Get the composite identifier for the composite included in this contract
                 $composite_id = $composites[$rentalobject_to_contract[$data[0]]];
 
-                // If composite_id has value and contract type is external
-                if(in_array($contract->get_contract_type_id(), $external_types)) {
-                	//specific logic for external responsibility area
+                // Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
+				$title = $socontract->get_responsibility_title($this->location_id);
+                
+                // For external contract types the rented area resides on the composite ...
+                if($title == 'contract_type_eksternleie') {
                 	if($composite_id)
                 	{
-                		// Get the rented area for this contract from the composite
                     	$socomposite = rental_socomposite::get_instance();
                     	$contract->set_rented_area($socomposite->get_area($composite_id));
                 	}	
                 } 
                 else 
                 {
-                	// Get the rented area from the contract
+                	// ... and for others contract types the rented area resides on the contract
                 	$contract->set_rented_area($this->decode($data[21]));
                 }
                 
-                //Get the account in/out and project number from database
-                $contract->set_account_in($default_values['account_in']);
-				$contract->set_account_out($default_values['account_out']);
-				$contract->set_project_id($default_values['project_number']);
+                
+                // Retrieve default values for accounts and project numbers
+				if($title == 'contract_type_eksternleie')
+				{
+					// The account out depends on the typer of external contract
+					$type_id = $contract->get_contract_type_id();
+					if(isset($type_id) && $type_id > 0)
+					{
+						$account = $socontract->get_contract_type_account($type_id);
+						$contract->set_account_out($account);
+					}
+					else
+					{
+						// If no specific external contract type, use default value
+						$contract->set_account_out($default_values['account_out']);
+					}
+				}
+				else if($title == 'contract_type_internleie')
+				{
+					//Set default account in/out and project numbers for internal contracts
+               		$contract->set_account_in($default_values['account_in']);
+					$contract->set_account_out($default_values['account_out']);
+					$contract->set_project_id($default_values['project_number']);
+				}
 				
 				// Store contract
 				if ($socontract->store($contract)) {
-					$contracts[$data[0]] = $contract->get_id(); // Map contract ids in Facilit and PE contract id (should be the same)
+					 // Map contract ids in Facilit and PE contract id (should be the same)
+					$contracts[$data[0]] = $contract->get_id();
 					
-					// Check if this contract has a composite
+					// Check if this contract has a composite and if so add rental composite to contract
 					if (!$this->is_null($rentalobject_to_contract[$data[0]]) && !$this->is_null($composite_id)) {
-						// Add rental composite to contract
 						$socontract->add_composite($contract->get_id(), $composite_id);
 					}
 					
-					if (!$this->is_null($data[2])) { //nPersonForetakId
-						// Add party to contract
+					// Check if this contract has a contract part and if so add party to contract
+					if (!$this->is_null($data[2])) { 															//nPersonForetakId
 						$party_id = $parties[$this->decode($data[2])];
 						$socontract->add_party($contract->get_id(), $party_id);
 						// Set this party to be the contract invoice recipient
@@ -879,7 +907,9 @@
 				{
 					continue;
 				}
-				$detail_price_items[$data[1]] = 	//Priselementid
+				
+				//Create a row in the array holding the details (price, amount, dates) for the price item
+				$detail_price_items[$data[1]] = 	//nPrisElementId
 				array(
 					'price' => $data[2],			//nPris
 					'amount' => $data[3],			//nMengde
@@ -897,35 +927,49 @@
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
 			
+			//Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
+			$title = $socontract->get_responsibility_title($this->location_id);
+			//If we are importing price items for 'Innleie', we have a default price item in the 'Prisbok' with agresso-id 'INNLEIE'
+			if($title == 'contract_type_innleie'){
+				$admin_price_item = $soprice_item->get_single_with_id('INNLEIE');
+			}
+			
 			foreach ($datalines as $data) {
 				if(count($data) <= 24)
 				{
 					continue;
 				}
-				// Create new admin price item if one doesn't exist in the admin price list
-				// Add new price item to contract with correct reference from the $contracts array
-				// Remember fields from detail price item.
 				
-				// The Agresso-ID is unique for price items
-				$id = $this->decode($data[12]);									//cVarenr
-				
-				$admin_price_item = null;
-				
-				if(isset($id))
+				/* If we are importing contract price items for external or internal:
+				 * - see if a pricebook element exist
+				 */
+				if($title != 'contract_type_innleie')
 				{
-					$admin_price_item = $soprice_item->get_single_with_id($id);
+					// The Agresso-ID is unique for price items
+					$id = $this->decode($data[12]);					//cVarenr				
+					$admin_price_item = null;
+					if(isset($id) && $id != '')
+					{
+						$admin_price_item = $soprice_item->get_single_with_id($id);
+					}
+					else
+					{
+						$admin_price_item = $soprice_item->get_single_with_id('UNKNOWN');
+					}
 				}
 				
+				// Get the facilit price item id so that we can retrieve the price item details
 				$facilit_id = $this->decode($data[0]);							//nPrisElementId
 				
-				// Create a new admin price item, store it if it har a new unique agresso-id. First price item with unique 
-				// agresso-id determines title, area or "nr of items", and the price (from the price item details)
+				/* Create a new pricebook price item if one does not exist in the pricebook; store it if it has a new unique agresso-id. 
+				 * Note: First price item with unique agresso-id determines title, area or "nr of items", and the price (from the price item details) */
 				if ($admin_price_item == null) {
 					$admin_price_item = new rental_price_item();
 					$admin_price_item->set_title($this->decode($data[3]));								//cPrisElementNavn
 					$admin_price_item->set_agresso_id($id);												//cVareNr
 					// This assumes 1 for AREA, and anything else for count, even blanks
 					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);		//nMengdeTypeId
+					// Get the price for this price item
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
 					$admin_price_item->set_responsibility_id($this->location_id);
 					
@@ -945,14 +989,35 @@
 					// Retrieve the contract
 					$contract = $socontract->get_single($contract_id);
 
-                    // Set cLonnsArt for price item as contract reference
-					$socontract->import_contract_reference($contract_id,$this->decode($data[13]));	//cLonnsArt
-				
-					// Copy fields from admin price item first
-					$price_item->set_title($admin_price_item->get_title());
+					// Set cLonnsArt for price item as contract reference
+					$contract->set_reference($this->decode($data[13]));
+			
+					// The contract price item title should be the same as in the price book for external and internal
+					if($title != 'contract_type_innleie')
+					{
+						$price_item->set_title($admin_price_item->get_title());
+					}
+					else
+					{
+						// ... and overridden by the price item for innleie
+						$price_item->set_title($data[3]);
+					}
+					
+					// Set the price book element's agresso-id and type (area/piece) 
 					$price_item->set_agresso_id($admin_price_item->get_agresso_id());
-					$price_item->set_is_area($admin_price_item->is_area());
-                    $price_item->set_price($detail_price_items[$facilit_id]['price']);
+					
+					// If the price item is unknown do not use the 'is_area' from the price book
+					if($admin_price_item->get_agresso_id() != 'UNKNOWN')
+					{
+						$price_item->set_is_area($admin_price_item->is_area());
+					}
+					else
+					{
+						$price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);
+					}	
+                    
+					// Get the price for the price item details
+					$price_item->set_price($detail_price_items[$facilit_id]['price']);
                     
                     // Give a warning if a contract has a price element of type area with are like 1
                    	if($price_item->is_area() && ($detail_price_items[$facilit_id]['amount'] == '1'))
@@ -960,7 +1025,6 @@
                    		$this->warning[] = "Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
                    	}
                     
-					
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					

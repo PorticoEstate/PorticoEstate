@@ -839,6 +839,19 @@ class rental_socontract extends rental_socommon
 		return $result;
     }
     
+    public function get_contract_type_account($contract_type_id)
+    {
+    	$q1="SELECT rct.account FROM rental_contract_types rct WHERE rct.id={$contract_type_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		$results = "";
+		while($this->db->next_record()){
+			$result = $this->db->f('account');
+		}
+		
+		return $result;
+    }
+    
+    
     public function get_term_label($billing_term_id){
     	$q1="SELECT rbt.title FROM rental_billing_term rbt WHERE rbt.id={$billing_term_id}";
 		$this->db->query($q1, __LINE__, __FILE__);

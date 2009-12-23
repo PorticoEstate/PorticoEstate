@@ -332,7 +332,25 @@
 					$contract->set_reference(phpgw::get_var('reference'));
 					$contract->set_invoice_header(phpgw::get_var('invoice_header'));
 					$contract->set_account_in(phpgw::get_var('account_in'));
-					$contract->set_account_out(phpgw::get_var('account_out'));
+					
+					if($contract->get_contract_type_id() != phpgw::get_var('contract_type'))
+					{
+						// New contract type id set, retrieve correct account out
+						$type_id = phpgw::get_var('contract_type');
+						if(isset($type_id) && $type_is != ''){
+							$account = rental_socontract::get_instance()->get_contract_type_account($type_id);
+							$contract->set_account_out($account);
+						}
+						else
+						{
+							$contract->set_account_out(phpgw::get_var('account_out'));
+						}
+					}
+					else
+					{
+						$contract->set_account_out(phpgw::get_var('account_out'));
+					}
+					
 					$contract->set_project_id(phpgw::get_var('project_id'));
 					$contract->set_due_date(strtotime(phpgw::get_var('due_date_hidden')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
