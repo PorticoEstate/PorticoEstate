@@ -937,7 +937,8 @@
 
 			if ( !strlen(session_id()) )
 			{
-				session_start();
+				throw new Exception("sessions::register_session() - No value for session_id()");
+//				session_start();
 			}
 
 			$_SESSION['phpgw_session'] = array
@@ -1099,6 +1100,11 @@
 			if(empty($sessionid) || !$sessionid)
 			{
 				$sessionid = phpgw::get_var(session_name());
+			}
+
+			if(!$sessionid)
+			{
+				return false;
 			}
 
 			$this->_sessionid = $sessionid;
