@@ -46,6 +46,7 @@
 		var $bestiller = 85; //cat_id for rolle
 		var $attestant = 83; //cat_id for rolle
 		var $budsjettansvarlig = 82; //cat_id for rolle
+		var $default_kostra_id = 9999; //dummy
 
 		var $import = array(
 			'Bilagsnr' => 'bilagsnr', 
@@ -334,7 +335,7 @@
 						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
 					}
 
-					$buffer[$i]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$i]['loc1']);
+					$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
 					
 					$merknad = "lag meg ein link til bilde av faktura - ref: {$_data['SCANNINGNO']}";
 					
