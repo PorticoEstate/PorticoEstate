@@ -84,6 +84,7 @@
 					'reference'		=> $this->db->f('reference', true),
 					'skill'			=> $this->db->f('skill'),
 					'place_id'		=> $this->db->f('place_id'),
+					'credits'		=> (int)$this->db->f('credits'),
 					'entry_date'	=> $this->db->f('entry_date'),
 					'owner'			=> $this->db->f('owner')
 				);
@@ -95,14 +96,7 @@
 		{
 			if(is_array($data))
 			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query		= isset($data['query']) ? $data['query'] : '';
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 				$order		= isset($data['order']) && $data['order'] ? $data['order'] : 'category DESC, start_date';
@@ -122,7 +116,7 @@
 			}
 
 			$sql = "SELECT phpgw_hrm_training.id as training_id,phpgw_hrm_training.title as title, phpgw_hrm_training.start_date,"
-				. " phpgw_hrm_training.end_date,phpgw_hrm_training_place.name as place, phpgw_hrm_training_category.descr as category"
+				. " phpgw_hrm_training.end_date,phpgw_hrm_training_place.name as place, phpgw_hrm_training_category.descr as category, credits"
 				. " FROM phpgw_hrm_training $this->left_join phpgw_hrm_training_place on phpgw_hrm_training.place_id=phpgw_hrm_training_place.id"
 				. " $this->join phpgw_hrm_training_category ON phpgw_hrm_training.category = phpgw_hrm_training_category.id"
 				. " WHERE phpgw_hrm_training.user_id=" . intval($user_id);
@@ -140,6 +134,7 @@
 					'end_date'		=> $this->db->f('end_date'),
 					'title'			=> $this->db->f('title', true),
 					'place'			=> $this->db->f('place', true),
+					'credits'		=> (int)$this->db->f('credits'),
 					'category'		=> $this->db->f('category', true)
 				);
 
@@ -195,6 +190,7 @@
 				$values['reference'],
 				$values['skill'],
 				$values['place_id'],
+				(int)$values['credits'],
 				$values['descr'],
 				time(),
 				$this->account
@@ -202,7 +198,7 @@
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
-			$this->db->query("INSERT INTO phpgw_hrm_training (id,user_id,category,title,start_date,end_date,reference,skill,place_id,descr,entry_date,owner) "
+			$this->db->query("INSERT INTO phpgw_hrm_training (id,user_id,category,title,start_date,end_date,reference,skill,place_id,credits,descr,entry_date,owner) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
 			$receipt['message'][]=array('msg'=>lang('training item has been saved'));
@@ -230,6 +226,7 @@
 			$value_set['reference']		= $this->db->db_addslashes($values['reference']);
 			$value_set['skill']			= $values['skill'];
 			$value_set['place_id']		= $values['place_id'];
+			$value_set['credits']		= (int)$values['credits'];
 
 			$value_set	= $this->db->validate_update($value_set);
 

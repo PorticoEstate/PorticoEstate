@@ -233,6 +233,7 @@
 				(
 					'title'			=> $entry['title'],
 					'place'			=> $entry['place'],
+					'credits'		=> $entry['credits'],
 					'start_date'		=> $entry['start_date'],
 					'end_date'		=> $entry['end_date'],
 					'category'		=> $entry['category'],
@@ -268,6 +269,17 @@
 												//		'cat_id'	=> $this->cat_id,
 														'allrows' 	=> $this->allrows)
 										)),
+				'sort_credits'		=> $this->nextmatchs->show_sort_order(array
+										(
+											'sort'	=> $this->sort,
+											'var'	=> 'phpgw_hrm_training.credits',
+											'order'	=> $this->order,
+											'extra'	=> array('menuaction'	=> 'hrm.uiuser.training',
+														'user_id'	=> $user_id,
+														'query'		=> $this->query,
+												//		'cat_id'	=> $this->cat_id,
+														'allrows' 	=> $this->allrows)
+										)),
 				'sort_start_date'	=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
@@ -292,6 +304,7 @@
 														'allrows' 	=> $this->allrows)
 										)),
 				'lang_category'		=> lang('category'),
+				'lang_credits'		=> lang('credits'),
 				'lang_title'		=> lang('training'),
 				'lang_start_date'	=> lang('start date'),
 				'lang_end_date'		=> lang('end date'),
@@ -517,6 +530,7 @@
 				'value_title'					=> isset($values['title']) ? $values['title'] : '',
 				'value_start_date'				=> isset($values['start_date']) ? $values['start_date'] : '',
 				'value_end_date'				=> isset($values['end_date']) ? $values['end_date'] : '',
+				'value_credits'					=> isset($values['credits']) ? $values['credits'] : 0,
 				'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
 				'value_reference'				=> isset($values['reference']) ? $values['reference'] : '',
 				'value_new_place_name'			=> isset($values['new_place_name']) ? $values['new_place_name'] : '',
@@ -615,6 +629,7 @@
 				'value_title'				=> $values['title'],
 				'value_start_date'			=> $values['start_date'],
 				'value_end_date'			=> $values['end_date'],
+				'value_credits'				=> isset($values['credits']) ? $values['credits'] : 0,
 				'value_entry_date'			=> $values['entry_date'],
 				'value_reference'			=> $values['reference'],
 
