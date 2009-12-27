@@ -131,6 +131,7 @@
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'owner' => array('type' => 'int','precision' => '4','nullable' => True),
 				'access' => array('type' => 'varchar','precision' => '7','nullable' => True),
+				'credits' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id','user_id'),
 			'fk' => array(),

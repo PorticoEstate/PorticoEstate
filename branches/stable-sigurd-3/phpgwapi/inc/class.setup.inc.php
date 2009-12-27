@@ -39,10 +39,11 @@
 		{
 			$this->detection = createObject('phpgwapi.setup_detection');
 			$this->process   = createObject('phpgwapi.setup_process');
+			$_translation    = &$this->process->translation;
 
 			/* The setup application needs these */
 			$this->html	= $html ? CreateObject('phpgwapi.setup_html') : null;
-			$this->translation = $translation ? CreateObject('phpgwapi.setup_translation') : null;
+			$this->translation = $translation ? $_translation : null ; //CreateObject('phpgwapi.setup_translation') : null;
 			
 			//$this->tbl_apps    = $this->get_apps_table_name();
 			//$this->tbl_config  = $this->get_config_table_name();

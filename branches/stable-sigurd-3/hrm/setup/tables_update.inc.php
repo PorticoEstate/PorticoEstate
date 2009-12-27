@@ -150,3 +150,19 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		return $GLOBALS['setup_info']['hrm']['currentver'];
 	}
+
+	/**
+	* Update hrm version from 0.9.17.005 to 0.9.17.006
+	*/
+
+	$test[] = '0.9.17.005';
+	function hrm_upgrade0_9_17_005()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_hrm_training','credits',array('type' => 'int','precision' => '4', 'nullable' => True));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['hrm']['currentver'] = '0.9.17.006';
+			return $GLOBALS['setup_info']['hrm']['currentver'];
+		}
+	}
