@@ -436,11 +436,11 @@
 				foreach ($users_gross as $entry => $user)
 				{
 
-					if( !array_search($user['account_id'], $accounts ) )
+					if( !isset($accounts[$user['account_id']]) )
 					{
 						$users[] = $user;
 					}
-					$accounts[] = $user['account_id'];
+					$accounts[$user['account_id']] = true;
 				}
 				unset($users_gross);
 				unset($accounts);

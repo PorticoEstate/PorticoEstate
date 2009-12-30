@@ -16,6 +16,16 @@
     <td>{lang_organisation}:</td>
     <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_needed_for_invoice_approval}:</td>
+    <td>
+     <select name="newsettings[invoice_approval]">
+      <option value="" {selected_invoice_approval_}>2</option>
+      <option value="1" {selected_invoice_approval_1}>1</option>
+     </select>
+    </td>
+   </tr>
+ 
    <tr class="row_on">
     <td>{lang_Path_to_Invoice_import_files}:<br>
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>

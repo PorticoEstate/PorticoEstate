@@ -36,8 +36,9 @@
 	{
 		var $total_records = 0;
 		var $role = array();
+		protected $invoice_approval = 2;
 
-		function property_soinvoice()
+		function __construct()
 		{
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
@@ -45,6 +46,9 @@
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
+			$this->config		= CreateObject('phpgwapi.config','property');
+			$this->config->read();
+			$this->invoice_approval = isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval'] ? $this->config->config_data['invoice_approval'] : 2;
 		}
 
 		function read_invoice($data)
@@ -1109,7 +1113,6 @@
 								$receipt['error'][] = array('msg'=>'Dette bilaget er ikkje godkjent: ' . " ".$voucher_id);
 								$local_error= true;
 							}
-
 						}
 
 						if ($values['kreditnota'][$n])
@@ -1124,19 +1127,23 @@
 
 						if (! $local_error)
 						{
-							$sql= "UPDATE fm_ecobilag set $blank_date $kommma_blank $sign_field $sign_id $kommma $sign_date_field $sign_date $kommma $transfer_sign_field $transfer_id $transfer_date_field $transfer_date ,kreditnota=$wait_for_kreditnota  where bilagsnr='$voucher_id'";
+							$sql= "UPDATE fm_ecobilag SET $blank_date $kommma_blank $sign_field $sign_id $kommma $sign_date_field $sign_date $kommma $transfer_sign_field $transfer_id $transfer_date_field $transfer_date ,kreditnota=$wait_for_kreditnota  where bilagsnr='$voucher_id'";
 							$GLOBALS['phpgw']->db->transaction_begin();
 							$GLOBALS['phpgw']->db->query($sql);
-							$GLOBALS['phpgw']->db->transaction_commit();
-
-							$receipt['message'][] = array('msg'=> lang('voucher is updated: ') . $voucher_id);
+							if($GLOBALS['phpgw']->db->transaction_commit())
+							{
+								$receipt['message'][] = array('msg'=> lang('voucher is updated: ') . $voucher_id);
+							}
 						}
 					}
 				}
 			}
 
 			$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set utbetalingid = NULL, utbetalingsigndato = NULL WHERE budsjettsigndato IS NULL");
-			$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set utbetalingid = NULL, utbetalingsigndato = NULL WHERE oppsynsigndato IS NULL AND saksigndato IS NULL");
+			if($this->invoice_approval == 2)
+			{
+				$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set utbetalingid = NULL, utbetalingsigndato = NULL WHERE oppsynsigndato IS NULL AND saksigndato IS NULL");
+			}
 
 			return $receipt;
 		}
@@ -1150,9 +1157,19 @@
 
 			$this->db->next_record();
 
-			if ($this->db->f('budsjettsigndato') && ($this->db->f('oppsynsigndato') || $this->db->f('saksigndato')))
+			if($this->invoice_approval == 1)
 			{
-				$allow_transfer=true;
+				if ($this->db->f('budsjettsigndato'))
+				{
+					$allow_transfer=true;
+				}			
+			}
+			else
+			{
+				if ($this->db->f('budsjettsigndato') && ($this->db->f('oppsynsigndato') || $this->db->f('saksigndato')))
+				{
+					$allow_transfer=true;
+				}
 			}
 
 			return $allow_transfer;

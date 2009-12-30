@@ -610,7 +610,7 @@
 				'type'			=>	array('number',''		,''		,''		,'number','number',''	  ,'number',''	,'url' ,'msg_box'	,''    ,''    ,''    ,$paid?'':'text'	   	,''     ,'msg_box',''    ,''     ,''     ,''     ,$paid?'':'checkbox' ,$paid?'':'radio'	 ,''     ,''     ,''     ,''  	 ),
 
 				'col_name'		=>	array('payment_date','transfer','kreditnota','sign','vendor_name','counter_num','counter','voucher_id_num','voucher_id','voucher_id_lnk','voucher_date_lnk','sign_orig' ,'num_days_orig','timestamp_voucher_date','num_days','amount_lnk','vendor_id_lnk','invoice_count','invoice_count_lnk','type_lnk','period','kreditnota_tmp','sign_tmp' ,'janitor_lnk','supervisor_lnk','budget_responsible_lnk','transfer_lnk'),
-				'name'			=>	array('payment_date','dummy','dummy','dummy','vendor','counter','counter','voucher_id'    ,'voucher_id','voucher_id'    ,'voucher_date'    ,'sign_orig','num_days'     ,'timestamp_voucher_date','num_days,amount'    ,'vendor_id'    ,'invoice_count','invoice_count'    ,'type'    ,'period','kreditnota','empty_fild','janitor'    ,'supervisor'    ,'budget_responsible'    ,'transfer_id'),
+				'name'			=>	array('payment_date','dummy','dummy','dummy','vendor','counter','counter','voucher_id'    ,'voucher_id','voucher_id'    ,'voucher_date'    ,'sign_orig','num_days'     ,'timestamp_voucher_date','num_days','amount'    ,'vendor_id'    ,'invoice_count','invoice_count'    ,'type'    ,'period','kreditnota','empty_fild','janitor'    ,'supervisor'    ,'budget_responsible'    ,'transfer_id'),
 
 				'formatter'		=>	array('','','','','','','','','','','','','','','','myFormatDate','','','','',$paid?'':'myPeriodDropDown','','','','','',''),
 
@@ -621,19 +621,19 @@
 			//url to detail of voucher
 			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>$this->user_lid));
 
-
 			if($paid)
 			{
 				 $link_sub.="&paid=true";
 			}
 
 			$j=0;
+			$count_uicols = count($uicols['name']);
 			//---- llena DATATABLE-ROWS con los valores del READ
 			if (isset($content) && is_array($content))
 			{
 				foreach($content as $invoices)
 				{
-					for ($i=0;$i<count($uicols['name']);$i++)
+					for ($i=0;$i<$count_uicols;$i++)
 					{
 						//values column kreditnota
 						if($uicols['type'][$i]=='checkbox' && $uicols['col_name'][$i]=='kreditnota_tmp')
@@ -687,7 +687,7 @@
 									{
 										if( ($invoices['is_janitor']== 1 && $type_sign == 'janitor') || ($invoices['is_supervisor']== 1 && $type_sign == 'supervisor') || ($invoices['is_budget_responsible']== 1 && $type_sign == 'budget_responsible'))
 										{
-											if( ( ($invoices['jan_date'] == '') && $type_sign == 'janitor') || (($invoices['super_date'] == '') && $type_sign == 'supervisor') || (($invoices['budget_date'] == '') && $type_sign == 'budget_responsible'))
+											if( ( (!$invoices['jan_date']) && $type_sign == 'janitor') || ((!$invoices['super_date']) && $type_sign == 'supervisor') || ((!$invoices['budget_date']) && $type_sign == 'budget_responsible'))
 											{
 												$datatable['rows']['row'][$j]['column'][$i]['name']			= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type']			= 'radio';
@@ -695,7 +695,7 @@
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= "";
 											}
 
-											elseif( (($invoices['janitor'] == $invoices['current_user']) && $type_sign == 'janitor')  || (($invoices['supervisor'] == $invoices['current_user']) && $type_sign == 'supervisor') || (($invoices['budget_responsible'] == $invoices['current_user']) && $type_sign == 'budget_responsible'))
+											else if( (($invoices['janitor'] == $invoices['current_user']) && $type_sign == 'janitor')  || (($invoices['supervisor'] == $invoices['current_user']) && $type_sign == 'supervisor') || (($invoices['budget_responsible'] == $invoices['current_user']) && $type_sign == 'budget_responsible'))
 											{
 												$datatable['rows']['row'][$j]['column'][$i]['name'] 		= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type'] 		= 'radio';
@@ -714,7 +714,7 @@
 										}
 										else
 										{
-											if( ($invoices['jan_date']=='' && $type_sign == 'janitor') || ($invoices['super_date']=='' && $type_sign == 'supervisor') || ($invoices['budget_date']=='' && $type_sign == 'budget_responsible') )
+											if( (!$invoices['jan_date'] && $type_sign == 'janitor') || (!$invoices['super_date'] && $type_sign == 'supervisor') || (!$invoices['budget_date'] && $type_sign == 'budget_responsible') )
 											{
 											}
 											else
@@ -725,8 +725,8 @@
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " disabled=\"disabled\" checked ";
 											}
 										}
-										$datatable['rows']['row'][$j]['column'][$i]['value2'] = ($type_sign == 'janitor'? $invoices['janitor']: ($type_sign == 'supervisor'? $invoices['supervisor'] : $invoices['budget_responsible']));
-										$datatable['rows']['row'][$j]['column'][$i]['value0'] = ($type_sign == 'supervisor'? $invoices['super_date']: "");
+										$datatable['rows']['row'][$j]['column'][$i]['value2'] = $type_sign == 'janitor'? $invoices['janitor']: ($type_sign == 'supervisor'? $invoices['supervisor'] : $invoices['budget_responsible']);
+										$datatable['rows']['row'][$j]['column'][$i]['value0'] = $type_sign == 'janitor'? $invoices['jan_date']: ($type_sign == 'supervisor'? $invoices['super_date'] : $invoices['budget_date']);
 									}
 									else //if($paid)
 									{
@@ -735,8 +735,7 @@
 								}
 								//---- speciual2----
 								elseif($uicols['input_type'][$i]=='special2')
-									{
-
+								{
 										// the same name of columns
 										$type_sign =  $datatable['rows']['row'][$j]['column'][$i]['format'] = $uicols['name'][$i];
 										$datatable['rows']['row'][$j]['column'][$i]['for_json'] 			= $uicols['col_name'][$i];
@@ -746,7 +745,7 @@
 										{
 											if( ($invoices['is_transfer']==1))
 											{
-												if( ($invoices['transfer_date']==''))
+												if(!$invoices['transfer_date'])
 												{
 													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer_tmp';
 													$datatable['rows']['row'][$j]['column'][$i]['type']			= 'checkbox';
