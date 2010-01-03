@@ -2012,6 +2012,12 @@
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
 			}
+
+			if(isset($values['location']) && $values['location'])
+			{
+				phpgwapi_cache::session_set('property', 'filter_location', implode('-', $values['location']));
+			}
+
 			return $values;
 		}
 
