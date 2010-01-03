@@ -7,7 +7,7 @@
 	* @author Joseph Engo <jengo@phpgroupware.org>
  	* @author Dave Hall <skwashd@phpgroupware.org>
  	* @author Sigurd Nes <sigurdne@online.no>
- 	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
+ 	* @copyright Copyright (C) 2000-2010 Free Software Foundation, Inc. http://www.fsf.org/
   	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
   	* @package phpgroupware
  	* @version $Id: header.inc.php.template 18392 2008-01-26 12:45:06Z skwashd $
@@ -199,7 +199,7 @@
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.29';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.30';
 
 
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])
@@ -223,6 +223,7 @@
 		'db_pass' => '{DB_PASS}',
 		// Look at the README file
 		'db_type' => '{DB_TYPE}',
+		'db_abstraction' => '{DB_ABSTRACTION}',
 		'config_passwd' => '{CONFIG_PASS}'
 	);
 

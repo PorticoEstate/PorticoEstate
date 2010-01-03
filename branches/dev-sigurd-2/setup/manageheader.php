@@ -317,6 +317,19 @@ HTML;
 				$detected .= lang('No ODBC/SAPDB support found. Disabling') . '<br>' . "\n";
 			}
 			*/
+
+			$supported_db_abstraction = array('adodb');
+			if (extension_loaded('pdo_pgsql'))
+			{
+				$detected .= '<li>' . lang('You appear to have PDO support enabled') . "</li>\n";
+				array_unshift($supported_db_abstraction, 'pdo');
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No PDO support found. Disabling') . "</li>\n";
+			}
+
+
 			if ( !count($supported_db) )
 			{
 				$lang_nodb = lang('Did not find any valid DB support!');
@@ -467,6 +480,28 @@ HTML;
 						}
 
 						$setup_tpl->set_var('dbtype_options', $dbtype_options);
+//---------
+						$selected = '';
+						$db_abstraction_options = '';
+						$found_dbtype = False;
+						foreach ( $supported_db_abstraction as $db_abstraction )
+						{
+							if ( $db_abstraction == $GLOBALS['phpgw_domain'][$key]['db_abstraction'] )
+							{
+								$selected = ' selected';
+								$found_db_abstraction = true;
+							}
+							else
+							{
+								$selected = '';
+							}
+							$db_abstraction_options .= <<<HTML
+								<option{$selected} value="{$db_abstraction}">$db_abstraction</option>
+
+HTML;
+						}
+						$setup_tpl->set_var('db_abstraction_options', $db_abstraction_options);
+//----------
 
 						$setup_tpl->parse('domains','domain', true);
 					}
@@ -652,6 +687,8 @@ HTML;
 			$setup_tpl->set_var('lang_dbpassdescr',lang('Password of db user'));
 			$setup_tpl->set_var('lang_dbtype',lang('DB Type'));
 			$setup_tpl->set_var('lang_whichdb',lang('Which database type do you want to use with phpGroupWare?'));
+			$setup_tpl->set_var('lang_db_abstraction',lang('Database abstraction'));
+			$setup_tpl->set_var('lang_whichdb_abstraction',lang('Which abstraction type do you want to use with phpGroupWare?'));
 			$setup_tpl->set_var('lang_configpass',lang('Configuration Password'));
 			$setup_tpl->set_var('lang_passforconfig',lang('Password needed for configuration'));
 			$setup_tpl->set_var('lang_persist',lang('Persistent connections'));
