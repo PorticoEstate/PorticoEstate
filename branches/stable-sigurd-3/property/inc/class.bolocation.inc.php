@@ -280,6 +280,11 @@
 			}
 
 			$filter_location	= isset($data['filter_location']) ? $data['filter_location'] : '';
+			if(!$filter_location)
+			{
+				$filter_location = phpgwapi_cache::session_get('property', 'filter_location');
+				phpgwapi_cache::session_clear('property', 'filter_location');
+			}
 			$block_query 		= !!$filter_location;
 			$location_link		= "menuaction:'property.uilocation.index',lookup:1,location_code:'{$filter_location}',block_query:'{$block_query}'";
 

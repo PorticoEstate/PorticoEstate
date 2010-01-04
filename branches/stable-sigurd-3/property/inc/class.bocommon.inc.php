@@ -436,11 +436,11 @@
 				foreach ($users_gross as $entry => $user)
 				{
 
-					if( !array_search($user['account_id'], $accounts ) )
+					if( !isset($accounts[$user['account_id']]) )
 					{
 						$users[] = $user;
 					}
-					$accounts[] = $user['account_id'];
+					$accounts[$user['account_id']] = true;
 				}
 				unset($users_gross);
 				unset($accounts);
@@ -2012,6 +2012,12 @@
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
 			}
+
+			if(isset($values['location']) && $values['location'])
+			{
+				phpgwapi_cache::session_set('property', 'filter_location', implode('-', $values['location']));
+			}
+
 			return $values;
 		}
 
