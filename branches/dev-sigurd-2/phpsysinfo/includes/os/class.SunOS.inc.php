@@ -1,240 +1,281 @@
 <?php 
-
-// phpSysInfo - A PHP System Information Script
-// http://phpsysinfo.sourceforge.net/
-
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-// $Id$
-
-$error->addError("WARN", "The SunOS version of phpSysInfo is work in progress, some things currently don't work");
-
-class sysinfo {
-  // Extract kernel values via kstat() interface
-  function kstat ($key) {
-    $m = execute_program('kstat', "-p d $key");
-    list($key, $value) = split("\t", trim($m), 2);
-    return $value;
-  } 
-
-  function vhostname () {
-    if (! ($result = getenv('SERVER_NAME'))) {
-      $result = 'N.A.';
-    } 
-    return $result;
-  } 
-  // get the IP address of our vhost name
-  function vip_addr () {
-    return gethostbyname($this->vhostname());
-  }
-  // get our canonical hostname
-  function chostname () {
-    if ($result = execute_program('uname', '-n')) {
-      $result = gethostbyaddr(gethostbyname($result));
-    } else {
-      $result = 'N.A.';
-    } 
-    return $result;
-  } 
-  // get the IP address of our canonical hostname
-  function ip_addr () {
-    if (!($result = getenv('SERVER_ADDR'))) {
-      $result = gethostbyname($this->chostname());
-    } 
-    return $result;
-  } 
-
-  function kernel () {
-    $os = execute_program('uname', '-s');
-    $version = execute_program('uname', '-r');
-    return $os . ' ' . $version;
-  } 
-
-  function uptime () {
-    $result = time() - $this->kstat('unix:0:system_misc:boot_time');
-
-    return $result;
-  } 
-
-  function users () {
-    $who = split('=', execute_program('who', '-q'));
-    $result = $who[1];
-    return $result;
-  } 
-
-  function loadavg ($bar = false) {
-    $load1 = $this->kstat('unix:0:system_misc:avenrun_1min');
-    $load5 = $this->kstat('unix:0:system_misc:avenrun_5min');
-    $load15 = $this->kstat('unix:0:system_misc:avenrun_15min');
-    $results['avg'] = array( round($load1/256, 2), round($load5/256, 2), round($load15/256, 2) );
-    return $results;
-  } 
-
-  function cpu_info () {
-    $results = array();
-    $ar_buf = array();
-
-    $results['model'] = execute_program('uname', '-i');
-    $results['cpuspeed'] = $this->kstat('cpu_info:0:cpu_info0:clock_MHz');
-    $results['cache'] = $this->kstat('cpu_info:0:cpu_info0:cpu_type');
-    $results['cpus'] = $this->kstat('unix:0:system_misc:ncpus');
-
-    return $results;
-  } 
-
-  function pci () {
-    // FIXME
-    $results = array();
-    return $results;
-  } 
-
-  function ide () {
-    // FIXME
-    $results = array();
-    return $results;
-  } 
-
-  function scsi () {
-    // FIXME
-    $results = array();
-    return $results;
-  } 
-
-  function usb () {
-    // FIXME
-    $results = array();
-    return $results;
-  } 
-
-  function sbus () {
-    $results = array();
-    $_results[0] = "";
-    // TODO. Nothing here yet. Move along.
-    $results = $_results;
-    return $results;
-  }
-
-  function network () {
-    $results = array();
-
-    $netstat = execute_program('netstat', '-ni | awk \'(NF ==10){print;}\'');
-    $lines = split("\n", $netstat);
-    $results = array();
-    for ($i = 0, $max = sizeof($lines); $i < $max; $i++) {
-      $ar_buf = preg_split("/\s+/", $lines[$i]);
-      if ((!empty($ar_buf[0])) && ($ar_buf[0] != 'Name')) {
-        $results[$ar_buf[0]] = array();
-
-        $results[$ar_buf[0]]['rx_bytes'] = 0;
-        $results[$ar_buf[0]]['rx_packets'] = $ar_buf[4];
-        $results[$ar_buf[0]]['rx_errs'] = $ar_buf[5];
-        $results[$ar_buf[0]]['rx_drop'] = 0;
-
-        $results[$ar_buf[0]]['tx_bytes'] = 0;
-        $results[$ar_buf[0]]['tx_packets'] = $ar_buf[6];
-        $results[$ar_buf[0]]['tx_errs'] = $ar_buf[7];
-        $results[$ar_buf[0]]['tx_drop'] = 0;
-
-        $results[$ar_buf[0]]['errs'] = $ar_buf[5] + $ar_buf[
-        7];
-        $results[$ar_buf[0]]['drop'] = 0;
-
-        preg_match('/^(\D+)(\d+)$/', $ar_buf[0], $intf);
-        $prefix = $intf[1] . ':' . $intf[2] . ':' . $intf[1] . $intf[2] . ':';
-        $cnt = $this->kstat($prefix . 'drop');
-
-        if ($cnt > 0) {
-          $results[$ar_buf[0]]['rx_drop'] = $cnt;
-        } 
-        $cnt = $this->kstat($prefix . 'obytes64');
-
-        if ($cnt > 0) {
-          $results[$ar_buf[0]]['tx_bytes'] = $cnt;
-        } 
-        $cnt = $this->kstat($prefix . 'rbytes64');
-
-        if ($cnt > 0) {
-          $results[$ar_buf[0]]['rx_bytes'] = $cnt;
+/**
+ * SunOS System Class
+ *
+ * PHP version 5
+ *
+ * @category  PHP
+ * @package   PSI_OS
+ * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
+ * @copyright 2009 phpSysInfo
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @version   SVN: $Id$
+ * @link      http://phpsysinfo.sourceforge.net
+ */
+ /**
+ * SunOS sysinfo class
+ * get all the required information from SunOS systems
+ *
+ * @category  PHP
+ * @package   PSI_OS
+ * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
+ * @copyright 2009 phpSysInfo
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @version   Release: 3.0
+ * @link      http://phpsysinfo.sourceforge.net
+ */
+class SunOS extends OS
+{
+    /**
+     * add warning to errors
+     */
+    public function __construct()
+    {
+        $this->error->addError("WARN", "The SunOS version of phpSysInfo is work in progress, some things currently don't work");
+    }
+    
+    /**
+     * Extract kernel values via kstat() interface
+     *
+     * @param string $key key for kstat programm
+     *
+     * @return string
+     */
+    private function _kstat($key)
+    {
+        if (CommonFunctions::executeProgram('kstat', '-p d '.$key, $m, PSI_DEBUG)) {
+            list($key, $value) = preg_split("/\t/", trim($m), 2);
+            return $value;
+        } else {
+            return '';
         }
-      } 
-    } 
-    return $results;
-  } 
-
-  function memory () {
-    $results['devswap'] = array();
-
-    $results['ram'] = array();
-
-    $pagesize = $this->kstat('unix:0:seg_cache:slab_size');
-    $results['ram']['total'] = $this->kstat('unix:0:system_pages:pagestotal') * $pagesize / 1024;
-    $results['ram']['used'] = $this->kstat('unix:0:system_pages:pageslocked') * $pagesize / 1024;
-    $results['ram']['free'] = $this->kstat('unix:0:system_pages:pagesfree') * $pagesize / 1024;
-    $results['ram']['shared'] = 0;
-    $results['ram']['buffers'] = 0;
-    $results['ram']['cached'] = 0;
-
-    $results['ram']['percent'] = round(($results['ram']['used'] * 100) / $results['ram']['total']);
-
-    $results['swap'] = array();
-    $results['swap']['total'] = $this->kstat('unix:0:vminfo:swap_avail') / 1024 / 1024;
-    $results['swap']['used'] = $this->kstat('unix:0:vminfo:swap_alloc') / 1024 / 1024;
-    $results['swap']['free'] = $this->kstat('unix:0:vminfo:swap_free') / 1024 / 1024;
-    $results['swap']['percent'] = round(($ar_buf[1] * 100) / $ar_buf[0]);
-    $results['swap']['percent'] = round(($results['swap']['used'] * 100) / $results['swap']['total']);
-    return $results;
-  } 
-
-  function filesystems () {
-    $df = execute_program('df', '-k');
-    $mounts = split("\n", $df);
-
-    $dftypes = execute_program('df', '-n');
-    $mounttypes = split("\n", $dftypes);
-
-    for ($i = 1, $j = 0, $max = sizeof($mounts); $i < $max; $i++) {
-      $ar_buf = preg_split('/\s+/', $mounts[$i], 6);
-      $ty_buf = split(':', $mounttypes[$i-1], 2);
-
-      if (hide_mount($ar_buf[5])) {
-        continue;
-      }
-
-      $results[$j] = array();
-
-      $results[$j]['disk'] = $ar_buf[0];
-      $results[$j]['size'] = $ar_buf[1];
-      $results[$j]['used'] = $ar_buf[2];
-      $results[$j]['free'] = $ar_buf[3];
-      $results[$j]['percent'] = round(($results[$j]['used'] * 100) / $results[$j]['size']);
-      $results[$j]['mount'] = $ar_buf[5];
-      $results[$j]['fstype'] = $ty_buf[1];
-      $j++;
-    } 
-    return $results;
-  } 
-  
-  function distro () {
-    $result = 'SunOS';  	
-    return($result);
-  }
-
-  function distroicon () {
-    $result = 'SunOS.png';
-    return($result);
-  }
-} 
-
+    }
+    
+    /**
+     * Virtual Host Name
+     *
+     * @return void
+     */
+    private function _hostname()
+    {
+        if (PSI_USE_VHOST === true) {
+            $this->sys->setHostname(getenv('SERVER_NAME'));
+        } else {
+            if (CommonFunctions::executeProgram('uname', '-n', $result, PSI_DEBUG)) {
+                $ip = gethostbyname($result);
+                if ($ip != $result) {
+                    $this->sys->setHostname(gethostbyaddr($ip));
+                }
+            }
+        }
+    }
+    
+    /**
+     * IP of the Virtual Host Name
+     *
+     *  @return void
+     */
+    private function _ip()
+    {
+        if (PSI_USE_VHOST === true) {
+            $this->sys->setIp(gethostbyname($this->_hostname()));
+        } else {
+            if (!($result = getenv('SERVER_ADDR'))) {
+                $this->sys->setIp(gethostbyname($this->_hostname()));
+            } else {
+                $this->sys->setIp($result);
+            }
+        }
+    }
+    
+    /**
+     * Kernel Version
+     *
+     * @return void
+     */
+    private function _kernel()
+    {
+        if (CommonFunctions::executeProgram('uname', '-s', $os, PSI_DEBUG)) {
+            if (CommonFunctions::executeProgram('uname', '-r', $version, PSI_DEBUG)) {
+                $this->sys->setKernel($os.' '.$version);
+            } else {
+                $this->sys->setKernel($os);
+            }
+        }
+    }
+    
+    /**
+     * UpTime
+     * time the system is running
+     *
+     * @return void
+     */
+    private function _uptime()
+    {
+        $this->sys->setUptime(time() - $this->_kstat('unix:0:system_misc:boot_time'));
+    }
+    
+    /**
+     * Number of Users
+     *
+     * @return void
+     */
+    private function _users()
+    {
+        if (CommonFunctions::executeProgram('who', '-q', $buf, PSI_DEBUG)) {
+            $who = preg_split('/=/', $buf);
+            $this->sys->setUsers($who[1]);
+        }
+    }
+    
+    /**
+     * Processor Load
+     * optionally create a loadbar
+     *
+     * @return void
+     */
+    private function _loadavg()
+    {
+        $load1 = $this->_kstat('unix:0:system_misc:avenrun_1min');
+        $load5 = $this->_kstat('unix:0:system_misc:avenrun_5min');
+        $load15 = $this->_kstat('unix:0:system_misc:avenrun_15min');
+        $this->sys->setLoad(round($load1 / 256, 2).' '.round($load5 / 256, 2).' '.round($load15 / 256, 2));
+    }
+    
+    /**
+     * CPU information
+     *
+     * @return void
+     */
+    private function _cpuinfo()
+    {
+        $dev = new CpuDevice();
+        if (CommonFunctions::executeProgram('uname', '-i', $buf, PSI_DEBUG)) {
+            $dev->setModel(trim($buf));
+        }
+        $dev->setCpuSpeed($this->_kstat('cpu_info:0:cpu_info0:clock_MHz'));
+        $dev->setCache($this->_kstat('cpu_info:0:cpu_info0:cpu_type') * 1024);
+        $this->sys->setCpus($dev);
+    }
+    
+    /**
+     * Network devices
+     *
+     * @return void
+     */
+    private function _network()
+    {
+        if (CommonFunctions::executeProgram('netstat', '-ni | awk \'(NF ==10){print;}\'', $netstat, PSI_DEBUG)) {
+            $lines = preg_split("/\n/", $netstat, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($lines as $line) {
+                $ar_buf = preg_split("/\s+/", $line);
+                if (! empty($ar_buf[0]) && $ar_buf[0] !== 'Name') {
+                    $dev = new NetDevice();
+                    $dev->setName($ar_buf[0]);
+                    $results[$ar_buf[0]]['errs'] = $ar_buf[5] + $ar_buf[7];
+                    preg_match('/^(\D+)(\d+)$/', $ar_buf[0], $intf);
+                    $prefix = $intf[1].':'.$intf[2].':'.$intf[1].$intf[2].':';
+                    $cnt = $this->_kstat($prefix.'drop');
+                    if ($cnt > 0) {
+                        $dev->setDrops($cnt);
+                    }
+                    $cnt = $this->_kstat($prefix.'obytes64');
+                    if ($cnt > 0) {
+                        $dev->setTxBytes($cnt);
+                    }
+                    $cnt = $this->_kstat($prefix.'rbytes64');
+                    if ($cnt > 0) {
+                        $dev->setRxBytes($cnt);
+                    }
+                    $this->sys->setNetDevices($dev);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Physical memory information and Swap Space information
+     *
+     * @return void
+     */
+    private function _memory()
+    {
+        $pagesize = $this->_kstat('unix:0:seg_cache:slab_size');
+        $this->sys->setMemTotal($this->_kstat('unix:0:system_pages:pagestotal') * $pagesize);
+        $this->sys->setMemUsed($this->_kstat('unix:0:system_pages:pageslocked') * $pagesize);
+        $this->sys->setMemFree($this->_kstat('unix:0:system_pages:pagesfree') * $pagesize);
+        $dev = new DiskDevice();
+        $dev->setName('SWAP');
+        $dev->setFsType('swap');
+        $dev->setTotal($this->_kstat('unix:0:vminfo:swap_avail') / 1024);
+        $dev->setUsed($this->_kstat('unix:0:vminfo:swap_alloc') / 1024);
+        $dev->setFree($this->_kstat('unix:0:vminfo:swap_free') / 1024);
+        $this->sys->setSwapDevices($dev);
+    }
+    
+    /**
+     * filesystem information
+     *
+     * @return void
+     */
+    private function _filesystems()
+    {
+        if (CommonFunctions::executeProgram('df', '-k', $df, PSI_DEBUG)) {
+            $mounts = preg_split("/\n/", $df, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($mounts as $mount) {
+                $ar_buf = preg_split('/\s+/', $mount, 6);
+                $dev = new DiskDevice();
+                $dev->setName($ar_buf[0]);
+                $dev->setTotal($ar_buf[1] * 1024);
+                $dev->setUsed($ar_buf[2] * 1024);
+                $dev->setFree($ar_buf[3] * 1024);
+                $dev->setMountPoint($ar_buf[5]);
+                if (CommonFunctions::executeProgram('df', '-n', $dftypes, PSI_DEBUG)) {
+                    $mounttypes = preg_split("/\n/", $dftypes, -1, PREG_SPLIT_NO_EMPTY);
+                    foreach ($mounttypes as $type) {
+                        $ty_buf = preg_split('/:/', $type, 2);
+                        if ($ty_buf == $dev->getName()) {
+                            $dev->setFsType($ty_buf[1]);
+                            break;
+                        }
+                    }
+                }
+                $this->sys->setDiskDevices($dev);
+            }
+        }
+    }
+    
+    /**
+     * Distribution Icon
+     *
+     * @return void
+     */
+    private function _distro()
+    {
+        $this->sys->setDistribution('SunOS');
+        $this->sys->setDistributionIcon('SunOS.png');
+    }
+    
+    /**
+     * get the information
+     *
+     * @see PSI_Interface_OS::build()
+     *
+     * @return Void
+     */
+    function build()
+    {
+        $this->_ip();
+        $this->_hostname();
+        $this->_distro();
+        $this->_kernel();
+        $this->_uptime();
+        $this->_users();
+        $this->_loadavg();
+        $this->_cpuinfo();
+        $this->_network();
+        $this->_memory();
+        $this->_filesystems();
+    }
+}
 ?>

@@ -16,13 +16,17 @@
 
 	$setup_info['phpsysinfo']['name']      = 'phpsysinfo';
 	$setup_info['phpsysinfo']['title']     = 'phpsysinfo';
-	$setup_info['phpsysinfo']['version']   = '1.7';
+	$setup_info['phpsysinfo']['version']   = '3.0';
 	$setup_info['phpsysinfo']['app_order'] = 99;
 	$setup_info['phpsysinfo']['enable']    = 2;
 	$setup_info['phpsysinfo']['tables']    = '';
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['phpsysinfo']['hooks'][]   = 'admin';
+	$setup_info['phpsysinfo']['hooks'] = array
+	(
+		'menu'	=> 'phpsysinfo.menu.get_menu',
+	);
+
 
 	/* Dependacies for this app to work */
 	$setup_info['phpsysinfo']['depends'][] = array(

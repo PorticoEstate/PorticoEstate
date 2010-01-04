@@ -1,552 +1,565 @@
 <?php 
-// phpSysInfo - A PHP System Information Script
-// http://phpsysinfo.sourceforge.net/
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// $Id$
-
-if (!defined('IN_PHPSYSINFO')) {
-    die("No Hacking");
-}
-
-require_once(APP_ROOT . '/includes/os/class.BSD.common.inc.php');
-
-class sysinfo {
-	var $inifile = "distros.ini";
-	var $icon = "unknown.png";
-	var $distro = "unknown";
-	var $parser;
-	
-	// get the distro name and icon when create the sysinfo object
-	function sysinfo() {
-  		$this->parser = new Parser();
-		$this->parser->df_param = 'P';
-		
-		$list = @parse_ini_file(APP_ROOT . "/" . $this->inifile, true);
-		if (!$list) {
-			return;
-		}
-		
-		$distro_info = execute_program('lsb_release','-a 2> /dev/null', false);  // We have the '2> /dev/null' because Ubuntu gives an error on this command which causes the distro to be unknown
-		if ( $distro_info != 'ERROR') {
-			$distro_tmp = split("\n",$distro_info);
-			foreach( $distro_tmp as $info ) {
-				$info_tmp = split(':', $info, 2);
-				$distro[ $info_tmp[0] ] = trim($info_tmp[1]);
-			}
-			if( !isset( $list[$distro['Distributor ID']] ) ){
-				return;
-			}
-			$this->icon = isset($list[$distro['Distributor ID']]["Image"]) ? $list[$distro['Distributor ID']]["Image"] : $this->icon;
-			$this->distro = $distro['Description'];
-		} else {  // Fall back in case 'lsb_release' does not exist ;)
-			foreach ($list as $section => $distribution) {
-				if (!isset($distribution["Files"])) {
-					continue;
-				} else {
-					foreach (explode(";", $distribution["Files"]) as $filename) {
-						if (file_exists($filename)) {
-							$buf = rfts( $filename );
-							$this->icon = isset($distribution["Image"]) ? $distribution["Image"] : $this->icon;
-							$this->distro = isset($distribution["Name"]) ? $distribution["Name"] . " " . trim($buf) : trim($buf);
-							break 2;
-						}
-					}
-				}
-			}
-		}
-	}
-  
-  // get our apache SERVER_NAME or vhost
-  function vhostname () {
-    if (! ($result = getenv('SERVER_NAME'))) {
-      $result = 'N.A.';
-    } 
-    return $result;
-  } 
-  // get the IP address of our vhost name
-  function vip_addr () {
-    return gethostbyname($this->vhostname());
-  }
-  // get our canonical hostname
-  function chostname () {
-    $result = rfts( '/proc/sys/kernel/hostname', 1 );
-    if ( $result == "ERROR" ) {
-      $result = "N.A.";
-    } else {
-      $result = gethostbyaddr( gethostbyname( trim( $result ) ) );
-    } 
-    return $result;
-  } 
-  // get the IP address of our canonical hostname
-  function ip_addr () {
-    if (!($result = getenv('SERVER_ADDR'))) {
-      $result = gethostbyname($this->chostname());
-    } 
-    return $result;
-  } 
-
-  function kernel () {
-    $buf = rfts( '/proc/version', 1 );
-    if ( $buf == "ERROR" ) {
-      $result = "N.A.";
-    } else {
-      if (preg_match('/version (.*?) /', $buf, $ar_buf)) {
-        $result = $ar_buf[1];
-
-        if (preg_match('/SMP/', $buf)) {
-          $result .= ' (SMP)';
-        } 
-      } 
-    } 
-    return $result;
-  } 
-  
-  function uptime () {
-    $buf = rfts( '/proc/uptime', 1 );
-    $ar_buf = split( ' ', $buf );
-    $result = trim( $ar_buf[0] );
-
-    return $result;
-  } 
-
-	function users () {
-		$strResult = 0;
-  		$strBuf = execute_program('who', '-q');
-		if( $strBuf != "ERROR" ) {
-			$arrWho = split( '=', $strBuf );
-    			$strResult = $arrWho[1];
-		}
-		return $strResult;
-	}
-
-  function loadavg ($bar = false) {
-    $buf = rfts( '/proc/loadavg' );
-    if( $buf == "ERROR" ) {
-      $results['avg'] = array('N.A.', 'N.A.', 'N.A.');
-    } else {
-      $results['avg'] = preg_split("/\s/", $buf, 4);
-      unset($results['avg'][3]);	// don't need the extra values, only first three
-    } 
-    if ($bar) {
-      $buf = rfts( '/proc/stat', 1 );
-      if( $buf != "ERROR" ) {
-	sscanf($buf, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
-	// Find out the CPU load
-	// user + sys = load 
-	// total = total
-	$load = $ab + $ac + $ad;	// cpu.user + cpu.sys
-	$total = $ab + $ac + $ad + $ae;	// cpu.total
-
-	// we need a second value, wait 1 second befor getting (< 1 second no good value will occour)
-	sleep(1);
-	$buf = rfts( '/proc/stat', 1 );
-	sscanf($buf, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
-	$load2 = $ab + $ac + $ad;
-	$total2 = $ab + $ac + $ad + $ae;
-	$results['cpupercent'] = (100*($load2 - $load)) / ($total2 - $total);
-      }
+/**
+ * Linux System Class
+ *
+ * PHP version 5
+ *
+ * @category  PHP
+ * @package   PSI_OS
+ * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
+ * @copyright 2009 phpSysInfo
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @version   SVN: $Id$
+ * @link      http://phpsysinfo.sourceforge.net
+ */
+ /**
+ * Linux sysinfo class
+ * get all the required information from Linux system
+ *
+ * @category  PHP
+ * @package   PSI_OS
+ * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
+ * @copyright 2009 phpSysInfo
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @version   Release: 3.0
+ * @link      http://phpsysinfo.sourceforge.net
+ */
+class Linux extends OS
+{
+    /**
+     * call parent constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
     }
-    return $results;
-  } 
-
-	function cpu_info () {
-		$bufr = rfts( '/proc/cpuinfo' );
-		$results = array("cpus" => 0);
-		
-		if ( $bufr != "ERROR" ) {
-			$bufe = explode("\n", $bufr);
-			
-			$results = array('cpus' => 0, 'bogomips' => 0);
-			$ar_buf = array();
-			
-			foreach( $bufe as $buf ) {
-				$arrBuff = preg_split('/\s+:\s+/', trim($buf));
-				if( count( $arrBuff ) == 2 ) {
-					$key = $arrBuff[0];
-					$value = $arrBuff[1];
-					// All of the tags here are highly architecture dependant.
-					// the only way I could reconstruct them for machines I don't
-					// have is to browse the kernel source.  So if your arch isn't
-					// supported, tell me you want it written in.
-					switch ($key) {
-						case 'model name':
-							$results['model'] = $value;
-							break;
-						case 'cpu MHz':
-							$results['cpuspeed'] = sprintf('%.2f', $value);
-							break;
-						case 'cycle frequency [Hz]': // For Alpha arch - 2.2.x
-							$results['cpuspeed'] = sprintf('%.2f', $value / 1000000);
-							break;
-						case 'clock': // For PPC arch (damn borked POS)
-							$results['cpuspeed'] = sprintf('%.2f', $value);
-							break;
-						case 'cpu': // For PPC arch (damn borked POS)
-							$results['model'] = $value;
-							break;
-						case 'L2 cache': // More for PPC
-							$results['cache'] = $value;
-							break;
-						case 'revision': // For PPC arch (damn borked POS)
-							$results['model'] .= ' ( rev: ' . $value . ')';
-							break;
-						case 'cpu model': // For Alpha arch - 2.2.x
-							$results['model'] .= ' (' . $value . ')';
-							break;
-						case 'cache size':
-							$results['cache'] = $value;
-							break;
-						case 'bogomips':
-							$results['bogomips'] += $value;
-							break;
-						case 'BogoMIPS': // For alpha arch - 2.2.x
-							$results['bogomips'] += $value;
-							break;
-						case 'BogoMips': // For sparc arch
-							$results['bogomips'] += $value;
-							break;
-						case 'cpus detected': // For Alpha arch - 2.2.x
-							$results['cpus'] += $value;
-							break;
-						case 'system type': // Alpha arch - 2.2.x
-							$results['model'] .= ', ' . $value . ' ';
-							break;
-						case 'platform string': // Alpha arch - 2.2.x
-							$results['model'] .= ' (' . $value . ')';
-							break;
-						case 'processor':
-							$results['cpus'] += 1;
-							break;
-						case 'Cpu0ClkTck': // Linux sparc64
-							$results['cpuspeed'] = sprintf('%.2f', hexdec($value) / 1000000);
-							break;
-						case 'Cpu0Bogo': // Linux sparc64 & sparc32
-							$results['bogomips'] = $value;
-							break;
-						case 'ncpus probed': // Linux sparc64 & sparc32
-							$results['cpus'] = $value;
-							break;
-		 			}
-				}
-			}
-		
-			// sparc64 specific code follows
-			// This adds the ability to display the cache that a CPU has
-			// Originally made by Sven Blumenstein <bazik@gentoo.org> in 2004
-			// Modified by Tom Weustink <freshy98@gmx.net> in 2004
-			$sparclist = array('SUNW,UltraSPARC@0,0', 'SUNW,UltraSPARC-II@0,0', 'SUNW,UltraSPARC@1c,0', 'SUNW,UltraSPARC-IIi@1c,0', 'SUNW,UltraSPARC-II@1c,0', 'SUNW,UltraSPARC-IIe@0,0');
-			foreach ($sparclist as $name) {
-				$buf = rfts( '/proc/openprom/' . $name . '/ecache-size',1 , 32, false );
-				if( $buf != "ERROR" ) {
-					$results['cache'] = base_convert($buf, 16, 10)/1024 . ' KB';
-				}
-			}
-			// sparc64 specific code ends
-	
-			// XScale detection code
-			if ( $results['cpus'] == 0 ) {
-				foreach( $bufe as $buf ) {
-					$fields = preg_split('/\s*:\s*/', trim($buf), 2);
-					if (sizeof($fields) == 2) {
-						list($key, $value) = $fields;
-						switch($key) {
-							case 'Processor':
-								$results['cpus'] += 1;
-								$results['model'] = $value;
-								break;
-							case 'BogoMIPS': //BogoMIPS are not BogoMIPS on this CPU, it's the speed, no BogoMIPS available
-								$results['cpuspeed'] = $value;
-								break;
-							case 'I size':
-								$results['cache'] = $value;
-								break;
-							case 'D size':
-								$results['cache'] += $value;
-								break;
-						}
-					}
-				}
-				$results['cache'] = $results['cache'] / 1024 . " KB";
-			}
-		}		
-		$keys = array_keys($results);
-		$keys2be = array('model', 'cpuspeed', 'cache', 'bogomips', 'cpus');
-		
-		while ($ar_buf = each($keys2be)) {
-			if (! in_array($ar_buf[1], $keys)) {
-				$results[$ar_buf[1]] = 'N.A.';
-			} 
-		}
-		
-		$buf = rfts( '/proc/acpi/thermal_zone/THRM/temperature', 1, 4096, false );
-		if ( $buf != "ERROR" ) {
-			$results['temp'] = substr( $buf, 25, 2 );
-		}
-		
-		return $results;
-	}
-
-	function pci () {
-		$arrResults = array();
-		$booDevice = false;
-		
-		if( ! $arrResults = $this->parser->parse_lspci() ) {
-			$strBuf = rfts( '/proc/pci', 0, 4096, false );
-			if( $strBuf != "ERROR" ) {
-				$arrBuf = explode( "\n", $strBuf );
-				foreach( $arrBuf as $strLine ) {
-					if( preg_match( '/Bus/', $strLine ) ) {
-						$booDevice = true;
-						continue;
-					}
-					if( $booDevice ) {
-						list( $strKey, $strValue ) = split( ': ', $strLine, 2 );
-						if( ! preg_match( '/bridge/i', $strKey ) && ! preg_match( '/USB/i ', $strKey ) ) {
-							$arrResults[] = preg_replace( '/\([^\)]+\)\.$/', '', trim( $strValue ) );
-						}
-						$booDevice = false;
-					}
-				}
-				asort( $arrResults );
-			}
-		}
-		return $arrResults;
-	} 
-
-  function ide () {
-    $results = array();
-    $bufd = gdc( '/proc/ide', false );
-
-    foreach( $bufd as $file ) {
-      if (preg_match('/^hd/', $file)) {
-        $results[$file] = array(); 
-	$buf = rfts("/proc/ide/" . $file . "/media", 1 );
-        if ( $buf != "ERROR" ) {
-          $results[$file]['media'] = trim($buf);
-          if ($results[$file]['media'] == 'disk') {
-            $results[$file]['media'] = 'Hard Disk';
-	    $buf = rfts( "/proc/ide/" . $file . "/capacity", 1, 4096, false);
-	    if( $buf == "ERROR" ) {
-		$buf = rfts( "/sys/block/" . $file . "/size", 1, 4096, false);
-	    }
-	    if ( $buf != "ERROR" ) {
-    	        $results[$file]['capacity'] = trim( $buf );
-    	    } 
-          } elseif ($results[$file]['media'] == 'cdrom') {
-            $results[$file]['media'] = 'CD-ROM';
-	    unset($results[$file]['capacity']);
-          } 
+    /**
+     * Hostname
+     *
+     * @return void
+     */
+    private function _hostname()
+    {
+        if (PSI_USE_VHOST === true) {
+            $this->sys->setHostname(getenv('SERVER_NAME'));
         } else {
-		unset($results[$file]);
-	} 
-
-	$buf = rfts( "/proc/ide/" . $file . "/model", 1 );
-        if ( $buf != "ERROR" ) {
-          $results[$file]['model'] = trim( $buf );
-          if (preg_match('/WDC/', $results[$file]['model'])) {
-            $results[$file]['manufacture'] = 'Western Digital';
-          } elseif (preg_match('/IBM/', $results[$file]['model'])) {
-            $results[$file]['manufacture'] = 'IBM';
-          } elseif (preg_match('/FUJITSU/', $results[$file]['model'])) {
-            $results[$file]['manufacture'] = 'Fujitsu';
-          } else {
-            $results[$file]['manufacture'] = 'Unknown';
-          } 
-        } 
-	
-      } 
-    } 
-
-    asort($results);
-    return $results;
-  } 
-
-  function scsi () {
-    $results = array();
-    $dev_vendor = '';
-    $dev_model = '';
-    $dev_rev = '';
-    $dev_type = '';
-    $s = 1;
-    $get_type = 0;
-
-    $bufr = execute_program('lsscsi', '-c', false);
-    if( $bufr == "ERROR" ) {
-    	$bufr = rfts( '/proc/scsi/scsi', 0, 4096, false);
-    }
-    if ( $bufr != "ERROR" ) {
-      $bufe = explode("\n", $bufr);
-      foreach( $bufe as $buf ) {
-        if (preg_match('/Vendor/', $buf)) {
-          preg_match('/Vendor: (.*) Model: (.*) Rev: (.*)/i', $buf, $dev);
-          list($key, $value) = split(': ', $buf, 2);
-          $dev_str = $value;
-          $get_type = true;
-          continue;
-        } 
-
-        if ($get_type) {
-          preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
-          $results[$s]['model'] = "$dev[1] $dev[2] ($dev_type[1])";
-          $results[$s]['media'] = "Hard Disk";
-          $s++;
-          $get_type = false;
-        } 
-      } 
-    } 
-    asort($results);
-    return $results;
-  } 
-
-  function usb () {
-    $results = array();
-    $devnum = -1;
-
-    $bufr = execute_program('lsusb', '', false);
-    if( $bufr == "ERROR" ) {
-	$bufr = rfts( '/proc/bus/usb/devices', 0, 4096, false );
-        if ( $bufr != "ERROR" ) {
-    	    $bufe = explode("\n", $bufr);
-	    foreach( $bufe as $buf ) {
-        	if (preg_match('/^T/', $buf)) {
-            	    $devnum += 1;
-    		    $results[$devnum] = "";
-        	} elseif (preg_match('/^S:/', $buf)) {
-            	    list($key, $value) = split(': ', $buf, 2);
-            	    list($key, $value2) = split('=', $value, 2);
-    		    if (trim($key) != "SerialNumber") {
-            		$results[$devnum] .= " " . trim($value2);
-            		$devstring = 0;
-    		    }
-        	} 
+            if (CommonFunctions::rfts('/proc/sys/kernel/hostname', $result, 1)) {
+                $result = trim($result);
+                $ip = gethostbyname($result);
+                if ($ip != $result) {
+                    $this->sys->setHostname(gethostbyaddr($ip));
+                }
             }
-        } 
-    } else {
-	$bufe = explode( "\n", $bufr );
-	foreach( $bufe as $buf ) {
-	    $device = preg_split("/ /", $buf, 7);
-	    if( isset( $device[6] ) && trim( $device[6] ) != "" ) {
-		$results[$devnum++] = trim( $device[6] );
-	    }
-	}
+        }
     }
-    return $results;
-  } 
-
-  function sbus () {
-    $results = array();
-    $_results[0] = ""; 
-    // TODO. Nothing here yet. Move along.
-    $results = $_results;
-    return $results;
-  } 
-
-  function network () {
-    $results = array();
-
-    $bufr = rfts( '/proc/net/dev' );
-    if ( $bufr != "ERROR" ) {
-      $bufe = explode("\n", $bufr);
-      foreach( $bufe as $buf ) {
-        if (preg_match('/:/', $buf)) {
-          list($dev_name, $stats_list) = preg_split('/:/', $buf, 2);
-          $stats = preg_split('/\s+/', trim($stats_list));
-          $results[$dev_name] = array();
-
-          $results[$dev_name]['rx_bytes'] = $stats[0];
-          $results[$dev_name]['rx_packets'] = $stats[1];
-          $results[$dev_name]['rx_errs'] = $stats[2];
-          $results[$dev_name]['rx_drop'] = $stats[3];
-
-          $results[$dev_name]['tx_bytes'] = $stats[8];
-          $results[$dev_name]['tx_packets'] = $stats[9];
-          $results[$dev_name]['tx_errs'] = $stats[10];
-          $results[$dev_name]['tx_drop'] = $stats[11];
-
-          $results[$dev_name]['errs'] = $stats[2] + $stats[10];
-          $results[$dev_name]['drop'] = $stats[3] + $stats[11];
-        } 
-      }
+    /**
+     * IP
+     *
+     * @return void
+     */
+    private function _ip()
+    {
+        if (PSI_USE_VHOST === true) {
+            $this->sys->setIp(gethostbyname($this->_hostname()));
+        } else {
+            if (!($result = $_SERVER['SERVER_ADDR'])) {
+                $this->sys->setIp(gethostbyname($this->_hostname()));
+            } else {
+                $this->sys->setIp($result);
+            }
+        }
     }
-    return $results;
-  } 
-
-  function memory () {
-    $results['ram'] = array('total' => 0, 'free' => 0, 'used' => 0, 'percent' => 0);
-    $results['swap'] = array('total' => 0, 'free' => 0, 'used' => 0, 'percent' => 0);
-    $results['devswap'] = array();
-
-    $bufr = rfts( '/proc/meminfo' );
-    if ( $bufr != "ERROR" ) {
-      $bufe = explode("\n", $bufr);
-      foreach( $bufe as $buf ) {
-        if (preg_match('/^MemTotal:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-          $results['ram']['total'] = $ar_buf[1];
-        } else if (preg_match('/^MemFree:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-          $results['ram']['free'] = $ar_buf[1];
-        } else if (preg_match('/^Cached:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-          $results['ram']['cached'] = $ar_buf[1];
-        } else if (preg_match('/^Buffers:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
-          $results['ram']['buffers'] = $ar_buf[1];
-        } 
-      } 
-
-      $results['ram']['used'] = $results['ram']['total'] - $results['ram']['free'];
-      $results['ram']['percent'] = round(($results['ram']['used'] * 100) / $results['ram']['total']);
-      
-      // values for splitting memory usage
-      if (isset($results['ram']['cached']) && isset($results['ram']['buffers'])) {
-        $results['ram']['app'] = $results['ram']['used'] - $results['ram']['cached'] - $results['ram']['buffers'];
-	$results['ram']['app_percent'] = round(($results['ram']['app'] * 100) / $results['ram']['total']);
-	$results['ram']['buffers_percent'] = round(($results['ram']['buffers'] * 100) / $results['ram']['total']);
-	$results['ram']['cached_percent'] = round(($results['ram']['cached'] * 100) / $results['ram']['total']);
-      }
-
-      $bufr = rfts( '/proc/swaps' );
-      if ( $bufr != "ERROR" ) {
-        $swaps = explode("\n", $bufr);
-        for ($i = 1; $i < (sizeof($swaps)); $i++) {
-	  if( trim( $swaps[$i] ) != "" ) {
-            $ar_buf = preg_split('/\s+/', $swaps[$i], 6);
-            $results['devswap'][$i - 1] = array();
-            $results['devswap'][$i - 1]['dev'] = $ar_buf[0];
-            $results['devswap'][$i - 1]['total'] = $ar_buf[2];
-            $results['devswap'][$i - 1]['used'] = $ar_buf[3];
-            $results['devswap'][$i - 1]['free'] = ($results['devswap'][$i - 1]['total'] - $results['devswap'][$i - 1]['used']);
-            $results['devswap'][$i - 1]['percent'] = round(($ar_buf[3] * 100) / $ar_buf[2]);
-	    $results['swap']['total'] += $ar_buf[2];
-	    $results['swap']['used'] += $ar_buf[3];
-	    $results['swap']['free'] = $results['swap']['total'] - $results['swap']['used'];
-	    $results['swap']['percent'] = round(($results['swap']['used'] * 100) / $results['swap']['total']);
-	  }
-        } 
-      }
+    /**
+     * Kernel Version
+     *
+     * @return void
+     */
+    private function _kernel()
+    {
+        if (CommonFunctions::executeProgram('uname', '-r', $strBuf, PSI_DEBUG)) {
+            $result = trim($strBuf);
+            if (CommonFunctions::executeProgram('uname', '-v', $strBuf, PSI_DEBUG)) {
+                if (preg_match('/SMP/', $strBuf)) {
+                    $result .= ' (SMP)';
+                }
+            }
+            if (CommonFunctions::executeProgram('uname', '-m', $strBuf, PSI_DEBUG)) {
+                $result .= ' '.trim($strBuf);
+            }
+            $this->sys->setKernel($result);
+        } else {
+            if (CommonFunctions::rfts('/proc/version', $strBuf, 1)) {
+                if (preg_match('/version (.*?) /', $strBuf, $ar_buf)) {
+                    $result = $ar_buf[1];
+                    if (preg_match('/SMP/', $strBuf)) {
+                        $result .= ' (SMP)';
+                    }
+                    $this->sys->setKernel($result);
+                }
+            }
+        }
     }
-    return $results;
-  } 
-  
-  function filesystems () {
-    return $this->parser->parse_filesystems();
-  } 
-
-  function distro () {
-   return $this->distro;
-  }
-
-  function distroicon () {   
-   return $this->icon;
-  }
-
-} 
-
+    /**
+     * UpTime
+     * time the system is running
+     *
+     * @return void
+     */
+    private function _uptime()
+    {
+        CommonFunctions::rfts('/proc/uptime', $buf, 1);
+        $ar_buf = preg_split('/ /', $buf);
+        $this->sys->setUptime(trim($ar_buf[0]));
+    }
+    /**
+     * Number of Users
+     *
+     * @return void
+     */
+    private function _users()
+    {
+        if (CommonFunctions::executeProgram('who', '-q', $strBuf, PSI_DEBUG)) {
+            $arrWho = preg_split('/=/', $strBuf);
+            $this->sys->setUsers($arrWho[1]);
+        }
+    }
+    /**
+     * Processor Load
+     * optionally create a loadbar
+     *
+     * @return void
+     */
+    private function _loadavg()
+    {
+        if (CommonFunctions::rfts('/proc/loadavg', $buf)) {
+            $result = preg_split("/\s/", $buf, 4);
+            // don't need the extra values, only first three
+            unset($result[3]);
+            $this->sys->setLoad(implode(' ', $result));
+        }
+        if (PSI_LOAD_BAR) {
+            $this->sys->setLoadPercent($this->_parseProcStat('cpu'));
+        }
+    }
+    /**
+     * fill the load for a individual cpu, through parsing /proc/stat for the specified cpu
+     *
+     * @param String $cpuline cpu for which load should be meassured
+     *
+     * @return Integer
+     */
+    private function _parseProcStat($cpuline)
+    {
+        $load = 0;
+        $load2 = 0;
+        $total = 0;
+        $total2 = 0;
+        if (CommonFunctions::rfts('/proc/stat', $buf)) {
+            $lines = preg_split("/\n/", $buf, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($lines as $line) {
+                if (preg_match('/^'.$cpuline.' (.*)/', $line, $matches)) {
+                    $ab = 0;
+                    $ac = 0;
+                    $ad = 0;
+                    $ae = 0;
+                    sscanf($buf, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
+                    $load = $ab + $ac + $ad; // cpu.user + cpu.sys
+                    $total = $ab + $ac + $ad + $ae; // cpu.total
+                    break;
+                }
+            }
+        }
+        // we need a second value, wait 1 second befor getting (< 1 second no good value will occour)
+        sleep(1);
+        if (CommonFunctions::rfts('/proc/stat', $buf)) {
+            $lines = preg_split("/\n/", $buf, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($lines as $line) {
+                if (preg_match('/^'.$cpuline.' (.*)/', $line, $matches)) {
+                    $ab = 0;
+                    $ac = 0;
+                    $ad = 0;
+                    $ae = 0;
+                    sscanf($buf, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
+                    $load2 = $ab + $ac + $ad;
+                    $total2 = $ab + $ac + $ad + $ae;
+                    break;
+                }
+            }
+        }
+        if ($total > 0 && $total2 > 0 && $load > 0 && $load2 > 0 && $total2 != $total && $load2 != $load) {
+            return (100 * ($load2 - $load)) / ($total2 - $total);
+        }
+        return 0;
+    }
+    /**
+     * CPU information
+     * All of the tags here are highly architecture dependant.
+     *
+     * @return void
+     */
+    private function _cpuinfo()
+    {
+        if (CommonFunctions::rfts('/proc/cpuinfo', $bufr)) {
+            $processors = preg_split('/\s?\n\s?\n/', trim($bufr));
+            foreach ($processors as $processor) {
+                $dev = new CpuDevice();
+                $details = preg_split("/\n/", $processor, -1, PREG_SPLIT_NO_EMPTY);
+                foreach ($details as $detail) {
+                    $arrBuff = preg_split('/\s+:\s+/', trim($detail));
+                    if (count($arrBuff) == 2) {
+                        switch (strtolower($arrBuff[0])) {
+                        case 'processor':
+                            $dev->setLoad($this->_parseProcStat('cpu'.trim($arrBuff[1])));
+                            break;
+                        case 'model name':
+                        case 'cpu':
+                            $dev->setModel($arrBuff[1]);
+                            break;
+                        case 'cpu mhz':
+                        case 'clock':
+                            $dev->setCpuSpeed($arrBuff[1]);
+                            break;
+                        case 'cycle frequency [hz]':
+                            $dev->setCpuSpeed($arrBuff[1] / 1000000);
+                            break;
+                        case 'cpu0clktck':
+                            $dev->setCpuSpeed(hexdec($arrBuff[1]) / 1000000); // Linux sparc64
+                            break;
+                        case 'l2 cache':
+                        case 'cache size':
+                            $dev->setCache(preg_replace("/[a-zA-Z]/", "", $arrBuff[1]) * 1024);
+                            break;
+                        case 'bogomips':
+                        case 'cpu0bogo':
+                            $dev->setBogomips($arrBuff[1]);
+                            break;
+                        }
+                    }
+                }
+                // sparc64 specific code follows
+                // This adds the ability to display the cache that a CPU has
+                // Originally made by Sven Blumenstein <bazik@gentoo.org> in 2004
+                // Modified by Tom Weustink <freshy98@gmx.net> in 2004
+                $sparclist = array('SUNW,UltraSPARC@0,0', 'SUNW,UltraSPARC-II@0,0', 'SUNW,UltraSPARC@1c,0', 'SUNW,UltraSPARC-IIi@1c,0', 'SUNW,UltraSPARC-II@1c,0', 'SUNW,UltraSPARC-IIe@0,0');
+                foreach ($sparclist as $name) {
+                    if (CommonFunctions::rfts('/proc/openprom/'.$name.'/ecache-size', $buf, 1, 32, false)) {
+                        $dev->setCache(base_convert($buf, 16, 10));
+                    }
+                }
+                // sparc64 specific code ends
+                
+                // XScale detection code
+                if ($dev->getModel() === "") {
+                    foreach ($details as $detail) {
+                        $arrBuff = preg_split('/\s*:\s*/', trim($buf), 2);
+                        if (count($arrBuff) == 2) {
+                            switch (strtolower($arrBuff[0])) {
+                            case 'Processor':
+                                $dev->setModel($arrBuff[1]);
+                                break;
+                            case 'BogoMIPS':
+                                $dev->setCpuSpeed($arrBuff[1]); //BogoMIPS are not BogoMIPS on this CPU, it's the speed, no BogoMIPS available
+                                break;
+                            case 'I size':
+                            case 'D size':
+                                if ($dev->getCache() === null) {
+                                    $dev->setCache($arrBuff[1] * 1024);
+                                } else {
+                                    $dev->setCache($dev->getCache() + ($arrBuff[1] * 1024));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (CommonFunctions::rfts('/proc/acpi/thermal_zone/THRM/temperature', $buf, 1, 4096, false)) {
+                    $dev->setTemp(substr($buf, 25, 2));
+                }
+                $this->sys->setCpus($dev);
+            }
+        }
+    }
+    /**
+     * PCI devices
+     *
+     * @return void
+     */
+    private function _pci()
+    {
+        if (!$arrResults = Parser::lspci()) {
+            if (CommonFunctions::rfts('/proc/pci', $strBuf, 0, 4096, false)) {
+                $booDevice = false;
+                $arrBuf = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
+                foreach ($arrBuf as $strLine) {
+                    if (preg_match('/Bus/', $strLine)) {
+                        $booDevice = true;
+                        continue;
+                    }
+                    if ($booDevice) {
+                        list($strKey, $strValue) = preg_split('/: /', $strLine, 2);
+                        if (!preg_match('/bridge/i', $strKey) && !preg_match('/USB/i ', $strKey)) {
+                            $dev = new HWDevice();
+                            $dev->setName(preg_replace('/\([^\)]+\)\.$/', '', trim($strValue)));
+                            $this->sys->setPciDevices($dev);
+                        }
+                        $booDevice = false;
+                    }
+                }
+            }
+        } else {
+            foreach ($arrResults as $dev) {
+                $this->sys->setPciDevices($dev);
+            }
+        }
+    }
+    /**
+     * IDE devices
+     *
+     * @return void
+     */
+    private function _ide()
+    {
+        $bufd = CommonFunctions::gdc('/proc/ide', false);
+        foreach ($bufd as $file) {
+            if (preg_match('/^hd/', $file)) {
+                $dev = new HWDevice();
+                $dev->setName(trim($file));
+                if (CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
+                    if (trim($buf) == 'disk') {
+                        if (CommonFunctions::rfts("/proc/ide/".$file."/capacity", $buf, 1, 4096, false) || CommonFunctions::rfts("/sys/block/".$file."/size", $buf, 1, 4096, false)) {
+                            $dev->setCapacity(trim($buf) * 512 / 1024);
+                        }
+                    }
+                }
+                if (CommonFunctions::rfts("/proc/ide/".$file."/model", $buf, 1)) {
+                    $dev->setName($dev->getName().": ".trim($buf));
+                }
+                $this->sys->setIdeDevices($dev);
+            }
+        }
+    }
+    /**
+     * SCSI devices
+     *
+     * @return void
+     */
+    private function _scsi()
+    {
+        $get_type = false;
+        $device = null;
+        if (CommonFunctions::executeProgram('lsscsi', '-c', $bufr, PSI_DEBUG) || CommonFunctions::rfts('/proc/scsi/scsi', $bufr, 0, 4096, PSI_DEBUG)) {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                if (preg_match('/Vendor: (.*) Model: (.*) Rev: (.*)/i', $buf, $devices)) {
+                    $get_type = true;
+                    $device = $devices;
+                    continue;
+                }
+                if ($get_type) {
+                    preg_match('/Type:\s+(\S+)/i', $buf, $dev_type);
+                    $dev = new HWDevice();
+                    $dev->setName($device[1].' '.$device[2].' ('.$dev_type[1].')');
+                    $this->sys->setScsiDevices($dev);
+                    $get_type = false;
+                }
+            }
+        }
+    }
+    /**
+     * USB devices
+     *
+     * @return array
+     */
+    private function _usb()
+    {
+        $devnum = -1;
+        if (!CommonFunctions::executeProgram('lsusb', '', $bufr, PSI_DEBUG)) {
+            if (CommonFunctions::rfts('/proc/bus/usb/devices', $bufr, 0, 4096, false)) {
+                $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+                foreach ($bufe as $buf) {
+                    if (preg_match('/^T/', $buf)) {
+                        $devnum += 1;
+                        $results[$devnum] = "";
+                    } elseif (preg_match('/^S:/', $buf)) {
+                        list($key, $value) = preg_split('/: /', $buf, 2);
+                        list($key, $value2) = preg_split('/=/', $value, 2);
+                        if (trim($key) != "SerialNumber") {
+                            $results[$devnum] .= " ".trim($value2);
+                        }
+                    }
+                }
+                foreach ($results as $var) {
+                    $dev = new HWDevice();
+                    $dev->setName($var);
+                    $this->sys->setUsbDevices($dev);
+                }
+            }
+        } else {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                $device = preg_split("/ /", $buf, 7);
+                if (isset($device[6]) && trim($device[6]) != "") {
+                    $dev = new HWDevice();
+                    $dev->setName(trim($device[6]));
+                    $this->sys->setUsbDevices($dev);
+                }
+            }
+        }
+    }
+    /**
+     * Network devices
+     * includes also rx/tx bytes
+     *
+     * @return void
+     */
+    private function _network()
+    {
+        if (CommonFunctions::rfts('/proc/net/dev', $bufr)) {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                if (preg_match('/:/', $buf)) {
+                    list($dev_name, $stats_list) = preg_split('/:/', $buf, 2);
+                    $stats = preg_split('/\s+/', trim($stats_list));
+                    $dev = new NetDevice();
+                    $dev->setName(trim($dev_name));
+                    $dev->setRxBytes($stats[0]);
+                    $dev->setTxBytes($stats[8]);
+                    $dev->setErrors($stats[2] + $stats[10]);
+                    $dev->setDrops($stats[3] + $stats[11]);
+                    $this->sys->setNetDevices($dev);
+                }
+            }
+        }
+    }
+    /**
+     * Physical memory information and Swap Space information
+     *
+     * @return void
+     */
+    private function _memory()
+    {
+        if (CommonFunctions::rfts('/proc/meminfo', $bufr)) {
+            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($bufe as $buf) {
+                if (preg_match('/^MemTotal:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
+                    $this->sys->setMemTotal($ar_buf[1] * 1024);
+                } elseif (preg_match('/^MemFree:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
+                    $this->sys->setMemFree($ar_buf[1] * 1024);
+                } elseif (preg_match('/^Cached:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
+                    $this->sys->setMemCache($ar_buf[1] * 1024);
+                } elseif (preg_match('/^Buffers:\s+(.*)\s*kB/i', $buf, $ar_buf)) {
+                    $this->sys->setMemBuffer($ar_buf[1] * 1024);
+                }
+            }
+            $this->sys->setMemUsed($this->sys->getMemTotal() - $this->sys->getMemFree());
+            // values for splitting memory usage
+            if ($this->sys->getMemCache() !== null && $this->sys->getMemBuffer() !== null) {
+                $this->sys->setMemApplication($this->sys->getMemUsed() - $this->sys->getMemCache() - $this->sys->getMemBuffer());
+            }
+            if (CommonFunctions::rfts('/proc/swaps', $bufr)) {
+                $swaps = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+                unset($swaps[0]);
+                foreach ($swaps as $swap) {
+                    $ar_buf = preg_split('/\s+/', $swap, 5);
+                    $dev = new DiskDevice();
+                    $dev->setMountPoint($ar_buf[0]);
+                    $dev->setName("SWAP");
+                    $dev->setTotal($ar_buf[2] * 1024);
+                    $dev->setUsed($ar_buf[3] * 1024);
+                    $dev->setFree($dev->getTotal() - $dev->getUsed());
+                    $this->sys->setSwapDevices($dev);
+                }
+            }
+        }
+    }
+    /**
+     * filesystem information
+     *
+     * @return void
+     */
+    private function _filesystems()
+    {
+        $arrResult = Parser::df("-P");
+        foreach ($arrResult as $dev) {
+            $this->sys->setDiskDevices($dev);
+        }
+    }
+    /**
+     * Distribution
+     *
+     * @return void
+     */
+    private function _distro()
+    {
+        $list = @parse_ini_file(APP_ROOT."/data/distros.ini", true);
+        if (!$list) {
+            return;
+        }
+        // We have the '2> /dev/null' because Ubuntu gives an error on this command which causes the distro to be unknown
+        if (CommonFunctions::executeProgram('lsb_release', '-a 2> /dev/null', $distro_info, PSI_DEBUG)) {
+            $distro_tmp = preg_split("/\n/", $distro_info, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($distro_tmp as $info) {
+                $info_tmp = preg_split('/:/', $info, 2);
+                $distro[$info_tmp[0]] = trim($info_tmp[1]);
+                if (isset($distro['Distributor ID']) && isset($list[$distro['Distributor ID']]['Image'])) {
+                    $this->sys->setDistributionIcon($list[$distro['Distributor ID']]['Image']);
+                }
+                if (isset($distro['Description'])) {
+                    $this->sys->setDistribution($distro['Description']);
+                }
+            }
+        } else {
+            // Fall back in case 'lsb_release' does not exist ;)
+            foreach ($list as $section=>$distribution) {
+                if (!isset($distribution["Files"])) {
+                    continue;
+                } else {
+                    foreach (preg_split("/;/", $distribution["Files"], -1, PREG_SPLIT_NO_EMPTY) as $filename) {
+                        if (file_exists($filename)) {
+                            CommonFunctions::rfts($filename, $buf);
+                            if (isset($distribution["Image"])) {
+                                $this->sys->setDistributionIcon($distribution["Image"]);
+                            }
+                            if (isset($distribution["Name"])) {
+                                if ($distribution["Name"] == 'Synology') {
+                                    $this->sys->setDistribution($distribution["Name"]);
+                                } else {
+                                    $this->sys->setDistribution($distribution["Name"]." ".trim($buf));
+                                }
+                            } else {
+                                $this->sys->setDistribution(trim($buf));
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * get the information
+     *
+     * @see PSI_Interface_OS::build()
+     *
+     * @return Void
+     */
+    function build()
+    {
+        $this->_distro();
+        $this->_ip();
+        $this->_hostname();
+        $this->_kernel();
+        $this->_uptime();
+        $this->_users();
+        $this->_cpuinfo();
+        $this->_pci();
+        $this->_ide();
+        $this->_scsi();
+        $this->_usb();
+        $this->_network();
+        $this->_memory();
+        $this->_filesystems();
+        $this->_loadavg();
+    }
+}
 ?>
