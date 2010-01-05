@@ -145,6 +145,7 @@ no records found.	bookingfrontend	no	Ingen treff.
 no records found.	bookingfrontend	no	Ingen funnet!
 nov	bookingfrontend	no	november
 number of participants	bookingfrontend	no	Antall deltakere
+estimated number of participants	bookingfrontend	no	Estimert antall deltakere
 oct	bookingfrontend	no	oktober
 of	bookingfrontend	no	av
 officer	bookingfrontend	no	Saksbehandler
@@ -273,3 +274,7 @@ contact_name	bookingfrontend	no	Navn
 customer_identifier_type	bookingfrontend	no	Fakturainformasjon
 group_id	bookingfrontend	no	Gruppe/Lag
 dates	bookingfrontend	no	Fra/Til
+Information about the event	bookingfrontend	no	Informasjon om arrangementet
+For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	no	For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+To borrow premises you must verify that you have read terms and conditions	bookingfrontend	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
+In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
