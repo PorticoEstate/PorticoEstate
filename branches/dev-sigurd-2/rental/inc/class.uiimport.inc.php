@@ -84,18 +84,6 @@
 			{
 				echo "<ul>";
 				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				$this->location_id = array_search('contract_type_eksternleie', $types);
-				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Ekstern';
-				
-				$result = $this->import(); // Do import step, result determines if finished for this area
-				echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
-				while($result != '6')
-				{
-					$result = $this->import();
-					echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
-					flush();
-				}
-				
 				$this->location_id = array_search('contract_type_internleie', $types);
 				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Intern';
 				
@@ -105,6 +93,18 @@
 				{
 					$result = $this->import();
 					echo '<li class="info">Internleie: finished step ' .$result. '</li>';
+					flush();
+				}
+				
+				$this->location_id = array_search('contract_type_eksternleie', $types);
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Ekstern';
+				
+				$result = $this->import(); // Do import step, result determines if finished for this area
+				echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
+				while($result != '6')
+				{
+					$result = $this->import();
+					echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
 					flush();
 				}
 				
@@ -340,9 +340,11 @@
 				$party->set_comment($this->decode($data[26]));			//cMerknad
                 
 				$contact_person = $this->decode($data[6]);
+				//var_dump($contact_person);
 				// Insert contract person in comment if present
 				if(isset($contact_person)) {				
                     $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$contact_person);	//cKontaktPerson
+                    //var_dump($party->get_comment()."\n\nKontaktperson: ".$contact_person);
                 }
                 
            		$valid_identifier = false;
