@@ -8,6 +8,7 @@
 
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?>
+<?php echo rental_uicommon::get_page_warning($contract->get_consistency_warnings()) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 
 <div class="identifier-header">
@@ -346,31 +347,13 @@
 					</dt>
 					<dd>
 						<?php
-						$billing_start_date = $contract->get_billing_start_date();
-						
-						if($billing_start_date == null || $billing_start_date == '') // No date set
-						{
-							// ..so we try to use the start date of the contract if any
-							$contract_date = $contract->get_contract_date();
-							if($contract_date != null && $contract_date->has_start_date())
-							{
-								$billing_start_date = $contract_date->get_start_date();
+							$billing_start_date = $contract->get_billing_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_start_date()) : '-';
+							$billing_start_date_yui = $contract->get_billing_start_date() ? date('Y-m-d', $contract->get_billing_start_date()) : '';
+							if ($editable) {
+								echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', get_billing_start_date);
+							} else {
+								echo $billing_start_date;
 							}
-							else // No start date of contract
-							{
-								// ..so we use the today's date
-								$billing_start_date = time();
-							}
-						}
-						
-						$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
-						if($editable)
-						{
-							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
-						}
-						else{ // Non-ediable
-							echo $billing_start_date;
-						}
 						?>
 					</dd>
 					<dt>

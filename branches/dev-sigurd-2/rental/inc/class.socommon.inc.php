@@ -28,6 +28,10 @@ abstract class rental_socommon
 		}
 		else if($type == 'int')
 		{
+			if($value == '')
+			{
+				return 'NULL';
+			}
 			return intval($value);
 		}
 		else if($type == 'float')

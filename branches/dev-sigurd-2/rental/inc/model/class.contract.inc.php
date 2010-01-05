@@ -719,27 +719,63 @@
 		
 		public function get_rented_area() { return $this->rented_area; }
 
+		/**
+		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#validates()
+		 */
 		public function validates(){
-			if($this->get_id() == null || $this->get_id() < 1){
+			
+			// If the contract has number as identifier, it must bt greater than 1
+			$id = $this->get_id();
+			if(!is_numeric($id) && $id < 1){
 				return false;
 			}
+			
+			// The contract must be designated a responsibility area
 			if($this->get_location_id() == null || $this->get_location_id() < 1){
 				return false;
 			}
 			return true;
 		}
+		
+		/**
+		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#check_consistency()
+		 */
 		public function check_consistency(){
-			if($this->get_contract_date()->has_start_date() && $this->get_billing_start_date() < $this->get_contract_date()->get_start_date()){
-				$this->set_validation_warning(lang('warning_billing_date_between'));
+			// Retrieve the start and end date
+			$dates = $this->get_contract_date();
+			if(isset($dates))
+			{
+				$start_date = $this->get_contract_date()->get_start_date();
+				$end_date = $this->get_contract_date()->get_end_date();
 			}
-			if($this->get_contract_date()->has_end_date() && $this->get_billing_start_date() > $this->get_contract_date()->get_end_date()){
-				$this->set_validation_warning(lang('warning_billing_date_between'));
+			
+			// Give warning if the contract lacks a start date
+			if(!isset($start_date))
+			{
+				$this->set_consistency_warning(lang('warning_lacking_start_date'));
 			}
-			if($this->get_contract_date()->has_start_date() && $this->get_due_date() < $this->get_contract_date()->get_start_date()){
-				$this->set_validation_warning(lang('warning_due_date_between'));
-			}
-			if($this->get_contract_date()->has_end_date() && $this->get_due_date() > $this->get_contract_date()->get_end_date()){
-				$this->set_validation_warning(lang('warning_due_date_between'));
+			else
+			{
+				
+				// If set, the billing date must be between the contract's start date and end date
+				$billing_start = $this->get_billing_start_date();
+				if(isset($billing_start) && is_numeric($billing_start) && $due_date > 0)
+				{
+					if($billing_start < $start_date || (isset($end_date) && $billing_start > $end_date)){
+						$this->set_consistency_warning(lang('warning_billing_date_between'));
+					} 
+				}
+				
+				// If set, the due date must be between the contract's start date and end date
+				$due_date = $this->get_due_date();
+				if(isset($due_date) && is_numeric($due_date) && $due_date > 0)
+				{
+					if($due_date < $start_date || (isset($end_date) && $due_date > $end_date)){
+						$this->set_consistency_warning(lang('warning_due_date_between'));
+					} 
+				}
 			}
 		}
 		

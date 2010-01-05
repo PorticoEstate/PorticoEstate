@@ -6,6 +6,9 @@ abstract class rental_model
 {
 	protected $validation_errors = array();
 	protected $validation_warnings = array();
+	
+	protected $consistency_warnings = array();
+	
 	protected $field_of_responsibility_id;
 	protected $field_of_responsibility_name;
 	protected $permission_array;
@@ -124,6 +127,16 @@ abstract class rental_model
 	public function set_validation_warning(string $warning_language_key)
 	{
 		$this->validation_warnings[] = $warning_language_key;
+	}
+	
+	public function set_consistency_warning(string $warning_language_key)
+	{
+		$this->consistency_warnings[] = $warning_language_key;
+	}
+	
+	public function get_consistency_warnings()
+	{
+		return $this->consistency_warnings;
 	}
 
 	public function get_validation_warnings()

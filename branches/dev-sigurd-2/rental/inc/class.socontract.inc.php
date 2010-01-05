@@ -455,52 +455,50 @@ class rental_socontract extends rental_socommon
 		$id = intval($contract->get_id());
 		
 		$values = array();
-		
-		if($contract->get_term_id()) {
-			$values[] = "term_id = " . $this->marshal($contract->get_term_id(), 'int');
-		}
-		
-		if($contract->get_billing_start_date()) {
-			$values[] = "billing_start = " . $this->marshal($contract->get_billing_start_date(), 'int');
-		}
+
+		// Set all fields in form
+
+		// FORM COLUMN 1
+		$values[] = "contract_type_id = ".	$this->marshal($contract->get_contract_type_id(), 'int');
+		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
 		
 		if ($contract->get_contract_date()) {
-			$values[] = "date_start = " . $this->marshal($contract->get_contract_date()->get_start_date(), 'int');
-			$values[] = "date_end = " . $this->marshal($contract->get_contract_date()->get_end_date(), 'int');
+			$values[] = "date_start = " . 	$this->marshal($contract->get_contract_date()->get_start_date(), 'int');
+			$values[] = "date_end = " .		$this->marshal($contract->get_contract_date()->get_end_date(), 'int');
 		}
 		
-		$values[] = "security_type = " . $this->marshal($contract->get_security_type(), 'int');
-		$values[] = "security_amount = " . $this->marshal($contract->get_security_amount(), 'string');
-		$values[] = "executive_officer = ". $this->marshal($contract->get_executive_officer_id(), 'int');
-		$values[] = "comment = ". $this->marshal($contract->get_comment(), 'string');
-		$values[] = "last_updated = ".strtotime('now');
-		$values[] = "service_id = ". $this->marshal($contract->get_service_id(),'string');
+		$values[] = "due_date = " . 		$this->marshal($contract->get_due_date(), 'int');
+		$values[] = "invoice_header = ". 	$this->marshal($contract->get_invoice_header(),'string');
+		$values[] = "term_id = " .			$this->marshal($contract->get_term_id(), 'int');
+		$values[] = "billing_start = " . 	$this->marshal($contract->get_billing_start_date(), 'int');
+		$values[] = "reference = ". 		$this->marshal($contract->get_reference(),'string');
+		
+		// FORM COLUMN 2
+		$values[] = "service_id = ". 		$this->marshal($contract->get_service_id(),'string');
 		$values[] = "responsibility_id = ". $this->marshal($contract->get_responsibility_id(),'string');
-		$values[] = "reference = ". $this->marshal($contract->get_reference(),'string');
-		$values[] = "invoice_header = ". $this->marshal($contract->get_invoice_header(),'string');
-		$values[] = "account_in = ".$this->marshal($contract->get_account_in(),'string');
-		$values[] = "account_out = ".$this->marshal($contract->get_account_out(),'string');
-		$values[] = "project_id = ".$this->marshal($contract->get_project_id(),'string');
-		$values[] = "old_contract_id = ".$this->marshal($contract->get_old_contract_id(),'string');
-		$values[] = "rented_area = ".$this->marshal($contract->get_rented_area(),'float');
+		$values[] = "account_in = ".		$this->marshal($contract->get_account_in(),'string');
+		$values[] = "account_out = ".		$this->marshal($contract->get_account_out(),'string');
+		$values[] = "project_id = ".		$this->marshal($contract->get_project_id(),'string');
+		$values[] = "security_type = " . 	$this->marshal($contract->get_security_type(), 'int');
+		$values[] = "security_amount = " . 	$this->marshal($contract->get_security_amount(), 'string');
+		$values[] = "rented_area = ".		$this->marshal($contract->get_rented_area(),'float');
 		
-		if($contract->get_due_date()) {
-			$values[] = "due_date = " . $this->marshal($contract->get_due_date(), 'int');
-		}
+		// FORM COLUMN 3
+		$values[] = "comment = ". 			$this->marshal($contract->get_comment(), 'string');
 		
-		$values[] = "contract_type_id = ". $this->marshal($contract->get_contract_type_id(), 'int');
-		 
+		
+		// Set date last updated
+		$values[] = "last_updated = ".		strtotime('now');
+		
 		$result = $this->db->query('UPDATE rental_contract SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		if(isset($result))
 		{
 			$this->last_edited_by($id);
+			return true;
 		}
 			
-		$receipt['id'] = $id;
-		$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
-		
-		return $receipt;
+		return false;
 	}
 	
 	/**

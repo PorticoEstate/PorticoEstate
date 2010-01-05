@@ -376,7 +376,7 @@ class rental_soprice_item extends rental_socommon
 		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
 		
 		$filter_clauses = array();
-		$filter_clauses[] = "responsibility_id > 0";
+		$filter_clauses[] = "rpi.title != 'UNKNOWN'";
 		
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
