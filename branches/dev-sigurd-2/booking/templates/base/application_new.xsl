@@ -23,14 +23,17 @@
 					</xsl:for-each>
 				</select>
 			</dd>
-			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
+			<dt>
+				<label for="field_description"><xsl:value-of select="php:function('lang', 'Information about the event')" /></label>
+				<p><xsl:value-of select="php:function('lang', 'For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet')" /></p>
+			</dt>
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
 		</dl>
 		<dl class="form-col">
 			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
-			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label></dt>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label></dt>
 			<dd>
 				<table id="agegroup">
 					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
@@ -133,11 +136,15 @@
 		<dl class="form-col">
 			<div class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></div>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
+			<br />
+			<p><xsl:value-of select="php:function('lang', 'In order to send the invoice we need information about either customer organization number or norwegian social security number')" /></p>
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<br/>
+			<br />
 			<div id='regulation_documents'>&nbsp;</div>
+			<br />
+			<p><xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" /></p>
 		</dl>
 		<div class="form-buttons">
 			<input type="submit">

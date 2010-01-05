@@ -57,6 +57,13 @@ dl.form dt, dl.form-col dt, dl.form-2col dt {
     margin: .5em 0 .1em 0;
     color: #002;
 }
+
+dl.form dt p, dl.form-col dt p, dl.form-2col dt p, dl.form-col p {
+    font-style: normal;
+    font-weight: normal;
+	font-size: smaller;
+    color: #002;
+}
 dl.form dd textarea,
 dl.form-col dd textarea {
     width: 15em;
