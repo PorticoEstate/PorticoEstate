@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.578';
+	$setup_info['property']['version']		= '0.9.17.579';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -196,7 +196,9 @@
         'property_attr_def',
         'property_attr_value',
         'property_group_attr',
-        'property_item_attr'
+        'property_item_attr',
+        'property_attr_choice',
+        'property_attr_group'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

@@ -3892,8 +3892,8 @@
             'property_data_type' => array
             (
                 'fd' => array(
-                    'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+                    'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+                    'display_name'  => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
                     'function_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
                 ),
                 'pk' => array('id'),
@@ -3907,9 +3907,9 @@
 			(
 				'fd' => array
 				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'description' => array('type' => 'text', 'nullable' => false),
+					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name'          => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
+					'description'   => array('type' => 'text', 'nullable' => false),
 					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
@@ -3923,12 +3923,12 @@
 			(
 				'fd' => array
 				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'description' => array('type' => 'text', 'nullable' => false),
-					'data_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'unit_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name'          => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'display_name'  => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
+					'description'   => array('type' => 'text', 'nullable' => false),
+					'data_type_id'  => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'unit_id'       => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array('property_data_type' => array('data_type_id' => 'id') ,'fm_standard_unit' => array('unit_id' => 'id')),
@@ -4044,7 +4044,7 @@
 
     /**
     * Update property version from 0.9.17.577 to 0.9.17.578
-    * Add BIM tables
+    * Add BIM tables for choices and attribute groups
     *
     */
 
@@ -4058,7 +4058,7 @@
                 'fd' => array(
                     'id' =>     array('type' => 'auto', 'precision' => 4, 'nullable' => false),
                     'name' =>   array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-                    'sort' =>   array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+                    'sort' =>   array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 5)
                 ),
                 'pk' => array('id'),
                 'fk' => array(),
@@ -4102,6 +4102,26 @@
         if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
         {
             $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.578';
+            return $GLOBALS['setup_info']['property']['currentver'];
+        }
+    }
+
+    /**
+    * Update property version from 0.9.17.578 to 0.9.17.579
+    * Add sort column to BIM attributes
+    *
+    */
+    $test[] = '0.9.17.578';
+    function property_upgrade0_9_17_578()
+    {
+        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+        
+        $GLOBALS['phpgw_setup']->oProc->DropColumn('property_catalog', null, 'manufacturer_id');
+        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');;
+
+        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+        {
+            $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.579';
             return $GLOBALS['setup_info']['property']['currentver'];
         }
     }
