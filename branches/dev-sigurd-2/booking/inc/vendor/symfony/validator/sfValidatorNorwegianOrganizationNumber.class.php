@@ -27,6 +27,7 @@ class sfValidatorNorwegianOrganizationNumber extends sfValidatorRegex
   protected function configure($options = array(), $messages = array())
   {	
     parent::configure($options, $messages);
-    $this->setOption('pattern', '/^\d{9}$/');
+    // also accept 5 digits even if its not a valid organization number
+    $this->setOption('pattern', '/(^\d{9}$)|(^\d{5}$)/');
   }
 }
