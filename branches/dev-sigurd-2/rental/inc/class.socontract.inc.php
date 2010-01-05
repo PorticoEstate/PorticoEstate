@@ -771,15 +771,21 @@ class rental_socontract extends rental_socommon
 	{
 		$pid =$this->marshal($party_id, 'int');
 		$cid = $this->marshal($contract_id, 'int'); 
+		$this->db->transaction_begin();
 		$q = "UPDATE rental_contract_party SET is_payer = true WHERE party_id = ".$pid." AND contract_id = ".$cid;
 		$result = $this->db->query($q);
 		$q1 = "UPDATE rental_contract_party SET is_payer = false WHERE party_id != ".$pid." AND contract_id = ".$cid;
 		$result1 = $this->db->query($q1);
 		if($result && $result1)
 		{
+			$this->db->transaction_commit();
 			$this->last_updated($contract_id);
 			$this->last_edited_by($contract_id);
 			return true;
+		}
+		else
+		{
+			$this->db->transaction_abort();
 		}
 		return false;
 	}
@@ -872,6 +878,9 @@ class rental_socontract extends rental_socommon
     	$q_composites = "SELECT composite_id FROM rental_contract_composite WHERE contract_id={$old_contract_id}";
     	$q_parties = "SELECT party_id, is_payer FROM rental_contract_party WHERE contract_id={$old_contract_id}";
     	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price FROM rental_contract_price_item WHERE contract_id={$old_contract_id}";
+    	$success_composites = true;
+    	$success_parties = true;
+    	$success_price_items = true;
     	
     	//composites
     	$this->db->query($q_composites);
@@ -879,7 +888,13 @@ class rental_socontract extends rental_socommon
     		$composite_id = $this->unmarshal($this->db->f('composite_id'),'int');
     		$composite_id = $this->marshal($composite_id, 'int');
     		$sql = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ({$contract_id}, {$composite_id})";
-    		$this->db->query($sql);
+    		$result = $this->db->query($sql);
+    		if($result){
+    			//noop
+    		}
+    		else{
+    			$success_composites = false;
+    		}
     	}
     	
     	//parties
@@ -890,7 +905,13 @@ class rental_socontract extends rental_socommon
     		$is_payer = $this->unmarshal($this->db->f('is_payer'),'bool');
     		$is_payer = $this->marshal($is_payer ? 'true' : 'false','bool');
     		$sql = "INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES ({$contract_id}, {$party_id}, {$is_payer})";
-    		$this->db->query($sql);
+    		$result = $this->db->query($sql);
+    		if($result){
+    			//noop
+    		}
+    		else{
+    			$success_parties = false;
+    		}
     	}
     	
     	//price items
@@ -913,7 +934,19 @@ class rental_socontract extends rental_socommon
     		$total_price = $this->unmarshal($this->db->f('total_price'),'float');
     		$total_price = $this->marshal($total_price, 'float');
     		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, null, null)";
-    		$this->db->query($sql);
+    		$result = $this->db->query($sql);
+    		if($result){
+    			//noop
+    		}
+    		else{
+    			$success_price_items = false;
+    		}
+    	}
+    	if($success_composites && $success_parties && $success_price_items){
+    		return true;
+    	}
+    	else{
+    		return false;
     	}
     }
     
@@ -934,6 +967,7 @@ class rental_socontract extends rental_socommon
     }
     
     public function update_price_items($contract_id, $rented_area){
+    	$success_price_item = true;
     	$q_price_items = "SELECT * FROM rental_contract_price_item WHERE contract_id={$contract_id} AND is_area";
     	$this->db->query($q_price_items);
     	while($this->db->next_record()){
@@ -946,7 +980,19 @@ class rental_socontract extends rental_socommon
     		$total_price = ($rented_area * $price);
     		$total_price = $this->marshal($total_price, 'float');
     		$sql = "UPDATE rental_contract_price_item SET area={$rented_area}, total_price={$total_price} WHERE price_item_id={$price_item_id} AND contract_id={$contract_id}";
-    		$this->db->query($sql);
+    		$result = $this->db->query($sql);
+    		if($result){
+    			//noop
+    		}
+    		else{
+    			$success_price_item = false;
+    		}
+    	}
+    	if($success_price_item){
+    		return true;
+    	}
+    	else{
+    		return false;
     	}
     }
     

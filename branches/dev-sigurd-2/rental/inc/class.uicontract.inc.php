@@ -365,16 +365,31 @@
 					$contract->set_rented_area($new_rented_area);
 					
 					$so_contract = rental_socontract::get_instance();
+					$db_contract = $so_contract->get_db();
+					$db_contract->transaction_begin();
 					if($so_contract->store($contract))
 					{
 						if($update_price_items){
-							$so_contract->update_price_items($contract->get_id(), $new_rented_area);
+							$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
+							if($success){
+								$db_contract->transaction_commit();
+								$message = lang('messages_saved_form');
+								$contract_id = $contract->get_id();
+							}
+							else{
+								$db_contract->transaction_abort();
+								$error = lang('messages_form_error');
+							}
 						}
-						$message = lang('messages_saved_form');
-						$contract_id = $contract->get_id();
+						else{
+							$db_contract->transaction_commit();
+							$message = lang('messages_saved_form');
+							$contract_id = $contract->get_id();
+						}
 					}
 					else
 					{
+						$db_contract->transaction_abort();
 						$error = lang('messages_form_error');
 					}
 				}
@@ -434,17 +449,27 @@
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$so_contract = rental_socontract::get_instance();
+				$db_contract = $so_contract->get_db();
+				$db_contract->transaction_begin();
 				if($so_contract->store($contract))
 				{
 					// Add that composite to the new contract
-					$so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
-					$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
-					$message = lang('messages_new_contract_from_composite').' '.$comp_name;
+					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
+					if($success){
+						$db_contract->transaction_commit();
+						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
+						$message = lang('messages_new_contract_from_composite').' '.$comp_name;
 					
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+					}
+					else{
+						$db_contract->transaction_abort();
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					}
 				}
 				else
 				{
+					$db_contract->transaction_abort();
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
 				}
 			}
@@ -461,8 +486,10 @@
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
 			$old_contract_old_id = $contract->get_old_contract_id();
+			$db_contract = $so_contract->get_db();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
+				$db_contract->transaction_begin();
 				//reset id's and contract dates
 				$contract->set_id(null);
 				$contract->set_old_contract_id(null);
@@ -472,12 +499,20 @@
 				if($so_contract->store($contract))
 				{
 					// copy the contract
-					$so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
-					$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+					$success = $so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
+					if($success){
+						$db_contract->transaction_commit();
+						$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+					}
+					else{
+						$db_contract->transaction_abort();
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					}
 				}
 				else
 				{
+					$db_contract->transaction_abort();
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
 				}
 			}

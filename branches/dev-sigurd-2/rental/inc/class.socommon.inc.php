@@ -112,6 +112,13 @@ abstract class rental_socommon
 		}
 		return null;
 	}
+	
+	/**
+	 * Method for retrieving the db-object (security "forgotten")
+	 */
+	public function get_db(){
+		return $this->db;
+	}
 
 	/**
 	 * Method for retreiving objects.
