@@ -888,8 +888,8 @@ class rental_socontract extends rental_socommon
     		$composite_id = $this->unmarshal($this->db->f('composite_id'),'int');
     		$composite_id = $this->marshal($composite_id, 'int');
     		$sql = "INSERT INTO rental_contract_composite (contract_id, composite_id) VALUES ({$contract_id}, {$composite_id})";
-    		$result = $this->db->query($sql);
-    		if($result){
+    		$result_composites = $this->db->query($sql);
+    		if($result_composites){
     			//noop
     		}
     		else{
@@ -905,8 +905,8 @@ class rental_socontract extends rental_socommon
     		$is_payer = $this->unmarshal($this->db->f('is_payer'),'bool');
     		$is_payer = $this->marshal($is_payer ? 'true' : 'false','bool');
     		$sql = "INSERT INTO rental_contract_party (contract_id, party_id, is_payer) VALUES ({$contract_id}, {$party_id}, {$is_payer})";
-    		$result = $this->db->query($sql);
-    		if($result){
+    		$result_parties = $this->db->query($sql);
+    		if($result_parties){
     			//noop
     		}
     		else{
@@ -934,14 +934,15 @@ class rental_socontract extends rental_socommon
     		$total_price = $this->unmarshal($this->db->f('total_price'),'float');
     		$total_price = $this->marshal($total_price, 'float');
     		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, null, null)";
-    		$result = $this->db->query($sql);
-    		if($result){
+    		$result_price_items = $this->db->query($sql);
+    		if($result_price_items){
     			//noop
     		}
     		else{
     			$success_price_items = false;
     		}
     	}
+//    	var_dump($success_composites.' '.$success_parties.' '.$success_price_items);
     	if($success_composites && $success_parties && $success_price_items){
     		return true;
     	}

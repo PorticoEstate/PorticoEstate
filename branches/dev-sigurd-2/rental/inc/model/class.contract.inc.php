@@ -725,11 +725,11 @@
 		 */
 		public function validates(){
 			
-			// If the contract has number as identifier, it must bt greater than 1
-			$id = $this->get_id();
-			if(!is_numeric($id) && $id < 1){
+			// If the contract has number as identifier, it must be greater than 1
+			/*$id = $this->get_id();
+			if(is_numeric($id) && $id < 1){
 				return false;
-			}
+			}*/
 			
 			// The contract must be designated a responsibility area
 			if($this->get_location_id() == null || $this->get_location_id() < 1){
