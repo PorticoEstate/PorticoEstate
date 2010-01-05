@@ -1,65 +1,244 @@
 <?php 
+/**
+ * PSI Config File
+ *
+ * PHP version 5
+ *
+ * @category  PHP
+ * @package   PSI
+ * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
+ * @copyright 2009 phpSysInfo
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @version   SVN: $Id$
+ * @link      http://phpsysinfo.sourceforge.net
+ */
+ 
+// ********************************
+//        MAIN PARAMETERS
+// ********************************
 
-// phpSysInfo - A PHP System Information Script
-// http://phpsysinfo.sourceforge.net/
+/**
+ * Turn on debugging of some functions and include errors and warnings in xml and provide a popup for displaying errors
+ * - false : no debug information are stored in xml or displayed
+ * - true : debug information stored in xml and displayed *be careful if set this to true, may include sensitive information from your pc*
+ */
+define('PSI_DEBUG', false);
 
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+/**
+ * Additional paths where to look for installed programs
+ * Example : define('PSI_ADD_PATHS', '/opt/bin,/opt/sbin');
+ */
+define('PSI_ADD_PATHS', false);
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+/**
+ * Plugins that should be included in xml and output (!!!plugin names are case-sensitive!!!)
+ * List of plugins should look like "plugin,plugin,plugin". See /plugins directory
+ * - define('PSI_PLUGINS', 'MDStatus,PS'); // list of plugins
+ * - define('PSI_PLUGINS', false); //no plugins
+ * included plugins:
+ * - MDStatus - show the raid status and whats currently going on
+ * - PS       - show a process tree of all running processes
+ * - PSStatus - show a graphical representation if a process is running or not
+ * - Quotas   - show a table with all quotas that are active and there current state
+ * - SMART    - show S.M.A.R.T. information from drives that support it
+ * - BAT      - show battery state on a laptop
+ */
+define('PSI_PLUGINS', false);
 
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-// $Id$
+// ********************************
+//       DISPLAY PARAMETERS
+// ********************************
 
-// define the default lng and template here
-$default_lng='en';
-$default_template='classic';
+/**
+ * Define the default language
+ */
+define('PSI_DEFAULT_LANG', 'en');
 
-// hide language and template picklist
-// false = display picklist
-// true = do not display picklist
-$hide_picklist = false;
+/**
+ * Define the default template
+ */
+define('PSI_DEFAULT_TEMPLATE', 'phpsysinfo');
 
-// define the motherboard monitoring program here
-// we support four programs so far
-// 1. lmsensors  http://www2.lm-sensors.nu/~lm78/
-// 2. healthd    http://healthd.thehousleys.net/
-// 3. hwsensors  http://www.openbsd.org/
-// 4. mbmon      http://www.nt.phys.kyushu-u.ac.jp/shimizu/download/download.html
-// 5. mbm5       http://mbm.livewiredev.com/
+/**
+ * Show or hide language picklist
+ */
+define('PSI_SHOW_PICKLIST_LANG', true);
 
-// $sensor_program = "lmsensors";
-// $sensor_program = "healthd";
-// $sensor_program = "hwsensors";
-// $sensor_program = "mbmon";
-// $sensor_program = "mbm5";
-$sensor_program = "";
+/**
+ * Show or hide template picklist
+ */
+define('PSI_SHOW_PICKLIST_TEMPLATE', true);
 
-// show mount point
-// true = show mount point
-// false = do not show mount point
-$show_mount_point = true;
+/**
+ * Define the interval for refreshing data in ms
+ * - 0 = disabled
+ * - 1000 = 1 second
+ * - Default is 60 seconds
+ */
+define('PSI_REFRESH', 60000);
 
-/***************** DO NOT EDIT BELOW THIS POINT ! Please :) *****************/
+/**
+ * Show a graph for current cpuload
+ * - true = displayed, but it's a performance hit (because we have to wait to get a value, 1 second)
+ * - false = will not be displayed
+ */
+define('PSI_LOAD_BAR', false);
 
-if ( PHPGROUPWARE ) {
-  if ( !isset($GLOBALS['phpgw']->config) || !is_object($GLOBALS['phpgw']->config) ) {
-  	$GLOBALS['phpgw']->config = createObject('phpgwapi.config', 'phpsysinfo');
-  }
-  $GLOBALS['phpgw']->config->appname = 'phpsysinfo';
-  $GLOBALS['phpgw']->config->read_repository();
-  $default_template =& $GLOBALS['phpgw']->config->config_data['theme'];
-  
-  $default_lng = strtolower(substr($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], 0, 2));
-  $hide_picklist = true;
-}
+/**
+ * Display the virtual host name and address
+ * - Default is canonical host name and address
+ * - Use define('PSI_USE_VHOST', true); to display virtual host name.
+ */
+define('PSI_USE_VHOST', false);
+
+/**
+ * Controls the units & format for network, memory and filesystem
+ * - 1 KiB = 2^10 bytes = 1,024 bytes
+ * - 1 KB = 10^3 bytes = 1,000 bytes
+ * - 'PiB'    everything is in PeBiByte
+ * - 'TiB'    everything is in TeBiByte
+ * - 'GiB'    everything is in GiBiByte
+ * - 'MiB'    everything is in MeBiByte
+ * - 'KiB'    everything is in KiBiByte
+ * - 'auto_binary' everything is automatic done if value is to big for, e.g MiB then it will be in GiB
+ * - 'PB'    everything is in PetaByte
+ * - 'TB'    everything is in TeraByte
+ * - 'GB'    everything is in GigaByte
+ * - 'MB'    everything is in MegaByte
+ * - 'KB'    everything is in KiloByte
+ * - 'auto_decimal' everything is automatic done if value is to big for, e.g MB then it will be in GB
+ */
+define('PSI_BYTE_FORMAT', 'auto_binary');
+
+/**
+ * Format in which temperature is displayed
+ * - 'c'    shown in celsius
+ * - 'f'    shown in fahrenheit
+ * - 'c-f'  both shown first celsius and fahrenheit in braces
+ * - 'f-c'  both shown first fahrenheit and celsius in braces
+ */
+define('PSI_TEMP_FORMAT', 'c');
+
+
+// ********************************
+//       SENSORS PARAMETERS
+// ********************************
+
+/**
+ * Define the motherboard monitoring program (!!!names are case-sensitive!!!)
+ * We support the following programs so far
+ * - LMSensors  http://www.lm-sensors.org/
+ * - Healthd    http://healthd.thehousleys.net/
+ * - HWSensors  http://www.openbsd.org/
+ * - MBMon      http://www.nt.phys.kyushu-u.ac.jp/shimizu/download/download.html
+ * - MBM5       http://mbm.livewiredev.com/
+ * - Coretemp
+ * - IPMI       http://openipmi.sourceforge.net/
+ * - K8Temp     http://hur.st/k8temp/
+ * Example: If you want to use lmsensors : define('PSI_SENSOR_PROGRAM', 'LMSensors');
+ */
+define('PSI_SENSOR_PROGRAM', false);
+
+/**
+ * Define how to access the monitor program
+ * Available methods for the above list are in the following list
+ * default method 'command' should be fine for everybody
+ * !!! tcp connections are only made local and on the default port !!!
+ * - LMSensors  command, file
+ * - Healthd    command
+ * - HWSensors  command
+ * - MBMon      command, tcp
+ * - MBM5       file
+ * - Coretemp   command
+ * - IPMI       command
+ * - K8Temp     command
+ */
+define('PSI_SENSOR_ACCESS', 'command');
+
+/**
+ * Hddtemp program
+ * If the hddtemp program is available we can read the temperature, if hdd is smart capable
+ * !!ATTENTION!! hddtemp might be a security issue
+ * - define('PSI_HDD_TEMP', 'tcp');	     // read data from hddtemp deamon (localhost:7634)
+ * - define('PSI_HDD_TEMP', 'command');  // read data from hddtemp programm (must be set suid)
+ */
+define('PSI_HDD_TEMP', false);
+
+
+// ********************************
+//      FILESYSTEM PARAMETERS
+// ********************************
+
+/**
+ * Show mount point
+ * - true = show mount point
+ * - false = do not show mount point
+ */
+define('PSI_SHOW_MOUNT_POINT', true);
+
+/**
+ * Show bind
+ * - true = display file system mounted with the bind options under Linux
+ * - false = hide them
+ */
+define('PSI_SHOW_BIND', false);
+
+/**
+ * Show inode usage
+ * - true = display used inodes in percent
+ * - false = hide them
+ */
+define('PSI_SHOW_INODES', true);
+
+/**
+ * Hide mounts
+ * Example : define('PSI_HIDE_MOUNTS', '/home,/usr');
+ */
+define('PSI_HIDE_MOUNTS', '');
+
+/**
+ * Hide filesystem types
+ * Example : define('PSI_HIDE_FS_TYPES', 'tmpfs,usbfs');
+ */
+define('PSI_HIDE_FS_TYPES', '');
+
+/**
+ * Hide partitions
+ * Example : define('PSI_HIDE_DISKS', 'rootfs');
+ */
+define('PSI_HIDE_DISKS', '');
+
+
+// ********************************
+//      NETWORK PARAMETERS
+// ********************************
+
+/**
+ * Hide network interfaces
+ * Example : define('PSI_HIDE_NETWORK_INTERFACE', 'eth0,sit0');
+ */
+define('PSI_HIDE_NETWORK_INTERFACE', '');
+
+
+// ********************************
+//        UPS PARAMETERS
+// ********************************
+
+/**
+ * Define the ups monitoring program (!!!names are case-sensitive!!!)
+ * We support the following programs so far
+ * - 1. Apcupsd  http://www.apcupsd.com/
+ * - 2. Nut      http://www.networkupstools.org/
+ * Example: If you want to use Apcupsd : define('PSI_UPS_PROGRAM', 'Apcupsd');
+ */
+define('PSI_UPS_PROGRAM', false);
+
+/**
+ * Apcupsd supports multiple UPSes
+ * You can specify comma delimited list in the form <hostname>:<port> or <ip>:<port>. The defaults are: 127.0.0.1:3551
+ * See the following parameters in apcupsd.conf: NETSERVER, NISIP, NISPORT
+ */
+define('PSI_UPS_APCUPSD_LIST', '127.0.0.1:3551');
 
 ?>

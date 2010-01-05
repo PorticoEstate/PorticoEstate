@@ -34,9 +34,9 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-			<div>Velkommen til <strong>Bergen kommunes</strong> bestillersystem.</div>
+			<div>Velkommen til Bergen kommune og <strong style="font-size: 120%">AktivBy</strong>.</div>
 			<div>Her finner du informasjon om bygg, anlegg</div>
-			<div>som leies ut av <strong>Kultur</strong> og <strong>idrett</strong>.</div>
+			<div>som leies ut av <strong>Idrett, Kultur</strong> og <strong>Grønn</strong> avdeling.</div>
 			<div>Bruk <strong>søkefeltet</strong> til å finne det du ønsker informasjon om.</div>
 			<div>Det enkelte bygg, anlegg har en <strong>kalender</strong> hvor du får</div>
 			<div>oversikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
