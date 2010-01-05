@@ -76,6 +76,10 @@
 			$this->db->query($sql);
 			$events = $this->db->resultSet;
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			foreach($events as $event)
 			{
@@ -87,7 +91,7 @@
 				$subject = 'Rapporter deltakertall';
 				try
 				{
-					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', $from, '', 'plain');
 					
 					// status set to 'sent, not responded to'
 					$sql = "update bb_event set reminder = 3 where id = ".$event['id'];
@@ -100,7 +104,7 @@
 			}
 		}
 
-		private function create_body_text($from, $to, $where, $who, $id, $secret, $type)
+		private function create_body_text($from, $to, $where, $who, $id, $secret, $type,$external_site_address)
 		{
 			$body = "Informasjon om kommende arrangement:\n";
 			$body .= "Hvor: %WHERE%\n";
@@ -112,7 +116,7 @@
 			$body .= "\nVennlist oppgi korrekt deltakertall\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor\n\n%URL%";
 
-			$body = str_replace('%URL%', $GLOBALS['phpgw_info']['server']['webserver_url'].'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
+			$body = str_replace('%URL%', $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
 			$body = str_replace('%WHO%', $who, $body);
 			$body = str_replace('%WHERE%', $where, $body);
 			$body = str_replace('%WHEN%', pretty_timestamp($from).' - '.pretty_timestamp($to), $body);

@@ -97,6 +97,10 @@
 
 		private function send_emails($contacts, $subject, $body)
 		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
 			$send = CreateObject('phpgwapi.send');
 			$result = array();
 
@@ -104,7 +108,7 @@
 			{
 				try
 				{
-					$send->msg('email', $contact['email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
 					$result['ok'][] = $contact; 
 				}
 				catch (phpmailerException $e)
