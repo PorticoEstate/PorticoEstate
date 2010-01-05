@@ -176,6 +176,7 @@
 				$new_group = $GLOBALS['phpgw']->accounts->get($values['account_id']);
 			}
 			$new_group->lid			= $values['account_name'];
+			$new_group->old_loginid = $old_group->lid;
 			$new_group->firstname	= $values['account_name'];
 			$new_group->lastname	= lang('group');
 			$new_group->expires		= -1;
