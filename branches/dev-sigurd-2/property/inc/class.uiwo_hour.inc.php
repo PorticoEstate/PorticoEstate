@@ -1427,15 +1427,11 @@ HTML;
 					exit;
 				}
 
-				$headers  = "Return-Path: <". $from_email .">\r\n";
-				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
 				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
 				{
-					$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
 					$bcc = $from_email;
 				}
-				$headers .= "Content-type: text/html; charset=utf-8\r\n";
-				$headers .= "MIME-Version: 1.0\r\n";
+
 				$subject  = lang('Workorder').": ".$workorder_id;
 
 				$attachment_log = '';
