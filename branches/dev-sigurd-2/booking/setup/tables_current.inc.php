@@ -516,7 +516,8 @@
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => 9,'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar', 'precision' => 12,'nullable' => True),
 				'application_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'reminder' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
+				'reminder' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1'),
+				'is_public' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1'),
 				'secret' => array('type' => 'text','nullable' => False),
 				'customer_internal' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1'),
 				'sms_total' => array('type' => 'int', 'precision' => 4,'nullable' => True)

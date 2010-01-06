@@ -20,6 +20,7 @@
 					'contact_phone' => array('type' => 'string'),
 					'completed'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 					'reminder'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
+					'is_public'	=> array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '1'),
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'sms_total'		=> array('type' => 'int', 'required' => false),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => False),
