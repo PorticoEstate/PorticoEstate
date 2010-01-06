@@ -93,7 +93,7 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'org_number',
+							'key' => 'organization_number',
 							'label' => lang('Organization number')
 						),
 						array(
@@ -105,7 +105,7 @@
 							'label' => lang('Phone')
 						),
 						array(
-							'key' => 'mail',
+							'key' => 'email',
 							'label' => lang('Email')
 						),
 						array(
@@ -122,6 +122,20 @@
 		{
 			$organizations = $this->bo->read();
 			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+
+			foreach($organizations["results"] as &$organization) {
+
+				$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
+
+				if ($contact) {
+					$organization += array(
+								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
+			}
+
 			return $this->yui_results($organizations);
 		}
 		
