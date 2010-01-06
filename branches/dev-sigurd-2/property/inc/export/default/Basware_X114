@@ -55,7 +55,14 @@
 
 		protected function select_vouchers_to_transfer()
 		{
-			$sql= "SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
+			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
+			{
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL';
+			}
+			else
+			{
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL';
+			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers = array();
 			while ($this->db->next_record())
@@ -223,6 +230,7 @@
 					'external_ref'			=> $this->db->f('external_ref'),
 				);
 			}
+
 			return $invoice_rollback;
 		}
 
@@ -264,8 +272,8 @@
 				$BilagOverf['item_type'],
 				$BilagOverf['item_id'],
 				$BilagOverf['external_ref'],
-				$this->db->money_format($BilagOverf['belop']),
-				$this->db->money_format($BilagOverf['godkjentbelop'])
+				$BilagOverf['belop'],
+				$BilagOverf['godkjentbelop']
 			);
 			
 			$values	= $this->db->validate_insert($values);
@@ -286,6 +294,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 
+			$table = '';
 			$update_paid = '';
 			switch($this->db->f('type'))
 			{
@@ -307,6 +316,10 @@
 			}
 
 			$Belop = $Belop/100;
+			if(!$table)
+			{
+				throw new Exception('ERROR: the order id seems to not correspond with any order type');
+			}
 
 			$sql="UPDATE $table SET $actual_cost_field=$actual_cost_field $operator $Belop $update_paid WHERE id='$order_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -316,7 +329,7 @@
 		{
 //			$download = 'on';
 //			$download = False;
-			$this->debug=True;
+//			$this->debug=True;
 
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
@@ -415,64 +428,62 @@
 			return $receipt;
 		}
 				
-		protected function LagFilnavn ($batchid)
+		protected function LagFilnavn ($external_ref)
 		{	
 			$fil_katalog = $this->config->config_data['export_path'];
 			$continue = True;
-			$i = 1;
-			do
+			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
+
+			//Sjekk om filen eksisterer
+			If (!file_exists($Filnavn))
 			{
-				$Filnavn = $fil_katalog . '/x114_' . date("dmy") . '_' . sprintf("%02s",$i) . '.TXT';
-
-				//Sjekk om filen eksisterer
-				If (!file_exists($Filnavn))
-				{
-					return $Filnavn;
-				}
-
-				$i++;
+				return $Filnavn;
 			}
-			while  ($continue);
-			
-			//Ingen løpenr er ledige, gi feilmelding
+
 			return False;
 		}
 		
 		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
-			//Bestem filnavn
-			$Filnavn = $this->LagFilnavn($batchid);
-			if (!$Filnavn)
-			{
-				$message='LagFilnavn: Alle loepenr for filnavn er i bruk';
-				$this->errorhandler($batchid,$message);
-				return $message;
-			}
-
-			//Test om filen kan opprettes og skrives til
-			if (@fopen($Filnavn, "wb"))
-			{
-				unlink($Filnavn);
-			}
-			else
-			{
-				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
-				if($this->debug)
-				{
-					echo $message;
-				}
-				else
-				{
-					return $message;
-				}
-			}
 			
 			//Velg ut alle hoved bilag som skal overføres
 
-			$this->db->transaction_begin();
-
 			$oRsBilag = $this->get_voucher($voucher_id);
+
+			if(isset($oRsBilag[0]['external_ref']) && $oRsBilag[0]['external_ref'])
+			{
+				//Bestem filnavn
+				$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_ref']);
+
+				if (!$Filnavn)
+				{
+					$message='LagFilnavn: Filnavn er i bruk';
+					$this->errorhandler($batchid,$message);
+					return $message;
+				}
+
+				//Test om filen kan opprettes og skrives til
+				if (@fopen($Filnavn, "wb"))
+				{
+					unlink($Filnavn);
+				}
+				else
+				{
+					$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
+					if($this->debug)
+					{
+						echo $message;
+					}
+					else
+					{
+						return $message;
+					}
+				}
+			}
+
 			$antall = count($oRsBilag);
+
+			$this->db->transaction_begin();
 
 			$tranfser_bilag = array($oRsBilag[0]['bilagsnr']);
 			$localtime = phpgwapi_datetime::user_localtime();
@@ -585,6 +596,7 @@
 				$oRsOverfBilag				= $line;
 				$oRsOverfBilag['filnavn']	= basename($Filnavn);
 				$oRsOverfBilag['ordrebelop']= $line[$BelopFelt];
+				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
 
 				//Kopier verdier  til fm_ecobilagoverf
 				if ($download=='on' && !$this->debug)
@@ -688,7 +700,7 @@
 			$export_data = array
 			(
 				'TRANSACTIONINFORMATION'	=> $transactioninformation,
-				'INVOICES'					=> $invoices				
+				'INVOICES'					=> $invoices
 			);
 
 			$xmltool = CreateObject('phpgwapi.xmltool');	
@@ -696,8 +708,7 @@
 			$buffer = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
 			$buffer = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
 			
-_debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
-			echo $buffer; die();
+//			echo $buffer; 
 //-- fortsett her....									
 
 			//Slett bilaget i fm_ecobilag
@@ -709,25 +720,25 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 			}
 				
 			//Fullfør transaksjon
-			if ($download=='on' && !$this->debug):
+			if ($download=='on' && !$this->debug)
 			{
+				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
 				
 				if(fclose($fp))
 				{
-					$file_written=True;
+					$file_written=true;
 				}
 
-				if($file_written && $this->config->config_data['invoice_export_method']!='ftp'):
+				if( $file_written && $this->config->config_data['invoice_export_method'] != 'ftp' )
 				{
-					$transfer_ok = True;
+					$transfer_ok = true;
 				}
-				elseif($file_written):
+				else if($file_written)
 				{
 					$transfer_ok = $this->transfer($buffer,$Filnavn,$batchid,$tranfser_bilag);
 				}
-				endif;
 
 				if($transfer_ok)
 				{
@@ -740,20 +751,19 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';				
 				}
 			}
-			else:
+			else
 			{
 				$message = $buffer;
 				$this->db->transaction_abort();
 
 			}
-			endif;
 
 			return $message;
 		}
 		
     	protected function get_voucher($bilagsnr)
     	{
-  	  		$bilagsnr = (int)$bilagsnr;
+  	  		$bilagsnr = $bilagsnr;
   	  		$sql= "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr = {$bilagsnr}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -792,7 +802,9 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					'splitt'				=> $this->db->f('splitt'),
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
-					'saksbehandler'			=> $this->db->f('saksbehandler')
+					'saksbehandler'			=> $this->db->f('saksbehandler'),
+					'external_ref'			=> $this->db->f('external_ref'),
+					'kostra_id'				=> $this->db->f('kostra_id')
 				);
 			}
 
