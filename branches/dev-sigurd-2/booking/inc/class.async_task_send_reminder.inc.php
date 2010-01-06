@@ -39,12 +39,17 @@
 			$this->db->query($sql);
 			$bookings = $this->db->resultSet;
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 			foreach($bookings as $booking)
 			{
 				$booking = $this->booking_bo->read_single($booking['id']);
 				$building = $this->building_bo->read_single($booking['building_id']);
 
-				$body = $this->create_body_text($booking['from_'], $booking['to_'], $building['name'], $booking['group_name'], $booking['id'], $booking['secret'], 'booking');
+				$body = $this->create_body_text($booking['from_'], $booking['to_'], $building['name'], $booking['group_name'], $booking['id'], $booking['secret'], 'booking', $external_site_address);
 				$subject = 'Rapporter deltakertall';
 
 				$this->db->query("select distinct name, email from bb_group_contact where trim(email) <> '' and group_id = ".$booking['group_id']);
@@ -53,7 +58,7 @@
 				{
 					try
 					{
-						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
 						
 						// status set to 'sent, not responded to'
 						$sql = "update bb_booking set reminder = 3 where id = ".$booking['id'];
@@ -87,7 +92,7 @@
 				$building_info = $this->event_bo->so->get_building_info($event['id']);
 				$building = $this->building_bo->read_single($building_info['id']);
 
-				$body = $this->create_body_text($event['from_'], $event['to_'], $building['name'], '', $event['id'], $event['secret'], 'event');
+				$body = $this->create_body_text($event['from_'], $event['to_'], $building['name'], '', $event['id'], $event['secret'], 'event', $external_site_address);
 				$subject = 'Rapporter deltakertall';
 				try
 				{
@@ -104,7 +109,7 @@
 			}
 		}
 
-		private function create_body_text($from, $to, $where, $who, $id, $secret, $type,$external_site_address)
+		private function create_body_text($from, $to, $where, $who, $id, $secret, $type, $external_site_address)
 		{
 			$body = "Informasjon om kommende arrangement:\n";
 			$body .= "Hvor: %WHERE%\n";
