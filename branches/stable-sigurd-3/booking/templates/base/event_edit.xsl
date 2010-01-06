@@ -9,23 +9,23 @@
 
     <form action="" method="POST">
 		<dl class="form-col">
-            <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
-            <dd>
-                <select id="field_active" name="active">
-                    <option value="1">
-                    	<xsl:if test="event/active=1">
-                    		<xsl:attribute name="selected">checked</xsl:attribute>
-                    	</xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Active')"/>
-                    </option>
-                    <option value="0">
-                    	<xsl:if test="event/active=0">
-                    		<xsl:attribute name="selected">checked</xsl:attribute>
-                    	</xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Inactive')"/>
-                    </option>
-                </select>
-            </dd>
+      <dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>
+      <dd>
+          <select id="field_active" name="active">
+              <option value="1">
+                <xsl:if test="event/active=1">
+                  <xsl:attribute name="selected">checked</xsl:attribute>
+                </xsl:if>
+                  <xsl:value-of select="php:function('lang', 'Active')"/>
+              </option>
+              <option value="0">
+                <xsl:if test="event/active=0">
+                  <xsl:attribute name="selected">checked</xsl:attribute>
+                </xsl:if>
+                  <xsl:value-of select="php:function('lang', 'Inactive')"/>
+              </option>
+          </select>
+      </dd>
 		</dl>
 		<dl class="form-col">
             <dt><label><xsl:value-of select="php:function('lang', 'Application')"/></label></dt>
@@ -56,6 +56,23 @@
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
+			</dd>
+			<dt><label for="field_public"><xsl:value-of select="php:function('lang', 'Event type')"/></label></dt>
+			<dd>
+			  <select id="field_public" name="is_public">
+				  <option value="1">
+					<xsl:if test="event/is_public=1">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Public event')"/>
+				  </option>
+				  <option value="0">
+					<xsl:if test="event/is_public=0">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Private event')"/>
+				  </option>
+			  </select>
 			</dd>
 		</dl>
 		<dl class="form-col">

@@ -2154,14 +2154,28 @@
 	$test[] = '0.1.89';
 	function booking_upgrade0_1_89()
 	{
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();	
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN sms_total INT");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN sms_total INT");
-	
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.90';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+  $test[] = '0.1.90';
+	function booking_upgrade0_1_90()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN is_public INT NOT NULL DEFAULT 1");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.91';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

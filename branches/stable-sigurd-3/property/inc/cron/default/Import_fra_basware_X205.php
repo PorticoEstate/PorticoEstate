@@ -337,7 +337,7 @@
 
 					$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
 					
-					$merknad = "lag meg ein link til bilde av faktura - ref: {$_data['SCANNINGNO']}";
+					$merknad = '';
 					
 					$buffer[$i]['merknad'] = $merknad;
 					$buffer[$i]['splitt'] = $this->splitt;

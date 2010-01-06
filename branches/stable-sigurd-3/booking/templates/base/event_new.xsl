@@ -30,6 +30,23 @@
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
 			</dd>
+			<dt><label for="field_public"><xsl:value-of select="php:function('lang', 'Event type')"/></label></dt>
+			<dd>
+			  <select id="field_public" name="is_public">
+				  <option value="1">
+					<xsl:if test="event/is_public=1">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Public event')"/>
+				  </option>
+				  <option value="0">
+					<xsl:if test="event/is_public=0">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Private event')"/>
+				  </option>
+			  </select>
+			</dd>
 		</dl>
 		<dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Where')" /></dt>

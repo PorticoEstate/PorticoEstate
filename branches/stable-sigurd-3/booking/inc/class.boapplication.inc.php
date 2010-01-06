@@ -14,17 +14,24 @@
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
+
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 			if($created)
 				$subject = "Søknad #{$application[id]} er mottatt";
 			else
 				$subject = "Søknad #{$application[id]} endret/oppdatert";
 			$link = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiapplication.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
-			$link = 'http://'.$_SERVER['HTTP_HOST'] . $link;
+			$link = 'http://'. $external_site_address . $link;
 			$link = str_replace('&amp;', '&', $link);
 			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
+
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'noreply@'.$GLOBALS['phpgw_info']['server']['hostname'], 'plain');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'plain');
 			}
 			catch (phpmailerException $e)
 			{
