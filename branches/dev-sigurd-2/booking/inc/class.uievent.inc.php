@@ -157,6 +157,7 @@
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
+				$event['is_public'] = 1;
 				
 				list($event, $errors) = $this->extract_and_validate($event);
 				if(!$errors)
