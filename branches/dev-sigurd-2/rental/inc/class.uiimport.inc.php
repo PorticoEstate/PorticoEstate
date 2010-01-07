@@ -913,8 +913,8 @@
 				//Create a row in the array holding the details (price, amount, dates) for the price item
 				$detail_price_items[$data[1]] = 	//nPrisElementId
 				array(
-					'price' => $data[2],			//nPris
-					'amount' => $data[3],			//nMengde
+					'price' => str_replace(',','.',$data[2]),			//nPris
+					'amount' => str_replace(',','.',$data[3]),			//nMengde
 					'date_start' => null,			//dGjelderFra	
 					'date_end' =>  null				//dGjelderTil
 				);
@@ -926,6 +926,7 @@
 					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
 				}
 			}
+			//var_dump($detail_price_items);
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
 			
@@ -1054,13 +1055,25 @@
                             $price_item->set_area($contract->get_rented_area());
 
                             //Calculate the total price for the price item
-                            $price_item->set_total_price($price_item->get_area() * $price_item->get_price());
+                            $item_area = $price_item->get_area();
+                            $item_price = $price_item->get_price();
+                            //$item_area = str_replace(',','.',$item_area);
+                            //$item_price = str_replace(',','.',$item_price);
+                            //var_dump('total_price = '.$item_area * $item_price.'='.$item_area.'*'.$item_price);
+                            //$price_item->set_total_price(floatval($item_area) * floatval($item_price));
+                            $price_item->set_total_price($item_area * $item_price);
                         
 					} 
 					else 
 					{
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
-						$price_item->set_total_price($price_item->get_count() * $price_item->get_price());
+						$item_count = $price_item->get_count();
+                        $item_price = $price_item->get_price();
+                        //$item_count = str_replace(',','.',$item_count);
+                        //$item_price = str_replace(',','.',$item_price);
+                        //var_dump('total_price = '.$item_count * $item_price.'='.$item_count.'*'.$item_price);
+						//$price_item->set_total_price(floatval($item_count) * floatval($item_price));
+						$price_item->set_total_price($item_count * $item_price);
 					}
 					
 					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);

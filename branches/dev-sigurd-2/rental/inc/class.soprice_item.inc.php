@@ -265,8 +265,10 @@ class rental_soprice_item extends rental_socommon
 		);
 		
 		if ($price_item->is_area()) {
+//			var_dump('total_price = '.$price_item->get_area().'*'.$price_item->get_price());
 			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_area() * $price_item->get_price()));
 		} else {
+//			var_dump('total_price = '.$price_item->get_count().'*'.$price_item->get_price());
 			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_count() * $price_item->get_price()));
 		}
 		
