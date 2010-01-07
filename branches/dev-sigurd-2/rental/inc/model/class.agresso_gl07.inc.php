@@ -55,7 +55,7 @@ class rental_agresso_gl07 implements rental_exportable
 		{
 			$missing_billing_info[] = 'Missing account out.';
 		}
-		$responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']; 
+		/*$responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']; 
 		if($responsibility_id_in == null || $responsibility_id_in == '')
 		{
 			$missing_billing_info[] = 'Missing system setting for responsibility id for the current user.';
@@ -63,7 +63,7 @@ class rental_agresso_gl07 implements rental_exportable
 		else if(strlen($responsibility_id_in) != 6)
 		{
 			$missing_billing_info[] = 'System setting for responsibility id for the current user must be 6 characters.';
-		}
+		}*/
 		$responsibility_id_out = $contract->get_responsibility_id();
 		if($responsibility_id_out == null || $responsibility_id_out == '')
 		{
@@ -92,7 +92,7 @@ class rental_agresso_gl07 implements rental_exportable
 		{
 			$missing_billing_info[] = 'Invalid location code for the building.';
 		}
-		$project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
+		/*$project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
 		if($project_id_in == null || $project_id_in == '')
 		{
 			$missing_billing_info[] = 'Missing system setting for project id.';
@@ -100,7 +100,7 @@ class rental_agresso_gl07 implements rental_exportable
 		else if(strlen($project_id_in) > 6)
 		{
 			$missing_billing_info[] = 'System setting for project id can not be more than 6 characters.';
-		}
+		}*/
 		$project_id_out = $contract->get_project_id();
 		if($project_id_out == null || $project_id_out == '')
 		{

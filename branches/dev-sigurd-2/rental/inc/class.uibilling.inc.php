@@ -101,7 +101,8 @@ class rental_uibilling extends rental_uicommon
 				if(isset($contract))
 				{
 					$total_price = $socontract_price_item->get_total_price($contract->get_id());
-					if(isset($total_price) && $total_price == 0)
+					$title = $contract->get_contract_type_title();
+					if((isset($total_price) && $total_price == 0) || $title == "KF")
 					{
 						$contracts[$id] = null;
 					}
