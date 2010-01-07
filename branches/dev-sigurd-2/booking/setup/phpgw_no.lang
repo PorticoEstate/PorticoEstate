@@ -417,3 +417,4 @@ In order to send the invoice we need information about either customer organizat
 Event type	booking	no	Arrangementstype
 Private event	booking	no	Privat arrangement
 Public event	booking	no	Offentlig arrangement
+customer_ssn contains an invalid Norwegian social security number (11 digits)	booking	no	Fødselsnummer er ugyldig (11 siffer)
