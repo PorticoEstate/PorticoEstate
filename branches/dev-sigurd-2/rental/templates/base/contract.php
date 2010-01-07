@@ -350,7 +350,7 @@
 							$billing_start_date = $contract->get_billing_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_start_date()) : '-';
 							$billing_start_date_yui = $contract->get_billing_start_date() ? date('Y-m-d', $contract->get_billing_start_date()) : '';
 							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', get_billing_start_date);
+								echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
 							} else {
 								echo $billing_start_date;
 							}
