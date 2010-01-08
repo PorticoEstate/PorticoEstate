@@ -740,6 +740,47 @@
 		
 		/**
 		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#validate_numeric()
+		 */
+		public function validate_numeric(){
+			$valid_numeric = true;
+			if($this->get_service_id() != null && !(strlen($this->get_service_id()) == 5)){
+				$this->set_validation_error('service_id', lang('Service id must be 5 characters.'));
+				$valid_numeric = false;
+			}
+			else if($this->get_service_id() != null && !is_numeric($this->get_service_id())){
+				$this->set_validation_error('service_id', lang('service_id_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_responsibility_id() != null && !(strlen($this->get_responsibility_id()) == 6)){
+				$this->set_validation_error('responsibility_id', lang('Responsibility id must be 6 characters.'));
+				$valid_numeric = false;
+			}
+			else if($this->get_responsibility_id() != null && !is_numeric($this->get_responsibility_id())){
+				$this->set_validation_error('responsibility_id', lang('responsibility_id_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_account_in() != null && !is_numeric($this->get_account_in())){
+				$this->set_validation_error('account_in', lang('account_in_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_account_out() != null && !is_numeric($this->get_account_out())){
+				$this->set_validation_error('account_out', lang('account_out_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_security_amount() != null && !is_numeric($this->get_security_amount())){
+				$this->set_validation_error('security_amount', lang('security_amount_not_numeric'));
+				$valid_numeric = false;
+			}
+			if(!is_numeric($this->get_rented_area())){
+				$this->set_validation_error('rented_area', lang('rented_area_not_numeric'));
+				$valid_numeric = false;
+			}
+			return $valid_numeric;
+		}
+		
+		/**
+		 * (non-PHPdoc)
 		 * @see rental/inc/model/rental_model#check_consistency()
 		 */
 		public function check_consistency(){

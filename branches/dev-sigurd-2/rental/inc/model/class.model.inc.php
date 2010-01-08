@@ -113,6 +113,10 @@ abstract class rental_model
 	{
 		return true;
 	}	
+	
+	public function validate_numeric(){
+		return true;
+	}
 
 	public function set_validation_error(string $rule_name, string $error_language_key)
 	{

@@ -210,11 +210,13 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id, $location_id = null, $notification = null, string $message = null, string $error = null)
+		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
 		{
 			
 			if (isset($contract_id) && $contract_id > 0) {
-				$contract = rental_socontract::get_instance()->get_single($contract_id);
+				if($contract == null){
+					$contract = rental_socontract::get_instance()->get_single($contract_id);
+				}
 				if ($contract) {
 					
 					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
@@ -356,6 +358,8 @@
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					$old_rented_area = $contract->get_rented_area();
 					$new_rented_area = phpgw::get_var('rented_area');
+					$new_rented_area = str_replace(',','.',$new_rented_area);
+					$validated_numeric=false;
 					if(!isset($new_rented_area) || $new_rented_area == ''){
 						$new_rented_area = 0;
 					}
@@ -363,37 +367,44 @@
 						$update_price_items = true;
 					}
 					$contract->set_rented_area($new_rented_area);
+					$validated_numeric = $contract->validate_numeric();
 					
-					$so_contract = rental_socontract::get_instance();
-					$db_contract = $so_contract->get_db();
-					$db_contract->transaction_begin();
-					if($so_contract->store($contract))
-					{
-						if($update_price_items){
-							$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
-							if($success){
+					if($validated_numeric){
+						$so_contract = rental_socontract::get_instance();
+						$db_contract = $so_contract->get_db();
+						$db_contract->transaction_begin();
+						if($so_contract->store($contract))
+						{
+							if($update_price_items){
+								$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
+								if($success){
+									$db_contract->transaction_commit();
+									$message = lang('messages_saved_form');
+									$contract_id = $contract->get_id();
+								}
+								else{
+									$db_contract->transaction_abort();
+									$error = lang('messages_form_error');
+								}
+							}
+							else{
 								$db_contract->transaction_commit();
 								$message = lang('messages_saved_form');
 								$contract_id = $contract->get_id();
 							}
-							else{
-								$db_contract->transaction_abort();
-								$error = lang('messages_form_error');
-							}
 						}
-						else{
-							$db_contract->transaction_commit();
-							$message = lang('messages_saved_form');
-							$contract_id = $contract->get_id();
+						else
+						{
+							$db_contract->transaction_abort();
+							$error = lang('messages_form_error');
 						}
 					}
-					else
-					{
-						$db_contract->transaction_abort();
-						$error = lang('messages_form_error');
+					else{
+						$error = $contract->get_validation_errors();
+						return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));
 			}
 			else if(isset($_POST['add_notification']))
 			{

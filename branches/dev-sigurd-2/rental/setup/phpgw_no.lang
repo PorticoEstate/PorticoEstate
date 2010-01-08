@@ -1,8 +1,10 @@
 1-6 characters	rental	no	1-6 tegn
 6 characters	rental	no	6 tegn
 account_in	rental	no	Art/konto inntektsside
+account_in_not_numeric	rental	no	Art/konto inntektsside må være et tall
 account_number	rental	no	Kontonummer
 account_out	rental	no	Art/konto utgiftsside
+account_out_not_numeric	rental	no	Art/konto utgiftsside må være et tall	
 active_party	rental	no	Kontraktspart er aktiv
 active_plural	rental	no	Aktive
 active_single	rental	no	Aktiv
@@ -311,12 +313,14 @@ remove_location	rental	no	Fjern enhet fra leieobjektet
 rental_composite	rental	no	Leieobjekt
 Rental	rental	no	Leie
 rented_area	rental	no	Utleid areal
+rented_area_not_numeric	rental	no	Areal må være et tall
 reports	rental	no	Rapporter
 reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
 reskontro	rental	no	Reskontro
 responsibility	rental	no	Ansvar
 Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
+responsibility_id_not_numeric	rental	no	Ansvar må være et tall
 result_unit_number	rental	no	Resultatsenhet
 Run	rental	no	Kjørt
 run by	rental	no	Utført av
@@ -331,6 +335,7 @@ search_where	rental	no	i
 section	rental	no	Seksjon
 security	rental	no	Sikkerhet
 security_amount	rental	no	Sikkerhetsbeløp
+security_amount_not_numeric	rental	no	Sikkerhetsbeløp må være et tall
 select_date	rental	no	Velg dato
 selected_composites	rental	no	Valgte leieobjekter
 selected_parties	rental	no	Valgte kontraktsparter
@@ -338,6 +343,7 @@ selected_price_items	rental	no	Valgte priselementer
 serial	rental	no	Løpenummer
 service	rental	no	Tjeneste
 Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
+service_id_not_numeric	rental	no	Tjeneste må være et tall
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
 showing_composite	rental	no	Leieobjekt
