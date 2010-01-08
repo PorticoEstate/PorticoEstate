@@ -20,6 +20,10 @@
 			<td>{lang_custom_email_sender}:example: noreply&lt;noreply@Bergen.Kommune.no&gt;</td>
 			<td><input name="newsettings[email_sender]" value="{value_email_sender}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_logopath_frontend}:example: /phpgwapi/templates/bkbooking/images/bergen_logo.png</td>
+			<td><input name="newsettings[logopath_frontend]" value="{value_logopath_frontend}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->

@@ -82,7 +82,9 @@
 	}
 
 	$_navbar_config			= json_encode($navbar_config);
-
+	$config	= CreateObject('phpgwapi.config','booking');
+	$config->read();
+	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -96,6 +98,7 @@
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'navbar_config' => $_navbar_config,
 		'lbl_search'   	=> lang('Search'),
+		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> (isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 	$bouser = CreateObject('bookingfrontend.bouser');
