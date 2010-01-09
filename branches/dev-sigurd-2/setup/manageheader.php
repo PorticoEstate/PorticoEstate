@@ -535,6 +535,7 @@ HTML;
 				$setup_tpl->set_var('db_user','phpgroupware');
 				$setup_tpl->set_var('db_pass','your_password');
 				$setup_tpl->set_var('db_type', $supported_db[0]);
+				$setup_tpl->set_var('db_abstraction', $supported_db_abstraction[0]);
 				$setup_tpl->set_var('config_pass','changeme');
 
 				$dbtype_options = '';
@@ -546,6 +547,17 @@ HTML;
 HTML;
 				}
 				$setup_tpl->set_var('dbtype_options', $dbtype_options);
+
+				$db_abstraction_options = '';
+				foreach ( $supported_db_abstraction as $db_abstraction )
+				{
+					$db_abstraction_options .= <<<HTML
+						<option value="{$db_abstraction}">{$db_abstraction}</option>
+
+HTML;
+				}
+				$setup_tpl->set_var('db_abstraction_options', $db_abstraction_options);
+
 
 				$setup_tpl->parse('domains','domain',True);
 				$setup_tpl->set_var('domain','');
