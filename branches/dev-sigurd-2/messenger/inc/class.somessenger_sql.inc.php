@@ -51,7 +51,7 @@
 					'from'    => $this->db->f('message_from'),
 					'status'  => $this->db->f('message_status'),
 					'date'    => $this->db->f('message_date'),
-					'subject' => $this->db->f('message_subject')
+					'subject' => $this->db->f('message_subject',true)
 				);
 			}
 			return $messages;
@@ -67,8 +67,8 @@
 				'from'    => $this->db->f('message_from'),
 				'status'  => $this->db->f('message_status'),
 				'date'    => $this->db->f('message_date'),
-				'subject' => $this->db->f('message_subject'),
-				'content' => $this->db->f('message_content')
+				'subject' => $this->db->f('message_subject',true),
+				'content' => htmlspecialchars_decode($this->db->f('message_content',true))
 			);
 			if ($this->db->f('message_status') == 'N')
 			{
