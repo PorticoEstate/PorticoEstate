@@ -23,6 +23,7 @@ class rental_uibilling extends rental_uicommon
 	public function __construct()
 	{
 		parent::__construct();
+		self::set_active_menu('rental::contracts::invoice');
 	}
 	
 	public function index()
