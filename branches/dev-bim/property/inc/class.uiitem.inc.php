@@ -1,7 +1,7 @@
 <?php
     phpgw::import_class('phpgwapi.yui');
     phpgw::import_class('property.soitem');
-
+    phpgw::import_class('phpgwapi.datetime');
     /**
      * FIXME: Description
      * @package property
@@ -13,7 +13,8 @@
         public $public_functions = array
         (
             'index' => true,
-            'testdata' => true
+            'testdata' => true,
+            'emptydb' => true
         );
 
         public function __construct()
@@ -52,24 +53,21 @@
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 */
-            echo '<pre></code>' . var_export($datatable, true) . '</code></pre>';
+            _debug_array($datatable);
             
         }
 
         public function testdata() {
-
-            
-
             // BIM testdata
             $GLOBALS['phpgw']->db->query("INSERT INTO property_catalog (name, description) VALUES ('NOBB', 'Norsk Byggevarebase')");
 
-            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB'))");
-            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Windows', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB'))");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB' LIMIT 1))");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Windows', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB' LIMIT 1))");
 
             $GLOBALS['phpgw']->db->query("INSERT INTO property_data_type (display_name, function_name) VALUES ('integer', 'dt_int')");
 
-            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Dimensions', 1");
-            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Layout', 2");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Dimensions', 1)");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Layout', 2)");
             
             $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
                 (name, display_name, description, data_type_id, unit_id, attr_group_id)
@@ -115,12 +113,39 @@
                     (SELECT id FROM property_attr_group WHERE name = 'Layout')
                 )"
             );
+            // Items
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_item
+                (group_id, location_id, vendor_id, installed)
+                VALUES (
+                    (SELECT id FROM property_group WHERE name = 'Doors'),
+                    1,
+                    104533,
+                    ".phpgwapi_datetime::user_localtime()."
+                )"
+            );
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_item
+                (group_id, location_id, vendor_id, installed)
+                VALUES (
+                    (SELECT id FROM property_group WHERE name = 'Doors'),
+                    1,
+                    104533,
+                    ".phpgwapi_datetime::user_localtime()."
+                )"
+            );
 
-            /*
-            echo '<pre><code>';
-            print_r($GLOBALS['phpgw']->db);
-            echo '</code></pre>';
-            */
+        }
+
+        public function emptydb() {
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_item_attr");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_group_attr");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_def");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_value");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_group");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_choice");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_data_type");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_item");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_group");
+            $GLOBALS['phpgw']->db->query("DELETE FROM property_catalog");
         }
 
     }
