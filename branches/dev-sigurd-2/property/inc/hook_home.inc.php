@@ -350,6 +350,62 @@
 		unset($default_status);
 	}
 
+	if ( isset($prefs['property']['mainscreen_project_1'])
+		&& $prefs['property']['mainscreen_project_1'] == 'yes')
+	{
+
+		$default_status 	= isset($prefs['property']['project_status_mainscreen_1']) ? $prefs['property']['project_status_mainscreen_1'] : '';
+		$obj = CreateObject('property.soproject');
+		$projects = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+		$total_records = $obj->total_records;
+
+		$portalbox = CreateObject('phpgwapi.listbox', array
+		(
+			'title'	=> isset($prefs['property']['mainscreen_projects_1_title']) && $prefs['property']['mainscreen_projects_1_title']? "{$prefs['property']['mainscreen_projects_1_title']} ({$total_records})" : lang('project') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
+			'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+			'width'	=> '100%',
+			'outerborderwidth'	=> '0',
+			'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+		));
+
+		$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+		if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+		{
+			$GLOBALS['portal_order'][] = $app_id;
+		}
+		$var = array
+		(
+			'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+			'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+		);
+
+		foreach ( $var as $key => $value )
+		{
+//			$portalbox->set_controls($key,$value);
+		}
+
+		$portalbox->data = array();
+		foreach ($projects as $project)
+		{
+			$portalbox->data[] = array
+			(
+				'text' => "{$project['address']} :: {$project['name']}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit', 'id' => $project['project_id']))
+			);
+		}
+
+		echo "\n".'<!-- BEGIN project 1 info -->'."\n".$portalbox->draw()."\n".'<!-- END project 1 info -->'."\n";
+
+		unset($obj);
+		unset($portalbox);
+		unset($default_status);
+	}
+
 	if ( isset($prefs['property']['mainscreen_workorder_1'])
 		&& $prefs['property']['mainscreen_workorder_1'] == 'yes')
 	{
@@ -464,6 +520,7 @@
 	if ( isset($prefs['property']['mainscreen_showapprovals_request'])
 		&& $prefs['property']['mainscreen_showapprovals_request'] == 'yes' )
 	{
+		$total_records = 0;
 		$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title']? "{$prefs['property']['mainscreen_showapprovals_request_title']} ({$total_records})" : lang('approvals request') . " ({$total_records})";
 	
 		//TODO Make listbox css compliant
@@ -511,7 +568,9 @@
 			'created_by'		=> $accound_id
 		);
 
-		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+		$obj = CreateObject('property.sopending_action');
+		$pending_approvals = $obj->get_pending_action($action_params);
+		$total_records = $obj->total_records;
 
 		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
@@ -535,7 +594,8 @@
 			'created_by'		=> $accound_id
 		);
 
-		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+		$pending_approvals = $obj->get_pending_action($action_params);
+		$total_records = $total_records + $obj->total_records;
 
 		foreach ($pending_approvals as $entry)
 		{
@@ -558,7 +618,8 @@
 			'created_by'		=> $accound_id
 		);
 
-		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+		$pending_approvals = $obj->get_pending_action($action_params);
+		$total_records = $total_records + $obj->total_records;
 
 		foreach ($pending_approvals as $entry)
 		{
@@ -572,6 +633,7 @@
 		
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
+		unset($obj);
 		unset($pending_approvals);
 	}
 
@@ -694,9 +756,7 @@
 	if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
 		&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
 	{
-
-		$title = lang('vendor reminder');
-		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
+		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('vendor reminder') . " ({$total_records})";	
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
