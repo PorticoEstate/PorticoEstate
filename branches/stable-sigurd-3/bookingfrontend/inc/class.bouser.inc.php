@@ -72,7 +72,10 @@
 		public function is_organization_admin($organization_id = null)
 		{
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			//return true;
+			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
+			{
+				return true;
+			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
 				return false;
@@ -85,7 +88,10 @@
 		public function is_group_admin($group_id = null)
 		{
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			//return true;
+			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
+			{
+				return true;
+			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
 				return false;

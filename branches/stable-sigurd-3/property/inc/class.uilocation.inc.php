@@ -501,6 +501,20 @@
 					)
 				);
 
+				if($this->acl->check('run', PHPGW_ACL_READ, 'rental'))
+				{
+					$datatable['rowactions']['action'][] = array(
+							'my_name'			=> 'view',
+							'text' 			=> lang('contracts'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	=> 'rental.uicontract.index',
+												'type_id'		=>	$type_id,
+											)),
+						'parameters'	=> $parameters
+					);
+				}
+
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -590,7 +604,6 @@
 											))
 					);
 				}
-
 
 				unset($parameters);
 			}
