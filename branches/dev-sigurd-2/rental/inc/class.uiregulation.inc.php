@@ -24,3 +24,4 @@ class rental_uiregulation extends rental_uicommon {
 		return "";
 	}
 }
+?>
