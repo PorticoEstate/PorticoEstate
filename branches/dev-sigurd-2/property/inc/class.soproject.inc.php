@@ -984,7 +984,12 @@
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
 
-				if($old_status != $project['status'] && $close_workorders)
+				if($old_status != $project['status'])
+				{
+					$historylog->add('S',$project['id'],$project['status'], $old_status);
+					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
+				}
+				else if($old_status != $project['status'] && $close_workorders)
 				{
 					$historylog->add('S',$project['id'],$project['status'], $old_status);
 
