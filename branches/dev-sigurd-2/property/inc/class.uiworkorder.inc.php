@@ -868,6 +868,7 @@
 					if (! $receipt['error'])
 					{
 						$id = $receipt['id'];
+						$historylog	= CreateObject('property.historylog','workorder');
 					}
 					$function_msg = lang('Edit Workorder');
 //----------files
@@ -910,11 +911,6 @@
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$headers = "Return-Path: <". $coordinator_email .">\r\n";
-						$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
 
 						$subject = lang(Approval).": ". $id;
 						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
@@ -947,6 +943,7 @@
 									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 									if($rcpt)
 									{
+										$historylog->add('AP', $id, lang('%1 is notified',$_address));
 										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 									}
 
@@ -1029,6 +1026,7 @@
 						}
 						else
 						{
+							$historylog->add('ON', $id, lang('%1 is notified',$to));
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 						}
 					}

@@ -1054,9 +1054,10 @@
 					}
 
 					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
-						&& $GLOBALS['phpgw_info']['server']['smtp_server']
-						&& $config->config_data['project_approval'] )
+						&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
+//						&& $config->config_data['project_approval'] )
 					{
+						$historylog	= CreateObject('property.historylog','project');
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
@@ -1100,6 +1101,7 @@
 									}
 									else
 									{
+										$historylog->add('AP', $id, lang('%1 is notified',$_address));
 										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 									}
 								}
@@ -1137,6 +1139,7 @@
 								}
 								else
 								{
+									$historylog->add('ON', $id, lang('%1 is notified',$to));
 									$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 								}
 							}
