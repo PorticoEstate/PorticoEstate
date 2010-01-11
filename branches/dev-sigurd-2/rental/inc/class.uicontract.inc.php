@@ -201,6 +201,15 @@
 		 */
 		public function index()
 		{
+			$search_for = phpgw::get_var('search_for');
+			if($search_for)
+			{
+				phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
+				phpgwapi_cache::session_set('rental', 'contract_search_type', phpgw::get_var('search_type'));
+				phpgwapi_cache::session_set('rental', 'contract_status', phpgw::get_var('contract_status'));
+				phpgwapi_cache::session_set('rental', 'contract_status_date', phpgw::get_var('date_status'));
+				phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
+			}
 			$this->render('contract_list.php');
 		}
 
