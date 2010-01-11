@@ -802,7 +802,7 @@
 				
 				// If set, the billing date must be between the contract's start date and end date
 				$billing_start = $this->get_billing_start_date();
-				if(isset($billing_start) && is_numeric($billing_start) && $due_date > 0)
+				if(isset($billing_start) && is_numeric($billing_start) && $billing_start > 0)
 				{
 					if($billing_start < $start_date || (isset($end_date) && $billing_start > $end_date)){
 						$this->set_consistency_warning(lang('warning_billing_date_between'));
