@@ -1062,15 +1062,9 @@
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-
 						$action_params['responsible'] = $_account_id;
 						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$headers = "Return-Path: <". $from_email .">\r\n";
-						$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
-						$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
-						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
 
 						$subject = lang(Approval).": ". $id;
 						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang('project %1 needs approval',$id) .'</a>';
@@ -1112,8 +1106,7 @@
 							}
 						}
 
-						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) 
-						 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'] == 1)
+						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
 						{
 							if($this->account!=$values['coordinator'] && $config->config_data['mailnotification'])
 							{
