@@ -95,9 +95,15 @@
 			}
 
 			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
+
+			$group = '';
+			if($ticket['group_id'])
+			{
+				$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
+			}
 			$portalbox->data[] = array
 			(
-				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
 			);
 		}
@@ -169,9 +175,16 @@
 			}
 
 			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
+
+			$group = '';
+			if($ticket['group_id'])
+			{
+				$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
+			}
+
 			$portalbox->data[] = array
 			(
-				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
 			);
 		}
@@ -242,9 +255,16 @@
 				}
 			}
 			$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
+
+			$group = '';
+			if($ticket['group_id'])
+			{
+				$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
+			}
+
 			$portalbox->data[] = array
 			(
-				'text' => "{$location['loc1_name']} :: {$ticket['subject']}",
+				'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $ticket['id']))
 			);
 		}
