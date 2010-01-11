@@ -3931,7 +3931,9 @@
 					'unit_id'       => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
 				),
 				'pk' => array('id'),
-				'fk' => array('property_data_type' => array('data_type_id' => 'id') ,'fm_standard_unit' => array('unit_id' => 'id')),
+				'fk' => array(
+                    'property_data_type' => array('data_type_id' => 'id'),
+                    'fm_standard_unit' => array('unit_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),

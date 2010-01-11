@@ -10,19 +10,29 @@
     class property_uiitem
     {
         private $so;
-        public $public_functions = array('index' => true);
+        public $public_functions = array
+        (
+            'index' => true,
+            'testdata' => true
+        );
 
-        function __construct()
+        public function __construct()
         {
+            //$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
+            
             $this->so = property_soitem::singleton();
         }
 
 
 
-        function index()
+        public function index()
         {
+            // Highlight menu selection
+            $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
+
             $datatable = $this->so->get();
-            $datatable = $this->so->populate($datatable);
+            //$datatable = $this->so->populate($datatable);
 /*
             phpgwapi_yui::load_widget('datatable');
             // Prepare template variables and process XSLT
@@ -35,24 +45,82 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
+            
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-			//Title of Page
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
-
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'actor.index', 'property' );
-
 */
-            echo '<pre></code>';
-            print_r($datatable);
+            echo '<pre></code>' . var_export($datatable, true) . '</code></pre>';
+            
+        }
+
+        public function testdata() {
+
+            
+
+            // BIM testdata
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_catalog (name, description) VALUES ('NOBB', 'Norsk Byggevarebase')");
+
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB'))");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Windows', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB'))");
+
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_data_type (display_name, function_name) VALUES ('integer', 'dt_int')");
+
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Dimensions', 1");
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Layout', 2");
+            
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+                (name, display_name, description, data_type_id, unit_id, attr_group_id)
+                VALUES (
+                    'height',
+                    'Height',
+                    NULL,
+                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    'mm',
+                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                )"
+            );
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+                (name, display_name, description, data_type_id, unit_id, attr_group_id)
+                VALUES (
+                    'width',
+                    'Width',
+                    NULL,
+                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    'mm',
+                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                )"
+            );
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+                (name, display_name, description, data_type_id, unit_id, attr_group_id)
+                VALUES (
+                    'depth',
+                    'Depth',
+                    NULL,
+                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    'mm',
+                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                )"
+            );
+            $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+                (name, display_name, description, data_type_id, unit_id, attr_group_id)
+                VALUES (
+                    'tiles',
+                    'No of tiles',
+                    NULL,
+                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    'mm',
+                    (SELECT id FROM property_attr_group WHERE name = 'Layout')
+                )"
+            );
+
+            /*
+            echo '<pre><code>';
+            print_r($GLOBALS['phpgw']->db);
             echo '</code></pre>';
+            */
         }
 
     }
