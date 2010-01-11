@@ -24,7 +24,8 @@ class rental_uiprice_item extends rental_uicommon
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('admin::rental::contract_type_list');
+		//self::set_active_menu('admin::rental::contract_type_list');
+		self::set_active_menu('rental::contracts::price_item_list');
 	}
 
 	public function index()
@@ -182,8 +183,12 @@ class rental_uiprice_item extends rental_uicommon
 				}
 				break;
 			case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
-			default:
 				$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
+				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
+			default:
+				//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
 				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 				break;

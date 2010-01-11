@@ -39,6 +39,7 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+		$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
