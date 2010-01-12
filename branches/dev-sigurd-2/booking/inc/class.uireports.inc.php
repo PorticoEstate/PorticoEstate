@@ -1,7 +1,5 @@
 <?php
 
-include_once('class.jasper_wrapper.inc.php');
-
 phpgw::import_class('booking.uicommon');
 phpgw::import_class('phpgwapi.send');
 
@@ -61,7 +59,9 @@ class booking_uireports extends booking_uicommon
 				//print_r($jasper_parameters);
 				//exit(0);
 
-				jasper_wrapper($jasper_parameters, $output_type, 'report_participants', $errors);     
+				$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
+				$jasper_wrapper->jasper_config = PHPGW_SERVER_ROOT.'/booking/jasper/jasper_config.xml';
+				$jasper_wrapper->execute($jasper_parameters, $output_type, 'report_participants', $errors);     
 			}
 		} 
 		else 
