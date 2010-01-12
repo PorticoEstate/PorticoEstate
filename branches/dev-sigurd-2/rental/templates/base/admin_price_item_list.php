@@ -7,10 +7,6 @@
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('price_list') ?></h1>
 
 <form action="#" method="GET">
-	<?php
-	if($this->type_of_user[ADMINISTRATOR])
-	{
-	?>
 	<fieldset>
 		<!-- Create new price item -->
 		<h3><?php echo lang('t_new_price_item') ?></h3>
@@ -41,9 +37,6 @@
 		</select>
 		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?php echo lang('f_new_price_item') ?>" />
 	</fieldset>
-	<?php
-	}
-	?>
 </form>
 
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
