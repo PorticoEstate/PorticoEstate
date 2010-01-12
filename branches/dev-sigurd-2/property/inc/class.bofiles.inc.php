@@ -241,11 +241,51 @@
 				}
 				else //Execute the jasper report
 				{
+					$output_type = 'PDF';
+					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"",
+						$from,
+						$to,
+						implode(",", $building_list));
+					// DEBUG
+					//print_r($jasper_parameters);
+					//exit(0);
+
+					$info				= pathinfo($file);
+					$report_name 		=  'report_' . basename($file,'.'.$info['extension']);
+					$report_source 		= "{$this->rootdir}{$file}";
+					$memory = xmlwriter_open_memory();
+					xmlwriter_start_document($memory,'1.0','UTF-8');
+
+					xmlwriter_start_element ($memory,'JasperConfig'); // <JasperConfig>
+						xmlwriter_start_element ($memory,'Reports'); // <Reports>	
+							xmlwriter_start_element ($memory,'Report'); // <Report>			
+								xmlwriter_write_attribute( $memory, 'name', $report_name);
+								xmlwriter_write_attribute( $memory, 'source', $report_source);
+							xmlwriter_end_element($memory); // </Report>
+						xmlwriter_end_element($memory); // </Reports>
+					xmlwriter_end_element($memory); // </JasperConfig>
+	
+					$xml = xmlwriter_output_memory($memory,true);
+
+					$jasper_config = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/config_' . basename($file);
+					$file_written = false;
+					$fp = fopen($jasper_config, "wb");
+					fwrite($fp,$xml);
+				
+					if(fclose($fp))
+					{
+						$file_written=true;
+					}
+
+					$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
+					$jasper_wrapper->jasper_config = $jasper_config;
+					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_name, $errors);     
+					unlink($jasper_config);
+
+/*
 					//class_path
-				//	$dirname = PHPGW_API_INC . '/jasper/lib';
 					$dirname = 'phpgwapi/inc/jasper/lib';
 					$file_list = array();
-				//	$file_list[] = PHPGW_API_INC . '/jasper/bin';
 					$file_list[] = 'phpgwapi/inc/jasper/bin';
 					$dir = new DirectoryIterator($dirname); 
 					if ( is_object($dir) )
@@ -283,6 +323,7 @@
 					$browser->content_header('report.pdf','application/pdf');
 
 					passthru($cmd);
+*/
 				}
 			}
 		}
