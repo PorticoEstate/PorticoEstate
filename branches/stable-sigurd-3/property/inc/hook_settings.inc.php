@@ -99,6 +99,10 @@
 	create_select_box('Default updated ticket status when creating project','tts_status_create_project',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_select_box('Autocreate project from ticket','auto_create_project_from_ticket',$yes_and_no);
 	
+	create_select_box('your projects on main screen - list 1','mainscreen_project_1',$yes_and_no,'Link to your projects');
+	create_select_box('Default project status 1','project_status_mainscreen_1',$_status_project,'The default status for list 1 when entering the mainscreen');
+	create_input_box('Custom title on projects on main screen - list 1','mainscreen_projects_1_title');
+
 	create_select_box('your workorders on main screen - list 1','mainscreen_workorder_1',$yes_and_no,'Link to your workorders');
 	create_select_box('Default workorder status 1','workorder_status_mainscreen_1',$_status_workorder,'The default status for list 1 when entering the mainscreen');
 	create_input_box('Custom title on workorders on main screen - list 1','mainscreen_workorders_1_title');

@@ -65,7 +65,7 @@
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
-			$user_id		= isset($data['user_id'])?$data['user_id']:'';
+			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id']: 0;
 			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
@@ -197,8 +197,11 @@
 
 			if ($user_id > 0)
 			{
-				$filtermethod .= " $where assignedto=" . (int)$user_id;
+				$filtermethod .= " {$where} (assignedto={$user_id}";
 				$where = 'AND';
+
+				$membership = $GLOBALS['phpgw']->accounts->membership($user_id);
+				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',',array_keys($membership)) . ')))'; 
 			}
 
 			if ($owner_id > 0)

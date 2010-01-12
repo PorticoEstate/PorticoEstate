@@ -501,6 +501,18 @@
 					)
 				);
 
+				$parameters3 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'search_for',
+							'source'	=> 'location_code'
+						),
+					)
+				);
+
 				if($this->acl->check('run', PHPGW_ACL_READ, 'rental'))
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -508,10 +520,12 @@
 							'text' 			=> lang('contracts'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 											(
-												'menuaction'	=> 'rental.uicontract.index',
-												'type_id'		=>	$type_id,
+												'menuaction'	  => 'rental.uicontract.index',
+												'search_type'	  => 'location_id',
+												'contract_status' => 'all',
+												'populate_form'   => 'yes'
 											)),
-						'parameters'	=> $parameters
+						'parameters'	=> $parameters3
 					);
 				}
 

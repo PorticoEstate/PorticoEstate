@@ -490,6 +490,8 @@
 					case 'SO': $type = lang('Initial Status'); break;
 					case 'S': $type = lang('Status changed'); break;
 					case 'SC': $type = lang('Status confirmed'); break;
+					case 'AP': $type = lang('Ask for approval'); break;
+					case 'ON': $type = lang('Owner notified'); break;
 					default: break;
 				}
 

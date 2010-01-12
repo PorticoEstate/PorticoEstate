@@ -494,10 +494,10 @@
 //_debug_array($sql);
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
-				$sql2 = 'SELECT count(*) FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
+				$sql2 = 'SELECT count(*) as cnt FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f('count');//$this->db->f('0');
+				$this->total_records = $this->db->f('cnt');//$this->db->f('0');
 			}
 			else
 			{
