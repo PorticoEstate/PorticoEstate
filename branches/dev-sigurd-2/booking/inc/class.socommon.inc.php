@@ -626,13 +626,18 @@
 			$id = intval($entry['id']);
 			
 			$values = $this->get_table_values($entry, __FUNCTION__);
+			foreach($values as $key => $val)
+			{
+				$val = str_replace('&nbsp;', ' ', $val);
+				$values[$key] = trim($val);
+			}
 			
 			array_walk($values, array($this, 'column_update_expression'));
 			
 			$update_queries = array(
 				'UPDATE ' . $this->table_name . ' SET ' . join(',', $values) . " WHERE id=$id"
 			);
-			
+
 			foreach($this->fields as $field => $params)
 			{
 				if($params['manytomany'] && is_array($entry[$field]))
@@ -683,7 +688,6 @@
 					}
 				}
 			}
-			
 			$this->db->query(join($update_queries, ";\n"), __LINE__, __FILE__);
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been updated', $entry['id']));
