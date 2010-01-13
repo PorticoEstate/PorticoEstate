@@ -96,10 +96,7 @@
 			if (is_array($fn_parts))
 			{
 				$type = $this->ext2mime($fn_parts[count($fn_parts)-1]);
-				if ($type != 'application/octect-stream')
-				{
-					return $type;
-				}
+				return $type;
 			}
 			return 'application/octet-stream';
 		}
@@ -311,6 +308,7 @@
 				'movie'	=> 'video/x-sgi-movie',
 				'mp2'	=> 'audio/mpeg',
 				'mp3'	=> 'audio/mpeg',
+				'mp4'	=> 'video/mp4',	
 				'mpe'	=> 'video/mpeg',
 				'mpeg'	=> 'video/mpeg',
 				'mpg'	=> 'video/mpeg',
