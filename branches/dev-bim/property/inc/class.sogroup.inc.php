@@ -5,7 +5,7 @@
      *
      * @author Espen
      */
-    class property_sogroup {
+    class property_soitem_group {
         private $db;
         private static $instance;
 
@@ -15,7 +15,7 @@
 
 
         /**
-         * @return property_soitem
+         * @return property_soitem_group
          */
         public static function singleton()
         {
@@ -34,7 +34,7 @@
          * @param integer $limit
          * @return array Array of zero or more items
          */
-        public function get($specific_group_id = null, $offset = null, $limit = null) {
+        public function read($specific_group_id = null, $offset = null, $limit = null) {
             $items = array();
 
             $select_cols = array('g.id',
@@ -74,6 +74,11 @@
             }
 
             return $items;
+        }
+
+        // TODO
+        public function read_single($id) {
+            
         }
 
 
