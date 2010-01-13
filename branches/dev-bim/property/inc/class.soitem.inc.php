@@ -113,7 +113,7 @@ phpgw::import_class('property.boitem');
                 $items[$i]['group_id']       = $this->db->f('group_id');
                 $items[$i]['location_id']    = $this->db->f('location_id');
                 $items[$i]['vendor_id']      = $this->db->f('vendor_id');
-                $items[$i]['installed'] = $this->db->f('installed');
+                $items[$i]['installed']      = $this->db->f('installed');
 
                 $this->uicols['input_type'][]   = 'text';
                 $this->uicols['name'][]         = $this->db->f('id');

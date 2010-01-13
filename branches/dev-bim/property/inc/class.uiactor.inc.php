@@ -208,15 +208,14 @@
 				}
 
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    							'menuaction'=> 'property.uiactor.index',
-									'lookup'    => $lookup,
-									'cat_id'	=>$this->cat_id,
-									'query'		=>$this->query,
-									'role'		=> $this->role,
-									'member_id'	=> $this->member_id
-
-	    				));
+                    (
+                        'menuaction'=> 'property.uiactor.index',
+                        'lookup'    => $lookup,
+                        'cat_id'	=>$this->cat_id,
+                        'query'		=>$this->query,
+                        'role'		=> $this->role,
+                        'member_id'	=> $this->member_id
+                    ));
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiactor.index',"
@@ -543,6 +542,8 @@
 					$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 				}
 			}
+
+            _debug_array($datatable);
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
