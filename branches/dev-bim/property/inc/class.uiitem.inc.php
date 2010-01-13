@@ -19,6 +19,8 @@
 
         public function __construct()
         {
+            $this->bocommon 		= $this->bo->bocommon;
+            
             //$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
             
@@ -32,10 +34,82 @@
             // Highlight menu selection
             $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
 
-            $datatable = $this->so->get();
-            //$datatable = $this->so->populate($datatable);
-/*
-            phpgwapi_yui::load_widget('datatable');
+            $item_list = $this->so->read(null);
+
+            $uicols = array(
+                'name' =>       array('id',      'group_id', 'location_id', 'vendor_id', 'installed_date'),
+                'datatype' =>   array('integer', 'integer',   'integer',    'integer',   'date'),
+                'hidden' =>     array(false,     false,       false,        false,       false)
+            );
+
+            $datatable = array();
+
+            $datatable['info'] = array
+            (
+            'file' => __FILE__,
+            'line' => __LINE__
+            );
+
+
+            $i = 0;
+            foreach($item_list as $item)
+            {
+                $j = 0;
+                $datatable['data']['rows']['row'][$i]['column'][$j]['name'] = 'id';
+                $datatable['data']['rows']['row'][$i]['column'][$j]['value'] = $item['id'];
+                $datatable['data']['rows']['row'][$i]['column'][$j]['lookup'] = '';
+                $datatable['data']['rows']['row'][$i]['column'][$j]['align'] = 'center';
+                $j++;
+                $datatable['data']['rows']['row'][$i]['column'][$j]['name'] = 'installed';
+                $datatable['data']['rows']['row'][$i]['column'][$j]['value'] = $item['installed'];
+                $datatable['data']['rows']['row'][$i]['column'][$j]['lookup'] = '';
+                $datatable['data']['rows']['row'][$i]['column'][$j]['align'] = 'center';
+                $j++;
+                
+                $i++;
+            }
+
+            $datatable['data']['rowactions']['action'] = array();
+
+            $datatable['data']['headers']['header'][0]['name']      = 'id';
+            $datatable['data']['headers']['header'][0]['text']      = 'ID';
+            $datatable['data']['headers']['header'][0]['visible'] 	= true;
+            $datatable['data']['headers']['header'][0]['format'] 	= '';
+            $datatable['data']['headers']['header'][0]['sortable']	= false;
+            $datatable['data']['headers']['header'][0]['formatter']	= '""';
+
+            $datatable['data']['headers']['header'][1]['name']      = 'installert';
+            $datatable['data']['headers']['header'][1]['text']      = 'desc';
+            $datatable['data']['headers']['header'][1]['visible'] 	= true;
+            $datatable['data']['headers']['header'][1]['format'] 	= '';
+            $datatable['data']['headers']['header'][1]['sortable']	= false;
+            $datatable['data']['headers']['header'][1]['formatter']	= '""';
+
+
+            $datatable['data']['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['data']['pagination']['records_start'] 	= 0;
+			$datatable['data']['pagination']['records_limit'] 	= 15;
+			$datatable['data']['pagination']['records_returned'] = 2;
+			$datatable['data']['pagination']['records_total'] 	= 2;
+
+            $datatable['data']['sorting'] = array
+            (
+                'order' => 'id',
+                'sort' => 'asc'
+            );
+
+
+            phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
             // Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
@@ -46,14 +120,18 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
-            
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-*/
-            _debug_array($datatable);
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+
+	  		// Prepare YUI Library
+  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'actor.index', 'property' );
+
+            //_debug_array($datatable);
             
         }
 
@@ -132,7 +210,6 @@
                     ".phpgwapi_datetime::user_localtime()."
                 )"
             );
-
         }
 
         public function emptydb() {

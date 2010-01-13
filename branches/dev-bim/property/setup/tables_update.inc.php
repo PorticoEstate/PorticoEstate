@@ -4119,11 +4119,30 @@
         $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
         
         $GLOBALS['phpgw_setup']->oProc->DropColumn('property_catalog', null, 'manufacturer_id');
-        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');;
+        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');
 
         if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
         {
             $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.579';
+            return $GLOBALS['setup_info']['property']['currentver'];
+        }
+    }
+
+    /**
+    * Update property version from 0.9.17.579 to 0.9.17.580
+    * Add sort column to BIM attributes
+    *
+    */
+    $test[] = '0.9.17.579';
+    function property_upgrade0_9_17_579()
+    {
+        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+        // Add unique constraints
+
+        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+        {
+            $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.580';
             return $GLOBALS['setup_info']['property']['currentver'];
         }
     }

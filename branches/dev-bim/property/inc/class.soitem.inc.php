@@ -11,9 +11,11 @@ phpgw::import_class('property.boitem');
     class property_soitem
     {
         private $db;
+        public $uicols;
         private static $instance;
 
         private function __construct() {
+            $this->uicols = array();
             $this->db = & $GLOBALS['phpgw']->db;
         }
 
@@ -24,7 +26,7 @@ phpgw::import_class('property.boitem');
         public static function singleton()
         {
             if (!isset(self::$instance))
-                {
+            {
                 $c = __CLASS__;
                 self::$instance = new $c;
             }
@@ -33,25 +35,64 @@ phpgw::import_class('property.boitem');
 
         /**
          * Retreive any number of items.
-         * @param integer $specific_item_id
-         * @param integer $offset
-         * @param integer $limit
+         * @param array $data
          * @return array Array of zero or more items
          */
-        public function get($specific_item_id = null, $offset = null, $limit = null)
+        public function read(array $data)
         {
-            $items = array();
+            $start		= isset($data['start']) ? $data['start'] : 0;
+            $filter		= $data['filter'] ? $data['filter'] : 'none';
+            $query		= $data['query'];
+            $sort		= $data['sort'] ? $data['sort'] : 'DESC';
+            $order		= $data['order'];
+            $cat_id		= $data['cat_id'];
+            $allrows	= $data['allrows'];
+            $member_id 	= $data['member_id'] ? $data['member_id'] : 0;
+            $dry_run	= $data['dry_run'];
 
-            $select_cols = array('i.id',
+            $uicols = array();
+            $uicols['input_type'][]		= 'text';
+            $uicols['name'][]			= 'id';
+            $uicols['descr'][]			= lang('ID');
+            $uicols['statustext'][]		= lang('ID');
+            $uicols['datatype'][]		= false;
+            $uicols['attib_id'][]		= false;
+
+            $uicols['input_type'][]		= 'hidden';
+            $uicols['name'][]			= 'id';
+            $uicols['descr'][]			= false;
+            $uicols['statustext'][]		= false;
+            $uicols['datatype'][]		= false;
+            $uicols['attib_id'][]		= false;
+
+            $uicols['input_type'][]		= 'text';
+            $uicols['name'][]			= 'category';
+            $uicols['descr'][]			= lang('category');
+            $uicols['statustext'][]		= lang('category');
+            $uicols['datatype'][]		= false;
+            $uicols['attib_id'][]		= false;
+
+            $uicols['input_type'][]		= 'text';
+            $uicols['name'][]			= 'entry_date';
+            $uicols['descr'][]			= lang('entry date');
+            $uicols['statustext'][]		= lang('entry date');
+            $uicols['datatype'][]		= false;
+            $uicols['attib_id'][]		= false;
+
+            $this->uicols = $uicols;
+
+            $select_cols = array(
+                'i.id',
                 'i.group_id',
                 'i.location_id',
                 'i.vendor_id',
-                'i.installed');
+                'i.installed'
+            );
             $from_tables = array('property_item i');
             $joins = array(
                 //$this->db->left_join.' property_group g ON i.group_id = g.id',
                 $this->db->left_join.' fm_vendor v ON i.vendor_id = v.id'
-                );
+            );
             $where_clauses = array(' WHERE 1=1');
 
             if($specific_item_id) {
@@ -72,7 +113,14 @@ phpgw::import_class('property.boitem');
                 $items[$i]['group_id']       = $this->db->f('group_id');
                 $items[$i]['location_id']    = $this->db->f('location_id');
                 $items[$i]['vendor_id']      = $this->db->f('vendor_id');
-                $items[$i]['installed_date'] = $this->db->f('installed');
+                $items[$i]['installed'] = $this->db->f('installed');
+
+                $this->uicols['input_type'][]   = 'text';
+                $this->uicols['name'][]         = $this->db->f('id');
+                $this->uicols['descr'][]        = $this->db->f('group_id');
+                $this->uicols['statustext'][]   = $this->db->f('location_id');
+                $this->uicols['datatype'][]     = $this->db->f('vendor_id');
+                $this->uicols['attib_id'][]     = $this->db->f('installed');
 
                 $i++;
             }
@@ -125,6 +173,5 @@ phpgw::import_class('property.boitem');
                 $obj->get_location_id(),
                 $obj->get_vendor_id(),
                 $obj->get_installed_date());
-            
         }
     }
