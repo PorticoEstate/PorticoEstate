@@ -224,8 +224,6 @@
 						'nofiles'		=> true
 					));
 
-				$browser = CreateObject('phpgwapi.browser');
-
 				if(!$jasper)
 				{
 					$this->vfs->override_acl = 1;
@@ -236,18 +234,31 @@
 
 					$this->vfs->override_acl = 0;
 
+					$browser = CreateObject('phpgwapi.browser');
 					$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
 					echo $document;
 				}
 				else //Execute the jasper report
 				{
 					$output_type = 'PDF';
+
+					/**
+					* 'parameters' will be in the following format:
+					* 'key1|value1;key2|value2;key3|value3' where key1, key2 ... keyX are
+					*  unique
+					*/
+/*
 					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"",
-						$from,
-						$to,
-						implode(",", $building_list));
+						1,//$from,
+						1,//$to,
+						1);//implode(",", $building_list));
+
+*/
+					$jasper_parameters = '"DUMMY|1"';
+
+
 					// DEBUG
-					//print_r($jasper_parameters);
+					//print_r($jasper_parameters);die();
 					//exit(0);
 
 					$info				= pathinfo($file);
@@ -281,49 +292,6 @@
 					$jasper_wrapper->jasper_config = $jasper_config;
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_name, $errors);     
 					unlink($jasper_config);
-
-/*
-					//class_path
-					$dirname = 'phpgwapi/inc/jasper/lib';
-					$file_list = array();
-					$file_list[] = 'phpgwapi/inc/jasper/bin';
-					$dir = new DirectoryIterator($dirname); 
-					if ( is_object($dir) )
-					{
-						foreach ( $dir as $_file )
-						{
-							if ( $_file->isDot()
-								|| !$_file->isFile()
-								|| !$_file->isReadable()
-								|| mime_content_type($_file->getPathname()) == 'text/xml')
-							{
-								continue;
-							}
-
-							$file_list[] = (string) "{$dirname}/{$_file}";
-						}
-					}
-					
-					if (stristr(PHP_OS, 'WIN')) 
-					{ 
-						$sep = ';';// Win 
-					}
-					else
-					{ 
-						$sep = ':';// Other
-					}
-
-					$class_path = implode($sep, $file_list);
-					$type = 'pdf';
-					$select_criteria = '//Record';
-					$template = "{$this->rootdir}/{$file}";
-
-					$cmd = "java -Djava.awt.headless=true -cp {$class_path} XmlJasperInterface -o{$type} -f{$template} -x{$select_criteria} < " . PHPGW_SERVER_ROOT . "/catch/test_data/jasper/tilstand.xml";
-
-					$browser->content_header('report.pdf','application/pdf');
-
-					passthru($cmd);
-*/
 				}
 			}
 		}
