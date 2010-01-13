@@ -21,7 +21,7 @@
         {
             $this->bocommon 		= $this->bo->bocommon;
             
-            //$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+            $GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
             
             $this->so = property_soitem::singleton();
@@ -55,50 +55,88 @@
             foreach($item_list as $item)
             {
                 $j = 0;
-                $datatable['data']['rows']['row'][$i]['column'][$j]['name'] = 'id';
-                $datatable['data']['rows']['row'][$i]['column'][$j]['value'] = $item['id'];
-                $datatable['data']['rows']['row'][$i]['column'][$j]['lookup'] = '';
-                $datatable['data']['rows']['row'][$i]['column'][$j]['align'] = 'center';
+                $datatable['rows']['row'][$i]['column'][$j]['name'] = 'id';
+                $datatable['rows']['row'][$i]['column'][$j]['value'] = $item['id'];
+                $datatable['rows']['row'][$i]['column'][$j]['lookup'] = '';
+                $datatable['rows']['row'][$i]['column'][$j]['align'] = 'center';
                 $j++;
-                $datatable['data']['rows']['row'][$i]['column'][$j]['name'] = 'installed';
-                $datatable['data']['rows']['row'][$i]['column'][$j]['value'] = $item['installed'];
-                $datatable['data']['rows']['row'][$i]['column'][$j]['lookup'] = '';
-                $datatable['data']['rows']['row'][$i]['column'][$j]['align'] = 'center';
+                $datatable['rows']['row'][$i]['column'][$j]['name'] = 'installed';
+                $datatable['rows']['row'][$i]['column'][$j]['value'] = $item['installed'];
+                $datatable['rows']['row'][$i]['column'][$j]['lookup'] = '';
+                $datatable['rows']['row'][$i]['column'][$j]['align'] = 'center';
                 $j++;
                 
                 $i++;
             }
 
-            $datatable['data']['rowactions']['action'] = array();
+            $datatable['rowactions']['action'] = array();
 
-            $datatable['data']['headers']['header'][0]['name']      = 'id';
-            $datatable['data']['headers']['header'][0]['text']      = 'ID';
-            $datatable['data']['headers']['header'][0]['visible'] 	= true;
-            $datatable['data']['headers']['header'][0]['format'] 	= '';
-            $datatable['data']['headers']['header'][0]['sortable']	= false;
-            $datatable['data']['headers']['header'][0]['formatter']	= '""';
+            $datatable['headers']['header'][0]['name']      = 'id';
+            $datatable['headers']['header'][0]['text']      = 'ID';
+            $datatable['headers']['header'][0]['visible'] 	= true;
+            $datatable['headers']['header'][0]['format'] 	= '';
+            $datatable['headers']['header'][0]['sortable']	= false;
+            $datatable['headers']['header'][0]['formatter']	= '""';
 
-            $datatable['data']['headers']['header'][1]['name']      = 'installert';
-            $datatable['data']['headers']['header'][1]['text']      = 'desc';
-            $datatable['data']['headers']['header'][1]['visible'] 	= true;
-            $datatable['data']['headers']['header'][1]['format'] 	= '';
-            $datatable['data']['headers']['header'][1]['sortable']	= false;
-            $datatable['data']['headers']['header'][1]['formatter']	= '""';
+            $datatable['headers']['header'][1]['name']      = 'installert';
+            $datatable['headers']['header'][1]['text']      = 'desc';
+            $datatable['headers']['header'][1]['visible'] 	= true;
+            $datatable['headers']['header'][1]['format'] 	= '';
+            $datatable['headers']['header'][1]['sortable']	= false;
+            $datatable['headers']['header'][1]['formatter']	= '""';
 
-
-            $datatable['data']['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+            $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
-			$datatable['data']['pagination']['records_start'] 	= 0;
-			$datatable['data']['pagination']['records_limit'] 	= 15;
-			$datatable['data']['pagination']['records_returned'] = 2;
-			$datatable['data']['pagination']['records_total'] 	= 2;
+			$datatable['pagination']['records_start'] 	= 0;
+			$datatable['pagination']['records_limit'] 	= 15;
+			$datatable['pagination']['records_returned'] = 2;
+			$datatable['pagination']['records_total'] 	= 2;
 
-            $datatable['data']['sorting'] = array
+            $datatable['sorting'] = array
             (
                 'order' => 'id',
                 'sort' => 'asc'
             );
+
+
+            if( phpgw::get_var('phpgw_return_as') == 'json' ) {
+                //values for Pagination
+                $json = array
+                        (
+                        'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+                        'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+                        'startIndex' 		=> $datatable['pagination']['records_start'],
+                        'sort'				=> $datatable['sorting']['order'],
+                        'dir'				=> $datatable['sorting']['sort'],
+                        'records'			=> array()
+                );
+
+                // values for datatable
+                if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])) {
+                    foreach( $datatable['rows']['row'] as $row ) {
+                        $json_row = array();
+                        foreach( $row['column'] as $column) {
+                            if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true) {
+                                $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+                            }
+                            elseif(isset($column['format']) && $column['format']== "link") {
+                                $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+                            }else {
+                                $json_row[$column['name']] = $column['value'];
+                            }
+                        }
+                        $json['records'][] = $json_row;
+                    }
+                }
+
+                // right in datatable
+                if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action'])) {
+                    $json ['rights'] = $datatable['rowactions']['action'];
+                }
+
+                return $json;
+            }
 
 
             phpgwapi_yui::load_widget('dragdrop');
