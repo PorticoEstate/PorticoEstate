@@ -8,8 +8,25 @@
 
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?>
-<?php echo rental_uicommon::get_page_warning($contract->get_consistency_warnings()) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
+<?php 
+if($contract->get_id() > 0) {
+	if($contract->get_consistency_warnings()){?>
+<div class="warning" style="width: 50%;">
+<?php 
+		$list_form = false;
+		$list_id = 'get_contract_warnings';
+		unset($related);
+		$url_add_on = '&amp;contract_id='.$contract->get_id();
+		unset($extra_cols);
+	
+		include('contract_warnings_partial.php');
+?>
+</div>
+<?php 
+	}
+}
+?>
 
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
@@ -122,7 +139,7 @@
 		 	<?php
 				$list_form = false;
 				$list_id = 'included_price_items';
-				$related = array('not_included_price_items','total_price');
+				$related = array('not_included_price_items','total_price','get_contract_warnings');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
 					array("key" => "area", "label" => lang('area'), "index" => 4, "formatter" => "formatArea"),

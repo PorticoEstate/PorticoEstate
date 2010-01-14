@@ -3,6 +3,7 @@
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'contract_date', 'inc/model/');
 	include_class('rental', 'invoice', 'inc/model/');
+	phpgw::import_class('rental.socontract_price_item');
 
 	class rental_contract extends rental_model
 	{
@@ -816,6 +817,23 @@
 					if($due_date < $start_date || (isset($end_date) && $due_date > $end_date)){
 						$this->set_consistency_warning(lang('warning_due_date_between'));
 					} 
+				}
+				$so_price_item = rental_socontract_price_item::get_instance();
+				$price_items = $so_price_item->get(null, null, null, null, null, null, array('contract_id' => $this->get_id()));
+				foreach($price_items as $price_item){
+					//get price item dates
+					$pi_date_start = $price_item->get_date_start();
+					$pi_date_end = $price_item->get_date_end();
+					if(isset($pi_date_start) && is_numeric($pi_date_start) && $pi_date_start > 0){
+						if($pi_date_start < $start_date || (isset($pi_date_end) && $pi_date_end > $end_date)){
+							$this->set_consistency_warning($price_item->get_agresso_id() . ' - ' . lang('warning_price_item_date_between'));
+						}
+					}
+					else if(isset($pi_date_end) && is_numeric($pi_date_end) && $pi_date_end > 0){
+						if($pi_date_end > $end_date){
+							$this->set_consistency_warning($price_item->get_agresso_id() . ' - ' . lang('warning_price_item_date_between'));
+						}
+					}
 				}
 			}
 		}

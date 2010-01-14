@@ -117,6 +117,13 @@
 				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
 					$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
 					break;
+				case 'get_contract_warnings':	//get the contract warnings
+					$contract = rental_socontract::get_instance()->get_single(phpgw::get_var('contract_id'));
+					$contract->check_consistency();
+					$rows = $contract->get_consistency_warnings();
+					$result_count = count($rows);
+					$export=true;
+					break;
 				case 'all_contracts':
 				default:
 					phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
@@ -126,17 +133,18 @@
 					phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
 					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
 			}
-			
-			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
-			
-			
-			//Serialize the contracts found
-			$rows = array();
-			foreach ($result_objects as $result) {
-				if(isset($result))
-				{
-					$rows[] = $result->serialize();
+			if($type != 'get_contract_warnings'){
+				$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
+				
+				
+				//Serialize the contracts found
+				$rows = array();
+				foreach ($result_objects as $result) {
+					if(isset($result))
+					{
+						$rows[] = $result->serialize();
+					}
 				}
 			}
 			

@@ -135,7 +135,7 @@ abstract class rental_model
 	
 	public function set_consistency_warning(string $warning_language_key)
 	{
-		$this->consistency_warnings[] = $warning_language_key;
+		$this->consistency_warnings[] = array('warning' => $warning_language_key);
 	}
 	
 	public function get_consistency_warnings()

@@ -72,6 +72,7 @@ contract	rental	no	Kontrakt
 contract_back	rental	no	Kontraktsliste
 contract_id	rental	no	Kontraktsnummer
 contract_number	rental	no	Kontraktnummer
+contract_warning	rental	no	Advarsler
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
 contracts	rental	no	Kontrakter
 contracts_under_dismissal	rental	no	Kontrakter under avslutning
@@ -388,6 +389,7 @@ user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
+warning_price_item_date_between	rental	no	Priselementets datoer må være innenfor kontraktens datoer!
 weekly	rental	no	Ukentlig
 working_on	rental	no	Kontrakter under arbeid
 year	rental	no	År
