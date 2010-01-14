@@ -13,6 +13,8 @@ add_area	rental	no	Legg til areal
 added_areas	rental	no	Inkludert areal
 add	rental	no	Legg til
 address	rental	no	Adresse
+adjustment_interval	rental	no	Reguleringsintervall
+adjustment_share	rental	no	Reguleringsandel
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
@@ -392,6 +394,7 @@ user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
+warning_lacking_start_date	rental	no	Kontrakten mangler start-dato!
 warning_price_item_date_between	rental	no	Priselementets datoer må være innenfor kontraktens datoer!
 weekly	rental	no	Ukentlig
 working_on	rental	no	Kontrakter under arbeid

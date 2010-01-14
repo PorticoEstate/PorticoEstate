@@ -106,7 +106,9 @@
 				'project_id' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'due_date' =>			array('type' => 'int', 'precision' => '8', 'nullable' => true), // opsjonsfrist
 				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true) //Utleid areal
+				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true), //Utleid areal
+				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
+				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)	//Reguleringsandel
 			),
 			'pk' => array('id'),
 			'fk' => array(

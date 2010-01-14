@@ -48,6 +48,8 @@
 		protected $notify_before_due_date;
 		protected $notify_after_termination_date;
 		protected $rented_area;
+		protected $adjustment_interval;
+		protected $adjustment_share;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -563,7 +565,9 @@
 				'max_area' =>	$this->rented_area,
 				'contract_status' => $this->get_contract_status(),
 				'contract_notification_status' => $this->get_contract_notification_status(),
-				'rented_area' => $this->get_rented_area()
+				'rented_area' => $this->get_rented_area(),
+				'adjustment_interval' => $this->get_adjustment_interval(),
+				'adjustment_share' => $this->get_adjustment_share()
 			);
 		}
 		
@@ -601,6 +605,26 @@
 		public function get_max_area()
 		{
 			return $this->max_area;
+		}
+		
+		public function set_adjustment_interval($adjustment_interval)
+		{
+			$this->adjustment_interval = $adjustment_interval;
+		}
+	
+		public function get_adjustment_interval()
+		{
+			return $this->adjustment_interval;
+		}
+		
+		public function set_adjustment_share($adjustment_share)
+		{
+			$this->adjustment_share = $adjustment_share;
+		}
+	
+		public function get_adjustment_share()
+		{
+			return $this->adjustment_share;
 		}
 		
 		public function set_contract_type_id($contract_type_id)

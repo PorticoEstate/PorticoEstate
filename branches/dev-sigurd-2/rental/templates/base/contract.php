@@ -598,6 +598,59 @@ if($contract->get_id() > 0) {
 							<?php }
 						?>
 					</dd>
+					<dt>
+						<label for="adjustment_interval"><?php echo lang('adjustment_interval') ?></label>
+					</dt>
+					<dd>
+						<?php
+						$current_interval = $contract->get_adjustment_interval();
+						if ($editable)
+						{
+							?>
+							<select name="adjustment_interval">
+								<?php
+									echo "<option ".($current_interval == '1' ? 'selected="selected"' : "")." value=\"1\">1 ".lang('year')."</option>";
+									echo "<option ".($current_interval == '2' ? 'selected="selected"' : "")." value=\"2\">2 ".lang('year')."</option>";
+									echo "<option ".($current_interval == '10' ? 'selected="selected"' : "")." value=\"10\">10 ".lang('year')."</option>";
+								?>
+							</select>
+							<?php
+						?>
+						<?php
+						}
+						else // Non-editable
+						{
+							echo $current_interval." år";
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="adjustment_share"><?php echo lang('adjustment_share') ?></label>
+					</dt>
+					<dd>
+						<?php
+						$current_share = $contract->get_adjustment_share();
+						if ($editable)
+						{
+							?>
+							<select name="adjustment_share">
+								<?php
+									echo "<option ".($current_share == '100' ? 'selected="selected"' : "")." value=\"100\">100%</option>";
+									echo "<option ".($current_share == '90' ? 'selected="selected"' : "")." value=\"90\">90%</option>";
+									echo "<option ".($current_share == '80' ? 'selected="selected"' : "")." value=\"80\">80%</option>";
+									echo "<option ".($current_share == '67' ? 'selected="selected"' : "")." value=\"67\">67%</option>";
+								?>
+							</select>
+							<?php
+						?>
+						<?php
+						}
+						else // Non-editable
+						{
+							echo $current_interval."%";
+						}
+						?>
+					</dd>
 				</dl>
                 <dl class="proplist-col">
                     <dt>

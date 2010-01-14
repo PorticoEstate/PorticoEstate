@@ -384,6 +384,8 @@
 						$update_price_items = true;
 					}
 					$contract->set_rented_area($new_rented_area);
+					$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
+					$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
 					$validated_numeric = $contract->validate_numeric();
 					
 					if($validated_numeric){
@@ -452,7 +454,7 @@
 					$error = lang('permission_denied_edit_contract');
 				}
 			}
-			return $this->viewedit(true, $contract_id, $location_id,$notification, $message, $error);
+			return $this->viewedit(true, $contract_id, null, $location_id,$notification, $message, $error);
 		}
 
 		/**
