@@ -15,6 +15,7 @@
 		protected $is_area;
 		protected $price;
 		protected $is_inactive;
+		protected $is_adjustable;
 		protected $responsibility_id;
 		protected $responsibility_title;
 
@@ -124,6 +125,7 @@
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
 				'is_inactive' => $this->get_status_text(),
+				'is_adjustable' => $this->get_adjustable_text(),
 				'price' => $this->get_price(),
 				'responsibility_id' => $this->get_responsibility_id(),
 				'responsibility_title' => lang($this->get_responsibility_title())
@@ -209,5 +211,21 @@
 		
 		public function set_responsibility_title($responsibility_title){
 			$this->responsibility_title = $responsibility_title;
+		}
+		public function is_adjustable(){
+			return $this->is_adjustable;
+		}
+		
+		public function get_adjustable_text()
+		{
+			if ($this->is_adjustable()) {
+				return lang('price_item_adjustable');
+			} else {
+				return lang('price_item_not_adjustable');
+			}
+		}
+		
+		public function set_is_adjustable($is_adjustable){
+			$this->is_adjustable = (boolean)$is_adjustable;
 		}
 	}

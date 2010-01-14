@@ -97,6 +97,10 @@
 		  	sortable: true
 		},
 		{
+			key: "is_adjustable",
+			label: "<?php echo lang('is_adjustable') ?>",
+		},
+		{
 			key: "responsibility_title",
 			label: "<?php echo lang('responsibility') ?>",
 		  	sortable: true

@@ -203,6 +203,7 @@
 					'agresso_id' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
 					'is_inactive' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
+					'is_adjustable' =>	array('type' => 'bool','nullable' => true,'default' => 'true'),
 					'price' =>      array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false)
 				),

@@ -80,6 +80,16 @@
 				<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?> disabled="disabled"/>
 			<?php }?>
 		</dd>
+		<dt>
+			<label for="is_adjustable"><?php echo lang('is_adjustable') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+					<input type="checkbox" name="is_adjustable" id="is_adjustable"<?php echo $price_item->is_adjustable() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+				<?php echo $price_item->get_adjustable_text()?>
+			<?php }?>
+		</dd>
 	</dl>
 
 	<?php
