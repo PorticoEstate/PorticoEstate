@@ -620,7 +620,7 @@ if($contract->get_id() > 0) {
 						}
 						else // Non-editable
 						{
-							echo $current_interval." år";
+							echo $current_interval." ".lang('year');
 						}
 						?>
 					</dd>
@@ -647,7 +647,7 @@ if($contract->get_id() > 0) {
 						}
 						else // Non-editable
 						{
-							echo $current_interval."%";
+							echo $current_share."%";
 						}
 						?>
 					</dd>
