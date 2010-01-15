@@ -59,9 +59,16 @@ class booking_uireports extends booking_uicommon
 				//print_r($jasper_parameters);
 				//exit(0);
 
-				$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
-				$jasper_wrapper->jasper_config = PHPGW_SERVER_ROOT.'/booking/jasper/jasper_config.xml';
-				$jasper_wrapper->execute($jasper_parameters, $output_type, 'report_participants', $errors);     
+				$jasper_wrapper 	= CreateObject('phpgwapi.jasper_wrapper');
+				$report_source		= PHPGW_SERVER_ROOT.'/booking/jasper/templates/participants.jrxml';
+				$jasper_info		= $jasper_wrapper->create_jasper_info($report_source);
+
+				$jasper_wrapper->jasper_info = $jasper_info;
+				$jasper_wrapper->execute($jasper_parameters, $output_type, $errors);     
+				if(is_file($jasper_info['config']))
+				{
+					unlink($jasper_info['config']);
+				}
 			}
 		} 
 		else 

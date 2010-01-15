@@ -261,37 +261,15 @@
 					//print_r($jasper_parameters);die();
 					//exit(0);
 
-					$info				= pathinfo($file);
-					$report_name 		=  'report_' . basename($file,'.'.$info['extension']);
-					$report_source 		= "{$this->rootdir}{$file}";
-					$memory = xmlwriter_open_memory();
-					xmlwriter_start_document($memory,'1.0','UTF-8');
-
-					xmlwriter_start_element ($memory,'JasperConfig'); // <JasperConfig>
-						xmlwriter_start_element ($memory,'Reports'); // <Reports>	
-							xmlwriter_start_element ($memory,'Report'); // <Report>			
-								xmlwriter_write_attribute( $memory, 'name', $report_name);
-								xmlwriter_write_attribute( $memory, 'source', $report_source);
-							xmlwriter_end_element($memory); // </Report>
-						xmlwriter_end_element($memory); // </Reports>
-					xmlwriter_end_element($memory); // </JasperConfig>
-	
-					$xml = xmlwriter_output_memory($memory,true);
-
-					$jasper_config = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/config_' . basename($file);
-					$file_written = false;
-					$fp = fopen($jasper_config, "wb");
-					fwrite($fp,$xml);
-				
-					if(fclose($fp))
+					$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
+					$report_source		= "{$this->rootdir}{$file}";
+					$jasper_info		= $jasper_wrapper->create_jasper_info($report_source);
+					$jasper_wrapper->jasper_info = $jasper_info;
+					$jasper_wrapper->execute($jasper_parameters, $output_type, $errors);     
+					if(is_file($jasper_info['config']))
 					{
-						$file_written=true;
+						unlink($jasper_info['config']);
 					}
-
-					$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
-					$jasper_wrapper->jasper_config = $jasper_config;
-					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_name, $errors);     
-					unlink($jasper_config);
 				}
 			}
 		}

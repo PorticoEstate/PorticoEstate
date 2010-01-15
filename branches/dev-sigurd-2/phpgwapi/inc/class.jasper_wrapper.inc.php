@@ -11,8 +11,12 @@
 
 	class phpgwapi_jasper_wrapper
 	{
-		# path to the Jasper config file (containing the report-list)
-		var $jasper_config = ''; //PHPGW_SERVER_ROOT.'/booking/jasper/jasper_config.xml';
+		# path to the Jasper config file (containing the report-list) and report name
+		public $jasper_info = array
+		(
+			'config'		=> false,
+			'report_name'	=> false
+		);
 
 		public function __construct()
 		{
@@ -24,8 +28,6 @@
 			{ 
 				$sep = ':';// Other
 			}
-
-//			$java_classpath = ':.:';
 
 			$java_classpath = "{$sep}.{$sep}";
 			foreach (glob(JASPER_LIBS . "*.jar") as $filename) 
@@ -54,7 +56,50 @@
 			}
 		}
 
-		public function execute($parameters, $output_type, $report_name, &$err) 
+		/**
+		* create jasper config information used for input for executing the report
+		*
+		* @param string $report_source full path to the jrxml-report definition file
+		*
+		* @return array Array with referense to the config-file and report name
+		*/
+
+		public function create_jasper_info($report_source)
+		{
+			$info				= pathinfo($report_source);
+			$base_name 			= basename($report_source,'.'.$info['extension']);
+			$report_name 		= "report_{$base_name}";
+
+			$memory = xmlwriter_open_memory();
+			xmlwriter_start_document($memory,'1.0','UTF-8');
+			xmlwriter_start_element ($memory,'JasperConfig'); // <JasperConfig>
+				xmlwriter_start_element ($memory,'Reports'); // <Reports>	
+					xmlwriter_start_element ($memory,'Report'); // <Report>			
+						xmlwriter_write_attribute( $memory, 'name', $report_name);
+						xmlwriter_write_attribute( $memory, 'source', $report_source);
+					xmlwriter_end_element($memory); // </Report>
+				xmlwriter_end_element($memory); // </Reports>
+			xmlwriter_end_element($memory); // </JasperConfig>
+
+			$xml = xmlwriter_output_memory($memory,true);
+
+			$jasper_info = array
+			(
+				'config'		=> "{$GLOBALS['phpgw_info']['server']['temp_dir']}/config_{$base_name}.xml",
+				'report_name'	=> $report_name
+			);
+
+			$fp = fopen($jasper_info['config'], "wb");
+			fwrite($fp,$xml);
+
+			if( !fclose($fp) )
+			{
+				throw new Exception('jasper_wrapper::create_jasper_config did not write any config file');
+			}
+			return $jasper_info;
+		}
+
+		public function execute($parameters, $output_type, &$err) 
 		{
 			if (!chdir(JASPER_BIN)) 
 			{
@@ -62,6 +107,7 @@
 				return 102;
 			}
 
+			$report_name = $this->jasper_info['report_name'];
 			$cmd = sprintf("CLASSPATH=%s %s -D%s JasperEngine -p %s -t %s -n %s -d %s -u %s -P %s %s",
 							$this->java_classpath,
 							JAVA_BIN,
@@ -72,11 +118,11 @@
 							$this->connection_string,
 							$this->db_user,
 							$this->db_pass,
-							$this->jasper_config);
+							$this->jasper_info['config']);
 
 			exec($cmd, $cmd_output, $retval);
-		//  echo $cmd . ":retval: " . $retval;
-			//  exit(0);
+		//	echo $cmd . ":retval: " . $retval;
+		//	exit(0);
 
 			switch ($retval) 
 			{
