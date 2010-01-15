@@ -251,7 +251,8 @@
 		*/
 		function content_header($fn='',$mime='',$length='',$nocache=True)
 		{
-			if($mime != 'text/plain')
+		//	if($mime != 'text/plain')
+			if( !$mime )
 			{
 				$mime_magic = createObject('phpgwapi.mime_magic');
 				$mime = $mime_magic->filename2mime($fn);

@@ -152,7 +152,6 @@
 				$lastiteration = $lastindex - $subindex;
 				for ($iteration = 0; $iteration < $lastiteration; $iteration++)
 				{
-					$nextchar = 0;
 					if ($this->comesafter($sortarray[$iteration][$index], $sortarray[$iteration + 1][$index]))
 					{
 						$temp = $sortarray[$iteration];
@@ -172,7 +171,6 @@
 				$lastiteration = $lastindex - $subindex;
 				for ($iteration = $lastiteration; $iteration > 0; $iteration--)
 				{
-					$nextchar = 0;
 					if ($this->comesafter($sortarray[$iteration][$index], $sortarray[$iteration - 1][$index]))
 					{
 						$temp = $sortarray[$iteration];

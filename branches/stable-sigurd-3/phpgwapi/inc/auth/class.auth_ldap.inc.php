@@ -137,7 +137,7 @@
 			}
 
 			// Generate the search DN
-			$search = $this->_generate_dn($this->userid_search_dn, '', $account_id);
+			$search = $this->_generate_dn($this->userid_search_dn, '', $_account_id);
 	
 			$ds = $GLOBALS['phpgw']->common->ldapConnect();
 			$sri = ldap_search($ds, $GLOBALS['phpgw_info']['server']['ldap_context'], $search, array('dn') );
@@ -150,7 +150,7 @@
 
 			$dn = $allValues[0]['dn'];
 			
-			$entry['userpassword'] = $this->generate_hash($new_password); 
+			$entry['userpassword'] = $this->create_hash($new_passwd); 
 			if ( isset($allValues[0]['shadowlastchange']) )
 			{
 				$entry['shadowLastChange'] = date('U') / phpgwapi_datetime::SECONDS_IN_DAY;

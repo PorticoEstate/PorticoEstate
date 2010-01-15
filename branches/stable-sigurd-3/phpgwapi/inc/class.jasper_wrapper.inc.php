@@ -16,11 +16,21 @@
 
 		public function __construct()
 		{
-			$java_classpath = ':.:';
+			if (stristr(PHP_OS, 'WIN')) 
+			{ 
+				$sep = ';';// Win 
+			}
+			else
+			{ 
+				$sep = ':';// Other
+			}
 
+//			$java_classpath = ':.:';
+
+			$java_classpath = "{$sep}.{$sep}";
 			foreach (glob(JASPER_LIBS . "*.jar") as $filename) 
 			{
-				$java_classpath .=  $filename . ":";
+				$java_classpath .=  $filename . $sep;
 			}
 			$this->java_classpath = $java_classpath;
 
@@ -142,26 +152,27 @@
 					$output = join("\n", $cmd_output);
 					if ($output_type == 'PDF') 
 					{
-						header("Content-Type: application/pdf");
-						header(sprintf("Content-Disposition: attachment; filename=\"%s.pdf\"", $report_name));
+						$mime= 'application/pdf';
+						$filename ="{$report_name}.pdf"; 
 					} 
 					else if ($output_type == 'CSV') 
 					{
-						header("Content-Type: text/csv");
-						header(sprintf("Content-Disposition: attachment; filename=\"%s.csv\"", $report_name));
+						$mime= 'text/csv';
+						$filename ="{$report_name}.csv"; 
 					} 
 					else if ($output_type == 'XLS') 
 					{
-						header("Content-Type: application/vnd.ms-excel");
-						header(sprintf("Content-Disposition: attachment; filename=\"%s.xls\"", $report_name));
+						$mime= 'application/vnd.ms-excel';
+						$filename ="{$report_name}.xls"; 
 					} 
 					else 
 					{ // should never arise                                                                                                                                                           
-						header("Content-Type: application/octet-stream");
-						header(sprintf("Content-Disposition: attachment; filename=\"%s.dat\"", $report_name));
+						$mime= 'application/octet-stream';
+						$filename ="{$report_name}.dat"; 
 					}
 
-				header("Content-Length: " . strlen($output));
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($filename,$mime,strlen($output));
 				echo $output;
 			}
 		}
