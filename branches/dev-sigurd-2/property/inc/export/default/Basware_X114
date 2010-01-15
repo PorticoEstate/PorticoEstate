@@ -38,8 +38,8 @@
 	{
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 		
-		var $old_files_deleted;
 		var $debug;
+		var $client_code = 14;
 		
 		function  __construct()
 		{
@@ -359,7 +359,10 @@
 		
 		protected function errorhandler($batchid,$error_desr)
 		{
-			$this->db->transaction_abort();
+			if($this->db->Transaction)
+			{
+				$this->db->transaction_abort();
+			}
 
 			$meld = $error_desr;
 		
@@ -509,15 +512,17 @@
 				0 => array
 				(
 					'TRANSACTIONTYPE'			=> 'X114',
+					'KEY'						=> '', //dummy
 					'VOUCHERID'					=> $oRsBilag[0]['bilagsnr'], // 70903541
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
-					'CLIENT.CODE'				=> $client_code, //14,
+					'CLIENT.CODE'				=> $this->client_code, //14,
 					'POATTRIB1'					=> '', //dummy
 					'POATTRIB2'					=> '', //dummy
 					'POPURCHASER'				=> '', //dummy
+					'PREVOUCHERID'				=> '', //dummy
 					'PURCHASEORDERNO'			=> $oRsBilag[0]['order_id'], // 1409220008
-					'PURCHASEORDEROWNER.CODE'	=> $purchaseorderower, // 100644
+					'PURCHASEORDEROWNER.CODE'	=> $oRsBilag[0]['spvend_code'], // 100644
 					'PURCHASEORDERSTATUS.CODE'	=> 'OK',
 					'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
 				)
@@ -642,9 +647,9 @@
 				$accountline[] = array
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
-					'ACCOUNTLINK.CODE'		=> $account_link, // 4180
+					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
 					'AMOUNT'				=> $amount, // 312500
-					'APPROVER.FULLNAME'		=> $approver, //Batch 04 - 14
+					'APPROVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dima'], // 1111
 					'DIMENSION.D2.CODE'		=> $line['dimb'], // 62000
 					'DIMENSION.D3.CODE'		=> $dim3, // dummy
@@ -655,12 +660,12 @@
 					'DIMENSION.D8.CODE'		=> $dim8, // dummy
 					'POITEMDESCRIPTION'		=> $descr, // Sugerør,plast,fleksibelt,20cm
 					'POITEMNUMBER'			=> $itemnumber, //200200
-					'POITEMTYPE'			=> $itemtype, // A = Item, B = Special Product (SP), C = Text based  (Misc.)
+					'POITEMTYPE'			=> 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
 					'POLINENUMBER'			=> $linenumber, // 10
-					'RECEIVER.FULLNAME'		=> $receiver, // Batch 04 - 14
+					'RECEIVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], // Batch 04 - 14
 					'STATUS'				=> 5,
 					'SUBACCOUNT'			=> $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'		=> $distribution_code, //0
+					'ALLOCATION.KEY'		=> 0,//$distribution_code, //0
 					'ALLOCATION.PERIOD'		=> '' //dummy
 				);		
 
