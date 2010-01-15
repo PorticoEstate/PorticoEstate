@@ -3899,7 +3899,7 @@
                 'pk' => array('id'),
                 'fk' => array(),
                 'ix' => array(),
-				'uc' => array()
+				'uc' => array('display_name', 'function_name')
             ),
 
 
@@ -3909,13 +3909,13 @@
 				(
 					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'name'          => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'description'   => array('type' => 'text', 'nullable' => false),
+					'description'   => array('type' => 'text', 'nullable' => true),
 					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('name')
 			),
 
 
@@ -3926,7 +3926,7 @@
 					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'name'          => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
 					'display_name'  => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'description'   => array('type' => 'text', 'nullable' => false),
+					'description'   => array('type' => 'text', 'nullable' => true),
 					'data_type_id'  => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 					'unit_id'       => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
 				),
@@ -3935,7 +3935,7 @@
                     'fm_attr_data_type' => array('data_type_id' => 'id'),
                     'fm_standard_unit' => array('unit_id' => 'id')),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('name')
 			),
 
             'fm_attr_value' => array
@@ -3945,10 +3945,10 @@
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'val_num' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 					'val_str' => array('type' => 'text', 'nullable' => true),
-					'created_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'expired_at' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'created_at' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'expired_at' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -3961,17 +3961,17 @@
 			(
 				'fd' => array
 				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'nat_group_no' => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
-					'bpn' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'parent_group' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-                    'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'name'          => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
+					'nat_group_no'  => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
+					'bpn'           => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'parent_group'  => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+                    'catalog_id'    => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array('fm_item_group' => array('parent_group' => 'id'), 'fm_item_catalog' => array('catalog_id' => 'id')),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('name')
 			),
 
 
@@ -3979,11 +3979,11 @@
 			(
 				'fd' => array
 				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+					'group_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'location_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'vendor_id'     => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'installed'     => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array('fm_item_group' => array('group_id' => 'id'),
@@ -3998,10 +3998,10 @@
 			(
 				'fd' => array
 				(
-					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'attr_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'value_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'item_id'       => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'attr_def_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'value_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active'        => array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 1)
 				),
 				'pk' => array('item_id', 'attr_def_id'),
 				'fk' => array('fm_item' => array('item_id' => 'id'),
@@ -4016,10 +4016,10 @@
 			(
 				'fd' => array
 				(
-					'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'attr_def_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'value_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'group_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'attr_def_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+                    'value_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active'        => array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 1)
 				),
 				'pk' => array('group_id', 'attr_def_id'),
 				'fk' => array('fm_item_group' => array('group_id' => 'id'),
@@ -4065,7 +4065,7 @@
                 'pk' => array('id'),
                 'fk' => array(),
                 'ix' => array(),
-                'uc' => array()
+                'uc' => array('name')
             ),
             'fm_attr_choice' => array
             (
@@ -4087,15 +4087,6 @@
         {
             $GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
         }
-
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_def','description',array('type' => 'text','nullable' => true));
-
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','created_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','created_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','expired_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','expired_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_item_catalog', 'description', array('type' => 'text','nullable' => true));
 
         // Add FK column
         $GLOBALS['phpgw_setup']->oProc->AddColumn('fm_attr_def','attr_group_id',array('type' => 'int', 'precision' => 4, 'nullable' => false));
