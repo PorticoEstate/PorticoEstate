@@ -55,7 +55,7 @@ class property_uiitem {
 
             $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
             (
-                'menuaction'=> 'property.uiactor.index',
+                'menuaction'=> 'property.uiitem.index',
                 'lookup'    => $lookup,
                 'cat_id'	=>$this->cat_id,
                 'query'		=>$this->query,
@@ -64,7 +64,7 @@ class property_uiitem {
             ));
             $datatable['config']['allow_allrows'] = true;
 
-            $datatable['config']['base_java_url'] = "menuaction:'property.uiactor.index',"
+            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',"
 
                     ."lookup:'{$lookup}',"
                     ."query:'{$this->query}',"
@@ -584,74 +584,74 @@ class property_uiitem {
 
     public function testdata() {
         // BIM testdata
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_catalog (name, description) VALUES ('NOBB', 'Norsk Byggevarebase')");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_item_catalog (name, description) VALUES ('NOBB', 'Norsk Byggevarebase')");
 
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB' LIMIT 1))");
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Windows', 'X', 123, NULL, (SELECT id FROM property_catalog WHERE name = 'NOBB' LIMIT 1))");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_item_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM fm_item_catalog WHERE name = 'NOBB' LIMIT 1))");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_item_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Windows', 'X', 123, NULL, (SELECT id FROM fm_item_catalog WHERE name = 'NOBB' LIMIT 1))");
 
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_data_type (display_name, function_name) VALUES ('integer', 'dt_int')");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_data_type (display_name, function_name) VALUES ('integer', 'dt_int')");
 
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Dimensions', 1)");
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_group (name, sort) VALUES ('Layout', 2)");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_group (name, sort) VALUES ('Dimensions', 1)");
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_group (name, sort) VALUES ('Layout', 2)");
 
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_def
                 (name, display_name, description, data_type_id, unit_id, attr_group_id)
                 VALUES (
                     'height',
                     'Height',
                     NULL,
-                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
                     'mm',
-                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                    (SELECT id FROM fm_attr_group WHERE name = 'Dimensions')
                 )"
         );
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_def
                 (name, display_name, description, data_type_id, unit_id, attr_group_id)
                 VALUES (
                     'width',
                     'Width',
                     NULL,
-                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
                     'mm',
-                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                    (SELECT id FROM fm_attr_group WHERE name = 'Dimensions')
                 )"
         );
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_def
                 (name, display_name, description, data_type_id, unit_id, attr_group_id)
                 VALUES (
                     'depth',
                     'Depth',
                     NULL,
-                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
                     'mm',
-                    (SELECT id FROM property_attr_group WHERE name = 'Dimensions')
+                    (SELECT id FROM fm_attr_group WHERE name = 'Dimensions')
                 )"
         );
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_attr_def
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_attr_def
                 (name, display_name, description, data_type_id, unit_id, attr_group_id)
                 VALUES (
                     'tiles',
                     'No of tiles',
                     NULL,
-                    (SELECT id FROM property_data_type WHERE function_name = 'dt_int'),
+                    (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
                     'mm',
-                    (SELECT id FROM property_attr_group WHERE name = 'Layout')
+                    (SELECT id FROM fm_attr_group WHERE name = 'Layout')
                 )"
         );
         // Items
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_item
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_item
                 (group_id, location_id, vendor_id, installed)
                 VALUES (
-                    (SELECT id FROM property_group WHERE name = 'Doors'),
+                    (SELECT id FROM fm_item_group WHERE name = 'Doors'),
                     1,
                     104533,
                     ".phpgwapi_datetime::user_localtime()."
                 )"
         );
-        $GLOBALS['phpgw']->db->query("INSERT INTO property_item
+        $GLOBALS['phpgw']->db->query("INSERT INTO fm_item
                 (group_id, location_id, vendor_id, installed)
                 VALUES (
-                    (SELECT id FROM property_group WHERE name = 'Doors'),
+                    (SELECT id FROM fm_item_group WHERE name = 'Doors'),
                     1,
                     104533,
                     ".phpgwapi_datetime::user_localtime()."
@@ -660,16 +660,16 @@ class property_uiitem {
     }
 
     public function emptydb() {
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_item_attr");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_group_attr");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_def");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_value");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_group");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_attr_choice");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_data_type");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_item");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_group");
-        $GLOBALS['phpgw']->db->query("DELETE FROM property_catalog");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_item_attr");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_item_group_attr");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_attr_def");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_attr_value");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_attr_group");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_attr_choice");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_attr_data_type");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_item");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_item_group");
+        $GLOBALS['phpgw']->db->query("DELETE FROM fm_item_catalog");
     }
 
 }

@@ -87,9 +87,9 @@ phpgw::import_class('property.boitem');
                 'i.vendor_id',
                 'i.installed'
             );
-            $from_tables = array('property_item i');
+            $from_tables = array('fm_item i');
             $joins = array(
-                //$this->db->left_join.' property_group g ON i.group_id = g.id',
+                //$this->db->left_join.' fm_item_group g ON i.group_id = g.id',
                 $this->db->left_join.' fm_vendor v ON i.vendor_id = v.id'
             );
             $where_clauses = array(' WHERE 1=1');
@@ -165,7 +165,7 @@ phpgw::import_class('property.boitem');
         {
             // If item has an ID, do an update, otherwise, do an insert
             $ins_or_upd = ($obj->get_id() != null ? 'UPDATE' : 'INSERT INTO');
-            $table = 'property_item';
+            $table = 'fm_item';
             $cols = array('id', 'group_id', 'location_id', 'vendor_id', 'installed');
             $values = array($obj->get_id(),
                 $obj->get_group()->get_id(),

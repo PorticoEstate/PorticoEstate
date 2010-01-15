@@ -43,10 +43,10 @@
                     'g.bpn',
                     'g.parent_group',
                     'g.catalog_id');
-            $from_tables = array('property_group g');
+            $from_tables = array('fm_item_group g');
             $joins = array(
-                    //$this->db->left_join.' property_group g ON i.group_id = g.id',
-                    $this->db->left_join.' property_catalog c ON g.catalog_id = c.id'
+                    //$this->db->left_join.' fm_item_group g ON i.group_id = g.id',
+                    $this->db->left_join.' fm_item_catalog c ON g.catalog_id = c.id'
             );
             $where_clauses = array(' WHERE 1=1');
 

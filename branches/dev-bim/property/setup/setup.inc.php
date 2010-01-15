@@ -189,16 +189,16 @@
 		'fm_responsibility_contact',
 		'fm_action_pending',
 		'fm_action_pending_category',
-        'property_catalog',
-        'property_group',
-        'property_item',
-        'property_data_type',
-        'property_attr_def',
-        'property_attr_value',
-        'property_group_attr',
-        'property_item_attr',
-        'property_attr_choice',
-        'property_attr_group'
+        'fm_item_catalog',
+        'fm_item_group',
+        'fm_item',
+        'fm_attr_data_type',
+        'fm_attr_def',
+        'fm_attr_value',
+        'fm_item_group_attr',
+        'fm_item_attr',
+        'fm_attr_choice',
+        'fm_attr_group'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

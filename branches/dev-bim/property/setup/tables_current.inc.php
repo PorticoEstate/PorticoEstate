@@ -2127,5 +2127,144 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array('num')
-		)
+		),
+        'fm_item_catalog' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'description' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_item_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'nat_group_no' => array('type' => 'varchar', 'precision' => 5,'nullable' => False),
+				'bpn' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'parent_group' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'catalog_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'fm_item_catalog' => array('catalog_id' => 'id'),
+				'fm_item_group' => array('parent_group' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_item' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'vendor_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'installed' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'fm_item_group' => array('group_id' => 'id'),
+				'fm_locations' => array('location_id' => 'id'),
+				'fm_vendor' => array('vendor_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_attr_data_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'display_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'function_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_attr_def' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'display_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'description' => array('type' => 'text','nullable' => True),
+				'data_type_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'unit_id' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'attr_group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'fm_attr_group' => array('attr_group_id' => 'id'),
+				'fm_attr_group' => array('attr_group_id' => 'id'),
+				'fm_attr_data_type' => array('data_type_id' => 'id'),
+				'fm_standard_unit' => array('unit_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_attr_value' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'val_num' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'val_str' => array('type' => 'text','nullable' => True),
+				'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_item_group_attr' => array(
+			'fd' => array(
+				'group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'active' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('attr_def_id','group_id'),
+			'fk' => array(
+				'fm_attr_def' => array('attr_def_id' => 'id'),
+				'fm_item_group' => array('group_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_item_attr' => array(
+			'fd' => array(
+				'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'active' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('attr_def_id','item_id'),
+			'fk' => array(
+				'fm_attr_def' => array('attr_def_id' => 'id'),
+				'fm_item' => array('item_id' => 'id'),
+				'fm_attr_value' => array('value_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_attr_choice' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_attr_def' => array('attr_def_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_attr_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'sort' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '5')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);

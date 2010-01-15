@@ -3889,7 +3889,7 @@
 
 		$tables = array
 		(
-            'property_data_type' => array
+            'fm_attr_data_type' => array
             (
                 'fd' => array(
                     'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
@@ -3903,7 +3903,7 @@
             ),
 
 
-            'property_catalog' => array
+            'fm_item_catalog' => array
 			(
 				'fd' => array
 				(
@@ -3919,7 +3919,7 @@
 			),
 
 
-            'property_attr_def' => array
+            'fm_attr_def' => array
 			(
 				'fd' => array
 				(
@@ -3932,13 +3932,13 @@
 				),
 				'pk' => array('id'),
 				'fk' => array(
-                    'property_data_type' => array('data_type_id' => 'id'),
+                    'fm_attr_data_type' => array('data_type_id' => 'id'),
                     'fm_standard_unit' => array('unit_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
 
-            'property_attr_value' => array
+            'fm_attr_value' => array
 			(
 				'fd' => array
 				(
@@ -3957,7 +3957,7 @@
 			),
 
 
-            'property_group' => array
+            'fm_item_group' => array
 			(
 				'fd' => array
 				(
@@ -3969,13 +3969,13 @@
                     'catalog_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('id'),
-				'fk' => array('property_group' => array('parent_group' => 'id'), 'property_catalog' => array('catalog_id' => 'id')),
+				'fk' => array('fm_item_group' => array('parent_group' => 'id'), 'fm_item_catalog' => array('catalog_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
 
 
-			'property_item' => array
+			'fm_item' => array
 			(
 				'fd' => array
 				(
@@ -3986,7 +3986,7 @@
 					'installed' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'fk' => array('property_group' => array('group_id' => 'id'),
+				'fk' => array('fm_item_group' => array('group_id' => 'id'),
                               'fm_locations' => array('location_id' => 'id'),
                               'fm_vendor' => array('vendor_id' => 'id')),
 				'ix' => array(),
@@ -3994,7 +3994,7 @@
 			),
 
 
-            'property_item_attr' => array
+            'fm_item_attr' => array
 			(
 				'fd' => array
 				(
@@ -4004,15 +4004,15 @@
 					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('item_id', 'attr_def_id'),
-				'fk' => array('property_item' => array('item_id' => 'id'),
-                              'property_attr_def' => array('attr_def_id' => 'id'),
-                              'property_attr_value' => array('value_id' => 'id')),
+				'fk' => array('fm_item' => array('item_id' => 'id'),
+                              'fm_attr_def' => array('attr_def_id' => 'id'),
+                              'fm_attr_value' => array('value_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
 
 
-			'property_group_attr' => array
+			'fm_item_group_attr' => array
 			(
 				'fd' => array
 				(
@@ -4022,8 +4022,8 @@
 					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
 				'pk' => array('group_id', 'attr_def_id'),
-				'fk' => array('property_group' => array('group_id' => 'id'),
-                              'property_attr_def' => array('attr_def_id' => 'id')),
+				'fk' => array('fm_item_group' => array('group_id' => 'id'),
+                              'fm_attr_def' => array('attr_def_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
 			),
@@ -4055,7 +4055,7 @@
     {
         $tables = array
         (
-            'property_attr_group' => array
+            'fm_attr_group' => array
             (
                 'fd' => array(
                     'id' =>     array('type' => 'auto', 'precision' => 4, 'nullable' => false),
@@ -4067,7 +4067,7 @@
                 'ix' => array(),
                 'uc' => array()
             ),
-            'property_attr_choice' => array
+            'fm_attr_choice' => array
             (
                 'fd' => array(
                     'id' =>         array('type' => 'auto', 'precision' => 4, 'nullable' => false),
@@ -4075,7 +4075,7 @@
                     'attr_def_id' =>array('type' => 'int', 'precision' => 4, 'nullable' => false)
                 ),
                 'pk' => array('id'),
-                'fk' => array('property_attr_def' => array('attr_def_id' => 'id')),
+                'fk' => array('fm_attr_def' => array('attr_def_id' => 'id')),
                 'ix' => array(),
                 'uc' => array()
             )
@@ -4088,18 +4088,18 @@
             $GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
         }
 
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_def','description',array('type' => 'text','nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_def','description',array('type' => 'text','nullable' => true));
 
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','created_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','created_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','expired_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_attr_value','expired_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','created_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','created_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','expired_at',array('type' => 'int', 'precision' => 4, 'nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_attr_value','expired_by',array('type' => 'int', 'precision' => 4, 'nullable' => true));
 
-        $GLOBALS['phpgw_setup']->oProc->AlterColumn('property_catalog', 'description', array('type' => 'text','nullable' => true));
+        $GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_item_catalog', 'description', array('type' => 'text','nullable' => true));
 
         // Add FK column
-        $GLOBALS['phpgw_setup']->oProc->AddColumn('property_attr_def','attr_group_id',array('type' => 'int', 'precision' => 4, 'nullable' => false));
-        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');
+        $GLOBALS['phpgw_setup']->oProc->AddColumn('fm_attr_def','attr_group_id',array('type' => 'int', 'precision' => 4, 'nullable' => false));
+        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES fm_attr_group');
 
         if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
         {
@@ -4118,8 +4118,8 @@
     {
         $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
         
-        $GLOBALS['phpgw_setup']->oProc->DropColumn('property_catalog', null, 'manufacturer_id');
-        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE property_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES property_attr_group');
+        $GLOBALS['phpgw_setup']->oProc->DropColumn('fm_item_catalog', null, 'manufacturer_id');
+        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES fm_attr_group');
 
         if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
         {
@@ -4130,7 +4130,7 @@
 
     /**
     * Update property version from 0.9.17.579 to 0.9.17.580
-    * Add sort column to BIM attributes
+    * 
     *
     */
     $test[] = '0.9.17.579';
