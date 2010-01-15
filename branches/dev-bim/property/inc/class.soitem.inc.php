@@ -11,7 +11,6 @@ phpgw::import_class('property.boitem');
     class property_soitem
     {
         private $db;
-        public $uicols;
         private static $instance;
 
         private function __construct() {

@@ -15,12 +15,12 @@
 
 
         /**
-         * @return property_soitem_group
+         * @return property_sogroup
          */
         public static function singleton()
         {
             if (!isset(self::$instance))
-                {
+            {
                 $c = __CLASS__;
                 self::$instance = new $c;
             }
