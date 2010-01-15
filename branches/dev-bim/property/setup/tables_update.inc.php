@@ -4127,22 +4127,3 @@
             return $GLOBALS['setup_info']['property']['currentver'];
         }
     }
-
-    /**
-    * Update property version from 0.9.17.579 to 0.9.17.580
-    * 
-    *
-    */
-    $test[] = '0.9.17.579';
-    function property_upgrade0_9_17_579()
-    {
-        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
-        // Add unique constraints
-
-        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-        {
-            $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.580';
-            return $GLOBALS['setup_info']['property']['currentver'];
-        }
-    }

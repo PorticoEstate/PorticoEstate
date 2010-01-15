@@ -12,10 +12,10 @@ class property_uiitem {
     private $sogroup;
     private $bocommon;
     public $public_functions = array
-            (
-            'index' => true,
-            'testdata' => true,
-            'emptydb' => true
+    (
+        'index' => true,
+        'testdata' => true,
+        'emptydb' => true
     );
 
     public function __construct() {
