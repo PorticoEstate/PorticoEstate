@@ -177,6 +177,7 @@ is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 is_inactive	rental	no	Inaktiv
 is_adjustable	rental	no	Regulerbar
+is_one_time	rental	no	Engangsbeløp
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr
 last_edited_by_current_user	rental	no	Din siste endring

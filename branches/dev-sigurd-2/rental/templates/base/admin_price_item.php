@@ -90,6 +90,16 @@
 				<?php echo $price_item->get_adjustable_text()?>
 			<?php }?>
 		</dd>
+		<dt>
+			<label for="is_one_time"><?php echo lang('is_one_time') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+					<input type="checkbox" name="is_one_time" id="is_one_time"<?php echo $price_item->is_one_time() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+					<input type="checkbox" name="is_one_time" id="is_one_time"<?php echo $price_item->is_one_time() ? ' checked="checked"' : '' ?> disabled="disabled"/>
+			<?php }?>
+		</dd>
 	</dl>
 
 	<?php

@@ -207,7 +207,8 @@
 					'is_inactive' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
 					'is_adjustable' =>	array('type' => 'bool','nullable' => true,'default' => 'true'),
 					'price' =>      array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false)
+					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false),
+					'is_one_time' =>	array('type' => 'bool','nullable' => true,'default' => 'false')
 				),
 				'pk' => array('id'),
 				'fk' => array(),
