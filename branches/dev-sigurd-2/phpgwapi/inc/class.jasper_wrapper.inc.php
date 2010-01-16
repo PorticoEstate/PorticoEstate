@@ -11,12 +11,6 @@
 
 	class phpgwapi_jasper_wrapper
 	{
-		# path to the Jasper config file (containing the report-list) and report name
-		public $jasper_info = array
-		(
-			'config'		=> false,
-			'report_name'	=> false
-		);
 
 		public function __construct()
 		{
@@ -64,7 +58,7 @@
 		* @return array Array with referense to the config-file and report name
 		*/
 
-		public function create_jasper_info($report_source)
+		protected static function _create_jasper_info($report_source)
 		{
 			$info				= pathinfo($report_source);
 			$base_name 			= basename($report_source,'.'.$info['extension']);
@@ -85,7 +79,7 @@
 
 			$jasper_info = array
 			(
-				'config'		=> "{$GLOBALS['phpgw_info']['server']['temp_dir']}/config_{$base_name}.xml",
+				'config'		=> $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . uniqid('config_') . "{$base_name}.xml",
 				'report_name'	=> $report_name
 			);
 
@@ -99,15 +93,35 @@
 			return $jasper_info;
 		}
 
-		public function execute($parameters, $output_type, &$err) 
+		/**
+		* 'parameters' will be in the following format:
+		* 'key1|value1;key2|value2;key3|value3' where key1, key2 ... keyX are
+		*  unique
+		*/
+
+		public function execute($parameters = '', $output_type, $report_source) 
 		{
-			if (!chdir(JASPER_BIN)) 
+			if( !$parameters )
 			{
-				$err['chdir'] = lang('Unable to perform chdir');
-				return 102;
+				$parameters = '"DUMMY|1"';
 			}
 
-			$report_name = $this->jasper_info['report_name'];
+			if (!chdir(JASPER_BIN)) 
+			{
+				throw new Exception('jasper_wrapper::execute ' . lang('Unable to perform chdir'));
+			}
+
+			try
+			{
+				$jasper_info = self::_create_jasper_info($report_source);
+			}
+			catch(Exception $e)
+			{
+				throw $e;
+				return false;
+			}
+
+			$report_name = $jasper_info['report_name'];
 			$cmd = sprintf("CLASSPATH=%s %s -D%s JasperEngine -p %s -t %s -n %s -d %s -u %s -P %s %s",
 							$this->java_classpath,
 							JAVA_BIN,
@@ -118,80 +132,92 @@
 							$this->connection_string,
 							$this->db_user,
 							$this->db_pass,
-							$this->jasper_info['config']);
+							$jasper_info['config']);
 
 			exec($cmd, $cmd_output, $retval);
 		//	echo $cmd . ":retval: " . $retval;
 		//	exit(0);
+			if(is_file($jasper_info['config']))
+			{
+				unlink($jasper_info['config']);
+			}
 
 			switch ($retval) 
 			{
 				case 201:
-					$err['corrupt template'] = lang('Corrupt template');
+					$error = lang('Corrupt template');
 					break;
 
 				case 202:
-					$err['fill report'] = lang('Unable to fill report');
+					$error = lang('Unable to fill report');
 					break;
 
 				case 203:
-					$err['report object'] = lang('Corrupt report object');
+					$error = lang('Corrupt report object');
 					break;
 
 				case 204:
-					$err['pdf'] = lang('Unable to export to PDF');
+					$error = lang('Unable to export to PDF');
 					break;
 
 				case 205:
-					$err['csv'] = lang('Unable to export to CSV');
+					$error = lang('Unable to export to CSV');
 					break;
 
 				case 206:
-					$err['xls'] = lang('Unable to export to XLS');
+					$error = lang('Unable to export to XLS');
 					break;
 
 				case 207:
-					$err['parse'] = lang('Unable to parse configuration');
+					$error = lang('Unable to parse configuration');
 					break;
 
 				case 208:
-					$err['invalid output'] = lang('Invalid output-type provided');
+					$error = lang('Invalid output-type provided');
 					break;
 
 				case 209:
-					$err['mysql driver'] = lang('Unable to load the MySQL driver');
+					$error = lang('Unable to load the MySQL driver');
 					break;
 
 				case 210:
-					$err['psql driver'] = lang('Unable to load the PostgreSQL driver');
+					$error = lang('Unable to load the PostgreSQL driver');
 					break;
 
 				case 211:
-					$err['connect'] = lang('Unable to connect to database');
+					$error = lang('Unable to connect to database');
 					break;
 
 				case 212:
-					$err['no name'] = lang('Missing report-name');
+					$error = lang('Missing report-name');
 					break;
 
 				case 213:
-					$err['invalid rname'] = lang('Invalid report-name');
+					$error = lang('Invalid report-name');
 					break;
 
 				case 214:
-					$err['invalid rname'] = lang('Missing configuration file');
+					$error = lang('Invalid report-name');
 					break;
 
 				case 215:
-					$err['missing cs'] = lang('Missing connection-string');
+					$error = lang('Missing connection-string');
 					break;
 
 				case 216:
-					$err['missing du'] = lang('Missing DB-username');
+					$error = lang('Missing DB-username');
 					break;
 
 				case 217:
-					$err['missing dp'] = lang('Missing DB-password');
+					$error = lang('Missing DB-password');
+					break;
+
+				case 218:
+					$error = lang('Unable to export to XHTML');
+					break;
+
+				case 219:
+					$error = lang('Unable to export to DOCX');
 					break;
 
 				case 0:
@@ -211,6 +237,16 @@
 						$mime= 'application/vnd.ms-excel';
 						$filename ="{$report_name}.xls"; 
 					} 
+					else if ($output_type == 'XHTML') 
+					{
+						$mime= 'text/html';
+						$filename ="{$report_name}.html"; 
+					} 
+					else if ($output_type == 'DOCX') 
+					{
+						$mime= 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+						$filename ="{$report_name}.docx"; 
+					} 
 					else 
 					{ // should never arise                                                                                                                                                           
 						$mime= 'application/octet-stream';
@@ -220,6 +256,10 @@
 				$browser = CreateObject('phpgwapi.browser');
 				$browser->content_header($filename,$mime,strlen($output));
 				echo $output;
+			}
+			if(isset($error) && $error)
+			{
+				throw new Exception($error);
 			}
 		}
 	}
