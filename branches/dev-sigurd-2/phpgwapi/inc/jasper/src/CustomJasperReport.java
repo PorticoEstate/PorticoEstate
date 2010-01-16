@@ -16,6 +16,8 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
+import net.sf.jasperreports.engine.export.JRXhtmlExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 
 class CustomJasperReport {
 
@@ -154,6 +156,45 @@ class CustomJasperReport {
 			System.exit(206);
 		}
 	}
+
+	public void generateXhtml() {
+
+		if (this.jasperPrint == null){
+			System.exit(203);
+		}
+
+		JRXhtmlExporter xhtmlexp = new JRXhtmlExporter();
+		xhtmlexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
+		xhtmlexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		
+		try {
+			xhtmlexp.exportReport();
+		} catch (JRException e) {
+//			System.err.println("Unable to generate XHTML file for report: "
+//					+ this.name);
+			System.exit(218);
+		}
+	}
+
+	public void generateDocx() {
+
+		if (this.jasperPrint == null){
+			System.exit(203);
+		}
+
+		JRDocxExporter docxexp = new JRDocxExporter();
+		docxexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
+		docxexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		
+		try {
+			docxexp.exportReport();
+		} catch (JRException e) {
+//			System.err.println("Unable to generate DOCX file for report: "
+//					+ this.name);
+			System.exit(219);
+		}
+	}
+
 
 	public String getName() {
 		return this.name;

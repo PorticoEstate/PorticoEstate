@@ -48,6 +48,10 @@ class JasperEngine {
 					output_type = 1;
 				} else if (args[i + 1].equals("XLS")) {
 					output_type = 2;
+				} else if (args[i + 1].equals("XHTML")) {
+					output_type = 3;
+				} else if (args[i + 1].equals("DOCX")) {
+					output_type = 4;
 				} else if (!args[i + 1].equals("PDF")) {
 					// System.err.printf("Unknown type: %s\n", args[i + 1]);
 					// printHelp();
@@ -122,6 +126,16 @@ class JasperEngine {
 
 		case 2:
 			report.generateJRXls();
+			// report.generateJExcel();
+			break;
+
+		case 3:
+			report.generateXhtml();
+			// report.generateJExcel();
+			break;
+
+		case 4:
+			report.generateDocx();
 			// report.generateJExcel();
 			break;
 
