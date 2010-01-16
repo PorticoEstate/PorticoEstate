@@ -242,33 +242,17 @@
 				{
 					$output_type = 'PDF';
 
-					/**
-					* 'parameters' will be in the following format:
-					* 'key1|value1;key2|value2;key3|value3' where key1, key2 ... keyX are
-					*  unique
-					*/
-/*
-					$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"",
-						1,//$from,
-						1,//$to,
-						1);//implode(",", $building_list));
-
-*/
-					$jasper_parameters = '"DUMMY|1"';
-
-
-					// DEBUG
-					//print_r($jasper_parameters);die();
-					//exit(0);
-
-					$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
 					$report_source		= "{$this->rootdir}{$file}";
-					$jasper_info		= $jasper_wrapper->create_jasper_info($report_source);
-					$jasper_wrapper->jasper_info = $jasper_info;
-					$jasper_wrapper->execute($jasper_parameters, $output_type, $errors);     
-					if(is_file($jasper_info['config']))
+					$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
+					try
 					{
-						unlink($jasper_info['config']);
+						$jasper_wrapper->execute('', $output_type, $report_source, $errors);
+					}
+					catch(Exception $e)
+					{
+						$error = $e->getMessage();
+						//FIXME Do something clever with the error
+						echo "<H1>{$error}</H1>";
 					}
 				}
 			}

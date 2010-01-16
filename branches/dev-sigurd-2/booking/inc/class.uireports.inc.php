@@ -46,7 +46,7 @@ class booking_uireports extends booking_uicommon
 
 			if (!count($building_list)) 
 			{
-				$errors['incomplete form'] = lang('No buildings selected');
+				$errors[] = lang('No buildings selected');
 			}
 
 			if (!count($errors)) 
@@ -61,13 +61,13 @@ class booking_uireports extends booking_uicommon
 
 				$jasper_wrapper 	= CreateObject('phpgwapi.jasper_wrapper');
 				$report_source		= PHPGW_SERVER_ROOT.'/booking/jasper/templates/participants.jrxml';
-				$jasper_info		= $jasper_wrapper->create_jasper_info($report_source);
-
-				$jasper_wrapper->jasper_info = $jasper_info;
-				$jasper_wrapper->execute($jasper_parameters, $output_type, $errors);     
-				if(is_file($jasper_info['config']))
+				try
 				{
-					unlink($jasper_info['config']);
+					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
 				}
 			}
 		} 
