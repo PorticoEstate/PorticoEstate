@@ -246,7 +246,7 @@
 					$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
 					try
 					{
-						$jasper_wrapper->execute('', $output_type, $report_source, $errors);
+						$jasper_wrapper->execute('', $output_type, $report_source);
 					}
 					catch(Exception $e)
 					{
