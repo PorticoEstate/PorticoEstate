@@ -1,6 +1,6 @@
 <?php
 
-phpgw::import_class('property.sogroup');
+phpgw::import_class('property.soitem_group');
 phpgw::import_class('property.boitem');
 
     /**
@@ -134,7 +134,7 @@ phpgw::import_class('property.boitem');
          * @param array $items Array of items in the same format as that returned from get_items().
          * @return mixed Array of item objects og null if failed.
          */
-        public function populate(array $items)
+        private function populate(array $items)
         {
             if(!is_array($items))
             {
