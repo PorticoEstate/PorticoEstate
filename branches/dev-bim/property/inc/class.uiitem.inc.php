@@ -25,7 +25,7 @@ class property_uiitem {
         $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
 
         $this->so = property_soitem::singleton();
-        $this->sogroup = property_sogroup::singleton();
+        $this->sogroup = property_soitem_group::singleton();
     }
 
 
@@ -37,86 +37,50 @@ class property_uiitem {
                 'vendor'=>'invoice'
         );
 
-        $dry_run=false;
-        $lookup = ''; //Fix this
+        $dry_run = false;
 
         $datatable = array();
         $values_combo_box = array('');
 
-        /*$receipt = $GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role);
-        $GLOBALS['phpgw']->session->appsession('session_data','actor_receipt_' . $this->role,'');*/
-
-
         if(phpgw::get_var('phpgw_return_as') != 'json') {
-
-            if(!$lookup) {
-                $datatable['menu']	= $this->bocommon->get_menu();
-            }
-
+            // Set base URL. FIXME: Add more URL parameters when needed
             $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
             (
                 'menuaction'=> 'property.uiitem.index',
-                'lookup'    => $lookup,
-                'cat_id'	=>$this->cat_id,
-                'query'		=>$this->query,
-                'role'		=> $this->role,
-                'member_id'	=> $this->member_id
             ));
             $datatable['config']['allow_allrows'] = true;
 
+            // FIXME: Do we need this?
             $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',"
+                ."category:'all'";
 
-                    ."lookup:'{$lookup}',"
-                    ."query:'{$this->query}',"
-                    ."cat_id:'{$this->cat_id}',"
-                    ."role:'{$this->role}',"
-                    ."member_id:'{$this->member_id}'";
-            //die(_debug_array($datatable));
-
-            $values_combo_box[0] = '';
-            $default_value = array ('cat_id'=>'','name'=>lang('no member'));
-            array_unshift ($values_combo_box[0]['cat_list'],$default_value);
-
-            $values_combo_box[1] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' => $this->role,'order'=>'descr'));
-            $default_value = array ('id'=>'','name'=> lang('no category'));
-            array_unshift ($values_combo_box[1],$default_value);
+            $default_value = array('category'=>'all');
+            array_unshift($values_combo_box, $default_value);
 
             $datatable['actions']['form'] = array(
                     array(
-                            'action'	=> $GLOBALS['phpgw']->link('/index.php',
-                            array(
-                            'menuaction' 		=> 'property.uiactor.index',
-                            'lookup'        		=> $lookup,
-                            'cat_id'	=> $this->cat_id,
-                            'query'		=> $this->query,
-                            'role'		=> $this->role,
-                            'member_id'	=> $this->member_id
-                            )
+                            'action' => $GLOBALS['phpgw']->link('/index.php',
+                                    array(
+                                        'menuaction' 	=> 'property.uiitem.index',
+                                        'cat_id'        => 0
+                                    )
                             ),
-                            'fields'	=> array(
+                            'fields' => array(
                                     'field' => array(
-                                            array(
-                                                    'id' => 'btn_member_id',
-                                                    'name' => 'member_id',
-                                                    'value'	=> lang('Member'),
-                                                    'type' => 'button',
-                                                    'style' => 'filter',
-                                                    'tab_index' => 1
-                                            ),
                                             array(
                                                     'id' => 'btn_cat_id',
                                                     'name' => 'cat_id',
                                                     'value'	=> lang('Category'),
                                                     'type' => 'button',
                                                     'style' => 'filter',
-                                                    'tab_index' => 2
+                                                    'tab_index' => 1
                                             ),
                                             array(
                                                     'type'=> 'link',
                                                     'id'  => 'btn_columns',
                                                     'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
                                                             array(
-                                                            'menuaction' => 'property.uiactor.columns',
+                                                            'menuaction' => 'property.uiitem.columns',
                                                             'role'		=> $this->role
                                                             ))."','','width=350,height=370')",
                                                     'value' => lang('columns'),
@@ -148,29 +112,18 @@ class property_uiitem {
                                     'hidden_value' => array(
                                             array( //div values  combo_box_0
                                                     'id' => 'values_combo_box_0',
-                                                    'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-                                            ),
-                                            array( //div values  combo_box_1
-                                                    'id' => 'values_combo_box_1',
-                                                    'value'	=> $this->bocommon->select2String($values_combo_box[1])
+                                                    'value'	=> 'lorem' //$this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
                                             )
                                     )
                             )
                     )
             );
-
-            if($this->role == 'tenant') {
-                unset($datatable['actions']['form'][0]['fields']['field'][0]);
-            }
-
-            if(!$this->acl_add) {
-                unset($datatable['actions']['form'][0]['fields']['field'][3]);
-            }
+            
             $dry_run=true;
         }
 
         $actor_list = array();
-        $actor_list = $this->bo->read($dry_run);
+        $actor_list = $this->so->read($dry_run);
 
         //echo $dry_run; count($actor_list); die(_debug_array($actor_list));
 
