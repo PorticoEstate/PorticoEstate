@@ -708,9 +708,11 @@
 		 */
 		public function _user_save()
 		{
-			$values							= phpgw::get_var('values', 'string', 'POST');
-			$values['account_groups']		= (array) phpgw::get_var('account_groups', 'int', 'POST');
-			$values['account_permissions']	= phpgw::get_var('account_permissions', 'bool', 'POST');
+			$values									= phpgw::get_var('values', 'string', 'POST');
+			$values['account_groups']				= (array) phpgw::get_var('account_groups', 'int', 'POST');
+			$values['account_permissions']			= phpgw::get_var('account_permissions', 'bool', 'POST');
+			$values['account_permissions_admin']	= phpgw::get_var('account_permissions_admin', 'int', 'POST');
+
 			//FIXME Caeies fix waiting for JSCAL
 			$values['account_expires_year']	= phpgw::get_var('account_expires_year', 'int', 'POST');
 			// we use string here to allow for MMM formatted months
@@ -735,6 +737,7 @@
 					'account_expires_month',
 					'account_expires_day',
 					'account_permissions',
+					'account_permissions_admin',
 					'account_groups'
 				);
 
@@ -916,6 +919,8 @@
 			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
 			$db_perms = $apps->read_account_specific();
 
+			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id);
+
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
 			foreach ( $available_apps as $key => $application )
@@ -930,7 +935,6 @@
 				}
 			}
 			asort($perm_display);
-
 			foreach ( $perm_display as $perm )
 			{
 				$checked = false;
@@ -943,9 +947,11 @@
 
 				$app_list[] = array
 				(
-					'app_title'		=> $perm['translated_name'],
-					'checkbox_name'	=> "account_permissions[{$perm['app_name']}]",
-					'checked'		=> $checked
+					'app_title'				=> $perm['translated_name'],
+					'checkbox_name'			=> "account_permissions[{$perm['app_name']}]",
+					'checked'				=> $checked,
+					'checkbox_name_admin'	=> "account_permissions_admin[{$perm['app_name']}]",
+					'checked_admin'			=> in_array($perm['app_name'],$apps_admin)
 				);
 			}
 

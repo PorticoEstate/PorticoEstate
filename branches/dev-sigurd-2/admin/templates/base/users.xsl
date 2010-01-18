@@ -242,9 +242,20 @@
 						</div>
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
-							<ul class="app_list">
+							<table class="app_list">
+								<tr>
+									<td>
+										Application
+									</td>
+									<td>
+									 	User access
+									</td>
+									<td>
+										Admin
+									</td>
+								</tr>
 								<xsl:apply-templates select="app_list" />
-							</ul>
+							</table>
 						</div>
 					</div>
 					<div class="button_group">
@@ -283,7 +294,7 @@
 <!-- BEGIN app_list -->
 
 	<xsl:template match="app_list">
-		<li>
+		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="position() mod 2 = 0">
@@ -294,6 +305,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<td>
+				<xsl:value-of select="app_title"/>
+
+			</td>
+			<td>
 			<input type="checkbox" id="{checkbox_name}" name="{checkbox_name}" value="1">
 				<xsl:choose>
 					<xsl:when test="checked = '1'">
@@ -301,10 +317,17 @@
 					</xsl:when>
 				</xsl:choose>
 			</input>
-			<label for="{checkbox_name}">
-				<xsl:value-of select="app_title" />
-			</label>
-		</li>
+			</td>
+			<td>
+			<input type="checkbox" id="{checkbox_name_admin}" name="{checkbox_name_admin}" value="2">
+				<xsl:choose>
+					<xsl:when test="checked_admin = '1'">
+						<xsl:attribute name="checked" value="checked" />
+					</xsl:when>
+				</xsl:choose>
+			</input>
+			</td>
+		</tr>
 	</xsl:template>
 
 <!-- permissions - applist for view -->

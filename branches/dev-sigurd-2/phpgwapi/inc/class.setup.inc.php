@@ -383,6 +383,7 @@
 			// hack to make phpgwapi_applications::name2id to work properly
 			unset($GLOBALS['phpgw_info']['apps']);
 			$GLOBALS['phpgw']->locations->add('run', "Automatically added on install - run {$appname}", $appname, false);
+			$GLOBALS['phpgw']->locations->add('admin', "Allow app admins - {$appname}", $appname, false);
 		}
 
 		/**
