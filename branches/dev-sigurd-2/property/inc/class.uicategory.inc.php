@@ -186,11 +186,6 @@
 			$values = $this->bo->read();
 			$uicols = $this->bo->uicols;
 
-/*			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('category ID');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Descr');
-*/
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -297,12 +292,8 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='id')
-					{
-						$datatable['headers']['header'][$i]['sortable']			= true;
-						$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i];
-					}
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
+					$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i];
 				}
 			}
 

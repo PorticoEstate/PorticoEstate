@@ -3856,7 +3856,7 @@
 
 	/**
 	* Update property version from 0.9.17.575 to 0.9.17.576
-	* Add variants of closed and approved-status for tickets
+	* Add contact_email to tickets
 	* 
 	*/
 
@@ -3874,3 +3874,24 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.576 to 0.9.17.577
+	* Add sorting to ticket status
+	* 
+	*/
+
+	$test[] = '0.9.17.576';
+	function property_upgrade0_9_17_576()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','sorting',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.577';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

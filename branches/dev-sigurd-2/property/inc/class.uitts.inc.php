@@ -116,9 +116,6 @@
 					break;
 				}
 			}
-
-
-
 		}
 
 		function save_sessiondata()
@@ -241,6 +238,24 @@
 			return "id ".$id." ".lang('Status has been changed');
 		}
 
+		function delete()
+		{
+			if(!$this->acl_delete)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			if( $this->bo->delete($id) )
+			{
+				return lang('ticket %1 has been deleted', $id);
+			}
+			else
+			{
+				return lang('delete failed');			
+			}
+		}
+
 		function index()
 		{
 			if($this->tenant_id)
@@ -351,7 +366,7 @@
 				$values_combo_box = array();
 
 				$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
-				$default_value = array ('id'=>'','name'=>lang('Open'));
+				$default_value = array ('id'=>'','name'=>isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'));
 				array_unshift ($values_combo_box[2],$default_value);
 
 				if(!$this->_simple)
@@ -604,6 +619,12 @@
 			$uicols['name'][$i++] = 'assignedto';
 			$uicols['name'][$i++] = 'entry_date';
 			$uicols['name'][$i++] = 'status';
+			
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
+			{
+				$uicols['name'][$i++] = 'order_id';
+			}
+
 			foreach($uicols_related as $related)
 			{
 				$uicols['name'][$i++] = $related;			
@@ -716,11 +737,26 @@
 			{
 				$datatable['rowactions']['action'][] = array(
 					'my_name' 			=> 'view',
-					'statustext' 	=> lang('view the project'),
+					'statustext' 	=> lang('view the ticket'),
 					'text'			=> lang('view'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uitts.view'
+							)),
+				'parameters'	=> $parameters
+				);
+			}
+
+			if($this->acl_delete)
+			{
+				$datatable['rowactions']['action'][] = array(
+					'my_name' 			=> 'delete',
+					'statustext' 	=> lang('delete the ticket'),
+					'text'			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this ticket'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	=> 'property.uitts.delete'
 							)),
 				'parameters'	=> $parameters
 				);
@@ -782,7 +818,7 @@
 					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date')
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];

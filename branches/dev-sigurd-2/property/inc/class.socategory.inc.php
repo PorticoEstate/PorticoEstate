@@ -67,6 +67,7 @@
 			$uicols['name'][]			= $this->location_info['id']['name'];
 			$uicols['descr'][]			= lang('id');
 			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
+			$uicols['sortable'][]		= true;
 
 			foreach($this->location_info['fields'] as $field)
 			{
@@ -74,6 +75,7 @@
 				$uicols['name'][]			= $field['name'];
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
+				$uicols['sortable'][]		= isset($field['sortable']) && $field['sortable'] ? true : false;
 			}
 
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
@@ -929,6 +931,13 @@
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
 							),
 							array
 							(

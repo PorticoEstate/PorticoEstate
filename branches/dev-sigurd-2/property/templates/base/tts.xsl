@@ -1116,7 +1116,12 @@
 					            <xsl:value-of select="php:function('lang', 'actual cost')" />
 							</td>
 							<td>
-								<xsl:value-of select="value_actual_cost"/>
+								<input type="text" name="values[actual_cost]" value="{value_actual_cost}">
+									<xsl:attribute name="title">
+					            		<xsl:value-of select="php:function('lang', 'Enter actual cost')" />
+									</xsl:attribute>
+								</input>
+							<!--<xsl:value-of select="value_actual_cost"/> -->
 								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							</td>
 						</tr>

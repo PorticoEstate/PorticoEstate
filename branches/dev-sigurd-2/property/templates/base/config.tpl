@@ -111,6 +111,11 @@
     <td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
    </tr>
    <tr class="row_on">
+    <td>{lang_Open_translates_to}: <br>
+	{lang_default}: {lang_Open}</td>
+    <td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
+   </tr>
+   <tr class="row_on">
     <td valign = 'top'>{lang_TTS_simplified_group}:</td>
     <td>
     	<!--to be able to blank the setting - need an empty value-->

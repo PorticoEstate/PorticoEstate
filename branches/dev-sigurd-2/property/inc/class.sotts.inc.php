@@ -234,7 +234,7 @@
 				}
 				else
 				{
-					$querymethod = " $where (subject $this->like '%$query%' or address $this->like '%$query%' or fm_tts_tickets.location_code $this->like '%$query%')";
+					$querymethod = " $where (subject $this->like '%$query%' OR address $this->like '%$query%' OR fm_tts_tickets.location_code $this->like '%$query%' OR fm_tts_tickets.order_id = '$query')";
 				}
 			}
 
@@ -281,6 +281,7 @@
 					'entry_date'		=> $this->db->f('entry_date'),
 					'finnish_date'		=> $this->db->f('finnish_date'),
 					'finnish_date2'		=> $this->db->f('finnish_date2'),
+					'order_id'			=> $this->db->f('order_id'),
 					'new_ticket'		=> ''
 				);
 			}
@@ -508,7 +509,7 @@
 
 		public function get_custom_status()
 		{
-			$sql = "SELECT * FROM fm_tts_status";
+			$sql = "SELECT * FROM fm_tts_status ORDER BY sorting ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$status= array();
@@ -608,6 +609,8 @@
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject		= $this->db->f('subject');
 			$old_contact_id		= $this->db->f('contact_id');
+			$old_actual_cost	= $this->db->f('actual_cost');
+
 			if($oldcat_id ==0){$oldcat_id ='';}
 			if($oldassigned ==0){$oldassigned ='';}
 			if($oldgroup_id ==0){$oldgroup_id ='';}
@@ -755,11 +758,20 @@
 	*/
 			if ($old_subject != $ticket['subject'])
 			{
-				$this->db->query("update fm_tts_tickets set subject='" . $ticket['subject']
+				$this->db->query("UPDATE fm_tts_tickets SET subject='" . $ticket['subject']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('S',$id,$ticket['subject'],$old_subject);
 				$receipt['message'][]= array('msg' => lang('Subject has been updated'));
 			}
+
+			if ((int)$old_actual_cost != (int)$ticket['actual_cost'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float)$ticket['actual_cost']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
+				$receipt['message'][]= array('msg' => lang('actual_cost has been updated'));
+			}
+
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
@@ -940,6 +952,36 @@
 			if ($this->db->f('delivered') )
 			{
 				//close
+			}
+		}
+
+		function delete($id)
+		{
+			$id = (int)$id;
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+			if ( !$location_id )
+			{
+				throw new Exception("phpgwapi_locations::get_id ('property', '.ticket') returned 0");
+			}
+
+			$this->db->transaction_begin();	
+
+			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_tts_history WHERE history_record_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_tts_views WHERE id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
+
+			if($this->db->transaction_commit())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 	}
