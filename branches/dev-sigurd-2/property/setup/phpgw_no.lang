@@ -845,7 +845,7 @@ is registered	property	no	er registert
 is there a demand from the authorities to correct this condition?	property	no	Finnes det offentlige pålegg fo å rette opp tilstanden?
 items	property	no	Detaljer
 janitor	property	no	Oppsynsmann
-jasper reports	no	JasperReports
+jasper reports	property	no	JasperReports
 key deliver location	property	no	Sted for å levere nøkkel
 key fetch location	property	no	Sted for å hente nøkkel
 key location	property	no	Nøkkel lokalisert
