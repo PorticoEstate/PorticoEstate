@@ -54,7 +54,7 @@
 		
 		protected function assign_to_current_user(&$application) {					
 			$current_account_id = $this->current_account_id();
-		 
+
 			if (!empty($current_account_id) && is_array($application) && 
 					!isset($application['case_officer_id']) || $application['case_officer_id'] != $current_account_id) 
 			{
@@ -497,6 +497,11 @@
 				
 				$update = false;
 				$notify = false;
+
+				if ($application['frontend_modified'] == '')
+				{
+					unset($application['frontend_modified']);
+				}
 				
 				if(array_key_exists('assign_to_user', $_POST))
 				{
