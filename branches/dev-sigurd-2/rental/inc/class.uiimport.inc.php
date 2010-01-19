@@ -972,6 +972,8 @@
 					$admin_price_item->set_agresso_id($id);												//cVareNr
 					// This assumes 1 for AREA, and anything else for count, even blanks
 					$admin_price_item->set_is_area($this->decode($data[4]) == '1' ? true : false);		//nMengdeTypeId
+					// This assumes -1 for adjustable, and anything else for not adjustable, even blanks
+					$admin_price_item->set_is_adjustable($this->decode($data[17]) == '-1' ? true : false);	//bRegulerbar
 					// Get the price for this price item
 					$admin_price_item->set_price($detail_price_items[$facilit_id]['price']);
 					$admin_price_item->set_responsibility_id($this->location_id);
