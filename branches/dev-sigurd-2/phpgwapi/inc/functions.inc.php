@@ -242,6 +242,7 @@
 					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+				break;
 			case E_STRICT:
 				$log_args['severity'] = 'S';
 				$log->strict($log_args);
