@@ -13,6 +13,7 @@ add_area	rental	no	Legg til areal
 added_areas	rental	no	Inkludert areal
 add	rental	no	Legg til
 address	rental	no	Adresse
+adjust_price	rental	no	Juster pris
 adjustment_interval	rental	no	Reguleringsintervall
 adjustment_share	rental	no	Reguleringsandel
 advance	rental	no	Forskudd
@@ -188,6 +189,9 @@ level	rental	no	Nivå
 link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer
 log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus.
+manual_adjust_price_item	rental	no	Manuell regulering av priselement
+manual_adjust_price_item_select	rental	no	Velg priselement
+manual_adjustment	rental	no	Manuell regulering
 message	rental	no	Melding
 messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver	
 messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
