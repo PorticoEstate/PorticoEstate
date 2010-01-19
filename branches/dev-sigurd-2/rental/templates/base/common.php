@@ -363,12 +363,12 @@
 				rowsPerPage: 10,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: '<< <?php echo lang(first) ?>',
-				previousPageLinkLabel: '< <?php echo lang(previous) ?>',
-				nextPageLinkLabel: '<?php echo lang(next) ?> >',
-				lastPageLinkLabel: '<?php echo lang(last) ?> >>',
-				template			: "{RowsPerPageDropdown}<?php echo lang(elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?php echo lang(shows_from) ?> {startRecord} <?php echo lang(to) ?> {endRecord} <?php echo lang(of_total) ?> {totalRecords}.",
+				firstPageLinkLabel: "<< <?php echo lang('first') ?>",
+				previousPageLinkLabel: "< <?php echo lang('previous') ?>",
+				nextPageLinkLabel: "<?php echo lang('next') ?> >",
+				lastPageLinkLabel: "<?php echo lang('last') ?> >>",
+				template			: "{RowsPerPageDropdown}<?php echo lang('elements_pr_page') ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?php echo lang('shows_from') ?> {startRecord} <?php echo lang('to') ?> {endRecord} <?php echo lang('of_total') ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
 
@@ -547,13 +547,13 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 		"calendar",
 		calendarBodyId,
 		{ 	navigator:true,
-			title: '<?php echo lang(select_date) ?>',
+			title: '<?php echo lang('select_date') ?>',
 			start_weekday:1,
 			LOCALE_WEEKDAYS:"short"}
 	);
 
-	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(calendar_months) ?>);
-	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(calendar_weekdays) ?>);
+	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang('calendar_months') ?>);
+	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang('calendar_weekdays') ?>);
 	cal.render();
 
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);

@@ -41,7 +41,7 @@
 
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
+		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
 		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
@@ -61,7 +61,7 @@
 					}
 				}
 		?>),
-		'<?php echo $editor_action ?>'
+		'<?php echo isset($editor_action) ? $editor_action : '' ?>'
 	);
 
     function composite_export(compType) {
@@ -79,7 +79,7 @@
             '&amp;type='+compType+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
-            '&amp;results=100'+
+            '&amp;results=5000'+
         	'&amp;export=true';
     }
 </script>
@@ -91,7 +91,12 @@
 <form id="<?php echo $list_id ?>_form" method="GET">
 <?php
 	$populate = phpgw::get_var('populate_form');
-	if(isset($populate)){
+	//Avoid Notices
+	$q = false;
+	$s_type = false;
+	$status = false;
+	if(isset($populate))
+	{
 		$q = phpgwapi_cache::session_get('rental', 'composite_query');
 		$s_type = phpgwapi_cache::session_get('rental', 'composite_search_type');
 		$status = phpgwapi_cache::session_get('rental', 'composite_status');

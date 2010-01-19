@@ -164,7 +164,10 @@ class rental_socomposite extends rental_socommon
 						$gab_id = $gabinfo['gab_id'];
 					}
 					$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
-					$location->set_address_1($data['street_name'].' '.$data['street_number']);
+					if(isset($data['street_name']) && $data['street_name'])
+					{
+						$location->set_address_1($data['street_name'].' '.$data['street_number']);
+					}
 					//$location->set_address_1($data['address']);
 					foreach($data['attributes'] as $attributes)
 					{
