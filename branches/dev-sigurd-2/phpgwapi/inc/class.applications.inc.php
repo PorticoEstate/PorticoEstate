@@ -144,6 +144,16 @@
 			}
 
 			$apps = $GLOBALS['phpgw']->acl->get_user_applications($this->account_id);
+			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $this->account_id);
+			if($apps_admin)
+			{
+				$apps['admin'] = true;
+			}
+			foreach($apps_admin as $app_admin)
+			{
+				$apps[$app_admin] = true;
+			}
+
 			foreach ( $GLOBALS['phpgw_info']['apps'] as $app )
 			{
 				if ( isset($apps[$app['name']]) )

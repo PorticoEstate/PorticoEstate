@@ -663,15 +663,30 @@ HTML;
 		{
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
-				$GLOBALS['phpgw']->common->phpgw_header(true);
-				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
+				$_access = false;
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['userid']))
+				{
+					$_access = true;
+				}
 
-				$lang_denied = lang('Access not permitted');
-				echo <<<HTML
-					<div class="error">$lang_denied</div>
+				if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['flags']['currentapp']))
+				{
+					$_access = true;
+				}
+
+				if (!$_access)
+				{
+					$GLOBALS['phpgw']->common->phpgw_header(true);
+					$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
+
+					$lang_denied = lang('Access not permitted');
+					echo <<<HTML
+						<div class="error">$lang_denied</div>
 
 HTML;
-				$GLOBALS['phpgw']->common->phpgw_exit(True);
+					$GLOBALS['phpgw']->common->phpgw_exit(True);
+				}
+				unset($_access);
 			}
 		}
 
