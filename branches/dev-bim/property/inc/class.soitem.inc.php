@@ -12,9 +12,9 @@ phpgw::import_class('property.boitem');
     {
         private $db;
         private static $instance;
+        public $uicols;
 
         private function __construct() {
-            $this->uicols = array();
             $this->db = & $GLOBALS['phpgw']->db;
         }
 
@@ -57,24 +57,24 @@ phpgw::import_class('property.boitem');
             $uicols['datatype'][]		= false;
             $uicols['attib_id'][]		= false;
 
-            $uicols['input_type'][]		= 'hidden';
-            $uicols['name'][]			= 'id';
-            $uicols['descr'][]			= false;
-            $uicols['statustext'][]		= false;
+            $uicols['input_type'][]		= 'text';
+            $uicols['name'][]			= 'group';
+            $uicols['descr'][]			= 'Gruppe';
+            $uicols['statustext'][]		= 'Gruppe';
             $uicols['datatype'][]		= false;
             $uicols['attib_id'][]		= false;
 
             $uicols['input_type'][]		= 'text';
-            $uicols['name'][]			= 'category';
-            $uicols['descr'][]			= lang('category');
-            $uicols['statustext'][]		= lang('category');
+            $uicols['name'][]			= 'location';
+            $uicols['descr'][]			= 'Location';
+            $uicols['statustext'][]		= 'Location';
             $uicols['datatype'][]		= false;
             $uicols['attib_id'][]		= false;
 
             $uicols['input_type'][]		= 'text';
-            $uicols['name'][]			= 'entry_date';
-            $uicols['descr'][]			= lang('entry date');
-            $uicols['statustext'][]		= lang('entry date');
+            $uicols['name'][]			= 'installed';
+            $uicols['descr'][]			= 'Installert';
+            $uicols['statustext'][]		= 'Installert';
             $uicols['datatype'][]		= false;
             $uicols['attib_id'][]		= false;
 
@@ -108,18 +108,11 @@ phpgw::import_class('property.boitem');
             $i = 0;
             while($this->db->next_record())
             {
-                $items[$i]['id']             = $this->db->f('id');
-                $items[$i]['group_id']       = $this->db->f('group_id');
-                $items[$i]['location_id']    = $this->db->f('location_id');
-                $items[$i]['vendor_id']      = $this->db->f('vendor_id');
-                $items[$i]['installed']      = $this->db->f('installed');
-
-                $this->uicols['input_type'][]   = 'text';
-                $this->uicols['name'][]         = $this->db->f('id');
-                $this->uicols['descr'][]        = $this->db->f('group_id');
-                $this->uicols['statustext'][]   = $this->db->f('location_id');
-                $this->uicols['datatype'][]     = $this->db->f('vendor_id');
-                $this->uicols['attib_id'][]     = $this->db->f('installed');
+                $items[$i]['id']       = $this->db->f('id');
+                $items[$i]['group']    = $this->db->f('group_id');
+                $items[$i]['location'] = $this->db->f('location_id');
+                $items[$i]['vendor']   = $this->db->f('vendor_id');
+                $items[$i]['installed']= $this->db->f('installed');
 
                 $i++;
             }
@@ -172,5 +165,22 @@ phpgw::import_class('property.boitem');
                 $obj->get_location_id(),
                 $obj->get_vendor_id(),
                 $obj->get_installed_date());
+        }
+
+
+        /**
+         * Get total number of records (rows) in item table
+         *
+         * @return integer No. of records
+         */
+        public function total_records()
+        {
+            $sql  = 'SELECT COUNT(id) AS rows FROM fm_item';
+
+            $this->db->query($sql);
+            // Move pointer to first row
+            $this->db->next_record();
+            // Get value of 'rows' column
+            return (int) $this->db->f('rows');
         }
     }

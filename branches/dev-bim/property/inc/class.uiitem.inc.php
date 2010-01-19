@@ -58,110 +58,101 @@ class property_uiitem {
             array_unshift($values_combo_box, $default_value);
 
             $datatable['actions']['form'] = array(
-                    array(
-                            'action' => $GLOBALS['phpgw']->link('/index.php',
-                                    array(
-                                        'menuaction' 	=> 'property.uiitem.index',
-                                        'cat_id'        => 0
-                                    )
-                            ),
-                            'fields' => array(
-                                    'field' => array(
-                                            array(
-                                                    'id' => 'btn_cat_id',
-                                                    'name' => 'cat_id',
-                                                    'value'	=> lang('Category'),
-                                                    'type' => 'button',
-                                                    'style' => 'filter',
-                                                    'tab_index' => 1
-                                            ),
-                                            array(
-                                                    'type'=> 'link',
-                                                    'id'  => 'btn_columns',
-                                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-                                                            array(
-                                                            'menuaction' => 'property.uiitem.columns',
-                                                            'role'		=> $this->role
-                                                            ))."','','width=350,height=370')",
-                                                    'value' => lang('columns'),
-                                                    'tab_index' => 6
-                                            ),
-                                            array(
-                                                    'type'	=> 'button',
-                                                    'id'	=> 'btn_new',
-                                                    'value'	=> lang('add'),
-                                                    'tab_index' => 5
-                                            ),
-                                            array( //boton     SEARCH
-                                                    'id' => 'btn_search',
-                                                    'name' => 'search',
-                                                    'value'    => lang('search'),
-                                                    'type' => 'button',
-                                                    'tab_index' => 4
-                                            ),
-                                            array( // TEXT IMPUT
-                                                    'name'     => 'query',
-                                                    'id'     => 'txt_query',
-                                                    'value'    => '',//$query,
-                                                    'type' => 'text',
-                                                    'onkeypress' => 'return pulsar(event)',
-                                                    'size'    => 28,
-                                                    'tab_index' => 3
-                                            )
-                                    ),
-                                    'hidden_value' => array(
-                                            array( //div values  combo_box_0
-                                                    'id' => 'values_combo_box_0',
-                                                    'value'	=> 'lorem' //$this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-                                            )
-                                    )
+                array(
+                    'action' => $GLOBALS['phpgw']->link('/index.php',
+                            array(
+                                'menuaction' 	=> 'property.uiitem.index',
+                                'cat_id'        => 0
                             )
+                    ),
+                    'fields' => array(
+                        'field' => array(
+                            array(
+                                    'id' => 'btn_cat_id',
+                                    'name' => 'cat_id',
+                                    'value'	=> lang('Category'),
+                                    'type' => 'button',
+                                    'style' => 'filter',
+                                    'tab_index' => 1
+                            ),
+                            array(
+                                    'type'=> 'link',
+                                    'id'  => 'btn_columns',
+                                    'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+                                            array(
+                                            'menuaction' => 'property.uiitem.columns',
+                                            'role'		=> $this->role
+                                            ))."','','width=350,height=370')",
+                                    'value' => lang('columns'),
+                                    'tab_index' => 6
+                            ),
+                            array(
+                                    'type'	=> 'button',
+                                    'id'	=> 'btn_new',
+                                    'value'	=> lang('add'),
+                                    'tab_index' => 5
+                            ),
+                            array(
+                                    'id' => 'btn_search',
+                                    'name' => 'search',
+                                    'value'    => lang('search'),
+                                    'type' => 'button',
+                                    'tab_index' => 4
+                            ),
+                            array(
+                                    'name'     => 'query',
+                                    'id'     => 'txt_query',
+                                    'value'    => '',//$query,
+                                    'type' => 'text',
+                                    'onkeypress' => 'return pulsar(event)',
+                                    'size'    => 28,
+                                    'tab_index' => 3
+                            )
+                        ),
+                        'hidden_value' => array(
+                                array(
+                                        'id' => 'values_combo_box',
+                                        'value'	=> 'lorem' //$this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+                                )
+                        )
                     )
+                )
             );
             
             $dry_run=true;
         }
 
-        $actor_list = array();
-        $actor_list = $this->so->read($dry_run);
+        $item_list = $this->so->read($dry_run);
 
-        //echo $dry_run; count($actor_list); die(_debug_array($actor_list));
-
-        $uicols	= $this->bo->uicols;
+        $uicols	= $this->so->uicols;
+        $uicols_count = count($uicols['name']);
 
         $j=0;
-        if (isset($actor_list) && is_array($actor_list)) {
-            foreach($actor_list as $actor) {
-                for ($i=0;$i<count($uicols['name']);$i++) {
-                    if($uicols['input_type'][$i]!='hidden') {
-                        if(isset($actor['query_location'][$uicols['name'][$i]])) {
-                            $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
-                            $datatable['rows']['row'][$j]['column'][$i]['statustext']		= lang('search');
-                            $datatable['rows']['row'][$j]['column'][$i]['value']			= $actor[$uicols['name'][$i]];
-                            $datatable['rows']['row'][$j]['column'][$i]['format'] 			= 'link';
-                            $datatable['rows']['row'][$j]['column'][$i]['java_link']		= true;
-                            $datatable['rows']['row'][$j]['column'][$i]['link']				= $actor['query_location'][$uicols['name'][$i]];
-                        }
-                        else {
-                            $datatable['rows']['row'][$j]['column'][$i]['value'] 			= $actor[$uicols['name'][$i]];
-                            $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
-                            $datatable['rows']['row'][$j]['column'][$i]['lookup'] 			= $lookup;
-                            $datatable['rows']['row'][$j]['column'][$i]['align'] 			= (isset($uicols['align'][$i])?$uicols['align'][$i]:'center');
+        if(is_array($item_list)) {
+            // For each item...
+            foreach($item_list as $item) {
+                // For each column definition...
+                for($i=0; $i < $uicols_count; $i++) {
+                    
+                    if($uicols['input_type'][$i] != 'hidden') {
+                        $datatable['rows']['row'][$j]['column'][$i]['value'] 	= $item[$uicols['name'][$i]];
+                        $datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+                        $datatable['rows']['row'][$j]['column'][$i]['lookup'] 	= '$lookup';
+                        $datatable['rows']['row'][$j]['column'][$i]['align'] 	= (isset($uicols['align'][$i]) ? $uicols['align'][$i] : 'center');
 
-                            if(isset($uicols['datatype']) && isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]=='link' && $actor[$uicols['name'][$i]]) {
-                                $datatable['rows']['row'][$j]['column'][$i]['value']		= lang('link');
-                                $datatable['rows']['row'][$j]['column'][$i]['link']		= $actor[$uicols['name'][$i]];
-                                $datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
-                            }
-                        }
+                        /*if($uicols['datatype'][$i] == 'link' && $item[$uicols['name'][$i]]) {
+                            $datatable['rows']['row'][$j]['column'][$i]['value']    = lang('link');
+                            $datatable['rows']['row'][$j]['column'][$i]['link']		= $item[$uicols['name'][$i]];
+                            $datatable['rows']['row'][$j]['column'][$i]['target']	= '_blank';
+                        }*/
                     }
                     else {
-                        $datatable['rows']['row'][$j]['column'][$i]['name'] 			= $uicols['name'][$i];
-                        $datatable['rows']['row'][$j]['column'][$i]['value']			= $actor[$uicols['name'][$i]];
+                        $datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+                        $datatable['rows']['row'][$j]['column'][$i]['value']	= $item[$uicols['name'][$i]];
                     }
 
-                    $datatable['rows']['row'][$j]['hidden'][$i]['value'] 			= $actor[$uicols['name'][$i]];
-                    $datatable['rows']['row'][$j]['hidden'][$i]['name'] 			= $uicols['name'][$i];
+                    $datatable['rows']['row'][$j]['hidden'][$i]['value']    = $item[$uicols['name'][$i]];
+                    $datatable['rows']['row'][$j]['hidden'][$i]['name']     = $uicols['name'][$i];
                 }
 
                 $j++;
@@ -170,151 +161,138 @@ class property_uiitem {
 
         // NO pop-up
         $datatable['rowactions']['action'] = array();
-        if(!$lookup) {
-            $parameters = array
-                    (
-                    'parameter' => array
-                    (
-                            array
-                            (
-                                    'name'		=> 'actor_id',
-                                    'source'	=> 'id'
-                            )
-                    )
-            );
 
-            if($this->acl_read) {
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 			=> 'view',
-                        'text' 			=> lang('view'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.view',
-                        'role'	=> $this->role
-                        )),
-                        'parameters'	=> $parameters
-                );
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 			=> 'view',
-                        'text' 			=> lang('open view in new window'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.view',
-                        'role'			=> $this->role,
-                        'target'		=> '_blank'
-                        )),
-                        'parameters'	=> $parameters
-                );
-            }
-            if($this->acl_edit) {
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 			=> 'edit',
-                        'text' 			=> lang('edit'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.edit',
-                        'role'	=> $this->role
-                        )),
-                        'parameters'	=> $parameters
-                );
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 		=> 'edit',
-                        'text' 			=> lang('open edit in new window'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.edit',
-                        'role'			=> $this->role,
-                        'target'		=> '_blank'
-                        )),
-                        'parameters'	=> $parameters
-                );
-            }
-            if($this->acl_delete) {
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 			=> 'delete',
-                        'text' 			=> lang('delete'),
-                        'confirm_msg'	=> lang('do you really want to delete this entry'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.delete',
-                        'role'	=> $this->role
-                        )),
-                        'parameters'	=> $parameters
-                );
-            }
-            if($this->acl_add) {
-                $datatable['rowactions']['action'][] = array(
-                        'my_name' 			=> 'add',
-                        'text' 			=> lang('add'),
-                        'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-                        (
-                        'menuaction'	=> 'property.uiactor.edit',
-                        'role'	=> $this->role
-                        ))
-                );
-            }
-            unset($parameters);
-        }
+        $parameters = array
+        (
+            'parameter' => array
+            (
+                array
+                (
+                    'name'		=> 'item_id',
+                    'source'	=> 'id'
+                )
+            )
+        );
 
-        $uicols_count	= count($uicols['descr']);
 
-        for ($i=0;$i<$uicols_count;$i++) {
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 		=> 'view',
+                'text' 			=> lang('view'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                    'menuaction'	=> 'property.uiitem.view',
+                    'role'          => $this->role
+                )),
+                'parameters'	=> $parameters
+        );
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 		=> 'view',
+                'text' 			=> lang('open view in new window'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                    'menuaction'	=> 'property.uiitem.view',
+                    'role'			=> $this->role,
+                    'target'		=> '_blank'
+                )),
+                'parameters'	=> $parameters
+        );
+
+
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 		=> 'edit',
+                'text' 			=> lang('edit'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                    'menuaction'=> 'property.uiitem.edit',
+                    'role'      => $this->role
+                )),
+                'parameters'	=> $parameters
+        );
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 		=> 'edit',
+                'text' 			=> lang('open edit in new window'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                'menuaction'	=> 'property.uiitem.edit',
+                'role'			=> $this->role,
+                'target'		=> '_blank'
+                )),
+                'parameters'	=> $parameters
+        );
+
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 			=> 'delete',
+                'text' 			=> lang('delete'),
+                'confirm_msg'	=> lang('do you really want to delete this entry'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                'menuaction'	=> 'property.uiitem.delete',
+                'role'	=> $this->role
+                )),
+                'parameters'	=> $parameters
+        );
+        $datatable['rowactions']['action'][] = array(
+                'my_name' 			=> 'add',
+                'text' 			=> lang('add'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                'menuaction'	=> 'property.uiitem.edit',
+                'role'	=> $this->role
+                ))
+        );
+
+        unset($parameters);
+
+
+        for ($i=0; $i < $uicols_count; $i++) {
 
             //all colums should be have formatter
             $datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
-            if($uicols['input_type'][$i]!='hidden') {
+            if($uicols['input_type'][$i] != 'hidden') {
                 $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
                 $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
                 $datatable['headers']['header'][$i]['visible'] 			= true;
                 $datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
                 $datatable['headers']['header'][$i]['sortable']			= false;
 
-                if(isset($uicols['datatype'][$i]) && $uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH') {
+                // If datatype is not T or CH
+                if(!in_array($uicols['datatype'][$i], array('T', 'CH'))) {
                     $datatable['headers']['header'][$i]['sortable']		= true;
                     $datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
                 }
             }
-            else {
+            /*else {
                 $datatable['headers']['header'][$i]['name'] 			= 'id2';
                 $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
                 $datatable['headers']['header'][$i]['visible'] 			= false;
                 $datatable['headers']['header'][$i]['sortable']			= false;
                 $datatable['headers']['header'][$i]['format'] 			= 'hidden';
-            }
+            }*/
         }
 
         // path for property.js
         $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
         // Pagination and sort values
-        $datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+        $datatable['pagination']['records_start'] 	= (int) $this->bo->start;
         $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-        $datatable['pagination']['records_returned'] = count($actor_list);
-        $datatable['pagination']['records_total'] 	= $this->bo->total_records;
+        $datatable['pagination']['records_returned']= count($item_list);
+        $datatable['pagination']['records_total'] 	= $this->so->total_records();
 
         //$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
         //$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 
-        if($this->role == 'tenant') {
-            if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== "")) {
-                $datatable['sorting']['order'] 			= 'first_name'; // name key Column in myColumnDef
-                $datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-            }
-            else {
-                $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-                $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-            }
+
+        if((phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+        {
+            $datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+            $datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
         }
-        else {
-            if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== "")) {
-                $datatable['sorting']['order'] 			= 'org_name'; // name key Column in myColumnDef
-                $datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-            }
-            else {
-                $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-                $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-            }
+        else
+        {
+            $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+            $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
         }
 
         _debug_array($datatable);
@@ -336,13 +314,13 @@ class property_uiitem {
         if( phpgw::get_var('phpgw_return_as') == 'json' ) {
             //values for Pagination
             $json = array
-                    (
-                    'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-                    'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-                    'startIndex' 		=> $datatable['pagination']['records_start'],
-                    'sort'				=> $datatable['sorting']['order'],
-                    'dir'				=> $datatable['sorting']['sort'],
-                    'records'			=> array()
+            (
+                'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+                'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+                'startIndex' 		=> $datatable['pagination']['records_start'],
+                'sort'				=> $datatable['sorting']['order'],
+                'dir'				=> $datatable['sorting']['sort'],
+                'records'			=> array()
             );
 
             // values for datatable
