@@ -2605,3 +2605,32 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.524';
+	/**
+	* Restore support for anonymous sessions.
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_524()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$apps = array();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT app_name FROM phpgw_applications', __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$apps[] = $GLOBALS['phpgw_setup']->oProc->m_odb->f('app_name', true);
+		}
+
+		foreach ( $apps as $app )
+		{
+			$GLOBALS['phpgw']->locations->add('admin', "Allow app admins - {$app}", $app, false);
+		}
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.525';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

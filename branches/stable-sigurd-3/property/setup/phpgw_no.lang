@@ -26,6 +26,7 @@ activity id	property	no	Aktivitet ID
 activity num	property	no	Aktivitet num
 actor	property	no	Aktør
 actual cost	property	no	Faktisk kostnad
+actual cost changed	property	no	Faktisk kostnad er endret
 actual cost - paid so far	property	no	Faktisk betalt - pr dd
 add a apartment	property	no	Legg til leilighet
 add a attrib	property	no	Legg til en attibutt
@@ -401,6 +402,7 @@ delete entity	property	no	Slett entitet
 delete entity type	property	no	Slett entitet-type
 delete entrance	property	no	slett inngang
 delete equipment	property	no	slett utstyr
+delete failed	property	no	Sletting feilet
 delete file	property	no	Slett fil
 delete investment history element	property	no	slett historie post for investering
 delete last entry	property	no	slett siste post
@@ -636,6 +638,7 @@ enter a standard prefix for the id of the equipments	property	no	Angi et standar
 enter a statustext for the inputfield in forms	property	no	Angi en statustekst for inputfeltet
 enter a value for the labour cost	property	no	angi arbeids kostnader
 enter a value for the material cost	property	no	angi materialkostnader
+Enter actual cost	property	no	Angi faktisk kostnad
 enter building id	property	no	angi bygnings ID
 enter document name	property	no	angi dokument ID
 enter document title	property	no	angi dokument tittel
@@ -845,6 +848,7 @@ is registered	property	no	er registert
 is there a demand from the authorities to correct this condition?	property	no	Finnes det offentlige pålegg fo å rette opp tilstanden?
 items	property	no	Detaljer
 janitor	property	no	Oppsynsmann
+jasper reports	property	no	JasperReports
 key deliver location	property	no	Sted for å levere nøkkel
 key fetch location	property	no	Sted for å hente nøkkel
 key location	property	no	Nøkkel lokalisert
@@ -1056,6 +1060,7 @@ open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
 order id	property	no	OrdreNr
+order_id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
 order text	property	no	Bestillingstekst
 other branch	property	no	Andre fag
@@ -1596,6 +1601,7 @@ this user has not defined an email address !	property	no	Denne brukeren har ikke
 this vendor is already registered for this activity	property	no	Denne leverandøren er allerede registert for denne aktiviteten
 ticket	property	no	melding
 .ticket	property	no	Melding
+ticket %1 has been deleted	property	no	Melding %1 er slettet
 ticket categories	property	no	Meldinger kategorier
 ticket has been saved	property	no	Melding er lagret
 ticket has been updated	property	no	melding er oppdatert

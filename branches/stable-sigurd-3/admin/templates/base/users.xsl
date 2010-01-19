@@ -143,7 +143,7 @@
 
 <!-- BEGIN account_edit -->
 
-	<xsl:template match="account_edit">
+	<xsl:template match="account_edit" xmlns:php="http://php.net/xsl">
 		<div id="admin_account_edit">
 			<h1><xsl:value-of select="page_title" /></h1>
 			<xsl:if test="msgbox_data != ''">
@@ -242,9 +242,24 @@
 						</div>
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
-							<ul class="app_list">
-								<xsl:apply-templates select="app_list" />
-							</ul>
+							<table class="app_list">
+								<thead>
+									<tr>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Application')" />
+										</th>
+										<th>
+										 	<xsl:value-of select="php:function('lang', 'User access')" />
+										</th>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Admin')" />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<xsl:apply-templates select="app_list" />
+								</tbody>
+							</table>
 						</div>
 					</div>
 					<div class="button_group">
@@ -283,7 +298,7 @@
 <!-- BEGIN app_list -->
 
 	<xsl:template match="app_list">
-		<li>
+		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="position() mod 2 = 0">
@@ -294,6 +309,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<td>
+				<xsl:value-of select="app_title"/>
+
+			</td>
+			<td>
 			<input type="checkbox" id="{checkbox_name}" name="{checkbox_name}" value="1">
 				<xsl:choose>
 					<xsl:when test="checked = '1'">
@@ -301,10 +321,17 @@
 					</xsl:when>
 				</xsl:choose>
 			</input>
-			<label for="{checkbox_name}">
-				<xsl:value-of select="app_title" />
-			</label>
-		</li>
+			</td>
+			<td>
+			<input type="checkbox" id="{checkbox_name_admin}" name="{checkbox_name_admin}" value="2">
+				<xsl:choose>
+					<xsl:when test="checked_admin = '1'">
+						<xsl:attribute name="checked" value="checked" />
+					</xsl:when>
+				</xsl:choose>
+			</input>
+			</td>
+		</tr>
 	</xsl:template>
 
 <!-- permissions - applist for view -->

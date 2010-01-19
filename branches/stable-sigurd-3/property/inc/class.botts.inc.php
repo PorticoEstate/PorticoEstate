@@ -51,8 +51,6 @@
 			'read'			=> true,
 			'read_single'		=> true,
 			'save'			=> true,
-			'delete'		=> true,
-			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -191,7 +189,7 @@
 			if(!$leave_out_open)
 			{
 				$status[$i]['id']='O';
-				$status[$i]['name']=lang('Open');
+				$status[$i]['name']= isset($this->config->config_data['tts_lang_open']) && $this->config->config_data['tts_lang_open'] ? $this->config->config_data['tts_lang_open'] : lang('Open');
 				$i++;
 			}
 
@@ -224,7 +222,8 @@
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
-				'M' => lang('Sendt by email to')
+				'M' => lang('Sendt by email to'),
+				'AC'=> lang('actual cost changed'),
 			);
 
 			$custom_status	= $this->so->get_custom_status();
@@ -537,6 +536,7 @@
 						case 'F': $type = lang('finnish date changed'); break;
 						case 'IF': $type = lang('Initial finnish date'); break;
 						case 'L': $type = lang('Location changed'); break;
+						case 'AC': $type = lang('actual cost changed'); break;
 						case 'M':
 							$type = lang('Sendt by email to');
 							$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
@@ -916,7 +916,7 @@
 
 		function delete($id)
 		{
-			$this->so->delete($id);
+			return $this->so->delete($id);
 		}
 
 		/**

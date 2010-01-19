@@ -331,9 +331,20 @@
 				);
 			}
 
+			$apps_admin = $values['account_permissions_admin'] ? array_keys($values['account_permissions_admin']) : array();
+			foreach ($apps_admin as $app_admin)
+			{
+				$acls[] = array
+				(
+					'appname' 	=> $app_admin,
+					'location'	=> 'admin',
+					'rights'	=> phpgwapi_acl::ADD
+				);			
+			}
+
 			$apps = $values['account_permissions'] ? array_keys($values['account_permissions']) : array();
 
-			unset($values['account_groups'], $values['account_permissions']);
+			unset($values['account_groups'], $values['account_permissions'], $values['account_permissions_admin']);
 
 			try
 			{
