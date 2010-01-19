@@ -40,6 +40,19 @@
   	{
 	    if(flag_particular_setting=='init')
 	    {
+			//category
+			index = locate_in_array_options(0,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+			//district
+			index = locate_in_array_options(1,"value",path_values.district_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
+
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 //			oMenuButton_0.focus();
 	    }
