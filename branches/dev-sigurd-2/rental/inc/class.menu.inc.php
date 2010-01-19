@@ -32,7 +32,15 @@
 				(
 					'text'	=> lang('price_list'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-spreadsheet')
+					'image'	=> array('rental', 'x-office-spreadsheet'),
+					'children'	=> array(
+							'manual_adjustment' => array
+							(
+								'text'	=> lang('manual_adjustment'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.manual_adjustment', 'appname' => 'rental') ),
+								'image'	=> array('rental', 'x-office-spreadsheet')
+							)
+						)
 				),
 				'regulation'	=> array
 				(
