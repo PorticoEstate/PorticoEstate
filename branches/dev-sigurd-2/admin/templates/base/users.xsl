@@ -143,7 +143,7 @@
 
 <!-- BEGIN account_edit -->
 
-	<xsl:template match="account_edit">
+	<xsl:template match="account_edit" xmlns:php="http://php.net/xsl">
 		<div id="admin_account_edit">
 			<h1><xsl:value-of select="page_title" /></h1>
 			<xsl:if test="msgbox_data != ''">
@@ -243,18 +243,22 @@
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
 							<table class="app_list">
-								<tr>
-									<td>
-										Application
-									</td>
-									<td>
-									 	User access
-									</td>
-									<td>
-										Admin
-									</td>
-								</tr>
-								<xsl:apply-templates select="app_list" />
+								<thead>
+									<tr>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Application')" />
+										</th>
+										<th>
+										 	<xsl:value-of select="php:function('lang', 'User access')" />
+										</th>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Admin')" />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<xsl:apply-templates select="app_list" />
+								</tbody>
 							</table>
 						</div>
 					</div>
