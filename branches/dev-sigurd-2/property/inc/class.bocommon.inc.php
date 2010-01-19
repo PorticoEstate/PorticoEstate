@@ -1722,11 +1722,10 @@
 			$header = array();
 			for ( $i = 0; $i < $count_uicols_name; ++$i )
 			{
-				if ( $input_type[$i] == 'hidden' )
+				if ( $input_type[$i] != 'hidden' )
 				{
-					continue;
+					$header[] = $this->utf2ascii($descr[$i]);
 				}
-				$header[] = $this->utf2ascii($descr[$i]);
 			}
 			fputcsv($fp, $header);
 			unset($header);
@@ -1738,11 +1737,10 @@
 					$row = array();
 					for ( $i = 0; $i < $count_uicols_name; ++$i )
 					{
-						if ( $input_type[$i] == 'hidden' )
+						if ( $input_type[$i] != 'hidden' )
 						{
-							continue;
+							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 						}
-						$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 					}
 					fputcsv($fp, $row);
 				}
