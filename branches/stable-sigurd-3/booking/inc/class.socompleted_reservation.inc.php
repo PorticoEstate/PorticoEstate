@@ -251,7 +251,11 @@
 			//Remember that the default value of customer_type is already
 			//set to 'external' so we only have to adjust customer_type
 			//when dealing with an internal customer
-			if (intval($customer_info['customer_internal']) == 1) {
+			if (strlen($customer_info['organization_number']) == 5) {
+				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
+			} else if (strlen($customer_info['customer_organization_number']) == 5) {
+				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
+			} else if (intval($customer_info['customer_internal']) == 1) {
 				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
 			}
 		}

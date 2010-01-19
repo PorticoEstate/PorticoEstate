@@ -26,7 +26,7 @@
             </dd>
 		</dl>
 		<dl class="form">
-			<div class="heading"><xsl:value-of select="php:function('lang', '1. Why?')" /></div>
+			<div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -49,7 +49,7 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '2. Where?')" /></div>
+			<div class="heading">2. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
 			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
@@ -68,7 +68,7 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '3. When?')" /></div>
+			<div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
 			<div id="dates-container">
 				<xsl:for-each select="application/dates"><div class="date-container">
 					<a href="#" class="close-btn">-</a>
@@ -89,7 +89,7 @@
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', '4. Who?')" /></div>
+			<div class="heading">4. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
 			<dd>
 				<ul>
