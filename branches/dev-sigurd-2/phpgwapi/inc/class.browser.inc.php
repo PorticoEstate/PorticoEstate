@@ -17,7 +17,7 @@
 	* @package phpgwapi
 	* @subpackage network
 	*/
-	class browser
+	class phpgwapi_browser
 	{
 		var $BROWSER_AGENT;
 		var $BROWSER_VER;
@@ -29,32 +29,34 @@
 		/**
 		* Determine browser, version and platform
 		*/
-		function browser()
+		function __construct()
 		{
-			if(ereg('MSIE ([0-9].[0-9]{1,2})',$_SERVER['HTTP_USER_AGENT'],$log_version))
+			$HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
+
+			if(preg_match('/MSIE ([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version))
 			{
 				$this->BROWSER_VER = $log_version[1];
 				$this->BROWSER_AGENT = 'IE';
 			}
-			elseif(ereg('Opera ([0-9].[0-9]{1,2})',$_SERVER['HTTP_USER_AGENT'],$log_version) ||
-				ereg('Opera/([0-9].[0-9]{1,2})',$_SERVER['HTTP_USER_AGENT'],$log_version))
+			else if(preg_match('/Opera ([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version) ||
+				preg_match('/Opera\\/([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version))
 			{
 				$this->BROWSER_VER   = $log_version[1];
 				$this->BROWSER_AGENT = 'OPERA';
 			}
-			elseif(eregi('iCab ([0-9].[0-9a-zA-Z]{1,4})',$_SERVER['HTTP_USER_AGENT'],$log_version) ||
-				eregi('iCab/([0-9].[0-9a-zA-Z]{1,4})',$_SERVER['HTTP_USER_AGENT'],$log_version))
+			else if(preg_match('/iCab ([0-9].[0-9a-zA-Z]{1,4})/i',$HTTP_USER_AGENT,$log_version) ||
+				preg_match('/iCab\\/([0-9].[0-9a-zA-Z]{1,4})/i',$HTTP_USER_AGENT,$log_version))
 			{
 				$this->BROWSER_VER   = $log_version[1];
 				$this->BROWSER_AGENT = 'iCab';
 			} 
-			elseif(eregi('Gecko/([0-9]{8})', $_SERVER['HTTP_USER_AGENT'], $log_version))
+			else if(strpos($HTTP_USER_AGENT,'Gecko') !== false)
 			{
-				$this->BROWSER_VER   = $log_version[1];//this is the gecko engine date, not the derivative product version number
+				$this->BROWSER_VER   = $log_version[1];
 				$this->BROWSER_AGENT = 'MOZILLA';
 			}
-			elseif(ereg('Konqueror/([0-9].[0-9].[0-9]{1,2})',$_SERVER['HTTP_USER_AGENT'],$log_version) ||
-				ereg('Konqueror/([0-9].[0-9]{1,2})',$_SERVER['HTTP_USER_AGENT'],$log_version))
+			else if(preg_match('/Konqueror\\/([0-9].[0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version) ||
+				preg_match('/Konqueror\\/([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version))
 			{
 				$this->BROWSER_VER=$log_version[1];
 				$this->BROWSER_AGENT='Konqueror';
@@ -72,19 +74,19 @@
 			{
 				$this->BROWSER_PLATFORM='Win';
 			}
-			elseif(strstr($_SERVER['HTTP_USER_AGENT'],'Mac'))
+			else if(strstr($_SERVER['HTTP_USER_AGENT'],'Mac'))
 			{
 				$this->BROWSER_PLATFORM='Mac';
 			}
-			elseif(strstr($_SERVER['HTTP_USER_AGENT'],'Linux'))
+			else if(strstr($_SERVER['HTTP_USER_AGENT'],'Linux'))
 			{
 				$this->BROWSER_PLATFORM='Linux';
 			}
-			elseif(strstr($_SERVER['HTTP_USER_AGENT'],'Unix'))
+			else if(strstr($_SERVER['HTTP_USER_AGENT'],'Unix'))
 			{
 				$this->BROWSER_PLATFORM='Unix';
 			}
-			elseif(strstr($_SERVER['HTTP_USER_AGENT'],'Beos'))
+			else if(strstr($_SERVER['HTTP_USER_AGENT'],'Beos'))
 			{
 				$this->BROWSER_PLATFORM='Beos';
 			}
@@ -251,15 +253,15 @@
 		*/
 		function content_header($fn='',$mime='',$length='',$nocache=True)
 		{
-		//	if($mime != 'text/plain')
-			if( !$mime )
+			// if no mime-type is given or it's the default binary-type, guess it from the extension
+			if( !$mime || $mime == 'application/octet-stream')
 			{
 				$mime_magic = createObject('phpgwapi.mime_magic');
 				$mime = $mime_magic->filename2mime($fn);
 			}
 			if($fn)
 			{
-				if($this->get_agent() == 'IE' && $this->BROWSER_VER == '5.5')
+				if($this->get_agent() == 'IE')// && $this->BROWSER_VER == '5.5')
 				{
 					$attachment = '';
 				}
@@ -296,9 +298,8 @@
 		*
 		* @return bool is wml-capable
 		*/
-		function is_mobile()
+		public static function is_mobile()
 		{
 			return strpos(strtolower($_SERVER['HTTP_ACCEPT']), 'text/vnd.wap.wml') > 0;
 		}
 	}
-?>
