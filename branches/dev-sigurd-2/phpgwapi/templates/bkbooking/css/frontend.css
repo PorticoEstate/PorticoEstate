@@ -265,3 +265,13 @@ dl.contactinfo dd {
 #overlay-info dd { padding-left: 2em; }
 #overlay-info .close { float: right; }
 #overlay-info .actions { margin-top: 1em;}
+
+.yui-calendar td.calcell {
+	border:0px !important;
+}
+.yui-skin-sam .yui-dt TABLE TH{
+	border: none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD{
+	border: none !important;
+}
