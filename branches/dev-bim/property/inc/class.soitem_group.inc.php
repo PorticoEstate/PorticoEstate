@@ -34,7 +34,9 @@
          * @param integer $limit
          * @return array Array of zero or more items
          */
-        public function read($specific_group_id = null, $offset = null, $limit = null) {
+        public function read(array $data)
+        {
+            // TODO: Use $data
             $items = array();
 
             $select_cols = array('g.id',
@@ -45,7 +47,6 @@
                     'g.catalog_id');
             $from_tables = array('fm_item_group g');
             $joins = array(
-                    //$this->db->left_join.' fm_item_group g ON i.group_id = g.id',
                     $this->db->left_join.' fm_item_catalog c ON g.catalog_id = c.id'
             );
             $where_clauses = array(' WHERE 1=1');
@@ -77,9 +78,11 @@
         }
 
         // TODO
-        public function read_single($id) {
+        public function read_single($id)
+        {
             
         }
+        
 
 
         /**

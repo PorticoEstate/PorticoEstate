@@ -39,6 +39,7 @@ phpgw::import_class('property.boitem');
          */
         public function read(array $data)
         {
+            // TODO: Use data
             $start		= isset($data['start']) ? $data['start'] : 0;
             $filter		= $data['filter'] ? $data['filter'] : 'none';
             $query		= $data['query'];

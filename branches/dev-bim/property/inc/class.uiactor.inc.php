@@ -543,7 +543,7 @@
 				}
 			}
 
-            _debug_array($datatable);
+            //_debug_array($datatable);
 
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');

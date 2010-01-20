@@ -40,7 +40,6 @@ class property_uiitem {
         $dry_run = false;
 
         $datatable = array();
-        $values_combo_box = array('');
 
         if(phpgw::get_var('phpgw_return_as') != 'json') {
             // Set base URL. FIXME: Add more URL parameters when needed
@@ -54,8 +53,10 @@ class property_uiitem {
             $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',"
                 ."category:'all'";
 
-            $default_value = array('category'=>'all');
-            array_unshift($values_combo_box, $default_value);
+            
+            $values_combo_box_0 = $this->sogroup->read(null);
+            $default_value = array('id' => -1, 'name' => 'Kategori ikke valgt');
+            array_unshift($values_combo_box_0, $default_value);
 
             $datatable['actions']['form'] = array(
                 array(
@@ -111,8 +112,8 @@ class property_uiitem {
                         ),
                         'hidden_value' => array(
                                 array(
-                                        'id' => 'values_combo_box',
-                                        'value'	=> 'lorem' //$this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+                                        'id' => 'values_combo_box_0',
+                                        'value'	=> $this->bocommon->select2string($values_combo_box_0)
                                 )
                         )
                     )
@@ -295,7 +296,6 @@ class property_uiitem {
             $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
         }
 
-        _debug_array($datatable);
 
         phpgwapi_yui::load_widget('dragdrop');
         phpgwapi_yui::load_widget('datatable');
@@ -372,146 +372,11 @@ class property_uiitem {
         $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
 
         // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'actor.index', 'property' );
+        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
 
         //$this->save_sessiondata();
     }
 
-
-
-    public function index2() {
-        // Highlight menu selection
-        $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
-
-        $item_list = $this->so->read(null);
-
-        $uicols = array(
-                'name' =>       array('id',      'group_id', 'location_id', 'vendor_id', 'installed_date'),
-                'datatype' =>   array('integer', 'integer',   'integer',    'integer',   'date'),
-                'hidden' =>     array(false,     false,       false,        false,       false)
-        );
-
-        $datatable = array();
-
-        $i = 0;
-        foreach($item_list as $item) {
-            $j = 0;
-            $datatable['rows']['row'][$i]['column'][$j]['name'] = 'id';
-            $datatable['rows']['row'][$i]['column'][$j]['value'] = $item['id'];
-            $datatable['rows']['row'][$i]['column'][$j]['lookup'] = '';
-            $datatable['rows']['row'][$i]['column'][$j]['align'] = 'center';
-            $j++;
-            $datatable['rows']['row'][$i]['column'][$j]['name'] = 'installed';
-            $datatable['rows']['row'][$i]['column'][$j]['value'] = $item['installed'];
-            $datatable['rows']['row'][$i]['column'][$j]['lookup'] = '';
-            $datatable['rows']['row'][$i]['column'][$j]['align'] = 'center';
-            $j++;
-
-            $i++;
-        }
-
-        $datatable['rowactions']['action'] = array();
-
-        $datatable['headers']['header'][0]['name']      = 'id';
-        $datatable['headers']['header'][0]['text']      = 'ID';
-        $datatable['headers']['header'][0]['visible'] 	= true;
-        $datatable['headers']['header'][0]['format'] 	= '';
-        $datatable['headers']['header'][0]['sortable']	= false;
-        $datatable['headers']['header'][0]['formatter']	= '""';
-
-        $datatable['headers']['header'][1]['name']      = 'installert';
-        $datatable['headers']['header'][1]['text']      = 'desc';
-        $datatable['headers']['header'][1]['visible'] 	= true;
-        $datatable['headers']['header'][1]['format'] 	= '';
-        $datatable['headers']['header'][1]['sortable']	= false;
-        $datatable['headers']['header'][1]['formatter']	= '""';
-
-        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
-
-        // Pagination and sort values
-        $datatable['pagination']['records_start'] 	= 0;
-        $datatable['pagination']['records_limit'] 	= 15;
-        $datatable['pagination']['records_returned'] = 2;
-        $datatable['pagination']['records_total'] 	= 2;
-
-        $datatable['sorting'] = array
-                (
-                'order' => 'id',
-                'sort' => 'asc'
-        );
-
-
-        if( phpgw::get_var('phpgw_return_as') == 'json' ) {
-            //values for Pagination
-            $json = array
-                    (
-                    'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-                    'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-                    'startIndex' 		=> $datatable['pagination']['records_start'],
-                    'sort'				=> $datatable['sorting']['order'],
-                    'dir'				=> $datatable['sorting']['sort'],
-                    'records'			=> array()
-            );
-
-            // values for datatable
-            if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])) {
-                foreach( $datatable['rows']['row'] as $row ) {
-                    $json_row = array();
-                    foreach( $row['column'] as $column) {
-                        if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true) {
-                            $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-                        }
-                        elseif(isset($column['format']) && $column['format']== "link") {
-                            $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-                        }else {
-                            $json_row[$column['name']] = $column['value'];
-                        }
-                    }
-                    $json['records'][] = $json_row;
-                }
-            }
-
-            // right in datatable
-            if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action'])) {
-                $json ['rights'] = $datatable['rowactions']['action'];
-            }
-
-            return $json;
-        }
-
-
-        phpgwapi_yui::load_widget('dragdrop');
-        phpgwapi_yui::load_widget('datatable');
-        phpgwapi_yui::load_widget('menu');
-        phpgwapi_yui::load_widget('connection');
-        //// cramirez: necesary for include a partucular js
-        phpgwapi_yui::load_widget('loader');
-        //cramirez: necesary for use opener . Avoid error JS
-        phpgwapi_yui::load_widget('tabview');
-        phpgwapi_yui::load_widget('paginator');
-        // Prepare template variables and process XSLT
-        $template_vars = array();
-        $template_vars['datatable'] = $datatable;
-        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-        if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
-            $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-        }
-        // Prepare CSS Style
-        $GLOBALS['phpgw']->css->validate_file('datatable');
-        $GLOBALS['phpgw']->css->validate_file('property');
-        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-        $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-        // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'actor.index', 'property' );
-
-        //_debug_array($datatable);
-
-    }
 
     public function testdata() {
         // BIM testdata
