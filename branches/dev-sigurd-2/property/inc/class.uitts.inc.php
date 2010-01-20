@@ -56,6 +56,8 @@
 		 */
 		protected $_simple = false;
 		protected $_show_finnish_date = false;
+		var $part_of_town_id;
+		var $status;
 
 		public function __construct()
 		{
@@ -811,9 +813,9 @@
 			unset($parameters);
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				if($uicols['input_type'][$i]!='hidden')
+		//		if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
 					$datatable['headers']['header'][$i]['visible'] 			= true;
