@@ -188,6 +188,36 @@
 			return true;
 		}
 
+		if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']))
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					$error_reporting = E_ERROR | E_USER_ERROR;
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING;
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					$error_reporting = E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE;
+					break;
+
+				case 'S': // Strict
+					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_STRICT;
+					break;
+			}
+
+			if( !(!!($error_reporting & $error_level)))
+			{
+				return true;
+			}
+		}
+
 		if ( !isset($GLOBALS['phpgw']->log)
 			|| !is_object($GLOBALS['phpgw']->log) )
 		{
@@ -441,6 +471,31 @@ HTML;
 		foreach ($c->config_data as $k => $v)
 		{
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
+		}
+
+		if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) )
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					error_reporting(E_ERROR | E_USER_ERROR);
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					error_reporting(E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING);
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE);
+					break;
+
+				case 'S': // Strict
+					error_reporting(E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_STRICT);
+					break;
+			}
 		}
 
 /*
