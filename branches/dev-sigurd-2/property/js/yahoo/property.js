@@ -9,7 +9,7 @@
 	var showTimer,hideTimer;
 	var tt = new YAHOO.widget.Tooltip("myTooltip");
 	var lightbox;
-	var maxRowsPerPage = 1000;
+	var maxRowsPerPage = 10000;
 	var myLoading;
 	var message_delete = "";
 
