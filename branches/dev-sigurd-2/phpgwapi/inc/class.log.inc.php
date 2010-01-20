@@ -47,7 +47,8 @@
 			'N'	=> 4,
 			'I' => 5,
 			'D' => 6,
-			'S'	=> 7
+			'S'	=> 7,
+			'DP'=>8
 		);
 
 		// these are used by the admin appliation when showing the log file.
@@ -60,7 +61,8 @@
 			'N'	=> 'notice',
 			'I' => 'info',
 			'D' => 'debug',
-			'S'	=> 'strict'
+			'S'	=> 'strict',
+			'DP'=> 'deprecated'
 		);
 
 		/**
@@ -184,6 +186,12 @@
 		{
 			$arg_array = func_get_args();
 			return $this->log_if_level('S',  $this->make_parms($arg_array));
+		}
+
+		function deprecated()
+		{
+			$arg_array = func_get_args();
+			return $this->log_if_level('DP',  $this->make_parms($arg_array));
 		}
 
 		function warn()

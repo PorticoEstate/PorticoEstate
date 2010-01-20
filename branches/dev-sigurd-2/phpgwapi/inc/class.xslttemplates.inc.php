@@ -15,7 +15,10 @@
 	{
 		die('PHP CONFIGURATION. xslt-extension is not loaded. Please contact the system administrator.');
 	}
-	
+
+	phpgw::import_class('phpgwapi.browser');	
+
+
 	/**
 	* Include xml tool
 	*/
@@ -67,7 +70,7 @@
 				$this->print = true;
 			}
 			$this->set_root($root);
-			if ( execMethod('phpgwapi.browser.is_mobile') )
+			if ( phpgwapi_browser::is_mobile() )
 			{
 				$this->set_output('wml');
 			}
