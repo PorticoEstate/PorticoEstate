@@ -453,11 +453,15 @@
             
             // Remove newlines from output
             $count = count($list);
-            for($i = 0; $i < $count; $i++) {
-            	$list[$i] = preg_replace("/[\n\r]/","",$list[$i]);
+            for($i = 0; $i < $count; $i++)
+            {
+ 				foreach ($list[$i] as $key => &$data)
+ 				{
+	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
+ 				}
             }
 
-            // Use keys as headings
+             // Use keys as headings
             $headings = $keys;
 
             $property_common = CreateObject('property.bocommon');
