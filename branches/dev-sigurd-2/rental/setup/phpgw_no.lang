@@ -232,16 +232,16 @@ month 9	rental	no	september
 month 10	rental	no	oktober
 month 11	rental	no	november
 month 12	rental	no	desember
-month 1 capitalized	rental	no	Januar
+month 1 capitalized	rental	no	Januar - 2. halvår (foregående år) - 4. kvartal (foregående år)
 month 2 capitalized	rental	no	Februar
 month 3 capitalized	rental	no	Mars
-month 4 capitalized	rental	no	April
+month 4 capitalized	rental	no	April - 1. kvartal
 month 5 capitalized	rental	no	Mai
 month 6 capitalized	rental	no	Juni
-month 7 capitalized	rental	no	Juli
+month 7 capitalized	rental	no	Juli - 1. halvår - 2. kvartal
 month 8 capitalized	rental	no	August
 month 9 capitalized	rental	no	September
-month 10 capitalized	rental	no	Oktober
+month 10 capitalized	rental	no	Oktober - 3. kvartal
 month 11 capitalized	rental	no	November
 month 12 capitalized	rental	no	Desember
 monthly	rental	no	Månedlig
