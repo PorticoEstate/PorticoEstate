@@ -102,6 +102,7 @@ id	bookingfrontend	no	ID
 inactivate	bookingfrontend	no	Inaktivert
 inactive	bookingfrontend	no	Inaktiv
 invoice information	bookingfrontend	no	Fakturainformasjon 
+responsible applicant	bookingfrontend	no	Ansvarlig søker
 jan	bookingfrontend	no	januar
 jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
@@ -275,7 +276,7 @@ customer_identifier_type	bookingfrontend	no	Fakturainformasjon
 group_id	bookingfrontend	no	Gruppe/Lag
 dates	bookingfrontend	no	Fra/Til
 Information about the event	bookingfrontend	no	Informasjon om arrangementet
-For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	no	For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
 To borrow premises you must verify that you have read terms and conditions	bookingfrontend	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
 In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
 Private event	bookingfrontend	no	Privat arrangement
