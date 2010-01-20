@@ -336,7 +336,7 @@ Total Cost	booking	no	Totalsum
 Int. invoice file	booking	no	Intern fakturafil
 Ext. invoice file	booking	no	Ekstern fakturafil
 Asynchronous Tasks	booking	no	Systemjobber
-booking_async_task_update_reservation_state_enabled	booking	no	Oppdater reservasjonsstatus
+booking_async_task_update_reservation_state_enabled	booking	no	Generer fakturagrunnlag
 booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på bookinger og arrangementer
 Update	booking	no	Oppdater
 Cannot generate files from empty list	booking	no	Kan ikke generere filer fra en tom liste
