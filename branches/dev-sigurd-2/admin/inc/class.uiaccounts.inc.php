@@ -514,6 +514,7 @@
 
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('base', 'groups', 'admin');
+			$js->validate_file('base', 'move', 'admin');
 
 			$accounts =& $GLOBALS['phpgw']->accounts;
 
@@ -531,12 +532,24 @@
 			$user_list = array();
 			foreach ( $account_list as $id => $user )
 			{
-				$user_list[$id] = array
-				(
-					'account_id'	=> $id,
-					'account_name'	=> (string) $user,
- 					'selected'		=> (int) isset($group_members[$id])
-				);
+				if(isset($group_members[$id]))
+				{
+					$member_list[$id] = array
+					(
+						'account_id'	=> $id,
+						'account_name'	=> (string) $user,
+ 						'selected'		=> (int) isset($group_members[$id])
+					);
+				}
+				else
+				{
+					$alluser_list[$id] = array
+					(
+						'account_id'	=> $id,
+						'account_name'	=> (string) $user,
+	 					'selected'		=> (int) isset($group_members[$id])
+					);				
+				}
 			}
 
 			//FIXME this needs to be provided by the app itself - thats why we have hooks
@@ -645,17 +658,12 @@
 											'menuaction' => 'admin.uiaccounts.edit_group',
 											'account_id' => $account_id
 										)),
-				'guser_list'		=> $user_list,
+				'guser_list'		=> $alluser_list,
+				'member_list'		=> $member_list,
 				'img_close'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_close', '.png', false),
 				'img_save'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_save', '.png', false),
-				'lang_account_name'	=> lang('group name'),
-				'lang_acl'			=> lang('acl'),
-				'lang_application'	=> lang('application'),
 				'lang_cancel'		=> lang('cancel'),
 				'lang_close'		=> lang('close'),
-				'lang_grant'		=> lang('grant'),
-				'lang_include_user'	=> lang('members'),
-				'lang_permissions'	=> lang('applications'),
 				'lang_save'			=> lang('save'),
 				'msgbox_data'		=> $error_list,
 				'select_size'		=> 5,
