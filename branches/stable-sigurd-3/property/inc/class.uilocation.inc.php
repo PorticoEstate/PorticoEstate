@@ -218,6 +218,15 @@
 				return;
 			}
 
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+
+			if ($default_district && !$second_display && !$this->district_id)
+			{
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
+			}
+
 			$datatable = array();
 			$values_combo_box = array();
 
@@ -250,6 +259,7 @@
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
 						 	                        ."lookup:'{$lookup}',"
+						 	                        ."second_display:1,"
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
