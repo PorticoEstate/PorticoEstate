@@ -816,6 +816,7 @@
 
 		function add_task($values)
 		{
+			$this->db->transaction_begin();
 			$table = 'phpgw_hrm_task';
 
 			$this->db->query("SELECT max(value_sort) as value_sort FROM $table WHERE job_id = " . (int)$values['job_id'],__LINE__,__FILE__);
@@ -1245,6 +1246,7 @@
 				return;
 			}
 
+			$this->db->transaction_begin();
 			$sql = "SELECT value_sort FROM $table where job_id=$job_id AND id=$id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1278,6 +1280,6 @@
 					return;
 					break;
 			}
+			$this->db->transaction_commit();
 		}
-
 	}
