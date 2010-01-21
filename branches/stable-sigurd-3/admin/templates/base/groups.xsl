@@ -84,37 +84,70 @@
 <!-- END group_list -->
 
 <!-- BEGIN group_edit -->
-	<xsl:template match="group_edit">
+	<xsl:template match="group_edit" xmlns:php="http://php.net/xsl">
 		<div id="admin_group_edit">
 			<h1><xsl:value-of select="page_title" /></h1>
 			<xsl:if test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
 			</xsl:if>
-			<form action="{edit_url}" method="post">
+
+			<form name='body_form' action="{edit_url}" method="post"  onsubmit="process_list('all_users[]',	'account_user[]')">
 				<div class="yui-navset" id="group_edit_tabview">
 					<xsl:value-of disable-output-escaping="yes" select="tabs" />
 
 						<div class="yui-content">
 
 							<div id="group">
-								<h2><xsl:value-of select="lang_group" /></h2>
+								<h2><xsl:value-of select="php:function('lang', 'group')" /></h2>
 								<input type="hidden" name="values[account_id]" value="{account_id}"/>
 								<ul id="admin_account_form">
 									<li>
-										<label for="account_name"><xsl:value-of select="lang_account_name" /></label>
+										<label for="account_name"><xsl:value-of select="php:function('lang', 'group name')" /></label>
 										<input name="values[account_name]" value="{value_account_name}" id="account_name" /><br class="eol" />
 									</li>
-									<li>
-										<label for="account_user"><xsl:value-of select="lang_include_user" /></label>
-										<select name="account_user[]" id="account_user" multiple="multiple" size="5">
-											<xsl:apply-templates select="guser_list"/>
-										</select><br class="eol" />
-									</li>
 								</ul>
+
+								<table border="0" align="center" width="100%">
+									<tbody align="center">
+										<tr bgcolor="">
+											<td width="45%"><xsl:value-of select="php:function('lang', 'all users')" /></td>
+											<td width="10%"></td>
+											<td width="45%"><xsl:value-of select="php:function('lang', 'members')" /></td>
+										</tr>
+										<tr bgcolor="">
+										<td width="45%">
+											<select multiple ='multiple' size="5" name="all_users[]" style="width:220">
+												<xsl:apply-templates select="guser_list"/>
+											</select>
+										</td>
+										<td width="10%">
+											<table border="0" align="center">
+											<tbody align="center">
+												<tr>
+												<td>
+													<input type="button" onClick="move('all_users[]','account_user[]','','account_user[]')" value="&gt;&gt;"/>
+												</td>
+												</tr>
+												<tr>
+												<td>
+													<input type="button" onClick="move('account_user[]','all_users[]','','account_user[]')" value="&lt;&lt;"/>
+												</td>
+												</tr>
+											</tbody>
+											</table>
+										</td>
+										<td width="45%">
+											<select multiple = 'multiple' size="5" name="account_user[]" id="account_user" style="width:220">
+												<xsl:apply-templates select="member_list"/>
+											</select>
+										</td>
+										</tr>
+									</tbody>
+								</table>	
 							</div>
 
 							<div id="apps">
-								<h2><xsl:value-of select="lang_permissions" /></h2>
+								<h2><xsl:value-of select="php:function('lang', 'applications')" /></h2>
 								<ul class="app_list">
 									<xsl:apply-templates select="app_list" />
 								</ul>
@@ -134,6 +167,12 @@
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />
 			</xsl:if>
+			<xsl:value-of select="account_name" />
+		</option>
+	</xsl:template>
+
+	<xsl:template match="member_list">
+		<option value="{account_id}">
 			<xsl:value-of select="account_name" />
 		</option>
 	</xsl:template>
