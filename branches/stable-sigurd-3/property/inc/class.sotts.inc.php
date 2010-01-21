@@ -360,6 +360,7 @@
 				$ticket['ecodimb']			= $this->db->f('ecodimb');
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
+				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
 
 				$user_id=(int)$this->db->f('user_id');
 				$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='$user_id' ");
@@ -610,8 +611,10 @@
 			$old_subject		= $this->db->f('subject');
 			$old_contact_id		= $this->db->f('contact_id');
 			$old_actual_cost	= $this->db->f('actual_cost');
+			$old_order_cat_id	= $this->db->f('order_cat_id');
 
 			if($oldcat_id ==0){$oldcat_id ='';}
+			if($old_order_cat_id ==0){$old_order_cat_id ='';}
 			if($oldassigned ==0){$oldassigned ='';}
 			if($oldgroup_id ==0){$oldgroup_id ='';}
 
@@ -770,6 +773,14 @@
 					. "' WHERE id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
 				$receipt['message'][]= array('msg' => lang('actual_cost has been updated'));
+			}
+
+			if ((int)$old_order_cat_id != (int)$ticket['order_cat_id'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET order_cat_id='" . (int)$ticket['order_cat_id']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$receipt['message'][]= array('msg' => lang('order category has been updated'));
+				$this->fields_updated = true;
 			}
 
 

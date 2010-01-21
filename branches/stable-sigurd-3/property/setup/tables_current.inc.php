@@ -874,7 +874,8 @@
 				'b_account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'budget' => array('type' => 'int','precision' => '4','nullable' => True),
-				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00')
+				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'order_cat_id' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

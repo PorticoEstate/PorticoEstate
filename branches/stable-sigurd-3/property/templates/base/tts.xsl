@@ -1097,6 +1097,20 @@
 						<xsl:call-template name="vendor_form"/>
 						<xsl:call-template name="ecodimb_form"/>
 						<xsl:call-template name="b_account_form"/>
+						<tr>
+							<td>
+								<xsl:value-of select="php:function('lang', 'order category')" />
+							</td>
+							<td>
+								<xsl:variable name="lang_cat_statustext"><xsl:value-of select="php:function('lang', 'select order category')" /></xsl:variable>
+									<select name="values[order_cat_id]"  title="{$lang_cat_statustext}">
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select order category')" />
+										</option>
+											<xsl:apply-templates select="order_cat_list/cat_list"/>
+									</select>
+							</td>
+						</tr>
 
 						<tr>
 							<td valign="top">
@@ -1749,4 +1763,3 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
