@@ -133,20 +133,24 @@
 	create_select_box('Default assign to TTS','assigntodefault',$_accounts,'The default user to assign a ticket in Helpdesk-submodule');
 
 	// Choose the correct priority to display
-	$priority_comment[1]  = ' - ' . lang('Lowest');
-	$priority_comment[5]  = ' - ' . lang('Medium');
-	$priority_comment[10] = ' - ' . lang('Highest');
-	for ($i=1; $i<=10; $i++)
+	$config	= CreateObject('phpgwapi.config','property');
+	$config->read();
+	$priority = array();
+	$prioritylevels = isset($config->config_data['prioritylevels']) && $config->config_data['prioritylevels'] ? $config->config_data['prioritylevels'] : 3;
+	$priority_comment[1]  = ' - ' . lang('Highest');
+	$priority_comment[$prioritylevels] = ' - ' . lang('Lowest');
+	for ($i=1; $i<=$prioritylevels; $i++)
 	{
-		$priority[$i] = $i . $priority_comment[$i];
+		$priority[$i] = $i . isset($priority_comment[$i]) ? $priority_comment[$i] : '';
 	}
 
 
+	$degree = array();
 	// Choose the correct degree to display
-		$degree_comment[0]=' - '.lang('None');
-		$degree_comment[1]=' - '.lang('Minor');
-		$degree_comment[2]=' - '.lang('Medium');
-		$degree_comment[3]=' - '.lang('Serious');
+	$degree_comment[0]=' - '.lang('None');
+	$degree_comment[1]=' - '.lang('Minor');
+	$degree_comment[2]=' - '.lang('Medium');
+	$degree_comment[3]=' - '.lang('Serious');
 	for ($i=0; $i<=3; $i++)
 	{
 		$degree[$i] = $i . $degree_comment[$i];
@@ -234,7 +238,7 @@
 
 	create_select_box('Workorder Approval From','approval_from',$_accounts,'If you need approval from your supervisor for projects/workorders');
 
-	if(!$email_org)
+//	if(!$email_org)
 	{
 		create_input_box('Your Email','email','Insert your email address');
 	}

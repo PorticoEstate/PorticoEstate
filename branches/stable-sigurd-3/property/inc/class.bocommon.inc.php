@@ -1614,7 +1614,7 @@
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
-		function download($list,$name,$descr,$input_type='')
+		function download($list,$name,$descr,$input_type=array())
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
@@ -1644,7 +1644,7 @@
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
-		function excel_out($list,$name,$descr,$input_type='')
+		function excel_out($list,$name,$descr,$input_type=array())
 		{
  			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
@@ -1659,7 +1659,7 @@
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
-				if($input_type[$k]!='hidden')
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
 					$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
 					$m++;
@@ -1674,7 +1674,7 @@
 					$m=0;
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($input_type[$k]!='hidden')
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 						{
 							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
 							$m++;
@@ -1722,11 +1722,10 @@
 			$header = array();
 			for ( $i = 0; $i < $count_uicols_name; ++$i )
 			{
-				if ( $input_type[$i] == 'hidden' )
+				if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 				{
-					continue;
+					$header[] = $this->utf2ascii($descr[$i]);
 				}
-				$header[] = $this->utf2ascii($descr[$i]);
 			}
 			fputcsv($fp, $header);
 			unset($header);
@@ -1738,11 +1737,10 @@
 					$row = array();
 					for ( $i = 0; $i < $count_uicols_name; ++$i )
 					{
-						if ( $input_type[$i] == 'hidden' )
+						if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 						{
-							continue;
+							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 						}
-						$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 					}
 					fputcsv($fp, $row);
 				}
@@ -1771,7 +1769,7 @@
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
-				if($input_type[$k]!='hidden')
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
 					$object->addCell(1, 0, $m, $descr[$k], 'string');
 					$m++;
@@ -1786,7 +1784,7 @@
 					$m=0;
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($input_type[$k]!='hidden')
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 						{
 							$content[$j][$m]	= str_replace(array('&'), array('og'), $entry[$name[$k]]);//str_replace("\r\n"," ",$entry[$name[$k]]);
 							$m++;

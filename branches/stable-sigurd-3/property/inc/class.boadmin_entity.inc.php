@@ -118,7 +118,7 @@
 			$this->query			= isset($query) ? $query : $this->query;
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
-			$this->type				= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
+			$this->type				= isset($type)  && $type && isset($this->type_app[$type]) ? $type : 'entity';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';

@@ -316,7 +316,7 @@
 	                                array( //boton 	OWNER
 	                                    'id' => 'btn_user_lid',
 	                                    'name' => 'user_lid',
-	                                    'value'	=> user_lid,
+	                                    'value'	=> 'user_lid',
 	                                    'type' => 'button',
 	                                    'tab_index' => 2,
 	                                    'style' => 'filter'
@@ -2603,8 +2603,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$voucher_id = phpgw::get_var('voucher_id', 'int');

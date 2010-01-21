@@ -251,3 +251,13 @@ div.allocation-list
 .yui-overlay .hd { padding:5px; }
 .yui-overlay .bd { padding:5px; }
 .yui overlay .ft { padding:5px; }
+
+.yui-calendar td.calcell {
+	border:0px !important;
+}
+.yui-skin-sam .yui-dt TABLE TH{
+	border: none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD{
+	border: none !important;
+}

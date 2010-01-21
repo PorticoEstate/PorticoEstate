@@ -390,7 +390,7 @@
 			$extra_vars = array();
 			foreach($_GET as $name => $value)
 			{
-				if (ereg('phpgw_',$name))
+				if (preg_match('/phpgw_/',$name))
 				{
 					$extra_vars[$name] = urlencode($value);
 				}

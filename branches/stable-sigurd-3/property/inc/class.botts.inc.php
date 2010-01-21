@@ -45,6 +45,11 @@
 		var $start_date;
 		var $end_date;
 		var $fields_updated = false;
+		var $status_id;
+		var $user_id;
+		var $part_of_town_id;
+		var $district_id;
+		var $total_records;
 
 		var $public_functions = array
 		(

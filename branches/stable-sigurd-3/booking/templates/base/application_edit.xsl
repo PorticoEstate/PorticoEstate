@@ -134,7 +134,7 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+			<div class="heading"><br /><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd>
 				<input id="field_contact_name" name="contact_name" type="text">
@@ -155,11 +155,11 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></div>
+			<div class="heading"><xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+			<div class="heading"><br /><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
 			<br/>
 			<div id='regulation_documents'/>
 		</dl>

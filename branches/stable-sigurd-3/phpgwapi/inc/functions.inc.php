@@ -183,9 +183,46 @@
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
+
 		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
+		}
+/*
+_debug_array($error_level);
+_debug_array($error_msg);
+_debug_array($error_file);
+_debug_array($error_line);
+//_debug_array($bt = debug_backtrace());die();
+*/
+		if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']))
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					$error_reporting = E_ERROR | E_USER_ERROR;
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING;
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					$error_reporting = E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE;
+					break;
+
+				case 'S': // Strict
+					$error_reporting = E_STRICT;
+					break;
+			}
+
+			if( !(!!($error_reporting & $error_level)))
+			{
+				return true;
+			}
 		}
 
 		if ( !isset($GLOBALS['phpgw']->log)
@@ -242,6 +279,7 @@
 					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+				break;
 			case E_STRICT:
 				$log_args['severity'] = 'S';
 				$log->strict($log_args);
@@ -252,8 +290,15 @@
 		//			echo '<p>' . lang('Strict: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 		//			echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+				break;
 
-			//No default, we just ignore it, for now
+			case E_DEPRECATED:
+			case E_USER_DEPRECATED:
+				$log_args['severity'] = 'DP';
+				$log->deprecated_($log_args);
+				echo '<p class="msg">' . lang('deprecated: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				break;
 		}
 	}
 	set_error_handler('phpgw_handle_error');
@@ -316,7 +361,12 @@ HTML;
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
 
-	magic_quotes_runtime(false);
+	if(get_magic_quotes_runtime())
+	{
+		echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
+		exit;
+	}
+
 
 // Can't use this yet - errorlog hasn't been created.
 //	print_debug('sane environment','messageonly','api');
@@ -440,6 +490,35 @@ HTML;
 		foreach ($c->config_data as $k => $v)
 		{
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
+		}
+
+		if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) )
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					error_reporting(E_ERROR | E_USER_ERROR);
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING);
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE);
+					break;
+
+				case 'S': // Strict
+					error_reporting(E_STRICT);
+					break;
+
+				case 'DP': // Deprecated
+					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED);
+					break;
+			}
 		}
 
 /*
@@ -636,7 +715,7 @@ HTML;
 		/********* Optional classes, which can be disabled for performance increases *********/
 		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
 		{
-			if (ereg('enable_', $phpgw_class_name[0]))
+			if (preg_match('/enable_/', $phpgw_class_name[0]))
 			{
 				$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
 				$enable_class = str_replace('_class', '', $enable_class);

@@ -224,7 +224,7 @@
 		
 		private function create_select_box($level_type, $level_key, $current_level)
 		{
-			$select_name = $level_type . '_' . $level_key . '_select';
+			$select_name = "{$level_type}_{$level_key}_select";
 
 			$var = array
 			(
@@ -239,13 +239,15 @@
 				'lang_notice'	=> lang('notice'),
 				'lang_debug'	=> lang('debug'),
 				'lang_strict'	=> 'strict',
+				'lang_deprecated'	=> 'deprecated',
 				'F_selected'	=> '',
 				'E_selected'	=> '',
 				'N_selected'	=> '',
 				'W_selected'	=> '',
 				'I_selected'	=> '',
 				'D_selected'	=> '',
-				'S_selected'	=> ''
+				'S_selected'	=> '',
+				'DP_selected'	=> ''
 			);
 			
 			if ( $current_level ) 

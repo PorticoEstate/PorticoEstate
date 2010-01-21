@@ -415,7 +415,7 @@
 			$cols_id	= phpgw::get_var('cols_id', 'int');
 			$resort		= phpgw::get_var('resort');
 			$values		= phpgw::get_var('values');
-
+			$values['sql_text'] = $_POST['values']['sql_text'];
 			if($cols_id)
 			{
 				$this->bo->resort(array('custom_id'=>$custom_id,'id'=>$cols_id,'resort'=>$resort));
