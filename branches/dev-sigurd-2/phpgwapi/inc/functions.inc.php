@@ -201,21 +201,21 @@ _debug_array($error_line);
 			{
 				case 'F': // Fatal
 				case 'E': // Error
-					$error_reporting = E_ERROR | E_USER_ERROR;
+					$error_reporting = E_ERROR | E_USER_ERROR |E_PARSE;
 					break;
 
 				case 'W': // Warn
 				case 'I': // Info
-					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING;
+					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING | E_PARSE;
 					break;
 
 				case 'N': // Notice
 				case 'D': // Debug
-					$error_reporting = E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE;
+					$error_reporting = E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_PARSE;
 					break;
 
 				case 'S': // Strict
-					$error_reporting = E_STRICT;
+					$error_reporting = E_STRICT | E_PARSE;
 					break;
 			}
 
@@ -311,7 +311,7 @@ _debug_array($error_line);
 	function phpgw_handle_exception(Exception $e)
 	{
 		$msg = $e->getMessage();
-		$help = lang('Please contact your administrator for assistance');
+		$help = 'Please contact your administrator for assistance';
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
 			<h1>Uncaught Exception: {$msg}</h1>
@@ -498,25 +498,25 @@ HTML;
 			{
 				case 'F': // Fatal
 				case 'E': // Error
-					error_reporting(E_ERROR | E_USER_ERROR);
+					error_reporting(E_ERROR | E_USER_ERROR | E_PARSE);
 					break;
 
 				case 'W': // Warn
 				case 'I': // Info
-					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING);
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_PARSE);
 					break;
 
 				case 'N': // Notice
 				case 'D': // Debug
-					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE);
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_PARSE);
 					break;
 
 				case 'S': // Strict
-					error_reporting(E_STRICT);
+					error_reporting(E_STRICT | E_PARSE);
 					break;
 
 				case 'DP': // Deprecated
-					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED);
+					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED | E_PARSE);
 					break;
 			}
 		}
