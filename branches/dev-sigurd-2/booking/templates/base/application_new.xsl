@@ -126,7 +126,7 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="form-col">
-			<div class="heading"><br /><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+			<div class="heading"><br />6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
 			<p>Oppgi ditt navn (fornavn og etternavn), e-post adresse vi kan nå deg på og telefon, mobil om du vil ha melding på SMS.</p>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd>
@@ -148,14 +148,14 @@
 			</dd>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+			<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
 			<p>Ut fra reglementet i pkt. 8 finner du kriterier for fakturering. Når du som privatperson skal låne noe som det ikke skal faktureres for oppgir du kun fødselsdato, men skal du leie noe som koster noe, da må vi ha hele personnummeret. Alle lag og organisasjoner skal oppgi organisasjonsnr.</p>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 			<br />
 			<p><xsl:value-of select="php:function('lang', 'In order to send the invoice we need information about either customer organization number or norwegian social security number')" /></p>
 		</dl>
 		<dl class="form-col">
-			<div class="heading"><br /><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
 			<p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
 			<br />
 			<div id='regulation_documents'>&nbsp;</div>
