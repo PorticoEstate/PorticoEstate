@@ -3895,3 +3895,24 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.576 to 0.9.17.577
+	* Add order categories to ticket ad hoc orders
+	* 
+	*/
+
+	$test[] = '0.9.17.577';
+	function property_upgrade0_9_17_577()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','order_cat_id',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.578';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

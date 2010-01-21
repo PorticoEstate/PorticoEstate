@@ -2393,6 +2393,9 @@
 			
 			//----------------------------------------------datatable settings--------			
 
+			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id));
+			$this->cats->app_name		= 'property.project';
+			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 			$data = array
 			(
 				'access_order'					=> $access_order,
@@ -2452,7 +2455,7 @@
 
 				'lang_no_cat'					=> lang('no category'),
 				'value_cat_id'					=> $this->cat_id,
-				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id)),
+				'cat_select'					=> $cat_select,
 				'value_category_name'			=> $ticket['category_name'],
 
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$form_link),
@@ -2488,7 +2491,8 @@
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'order_cat_list'				=> $order_catetory
 			);
 
 			//---datatable settings--------------------
@@ -2510,13 +2514,12 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.view', 'property' );
 			//-----------------------datatable settings---
 			
-			
+//_debug_array($data);die();
 			
 			$appname		= lang('helpdesk');
 			$function_msg	= lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function view2()
