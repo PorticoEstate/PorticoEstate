@@ -17,7 +17,7 @@
             $bui_result = $org_result = $res_result = array();
 
             if (!$type || $type == "building") {
-                $bui_result = $this->sobuilding->read(array("query"=>$searchterm));
+                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
                 foreach($bui_result['results'] as &$bui)
                 {
                     $bui['type'] = "building";
@@ -28,7 +28,7 @@
                 }
             }
             if (!$type || $type == "organization") {
-                $org_result = $this->soorganization->read(array("query"=>$searchterm));
+                $org_result = $this->soorganization->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
                 foreach($org_result['results'] as &$org)
                 {
                     $org['type'] = "organization";
@@ -37,7 +37,7 @@
                 }
             }
             if(!$type || $type == "resource") {
-                $res_result = $this->soresource->read(array("query"=>$searchterm));
+                $res_result = $this->soresource->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
                 foreach($res_result['results'] as &$res)
                 {
                     $res['name'] = $res['building_name']. ' / ' . $res['name'];
