@@ -583,6 +583,8 @@
 
 		function add_job($values)
 		{
+			$receipt = array();
+			$this->db->transaction_begin();
 			$table = 'phpgw_hrm_job';
 
 			if($values['parent_id'])
@@ -610,15 +612,15 @@
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
-
 			$this->db->query("INSERT INTO $table (name,descr,job_parent,job_level,entry_date,owner) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
-			$receipt['message'][]=array('msg'=>lang('job has been saved'));
-
 			$receipt['id'] = $this->db->get_last_insert_id($table,'id');
-
-			$this->db->transaction_commit();
+			
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('job has been saved'));
+			}
 			return $receipt;
 		}
 
@@ -814,6 +816,7 @@
 
 		function add_task($values)
 		{
+			$this->db->transaction_begin();
 			$table = 'phpgw_hrm_task';
 
 			$this->db->query("SELECT max(value_sort) as value_sort FROM $table WHERE job_id = " . (int)$values['job_id'],__LINE__,__FILE__);
@@ -1243,6 +1246,7 @@
 				return;
 			}
 
+			$this->db->transaction_begin();
 			$sql = "SELECT value_sort FROM $table where job_id=$job_id AND id=$id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1276,6 +1280,6 @@
 					return;
 					break;
 			}
+			$this->db->transaction_commit();
 		}
-
 	}
