@@ -277,14 +277,13 @@
 		unset($default_status);
 	}
 
-	// ticket initiated by user
 	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_4'])
 		&& $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['tts_status_4']) ? $prefs['property']['tts_status_4'] : '';
 		$tts = CreateObject('property.sotts');
-		$tickets = $tts->read(array('owner_id' => $accound_id, 'status_id' => $default_status));
+		$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
 		$total_records = $tts->total_records;
 
 		$portalbox = CreateObject('phpgwapi.listbox', array
