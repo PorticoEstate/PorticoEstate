@@ -17,10 +17,8 @@
 		<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 		<form method="post" action="{$select_url}">
 			<select name="{$select_name}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
-				<xsl:attribute name="onMouseover">
-					<xsl:text>window.status='</xsl:text>
-						<xsl:value-of select="lang_cat_statustext"/>
-					<xsl:text>'; return true;</xsl:text>
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_cat_statustext"/>
 				</xsl:attribute>
 				<option value="none"><xsl:value-of select="lang_no_cat"/></option>
 					<xsl:apply-templates select="cat_list"/>
