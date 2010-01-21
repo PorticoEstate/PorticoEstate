@@ -5,7 +5,7 @@
 	//define SelectButton
  	var oMenuButton_0;
  	var selectsButtons = [
-	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'districtbutton',dependiente:''}
+	{order:0, var_URL:'group_id',name:'btn_group_id',style:'districtbutton',dependiente:''}
 	]
 
 	// define buttons

@@ -29,35 +29,28 @@
 
         /**
          * Retreive any number of groups.
-         * @param integer $specific_group_id
-         * @param integer $offset
-         * @param integer $limit
-         * @return array Array of zero or more items
+         * @param array $data
+         * @return array Array of zero or more groups
          */
         public function read(array $data)
         {
-            // TODO: Use $data
-            $items = array();
+            $start  	= isset($data['start']) ? $data['start'] : 0;
+            $filter     = isset($data['filter']) ? $data['filter'] : 'none';
+            $query		= $data['query'];
+            $sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+            $order		= $data['order'];
+            $allrows	= $data['allrows'];
+            $dry_run	= $data['dry_run'];
 
-            $select_cols = array('g.id',
-                    'g.name',
-                    'g.nat_group_no',
-                    'g.bpn',
-                    'g.parent_group',
-                    'g.catalog_id');
-            $from_tables = array('fm_item_group g');
-            $joins = array(
-                    $this->db->left_join.' fm_item_catalog c ON g.catalog_id = c.id'
-            );
-            $where_clauses = array(' WHERE 1=1');
+            $ret = array();
 
-            if($specific_item_id) {
-                // FIXME Sanitize input!!
-                $where_clauses[] = "i.id = $specific_item_id";
-            }
+            $entity_table   = 'fm_item_group';
+            $cols           = array($entity_table.'.*');
+            $where_clauses  = array(' WHERE 1=1');
+            $joins          = array();
 
-            $sql  = 'SELECT ' . implode($select_cols, ', ') .
-                    ' FROM ' . implode($from_tables, ', ') .
+            $sql  = 'SELECT ' . implode($cols, ', ') .
+                    " FROM $entity_table ".
                     implode($joins, ' ') .
                     implode($where_clauses, ' AND ');
 

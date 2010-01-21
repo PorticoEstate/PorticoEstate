@@ -1,6 +1,7 @@
 <?php
 phpgw::import_class('phpgwapi.yui');
 phpgw::import_class('property.soitem');
+phpgw::import_class('property.soitem_group');
 phpgw::import_class('phpgwapi.datetime');
 /**
  * FIXME: Description
@@ -48,14 +49,11 @@ class property_uiitem {
                 'menuaction'=> 'property.uiitem.index',
             ));
             $datatable['config']['allow_allrows'] = true;
-
-            // FIXME: Do we need this?
             $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',"
-                ."category:'all'";
+                ."group:'all'";
 
-            
             $values_combo_box_0 = $this->sogroup->read(null);
-            $default_value = array('id' => -1, 'name' => 'Kategori ikke valgt');
+            $default_value = array('id' => -1, 'name' => 'Alle grupper');
             array_unshift($values_combo_box_0, $default_value);
 
             $datatable['actions']['form'] = array(
@@ -63,15 +61,15 @@ class property_uiitem {
                     'action' => $GLOBALS['phpgw']->link('/index.php',
                             array(
                                 'menuaction' 	=> 'property.uiitem.index',
-                                'cat_id'        => 0
+                                'group_id'        => 0
                             )
                     ),
                     'fields' => array(
                         'field' => array(
                             array(
-                                    'id' => 'btn_cat_id',
-                                    'name' => 'cat_id',
-                                    'value'	=> lang('Category'),
+                                    'id' => 'btn_group_id',
+                                    'name' => 'group_id',
+                                    'value'	=> lang('Group'),
                                     'type' => 'button',
                                     'style' => 'filter',
                                     'tab_index' => 1
