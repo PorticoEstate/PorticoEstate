@@ -34,7 +34,7 @@
 	 * @subpackage property
 	 * @category core
 	 */
-
+	 
 	phpgw::import_class('phpgwapi.yui');
 	
 	class property_uiresponsible
@@ -182,16 +182,16 @@
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
-
-
+			
+			
 	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-												(
+	    				(
 	    							'menuaction'=> 'property.uiresponsible.index',
 									'query'		=> $this->query,
 									'location'	=> $this->location,
 									'lookup'	=> $lookup
 
-												));
+	    				));
 	    				
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -256,7 +256,7 @@
 												)
 										  )
 				);
-				}
+			}
 
 			$responsible_info = array();
 			$responsible_info = $this->bo->read_type();
@@ -270,7 +270,7 @@
 
 			$j=0;
 			if (isset($responsible_info) && is_array($responsible_info))
-				{
+			{
 				foreach($responsible_info as $entry)
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
@@ -291,13 +291,13 @@
 					}
 					$j++;
 				}
-				}
-
+			}
+	
 									
 			$uicols_count	= count($uicols['descr']);
 
 			for ($i=0;$i<$uicols_count;$i++)
-				{
+			{
 				//all colums should be have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
@@ -322,8 +322,8 @@
 					$datatable['headers']['header'][$i]['sortable']		= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
-				}
-
+			}				
+			
 			$datatable['rowactions']['action'] = array();
 			
 			if(!$lookup)
@@ -339,13 +339,13 @@
 						),					
 					)
 				);
-
+				
 				$parameters2 = array
-			(
-					'parameter' => array
 				(
-						array
+					'parameter' => array
 					(
+						array
+						(
 							'name'		=> 'type_id',
 							'source'	=> 'id'
 						),
@@ -355,8 +355,8 @@
 							'source'	=> 'location'
 						)
 					)
-			);
-
+				);
+				
 				$parameters3 = array
 				(
 					'parameter' => array
@@ -375,7 +375,7 @@
 				);
 								
 				if($this->acl_edit)
-			{
+				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'		=> 'edit',
 						'text' 			=> lang('edit'),
@@ -386,10 +386,10 @@
 										)),
 						'parameters'	=> $parameters3
 					);
-			}
+				}
 				
 				if($this->acl_delete)
-			{
+				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'		=> 'delete',
 						'text' 			=> lang('delete'),
@@ -400,17 +400,17 @@
 										)),
 						'parameters'	=> $parameters
 					);
-			}
-
+				}
+				
 				$datatable['rowactions']['action'][] = array(
 					'my_name'		=> 'contacts',
 					'text' 			=> lang('contacts'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-			(
+									(
 										'menuaction'	=> 'property.uiresponsible.contact'
 									)),
 					'parameters'	=> $parameters2
-			);
+				);
 
 				if($this->acl_add)
 				{
@@ -418,13 +418,13 @@
 							'my_name'			=> 'add',
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-			(
-				'menuaction'	=> 'property.uiresponsible.edit_type',
-				'location'		=> $this->location
+											(
+												'menuaction'	=> 'property.uiresponsible.edit_type',
+												'location'		=> $this->location
 											))
-			);
+					);
 				}				
-
+				
 				unset($parameters);
 			}
 			
@@ -481,14 +481,14 @@
 			{
     		//values for Pagination
 	    		$json = array
-				(
+	    		(
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
     				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
 	    			'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 	    			'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-				);
+	    		);
 
 				// values for datatable
 	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -500,23 +500,23 @@
 		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-			}
+		    				}
 		    				elseif(isset($column['format']) && $column['format']== "link")
-			{
+		    				{
 		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
 		    				}else
-				{
+		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
 		    			}
 		    			 $json['records'][] = $json_row;
-				}
-			}
+	    			}
+	    		}
 
-			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt');
-			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
-			$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt', '');
-
+				$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt');
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt', '');
+				
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
