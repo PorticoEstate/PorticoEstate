@@ -121,7 +121,7 @@
 					break;
 
 				case 'paginator':
-					$load = array('paginator');
+					$load = array('paginator-min');
 					break;
 
 				case 'event':
