@@ -537,17 +537,15 @@
 					$member_list[$id] = array
 					(
 						'account_id'	=> $id,
-						'account_name'	=> (string) $user,
- 						'selected'		=> (int) isset($group_members[$id])
+						'account_name'	=> (string) $user
 					);
 				}
 				else
 				{
-					$alluser_list[$id] = array
+					$user_list[$id] = array
 					(
 						'account_id'	=> $id,
-						'account_name'	=> (string) $user,
-	 					'selected'		=> (int) isset($group_members[$id])
+						'account_name'	=> (string) $user
 					);				
 				}
 			}
@@ -658,7 +656,7 @@
 											'menuaction' => 'admin.uiaccounts.edit_group',
 											'account_id' => $account_id
 										)),
-				'guser_list'		=> $alluser_list,
+				'guser_list'		=> $user_list,
 				'member_list'		=> $member_list,
 				'img_close'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_close', '.png', false),
 				'img_save'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_save', '.png', false),
