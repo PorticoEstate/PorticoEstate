@@ -34,7 +34,11 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		YAHOO.util.Dom.addClass(elCell, 'info');
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
-		elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+		if (booking.is_public == 0) {
+			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 12);
+		} else {
+			elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+		}
 		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking); return false; };
 	}
 	else {
