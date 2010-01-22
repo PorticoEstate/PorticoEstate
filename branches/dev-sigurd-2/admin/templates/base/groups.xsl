@@ -116,7 +116,7 @@
 										</tr>
 										<tr bgcolor="">
 										<td width="45%">
-											<select multiple ='multiple' size="5" name="all_users[]" style="width:220">
+											<select multiple ='multiple' size="10" name="all_users[]" style="width:220">
 												<xsl:apply-templates select="guser_list"/>
 											</select>
 										</td>
@@ -137,7 +137,7 @@
 											</table>
 										</td>
 										<td width="45%">
-											<select multiple = 'multiple' size="5" name="account_user[]" id="account_user" style="width:220">
+											<select multiple = 'multiple' size="10" name="account_user[]" id="account_user" style="width:220">
 												<xsl:apply-templates select="member_list"/>
 											</select>
 										</td>
@@ -164,9 +164,6 @@
 
 	<xsl:template match="guser_list">
 		<option value="{account_id}">
-			<xsl:if test="selected != 0">
-				<xsl:attribute name="selected" value="selected" />
-			</xsl:if>
 			<xsl:value-of select="account_name" />
 		</option>
 	</xsl:template>
