@@ -267,7 +267,7 @@
  	                        						."location_code:'{$this->location_code}',"
  	                        						."block_query:'{$block_query}'";
 
-				 // $values_combo_box  se usará para escribir en el HTML, usando el XSLT
+				 // $values_combo_box  se usarï¿½ para escribir en el HTML, usando el XSLT
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
 	                                                                        'type' =>'location',
@@ -425,7 +425,8 @@
 						                            );
 				}
 
-				$dry_run=true;
+				$dry_run=true;
+
 			}
 
 			$location_list = array();
