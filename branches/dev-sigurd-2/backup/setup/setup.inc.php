@@ -32,8 +32,7 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['backup']['hooks'] = array
 	(
-		'admin',
-		'manual'
+		'menu'	=> 'backup.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */

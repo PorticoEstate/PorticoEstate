@@ -24,7 +24,7 @@
 	\*******************************************************************/
 	/* $Id$ */
 
-	class uibackup
+	class backup_uibackup
 	{
 		var $public_functions = array
 		(
@@ -32,7 +32,7 @@
 			'web_backup'	=> True
 		);
 
-		function uibackup()
+		function __construct()
 		{
 			$this->bobackup	= CreateObject('backup.bobackup');
 		}
@@ -72,7 +72,7 @@
 
 		function backup_admin()
 		{
-			$values = $_POST['values'];
+			$values =phpgw::get_var('values');
 
 			$link_data = array
 			(
@@ -82,6 +82,7 @@
 			if ($values['save'])
 			{
 				$error = $this->bobackup->check_values($values);
+
 				if (is_array($error))
 				{
 					$GLOBALS['phpgw']->template->set_var('message',$GLOBALS['phpgw']->common->error_list($error));
@@ -93,10 +94,11 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->common->phpgw_header();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			$this->set_app_langs();
 
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('admin_form' => 'admin_form.tpl'));
 
 			$GLOBALS['phpgw']->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php',$link_data));
@@ -128,9 +130,9 @@
 				case 'zip':		$b_type_sel[2]=' selected';break;
 			}
 
-			$type_list = '<option value="tgz"' . $b_type_sel[0] . '>' . lang('tar.gz') . '</option>' . "\n"
-						. '<option value="tar.bz2"' . $b_type_sel[1] . '>' . lang('tar.bz2') . '</option>' . "\n"
-						. '<option value="zip"' . $b_type_sel[2] . '>' . lang('zip') . '</option>' . "\n";
+			$type_list = '<option value="tgz"' . $b_type_sel[0] . '>tar.gz</option>' . "\n"
+						. '<option value="tar.bz2"' . $b_type_sel[1] . '>tar.bz2</option>' . "\n"
+						. '<option value="zip"' . $b_type_sel[2] . '>zip</option>' . "\n";
 
 			$GLOBALS['phpgw']->template->set_var('type_list',$type_list);
 
@@ -141,8 +143,8 @@
 				case 'smbmount':	$r_type_sel[2]=' selected';break;
 			}
 
-			$r_app_list = '<option value="ftp"' . $r_type_sel[0] . '>' . lang('ftp') . '</option>' . "\n"
-						. '<option value="nfs"' . $r_type_sel[1] . '>' . lang('nfs') . '</option>' . "\n"
+			$r_app_list = '<option value="ftp"' . $r_type_sel[0] . '>ftp</option>' . "\n"
+						. '<option value="nfs"' . $r_type_sel[1] . '>nfs</option>' . "\n"
 						. '<option value="smbmount"' . $r_type_sel[2] . '>' . lang('smbmount') . '</option>' . "\n";
 
 			$GLOBALS['phpgw']->template->set_var('r_app_list',$r_app_list);
@@ -178,9 +180,9 @@
 
 		function web_backup()
 		{
-			if ($_POST['delete'] && $_POST['archive'])
+			if ($_GET['delete'] && $_GET['archive'])
 			{
-				$this->bobackup->drop_archive($_POST['archive']);
+				$this->bobackup->drop_archive($_GET['archive']);
 			}
 
 			$link_data = array
@@ -190,10 +192,13 @@
 				'archive'		=> $archive
 			);
 
-			$GLOBALS['phpgw']->common->phpgw_header();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
 
 			$this->set_app_langs();
 
+			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
+
+			$GLOBALS['phpgw']->template->set_root(PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array('archive_list_t' => 'web_form.tpl'));
 			$GLOBALS['phpgw']->template->set_block('archive_list_t','archive_list','list');
 
@@ -204,22 +209,24 @@
 			if ($config['l_websave'] == 'yes')
 			{
 				$archives = $this->bobackup->get_archives();
-				$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
-
 				if ($archives)
 				{
 					for ($i=0;$i<count($archives);$i++)
 					{
-						$this->nextmatchs->template_alternate_row_color($GLOBALS['phpgw']->template);
+						$this->nextmatchs->alternate_row_class($GLOBALS['phpgw']->template);
 
 						$GLOBALS['phpgw']->template->set_var(array
 						(
-							'archive'	=> 'archives/' . $archives[$i],
+							'archive'	=> 'backup/archives/' . $archives[$i],
 							'aname'		=> $archives[$i]
 						));
 
-						$GLOBALS['phpgw']->template->set_var('delete',$GLOBALS['phpgw']->link('/index.php','menuaction=backup.uibackup.web_backup&delete=True&archive='
-											. $archives[$i]));
+						$GLOBALS['phpgw']->template->set_var('delete',$GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=>'backup.uibackup.web_backup',
+											'delete'		=>true,
+											'archive'		=> $archives[$i])
+										));
 						$GLOBALS['phpgw']->template->set_var('lang_delete',lang('Delete'));
 
 						$GLOBALS['phpgw']->template->fp('list','archive_list',True);
@@ -235,7 +242,6 @@
 				$GLOBALS['phpgw']->template->set_var('noweb',lang('The backup application is not configured for showing the archives in phpGroupWare yet !'));
 			}
 
-			$GLOBALS['phpgw']->template->pfp('out','archive_list_t',True);
+			$GLOBALS['phpgw']->template->pfp('out','archive_list_t');
 		}
 	}
-?>

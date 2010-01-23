@@ -24,7 +24,7 @@
 	\*******************************************************************/
 	/* $Id$ */
 
-	class bobackup
+	class backup_bobackup
 	{
 		var $public_functions = array
 		(
@@ -38,7 +38,7 @@
 			'drop_archive'		=> True
 		);
 
-		function bobackup()
+		function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config','backup');
 			$this->config->read_repository();
@@ -70,8 +70,7 @@
 		{
 			if ($values['b_create'])
 			{
-				$doc_root = get_var('DOCUMENT_ROOT',Array('GLOBAL','SERVER'));
-
+				$doc_root = phpgw::get_var('DOCUMENT_ROOT', 'string', 'SERVER');
 				if ($values['script_path'])
 				{
 					if (substr($values['script_path'],0,strlen($doc_root)) == $doc_root)
@@ -148,7 +147,7 @@
 								$error[] = lang('Please set the path to the MySQL database dir in *Site configuration* !');
 							}
 						}
-						elseif($GLOBALS['phpgw_info']['server']['db_type'] == 'pgsql')
+						elseif($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 						{
 							if (!isset($site_co['pgsql']))
 							{
@@ -312,10 +311,16 @@
 				
 // ------------------------------------ check -----------------------------------------------
 
-				$check = $GLOBALS['phpgw']->template->set_file(array('check' => 'check_form.tpl'));
-				$check .= $GLOBALS['phpgw']->template->set_var('server_root',$co['server_root']);
-				$check .= $GLOBALS['phpgw']->template->set_var('script_path',$co['script_path']);
-				$check .= $GLOBALS['phpgw']->template->fp('out','check',True);
+			//	$check = $GLOBALS['phpgw']->template->set_file(array('check' => 'check_form.tpl'));
+			//	$check .= $GLOBALS['phpgw']->template->set_var('server_root',$co['server_root']);
+			//	$check .= $GLOBALS['phpgw']->template->set_var('script_path',$co['script_path']);
+			//	$check .= $GLOBALS['phpgw']->template->fp('out','check',True);
+				$tpl = createObject('phpgwapi.Template',PHPGW_APP_TPL);
+				$tpl->set_file(array('check' => 'check_form.tpl'));
+				$tpl->set_var('server_root',$co['server_root']);
+				$tpl->set_var('script_path',$co['script_path']);
+				$check = $tpl->fp('out','check',True);
+
 				$conf_file = $co['server_root'] . '/backup/phpgw_check_for_backup';
 				$this->save_config($conf_file,$check);
 
@@ -323,87 +328,96 @@
 
 // --------------------------------- backup -------------------------------------------------
 
-				$config = $GLOBALS['phpgw']->template->set_file(array('backup' => 'backup_form.tpl'));
+/*				$config = $GLOBALS['phpgw']->template->set_file(array('backup' => 'backup_form.tpl'));
 				$config .= $GLOBALS['phpgw']->template->set_var('script_path',$co['script_path']);
 				$config .= $GLOBALS['phpgw']->template->set_var('php_path',$co['php_cgi']);
 				$config .= $GLOBALS['phpgw']->template->fp('out','backup',True);
+*/
+				$tpl = createObject('phpgwapi.Template',PHPGW_APP_TPL);
+				$tpl->set_file(array('backup' => 'backup_form.tpl'));
+				$tpl->set_var('script_path',$co['script_path']);
+				$tpl->set_var('php_path',$co['php_cgi']);
+				$config = $tpl->fp('out','backup',True);
+
 				$conf_file = $co['server_root'] . '/backup/phpgw_start_backup.' . $co['b_intval'];
+//_debug_array($conf_file);die();
 				$this->save_config($conf_file,$config);
 
 // -------------------------------- end backup ----------------------------------------------
 
 // --------------------------------- script --------------------------------------------------
 
-				$config = $GLOBALS['phpgw']->template->set_file(array('script_ba_t' => 'script_form.tpl'));
-				$config .= $GLOBALS['phpgw']->template->set_block('script_ba_t','script_ba','ba');
+				$tpl = createObject('phpgwapi.Template',PHPGW_APP_TPL);
+				$tpl->set_file(array('script_ba_t' => 'script_form.tpl'));
+				$tpl->set_block('script_ba_t','script_ba','ba');
 
-				$config .= $GLOBALS['phpgw']->template->set_var('basedir',$co['basedir']);
-				$config .= $GLOBALS['phpgw']->template->set_var('server_root',$co['server_root']);
-				$config .= $GLOBALS['phpgw']->template->set_var('versions',$co['versions']);
-				$config .= $GLOBALS['phpgw']->template->set_var('bintval',$co['b_intval']);
-				$config .= $GLOBALS['phpgw']->template->set_var('bcomp',$co['b_type']);
+				$tpl->set_var('basedir',$co['basedir']);
+				$tpl->set_var('server_root',$co['server_root']);
+				$tpl->set_var('versions',$co['versions']);
+				$tpl->set_var('bintval',$co['b_intval']);
+				$tpl->set_var('bcomp',$co['b_type']);
 
-				$config .= $GLOBALS['phpgw']->template->set_var('php_path',$co['php_cgi']);
-				$config .= $GLOBALS['phpgw']->template->set_var('tar_path',$co['tar']);
-				$config .= $GLOBALS['phpgw']->template->set_var('zip_path',$co['zip']);
-				$config .= $GLOBALS['phpgw']->template->set_var('bzip2_path',$co['bzip2']);
+				$tpl->set_var('php_path',$co['php_cgi']);
+				$tpl->set_var('tar_path',$co['tar']);
+				$tpl->set_var('zip_path',$co['zip']);
+				$tpl->set_var('bzip2_path',$co['bzip2']);
 
 				if ($co['b_sql'])
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('bsql',$co['b_sql']);
-					$config .= $GLOBALS['phpgw']->template->set_var('db_name',$co['db_name']);
-					$config .= $GLOBALS['phpgw']->template->set_var('mysql_dir',$co['mysql']);
-					$config .= $GLOBALS['phpgw']->template->set_var('pgsql_dir',$co['pgsql']);
+					$tpl->set_var('bsql',$co['b_sql']);
+					$tpl->set_var('db_name',$co['db_name']);
+					$tpl->set_var('mysql_dir',$co['mysql']);
+					$tpl->set_var('pgsql_dir',$co['pgsql']);
 				}
 
 				if ($co['b_ldap'] == 'yes')
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('bldap','yes');
-					$config .= $GLOBALS['phpgw']->template->set_var('ldap_dir',$co['ldap']);
-					$config .= $GLOBALS['phpgw']->template->set_var('ldap_in',$co['ldap_in']);
+					$tpl->set_var('bldap','yes');
+					$tpl->set_var('ldap_dir',$co['ldap']);
+					$tpl->set_var('ldap_in',$co['ldap_in']);
 				}
 
 				if ($co['b_email'] == 'yes')
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('bemail','yes');
-					$config .= $GLOBALS['phpgw']->template->set_var('maildir',$co['maildir']);
+					$tpl->set_var('bemail','yes');
+					$tpl->set_var('maildir',$co['maildir']);
 
 					$allaccounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
 
 					while (list($null,$account) = each($allaccounts))
 					{
-						$config .= $GLOBALS['phpgw']->template->set_var(array
+						$tpl->set_var(array
 						(
 							'lid'			=> stripslashes($account['account_lid']),
 							'server_root'	=> $co['server_root']
 						));
-						$GLOBALS['phpgw']->template->fp('ba','script_ba',True);
+						$tpl->fp('ba','script_ba',True);
 					}
 				}
 
 				if ($co['r_save'] == 'yes')
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('rsave','yes');
-					$config .= $GLOBALS['phpgw']->template->set_var('rip',$co['r_ip']);
-					$config .= $GLOBALS['phpgw']->template->set_var('rpath',$co['r_path']);
-					$config .= $GLOBALS['phpgw']->template->set_var('ruser',$co['r_user']);
-					$config .= $GLOBALS['phpgw']->template->set_var('rpwd',$co['r_pwd']);
-					$config .= $GLOBALS['phpgw']->template->set_var('rapp',$co['r_app']);
+					$tpl->set_var('rsave','yes');
+					$tpl->set_var('rip',$co['r_ip']);
+					$tpl->set_var('rpath',$co['r_path']);
+					$tpl->set_var('ruser',$co['r_user']);
+					$tpl->set_var('rpwd',$co['r_pwd']);
+					$tpl->set_var('rapp',$co['r_app']);
 				}
 
 				if ($co['l_save'] == 'yes')
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('lsave','yes');
-					$config .= $GLOBALS['phpgw']->template->set_var('lpath',$co['l_path']);		
+					$tpl->set_var('lsave','yes');
+					$tpl->set_var('lpath',$co['l_path']);		
 				}
 
 				if ($co['l_websave'] == 'yes')
 				{
-					$config .= $GLOBALS['phpgw']->template->set_var('lsave','yes');
-					$config .= $GLOBALS['phpgw']->template->set_var('lwebsave','yes');
+					$tpl->set_var('lsave','yes');
+					$tpl->set_var('lwebsave','yes');
 				}
 
-				$config .= $GLOBALS['phpgw']->template->fp('out','script_ba_t',True);
+				$config = $tpl->fp('out','script_ba_t',True);
 
 				$conf_file = $co['script_path'] . '/phpgw_data_backup.php';
 				$this->save_config($conf_file,$config);
