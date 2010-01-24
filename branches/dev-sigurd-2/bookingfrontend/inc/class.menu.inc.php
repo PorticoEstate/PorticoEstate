@@ -8,7 +8,8 @@
 
 			$menus = array();
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'bookingfrontend'))
 			{
 				$menus['admin'] = array
 				(
