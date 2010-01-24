@@ -23,26 +23,6 @@ $GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHE
 $GLOBALS['phpgw_setup']->oProc->next_record();
 $app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
 
-$GLOBALS['phpgw_setup']->oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
-
-$locations = array();
-while ($GLOBALS['phpgw_setup']->oProc->next_record())
-{
-	$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
-}
-
-if(count($locations))
-{
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_choice WHERE location_id IN ('. implode (',',$locations) . ')');
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN ('. implode (',',$locations). ')');
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_acl  WHERE location_id IN ('. implode (',',$locations) . ')');
-}
-
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
-
-
-unset($locations);
-
 #
 #  phpgw_locations
 #
