@@ -185,10 +185,21 @@ HTML;
 
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
-
+		
+		$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
+		
+		if(isset($GLOBALS['phpgw_info']['server']['system_name']))
+		{
+			 $powered_by = $GLOBALS['phpgw_info']['server']['system_name'] . ' ' . lang('version') . ' ' . $version;
+		}
+		else
+		{
+			$powered_by = lang('Powered by phpGroupWare version %1', $version);
+		}
+		
 		$var = array
 		(
-			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'powered_by'	=> $powered_by
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

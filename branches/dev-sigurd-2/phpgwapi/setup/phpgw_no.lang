@@ -123,4 +123,5 @@ sorry, your login has expired	login	no	Beklager, din login er utgått
 todays date, eg. %1	common	no	Dagens dato, %1
 use cookies	login	no	use cookies
 username	login	no	Brukernavn
+version	common	no	versjon
 you have been successfully logged out	login	no	Du har nå logget ut

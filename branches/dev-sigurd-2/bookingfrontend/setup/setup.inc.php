@@ -21,7 +21,7 @@
 
 	$setup_info['bookingfrontend']['depends'][] = array(
 		'appname' => 'booking',
-		'versions' => Array('0.1.90')
+		'versions' => Array('0.1.91')
 	);
 
 	$setup_info['bookingfrontend']['depends'][] = array(
