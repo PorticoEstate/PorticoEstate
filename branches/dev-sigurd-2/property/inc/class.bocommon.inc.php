@@ -2013,7 +2013,7 @@
 
 			if(isset($values['location']) && $values['location'])
 			{
-				phpgwapi_cache::session_set('property', 'filter_location', implode('-', $values['location']));
+//				phpgwapi_cache::session_set('property', 'filter_location', implode('-', $values['location']));
 			}
 
 			return $values;
