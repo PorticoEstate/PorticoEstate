@@ -38,14 +38,14 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'backup.uibackup.web_backup') ),
 					'image'	=> array('backup', 'navbar'),
 					'order'	=> 35,
-					'group'	=> 'facilities management'
+					'group'	=> 'core'
 				),
 			);
 
 			$menus['toolbar'] = array();
 
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
-			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'backup'))
 			{
 				$menus['admin'] = array
 				(
