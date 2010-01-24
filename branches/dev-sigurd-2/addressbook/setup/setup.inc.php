@@ -13,7 +13,7 @@
 
 	/* Basic information about this app */
 	$setup_info['addressbook']['name']      = 'addressbook';
-	$setup_info['addressbook']['version']   = '0.9.17.500';
+	$setup_info['addressbook']['version']   = '0.9.17.501';
 	$setup_info['addressbook']['app_order'] = 4;
 	$setup_info['addressbook']['enable']    = 1;
 	$setup_info['addressbook']['app_group']	= 'office';
