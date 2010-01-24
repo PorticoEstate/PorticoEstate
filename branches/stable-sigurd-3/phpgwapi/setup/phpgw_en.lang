@@ -390,7 +390,7 @@ qatar	common	en	QATAR
 read	common	en	Read
 read this list of methods.	common	en	Read this list of methods.
 register_globals = %1	common	en	register_globals = %1
-register_globals_off	common	en	This application has been tested to work with register_globals = off in your php.ini.  This application should work with most PHP 4.1.0+ servers.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+register_globals_off	common	en	This application has been tested to work with register_globals = off in your php.ini.  This application should work with most PHP 5.2.0+ servers.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
 register_globals_on	common	en	This application has not been tested to work with register_globals = off in your php.ini.  This application requires register_globals = on to be set in your php.ini.  For more information regarding the potential problem of using register_globals = on, see <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
 reject	common	en	Reject
 rename	common	en	Rename

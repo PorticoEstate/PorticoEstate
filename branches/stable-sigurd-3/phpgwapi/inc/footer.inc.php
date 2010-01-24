@@ -33,7 +33,7 @@
 		require_once PHPGW_APP_INC . '/footer.inc.php';
 	}
 
-	if (DEBUG_TIMER)
+	if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && DEBUG_TIMER)
 	{
 		$debug_timer_stop = perfgetmicrotime();
 		echo '<p class="api_timer">' . lang('page prepared in %1 seconds.', $debug_timer_stop - $GLOBALS['debug_timer_start'] ) . "<p>\n";

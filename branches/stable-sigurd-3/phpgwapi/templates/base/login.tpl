@@ -75,7 +75,7 @@
 			<p class="button_group"><input type="submit" value="{lang_login}" name="submitit"></p>
 			<p class="link_group"><a href="{return_sso_login_url}">{lang_return_sso_login}</a></p>
 			<!-- END button_block -->
-			<p id="version">phpGroupWare {version}</p>
+			<p id="version">{system} {version}</p>
 		</div>
 		</form>
 		<div id="testjs">

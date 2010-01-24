@@ -65,6 +65,11 @@
 	*/
 	$GLOBALS['phpgw_info']['server']['header_admin_password'] = '{HEADER_ADMIN_PASSWORD}';
 
+	/**
+	* @global string $phpgw_info['server']['system_name'] The system name
+	*/
+	$GLOBALS['phpgw_info']['server']['system_name'] = '{SYSTEM_NAME}';
+
 	// phpGroupWare domain-specific db settings
 	// Note that with mcrypt enabled- the database settings are encrypted (the web-interface has to be used to produce the settings)
 	{domains}
@@ -186,6 +191,12 @@
 	* Installed API version
 	*/
 	$GLOBALS['phpgw_info']['server']['versions']['phpgwapi'] = $setup_info['phpgwapi']['version'];
+
+	/**
+	* @global string $phpgw_info['server']['versions']['system']
+	* Installed header version
+	*/
+	$GLOBALS['phpgw_info']['server']['versions']['system'] = $setup_info['phpgwapi']['versions']['system'];
 
 	/**
 	* @global string $phpgw_info['server']['versions']['current_header']

@@ -592,6 +592,7 @@ HTML;
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
 			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
+			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'phpGroupWare');
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
@@ -689,6 +690,7 @@ HTML;
 			$setup_tpl->set_var('lang_serverroot',lang('Server Root'));
 			$setup_tpl->set_var('lang_includeroot',lang('Include Root (this should be the same as Server Root unless you know what you are doing)'));
 			$setup_tpl->set_var('lang_adminpass',lang('Admin password to header manager'));
+			$setup_tpl->set_var('lang_system_name',lang('System name'));
 			$setup_tpl->set_var('lang_dbhost',lang('DB Host'));
 			$setup_tpl->set_var('lang_dbhostdescr',lang('Hostname/IP of database server'));
 			$setup_tpl->set_var('lang_dbname',lang('DB Name'));
