@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- $Id: admin_form.tpl 4237 2009-11-27 23:17:21Z sigurd $ -->
 
 <center>
 <form method="POST" action="{action_url}">

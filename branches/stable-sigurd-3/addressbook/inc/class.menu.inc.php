@@ -51,7 +51,9 @@
 					'group'	=> 'office'
 				)
 			);
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+//			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'addressbook'))
 			{
 				$menus['admin'] = array
 				(
@@ -95,6 +97,12 @@
 					(
 						'text'	=> 'Notes Types Manager',
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_note_type.view') )
+					),
+
+					array
+					(
+						'text'	=> lang('Custom fields on org-person'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'addressbook', 'location' =>'org_person', 'menu_selection' => '') )
 					)
 				);
 			}

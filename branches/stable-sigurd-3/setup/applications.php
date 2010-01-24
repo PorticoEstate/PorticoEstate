@@ -185,9 +185,10 @@
 					&& is_array($setup_info[$appname]['tables']) )
 				{
 					$terror = $GLOBALS['phpgw_setup']->process->current($terror,$DEBUG);
-					$terror = $GLOBALS['phpgw_setup']->process->default_records($terror,$DEBUG);
 					echo "<li>{$setup_info[$appname]['name']} "
 						. lang('tables installed, unless there are errors printed above') . ".</h3>\n";
+					$terror = $GLOBALS['phpgw_setup']->process->default_records($terror,$DEBUG);
+					echo '<li>' . lang('%1 default values processed', lang($appname)) . ".</li>\n";
 				}
 				else
 				{
@@ -198,9 +199,12 @@
 					else
 					{
 						$GLOBALS['phpgw_setup']->register_app($appname);
-					}
-					echo '<li>' . lang('%1 registered', lang($appname)) . ".</li>\n";
+						echo '<li>' . lang('%1 registered', lang($appname)) . ".</li>\n";
 
+						// Default values has be processed - even for apps without tables - after register for locations::add to work
+						$terror = $GLOBALS['phpgw_setup']->process->default_records($terror,$DEBUG);
+						echo '<li>' . lang('%1 default values processed', lang($appname)) . ".</li>\n";
+					}
 					if ( isset($setup_info[$appname]['hooks'])
 						&& is_array($setup_info[$appname]['hooks']) )
 					{

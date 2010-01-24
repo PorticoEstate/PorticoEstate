@@ -23,7 +23,9 @@
 	* along with this program; if not, write to the Free Software       *
 	* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.         *
 	\*******************************************************************/
-	/* $Id$ */
+	/* $Id: script_form.tpl 4237 2009-11-27 23:17:21Z sigurd $ */
+
+	date_default_timezone_set('UTC');
 
 	function get_archives($dir)
 	{
@@ -91,8 +93,9 @@
 		{
 			if ($rfiles['bdate'] <= $rdate)
 			{
-				unlink($dir . '/' . $rfiles['file']);
-				echo 'removed ' . $dir . '/' . $rfiles['file'] . "\n";
+//				unlink($dir . '/' . $rfiles['file']);
+//				echo 'removed ' . $dir . '/' . $rfiles['file'] . "\n";
+				echo 'would like to remove ' . $dir . '/' . $rfiles['file'] . "\n";
 			}
 		}
 	}
@@ -125,17 +128,22 @@
 
 	if ($bsql)
 	{
+		$in		= ' {db_name}';
 		switch($bsql)
 		{
-			case 'mysql':	$database = '{mysql_dir}'; break;
-			case 'pgsql':	$database = '{pgsql_dir}'; break;
+			case 'mysql':
+				$out	= $basedir . '/' . get_date() . '_phpGWBackup_{bsql}.' . $end;
+				$database = '{mysql_dir}'; 
+				chdir($database);
+				system("$command" . $out . $in);
+				break;
+
+			case 'postgres':
+				$end = 'gz';
+				$out	= $basedir . '/' . get_date() . '_' . ltrim($in) . '_phpGWBackup_{bsql}.' . $end;
+				system("pg_dump {$in} | gzip > {$out}");
+				break;
 		}
-
-		chdir($database);
-		$out	= $basedir . '/' . get_date() . '_phpGWBackup_{bsql}.' . $end;
-		$in		= ' {db_name}';
-
-		system("$command" . $out . $in);
 
 		if ($bcomp == 'tar.bz2')
 		{
@@ -300,7 +308,9 @@
 		$command = 'rm';
 		for ($i=0;$i<count($output);$i++)
 		{
-			system("$command " . $output[$i] . ' 2>&1 > /dev/null');
+//			system("$command " . $output[$i] . ' 2>&1 > /dev/null');
+			echo 'would like to remove ' . $output[$i] . "\n";
+
 		}
 	}
 

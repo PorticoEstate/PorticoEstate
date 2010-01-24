@@ -227,39 +227,43 @@
 					)
 				),
 			);
-			$menus['admin'] = array
-			(
-				'index'	=> array
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
+				$menus['admin'] = array
 				(
-					'text'	=> lang('Configuration'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'booking') )
-				),
-				'permissions'	=> array
-				(
-					'text'	=> lang('Root Permissions'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
-				),
-				'activity'	=> array
-				(
-					'text'	=> lang('Activity'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
-				),
-				'audience'	=> array
-				(
-					'text'	=> lang('Audience'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
-				),
-				'agegroup'	=> array
-				(
-					'text'	=> lang('Agegroup'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
-				),
-				'async_settings'	=> array
-				(
-					'text'	=> lang('Asynchronous Tasks'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
-				),
-			);
+					'index'	=> array
+					(
+						'text'	=> lang('Configuration'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'booking') )
+					),
+					'permissions'	=> array
+					(
+						'text'	=> lang('Root Permissions'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+					),
+					'activity'	=> array
+					(
+						'text'	=> lang('Activity'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
+					),
+					'audience'	=> array
+					(
+						'text'	=> lang('Audience'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
+					),
+					'agegroup'	=> array
+					(
+						'text'	=> lang('Agegroup'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
+					),
+					'async_settings'	=> array
+					(
+						'text'	=> lang('Asynchronous Tasks'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
+					),
+				);
+			}
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;

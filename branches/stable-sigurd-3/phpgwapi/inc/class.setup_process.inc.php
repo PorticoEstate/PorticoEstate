@@ -356,9 +356,10 @@
 				$appname = isset($setup_info[$key]['name']) ? $setup_info[$key]['name'] : '';
 				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
-				if( isset($setup_info[$key]['tables'])
-					&& $setup_info[$key]['tables']
-					&& file_exists($appdir.'default_records.inc.php'))
+//				if( isset($setup_info[$key]['tables'])
+//					&& $setup_info[$key]['tables']
+//					&& file_exists($appdir.'default_records.inc.php'))
+				if( file_exists($appdir.'default_records.inc.php'))
 				{
 					if($DEBUG)
 					{

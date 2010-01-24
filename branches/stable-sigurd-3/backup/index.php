@@ -34,4 +34,4 @@
 	include('../header.inc.php');
 
 	$GLOBALS['phpgw']->redirect_link('/index.php','menuaction=backup.uibackup.web_backup');
-?>
+
