@@ -280,13 +280,8 @@
 			}
 
 			$filter_location	= isset($data['filter_location']) ? $data['filter_location'] : '';
-			if(!$filter_location)
-			{
-				$filter_location = phpgwapi_cache::session_get('property', 'filter_location');
-				phpgwapi_cache::session_clear('property', 'filter_location');
-			}
 			$block_query 		= !!$filter_location;
-			$location_link		= "menuaction:'property.uilocation.index',lookup:1,location_code:'{$filter_location}',block_query:'{$block_query}'";
+			$location_link		= "menuaction:'property.uilocation.index',lookup:1";
 
 			$config = $this->soadmin_location->read_config('');
 
@@ -354,6 +349,7 @@
 					$lookup_functions[] = array
 					(
 						'name' 						=> 'lookup_loc' . ($i+1) . '()',
+						'filter_level'				=> $i,
 						'link'						=>  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i,
 						'action' 					=> 'Window1=window.open(strURL,"Search","width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 					);
@@ -443,6 +439,7 @@
 						$lookup_functions[] = array
 						(
 							'name' 						=> 'lookup_loc' . ($m+1) . '()',
+							'filter_level'				=> $m,
 							'link'						=> $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
 							'action' 					=> 'Window1=window.open(strURL,"Search","width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 						);
@@ -583,10 +580,51 @@
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
 				$location['lookup_functions'] = '';
+				$filter_level = 0;
 				for ($j=0;$j<count($lookup_functions);$j++)
 				{
+					if(isset( $lookup_functions[$j]['filter_level']) && $lookup_functions[$j]['filter_level'] > 0)
+					{
+						$lookup_functions[$j]['link'] .= ",block_query:block,location_code:filter";
+						$_filter = array();
+						for ($i=1;$i<=$lookup_functions[$j]['filter_level'];$i++)
+						{
+							$_filter[] = "document.form.loc{$i}.value";
+						}
+						$filter_level = $lookup_functions[$j]['filter_level'];
+					}
+					else
+					{
+						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
+					}
+					
 					$location['lookup_functions'] .= "\t".'function ' . $lookup_functions[$j]['name'] ."\n";
 					$location['lookup_functions'] .= "\t".'{'."\n";
+					if($filter_level)
+					{
+						$location['lookup_functions'] .= "
+						var block = '';
+						var filter = '';
+						var filter_level = {$filter_level};
+						if (filter_level) 
+						{
+							for(i=1;i<=filter_level;i++)
+							{
+								if(eval('document.form.loc'+i+'.value'))
+								{
+									block = true;
+									if(!filter)
+									{
+										filter = eval('document.form.loc'+i+'.value');
+									}
+									else
+									{
+										filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+									}
+								}
+							}
+						}";
+					}
 					$location['lookup_functions'] .= "\t\tvar oArgs = {" . $lookup_functions[$j]['link'] ."};" . "\n";
 					$location['lookup_functions'] .= "\t\tvar strURL = phpGWLink('index.php', oArgs);\n";
 					$location['lookup_functions'] .= "\t\t".$lookup_functions[$j]['action'] ."\n";
