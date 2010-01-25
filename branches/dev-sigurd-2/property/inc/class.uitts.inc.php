@@ -650,7 +650,7 @@
 				(
 					'bgcolor'			=> '#5EFB6E',
 					'status'			=> lang('closed'),
-					'text_edit_status'	=> lang('Open'),
+					'text_edit_status'	=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
 					'new_status' 		=> 'O'
 				);
 
@@ -674,7 +674,7 @@
 						if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= lang('Open');
+							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
 						}
 						else if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='C')
 						{
@@ -1008,7 +1008,7 @@
 			{
 				if ($ticket['status']=='O')
 				{
-					$status = lang('Open');
+					$status = isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
 				}
 				else
 				{
@@ -1262,7 +1262,7 @@
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'filter_name'					=> 'filter',
 				'filter_list'					=> $this->bo->filter(array('format' => 'filter', 'filter'=> $this->status_id,'default' => 'open')),
-				'lang_show_all'					=> lang('Open'),
+				'lang_show_all'					=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
 				'lang_filter_statustext'		=> lang('Select the filter. To show all entries select SHOW ALL'),
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
@@ -1553,6 +1553,8 @@
 				'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
 				'select_priority_name'			=> 'values[priority]',
 				'priority_list'				=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
+
+				'status_list'				=> $this->bo->get_status_list('O'),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_subject'				=> lang('Subject'),
