@@ -78,6 +78,32 @@ class rental_sobilling_info extends rental_socommon
 			$billing_info->set_term_id($this->unmarshal($this->db->f('term_id'),'int'));
 			$billing_info->set_year($this->unmarshal($this->db->f('year'),'int'));
 			$billing_info->set_month($this->unmarshal($this->db->f('month'),'int'));
+			if($billing_info->get_term_id() == 2){ // yearly
+				$billing_info->set_term_label(lang('annually'));
+			}
+			else if($billing_info->get_term_id() == 3){ // half year
+				if($billing_info->get_month() == 7){
+					$billing_info->set_term_label(lang('first_half'));
+				}
+				else{
+					$billing_info->set_term_label(lang('second_half'));
+				}
+				
+			}
+			else if($billing_info->get_term_id() == 4){ // quarterly
+				if($billing_info->get_month() == 3){
+					$billing_info->set_term_label(lang('first_quarter'));
+				}
+				else if($billing_info->get_month() == 6){
+					$billing_info->set_term_label(lang('second_quarter'));
+				}
+				else if($billing_info->get_month() == 9){
+					$billing_info->set_term_label(lang('third_quarter'));
+				}
+				else{
+					$billing_info->set_term_label(lang('fourth_quarter'));
+				}
+			}
 		}
 		return $billing_info;
 	}

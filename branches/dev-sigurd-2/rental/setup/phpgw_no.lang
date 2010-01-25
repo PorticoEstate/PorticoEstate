@@ -149,8 +149,11 @@ Finish	rental	no	Avslutt
 fire_drawings	rental	no	Branntegninger
 firstname	rental	no	Fornavn
 first	rental	no	Første
+first_half	rental	no	1. halvår
+first_quarter	rental	no	1. kvartal
 fixed	rental	no	Tidsbestemt
 floor	rental	no	Etasje
+fourth_quarter	rental	no	4. kvartal
 f_new_contract	rental	no	Opprett kontrakt
 f_new_party	rental	no	Ny kontraktspart
 f_new_price_item	rental	no	Nytt priselement
@@ -345,6 +348,8 @@ search_for	rental	no	Søk etter
 search_options	rental	no	Søkevalg
 search	rental	no	Søk
 search_where	rental	no	i
+second_half	rental	no	2. halvår
+second_quarter	rental	no	2. kvartal
 section	rental	no	Seksjon
 security	rental	no	Sikkerhet
 security_amount	rental	no	Sikkerhetsbeløp
@@ -380,6 +385,7 @@ terminated_contract	rental	no	Under opphør
 terminated_contracts	rental	no	Opphørte kontrakter
 the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
 thousands separator	rental	no	Skilletegn for tusen
+third_quarter	rental	no	3. kvartal
 t_functions	rental	no	Funksjoner
 title	rental	no	Tittel
 t_new_composite	rental	no	Opprett nytt leieobjekt

@@ -31,6 +31,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 					<td><?php echo lang('year') ?></td>
 					<td><?php echo $billing_info->get_year(); ?></td>
 				</tr>
+				<?php if($billing_info->get_term_id() == 1){?>
 				<tr>
 					<td><?php echo lang('month') ?></td>
 					<td><?php echo lang('month ' . $billing_info->get_month() . ' capitalized') ?></td>
@@ -51,6 +52,15 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 						?>
 					</td>
 				</tr>
+				<?php }
+				else { ?>
+				<tr>
+					<td>
+						<label for="billing_term"><?php echo lang('billing_term') ?></label>
+					</td>
+					<td><?php echo $billing_info->get_term_label()?></td>
+				</tr>
+				<?php }?>
 				<?php 	}
 					}?>
 				<tr>

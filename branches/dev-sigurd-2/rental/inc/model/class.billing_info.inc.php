@@ -11,6 +11,7 @@ class rental_billing_info extends rental_model
 	protected $month;
 	protected $year;
 	protected $deleted;
+	protected $term_label;
 	
 	public static $so;
 	
@@ -103,6 +104,16 @@ class rental_billing_info extends rental_model
 			'year'				=> $this->get_year(),
 			'month'				=> $this->get_month()
 		);
+	}
+	
+	public function get_term_label()
+	{
+		return $this->term_label;
+	}
+	
+	public function set_term_label($term_label)
+	{
+		$this->term_label = $term_label;
 	}
 }
 ?>
