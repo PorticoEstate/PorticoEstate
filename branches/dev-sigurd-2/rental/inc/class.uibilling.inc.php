@@ -94,7 +94,7 @@ class rental_uibilling extends rental_uicommon
 			$billing_term_tmp = phpgw::get_var('billing_term');
 			$billing_term = substr($billing_term_tmp,0,1);
 			$billing_month = substr($billing_term_tmp,2);
-			var_dump($billing_month);
+			
 			if($billing_term == '1'){ // monthly
 				$month = $billing_month;
 			}
@@ -153,34 +153,37 @@ class rental_uibilling extends rental_uicommon
 				// We only give a warning and let the user go to step 2
 				$warningMsgs[] = lang('the period has been billed before.');
 			}
-			$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
-			$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-	
-			$socontract_price_item = rental_socontract_price_item::get_instance();
-			foreach($contracts as $id => $contract)
-			{	
-				if(isset($contract))
-				{
-					$total_price = $socontract_price_item->get_total_price($contract->get_id());
-					$type_id = $contract->get_contract_type_id();
-					
-					if($type_id == 4)
+			else
+			{
+				$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+				$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+		
+				$socontract_price_item = rental_socontract_price_item::get_instance();
+				foreach($contracts as $id => $contract)
+				{	
+					if(isset($contract))
 					{
-						$warningMsgs[] = "Removed KF contract " . $contract->get_old_contract_id();
-						$contracts[$id] = null;
-					} 
-					else if(isset($total_price) && $total_price == 0)
-					{
-						$warningMsgs[] = "Removed contract " . $contract->get_old_contract_id() . " with total price equal to 0";
-						$contracts[$id] = null;
-					}
-					else
-					{
-						$contract->set_total_price($total_price);
+						$total_price = $socontract_price_item->get_total_price($contract->get_id());
+						$type_id = $contract->get_contract_type_id();
+						
+						if($type_id == 4)
+						{
+							$warningMsgs[] = "Removed KF contract " . $contract->get_old_contract_id();
+							$contracts[$id] = null;
+						} 
+						else if(isset($total_price) && $total_price == 0)
+						{
+							$warningMsgs[] = "Removed contract " . $contract->get_old_contract_id() . " with total price equal to 0";
+							$contracts[$id] = null;
+						}
+						else
+						{
+							$contract->set_total_price($total_price);
+						}
 					}
 				}
 			}
-			
+				
 			$data = array
 			(
 				'contracts' => $contracts,

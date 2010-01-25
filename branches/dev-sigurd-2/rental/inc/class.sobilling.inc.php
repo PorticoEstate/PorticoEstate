@@ -200,15 +200,8 @@ class rental_sobilling extends rental_socommon
 			$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
 			$total_sum = $billing->get_total_sum();
 		}
-		$billing_info = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => $billing->get_id()));
-		if($billing_info){
-			if(!($billing_info->get_term_id() == $billing_term)){ //create new billing_info
-				$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
-			}
-		}
-		else{
-			$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
-		}
+
+		$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
 		$res = rental_sobilling_info::get_instance()->store($billing_info);
 		
 		// Get the number of months in selected term for contract
