@@ -162,11 +162,16 @@ class rental_uibilling extends rental_uicommon
 				if(isset($contract))
 				{
 					$total_price = $socontract_price_item->get_total_price($contract->get_id());
-					if(!isset($title)){
-						$title = $contract->get_contract_type_title();
-					}
-					if((isset($total_price) && $total_price == 0) || $title == "KF")
+					$type_id = $contract->get_contract_type_id();
+					
+					if($type_id == 4)
 					{
+						$warningMsgs[] = "Removed KF contract " . $contract->get_old_contract_id();
+						$contracts[$id] = null;
+					} 
+					else if(isset($total_price) && $total_price == 0)
+					{
+						$warningMsgs[] = "Removed contract " . $contract->get_old_contract_id() . " with total price equal to 0";
 						$contracts[$id] = null;
 					}
 					else
