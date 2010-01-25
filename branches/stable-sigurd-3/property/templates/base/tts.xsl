@@ -388,7 +388,7 @@
 
 <!-- add -->
 
-	<xsl:template match="add">
+	<xsl:template match="add" xmlns:php="http://php.net/xsl">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -441,93 +441,91 @@
 
 			<xsl:choose>
 				<xsl:when test="simple !='1'">
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_group"/>
-				</td>
-				<td>
-					<xsl:call-template name="group_select"/>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_assign_to"/>
-				</td>
-				<td>
-					<xsl:call-template name="user_id_select"/>
-				</td>
-			</tr>
-			<xsl:call-template name="contact_form"/>	
-			<xsl:choose>
-				<xsl:when test="mailnotification != ''">
 					<tr>
-						<td>
-							<xsl:value-of select="lang_mailnotification"/>
+						<td valign="top">
+							<xsl:value-of select="lang_group"/>
 						</td>
 						<td>
-							<xsl:choose>
-									<xsl:when test="pref_send_mail = 1">
-										<input type="checkbox" name="values[send_mail]" value="1" checked="checked" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_mailnotification_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
-											</xsl:attribute>
-										</input>
-									</xsl:when>
-									<xsl:otherwise>
-										<input type="checkbox" name="values[send_mail]" value="1" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_mailnotification_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
-											</xsl:attribute>
-										</input>
-									</xsl:otherwise>
-							</xsl:choose>
+							<xsl:call-template name="group_select"/>
 						</td>
 					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_assign_to"/>
+						</td>
+						<td>
+							<xsl:call-template name="user_id_select"/>
+						</td>
+					</tr>
+					<xsl:call-template name="contact_form"/>	
+					<xsl:choose>
+						<xsl:when test="mailnotification != ''">
+							<tr>
+								<td>
+									<xsl:value-of select="lang_mailnotification"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[send_mail]" value="1" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
+										</xsl:attribute>
+										<xsl:if test="pref_send_mail = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="lang_priority"/>
+						</td>
+						<td>
+							<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
+							<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
+							<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<xsl:apply-templates select="priority_list"/>
+							</select>			
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+		    		        <xsl:value-of select="php:function('lang', 'status')" />
+						</td>
+						<td>
+							<select name="values[status]" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
+								</xsl:attribute>
+								<xsl:apply-templates select="status_list"/>
+							</select>			
+						</td>
+					</tr>
+					<xsl:choose>
+						<xsl:when test="show_finnish_date ='1'">
+							<tr>
+								<td>
+									<xsl:value-of select="lang_finnish_date"/>
+								</td>
+								<td>
+									<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_finnish_date_statustext"/>
+										</xsl:attribute>
+									</input>
+									<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
 				</xsl:when>
 			</xsl:choose>
-
-
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_priority"/>
-				</td>
-				<td>
-				<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
-				<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
-					<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-							<xsl:apply-templates select="priority_list"/>
-					</select>			
-				</td>
-			</tr>
-			<xsl:choose>
-				<xsl:when test="show_finnish_date ='1'">
-					<tr>
-						<td>
-							<xsl:value-of select="lang_finnish_date"/>
-						</td>
-						<td>
-							<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_finnish_date_statustext"/>
-								</xsl:attribute>
-							</input>
-							<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-						</td>
-					</tr>
-			</xsl:when>
-			</xsl:choose>
-
-			</xsl:when>
-			</xsl:choose>
-
-
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_subject"/>
+					<xsl:value-of select="php:function('lang', 'subject')" />
 				</td>
 				<td>
 					<input type="text" name="values[subject]" value="{value_subject}" onMouseout="window.status='';return true;">
@@ -942,22 +940,16 @@
 							<xsl:value-of select="php:function('lang', 'Send e-mail')" />
 						</td>
 						<td>
-							<xsl:choose>
-									<xsl:when test="pref_send_mail = 1">
-										<input type="checkbox" name="values[send_mail]" value="1" checked="checked">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
-											</xsl:attribute>
-										</input>
-									</xsl:when>
-									<xsl:otherwise>
-										<input type="checkbox" name="values[send_mail]" value="1">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
-											</xsl:attribute>
-										</input>
-									</xsl:otherwise>
-							</xsl:choose>
+							<input type="checkbox" name="values[send_mail]" value="1" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
+								</xsl:attribute>
+								<xsl:if test="pref_send_mail = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
 						</td>
 					</tr>
 				</xsl:when>
@@ -1729,28 +1721,23 @@
 
 
 	<xsl:template match="priority_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
 
 	<xsl:template match="status_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
+
 
 	<xsl:template match="vendor_email">
 	<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>

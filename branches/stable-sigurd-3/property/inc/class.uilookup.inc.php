@@ -153,7 +153,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.addressbook',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}',"
@@ -406,7 +406,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.vendor',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}',"
@@ -632,7 +632,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.b_account',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";
@@ -832,7 +832,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.street',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";
@@ -1043,7 +1043,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.tenant',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";
@@ -1244,7 +1244,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ns3420',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";
@@ -1758,7 +1758,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.phpgw_user',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}',"
@@ -1980,7 +1980,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.project_group',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";
@@ -2179,7 +2179,7 @@
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ecodimb',"
-	    											."second_display:'{true}',"
+	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
  	                        						."filter:'{$this->filter}'";

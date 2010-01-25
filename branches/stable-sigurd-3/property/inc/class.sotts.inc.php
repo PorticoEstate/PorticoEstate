@@ -447,7 +447,7 @@
 				$ticket['group_id'],
 				$this->db->db_addslashes($ticket['subject']),
 				$ticket['cat_id'],
-				'O',
+				$ticket['status'],
 				$this->db->db_addslashes($ticket['details']),
 				$ticket['location_code'],
 				$address,

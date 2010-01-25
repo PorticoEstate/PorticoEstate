@@ -57,12 +57,6 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uievent.index') ),
 						                    'image'	=> array('property', 'location'),
 						),
-						'completed_reservations' => array
-						(
-							'text'	=> lang('Completed'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
-						                    'image'	=> array('property', 'location'),
-						),
 					)
 				),
 				'buildings' => array
@@ -154,6 +148,12 @@
 					'image'	=> array('property', 'location'),
 					'children' => array
 					(
+						'completed_reservations' => array
+						(
+							'text'	=> lang('Completed'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
+						                    'image'	=> array('property', 'location'),
+						),
 						'generated_files' => array
 						(
 							'text'	=> lang('Generated Files'),
@@ -185,48 +185,50 @@
                         )       
                     )       
                 ),      
-
-				
-				'settings' => array
-				(
-					'text'	=> lang('Settings'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking')),
-					'image' => array('admin', 'navbar'),
-					'children' => array
-					(
-						'permissions'	=> array
-						(
-							'text'	=> lang('Root Permissions'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
-						),
-						'activity'	=> array
-						(
-							'text'	=> lang('Activity'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
-						),
-						'audience'	=> array
-						(
-							'text'	=> lang('Audience'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
-						),
-						'agegroup'	=> array
-						(
-							'text'	=> lang('Age group'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
-						),
-						'account_code_sets'	=> array
-						(
-							'text'	=> lang('Account Codes'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaccount_code_set.index', 'appname' => 'booking') )
-						),
-						'async_settings'	=> array
-						(
-							'text'	=> lang('Asynchronous Tasks'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
-						),
-					)
-				),
 			);
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$menus['navigation']['settings'] = array
+					(
+						'text'	=> lang('Settings'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking')),
+						'image' => array('admin', 'navbar'),
+						'children' => array
+						(
+							'permissions'	=> array
+							(
+								'text'	=> lang('Root Permissions'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+							),
+							'activity'	=> array
+							(
+								'text'	=> lang('Activity'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index', 'appname' => 'booking') )
+							),
+							'audience'	=> array
+							(
+								'text'	=> lang('Audience'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaudience.index', 'appname' => 'booking') )
+							),
+							'agegroup'	=> array
+							(
+								'text'	=> lang('Age group'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiagegroup.index', 'appname' => 'booking') )
+							),
+							'account_code_sets'	=> array
+							(
+								'text'	=> lang('Account Codes'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaccount_code_set.index', 'appname' => 'booking') )
+							),
+							'async_settings'	=> array
+							(
+								'text'	=> lang('Asynchronous Tasks'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
+							),
+						)
+					);
+			}
+
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
 			{

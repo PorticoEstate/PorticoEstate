@@ -108,13 +108,14 @@
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
-				$this->limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
-				$this->limit = 15;
+				$limit = 15;
 			}
 
+			$limit		= $this->allrows ? 0 : $limit;
 		    $fields[0] = 'per_first_name';
 		    $fields[1] = 'per_last_name';
 		    $fields[2] = 'per_department';
@@ -138,7 +139,7 @@
 			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
 			$this->total_records = $addressbook->get_count_persons($criteria);
 
-			$contacts = $addressbook->get_persons($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+			$contacts = $addressbook->get_persons($fields, $this->start, $limit, $this->order, $this->sort, '', $criteria);
 
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			$user_contacts = array();
