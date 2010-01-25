@@ -124,12 +124,12 @@ class rental_sobilling_info extends rental_socommon
 		
 		// Build a db-friendly array of the composite object
 		$values = array(
-			$billing_info->get_billing_id(),
-			$billing_info->get_term_id(),
-			$billing_info->get_location_id(),
-			$billing_info->get_month(),
-			$billing_info->get_year(),
-			($billing_info->is_deleted() ? "true" : "false")
+			"billing_id = " . $this->marshal($billing_info->get_billing_id(), 'int'),
+			"term_id = " . $this->marshal($billing_info->get_term_id(), 'int'),
+			"location_id = " . $this->marshal($billing_info->get_location_id(), 'int'),
+			"month = " . $this->marshal($billing_info->get_month(), 'int'),
+			"year = " . $this->marshal($billing_info->get_year(), 'int'),
+			"deleted = " . $billing_info->is_deleted() ? "true" : "false"
 		);
 
 		$this->db->query('UPDATE billing_info SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
