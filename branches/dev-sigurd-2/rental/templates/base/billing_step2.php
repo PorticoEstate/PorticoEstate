@@ -19,6 +19,9 @@ var toggleAll = function (target_tag_name, source_tag_name)
 	<input type="hidden" name="contract_type" value="<?php echo $contract_type ?>"/>
 	<input type="hidden" name="year" value="<?php echo $year ?>"/>
 	<input type="hidden" name="month" value="<?php echo $month ?>"/>
+	<input type="hidden" name="title" value="<?php echo $title ?>"/>
+	<input type="hidden" name="use_existing" value="<?php echo $use_existing ?>"/>
+	<input type="hidden" name="existing_billing" value="<?php echo $existing_billing ?>"/>
 	<input type="hidden" name="billing_term" value="<?php echo $billing_term ?>"/>
 	<input type="hidden" name="export_format" value="<?php echo $export_format ?>"/>
 	<div>
@@ -37,6 +40,10 @@ var toggleAll = function (target_tag_name, source_tag_name)
 					}
 				?>
 				</td>
+			</tr>
+			<tr>
+				<td><?php echo lang('title') ?></td>
+				<td><?php echo $title ?></td>
 			</tr>
 			<tr>
 				<td><?php echo lang('year') ?></td>
@@ -198,7 +205,9 @@ var toggleAll = function (target_tag_name, source_tag_name)
 										?>
 										<input name="contract[]" value="<?php echo $contract->get_id() ?>" type="checkbox" />
 										<?php 
-											}
+											}else{?>
+												<input name="contract[]" value="<?php echo $contract->get_id() ?>" type="hidden"/>
+										<?php }
 										?>
 									</div>
 								</td>

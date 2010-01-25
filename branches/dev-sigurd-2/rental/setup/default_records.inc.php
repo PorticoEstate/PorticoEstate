@@ -254,9 +254,9 @@ else
 	$rental_manager		= $GLOBALS['phpgw']->accounts->name2id('rental_manager');
 }
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001','9')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number, agresso_export_format) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001','9', 'agresso_gl07')");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '1510')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out, agresso_export_format) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '1510', 'agresso_lg04')");
 
 $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'Egne', 1)");
 $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'Innleie', 1)");
@@ -270,7 +270,7 @@ $oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, 
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('half-year','6')");
-$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','4')");
+$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','3')");
 
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', 'Y900', true, 23.00)");

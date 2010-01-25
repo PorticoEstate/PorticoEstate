@@ -94,6 +94,7 @@ count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
 count_suffix	rental	no	stk
 count_suffix	rental	no	stk
+create_billing	rental	no	Opprett fakturakjøring
 create_shortcut	rental	no	Ny snarvei
 create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
 create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
@@ -232,16 +233,16 @@ month 9	rental	no	september
 month 10	rental	no	oktober
 month 11	rental	no	november
 month 12	rental	no	desember
-month 1 capitalized	rental	no	Januar - 2. halvår (foregående år) - 4. kvartal (foregående år)
+month 1 capitalized	rental	no	Januar
 month 2 capitalized	rental	no	Februar
 month 3 capitalized	rental	no	Mars
-month 4 capitalized	rental	no	April - 1. kvartal
+month 4 capitalized	rental	no	April
 month 5 capitalized	rental	no	Mai
 month 6 capitalized	rental	no	Juni
-month 7 capitalized	rental	no	Juli - 1. halvår - 2. kvartal
+month 7 capitalized	rental	no	Juli
 month 8 capitalized	rental	no	August
 month 9 capitalized	rental	no	September
-month 10 capitalized	rental	no	Oktober - 3. kvartal
+month 10 capitalized	rental	no	Oktober
 month 11 capitalized	rental	no	November
 month 12 capitalized	rental	no	Desember
 monthly	rental	no	Månedlig
@@ -249,6 +250,7 @@ month	rental	no	Måned
 name	rental	no	Navn
 never	rental	no	Aldri
 new_notification	rental	no	Nytt varsel
+new_billing	rental	no	Ny fakturering
 next	rental	no	Neste
 nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet

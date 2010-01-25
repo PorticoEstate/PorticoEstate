@@ -15,6 +15,7 @@ class rental_billing extends rental_model
 	protected $billing_term;
 	protected $year;
 	protected $month;
+	protected $title;
 	protected $success;
 	protected $total_sum;
 	protected $timestamp_start;
@@ -26,13 +27,11 @@ class rental_billing extends rental_model
 	
 	public static $so;
 	
-	public function __construct(int $id, int $location_id, int $billing_term, int $year, int $month, int $created_by)
+	public function __construct(int $id, int $location_id, $title, int $created_by)
 	{
 		$this->id = (int)$id;
 		$this->location_id = (int)$location_id;
-		$this->billing_term = (int)$billing_term;
-		$this->year = (int)$year;
-		$this->month = (int)$month;
+		$this->title = $title;
 		$this->success = false;
 		$this->created_by = (int)$created_by;
 		$this->has_generated_export = false;
@@ -131,18 +130,7 @@ class rental_billing extends rental_model
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		$description = '';
 		$location_id = $this->get_location_id();
-		$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-		foreach($fields as $id => $label)
-		{
-			if($id == $location_id)
-			{
-				$description = lang($label) . ' ';
-			}
-		}
-		$description .= lang('month ' . $this->get_month()) . ' ';
-		$description .= $this->get_year();
 		$account = $GLOBALS['phpgw']->accounts->get($this->get_created_by());
 		$timestamp_commit = '';
 		if($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
@@ -151,12 +139,22 @@ class rental_billing extends rental_model
 		}
 		return array(
 			'id'				=> $this->get_id(),
-			'description'		=> $description,
+			'description'		=> $this->get_title(),
 			'total_sum'			=> $this->get_total_sum(),
 			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
 			'timestamp_commit'	=> $timestamp_commit,
-			'created_by'		=> "{$account->__get('firstname')} {$account->__get('lastname')}"
+			'created_by'		=> "{$account->firstname} {$account->lastname}"
 		);
+	}
+	
+	public function get_title()
+	{
+		return $this->title;
+	}
+	
+	public function set_title($title)
+	{
+		$this->title = $title;
 	}
 	
 }

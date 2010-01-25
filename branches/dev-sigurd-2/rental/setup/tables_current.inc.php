@@ -60,7 +60,8 @@
 				'notify_after_termination_date' => array('type' => 'int','precision' => '4','nullable' => false),
 				'account_in'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_out'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'project_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'project_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'agresso_export_format' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -286,9 +287,7 @@
 				'timestamp_stop'	=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'timestamp_commit'	=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
-				'term_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'year'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'month'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'title'				=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'deleted'			=> array('type' => 'bool', 'default' => 'false'),
 				'export_format'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'export_data'		=> array('type' => 'blob', 'nullable' => true)
@@ -296,8 +295,24 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'phpgw_locations'		=> array('location_id' => 'location_id'),
-				'rental_billing_term'	=> array('term_id' => 'id'),
 				'phpgw_accounts'		=> array('created_by' => 'account_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_billing_info' => array(
+			'fd' => array(
+				'id'				=> array('type' => 'auto', 'nullable' => false),
+				'billing_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
+				'term_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'year'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'month'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'deleted'			=> array('type' => 'bool', 'default' => 'false')
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_billing'	=> array('billing_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()

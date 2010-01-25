@@ -25,13 +25,15 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 					?>
 					</td>
 				</tr>
+				<?php if($billing_info_array != null){
+						foreach($billing_info_array as $billing_info){?>
 				<tr>
 					<td><?php echo lang('year') ?></td>
-					<td><?php echo $billing_job->get_year(); ?></td>
+					<td><?php echo $billing_info->get_year(); ?></td>
 				</tr>
 				<tr>
 					<td><?php echo lang('month') ?></td>
-					<td><?php echo lang('month ' . $billing_job->get_month() . ' capitalized') ?></td>
+					<td><?php echo lang('month ' . $billing_info->get_month() . ' capitalized') ?></td>
 				</tr>
 				<tr>
 					<td>
@@ -41,7 +43,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 						<?php
 						foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 						{
-							if($term_id == $billing_job->get_billing_term())
+							if($term_id == $billing_info->get_term_id())
 							{
 								echo lang($term_title);
 							}
@@ -49,6 +51,8 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 						?>
 					</td>
 				</tr>
+				<?php 	}
+					}?>
 				<tr>
 					<td><?php echo lang('sum') ?></td>
 					<td><?php echo number_format($billing_job->get_total_sum(), isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2, isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',',lang('currency_thousands_separator')); echo ' '.((isset($config->config_data['currency_suffix']) && $config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : 'NOK');?></td>

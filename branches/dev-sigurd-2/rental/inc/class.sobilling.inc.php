@@ -1,7 +1,9 @@
 <?php
 phpgw::import_class('rental.socommon');
+phpgw::import_class('rental.sobilling_info');
 include_class('rental', 'agresso_gl07', 'inc/model/');
 include_class('rental', 'agresso_lg04', 'inc/model/');
+include_class('rental', 'billing_info', 'inc/model/');
 
 class rental_sobilling extends rental_socommon
 {
@@ -28,6 +30,11 @@ class rental_sobilling extends rental_socommon
 		{
 			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
+		if(isset($filters['location_id']))
+		{
+			$location_id = $this->marshal($filters['location_id'], 'int');
+			$filter_clauses[] = "location_id=$location_id";
+		}
 		$filter_clauses[] = "deleted = false";
 		if(count($filter_clauses))
 		{
@@ -43,7 +50,7 @@ class rental_sobilling extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, term_id, year, month, export_format, export_data';
+			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, export_format, export_data';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY timestamp_stop DESC';
 		}
@@ -54,7 +61,7 @@ class rental_sobilling extends rental_socommon
 	{
 		if($billing == null)
 		{
-			$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('term_id', true), $this->db->f('year', true), $this->db->f('month', true), $this->db->f('created_by', true));
+			$billing = new rental_billing($this->db->f('id', true), $this->db->f('location_id', true), $this->db->f('title', true), $this->db->f('created_by', true));
 			$billing->set_success($this->db->f('success', true));
 			$billing->set_total_sum($this->db->f('total_sum', true));
 			$billing->set_timestamp_start($this->db->f('timestamp_start', true));
@@ -85,13 +92,11 @@ class rental_sobilling extends rental_socommon
 			$this->marshal($billing->get_timestamp_stop(), 'int'),
 			$this->marshal($billing->get_timestamp_commit(), 'int'),
 			$this->marshal($billing->get_location_id(), 'int'),
-			$this->marshal($billing->get_billing_term(), 'int'),
-			$this->marshal($billing->get_year(), 'int'),
-			$this->marshal($billing->get_month(), 'int'),
+			$this->marshal($billing->get_title(), 'string'),
 			$billing->is_deleted() ? 'true' : 'false',
 			$this->marshal($billing->get_export_format(), 'string'),
 		);
-		$query ="INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, term_id, year, month, deleted, export_format) VALUES (" . join(',', $values) . ")";
+		$query ="INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, deleted, export_format) VALUES (" . join(',', $values) . ")";
 		$receipt = null;
 		if($this->db->query($query))
 		{
@@ -111,9 +116,7 @@ class rental_sobilling extends rental_socommon
 			'timestamp_stop = ' . $this->marshal($billing->get_timestamp_stop(), 'int'),
 			'timestamp_commit = ' . $this->marshal($billing->get_timestamp_commit(), 'int'),
 			'location_id = ' . $this->marshal($billing->get_location_id(), 'int'),
-			'term_id = ' . $this->marshal($billing->get_billing_term(), 'int'),
-			'year = ' . $this->marshal($billing->get_year(), 'int'),
-			'month = ' . $this->marshal($billing->get_month(), 'int'),
+			'title = ' . $this->marshal($billing->get_title(), 'string'),
 			"deleted = '" . ($billing->is_deleted() ? 'true' : 'false') . "'",
 			'export_format = ' . $this->marshal($billing->get_export_format(), 'string'),
 		);
@@ -129,7 +132,7 @@ class rental_sobilling extends rental_socommon
 	{
 		if($this->billing_terms == null)
 		{
-			$sql = "SELECT id, title FROM rental_billing_term";
+			$sql = "SELECT id, title FROM rental_billing_term ORDER BY months DESC";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$results = array();
 			while($this->db->next_record()){
@@ -178,17 +181,35 @@ class rental_sobilling extends rental_socommon
 		return $missing_billing_info;
 	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing)
 	{
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
-		$billing = new rental_billing(-1, $contract_type, $billing_term, $year, $month, $created_by); // The billing job itself
-		$billing->set_timestamp_start(time()); // Start of run
-		$billing->set_export_format($export_format);
-		$this->store($billing); // Store job as it is
-		$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
-		$counter = 0;
-		$total_sum = 0;
+		if($existing_billing < 1){ //new billing
+			$billing = new rental_billing(-1, $contract_type, $title, $created_by); // The billing job itself
+			$billing->set_timestamp_start(time()); // Start of run
+			$billing->set_export_format($export_format);
+			$billing->set_title($title);
+			$this->store($billing); // Store job as it is
+			$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
+			$counter = 0;
+			$total_sum = 0;
+		}
+		else{
+			$billing = $this->get_single($existing_billing);
+			$billing_end_timestamp = strtotime('-1 day', strtotime(($month == 12 ? ($year + 1) : $year) . '-' . ($month == 12 ? '01' : ($month + 1)) . '-01')); // Last day of billing period is the last day of the month we're billing
+			$total_sum = $billing->get_total_sum();
+		}
+		$billing_info = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => $billing->get_id()));
+		if($billing_info){
+			if(!($billing_info->get_term_id() == $billing_term)){ //create new billing_info
+				$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
+			}
+		}
+		else{
+			$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
+		}
+		$res = rental_sobilling_info::get_instance()->store($billing_info);
 		
 		// Get the number of months in selected term for contract
 		$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
@@ -227,7 +248,7 @@ class rental_sobilling extends rental_socommon
 	 */
 	public function has_been_billed($contract_type, $billing_term, $year, $month)
 	{
-		$sql = "SELECT COUNT(id) AS count FROM rental_billing WHERE location_id = {$this->marshal($contract_type,'int')} AND term_id = {$this->marshal($billing_term,'int')} AND year = {$this->marshal($year,'int')} AND month = {$this->marshal($month,'int')} AND deleted = false";
+		$sql = "SELECT COUNT(id) AS count FROM rental_billing_info WHERE location_id = {$this->marshal($contract_type,'int')} AND term_id = {$this->marshal($billing_term,'int')} AND year = {$this->marshal($year,'int')} AND month = {$this->marshal($month,'int')} AND deleted = false";
 		$result = $this->db->query($sql, __LINE__, __FILE__);
 		if($result && $this->db->next_record())
 		{
@@ -273,5 +294,15 @@ class rental_sobilling extends rental_socommon
 		return '';
 	}
 	
+	public function get_agresso_export_format($contract_type)
+	{
+		$sql = "SELECT agresso_export_format FROM rental_contract_responsibility WHERE location_id=$contract_type";
+		$result = $this->db->query($sql, __LINE__, __FILE__);
+		if($result && $this->db->next_record())
+		{
+			return $this->unmarshal($this->db->f('agresso_export_format', true), 'string');
+		}
+		return '';
+	}
 }
 ?>

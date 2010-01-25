@@ -7,23 +7,34 @@
 	<div>
 		<fieldset>
 			<h3><?php echo lang('field_of_responsibility') ?></h3>
-			<select name="contract_type" id="contract_type">
 				<?php 
 				$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 				foreach($fields as $id => $label)
 				{
-					$names = $this->locations->get_name($id);
-						if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
-						{
-							if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
-							{
-								?>
-								<option value="<?php echo $id ?>" <?php echo ($id == $contract_type ? 'selected="selected"' : '')?>><?php echo lang($label) ?></option>
-								<?php
-							}
-						}
+					if($id == $contract_type){
+					?>
+						<input type="hidden" name="contract_type" id="contract_type" value="<?php echo $id ?>"/>
+						<?php echo lang($label)?>
+					<?php 
+					}
 				}
 				?>
+		</fieldset>
+		<fieldset>
+			<h3><?php echo lang('title') ?></h3>
+			<input type="text" name="title" id="title"/>
+			<select name="existing_billing" id="existing_billing">
+				<option value="new_billing"><?php echo lang('new_billing')?></option>
+			<?php
+				$result_objects = rental_sobilling::get_instance()->get(null, null, null, null, null, null, array('location_id' => $contract_type));
+			 	foreach($result_objects as $billing){
+			 		if($billing->get_location_id() == $contract_type){
+			 			?>
+			 				<option value="<?php echo $billing->get_id()?>"><?php echo $billing->get_title()?></option>
+			 			<?php 
+			 		}
+			 	}
+			?>
 			</select>
 		</fieldset>
 		<fieldset>
@@ -42,40 +53,50 @@
 			</select>
 		</fieldset>
 		<fieldset>
-			<h3><?php echo lang('month') ?></h3>
-			<select name="month" id="month">
-				<?php 
-				$this_month = date('n');
-				for($i = 1; $i <= 12; $i++)
-				{
-					?>
-					<option value="<?php echo $i ?>"<?php echo $this_month == $i ? ' selected="selected"' : '' ?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
-					<?php
-				}
-				?>
-			</select>
-		</fieldset>
-		<fieldset>
 			<h3><?php echo lang('billing_term') ?></h3>
-			<select name="billing_term">
+			<select name="billing_term" id="billing_term">
 				<?php
+				$current=0;
 				foreach(rental_sobilling::get_instance()->get_billing_terms() as $term_id => $term_title)
 				{
 					?>
-					 <option value="<?php echo $term_id ?>" <?php echo ($term_id == $billing_term ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>
-					<?php
-				}
+					<optgroup label="<?php echo lang($term_title) ?>">
+					<?php if($current == 0){?>
+					<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>
+					<?php }
+					else if($current == 1){?>
+						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>1. halv&aring;r</option>
+						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>2. halv&aring;r</option>
+					<?php }
+					else if($current == 2){?>
+						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>1. kvartal</option>
+						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-2" == $billing_term ? 'selected="selected"' : '')?>>2. kvartal</option>
+						<option value="<?php echo $term_id ?>-3" <?php echo ($term_id."-3" == $billing_term ? 'selected="selected"' : '')?>>3. kvartal</option>
+						<option value="<?php echo $term_id ?>-4" <?php echo ($term_id."-4" == $billing_term ? 'selected="selected"' : '')?>>4. kvartal</option>
+					<?php }
+					else{?>
+					 <?php 
+						$this_month = date('n');
+						for($i = 1; $i <= 12; $i++)
+						{
+							?>
+							<option value="<?php echo $term_id ?>-<?php echo $i ?>"<?php echo ($term_id."-".$i == $billing_term ? ' selected="selected"' : '')?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
+							<?php
+						}
+					}
+					$current++;?>
+					</optgroup>
+			<?php }
 				?>
 			</select>
 		</fieldset>
 		<fieldset>
 			<h3><?php echo lang('Export format') ?></h3>
-			<select name="export_format">
-				<option value="agresso_gl07"><?php echo lang('agresso_gl07') ?></option>
-				<option value="agresso_lg04"><?php echo lang('agresso_lg04') ?></option>
-			</select>	
+			<input type="hidden" name="export_format" id="export_format" value="<?php echo $export_format?>"/>
+			<?php echo lang($export_format)?>	
 		</fieldset>
 		<fieldset>
+			<input type="submit" name="previous" value="<?php echo lang('previous') ?>"/>
 			<input type="submit" name="next" value="<?php echo lang('next') ?>"/>
 		</fieldset>
 		<div>&amp;nbsp;</div>
@@ -85,10 +106,3 @@
 		<div>&amp;nbsp;</div>
 	</div>
 </form>
-<?php 
-	$list_form = true;
-	$list_id = 'all_billings';
-	$url_add_on = '&amp;type='.$list_id;
-	$extra_cols = null;
-	include('billing_list_partial.php');
-?>
