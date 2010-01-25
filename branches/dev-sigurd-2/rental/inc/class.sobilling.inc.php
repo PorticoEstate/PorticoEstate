@@ -201,7 +201,7 @@ class rental_sobilling extends rental_socommon
 			$total_sum = $billing->get_total_sum();
 		}
 
-		$billing_info = new rental_billing_info($billing->get_id(), $contract_type, $billing_term, $year, $month);
+		$billing_info = new rental_billing_info(null, $billing->get_id(), $contract_type, $billing_term, $year, $month);
 		$res = rental_sobilling_info::get_instance()->store($billing_info);
 		
 		// Get the number of months in selected term for contract
