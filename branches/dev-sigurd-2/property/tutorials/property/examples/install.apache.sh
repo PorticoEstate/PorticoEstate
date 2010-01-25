@@ -63,14 +63,39 @@ PHP="php-5.3.1"
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  * Download: http://eaccelerator.net/
 #  */
-EACCELERATORTAR="eaccelerator-0.9.6-rc1.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.6-rc1"
-$PHP_PREFIX = "/usr/local"
+EACCELERATORTAR="eaccelerator-svn379.tar.gz"
+EACCELERATOR="eaccelerator-svn379"
+PHP_PREFIX="/usr/local"
 
 # APC as Alternative:
 # Download: http://pecl.php.net/package/APC
 # APCTAR="APC-3.1.2.tgz"
 # APC="APC-3.1.2"
+
+#/**
+#  * Oracle PDO-Support
+#  * Download: http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
+#  */
+
+ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"
+ORACLE="instantclient_11_2"
+ORACLEDEVELTAR="instantclient-sdk-linux32-11.2.0.1.zip"
+
+ORACLE_PDO=""
+
+# include the oracle pdo-driver in the install
+function include_oracle()
+{
+    unzip $1
+    rm /opt/$2 -rf
+    mv $2 /opt/
+    unzip $ORACLEDEVELTAR 
+    mv $2/sdk /opt/$2/
+    export ORACLE_HOME=/opt/$2/
+    ln -s /opt/$2/libclntsh.so.11.1 /opt/$2/libclntsh.so
+    ln -s /opt/$2/libocci.so.11.1 /opt/$2/libocci.so
+    ln -s /opt/$2/ /opt/$2/lib
+}
 
 
 # clean up from previous
@@ -82,8 +107,23 @@ rm $IMAP -rf &&\
 rm $PHP -rf &&\
 rm $EACCELERATOR -rf &&\
 rm $APACHE -rf &&\
+rm $ORACLE -rf &&\
 
 # perform the install
+
+echo -n "Include Oracle-pdo? answere yes or no: "
+
+read svar
+
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try"
+    include_oracle $ORACLETAR $ORACLE $ORACLEDEVELTAR
+    ORACLE_PDO=" --with-oci8=instantclient,/opt/$ORACLE/ --with-pdo-oci"
+    echo $ORACLE_PDO
+    else
+    echo "Skipping Oracle"
+fi
 
 tar -xzf $FREETDSTAR &&\
 tar -xzf $LIBXMLTAR &&\
@@ -91,7 +131,7 @@ tar -xzf $LIBXSLTAR &&\
 gunzip -c $IMAPTAR | tar xf - &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
+tar -xzf $EACCELERATORTAR &&\
 cd $FREETDS &&\
 ./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
 --enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
@@ -162,7 +202,8 @@ export LDFLAGS=-lstdc++ &&\
  --enable-mbstring\
  --with-mcrypt\
  --enable-soap\
- --with-xmlrpc &&\
+ --with-xmlrpc \
+ $ORACLE_PDO &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\
