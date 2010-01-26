@@ -733,6 +733,8 @@
 			$contracts = array();
 			$datalines = $this->getcsvdata($this->path . "/u_Kontrakt.csv");
 			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
+			
+			echo "<br/>Read " . count($datalines) . " contracts<br/>";
 
             // Old->new ID mapping
             $contract_types = array(
@@ -789,15 +791,18 @@
 				if ($price_period == 4) {
 					// The price period is month.  We ignore this but print a warning.
 					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
+					echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
 				}
                 elseif($price_period == 5) {
                     // The price period is 5, which is unknown.  We ignore this but print a warning.
 					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
-                }
+					echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
+                }	
 
                 // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
                 if($data[6] == 3) {
                     $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
+                    echo "<br/>Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
                 }
 				
                 // Set the billing start date for the contract
@@ -808,11 +813,6 @@
 				$contract->set_comment($this->decode($data[18]));							//cMerknad
                 $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);	//
 				
-				// Ansvar/Tjenestested: F.eks: 080400.13000
-				$ansvar_tjeneste = $this->decode($data[26]);								//cSikkerhetsTekst
-				$ansvar_tjeneste_components = explode(".", $ansvar_tjeneste);
-				$contract->set_responsibility_id($ansvar_tjeneste_components[0]);
-				$contract->set_service_id($ansvar_tjeneste_components[1]);
 				
 				// Set the location identifier (responsibiity area)
 				$contract->set_location_id($this->location_id);
@@ -822,7 +822,7 @@
 
                 // Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
 				$title = $socontract->get_responsibility_title($this->location_id);
-                
+				
                 // For external contract types the rented area resides on the composite ...
                 if($title == 'contract_type_eksternleie') {
                 	if($composite_id)
@@ -860,6 +860,20 @@
                		$contract->set_account_in($default_values['account_in']);
 					$contract->set_account_out($default_values['account_out']);
 					$contract->set_project_id($default_values['project_number']);
+					
+					// Ansvar/Tjenestested: F.eks: 080400.13000
+					$ansvar_tjeneste = $this->decode($data[26]);								//cSikkerhetsTekst
+					$ansvar_tjeneste_components = explode(".", $ansvar_tjeneste);
+					if(count($ansvar_tjeneste_components) == 2)
+					{
+						$contract->set_responsibility_id($ansvar_tjeneste_components[0]);
+						$contract->set_service_id($ansvar_tjeneste_components[1]);
+					}
+					else
+					{
+						$this->warnings[] = "The contract (internal) " . $contract->get_old_contract_id()  . " lacks service and responsibility area";
+						echo "<br/>The contract (internal) " . $contract->get_old_contract_id()  . " lacks service and responsibility area";
+					}
 				}
 				
 				// Store contract
@@ -881,13 +895,15 @@
 					}
 					
 					$this->messages[] = "Successfully added contract (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
+					echo "<br/>Successfully added contract (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
 				} else {
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
+					echo "<br/>Error: Failed to store contract " . $this->decode($data[5]);
 				}
 			}
 			
 			$this->messages[] = "Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
-
+			echo "<br/>Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
 			return $contracts;
 		}
 		
@@ -926,7 +942,8 @@
 					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
 				}
 			}
-			//var_dump($detail_price_items);
+			
+			echo "<br/>Read " . count($datalines) . " details on price elements for contracts";
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
 			
@@ -936,6 +953,8 @@
 			if($title == 'contract_type_innleie'){
 				$admin_price_item = $soprice_item->get_single_with_id('INNLEIE');
 			}
+			
+			echo "<br/>Read " . count($datalines) . " price elements for contracts";
 			
 			foreach ($datalines as $data) {
 				if(count($data) <= 24)
@@ -982,6 +1001,7 @@
 					{
 						$soprice_item->store($admin_price_item);
 						$this->messages[] = "Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
+						echo "<br/>Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
 					}
 				}
 				
@@ -997,14 +1017,14 @@
 					// Set cLonnsArt for price item as contract reference
 					$contract->set_reference($this->decode($data[13]));
 			
-					// The contract price item title should be the same as in the price book for external and internal
-					if($title != 'contract_type_innleie')
+					// The contract price item title should be the same as in the price book for internal
+					if($title == 'contract_type_internleie')
 					{
 						$price_item->set_title($admin_price_item->get_title());
 					}
 					else
 					{
-						// ... and overridden by the price item for innleie
+						// ... and overridden by the price item for innleie and external
 						$price_item->set_title($data[3]);
 					}
 					
@@ -1027,7 +1047,8 @@
                     // Give a warning if a contract has a price element of type area with are like 1
                    	if($price_item->is_area() && ($detail_price_items[$facilit_id]['amount'] == '1'))
                    	{
-                   		$this->warning[] = "Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
+                   		$this->messages[] = "Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
+                   		echo "<br/>Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
                    	}
                     
 					// Tie this price item to its parent admin price item
@@ -1040,8 +1061,10 @@
                             {
                             	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
                             	{
-                            		$this->warning[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
-                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract." ;
+                            		$this->messages[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract.";
+                            		echo "<br/>Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract.";
                             	}
                             }
                             else
@@ -1089,16 +1112,19 @@
 					
 					// .. and save
 					if($socontract_price_item->import($price_item)) {
+                        echo "<br/>Successfully imported price item ({$id}) for contract {$contract_id}";
                         $this->messages[] = "Successfully imported price item ({$id}) for contract {$contract_id}";
                     }
                     else {
-                        $this->warning[] = "Could not store price item ({$id}) - " . $price_item->get_title();
+                        echo "<br/>Could not store price item ({$id}) - " . $price_item->get_title();
+                        $this->messages[] = "Could not store price item ({$id}) - " . $price_item->get_title();
                     }
 				} else {
-					$this->warning[] = "Skipped price item with no contract attached: " . join(", ", $data);
+					echo "<br/>Skipped price item with no contract attached: " . join(", ", $data);
+					$this->messages[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 			}
-			
+			echo "<br/>Imported contract price items. (" . (time() - $start_time) . " seconds)";
 			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
 
             return true;
