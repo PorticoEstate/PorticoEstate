@@ -86,8 +86,18 @@ ORACLE_PDO=""
 # include the oracle pdo-driver in the install
 function include_oracle()
 {
+    echo -n "Delete /opt/$2 ? answere yes or no: "
+
+    read svar
+
+    if [ $svar = "yes" ];then
+      echo "Ok - lets try"
+      rm /opt/$2 -rf
+      else
+      echo "Skipp delete old"
+    fi
+
     unzip $1
-    rm /opt/$2 -rf
     mv $2 /opt/
     unzip $ORACLEDEVELTAR 
     mv $2/sdk /opt/$2/
