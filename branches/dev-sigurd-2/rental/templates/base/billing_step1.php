@@ -22,7 +22,7 @@
 		</fieldset>
 		<fieldset>
 			<h3><?php echo lang('title') ?></h3>
-			<input type="text" name="title" id="title"/>
+			<input type="text" name="title" id="title" value="<?php echo $title == null ? '' : $title ?>"/>
 			<select name="existing_billing" id="existing_billing">
 				<option value="new_billing"><?php echo lang('new_billing')?></option>
 			<?php
@@ -30,7 +30,7 @@
 			 	foreach($result_objects as $billing){
 			 		if($billing->get_location_id() == $contract_type){
 			 			?>
-			 				<option value="<?php echo $billing->get_id()?>"><?php echo $billing->get_title()?></option>
+			 				<option value="<?php echo $billing->get_id()?>"<?php echo $billing->get_id() == $existing_billing ? ' selected' : '' ?>><?php echo $billing->get_title()?></option>
 			 			<?php 
 			 		}
 			 	}
@@ -62,17 +62,17 @@
 					?>
 					<optgroup label="<?php echo lang($term_title) ?>">
 					<?php if($current == 0){?>
-					<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>
+					<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term_selection ? 'selected="selected"' : '')?>><?php echo lang($term_title) ?></option>
 					<?php }
 					else if($current == 1){?>
-						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>1. halv&aring;r</option>
-						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>2. halv&aring;r</option>
+						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term_selection ? 'selected="selected"' : '')?>>1. halv&aring;r</option>
+						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-1" == $billing_term_selection ? 'selected="selected"' : '')?>>2. halv&aring;r</option>
 					<?php }
 					else if($current == 2){?>
-						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term ? 'selected="selected"' : '')?>>1. kvartal</option>
-						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-2" == $billing_term ? 'selected="selected"' : '')?>>2. kvartal</option>
-						<option value="<?php echo $term_id ?>-3" <?php echo ($term_id."-3" == $billing_term ? 'selected="selected"' : '')?>>3. kvartal</option>
-						<option value="<?php echo $term_id ?>-4" <?php echo ($term_id."-4" == $billing_term ? 'selected="selected"' : '')?>>4. kvartal</option>
+						<option value="<?php echo $term_id ?>-1" <?php echo ($term_id."-1" == $billing_term_selection ? 'selected="selected"' : '')?>>1. kvartal</option>
+						<option value="<?php echo $term_id ?>-2" <?php echo ($term_id."-2" == $billing_term_selection ? 'selected="selected"' : '')?>>2. kvartal</option>
+						<option value="<?php echo $term_id ?>-3" <?php echo ($term_id."-3" == $billing_term_selection ? 'selected="selected"' : '')?>>3. kvartal</option>
+						<option value="<?php echo $term_id ?>-4" <?php echo ($term_id."-4" == $billing_term_selection ? 'selected="selected"' : '')?>>4. kvartal</option>
 					<?php }
 					else{?>
 					 <?php 
@@ -80,7 +80,7 @@
 						for($i = 1; $i <= 12; $i++)
 						{
 							?>
-							<option value="<?php echo $term_id ?>-<?php echo $i ?>"<?php echo ($term_id."-".$i == $billing_term ? ' selected="selected"' : '')?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
+							<option value="<?php echo $term_id ?>-<?php echo $i ?>"<?php echo ($term_id."-".$i == $billing_term_selection ? ' selected="selected"' : '')?>><?php echo lang('month ' . $i . ' capitalized') ?></option>
 							<?php
 						}
 					}

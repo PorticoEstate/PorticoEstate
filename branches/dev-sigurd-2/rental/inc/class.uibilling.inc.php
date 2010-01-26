@@ -92,6 +92,7 @@ class rental_uibilling extends rental_uicommon
 			$use_existing = false;
 			$year = phpgw::get_var('year');
 			$billing_term_tmp = phpgw::get_var('billing_term');
+			$billing_term_selection = $billing_term_tmp;
 			$billing_term = substr($billing_term_tmp,0,1);
 			$billing_month = substr($billing_term_tmp,2);
 			
@@ -101,28 +102,35 @@ class rental_uibilling extends rental_uicommon
 			else if($billing_term == '4'){ // quarterly
 				if($billing_month == '1'){ //1. quarter
 					$month = 3;
+					$billing_term_label = lang('first_quarter');
 				}
 				else if($billing_month == '2'){ //2. quarter
 					$month = 6;
+					$billing_term_label = lang('second_quarter');
 				}
 				else if($billing_month == '3'){ //3. quarter
 					$month = 9;
+					$billing_term_label = lang('third_quarter');
 				}
 				else{ //4. quarter
 					$month = 12;
+					$billing_term_label = lang('fourth_quarter');
 				}
 			}
 			else if($billing_term == '3'){ // half year
 				if($billing_moth == '1'){
 					$month = 7;
+					$billing_term_label = lang('first_half');
 				}
 				else{
 					$month = 1;
+					$billing_term_label = lang('second_half');
 				}
 			}
 			else // yearly
 			{
 				$month = 1;
+				$billing_term_label = lang('annually');
 			}
 
 			$existing_billing = phpgw::get_var('existing_billing');
@@ -189,6 +197,8 @@ class rental_uibilling extends rental_uicommon
 				'contracts' => $contracts,
 				'contract_type' => phpgw::get_var('contract_type'),
 				'billing_term' => $billing_term,
+				'billing_term_label' => $billing_term_label,
+				'billing_term_selection' => $billing_term_selection,
 				'year' => $year,
 				'month' => $month,
 				'title' => $title,
@@ -209,7 +219,10 @@ class rental_uibilling extends rental_uicommon
 			(
 				'contract_type' => phpgw::get_var('contract_type'),
 				'billing_term' => phpgw::get_var('billing_term'),
+				'billing_term_selection' => phpgw::get_var('billing_term_selection'),
+				'title' => phpgw::get_var('title'),
 				'year' => phpgw::get_var('year'),
+				'existing_billing' => phpgw::get_var('existing_billing'),
 				'export_format' => $export_format,
 				'errorMsgs' => $errorMsgs,
 				'warningMsgs' => $warningMsgs,

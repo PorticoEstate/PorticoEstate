@@ -23,6 +23,7 @@ var toggleAll = function (target_tag_name, source_tag_name)
 	<input type="hidden" name="use_existing" value="<?php echo $use_existing ?>"/>
 	<input type="hidden" name="existing_billing" value="<?php echo $existing_billing ?>"/>
 	<input type="hidden" name="billing_term" value="<?php echo $billing_term ?>"/>
+	<input type="hidden" name="billing_term_selection" value="<?php echo $billing_term_selection ?>"/>
 	<input type="hidden" name="export_format" value="<?php echo $export_format ?>"/>
 	<div>
 		<table>
@@ -49,6 +50,7 @@ var toggleAll = function (target_tag_name, source_tag_name)
 				<td><?php echo lang('year') ?></td>
 				<td><?php echo $year ?></td>
 			</tr>
+			<?php if($billing_term == 1){?>
 			<tr>
 				<td><?php echo lang('month') ?></td>
 				<td><?php echo lang('month ' . $month . ' capitalized') ?></td>
@@ -69,6 +71,13 @@ var toggleAll = function (target_tag_name, source_tag_name)
 					?>
 				</td>
 			</tr>
+			<?php }
+				else{?>
+			<tr>
+				<td><?php echo lang('billing_term') ?></td>
+				<td><?php echo $billing_term_label ?></td>
+			</tr>
+				<?php } ?>
 			<tr>
 				<td><?php echo lang('Export format') ?></td>
 				<td><?php echo lang($export_format); ?></td>
