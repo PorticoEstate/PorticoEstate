@@ -50,6 +50,7 @@ billing_external	rental	no	Ekstern
 billing_internal	rental	no	Intern
 billing_start	rental	no	Fakturastart
 billing_term	rental	no	Termin
+billing_terms	rental	no	Terminer
 billing_unit	rental	no	Ansvar-/tjenestested
 bill	rental	no	Faktura
 bill2	rental	no	Fakturér
@@ -170,12 +171,13 @@ house_number	rental	no	Husnummer
 id	rental	no	ID
 Identifier	rental	no	Identifikator
 import_log_messages	rental	no	Import log
-import_reset    rental  no  Nullstill importstatus
+import_reset	rental	no	Nullstill importstatus
 in_operation	rental	no	I drift
 inactive_party	rental	no	Kontraktspart er inaktiv
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
 Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
+invoice_run	rental	no	Fakturakjøring
 invoice_menu	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
 is_area	rental	no	Areal
@@ -197,7 +199,7 @@ manual_adjust_price_item	rental	no	Manuell regulering av priselement
 manual_adjust_price_item_select	rental	no	Velg priselement
 manual_adjustment	rental	no	Manuell regulering
 message	rental	no	Melding
-messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver	
+messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
 messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
 messages_fontpage_saved	rental	no	Oppsettet ble lagret
 messages_form_error	rental	no	Skjemaet inneholder en feil.
@@ -370,7 +372,7 @@ showing	rental	no	Viser priselement
 show	rental	no	Vis
 shows_from	rental	no	Viser fra
 ssn	rental	no	Fødselsnummer
-started	no	rental	Startet
+started	rental	no	Startet
 status_before	rental	no	før
 status_date	rental	no	den
 status_unknown	rental	no	Ukjent status
