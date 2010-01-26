@@ -50,7 +50,7 @@
 				$this->BROWSER_VER   = $log_version[1];
 				$this->BROWSER_AGENT = 'iCab';
 			} 
-			else if(strpos($HTTP_USER_AGENT,'Gecko') !== false)
+			else if(preg_match('/Gecko\\/([0-9]{8})/', $HTTP_USER_AGENT, $log_version))
 			{
 				$this->BROWSER_VER   = $log_version[1];
 				$this->BROWSER_AGENT = 'MOZILLA';
