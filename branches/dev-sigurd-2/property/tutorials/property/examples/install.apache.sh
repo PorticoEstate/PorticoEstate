@@ -127,7 +127,7 @@ read svar
 
 
 if [ $svar = "yes" ];then
-    echo "Ok - lets try"
+    echo "Ok - lets try the Oracle"
     include_oracle $ORACLETAR $ORACLE $ORACLEDEVELTAR
     ORACLE_PDO=" --with-oci8=instantclient,/opt/$ORACLE/ --with-pdo-oci"
     echo $ORACLE_PDO
@@ -135,27 +135,70 @@ if [ $svar = "yes" ];then
     echo "Skipping Oracle"
 fi
 
-tar -xzf $FREETDSTAR &&\
+# include the IMAP-support in the install
+function include_imap()
+{
+    cd $1 &&\
+    make lmd SSLTYPE=unix.nopwd IP6=4 &&\
+    ln -s c-client include &&\
+    mkdir lib &&\
+    cd lib &&\
+    ln -s ../c-client/c-client.a libc-client.a &&\
+    cd ../../
+}
+
+echo -n "Include IMAP support? answere yes or no: "
+
+read svar
+
+IMAP_CONFIG=''
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try the IMAP"
+    gunzip -c $IMAPTAR | tar xf -
+    include_imap $IMAP
+    IMAP_CONFIG="--with-imap=/opt/web/$IMAP --with-imap-ssl"
+    echo $IMAP_CONFIG
+    else
+    echo "Skipping Oracle"
+fi
+
+# include the MSSQL/SYBASE-support in the install
+function include_mssql()
+{
+    cd $1 &&\
+    ./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
+    --enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
+    make &&\
+    make install &&\
+    touch /usr/local/freetds/include/tds.h &&\
+    touch /usr/local/freetds/lib/libtds.a &&\
+    cd ..
+}
+
+echo -n "Include MSSQL support? answere yes or no: "
+
+read svar
+
+MSSQL_CONFIG=''
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try the MSSQL"
+    tar -xzf $FREETDSTAR
+    include_mssql $FREETDS
+    MSSQL_CONFIG="--with-sybase-ct=/usr/local/freetds"
+    echo $MSSQL_CONFIG
+    else
+    echo "Skipping MSSQL"
+fi
+
+
 tar -xzf $LIBXMLTAR &&\
 tar -xzf $LIBXSLTAR &&\
-gunzip -c $IMAPTAR | tar xf - &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
 tar -xzf $EACCELERATORTAR &&\
-cd $FREETDS &&\
-./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
---enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
-make &&\
-make install &&\
-touch /usr/local/freetds/include/tds.h &&\
-touch /usr/local/freetds/lib/libtds.a &&\
-cd ../$IMAP &&\
-make lmd SSLTYPE=unix.nopwd IP6=4 &&\
-ln -s c-client include &&\
-mkdir lib &&\
-cd lib &&\
-ln -s ../c-client/c-client.a libc-client.a &&\
-cd ../../$LIBXML &&\
+cd $LIBXML &&\
 ./configure &&\
 make &&\
 make install &&\
@@ -185,9 +228,9 @@ make &&\
 make install &&\
 cd ../$PHP &&\
 export LDFLAGS=-lstdc++ &&\
-./configure --with-imap=/opt/web/$IMAP\
- --with-imap-ssl\
- --with-sybase-ct=/usr/local/freetds\
+./configure \
+ $IMAP_CONFIG\
+ $MSSQL_CONFIG\
  --with-apxs2=/usr/local/apache2/bin/apxs\
  --with-xsl\
  --with-zlib\
