@@ -287,7 +287,6 @@
 					if (!($number_generator = $this->sequential_number_generator_so->get_generator_instance('internal'))) {
 						throw new UnexpectedValueException("Unable to find sequential number generator for internal export");
 					}
-					
 					return $this->build_export_result(
 						$export_format,
 						count(array_filter($internal_reservations, array($this, 'not_free'))),
@@ -582,8 +581,7 @@
 				$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
-				$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
-				 
+				$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				
 				//Topptekst til faktura, knyttet mot fagavdeling
