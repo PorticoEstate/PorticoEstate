@@ -12,7 +12,7 @@
 	}
 	var columnDefs = [{
 		key: "description",
-		label: "<?php echo lang('description') ?>",
+		label: "<?php echo lang('title') ?>",
 	    sortable: false
 	},
 	{
