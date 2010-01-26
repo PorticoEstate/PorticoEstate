@@ -16,6 +16,7 @@
 		protected $total_price;
 		protected $date_start;
 		protected $date_end;
+		protected $is_billed;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -200,6 +201,16 @@
 				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):'',  
 				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):''
 			);
+		}
+		
+		public function set_is_billed($is_billed)
+		{
+			$this->is_billed = (boolean)$is_billed;
+		}
+		
+		public function is_billed()
+		{
+			return $this->is_billed;
 		}
 		
 	}

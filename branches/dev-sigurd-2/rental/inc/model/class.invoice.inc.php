@@ -281,6 +281,14 @@
 				}
 				 
 				$invoice_price_item = new rental_invoice_price_item($decimals, -1, $invoice->get_id(), $contract_price_item->get_title(), $contract_price_item->get_agresso_id(), $contract_price_item->is_area(), $contract_price_item->get_price(), $contract_price_item->get_area(), $contract_price_item->get_count(), $invoice_price_item_start, $invoice_price_item_end);
+				if($contract_price_item->is_one_time()){
+					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end){
+						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
+						//update contract_price_item: set billed=true;
+						$contract_price_item->set_is_billed(true);
+						rental_socontract_price_item::get_instance()->store($contract_price_item);
+					}
+				}
 				rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
 				$invoice->add_invoice_price_item($invoice_price_item);
 				$total_sum += $invoice_price_item->get_total_price();

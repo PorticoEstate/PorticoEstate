@@ -44,6 +44,8 @@ class rental_socontract_price_item extends rental_socommon
 			$filter_clauses[] = "contract_id = {$id}";
 		}
 		
+		$filter_clauses[] = "NOT is_billed";
+		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -108,10 +110,11 @@ class rental_socontract_price_item extends rental_socommon
 			str_replace(',','.',$price),
 			str_replace(',','.',$rented_area),
 			str_replace(',','.',$price_item->get_count()),
-			str_replace(',','.',$total_price)
+			str_replace(',','.',$total_price),
+			($price_item->is_billed() ? "true" : "false")
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_billed');
 		
 		if ($price_item->get_date_start()) {
 			$values[] = $this->marshal($price_item->get_date_start(), 'int');
@@ -163,10 +166,11 @@ class rental_socontract_price_item extends rental_socommon
 			str_replace(',','.',$price),
 			str_replace(',','.',$rented_area),
 			str_replace(',','.',$price_item->get_count()),
-			str_replace(',','.',$total_price)
+			str_replace(',','.',$total_price),
+			($price_item->is_billed() ? "true" : "false")
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_billed');
 		
 		if ($price_item->get_date_start()) {
 			$values[] = $this->marshal($price_item->get_date_start(), 'int');
@@ -213,7 +217,8 @@ class rental_socontract_price_item extends rental_socommon
 			str_replace(',','.',$price),
 			str_replace(',','.',$total_price),
 			$this->marshal($price_item->get_date_start(), 'int'),
-			$this->marshal($price_item->get_date_end(), 'int')
+			$this->marshal($price_item->get_date_end(), 'int'),
+			($price_item->is_billed() ? "true" : "false"),
 		);
 
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

@@ -230,7 +230,8 @@
 				'price' =>          array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'total_price' => 	array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'date_start' => 	array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'date_end' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true)
+				'date_end' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'is_billed' =>        array('type' => 'bool','nullable' => false,'default' => 'false')
 			),
 			'pk' => array('id'),
 			'fk' => array(
