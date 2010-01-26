@@ -184,6 +184,10 @@ class rental_sobilling extends rental_socommon
 		
 	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing)
 	{
+		if($contracts_overriding_billing_start == null){
+			$contracts_overriding_billing_start = array();
+		}
+		
 		// We start a transaction before running the billing
 		$this->db->transaction_begin();
 		if($existing_billing < 1){ //new billing
