@@ -23,7 +23,7 @@
 	},
 	{
 		key: "timestamp_stop",
-		label: "<?php echo lang('Run') ?>",
+		label: "<?php echo lang('last_updated') ?>",
 	    sortable: true
 	},
 	{
@@ -97,4 +97,4 @@
 	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
 </fieldset>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
-<div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_paginator" class="paginator" ></div>
