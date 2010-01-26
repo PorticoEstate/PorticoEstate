@@ -34,7 +34,7 @@ class rental_sobilling extends rental_socommon
 		{
 			$location_id = $this->marshal($filters['location_id'], 'int');
 			$filter_clauses[] = "location_id=$location_id";
-			$filter_clauses[] = "timestamp_stop is null";
+			$filter_clauses[] = "timestamp_commit is null";
 		}
 		$filter_clauses[] = "deleted = false";
 		if(count($filter_clauses))
