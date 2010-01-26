@@ -58,6 +58,8 @@
 		protected $_show_finnish_date = false;
 		var $part_of_town_id;
 		var $status;
+		var $filter;
+		var $user_filter;
 
 		public function __construct()
 		{
@@ -887,7 +889,7 @@
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}

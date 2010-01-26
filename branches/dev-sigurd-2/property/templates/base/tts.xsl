@@ -1089,6 +1089,7 @@
 						<xsl:call-template name="vendor_form"/>
 						<xsl:call-template name="ecodimb_form"/>
 						<xsl:call-template name="b_account_form"/>
+<!--
 						<tr>
 							<td>
 								<xsl:value-of select="php:function('lang', 'order category')" />
@@ -1103,7 +1104,7 @@
 									</select>
 							</td>
 						</tr>
-
+-->
 						<tr>
 							<td valign="top">
 			            		<xsl:value-of select="php:function('lang', 'cost estimate')" />
