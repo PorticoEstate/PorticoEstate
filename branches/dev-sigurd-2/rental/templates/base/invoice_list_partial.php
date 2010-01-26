@@ -11,13 +11,8 @@
 		}
 	}
 	var columnDefs = [{
-		key: "contract_id",
+		key: "old_contract_id",
 		label: "<?php echo lang('contract_id') ?>",
-	    sortable: true
-	},
-	{
-		key: "timestamp_created",
-		label: "<?php echo lang('Billing date') ?>",
 	    sortable: true
 	},
 	{

@@ -25,6 +25,7 @@
 		protected $project_id;
 		protected $service_id;
 		protected $responsibility_id;
+		protected $old_contract_id;
 		
 		public static $so;
 		
@@ -183,6 +184,13 @@
 		}
 	
 		public function get_project_id(){ return $this->project_id; }
+		
+		public function set_old_contract_id($old_contract_id)
+		{
+			$this->old_contract_id = $old_contract_id;
+		}
+	
+		public function get_old_contract_id(){ return $this->old_contract_id; }
 
 		public function get_composite_names()
 		{
@@ -299,7 +307,8 @@
 				'timestamp_created'	=> date($date_format, $this->get_timestamp_created()),
 				'composite_name'	=> $this->get_composite_names(),
 				'party_name'		=> $party_name,
-				'total_sum'			=> $this->get_total_sum()
+				'total_sum'			=> $this->get_total_sum(),
+				'old_contract_id'	=> $this->get_old_contract_id()
 			);
 		}
 		
