@@ -33,9 +33,9 @@
 		* @param string $query query to be executed (optional)
 		* @param string $db_type the database engine being used
 		*/
-		public function __construct($query = null, $db_type = null)
+		public function __construct($query = null, $db_type = null, $delay_connect = null)
 		{
-			parent::__construct($query, $db_type);
+			parent::__construct($query, $db_type, $delay_connect);
 		}
 
 		/**
@@ -129,7 +129,10 @@
 				case 'oracle':
 					try
 					{
-						$this->db = new PDO("OCI:dbname={$this->Database};charset=UTF-8", $this->User, $this->Password);
+						$_charset = ';charset=AL32UTF8';
+				//		$_charset = '';
+						$this->db = new PDO("oci:dbname={$this->Host}/{$this->Database}{$_charset}", $this->User, $this->Password);
+						unset($_charset);
 					}
 					catch(PDOException $e){}
 					break;
