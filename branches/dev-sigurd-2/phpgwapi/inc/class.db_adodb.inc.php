@@ -36,9 +36,9 @@
 		* @param string $query query to be executed (optional)
 		* @param string $db_type the database engine being used
 		*/
-		public function __construct($query = null, $db_type = null)
+		public function __construct($query = null, $db_type = null, $delay_connect = null)
 		{
-			parent::__construct($query, $db_type);
+			parent::__construct($query, $db_type, $delay_connect);
 		}
 
 		/**
