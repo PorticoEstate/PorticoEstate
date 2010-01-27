@@ -213,4 +213,14 @@
 			return $this->is_billed;
 		}
 		
+		public function set_is_one_time($is_one_time)
+		{
+			$this->is_one_time = (boolean)$is_one_time;
+		}
+		
+		public function is_one_time()
+		{
+			return $this->is_one_time;
+		}
+		
 	}

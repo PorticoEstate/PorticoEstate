@@ -233,10 +233,11 @@
 					// We just use the invoice date for our calculations
 					$contract_price_item_start = $timestamp_invoice_start;
 				}
-				else // Date set
+/*				else // Date set
 				{
 					$contract_price_item_start = strtotime($contract_price_item_start); // We have to translate to unix timestamp
 				}
+*/
 				$contract_price_item_end = $contract_price_item->get_date_end();
 				if($contract_price_item_end == null || $contract_price_item_end == '') // Date not set
 				{
