@@ -24,6 +24,7 @@ class rental_billing extends rental_model
 	protected $deleted;
 	protected $created_by;
 	protected $has_generated_export;
+	protected $contract_type_title;
 	
 	public static $so;
 	
@@ -43,6 +44,13 @@ class rental_billing extends rental_model
 	public function set_id(int $id)
 	{
 		$this->id = (int)$id;
+	}
+	
+	public function get_contract_type_title(){ return $this->contract_type_title; }
+	
+	public function set_contract_type_title($contract_type_title)
+	{
+		$this->contract_type_title = $contract_type_title;
 	}
 	
 	public function get_billing_term(){ return $this->billing_term; }
@@ -143,7 +151,8 @@ class rental_billing extends rental_model
 			'total_sum'			=> $this->get_total_sum(),
 			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
 			'timestamp_commit'	=> $timestamp_commit,
-			'created_by'		=> "{$account->firstname} {$account->lastname}"
+			'created_by'		=> "{$account->firstname} {$account->lastname}",
+			'contract_type_title' => $this->get_contract_type_title()
 		);
 	}
 	
