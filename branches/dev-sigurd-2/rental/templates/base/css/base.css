@@ -379,7 +379,7 @@ label {
 
 	
 fieldset {
-	border-bottom:1px solid #ccc;
+	border-bottom:0px solid #ccc;
 	padding:5px 0px 5px 10px;
 }
 
@@ -415,4 +415,13 @@ p.message {
 }
 .yui-skin-sam .yui-dt TABLE TD{
 	border: none !important;
+}
+
+.datatable_container {
+	margin-left: 1em;
+	margin-top: 1em;
+}
+
+.paginator {
+	margin-left: 1em !important;
 }
