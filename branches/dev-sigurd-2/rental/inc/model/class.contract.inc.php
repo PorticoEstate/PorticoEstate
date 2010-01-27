@@ -468,9 +468,8 @@
 				$this->bill_timestamps = array_reverse($this->bill_timestamps); // ..then we reverse them to make the last biling come first
 				if($timestamp == null) // No timestamp specified
 				{
-					// We can just use the first invoice
-					$keys = array_keys($this->bill_timestamps);
-					return $this->bill_timestamps[$keys[0]]->get_timestamp_end();
+					// We can just use the first invoice;		
+					return $this->bill_timestamps[0];
 				}
 				foreach ($this->bill_timestamps as $bill_timestamp) // Runs through all invoices
 				{
