@@ -3,10 +3,8 @@ include("common.php");
 $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 ?>
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-document.png" /> <?php echo lang('invoice_run') ?></h1>
-<div>
-
+<div class="yui-content">
 <a href="<?php echo $back_link ?>"><?php echo lang('Back') ?></a>
-
 <form action="" method="post" >
 <?php 
 if($billing_job != null)
@@ -79,18 +77,12 @@ if($billing_job != null)
 			$timestamp_commit = $billing_job->get_timestamp_commit();
 			if($timestamp_commit == null || $timestamp_commit == '')
 			{
-				?>
-				<td><?php echo lang('No') ?></td>
-				<?php
+				echo lang('No');
 			}
 			else
-			{	
-			?>
-				<td>
-					<?php echo date($date_format, $timestamp_commit) ?>
-					<?php echo date('H:i:s', $timestamp_commit) ?>
-				</td>
-			<?php 
+			{
+				echo date($date_format, $timestamp_commit);
+				echo date('H:i:s', $timestamp_commit);	
 			}
 			?>
 		</dd>
@@ -144,14 +136,15 @@ else // billing job == null
 	<?php
 }	
 ?>
+</form>
 <div>&amp;nbsp;</div>
 <?php echo rental_uicommon::get_page_error($errorMsgs) ?>
 <?php echo rental_uicommon::get_page_warning($warningMsgs) ?>
 <?php echo rental_uicommon::get_page_message($infoMsgs) ?>
 <div>&amp;nbsp;</div>
 </div>
-</form>
-<div style="float: left; margin-left: 1em;">
+
+<div style="position: relative; clear: both; margin-left: 1em; ">
 <?php 
 	if($billing_job != null)
 	{
