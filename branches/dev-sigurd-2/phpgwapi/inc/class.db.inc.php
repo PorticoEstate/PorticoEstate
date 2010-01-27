@@ -108,7 +108,7 @@
 		* @param string $query query to be executed (optional)
 		* @param string $db_type the database engine being used
 		*/
-		public function __construct($query = null, $db_type = null)
+		public function __construct($query = null, $db_type = null, $delay_connect = null)
 		{
 			if ( is_null($db_type) )
 			{
@@ -137,7 +137,10 @@
 					//do nothing for now
 			}
 			
-			$this->connect();
+			if( !$delay_connect )
+			{
+				$this->connect();
+			}
 
 			if ( !is_null($query) )
 			{
