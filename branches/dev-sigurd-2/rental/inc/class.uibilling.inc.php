@@ -307,6 +307,25 @@ class rental_uibilling extends rental_uicommon
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_job->set_deleted(true);
 		rental_sobilling::get_instance()->store($billing_job);
+		
+		//set deleted=true on billing_info
+		$billing_infos = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
+		foreach($billing_infos as $billing_info){
+			$billing_info->set_deleted(true);
+			rental_sobilling_info::get_instance()->store($billing_info);
+		}
+		
+		//set is_billed on invoice price items to false
+		$billing_job_invoices = rental_soinvoice::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
+		foreach($billing_job_invoices as $invoice){
+			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id(), 'one_time' => true));
+			foreach($price_items as $price_item){
+				if($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()){
+					$price_item->set_is_billed(false);
+					rental_socontract_price_item::get_instance()->store($price_item);
+				}
+			}
+		}
 	}
 	
 	/**

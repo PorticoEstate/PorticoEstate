@@ -43,8 +43,12 @@ class rental_socontract_price_item extends rental_socommon
 			$id = $this->marshal($filters['contract_id'],'int');
 			$filter_clauses[] = "rcpi.contract_id = {$id}";
 		}
-		
-		$filter_clauses[] = "NOT rcpi.is_billed";
+		if(isset($filters['one_time'])){
+			$filter_clauses[] = "rpi.is_one_time";
+		}
+		else{
+			$filter_clauses[] = "NOT rcpi.is_billed";
+		}
 		
 		if(count($filter_clauses))
 		{
