@@ -142,7 +142,7 @@
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 
-        window.location = 'index.php?menuaction=rental.uicontract.download'+
+        var dl = window.open('index.php?menuaction=rental.uicontract.download'+
             '&amp;type='+ctype+
             '&amp;contract_type='+typeoption+
             '&amp;contract_status='+statusoption+
@@ -150,7 +150,7 @@
             '&amp;query='+query+
             '&amp;search_option='+sOption+
             '&amp;results=100'+
-            '&amp;export=true';
+            '&amp;export=true');
     }
 </script>
 <?php
