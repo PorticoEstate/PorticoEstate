@@ -130,7 +130,7 @@
 			}
 			$application['comments'] = $filtered_comments;
 		}
-		
+
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -208,7 +208,23 @@
 
 		public function index_json()
 		{
-			$applications = $this->bo->read();
+			$filters['id'] = $this->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			$filters['status'] = 'NEW';
+			if(isset($_SESSION['showall']))
+			{
+				$filters['status'] = array('NEW', 'REJECTED', 'ACCEPTED');
+			}
+
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$applications = $this->bo->so->read($params);
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
@@ -229,6 +245,35 @@
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
+		}
+		
+		/**
+		 * Returns an array of application ids from applications assocciated with buildings
+		 * which the given user has access to
+		 *
+		 * @param int $user_id
+		 */
+		private function accessable_applications($user_id)
+		{
+			$resources = array();
+			$this->db = & $GLOBALS['phpgw']->db;
+
+			$sql = "select distinct ap.id
+					from bb_application ap
+					inner join bb_application_resource ar on ar.application_id = ap.id
+					inner join bb_resource re on re.id = ar.resource_id
+					inner join bb_building bu on bu.id = re.building_id
+					inner join bb_permission pe on pe.object_id = bu.id and pe.object_type = 'building'
+					where pe.subject_id = ".$user_id;
+			$this->db->query($sql);
+			$result = $this->db->resultSet;
+
+			foreach($result as $r)
+			{
+				$resources[] = $r['id'];
+			}
+
+			return $resources;
 		}
 
 		public function associated()
