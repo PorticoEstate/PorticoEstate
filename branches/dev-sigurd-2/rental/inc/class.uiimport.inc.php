@@ -742,7 +742,7 @@
                 3 => 1, // "Internleie - egne" -> Egne
                 4 => 8, // "Tidsbegrenset" -> Annen (ekstern)
                 5 => 4, // "Internleie - KF" -> KF
-                12=> 5, // "Eksten Feste" -> Feste
+                12=> 6, // "Eksten Feste" -> Feste
                 13=> 7, // "Ekstern Leilighet" -> Leilighet
                 14=> 8, // "Ekstern Annen" -> Annen
                 15=> 3, // "Intern - I-kontrakt" -> Inversteringskontrakt
@@ -841,17 +841,10 @@
                 // Retrieve default values for accounts and project numbers
 				if($title == 'contract_type_eksternleie')
 				{
-					// The account out depends on the typer of external contract
 					$type_id = $contract->get_contract_type_id();
-					if(isset($type_id) && $type_id > 0)
+					if(!in_array($type_id, array(5,7,8)))
 					{
-						$account = $socontract->get_contract_type_account($type_id);
-						$contract->set_account_out($account);
-					}
-					else
-					{
-						// If no specific external contract type, use default value
-						$contract->set_account_out($default_values['account_out']);
+						$contract->set_contract_type_id(8);	
 					}
 				}
 				else if($title == 'contract_type_internleie')
