@@ -105,6 +105,13 @@
 		public function index_json()
 		{
 			$events = $this->bo->read();
+
+			foreach($events['results'] as &$event)
+			{
+				$building_info = $this->bo->so->get_building_info($event['id']);
+				$event['building_name'] = $building_info['name'];
+			}
+
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
 			return $this->yui_results($events);
 		}
