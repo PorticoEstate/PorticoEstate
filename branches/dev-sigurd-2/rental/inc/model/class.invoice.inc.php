@@ -214,7 +214,20 @@
 				$timestamp_invoice_start = $contract->get_billing_start_date();
 			}
 			
-			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $contract->get_account_out(), $contract->get_service_id(), $contract->get_responsibility_id());
+			//If no account out is specified: check if the contract type defines any data to be used in this field
+			//AGRESSO specific logic  
+			$account_out = $contract->get_account_out();
+			if(!isset($account_out) || $account_out == '')
+			{
+				//If no account out - check the contract type for default
+				$account_tmp = rental_socontract::get_instance()->get_contract_type_account($contract->get_contract_type_id());
+				if(isset($account_tmp) && $account_tmp != '')
+				{
+					$account_out = $account_tmp;
+				}	
+			}
+			
+			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $account_out, $contract->get_service_id(), $contract->get_responsibility_id());
 			
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
