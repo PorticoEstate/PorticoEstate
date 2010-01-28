@@ -842,7 +842,7 @@
 				if($title == 'contract_type_eksternleie')
 				{
 					$type_id = $contract->get_contract_type_id();
-					if(!in_array($type_id, array(5,7,8)))
+					if(!in_array($type_id, array(6,7,8)))
 					{
 						$contract->set_contract_type_id(8);	
 					}
