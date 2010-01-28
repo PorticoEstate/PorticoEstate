@@ -169,6 +169,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.identifier';
 			$columns[] = 'party.first_name';
 			$columns[] = 'party.last_name';
+			$columns[] = 'party.comment';
 			$columns[] = 'party.is_inactive';
 			$columns[] = 'party.title';
 			$columns[] = 'party.company_name';
@@ -307,7 +308,6 @@ class rental_soparty extends rental_socommon
 			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
 		}
-
 		return $party;
 	}
 	
