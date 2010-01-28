@@ -212,7 +212,7 @@
 			$filters['status'] = 'NEW';
 			if(isset($_SESSION['showall']))
 			{
-				$filters['status'] = array('NEW', 'REJECTED', 'ACCEPTED');
+				$filters['status'] = array('NEW', 'REJECTED', 'ACCEPTED', 'CONFIRMED');
 			}
 
 			$params = array(
