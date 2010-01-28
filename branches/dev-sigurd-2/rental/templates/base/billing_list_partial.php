@@ -16,6 +16,11 @@
 	    sortable: false
 	},
 	{
+		key: "billing_info",
+		label: "<?php echo lang('billing_terms') ?>",
+		sortable: false
+	},
+	{
 		key: "total_sum",
 		label: "<?php echo lang('sum') ?>",
 		formatter: formatPrice,

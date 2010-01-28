@@ -25,6 +25,7 @@ class rental_billing extends rental_model
 	protected $created_by;
 	protected $has_generated_export;
 	protected $contract_type_title;
+	protected $billing_info;
 	
 	public static $so;
 	
@@ -37,6 +38,7 @@ class rental_billing extends rental_model
 		$this->created_by = (int)$created_by;
 		$this->has_generated_export = false;
 		$this->deleted = false;
+		$this->billing_info = array();
 	}
 	
 	public function get_id(){ return $this->id; }
@@ -145,9 +147,25 @@ class rental_billing extends rental_model
 		{
 			$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
 		}
+		$billing_info_content = array();
+		foreach($this->get_billing_info() as $bi){
+			$term = $bi->get_term_id();
+			$term_label = "";
+			$month = $bi->get_month();
+			$year = $bi->get_year();
+			if($term == 1){
+				$term_label = lang('month ' . $bi->get_month() . ' capitalized');
+			}
+			else{
+				$term_label = $bi->get_term_label();
+			}
+			$billing_info_content[] = $term_label . " " . $year;
+		}
+		$billing_info_labels = join('<br/>', $billing_info_content);
 		return array(
 			'id'				=> $this->get_id(),
 			'description'		=> $this->get_title(),
+			'billing_info'		=> $billing_info_labels,
 			'total_sum'			=> $this->get_total_sum(),
 			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
 			'timestamp_commit'	=> $timestamp_commit,
@@ -166,5 +184,24 @@ class rental_billing extends rental_model
 		$this->title = $title;
 	}
 	
+	public function get_billing_info()
+	{
+		return $this->billing_info;
+	}
+	
+	public function add_billing_info(rental_billing_info $new_billing_info)
+	{
+		$new_billing_info_id = $new_billing_info->get_id();
+		
+		if(!in_array($new_billing_info_id, $this->billing_info))
+		{
+			$this->billing_info[$new_billing_info_id] = $new_billing_info;
+		}
+	}
+	
+	public function set_billing_info($billing_info)
+	{
+		$this->billing_info = $billing_info;
+	}
 }
 ?>

@@ -28,33 +28,34 @@ class rental_sobilling extends rental_socommon
 		$clauses = array('1=1');
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+			$filter_clauses[] = "rb.{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
 		if(isset($filters['location_id']))
 		{
 			$location_id = $this->marshal($filters['location_id'], 'int');
-			$filter_clauses[] = "location_id=$location_id";
-			$filter_clauses[] = "timestamp_commit is null";
+			$filter_clauses[] = "rb.location_id=$location_id";
+			$filter_clauses[] = "rb.timestamp_commit is null";
 		}
-		$filter_clauses[] = "deleted = false";
+		$filter_clauses[] = "rb.deleted = false";
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
 		}
 		$condition =  join(' AND ', $clauses);
 
-		$tables = "rental_billing";
-		$joins = "";
+		$tables = "rental_billing rb";
+		$joins = $this->left_join.' rental_billing_info rbi ON (rb.id = rbi.billing_id)';
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$cols = 'COUNT(DISTINCT(rb.id)) AS count';
 		}
 		else
 		{
-			$cols = 'id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, export_format, export_data';
+			$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rb.export_data, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year';
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY timestamp_stop DESC';
+			$order = $sort_field ? "ORDER BY rb.{$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY rb.timestamp_stop DESC';
 		}
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -73,6 +74,42 @@ class rental_sobilling extends rental_socommon
 			{
 				$billing->set_generated_export(true);
 			}
+		}
+		
+		$billing_info_id = $this->unmarshal($this->db->f('billing_info_id', true), 'int');
+		if($billing_info_id)
+		{
+			$billing_info = new rental_billing_info($billing_info_id);
+			$billing_info->set_term_id($this->unmarshal($this->db->f('term_id', true), 'int'));
+			$billing_info->set_month($this->unmarshal($this->db->f('month', true), 'int'));
+			$billing_info->set_year($this->unmarshal($this->db->f('year', true), 'int'));
+			if($billing_info->get_term_id() == 2){ // yearly
+				$billing_info->set_term_label(lang('annually'));
+			}
+			else if($billing_info->get_term_id() == 3){ // half year
+				if($billing_info->get_month() == 7){
+					$billing_info->set_term_label(lang('first_half'));
+				}
+				else{
+					$billing_info->set_term_label(lang('second_half'));
+				}
+				
+			}
+			else if($billing_info->get_term_id() == 4){ // quarterly
+				if($billing_info->get_month() == 3){
+					$billing_info->set_term_label(lang('first_quarter'));
+				}
+				else if($billing_info->get_month() == 6){
+					$billing_info->set_term_label(lang('second_quarter'));
+				}
+				else if($billing_info->get_month() == 9){
+					$billing_info->set_term_label(lang('third_quarter'));
+				}
+				else{
+					$billing_info->set_term_label(lang('fourth_quarter'));
+				}
+			}
+			$billing->add_billing_info($billing_info);
 		}
 		return $billing;
 	}
