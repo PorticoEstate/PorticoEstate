@@ -208,7 +208,7 @@ if($contract->get_id() > 0) {
 								<?php
 								foreach(rental_socontract::get_instance()->get_contract_types($contract->get_location_id()) as $contract_type_id => $contract_type_label)
 								{
-									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".$contract_type_label."</option>";
+									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".lang($contract_type_label)."</option>";
 								}
 								?>
 							</select>
@@ -218,7 +218,7 @@ if($contract->get_id() > 0) {
 						}
 						else // Non-editable
 						{
-							echo rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id);
+							echo lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
 						}
 						?>
 					</dd>

@@ -258,14 +258,14 @@ $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, n
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out, agresso_export_format) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '1510', 'agresso_lg04')");
 
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'Egne', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'Innleie', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'Investeringskontrakt', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'KF', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'Andre', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'Feste', 3, '1520')");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'Leilighet', 3, '1530')");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'Annen', 3, '1510')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'contract_type_internleie_egne', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'contract_type_internleie_innleie', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'contract_type_internleie_investeringskontrakt', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'contract_type_internleie_KF', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'contract_type_internleie_andre', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'contract_type_eksternleie_feste', 3, '1520')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'contract_type_eksternleie_leilighet', 3, '1530')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'contract_type_eksternleie_annen', 3, '1510')");
 
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
