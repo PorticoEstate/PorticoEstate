@@ -762,9 +762,27 @@
 				$contract = new rental_contract();
 				
 				// Set the contract dates
-				$date_start = $this->decode($data[3]);						//dFra
-				$date_end = $this->decode($data[4]);						//dTil
-				$contract->set_contract_date(new rental_contract_date(strtotime($date_start), strtotime($date_end)));
+				$date_array = explode(".",$this->decode($data[3]));		//dFra
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$date_start = strtotime($y."-".$m."-".$d);
+				}
+				
+				$date_array = explode(".",$this->decode($data[4]));		//dTil
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$date_end = strtotime($y."-".$m."-".$d);
+				}
+				
+				$contract->set_contract_date(new rental_contract_date($date_start,$date_end));
+				unset($date_start);
+				unset($date_end);
 
                 // Set the old contract identifier
 				$contract->set_old_contract_id($this->decode($data[5]));	//cKontraktnr
@@ -806,7 +824,15 @@
                 }
 				
                 // Set the billing start date for the contract
-				$contract->set_billing_start_date(strtotime($this->decode($data[16])));		//dFakturaFraDato
+				$date_array = explode(".",$this->decode($data[16]));		//dFakturaFraDato
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$contract->set_billing_start_date(strtotime($y."-".$m."-".$d));
+				}
+				
 				
 				// Deres ref.
 				$contract->set_invoice_header($this->decode($data[17]));					//cFakturaRef
@@ -929,10 +955,24 @@
 				);
 				
 				if (!$this->is_null($data[4])) {
-					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+					$date_array = explode(".",$this->decode($data[4]));
+					if(count($date_array) == 3)
+					{
+						$y = $date_array[2];
+						$m = $date_array[1];
+						$d = $date_array[0];
+						$detail_price_items[$data[1]]['date_start'] = strtotime($y."-".$m."-".$d);
+					}
 				}
 				if (!$this->is_null($data[5])) {
-					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
+					$date_array = explode(".",$this->decode($data[5]));
+					if(count($date_array) == 3)
+					{
+						$y = $date_array[2];
+						$m = $date_array[1];
+						$d = $date_array[0];
+						$detail_price_items[$data[1]]['date_end'] = strtotime($y."-".$m."-".$d);
+					}	
 				}
 			}
 			
@@ -1094,6 +1134,7 @@
 						$price_item->set_total_price($item_count * $item_price);
 					}
 					
+					
 					$price_item->set_date_start($detail_price_items[$facilit_id]['date_start']);
 					$price_item->set_date_end($detail_price_items[$facilit_id]['date_end']);
 				
@@ -1136,7 +1177,14 @@
 				
 				// We do not import adjustments.  And only import if there is a title.
 				if ($type_id != 1 && $type_id != '1' && !$this->is_null($data[3])) {
-					$date = strtotime($this->decode($data[7]));
+					$date_array = explode(".",$this->decode($data[7]));		
+					if(count($date_array) == 3)
+					{
+						$y = $date_array[2];
+						$m = $date_array[1];
+						$d = $date_array[0];
+						$date = strtotime($y."-".$m."-".$d);
+					}
 					$contract_id = $contracts[$data[1]];
 					$location_id = $this->location_id;
 					
