@@ -62,7 +62,9 @@
 			$export = false;
 			if(isset($exp_param)){
 				$export=true;
+				$num_of_objects = null;
 			}
+			
 			$type = phpgw::get_var('type');
 			switch($type)
 			{

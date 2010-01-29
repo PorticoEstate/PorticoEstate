@@ -51,6 +51,7 @@ class rental_uiparty extends rental_uicommon
 		$export = false;
 		if(isset($exp_param)){
 			$export=true;
+			$num_of_objects = null;
 		}
 		
 		//Retrieve a contract identifier and load corresponding contract

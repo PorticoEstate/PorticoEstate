@@ -97,9 +97,9 @@
         var dl = window.open('index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>');
     }
 </script>
-<fieldset>
+<!-- <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
 	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
-</fieldset>
+</fieldset> -->
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator" ></div>

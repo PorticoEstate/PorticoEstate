@@ -149,7 +149,7 @@
             '<?php echo $url_add_on ?>'+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
-            '&amp;results=100'+
+            //'&amp;results=100'+
             '&amp;export=true');
     }
 </script>

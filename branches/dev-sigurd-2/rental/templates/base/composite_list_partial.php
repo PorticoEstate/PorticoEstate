@@ -79,7 +79,6 @@
             '&amp;type='+compType+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
-            '&amp;results=5000'+
         	'&amp;export=true';
     }
 </script>

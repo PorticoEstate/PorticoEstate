@@ -50,6 +50,7 @@
 			$export = false;
 			if(isset($exp_param)){
 				$export=true;
+				$num_of_objects = null;
 			}
 			
 			//Retrieve the type of query and perform type specific logic
