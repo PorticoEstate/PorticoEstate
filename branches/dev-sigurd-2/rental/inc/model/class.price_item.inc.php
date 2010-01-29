@@ -18,7 +18,7 @@
 		protected $is_adjustable;
 		protected $responsibility_id;
 		protected $responsibility_title;
-		protected $is_one_time;
+		//protected $is_one_time;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -129,8 +129,8 @@
 				'is_adjustable' => $this->get_adjustable_text(),
 				'price' => $this->get_price(),
 				'responsibility_id' => $this->get_responsibility_id(),
-				'responsibility_title' => lang($this->get_responsibility_title()),
-				'is_one_time' => $this->is_one_time()
+				'responsibility_title' => lang($this->get_responsibility_title())
+				//'is_one_time' => $this->is_one_time()
 			);
 		}
 
@@ -231,11 +231,12 @@
 			$this->is_adjustable = (boolean)$is_adjustable;
 		}
 		
-		public function is_one_time(){
+/*		public function is_one_time(){
 			return $this->is_one_time;
 		}
 		
 		public function set_is_one_time($is_one_time){
 			$this->is_one_time = (boolean)$is_one_time;
 		}
+*/
 	}

@@ -146,7 +146,8 @@ if($contract->get_id() > 0) {
 					array("key" => "count", "label" => lang('count'), "index" => 5, "formatter" => "formatCount"),
 					array("key" => "total_price", "label" => lang('total_price'), "formatter" => "formatPrice", "index" => 6),
 					array("key" => "date_start", "label" => lang('date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
-					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
+					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
+					array("key" => "is_one_time", "label" => lang('is_one_time'), "index" => 9, "formatter" => "formatBoolean")
 				);
 
 				$editor_action = 'rental.uiprice_item.set_value';
@@ -157,7 +158,8 @@ if($contract->get_id() > 0) {
 						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'date_start' => 'new YAHOO.widget.DateCellEditor()',
-						'date_end' => 'new YAHOO.widget.DateCellEditor()'
+						'date_end' => 'new YAHOO.widget.DateCellEditor()',
+						'is_one_time' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 					);
 				}
 

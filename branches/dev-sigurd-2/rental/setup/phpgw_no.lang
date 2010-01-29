@@ -265,6 +265,7 @@ never	rental	no	Aldri
 new_notification	rental	no	Nytt varsel
 new_billing	rental	no	Ny fakturering
 next	rental	no	Neste
+no	rental	no	Nei
 nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet
 no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
@@ -422,4 +423,5 @@ warning_price_item_date_between	rental	no	Priselementets datoer må være innenf
 weekly	rental	no	Ukentlig
 working_on	rental	no	Kontrakter under arbeid
 year	rental	no	År
+yes	rental	no	Ja
 your_notifications	rental	no	Dine varsler

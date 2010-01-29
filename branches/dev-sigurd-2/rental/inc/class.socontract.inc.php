@@ -887,7 +887,7 @@ class rental_socontract extends rental_socommon
     	//queries for selecting composites, parties and price items for the contract to be copied
     	$q_composites = "SELECT composite_id FROM rental_contract_composite WHERE contract_id={$old_contract_id}";
     	$q_parties = "SELECT party_id, is_payer FROM rental_contract_party WHERE contract_id={$old_contract_id}";
-    	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price FROM rental_contract_price_item WHERE contract_id={$old_contract_id}";
+    	$q_price_items = "SELECT price_item_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time FROM rental_contract_price_item WHERE contract_id={$old_contract_id}";
     	$success_composites = true;
     	$success_parties = true;
     	$success_price_items = true;
@@ -943,7 +943,9 @@ class rental_socontract extends rental_socommon
     		$price = $this->marshal($price, 'float');
     		$total_price = $this->unmarshal($this->db->f('total_price'),'float');
     		$total_price = $this->marshal($total_price, 'float');
-    		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, null, null)";
+    		$is_one_time = $this->unmarshal($this->db->f('is_one_time'),'bool');
+    		$is_one_time = $this->marshal($is_one_time ? 'true' : 'false','bool');
+    		$sql = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, is_one_time, date_start, date_end) VALUES ({$price_item_id}, {$contract_id}, {$title}, {$area}, {$count}, {$agresso_id}, {$is_area}, {$price}, {$total_price}, {$is_one_time}, null, null)";
     		$result_price_items = $this->db->query($sql);
     		if($result_price_items){
     			//noop

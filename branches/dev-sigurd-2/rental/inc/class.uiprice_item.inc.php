@@ -77,7 +77,6 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
 			$price_item->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
 			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
-			$price_item->set_is_one_time(phpgw::get_var('is_one_time') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
 			if (rental_soprice_item::get_instance()->store($price_item)) {
 				return $this->viewedit(true, $price_item, lang('messages_saved_form'));
@@ -130,8 +129,9 @@ class rental_uiprice_item extends rental_uicommon
 		$price_item = rental_socontract_price_item::get_instance()->get_single($id);
 		$price_item->set_field($field, $value);
 
-		$price_item->store();
-		print_r($price_item);
+		//$price_item->store();
+		rental_socontract_price_item::get_instance()->store($price_item);
+//		print_r($price_item);
 
 	}
 

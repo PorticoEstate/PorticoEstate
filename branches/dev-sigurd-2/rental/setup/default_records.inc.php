@@ -286,8 +286,8 @@ $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterl
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
 
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id,is_one_time) VALUES ('Unknown', 'UNKNOWN', false,false,false, 0, 0,false)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id,is_one_time) VALUES ('Leie', 'INNLEIE', false,false,false, 0, {$loc_id_in},false)");
+$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Unknown', 'UNKNOWN', false,false,false, 0, 0)");
+$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Leie', 'INNLEIE', false,false,false, 0, {$loc_id_in})");
 
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('contracts')");
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");

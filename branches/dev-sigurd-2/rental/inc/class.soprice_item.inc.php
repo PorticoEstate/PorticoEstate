@@ -44,7 +44,6 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
-		$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time', true), 'bool'));
 		
 		return $price_item;
 	}
@@ -72,7 +71,6 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
-			$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time', true), 'bool'));
 			
 			return $price_item;
 		}
@@ -101,7 +99,6 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
-			$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time', true), 'bool'));
 			
 			return $price_item;
 		}
@@ -138,7 +135,6 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
-			$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time', true), 'bool'));
 			
 			$results[] = $price_item;
 		}
@@ -216,11 +212,10 @@ class rental_soprice_item extends rental_socommon
 			($price_item->is_inactive() ? "true" : "false"),
 			($price_item->is_adjustable() ? "true" : "false"),
 			str_replace(',','.',$price),
-			$price_item->get_responsibility_id(),
-			($price_item->is_one_time() ? "true" : "false")
+			$price_item->get_responsibility_id()
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'price', 'responsibility_id', 'is_one_time');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'price', 'responsibility_id');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		
@@ -249,8 +244,7 @@ class rental_soprice_item extends rental_socommon
 			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
 			'is_adjustable = ' . ($price_item->is_adjustable() ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price()),
-			'responsibility_id = ' . $price_item->get_responsibility_id(),
-			'is_one_time = ' . ($price_item->is_one_time() ? "true" : "false")
+			'responsibility_id = ' . $price_item->get_responsibility_id()
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -278,6 +272,7 @@ class rental_soprice_item extends rental_socommon
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
+			'is_one_time = ' . ($price_item->is_one_time() ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price())
 		);
 		
@@ -356,9 +351,10 @@ class rental_soprice_item extends rental_socommon
 				"'" . $price_item->get_agresso_id() . "'",
 				$price_item->is_area() ? 'true' : 'false',
 				str_replace(',','.',$price_item->get_price()),
-				str_replace(',','.',$total_price)
+				str_replace(',','.',$total_price),
+				$price_item->is_one_time() ? 'true' : 'false',
 			);
-			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
+			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price, is_one_time) VALUES (" . join(',', $values) . ")";
 			//var_dump($q);
 			$result = $this->db->query($q);
 			if($result)
@@ -447,7 +443,6 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
-			$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time'),'bool'));
 		}
 		return $price_item;
 	}

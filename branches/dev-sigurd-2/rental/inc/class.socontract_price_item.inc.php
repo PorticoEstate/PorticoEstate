@@ -31,7 +31,7 @@ class rental_socontract_price_item extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": 'ORDER BY agresso_id ASC, title ASC';
 		
 		$filter_clauses = array();
 		
@@ -41,13 +41,13 @@ class rental_socontract_price_item extends rental_socommon
 		}
 		if(isset($filters['contract_id'])){
 			$id = $this->marshal($filters['contract_id'],'int');
-			$filter_clauses[] = "rcpi.contract_id = {$id}";
+			$filter_clauses[] = "contract_id = {$id}";
 		}
 		if(isset($filters['one_time'])){
-			$filter_clauses[] = "rpi.is_one_time";
+			$filter_clauses[] = "is_one_time";
 		}
 		else{
-			$filter_clauses[] = "NOT rcpi.is_billed";
+			$filter_clauses[] = "NOT is_billed";
 		}
 		
 		if(count($filter_clauses))
@@ -59,15 +59,16 @@ class rental_socontract_price_item extends rental_socommon
 		
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(rcpi.id)) AS count';
+			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$order = "";
 		}
 		else
 		{
-			$cols = 'rcpi.*, rpi.is_one_time';
+			$cols = '*';
 		}
 		
-		$tables = "rental_contract_price_item rcpi";
-		$joins = "	{$this->left_join} rental_price_item rpi ON (rpi.id = rcpi.price_item_id)";
+		$tables = "rental_contract_price_item";
+		$joins = "";
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -173,10 +174,11 @@ class rental_socontract_price_item extends rental_socommon
 			str_replace(',','.',$rented_area),
 			str_replace(',','.',$price_item->get_count()),
 			str_replace(',','.',$total_price),
+			($price_item->is_one_time() ? "true" : "false"),
 			($price_item->is_billed() ? "true" : "false")
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_billed');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_one_time', 'is_billed');
 		
 		if ($price_item->get_date_start()) {
 			$values[] = $this->marshal($price_item->get_date_start(), 'int');
@@ -224,9 +226,10 @@ class rental_socontract_price_item extends rental_socommon
 			"total_price=" . str_replace(',','.',$total_price),
 			"date_start=" . $this->marshal($price_item->get_date_start(), 'int'),
 			"date_end=" . $this->marshal($price_item->get_date_end(), 'int'),
+			"is_one_time=" . $price_item->get_is_one_time(),
 			"is_billed=" . ($price_item->is_billed() ? "true" : "false")
 		);
-
+		
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
@@ -243,7 +246,7 @@ class rental_socontract_price_item extends rental_socommon
 	public function get_total_price($contract_id){
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 		//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
-		$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id}");
+		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE NOT is_one_time AND contract_id={$contract_id}");
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');
 			return $total_price;

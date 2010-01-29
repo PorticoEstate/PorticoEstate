@@ -45,6 +45,16 @@
 		}
 	}
 
+	var formatBoolean = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			if(oData == true){
+				elCell.innerHTML = "<?php echo lang('yes')?>";
+			}
+		}else{
+			elCell.innerHTML = "<?php echo lang('no')?>";
+		}
+	}
+
 	// Defining columns for datatable
 	var columnDefs = [
 		{
