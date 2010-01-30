@@ -789,7 +789,7 @@
 				$counter = 0;
 				socket_set_blocking( $this->socket, true );
 				socket_set_timeout($this->socket,2);
-				$ts1=time();
+				//$ts1=time();
 				do{
 					$status = socket_get_status( $this->socket );
 	/*				if( $this->debug & DBGSOCK )
@@ -802,7 +802,7 @@
 						$buffer = @fread( $this->socket, $status['unread_bytes'] );
 						$counter = 0;
 					} else {
-						$ts=time();
+						//$ts=time();
 						$buffer = @fread( $this->socket, 1024 );
 
 						sleep(0.1);

@@ -491,7 +491,7 @@
 				array_walk($this->inserts[$index]['data'],array(&$this,'set_fields_insert'),$index);
 				reset($this->inserts[$index]['data']);
 				array_walk($field_to_prototype,array(&$this,'set_field_inserts_prototyped'),$index);
-				$inserts[$index] = $this->insert($idx);
+				$inserts[$index] = $this->insert($index);
 			}
 			return $inserts;
 		}

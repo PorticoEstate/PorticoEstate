@@ -752,9 +752,6 @@
 				$this->_read_repository($account_type, $app_id, $location_id);
 			}
 
-
-
-		//	$count = (isset($this->_data[$this->_account_id])?count($this->_data[$this->_account_id]):0);
 			$rights = 0;
 
 			if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
