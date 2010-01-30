@@ -1006,7 +1006,7 @@
 					$account_id = get_account_id($accountid, $this->_account_id);
 					$cache_accountid[$accountid] = $account_id;
 				}
-				$account_sel = " AND acl_account = {$account_id}";
+				$account_sel = " AND (acl_account = {$account_id} OR acl_grantor = {$account_id})";
 			}
 
 			$app = $this->_db->db_addslashes($app);
@@ -1031,21 +1031,23 @@
 				. " WHERE location_id IN ({$location_filter}) $account_sel";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$ret = !!$this->_db->num_rows();
+			$ret = !!$this->_db->affected_rows();
 
 			if ( $ret )
 			{
-				$location_id	= $GLOBALS['phpgw']->locations->get_id($app, $location);
-				if($account_id)
+				foreach ($locations as $location_id)
 				{
-					$this->_delete_cache($account_id, $location_id);
-				}
-				else
-				{
-					$account_objects = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', '', '', -1);
-					foreach($account_objects as $account)
+					if($account_id)
 					{
-						$this->_delete_cache($account->id, $location_id);
+						$this->_delete_cache($account_id, $location_id);
+					}
+					else
+					{
+						$account_objects = $GLOBALS['phpgw']->accounts->get_list('both', -1, 'ASC', '', '', -1);
+						foreach($account_objects as $account)
+						{
+							$this->_delete_cache($account->id, $location_id);
+						}
 					}
 				}
 			}
