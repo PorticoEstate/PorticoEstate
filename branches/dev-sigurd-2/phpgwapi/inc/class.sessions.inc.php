@@ -232,7 +232,7 @@
 
 			$now = time();
 
-			$lid_parts	= $this->_set_login($login);
+			$this->_set_login($login);
 			$user_ip	= $this->_get_user_ip();
 
 			if ( $this->_login_blocked($login, $this->_get_user_ip()) )
@@ -1194,7 +1194,7 @@
 				{
 					$GLOBALS['phpgw']->log->message(array(
 						'text' => 'W-VerifySession, the domains %1 and %2 don\'t match',
-						'p1'   => $userid_array[1],
+						'p1'   => $this->_account_domain,
 						'p2'   => $GLOBALS['phpgw_info']['user']['domain'],
 						'line' => __LINE__,
 						'file' => __FILE__
