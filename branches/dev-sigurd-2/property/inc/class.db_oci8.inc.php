@@ -41,6 +41,7 @@
 		var $last_query_text = "";
 
 		var $num_rows; // Used to store the total of rows returned by a SELECT statement.
+		var $auto_stripslashes = false;
 		
 		/* public: constructor */
 		function DB_OCI8($query = "")
@@ -521,9 +522,21 @@
 			print $this->num_rows();
 		}
 
-		function f($Name)
+		function f($Name, $strip_slashes = false)
 		{
-			return $this->Record[$Name];
+			if( isset($this->Record[$Name])
+			{
+				if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
+				{
+					return stripslashes($this->Record[$Name]);
+				}
+				else
+				{
+					return $this->Record[$Name];
+				}
+			}
+
+			return '';
 		}
 
 		function p($Name)
@@ -643,6 +656,200 @@
 		{
 			return "SYSDATE";
 		}
+
+		function db_addslashes($str)
+		{
+			if (!IsSet($str) || $str == '')
+			{
+				return '';
+			}
+			return str_replace("'", "''", $str);
+		}
+
+
+		/**
+		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
+		 *
+		 * It is not a good idea to rely on the data types determined by this method if 
+		 * you are inserting numeric data into varchar/text fields, such as street numbers
+		 * 
+		 * @param array $value_set array of values to insert into the database
+		 * @return string the prepared sql, empty string for invalid input
+		 */
+		public function validate_insert($values)
+		{
+			if ( !is_array($values) || !count($values) )
+			{
+				return '';
+			}
+			
+			$insert_value = array();
+			foreach ( $values as $value )
+			{
+				if($value || (is_numeric($value) && $value == 0) )
+				{
+					if ( is_numeric($value) )
+					{
+						$insert_value[]	= "'$value'";
+					}
+					else
+					{
+						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
+					}
+				}
+				else
+				{
+					$insert_value[]	= 'NULL';
+				}
+			}
+			return implode(",", $insert_value);
+		}
+
+		/**
+		 * Prepare the SET component of an UPDATE sql statement
+		 * 
+		 * @param array $value_set associative array of values to update the database with
+		 * @return string the prepared sql, empty string for invalid input
+		 */
+		public function validate_update($value_set)
+		{
+			if ( !is_array($value_set) || !count($value_set) )
+			{
+				return '';
+			}
+			
+			$value_entry = array();
+			foreach ( $value_set as $field => $value )
+			{
+				if($value || (is_numeric($value) && $value == 0) )
+				{
+					if ( is_numeric($value) )
+					{
+						if((strlen($value) > 1 && strpos($value,'0') === 0))
+						{
+							$value_entry[]= "{$field}='{$value}'";
+						}
+						else
+						{
+							$value_entry[]= "{$field}={$value}";
+						}
+					}
+					else
+					{
+						$value_entry[]= "{$field}='{$value}'";
+					}
+				}
+				else
+				{
+					$value_entry[]= "{$field}=NULL";
+				}
+			}
+			return implode(',', $value_entry);
+		}
+
+
+		/**
+		* Get the correct date format for DATE field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function date_format()
+		{
+			static $date_format = null;
+			if ( is_null($date_format) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$date_format 		= 'M d Y';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$date_format 		= 'Y-m-d';
+				}
+			}
+			return $date_format;
+	 	}
+	
+		/**
+		* Get the correct datetime format for DATETIME field for a particular RDBMS
+		*
+		* @internal the string is compatiable with PHP's date()
+		* @return string the date format string
+		*/
+		public static function datetime_format()
+		{
+			static $datetime_format = null;
+			if ( is_null($datetime_format) )
+			{
+				switch($GLOBALS['phpgw_info']['server']['db_type'])
+				{
+					case 'mssql':
+						$datetime_format 		= 'M d Y g:iA';
+						break;
+					case 'mysql':
+					case 'pgsql':
+					case 'postgres':
+					default:
+						$datetime_format 		= 'Y-m-d G:i:s';
+				}
+			}
+			return $datetime_format;
+	 	}
+
+		/**
+		* Get the correct datetime format for MONEY field for a particular RDBMS
+		*
+		* @return string the formatted string
+		*/
+		public static function money_format($amount)
+		{
+			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			{
+				return "CONVERT(MONEY,'{$amount}',0)";
+			}
+			else
+			{
+				return "'{$amount}'";
+			}
+		}
+
+		/**
+		* Finds the next ID for a record at a table
+		*
+		* @param string $table tablename in question
+		* @param array $key conditions
+		* @return int the next id
+		*/
+		public function next_id($table='',$key='')
+		{
+			$where = '';
+			$condition = array();
+			if(is_array($key))
+			{
+				foreach ($key as $column => $value)
+				{
+					if($value)
+					{
+						$condition[] = $column . "='" . $value;
+					}
+				}
+
+				if( $condition )
+				{
+					$where='WHERE ' . implode("' AND ", $condition) . "'";
+				}
+			}
+
+			$this->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
+			$this->next_record();
+			$next_id = $this->f('maximum')+1;
+			return $next_id;
+		}
+
 	}
 
 	if( !class_exists("DB_Sql"))
