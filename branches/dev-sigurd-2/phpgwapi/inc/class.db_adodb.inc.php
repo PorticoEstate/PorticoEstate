@@ -117,7 +117,14 @@
 			}
 			$this->adodb = newADOConnection($this->Type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
-			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			if(isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'])
+			{
+				return @$this->adodb->PConnect($this->Host, $this->User, $this->Password, $this->Database);	
+			}
+			else
+			{
+				return @$this->adodb->Connect($this->Host, $this->User, $this->Password, $this->Database);
+			}
 		}
 
 		/**
@@ -533,7 +540,7 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		public function metadata($table = '',$full = false)
+		public function metadata($table,$full = false)
 		{
 			if($this->debug)
 			{
@@ -549,32 +556,6 @@
 				$return = array();
 			}
 			return $return;
-			
-			/*
-			 * Due to compatibility problems with Table we changed the behavior
-			 * of metadata();
-			 * depending on $full, metadata returns the following values:
-			 *
-			 * - full is false (default):
-			 * $result[]:
-			 *   [0]["table"]  table name
-			 *   [0]["name"]   field name
-			 *   [0]["type"]   field type
-			 *   [0]["len"]    field length
-			 *   [0]["flags"]  field flags
-			 *
-			 * - full is true
-			 * $result[]:
-			 *   ["num_fields"] number of metadata records
-			 *   [0]["table"]  table name
-			 *   [0]["name"]   field name
-			 *   [0]["type"]   field type
-			 *   [0]["len"]    field length
-			 *   [0]["flags"]  field flags
-			 *   ["meta"][field name]  index of field named "field name"
-			 *   The last one is used, if you have a field name, but no index.
-			 *   Test:  if (isset($result['meta']['myfield'])) { ...
-			 */
 		}
 
 		/**

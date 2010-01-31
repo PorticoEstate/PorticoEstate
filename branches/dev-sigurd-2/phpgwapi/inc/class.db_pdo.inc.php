@@ -126,6 +126,7 @@
 					}
 					catch(PDOException $e){}
 					break;
+				case 'oci8':
 				case 'oracle':
 					try
 					{
@@ -192,7 +193,8 @@
 					catch(PDOException $e){}
 					break;
 				default:
-					//do nothing for now
+					throw new Exception(lang('db type %1 not supported', $this->Type));
+					
 			}
 
 			if ( isset($e) && $e )
@@ -341,7 +343,7 @@
 		/**
 		* Execute a query with limited result set
 		*
-		* @param string $Query_String the query to be executed
+		* @param string $sql the query to be executed
 		* @param integer $offset row to start from
 		* @param integer $line the line method was called from - use __LINE__
 		* @param string $file the file method was called from - use __FILE__
@@ -349,44 +351,52 @@
 		* @return integer current query id if sucesful and null if fails
 		*/
 
-		function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
+		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
 		{
-			$offset		= intval($offset);
-			$num_rows	= intval($num_rows);
+			$offset		= (int)$offset;
+			$num_rows	= (int)$num_rows;
 
 			if ($num_rows == 0)
 			{
 				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$num_rows = (isset($maxmatches)?intval($maxmatches):15);
+				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;
 			}
 
-			if( $this->Type == 'mssql' )
+			switch ( $this->Type )
 			{
-				$Query_String = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
-				$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
-				$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
+				case 'mssql':
+					$sql = str_replace('SELECT ', 'SELECT TOP ', $sql);
+					$sql = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $sql);
+					$sql = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $sql);
+					break;
+				case 'oci8':
+				case 'oracle':
+					//http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
+					//http://dibiphp.com
+					if ($offset > 0)
+					{
+						$sql = 'SELECT * FROM (SELECT t.*, ROWNUM AS "__rownum" FROM (' . $sql . ') t ' . ($num_rows >= 0 ? 'WHERE ROWNUM <= '
+						 . ( $offset + $num_rows) : '') . ') WHERE "__rownum" > '.  $offset;
+					}
+					elseif ($num_rows >= 0)
+					{
+						$sql = "SELECT * FROM ({$sql}) WHERE ROWNUM <= {$num_rows}";
+					}
 
-			}
-			else
-			{
-				if ($offset == 0)
-				{
-					$Query_String .= ' LIMIT ' . $num_rows;
-				}
-				else
-				{
-					$Query_String .= ' LIMIT ' . $num_rows . ' OFFSET ' . $offset;
-				}
+					break;
+				default:
+					$sql .= " LIMIT {$num_rows}";
+					$sql .=  $offset ? " OFFSET {$offset}" : '';
 			}
 
 			if ($this->debug)
 			{
-				printf("Debug: limit_query = %s<br />offset=%d, num_rows=%d<br />\n", $Query_String, $offset, $num_rows);
+				printf("Debug: limit_query = %s<br />offset=%d, num_rows=%d<br />\n", $sql, $offset, $num_rows);
 			}
 
 			try
 			{
-				$statement_object = $this->db->query($Query_String);
+				$statement_object = $this->db->query($sql);
 				if($this->fetchmode == 'ASSOC')
 				{
 					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
@@ -699,7 +709,7 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		public function metadata($table = '',$full = false)
+		public function metadata($table, $full = false)
 		{			
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
@@ -712,31 +722,6 @@
 			$this->adodb->close();
 			return $return;
 			
-			/*
-			 * Due to compatibility problems with Table we changed the behavior
-			 * of metadata();
-			 * depending on $full, metadata returns the following values:
-			 *
-			 * - full is false (default):
-			 * $result[]:
-			 *   [0]["table"]  table name
-			 *   [0]["name"]   field name
-			 *   [0]["type"]   field type
-			 *   [0]["len"]    field length
-			 *   [0]["flags"]  field flags
-			 *
-			 * - full is true
-			 * $result[]:
-			 *   ["num_fields"] number of metadata records
-			 *   [0]["table"]  table name
-			 *   [0]["name"]   field name
-			 *   [0]["type"]   field type
-			 *   [0]["len"]    field length
-			 *   [0]["flags"]  field flags
-			 *   ["meta"][field name]  index of field named "field name"
-			 *   The last one is used, if you have a field name, but no index.
-			 *   Test:  if (isset($result['meta']['myfield'])) { ...
-			 */
 		}
 
 		/**
@@ -796,22 +781,87 @@
 		
 		/**
 		* Get a list of table names in the current database
+		* @param bool $include_views include views in the listing if any (optional)
 		*
 		* @return array list of the tables
 		*/
-		public function table_names()
+		public function table_names($include_views = null)
 		{
-			if(!$this->adodb || !$this->adodb->IsConnected())
+			$return = array();
+
+			switch ( $this->Type )
 			{
-				$this->_connect_adodb();
+				case 'mysql': // Not testet
+				$this->query("SHOW FULL TABLES",__LINE__, __FILE__);
+					foreach($this->resultSet as $entry)
+					{
+						if($include_views)
+						{
+							$return[] =  $entry[0];
+						}
+						else
+						{
+							if ($entry[1] =='BASE TABLE')
+							{
+								$return[] =  $entry[0];							
+							}
+						}
+					} 
+					break;
+				case 'postgres':
+					$this->query("SELECT table_name as name, CAST(table_type = 'VIEW' AS INTEGER) as view
+						FROM information_schema.tables
+						WHERE table_schema = current_schema()",__LINE__, __FILE__);
+					foreach($this->resultSet as $entry)
+					{
+						if($include_views)
+						{
+							$return[] =  $entry['name'];
+						}
+						else
+						{
+							if (!$entry['view'])
+							{
+								$return[] =  $entry['name'];
+							}
+						}
+					} 
+					break;
+				case 'mssql': //not testet
+					$this->query("SELECT name FROM sysobjects WHERE type='u' AND name != 'dtproperties'",__LINE__, __FILE__);
+					foreach($this->resultSet as $entry)
+					{
+						$return[] =  $entry;				
+					}
+					break;
+				case 'oci8':
+				case 'oracle':
+					$this->query('SELECT * FROM cat',__LINE__, __FILE__);
+					foreach($this->resultSet as $entry)
+					{
+						if($include_views)
+						{
+							$return[] =  $entry['TABLE_NAME'];
+						}
+						else
+						{
+							if( $entry['TABLE_TYPE']== 'TABLE')
+							{
+								$return[] =  $entry['TABLE_NAME'];							
+							}
+						}
+					} 
+					break;
+				default: //fallback
+					if(!$this->adodb || !$this->adodb->IsConnected())
+					{
+						$this->_connect_adodb();
+					}
+
+					$return = $this->adodb->MetaTables('TABLES');
+					$this->adodb->close();
 			}
 
-			$return = $this->adodb->MetaTables('TABLES');
-			$this->adodb->close();
-			if ( !$return )
-			{
-				return array();
-			}
 			return $return;
 		}
 
@@ -865,17 +915,17 @@
 		/**
 		 * Execute prepared SQL statement for insert
 		 *
-		 * @param string $sql_string 
+		 * @param string $sql 
 		 * @param array $valueset  values,id and datatypes for the insert 
 		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
-		public function insert($sql_string, $valueset, $line = '', $file = '')
+		public function insert($sql, $valueset, $line = '', $file = '')
 		{		
 			try
 			{
-				$statement_object = $this->db->prepare($sql_string);
+				$statement_object = $this->db->prepare($sql);
 				foreach($valueset as $fields)
 				{
 					foreach($fields as $field => $entry)
@@ -896,16 +946,16 @@
 		/**
 		 * Execute prepared SQL statement for select
 		 *
-		 * @param string $sql_string 
+		 * @param string $sql 
 		 * @param array $params conditions for the select 
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
-		public function select($sql_string, $params, $line = '', $file = '')
+		public function select($sql, $params, $line = '', $file = '')
 		{		
 			try
 			{
-				$statement_object = $this->db->prepare($sql_string);
+				$statement_object = $this->db->prepare($sql);
 				$statement_object->execute($params);
 				if($this->fetchmode == 'ASSOC')
 				{

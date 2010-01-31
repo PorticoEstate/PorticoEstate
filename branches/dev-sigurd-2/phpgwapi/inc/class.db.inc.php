@@ -471,7 +471,7 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		abstract public function metadata($table = '',$full = false);
+		abstract public function metadata($table,$full = false);
 
 		/**
 		* Returns an associate array of foreign keys, or false if not supported.
