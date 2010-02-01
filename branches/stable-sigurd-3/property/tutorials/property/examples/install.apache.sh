@@ -75,6 +75,7 @@ PHP_PREFIX="/usr/local"
 #/**
 #  * Oracle PDO-Support
 #  * Download: http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
+#  * http://lacot.org/
 #  */
 
 ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"

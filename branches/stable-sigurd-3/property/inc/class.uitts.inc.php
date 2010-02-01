@@ -627,6 +627,7 @@
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
 			{
 				$uicols['name'][$i++] = 'order_id';
+				$uicols['name'][$i++] = 'vendor';
 			}
 
 			foreach($uicols_related as $related)
@@ -2085,119 +2086,114 @@
 				// approval					
 			}
 
-
-			if(isset($values['send_order']) && $values['send_order'])
+			if(isset($values['vendor_email']) && $values['vendor_email'])
 			{
+				$subject = lang(workorder).": {$ticket['order_id']}";
 
+				$organisation = '';
+				$contact_name = '';
+				$contact_email = '';
+				$contact_phone = '';
 
-				if(isset($values['vendor_email']) && $values['vendor_email'])
+				if(isset($this->bo->config->config_data['org_name']))
 				{
-					$subject = lang(workorder).": {$ticket['order_id']}";
+					$organisation = $this->bo->config->config_data['org_name'];
+				}
 
-					$organisation = '';
-					$contact_name = '';
-					$contact_email = '';
-					$contact_phone = '';
+				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+				$location = lang('Address'). ": {$ticket['address']}<br>";
 
-					if(isset($this->bo->config->config_data['org_name']))
+				$address_element = $this->bo->get_address_element($ticket['location_code']);
+
+				foreach($address_element as $address_entry)
+				{
+					$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
+				}
+
+				$location = rtrim($location, '<br>');
+
+				$order_description = $ticket['order_descr'];
+
+				if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
+				{
+					$contact_name = $contact_data['value_contact_name'];
+				}
+				if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+				{
+					$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+				}
+				if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+				{
+					$contact_phone = $contact_data['value_contact_tel'];
+				}
+
+				$order_id = $ticket['order_id'];
+
+				$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
+				$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+
+				$body = nl2br(str_replace(array
+							(
+								'__organisation__',
+								'__user_name__',
+								'__user_phone__',
+								'__user_email__',
+								'__ressursnr__',
+								'__location__',
+								'__order_description__',
+								'__contact_name__',
+								'__contact_email__',
+								'__contact_phone__',
+								'__order_id__',
+								'[b]',
+								'[/b]'
+							),array
+							(
+								$organisation,
+								$user_name,
+								$user_phone,
+								$user_email,
+								$ressursnr,
+								$location,
+								$order_description,
+								$contact_name,
+								$contact_email,
+								$contact_phone,
+								$order_id,
+								'<b>',
+								'</b>'
+							),$order_email_template));
+
+				if(isset($values['file_attach']) && is_array($values['file_attach']))
+				{
+					$bofiles	= CreateObject('property.bofiles');
+					$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
+					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
+				}
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				{
+					if (!is_object($GLOBALS['phpgw']->send))
 					{
-						$organisation = $this->bo->config->config_data['org_name'];
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
 
-					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
-					$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-					$location = lang('Address'). ": {$ticket['address']}<br>";
-
-					$address_element = $this->bo->get_address_element($ticket['location_code']);
-
-					foreach($address_element as $address_entry)
-					{
-						$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
-					}
-
-					$location = rtrim($location, '<br>');
-
-					$order_description = $ticket['order_descr'];
-
-					if(isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
-					{
-						$contact_name = $contact_data['value_contact_name'];
-					}
+					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+					$bcc = $coordinator_email;
 					if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 					{
-						$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+						$bcc .= ";{$contact_data['value_contact_email']}";
 					}
-					if(isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+						foreach($values['vendor_email'] as $_to)
 					{
-						$contact_phone = $contact_data['value_contact_tel'];
-					}
-
-					$order_id = $ticket['order_id'];
-
-					$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-					$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-					$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
-
-					$body = nl2br(str_replace(array
-								(
-									'__organisation__',
-									'__user_name__',
-									'__user_phone__',
-									'__user_email__',
-									'__ressursnr__',
-									'__location__',
-									'__order_description__',
-									'__contact_name__',
-									'__contact_email__',
-									'__contact_phone__',
-									'__order_id__',
-									'[b]',
-									'[/b]'
-								),array
-								(
-									$organisation,
-									$user_name,
-									$user_phone,
-									$user_email,
-									$ressursnr,
-									$location,
-									$order_description,
-									$contact_name,
-									$contact_email,
-									$contact_phone,
-									$order_id,
-									'<b>',
-									'</b>'
-								),$order_email_template));
-
-					if(isset($values['file_attach']) && is_array($values['file_attach']))
-					{
-						$bofiles	= CreateObject('property.bofiles');
-						$attachments = $bofiles->get_attachments("/fmticket/{$id}/", $values['file_attach']);
-						$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ',$values['file_attach']);
-					}
-					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
-					{
-						if (!is_object($GLOBALS['phpgw']->send))
-						{
-							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-						}
-
-						$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-						$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-
-						$bcc = $coordinator_email;
-						if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-						{
-							$bcc .= ";{$contact_data['value_contact_email']}";
-						}
-
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['vendor_email'], $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
 						if($rcpt)
 						{
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 							$historylog	= CreateObject('property.historylog','tts');
-							$historylog->add('M',$id,"{$values['vendor_email']}{$attachment_log}");
+							$historylog->add('M',$id,"{$_to}{$attachment_log}");
 							$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 							$action_params = array
 							(
@@ -2210,16 +2206,17 @@
 								'remark'			=> '',
 								'deadline'			=> ''
 							);
-				
+			
 							$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
 						}
 					}
-					else
-					{
-						$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
-					}
+				}
+				else
+				{
+					$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 				}
 			}
+
 			// start approval
 			if ($values['approval'] && $values['mail_address'] && $this->bo->config->config_data['workorder_approval'])
 			{
