@@ -282,6 +282,7 @@
 					'finnish_date'		=> $this->db->f('finnish_date'),
 					'finnish_date2'		=> $this->db->f('finnish_date2'),
 					'order_id'			=> $this->db->f('order_id'),
+					'vendor_id'			=> $this->db->f('vendor_id'),
 					'new_ticket'		=> ''
 				);
 			}

@@ -281,8 +281,9 @@
 
 		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
 		{
-			$category_name = array();
-			$account = array();
+			static $category_name = array();
+			static $account = array();
+			static $vendor_cache = array();
 			
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
@@ -296,7 +297,10 @@
 			if(!$external)
 			{
 				$entity	= $this->get_origin_entity_type();
-//				$this->uicols_related = $this->so->uicols_related;
+				$contacts	= CreateObject('property.soactor');
+				$contacts->role='vendor';
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 			else
 			{
@@ -381,6 +385,29 @@
 						if($ticket['child_date'][$j]['date_info'] && !$download)
 						{
 							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
+						}
+					}
+				}
+				if( $ticket['vendor_id'])
+				{
+					if(isset($vendor_cache[$ticket['vendor_id']]))
+					{
+						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
+					}
+					else
+					{
+						$vendor_data	= $contacts->read_single($ticket['vendor_id'],$vendor_data);
+						if($vendor_data)
+						{
+							foreach($vendor_data['attributes'] as $attribute)
+							{
+								if($attribute['name']=='org_name')
+								{
+									$vendor_cache[$ticket['vendor_id']]=$attribute['value'];
+									$ticket['vendor'] = $attribute['value'];
+									break;
+								}
+							}
 						}
 					}
 				}

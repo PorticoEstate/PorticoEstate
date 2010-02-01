@@ -1158,7 +1158,7 @@
 													<td>
 														<input type="checkbox" name="values[approval][{id}]" value="True">
 															<xsl:attribute name="title">
-																<xsl:value-of select="//lang_ask_approval_statustext"/>
+																<xsl:value-of select="php:function('lang', 'ask for approval')" />
 															</xsl:attribute>
 														</input>
 													</td>
@@ -1175,31 +1175,12 @@
 							</xsl:when>
 						</xsl:choose>
 						<tr>
-							<td>
+							<td valign='top'>
 					            <xsl:value-of select="php:function('lang', 'send order')" />
 							</td>
 							<td>
 								<table>
-									<tr>
-										<td>
-											<input type="checkbox" name="values[send_order]" value="True">
-												<xsl:attribute name="title">
-										            <xsl:value-of select="php:function('lang', 'send order')" />
-												</xsl:attribute>
-											</input>
-										</td>
-										<td>										            
-											<select name="values[vendor_email]">
-												<xsl:attribute name="title">
-										            <xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
-												</xsl:attribute>
-												<option value="">
-													<xsl:value-of select="php:function('lang', 'select email')" />
-												</option>
-												<xsl:apply-templates select="vendor_email"/>
-											</select>
-										</td>
-									</tr>
+									<xsl:apply-templates select="vendor_email"/>
 								</table>
 							</td>
 						</tr>
@@ -1739,15 +1720,18 @@
 		</option>
 	</xsl:template>
 
-
 	<xsl:template match="vendor_email">
 	<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$email}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$email}"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<tr>
+			<td>
+				<input type="checkbox" name="values[vendor_email][]" value="{$email}" >
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
+					</xsl:attribute>
+				</input>
+			</td>
+			<td>
+				<xsl:value-of select="email"/>
+			</td>
+		</tr>
 	</xsl:template>
