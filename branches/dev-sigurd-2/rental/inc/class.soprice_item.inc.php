@@ -263,6 +263,7 @@ class rental_soprice_item extends rental_socommon
 	function update_contract_price_item(rental_contract_price_item $price_item)
 	{
 		$id = intval($price_item->get_id());
+		$one_time = $price_item->get_is_one_time();
 		
 		$values = array(
 			'price_item_id = ' . $price_item->get_price_item_id(),
@@ -272,7 +273,7 @@ class rental_soprice_item extends rental_socommon
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
-			'is_one_time = ' . ($price_item->is_one_time() ? "true" : "false"),
+			'is_one_time = ' . ((isset($one_time) && ($price_item->is_one_time() || $price_item->get_is_one_time() == 1)) ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price())
 		);
 		
@@ -351,10 +352,9 @@ class rental_soprice_item extends rental_socommon
 				"'" . $price_item->get_agresso_id() . "'",
 				$price_item->is_area() ? 'true' : 'false',
 				str_replace(',','.',$price_item->get_price()),
-				str_replace(',','.',$total_price),
-				$price_item->is_one_time() ? 'true' : 'false',
+				str_replace(',','.',$total_price)
 			);
-			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price, is_one_time) VALUES (" . join(',', $values) . ")";
+			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
 			//var_dump($q);
 			$result = $this->db->query($q);
 			if($result)

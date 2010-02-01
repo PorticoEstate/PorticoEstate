@@ -212,6 +212,14 @@ class rental_socontract_price_item extends rental_socommon
 		
 		$price = $price_item->get_price() ? $price_item->get_price() : 0;
 		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		if($total_price == 0){
+			if($price_item->is_area()){
+				$total_price = $price_item->get_area() * $price_item->get_price();
+			}
+			else{
+				$total_price = $price_item->get_count() * $price_item->get_price();
+			}
+		}
 		
 		// Build a db-friendly array of the composite object
 		$values = array(
@@ -226,7 +234,7 @@ class rental_socontract_price_item extends rental_socommon
 			"total_price=" . str_replace(',','.',$total_price),
 			"date_start=" . $this->marshal($price_item->get_date_start(), 'int'),
 			"date_end=" . $this->marshal($price_item->get_date_end(), 'int'),
-			"is_one_time=" . $price_item->get_is_one_time(),
+			"is_one_time=" . ($price_item->is_one_time() ? "true" : "false"),
 			"is_billed=" . ($price_item->is_billed() ? "true" : "false")
 		);
 		
