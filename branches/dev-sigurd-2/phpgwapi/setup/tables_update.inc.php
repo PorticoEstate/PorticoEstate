@@ -1036,7 +1036,7 @@
 		/* Check if addressmaster exist  */
 		$GLOBALS['phpgw_setup']->db->query("SELECT config_name, config_value FROM phpgw_config WHERE config_name = 'addressmaster'");
 		$GLOBALS['phpgw_setup']->db->next_record();
-		if($GLOBALS['phpgw_setup']->db->f(0))
+		if($GLOBALS['phpgw_setup']->db->f('config_name'))
 		{
 			$addressmaster_id = $GLOBALS['phpgw_setup']->db->f('config_value');
 		}

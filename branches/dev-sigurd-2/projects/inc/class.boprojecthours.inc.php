@@ -875,8 +875,8 @@
 				{
 					if( $matrix[$i]['id'] == $hoursResult->f(1) )
 					{
-				//		$matrix[$i]['days'][$hoursResult->f(0)] = $hoursResult->f(2);
-						$matrix[$i]['days'][date("Ymd",$hoursResult->f(0))] = $hoursResult->f(2);
+				//		$matrix[$i]['days'][$hoursResult->f('day')] = $hoursResult->f('_time');
+						$matrix[$i]['days'][date("Ymd",$hoursResult->f('day'))] = $hoursResult->f('_time');
 						break;
 					}
 				}

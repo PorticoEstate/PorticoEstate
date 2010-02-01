@@ -693,11 +693,11 @@
 			$cat = createobject('phpgwapi.categories');
 
 			// Have they viewed this ticket before ?
-			$this->db->query("select count(*) from phpgw_tts_views where view_id='" . $params['id']
+			$this->db->query("select count(*) as cnt from phpgw_tts_views where view_id='" . $params['id']
 					. "' and view_account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			if (! $this->db->f(0))
+			if (! $this->db->f('cnt'))
 			{
 				$this->db->query("insert into phpgw_tts_views values ('" . $params['id'] . "','"
 					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . time() . "')",__LINE__,__FILE__);

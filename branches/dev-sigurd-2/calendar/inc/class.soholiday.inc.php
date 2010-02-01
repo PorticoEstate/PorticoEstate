@@ -177,7 +177,7 @@
 			{
 				$querymethod .= " AND (occurence < 1900 OR occurence = $year)";
 			}
-			$sql = "SELECT count(*) FROM phpgw_cal_holidays WHERE locale='".$locale."'".$querymethod;
+			$sql = "SELECT count(*) as cnt FROM phpgw_cal_holidays WHERE locale='".$locale."'".$querymethod;
 
 			if($this->debug)
 			{
@@ -186,7 +186,7 @@
 			
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			$retval = intval($this->db->f(0));
+			$retval = intval($this->db->f('cnt'));
 			if($this->debug)
 			{
 				echo 'Total Holidays for : '.$locale.' : '.$retval."<br />\n";

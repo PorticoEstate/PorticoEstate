@@ -287,7 +287,7 @@
 			static $by_id;
 			static $by_lid;
 
-			$sql = 'SELECT count(account_id) FROM phpgw_accounts WHERE ';
+			$sql = 'SELECT count(account_id) as cnt FROM phpgw_accounts WHERE ';
 			if ( is_int($account_lid) )
 			{
 				if(@isset($by_id[$account_lid]) && $by_id[$account_lid] != '')
@@ -307,7 +307,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$ret_val = $this->db->f(0) > 0;
+			$ret_val = $this->db->f('cnt') > 0;
 			if(is_int($account_lid))
 			{
 				$by_id[$account_lid] = $ret_val;
@@ -532,9 +532,9 @@
 				$accounts[$id]->init($record);
 			}
 
-			$this->db->query("SELECT count(account_id) FROM phpgw_accounts $whereclause");
+			$this->db->query("SELECT count(account_id) as cnt FROM phpgw_accounts $whereclause");
 			$this->db->next_record();
-			$this->total = $this->db->f(0);
+			$this->total = $this->db->f('cnt');
 
 			return $accounts;
 		}

@@ -1585,8 +1585,8 @@ class egw_db
 					}
 					// fall through !!!
 				default:
-					$this->select($table,'count(*)',$where,$line,$file);
-					if ($this->next_record() && $this->f(0))
+					$this->select($table,'count(*) as cnt ',$where,$line,$file);
+					if ($this->next_record() && $this->f('cnt'))
 					{
 						return !!$this->update($table,$data,$where,$line,$file,$app);
 					}

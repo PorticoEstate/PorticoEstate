@@ -919,10 +919,10 @@
 					$column = 'project_id';
 					$equal  = '=';
 			}
-			$this->db->query('SELECT count(*) from phpgw_p_projects where ' . $column . '=' . $column_val . $editexists,__LINE__,__FILE__);
+			$this->db->query('SELECT count(*) as cnt from phpgw_p_projects where ' . $column . '=' . $column_val . $editexists,__LINE__,__FILE__);
 			$this->db->next_record();
 
-			if ( $this->db->f(0) )
+			if ( $this->db->f('cnt') )
 			{
 				return true;
 			}
@@ -968,9 +968,9 @@
 		{
 			$prefix = 'P-' . $this->year . '-';
 
-			$this->db->query("select max(p_number) from phpgw_p_projects where p_number like ('$prefix%') and parent=0");
+			$this->db->query("select max(p_number) as current from phpgw_p_projects where p_number like ('$prefix%') and parent=0");
 			$this->db->next_record();
-			$max = $this->add_leading_zero( substr( $this->db->f(0), -4 ) );
+			$max = $this->add_leading_zero( substr( $this->db->f('current'), -4 ) );
 
 			return $prefix . $max;
 		}
@@ -988,9 +988,9 @@
 			$this->db->next_record();
 			$prefix = $this->db->f('p_number') . '/';
 
-			$this->db->query("select max(p_number) from phpgw_p_projects where p_number like ('$prefix%')");
+			$this->db->query("select max(p_number) as current from phpgw_p_projects where p_number like ('$prefix%')");
 			$this->db->next_record();
-			$max = $this->add_leading_zero( substr( $this->db->f(0), -4 ) );
+			$max = $this->add_leading_zero( substr( $this->db->f('current'), -4 ) );
 
 			return $prefix . $max;
 		}
@@ -999,9 +999,9 @@
 		{
 			$prefix = 'A-' . $this->year . '-';
 
-			$this->db->query("select max(a_number) from phpgw_p_activities where a_number like ('$prefix%')");
+			$this->db->query("select max(a_number) as current from phpgw_p_activities where a_number like ('$prefix%')");
 			$this->db->next_record();
-			$max = $this->add_leading_zero( substr( $this->db->f(0), -4 ) );
+			$max = $this->add_leading_zero( substr( $this->db->f('current'), -4 ) );
 
 			return $prefix . $max;
 		}
@@ -1009,9 +1009,9 @@
 		function create_deliveryid()
 		{
 			$prefix = 'D-' . $this->year . '-';
-			$this->db->query("select max(d_number) from phpgw_p_delivery where d_number like ('$prefix%')");
+			$this->db->query("select max(d_number) as current from phpgw_p_delivery where d_number like ('$prefix%')");
 			$this->db->next_record();
-			$max = $this->add_leading_zero( substr( $this->db->f(0), -4 ) );
+			$max = $this->add_leading_zero( substr( $this->db->f('current'), -4 ) );
 
 			return $prefix . $max;
 		}
@@ -1019,9 +1019,9 @@
 		function create_invoiceid()
 		{
 			$prefix = 'I-' . $this->year . '-';
-			$this->db->query("select max(i_number) from phpgw_p_invoice where i_number like ('$prefix%')");
+			$this->db->query("select max(i_number) as current from phpgw_p_invoice where i_number like ('$prefix%')");
 			$this->db->next_record();
-			$max = $this->add_leading_zero( substr( $this->db->f(0), -4 ) );
+			$max = $this->add_leading_zero( substr( $this->db->f('current'), -4 ) );
 
 			return $prefix . $max;
 		}
@@ -1290,7 +1290,7 @@
 
 			if ( $this->db->f($item_id) )
 			{
-				return $this->db->f(0);
+				return $this->db->f($item_id);
 			}
 		}
 
@@ -1322,7 +1322,7 @@
 			$this->db->query( "SELECT $item FROM $table WHERE $column=" . $item_id,__LINE__,__FILE__ );
 			if ( $this->db->next_record() )
 			{
-				return $this->db->f(0);
+				return $this->db->f($item);
 			}
 		}
 
@@ -1401,7 +1401,7 @@
 			{
 				while( $this->db->next_record() )
 				{
-					$location = ltrim($this->db->f(0), '.'); 
+					$location = ltrim($this->db->f('name'), '.'); 
 					$parts = explode('.', $location);
 					$projects[] = $parts[1];
 				}
@@ -1469,7 +1469,7 @@
 
 			while($this->db->next_record())
 			{
-				$members[] = $this->db->f(0);
+				$members[] = $this->db->f('acl_account');
 			}
 
 			if (is_array($members) && in_array($this->account,$members))

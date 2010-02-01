@@ -726,9 +726,9 @@ class calendar_socalendar_ extends calendar_socalendar__
 				$end = 0;
 			}
 
-			$this->stream->query('SELECT count(cal_id) FROM phpgw_cal_repeats WHERE cal_id='.$event['id'],__LINE__,__FILE__);
+			$this->stream->query('SELECT count(cal_id) as cnt FROM phpgw_cal_repeats WHERE cal_id='.$event['id'],__LINE__,__FILE__);
 			$this->stream->next_record();
-			$num_rows = $this->stream->f(0);
+			$num_rows = $this->stream->f('cnt');
 			if($num_rows == 0)
 			{
 				$this->stream->query('INSERT INTO phpgw_cal_repeats(cal_id,recur_type,recur_enddate,recur_data,recur_interval) '

@@ -46,10 +46,10 @@ ID.';
 		$comment = xmlrpc_decode($m->getParam(2));
 	
 		$countID = "${msgID}_count";
-		$sql = 'SELECT COUNT(msg_id) FROM phpgw_discuss';
+		$sql = 'SELECT COUNT(msg_id) as cnt FROM phpgw_discuss';
 		$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 		$GLOBALS['phpgw']->db->next_record();
-		$count = $GLOBALS['phpgw']->db->f(0);
+		$count = $GLOBALS['phpgw']->db->f('cnt');
 		
 		if(!$count)
 		{

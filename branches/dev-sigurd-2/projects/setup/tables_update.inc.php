@@ -33,9 +33,9 @@
 	{
 		$GLOBALS['phpgw_setup']->db->HaltOnError = False;
 
-		$GLOBALS['phpgw_setup']->db->query("SELECT COUNT($column) FROM $table");
+		$GLOBALS['phpgw_setup']->db->query("SELECT COUNT($column) as cnt FROM $table");
 		$GLOBALS['phpgw_setup']->db->next_record();
-		if (!$GLOBALS['phpgw_setup']->db->f(0))
+		if (!$GLOBALS['phpgw_setup']->db->f('cnt'))
 		{
 			if ($GLOBALS['DEBUG']) { echo '<br>' . $table . ' has no column named ' . $column; }
 			return False;

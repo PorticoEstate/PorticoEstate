@@ -531,6 +531,8 @@
 					$ret = $this->db->lastInsertId($sequence);
 					break;
 				case 'mssql':
+					//FIXME
+					$this->fetchmode = 'BOTH';
 					$this->query("SELECT @@identity", __LINE__, __FILE__);
 					$this->next_record();
 					$ret = $this->f(0);

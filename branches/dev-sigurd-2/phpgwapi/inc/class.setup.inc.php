@@ -66,6 +66,7 @@
 			$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
 			$this->db	  = createObject('phpgwapi.db');
+			$this->db->fetchmode= 'BOTH';
 			$GLOBALS['phpgw']->db =& $this->db;
 
 			$GLOBALS['ConfigDomain'] = $ConfigDomain;
@@ -407,9 +408,9 @@
 				// _debug_array($setup_info[$appname]);
 			}
 
-			$this->db->query("SELECT COUNT(app_name) FROM phpgw_applications WHERE app_name='".$appname."'",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(app_name) as cnt FROM phpgw_applications WHERE app_name='".$appname."'",__LINE__,__FILE__);
 			$this->db->next_record();
-			if($this->db->f(0))
+			if($this->db->f('cnt'))
 			{
 				if(@$GLOBALS['DEBUG'])
 				{
@@ -454,9 +455,9 @@
 				// _debug_array($setup_info[$appname]);
 			}
 
-			$this->db->query("SELECT COUNT(app_name) FROM $appstbl WHERE app_name='".$appname."'",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(app_name) as cnt FROM $appstbl WHERE app_name='".$appname."'",__LINE__,__FILE__);
 			$this->db->next_record();
-			if(!$this->db->f(0))
+			if(!$this->db->f('cnt'))
 			{
 				return False;
 			}

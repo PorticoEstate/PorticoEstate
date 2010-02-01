@@ -351,10 +351,10 @@
 
 					if ($upgrademethod == 'addonlynew')
 					{
-						$GLOBALS['phpgw']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE lang='".$lang."'",__LINE__,__FILE__);
+						$GLOBALS['phpgw']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE lang='".$lang."'",__LINE__,__FILE__);
 						$GLOBALS['phpgw']->db->next_record();
 
-						if ($GLOBALS['phpgw']->db->f(0) != 0)
+						if ($GLOBALS['phpgw']->db->f('cnt') != 0)
 						{
 							$error .= "Lang code '{$lang}' already installed: skipping<br>\n";
 							continue;
@@ -423,10 +423,10 @@
 							if ($upgrademethod == 'addmissing')
 							{
 								//echo '<br />Test: addmissing';
-								$GLOBALS['phpgw']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE message_id='$message_id' AND lang='$lang' AND app_name='$app_name'",__LINE__,__FILE__);
+								$GLOBALS['phpgw']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE message_id='$message_id' AND lang='$lang' AND app_name='$app_name'",__LINE__,__FILE__);
 								$GLOBALS['phpgw']->db->next_record();
 
-								if ( $GLOBALS['phpgw']->db->f(0) != 0)
+								if ( $GLOBALS['phpgw']->db->f('cnt') != 0)
 								{
 									continue;
 								}
