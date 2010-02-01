@@ -223,7 +223,46 @@ phpgw::import_class('booking.uicommon');
 		
 		public function index_json()
 		{
-			$reservations = $this->bo->read();
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$dir = phpgw::get_var('dir');
+
+			$filters = array();
+			foreach($this->bo->so->get_field_defs() as $field => $params) {
+				if(phpgw::get_var("filter_$field")) {
+					$filters[$field] = phpgw::get_var("filter_$field");
+				}
+			}
+
+			$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+
+			// if no buildings are searched for, show all accessable buildings
+			if ( !isset($filters['building_id']) ) {
+				$filters['building_id'] = $accessable_buildings;
+			} else { // before displaying search result, check if the building search for is accessable
+				if (!in_array($filters['building_id'], $accessable_buildings)) {
+					$filters['building_id'] = -1;
+					unset($filters['building_name']);
+				}
+			}
+
+			if(!isset($_SESSION['showall'])) {
+				$filters['active'] = "1";
+			}
+
+			$params = array(
+				'start' => $start,
+				'results' => $results,
+				'query'	=> $query,
+				'sort'	=> $sort,
+				'dir'	=> $dir,
+				'filters' => $filters
+			);
+
+			$reservations = $this->bo->so->read($params);
+
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
 				

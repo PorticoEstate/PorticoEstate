@@ -43,4 +43,32 @@
 			
 			return $params;
 		}
-	}
+
+		/**
+		* Returns an array of building ids from buildings which the given user has access to
+		*
+		* @param int $user_id
+		*/
+		public function accessable_buildings($user_id)
+		{
+			$buildings = array();
+			$this->db = & $GLOBALS['phpgw']->db;
+
+			$sql = "select distinct bu.id
+					from bb_building bu
+					inner join bb_permission pe on pe.object_id = bu.id and pe.object_type = 'building'
+					where pe.subject_id = ".$user_id;
+			$this->db->query($sql);
+			$result = $this->db->resultSet;
+
+			foreach($result as $r)
+			{
+			$buildings[] = $r['id'];
+			}
+
+			return $buildings;
+		}
+
+  }
+
+
