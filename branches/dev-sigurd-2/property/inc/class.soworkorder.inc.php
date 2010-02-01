@@ -42,6 +42,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->db2			= clone($this->db);
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
@@ -497,7 +498,7 @@
 				$sql2 = 'SELECT count(*) as cnt FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f('cnt');//$this->db->f('0');
+				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{

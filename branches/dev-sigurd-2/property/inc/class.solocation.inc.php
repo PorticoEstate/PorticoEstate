@@ -53,6 +53,7 @@
 			$this->custom 		= createObject('property.custom_fields');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->socommon		= & $this->bocommon->socommon;
 
 			$this->join			= & $this->db->join;
@@ -222,11 +223,11 @@
 
 		function check_location($location_code='',$type_id='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_location$type_id where location_code='$location_code'");
+			$this->db->query("SELECT count(*) AS cnt FROM fm_location$type_id where location_code='$location_code'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -675,9 +676,9 @@
 			$values = array();
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('cnt');
 
 				if(!$allrows)
 				{
@@ -1408,13 +1409,13 @@
 
 			$table = 'fm_location' . $type_id . '_history';
 
-			$sql = "SELECT count(*) FROM $table WHERE location_code='$location_code'";
+			$sql = "SELECT count(*) AS cnt FROM $table WHERE location_code='$location_code'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if($this->db->f('0')>0)
+			if($this->db->f('cnt')>0)
 			{
 				return true;
 			}

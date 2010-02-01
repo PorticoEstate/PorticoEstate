@@ -55,8 +55,8 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->bofiles		= CreateObject('property.bofiles');
-			$this->db           = $this->bocommon->new_db();
-
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 		}
 
 		function pre_run($data='')
@@ -383,10 +383,10 @@
 			}
 			else
 			{
-				$sql = "SELECT count(*) FROM fm_tts_tickets WHERE id='$id'";
+				$sql = "SELECT count(*) as cnt FROM fm_tts_tickets WHERE id='$id'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
-				if($this->db->f(0))
+				if($this->db->f('cnt'))
 				{
 					return true;
 				}

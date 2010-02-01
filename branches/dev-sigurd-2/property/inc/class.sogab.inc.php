@@ -42,6 +42,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->db2          = clone($this->db);
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
@@ -404,11 +405,11 @@
 
 		function exist_gab_location($gab_id='',$location_code='')
 		{
-			$this->db2->query("SELECT count(*) FROM fm_gab_location where gab_id='$gab_id' and location_code='$location_code'");
+			$this->db2->query("SELECT count(*) as cnt FROM fm_gab_location where gab_id='$gab_id' and location_code='$location_code'");
 
 			$this->db2->next_record();
 
-			if ( $this->db2->f(0))
+			if ( $this->db2->f('cnt'))
 			{
 				return true;
 			}

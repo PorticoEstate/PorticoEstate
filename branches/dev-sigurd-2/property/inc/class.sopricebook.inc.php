@@ -39,6 +39,7 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
@@ -161,11 +162,11 @@
 
 		function check_activity_num($num='',$agreement_group_id='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_activities where num='$num' and agreement_group_id ='$agreement_group_id'");
+			$this->db->query("SELECT count(*) as cnt FROM fm_activities where num='$num' and agreement_group_id ='$agreement_group_id'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -173,11 +174,11 @@
 
 		function check_agreement_group_num($num='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_agreement_group where num='$num'");
+			$this->db->query("SELECT count(*) as cnt FROM fm_agreement_group where num='$num'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -776,11 +777,11 @@
 
 		function add_activity_vendor($values)
 		{
-			$this->db->query("SELECT count(*) FROM fm_activity_price_index WHERE activity_id='" . $values['activity_id'] . "' and agreement_id='" . $values['agreement_id'] . "'",__LINE__,__FILE__);
+			$this->db->query("SELECT count(*) as cnt FROM fm_activity_price_index WHERE activity_id='" . $values['activity_id'] . "' and agreement_id='" . $values['agreement_id'] . "'",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				$receipt['error'][] = array('msg'=>lang('This Vendor is already registered for this activity'));
 			}

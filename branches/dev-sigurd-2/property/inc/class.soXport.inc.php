@@ -44,6 +44,7 @@
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->soinvoice	= CreateObject('property.soinvoice',true);
 			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
@@ -197,9 +198,9 @@
 		function check_spbudact_code($id)
 		{
 
-			$this->db->query("select count(*) from fm_b_account where id='$id'");
+			$this->db->query("select count(*) as cnt from fm_b_account where id='$id'");
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function add($buffer)

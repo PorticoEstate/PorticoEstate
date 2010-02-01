@@ -41,6 +41,7 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->custom 	= createObject('property.custom_fields');
 			$this->_db		= & $GLOBALS['phpgw']->db;
+			$this->_db->fetchmode= 'ASSOC';
 			$this->_like	= & $this->_db->like;
 			$this->_join	= & $this->_db->join;
 		}

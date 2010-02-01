@@ -51,6 +51,7 @@
 		{
 //			$this->_account			=& $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 							=& $GLOBALS['phpgw']->db;
+			$this->_db->fetchmode= 'ASSOC';
 			$this->boadmin_entity				= CreateObject('property.boadmin_entity');
 			$this->soadmin_entity				= & $this->boadmin_entity->so;
 			$this->soadmin_entity->type			= & $this->boadmin_entity->type;

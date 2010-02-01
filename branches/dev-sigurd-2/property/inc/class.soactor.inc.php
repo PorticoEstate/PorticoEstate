@@ -42,7 +42,7 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
 			$this->db           = & $GLOBALS['phpgw']->db;
-
+			$this->db->fetchmode= 'ASSOC';
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
@@ -248,9 +248,9 @@
 
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+				$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('cnt');
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);

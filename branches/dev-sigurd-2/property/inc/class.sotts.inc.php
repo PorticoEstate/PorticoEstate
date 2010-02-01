@@ -49,6 +49,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -384,11 +385,11 @@
 		{
 			// Have they viewed this ticket before ?
 			$id = (int) $id;
-			$this->db->query("SELECT count(*) FROM fm_tts_views where id={$id}"
+			$this->db->query("SELECT count(*) as cnt FROM fm_tts_views where id={$id}"
 					. " AND account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			if (! $this->db->f(0))
+			if (! $this->db->f('cnt'))
 			{
 				$this->db->query("INSERT INTO fm_tts_views (id,account_id,time) values ({$id},'"
 					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . phpgwapi_datetime::user_localtime() . "')",__LINE__,__FILE__);

@@ -34,16 +34,14 @@
 
 	class property_sotemplate
 	{
-		function property_sotemplate()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
-
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->db->fetchmode= 'ASSOC';
+			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
+			$this->like			= & $this->db->like;
 		}
 
 		function read($data)
@@ -313,7 +311,7 @@
 				$template_id);
 
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 
 			$this->db->query("INSERT INTO fm_template_hours (owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
@@ -416,7 +414,7 @@
 				'grouping_descr'	=> $hour['grouping_descr']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_template_hours set $value_set WHERE id= '" . $hour['hour_id'] ."'",__LINE__,__FILE__);
 
@@ -456,7 +454,7 @@
 				time()
 				);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_template (owner,name,descr,chapter_id,entry_date) "
 				. " VALUES ($values)",__LINE__,__FILE__);
@@ -483,7 +481,7 @@
 				'chapter_id'	=>$values['chapter_id']
 				);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_template set $value_set WHERE id='" . $values['template_id'] . "'",__LINE__,__FILE__);
 

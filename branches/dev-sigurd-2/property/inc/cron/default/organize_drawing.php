@@ -51,8 +51,8 @@
 			$this->vfs 		= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
-			$this->db		= $this->bocommon->new_db();
-
+			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db->fetchmode= 'ASSOC';
 		}
 
 		function pre_run($data='')
@@ -311,12 +311,12 @@
 
 		function check_building($loc1='',$loc2='')
 		{
-			$sql = "SELECT count(*)  FROM fm_location2 WHERE loc1= '$loc1' AND loc2= '$loc2'";
+			$sql = "SELECT count(*) as cnt FROM fm_location2 WHERE loc1= '$loc1' AND loc2= '$loc2'";
 
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			if($this->db->f(0))
+			if($this->db->f('cnt'))
 			{
 				return true;
 			}
