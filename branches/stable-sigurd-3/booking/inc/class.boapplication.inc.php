@@ -39,6 +39,35 @@
 			}
 		}
 		
+		/**
+		* Returns an array of application ids from applications assocciated with buildings
+		* which the given user has access to
+		*
+		* @param int $user_id
+		*/
+		public function accessable_applications($user_id)
+		{
+			$applications = array();
+			$this->db = & $GLOBALS['phpgw']->db;
+
+			$sql = "select distinct ap.id
+					from bb_application ap
+					inner join bb_application_resource ar on ar.application_id = ap.id
+					inner join bb_resource re on re.id = ar.resource_id
+					inner join bb_building bu on bu.id = re.building_id
+					inner join bb_permission pe on pe.object_id = bu.id and pe.object_type = 'building'
+					where pe.subject_id = ".$user_id;
+			$this->db->query($sql);
+			$result = $this->db->resultSet;
+
+			foreach($result as $r)
+			{
+				$applications[] = $r['id'];
+			}
+
+			return $applications;
+		}
+
 		public function read_dashboard_data($for_case_officer_id = null) {
 			$params = $this->build_default_read_params();
 			

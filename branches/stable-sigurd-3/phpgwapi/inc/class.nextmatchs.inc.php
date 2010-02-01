@@ -379,7 +379,7 @@
 		{
 			list($filter,$qfield,$start,$order,$sort,$query) = $this->_get_var();
 
-			$start = $localstart;
+			//$start = $localstart;
 			$var = array(
 				'form_action'  => ($this->action ? $this->page($extra) : $GLOBALS['phpgw']->link($sn, $extra)),
 				'filter_value' => $filter,
@@ -405,7 +405,7 @@
 		{
 			list($filter,$qfield,$start,$order,$sort,$query) = $this->_get_var();
 
-			$start = $localstart;
+			//$start = $localstart;
 			$cats  = createObject('phpgwapi.categories');
 			$var = array(
 				'form_action'   => ($this->action?$this->page($extra):$GLOBALS['phpgw']->link($sn, $extra)),

@@ -63,7 +63,7 @@
 
 //			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
-			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'hrm'))
 			{
 				$menus['admin'] = array
 				(

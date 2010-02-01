@@ -422,7 +422,7 @@ class Template
 			}
 		} else {
 			reset($varname);
-			while (list($k, $v) = each($varname)) {
+			while (list(, $v) = each($varname)) {
 				if (!empty($v)) {
 					if ($this->debug & 1) {
 						printf("<b>clear_var:</b> (with array) <b>%s</b><br>\n", $v);
@@ -464,7 +464,7 @@ class Template
 			}
 		} else {
 			reset($varname);
-			while (list($k, $v) = each($varname)) {
+			while (list(, $v) = each($varname)) {
 				if (!empty($v)) {
 					if ($this->debug & 1) {
 						printf("<b>unset_var:</b> (with array) <b>%s</b><br>\n", $v);
@@ -660,7 +660,7 @@ class Template
 			echo "<p><b>get_vars:</b> constructing array of vars...</p>\n";
 		}
 		reset($this->varkeys);
-		while (list($k, $v) = each($this->varkeys)) {
+		while (list($k, ) = each($this->varkeys)) {
 			$result[$k] = $this->get_var($k);
 		}
 		return $result;
@@ -698,7 +698,7 @@ class Template
 			return $str;
 		} else {
 			reset($varname);
-			while (list($k, $v) = each($varname)) {
+			while (list(, $v) = each($varname)) {
 				if (isset($this->varvals[$v])) {
 					$str = $this->varvals[$v];
 				} else {
@@ -745,7 +745,7 @@ class Template
 		}
 
 		reset($m);
-		while (list($k, $v) = each($m)) {
+		while (list(, $v) = each($m)) {
 			if (!isset($this->varkeys[$v])) {
 				if ($this->debug & 4) {
 					echo "<p><b>get_undefined:</b> undefined: $v</p>\n";

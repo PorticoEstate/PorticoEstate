@@ -130,7 +130,7 @@
 			}
 			$application['comments'] = $filtered_comments;
 		}
-		
+
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -208,7 +208,23 @@
 
 		public function index_json()
 		{
-			$applications = $this->bo->read();
+			$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			$filters['status'] = 'NEW';
+			if(isset($_SESSION['showall']))
+			{
+				$filters['status'] = array('NEW', 'REJECTED', 'ACCEPTED', 'CONFIRMED');
+			}
+
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$applications = $this->bo->so->read($params);
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
@@ -230,7 +246,7 @@
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 			return $this->yui_results($applications);
 		}
-
+		
 		public function associated()
 		{
 			$associations = $this->assoc_bo->read();

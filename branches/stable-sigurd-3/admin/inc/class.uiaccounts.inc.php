@@ -526,7 +526,7 @@
 
 			$group_members = $accounts->member($account_id);
 
-			$account_list = $accounts->get_list('accounts');
+			$account_list = $accounts->get_list('accounts', -1, 'ASC', 'account_lastname');
 
 			$members = array();
 			$user_list = array();
@@ -537,7 +537,7 @@
 					$member_list[$id] = array
 					(
 						'account_id'	=> $id,
-						'account_name'	=> (string) $user
+						'account_name'	=> $user->__toString()
 					);
 				}
 				else
@@ -545,7 +545,7 @@
 					$user_list[$id] = array
 					(
 						'account_id'	=> $id,
-						'account_name'	=> (string) $user
+						'account_name'	=> $user->__toString()
 					);				
 				}
 			}

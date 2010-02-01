@@ -234,7 +234,7 @@
 				}
 				else
 				{
-					$querymethod = " $where (subject $this->like '%$query%' OR address $this->like '%$query%' OR fm_tts_tickets.location_code $this->like '%$query%' OR fm_tts_tickets.order_id = '$query')";
+					$querymethod = " $where (subject $this->like '%$query%' OR address $this->like '%$query%' OR fm_tts_tickets.location_code $this->like '%$query%' OR fm_tts_tickets.order_id =" . (int)$query . ')';
 				}
 			}
 
