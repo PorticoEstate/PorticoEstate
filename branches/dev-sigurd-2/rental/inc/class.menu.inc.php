@@ -42,10 +42,10 @@
 							)
 						)
 				),
-				'regulation'	=> array
+				'adjustment'	=> array
 				(
-					'text'	=> lang('regulation'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiregulation.index', 'appname' => 'rental') ),
+					'text'	=> lang('adjustment'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadjustment.index', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'x-office-spreadsheet')
 				)
 			);
