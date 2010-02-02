@@ -240,7 +240,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustment_interval,contract.adjustment_share';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -307,6 +307,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_rented_area($this->unmarshal($this->db->f('rented_area'),'float'));
 			$contract->set_adjustment_interval($this->unmarshal($this->db->f('adjustment_interval'),'int'));
 			$contract->set_adjustment_share($this->unmarshal($this->db->f('adjustment_share'),'int'));
+			$contract->set_adjustment_year($this->unmarshal($this->db->f('adjustment_year'),'int'));
 			$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'),'int'));
 			$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'),'int'));
 			$contract->set_notify_after_termination_date($this->unmarshal($this->db->f('notify_after_termination_date'),'int'));
@@ -1016,6 +1017,12 @@ class rental_socontract extends rental_socommon
     	$this->db->query($sql);
     }
     
+    public function update_adjustment_year($contract_id, $adjusted_year)
+    {
+    	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
+    	$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
+    	$this->db->query($sql);
+    }
 
 }
 ?>

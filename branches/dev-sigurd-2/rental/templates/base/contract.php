@@ -653,6 +653,12 @@ if($contract->get_id() > 0) {
 						}
 						?>
 					</dd>
+					<dt>
+						<label for="adjustment_year"><?php echo lang('adjustment_year') ?></label>
+					</dt>
+					<dd>
+						<?php echo $contract->get_adjustment_year(); ?>
+					</dd>
 				</dl>
                 <dl class="proplist-col">
                     <dt>
