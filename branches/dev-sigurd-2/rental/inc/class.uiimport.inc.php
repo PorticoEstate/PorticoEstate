@@ -1218,6 +1218,10 @@
         }
 
         private function log_messages($step) {
+        	sort($this->errors);
+        	sort($this->warnings);
+        	sort($this->messages);
+        	
             $msgs = array_merge(
             	array('----------------Errors--------------------'),
             	$this->errors,
