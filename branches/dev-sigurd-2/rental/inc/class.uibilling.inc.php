@@ -289,7 +289,7 @@ class rental_uibilling extends rental_uicommon
 			'errorMsgs' => $errorMsgs,
 			'infoMsgs' => $infoMsgs,
 			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index'))),
-			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''))))
+			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop())))
 		);
 		$this->render('billing.php', $data);
 	}
@@ -449,8 +449,12 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
-    	$browser = CreateObject('phpgwapi.browser');
-		$browser->content_header('export.txt','text/plain');
+    	//$browser = CreateObject('phpgwapi.browser');
+		//$browser->content_header('export.txt','text/plain');
+		
+		$stop = phpgw::get_var('date');
+		$date = date('Ymd', $stop);
+		header("Content-Disposition: attachment; filename='BBEPEFaktura_{$date}.L04'");
 		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 
