@@ -41,7 +41,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = clone($GLOBALS['phpgw']->db);
-			$this->db->fetchmode= 'ASSOC';
 			$this->db2          = clone($this->db);
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;

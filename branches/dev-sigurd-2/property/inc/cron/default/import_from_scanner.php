@@ -56,7 +56,6 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->bofiles		= CreateObject('property.bofiles');
 			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 		}
 
 		function pre_run($data='')

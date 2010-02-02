@@ -38,10 +38,8 @@
 
 		function import_files()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db 				= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->db2				= clone($this->db);
 			$this->soadmin_location	= CreateObject('property.soadmin_location');
 

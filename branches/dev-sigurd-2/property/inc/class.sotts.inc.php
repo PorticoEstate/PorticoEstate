@@ -49,7 +49,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

@@ -46,13 +46,11 @@
 
 		function organize_drawing()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->vfs 		= CreateObject('phpgwapi.vfs');
 			$this->rootdir 		= $this->vfs->basedir;
 			$this->fakebase 	= $this->vfs->fakebase;
 			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 		}
 
 		function pre_run($data='')

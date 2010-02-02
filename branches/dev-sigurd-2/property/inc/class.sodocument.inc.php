@@ -47,9 +47,7 @@
 			$this->cats->app_name		= 'property.document';
 			$this->cats->supress_info	= true;
 
-
 			$this->db           	= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->join				= & $this->db->join;
 			$this->like				= & $this->db->like;
 		}

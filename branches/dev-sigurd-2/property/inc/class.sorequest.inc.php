@@ -41,7 +41,6 @@
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 			$this->interlink 	= CreateObject('property.interlink');

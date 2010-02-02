@@ -44,7 +44,6 @@
 			$this->custom 		= createObject('property.custom_fields');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->join			= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
 			$this->like			= & $this->db->like;

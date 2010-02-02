@@ -39,7 +39,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->db2			= clone($this->db);
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;

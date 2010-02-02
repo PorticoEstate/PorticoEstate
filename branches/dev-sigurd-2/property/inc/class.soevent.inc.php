@@ -44,7 +44,6 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 			= & $GLOBALS['phpgw']->db;
-			$this->_db->fetchmode= 'ASSOC';
 			$this->_join		= & $this->_db->loin;
 			$this->_like		= & $this->_db->like;
 		}

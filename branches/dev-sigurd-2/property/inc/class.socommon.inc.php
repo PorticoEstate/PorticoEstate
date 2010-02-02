@@ -53,8 +53,6 @@
 			if(is_object($GLOBALS['phpgw']->db))
 			{
 				$this->db = & $GLOBALS['phpgw']->db;
-				$this->db->fetchmode= 'ASSOC';
-				//$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{

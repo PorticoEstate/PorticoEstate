@@ -53,7 +53,6 @@
 			$this->custom 		= createObject('property.custom_fields');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->db->fetchmode= 'ASSOC';
 			$this->socommon		= & $this->bocommon->socommon;
 
 			$this->join			= & $this->db->join;
