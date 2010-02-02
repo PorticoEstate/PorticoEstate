@@ -4,10 +4,12 @@ phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.soprice_item');
 phpgw::import_class('rental.socontract_price_item');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.soadjustment');
 
 include_class('rental', 'price_item', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
+include_class('rental', 'adjustment', 'inc/model/');
 
 class rental_uiprice_item extends rental_uicommon
 {
@@ -307,6 +309,14 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item = rental_price_item::get($id);
 			$price_item->set_price($new_price);
 			if (rental_soprice_item::get_instance()->store($price_item)) {
+				$adjustment = new rental_adjustment();
+				$adjustment->set_price_item_id($price_item->get_id());
+				$adjustment->set_new_price($new_price);
+				$adjustment->set_percent(0);
+				$adjustment->set_responsibility_id($price_item->get_responsibility_id());
+				$adjustment->set_is_manual(true);
+				$adjustment->set_adjustment_date(time());
+				rental_soadjustment::get_instance()->store($adjustment);
 				$message[] = "Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}";
 				//update affected contract_price_items
 				$no_of_contracts_updated = rental_soprice_item::get_instance()->adjust_contract_price_items($id, $new_price);

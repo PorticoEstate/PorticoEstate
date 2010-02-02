@@ -19,13 +19,13 @@
             label: "<?php echo lang('id') ?>"
 		},
 		{
-			key: "price_item",
+			key: "price_item_id",
 			label: "<?php echo lang('price_item') ?>",
 		  	sortable: true
 		},
 		{
 			key: "new_price",
-			label: "<?php echo lang('price') ?>",
+			label: "<?php echo lang('new_price') ?>",
 			sortable: true,
 			formatter: formatPrice
 		},

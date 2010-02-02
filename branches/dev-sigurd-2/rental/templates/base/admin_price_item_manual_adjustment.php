@@ -51,5 +51,6 @@ $list_id = 'manual_adjustments';
 $url_add_on = '&amp;type='.$list_id;
 $editable = false;
 $extra_cols = array();
+$hide_cols = array('percent');
 include('adjustment_list_partial.php');
 ?>

@@ -50,16 +50,17 @@ class rental_soadjustment extends rental_socommon
 
 		$tables = "rental_adjustment";
 		$joins = "";
+		$dir = $ascending ? 'ASC' : 'DESC';
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$order = "";
 		}
 		else
 		{
 			$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_date';
+			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ' ORDER BY adjustment_date DESC';
 		}
-		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -69,7 +70,7 @@ class rental_soadjustment extends rental_socommon
 		if($adjustment == null ) // new object
 		{
 			$adjustment = new rental_adjustment($adjustment_id);
-			$adjustment->set_responsibility_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
+			$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
 			$adjustment->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$adjustment->set_new_price($this->unmarshal($this->db->f('new_price', true), 'float'));
 			$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'int'));

@@ -58,6 +58,6 @@ $list_id = 'non_manual_adjustments';
 $url_add_on = '&amp;type='.$list_id;
 $editable = false;
 $extra_cols = array();
-$hide_cols = array('price_item','new_price');
+$hide_cols = array('price_item_id','new_price');
 include('adjustment_list_partial.php');
 ?>
