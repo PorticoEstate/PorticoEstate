@@ -145,6 +145,7 @@ every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
+export	rental	no	Eksport
 Export failed.	rental	no	Eksporten feilet.
 Export format	rental	no	Format
 Export generated.	rental	no	Eksporten ble generert.
