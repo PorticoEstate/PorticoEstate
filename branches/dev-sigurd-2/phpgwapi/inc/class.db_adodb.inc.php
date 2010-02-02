@@ -116,7 +116,10 @@
 				$type = 'mysqlt';
 			}
 			$this->adodb = newADOConnection($this->Type);
-			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
+			if(	$this->fetchmode != 'ASSOC')
+			{
+				$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
+			}
 			if(isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'])
 			{
 				return @$this->adodb->PConnect($this->Host, $this->User, $this->Password, $this->Database);	
