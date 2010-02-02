@@ -109,7 +109,8 @@
 				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true), //Utleid areal
 				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
-				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)	//Reguleringsandel
+				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsandel
+				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -408,6 +409,22 @@
 				'fk' => array(
 					'rental_contract_responsibility' => array( 'responsibility_id' => 'id'),
 				),
+				'ix' => array(),
+				'uc' => array()
+		),
+		
+		'rental_adjustment' => array(
+			'fd' => array(
+				'id' =>                 array('type' => 'auto', 'nullable' => false),
+				'price_item_id'	=>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'responsibility_id' =>  array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'adjustment_date' =>  	array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'percent' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false')	
+			),
+			'pk' => array('id'),
+				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 		)

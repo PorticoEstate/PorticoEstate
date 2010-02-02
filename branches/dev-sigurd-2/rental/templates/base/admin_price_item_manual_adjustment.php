@@ -44,3 +44,12 @@
 		}
 	);
 </script>
+
+<?php
+$list_form = true; 
+$list_id = 'manual_adjustments';
+$url_add_on = '&amp;type='.$list_id;
+$editable = false;
+$extra_cols = array();
+include('adjustment_list_partial.php');
+?>

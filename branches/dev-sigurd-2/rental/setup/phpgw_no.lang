@@ -14,8 +14,11 @@ added_areas	rental	no	Inkludert areal
 add	rental	no	Legg til
 address	rental	no	Adresse
 adjust_price	rental	no	Juster pris
+adjustment	rental	no	Regulering
 adjustment_interval	rental	no	Reguleringsintervall
+adjustment_list	rental	no	Reguleringer
 adjustment_share	rental	no	Reguleringsandel
+adjustment_year	rental	no	Sist regulert
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
@@ -265,6 +268,7 @@ name	rental	no	Navn
 never	rental	no	Aldri
 new_notification	rental	no	Nytt varsel
 new_billing	rental	no	Ny fakturering
+new_adjustment	rental	no	Ny regulering
 next	rental	no	Neste
 no	rental	no	Nei
 nobody	rental	no	Ingen
@@ -304,6 +308,7 @@ party	rental	no	Kontraktspart
 party_back	rental	no	Kontraktspartliste
 party_location	rental	no	Intern organisasjonstihørighet
 party_type	rental	no	Type kontraktspart
+percent	rental	no	Prosent
 period	rental	no	Periode
 permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å editere kontrakten
 permission_denied_new_contract	rental	no	Du mangler rettigheter for å legge til å opprette nye kontrakter
@@ -332,7 +337,6 @@ property	rental	no	Eiendom
 quarterly	rental	no	Kvartalvis
 rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
-regulation	rental	no	Regulering
 reference	rental	no	Deres ref
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
