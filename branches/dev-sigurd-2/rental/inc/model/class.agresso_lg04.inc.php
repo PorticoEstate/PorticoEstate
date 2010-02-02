@@ -85,7 +85,20 @@ class rental_agresso_lg04 implements rental_exportable
 				$data['article_code'] = $price_item->get_agresso_id();
 				$price_item_data[] = $data;
 			}
-			$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name);
+			$this->orders[] = $this->get_order(
+				$invoice->get_header(), 
+				$invoice->get_party()->get_identifier(), 
+				$invoice->get_id(), 
+				$this->billing_job->get_year(), 
+				$this->billing_job->get_month(), 
+				$invoice->get_account_out(), 
+				$price_item_data, 
+				$invoice->get_responsibility_id(), 
+				$invoice->get_service_id(), 
+				$building_location_code, 
+				$invoice->get_project_id(), 
+				$composite_name
+			);
 		}
 	}
 	
@@ -182,7 +195,7 @@ class rental_agresso_lg04 implements rental_exportable
 		foreach($product_items as $item) // All products (=price items)
 		{
 			$order[] = // Product line
-				 sprintf("%1s", '')										//		just white space..
+				'0'										//		just white space..  sprintf("%1s", '')
 				.sprintf("%8s", '')										//  2	account
 				.sprintf("%180s", '')									//		just white space..
 				.sprintf("%02s", '')									//  5	allocation_key

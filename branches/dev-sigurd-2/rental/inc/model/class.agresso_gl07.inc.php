@@ -145,11 +145,15 @@ class rental_agresso_gl07 implements rental_exportable
 			$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
-			$description = "{$invoice->get_contract_id()}, " . number_format($invoice->get_total_area(), 1, $decimal_separator, $thousands_separator) . " m2 - {$invoice->get_header()}"; 
+			$description = "{$invoice->get_old_contract_id()}, " . number_format($invoice->get_total_area(), 1, $decimal_separator, $thousands_separator) . " m2 - {$invoice->get_header()}"; 
+			
+			$responsibility_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'] : '028120';
+			$project_id_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'] : '9';
+			
 			// The income side
 			foreach($price_items as $price_item) // Runs through all items
 			{
-				$this->lines[] = $this->get_line($invoice->get_account_in(), $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'], $invoice->get_service_id(), $building_location_code, $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'], $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+				$this->lines[] = $this->get_line($invoice->get_account_in(), $responsibility_in , $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
 			}
 			// The receiver's outlay side
 			$this->lines[] = $this->get_line($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());

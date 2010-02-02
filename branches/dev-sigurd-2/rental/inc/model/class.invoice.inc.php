@@ -227,11 +227,12 @@
 				}	
 			}
 			
-			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, 0, $contract->get_invoice_header(), $contract->get_account_in(), $account_out, $contract->get_service_id(), $contract->get_responsibility_id());
+			$invoice = new rental_invoice(-1, $billing_id, $contract_id, time(), $timestamp_invoice_start, $timestamp_invoice_end, 0, $contract->get_rented_area(), $contract->get_invoice_header(), $contract->get_account_in(), $account_out, $contract->get_service_id(), $contract->get_responsibility_id());
 			
 			$invoice->set_timestamp_created(time());
 			$invoice->set_party_id($contract->get_payer_id());
 			$invoice->set_project_id($contract->get_project_id());
+			$invoice->set_old_contract_id($contract->get_old_contract_id());
 			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
 			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			$total_sum = 0;
@@ -306,10 +307,10 @@
 				rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
 				$invoice->add_invoice_price_item($invoice_price_item);
 				$total_sum += $invoice_price_item->get_total_price();
-				$total_area += $invoice_price_item->get_area();
+				//$total_area += $invoice_price_item->get_area(); Area is moved to contract
 			}
 			$invoice->set_total_sum(round($total_sum, $decimals));
-			$invoice->set_total_area($total_area);
+			//$invoice->set_total_area($total_area); Area is moved to contract
 			rental_soinvoice::get_instance()->store($invoice);
 			return $invoice;
 		}
