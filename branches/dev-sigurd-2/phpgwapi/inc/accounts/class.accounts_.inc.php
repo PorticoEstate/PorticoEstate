@@ -663,7 +663,6 @@
 		 */
 		public function update_user($user, $groups, $acls = array(), $modules = null)
 		{
-			//TODO: delete acl-cache for user
 			$this->set_account($user->id);
 			$this->account = $user;
 			$this->save_repository();
