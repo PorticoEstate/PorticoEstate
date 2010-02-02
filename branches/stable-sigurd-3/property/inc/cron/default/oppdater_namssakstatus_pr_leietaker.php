@@ -38,10 +38,9 @@
 
 		function oppdater_namssakstatus_pr_leietaker()
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon			= CreateObject('property.bocommon');
-			$this->db				= $this->bocommon->new_db();
-			$this->db2				= $this->bocommon->new_db($this->db);
+			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->db2				= clone($this->db);
 			$this->join				= $this->db->join;
 			$this->like				= $this->db->like;
 			$this->left_join 		= " LEFT JOIN ";

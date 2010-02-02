@@ -186,9 +186,9 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_attrib SET custom = 1");
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		$locations = $GLOBALS['phpgw_setup']->oProc->f(0);
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
 
 		for ($location_type=1; $location_type<($locations+1); $location_type++)
 		{
@@ -393,9 +393,9 @@
 
 		$datatype_text[$datatype];
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		$locations = $GLOBALS['phpgw_setup']->oProc->f(0);
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
 
 		for ($location_type=1; $location_type<($locations+1); $location_type++)
 		{

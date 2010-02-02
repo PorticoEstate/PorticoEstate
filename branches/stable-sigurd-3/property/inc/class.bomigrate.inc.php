@@ -156,7 +156,7 @@
 		function copy_data($table_def = array())
 		{
 			$db = $GLOBALS['phpgw']->db;
-			$db->fetchmode = 'ASSOC';
+
 			foreach ($table_def as $table => $fd)
 			{
 				if($table=='fm_ecobilagoverf' || $table== 'phpgw_lang')

@@ -555,9 +555,9 @@
 				{
 					$budget_account=$values['budget_account'][$n];
 
-					$GLOBALS['phpgw']->db->query("select count(*) from fm_b_account  where id ='{$budget_account}'");
+					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_b_account  where id ='{$budget_account}'");
 					$GLOBALS['phpgw']->db->next_record();
-					if ($GLOBALS['phpgw']->db->f(0) == 0)
+					if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 					{
 						$receipt['error'][] = array('msg'=> lang('This account is not valid:'). " ".$budget_account);
 						$local_error= true;
@@ -576,9 +576,9 @@
 				else
 				{
 					$dimd=$values['dimd'][$n];
-					$GLOBALS['phpgw']->db->query("select count(*) from fm_ecodimd where id ='$dimd'");
+					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_ecodimd where id ='$dimd'");
 					$GLOBALS['phpgw']->db->next_record();
-					if ($GLOBALS['phpgw']->db->f(0) == 0)
+					if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 					{
 						$receipt['error'][] = array('msg'=>lang('This Dim D is not valid:'). " ".$dimd);
 						$local_error= true;
@@ -758,18 +758,15 @@
 
 		function increment_bilagsnr()
 		{
-
 			$this->db->query("UPDATE fm_idgenerator set value = value + 1 where name = 'Bilagsnummer'");
 			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
 			$this->db->next_record();
 			$bilagsnr = $this->db->f('value');
 			return $bilagsnr;
-
 		}
 
 		function next_bilagsnr()
 		{
-
 			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
 			$this->db->next_record();
 			$bilagsnr = $this->db->f('value')+1;
@@ -779,10 +776,9 @@
 
 		function check_vendor($vendor_id)
 		{
-
-			$this->db->query("select count(*) from fm_vendor where id='$vendor_id'");
+			$this->db->query("select count(*) as cnt from fm_vendor where id='$vendor_id'");
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 
@@ -1177,11 +1173,11 @@
 
 		function check_claim($voucher_id='')
 		{
-			$sql = "SELECT count(*) FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
+			$sql = "SELECT count(*) as cnt FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
 			. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 	}
 

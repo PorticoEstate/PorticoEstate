@@ -276,9 +276,9 @@ phpgw::import_class('phpgwapi.datetime');
 				while($this->cal->stream->next_record())
 				{
 					$id = $this->cal->stream->f('cal_id');
-					$db2->query('SELECT count(*) FROM phpgw_cal_user WHERE cal_id='.$id.' AND cal_login='.$new_owner,__LINE__,__FILE__);
+					$db2->query('SELECT count(*) as cnt FROM phpgw_cal_user WHERE cal_id='.$id.' AND cal_login='.$new_owner,__LINE__,__FILE__);
 					$db2->next_record();
-					if($db2->f(0) == 0)
+					if($db2->f('cnt') == 0)
 					{
 						$db2->query('UPDATE phpgw_cal_user SET cal_login='.$new_owner.' WHERE cal_id='.$id.' AND cal_login='.$account_id,__LINE__,__FILE__);
 					}

@@ -39,7 +39,6 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->socommon		= CreateObject('property.socommon');
 			$this->_db 			= & $GLOBALS['phpgw']->db;
-
 			$this->_join		= & $this->_db->join;
 			$this->_like		= & $this->_db->like;
 		}

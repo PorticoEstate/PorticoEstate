@@ -33,7 +33,6 @@
 		preg_match_all($header_regular_expression,$headers[$header_key], $matches);
 //		_debug_array($matches);
 		$userId = $matches[1][0];
-//		_debug_array($userId); die();
 	}
 
 	require_once PHPGW_SERVER_ROOT.'/bookingfrontend/inc/custom/default/BrukerService.php';
@@ -64,12 +63,17 @@
 	{
 		$ctx			= new UserContext();
 
-		$ctx->Appid = 'portico';
+		$ctx->appid = 'portico';
 		$ctx->onBehalfOfId= $userId;
-		$ctx->userId = $userId;
-		$ctx->Transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
+		$ctx->userid = $userId;
+		$ctx->transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
 
-		$Bruker = $BrukerService->retrieveBruker($ctx);
+		$request = new retrieveBruker();
+		$request->userContext = $ctx;
+		$request->userid = $userId;
+
+		$response = $BrukerService->retrieveBruker($request);
+		$Bruker = $response->return;
 		$login = $Bruker->ou; // organisasjons nr
 	}
 

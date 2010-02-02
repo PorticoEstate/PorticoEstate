@@ -52,10 +52,10 @@
 		{
 			$where = $this->test_account_id($account_id);
 
-			$this->db->query("SELECT COUNT(*) from phpgw_access_log $where", __LINE__, __FILE__);
+			$this->db->query("SELECT COUNT(*) as cnt from phpgw_access_log $where", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function return_logged_out($account_id)
@@ -68,9 +68,9 @@
 			{
 				$where = 'WHERE lo !=0';
 			}
-			$this->db->query("SELECT COUNT(*) FROM phpgw_access_log $where", __LINE__, __FILE__);
+			$this->db->query("SELECT COUNT(*) as cnt FROM phpgw_access_log $where", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 	}

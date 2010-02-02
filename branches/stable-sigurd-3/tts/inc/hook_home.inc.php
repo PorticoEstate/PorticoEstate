@@ -68,10 +68,10 @@
 				$tr_color = $GLOBALS['phpgw_info']['theme']['bg_color'];
 			}
 
-			$db2->query("select count(*) from phpgw_tts_views where view_id='" . $GLOBALS['phpgw']->db->f('ticket_id')
+			$db2->query("select count(*) as cnt from phpgw_tts_views where view_id='" . $GLOBALS['phpgw']->db->f('ticket_id')
 				. "' and view_account_id='" . $GLOBALS['phpgw_info']['user']['account_id'] . "'",__LINE__,__FILE__);
 			$db2->next_record();
-			if($db2->f(0))
+			if($db2->f('cnt'))
 			{
 				$t_read=1;
 			}

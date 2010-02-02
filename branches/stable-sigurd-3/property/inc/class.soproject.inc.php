@@ -802,11 +802,11 @@
 			}
 
 
-			$this->db->query("SELECT count(*) FROM $meter_table where location_code='$location_code' and category=1",__LINE__,__FILE__);
+			$this->db->query("SELECT count(*) as cnt FROM $meter_table where location_code='$location_code' and category=1",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				$this->db->query("update $meter_table set ext_meter_id='$power_meter',address='$address' where location_code='$location_code' and category='1'",__LINE__,__FILE__);
 			}
@@ -830,10 +830,10 @@
 		{
 			$prefix = 'meter';
 			$pos	= strlen($prefix);
-			$this->db->query("select max(num) from $meter_table where num $this->like ('$prefix%')");
+			$this->db->query("select max(num) as current from $meter_table where num $this->like ('$prefix%')");
 			$this->db->next_record();
 
-			$max = $this->bocommon->add_leading_zero(substr($this->db->f(0),$pos));
+			$max = $this->bocommon->add_leading_zero(substr($this->db->f('current'),$pos));
 
 			$meter_id= $prefix . $max;
 			return $meter_id;

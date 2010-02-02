@@ -34,7 +34,7 @@
 
 	class property_sotenant_claim
 	{
-		function property_sotenant_claim()
+		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;

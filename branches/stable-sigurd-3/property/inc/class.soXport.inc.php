@@ -197,9 +197,9 @@
 		function check_spbudact_code($id)
 		{
 
-			$this->db->query("select count(*) from fm_b_account where id='$id'");
+			$this->db->query("select count(*) as cnt from fm_b_account where id='$id'");
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function add($buffer)

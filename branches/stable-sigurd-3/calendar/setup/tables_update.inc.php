@@ -208,9 +208,9 @@
 			)
 		);
 	
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) FROM webcal_entry',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) as cnt FROM webcal_entry',__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		if($GLOBALS['phpgw_setup']->oProc->f(0))
+		if($GLOBALS['phpgw_setup']->oProc->f('cnt'))
 		{
 			$GLOBALS['phpgw_setup']->oProc->query('SELECT cal_id,cal_owner,cal_duration,cal_priority,cal_type,cal_access,cal_name,cal_description,cal_id,cal_date,cal_time,cal_mod_date,cal_mod_time FROM webcal_entry ORDER BY cal_id',__LINE__,__FILE__);
 			while($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -250,9 +250,9 @@
 			)
 		);
 	
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) FROM webcal_entry_user',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) as cnt FROM webcal_entry_user',__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		if($GLOBALS['phpgw_setup']->oProc->f(0))
+		if($GLOBALS['phpgw_setup']->oProc->f('cnt'))
 		{
 			$GLOBALS['phpgw_setup']->oProc->query('SELECT cal_id,cal_login,cal_status FROM webcal_entry_user ORDER BY cal_id',__LINE__,__FILE__);
 			while($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -283,9 +283,9 @@
 			)
 		);
 	
-		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) FROM webcal_entry_repeats',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) as cnt FROM webcal_entry_repeats',__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		if($GLOBALS['phpgw_setup']->oProc->f(0))
+		if($GLOBALS['phpgw_setup']->oProc->f('cnt'))
 		{
 			$GLOBALS['phpgw_setup']->oProc->query('SELECT cal_id,cal_type,cal_end,cal_frequency,cal_days FROM webcal_entry_repeats ORDER BY cal_id',__LINE__,__FILE__);
 			while($GLOBALS['phpgw_setup']->oProc->next_record())

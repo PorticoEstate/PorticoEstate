@@ -53,12 +53,11 @@
 			if(is_object($GLOBALS['phpgw']->db))
 			{
 				$this->db = & $GLOBALS['phpgw']->db;
-				//$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{
 				$this->db = CreateObject('phpgwapi.db');
-
+				$this->db->fetchmode= 'ASSOC';
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
@@ -199,10 +198,10 @@
 
 		function check_location($location_code='',$type_id='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_location$type_id where location_code='$location_code'");
+			$this->db->query("SELECT count(*) as cnt FROM fm_location$type_id where location_code='$location_code'");
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}

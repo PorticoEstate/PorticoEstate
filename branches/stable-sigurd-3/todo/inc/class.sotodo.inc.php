@@ -417,16 +417,16 @@
 			$this->db->query("select $item from phpgw_todo where todo_id=" . intval($todo_id),__LINE__,__FILE__);
 			if($this->db->next_record())
 			{
-				return $this->db->f(0);
+				return $this->db->f($item);
 			}
 		}
 
 		function exists($todo_id)
 		{
-			$this->db->query('select count(*) from phpgw_todo where todo_id_parent=' . intval($todo_id),__LINE__,__FILE__);
+			$this->db->query('select count(*) as cnt from phpgw_todo where todo_id_parent=' . intval($todo_id),__LINE__,__FILE__);
 			$this->db->next_record();
 
-			if($this->db->f(0))
+			if($this->db->f('cnt'))
 			{
 				return True;
 			}

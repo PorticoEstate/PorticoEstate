@@ -100,7 +100,7 @@
 		
 		var $resultSet;
 		
-		var $fetchmode = 'BOTH';
+		var $fetchmode = 'ASSOC';//'BOTH';
 
 		var $Transaction  = false;		
 		/**

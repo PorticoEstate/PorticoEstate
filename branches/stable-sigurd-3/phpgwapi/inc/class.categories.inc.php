@@ -236,7 +236,7 @@
 				{
 					$cats[] = array
 					(
-						"$column" => $this->db->f(0)
+						"$column" => $this->db->f($column)
 					);
 				}
 				else
@@ -914,11 +914,11 @@
 				$cat_exists = " cat_name='" . $this->db->db_addslashes($cat_name) . "' AND cat_id != $cat_id ";
 			}
 
-			$this->db->query("SELECT COUNT(cat_id) FROM phpgw_categories WHERE $cat_exists $filter",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(cat_id) as cnt FROM phpgw_categories WHERE $cat_exists $filter",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ($this->db->f(0))
+			if ($this->db->f('cnt'))
 			{
 				return True;
 			}

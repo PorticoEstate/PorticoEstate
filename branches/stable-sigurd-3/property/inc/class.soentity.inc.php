@@ -49,7 +49,6 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
 			$this->db           = & $GLOBALS['phpgw']->db;
-
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
@@ -408,9 +407,9 @@
 			$sql .= " $filtermethod $querymethod";
 
 //_debug_array($sql);
-			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
-			$this->total_records = $this->db->f(0);
+			$this->total_records = $this->db->f('cnt');
 
 			if($dry_run)
 			{
@@ -509,11 +508,11 @@
 		function check_entity($entity_id,$cat_id,$num)
 		{
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
-			$this->db->query("SELECT count(*) FROM $table where num='$num'");
+			$this->db->query("SELECT count(*) as cnt FROM $table where num='$num'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}

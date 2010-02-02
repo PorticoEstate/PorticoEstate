@@ -98,10 +98,10 @@
 
 		function total_messages($extra_where_clause = '')
 		{
-			$this->db->query("select count(*) from phpgw_messenger_messages where message_owner='"
+			$this->db->query("select count(*) as cnt from phpgw_messenger_messages where message_owner='"
 				. $this->owner . "' " . $extra_where_clause,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function delete_message($message_id)

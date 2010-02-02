@@ -725,7 +725,7 @@
 		{
 			// Nice SQL-Statement Kai
 //			$sql  = 'SELECT UNIX_TIMESTAMP(FROM_UNIXTIME(start_date,"%Y%m%d")) as day, project_id, sum(minutes) + sum(t_journey) ';
-			$sql  = 'SELECT start_date as day, project_id, sum(minutes) + sum(t_journey) ';
+			$sql  = 'SELECT start_date as day, project_id, sum(minutes) + sum(t_journey) as _time';
 			$sql .= 'FROM phpgw_p_hours ';
 			$sql .= 'WHERE employee='.(int)$employee.' AND start_date >= '.(int)$start_date.' AND start_date <= '.((int)$end_date + 86400).' ';
 			$sql .= 'GROUP BY project_id, day ';

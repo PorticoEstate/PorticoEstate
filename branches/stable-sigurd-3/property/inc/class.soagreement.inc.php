@@ -42,7 +42,6 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = clone($GLOBALS['phpgw']->db);
 			$this->db2          = clone($this->db);
-
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->like			= $this->bocommon->like;
