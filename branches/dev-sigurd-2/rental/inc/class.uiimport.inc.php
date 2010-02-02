@@ -75,13 +75,13 @@
 				// Get the path for user input or use a default path
 				$this->path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
 				phpgwapi_cache::session_set('rental', 'import_path', $this->path);
-				//phpgwapi_cache::session_set('rental', 'import_path_folder','/Ekstern');
-				//$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-				//$location_id = array_search('contract_type_eksternleie', $types);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'true'));
 			} 
 			else if(phpgw::get_var("importstep"))
 			{
+				$start_time = time(); // Start time of import
+				$start = date("G:i:s",$start_time);
+				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 				$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 				$this->location_id = array_search('contract_type_internleie', $types);
@@ -120,60 +120,14 @@
 					flush();
 				}
 				echo "</ul>";
-				
-				/*if(phpgw::get_var("importstep") == 'contract_type_eksternleie' && $result == '6') {
-					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-					$location_id = array_search('contract_type_internleie', $types);
-					phpgwapi_cache::session_set('rental', 'import_path_folder','/Intern');
-					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
-					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
-					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_internleie', 'location_id' => $location_id));
-					return;
-				} 
-				else if(phpgw::get_var("importstep") == 'contract_type_internleie' && $result == '6') 
-				{
-					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-					$location_id = array_search('contract_type_innleie', $types);
-					phpgwapi_cache::session_set('rental', 'import_path_folder','/Innleie');
-					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
-					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
-					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'contract_type_innleie', 'location_id' => $location_id));
-					return;
-				} 
-				else if(phpgw::get_var("importstep") == 'contract_type_innleie' && $result == '6')
-				{
-					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
-					$import_messages[] = "Import finished";
-					$this->messages = $import_messages;
-				}
-				else
-				{
-					$import_messages = phpgwapi_cache::session_get('rental', 'import_messages');
-					$import_messages[] = "Finished importing responsibility area (". phpgw::get_var("importstep") .") on step " . $result . " of 6";
-					phpgwapi_cache::session_set('rental', 'import_messages', $import_messages);
-					$url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => phpgw::get_var("importstep"), 'location_id' => phpgw::get_var("location_id")));	
-					$header = lang('facilit_import');
-					$p = RENTAL_TEMPLATE_PATH;
-					echo "<html>\n<head>\n<title>Import fra Facilit</title>";
-					echo "\n<meta http-equiv=\"refresh\" content=\"0; URL=$url\">";
-					echo "\n</head>\n<body>";
-					echo "<h1><img src='{$p}images/32x32/actions/document-save.png' /> {$header}</h1>";
-					echo "<ul>";
-					foreach ($import_messages as $message) {
-						echo '<li class="info">' . $message . '</li>';
-					}
-					echo "</ul>";
-					echo "\n</body>\n</html>";
-					//flush();
-					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => phpgw::get_var("importstep"), 'location_id' => phpgw::get_var("location_id")));	
-					return;
-				}	*/
+				$end_time = time();
+				$difference = ($end_time - $start_time) / 60;
+				$end = date("G:i:s",$end_time);
+				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 			}
-			
-			//Render import page
-			$this->render('facilit_import.php', array(
+			else
+			{
+				$this->render('facilit_import.php', array(
 				'messages' => $this->messages,
 				'warnings' => $this->warnings,
 				'errors' => $this->errors, 
@@ -181,6 +135,7 @@
 				'facilit_path' => $path,
 				'location_id' => $this->location_id)
 			);
+			}
 		}
 		
 		/**
@@ -209,7 +164,6 @@
 			$this->messages = array();
 			$this->warnings = array();
 			$this->errors = array();
-			
 			
 			// Import contract parts
 			// Step result:
@@ -304,7 +258,8 @@
 			}
 			
 			$datalines = $this->getcsvdata($this->path . "/u_PersonForetak.csv", true);
-			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read 'u_PersonForetak.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_PersonForetak.csv' contained " . count($datalines) . " lines";
 			$counter = 1;
 			
 			// Loop through each line of the file, parsing CSV data to a php array
@@ -317,7 +272,7 @@
 				// Create a new rental party we can fill with info from this line from the file
 				$party = new rental_party();
 
-				$identifier = $this->decode($data[24]); //cPersonForetaknr
+				$identifier = $this->decode($data[24]); 				//cPersonForetaknr
 				//Removed whitespace characters
 				$identifier = str_replace(' ','',''.$identifier);
 				
@@ -339,12 +294,10 @@
 				$party->set_reskontro($this->decode($data[23]));		//cReskontronr
 				$party->set_comment($this->decode($data[26]));			//cMerknad
                 
-				$contact_person = $this->decode($data[6]);
-				//var_dump($contact_person);
 				// Insert contract person in comment if present
+				$contact_person = $this->decode($data[6]);
 				if(isset($contact_person)) {				
                     $party->set_comment($party->get_comment()."\n\nKontaktperson: ".$contact_person);	//cKontaktPerson
-                    //var_dump($party->get_comment()."\n\nKontaktperson: ".$contact_person);
                 }
                 
            		$valid_identifier = false;
@@ -363,8 +316,15 @@
 	                        
 	                        // Get location ID
 	                        $locations = $GLOBALS['phpgw']->locations;
-	                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$this->decode($data[24]));	//cPersonForetaknr
-	                        $party->set_location_id($subs[0]['location_id']);
+	                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$identifier);	//cPersonForetaknr
+	                        if(count($subs) > 0)
+	                        {
+	                        	$party->set_location_id($subs[0]['location_id']);
+	                        }
+	                        else
+	                        {
+	                        	$this->warnings[] = "Party with valid identifier ({$identifier}) not found in internal organisation tree.";
+	                        }
                     		$valid_identifier = true;
                     	}
                     	break;
@@ -376,7 +336,7 @@
 	                        $party->set_first_name(null);
 	                        $party->set_last_name(null);
 	                        
-	                        
+	                        $valid_identifier = true;
                     	}
                     	break;
                     case 11: // Personnr
@@ -402,7 +362,7 @@
                 	$party->set_last_name($this->decode($data[1]));			//cEtternavn
                     $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
                     $party->set_is_inactive(true);
-                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";	//cPersonForetaknr
+                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";
                 }
 
 				// Store party and log message
@@ -438,7 +398,8 @@
 			
 			//Read source data
 			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt.csv");
-			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read 'u_Leieobjekt.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Leieobjekt.csv' contained " . count($datalines) . " lines";
 			
 			foreach ($datalines as $data) {
 				
@@ -502,14 +463,14 @@
 							// Using non-conforming object identifier. Gives a warning.
 							$loc1 = $object_identifier;
 							$set_custom_address = true;
-							$this->warnings[] = "Composite (internal contract) have wrong object-number ({$loc1}). Should consist of 6 numbers. Setting custom address.";
+							$this->warnings[] = "Composite (internal contract) has wrong object-number ({$loc1}). Should consist of 6 numbers. Setting custom address.";
 						}
 					}
 					else if($property_ok)
 					{
 						//If no object number, only property number
 						$set_custom_address = true;
-						$this->warnings[] = "Composite (internal contract) have no object-number ({$object_identifier}). Using property identifier. Setting custom address.";
+						$this->warnings[] = "Composite (internal contract) has no object-number ({$object_identifier}). Using property identifier. Setting custom address.";
 					}
 					
 					if(!isset($loc1))
@@ -597,7 +558,7 @@
 					{
 						$loc1 = $object_identifier;
 						$set_custom_address = true;
-						$this->warnings[] = "Composite (external) lacks data to create an object number. Using object number ({$loc1}) Setting custom address.";
+						$this->warnings[] = "Composite (external) lacks data to create an object number. Using non-conforming object number ({$loc1}) Setting custom address.";
 					}
 				}
 				else if($title == 'contract_type_innleie')
@@ -638,15 +599,6 @@
 					$this->errors[] = "The type of import ({$title}) is invalid";
 				}
 				
-				
-
-				//Retrieve 
-				//$comps = $socomposite->get(0, 1, null, null, null, null, array('location_code' => $loc1));
-				//$composite = $comps[0];
-				
-				//if(!isset($composite))
-				//{
-				
 				$composite = new rental_composite();
 				
 				// Use the first address line as name if no name
@@ -683,19 +635,9 @@
 					{
 						$this->messages[] = "Successfully added unit " . $loc1 . " to composite (" . $composite->get_id() . ")";
 					}
-					
 				} else {
 					$this->errors[] = "Failed to store composite " . $composite->get_name();
 				}
-				/*}
-				else
-				{
-					$this->messages[] = "Loaded already existing composite " . $composite->get_name() . " (" . $composite->get_id() . ") with ";
-					// Add composite to collection of composite so we can refer to it later.
-					$composites[$data[0]] = $composite->get_id();	
-				}*/
-				
-				
 			}
 			
 			$this->messages[] = "Successfully imported " . count($composites) . " composites (" . (time() - $start_time) . " seconds)";
@@ -705,15 +647,18 @@
 		
 		protected function import_rentalobject_to_contract()
 		{
+			$start_time = time();
 			$rentalobject_to_contract = array();
 			$datalines = $this->getcsvdata($this->path . "/u_Leieobjekt_Kontrakt.csv");
+			$this->messages[] = "Read 'u_Leieobjekt_Kontrakt.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Leieobjekt_Kontrakt.csv' contained " . count($datalines) . " lines";
 			
 			foreach ($datalines as $data) {
 				// Array with Facilit Contract ID => Facilit composite ID
 				$rentalobject_to_contract[$data[1]] = $data[0];
 			}
 			
-			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract links";
+			$this->messages[] = "Successfully imported " . count($rentalobject_to_contract) . " contract to composite relations";
 
 			return $rentalobject_to_contract;
 		}
@@ -732,10 +677,10 @@
 			$socontract = rental_socontract::get_instance();
 			$contracts = array();
 			$datalines = $this->getcsvdata($this->path . "/u_Kontrakt.csv");
-			$this->messages[] = "Read CSV file in " . (time() - $start_time) . " seconds";
 			
-			echo "<br/>Read " . count($datalines) . " contracts<br/>";
-
+			$this->messages[] = "Read 'u_Kontrakt.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Kontrakt.csv' contained " . count($datalines) . " lines";
+			
             // Old->new ID mapping
             $contract_types = array(
                 2 => 2, // "Internleie - innleid" -> Innleie
@@ -809,18 +754,18 @@
 				if ($price_period == 4) {
 					// The price period is month.  We ignore this but print a warning.
 					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
-					echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
+					//echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is month.  Ignored.";
 				}
                 elseif($price_period == 5) {
                     // The price period is 5, which is unknown.  We ignore this but print a warning.
 					$this->warnings[] = "Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
-					echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
+					//echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
                 }	
 
                 // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
                 if($data[6] == 3) {
                     $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
-                    echo "<br/>Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
+                   // echo "<br/>Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
                 }
 				
                 // Set the billing start date for the contract
@@ -890,8 +835,7 @@
 					}
 					else
 					{
-						$this->warnings[] = "The contract (internal) " . $contract->get_old_contract_id()  . " lacks service and responsibility area";
-						echo "<br/>The contract (internal) " . $contract->get_old_contract_id()  . " lacks service and responsibility area";
+						$this->warnings[] = "The contract (internal) " . $contract->get_old_contract_id()  . " lacks service and responsibility ids";
 					}
 				}
 				
@@ -914,15 +858,12 @@
 					}
 					
 					$this->messages[] = "Successfully added contract (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
-					echo "<br/>Successfully added contract (" . $contract->get_id() . "/". $contract->get_old_contract_id() .")";
 				} else {
 					$this->errors[] = "Failed to store contract " . $this->decode($data[5]);
-					echo "<br/>Error: Failed to store contract " . $this->decode($data[5]);
 				}
 			}
 			
 			$this->messages[] = "Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
-			echo "<br/>Successfully imported " . count($contracts) . " contracts. (" . (time() - $start_time) . " seconds)";
 			return $contracts;
 		}
 		
@@ -938,6 +879,8 @@
 			$detail_price_items = array();
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementDetaljKontrakt.csv");
 			
+			$this->messages[] = "Read 'u_PrisElementDetaljKontrakt.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_PrisElementDetaljKontrakt.csv' contained " . count($datalines) . " lines";
 			
 			foreach ($datalines as $data) {			//Felt fra 'PrisElementDetaljKontrakt'
 				if(count($data) <= 10)
@@ -976,9 +919,10 @@
 				}
 			}
 			
-			echo "<br/>Read " . count($datalines) . " details on price elements for contracts";
-			
 			$datalines = $this->getcsvdata($this->path . "/u_PrisElementKontrakt.csv");
+			
+			$this->messages[] = "Read 'u_PrisElementKontrakt.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_PrisElementKontrakt.csv' contained " . count($datalines) . " lines";
 			
 			//Retrieve the title for the responsibility area we are importing (to hande the respoonsibility areas differently)
 			$title = $socontract->get_responsibility_title($this->location_id);
@@ -986,8 +930,6 @@
 			if($title == 'contract_type_innleie'){
 				$admin_price_item = $soprice_item->get_single_with_id('INNLEIE');
 			}
-			
-			echo "<br/>Read " . count($datalines) . " price elements for contracts";
 			
 			foreach ($datalines as $data) {
 				if(count($data) <= 24)
@@ -1033,8 +975,7 @@
 					if(isset($id))
 					{
 						$soprice_item->store($admin_price_item);
-						$this->messages[] = "Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
-						echo "<br/>Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
+						$this->messages[] = "Stored price item ({$id}) with title " . $admin_price_item->get_title() . " in 'Prisbok'";
 					}
 				}
 				
@@ -1080,8 +1021,7 @@
                     // Give a warning if a contract has a price element of type area with are like 1
                    	if($price_item->is_area() && ($detail_price_items[$facilit_id]['amount'] == '1'))
                    	{
-                   		$this->messages[] = "Stored price item {$id} in with title " . $admin_price_item->get_title() . " in 'Prisbok'";
-                   		echo "<br/>Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
+                   		$this->warnings[] = "Contract " . $contract->get_old_contract_id() . " has a price item of type area with amount like 1";
                    	}
                     
 					// Tie this price item to its parent admin price item
@@ -1094,9 +1034,7 @@
                             {
                             	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
                             	{
-                            		$this->messages[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
-                            		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract.";
-                            		echo "<br/>Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		$this->warnings[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
                             		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract.";
                             	}
                             }
@@ -1115,10 +1053,6 @@
                             //Calculate the total price for the price item
                             $item_area = $price_item->get_area();
                             $item_price = $price_item->get_price();
-                            //$item_area = str_replace(',','.',$item_area);
-                            //$item_price = str_replace(',','.',$item_price);
-                            //var_dump('total_price = '.$item_area * $item_price.'='.$item_area.'*'.$item_price);
-                            //$price_item->set_total_price(floatval($item_area) * floatval($item_price));
                             $price_item->set_total_price($item_area * $item_price);
                         
 					} 
@@ -1127,10 +1061,6 @@
 						$price_item->set_count($detail_price_items[$facilit_id]['amount']);
 						$item_count = $price_item->get_count();
                         $item_price = $price_item->get_price();
-                        //$item_count = str_replace(',','.',$item_count);
-                        //$item_price = str_replace(',','.',$item_price);
-                        //var_dump('total_price = '.$item_count * $item_price.'='.$item_count.'*'.$item_price);
-						//$price_item->set_total_price(floatval($item_count) * floatval($item_price));
 						$price_item->set_total_price($item_count * $item_price);
 					}
 					
@@ -1146,21 +1076,16 @@
 					
 					// .. and save
 					if($socontract_price_item->import($price_item)) {
-                        echo "<br/>Successfully imported price item ({$id}) for contract {$contract_id}";
-                        $this->messages[] = "Successfully imported price item ({$id}) for contract {$contract_id}";
+                    	$this->messages[] = "Successfully imported price item ({$id}) for contract {$contract_id}";
                     }
                     else {
-                        echo "<br/>Could not store price item ({$id}) - " . $price_item->get_title();
-                        $this->messages[] = "Could not store price item ({$id}) - " . $price_item->get_title();
+                        $this->warnings[] = "Could not store price item ({$id}) - " . $price_item->get_title();
                     }
 				} else {
-					echo "<br/>Skipped price item with no contract attached: " . join(", ", $data);
-					$this->messages[] = "Skipped price item with no contract attached: " . join(", ", $data);
+					$this->warnings[] = "Skipped price item with no contract attached: " . join(", ", $data);
 				}
 			}
-			echo "<br/>Imported contract price items. (" . (time() - $start_time) . " seconds)";
 			$this->messages[] = "Imported contract price items. (" . (time() - $start_time) . " seconds)";
-
             return true;
 		}
 		
@@ -1171,6 +1096,9 @@
 			$sonotification = rental_sonotification::get_instance();
 			
 			$datalines = $this->getcsvdata($this->path . "/u_Hendelse.csv");
+			
+			$this->messages[] = "Read 'u_Hendelse.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Hendelse.csv' contained " . count($datalines) . " lines";
 			
 			foreach ($datalines as $data) {
 				$type_id = $data[2];
@@ -1213,7 +1141,6 @@
 			}
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
-
 			return true;
 		}
 		
@@ -1291,7 +1218,14 @@
         }
 
         private function log_messages($step) {
-            $msgs = array_merge($this->errors, $this->warnings, $this->messages);
+            $msgs = array_merge(
+            	array('----------------Errors--------------------'),
+            	$this->errors,
+            	array('---------------Warnings-------------------'),
+            	$this->warnings,
+            	array('---------------Messages-------------------'),
+            	$this->messages
+            );
             $path = $this->path;
 
             if(is_dir($path.'/logs') || mkdir($path.'/logs')) {
