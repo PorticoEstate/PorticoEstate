@@ -88,7 +88,7 @@
 	);
 
     function doExport() {
-        window.location = 'index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>';
+        window.location = 'index.php?menuaction=rental.uibilling.download&amp;export=true<?php echo $url_add_on; ?>';
     }
 </script>
 <fieldset>
