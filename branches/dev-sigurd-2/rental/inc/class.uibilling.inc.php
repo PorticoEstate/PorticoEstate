@@ -289,7 +289,7 @@ class rental_uibilling extends rental_uicommon
 			'errorMsgs' => $errorMsgs,
 			'infoMsgs' => $infoMsgs,
 			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index'))),
-			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop())))
+			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop(), 'export_format' => $billing_job->get_export_format())))
 		);
 		$this->render('billing.php', $data);
 	}
@@ -453,8 +453,10 @@ class rental_uibilling extends rental_uicommon
 		//$browser->content_header('export.txt','text/plain');
 		
 		$stop = phpgw::get_var('date');
+		$export_format = str_replace('-','.',phpgw::get_var('export_format'));
+		
 		$date = date('Ymd', $stop);
-		header("Content-Disposition: attachment; filename='BBEPEFaktura_{$date}.L04'");
+		header("Content-Disposition: attachment; filename='BKBPE_{$date}{$export_format}'");
 		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 

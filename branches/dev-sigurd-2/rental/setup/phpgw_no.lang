@@ -301,6 +301,7 @@ other_guarantee	rental	no	Annen garanti
 others	rental	no	Annet
 out_of_operation	rental	no	Ikke i drift
 overridden_address	rental	no	Overstyrt adresse
+override	rental	no	Bruk fakturastart
 panels	rental	no	Vinduer
 parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
