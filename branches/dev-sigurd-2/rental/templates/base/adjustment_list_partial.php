@@ -12,6 +12,18 @@
 		}
 	}
 
+	var formatPercent = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
+				suffix: " %",
+				thousandsSeparator: "<?php echo lang('currency_thousands_separator') ?>",
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ','; ?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places'] : 2; ?>
+		    });
+		}
+	}
+
 	// Defining columns for datatable
 	var columnDefs = [
         {
@@ -31,7 +43,12 @@
 		},
 		{
 			key: "percent",
-			label: "<?php echo lang('percent') ?>"
+			label: "<?php echo lang('percent') ?>",
+			formatter: formatPercent
+		},
+		{
+			key: "interval",
+			label: "<?php echo lang('interval') ?>",
 		},
 		{
 			key: "responsibility_title",

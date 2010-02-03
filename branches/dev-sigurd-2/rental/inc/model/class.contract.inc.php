@@ -51,6 +51,7 @@
 		protected $adjustment_interval;
 		protected $adjustment_share;
 		protected $adjustment_year;
+		protected $adjustable;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -567,7 +568,8 @@
 				'contract_notification_status' => $this->get_contract_notification_status(),
 				'rented_area' => $this->get_rented_area(),
 				'adjustment_interval' => $this->get_adjustment_interval(),
-				'adjustment_share' => $this->get_adjustment_share()
+				'adjustment_share' => $this->get_adjustment_share(),
+				'adjustment_year' => $this->get_adjustment_year()
 			);
 		}
 		
@@ -635,6 +637,21 @@
 		public function get_adjustment_year()
 		{
 			return $this->adjustment_year;
+		}
+		
+		public function set_adjustable($adjustable)
+		{
+			$this->adjustable = (boolean)$adjustable;
+		}
+		
+		public function is_adjustable()
+		{
+			return $this->adjustable;
+		}
+		
+		public function get_adjustable()
+		{
+			return $this->adjustable;
 		}
 		
 		public function set_contract_type_id($contract_type_id)

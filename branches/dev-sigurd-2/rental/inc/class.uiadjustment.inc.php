@@ -31,6 +31,9 @@ class rental_uiadjustment extends rental_uicommon {
 		$start_index	= phpgw::get_var('startIndex', 'int');
 		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
 		$sort_field		= phpgw::get_var('sort');
+		if($sort_field == 'responsibility_title'){
+			$sort_field = "responsibility_id";
+		}
 		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		// Form variables
 		$search_for 	= phpgw::get_var('query');
@@ -135,12 +138,10 @@ class rental_uiadjustment extends rental_uicommon {
 				{
 					$adjustment->set_responsibility_id($responsibility_id); // only present when new contract
 				}
-				/*$new_price=phpgw::get_var('new_price');
-				if(!isset($new_price)){
-					$new_price = 0;
-				}*/
+
 				$adjustment->set_new_price(0);
 				$adjustment->set_percent(phpgw::get_var('percent'));
+				$adjustment->set_interval(phpgw::get_var('interval'));
 				
 				$so_adjustment = rental_soadjustment::get_instance();
 				if($so_adjustment->store($adjustment))

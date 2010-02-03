@@ -240,7 +240,7 @@ class rental_socontract extends rental_socommon
 		{
 			// columns to retrieve
 			$columns[] = 'contract.id AS contract_id';
-			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year';
+			$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year';
 			$columns[] = 'party.id AS party_id';
 			$columns[] = 'party.first_name, party.last_name, party.company_name';
 			$columns[] = 'c_t.is_payer';		
@@ -305,6 +305,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
 			$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'),int));
 			$contract->set_rented_area($this->unmarshal($this->db->f('rented_area'),'float'));
+			$contract->set_adjustable($this->unmarshal($this->db->f('adjustable'),'bool'));
 			$contract->set_adjustment_interval($this->unmarshal($this->db->f('adjustment_interval'),'int'));
 			$contract->set_adjustment_share($this->unmarshal($this->db->f('adjustment_share'),'int'));
 			$contract->set_adjustment_year($this->unmarshal($this->db->f('adjustment_year'),'int'));
@@ -485,6 +486,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "security_type = " . 	$this->marshal($contract->get_security_type(), 'int');
 		$values[] = "security_amount = " . 	$this->marshal($contract->get_security_amount(), 'string');
 		$values[] = "rented_area = ".		$this->marshal($contract->get_rented_area(),'float');
+		$values[] = "adjustable = ".		($adjustment->is_adjustable() ? "true" : "false");
 		$values[] = "adjustment_interval = ".		$this->marshal($contract->get_adjustment_interval(),'int');
 		$values[] = "adjustment_share = ".		$this->marshal($contract->get_adjustment_share(),'int');
 		
@@ -1017,10 +1019,18 @@ class rental_socontract extends rental_socommon
     	$this->db->query($sql);
     }
     
-    public function update_adjustment_year($contract_id, $adjusted_year)
+    public function update_adjustment_year_interval($contract_id, $adjusted_year, $adjustment_interval)
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
-    	$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
+    	$new_adjustment_interval = $this->marshal($adjustment_interval, 'int');
+    	$sql = "UPDATE rental_contract SET adjustable=TRUE, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
+    	$this->db->query($sql);
+    }
+    
+    public function update_adjustment_share($contract_id, $adjustment_share)
+    {
+    	$new_adjustment_share = $this->marshal($adjusted_year, 'float');
+    	$sql = "UPDATE rental_contract SET adjustment_share={$new_adjustment_share} WHERE id = {$contract_id}";
     	$this->db->query($sql);
     }
 

@@ -58,7 +58,7 @@ class rental_soadjustment extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_date';
+			$cols = 'id, price_item_id, responsibility_id, new_price, percent, interval, adjustment_date';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ' ORDER BY adjustment_date DESC';
 		}
 		
@@ -73,7 +73,8 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
 			$adjustment->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$adjustment->set_new_price($this->unmarshal($this->db->f('new_price', true), 'float'));
-			$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'int'));
+			$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'float'));
+			$adjustment->set_interval($this->unmarshal($this->db->f('interval', true), 'int'));
 			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
 		}
@@ -100,6 +101,7 @@ class rental_soadjustment extends rental_socommon
 			'responsibility_id = ' . $adjustment->get_responsibility_id(),
 			'new_price= ' . $adjustment->get_new_price(),
             'percent = '.$adjustment->get_percent(),
+			'interval = '.$adjustment->get_interval(),
             'adjustment_date = ' . $adjustment->get_adjustment_date(),
 			'is_manual = ' . ($adjustment->is_manual() ? "true" : "false")
 		);
@@ -118,12 +120,13 @@ class rental_soadjustment extends rental_socommon
 	public function add(&$adjustment)
 	{
 		// Build a db-friendly array of the adjustment object
-		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_date', 'is_manual');
+		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'interval', 'adjustment_date', 'is_manual');
 		$values = array(
 			$adjustment->get_price_item_id(),
 			$adjustment->get_responsibility_id(),
 			$adjustment->get_new_price(),
 			$adjustment->get_percent(),
+			$adjustment->get_interval(),
             $adjustment->get_adjustment_date(),
             ($adjustment->is_manual() ? "true" : "false")
 		);

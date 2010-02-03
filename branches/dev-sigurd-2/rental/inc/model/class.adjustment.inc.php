@@ -10,6 +10,7 @@ class rental_adjustment extends rental_model
 	protected $percent;
 	protected $adjustment_date;
 	protected $is_manual;
+	protected $interval;
 
 	public function __construct(int $id = null)
 	{
@@ -92,6 +93,16 @@ class rental_adjustment extends rental_model
 		$this->is_manual = (boolean)$is_manual;
 	}
 	
+	public function get_interval()
+	{
+		return $this->interval;
+	}
+	
+	public function set_interval(int $interval)
+	{
+		$this->interval = (int)$interval;
+	}
+	
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -101,6 +112,7 @@ class rental_adjustment extends rental_model
 			'responsibility_title' => lang(rental_socontract::get_instance()->get_responsibility_title($this->get_responsibility_id())),
 			'new_price' => $this->get_new_price(),
 			'percent' => $this->get_percent(),
+			'interval' => $this->get_interval(),
 			'adjustment_date' => date($date_format, $this->get_adjustment_date())
 		);
 	}

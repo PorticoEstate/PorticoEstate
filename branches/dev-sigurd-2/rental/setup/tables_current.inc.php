@@ -110,7 +110,8 @@
 				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true), //Utleid areal
 				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
 				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsandel
-				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true)
+				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Sist regulert
+				'adjustable' =>			array('type' => 'bool','nullable' => true, 'default' => 'false') //Regulerbar
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -420,7 +421,8 @@
 				'responsibility_id' =>  array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'adjustment_date' =>  	array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-				'percent' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false')	
 			),
 			'pk' => array('id'),

@@ -28,6 +28,18 @@
 			?>
 		</dd>
 		<dt>
+			<label for="interval"><?php echo lang('interval') ?></label>
+		</dt>
+		<dd>
+			<?php
+				if ($editable) {
+					echo '<input type="text" name="interval" id="interval" value="' . $adjustment->get_interval() . '"/> ';
+				} else {
+					echo $adjustment->get_interval();
+				}
+			?>
+		</dd>
+		<dt>
 			<label for="adjustment_date"><?php echo lang('adjustment_date') ?></label>
 		</dt>
 		<dd>

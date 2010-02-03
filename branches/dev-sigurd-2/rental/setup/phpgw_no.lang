@@ -15,10 +15,12 @@ add	rental	no	Legg til
 address	rental	no	Adresse
 adjust_price	rental	no	Juster pris
 adjustment	rental	no	Regulering
+adjustable	rental	no	Regulerbar
 adjustment_interval	rental	no	Reguleringsintervall
 adjustment_list	rental	no	Reguleringer
 adjustment_share	rental	no	Reguleringsandel
 adjustment_year	rental	no	Sist regulert
+adjustment_date	rental	no	Reguleringsdato
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
@@ -188,6 +190,7 @@ in_operation	rental	no	I drift
 inactive_party	rental	no	Kontraktspart er inaktiv
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
+interval	rental	no	Intervall
 Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
 invoice_run	rental	no	Fakturakjøring
 invoice_menu	rental	no	Faktura
@@ -269,6 +272,7 @@ never	rental	no	Aldri
 new_notification	rental	no	Nytt varsel
 new_billing	rental	no	Ny fakturering
 new_adjustment	rental	no	Ny regulering
+new_price	rental	no	Ny pris
 next	rental	no	Neste
 no	rental	no	Nei
 nobody	rental	no	Ingen
@@ -320,6 +324,7 @@ postal_code_place	rental	no	Postnummer/-sted
 post_code	rental	no	Postnummer
 post_place	rental	no	Sted
 previous	rental	no	Forrige
+price_item	rental	no	Priselement
 price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
 price_item_inactive	rental	no	Inaktiv

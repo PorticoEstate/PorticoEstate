@@ -388,6 +388,7 @@
 					$contract->set_rented_area($new_rented_area);
 					$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
 					$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
+					$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
 					$validated_numeric = $contract->validate_numeric();
 					
 					if($validated_numeric){

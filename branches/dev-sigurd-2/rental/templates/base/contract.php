@@ -601,6 +601,12 @@ if($contract->get_id() > 0) {
 						?>
 					</dd>
 					<dt>
+						<label for="adjustable"><?php echo lang('adjustable') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="adjustable" id="adjustable"<?php echo $contract->is_adjustable() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
+					</dd>
+					<dt>
 						<label for="adjustment_interval"><?php echo lang('adjustment_interval') ?></label>
 					</dt>
 					<dd>

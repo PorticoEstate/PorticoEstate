@@ -7,6 +7,7 @@
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
 	phpgw::import_class('rental.sonotification');
+	phpgw::import_class('rental.soadjustment');
 	
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
@@ -16,6 +17,7 @@
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
 	include_class('rental', 'notification', 'inc/model/');
+	include_class('rental', 'adjustment', 'inc/model/');
 
 	class rental_uiimport extends rental_uicommon
 	{
@@ -89,7 +91,7 @@
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
 				echo '<li class="info">Internleie: finished step ' .$result. '</li>';
-				while($result != '6')
+				while($result != '7')
 				{
 					$result = $this->import();
 					echo '<li class="info">Internleie: finished step ' .$result. '</li>';
@@ -101,7 +103,7 @@
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
 				echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
-				while($result != '6')
+				while($result != '7')
 				{
 					$result = $this->import();
 					echo '<li class="info">Eksternleie: finished step ' .$result. '</li>';
@@ -113,7 +115,7 @@
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
 				echo '<li class="info">Innleie: finished step ' .$result. '</li>';
-				while($result != '6')
+				while($result != '7')
 				{
 					$result = $this->import();
 					echo '<li class="info">Innleie: finished step ' .$result. '</li>';
@@ -150,7 +152,7 @@
 		public function import()
 		{
 					
-			$steps = 6;
+			$steps = 7;
 			
 			/* Import logic:
 			 * 
@@ -226,7 +228,18 @@
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
-                $this->log_messages(6);
+				$this->import_button_label = "7/{$steps}: Continue to import adjustments";
+				$this->log_messages(6);
+				return '6';
+			}
+			
+			// Import adjustments
+			// Prerequistes: Contracts
+			// Step result
+			if (!phpgwapi_cache::session_get('rental', 'facilit_adjustments')) {
+				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
+				phpgwapi_cache::session_set('rental', 'facilit_adjustments', $this->import_adjustments($contracts));
+                $this->log_messages(7);
                 $this->clean_up();
 				$this->import_button_label = "Import done";
 				//return;
@@ -239,7 +252,8 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_events');
-			return '6';
+			//phpgwapi_cache::session_clear('rental', 'facilit_adjustments');
+			return '7';
 		}
 		
 		protected function import_parties()
@@ -1079,6 +1093,12 @@
 					// Tie this price item to its parent admin price item
 					$price_item->set_price_item_id($admin_price_item->get_id());
 					
+					//update contract with adjustment share
+					$adjustment_share = $this->decode($data[18]);	//nReguleringsandel
+					if($adjustment_share != null && $adjustment_share > 0){
+						$socontract->update_adjustment_share($contract_id, $adjustment_share);
+					}	
+					
 					// .. and save
 					if($socontract_price_item->import($price_item)) {
                     	$this->messages[] = "Successfully imported price item ({$id}) for contract {$contract_id}";
@@ -1099,6 +1119,7 @@
 			$start_time = time();
 			
 			$sonotification = rental_sonotification::get_instance();
+			$socontract = rental_socontract::get_instance();
 			
 			$datalines = $this->getcsvdata($this->path . "/u_Hendelse.csv");
 			
@@ -1140,12 +1161,90 @@
 							$this->errors[] = "Error importing event " . $notification->get_message() . " for contract {$contract_id}";
 						}
 					}
+				} else if($type_id == 1 || $type_id == '1') {	//price adjustment
+					$adjusted = $this->decode($data[8]);
+					if($adjusted == 0 || $adjusted == '0'){
+						$date_tmp = $this->decode($data[7]);
+						$year = substr($date_tmp, 5, 4);
+						
+						$interval = $this->decode($data[6]);
+						$last_adjusted_year = $year - $interval;
+						
+						//update last adjusted on contract.
+						$contract_id = $contracts[$data[1]];
+						if($contract_id > 0){
+							$socontract->update_adjustment_year_interval($contract_id, $adjusted_year, $interval);
+						}
+					}
 				} else {
 					$this->warnings[] = "Skipping price item " . $data[0] . " because it has no title or is an adjustment (regulering).";
 				}
 			}
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
+			return true;
+		}
+		
+		protected function import_adjustments($contracts)
+		{
+			$start_time = time();
+			
+			$soadjustment = rental_soadjustment::get_instance();
+			
+			$datalines = $this->getcsvdata($this->path . "/u_Regulering.csv");
+			
+			$this->messages[] = "Read 'u_Regulering.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Regulering.csv' contained " . count($datalines) . " lines";
+			
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$location_id_intern = array_search('contract_type_internleie', $types);
+			$location_id_extern = array_search('contract_type_eksternleie', $types);
+			
+			foreach ($datalines as $data) {
+				if(count($data) <= 9)
+				{
+					continue;
+				}
+				$adjustment = new rental_adjustment();
+				$responsibility_id = $this->decode($data[9]);	//nResponsibility
+				
+				if ($responsibility_id == 1 || $responsibility_id == '1') {
+					$adjustment->set_responsibility_id($location_id_intern);	//internal
+				}
+				else{
+					$adjustment->set_responsibility_id($location_id_extern);	//external
+				}
+				
+				$date_array = explode(".",$this->decode($data[1]));	//dAktuellDato
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$date = strtotime($y."-".$m."-".$d);
+				}
+				$adjustment->set_adjustment_date($date);
+				
+				$percent_tmp =$this->decode($data[4]);	//cBeskrivelse
+				$percent = substr($percent_tmp, 34, -2);
+				$percent = str_replace(',', '.', $percent);
+				$adjustment->set_percent($percent);
+				
+				$adjustment->set_interval($this->decode($data[2]));
+				
+				$adjustment->set_new_price(0);
+				$adjustment->set_price_item_id(0);
+
+				
+				// All is good, store notification
+				if ($soadjustment->store($adjustment)) {
+					$this->messages[] = "Successfully imported adjustment '" . $adjustment->get_id() . "' for contract {$contract_id}";
+				} else {
+					$this->errors[] = "Error importing adjustment " . $adjustment->get_id() . " for contract {$contract_id}";
+				}
+			}
+			
+			$this->messages[] = "Imported adjustments. (" . (time() - $start_time) . " seconds)";
 			return true;
 		}
 		
