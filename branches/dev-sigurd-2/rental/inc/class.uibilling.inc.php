@@ -363,6 +363,14 @@ class rental_uibilling extends rental_uicommon
 		$result_count = 0;
 		//Retrieve the type of query and perform type specific logic
 		$query_type = phpgw::get_var('type');
+		
+		$exp_param 	= phpgw::get_var('export');
+		$export = false;
+		if(isset($exp_param)){
+			$export=true;
+			$num_of_objects = null;
+		}
+		
 		switch($query_type)
 		{
 			case 'all_billings':
@@ -393,8 +401,10 @@ class rental_uibilling extends rental_uicommon
 		// ... add result data
 		$result_data = array('results' => $rows, 'total_records' => $object_count);
 		
-		//Add action column to each row in result table
-		array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
+		if(!$export){
+			//Add action column to each row in result table
+			array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
+		}
 
 		return $this->yui_results($result_data, 'total_records', 'results');
 	}
@@ -453,7 +463,7 @@ class rental_uibilling extends rental_uicommon
 		//$browser->content_header('export.txt','text/plain');
 		
 		$stop = phpgw::get_var('date');
-		$export_format = str_replace('-','.',phpgw::get_var('export_format'));
+		$export_format = str_replace('_','.',phpgw::get_var('export_format'));
 		
 		$date = date('Ymd', $stop);
 		header("Content-Disposition: attachment; filename='BKBPE_{$date}{$export_format}'");

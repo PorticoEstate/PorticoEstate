@@ -94,7 +94,7 @@
 	);
 
     function doExport() {
-        var dl = window.open('index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>');
+        var dl = window.open('index.php?menuaction=rental.uibilling.download&amp;export=true<?php echo $url_add_on; ?>');
     }
 </script>
 <!-- <fieldset>
