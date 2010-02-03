@@ -46,7 +46,7 @@
 
 		function __construct()
 		{
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
@@ -176,9 +176,11 @@
 				
 				foreach ($status_id as $value)
 				{
-				//	$value = trim($value,'C');
-					$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
-					$or = ' OR';
+					if($value)
+					{
+						$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
+						$or = ' OR';
+					}
 				}
 
 				$filtermethod .= ')';
@@ -253,19 +255,29 @@
 				}
 			}
 
-			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
-			. " $this->left_join fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
+			. " LEFT OUTER JOIN fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
 			. " $filtermethod $querymethod";
 
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*) as hits ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+/*
+				$sql2 = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
+				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " $order_join"
+				. " $filtermethod $querymethod";
+
+				$sql2 = 'SELECT count(*) as cnt ' . substr($sql2,strripos($sql2,'FROM'));
+*/
+				$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
+				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f('hits');
-				$this->db->fetchmode = 'ASSOC';
+				$this->total_records = $this->db->f('cnt');
+				unset($sql2);
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -299,10 +311,12 @@
 					'finnish_date2'		=> $this->db->f('finnish_date2'),
 					'order_id'			=> $this->db->f('order_id'),
 					'vendor_id'			=> $this->db->f('vendor_id'),
-					'new_ticket'		=> ''
+					'actual_cost'		=> $this->db->f('actual_cost'),
+					'estimate'			=> $this->db->f('budget'),
+					'new_ticket'		=> $this->db->f('view') ? false : true,
 				);
 			}
-			
+/*			
 			foreach ($tickets as &$ticket)
 			{
 				$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
@@ -314,6 +328,7 @@
 					$ticket['new_ticket'] = true;
 				}
 			}
+*/
 			return $tickets;
 		}
 

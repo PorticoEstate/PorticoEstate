@@ -628,6 +628,8 @@
 			{
 				$uicols['name'][$i++] = 'order_id';
 				$uicols['name'][$i++] = 'vendor';
+				$uicols['name'][$i++] = 'estimate';
+				$uicols['name'][$i++] = 'actual_cost';
 			}
 
 			foreach($uicols_related as $related)

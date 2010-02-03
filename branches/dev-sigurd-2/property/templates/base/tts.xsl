@@ -1720,11 +1720,10 @@
 		</option>
 	</xsl:template>
 
-	<xsl:template match="vendor_email">
-	<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
+	<xsl:template match="vendor_email" xmlns:php="http://php.net/xsl">
 		<tr>
 			<td>
-				<input type="checkbox" name="values[vendor_email][]" value="{$email}" >
+				<input type="checkbox" name="values[vendor_email][]" value="{email}" >
 					<xsl:attribute name="title">
 						<xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
 					</xsl:attribute>
