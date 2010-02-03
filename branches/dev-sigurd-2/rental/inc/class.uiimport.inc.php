@@ -901,7 +901,7 @@
 					$date_array = explode(".",$this->decode($data[4]));
 					if(count($date_array) == 3)
 					{
-						$y = $date_array[2];
+						$y = substr($date_array[2],0,4);
 						$m = $date_array[1];
 						$d = $date_array[0];
 						$detail_price_items[$data[1]]['date_start'] = strtotime($y."-".$m."-".$d);
@@ -911,7 +911,7 @@
 					$date_array = explode(".",$this->decode($data[5]));
 					if(count($date_array) == 3)
 					{
-						$y = $date_array[2];
+						$y = substr($date_array[2],0,4);
 						$m = $date_array[1];
 						$d = $date_array[0];
 						$detail_price_items[$data[1]]['date_end'] = strtotime($y."-".$m."-".$d);
