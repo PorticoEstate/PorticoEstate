@@ -126,4 +126,26 @@
 		{
 			return $this->so->set_active($id, $active);
 		}
+
+		/**
+		 * Checks if the current user has any role
+		 * Use booking_sopermission::ROLE_MANAGER or booking_sopermission::CASE_OFFICER for the role parameter
+		 */
+		function has_role($role)
+		{
+			$permission_root_bo = CreateObject('booking.bopermission_root');
+			$filters['filters']['role'] = $role;
+			$filters['filters']['subject_id'] = $GLOBALS['phpgw_info']['user']['id']; // id for the current user
+
+			$booking_roles = $permission_root_bo->so->read($filters);
+
+			if (intval($booking_roles['total_records']) == 1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}

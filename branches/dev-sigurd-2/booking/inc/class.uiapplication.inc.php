@@ -208,7 +208,13 @@
 
 		public function index_json()
 		{
-			$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			// users with the booking role admin should have access to all buildings
+			// admin users should have access to all buildings
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
+			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) )
+			{
+				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			}
 			$filters['status'] = 'NEW';
 			if(isset($_SESSION['showall']))
 			{
