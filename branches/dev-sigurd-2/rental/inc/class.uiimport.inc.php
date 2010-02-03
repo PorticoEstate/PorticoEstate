@@ -898,30 +898,29 @@
 				);
 				
 				if (!$this->is_null($data[4])) {
-					$date_elements = explode(" ",$this->decode($data[4]));
-					$date_array = explode(".",$date_elements);
-					if(count($date_array) == 3)
-					{
-						$y = $date_array[2];
-						$m = $date_array[1];
-						$d = $date_array[0];
-						$detail_price_items[$data[1]]['date_start'] = strtotime($y."-".$m."-".$d);
-					}
-					unset($date_array);
-					//$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+//					$date_array = explode(".",$this->decode($data[4]));
+//					if(count($date_array) == 3)
+//					{
+//						$y = $date_array[2];
+//						$m = $date_array[1];
+//						$d = $date_array[0];
+//						$detail_price_items[$data[1]]['date_start'] = strtotime($y."-".$m."-".$d);
+//					}
+//					unset($date_array);
+					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
 				}
 				if (!$this->is_null($data[5])) {
-					$date_elements = explode(" ",$this->decode($data[5]));
-					$date_array = explode(".",$date_elements);
-					if(count($date_array) == 3)
-					{
-						$y = $date_array[2];
-						$m = $date_array[1];
-						$d = $date_array[0];
-						$detail_price_items[$data[1]]['date_end'] = strtotime($y."-".$m."-".$d);
-					}
-					unset($date_array);
-					//$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
+//					$date_elements = explode(" ",);
+//					$date_array = explode(".",$this->decode($data[5]));
+//					if(count($date_array) == 3)
+//					{
+//						$y = $date_array[2];
+//						$m = $date_array[1];
+//						$d = $date_array[0];
+//						$detail_price_items[$data[1]]['date_end'] = strtotime($y."-".$m."-".$d);
+//					}
+					//unset($date_array);
+					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
 				}
 			}
 			
