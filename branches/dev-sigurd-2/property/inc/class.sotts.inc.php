@@ -51,6 +51,7 @@
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
+			$this->left_join 	= & $this->db->left_join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
@@ -77,6 +78,7 @@
 			$end_date		= isset($data['end_date'])?$data['end_date']:'';
 			$external		= isset($data['external'])?$data['external']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$new			= isset($data['new']) ? $data['new'] : '';
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -144,7 +146,7 @@
 
 			if ($status_id == 'X')
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='X'";
+				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
 				$where = 'AND';
 			}
 			else if($status_id == 'O')
@@ -160,21 +162,21 @@
 					}
 				}
 
-				$filtermethod .= " $where (fm_tts_tickets.status='O'{$open})";
+				$filtermethod .= " $where ( (fm_tts_tickets.status='O'{$open})";
 				$where = 'AND';
 			}
 			else if($status_id == 'all')
 			{
-				//nothing
+				$filtermethod .= "{$where} (1=1";//nothing
 			}
 			else if(is_array($status_id) && count($status_id))
 			{
 				$or = '';
-				$filtermethod .= "{$where} (";
+				$filtermethod .= "{$where} ((";
 				
 				foreach ($status_id as $value)
 				{
-					$value = trim($value,'C');
+				//	$value = trim($value,'C');
 					$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
 					$or = ' OR';
 				}
@@ -185,8 +187,17 @@
 			}
 			else
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='{$status_id}'";
+				$filtermethod .= " $where (fm_tts_tickets.status='{$status_id}'";
 				$where = 'AND';
+			}
+
+			if($new)
+			{
+				$filtermethod .= " OR fm_tts_views.id IS NULL )";
+			}
+			else
+			{
+				$filtermethod .= ')';
 			}
 
 			if ($cat_id > 0)
@@ -242,10 +253,11 @@
 				}
 			}
 
-			$sql = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
+			. " $this->left_join fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
 			. " $filtermethod $querymethod";
 
 			if(!$dry_run)
