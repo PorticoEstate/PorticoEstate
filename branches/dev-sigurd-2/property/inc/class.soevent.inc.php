@@ -63,7 +63,7 @@
 				$location_id = (int) $data['location_id'];
 			}
 
-			$location_item_id 	= isset($data['location_item_id']) && $data['location_item_id'] ? (int)$data['location_item_id'] : '';
+			$location_item_id 	= isset($data['location_item_id']) && $data['location_item_id'] ? $data['location_item_id'] : '';
 			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query				= isset($data['query']) ? $data['query'] : '';
 			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
@@ -353,7 +353,7 @@
 			$tz_offset			= $data['tz_offset'] ? $data['tz_offset'] : 0;
 			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
 			$location_id		= (int) $data['location_id'];
-			$location_item_id	= (int) $data['location_item_id'];
+			$location_item_id	= $data['location_item_id'];
 
 			if(!$startYear || !$startMonth || !$startDay || !$location_id || !$location_item_id)
 			{
@@ -415,7 +415,7 @@
 			$eday				= $data['eday'];
 			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
 			$location_id		= (int) $data['location_id'];
-			$location_item_id	= (int) $data['location_item_id'];
+			$location_item_id	= $data['location_item_id'];
 			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_repeated_events - Missing date info");
