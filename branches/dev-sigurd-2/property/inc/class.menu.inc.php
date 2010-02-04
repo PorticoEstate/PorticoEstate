@@ -394,6 +394,11 @@
 						'text'	=> lang('Request condition_type'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_condition_type') )
 					),
+					'order_dim1'	=> array
+					(
+						'text'	=> lang('order_dim1'),//translation have to refeflect the (local) meaning
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'order_dim1') )
+					),
 					'workorder_status'	=> array
 					(
 						'text'	=> lang('Workorders status'),

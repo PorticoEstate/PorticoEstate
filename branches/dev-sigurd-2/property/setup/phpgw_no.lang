@@ -1061,6 +1061,7 @@ opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
+order_dim1	property	no	Aktivitet
 order id	property	no	OrdreNr
 order_id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen

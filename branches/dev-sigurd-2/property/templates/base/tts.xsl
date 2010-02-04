@@ -1089,22 +1089,39 @@
 						<xsl:call-template name="vendor_form"/>
 						<xsl:call-template name="ecodimb_form"/>
 						<xsl:call-template name="b_account_form"/>
-<!--
+
 						<tr>
 							<td>
-								<xsl:value-of select="php:function('lang', 'order category')" />
+								<xsl:value-of select="php:function('lang', 'building part')" />
 							</td>
 							<td>
-								<xsl:variable name="lang_cat_statustext"><xsl:value-of select="php:function('lang', 'select order category')" /></xsl:variable>
-									<select name="values[order_cat_id]"  title="{$lang_cat_statustext}">
+									<select name="values[building_part]" >
+										<xsl:attribute name="title">
+						            		<xsl:value-of select="php:function('lang', 'select building part')" />
+										</xsl:attribute>
 										<option value="0">
-											<xsl:value-of select="php:function('lang', 'select order category')" />
+											<xsl:value-of select="php:function('lang', 'select building part')" />
 										</option>
-											<xsl:apply-templates select="order_cat_list/cat_list"/>
+											<xsl:apply-templates select="building_part_list/status_list"/>
 									</select>
 							</td>
 						</tr>
--->
+						<tr>
+							<td>
+								<xsl:value-of select="php:function('lang', 'order_dim1')" />
+							</td>
+							<td>
+									<select name="values[order_dim1]" >
+										<xsl:attribute name="title">
+						            		<xsl:value-of select="php:function('lang', 'order_dim1')" />
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'order_dim1')" />
+										</option>
+											<xsl:apply-templates select="order_dim1_list/status_list"/>
+									</select>
+							</td>
+						</tr>
 						<tr>
 							<td valign="top">
 			            		<xsl:value-of select="php:function('lang', 'cost estimate')" />
@@ -1156,7 +1173,7 @@
 											<xsl:for-each select="value_approval_mail_address" >
 												<tr>
 													<td>
-														<input type="checkbox" name="values[approval][{id}]" value="True">
+														<input type="checkbox" name="values[approval][{id}]" value="{address}">
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'ask for approval')" />
 															</xsl:attribute>
@@ -1164,8 +1181,6 @@
 													</td>
 													<td valign='top'>
 														<xsl:value-of select="address"/>
-														<input type="hidden" name="values[mail_address][{id}]" value="{address}">
-														</input>
 													</td>
 												</tr>
 											</xsl:for-each>

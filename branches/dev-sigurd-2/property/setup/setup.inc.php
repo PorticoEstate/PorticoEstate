@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.578';
+	$setup_info['property']['version']		= '0.9.17.579';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -136,6 +136,7 @@
 		'fm_ecobilag_category',
 		'fm_ecodimb',
 		'fm_ecodimd',
+		'fm_order_dim1',
 		'fm_ecologg',
 		'fm_ecomva',
 		'fm_ecouser',

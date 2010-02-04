@@ -393,19 +393,16 @@
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
+				$ticket['building_part']	= $this->db->f('building_part',true);
+				$ticket['order_dim1']		= $this->db->f('order_dim1');
 
 				$user_id=(int)$this->db->f('user_id');
-				$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='$user_id' ");
-				$this->db->next_record();
 
-				$ticket['user_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;
-				if ($ticket['assignedto']>0)
+				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				if ($ticket['assignedto'] > 0)
 				{
-					$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='" . $ticket['assignedto'] . "'");
-					$this->db->next_record();
-					$ticket['assignedto_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;
+					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 				}
-
 			}
 
 			return $ticket;
@@ -627,7 +624,6 @@
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-
 			$location_code 	= $this->db->f('location_code');
 			$oldlocation_code 	= $this->db->f('location_code');
 			$oldfinnish_date 	= $this->db->f('finnish_date');
@@ -644,7 +640,10 @@
 			$old_contact_id		= $this->db->f('contact_id');
 			$old_actual_cost	= $this->db->f('actual_cost');
 			$old_order_cat_id	= $this->db->f('order_cat_id');
+			$old_building_part	= $this->db->f('building_part',true);
+			$old_order_dim1		= (int)$this->db->f('order_dim1');
 
+	
 			if($oldcat_id ==0){$oldcat_id ='';}
 			if($old_order_cat_id ==0){$old_order_cat_id ='';}
 			if($oldassigned ==0){$oldassigned ='';}
@@ -815,6 +814,21 @@
 				$this->fields_updated = true;
 			}
 
+			if ((int)$old_order_dim1 != (int)$ticket['order_dim1'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET order_dim1='" . (int)$ticket['order_dim1']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$receipt['message'][]= array('msg' => lang('order_dim1 has been updated'));
+				$this->fields_updated = true;
+			}
+
+			if ($old_building_part != $ticket['building_part'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET building_part='" . $ticket['building_part']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$receipt['message'][]= array('msg' => lang('building part has been updated'));
+				$this->fields_updated = true;
+			}
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
