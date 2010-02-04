@@ -45,8 +45,8 @@
 	$options['proxy_host']	= isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'] ? $config->config_data['soap_proxy_host'] : '';// '';
 	$options['proxy_port']	= isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'] ? $config->config_data['soap_proxy_port'] : '';// '';
 	$options['encoding']	= isset($config->config_data['soap_encoding']) && $config->config_data['soap_encoding'] ? $config->config_data['soap_encoding'] : '';// 'UTF-8';
-	$options['login']		= isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';// 'portal';
-	$options['password']	= isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';// 'ocean9';
+	$options['login']		= isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';
+	$options['password']	= isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';
 
 	$wsdl = isset($config->config_data['soap_wsdl']) && $config->config_data['soap_wsdl'] ? $config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
 
