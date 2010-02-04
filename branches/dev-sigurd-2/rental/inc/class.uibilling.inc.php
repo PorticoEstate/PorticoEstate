@@ -119,17 +119,17 @@ class rental_uibilling extends rental_uicommon
 			}
 			else if($billing_term == '3'){ // half year
 				if($billing_moth == '1'){
-					$month = 7;
+					$month = 6;
 					$billing_term_label = lang('first_half');
 				}
 				else{
-					$month = 1;
+					$month = 12;
 					$billing_term_label = lang('second_half');
 				}
 			}
 			else // yearly
 			{
-				$month = 1;
+				$month = 12;
 				$billing_term_label = lang('annually');
 			}
 

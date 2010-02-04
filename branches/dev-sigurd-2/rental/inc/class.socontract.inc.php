@@ -211,14 +211,19 @@ class rental_socontract extends rental_socommon
 			$year = (int)$filters['year'];
 			$months = $this->unmarshal($this->db->f('months', true), 'int');
 			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
-			$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+			if($months == 1){
+				$timestamp_start = $timestamp_end; // The first day of the period to bill for
+			}else{
+				$months = $months-1;
+				$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+			}
 			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
 			//$timestamp_start = strtotime("{$year}-{$month}-01");
 			
 			$filter_clauses[] = "contract.term_id = {$billing_term_id}";
-			$filter_clauses[] = "date_start < $timestamp_end";
-			$filter_clauses[] = "(date_end IS NULL OR date_end >= {$timestamp_start})";
-			$filter_clauses[] = "billing_start < {$timestamp_end}";
+			$filter_clauses[] = "contract.date_start < $timestamp_end";
+			$filter_clauses[] = "(contract.date_end IS NULL OR contract.date_end >= {$timestamp_start})";
+			$filter_clauses[] = "contract.billing_start < {$timestamp_end}";
 			
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
 			$order = $order ? $order.', '.$specific_ordering : "ORDER BY {$specific_ordering}";
