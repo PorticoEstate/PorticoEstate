@@ -63,3 +63,23 @@
 			return $GLOBALS['setup_info']['addressbook']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.501';
+	/**
+	* Allow custom fields on relation org_person.
+	*
+	* @return string the new version number
+	*/
+	function addressbook_upgrade0_9_17_501()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('person', "Allow custom fields on table person", 'addressbook', false, 'phpgw_contact_person');
+		$GLOBALS['phpgw']->locations->add('organisation', "Allow custom fields on table org", 'addressbook', false, 'phpgw_contact_org');
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['addressbook']['currentver'] = '0.9.17.502';
+			return $GLOBALS['setup_info']['addressbook']['currentver'];
+		}
+	}	
