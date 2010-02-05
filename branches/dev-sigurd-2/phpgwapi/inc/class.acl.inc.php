@@ -1054,6 +1054,10 @@
 				$locations[] = $this->_db->f('location_id');
 			}
 
+			if(!$locations)
+			{
+				return;
+			}
 			$location_filter = implode(',', $locations);
 
 			$sql = 'DELETE FROM phpgw_acl'
