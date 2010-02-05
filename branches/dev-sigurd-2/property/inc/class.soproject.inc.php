@@ -55,44 +55,47 @@
 		function select_status_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_project_status ORDER BY id ");
-
-			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id']				= $this->db->f('id');
-				$status_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$status[] = array
+				(
+					'id' 	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $status;
 		}
 
 		function select_branch_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_branch ORDER BY id ");
 
-			$i = 0;
+			$branch = array();
 			while ($this->db->next_record())
 			{
-				$branch_entries[$i]['id']				= $this->db->f('id');
-				$branch_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$branch[] = array
+				( 
+					'id' => $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $branch_entries;
+			return $branch;
 		}
 
 		function select_key_location_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_key_loc ORDER BY descr ");
-
-			$key_location_entries = '';
-			$i = 0;
+			$location = array();
 			while ($this->db->next_record())
 			{
-				$key_location_entries[$i]['id']				= $this->db->f('id');
-				$key_location_entries[$i]['name']			= stripslashes($this->db->f('descr'));
-				$i++;
+				$location[] = array
+				( 
+					'id' => $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $key_location_entries;
+			return $location;
 		}
 
 		function read($data)
