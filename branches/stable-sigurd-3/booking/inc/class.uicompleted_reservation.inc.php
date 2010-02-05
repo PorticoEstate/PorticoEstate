@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('booking.uicommon');
+phpgw::import_class('booking.sopermission');
 
 	class booking_uicompleted_reservation extends booking_uicommon
 	{
@@ -97,7 +98,7 @@ phpgw::import_class('booking.uicommon');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
-			
+
 			if (phpgw::get_var('export')) {
 				return $this->export();
 			}
@@ -236,20 +237,33 @@ phpgw::import_class('booking.uicommon');
 				}
 			}
 
-			$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+			$filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
+			if ($filter_to) {
+				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+			}
 
-			// if no buildings are searched for, show all accessable buildings
-			if ( !isset($filters['building_id']) ) {
-				$filters['building_id'] = $accessable_buildings;
-			} else { // before displaying search result, check if the building search for is accessable
-				if (!in_array($filters['building_id'], $accessable_buildings)) {
-					$filters['building_id'] = -1;
-					unset($filters['building_name']);
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
+			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings
+
+				$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+
+				// if no buildings are searched for, show all accessable buildings
+				if ( !isset($filters['building_id']) ) {
+					$filters['building_id'] = $accessable_buildings;
+				} else { // before displaying search result, check if the building search for is accessable
+					if (!in_array($filters['building_id'], $accessable_buildings)) {
+						$filters['building_id'] = -1;
+						unset($filters['building_name']);
+					}
 				}
 			}
 
 			if(!isset($_SESSION['showall'])) {
 				$filters['active'] = "1";
+			}
+
+			if (!isset($_SESSION['show_all_completed_reservations'])) {
+				$filters['exported'] = '';
 			}
 
 			$params = array(

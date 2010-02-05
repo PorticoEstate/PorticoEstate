@@ -1504,9 +1504,7 @@
 
 			$socategory = CreateObject('property.socategory');
 
-			$categories= $socategory->select_category_list(array('type'=>$data['type'],
-										'type_id'=>(isset($data['type_id'])?$data['type_id']:''),
-										'order'	=>$data['order']));
+			$categories= $socategory->get_list($data);
 
 			return $this->select_list($data['selected'],$categories);
 		}

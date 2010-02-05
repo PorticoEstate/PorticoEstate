@@ -628,6 +628,8 @@
 			{
 				$uicols['name'][$i++] = 'order_id';
 				$uicols['name'][$i++] = 'vendor';
+				$uicols['name'][$i++] = 'estimate';
+				$uicols['name'][$i++] = 'actual_cost';
 			}
 
 			foreach($uicols_related as $related)
@@ -2186,29 +2188,29 @@
 					{
 						$bcc .= ";{$contact_data['value_contact_email']}";
 					}
-						foreach($values['vendor_email'] as $_to)
+
+					$_to = implode(';',$values['vendor_email']);
+					
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
+					if($rcpt)
 					{
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
-						if($rcpt)
-						{
-							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
-							$historylog	= CreateObject('property.historylog','tts');
-							$historylog->add('M',$id,"{$_to}{$attachment_log}");
-							$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
-							$action_params = array
-							(
-								'appname'			=> 'property',
-								'location'			=> '.ticket',
-								'id'				=> $id,
-								'responsible'		=> $values['vendor_id'],
-								'responsible_type'  => 'vendor',
-								'action'			=> 'remind',
-								'remark'			=> '',
-								'deadline'			=> ''
-							);
+						$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+						$historylog	= CreateObject('property.historylog','tts');
+						$historylog->add('M',$id,"{$_to}{$attachment_log}");
+						$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
+						$action_params = array
+						(
+							'appname'			=> 'property',
+							'location'			=> '.ticket',
+							'id'				=> $id,
+							'responsible'		=> $values['vendor_id'],
+							'responsible_type'  => 'vendor',
+							'action'			=> 'remind',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
 			
-							$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
-						}
+						$reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
 				}
 				else
@@ -2218,7 +2220,7 @@
 			}
 
 			// start approval
-			if ($values['approval'] && $values['mail_address'] && $this->bo->config->config_data['workorder_approval'])
+			if (isset($values['approval']) && $values['approval']  && $this->bo->config->config_data['workorder_approval'])
 			{
 				$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 				$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
@@ -2245,19 +2247,16 @@
 						'deadline'			=> ''
 					);
 					$bcc = '';//$coordinator_email;
-					foreach ($values['mail_address'] as $_account_id => $_address)
+					foreach ($values['approval'] as $_account_id => $_address)
 					{
-						if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+						$action_params['responsible'] = $_account_id;
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+						if($rcpt)
 						{
-							$action_params['responsible'] = $_account_id;
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-							if($rcpt)
-							{
-								$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
-							}
-
-							 execMethod('property.sopending_action.set_pending_action', $action_params);
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 						}
+
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
 				}
 				else
@@ -2493,7 +2492,9 @@
 				'lang_file_statustext'			=> lang('Select file to upload'),
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'order_cat_list'				=> $order_catetory
+				'order_cat_list'				=> $order_catetory,
+				'building_part_list'			=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+				'order_dim1_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
 			);
 
 			//---datatable settings--------------------

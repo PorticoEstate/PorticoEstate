@@ -3897,7 +3897,7 @@
 
 
 	/**
-	* Update property version from 0.9.17.576 to 0.9.17.577
+	* Update property version from 0.9.17.577 to 0.9.17.578
 	* Add order categories to ticket ad hoc orders
 	* 
 	*/
@@ -3916,3 +3916,37 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.578 to 0.9.17.579
+	* Add custom dimension for orders
+	* 
+	*/
+
+	$test[] = '0.9.17.578';
+	function property_upgrade0_9_17_578()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','building_part',array('type' => 'varchar','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','order_dim1',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_order_dim1', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'num' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.579';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

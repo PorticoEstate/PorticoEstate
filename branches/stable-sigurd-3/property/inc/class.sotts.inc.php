@@ -46,11 +46,12 @@
 
 		function __construct()
 		{
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
+			$this->left_join 	= & $this->db->left_join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
@@ -77,6 +78,7 @@
 			$end_date		= isset($data['end_date'])?$data['end_date']:'';
 			$external		= isset($data['external'])?$data['external']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$new			= isset($data['new']) ? $data['new'] : '';
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -144,7 +146,7 @@
 
 			if ($status_id == 'X')
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='X'";
+				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
 				$where = 'AND';
 			}
 			else if($status_id == 'O')
@@ -160,23 +162,25 @@
 					}
 				}
 
-				$filtermethod .= " $where (fm_tts_tickets.status='O'{$open})";
+				$filtermethod .= " $where ( (fm_tts_tickets.status='O'{$open})";
 				$where = 'AND';
 			}
 			else if($status_id == 'all')
 			{
-				//nothing
+				$filtermethod .= "{$where} (1=1";//nothing
 			}
 			else if(is_array($status_id) && count($status_id))
 			{
 				$or = '';
-				$filtermethod .= "{$where} (";
+				$filtermethod .= "{$where} ((";
 				
 				foreach ($status_id as $value)
 				{
-					$value = trim($value,'C');
-					$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
-					$or = ' OR';
+					if($value)
+					{
+						$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
+						$or = ' OR';
+					}
 				}
 
 				$filtermethod .= ')';
@@ -185,8 +189,17 @@
 			}
 			else
 			{
-				$filtermethod .= " $where fm_tts_tickets.status='{$status_id}'";
+				$filtermethod .= " $where (fm_tts_tickets.status='{$status_id}'";
 				$where = 'AND';
+			}
+
+			if($new)
+			{
+				$filtermethod .= " OR fm_tts_views.id IS NULL )";
+			}
+			else
+			{
+				$filtermethod .= ')';
 			}
 
 			if ($cat_id > 0)
@@ -242,18 +255,29 @@
 				}
 			}
 
-			$sql = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
+			. " LEFT OUTER JOIN fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
 			. " $filtermethod $querymethod";
 
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*) as hits ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+/*
+				$sql2 = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
+				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " $order_join"
+				. " $filtermethod $querymethod";
+
+				$sql2 = 'SELECT count(*) as cnt ' . substr($sql2,strripos($sql2,'FROM'));
+*/
+				$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
+				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f('hits');
-				$this->db->fetchmode = 'ASSOC';
+				$this->total_records = $this->db->f('cnt');
+				unset($sql2);
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -287,10 +311,12 @@
 					'finnish_date2'		=> $this->db->f('finnish_date2'),
 					'order_id'			=> $this->db->f('order_id'),
 					'vendor_id'			=> $this->db->f('vendor_id'),
-					'new_ticket'		=> ''
+					'actual_cost'		=> $this->db->f('actual_cost'),
+					'estimate'			=> $this->db->f('budget'),
+					'new_ticket'		=> $this->db->f('view') ? false : true,
 				);
 			}
-			
+/*			
 			foreach ($tickets as &$ticket)
 			{
 				$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
@@ -302,6 +328,7 @@
 					$ticket['new_ticket'] = true;
 				}
 			}
+*/
 			return $tickets;
 		}
 
@@ -366,19 +393,16 @@
 				$ticket['budget']			= $this->db->f('budget');
 				$ticket['actual_cost']		= $this->db->f('actual_cost');
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
+				$ticket['building_part']	= $this->db->f('building_part',true);
+				$ticket['order_dim1']		= $this->db->f('order_dim1');
 
 				$user_id=(int)$this->db->f('user_id');
-				$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='$user_id' ");
-				$this->db->next_record();
 
-				$ticket['user_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;
-				if ($ticket['assignedto']>0)
+				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				if ($ticket['assignedto'] > 0)
 				{
-					$this->db->query("SELECT account_firstname,account_lastname FROM phpgw_accounts WHERE account_id='" . $ticket['assignedto'] . "'");
-					$this->db->next_record();
-					$ticket['assignedto_name']	= $this->db->f('account_firstname') . " " .$this->db->f('account_lastname') ;
+					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 				}
-
 			}
 
 			return $ticket;
@@ -600,7 +624,6 @@
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-
 			$location_code 	= $this->db->f('location_code');
 			$oldlocation_code 	= $this->db->f('location_code');
 			$oldfinnish_date 	= $this->db->f('finnish_date');
@@ -617,7 +640,10 @@
 			$old_contact_id		= $this->db->f('contact_id');
 			$old_actual_cost	= $this->db->f('actual_cost');
 			$old_order_cat_id	= $this->db->f('order_cat_id');
+			$old_building_part	= $this->db->f('building_part',true);
+			$old_order_dim1		= (int)$this->db->f('order_dim1');
 
+	
 			if($oldcat_id ==0){$oldcat_id ='';}
 			if($old_order_cat_id ==0){$old_order_cat_id ='';}
 			if($oldassigned ==0){$oldassigned ='';}
@@ -788,6 +814,21 @@
 				$this->fields_updated = true;
 			}
 
+			if ((int)$old_order_dim1 != (int)$ticket['order_dim1'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET order_dim1='" . (int)$ticket['order_dim1']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$receipt['message'][]= array('msg' => lang('order_dim1 has been updated'));
+				$this->fields_updated = true;
+			}
+
+			if ($old_building_part != $ticket['building_part'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET building_part='" . $ticket['building_part']
+					. "' WHERE id='$id'",__LINE__,__FILE__);
+				$receipt['message'][]= array('msg' => lang('building part has been updated'));
+				$this->fields_updated = true;
+			}
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{

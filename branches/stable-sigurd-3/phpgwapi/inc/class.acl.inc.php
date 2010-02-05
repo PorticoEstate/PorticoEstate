@@ -978,6 +978,35 @@
 		}
 
 		/**
+		* Clear cached permissions for all locations for a given user
+		*
+		* @param integer $account_id Account id - 0 = current user
+		*
+		* @return void
+		*/
+		public function clear_user_cache($account_id = 0)
+		{
+			$account_id = (int)$account_id;
+			if(!$account_id)
+			{
+				$account_id = $this->_account_id;
+			}
+			$locations = array();
+
+			$sql = 'SELECT location_id FROM phpgw_locations';
+			$this->_db->query($sql, __LINE__, __FILE__);
+			while ($this->_db->next_record())
+			{
+				$locations[] = $this->_db->f('location_id');
+			}
+
+			foreach ($locations as $location_id)
+			{
+				$this->_delete_cache($account_id, $location_id);
+			}
+		}
+
+		/**
 		* Delete repository information for an application
 		*
 		* @param string  $app       Application name
@@ -1025,6 +1054,10 @@
 				$locations[] = $this->_db->f('location_id');
 			}
 
+			if(!$locations)
+			{
+				return;
+			}
 			$location_filter = implode(',', $locations);
 
 			$sql = 'DELETE FROM phpgw_acl'

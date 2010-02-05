@@ -692,6 +692,7 @@
 
 			$aclobj =& $GLOBALS['phpgw']->acl;
 			$aclobj->set_account_id($user->id, true);
+			$aclobj->clear_user_cache($user->id);
 			foreach ($GLOBALS['phpgw_info']['apps'] as $app => $dummy)
 			{
 				if($app == 'phpgwapi')

@@ -53,7 +53,8 @@
 			'edit_user'					=> true,
 			'edit_group'				=> true,
 			'view_user'					=> true,
-			'sync_accounts_contacts'	=> true
+			'sync_accounts_contacts'	=> true,
+			'clear_user_cache'			=> true
 		);
 
 		/**
@@ -1297,4 +1298,22 @@
 			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 		}
 
+		/**
+		* Clear ACL-cache for all users
+		*
+		* @return void
+		*/
+
+		function clear_user_cache()
+		{
+			if(	$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				$account_list = $GLOBALS['phpgw']->accounts->get_list('both', -1);
+				foreach ( $account_list as  $id => $account)
+				{
+					$GLOBALS['phpgw']->acl->clear_user_cache($id);
+				}
+			}
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
 	}

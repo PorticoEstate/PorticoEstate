@@ -424,7 +424,7 @@
 
 			$location	= phpgw::get_var('location');
 			$attrib_id	= phpgw::get_var('attrib_id');
-			$item_id	= phpgw::get_var('item_id', 'int');
+			$item_id	= phpgw::get_var('item_id');//might be bigint
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 

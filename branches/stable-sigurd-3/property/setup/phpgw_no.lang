@@ -26,6 +26,7 @@ activity id	property	no	Aktivitet ID
 activity num	property	no	Aktivitet num
 actor	property	no	Aktør
 actual cost	property	no	Faktisk kostnad
+actual_cost	property	no	Faktisk kostnad
 actual cost changed	property	no	Faktisk kostnad er endret
 actual cost - paid so far	property	no	Faktisk betalt - pr dd
 add a apartment	property	no	Legg til leilighet
@@ -719,6 +720,7 @@ equipment %1 has been saved	property	no	utstyr %1 er lagret
 equipment id	property	no	utstyr ID
 equipment_id	property	no	utstyr ID
 equipment type	property	no	Type utstyr/anlegg
+estimate	property	no	Kostnadsestimat
 event	property	no	Hendelse
 event action	property	no	Handling ved hendelse
 events	property	no	Hendelser
@@ -1059,6 +1061,7 @@ opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	bestill
+order_dim1	property	no	Aktivitet
 order id	property	no	OrdreNr
 order_id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
