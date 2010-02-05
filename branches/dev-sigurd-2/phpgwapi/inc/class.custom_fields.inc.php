@@ -1183,11 +1183,13 @@
 		 */
 		public function get_table_def($table = '', $table_def = array())
 		{
-			if( !$GLOBALS['phpgw_setup']->_oProc 
-				|| !is_object($GLOBALS['phpgw_setup']->_oProc) )
+			if( !$GLOBALS['phpgw_setup']->oProc 
+				|| !is_object($GLOBALS['phpgw_setup']->oProc) )
 			{
 				$GLOBALS['phpgw_setup']->oProc =& $this->_oProc;
 			}
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->fetchmode = 'BOTH';
 
 			$setup = createobject('phpgwapi.setup_process');
 			$tableinfo = $setup->sql_to_array($table);
