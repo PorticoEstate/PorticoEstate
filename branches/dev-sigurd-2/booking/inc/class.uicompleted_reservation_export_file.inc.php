@@ -56,7 +56,7 @@ phpgw::import_class('booking.uicommon');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
-			
+
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -124,6 +124,7 @@ phpgw::import_class('booking.uicommon');
 
 		public function index_json()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
 			$export_files = $this->bo->read();
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export_file.show");
 			foreach($export_files["results"] as &$export_file) {
@@ -134,6 +135,12 @@ phpgw::import_class('booking.uicommon');
 					'label' => lang('Download'), 
 					'href' => $this->link_to('download', array('id' => $export_file['id']))
 				);
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export_file['created_by_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$export_file['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
 			}
 			
 			$results = $this->yui_results($export_files);
