@@ -889,6 +889,13 @@
 				'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
 			);
 
+			$event['event_link'] = "{menuaction:'property.uievent.edit',"
+									."location:'{$data['location']}',"
+									."attrib_id:'{$event['name']}'";
+			$event['event_link'] .=	isset($event['item_id']) ? ",item_id:{$event['item_id']}" : '';		
+			$event['event_link'] .=	isset($event['value']) ? ",id:{$event['value']}" : '';		
+			$event['event_link'] .= '}';
+
 			$event['function_name']	= 'lookup_'. $event['name'] .'()';
 
 			return $event;

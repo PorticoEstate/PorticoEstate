@@ -229,16 +229,23 @@
 						unset($id);
 						unset($job);
 					}
+
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
-						'menuaction'	=> $this->_appname.'.uievent.edit',
-						'location'		=> $location,
-						'attrib_id'		=> $attributes['id'],
-						'item_id'		=> isset($attributes['item_id']) ? $attributes['item_id'] : '',
-						'id'			=> isset($attributes['value']) && $attributes['value'] ? $attributes['value'] : ''));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+
+					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
+									."location:'{$location}',"
+									."attrib_id:'{$attributes['id']}'";
+					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';		
+					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';		
+					$lookup_functions[$m]['action'] .= "};\n";
+					$lookup_functions[$m]['action'] .= "if(document.form.{$attributes['name']}.value)\n";
+					$lookup_functions[$m]['action'] .= "{\n";
+					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
+					$lookup_functions[$m]['action'] .= "}\n";
+					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
+					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
