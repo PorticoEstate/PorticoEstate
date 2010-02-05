@@ -193,6 +193,8 @@
 
 		public function index_json()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
+			
 			$permissions = $this->bo->read();
 			foreach($permissions['results'] as &$permission)
 			{
@@ -203,7 +205,13 @@
 				$permission_actions = array();
 				if ($this->bo->allow_write($permission))  $permission_actions[] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
 				if ($this->bo->allow_delete($permission)) $permission_actions[] = $this->get_object_typed_link('delete', array('id' => $permission['id']));
-				
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$permission['subject_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$permission['subject_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
+
 				$permission['actions'] = $permission_actions;
 			}
 			return $this->yui_results($permissions);

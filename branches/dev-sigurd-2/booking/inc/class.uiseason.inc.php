@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.boresource');
 	phpgw::import_class('booking.uipermission_season');
 
 	class booking_uiseason extends booking_uicommon
@@ -27,6 +28,7 @@
 			self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.boseason');
+			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::buildings::seasons');
 			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_', 'to_', 'resources', 'active', 'officer_id', 'officer_name');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
@@ -35,6 +37,8 @@
 		
 		public function index()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
+			
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
@@ -121,8 +125,24 @@
 				$season['status'] = lang($season['status']);
 				$season['from_'] = pretty_timestamp($season['from_']);
 				$season['to_'] = pretty_timestamp($season['to_']);
+
+				$resources = $this->resource_bo->read_single($season['id']);
+				if (isset($season['resources'])) {
+					$filters['filters']['id'] = $season['resources'];
+					$resources = $this->resource_bo->so->read($filters);
+					$temparray = array();
+					foreach($resources['results'] as $resource) {
+						$temparray[] = $resource['name'];
+					}
+					$season['resource_list'] = implode(', ', $temparray);
+				}
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$season['officer_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$season['officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
 			}
-			
 			return $this->yui_results($seasons);
 		}
 

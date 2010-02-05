@@ -117,6 +117,12 @@
 		public function index_json()
 		{
 			$bookings = $this->bo->read();
+			foreach($bookings['results'] as &$booking) {
+				$building = $this->building_bo->read_single($booking['building_id']);
+				//print_r($building);
+				$booking['building_name'] = $building['name'];
+			}
+
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
 			return $this->yui_results($bookings);
 		}
