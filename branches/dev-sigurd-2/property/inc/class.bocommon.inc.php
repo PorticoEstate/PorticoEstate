@@ -609,7 +609,61 @@
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('click this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
+			if(isset($data['callback']) && $data['callback'])
+			{
+				$vendor['callback'] = $data['callback'];
+				$callback = $data['callback'];
+			}
+			else
+			{
+				$vendor['callback'] = '""';
+				$callback = '""';
+			}
 
+			$code = <<<JS
+    var d;
+
+    function onDOMAttrModified(e)
+    {
+        var attr = e.attrName || e.propertyName
+        var target = e.target || e.srcElement;
+        if (attr.toLowerCase() == 'readonly')
+        {
+ 			vendor_callback();	
+        }
+    }
+
+	function vendor_callback()
+	{
+		var oArgs = $callback;
+		if(document.getElementById('vendor_id').value)
+		{
+			oArgs['vendor_id'] = document.getElementById('vendor_id').value;
+		}
+		var strURL = phpGWLink('index.php', oArgs, true);
+
+		alert(strURL);
+	}		
+/*
+    window.onload = function()
+    {
+        d = document.getElementById('vendor_id');
+        if (d.attachEvent)
+        {
+            d.attachEvent('onpropertychange', onDOMAttrModified, false);
+        }
+     	else
+        {
+            d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+        }
+    };
+*/
+
+JS;
+			if(isset($data['callback']) && $data['callback'])
+			{
+				$GLOBALS['phpgw']->js->add_code('', $code);
+			}
 //_debug_array($vendor);
 			return $vendor;
 		}

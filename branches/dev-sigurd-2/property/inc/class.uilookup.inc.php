@@ -522,7 +522,7 @@
 			
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$org_name.'")[0].value = data.getData("org_name");' ."\r\n";
-			
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].setAttribute("readonly","readonly",0);' ."\r\n";			
 			$function_exchange_values .= 'window.close()';
 
 			$datatable['exchange_values'] = $function_exchange_values;
