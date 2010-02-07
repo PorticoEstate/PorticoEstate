@@ -1164,20 +1164,46 @@
 				} else if($type_id == 1 || $type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
 					if($adjusted == 0 || $adjusted == '0'){
-						$date_tmp = $this->decode($data[7]);
-						$year = substr($date_tmp, 5, 4);
-						
-						$interval = $this->decode($data[6]);
-						$last_adjusted_year = $year - $interval;
+						$date_tmp = explode(".", $this->decode($data[7]));
+						if(count($date_tmp) == 3){
+							$year = $date_tmp[2];
+							$interval = $this->decode($data[6]);
+							$last_adjusted_year = $year - $interval;
+						}else{
+							$last_adjusted_year = 0;
+						}
 						
 						//update last adjusted on contract.
 						$contract_id = $contracts[$data[1]];
-						if($contract_id > 0){
-							$socontract->update_adjustment_year_interval($contract_id, $adjusted_year, $interval);
+						if($contract_id > 0 && $last_adjusted_year > 0){
+							$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
 						}
 					}
 				} else {
 					$this->warnings[] = "Skipping price item " . $data[0] . " because it has no title or is an adjustment (regulering).";
+				}
+			}
+			
+			//loop through events once more to update previous adjustments
+			foreach ($datalines as $data) {
+				$type_id = $data[2];
+				
+				if($type_id == 1 || $type_id == '1') {	//price adjustment
+					$adjusted = $this->decode($data[8]);
+					if($adjusted == -1 || $adjusted == '-1'){
+					$date_tmp = explode(".", $this->decode($data[7]));
+						if(count($date_tmp) == 3){
+							$year = $date_tmp[2];
+						}else{
+							$year = 0;
+						}
+						
+						//update last adjusted and interval on contract.
+						$contract_id = $contracts[$data[1]];
+						if($contract_id > 0 && $year > 0){
+							$socontract->update_adjustment_year($contract_id, $year);
+						}
+					}
 				}
 			}
 			

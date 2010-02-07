@@ -491,7 +491,7 @@ class rental_socontract extends rental_socommon
 		$values[] = "security_type = " . 	$this->marshal($contract->get_security_type(), 'int');
 		$values[] = "security_amount = " . 	$this->marshal($contract->get_security_amount(), 'string');
 		$values[] = "rented_area = ".		$this->marshal($contract->get_rented_area(),'float');
-		$values[] = "adjustable = ".		($adjustment->is_adjustable() ? "true" : "false");
+		$values[] = "adjustable = ".		($contract->is_adjustable() ? "true" : "false");
 		$values[] = "adjustment_interval = ".		$this->marshal($contract->get_adjustment_interval(),'int');
 		$values[] = "adjustment_share = ".		$this->marshal($contract->get_adjustment_share(),'int');
 		
@@ -669,7 +669,6 @@ class rental_socontract extends rental_socommon
 		
 		$cols[] = 'adjustment_share';
 		$values[] = $this->marshal($contract->get_adjustment_share(),'int');
-		
 		
 		
 		if ($contract->get_security_type()) {
@@ -1028,8 +1027,19 @@ class rental_socontract extends rental_socommon
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
     	$new_adjustment_interval = $this->marshal($adjustment_interval, 'int');
-    	$sql = "UPDATE rental_contract SET adjustable=TRUE, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
+    	$sql = "UPDATE rental_contract SET adjustable=true, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
     	$this->db->query($sql);
+    }
+    
+	public function update_adjustment_year($contract_id, $adjusted_year)
+    {
+    	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
+    	$sql1 = "SELECT adjustment_year FROM rental_contract where id={$contract_id} AND adjustment_year<{$new_adjusted_year}";
+    	$this->db->query($sql1);
+    	while($this->db->next_record()){
+    		$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id={$contract_id}";
+    		$this->db->query($sql);
+    	}
     }
     
     public function update_adjustment_share($contract_id, $adjustment_share)
