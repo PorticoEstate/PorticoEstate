@@ -1,36 +1,31 @@
 <?php
-	$setup_info['rental']['name'] = 'rental';
-	$setup_info['rental']['version'] = '0.0.27';
-	$setup_info['rental']['app_order'] = 51;
+	$setup_info['rental']['name'] = 'rental';		// Module identifier
+	$setup_info['rental']['version'] = '0.0.27';	// Current module version 
+	$setup_info['rental']['app_order'] = 51;		// (?)
 	$setup_info['rental']['tables'] = array(
 		'rental_party',						// All contract participants, tenants etc.
-		'rental_contract',					// Contracts, has parties and a rental object
+		'rental_contract',					// Contracts, has parties and rental objects
 		'rental_contract_composite',		// Connection between contracts and composites
-		'rental_contract_party',			// Link table between tenants and contracts
-		'rental_composite',					// Rental object, an aggregation of rental units or areas
+		'rental_contract_party',			// Connection between tenants and contracts
+		'rental_composite',					// Rental object, an aggregation of rental units
 		'rental_contract_price_item',		// Price items from the price book tied to a contract
 		'rental_billing',					// Contains information about the job creating invoices
-		'rental_invoice',					// Contratcs' invoices
+		'rental_invoice',					// Contract invoices
 		'rental_invoice_price_item',		// Price items from the contract tied to a past invoice
-	//	'rental_contract_metadata_item',	// Custom field storage for contracts
 		'rental_unit',						// Link table between property register and rental objects or composites
-	//	'rental_comment',					// Comments to rental composites and tenants
 		'rental_document',					// Holds document meta data for both contracts and parties
 		'rental_document_types',			// Document types
-		'rental_contract_last_edited',
-		'rental_contract_responsibility',
-		'rental_notification',				// Stores user notifications
-		'rental_notification_workbench',	
-		// Admin tables
-		'rental_billing_term',
-		'rental_price_item',
-		'rental_contract_types',
-		'rental_billing_info',
-		'rental_adjustment'
-	//	'rental_custom_field_type',
-	//	'rental_rental_object_type'
+		'rental_contract_last_edited',		// 'Last edited' information for eash user
+		'rental_contract_responsibility',	// Responsility areas
+		'rental_notification',				// User notifications for contracts
+		'rental_notification_workbench',	// Notifications on users' workbenches
+		'rental_billing_term',				// The different billing terms
+		'rental_price_item',				// Price items in concept 'Prisbok'
+		'rental_contract_types',			// Contract types
+		'rental_billing_info',				// Term information for each billing
+		'rental_adjustment'					// Price regulations
 	);
-	$setup_info['rental']['enable'] = 1;
+	$setup_info['rental']['enable'] = 1;							
 	$setup_info['rental']['app_group']	= 'office';
 	$setup_info['rental']['description'] = 'Bergen kommune rental';
 	$setup_info['rental']['author'][] = array
