@@ -165,13 +165,23 @@ class rental_uibilling extends rental_uicommon
 			{
 				$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
 				$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				
+				$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+				$contract_price_items = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
+				$contract_id_array = array();
+				
+				foreach($contract_price_items as $contract_price_item){
+					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts)){
+						$contracts[$contract_price_item->get_contract_id()] = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
+					}
+				}
 		
 				$socontract_price_item = rental_socontract_price_item::get_instance();
 				foreach($contracts as $id => $contract)
 				{	
 					if(isset($contract))
 					{
-						$total_price = $socontract_price_item->get_total_price($contract->get_id());
+						$total_price = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
 						$type_id = $contract->get_contract_type_id();
 						
 						if($type_id == 4)

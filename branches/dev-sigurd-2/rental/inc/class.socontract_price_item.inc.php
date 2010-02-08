@@ -43,6 +43,34 @@ class rental_socontract_price_item extends rental_socommon
 			$id = $this->marshal($filters['contract_id'],'int');
 			$filter_clauses[] = "contract_id = {$id}";
 		}
+		if(isset($filters['contract_ids_one_time'])){
+			$billing_term_id = (int)$filters['billing_term_id'];
+			$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+			$result = $this->db->query($sql);
+			if(!$result)
+			{
+				return;
+			}
+			if(!$this->db->next_record())
+			{
+				return;
+			}
+			$month = (int)$filters['month'];
+			$year = (int)$filters['year'];
+			$months = $this->unmarshal($this->db->f('months', true), 'int');
+			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+			if($months == 1){
+				$timestamp_start = $timestamp_end; // The first day of the period to bill for
+			}else{
+				$months = $months-1;
+				$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+			}
+			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+			
+			$filter_clauses[] = "is_one_time";
+			$filter_clauses[] = "date_start < {$timestamp_end}";
+			$filter_clauses[] = "date_start >= {$timestamp_start}";
+		}
 		if(isset($filters['one_time'])){
 			$filter_clauses[] = "is_one_time";
 		}
@@ -255,6 +283,48 @@ class rental_socontract_price_item extends rental_socommon
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 		//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
 		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE NOT is_one_time AND contract_id={$contract_id}");
+		if($this->db->next_record()){
+			$total_price = $this->db->f('sum_total');
+			return $total_price;
+		}
+	}
+	
+	/**
+	 * Select total sum of all "active" price-items on a contract for invoice-generation.
+	 * 
+	 * @param $contract_id	the id of the contract to generate total price on 
+	 * @return total_price	the total price
+	 */
+	public function get_total_price_invoice($contract_id, $billing_term, $month, $year){
+		$billing_term_id = (int)$billing_term;
+		$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+		$result = $this->db->query($sql);
+		if(!$result)
+		{
+			return;
+		}
+		if(!$this->db->next_record())
+		{
+			return;
+		}
+		$months = $this->unmarshal($this->db->f('months', true), 'int');
+		$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+		if($months == 1){
+			$timestamp_start = $timestamp_end; // The first day of the period to bill for
+		}else{
+			$months = $months-1;
+			$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+		}
+		$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+		
+		//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
+		$q_total_price = "SELECT sum(total_price::numeric) AS sum_total ";
+		$q_total_price .= "FROM rental_contract_price_item ";
+		$q_total_price .= "WHERE contract_id={$contract_id} ";
+		$q_total_price .= "AND NOT is_billed ";
+		$q_total_price .= "AND ((date_start < {$timestamp_end} AND date_start >= {$timestamp_start}) ";
+		$q_total_price .= "OR date_start IS NULL)";
+		$this->db->query($q_total_price);
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');
 			return $total_price;
