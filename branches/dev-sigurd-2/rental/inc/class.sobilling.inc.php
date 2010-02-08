@@ -45,13 +45,14 @@ class rental_sobilling extends rental_socommon
 
 		$tables = "rental_billing rb";
 		$joins = $this->left_join.' rental_billing_info rbi ON (rb.id = rbi.billing_id)';
+		$joins .= $this->left_join.' rental_contract_responsibility rcr ON (rcr.location_id = rb.location_id)';
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rb.id)) AS count';
 		}
 		else
 		{
-			$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rb.export_data, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year';
+			$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rb.export_data, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year, rcr.title as responsibility_title';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY rb.{$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY rb.timestamp_stop DESC';
 		}
@@ -70,6 +71,7 @@ class rental_sobilling extends rental_socommon
 			$billing->set_timestamp_stop($this->db->f('timestamp_stop', true));
 			$billing->set_timestamp_commit($this->db->f('timestamp_commit', true));
 			$billing->set_export_format($this->db->f('export_format', true));
+			$billing->set_responsibility_title(lang($this->unmarshal($this->db->f('responsibility_title'), 'string')));
 			if($this->db->f('export_data', true) != null)
 			{
 				$billing->set_generated_export(true);

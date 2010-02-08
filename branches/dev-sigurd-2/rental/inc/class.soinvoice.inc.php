@@ -53,7 +53,6 @@ class rental_soinvoice extends rental_socommon
 		$joins .= " {$this->left_join} rental_contract contract ON (contract.id = rental_invoice.contract_id)";
 		$joins .= " {$this->left_join} rental_billing ON (rental_billing.id = rental_invoice.billing_id)";
 		$joins .= " {$this->left_join} rental_billing_info ON (rental_billing_info.billing_id = rental_invoice.billing_id)";
-		$joins .= " {$this->left_join} rental_contract_responsibility ON (rental_contract_responsibility.location_id = rental_billing.location_id)";
 		$order = '';
 		if($return_count) // We should only return a count
 		{
@@ -61,7 +60,7 @@ class rental_soinvoice extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_invoice.id, rental_invoice.contract_id, rental_invoice.billing_id, rental_invoice.party_id, timestamp_created, rental_invoice.timestamp_start, timestamp_end, rental_invoice.total_sum, total_area, header, rental_invoice.account_in, rental_invoice.account_out, rental_invoice.service_id, rental_invoice.responsibility_id, rental_invoice.project_id, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active, contract.old_contract_id, rental_billing_info.term_id, rental_billing_info.month, rental_contract_responsibility.title as responsibility_title';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, rental_invoice.billing_id, rental_invoice.party_id, timestamp_created, rental_invoice.timestamp_start, timestamp_end, rental_invoice.total_sum, total_area, header, rental_invoice.account_in, rental_invoice.account_out, rental_invoice.service_id, rental_invoice.responsibility_id, rental_invoice.project_id, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active, contract.old_contract_id, rental_billing_info.term_id, rental_billing_info.month';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			if($sort_field == null || $sort_field == '') // Sort field not set
 			{
@@ -89,7 +88,6 @@ class rental_soinvoice extends rental_socommon
 			$invoice->set_party_id(		$this->unmarshal($this->db->f('party_id'),'int'));
 			$invoice->set_project_id(	$this->unmarshal($this->db->f('project_id'),'string'));
 			$invoice->set_old_contract_id ($this->unmarshal($this->db->f('old_contract_id'), 'string'));
-			$invoice->set_responsibility_label(lang($this->unmarshal($this->db->f('responsibility_title'), 'string')));
 			$invoice->set_term_id($this->unmarshal($this->db->f('term_id'), 'int'));
 			$invoice->set_month($this->unmarshal($this->db->f('month'), 'int'));
 			$party = new rental_party(	$this->unmarshal($this->db->f('party_id'),'int'));

@@ -16,6 +16,11 @@
 	    sortable: false
 	},
 	{
+		key: "responsibility_title",
+		label: "<?php echo lang('contract_type') ?>",
+		sortable: true
+	},
+	{
 		key: "billing_info",
 		label: "<?php echo lang('billing_terms') ?>",
 		sortable: false

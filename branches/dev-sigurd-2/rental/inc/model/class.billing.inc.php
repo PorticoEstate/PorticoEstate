@@ -26,6 +26,7 @@ class rental_billing extends rental_model
 	protected $has_generated_export;
 	protected $contract_type_title;
 	protected $billing_info;
+	protected $responsibility_title;
 	
 	public static $so;
 	
@@ -137,6 +138,13 @@ class rental_billing extends rental_model
 
 	public function get_export_format(){ return $this->export_format; }
 	
+	public function get_responsibility_title(){ return $this->responsibility_title; }
+			
+	public function set_responsibility_title($responsibility_title)
+	{
+		$this->responsibility_title = $responsibility_title;
+	}
+	
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -165,6 +173,7 @@ class rental_billing extends rental_model
 		return array(
 			'id'				=> $this->get_id(),
 			'description'		=> $this->get_title(),
+			'responsibility_title' => $this->get_responsibility_title(),
 			'billing_info'		=> $billing_info_labels,
 			'total_sum'			=> $this->get_total_sum(),
 			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),

@@ -375,10 +375,16 @@ class rental_uibilling extends rental_uicommon
 		{
 			case 'all_billings':
 				$filters = array();
+				if($sort_field == 'responsibility_title'){
+					$sort_field = 'location_id';
+				}
 				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 			case 'invoices':
+				if($sort_field == 'term_label'){
+					$sort_field = 'term_id';
+				}
 				$filters = array('billing_id' => phpgw::get_var('billing_id'));
 				$result_objects = rental_soinvoice::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_soinvoice::get_instance()->get_count($search_for, $search_type, $filters);

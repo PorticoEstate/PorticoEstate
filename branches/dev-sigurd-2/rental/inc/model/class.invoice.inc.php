@@ -28,7 +28,6 @@
 		protected $old_contract_id;
 		protected $term_id;
 		protected $term_label;
-		protected $responsibility_label;
 		
 		public static $so;
 		
@@ -204,13 +203,6 @@
 			return $names;
 		}
 		
-		public function set_responsibility_label($responsibility_label)
-		{
-			$this->responsibility_label = $responsibility_label;
-		}
-	
-		public function get_responsibility_label(){ return $this->responsibility_label; }
-		
 		public function set_term_id($term_id)
 		{
 			$this->term_id = $term_id;
@@ -358,7 +350,6 @@
 			return array(
 				'id'				=> $this->get_id(),
 				'contract_id'		=> $this->get_contract_id(),
-				'responsibility_label' => $this->get_responsibility_label(),
 				'term_label'		=> $this->get_term_label(),
 				'timestamp_created'	=> date($date_format, $this->get_timestamp_created()),
 				'composite_name'	=> $this->get_composite_names(),
