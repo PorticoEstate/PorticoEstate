@@ -758,11 +758,31 @@
 					//echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
                 }	
 
-                // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
-                if($data[6] == 3) {
+                $contract_status = $data[6];
+                if($contract_status == 3) {     // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
                     $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
-                   // echo "<br/>Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
                 }
+				else if($contract_status == 1) { // Report contracts under plannning. Send warning if contract status is '1' (Under planlegging)
+                    $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Under planlegging'";
+                }
+				else if($contract_status == 2) {  //Test: if the contract is running; is import date  within the contract period
+					if($date_start != null && time() < $date_start)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Løpende' but the start date is in the future.";
+					} 
+					else if($date_end != null && time() > $date_end)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Løpende' but the end date is in the past.";
+					}
+                }
+                //Test that the contracts end date is in the past if the contract has status Ended
+                else if($contract_status == 4){
+                	if($date_end == null || time() < $date_end)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Avsluttet' but the end date not set or in the future.";
+					}
+                }
+                
 				
                 // Set the billing start date for the contract
                 $billing_start_date = is_numeric(strtotime($this->decode($data[16]))) ? strtotime($this->decode($data[16])) : null;
