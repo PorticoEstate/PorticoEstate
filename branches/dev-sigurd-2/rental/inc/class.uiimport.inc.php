@@ -720,28 +720,10 @@
 				// Create a new contract object
 				$contract = new rental_contract();
 				
-				// Set the contract dates
-				$date_array = explode(".",$this->decode($data[3]));		//dFra
-				if(count($date_array) == 3)
-				{
-					$y = $date_array[2];
-					$m = $date_array[1];
-					$d = $date_array[0];
-					$date_start = strtotime($y."-".$m."-".$d);
-				}
-				
-				$date_array = explode(".",$this->decode($data[4]));		//dTil
-				if(count($date_array) == 3)
-				{
-					$y = $date_array[2];
-					$m = $date_array[1];
-					$d = $date_array[0];
-					$date_end = strtotime($y."-".$m."-".$d);
-				}
-				
+				//Set the contract dates
+				$date_start = is_numeric(strtotime($this->decode($data[3]))) ? strtotime($this->decode($data[3])) : null;
+				$date_end = is_numeric(strtotime($this->decode($data[4]))) ? strtotime($this->decode($data[4])) : null;
 				$contract->set_contract_date(new rental_contract_date($date_start,$date_end));
-				unset($date_start);
-				unset($date_end);
 
                 // Set the old contract identifier
 				$contract->set_old_contract_id($this->decode($data[5]));	//cKontraktnr
@@ -783,21 +765,13 @@
                 }
 				
                 // Set the billing start date for the contract
-				$date_array = explode(".",$this->decode($data[16]));		//dFakturaFraDato
-				if(count($date_array) == 3)
-				{
-					$y = $date_array[2];
-					$m = $date_array[1];
-					$d = $date_array[0];
-					$contract->set_billing_start_date(strtotime($y."-".$m."-".$d));
-				}
-				
+                $billing_start_date = is_numeric(strtotime($this->decode($data[16]))) ? strtotime($this->decode($data[16])) : null;
+                $contract->set_billing_start_date($billing_start_date);
 				
 				// Deres ref.
 				$contract->set_invoice_header($this->decode($data[17]));					//cFakturaRef
 				$contract->set_comment($this->decode($data[18]));							//cMerknad
                 $contract->set_contract_type_id($contract_types[$this->decode($data[1])]);	//
-				
 				
 				// Set the location identifier (responsibiity area)
 				$contract->set_location_id($this->location_id);
@@ -902,39 +876,37 @@
 					continue;
 				}
 				
-				//Create a row in the array holding the details (price, amount, dates) for the price item
-				$detail_price_items[$data[1]] = 	//nPrisElementId
-				array(
-					'price' => str_replace(',','.',$data[2]),			//nPris
-					'amount' => str_replace(',','.',$data[3]),			//nMengde
-					'date_start' => null,			//dGjelderFra	
-					'date_end' =>  null				//dGjelderTil
-				);
 				
-				if (!$this->is_null($data[4])) {
-//					$date_array = explode(".",$this->decode($data[4]));
-//					if(count($date_array) == 3)
-//					{
-//						$y = $date_array[2];
-//						$m = $date_array[1];
-//						$d = $date_array[0];
-//						$detail_price_items[$data[1]]['date_start'] = strtotime($y."-".$m."-".$d);
-//					}
-//					unset($date_array);
-					$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+				if(isset($detail_price_items[$data[1]]))
+				{
+					// Update existing detail only start date is later than existing start date detail
+					if (!$this->is_null($data[4])) {
+						$detail_date = strtotime($this->decode($data[4]));
+						if($detail_date > $detail_price_items[$data[1]]['date_start'])
+						{
+							$detail_price_items[$data[1]]['date_start'] = $detail_date;
+							$detail_price_items[$data[1]]['amount'] = str_replace(',','.',$data[3]);
+							$detail_price_items[$data[1]]['price'] = str_replace(',','.',$data[2]);
+						}
+					}
 				}
-				if (!$this->is_null($data[5])) {
-//					$date_elements = explode(" ",);
-//					$date_array = explode(".",$this->decode($data[5]));
-//					if(count($date_array) == 3)
-//					{
-//						$y = $date_array[2];
-//						$m = $date_array[1];
-//						$d = $date_array[0];
-//						$detail_price_items[$data[1]]['date_end'] = strtotime($y."-".$m."-".$d);
-//					}
-					//unset($date_array);
-					$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
+				else
+				{
+					//Create a row in the array holding the details (price, amount, dates) for the price item
+					$detail_price_items[$data[1]] = 	//nPrisElementId
+					array(
+						'price' => str_replace(',','.',$data[2]),			//nPris
+						'amount' => str_replace(',','.',$data[3]),			//nMengde
+						'date_start' => null,			//dGjelderFra	
+						'date_end' =>  null				//dGjelderTil
+					);
+					
+					if (!$this->is_null($data[4])) {
+						$detail_price_items[$data[1]]['date_start'] = strtotime($this->decode($data[4]));
+					}
+					if (!$this->is_null($data[5])) {
+						$detail_price_items[$data[1]]['date_end'] = strtotime($this->decode($data[5]));
+					}
 				}
 			}
 			
