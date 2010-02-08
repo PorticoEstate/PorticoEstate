@@ -611,54 +611,68 @@
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
 			if(isset($data['callback']) && $data['callback'])
 			{
-				$vendor['callback'] = $data['callback'];
+	//			$vendor['callback'] = $data['callback'];
 				$callback = $data['callback'];
 			}
 			else
 			{
-				$vendor['callback'] = '""';
+	//			$vendor['callback'] = '""';
 				$callback = '""';
 			}
 
 			$code = <<<JS
-    var d;
+			var d;
 
-    function onDOMAttrModified(e)
-    {
-        var attr = e.attrName || e.propertyName
-        var target = e.target || e.srcElement;
-        if (attr.toLowerCase() == 'readonly')
-        {
- 			vendor_callback();	
-        }
-    }
+			function onDOMAttrModified(e)
+			{
+				var attr = e.attrName || e.propertyName
+				var target = e.target || e.srcElement;
+				if (attr.toLowerCase() == 'readonly')
+				{
+		 			vendor_callback();	
+				}
+			}
 
-	function vendor_callback()
-	{
-		var oArgs = $callback;
-		if(document.getElementById('vendor_id').value)
-		{
-			oArgs['vendor_id'] = document.getElementById('vendor_id').value;
-		}
-		var strURL = phpGWLink('index.php', oArgs, true);
+			function vendor_callback()
+			{
+				var oArgs = $callback;
+				if(document.getElementById('vendor_id').value)
+				{
+					oArgs['vendor_id'] = document.getElementById('vendor_id').value;
+				}
+				var strURL = phpGWLink('index.php', oArgs, true);
+		
+				var	handleSuccess = function(o)
+				{
+					alert( 'success' );
+				}
 
-		alert(strURL);
-	}		
-/*
-    window.onload = function()
-    {
-        d = document.getElementById('vendor_id');
-        if (d.attachEvent)
-        {
-            d.attachEvent('onpropertychange', onDOMAttrModified, false);
-        }
-     	else
-        {
-            d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
-        }
-    };
-*/
+				var	handleFailure = function(o)
+				{
+					alert( 'Failure' );
+				}
 
+				var callback =
+				{
+					success: handleSuccess,
+					failure: handleFailure
+				};
+
+//				YAHOO.util.Connect.asyncRequest('GET',strURL,callback);
+			}		
+
+			YAHOO.util.Event.addListener(window, "load", function()
+			{
+				d = document.getElementById('vendor_id');
+				if (d.attachEvent)
+				{
+					d.attachEvent('onpropertychange', onDOMAttrModified, false);
+				}
+				else
+				{
+					d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+				}
+			});
 JS;
 			if(isset($data['callback']) && $data['callback'])
 			{
@@ -2155,36 +2169,36 @@ JS;
 		}
 
 
-
 		public function select2String($array_values, $id = 'id', $name = 'name',$name2 = '' )
-        {
-             $str_array_values = "";
-             for($i = 0; $i < count($array_values); $i++)
-             {
-                foreach( $array_values[$i] as $key => $value )
-                {
-                    if ($key == $id)
-                    {
-                     $str_array_values .= $value;
-                     $str_array_values .= "#";
-                    }
-                    if ($key == $name)
-                    {
-                      $str_array_values .= $value;
-                      $str_array_values .= "@";
-                    }
-                 if ($key == $name2)
-                 {
-                 // eliminate hte last @ in $str_array_values
-                 $str_array_values = substr($str_array_values, 0, strrpos($str_array_values,'@'));
-                 $str_array_values .= " ".$value;
-                 $str_array_values .= "@";
-                 }
-                }
-             }
-             return $str_array_values;
-        }
-        
+		{
+			$str_array_values = "";
+			for($i = 0; $i < count($array_values); $i++)
+			{
+				foreach( $array_values[$i] as $key => $value )
+				{
+					if ($key == $id)
+					{
+						$str_array_values .= $value;
+						$str_array_values .= "#";
+					}
+					if ($key == $name)
+					{
+						$str_array_values .= $value;
+						$str_array_values .= "@";
+					}
+					if ($key == $name2)
+					{
+						// eliminate hte last @ in $str_array_values
+						$str_array_values = substr($str_array_values, 0, strrpos($str_array_values,'@'));
+						$str_array_values .= " ".$value;
+						$str_array_values .= "@";
+					}
+				}
+			}
+
+			return $str_array_values;
+		}
+
 		public function make_menu_date($array,$id_buttons,$name_hidden) 
 		{
 			$split_values = array ();			
