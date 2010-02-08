@@ -1136,6 +1136,7 @@
 				} else if($type_id == 1 || $type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
 					if($adjusted == 0 || $adjusted == '0'){
+						$current_year = date('Y');
 						$date_tmp = explode(".", $this->decode($data[7]));
 						if(count($date_tmp) == 3){
 							$year = $date_tmp[2];
@@ -1145,10 +1146,15 @@
 							$last_adjusted_year = 0;
 						}
 						
-						//update last adjusted on contract.
 						$contract_id = $contracts[$data[1]];
-						if($contract_id > 0 && $last_adjusted_year > 0){
-							$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+						if($last_adjusted_year <= $current_year){
+							//update last adjusted on contract.
+							if($contract_id > 0 && $last_adjusted_year > 0){
+								$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment on contract {$contract_id} because last adjusted year is after {$current_year}.";
 						}
 					}
 				} else {
@@ -1163,17 +1169,23 @@
 				if($type_id == 1 || $type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
 					if($adjusted == -1 || $adjusted == '-1'){
-					$date_tmp = explode(".", $this->decode($data[7]));
+						$current_year = date('Y');
+						$date_tmp = explode(".", $this->decode($data[7]));
 						if(count($date_tmp) == 3){
 							$year = $date_tmp[2];
 						}else{
 							$year = 0;
 						}
-						
+
 						//update last adjusted and interval on contract.
 						$contract_id = $contracts[$data[1]];
-						if($contract_id > 0 && $year > 0){
-							$socontract->update_adjustment_year($contract_id, $year);
+						if($year <= $current_year){
+							if($contract_id > 0 && $year > 0){
+								$socontract->update_adjustment_year($contract_id, $year);
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment-year update on contract {$contract_id} because last adjusted year is after {$current_year}.";
 						}
 					}
 				}
