@@ -379,12 +379,14 @@
 			<xsl:choose>
 				<xsl:when test="location_data!=''">
 					<div id="location">
+						<table>
 						<xsl:call-template name="location_form"/>
 						<xsl:choose>
 							<xsl:when test="vendor_data!=''">
 								<xsl:call-template name="vendor_form"/>
 							</xsl:when>
 						</xsl:choose>
+						</table>
 					</div>
 				</xsl:when>
 			</xsl:choose>
