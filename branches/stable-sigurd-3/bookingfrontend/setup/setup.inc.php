@@ -32,6 +32,7 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['bookingfrontend']['hooks'] = array
 	(
-		'menu'	=> 'bookingfrontend.menu.get_menu'
+		'menu'	=> 'bookingfrontend.menu.get_menu',
+		'config'
 	);
 ?>

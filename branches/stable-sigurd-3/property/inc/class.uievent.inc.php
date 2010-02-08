@@ -548,14 +548,10 @@
 			phpgwapi_yui::tabview_setup('general_edit_tabview');
 			$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 			$tabs['repeat']		= array('label' => lang('repeat'), 'link' => '#repeat');
-			$schedule = array();
-
 			if ($id)
 			{
 				$tabs['plan']		= array('label' => lang('plan'), 'link' => '#plan');
-				$schedule = $this->schedule2($id);
 			}
-
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
@@ -620,8 +616,21 @@
 
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'tabs'							=> $id ? phpgwapi_yui::tabview_generate($tabs, 'general') : '',
 			);
+
+			$schedule = array();
+
+			if ($id)
+			{
+				$schedule = $this->schedule2($id);
+			}
+			else
+			{
+				$data['td_count']		= '""';
+				$data['base_java_url']	= '""';
+				$data['property_js']	= '""';
+			}
 
 			$data = array_merge($schedule, $data);
 			$appname	=  lang('event');

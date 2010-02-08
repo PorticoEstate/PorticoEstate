@@ -12,6 +12,14 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
+	   <tr class="row_on">
+	    <td>{lang_remote_authentication}:</td>
+	    <td>
+	     <select name="newsettings[authentication_method]">
+{hook_authentication}
+	     </select>
+	    </td>
+	   </tr>
 		<tr class="row_on">
 			<td>{lang_custom_login_url_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>

@@ -564,7 +564,7 @@
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-						if (isset($project_entry) && $this->acl_add && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_ADD))
+						if($this->acl_add)
 						{
 							$datatable['rowactions']['action'][] = array(
 												'my_name' 			=> 'add',
@@ -752,7 +752,6 @@
 						phpgwapi_cache::session_set('property', 'project_index_json',$json);
 						phpgwapi_cache::session_set('property', 'project_index_json_get', 1);
 				}
-
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------

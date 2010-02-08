@@ -2031,7 +2031,8 @@
 			{
 				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'			=> $ticket['vendor_id'],
-						'vendor_name'		=> $ticket['vendor_name']));
+						'vendor_name'		=> $ticket['vendor_name'],
+						'callback'			=> "{menuaction:'property.uitts.view', id:{$id}}"));
 
 				$vendor_email = execMethod('property.sowo_hour.get_email', $ticket['vendor_id']);
 
@@ -2390,6 +2391,37 @@
        			'name'		=> "2",
        			'values'	=>	json_encode($attach_file_def)
 			);
+
+
+       		$myColumnDefs[3] = array
+       		(
+       			'name'		=> "3",
+       			'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
+			);	
+
+
+			$content_email = array();
+			foreach($vendor_email as $_entry )
+			{				
+				$content_email[] = array
+				(
+				
+					'value_email'		=> $_entry['email'],
+					'value_select'		=> '<input type="checkbox" name="values[vendor_email][]" value="'.$_entry['email'].'" title="'.lang('The address to which this order will be sendt').'">'
+				);
+			}
+
+			$datavalues[3] = array
+			(
+					'name'					=> "3",
+					'values' 				=> json_encode($content_email),
+					'total_records'			=> count($content_email),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);
+
 			
 			//----------------------------------------------datatable settings--------			
 
@@ -2409,7 +2441,7 @@
 				'value_actual_cost'				=> $ticket['actual_cost'],
 				'need_approval'					=> $need_approval,
 				'value_approval_mail_address'	=> $supervisor_email,
-				'vendor_email'					=> $vendor_email,
+//				'vendor_email'					=> $vendor_email,
 
 				'contact_data'					=> $contact_data,
 				'lookup_type'					=> $lookup_type,

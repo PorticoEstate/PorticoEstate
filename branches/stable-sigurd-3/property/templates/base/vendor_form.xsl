@@ -11,6 +11,7 @@
 			{
 				Window1=window.open('<xsl:value-of select="vendor_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}		
+
 		</script>
 
 			<tr>
@@ -18,18 +19,14 @@
 					<a href="javascript:vendor_lookup()" onMouseover="window.status='{lang_select_vendor_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_vendor"/></a>
 				</td>
 				<td>
-					<input size="5" type="text" name="vendor_id" value="{value_vendor_id}" >
-					<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_select_vendor_help"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input size="5" type="text" id = "vendor_id" name="vendor_id" value="{value_vendor_id}" onDOMAttrModified="vendor_callback()">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_select_vendor_help"/>
 						</xsl:attribute>
 					</input>
-				<input  size="30" type="text" name="vendor_name" value="{value_vendor_name}"  onClick="vendor_lookup();" readonly="readonly"> 
-					<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_select_vendor_help"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input  size="30" type="text" name="vendor_name" value="{value_vendor_name}"  onClick="vendor_lookup();" readonly="readonly"> 
+					<xsl:attribute name="title">
+							<xsl:value-of select="lang_select_vendor_help"/>
 						</xsl:attribute>
 					</input>
 				</td>

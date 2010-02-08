@@ -1193,11 +1193,14 @@
 							<td valign='top'>
 					            <xsl:value-of select="php:function('lang', 'send order')" />
 							</td>
-							<td>
+							<td><div id="paging_3"></div><div id="datatable-container_3"></div> </td>
+
+						<!--	<td>
 								<table>
 									<xsl:apply-templates select="vendor_email"/>
 								</table>
 							</td>
+						-->
 						</tr>
 						<tr>
 							<td valign="top">
