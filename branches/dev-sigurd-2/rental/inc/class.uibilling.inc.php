@@ -469,10 +469,18 @@ class rental_uibilling extends rental_uicommon
 		//$browser->content_header('export.txt','text/plain');
 		
 		$stop = phpgw::get_var('date');
-		$export_format = str_replace('_','.',phpgw::get_var('export_format'));
-		
+		$export_format = explode('_',phpgw::get_var('export_format'));
+		$file_ending = $export_format[1];
+		if($file_ending == 'gl07')
+		{
+			$type = 'intern';
+		}
+		else if($file_ending == 'lg04')
+		{
+			$type = 'faktura';
+		}
 		$date = date('Ymd', $stop);
-		header("Content-Disposition: attachment; filename='BKBPE_{$date}{$export_format}'");
+		header("Content-Disposition: attachment; filename='PE_{$type}_{$date}.{$file_ending}'");
 		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 
