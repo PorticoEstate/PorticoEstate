@@ -4,7 +4,7 @@ account_in	rental	no	Art/konto inntektsside
 account_in_not_numeric	rental	no	Art/konto inntektsside må være et tall
 account_number	rental	no	Kontonummer
 account_out	rental	no	Art/konto utgiftsside
-account_out_not_numeric	rental	no	Art/konto utgiftsside må være et tall	
+account_out_not_numeric	rental	no	Art/konto utgiftsside må være et tall
 active_party	rental	no	Kontraktspart er aktiv
 active_plural	rental	no	Aktive
 active_single	rental	no	Aktiv
