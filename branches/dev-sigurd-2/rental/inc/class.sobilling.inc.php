@@ -221,10 +221,14 @@ class rental_sobilling extends rental_socommon
 		return $missing_billing_info;
 	}
 		
-	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing)
+	public function create_billing(int $decimals, int $contract_type, int $billing_term, int $year, int $month, $title, int $created_by, array $contracts_to_bill, array $contracts_overriding_billing_start, string $export_format, int $existing_billing, array $contracts_bill_only_one_time)
 	{
 		if($contracts_overriding_billing_start == null){
 			$contracts_overriding_billing_start = array();
+		}
+		
+		if($contracts_bill_only_one_time == null){
+			$contracts_bill_only_one_time = array();
 		}
 		
 		// We start a transaction before running the billing
@@ -257,7 +261,7 @@ class rental_sobilling extends rental_socommon
 		
 		foreach($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 		{
-			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id,$contracts_overriding_billing_start) ? true : false,$bill_from_timestamp, $billing_end_timestamp); // Creates an invoice of the contract
+			$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id,$contracts_overriding_billing_start) ? true : false,$bill_from_timestamp, $billing_end_timestamp,in_array($contract_id,$contracts_bill_only_one_time) ? true : false ); // Creates an invoice of the contract
 			if($invoice != null)
 			{
 				$total_sum += $invoice->get_total_sum();

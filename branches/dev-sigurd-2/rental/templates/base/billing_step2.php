@@ -217,6 +217,12 @@ var toggleAll = function (target_tag_name, source_tag_name)
 											}else{?>
 												<input name="contract[]" value="<?php echo $contract->get_id() ?>" type="hidden"/>
 										<?php }
+											if($contract->get_bill_only_one_time())
+											{
+										?>
+										<input name="bill_only_one_time[]" value="<?php echo $contract->get_id() ?>" type="hidden"/>
+										<?php 
+											}
 										?>
 									</div>
 								</td>

@@ -224,7 +224,7 @@
 	
 		public function get_month(){ return $this->month; }
 		
-		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end)
+		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time)
 		{
 			if($timestamp_invoice_start > $timestamp_invoice_end) // Sanity check
 			{
@@ -256,7 +256,15 @@
 			$invoice->set_party_id($contract->get_payer_id());
 			$invoice->set_project_id($contract->get_project_id());
 			$invoice->set_old_contract_id($contract->get_old_contract_id());
-			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+			
+			if($bill_only_one_time)
+			{
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id(), 'one_time' => true));
+			}
+			else
+			{
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+			}
 			rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
 			$total_sum = 0;
 			$total_area = 0;
