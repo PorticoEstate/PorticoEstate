@@ -146,11 +146,21 @@ HTML;
 
 			$attrib_data 	= $GLOBALS['phpgw']->custom_fields->get($appname, $location, $id);
 
+			$helpmsg = nl2br(str_replace(array
+						(
+							'[',
+							']'
+						),array
+						(
+							'<',
+							'>'
+						),$attrib_data['helpmsg']));
+
 			$function_msg	= lang('Help');
 
 			$t->set_file('help', 'help.tpl');
 			$t->set_var('title', lang('Help') . " - \"{$attrib_data['input_text']}\"");
-			$t->set_var('help_msg', $attrib_data['helpmsg'] );
+			$t->set_var('help_msg', $helpmsg );
 			$t->set_var('lang_close', lang('close'));
 											
 			$GLOBALS['phpgw']->common->phpgw_header();
