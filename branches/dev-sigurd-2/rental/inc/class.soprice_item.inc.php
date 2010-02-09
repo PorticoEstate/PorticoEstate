@@ -388,7 +388,7 @@ class rental_soprice_item extends rental_socommon
 		if($sort_field == 'responsibility_title'){
 			$sort_field = 'responsibility_id';
 		}
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": "ORDER BY agresso_id ASC";
 		
 		$filter_clauses = array();
 		$filter_clauses[] = "rpi.title != 'UNKNOWN'";
@@ -417,6 +417,7 @@ class rental_soprice_item extends rental_socommon
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rpi.id)) AS count';
+			$order = '';
 		}
 		else
 		{
