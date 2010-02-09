@@ -173,9 +173,14 @@ class rental_uibilling extends rental_uicommon
 				
 				foreach($contract_price_items as $contract_price_item){
 					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts)){
-						$c = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
-						$c->set_bill_only_one_time();
-						$contracts[$contract_price_item->get_contract_id()] = $c;
+						$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_price_item->get_contract_id(), 'contract_type' => $contract_type));
+						//var_dump($aditional_contracts);
+						//$c = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
+						if(count($aditional_contracts) == 1){
+							$c = $aditional_contracts[$contract_price_item->get_contract_id()];
+							$c->set_bill_only_one_time();
+							$contracts[$contract_price_item->get_contract_id()] = $c;
+						}
 					}
 				}
 		
@@ -189,12 +194,12 @@ class rental_uibilling extends rental_uicommon
 						
 						if($type_id == 4)
 						{
-							$warningMsgs[] = "Removed KF contract " . $contract->get_old_contract_id();
+							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
 							$contracts[$id] = null;
 						} 
 						else if(isset($total_price) && $total_price == 0)
 						{
-							$warningMsgs[] = "Removed contract " . $contract->get_old_contract_id() . " with total price equal to 0";
+							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
 							$contracts[$id] = null;
 						}
 						else

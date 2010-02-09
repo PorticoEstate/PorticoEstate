@@ -57,6 +57,9 @@ billing_start	rental	no	Fakturastart
 billing_term	rental	no	Termin
 billing_terms	rental	no	Terminer
 billing_unit	rental	no	Ansvar-/tjenestested
+billing_removed_KF_contract	rental	no	Fjernet KF-kontrakt med id
+billing_removed_contract_part_1	rental	no	Fjernet kontrakt
+billing_removed_contract_part_2	rental	no	med total pris = 0
 bill	rental	no	Faktura
 bill2	rental	no	Fakturér
 building	rental	no	Bygg
