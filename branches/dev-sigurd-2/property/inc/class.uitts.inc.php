@@ -629,6 +629,10 @@
 			{
 				$uicols['name'][$i++] = 'order_id';
 				$uicols['name'][$i++] = 'vendor';
+			}
+
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
+			{
 				$uicols['name'][$i++] = 'estimate';
 				$uicols['name'][$i++] = 'actual_cost';
 			}
