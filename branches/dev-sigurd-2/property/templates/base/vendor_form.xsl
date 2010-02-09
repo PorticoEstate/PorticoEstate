@@ -24,6 +24,7 @@
 							<xsl:value-of select="lang_select_vendor_help"/>
 						</xsl:attribute>
 					</input>
+					<input  type="hidden" id = "vendor_id_trigger" name="vendor_id_trigger" value=""></input>
 					<input  size="30" type="text" name="vendor_name" value="{value_vendor_name}"  onClick="vendor_lookup();" readonly="readonly"> 
 					<xsl:attribute name="title">
 							<xsl:value-of select="lang_select_vendor_help"/>

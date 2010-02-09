@@ -19,16 +19,17 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.fetch_vendor_email=function()
 	{
-		//asign value to hidden
-		//	YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
-
-		//	formObject = document.body.getElementsByTagName('form');
-		//	YAHOO.util.Connect.setForm(formObject[0]);//First form
+//			formObject = document.body.getElementsByTagName('form');
+//			YAHOO.util.Connect.setForm(formObject[0]);//First form
 			if(document.getElementById('vendor_id').value)
 			{
 				base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
 			}
-			execute_async(myDataTable_3);
+			
+			if(document.getElementById('vendor_id_trigger').value)
+			{
+				execute_async(myDataTable_3);
+			}
 	}
 
 
