@@ -2066,8 +2066,7 @@
 			{
 				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'			=> $ticket['vendor_id'],
-						'vendor_name'		=> $ticket['vendor_name'],
-						'callback'			=> "{menuaction:'property.uitts.view', id:{$id}}"));
+						'vendor_name'		=> $ticket['vendor_name']));
 
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $ticket['b_account_id'] ? $ticket['b_account_id'] : $ticket['b_account_id'],
