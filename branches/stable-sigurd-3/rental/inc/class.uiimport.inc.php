@@ -758,11 +758,31 @@
 					//echo "<br/>Price period of contract " . $contract->get_old_contract_id() . " is unknown (value: 5).  Ignored.";
                 }	
 
-                // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
-                if($data[6] == 3) {
+                $contract_status = $data[6];
+                if($contract_status == 3) {     // Report contracts under dismissal. Send warning if contract status is '3' (Under avslutning)
                     $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
-                   // echo "<br/>Status of contract " . $contract->get_old_contract_id() . " is '".lang('contract_under_dismissal')."'";
                 }
+				else if($contract_status == 1) { // Report contracts under plannning. Send warning if contract status is '1' (Under planlegging)
+                    $this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Under planlegging'";
+                }
+				else if($contract_status == 2) {  //Test: if the contract is running; is import date  within the contract period
+					if($date_start != null && time() < $date_start)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Løpende' but the start date is in the future.";
+					} 
+					else if($date_end != null && time() > $date_end)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Løpende' but the end date is in the past.";
+					}
+                }
+                //Test that the contracts end date is in the past if the contract has status Ended
+                else if($contract_status == 4){
+                	if($date_end == null || time() < $date_end)
+					{
+						$this->warnings[] = "Status of contract " . $contract->get_old_contract_id() . " is 'Avsluttet' but the end date not set or in the future.";
+					}
+                }
+                
 				
                 // Set the billing start date for the contract
                 $billing_start_date = is_numeric(strtotime($this->decode($data[16]))) ? strtotime($this->decode($data[16])) : null;
@@ -1136,6 +1156,7 @@
 				} else if($type_id == 1 || $type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
 					if($adjusted == 0 || $adjusted == '0'){
+						$current_year = date('Y');
 						$date_tmp = explode(".", $this->decode($data[7]));
 						if(count($date_tmp) == 3){
 							$year = $date_tmp[2];
@@ -1145,10 +1166,15 @@
 							$last_adjusted_year = 0;
 						}
 						
-						//update last adjusted on contract.
 						$contract_id = $contracts[$data[1]];
-						if($contract_id > 0 && $last_adjusted_year > 0){
-							$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+						if($last_adjusted_year <= $current_year){
+							//update last adjusted on contract.
+							if($contract_id > 0 && $last_adjusted_year > 0){
+								$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment on contract {$contract_id} because last adjusted year is after {$current_year}.";
 						}
 					}
 				} else {
@@ -1163,17 +1189,23 @@
 				if($type_id == 1 || $type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
 					if($adjusted == -1 || $adjusted == '-1'){
-					$date_tmp = explode(".", $this->decode($data[7]));
+						$current_year = date('Y');
+						$date_tmp = explode(".", $this->decode($data[7]));
 						if(count($date_tmp) == 3){
 							$year = $date_tmp[2];
 						}else{
 							$year = 0;
 						}
-						
+
 						//update last adjusted and interval on contract.
 						$contract_id = $contracts[$data[1]];
-						if($contract_id > 0 && $year > 0){
-							$socontract->update_adjustment_year($contract_id, $year);
+						if($year <= $current_year){
+							if($contract_id > 0 && $year > 0){
+								$socontract->update_adjustment_year($contract_id, $year);
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment-year update on contract {$contract_id} because last adjusted year is after {$current_year}.";
 						}
 					}
 				}

@@ -52,6 +52,7 @@
 		protected $adjustment_share;
 		protected $adjustment_year;
 		protected $adjustable;
+		protected $bill_only_one_time;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -65,6 +66,7 @@
 			$this->parties = array();
 			$this->composites = array();
 			$this->bill_timestamps = array(); // Consider to have all invoices here if other data than billing timetamps are needed 
+			$bill_only_one_time = false;
 		}
 		
 		public function set_id($id)
@@ -248,6 +250,16 @@
 		public function set_contract_type_title($title)
 		{
 			$this->contract_type_title = $title;
+		}
+		
+		public function get_bill_only_one_time()
+		{
+			return $this->bill_only_one_time;
+		}
+		
+		public function set_bill_only_one_time()
+		{
+			$this->bill_only_one_time = true;
 		}
 		
 		public function get_party_name(){

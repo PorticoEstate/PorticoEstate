@@ -1288,7 +1288,11 @@
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+				if($category['location_level'] > 0)
+				{
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location');
+					$active_tab = 'location';
+				}
 
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
@@ -1298,9 +1302,12 @@
 				{
 					if(isset($group['attributes']))
 					{
-						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-						$group['link'] = str_replace(' ', '_', $group['name']);
+						$_tab_name = str_replace(' ', '_', $group['name']);
+						$active_tab = $active_tab ? $active_tab : $_tab_name;
+						$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
+						$group['link'] = $_tab_name;
 						$attributes[] = $group;
+						unset($_tab_name);
 					}
 				}
 				unset($attributes_groups);
@@ -1442,7 +1449,7 @@
 				'table_apply' 					=> $table_apply,
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general')
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
 			);
 
 			phpgwapi_yui::load_widget('dragdrop');

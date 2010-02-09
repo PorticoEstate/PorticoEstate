@@ -233,9 +233,6 @@
 		<div class="yui-navset" id="entity_edit_tabview">
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<div class="yui-content">		
-				<div id="general">
 
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -262,7 +259,6 @@
 				</td>
 			</tr>
 		</table>
-
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:call-template name="target"/>
 			<xsl:for-each select="origin_list" >
@@ -376,21 +372,25 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
+		</table>
+		<xsl:value-of disable-output-escaping="yes" select="tabs" />
+		<div class="yui-content">		
 
 			<xsl:choose>
 				<xsl:when test="location_data!=''">
-					<xsl:call-template name="location_form"/>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="vendor_data!=''">
-					<xsl:call-template name="vendor_form"/>
+					<div id="location">
+						<table>
+						<xsl:call-template name="location_form"/>
+						<xsl:choose>
+							<xsl:when test="vendor_data!=''">
+								<xsl:call-template name="vendor_form"/>
+							</xsl:when>
+						</xsl:choose>
+						</table>
+					</div>
 				</xsl:when>
 			</xsl:choose>
 
-		</table>
-		</div>
-		
 		<xsl:call-template name="attributes_values"/>
 
 		<div id="files">

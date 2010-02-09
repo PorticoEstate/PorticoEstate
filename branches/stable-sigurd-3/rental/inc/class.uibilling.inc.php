@@ -44,12 +44,13 @@ class rental_uibilling extends rental_uicommon
 			}
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
 			$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
+			$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
 			if($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) // User submitted contracts to bill
 			{
 				$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
 				if($missing_billing_info == null || count($missing_billing_info) == 0)
 				{
-					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing);
+					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing, $contract_bill_only_one_time);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.view', 'id' => $billing_job->get_id()));
 					return;
 				}
@@ -165,13 +166,25 @@ class rental_uibilling extends rental_uicommon
 			{
 				$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
 				$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				
+				$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+				$contract_price_items = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
+				$contract_id_array = array();
+				
+				foreach($contract_price_items as $contract_price_item){
+					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts)){
+						$c = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
+						$c->set_bill_only_one_time();
+						$contracts[$contract_price_item->get_contract_id()] = $c;
+					}
+				}
 		
 				$socontract_price_item = rental_socontract_price_item::get_instance();
 				foreach($contracts as $id => $contract)
 				{	
 					if(isset($contract))
 					{
-						$total_price = $socontract_price_item->get_total_price($contract->get_id());
+						$total_price = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
 						$type_id = $contract->get_contract_type_id();
 						
 						if($type_id == 4)
