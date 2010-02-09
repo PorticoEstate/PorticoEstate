@@ -173,9 +173,14 @@ class rental_uibilling extends rental_uicommon
 				
 				foreach($contract_price_items as $contract_price_item){
 					if(!array_key_exists($contract_price_item->get_contract_id(), $contracts)){
-						$c = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
-						$c->set_bill_only_one_time();
-						$contracts[$contract_price_item->get_contract_id()] = $c;
+						$aditional_contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_price_item->get_contract_id(), 'contract_type' => $contract_type));
+						//var_dump($aditional_contracts);
+						//$c = rental_socontract::get_instance()->get_single($contract_price_item->get_contract_id());
+						if(count($aditional_contracts) == 1){
+							$c = $aditional_contracts[$contract_price_item->get_contract_id()];
+							$c->set_bill_only_one_time();
+							$contracts[$contract_price_item->get_contract_id()] = $c;
+						}
 					}
 				}
 		
