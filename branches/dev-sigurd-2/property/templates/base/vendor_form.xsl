@@ -19,7 +19,7 @@
 					<a href="javascript:vendor_lookup()" onMouseover="window.status='{lang_select_vendor_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_vendor"/></a>
 				</td>
 				<td>
-					<input size="5" type="text" id = "vendor_id" name="vendor_id" value="{value_vendor_id}" onDOMAttrModified="vendor_callback()">
+					<input size="5" type="text" id = "vendor_id" name="vendor_id" value="{value_vendor_id}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_select_vendor_help"/>
 						</xsl:attribute>

@@ -824,7 +824,7 @@
 			(
 				'td_count'					=> 6,
 				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'				=> json_encode(array('menuaction' => "property.uievent.schedule2",'id'=>$id)),
+				'base_java_url'				=> "{menuaction:'property.uievent.schedule2',id:'{$id}'}",
 				'datatable'					=> $datavalues,
 				'myColumnDefs'				=> $myColumnDefs,
 				'myButtons'					=> $myButtons,

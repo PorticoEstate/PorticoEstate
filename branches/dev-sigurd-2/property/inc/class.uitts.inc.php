@@ -48,7 +48,8 @@
 			'download'	=> true,
 			'download2'	=> true,
 			'view_file'	=> true,
-			'edit_status'=> true
+			'edit_status'=> true,
+			'get_vendor_email' => true
 		);
 
 		/**
@@ -1758,6 +1759,40 @@
 		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+		function get_vendor_email($vendor_id = 0)
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int', 'GET', 0);
+			}
+			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
+
+			$content_email = array();
+			foreach($vendor_email as $_entry )
+			{				
+				$content_email[] = array
+				(
+				
+					'value_email'		=> $_entry['email'],
+					'value_select'		=> '<input type="checkbox" name="values[vendor_email][]" value="'.$_entry['email'].'" title="'.lang('The address to which this order will be sendt').'">'
+				);
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content_email))
+				{
+					return json_encode($content_email);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content_email;
+		}
+
 		function view()
 		{
 			if(!$this->acl_read)
@@ -2033,8 +2068,6 @@
 						'vendor_id'			=> $ticket['vendor_id'],
 						'vendor_name'		=> $ticket['vendor_name'],
 						'callback'			=> "{menuaction:'property.uitts.view', id:{$id}}"));
-
-				$vendor_email = execMethod('property.sowo_hour.get_email', $ticket['vendor_id']);
 
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $ticket['b_account_id'] ? $ticket['b_account_id'] : $ticket['b_account_id'],
@@ -2401,16 +2434,7 @@
 			);	
 
 
-			$content_email = array();
-			foreach($vendor_email as $_entry )
-			{				
-				$content_email[] = array
-				(
-				
-					'value_email'		=> $_entry['email'],
-					'value_select'		=> '<input type="checkbox" name="values[vendor_email][]" value="'.$_entry['email'].'" title="'.lang('The address to which this order will be sendt').'">'
-				);
-			}
+			$content_email = $this->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
 
 			$datavalues[3] = array
 			(
@@ -2448,6 +2472,8 @@
 				'simple'						=> $this->_simple,
 				'show_finnish_date'				=> $this->_show_finnish_date,
 				'tabs'							=> self::_generate_tabs(true),
+				'td_count'						=> '""',
+				'base_java_url'					=> "{menuaction:'property.uitts.get_vendor_email'}",
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
