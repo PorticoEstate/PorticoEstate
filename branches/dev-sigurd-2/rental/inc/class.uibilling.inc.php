@@ -194,12 +194,12 @@ class rental_uibilling extends rental_uicommon
 						
 						if($type_id == 4)
 						{
-							$warningMsgs[] = "Removed KF contract " . $contract->get_old_contract_id();
+							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
 							$contracts[$id] = null;
 						} 
 						else if(isset($total_price) && $total_price == 0)
 						{
-							$warningMsgs[] = "Removed contract " . $contract->get_old_contract_id() . " with total price equal to 0";
+							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
 							$contracts[$id] = null;
 						}
 						else
