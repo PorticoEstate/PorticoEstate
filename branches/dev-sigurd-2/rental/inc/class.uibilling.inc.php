@@ -92,7 +92,12 @@ class rental_uibilling extends rental_uicommon
 			}
 			$use_existing = false;
 			$year = phpgw::get_var('year');
-			$billing_term_tmp = phpgw::get_var('billing_term');
+			if($step == 2){
+				$billing_term_tmp = phpgw::get_var('billing_term_selection');
+			}
+			else{
+				$billing_term_tmp = phpgw::get_var('billing_term');
+			}
 			$billing_term_selection = $billing_term_tmp;
 			$billing_term = substr($billing_term_tmp,0,1);
 			$billing_month = substr($billing_term_tmp,2);
