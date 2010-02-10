@@ -172,7 +172,6 @@
 			$allrows  = phpgw::get_var('allrows', 'bool');
 
 			$lookup = ''; //Fix this
-			$dry_run = false;
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -405,12 +404,11 @@
 										  )
 				);
 
-//				$dry_run = true;
 			}
 
 			$workorder_list = array();
 
-			$workorder_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' =>$allrows, 'dry_run' => $dry_run));
+			$workorder_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' =>$allrows));
 			$uicols = $this->bo->uicols;
 
 			$content = array();

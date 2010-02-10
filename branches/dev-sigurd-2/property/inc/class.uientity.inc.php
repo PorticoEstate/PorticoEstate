@@ -226,8 +226,6 @@
 
 		function index()
 		{
-			$dry_run = false;
-
 			//redirect. If selected the title of module.
 			if($this->entity_id == 1 && !$this->cat_id)
 			{
@@ -508,16 +506,14 @@
 						}
 					}
 
-				//cramirez: $dry_run is use "$this->bo->read"
-				$dry_run=true;
 				// sets for initial ordering
 				$this->sort = "ASC";
 				$this->order = "num";
 			}
 
 			$entity_list = array();
-			//cramirez: $dry_run avoid to load all data the first time
-			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date,'dry_run' =>$dry_run));
+
+			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date));
 
 			$uicols = $this->bo->uicols;
 
@@ -755,8 +751,6 @@
 
 //-BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
 			//values for Pagination
 			$json = array
 			(
@@ -802,8 +796,13 @@
 				$json ['rights'] = $datatable['rowactions']['action'];
 			}
 
-			return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-END------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT

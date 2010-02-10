@@ -134,8 +134,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$dry_run = false;
-
 			$datatable = array();
 			$values_combo_box = array();
 
@@ -311,11 +309,10 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][4]);
 				}
-				$dry_run = true;
 			}
 
 			$request_list = array();
-			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
 			$uicols	= $this->bo->uicols;
 
 			$j=0;
@@ -571,8 +568,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -614,8 +609,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 

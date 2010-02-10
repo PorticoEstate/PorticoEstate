@@ -961,8 +961,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1073,8 +1071,13 @@
 					$json ['message'][] = $receipt;
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -1559,8 +1562,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1592,8 +1593,13 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -2125,8 +2131,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2172,10 +2176,14 @@
 				{
 					$json ['current_consult'] = $current_Consult;
 				}
-	//			_debug_array($json);
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('start_date');

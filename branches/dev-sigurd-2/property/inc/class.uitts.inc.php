@@ -275,8 +275,6 @@
 
 			$this->save_sessiondata();
 
-			$dry_run=false;
-
 			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_category 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -595,18 +593,10 @@
 						)
 					);				
 				}
-
-				$dry_run = true;
 			}
 
-			if($dry_run)
-			{
-				$ticket_list = array();
-			}
-			else
-			{
-				$ticket_list = $this->bo->read($start_date,$end_date);
-			}
+			$ticket_list = $this->bo->read($start_date,$end_date);
+
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
 //_debug_array($uicols_related);
@@ -876,8 +866,6 @@
 		  	phpgwapi_yui::load_widget('paginator');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -946,8 +934,14 @@
 				{
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 		    		return $json;
-			}
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 // Prepare template variables and process XSLT
