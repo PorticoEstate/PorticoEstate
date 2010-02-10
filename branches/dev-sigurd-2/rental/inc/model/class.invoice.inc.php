@@ -28,6 +28,7 @@
 		protected $old_contract_id;
 		protected $term_id;
 		protected $term_label;
+		protected $billing_title;
 		
 		public static $so;
 		
@@ -223,6 +224,13 @@
 		}
 	
 		public function get_month(){ return $this->month; }
+		
+		public function set_billing_title($billing_title)
+		{
+			$this->billing_title = $billing_title;
+		}
+	
+		public function get_billing_title(){ return $this->billing_title; }
 		
 		public static function create_invoice(int $decimals, int $billing_id, int $contract_id, bool $override,int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time)
 		{
