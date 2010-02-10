@@ -989,6 +989,15 @@
 						$this->messages[] = "Stored price item ({$id}) with title " . $admin_price_item->get_title() . " in 'Prisbok'";
 					}
 				}
+				else{
+					//check type on price item (not is_area and data[4]=1, or is_area and data[4] != 1)
+					if($admin_price_item->is_area() && $this->decode($data[4] != '1')){
+						$this->warnings[] = "Price item ({$admin_price_item->get_agresso_id()}) - " . $admin_price_item->get_title() . " - on contract {$contracts[$this->decode($data[1])]} is stored as area price item, but has record indicating it is not an area price item!";
+					}
+					else if(!$admin_price_item->is_area() && $this->decode($data[4] == '1')){
+						$this->warnings[] = "Price item ({$admin_price_item->get_agresso_id()}) - " . $admin_price_item->get_title() . " - on contract {$contracts[$this->decode($data[1])]} is stored as non-area price item, but has record indicating it is an area price item!";
+					}
+				}
 				
 				$contract_id = $contracts[$this->decode($data[1])];				//nKontraktId
 				
