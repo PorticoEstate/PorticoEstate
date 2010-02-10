@@ -3,6 +3,7 @@ var  myPaginator_1, myDataTable_1;
 var  myPaginator_2, myDataTable_2;
 var  myPaginator_3, myDataTable_3;
 var d;
+var vendor_id = 0;
 
 /********************************************************************************/
 this.myParticularRenderEvent = function()
@@ -26,9 +27,10 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 				base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
 			}
 			
-			if(document.getElementById('vendor_id_trigger').value)
+			if(document.getElementById('vendor_id').value != vendor_id)
 			{
 				execute_async(myDataTable_3);
+				vendor_id = document.getElementById('vendor_id').value;
 			}
 	}
 
