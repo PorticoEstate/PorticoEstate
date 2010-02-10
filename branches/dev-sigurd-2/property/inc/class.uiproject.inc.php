@@ -395,7 +395,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$project_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'dry_run' => $dry_run));
@@ -424,7 +424,7 @@
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
-								$uicols['formatter'][$k] = 'myCustom';
+								$uicols['formatter'][$k] = "'myCustom'";
 							}
 							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]])
 							{
@@ -700,8 +700,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 		  	//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -752,9 +750,15 @@
 						phpgwapi_cache::session_set('property', 'project_index_json',$json);
 						phpgwapi_cache::session_set('property', 'project_index_json_get', 1);
 				}
-	    		return $json;
-			}
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
 //-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$datatable['json_data'] = json_encode($json);
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;

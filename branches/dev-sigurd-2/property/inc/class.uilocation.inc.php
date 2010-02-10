@@ -425,7 +425,7 @@
 						                            );
 				}
 
-				$dry_run=true;
+//				$dry_run=true;
 
 			}
 
@@ -786,8 +786,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -839,8 +837,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -1817,7 +1820,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$summary_list= $this->bo->read_summary();
@@ -1878,8 +1881,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1931,10 +1932,16 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
-			//-------------------- JSON CODE ----------------------
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
 
+			$datatable['json_data'] = json_encode($json);
+
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));

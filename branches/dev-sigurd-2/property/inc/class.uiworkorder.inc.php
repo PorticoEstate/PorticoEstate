@@ -405,8 +405,7 @@
 										  )
 				);
 
-				$dry_run = true;
-
+//				$dry_run = true;
 			}
 
 			$workorder_list = array();
@@ -650,8 +649,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -704,10 +701,15 @@
 						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 1);
 				}
 
-	    		return $json;
-			}
-//-------------------- JSON CODE ----------------------
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
 
+
+			$datatable['json_data'] = json_encode($json);
+
+//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();

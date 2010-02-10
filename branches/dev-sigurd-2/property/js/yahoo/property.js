@@ -703,13 +703,15 @@
 		{
 			myLoading.show();
 		}
-		try	{
+/*		try	{
 	 		ds = phpGWLink('index.php',path_values,true);
 			}
 		catch(e)
 			{
 				alert(e);
 			}
+*/
+	 		ds = phpGWLink('index.php',path_values,true);
 
 		var callback2 =
 		{
@@ -720,6 +722,28 @@
 					myLoading.hide();
 				}
 				eval('values_ds ='+o.responseText);
+				myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
+				update_datatable();
+				update_filter();
+				flag_particular_setting='update';
+			},
+			failure: function(o) {window.alert('Server or your connection is dead.')},
+			timeout: 10000,
+			cache: false
+		}
+
+
+//		var callback2 =
+//		{
+//			success: function(o)
+//			{
+				values_ds = json_data;
+
+				if(config_values.PanelLoading)
+				{
+					myLoading.hide();
+				}
+				//eval('values_ds ='+o.responseText);
 				flag_particular_setting='';
 
 				if(flag==0)
@@ -730,19 +754,25 @@
 				}
 				else
 				{
-					myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
-					update_datatable();
-					update_filter();
-					flag_particular_setting='update';
-
+					try
+					{
+						YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
+					}
+					catch(e_async)
+					{
+					   alert(e_async.message);
+					}
 				}
 				particular_setting();
 
-			},
-			failure: function(o) {window.alert('Server or your connection is dead.')},
-			timeout: 10000,
-			cache: false
-		}
+	//		},
+//			failure: function(o) {window.alert('Server or your connection is dead.')},
+//			timeout: 10000,
+//			cache: false
+//		}
+
+
+/*
 		try
 		{
 			//First call JSON (POST)
@@ -752,6 +782,8 @@
 		{
 		   alert(e_async.message);
 		}
+
+*/
 	}
 
 /********************************************************************************
