@@ -129,11 +129,8 @@ class rental_uiprice_item extends rental_uicommon
 		$id = phpgw::get_var('id');
 
 		$price_item = rental_socontract_price_item::get_instance()->get_single($id);
-		$price_item->set_field($field, $value);
-
-		//$price_item->store();
+		$price_item->set_field($field, $value);	
 		rental_socontract_price_item::get_instance()->store($price_item);
-//		print_r($price_item);
 
 	}
 
