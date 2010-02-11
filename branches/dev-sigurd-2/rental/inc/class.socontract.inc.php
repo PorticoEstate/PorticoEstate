@@ -1047,7 +1047,7 @@ class rental_socontract extends rental_socommon
     
     public function update_adjustment_share($contract_id, $adjustment_share)
     {
-    	$new_adjustment_share = $this->marshal($adjusted_year, 'float');
+    	$new_adjustment_share = $this->marshal($adjustment_share, 'int');
     	$sql = "UPDATE rental_contract SET adjustment_share={$new_adjustment_share} WHERE id = {$contract_id}";
     	$this->db->query($sql);
     }

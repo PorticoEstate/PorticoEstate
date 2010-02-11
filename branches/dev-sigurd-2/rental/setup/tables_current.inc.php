@@ -109,7 +109,7 @@
 				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true), //Utleid areal
 				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
-				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsandel
+				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true, 'default' => 100),	//Reguleringsandel
 				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Sist regulert
 				'adjustable' =>			array('type' => 'bool','nullable' => true, 'default' => 'false') //Regulerbar
 			),
