@@ -396,6 +396,7 @@
 				$ticket['order_cat_id']		= $this->db->f('order_cat_id');
 				$ticket['building_part']	= $this->db->f('building_part',true);
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
+				$ticket['publish_note']		= $this->db->f('publish_note');
 
 				$user_id=(int)$this->db->f('user_id');
 
@@ -681,6 +682,24 @@
 			** L - Location changed
 			** M - Mail sent to vendor
 			*/
+
+			$this->db->query("UPDATE fm_tts_tickets SET publish_note = NULL WHERE id = {$id}",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_tts_history SET publish = NULL WHERE history_record_id = {$id}",__LINE__,__FILE__);
+			if(isset($ticket['publish_note']))
+			{
+				foreach ($ticket['publish_note'] as $publish_info)
+				{
+					$note = explode('_', $publish_info);
+					if(!$note[1])
+					{
+						$this->db->query("UPDATE fm_tts_tickets SET publish_note = 1 WHERE id = {$note[0]}",__LINE__,__FILE__);
+					}
+					else
+					{
+						$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = {$note[1]}",__LINE__,__FILE__);
+					}
+				}
+			}
 
 			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
 

@@ -2322,11 +2322,12 @@
 			(
 				array
 				(
-					'value_id'	=>'', //not from historytable
-					'value_count' => 1,
-					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
-					'value_user' => $ticket['user_name'],
-            		'value_note' => $ticket['details']
+					'value_id'		=>'', //not from historytable
+					'value_count'	=> 1,
+					'value_date'	=> $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
+					'value_user'	=> $ticket['user_name'],
+            		'value_note'	=> $ticket['details'],
+            		'value_publish'	=> $ticket['publish_note']
 				)
 			);
 
@@ -2357,11 +2358,11 @@
 				}
 			}
 
-			$note_def[] = array('key' => 'publish_text','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+			$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
 			foreach($additional_notes as &$note)
 			{
-				$_checked = '';//'checked';
-				$note['publish_text'] = "<input type='checkbox' {$_checked}  name='values[publish_text][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
+				$_checked = $note['value_publish'] ? 'checked' : '';
+				$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
 			}
 
 

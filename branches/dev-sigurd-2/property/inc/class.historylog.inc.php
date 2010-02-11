@@ -204,7 +204,8 @@
 					'status'     => preg_replace('/ /','',$this->db->f('history_status')),
 					'new_value'  => htmlspecialchars_decode($this->db->f('history_new_value',true)),
 					'old_value'  => htmlspecialchars_decode($this->db->f('history_old_value',true)),
-					'datetime'   => strtotime($this->db->f('history_timestamp'))
+					'datetime'   => strtotime($this->db->f('history_timestamp')),
+					'publish'	=> $this->db->f('publish')
 				);
 			}
 			return $return_values;

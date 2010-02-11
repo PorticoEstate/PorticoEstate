@@ -877,7 +877,8 @@
 				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'order_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
-				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True)
+				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True),
+				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1410,7 +1411,8 @@
 				'history_status' => array('type' => 'varchar','precision' => '3','nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
 				'history_old_value' => array('type' => 'text','nullable' => true),
-				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
+				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp'),
+				'publish'=> array('type' => 'int','precision' => 2,'nullable' => True)
 			),
 			'pk' => array('history_id'),
 			'fk' => array(),

@@ -532,6 +532,7 @@
 					'value_date'	=> $GLOBALS['phpgw']->common->show_date($value['datetime']),
 					'value_user'	=> $value['owner'],
 					'value_note'	=> stripslashes($value['new_value']),
+					'value_publish'	=> $value['publish'],
 					);
 				$i++;
 			}
