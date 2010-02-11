@@ -29,6 +29,10 @@
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "organization"));
+			if ( trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])) )
+			{
+				$organization['homepage'] = 'http://'.$organization['homepage'];
+			}
 			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
 
 			// BEGIN EVIL HACK
