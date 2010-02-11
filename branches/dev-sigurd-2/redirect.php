@@ -12,6 +12,10 @@
 	* @version $Id$
 	*/
 
+
+	Header("Location: {$_GET['go']}");
+	exit;
+
 	//Get the session variables set for non cookie based sessions
 	if ( !isset($_COOKIES['PHPSESSID']) 
 		|| isset($_COOKIES['sessionid']) ) 
