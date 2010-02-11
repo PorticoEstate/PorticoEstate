@@ -123,27 +123,23 @@
 
 		function read($data)
 		{
-
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= $data['filter'] ? (int)$data['filter'] : 0;
-				$query			= isset($data['query']) ? $data['query'] : '';
-				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order			= isset($data['order']) ? $data['order'] : '';
-				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 0;
-				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
-				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
-				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-				$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
-				$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
-				$paid			= isset($data['paid']) ? $data['paid'] : '';
-				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
-				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= $data['filter'] ? (int)$data['filter'] : 0;
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 0;
+			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
+			$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
+			$paid			= isset($data['paid']) ? $data['paid'] : '';
+			$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
+			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -331,11 +327,6 @@
 //				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 			}
 
-			if($dry_run)
-			{
-				return array();
-			}
-
 			$location_table = 'fm_project';
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
 			{
@@ -506,40 +497,45 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			$sql .= " $group_method";
-
-			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$count_cols_return=count($cols_return);
-			$j=0;
 			$workorder_list = array();
-			while ($this->db->next_record())
+
+			if(!$dry_run)
 			{
-				for ($i=0;$i<$count_cols_return;$i++)
+				$sql .= " $group_method";
+
+				//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+
+				if(!$allrows)
 				{
-					$workorder_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$workorder_list[$j]['grants'] = (int)$this->grants[$this->db->f('project_owner')];
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 
-				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
-				$count_location =count($location);
-				for ($m=0;$m<$count_location;$m++)
-				{
-					$workorder_list[$j]['loc' . ($m+1)] = $location[$m];
-					$workorder_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
+				$count_cols_return=count($cols_return);
+				$j=0;
 
-				$j++;
+				while ($this->db->next_record())
+				{
+					for ($i=0;$i<$count_cols_return;$i++)
+					{
+						$workorder_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
+						$workorder_list[$j]['grants'] = (int)$this->grants[$this->db->f('project_owner')];
+					}
+
+					$location_code=	$this->db->f('location_code');
+					$location = split('-',$location_code);
+					$count_location =count($location);
+					for ($m=0;$m<$count_location;$m++)
+					{
+						$workorder_list[$j]['loc' . ($m+1)] = $location[$m];
+						$workorder_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					}
+
+					$j++;
+				}
 			}
 
 			return $workorder_list;

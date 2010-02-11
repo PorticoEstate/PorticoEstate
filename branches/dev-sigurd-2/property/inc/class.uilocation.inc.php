@@ -425,7 +425,7 @@
 						                            );
 				}
 
-//				$dry_run=true;
+				$dry_run=true;
 
 			}
 
@@ -731,10 +731,25 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($location_list);
+
+			if($this->bo->total_records && !count($location_list))
+			{
+
+				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
+				{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				}
+				else
+				{
+					$datatable['pagination']['records_returned']= $this->bo->total_records;
+				}
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($location_list);
+			}
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{

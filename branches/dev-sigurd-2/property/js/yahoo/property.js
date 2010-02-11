@@ -732,58 +732,33 @@
 			cache: false
 		}
 
+		values_ds = json_data;
 
-//		var callback2 =
-//		{
-//			success: function(o)
-//			{
-				values_ds = json_data;
-
-				if(config_values.PanelLoading)
-				{
-					myLoading.hide();
-				}
-				//eval('values_ds ='+o.responseText);
-				flag_particular_setting='';
-
-				if(flag==0)
-				{
-					init_datatable();
-					init_filter();
-					flag_particular_setting='init';
-				}
-				else
-				{
-					try
-					{
-						YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
-					}
-					catch(e_async)
-					{
-					   alert(e_async.message);
-					}
-				}
-				particular_setting();
-
-	//		},
-//			failure: function(o) {window.alert('Server or your connection is dead.')},
-//			timeout: 10000,
-//			cache: false
-//		}
-
-
-/*
-		try
+		if(config_values.PanelLoading)
 		{
-			//First call JSON (POST)
-			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
+			myLoading.hide();
 		}
-		catch(e_async)
-		{
-		   alert(e_async.message);
-		}
+		//eval('values_ds ='+o.responseText);
+		flag_particular_setting='';
 
-*/
+		if(flag==0)
+		{
+			init_datatable();
+			init_filter();
+			flag_particular_setting='init';
+		}
+		else
+		{
+			try
+			{
+				YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
+			}
+			catch(e_async)
+			{
+			   alert(e_async.message);
+			}
+		}
+		particular_setting();
 	}
 
 /********************************************************************************
@@ -805,7 +780,7 @@
 
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-
+ //       myDataSource.connXhrMode = "queueRequests"; 
 		// Compute fields from column definitions
 		var fields = new Array();
 		for(var i=0; i < myColumnDefs.length;i++)

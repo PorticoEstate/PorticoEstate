@@ -671,14 +671,15 @@
 			$sql .= "$filtermethod $querymethod";
 
 //echo $sql; die();
-			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+
 			$values = array();
+			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
+
+			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if(!$dry_run)
 			{
-				$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-				$this->db->next_record();
-				$this->total_records = $this->db->f('cnt');
-
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
