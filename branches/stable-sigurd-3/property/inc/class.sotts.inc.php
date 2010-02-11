@@ -168,6 +168,7 @@
 			else if($status_id == 'all')
 			{
 				$filtermethod .= "{$where} (1=1";//nothing
+				$where = 'AND';
 			}
 			else if(is_array($status_id) && count($status_id))
 			{

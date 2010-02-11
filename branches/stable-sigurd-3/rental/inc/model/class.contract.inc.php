@@ -130,7 +130,7 @@
 		 * @return string with UNIX time.
 		 */
 		public function get_billing_start_date() { 
-			return isset($this->billing_start_date) ? $this->billing_start_date : $this->contract_date->get_start_date(); 
+			return isset($this->billing_start_date) ? $this->billing_start_date : isset($this->contract_date) ? $this->contract_date->get_start_date() : ''; 
 		}
 		
 		public function set_location_id($location_id)
