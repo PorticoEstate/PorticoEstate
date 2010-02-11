@@ -144,31 +144,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			/*
-			* FIXME:
-			* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
-			* Should be fixed in the js if possible.
-			*/
-
-/*			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
-				if($json_get == 1)
-				{
-					$json = phpgwapi_cache::session_get('property', 'workorder_index_json');
-					if($json && is_array($json))
-					{
-						phpgwapi_cache::session_clear('property', 'workorder_index_json');
-						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 2);
-						return $json;
-					}
-				}
-			}
-			else
-			{
-				phpgwapi_cache::session_clear('property', 'workorder_index_json_get');
-			}
-*/
 			$allrows  = phpgw::get_var('allrows', 'bool');
 			$dry_run = false;
 
@@ -621,21 +596,15 @@
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
-			if($this->bo->total_records && !count($workorder_list))
+			if($dry_run)
 			{
-				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
-				{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				}
-				else
-				{
-					$datatable['pagination']['records_returned']= $this->bo->total_records;
-				}
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
 			}
 			else
 			{
 				$datatable['pagination']['records_returned']= count($workorder_list);
 			}
+
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 

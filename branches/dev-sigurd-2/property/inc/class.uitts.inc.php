@@ -596,7 +596,11 @@
 				$dry_run = true;
 			}
 
-			$ticket_list = $this->bo->read($start_date,$end_date,'', $dry_run);
+			$ticket_list = array();
+			if(!$dry_run)
+			{
+				$ticket_list = $this->bo->read($start_date, $end_date);
+			}
 
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
@@ -842,16 +846,9 @@
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$datatable['pagination']['records_returned']= count($ticket_list);
 
-			if($this->bo->total_records && !count($ticket_list))
+			if($dry_run)
 			{
-				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
-				{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				}
-				else
-				{
-					$datatable['pagination']['records_returned']= $this->bo->total_records;
-				}
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
 			}
 			else
 			{

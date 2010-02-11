@@ -244,6 +244,7 @@
 
 			$start_date	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
+			$dry_run = false;
 
 			//Preferencias sets
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'] == 'yes')
@@ -509,11 +510,12 @@
 				// sets for initial ordering
 				$this->sort = "ASC";
 				$this->order = "num";
+				$dry_run = true;
 			}
 
 			$entity_list = array();
 
-			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date));
+			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date, 'dry_run' => $dry_run));
 
 			$uicols = $this->bo->uicols;
 
@@ -716,7 +718,16 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']	= count($entity_list);
+
+			if($dry_run)
+			{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($entity_list);
+			}
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column

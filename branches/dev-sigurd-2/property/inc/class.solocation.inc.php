@@ -546,6 +546,12 @@
 
 			$this->uicols = $uicols;
 
+			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -613,7 +619,6 @@
 //				$where= 'AND';
 			}
 
-
 			if ($district_id > 0)
 			{
 				$filtermethod .= " $where fm_part_of_town.district_id='$district_id' ";
@@ -677,40 +682,36 @@
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
-			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-			if(!$dry_run)
+			if(!$allrows)
 			{
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
-
-				$j=0;
-
-				$location_count 	= $type_id-1;
-
-				$cols_return = $uicols['name'];
-				$dataset = array();
-				while ($this->db->next_record())
-				{
-					foreach($cols_return as $key => $field)
-					{
-						$dataset[$j][$field] = array
-						(
-							'value'		=> $this->db->f($field),
-							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id']:''
-						);
-					}
-					$j++;				
-				}
-
-				$values = $this->custom->translate_value($dataset, $location_id, $location_count);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$j=0;
+
+			$location_count 	= $type_id-1;
+
+			$cols_return = $uicols['name'];
+			$dataset = array();
+			while ($this->db->next_record())
+			{
+				foreach($cols_return as $key => $field)
+				{
+					$dataset[$j][$field] = array
+					(
+						'value'		=> $this->db->f($field),
+						'datatype'	=> $uicols['datatype'][$key],
+						'attrib_id'	=> isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id']:''
+					);
+				}
+				$j++;				
+			}
+
+			$values = $this->custom->translate_value($dataset, $location_id, $location_count);
 			return $values;
 		}
 

@@ -732,17 +732,9 @@
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
-			if($this->bo->total_records && !count($location_list))
+			if($dry_run)
 			{
-
-				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
-				{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				}
-				else
-				{
-					$datatable['pagination']['records_returned']= $this->bo->total_records;
-				}
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
 			}
 			else
 			{

@@ -284,8 +284,12 @@
 			}
 
 			$this->uicols	= $uicols;
-
 //_debug_array($cols_return_extra);
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				switch($order)
@@ -411,20 +415,13 @@
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
-			if($dry_run)
+			if(!$allrows)
 			{
-				return array();
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$j=0;
