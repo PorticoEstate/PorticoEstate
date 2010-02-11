@@ -521,11 +521,13 @@
 		{
 			$additional_notes = array();
 			$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
+
 			$i=2;
-			while (is_array($history_array) && list(,$value) = each($history_array))
+			foreach ($history_array as $value)
 			{
 				$additional_notes[] = array
 				(
+					'value_id'		=> $value['id'],
 					'value_count'	=> $i,
 					'value_date'	=> $GLOBALS['phpgw']->common->show_date($value['datetime']),
 					'value_user'	=> $value['owner'],

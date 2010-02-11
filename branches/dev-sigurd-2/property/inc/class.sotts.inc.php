@@ -263,8 +263,6 @@
 			. " LEFT OUTER JOIN fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
 			. " $filtermethod $querymethod";
 
-			if(!$dry_run)
-			{
 /*
 				$sql2 = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
 				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
@@ -274,11 +272,15 @@
 
 				$sql2 = 'SELECT count(*) as cnt ' . substr($sql2,strripos($sql2,'FROM'));
 */
-				$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
-				$this->db->query($sql2,__LINE__,__FILE__);
-				$this->db->next_record();
-				$this->total_records = $this->db->f('cnt');
-				unset($sql2);
+			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
+			$this->db->query($sql2,__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
+			unset($sql2);
+
+			$tickets = array();
+			if(!$dry_run)
+			{
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -288,48 +290,46 @@
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 
-			}
-
-			$tickets = array();
-
-			while ($this->db->next_record())
-			{
-				$tickets[]= array
-				(
-					'id'				=> (int) $this->db->f('id'),
-					'subject'			=> $this->db->f('subject',true),
-					'loc1_name'			=> $this->db->f('loc1_name',true),
-					'location_code'		=> $this->db->f('location_code'),
-					'user_id'			=> $this->db->f('user_id'),
-					'address'			=> $this->db->f('address',true),
-					'assignedto'		=> $this->db->f('assignedto'),
-					'status'			=> $this->db->f('status'),
-					'priority'			=> $this->db->f('priority'),
-					'cat_id'			=> $this->db->f('cat_id'),
-					'group_id'			=> $this->db->f('group_id'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'finnish_date'		=> $this->db->f('finnish_date'),
-					'finnish_date2'		=> $this->db->f('finnish_date2'),
-					'order_id'			=> $this->db->f('order_id'),
-					'vendor_id'			=> $this->db->f('vendor_id'),
-					'actual_cost'		=> $this->db->f('actual_cost'),
-					'estimate'			=> $this->db->f('budget'),
-					'new_ticket'		=> $this->db->f('view') ? false : true,
-				);
-			}
-/*			
-			foreach ($tickets as &$ticket)
-			{
-				$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
-					. " AND account_id='{$this->account}'",__LINE__,__FILE__);
-				$this->db->next_record();
-
-				if(! $this->db->f('hits'))
+				while ($this->db->next_record())
 				{
-					$ticket['new_ticket'] = true;
+					$tickets[]= array
+					(
+						'id'				=> (int) $this->db->f('id'),
+						'subject'			=> $this->db->f('subject',true),
+						'loc1_name'			=> $this->db->f('loc1_name',true),
+						'location_code'		=> $this->db->f('location_code'),
+						'user_id'			=> $this->db->f('user_id'),
+						'address'			=> $this->db->f('address',true),
+						'assignedto'		=> $this->db->f('assignedto'),
+						'status'			=> $this->db->f('status'),
+						'priority'			=> $this->db->f('priority'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						'group_id'			=> $this->db->f('group_id'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'finnish_date'		=> $this->db->f('finnish_date'),
+						'finnish_date2'		=> $this->db->f('finnish_date2'),
+						'order_id'			=> $this->db->f('order_id'),
+						'vendor_id'			=> $this->db->f('vendor_id'),
+						'actual_cost'		=> $this->db->f('actual_cost'),
+						'estimate'			=> $this->db->f('budget'),
+						'new_ticket'		=> $this->db->f('view') ? false : true,
+					);
 				}
-			}
+/*			
+				foreach ($tickets as &$ticket)
+				{
+					$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
+						. " AND account_id='{$this->account}'",__LINE__,__FILE__);
+					$this->db->next_record();
+	
+					if(! $this->db->f('hits'))
+					{
+						$ticket['new_ticket'] = true;
+					}
+				}
 */
+			}
+
 			return $tickets;
 		}
 

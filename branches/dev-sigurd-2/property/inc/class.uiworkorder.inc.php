@@ -637,7 +637,6 @@
 				$datatable['pagination']['records_returned']= count($workorder_list);
 			}
 
-
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 

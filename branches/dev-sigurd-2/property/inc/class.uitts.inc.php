@@ -274,7 +274,7 @@
 			}
 
 			$this->save_sessiondata();
-
+			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$default_category 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -593,9 +593,10 @@
 						)
 					);				
 				}
+				$dry_run = true;
 			}
 
-			$ticket_list = $this->bo->read($start_date,$end_date);
+			$ticket_list = $this->bo->read($start_date,$end_date,'', $dry_run);
 
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
@@ -840,7 +841,22 @@
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$datatable['pagination']['records_returned']= count($ticket_list);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if($this->bo->total_records && !count($ticket_list))
+			{
+				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
+				{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				}
+				else
+				{
+					$datatable['pagination']['records_returned']= $this->bo->total_records;
+				}
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($ticket_list);
+			}
 
 			$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 
@@ -857,13 +873,6 @@
 				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
     		//values for Pagination
@@ -954,6 +963,13 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
 
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
@@ -2309,6 +2325,7 @@
 			(
 				array
 				(
+					'value_id'	=>'', //not from historytable
 					'value_count' => 1,
 					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
 					'value_user' => $ticket['user_name'],
@@ -2342,6 +2359,14 @@
 					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
 				}
 			}
+
+			$note_def[] = array('key' => 'publish_text','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+			foreach($additional_notes as &$note)
+			{
+				$_checked = '';//'checked';
+				$note['publish_text'] = "<input type='checkbox' {$_checked}  name='values[publish_text][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
+			}
+
 
 //_debug_Array($additional_notes);die();
 			//---datatable settings---------------------------------------------------	

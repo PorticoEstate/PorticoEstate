@@ -780,7 +780,7 @@
 
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
- //       myDataSource.connXhrMode = "queueRequests"; 
+        myDataSource.connXhrMode = "queueRequests"; 
 		// Compute fields from column definitions
 		var fields = new Array();
 		for(var i=0; i < myColumnDefs.length;i++)
