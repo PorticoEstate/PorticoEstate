@@ -268,7 +268,6 @@
 					 )
 				);
 
-				$dry_run = true;
 			}
 
 			$document_list = $this->bo->read();
@@ -407,8 +406,6 @@
 
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -449,8 +446,6 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -685,8 +680,6 @@
 										)
 					 )
 				);
-
-				$dry_run = true;
 			}
 
 			$document_list = $this->bo->read_at_location($location_code);
@@ -914,8 +907,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -962,9 +953,13 @@
 					$json ['toolbar_height'] = $json ['toolbar_height'] + (count($datatable['locdata']) * 10);
 					$json ['current_consult'] = $datatable['locdata'];
 				}
-_debug_array($datatable['locdata']);				
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

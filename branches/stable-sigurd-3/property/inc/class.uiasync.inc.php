@@ -167,7 +167,6 @@
 										)
 					 )
 				);
-				$dry_run = true;
 			}
 
 			$method_list = $this->bo->read();
@@ -398,8 +397,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -440,8 +437,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

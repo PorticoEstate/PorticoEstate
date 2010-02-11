@@ -150,7 +150,7 @@
 			* Should be fixed in the js if possible.
 			*/
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
+/*			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
 				if($json_get == 1)
@@ -168,11 +168,11 @@
 			{
 				phpgwapi_cache::session_clear('property', 'workorder_index_json_get');
 			}
-
+*/
 			$allrows  = phpgw::get_var('allrows', 'bool');
+			$dry_run = false;
 
 			$lookup = ''; //Fix this
-			$dry_run = false;
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -405,8 +405,7 @@
 										  )
 				);
 
-				$dry_run = true;
-
+				$dry_run=true;
 			}
 
 			$workorder_list = array();
@@ -498,7 +497,7 @@
 						),
 					)
 				);
-				if($this->acl_read && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_READ))
+				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'			=> 'view',
@@ -520,7 +519,7 @@
 						'parameters'	=> $parameters
 					);
 				}
-				if($this->acl_edit && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
+				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'		=> 'edit',
@@ -552,7 +551,7 @@
 						'parameters'	=> $parameters2
 					);
 				}
-				if($this->acl_delete && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_DELETE))
+				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'			=> 'delete',
@@ -621,7 +620,24 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned'] = count($workorder_list);
+
+			if($this->bo->total_records && !count($workorder_list))
+			{
+				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
+				{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				}
+				else
+				{
+					$datatable['pagination']['records_returned']= $this->bo->total_records;
+				}
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($workorder_list);
+			}
+
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 
@@ -639,19 +655,9 @@
 			    $datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 		    }
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('tabview');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -697,17 +703,22 @@
 				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
 				* Should be fixed in the js if possible.
 				*/
+/*
 				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
 				if(!$json_get)
 				{
 						phpgwapi_cache::session_set('property', 'workorder_index_json',$json);
 						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 1);
 				}
+*/
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
 
-	    		return $json;
-			}
+			$datatable['json_data'] = json_encode($json);
+
 //-------------------- JSON CODE ----------------------
-
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -719,6 +730,15 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('tabview');
+
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');

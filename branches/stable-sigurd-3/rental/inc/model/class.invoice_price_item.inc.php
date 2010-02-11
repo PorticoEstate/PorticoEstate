@@ -81,69 +81,115 @@
 			$this->total_price = (float)$total_price;
 		}
 	
+		/**
+		 * This method calculated the total price of the invoice price item if it hasn't been done before
+		 * 
+		 * @return float	the total price of the price item
+		 */
 		public function get_total_price(){ 
 			if($this->total_price == null) // Needs to be calculated
 			{
-				$num_of_complete_months = 0; // The calculation of the price for complete months (meaning the item applies for the whole month) ..
-				$incomplete_months = array(); // ..is different than the calculation for incomplete months
+				// The calculation of the price for complete months (meaning the item applies for the whole month) ..
+				$num_of_complete_months = 0;
+				
+				// ..is different than the calculation for incomplete months
+				$incomplete_months = array(); 
+				
+				// Get the year, month and day from the startdate timestamp 
 				$date_start = array();
 				$date_start['year'] = (int)date('Y', $this->get_timestamp_start());
 				$date_start['month'] = (int)date('n', $this->get_timestamp_start());
 				$date_start['day'] = (int)date('j', $this->get_timestamp_start());
+				
+				// Get the year, month and day from the enddate timestamp 
 				$date_end = array();
 				$date_end['year'] = (int)date('Y', $this->get_timestamp_end());
 				$date_end['month'] = (int)date('n', $this->get_timestamp_end());
 				$date_end['day'] = (int)date('j', $this->get_timestamp_end());
-				for($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--) // Runs through all the years this price item goes for
+				
+				// Runs through all the years this price item goes for
+				for($current_year = $date_end['year']; $current_year >= $date_start['year']; $current_year--) 
 				{
-					// We need to find which months to cover the current year
-					// First we set the defaults
+					// Within each year: which months do the price item run for
+					
+					// First we set the defaults (whole year)
 					$current_start_month = 1; // January
 					$current_end_month = 12; // December
-					if($current_year == $date_start['year']) // We're at the start year
+					
+					// If we are at the start year, use the start month of this year as start month
+					if($current_year == $date_start['year']) 
 					{
 						$current_start_month = $date_start['month'];
 					}
-					if($current_year == $date_end['year']) // We're at the end year
+					
+					// If we are at the start year, use the end month of this year as end month
+					if($current_year == $date_end['year'])
 					{
 						$current_end_month = $date_end['month'];
 					}
 					
-					for($current_month = $current_end_month; $current_month >= $current_start_month; $current_month--) // Runs through all of the months the current year (we go backwards since we go backwards with the years)
+					// Runs through all of the months of the current year (we go backwards since we go backwards with the years)
+					for($current_month = $current_end_month; $current_month >= $current_start_month; $current_month--) 
 					{
+						// Retrive the number of days in the current month
 						$num_of_days_in_current_month = date('t', strtotime($current_year . '-' . $current_month . '-01'));
+						
+						// Set the defaults (whole month)
 						$first_day = 1;
 						$last_day = $num_of_days_in_current_month;
-						if($current_year == $date_start['year'] && $current_month == $date_start['month']) // We're at the start month
+						
+						// If we are at the start month in the start year, use day in this month as first day
+						if($current_year == $date_start['year'] && $current_month == $date_start['month']) 
 						{
 							$first_day = $date_start['day'];
 						}
-						if($current_year == $date_end['year'] && $current_month == $date_end['month']) // We're at the end month
+						
+						// If we are at the end month in the end year, use the day in this month as end day
+						if($current_year == $date_end['year'] && $current_month == $date_end['month']) 
 						{
 							$last_day = $date_end['day']; // The end date's day is the item's end day
 						}
+						
+						// Increase counter: complete months or incomplete months (number of days in this year and number of days )
 						if($first_day === 1 && $last_day == $num_of_days_in_current_month){ // This is a whole month
 							$num_of_complete_months++;
 						}
 						else // Incomplete month
 						{
-							$num_of_days_in_current_year = (date('L', strtotime($current_year . '01-01')) == 0) ? 365 : 366; // YYY: There must be a better day to do this!?
+							// YYY: There must be a better day to do this!?
+							$num_of_days_in_current_year = (date('L', strtotime($current_year . '01-01')) == 0) ? 365 : 366; 
 							$num_of_days = $last_day - $first_day + 1;
 							$incomplete_months[] = array($num_of_days_in_current_year, $num_of_days);
 						}
 					}
 				}
-				// We need to find what we're basing the price on
+				// ---- Calculate complemete months
+				
+				// Retrieve the amount: rented area of contract or the number of items (depending on type of price element)
 				$amount = $this->is_area() ? $this->get_area() : $this->get_count();
-				$rounded_element_price_per_month = round($this->get_price() / 12.0, 4); // We have to first _round_ the element price per month
-				$price_per_month = $rounded_element_price_per_month * $amount; // The price per month is the rounded element price multipied by the amount
-				$this->total_price = $price_per_month * $num_of_complete_months; // The total price for the complete months are just the monthly price multiplied by the number of months
-				$rounded_price_per_year = round($this->get_price() * $amount, 4);
-				foreach($incomplete_months as $day_factors) // Runs through all the incomplete months
+				
+				// We have to first _round_ the element price per month (NB! using precision of 4 decimals in mid-calculation)
+				$rounded_element_price_per_month = $this->get_price() / 12.0; // round($this->get_price() / 12.0, 2);
+				
+				// The price per month is the rounded element price multipied by the amount
+				$price_per_month = $rounded_element_price_per_month * $amount; 
+				
+				// The total price for the complete months are just the monthly price multiplied by the number of months
+				$this->total_price = $price_per_month * $num_of_complete_months;
+				
+				// ---- Calculate incomplete months 
+				
+				// We have to first _round_ the element price per year (NB! using precision of 4 decimals in mid-calculation)
+				$rounded_price_per_year = $this->get_price() * $amount;//round($this->get_price() * $amount, 4);
+				
+				// Run through all the incomplete months ...
+				foreach($incomplete_months as $day_factors) 
 				{
+					// ... and add the sum of each incomplete month to the total price of the price item
+					// Calculation: Price per day (price per year divided with number of days in year) multiplied with number of days in incomple month
 					$this->total_price += ($rounded_price_per_year / $day_factors[0]) * $day_factors[1];
 				}
-				// We round the total price for each item
+				// We round the total price for each price item with the sepcified number of decimals precision
 				$this->total_price = round($this->total_price, $this->decimals);
 			}
 			return $this->total_price;

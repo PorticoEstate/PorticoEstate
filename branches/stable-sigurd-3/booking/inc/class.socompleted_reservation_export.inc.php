@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.socommon');
+	phpgw::import_class('booking.sopermission');
 	
 	class booking_socompleted_reservation_export extends booking_socommon
 	{
@@ -212,6 +213,15 @@
 			else
 			{
 				throw new InvalidArgumentException('Invalid entity parameter');
+			}
+
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
+			     !$this->completed_reservation_bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings
+
+				if ( !isset($filters['building_id']) )
+				{
+					$filters['building_id'] = $this->completed_reservation_bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+				}
 			}
 			
 			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'to_', 'dir' => 'asc'));

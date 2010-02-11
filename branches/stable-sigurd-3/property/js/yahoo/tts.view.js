@@ -3,6 +3,7 @@ var  myPaginator_1, myDataTable_1;
 var  myPaginator_2, myDataTable_2;
 var  myPaginator_3, myDataTable_3;
 var d;
+var vendor_id = 0;
 
 /********************************************************************************/
 this.myParticularRenderEvent = function()
@@ -19,16 +20,18 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.fetch_vendor_email=function()
 	{
-		//asign value to hidden
-		//	YAHOO.util.Dom.get("hd_"+this.get("id")).value = this.get("value");
-
-		//	formObject = document.body.getElementsByTagName('form');
-		//	YAHOO.util.Connect.setForm(formObject[0]);//First form
+//			formObject = document.body.getElementsByTagName('form');
+//			YAHOO.util.Connect.setForm(formObject[0]);//First form
 			if(document.getElementById('vendor_id').value)
 			{
 				base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
 			}
-			execute_async(myDataTable_3);
+			
+			if(document.getElementById('vendor_id').value != vendor_id)
+			{
+				execute_async(myDataTable_3);
+				vendor_id = document.getElementById('vendor_id').value;
+			}
 	}
 
 

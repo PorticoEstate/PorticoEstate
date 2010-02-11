@@ -736,6 +736,12 @@
   		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
 
 		var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";
+ 
+		<xsl:choose>
+			<xsl:when test="//datatable/json_data != ''">
+  				var json_data = <xsl:value-of select="//datatable/json_data" disable-output-escaping="yes" />;
+			</xsl:when>
+		</xsl:choose>
 
 		var myColumnDefs = [
 			<xsl:for-each select="//datatable/headers/header">

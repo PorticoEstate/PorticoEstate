@@ -239,6 +239,11 @@
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+
+			if ( trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])) )
+			{
+				$organization['homepage'] = 'http://'.$organization['homepage'];
+			}
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$this->install_customer_identifier_ui($organization);

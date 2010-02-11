@@ -100,23 +100,20 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter	= $data['filter']?(int)$data['filter']:0;
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$status_id = (isset($data['status_id'])?$data['status_id']:'');
-				$start_date = (isset($data['start_date'])?$data['start_date']:'');
-				$end_date = (isset($data['end_date'])?$data['end_date']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
-				$district_id	= (isset($data['district_id'])?$data['district_id']:'');
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
-			}
+			$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter	= $data['filter']?(int)$data['filter']:0;
+			$query = (isset($data['query'])?$data['query']:'');
+			$sort = (isset($data['sort'])?$data['sort']:'DESC');
+			$order = (isset($data['order'])?$data['order']:'');
+			$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+			$status_id = (isset($data['status_id'])?$data['status_id']:'');
+			$start_date = (isset($data['start_date'])?$data['start_date']:'');
+			$end_date = (isset($data['end_date'])?$data['end_date']:'');
+			$allrows = (isset($data['allrows'])?$data['allrows']:'');
+			$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
+			$district_id	= (isset($data['district_id'])?$data['district_id']:'');
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -307,10 +304,6 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
 
-			if($dry_run)
-			{
-				return array();
-			}
 
 			if ($order)
 			{
@@ -461,40 +454,43 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			$sql .= " $group_method";
-			if(!$allrows)
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$project_list = array();
-			$j=0;
-			$k=count($cols_return);
-			while ($this->db->next_record())
-			{
-				for ($i=0;$i<$k;$i++)
+				$project_list = array();
+				$sql .= " $group_method";
+				if(!$allrows)
 				{
-					$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
-					$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
+					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 
-				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
-				$n=count($location);
-				for ($m=0;$m<$n;$m++)
+				$project_list = array();
+				$j=0;
+				$k=count($cols_return);
+				while ($this->db->next_record())
 				{
-					$project_list[$j]['loc' . ($m+1)] = $location[$m];
-					$project_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					for ($i=0;$i<$k;$i++)
+					{
+						$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+						$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
+					}
+
+					$location_code=	$this->db->f('location_code');
+					$location = split('-',$location_code);
+					$n=count($location);
+					for ($m=0;$m<$n;$m++)
+					{
+						$project_list[$j]['loc' . ($m+1)] = $location[$m];
+						$project_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					}
+
+					$j++;
 				}
-
-				$j++;
 			}
-
-//_debug_array($project_list);
+	
 			return $project_list;
 		}
 

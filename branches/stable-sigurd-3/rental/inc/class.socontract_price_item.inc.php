@@ -324,8 +324,8 @@ class rental_socontract_price_item extends rental_socommon
 		$q_total_price .= "FROM rental_contract_price_item ";
 		$q_total_price .= "WHERE contract_id={$contract_id} ";
 		$q_total_price .= "AND NOT is_billed ";
-		$q_total_price .= "AND ((date_start < {$timestamp_end} AND date_start >= {$timestamp_start}) ";
-		$q_total_price .= "OR date_start IS NULL)";
+		$q_total_price .= "AND ((NOT date_start IS NULL AND date_start < {$timestamp_end}) OR date_start IS NULL) ";
+		$q_total_price .= "AND ((NOT date_end IS NULL AND date_end >= {$timestamp_start}) OR date_end IS NULL)";
 		$this->db->query($q_total_price);
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');

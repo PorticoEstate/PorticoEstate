@@ -373,8 +373,6 @@
 			
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
 	    		$json = array
 	    		(
 	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
@@ -405,9 +403,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 				
-				return $json;			
-				
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------		
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -509,15 +511,12 @@
 												)
 										  )
 				);
-				//cramirez: $dry_run is use "$this->bo->read"
-				//$dry_run=true;
-
 			}
 
 			$list = array();
-			//cramirez: $dry_run avoid to load all data the first time
+
 			$list = $this->bo->read();
-//die(_debug_array($list));
+
 			while (is_array($list) && list($id,$alarm) = each($list))
 			{
 				if(is_array($alarm['times']))
@@ -699,8 +698,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -731,8 +728,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT

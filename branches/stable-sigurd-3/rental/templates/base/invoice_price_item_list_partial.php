@@ -22,7 +22,7 @@ if($list_form)
 						foreach($invoices as $invoice)
 						{
 							?>
-							<option value="<?php echo $invoice->get_id() ?>"><?php echo "{$invoice->get_id()} - " . date($date_format, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $decimal_places, $decimal_separator, $thousands_separator) . " {$currency_suffix}" ?></option>
+							<option value="<?php echo $invoice->get_id() ?>"><?php echo "{$invoice->get_billing_title()} - " . date($date_format, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $decimal_places, $decimal_separator, $thousands_separator) . " {$currency_suffix}" ?></option>
 							<?php
 						}
 					}

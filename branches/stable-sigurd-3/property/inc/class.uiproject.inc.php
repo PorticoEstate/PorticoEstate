@@ -133,7 +133,7 @@
 			* Should be fixed in the js if possible.
 			*/
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
+/*			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
 				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
 				if($json_get == 1)
@@ -151,7 +151,7 @@
 			{
 				phpgwapi_cache::session_clear('property', 'project_index_json_get');
 			}
-
+*/
 			$lookup 		= phpgw::get_var('lookup', 'bool');
 			$from 			= phpgw::get_var('from');
 			$start_date 	= urldecode(phpgw::get_var('start_date'));
@@ -424,7 +424,7 @@
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
-								$uicols['formatter'][$k] = 'myCustom';
+								$uicols['formatter'][$k] = "'myCustom'";
 							}
 							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]])
 							{
@@ -452,133 +452,125 @@
 
 					$j++;
 				}
-
-				$datatable['rowactions']['action'] = array();
-				if(!$lookup)
-					{
-
-						$parameters = array
-						(
-							'parameter' => array
-							(
-								array
-								(
-									'name'		=> 'id',
-									'source'	=> 'project_id'
-								),
-							)
-						);
-
-						$parameters2 = array
-						(
-							'parameter' => array
-							(
-								array
-								(
-									'name'		=> 'project_id',
-									'source'	=> 'project_id'
-								),
-							)
-						);
-
-
-						if (isset($project_entry) && $this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
-						{
-							$datatable['rowactions']['action'][] = array(
-								'my_name' 			=> 'view',
-								'statustext' 			=> lang('view the project'),
-								'text'		=> lang('view'),
-								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uiproject.view'
-
-										)),
-								'parameters'	=> $parameters
-							);
-							$datatable['rowactions']['action'][] = array(
-								'my_name' 			=> 'view',
-								'statustext' 		=> lang('view the project'),
-								'text' 				=> lang('open view in new window'),
-								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uiproject.view',
-											'target'		=> '_blank'
-
-										)),
-								'parameters'	=> $parameters
-							);
-						}
-						else
-						{
-				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
-						}
-
-						if (isset($project_entry) && $this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
-						{
-							$datatable['rowactions']['action'][] = array(
-								'my_name' 			=> 'edit',
-								'statustext' 		=> lang('edit the project'),
-								'text'				=> lang('edit'),
-								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uiproject.edit'
-
-										)),
-								'parameters'	=> $parameters
-							);
-							$datatable['rowactions']['action'][] = array(
-								'my_name' 			=> 'edit',
-								'statustext' 		=> lang('edit the project'),
-								'text'	 			=> lang('open edit in new window'),
-								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uiproject.edit',
-											'target'		=> '_blank'
-										)),
-								'parameters'	=> $parameters
-							);
-						}
-						else
-						{
-				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
-						}
-
-
-
-
-						if(isset($project_entry) && $this->acl_delete && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_DELETE))
-						{
-							$datatable['rowactions']['action'][] = array(
-								'my_name' 			=> 'delete',
-								'text' 			=> lang('delete'),
-								'confirm_msg'	=> lang('do you really want to delete this entry'),
-								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-												(
-													'menuaction'	=> 'property.uiproject.delete'
-												)),
-								'parameters'	=> $parameters2
-							);
-						}
-						else
-						{
-				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
-						}
-
-						if($this->acl_add)
-						{
-							$datatable['rowactions']['action'][] = array(
-												'my_name' 			=> 'add',
-												'text' 			=> lang('add'),
-												'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-																(
-																	'menuaction'	=> 'property.uiproject.edit'
-																))
-										);
-						}
-					}
-
-						unset($parameters);
 			}
+
+			$datatable['rowactions']['action'] = array();
+			if(!$lookup)
+			{
+				$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'project_id'
+						),
+					)
+				);
+				$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'project_id',
+							'source'	=> 'project_id'
+						),
+					)
+				);
+
+				if ($this->acl_read)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'view',
+						'statustext' 			=> lang('view the project'),
+						'text'		=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiproject.view'
+									)),
+						'parameters'	=> $parameters
+					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'view',
+						'statustext' 		=> lang('view the project'),
+						'text' 				=> lang('open view in new window'),
+						'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiproject.view',
+									'target'		=> '_blank'
+									)),
+						'parameters'	=> $parameters
+					);
+				}
+				else
+				{
+		//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				}
+
+				if ($this->acl_edit)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'edit',
+						'statustext' 		=> lang('edit the project'),
+						'text'				=> lang('edit'),
+						'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiproject.edit'
+									)),
+						'parameters'	=> $parameters
+					);
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'edit',
+						'statustext' 		=> lang('edit the project'),
+						'text'	 			=> lang('open edit in new window'),
+						'action'			=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'property.uiproject.edit',
+									'target'		=> '_blank'
+								)),
+						'parameters'	=> $parameters
+					);
+				}
+				else
+				{
+		//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				}
+
+				if($this->acl_delete)
+				{
+					$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'delete',
+						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uiproject.delete'
+										)),
+						'parameters'	=> $parameters2
+					);
+				}
+				else
+				{
+		//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
+				}
+
+				if($this->acl_add)
+				{
+					$datatable['rowactions']['action'][] = array(
+										'my_name' 			=> 'add',
+										'text' 			=> lang('add'),
+										'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'	=> 'property.uiproject.edit'
+														))
+								);
+				}
+			}
+
+			unset($parameters);
+
 			$count_uicols_descr = count($uicols['descr']);
 
 
@@ -670,7 +662,24 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($project_list);
+
+			if($this->bo->total_records && !count($project_list))
+			{
+				if($this->bo->total_records > $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
+				{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				}
+				else
+				{
+					$datatable['pagination']['records_returned']= $this->bo->total_records;
+				}
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($project_list);
+			}
+
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$appname	= lang('Project');
@@ -687,21 +696,7 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 		  	//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -746,20 +741,40 @@
 				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about a second
 				* Should be fixed in the js if possible.
 				*/
+/*
 				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
 				if(!$json_get)
 				{
 						phpgwapi_cache::session_set('property', 'project_index_json',$json);
 						phpgwapi_cache::session_set('property', 'project_index_json_get', 1);
 				}
-	    		return $json;
-			}
+*/
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
 //-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$datatable['json_data'] = json_encode($json);
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
