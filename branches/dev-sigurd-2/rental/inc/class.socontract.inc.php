@@ -671,7 +671,7 @@ class rental_socontract extends rental_socommon
 		$values[] = $this->marshal($contract->get_adjustment_share(),'int');
 		
 		$cols[] = 'adjustable';
-		$values[] = $this->marshal($contract->is_adjustable(), 'bool');
+		$values[] = ($contract->get_adjustable() ? "true" : "false");
 		
 		
 		if ($contract->get_security_type()) {
