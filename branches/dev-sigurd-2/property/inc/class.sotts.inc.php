@@ -260,7 +260,7 @@
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
-			. " LEFT OUTER JOIN fm_tts_views ON fm_tts_tickets.id = fm_tts_views.id"
+			. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
 			. " $filtermethod $querymethod";
 
 /*
