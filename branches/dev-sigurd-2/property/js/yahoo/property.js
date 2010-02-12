@@ -722,10 +722,11 @@
 					myLoading.hide();
 				}
 				eval('values_ds ='+o.responseText);
+				flag_particular_setting='update';
+				particular_setting();
 				myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
 				update_datatable();
 				update_filter();
-				flag_particular_setting='update';
 			},
 			failure: function(o) {window.alert('Server or your connection is dead.')},
 			timeout: 10000,
@@ -738,7 +739,7 @@
 		{
 			myLoading.hide();
 		}
-		//eval('values_ds ='+o.responseText);
+
 		flag_particular_setting='';
 
 		if(flag==0)
@@ -746,6 +747,7 @@
 			init_datatable();
 			init_filter();
 			flag_particular_setting='init';
+			particular_setting();
 		}
 		else
 		{
@@ -758,7 +760,6 @@
 			   alert(e_async.message);
 			}
 		}
-		particular_setting();
 	}
 
 /********************************************************************************
