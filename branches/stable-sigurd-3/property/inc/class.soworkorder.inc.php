@@ -327,6 +327,11 @@
 //				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 			}
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 			$location_table = 'fm_project';
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
 			{
@@ -499,43 +504,38 @@
 
 			$workorder_list = array();
 
-			if(!$dry_run)
+			$sql .= " $group_method";
+
+			if(!$allrows)
 			{
-				$sql .= " $group_method";
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
 
-				//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			$count_cols_return=count($cols_return);
+			$j=0;
 
-				if(!$allrows)
+			while ($this->db->next_record())
+			{
+				for ($i=0;$i<$count_cols_return;$i++)
 				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$workorder_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
+					$workorder_list[$j]['grants'] = (int)$this->grants[$this->db->f('project_owner')];
 				}
-				else
+
+				$location_code=	$this->db->f('location_code');
+				$location = split('-',$location_code);
+				$count_location =count($location);
+				for ($m=0;$m<$count_location;$m++)
 				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+					$workorder_list[$j]['loc' . ($m+1)] = $location[$m];
+					$workorder_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
 
-				$count_cols_return=count($cols_return);
-				$j=0;
-
-				while ($this->db->next_record())
-				{
-					for ($i=0;$i<$count_cols_return;$i++)
-					{
-						$workorder_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-						$workorder_list[$j]['grants'] = (int)$this->grants[$this->db->f('project_owner')];
-					}
-
-					$location_code=	$this->db->f('location_code');
-					$location = split('-',$location_code);
-					$count_location =count($location);
-					for ($m=0;$m<$count_location;$m++)
-					{
-						$workorder_list[$j]['loc' . ($m+1)] = $location[$m];
-						$workorder_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-					}
-
-					$j++;
-				}
+				$j++;
 			}
 
 			return $workorder_list;

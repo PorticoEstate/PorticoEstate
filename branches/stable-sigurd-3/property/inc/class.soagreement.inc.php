@@ -694,6 +694,7 @@ $allrows = true; // return all..
 
 			$this->db->transaction_begin();
 			$id = $this->bocommon->next_id($table);
+			$vals = array();
 			$vals[] = $id;
 			$vals[] = $agreement['name'];
 			$vals[] = $agreement['descr'];
@@ -1070,6 +1071,7 @@ $allrows = true; // return all..
 
 		function read_group_activity($group_id='',$agreement_id='')
 		{
+			$uicols = array();
 			$uicols['name'][]			= 'id';
 			$uicols['descr'][]			= lang('ID');
 			$uicols['name'][]			= 'num';
@@ -1088,6 +1090,7 @@ $allrows = true; // return all..
 			$sql="SELECT fm_activities.* FROM fm_activities WHERE agreement_group_id = $group_id";
 			$this->db->query($sql);
 
+			$activity_list = array();
 			while ($this->db->next_record())
 			{
 				$activity_list[$this->db->f('id')]=array
@@ -1118,27 +1121,74 @@ $allrows = true; // return all..
 			return $activity_list_result;
 		}
 
-		function add_activity($values='',$agreement_id='')
+		function add_activity($values,$agreement_id)
 		{
+			$agreement_id = (int)$agreement_id;
+
 			if (isset($values['select']) AND is_array($values['select']))
 			{
 				$this->db->transaction_begin();
 
-				$this->db->query("SELECT start_date FROM fm_agreement WHERE id=" . $values['agreement_id']);
+				$this->db->query("SELECT start_date FROM fm_agreement WHERE id={$agreement_id}");
 				$this->db->next_record();
 				$date	= $this->db->f('start_date');
+				if(!$date)
+				{
+					throw new Exception("missing start date for agreement {$agreement_id}");
+//					return $receipt['error'][] = array('msg'=>lang('missing start date for agreement %1',$agreement_id));
+				}
+				
+				$sql = 'INSERT INTO fm_activity_price_index (agreement_id, activity_id, index_count, current_index, index_date, entry_date, user_id)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
+				$valueset=array();
 
 				foreach($values['select'] as $activity_id)
 				{
-					$this->db->query("INSERT INTO fm_activity_price_index ( agreement_id, activity_id,index_count,current_index,index_date,entry_date,user_id) "
-					. "VALUES ($agreement_id,$activity_id,-1,1,$date," . time() . "," . $this->account . ")");
+					$valueset[] = array
+					(
+						1	=> array
+						(
+							'value'	=> $agreement_id,
+							'type'	=> PDO::PARAM_INT
+						),
+						2	=> array
+						(
+							'value'	=> $activity_id,
+							'type'	=>	PDO::PARAM_INT
+						),
+						3	=> array
+						(
+							'value'	=> -1,
+							'type'	=> PDO::PARAM_INT
+						),
+						4	=> array
+						(
+							'value'	=> 1,
+							'type'	=>	PDO::PARAM_INT
+						),
+						5	=> array
+						(
+							'value'	=> $date,
+							'type'	=> PDO::PARAM_INT
+						),
+						6	=> array
+						(
+							'value'	=> time(),
+							'type'	=> PDO::PARAM_INT
+						),
+						7	=> array
+						(
+							'value'	=> $this->account,
+							'type'	=> PDO::PARAM_INT
+						)
+					);
 				}
 
+				$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 				$this->db->transaction_commit();
 			}
 
-
-			$receipt['agreement_id']= $id;//$this->db->get_last_insert_id($table,'id');
+			$receipt['agreement_id']= $agreement_id;
 
 			$receipt['message'][] = array('msg'=>lang('agreement %1 has been saved',$receipt['agreement_id']));
 
@@ -1148,23 +1198,23 @@ $allrows = true; // return all..
 		function select_status_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_agreement_status ORDER BY id ");
-
-			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id']				= $this->db->f('id');
-				$status_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $status;
 		}
 
 		function get_activity_descr($id)
 		{
+			$id = (int)$id;
 			$this->db->query("SELECT descr FROM fm_activities WHERE id = $id",__LINE__,__FILE__);
 			$this->db->next_record();
-			return stripslashes($this->db->f('descr'));
+			return $this->db->f('descr',true);
 		}
-
 	}
-

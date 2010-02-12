@@ -12,4 +12,18 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
+	
+	$test[] = '0.1.0';
+	function rental_upgrade0_1_0()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_contract','adjustment_share',array(
+			'type' => 'int', 
+			'precision' => '4',
+			'nullable' => true,
+			'default' => 100
+		));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.1';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
 ?>

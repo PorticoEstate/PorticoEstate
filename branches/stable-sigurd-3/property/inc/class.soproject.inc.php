@@ -304,6 +304,11 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 
 			if ($order)
 			{
@@ -454,43 +459,38 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			if(!$dry_run)
+			$project_list = array();
+			$sql .= " $group_method";
+			if(!$allrows)
 			{
-				$project_list = array();
-				$sql .= " $group_method";
-				if(!$allrows)
-				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-				}
-				else
-				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-				}
-
-				$project_list = array();
-				$j=0;
-				$k=count($cols_return);
-				while ($this->db->next_record())
-				{
-					for ($i=0;$i<$k;$i++)
-					{
-						$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
-						$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
-					}
-
-					$location_code=	$this->db->f('location_code');
-					$location = split('-',$location_code);
-					$n=count($location);
-					for ($m=0;$m<$n;$m++)
-					{
-						$project_list[$j]['loc' . ($m+1)] = $location[$m];
-						$project_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-					}
-
-					$j++;
-				}
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
-	
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$project_list = array();
+			$j=0;
+			$k=count($cols_return);
+			while ($this->db->next_record())
+			{
+				for ($i=0;$i<$k;$i++)
+				{
+					$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
+					$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
+				}
+				$location_code=	$this->db->f('location_code');
+				$location = split('-',$location_code);
+				$n=count($location);
+				for ($m=0;$m<$n;$m++)
+				{
+					$project_list[$j]['loc' . ($m+1)] = $location[$m];
+					$project_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+				}
+
+				$j++;
+			}
 			return $project_list;
 		}
 

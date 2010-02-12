@@ -269,6 +269,7 @@ Check to add text to order	property	no	Merk for å legge teksten til i bestillin
 check to delete file	property	no	Merk for å slette fil
 check to delete this request from this project	property	no	Merk for a slette dette tiltaket fra dette prosjektet
 check to inherit from this location	property	no	Merk av for å arve fra denne lokalisering
+Check to publish text at frontend	property	no	Merk av for å publisere i frontend
 check to reset the query	property	no	Merk av for å nulle spørring
 check to show this attribue in lookup forms	property	no	Merk av for å vise denne attributten i loaliseringsskjema
 check to show this attribute in entity list	property	no	Merk av for å vise denne attributten i oversikt
@@ -1193,6 +1194,7 @@ property has been edited	property	no	eiendom er oppdater
 property has been saved	property	no	eiendom er lagret
 property id	property	no	eiendoms ID
 property name	property	no	Eiendoms Navn
+publish text	property	no	Publiser tekst
 purchase cost	property	no	anskaffelses kostnad
 quantity	property	no	Mengde
 read	property	no	Les

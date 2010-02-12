@@ -395,16 +395,6 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
     		//values for Pagination
 	    		$json = array
@@ -446,12 +436,28 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
