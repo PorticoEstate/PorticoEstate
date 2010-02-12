@@ -6,15 +6,12 @@
 	* @internal Idea by Jason Wies <jason@xc.net>
 	* @author Lars Kneschke <lkneschke@linux-at-work.de>
 	* @author Dave Hall <skwashd@phpgroupware.org>
-	* @copyright Copyright (C) 2004-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2004-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgroupware
 	* @version $Id$
 	*/
 
-
-	Header("Location: {$_GET['go']}");
-	exit;
 
 	//Get the session variables set for non cookie based sessions
 	if ( !isset($_COOKIES['PHPSESSID']) 
@@ -55,6 +52,10 @@
 	if( isset($_GET['go']) )
 	{
 		$_GET['go'] = htmlspecialchars_decode(urldecode($_GET['go']));
+		Header("Location: {$_GET['go']}");
+		exit;
+
+/*
 		?>
 			<h2><?php echo lang('external link'); ?></h2>
 			<p><?php echo lang('lang you are about to visit an external site'); ?><br />
@@ -63,6 +64,7 @@
 			<script language="JavaScript" type="text/javascript">window.location="<?php echo$_GET['go']; ?>";</script>
 		<?php
 	        exit;
+*/
 	}
 	else
 	{
