@@ -6,7 +6,7 @@
 	$setup_info['rentalfrontend']['enable'] = 1;
 	$setup_info['rentalfrontend']['app_group']	= 'office';
 
-	$setup_info['rentalfrontend']['description'] = 'Bergen kommune utleie-frontend';
+	$setup_info['rentalfrontend']['description'] = 'Bergen kommune rental frontend';
 
 	$setup_info['rentalfrontend']['author'][] = array
 	(
@@ -27,7 +27,7 @@
 
     $setup_info['rentalfrontend']['depends'][] = array(
 		'appname' => 'rental',
-		'versions' => array('0.0.27')
+		'versions' => array('0.1.0')
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
