@@ -58,7 +58,8 @@
 			'edit_attrib_group'		=> true,
 			'edit_attrib' 			=> true,
 			'list_custom_function'	=> true,
-			'edit_custom_function'	=> true
+			'edit_custom_function'	=> true,
+			'get_template_attributes'=> true
 		);
 
 		function property_uiadmin_entity()
@@ -963,6 +964,11 @@
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 			$id		= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+			$template_attrib = phpgw::get_var('template_attrib');
+			if($template_attrib)
+			{
+				$values['template_attrib'] = array_values(explode(',', $template_attrib));
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
@@ -1023,11 +1029,61 @@
 //_debug_array($link_data);
 
 			$entity = $this->bo->read_single($entity_id,false);
+			$this->bo->allrows = true;
+
+			$entity_list 	= $this->bo->read(array('allrows' => true));
+
+			$category_list = array();
+			foreach($entity_list as $entry)
+			{
+				$cat_list = $this->bo->read_category($entry['id']);
+
+				foreach($cat_list as $category)
+				{
+					$category_list[] = array
+					(
+						'id'	=> "{$entry['id']}_{$category['id']}",
+						'name'	=> "{$entry['name']}::{$category['name']}"
+					);
+				}
+			}
+
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array('key' => 'attrib_id','label'=> lang('id') ,'sortable'=>false,'resizeable'=>true,'hidden'=>false),
+       												array('key' => 'name',	'label'=> lang('name'),	'sortable'=>false,'resizeable'=>true),
+	       											array('key' => 'datatype',	'label'=>lang('datatype'),	'sortable'=>false,'resizeable'=>true),
+		       				       					array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
+			);	
+
+
+			$content_attributes = array
+			(
+			);
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_attributes),
+					'total_records'			=> 0,
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+			);
+
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
+				'td_count'							=> 3,
+				'base_java_url'						=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+
 				'lang_entity'						=> lang('entity'),
 				'entity_name'						=> $entity['name'],
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1073,14 +1129,62 @@
 				'lang_start_ticket'					=> lang('Start ticket'),
 				'value_start_ticket'				=> $values['start_ticket'],
 				'lang_start_ticket_statustext'		=> lang('Enable start ticket from this category'),
-				'jasperupload'						=> true
+				'jasperupload'						=> true,
+				'category_list'						=> $category_list
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.edit_category', 'property' );
+		}
+
+		function get_template_attributes()
+		{
+			$template_info = explode('_', phpgw::get_var('category_template', 'string', 'GET'));
+			$template_entity_id = $template_info[0];
+			$template_cat_id = $template_info[1];
+
+			$attrib_list = $this->bo->read_attrib($template_entity_id,$template_cat_id, true);
+
+			$content = array();
+			foreach($attrib_list as $_entry )
+			{				
+				$content[] = array
+				(
+				
+					'attrib_id'	=> $_entry['id'],
+					'name'		=> $_entry['input_text'],
+					'datatype'	=> $_entry['trans_datatype'],
+				);
+			}
+
+			if(count($content))
+			{
+				return json_encode($content);
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		function delete()
