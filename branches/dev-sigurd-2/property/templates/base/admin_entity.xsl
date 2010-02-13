@@ -359,7 +359,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form method="post" action="{$form_action}">
+			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 			<tr>
 				<td class="th_text" align="left">
 					<xsl:value-of select="lang_entity"/>
@@ -749,14 +749,38 @@
 				</xsl:when>
 			</xsl:choose>
 
+			<xsl:choose>
+				<xsl:when test="category_list != '' and value_id = ''">
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'template')" />
+						</td>
+						<td valign="top">
+							<select id="category_template" name="values[category_template]" onChange="get_template_attributes()">
+								<option value=""><xsl:value-of select="php:function('lang', 'select template')" /></option>
+								<xsl:apply-templates select="category_list"/>
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="19%" align="left" valign="top">
+							<xsl:value-of select="php:function('lang', 'attributes')" />
+						</td>
+						<td>
+							<div id="paging_0"></div><div id="datatable-container_0"></div>
+							<input type="hidden" name="template_attrib" value=""></input>
+						</td>
+					</tr>
+
+				</xsl:when>
+			</xsl:choose>
+
 			<tr height="50">
 				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_save_standardtext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[save]" value="{lang_save}" onClick="onActionsClick()">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'save')" />
 						</xsl:attribute>
 					</input>
 				</td>
@@ -779,6 +803,34 @@
 			</tr>
 		</table>
 		</div>
+
+		<!--  DATATABLE DEFINITIONS-->
+		<script>
+			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+		    var td_count = <xsl:value-of select="td_count" />;
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+				{
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+			<!--		permission		:	<xsl:value-of select="permission"/>, -->
+					footer			:	<xsl:value-of select="footer"/>
+				}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
 	</xsl:template>
 
 <!-- list attribute -->
@@ -1816,6 +1868,10 @@
 				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="category_list">
+				<option value="{id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 	</xsl:template>
 
 	<xsl:template name="choice">
