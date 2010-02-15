@@ -607,7 +607,58 @@
 			else
 			{
 				$receipt = $this->so->add($workorder);
+				$workorder['id'] = $receipt['id'];
 			}
+
+			if(isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
+			{
+				$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+
+				$boclaim = CreateObject('property.botenant_claim');
+
+				$value_set = array
+				(
+					'workorder' 		=> $target,
+					'project_id'		=> $workorder['project_id'],
+				);
+
+				$claim = $boclaim->read(array('project_id' => $project['project_id']));
+				$target = array();
+				if($claim)
+				{
+					$value_set['claim_id'] = $claim[0]['claim_id'];
+					$claim_old  = $boclaim->read_single($claim[0]['claim_id']);
+					if(isset($claim_old['workorder']) && $claim_old['workorder'])
+					{
+						$target = $claim_old['workorder'];
+					}
+					$value_set['amount']		= $claim_old['amount'];
+					$value_set['tenant_id']		= $claim_old['tenant_id'];
+					$value_set['b_account_id']	= $claim_old['b_account_id'];
+					$value_set['cat_id']		= $claim_old['cat_id'];
+					$value_set['status']		= $claim_old['status'];
+					$value_set['remark']		= $claim_old['remark'];					
+				}
+				else
+				{
+					$value_set['amount']		= 0;
+					$value_set['tenant_id']		= $project['tenant_id'];
+					$value_set['b_account_id']	= $workorder['b_account_id'];
+					$value_set['cat_id']		= 99;
+					$value_set['status']		= 'open';
+					$value_set['remark']		= '';
+				}
+
+				if(!in_array($workorder['id'],$target))
+				{
+					$target[] = $workorder['id'];
+				}
+
+				$value_set['workorder']	= $target;
+
+				$boclaim->save($value_set);
+			}
+
 			return $receipt;
 		}
 

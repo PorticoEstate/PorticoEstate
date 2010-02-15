@@ -657,7 +657,7 @@
 				}
 			}
 
-
+/*
 			for ($i=0;$i<count($project_values['workorder_budget']);$i++)
 			{
 				$claimed= $this->bo->check_claim_workorder($project_values['workorder_budget'][$i]['workorder_id']);
@@ -668,7 +668,7 @@
 				}
 			}
 
-
+*/
 
 			$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
@@ -998,7 +998,7 @@
 				}
 			}
 
-
+/*
 			for ($i=0;$i<count($project_values['workorder_budget']);$i++)
 			{
 				$claimed= $this->bo->check_claim_workorder($project_values['workorder_budget'][$i]['workorder_id']);
@@ -1009,7 +1009,7 @@
 				}
 			}
 
-
+*/
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
