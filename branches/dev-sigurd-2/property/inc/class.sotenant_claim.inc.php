@@ -164,6 +164,7 @@
 			return $claims;
 		}
 
+		//FIXME: to be removed
 		function check_claim_workorder($workorder_id)
 		{
 			$claim = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $workorder_id, 'origin');
@@ -262,7 +263,6 @@
 			$claim['amount'] =  str_replace(",",".",$claim['amount']);
 
 			$value_set=array(
-				'amount'			=> $claim['amount'],
 				'tenant_id'			=> $claim['tenant_id'],
 				'b_account_id'		=> $claim['b_account_id'],
 				'amount'			=> $claim['amount'],
