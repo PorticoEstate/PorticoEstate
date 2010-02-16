@@ -3972,3 +3972,24 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.579 to 0.9.17.580
+	* Add optional hierarchy on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.580';
+	function property_upgrade0_9_17_580()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','parent_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','level', array('type' => 'int','precision' => '4','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.581';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

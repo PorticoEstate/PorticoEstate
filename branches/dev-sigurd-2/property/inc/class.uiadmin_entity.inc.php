@@ -1031,6 +1031,8 @@
 			$entity = $this->bo->read_single($entity_id,false);
 			$this->bo->allrows = true;
 
+			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category($entity_id));
+
 			$entity_list 	= $this->bo->read(array('allrows' => true));
 
 			$category_list = array();
@@ -1130,7 +1132,8 @@
 				'value_start_ticket'				=> $values['start_ticket'],
 				'lang_start_ticket_statustext'		=> lang('Enable start ticket from this category'),
 				'jasperupload'						=> true,
-				'category_list'						=> $category_list
+				'category_list'						=> $category_list,
+				'parent_list'						=> $parent_list,
 			);
 
 			$appname = lang('entity');

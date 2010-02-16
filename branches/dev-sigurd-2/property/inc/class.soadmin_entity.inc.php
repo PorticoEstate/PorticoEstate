@@ -38,6 +38,7 @@
 		var $type = 'entity';
 		var $type_app;
 		var $bocommon;
+		private $move_child = array();
 
 		function __construct($entity_id='', $cat_id='', $bocommon = '')
 		{
@@ -231,18 +232,23 @@
 			$category = array();
 			if ($this->db->next_record())
 			{
-				$category['id']			= $this->db->f('id');
-				$category['name']		= $this->db->f('name');
-				$category['descr']		= $this->db->f('descr');
-				$category['prefix']		= $this->db->f('prefix');
-				$category['lookup_tenant']	= $this->db->f('lookup_tenant');
-				$category['tracking']	= $this->db->f('tracking');
-				$category['location_level']	= $this->db->f('location_level');
-				$category['fileupload']	= $this->db->f('fileupload');
-				$category['loc_link']	= $this->db->f('loc_link');
-				$category['start_project']	= $this->db->f('start_project');
-				$category['start_ticket']	= $this->db->f('start_ticket');
-				$category['jasperupload']	= $this->db->f('jasperupload');
+				$category = array
+				(
+					'id'				=> $this->db->f('id'),
+					'name'				=> $this->db->f('name'),
+					'descr'				=> $this->db->f('descr'),
+					'prefix'			=> $this->db->f('prefix'),
+					'lookup_tenant'		=> $this->db->f('lookup_tenant'),
+					'tracking'			=> $this->db->f('tracking'),
+					'location_level'	=> $this->db->f('location_level'),
+					'fileupload'		=> $this->db->f('fileupload'),
+					'loc_link'			=> $this->db->f('loc_link'),
+					'start_project'		=> $this->db->f('start_project'),
+					'start_ticket'		=> $this->db->f('start_ticket'),
+					'jasperupload'		=> $this->db->f('jasperupload'),
+					'parent_id'			=> $this->db->f('parent_id'),
+					'level'				=> $this->db->f('level')
+				);
 			}
 			return $category;
 		}
@@ -317,10 +323,23 @@
 		{
 			$this->db->transaction_begin();
 
+			$table = "fm_{$this->type}_category";
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
-			$values['id'] = $this->bocommon->next_id("fm_{$this->type}_category", array('entity_id'=>$values['entity_id']));
+			$values['id'] = $this->bocommon->next_id($table, array('entity_id'=>$values['entity_id']));
+
+			if($values['parent_id'])
+			{
+				$this->db->query("SELECT level FROM $table  WHERE entity_id = {$values['entity_id']} AND id=" . (int)$values['parent_id'],__LINE__,__FILE__);
+				$this->db->next_record();
+				$level	= (int)$this->db->f('level') +1;
+			}
+			else
+			{
+				$level	= 0;
+			}
+
 
 			$values_insert= array(
 				$values['entity_id'],
@@ -335,12 +354,14 @@
 				$values['loc_link'],
 				$values['start_project'],
 				$values['start_ticket'],
-				$values['jasperupload']
+				$values['jasperupload'],
+				$values['parent_id'],
+				$level
 				);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO fm_{$this->type}_category (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload) "
+			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
@@ -394,7 +415,7 @@
 				}
 				else
 				{
-					$this->db->query("DELETE FROM fm_{$this->type}_category WHERE id=" . $values['id'] . " AND entity_id=" . $values['entity_id'],__LINE__,__FILE__);
+					$this->db->query("DELETE FROM {$table} WHERE id=" . $values['id'] . " AND entity_id=" . $values['entity_id'],__LINE__,__FILE__);
 					unset($receipt['id']);
 				}
 			}
@@ -482,6 +503,40 @@
 			{
 				$table = "fm_{$this->type}_category";
 
+				$this->db->query("SELECT level FROM $table WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_level	= (int)$this->db->f('level');
+
+				if(isset($entity['parent_id']) && $entity['parent_id'])
+				{
+					$this->db->query("SELECT level FROM $table  WHERE entity_id=" . $entity['entity_id']. " AND id=" . (int)$entity['parent_id'],__LINE__,__FILE__);
+					$this->db->next_record();
+					$level	= (int)$this->db->f('level') +1;
+				}
+				else
+				{
+					$level	= 0;
+				}
+
+				if($old_level !=$level)
+				{
+					$this->level = $level;
+					$this->parent_gap = 1;
+					$this->category_parent = $entity['id'];
+					while ($this->category_parent)
+					{
+						$this->check_move_child($entity['entity_id']);
+					}
+
+					if ( count($this->move_child) )
+					{
+						foreach ($this->move_child as $child)
+						{
+							$this->db->query("UPDATE $table set level= {$child['new_level']} WHERE entity_id={$entity['entity_id']} AND id=" . (int)$child['id'],__LINE__,__FILE__);
+						}
+					}
+				}
+
 				$entity['name'] = $this->db->db_addslashes($entity['name']);
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
@@ -496,7 +551,9 @@
 					'loc_link'		=> $entity['loc_link'],
 					'start_project'	=> $entity['start_project'],
 					'start_ticket'	=> $entity['start_ticket'],
-					'jasperupload'	=> $entity['jasperupload']
+					'jasperupload'	=> $entity['jasperupload'],
+					'parent_id'		=> $entity['parent_id'],
+					'level'			=> $level,
 					);
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -514,6 +571,91 @@
 
 			return $receipt;
 		}
+
+		/**
+		* ???
+		*
+		* @param bool $recursive is the function being called recursively
+		* @return a list of children to be moved
+		*/
+		private function check_move_child($entity_id, $recursive = false)
+		{
+			$entity_id = (int)$entity_id;
+			// New run so lets reset the data
+			if ( !$recursive )
+			{
+				$this->move_child = array();
+			}
+
+			$table = "fm_{$this->type}_category";
+
+			$continue = false;
+			$move_child = array();
+			$this->db->query("SELECT id FROM $table WHERE entity_id= {$entity_id} AND parent_id=" . (int)$this->category_parent,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$this->move_child[] = array
+				(
+					'id' 			=>(int)$this->db->f('id'),
+					'category_parent' 	=>(int)$this->category_parent,
+					'new_level' 	=> ($this->level + $this->parent_gap)
+				);
+
+				$move_child[] = (int)$this->db->f('id');
+				$continue = true;
+			}
+			if($continue)
+			{
+				$this->parent_gap++;
+				foreach ($move_child as $parent_id)
+				{
+					$this->category_parent = $parent_id;
+					$this->check_move_child($entity_id,true);
+				}
+
+			}
+			else
+			{
+				$this->category_parent = false;
+			}
+		}
+
+		protected function check_move_child_delete($entity_id,$id)
+		{
+			$continue = false;
+			$move_child = array();
+			$table = "fm_{$this->type}_category";
+
+			$this->db->query("SELECT id FROM {$table} WHERE entity_id = {$entity_id} AND parent_id=" . (int) $this->category_id,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$this->move_child[] = array
+				(
+					'id' 			=> (int)$this->db->f('id'),
+					'parent'	 	=> $this->category_parent,
+					'new_level' 	=> $this->level
+				);
+
+				$move_child[] = (int)$this->db->f('id');
+				$continue = true;
+			}
+			unset ($this->category_parent);
+			if($continue)
+			{
+				$this->level++;
+				foreach ($move_child as $id)
+				{
+					$this->category_id = $id;
+					$this->check_move_child_delete($entity_id, $id);
+				}
+
+			}
+			else
+			{
+				$this->check_parent = false;
+			}
+		}
+
 
 		function delete_entity($id)
 		{
@@ -548,7 +690,38 @@
 		{	
 			$this->init_process();
 
-			$this->db->transaction_begin();	
+			$this->db->transaction_begin();
+
+			$table = "fm_{$this->type}_category";
+			$this->db->query("SELECT parent_id,level FROM $table WHERE entity_id = {$entity_id} AND id={$id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->level		= (int)$this->db->f('level');
+			$this->category_parent	= (int)$this->db->f('parent_id');
+
+			$this->check_parent = true;
+			$this->category_id = $id;
+			while ($this->check_parent)
+			{
+				$this->check_move_child_delete($entity_id, $id);
+			}
+
+			if (is_array($this->move_child))
+			{
+				foreach ($this->move_child as $child)
+				{
+					$new_level = $child['new_level'];
+
+					if($child['parent'] || $child['parent']===0)
+					{
+						$sql = "UPDATE $table SET level= $new_level, parent_id = {$child['parent']} WHERE entity_id = {$entity_id} AND id= {$child['id']}";
+					}
+					else
+					{
+						$sql = "UPDATE $table SET level = $new_level WHERE entity_id = {$entity_id} AND id= {$child['id']}";
+					}
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
 
 			$this->oProc->DropTable("fm_{$this->type}_{$entity_id}_{$id}");
 
