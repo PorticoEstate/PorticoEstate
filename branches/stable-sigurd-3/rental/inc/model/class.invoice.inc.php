@@ -302,6 +302,13 @@
 			
 			$total_sum = 0; // Holding the total price of the invoice
 			
+			$contract_dates = $contract->get_contract_date();
+			if(isset($contract_dates))
+			{
+				$contract_start = $contract->get_contract_date()->get_start_date();
+				$contract_end = $contract->get_contract_date()->get_end_date();
+			}
+			
 			// Run through the contract price items
 			foreach($contract_price_items as $contract_price_item)
 			{
@@ -355,6 +362,34 @@
 				{
 					$invoice_price_item_end = $timestamp_invoice_end;	// We use the invoice end
 				}
+				
+				// Checking the contract dates against the temporary price item dates
+				if(isset($contract_start))
+				{
+					if($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_start > $invoice_price_item_start) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_start = $contract_start;
+					}
+				}
+				
+				if(isset($contract_end))
+				{
+					if($contract_end < $timestamp_invoice_start) // The end of the contract is befire the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_end < $invoice_price_item_end) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_end = $contract_end;
+					}
+				}
+				
 				// --- End of period calculation ---
 				
 				// Create a new invoice price item
