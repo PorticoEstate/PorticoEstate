@@ -206,7 +206,16 @@
 			</xsl:choose>
 
 			<xsl:choose>
-				<xsl:when test="//local_admin != ''">
+				<xsl:when test="i_am_admin = '1'">
+					<input type="checkbox" id="{elmid}" name="{checkbox_name}" value="1">
+						<xsl:if test="checked = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</xsl:when>
+				<xsl:otherwise>
 					<input type="hidden" id="{elmid}" name="{checkbox_name}">
 						<xsl:if test="checked = '1'">
 							<xsl:attribute name="value">
@@ -221,18 +230,8 @@
 							</xsl:attribute>
 						</xsl:if>
 					</input>
-				</xsl:when>
-				<xsl:otherwise>
-					<input type="checkbox" id="{elmid}" name="{checkbox_name}" value="1">
-						<xsl:if test="checked = '1'">
-							<xsl:attribute name="checked">
-								<xsl:text>checked</xsl:text>
-							</xsl:attribute>
-						</xsl:if>
-					</input>
 				</xsl:otherwise>
 			</xsl:choose>
-
 			<label for="{elmid}">
 				<xsl:value-of select="app_title" />
 			</label>
