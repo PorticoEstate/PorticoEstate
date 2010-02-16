@@ -2782,13 +2782,13 @@ class uiaddressbook
 
 			return;
 		}
-
+		$this->template->set_root(PHPGW_APP_TPL);
 		$this->template->set_file(array('delete' => 'delete.tpl'));
 
 		if ($confirm != 'true')
 		{
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+		//	echo parse_navbar();
 			$this->template->set_var('lang_sure',lang('Are you sure you want to delete this entry ?'));
 			$this->template->set_var('no_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type)));
 			$this->template->set_var('lang_no',lang('NO'));
