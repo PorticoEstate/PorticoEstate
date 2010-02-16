@@ -537,11 +537,11 @@
 
 			while($this->_db->next_record())
 			{
-				$_acl_account	= $this->_db->f('acl_account');
-				$_acl_rights	= $this->_db->f('acl_rights');
-				$_acl_grantor	= $this->_db->f('acl_grantor');
-				$_acl_type		= $this->_db->f('acl_type');
-				$_location_id	= $this->_db->f('location_id');
+				$_acl_account	= (int) $this->_db->f('acl_account');
+				$_acl_rights	= (int) $this->_db->f('acl_rights');
+				$_acl_grantor	= (int) $this->_db->f('acl_grantor');
+				$_acl_type		= (int) $this->_db->f('acl_type');
+				$_location_id	= (int) $this->_db->f('location_id');
 
 				//avoid doubled set of rights
 		//		if(!$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id])
@@ -577,7 +577,7 @@
 				}
 		//		$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
 			}
-
+//_debug_array($unique_data);
 			$sql = 'DELETE FROM phpgw_acl'
 					. " WHERE acl_account = {$acct_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
