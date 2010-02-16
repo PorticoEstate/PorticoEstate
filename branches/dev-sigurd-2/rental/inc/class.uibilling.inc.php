@@ -492,19 +492,31 @@ class rental_uibilling extends rental_uicommon
 		//$browser->content_header('export.txt','text/plain');
 		
 		$stop = phpgw::get_var('date');
-		$export_format = explode('_',phpgw::get_var('export_format'));
-		$file_ending = $export_format[1];
-		if($file_ending == 'gl07')
-		{
-			$type = 'intern';
+		
+		$cs15 = phpgw::get_var('generate_cs15');
+		if($cs15 == null){
+			$export_format = explode('_',phpgw::get_var('export_format'));
+			$file_ending = $export_format[1];
+			if($file_ending == 'gl07')
+			{
+				$type = 'intern';
+			}
+			else if($file_ending == 'lg04')
+			{
+				$type = 'faktura';
+			}
+			$date = date('Ymd', $stop);
+			header("Content-Disposition: attachment; filename='PE_{$type}_{$date}.{$file_ending}'");
+			print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
 		}
-		else if($file_ending == 'lg04')
-		{
-			$type = 'faktura';
+		else{
+			$file_ending = 'cs15';
+			$type = 'kundefil';
+			$date = date('Ymd', $stop);
+			header('Content-type: text/plain');
+			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
+			print rental_sobilling::get_instance()->generate_cs15_export((int)phpgw::get_var('id'));
 		}
-		$date = date('Ymd', $stop);
-		header("Content-Disposition: attachment; filename='PE_{$type}_{$date}.{$file_ending}'");
-		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 
 }

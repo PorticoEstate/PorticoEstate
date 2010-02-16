@@ -95,6 +95,10 @@
     function doExport() {
         window.location = 'index.php?menuaction=rental.uibilling.download&amp;export=true<?php echo $url_add_on; ?>';
     }
+
+    function doExportCS15(billing_id, ts_stop) {
+        window.location = 'index.php?menuaction=rental.uibilling.download_export&amp;generate_cs15=true&amp;id=' + billing_id + '&amp;date=' + ts_stop;
+    }
 </script>
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>

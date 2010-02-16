@@ -116,6 +116,7 @@ create_shortcut	rental	no	Ny snarvei
 create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
 create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
 create_contract_contract_type_internleie	rental	no	Opprett internleiekontrakt
+cs15_export	rental	no	Kundefil
 currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
 currency suffix	rental	no	Valuta suffix
@@ -182,6 +183,7 @@ frontpage_reset_setup	rental	no	Nullstill oppsett
 f_select_columns	rental	no	Velg kolonner
 gab	rental	no	GAB
 Generate export	rental	no	Generér eksport
+Generate cs15	rental	no	Generér kundefil
 half-year	rental	no	Halvårig
 has_custom_address	rental	no	Er adressen overstyrt?
 house_number	rental	no	Husnummer

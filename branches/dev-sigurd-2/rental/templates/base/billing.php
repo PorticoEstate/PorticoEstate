@@ -125,6 +125,12 @@ if($billing_job != null)
 			}	
 			?>
 		</dd>
+		<dt>
+			<?php echo lang('cs15_export') ?>
+		</dt>
+		<dd>
+			<input type="button" name="generate_cs15" value="<?php echo lang('Generate cs15') ?>" onClick="javascript:doExportCS15(<?php echo $billing_job->get_id()?>, <?php echo $billing_job->get_timestamp_stop() ?>)"/>
+		</dd>
 	</dl>
 			
 	<?php
