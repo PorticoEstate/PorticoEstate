@@ -2608,7 +2608,7 @@
 
 	$test[] = '0.9.17.524';
 	/**
-	* Restore support for anonymous sessions.
+	* support per application admin
 	*
 	* @return string the new version number
 	*/
@@ -2633,4 +2633,44 @@
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.525';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
+	}
+	$test[] = '0.9.17.524';
+
+	/**
+	* In order to manage users as an apllication admin - the users has to have access to 'run' per user - not via groups
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_525()
+	{
+		set_time_limit(1000);
+		$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
+		$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+		$GLOBALS['phpgw']->acl->enable_inheritance = true;
+		$aclobj =& $GLOBALS['phpgw']->acl;
+		$available_apps = $GLOBALS['phpgw_info']['apps'];
+		$permission = array();
+		foreach($available_apps as $_app => $dummy)
+		{
+			$valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+
+			foreach ($valid_users as $user)
+			{
+				$permission[$user['account_id']][] = $_app;
+			}
+
+			foreach ($permission as $user => $apps)
+			{
+				$aclobj->set_account_id($user, true);
+				// application permissions
+				foreach ( $apps as $app )
+				{
+					$aclobj->add($app, 'run', phpgwapi_acl::READ);
+				}
+				$aclobj->save_repository();
+			}
+		}
+
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.526';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
