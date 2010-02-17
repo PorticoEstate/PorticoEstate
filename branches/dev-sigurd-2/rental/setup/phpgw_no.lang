@@ -197,6 +197,7 @@ included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
 interval	rental	no	Intervall
 Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
+invoice	rental	no	Faktura
 invoice_run	rental	no	Fakturakjøring
 invoice_menu	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
