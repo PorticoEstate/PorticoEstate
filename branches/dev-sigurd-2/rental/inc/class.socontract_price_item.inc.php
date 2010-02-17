@@ -250,7 +250,7 @@ class rental_socontract_price_item extends rental_socommon
 		else{
 			$total_price = $price_item->get_count() * $price_item->get_price();
 		}
-		
+
 		// Build a db-friendly array of the composite object
 		$values = array(
 			"price_item_id=" . $price_item->get_price_item_id(),
@@ -264,10 +264,9 @@ class rental_socontract_price_item extends rental_socommon
 			"total_price=" . str_replace(',','.',$total_price),
 			"date_start=" . $this->marshal($price_item->get_date_start(), 'int'),
 			"date_end=" . $this->marshal($price_item->get_date_end(), 'int'),
-			"is_one_time=" . ($price_item->is_one_time() ? "true" : "false"),
+			"is_one_time=" . ($price_item->get_is_one_time() == "true" ? "true" : "false"),
 			"is_billed=" . ($price_item->is_billed() ? "true" : "false")
 		);
-		
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
