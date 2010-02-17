@@ -10,9 +10,7 @@
          */
         public static function render_template($tpl, $data)
 		{
-            $GLOBALS['phpgw']->xslttpl->add_file(array($tpl.'.xsl'));
+            $GLOBALS['phpgw']->xslttpl->add_file($tpl); // $tpl bør komme inn som array ( i tilfelle flere..)
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));
 		}
     }
-
-?>

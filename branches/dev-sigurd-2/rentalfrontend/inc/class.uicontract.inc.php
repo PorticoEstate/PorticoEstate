@@ -12,14 +12,24 @@
             'show'      => true
         );
 
+		public function __construct()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true; // må angis
+//			parent::__construct();
+		}
 
         /**
          * Show single contract details
          */
         public function show()
         {
-            $contract = rental_socontract::get_instance()->get_single(phpgw::get_var('cid'));
-            rentalfrontend_uicommon::render_template('contract', $this->contract);
+            $cid = phpgw::get_var('cid', 'int', 'REQUEST', 0);
+            $contract = array();
+            if($cid)
+            {
+            	$contract = rental_socontract::get_instance()->get_single($cid);
+            }
+            rentalfrontend_uicommon::render_template(array('contract'), $this->contract);
             //_debug_array($contract);
         }
 
@@ -29,6 +39,6 @@
          */
         public function index()
         {
-
+			$this->show();
         }
     }
