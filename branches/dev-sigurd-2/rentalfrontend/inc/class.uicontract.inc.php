@@ -6,7 +6,6 @@
 
     class rentalfrontend_uicontract extends rental_uicontract
     {
-        private $contract;
 
         public $public_functions = array(
             'index'     => true,
@@ -19,8 +18,9 @@
          */
         public function show()
         {
-            $this->contract = rental_socontract::get_instance()->get_single(phpgw::get_var('cid'));
+            $contract = rental_socontract::get_instance()->get_single(phpgw::get_var('cid'));
             rentalfrontend_uicommon::render_template('contract', $this->contract);
+            //_debug_array($contract);
         }
 
 
