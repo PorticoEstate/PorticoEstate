@@ -317,7 +317,7 @@ parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
 party	rental	no	Kontraktspart
 party_back	rental	no	Kontraktspartliste
-party_location	rental	no	Intern organisasjonstihørighet
+party_location	rental	no	Intern organisasjonstilhørighet
 party_type	rental	no	Type kontraktspart
 percent	rental	no	Prosent
 period	rental	no	Periode
