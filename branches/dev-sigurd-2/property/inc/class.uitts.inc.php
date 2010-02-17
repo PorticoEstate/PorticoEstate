@@ -369,7 +369,12 @@
 				$values_combo_box = array();
 
 				$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
-				$default_value = array ('id'=>'','name'=>isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'));
+				
+				if(isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
+				{
+					array_unshift ($values_combo_box[2],array ('id'=>'O2','name'=>$this->bo->config->config_data['tts_lang_open']));
+				}
+				$default_value = array ('id'=>'','name'=>lang('Open'));
 				array_unshift ($values_combo_box[2],$default_value);
 
 				if(!$this->_simple)
@@ -2067,12 +2072,12 @@
 			$order_edit 			= $this->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 			
 			$access_order = false;
-			if($order_read || $order_add || $order_edit)
+			if($order_add || $order_edit)
 			{
 				$access_order = true;
 			}
 
-			if($order_read)
+			if($access_order)
 			{
 				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'			=> $ticket['vendor_id'],

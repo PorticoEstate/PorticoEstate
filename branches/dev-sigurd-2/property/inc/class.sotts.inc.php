@@ -88,16 +88,19 @@
 				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
 			}
 
+			$result_order_field = '';
 			if ($order)
 			{
 				if( $order == 'assignedto' )
 				{
-					$order_join = "$this->join phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
+					$result_order_field = ',account_lastname';
+					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.assignedto=phpgw_accounts.account_id";
 					$order = 'account_lastname';
 				}
 				else if( $order == 'user' )
 				{
-					$order_join = "$this->join phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
+					$result_order_field = ',account_lastname';
+					$order_join = "LEFT OUTER JOIN phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
 					$order = 'account_lastname';
 				}
 				else
@@ -146,7 +149,26 @@
 
 			if ($status_id == 'X')
 			{
-				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
+				$closed = '';
+				$this->db->query('SELECT * from fm_tts_status',__LINE__,__FILE__);
+
+				while ($this->db->next_record())
+				{
+					if( $this->db->f('closed'))
+					{
+						$closed .= " OR fm_tts_tickets.status = 'C" . $this->db->f('id') . "'";
+					}
+				}
+
+				$filtermethod .= " $where ( (fm_tts_tickets.status='X'{$closed})";
+				$where = 'AND';
+
+//				$filtermethod .= " $where ( fm_tts_tickets.status='X'";
+//				$where = 'AND';
+			}
+			else if ($status_id == 'O2') // explicite 'open'
+			{
+				$filtermethod .= " $where ( fm_tts_tickets.status='O'";
 				$where = 'AND';
 			}
 			else if($status_id == 'O')
@@ -256,7 +278,7 @@
 				}
 			}
 
-			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field} FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			. " $order_join"
