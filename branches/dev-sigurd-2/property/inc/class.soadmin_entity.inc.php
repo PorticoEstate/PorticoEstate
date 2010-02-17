@@ -174,14 +174,148 @@
 			{
 				$category[] = array
 				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name'),
-					'prefix'=> $this->db->f('prefix'),
-					'descr'	=> $this->db->f('descr')
+					'id'		=> $this->db->f('id'),
+					'name'		=> $this->db->f('name'),
+					'prefix'	=> $this->db->f('prefix'),
+					'descr'		=> $this->db->f('descr'),
+					'level'		=> $this->db->f('level'),
+					'parent_id'	=> $this->db->f('parent_id')
 				);
 			}
 			return $category;
 		}
+
+		function read_category_h($data)
+		{
+			$start = (isset($data['start'])&& $data['start'] ? $data['start'] : 0);
+			$query = (isset($data['query'])?$data['query']:'');
+			$sort = (isset($data['sort'])?$data['sort']:'DESC');
+			$order = (isset($data['order'])?$data['order']:'');
+			$allrows = (isset($data['allrows'])?$data['allrows']:'');
+			$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
+			$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+
+			if ($order)
+			{
+				$ordermethod = " order by $order $sort";
+
+			}
+			else
+			{
+				$ordermethod = ' order by id asc';
+			}
+
+			$table = "fm_{$type}_category";
+
+			$parent_select = ' AND (level = 0 OR level IS NULL)';
+
+			$where = '';
+			$querymethod = '';
+			if($query)
+			{
+				$query = $this->db->db_addslashes($query);
+				$where = ' AND';
+				$querymethod = " name $this->like '%$query%'";
+			}
+
+			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id";
+
+			$this->db->query($sql . $parent_select . $where . $querymethod . $ordermethod,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			$jobs = array();
+			while ($this->db->next_record())
+			{
+				$jobs[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'name'		=> $this->db->f('name',true),
+					'prefix'	=> $this->db->f('prefix'),
+					'descr'		=> $this->db->f('descr',true),
+					'level'		=> 0,
+					'parent_id'	=> 0
+				);
+			}
+
+			if ($querymethod)
+			{
+				$where = ' AND';
+				$and = ' AND';
+			}
+			else
+			{
+				$where = '';
+				$and = ' AND';
+			}
+			$num_jobs = count($jobs);
+			for ( $i = 0 ; $i < $num_jobs; ++$i )
+			{
+				$sub_select = $and . ' parent_id=' . (int) $jobs[$i]['id'] . " AND level=" . ++$jobs[$i]['level'];
+
+				$this->db->query($sql . $where . $querymethod . $sub_select . $ordermethod,__LINE__,__FILE__);
+
+				$this->total_records += $this->db->num_rows();
+
+				$subjobs = array();
+				while ($this->db->next_record())
+				{
+					$subjobs[] = array
+					(
+						'id'		=> (int)$this->db->f('id'),
+						'name'		=> $this->db->f('name'),
+						'prefix'	=> $this->db->f('prefix'),
+						'descr'		=> $this->db->f('descr'),
+						'level'		=> (int)$this->db->f('level'),
+						'parent_id'	=> (int)$this->db->f('parent_id'),
+						'owner'		=> (int)$this->db->f('owner')
+					);
+				}
+
+				$num_subjobs = count($subjobs);
+				if ($num_subjobs != 0)
+				{
+					$newjobs = array();
+					for ($k = 0; $k <= $i; $k++)
+					{
+						$newjobs[$k] = $jobs[$k];
+					}
+					for ($k = 0; $k < $num_subjobs; $k++)
+					{
+						$newjobs[$k+$i+1] = $subjobs[$k];
+					}
+					for ($k = $i+1; $k < $num_jobs; $k++)
+					{
+						$newjobs[$k+$num_subjobs] = $jobs[$k];
+					}
+					$jobs = $newjobs;
+					$num_jobs = count($jobs);
+				}
+
+			}
+
+			if (!$allrows)
+			{
+				$max = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$max = $max + $start;
+
+				$sjobs = array();
+				foreach ( $jobs as $job )
+				{
+					if ( isset($job) && is_array($job) )
+					{
+						$sjobs[] = $job;
+					}
+				}
+				if ( count($sjobs) )
+				{
+					$jobs = $sjobs;
+				}
+			}
+
+			_debug_array($jobs);die();
+		}
+
+
 
 		function read_single($id)
 		{
