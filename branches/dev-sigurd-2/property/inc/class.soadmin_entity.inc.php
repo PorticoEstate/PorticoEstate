@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -54,6 +54,7 @@
 			}
 
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2			= clone($this->db);
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 
@@ -185,136 +186,101 @@
 			return $category;
 		}
 
-		function read_category_h($data)
+
+		/**
+		* used for retrive a child-node from a hierarchy
+		*
+		* @param integer $entity_id Entity id
+		* @param integer $parent is the parent of the children we want to see
+		* @param integer $level is increased when we go deeper into the tree,
+		* @return array $child Children
+		*/
+
+		protected function get_children($entity_id, $parent, $level, $menuaction)
 		{
-			$start = (isset($data['start'])&& $data['start'] ? $data['start'] : 0);
-			$query = (isset($data['query'])?$data['query']:'');
-			$sort = (isset($data['sort'])?$data['sort']:'DESC');
-			$order = (isset($data['order'])?$data['order']:'');
-			$allrows = (isset($data['allrows'])?$data['allrows']:'');
-			$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
-			$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			// retrieve all children of $parent
+			
+			$table = "fm_{$this->type}_category";
+			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent}";
+			$this->db2->query($sql,__LINE__,__FILE__);
 
-			if ($order)
+			$children = array();
+			while ($this->db2->next_record())
 			{
-				$ordermethod = " order by $order $sort";
+				$id	= $this->db2->f('id');
+		//		$location = ".entity.{$entity_id}.{$id}";
+		//		$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
 
-			}
-			else
-			{
-				$ordermethod = ' order by id asc';
-			}
-
-			$table = "fm_{$type}_category";
-
-			$parent_select = ' AND (level = 0 OR level IS NULL)';
-
-			$where = '';
-			$querymethod = '';
-			if($query)
-			{
-				$query = $this->db->db_addslashes($query);
-				$where = ' AND';
-				$querymethod = " name $this->like '%$query%'";
-			}
-
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id";
-
-			$this->db->query($sql . $parent_select . $where . $querymethod . $ordermethod,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-
-			$jobs = array();
-			while ($this->db->next_record())
-			{
-				$jobs[] = array
+				$children[$id] = array
 				(
-					'id'		=> $this->db->f('id'),
-					'name'		=> $this->db->f('name',true),
-					'prefix'	=> $this->db->f('prefix'),
-					'descr'		=> $this->db->f('descr',true),
-					'level'		=> 0,
-					'parent_id'	=> 0
+					'id'			=> $id,
+					'name'			=> $this->db2->f('name'),
+					'prefix'		=> $this->db2->f('prefix'),
+					'descr'			=> $this->db2->f('descr'),
+					'level'			=> (int)$this->db2->f('level'),
+					'parent_id'		=> (int)$this->db2->f('parent_id'),
+					'owner'			=> (int)$this->db2->f('owner'),
+					'location_id'	=> $location_id
 				);
 			}
-
-			if ($querymethod)
+				
+			foreach($children as &$child)
 			{
-				$where = ' AND';
-				$and = ' AND';
-			}
-			else
-			{
-				$where = '';
-				$and = ' AND';
-			}
-			$num_jobs = count($jobs);
-			for ( $i = 0 ; $i < $num_jobs; ++$i )
-			{
-				$sub_select = $and . ' parent_id=' . (int) $jobs[$i]['id'] . " AND level=" . ++$jobs[$i]['level'];
-
-				$this->db->query($sql . $where . $querymethod . $sub_select . $ordermethod,__LINE__,__FILE__);
-
-				$this->total_records += $this->db->num_rows();
-
-				$subjobs = array();
-				while ($this->db->next_record())
+				$child['url']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $menuaction, 'entity_id'=> $entity_id , 'cat_id'=> $child['id'], 'type' => $this->type));
+				$child['text']	= $child['name'];
+				$_children = $this->get_children($entity_id, $child['id'], $level+1, $menuaction);
+				if($_children)
 				{
-					$subjobs[] = array
+					$child['children'] = $_children;
+				}
+			}
+			return $children;
+		} 
+
+
+		public function read_category_tree($entity_id, $menuaction, $required = '')
+		{
+
+			$table = "fm_{$this->type}_category";
+
+			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL)";
+
+			$this->db2->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db2->num_rows();
+
+			$category = array();
+			while ($this->db2->next_record())
+			{
+				$id	= $this->db2->f('id');
+				$location = ".entity.{$entity_id}.{$id}";
+	//			$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
+				if ( !$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])) )
+				{
+					$categories[$id] = array
 					(
-						'id'		=> (int)$this->db->f('id'),
-						'name'		=> $this->db->f('name'),
-						'prefix'	=> $this->db->f('prefix'),
-						'descr'		=> $this->db->f('descr'),
-						'level'		=> (int)$this->db->f('level'),
-						'parent_id'	=> (int)$this->db->f('parent_id'),
-						'owner'		=> (int)$this->db->f('owner')
+						'id'			=> $id,
+						'name'			=> $this->db2->f('name',true),
+						'prefix'		=> $this->db2->f('prefix'),
+						'descr'			=> $this->db2->f('descr',true),
+						'level'			=> 0,
+						'parent_id'		=> 0,
+						'location_id'	=> $location_id
 					);
 				}
-
-				$num_subjobs = count($subjobs);
-				if ($num_subjobs != 0)
-				{
-					$newjobs = array();
-					for ($k = 0; $k <= $i; $k++)
-					{
-						$newjobs[$k] = $jobs[$k];
-					}
-					for ($k = 0; $k < $num_subjobs; $k++)
-					{
-						$newjobs[$k+$i+1] = $subjobs[$k];
-					}
-					for ($k = $i+1; $k < $num_jobs; $k++)
-					{
-						$newjobs[$k+$num_subjobs] = $jobs[$k];
-					}
-					$jobs = $newjobs;
-					$num_jobs = count($jobs);
-				}
-
 			}
 
-			if (!$allrows)
+			foreach($categories as &$category)
 			{
-				$max = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$max = $max + $start;
-
-				$sjobs = array();
-				foreach ( $jobs as $job )
+				$category['url']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $menuaction, 'entity_id'=> $entity_id , 'cat_id'=> $category['id'], 'type' => $this->type));
+				$category['text']	= $category['name'];
+				$children = $this->get_children($entity_id, $category['id'], 0, $menuaction);
+				if ($children)
 				{
-					if ( isset($job) && is_array($job) )
-					{
-						$sjobs[] = $job;
-					}
-				}
-				if ( count($sjobs) )
-				{
-					$jobs = $sjobs;
+					$category['children'] = $children;
 				}
 			}
-
-			_debug_array($jobs);die();
+			return $categories;
 		}
-
 
 
 		function read_single($id)

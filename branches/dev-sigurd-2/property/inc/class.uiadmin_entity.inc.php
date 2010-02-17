@@ -1032,6 +1032,18 @@
 			$this->bo->allrows = true;
 
 			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category($entity_id));
+			if($id)
+			{
+				$k = count($parent_list);
+				for ($i=0; $i<$k; $i++)
+				{
+					if ($parent_list[$i]['id'] == $id)
+					{
+						unset($parent_list[$i]);
+						break;
+					}
+				}
+			}
 
 			$entity_list 	= $this->bo->read(array('allrows' => true));
 

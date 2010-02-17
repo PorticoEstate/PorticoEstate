@@ -87,6 +87,8 @@
 							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
 
+						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute');
+					/*	
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 						foreach($cat_list as $category)
@@ -97,6 +99,7 @@
 								'text'	=> $category['name']
 							);
 						}
+					*/
 					}
 				}
 
@@ -866,6 +869,8 @@
 
 					if ($type != 'horisontal')
 					{
+						$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
+/*
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 						foreach($cat_list as $category)
 						{
@@ -878,6 +883,7 @@
 								);
 							}
 						}
+*/					
 					}
 				}
 			}
