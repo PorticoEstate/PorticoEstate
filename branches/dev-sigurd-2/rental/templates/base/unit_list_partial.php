@@ -85,7 +85,7 @@
 
 	// Initiating the data source
 	setDataSource(
-			'index.php?menuaction=rental.uiunit.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>',
+			'index.php?menuaction=rental.uiunit.query&amp;phpgw_return_as=json<?php echo $url_add_on ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 			columnDefs,
 			'<?php echo $list_id ?>_form',
 			[],
