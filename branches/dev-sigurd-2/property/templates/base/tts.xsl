@@ -750,6 +750,15 @@
 			{
 				Window1=window.open('<xsl:value-of select="request_link"/>');
 			}		
+
+			function template_lookup()
+			{
+				var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+
+				var strURL = phpGWLink('index.php', oArgs);
+
+				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			}
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
@@ -1151,10 +1160,16 @@
 						</tr>
 						<tr>
 							<td valign="top">
-            					<xsl:value-of select="php:function('lang', 'description')" />
+			 					<a href="javascript:template_lookup()" >
+									<xsl:attribute name="title">
+		    			        		<xsl:value-of select="php:function('lang', 'lookup template')" />
+									</xsl:attribute>
+			 						<xsl:value-of select="php:function('lang', 'description')" />
+			 					</a>
+            					
 							</td>
 							<td>
-								<textarea cols="{textareacols}" rows="{textarearows}" name="values[order_descr]" wrap="virtual">
+								<textarea cols="{textareacols}" rows="{textarearows}" id='order_descr' name="values[order_descr]" wrap="virtual">
 									<xsl:attribute name="title">
 		    			        		<xsl:value-of select="php:function('lang', 'description order')" />
 									</xsl:attribute>

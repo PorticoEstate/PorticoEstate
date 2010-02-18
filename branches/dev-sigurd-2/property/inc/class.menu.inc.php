@@ -602,6 +602,19 @@
 				);
 			}
 
+			if ( $acl->check('.ticket.order',PHPGW_ACL_ADD, 'property') )
+			{
+				$menus['navigation']['helpdesk']['children'] = array
+				(
+					'order_template' => array
+					(	
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'order_template') ),
+						'text'	=> lang('order template'),
+						'image'		=> array('property', 'helpdesk')
+					)
+				);
+			}
+
 			if ( $acl->check('.project', PHPGW_ACL_READ, 'property') )
 			{
 				$menus['navigation']['project'] = array

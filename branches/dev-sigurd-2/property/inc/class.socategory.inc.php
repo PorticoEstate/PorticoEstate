@@ -47,14 +47,11 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-			}
+			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$query		= isset($data['query'])?$data['query']:'';
+			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order		= isset($data['order'])?$data['order']:'';
+			$allrows	= isset($data['allrows'])?$data['allrows']:'';
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -106,7 +103,13 @@
 					$i++;
 				}
 			}
-
+			$where = 'WHERE';
+			$filtermethod = '';
+			if(isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
+			{
+				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
+				$where = 'AND';
+			}
 			$this->uicols = $uicols;
 
 			if ($order)
@@ -130,7 +133,7 @@
 				}
 
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " {$where } {$table}.{$this->location_info['id']['name']} = {$id_query}";
 				foreach($this->location_info['fields'] as $field)
 				{
 					if($field['type'] == 'varchar')
@@ -140,7 +143,7 @@
 				}
 			}
 
-			$sql = "SELECT * FROM $table $querymethod";
+			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -1030,6 +1033,49 @@
 						'name'				=> lang('Pending action type'),
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::action_type'
+					);
+
+					break;
+
+				case 'order_template':
+
+					$info = array
+					(
+						'table' 			=> 'fm_order_template',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('order template'),
+						'acl_location' 		=> '.ticket.order',
+						'menu_selection'	=> 'property::helpdesk::order_template',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> true
 					);
 
 					break;
