@@ -666,19 +666,6 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-				/*
-				* FIXME:
-				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
-				* Should be fixed in the js if possible.
-				*/
-/*
-				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
-				if(!$json_get)
-				{
-						phpgwapi_cache::session_set('property', 'workorder_index_json',$json);
-						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 1);
-				}
-*/
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
 		    		return $json;
