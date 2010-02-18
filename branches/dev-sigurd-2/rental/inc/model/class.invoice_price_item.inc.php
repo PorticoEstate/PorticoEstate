@@ -168,82 +168,25 @@
 				// Retrieve the amount: rented area of contract or the number of items (depending on type of price element)
 				$amount = $this->is_area() ? $this->get_area() : $this->get_count();
 				
-				// We have to first _round_ the element price per month (NB! using precision of 4 decimals in mid-calculation)
-				//$rounded_element_price_per_month = $this->get_price() / 12.0; // round($this->get_price() / 12.0, 2);
-				
-				//Alternativ: Round by two
-				//var_dump("Price. " . $this->get_price());
-				//var_dump("Per month " . $this->get_price()/12.0);
-				
-				
-				$rounded_element_price_for_complete_months = round(($this->get_price() * $num_of_complete_months)/12.0,2);
-				//var_dump("Rounded for complete months period " . $rounded_element_price_for_complete_months);
-				
-				// @TODO: FACILIT BILLING LOGIC (TO BE REMOVED IN 2011)
-				//$rounded_element_price_per_month = $this->cut_off_after_two_decimals($rounded_element_price_per_month);
-				
-				// The price per month is the rounded element price multipied by the amount
-				$this->total_price = $rounded_element_price_for_complete_months * $amount;
-				//var_dump("Total price for period " . $this->total_price);
-				
-				// The total price for the complete months are just the monthly price multiplied by the number of months
-				//$this->total_price = $price_per_month * $num_of_complete_months;
-				//var_dump("Total for this price element " . $this->total_price); 
+				// The total price of this price element for complete months
+				$this->total_price = (($this->get_price() * $num_of_complete_months)/12.0) * $amount;
 				
 				// ---- Calculate incomplete months 
 				
-				// We have to first _round_ the element price per year (NB! using precision of 4 decimals in mid-calculation)
-				//$rounded_price_per_year = $this->get_price() * $amount;
-				
-				//Alternativ: Round by two
-				$rounded_price_per_year = round($this->get_price() * $amount, 2);
-				
-				// @TODO: FACILIT BILLING LOGIC (TO BE REMOVED IN 2011)				
-				//$rounded_price_per_year = $this->cut_off_after_two_decimals($rounded_price_per_year);
+				$price_per_year = $this->get_price() * $amount;
 				
 				// Run through all the incomplete months ...
 				foreach($incomplete_months as $day_factors) 
 				{
 					// ... and add the sum of each incomplete month to the total price of the price item
-					// Calculation: Price per day (price per year divided with number of days in year) multiplied with number of days in incomple month
-					$this->total_price += ($rounded_price_per_year / $day_factors[0]) * $day_factors[1];
+					// Calculation: Price per day (price per year divided with number of days in year) multiplied with number of days in incomplete month
+					$this->total_price += ($price_per_year / $day_factors[0]) * $day_factors[1];
 				}
-				// We round the total price for each price item with the sepcified number of decimals precision
+				// We round the total price for each price item with the specified number of decimals precision
 				$this->total_price = round($this->total_price, $this->decimals);
 			}
 			return $this->total_price;
 		}
-		
-		private function round_half_down($number)
-		{
-			//var_dump($number);
-			$parts = explode(".",$number);
-			if(count($parts) == 2){
-				$integer = $parts[0];
-				$decimals = $parts[1];
-				if(strlen($decimals) > 2)
-				{
-					$first = substr($decimals,0,1);
-					$second = substr($decimals,1,1);
-					$third = substr($decimals,2,1);
-					$fourth = substr($decimals,2,1);
-				 	if($third < 5)
-				 	{
-				 		return $integer . "." . $first . $second;
-				 	}
-				 	else if($third == 5)
-				 	{
-				 		if($fourth && $fourth <= 5)
-				 		{
-				 			return $integer . "." . $first . $second;	
-				 		}
-				 	}
-				 	return $integer . "." . $first . ($second+1);
-				}
-			}
-			return $number;
-		}
-		
 		
 		public function set_timestamp_start(int $timestamp_start)
 		{
