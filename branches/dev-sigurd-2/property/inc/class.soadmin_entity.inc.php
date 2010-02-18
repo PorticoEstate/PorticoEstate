@@ -197,9 +197,7 @@
 		*/
 
 		protected function get_children($entity_id, $parent, $level, $menuaction)
-		{
-			// retrieve all children of $parent
-			
+		{	
 			$table = "fm_{$this->type}_category";
 			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent}";
 			$this->db2->query($sql,__LINE__,__FILE__);
@@ -282,6 +280,31 @@
 			return $categories;
 		}
 
+		/**
+		* used for retrive the pathe for a particular node from a hierarchy
+		*
+		* @param integer $entity_id Entity id
+		* @param integer $node is the id of the node we want the path of
+		* @return array $path Path
+		*/
+
+		public function get_path($entity_id, $node)
+		{
+			$table = "fm_{$this->type}_category";
+			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND id = {$node}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$parent_id = $this->db->f('parent_id');
+			$name = $this->db->f('name', true);
+			$path = array($name);
+			if ($parent_id)
+			{
+				$path = array_merge($this->get_path($entity_id, $parent_id), $path);
+			}
+			return $path;
+		}
 
 		function read_single($id)
 		{

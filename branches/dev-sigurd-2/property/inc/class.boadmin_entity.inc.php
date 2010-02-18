@@ -558,5 +558,9 @@
 			}
 			return $GLOBALS['phpgw']->custom_functions->get($this->type_app[$this->type],$location,$id);
 		}
-	}
 
+		function get_path($entity_id, $node)
+		{
+			return $this->so->get_path($entity_id, $node);
+		}
+	}

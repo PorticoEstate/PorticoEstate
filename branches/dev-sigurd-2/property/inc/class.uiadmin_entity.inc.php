@@ -1099,7 +1099,7 @@
 				'myColumnDefs'						=> $myColumnDefs,
 
 				'lang_entity'						=> lang('entity'),
-				'entity_name'						=> $entity['name'],
+				'entity_name'						=> $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_prefix_standardtext'			=> lang('Enter a standard prefix for the id'),
 				'lang_name_standardtext'			=> lang('Enter a name of the standard'),
