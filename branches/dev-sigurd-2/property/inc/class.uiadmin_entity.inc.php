@@ -1031,16 +1031,24 @@
 			$entity = $this->bo->read_single($entity_id,false);
 			$this->bo->allrows = true;
 
-			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category($entity_id));
+			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category_tree2($entity_id));
+
 			if($id)
 			{
+				$exclude = array($id);
+				$children = $this->bo->get_children2($entity_id, $id, 0,true);
+
+				foreach($children as $child)
+				{
+					$exclude[] = $child['id']; 
+				}
+
 				$k = count($parent_list);
 				for ($i=0; $i<$k; $i++)
 				{
-					if ($parent_list[$i]['id'] == $id)
+					if (in_array($parent_list[$i]['id'],$exclude))
 					{
 						unset($parent_list[$i]);
-						break;
 					}
 				}
 			}
@@ -1099,7 +1107,7 @@
 				'myColumnDefs'						=> $myColumnDefs,
 
 				'lang_entity'						=> lang('entity'),
-				'entity_name'						=> $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)),
+				'entity_name'						=> $id ? $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)) : $entity['name'],
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_prefix_standardtext'			=> lang('Enter a standard prefix for the id'),
 				'lang_name_standardtext'			=> lang('Enter a name of the standard'),

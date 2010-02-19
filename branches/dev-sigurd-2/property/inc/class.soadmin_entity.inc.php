@@ -39,6 +39,7 @@
 		var $type_app;
 		var $bocommon;
 		private $move_child = array();
+		public $category_tree = array();
 
 		function __construct($entity_id='', $cat_id='', $bocommon = '')
 		{
@@ -187,6 +188,63 @@
 		}
 
 
+		function get_children2($entity_id, $parent, $level, $reset = false)
+		{
+			if($reset)
+			{
+				$this->category_tree = array();
+			}
+			$table = "fm_{$this->type}_category";
+			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent}";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$id	= $this->db->f('id');
+				$this->category_tree[] = array
+				(
+					'id'		=> $id,
+					'name'		=> str_repeat('..',$level).$this->db->f('name'),
+					'parent_id'	=> $this->db->f('parent_id')
+				);
+	   			$this->get_children2($entity_id, $id, $level+1);
+			}
+			return $this->category_tree;
+		} 
+
+		public function read_category_tree2($entity_id)
+		{
+			$table = "fm_{$this->type}_category";
+
+			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL)";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$this->category_tree = array();
+			while ($this->db->next_record())
+			{
+				$id	= $this->db->f('id');
+				$categories[$id] = array
+				(
+					'id'			=> $id,
+					'name'			=> $this->db->f('name',true),
+					'parent_id'		=> 0
+				);
+			}
+
+			foreach($categories as $category)
+			{
+				$this->category_tree[] = array
+				(
+					'id'	=> $category['id'],
+					'name'	=> $category['name']
+				);
+				$this->get_children2($entity_id, $category['id'], 1);
+			}
+			return $this->category_tree;
+		}
+
+
 		/**
 		* used for retrive a child-node from a hierarchy
 		*
@@ -238,7 +296,6 @@
 
 		public function read_category_tree($entity_id, $menuaction, $required = '')
 		{
-
 			$table = "fm_{$this->type}_category";
 
 			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL)";
