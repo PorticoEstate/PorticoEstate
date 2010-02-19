@@ -213,13 +213,14 @@
 										  )
 				);
 			}
-
+	
 			$uicols = array (
-				'input_type'	=>	array('text','text'),
-				'name'			=>	array('contact_id','contact_name','is_user'),
-				'sort_field'	=>	array('person_id','last_name'),
-				'formatter'		=>	array('','',''),
-				'descr'			=>	array(lang('ID'),lang('Name'), lang('is user'))
+				'input_type'	=>	array('text','text','text','text','text'),
+				'name'			=>	array('contact_id','contact_name','email','wphone','is_user'),
+				'sort_field'	=>	array('person_id','last_name','','',''),
+				'sortable'		=>	array(true,true,false,false,false),
+				'formatter'		=>	array('','','','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'), lang('is user'))
 			);
 
 			$addressbook_list = array();
@@ -256,7 +257,7 @@
 				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= true;
+				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
 				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['sort_field'][$i];
 			}
 
