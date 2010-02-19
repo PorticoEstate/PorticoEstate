@@ -469,12 +469,12 @@
 			}
 			
 			$comm_preferred = $fields['tab_comms']['preferred'];
-			
+//_debug_array($fields);die();			
 			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
 			@$this->upgrade_comms($fields['edit_comms']['insert'], 
 					     $fields['edit_comms']['delete'], 
 					     $fields['edit_comms']['edit'],
-			    	     $fields['comm_data'], $comm_preferred, $person_id);
+			    	     $fields['tab_comms']['comm_data'], $comm_preferred, $person_id);
 
 			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
 			@$this->upgrade_others($fields['edit_others']['insert'],
@@ -886,7 +886,6 @@
 			{
 				$data = array();
 			}
-			
 			$this->edit_comms_by_contact($contact_id, array('comm_preferred'=>'N'), PHPGW_SQL_RUN_SQL);
 			foreach($data as $key => $value)
 			{
