@@ -676,6 +676,9 @@ class rental_socontract extends rental_socommon
 		$cols[] = 'adjustable';
 		$values[] = ($contract->get_adjustable() ? "true" : "false");
 		
+		$cols[] = 'adjustment_year';
+		$values[] = $this->marshal($contract->get_adjustment_year(),'int');
+		
 		
 		if ($contract->get_security_type()) {
 			$cols[] = 'security_type';
