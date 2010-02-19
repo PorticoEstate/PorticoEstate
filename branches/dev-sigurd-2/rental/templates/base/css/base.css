@@ -425,3 +425,7 @@ p.message {
 .paginator {
 	margin-left: 1em !important;
 }
+
+th.yui-dt-sortable div{
+	background: url("phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0pt -100px rgb(216, 216, 218);
+}
