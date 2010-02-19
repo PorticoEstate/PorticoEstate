@@ -521,7 +521,8 @@ class rental_uibilling extends rental_uicommon
 				$type = 'faktura';
 			}
 			$date = date('Ymd', $stop);
-			header("Content-Disposition: attachment; filename='PE_{$type}_{$date}.{$file_ending}'");
+			header('Content-type: text/plain');
+			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
 			print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
 		}
 		else{
