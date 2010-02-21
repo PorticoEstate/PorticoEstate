@@ -40,6 +40,16 @@
 				(
 					'text'	=> lang('show'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rentalfrontend.uicontract.show'))
+				),
+				'demo_tab'	=> array
+				(
+					'text'	=> 'Demo Tabs',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rentalfrontend.ui_demo_tabs.first'))
+				),
+				'demo_tab_noframework'	=> array
+				(
+					'text'	=> 'Demo Tabs noframework',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rentalfrontend.ui_demo_tabs.first', 'noframework' => true))
 				)
 			);
 
