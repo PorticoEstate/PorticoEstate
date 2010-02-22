@@ -1077,7 +1077,8 @@ class uiaddressbook
 		$fields['owner'] = isset($fields['owner']) ? $fields['owner'] : $this->owner;
 		if ($this->bo->check_delete($this->contact_id))
 		{
-			$delete = '<input type="submit" name="delete" value="' . lang('Delete') . '">';
+	//		$delete = '<input type="submit" name="delete" value="' . lang('Delete') . '">';
+			$delete = '<input type="button" name="button3" onclick="submit_form(\'delete\')" value="' . lang('Delete') . '">';
 		}
 
 		$this->template->set_file(array('form' => 'form.tpl'));
@@ -1897,6 +1898,22 @@ class uiaddressbook
 			$this->submit = 'delete';
 			$this->firsttime = false;
 		}
+		elseif(phpgw::get_var('_submit') == 'submit')
+		{
+			$this->submit = 'save';
+			$this->firsttime = false;
+		}
+		elseif(phpgw::get_var('_submit') == 'cancel')
+		{
+			$this->submit = 'cancel';
+			$this->firsttime = false;
+		}
+		elseif(phpgw::get_var('_submit') == 'delete')
+		{
+			$this->submit = 'delete';
+			$this->firsttime = false;
+		}
+
 
 		//set add/edit/delete action
 		if(phpgw::get_var('address_add_row'))
