@@ -1,6 +1,6 @@
 <?php
 	$setup_info['frontend']['name'] = 'frontend';
-	$setup_info['frontend']['version'] = '0.1';
+	$setup_info['frontend']['version'] = '0.9.17.500';
 	$setup_info['frontend']['app_order'] = 9;
 //	$setup_info['frontend']['tables'] = array();
 	$setup_info['frontend']['enable'] = 1;
