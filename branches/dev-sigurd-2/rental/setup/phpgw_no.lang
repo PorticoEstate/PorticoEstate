@@ -300,6 +300,7 @@ object_number	rental	no	Objektnummer
 objno_name_address	rental	no	Objektnummer/navn/adresse
 occupied	rental	no	Opptatt
 of_total	rental	no	av totalt
+ok	rental	no	Ok
 old_contract_id	rental	no	Gammelt kontraktsnummer
 ODS	rental	no	ODS
 One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
@@ -384,6 +385,7 @@ security	rental	no	Sikkerhet
 security_amount	rental	no	Sikkerhetsbeløp
 security_amount_not_numeric	rental	no	Sikkerhetsbeløp må være et tall
 select_date	rental	no	Velg dato
+select_date_valid_year	rental	no	Vennligst velg et gyldig år
 selected_composites	rental	no	Valgte leieobjekter
 selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer
