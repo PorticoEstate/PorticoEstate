@@ -194,6 +194,7 @@ import_log_messages	rental	no	Import log
 import_reset	rental	no	Nullstill importstatus
 in_operation	rental	no	I drift
 inactive_party	rental	no	Kontraktspart er inaktiv
+inactive	rental	no	Inaktiv
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
 interval	rental	no	Intervall
