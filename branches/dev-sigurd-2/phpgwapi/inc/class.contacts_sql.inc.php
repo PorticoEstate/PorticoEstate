@@ -66,6 +66,7 @@
 		var $total_records = 0;
 		var $grants;
 		protected $global_lock = false;
+		protected $local_lock = false;
 		/**
 		* All exporteds fields
 		*
@@ -2394,7 +2395,7 @@
 			}
 			else
 			{
-				$this->lock_table($this->contact->table);
+				$this->lock_table($this->contact->table, '', true);
 			}
 
 			$this->contact->insert(array
@@ -2480,7 +2481,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->org->table);
+					$this->lock_table($this->org->table, '', true);
 				}
 			}
 
@@ -2513,7 +2514,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->person->table);
+					$this->lock_table($this->person->table, '', true);
 				}
 			}
 
@@ -2571,7 +2572,7 @@
 					}
 					else
 					{
-						$this->lock_table($this->relations->table);
+						$this->lock_table($this->relations->table, '', true);
 					}
 				}
 				$sql[] = $this->_add($data,'relations', 'my_org_id', $cid, $action);
@@ -2618,7 +2619,7 @@
 						}
 						else
 						{
-							$this->lock_table($this->relations->table);
+							$this->lock_table($this->relations->table, '', true);
 						}
 					}
 					$sql[] = $this->_add($data,'relations', 'my_person_id', $cid, $action);
@@ -2648,7 +2649,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->location->table);
+					$this->lock_table($this->location->table, '', true);
 				}
 			}
 			if(count($addr[0]) == 0)
@@ -2682,13 +2683,13 @@
 			$this->comm = createObject('phpgwapi.contact_comm');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->Transaction && !$this->local_lock)
 				{
 					$this->global_lock = true;
 				}
 				else
 				{
-					$this->lock_table($this->comm->table);
+					$this->lock_table($this->comm->table, '', true);
 				}
 			}
 
@@ -2721,7 +2722,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->note->table);
+					$this->lock_table($this->note->table, '', true);
 				}
 			}
 
@@ -2754,7 +2755,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->others->table);
+					$this->lock_table($this->others->table, '', true);
 				}
 			}
 
@@ -2929,7 +2930,7 @@
 			}
 			else
 			{
-				$this->lock_table($relations->table);
+				$this->lock_table($relations->table, '', true);
 			}
 
 			$criteria = $relations->entity_criteria(phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('my_org_id', $org_id),
@@ -3935,7 +3936,7 @@
 					}
 					else
 					{
-						$this->lock_table($this->relations->table);
+						$this->lock_table($this->relations->table, '', true);
 					}
 
 					$data['my_creaton'] = $this->get_mkdate();
@@ -3969,7 +3970,7 @@
 						}
 						else
 						{
-							$this->lock_table($this->relations->table);
+							$this->lock_table($this->relations->table, '', true);
 						}
 
 						$data['my_creaton'] = $this->get_mkdate();
@@ -4075,13 +4076,17 @@
 			return $this->db->get_last_insert_id($this->$entity->table, $this->$entity->real_field($field));
 		}
 
-		function lock_table($table, $action=PHPGW_SQL_RUN_SQL)
+		function lock_table($table, $action=PHPGW_SQL_RUN_SQL, $local_lock = false)
 		{
 			if ( ( !isset($this->locked[$table]) || !$this->locked[$table] )
 				&& $action == PHPGW_SQL_RUN_SQL)
 			{
 				$this->db->lock($table);
 				$this->locked[$table] = TRUE;
+				if($local_lock)
+				{
+					$this->local_lock = true;
+				}
 			}
 		}
 
@@ -4092,6 +4097,13 @@
 		*/
 		function unlock_table()
 		{
+			if(!$this->global_lock && $this->db->Transaction)
+			{
+				$this->db->transaction_commit();				
+				$this->locked = NULL;
+			}
+			
+/*
 			$this->ldebug('unlock_table', array($this->locked), 'dump');
 			if(count($this->locked))
 			{
@@ -4102,6 +4114,8 @@
 				}
 				$this->locked = NULL;
 			}
+
+*/
 		}
 
 		/**
