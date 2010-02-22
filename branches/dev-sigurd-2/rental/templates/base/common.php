@@ -551,7 +551,6 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 				cancel: "<?php echo lang('cancel') ?>",
 				invalidYear: "<?php echo lang('select_date_valid_year') ?>"
 				},
-				monthFormat: YAHOO.widget.Calendar.SHORT,
 				initialFocus: "month"
 			}
 	
