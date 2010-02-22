@@ -15,10 +15,6 @@
     $GLOBALS['phpgw_info']['menuaction'] = phpgw::get_var('menuaction');
 
 
-/////////////////////////////////////////////////////////////////////////////
-// END Stuff copied from functions.inc.php
-/////////////////////////////////////////////////////////////////////////////
-
     if (isset($_GET['menuaction']))
 	{
 		list($app,$class,$method) = explode('.',$_GET['menuaction']);

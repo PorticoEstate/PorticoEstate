@@ -1,6 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div id="content">
-        Hello world
+        KontraktID: <xsl:value-of select="id" />
     </div>
 </xsl:template>
 
+<xsl:

@@ -29,7 +29,12 @@
             {
             	$contract = rental_socontract::get_instance()->get_single($cid);
             }
-            rentalfrontend_uicommon::render_template(array('contract'), $this->contract);
+            //print_r($contract);
+            $tpldata = array(); // Collect all contracts as arrays in this
+            $tpldata[] = array(
+                'id' => $contract->get_id()
+            );
+            rentalfrontend_uicommon::render_template(array('contract'), $tpldata);
             //_debug_array($contract);
         }
 
