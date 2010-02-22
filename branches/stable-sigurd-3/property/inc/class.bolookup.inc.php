@@ -116,14 +116,21 @@
 			}
 
 			$limit		= $this->allrows ? 0 : $limit;
-		    $fields[0] = 'per_first_name';
-		    $fields[1] = 'per_last_name';
-		    $fields[2] = 'per_department';
-		    $fields[3] = 'per_title';
-		    $fields[4] = 'addr_add1';
-		    $fields[5] = 'addr_city';
-		    $fields['owner'] = 'owner';
-		    $fields['contact_id'] = 'contact_id';
+
+		    $fields = array
+		    (
+	//	    	'fn',
+	//	    	'tel_work',
+	//	    	'email',
+		    	'per_first_name',
+		    	'per_last_name',
+	//	    	'per_department',
+	//	    	'per_title',
+	//	    	'addr_add1',
+	//	    	'addr_city',
+		    	'owner',
+		    	'contact_id',
+		    );
 
 			if($this->cat_id && $this->cat_id != 0)
 			{
@@ -153,6 +160,13 @@
 			}
 			foreach($contacts as &$contact)
 			{
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+
+				if ( is_array($comms) && count($comms) )
+				{
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+				}
 				if (in_array($contact['contact_id'], $user_contacts) )
 				{
 					$contact['is_user'] = 'X';

@@ -3972,3 +3972,60 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.580 to 0.9.17.581
+	* Add optional hierarchy on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.580';
+	function property_upgrade0_9_17_580()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','parent_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','level', array('type' => 'int','precision' => '4','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.581';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.581 to 0.9.17.582
+	* Add templates to Ad Hoc Orders
+	* 
+	*/
+
+	$test[] = '0.9.17.581';
+	function property_upgrade0_9_17_581()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_order_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'content' => array('type' => 'text','nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.582';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

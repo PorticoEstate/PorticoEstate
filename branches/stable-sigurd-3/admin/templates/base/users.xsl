@@ -284,13 +284,34 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-			<input type="checkbox" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
-				<xsl:choose>
-					<xsl:when test="selected != ''">
-						<xsl:attribute name="checked" value="checked" />
-					</xsl:when>
-				</xsl:choose>
-			</input>
+			<xsl:choose>
+				<xsl:when test="i_am_admin = 1">
+					<input type="checkbox" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
+						<xsl:choose>
+							<xsl:when test="selected != ''">
+								<xsl:attribute name="checked" value="checked" />
+							</xsl:when>
+						</xsl:choose>
+					</input>
+				</xsl:when>
+				<xsl:otherwise>
+					<input type="checkbox" readonly='true'>
+						<xsl:choose>
+							<xsl:when test="selected != ''">
+								<xsl:attribute name="checked" value="checked" />
+							</xsl:when>
+						</xsl:choose>
+					</input>
+					<input type="hidden" id="account_groups{account_id}" name="account_groups[]">
+						<xsl:if test="selected != ''">
+							<xsl:attribute name="value">
+								<xsl:value-of select="account_id"/>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</xsl:otherwise>
+			</xsl:choose>
+
 			<xsl:value-of select="account_lid"/>
 		</li>
 	</xsl:template>
@@ -313,24 +334,62 @@
 				<xsl:value-of select="app_title"/>
 
 			</td>
-			<td>
-			<input type="checkbox" id="{checkbox_name}" name="{checkbox_name}" value="1">
-				<xsl:choose>
-					<xsl:when test="checked = '1'">
-						<xsl:attribute name="checked" value="checked" />
-					</xsl:when>
-				</xsl:choose>
-			</input>
-			</td>
-			<td>
-			<input type="checkbox" id="{checkbox_name_admin}" name="{checkbox_name_admin}" value="2">
-				<xsl:choose>
-					<xsl:when test="checked_admin = '1'">
-						<xsl:attribute name="checked" value="checked" />
-					</xsl:when>
-				</xsl:choose>
-			</input>
-			</td>
+			<xsl:choose>
+				<xsl:when test="i_am_admin = 1">
+					<td>
+						<input type="checkbox" id="{checkbox_name}" name="{checkbox_name}" value="1">
+							<xsl:choose>
+								<xsl:when test="checked = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+					</td>
+					<td>
+						<input type="checkbox" id="{checkbox_name_admin}" name="{checkbox_name_admin}" value="2">
+							<xsl:choose>
+								<xsl:when test="checked_admin = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+					</td>
+				</xsl:when>
+				<xsl:otherwise>
+					<td>
+						<input type="checkbox" readonly='true'>
+							<xsl:choose>
+								<xsl:when test="checked = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<input type="hidden" id="{checkbox_name}" name="{checkbox_name}">
+							<xsl:if test="checked = '1'">
+								<xsl:attribute name="value">
+									<xsl:text>1</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+					<td>
+						<input type="checkbox" readonly='true'>
+							<xsl:choose>
+								<xsl:when test="checked_admin = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<input type="hidden" id="{checkbox_name_admin}" name="{checkbox_name_admin}">
+							<xsl:if test="checked_admin = '1'">
+								<xsl:attribute name="value">
+									<xsl:text>2</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+				</xsl:otherwise>
+			</xsl:choose>
 		</tr>
 	</xsl:template>
 

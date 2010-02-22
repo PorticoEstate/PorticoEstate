@@ -1502,7 +1502,9 @@
 				'loc_link' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_project' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True),
-				'jasperupload' => array('type' => 'int','precision' => '2','nullable' => True)
+				'jasperupload' => array('type' => 'int','precision' => '2','nullable' => True),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'level' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('entity_id','id'),
 			'fk' => array(),
@@ -1717,7 +1719,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
+		'fm_order_template' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'content' => array('type' => 'text','nullable' => True),
+				'public' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_s_agreement' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),

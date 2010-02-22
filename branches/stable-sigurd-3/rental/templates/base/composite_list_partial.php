@@ -1,4 +1,15 @@
 <script type="text/javascript">
+	//Add listener resetting form: redirects browser to call index  again
+	YAHOO.util.Event.addListener(
+		'ctrl_reset_button',
+		'click',
+		function(e)
+		{
+			YAHOO.util.Event.stopEvent(e);
+	 		window.location = 'index.php?menuaction=rental.uicomposite.index';
+		}
+		);
+
 	// Defining columns for datatable
 	var columnDefs = [{
 			key: "id",

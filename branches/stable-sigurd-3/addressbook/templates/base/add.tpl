@@ -1,15 +1,18 @@
 
 <!-- BEGIN add -->
-   <table border="0" cellPadding="0" cellSpacing="0" width="77%">
+   <table align = 'center' border="0" cellPadding="0" cellSpacing="0" width="77%">
     <tr> 
 
      <td width="10%"> 
-      <input type="submit" name="submit" value="{lang_save}" {js_submit}>&nbsp;
+   <!-- <input type="submit" name="submit" value="{lang_save}" {js_submit}>&nbsp;-->
+     <input type="button" name="button1" onclick="submit_form('submit')" value="{lang_save}">&nbsp;
+	<!--<li class="{tab_css}"><a href="javascript:changetab('{tab_caption}')"><em>{tab_caption}</em></a></li>-->
      </td>
 
 
      <td width="10%">
-      <input type="submit" name="cancel" value="{lang_cancel}" {js_submit}>
+     <!-- <input type="submit" name="cancel" value="{lang_cancel}" {js_submit}>-->
+      <input type="button" name="button2" onclick="submit_form('cancel')" value="{lang_cancel}">
      </td>
 
      <td width="60%">

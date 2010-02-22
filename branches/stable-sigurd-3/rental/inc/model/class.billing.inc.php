@@ -66,9 +66,19 @@ class rental_billing extends rental_model
 	
 	public function get_year(){ return $this->year; }
 	
+	public function set_year($year)
+	{
+		$this->year = $year;
+	}
+	
 
 	public function get_month(){ return $this->month; }
 
+	public function set_month($month)
+	{
+		$this->month = $month;
+	}
+	
 	public function get_total_sum(){ return $this->total_sum; }
 	
 	public function set_timestamp_start(int $timestamp_start)

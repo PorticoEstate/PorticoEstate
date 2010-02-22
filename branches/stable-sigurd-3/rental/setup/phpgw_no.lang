@@ -70,6 +70,7 @@ calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli"
 calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 cancel	rental	no	Avbryt
 close	rental	no	Lukk
+clear	rental	no	Nullstill
 closing_due_date	rental	no	Nær opsjonsfrist
 CSV	rental	no	CSV
 comment	rental	no	Kommentar
@@ -116,6 +117,7 @@ create_shortcut	rental	no	Ny snarvei
 create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
 create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
 create_contract_contract_type_internleie	rental	no	Opprett internleiekontrakt
+cs15_export	rental	no	Kundefil
 currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
 currency suffix	rental	no	Valuta suffix
@@ -182,6 +184,7 @@ frontpage_reset_setup	rental	no	Nullstill oppsett
 f_select_columns	rental	no	Velg kolonner
 gab	rental	no	GAB
 Generate export	rental	no	Generér eksport
+Generate cs15	rental	no	Generér kundefil
 half-year	rental	no	Halvårig
 has_custom_address	rental	no	Er adressen overstyrt?
 house_number	rental	no	Husnummer
@@ -191,10 +194,12 @@ import_log_messages	rental	no	Import log
 import_reset	rental	no	Nullstill importstatus
 in_operation	rental	no	I drift
 inactive_party	rental	no	Kontraktspart er inaktiv
+inactive	rental	no	Inaktiv
 included_units	rental	no	Leieobjektets enheter
 internal	rental	no	Interne kontraktsparter
 interval	rental	no	Intervall
 Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
+invoice	rental	no	Faktura
 invoice_run	rental	no	Fakturakjøring
 invoice_menu	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
@@ -296,6 +301,7 @@ object_number	rental	no	Objektnummer
 objno_name_address	rental	no	Objektnummer/navn/adresse
 occupied	rental	no	Opptatt
 of_total	rental	no	av totalt
+ok	rental	no	Ok
 old_contract_id	rental	no	Gammelt kontraktsnummer
 ODS	rental	no	ODS
 One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
@@ -314,7 +320,7 @@ parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
 party	rental	no	Kontraktspart
 party_back	rental	no	Kontraktspartliste
-party_location	rental	no	Intern organisasjonstihørighet
+party_location	rental	no	Intern organisasjonstilhørighet
 party_type	rental	no	Type kontraktspart
 percent	rental	no	Prosent
 period	rental	no	Periode
@@ -380,6 +386,7 @@ security	rental	no	Sikkerhet
 security_amount	rental	no	Sikkerhetsbeløp
 security_amount_not_numeric	rental	no	Sikkerhetsbeløp må være et tall
 select_date	rental	no	Velg dato
+select_date_valid_year	rental	no	Vennligst velg et gyldig år
 selected_composites	rental	no	Valgte leieobjekter
 selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer

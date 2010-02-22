@@ -290,8 +290,7 @@
 				//Removed whitespace characters
 				$identifier = str_replace(' ','',''.$identifier);
 				
-				// Fødselsnr/Foretaksnr/AgressoID
-				$party->set_identifier($identifier);		
+					
 				
 				// Default information
 				$party->set_address_1($this->decode($data[3]));			//cAdresse1
@@ -342,6 +341,29 @@
                     		$valid_identifier = true;
                     	}
                     	break;
+                    case 5: //Internal, Should be a result unit on the form 'Rxxxx'
+                    	if((substr($identifier,0,1) == 'R') && is_numeric(substr($identifier,1,4)))
+                    	{
+                    		$identifier = substr($identifier,1,4);
+                    		
+                    		$party->set_company_name($this->decode($data[2]));	//cForetaksnavn
+	                        $party->set_first_name(null);
+	                        $party->set_last_name(null);
+	                        
+	                        // Get location ID
+	                        $locations = $GLOBALS['phpgw']->locations;
+	                        $subs = $locations->get_subs_from_pattern('rental', '.ORG.BK.__.'.$identifier);	//cPersonForetaknr
+	                        if(count($subs) > 0)
+	                        {
+	                        	$party->set_location_id($subs[0]['location_id']);
+	                        }
+	                        else
+	                        {
+	                        	$this->warnings[] = "Party with valid identifier ({$identifier}- original R{$identifier}) not found in internal organisation tree.";
+	                        }
+                    		$valid_identifier = true;
+                    	}
+                    	break;
                     case 6: // Foretak (agresso-id)
                     case 9: // Foretak (org.nr)
                     	if(is_numeric($identifier))
@@ -378,6 +400,9 @@
                     $party->set_is_inactive(true);
                     $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";
                 }
+                
+                	// Fødselsnr/Foretaksnr/AgressoID
+				$party->set_identifier($identifier);
 
 				// Store party and log message
 				if ($soparty->store($party)) 

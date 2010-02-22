@@ -79,7 +79,7 @@
 			(<a href="javascript: void(0)" 
 				onclick="window.open('{application/schedule_link}', 
 					     '', 
-						   'width=1000, height=600'); 
+						   'width=1000, height=600, scrollbars=yes');
 						      return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)</dd>
             <dd><div id="resources_container"/></dd>
         </dl>

@@ -57,6 +57,9 @@ class rental_socontract extends rental_socommon
 		else if ($sort_field == 'composite'){
 			$sort_field = "composite.name";
 		}
+		else if ($sort_field == 'type'){
+			$sort_field = 'contract.location_id';
+		}
 		
 		//Contracts for billing should always be sorted on biling start
 		if(isset($filters['contracts_for_billing']))
@@ -672,6 +675,9 @@ class rental_socontract extends rental_socommon
 		
 		$cols[] = 'adjustable';
 		$values[] = ($contract->get_adjustable() ? "true" : "false");
+		
+		$cols[] = 'adjustment_year';
+		$values[] = $this->marshal($contract->get_adjustment_year(),'int');
 		
 		
 		if ($contract->get_security_type()) {

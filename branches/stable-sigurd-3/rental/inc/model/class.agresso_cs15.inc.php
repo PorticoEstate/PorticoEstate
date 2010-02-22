@@ -17,7 +17,7 @@ class rental_agresso_cs15 implements rental_exportable
 	 */
 	public function get_id()
 	{
-		return 'Agresso GL07';
+		return 'Agresso CS15';
 	}
 	
 	/**

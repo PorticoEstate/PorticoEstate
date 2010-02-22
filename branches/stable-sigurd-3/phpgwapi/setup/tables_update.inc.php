@@ -2608,7 +2608,7 @@
 
 	$test[] = '0.9.17.524';
 	/**
-	* Restore support for anonymous sessions.
+	* support per application admin
 	*
 	* @return string the new version number
 	*/
@@ -2634,3 +2634,4 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+

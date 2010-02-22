@@ -56,6 +56,8 @@
 			$granting_group	= phpgw::get_var('granting_group');
 			$allrows	= phpgw::get_var('allrows');
 
+			$this->allrows = $allrows ? $allrows : '';
+
 			if ($start)
 			{
 				$this->start=$start;
@@ -101,10 +103,6 @@
 			{
 				$this->granting_group = $granting_group;
 			}
-			if(isset($allrows))
-			{
-				$this->allrows = $allrows;
-			}
 		}
 
 
@@ -120,7 +118,6 @@
 			$this->cat_id		= $data['cat_id'];
 			$this->location		= $data['location'];
 			$this->granting_group	= $data['granting_group'];
-			$this->allrows	= $data['allrows'];
 		}
 
 		function save_sessiondata($data)
@@ -322,11 +319,20 @@
 			{
 				$check_account_type = array('accounts');
 				$acl_account_type = 'accounts';
+				$valid_users	= $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $this->acl_app);
 			}
 			else
 			{
 				$check_account_type = array('groups','accounts');
 				$acl_account_type = 'both';
+				$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $this->acl_app);
+				$valid_users = array();
+				foreach($_valid_users as $_user)
+				{
+					$valid_users[] = $_user['account_id'];
+				}
+				unset($_user);
+				unset($_valid_users);
 			}
 
 			$grantor = -1;
@@ -344,14 +350,32 @@
 
 			$right=$this->right;
 
-			$offset = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, -1,$this->sort, $this->order, $this->query);
+
+//_debug_array($type);die();
+//_debug_array($valid_users);die();
+			//$allusers	= array_intersect_key($allusers, $valid_users);
+
+			foreach($allusers as  $user)
+			{
+				if(!in_array($user->id, $valid_users))
+				{
+					unset($allusers[$user->id]);
+				}
+			}
+			unset($user);
+			reset($allusers);
+
+			$this->total_records = count($allusers);
+			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
 			if ($this->allrows)
 			{
-				$this->start = -1;
-				$offset = -1;
+				$this->start = 0;
+				$length = $this->total_records;
 			}
 
-			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, $this->start,$this->sort, $this->order, $this->query, $offset);
+			$allusers = array_slice($allusers, $this->start , $length, true);
 
 			if ( isset($allusers) && is_array($allusers))
 			{
@@ -397,8 +421,6 @@
 					$j++;
 				}
 			}
-
-			$this->total_records = $GLOBALS['phpgw']->accounts->total;
 
 			return $user_list;
 		}

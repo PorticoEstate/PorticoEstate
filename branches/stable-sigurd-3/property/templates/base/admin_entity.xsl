@@ -359,7 +359,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+			<form  name="form" method="post" action="{$form_action}">
 			<tr>
 				<td class="th_text" align="left">
 					<xsl:value-of select="lang_entity"/>
@@ -368,6 +368,21 @@
 					<xsl:value-of select="entity_name"/>
 				</td>
 			</tr>
+			<xsl:choose>
+				<xsl:when test="parent_list != ''">
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'parent')" />
+						</td>
+						<td valign="top">
+							<select id="parent_id" name="values[parent_id]">
+								<option value=""><xsl:value-of select="php:function('lang', 'select parent')" /></option>
+								<xsl:apply-templates select="parent_list"/>
+							</select>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_id != ''">
 					<tr>
@@ -1866,6 +1881,17 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="parent_list">
+		<xsl:choose>
+			<xsl:when test="selected">
+				<option value="{id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+			</xsl:when>
+			<xsl:otherwise>
+				<option value="{id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

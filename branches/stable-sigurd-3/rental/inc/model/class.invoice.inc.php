@@ -263,7 +263,11 @@
 				if(isset($account_tmp) && $account_tmp != '')
 				{
 					$account_out = $account_tmp;
-				}	
+				}
+				else
+				{
+					$account_out = rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+				}
 			}
 			
 			// Create invoice ...

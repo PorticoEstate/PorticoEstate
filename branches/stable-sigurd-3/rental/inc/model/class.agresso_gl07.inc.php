@@ -208,13 +208,13 @@ class rental_agresso_gl07 implements rental_exportable
 			.$this->date_str											// 26	voucher_date
 			.sprintf("%015s", '')										// 27	voucher_no
 			.sprintf("%04.4s", $bill_year).sprintf("%02.2s", $bill_month)	// 28	period
-			.sprintf("%-8s", '')										// 29
-			.sprintf("%-8s", '')										// 30
-			.sprintf("%-8s", '')										// 31
+			.sprintf("%-1s", '')										// 29
+			.sprintf("%-100s", '')										// 30
+			.sprintf("%-255s", '')										// 31
 			.sprintf("%-8s", '')										// 32
 			.sprintf("%-8s", '')										// 33
-			.sprintf("%-8s", '')										// 34
-			.sprintf("%-8s", '')										// 35
+			.sprintf("%-20s", '')										// 34
+			.sprintf("%-25s", '')										// 35
 			.sprintf("%-15.15s", $contract_id)							// 36	order_id
 			.sprintf("%-27s", '')										// 37
 			.sprintf("%-2s", '')										// 38

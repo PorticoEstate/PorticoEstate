@@ -157,8 +157,8 @@ if($contract->get_id() > 0) {
 						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'date_start' => 'new YAHOO.widget.DateCellEditor()',
-						'date_end' => 'new YAHOO.widget.DateCellEditor()',
+						'date_start' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'"})',
+						'date_end' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'"})',
 						'is_one_time' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 					);
 				}
@@ -463,7 +463,7 @@ if($contract->get_id() > 0) {
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+								echo '';
 							}
 							else
 							{

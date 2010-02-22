@@ -122,8 +122,47 @@
 															. ': ' . lang('list groups');
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 
-			$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_users	= array_merge($valid_users, $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('groups', -1,$this->sort, $this->order, $this->query);
+				foreach($allusers as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($allusers[$user->id]);
+					}
+				}
+				unset($user);
+
+				$total = count($allusers);
+				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+				if ($this->allrows)
+				{
+					$start = 0;
+					$length = $total;
+				}
+
+				$account_info = array_slice($allusers, $start , $length, true);
+				unset($allusers);
+			}
+			else
+			{
+				$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
 																	$order, $query, $total);
+			}
 
 			$total = $GLOBALS['phpgw']->accounts->total;
 
@@ -271,8 +310,54 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
 
-			$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total);
-			$total = $GLOBALS['phpgw']->accounts->total;
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+	
+						foreach($_valid_users as $_user)
+						{
+							$valid_users[] = $_user['account_id'];
+						}
+						unset($_user);
+						unset($_valid_users);
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$this->sort, $this->order, $this->query);
+				foreach($allusers as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($allusers[$user->id]);
+					}
+				}
+				unset($user);
+
+				$total = count($allusers);
+				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+				if ($this->allrows)
+				{
+					$start = 0;
+					$length = $total;
+				}
+
+				$account_info = array_slice($allusers, $start , $length, true);
+				unset($allusers);
+			}
+			else
+			{
+				$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total);
+				$total = $GLOBALS['phpgw']->accounts->total;
+			}
 
 			$link_data = array
 			(
@@ -482,19 +567,26 @@
 			if ( phpgw::get_var('save', 'bool', 'POST') )
 			{
 				$values			= phpgw::get_var('values', 'string', 'POST', array());
-				$account_apps	= phpgw::get_var('account_apps', 'bool', 'POST');
+				$account_apps	= phpgw::get_var('account_apps', 'string', 'POST');
 				$account_user	= phpgw::get_var('account_user', 'int', 'POST');
 
 				$values['account_user'] = array();
 				if (is_array($account_user))
 				{
+					
 					$values['account_user'] = $account_user;
 				}
 
 				$values['account_apps'] = array();
 				if ( is_array($account_apps) && count($account_apps) )
 				{
-					$values['account_apps'] = $account_apps;
+					foreach($account_apps as $app => $enabled)
+					{					
+						if(isset($enabled) && $enabled)
+						{
+							$values['account_apps'][$app] = true;
+						}
+					}
 				}
 
 				//FIXME exception/error handling needed here!
@@ -527,7 +619,42 @@
 
 			$group_members = $accounts->member($account_id);
 
-			$account_list = $accounts->get_list('accounts', -1, 'ASC', 'account_lastname');
+			//local application admin
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+	
+						foreach($_valid_users as $_user)
+						{
+							$valid_users[] = $_user['account_id'];
+						}
+						unset($_user);
+						unset($_valid_users);
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$this->sort, $this->order, $this->query);
+				foreach($account_list as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($account_list[$user->id]);
+					}
+				}
+				unset($user);
+			}
+			else
+			{
+				$account_list = $accounts->get_list('accounts', -1, 'ASC', 'account_lastname');
+			}
 
 			$members = array();
 			$user_list = array();
@@ -573,6 +700,15 @@
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
 
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
+			else
+			{
+				$valid_apps = $apps;
+			}
+
 			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
 			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
 			$lang_acl = lang('Set general permissions');
@@ -597,6 +733,7 @@
 				'granting_group'	=> $account_id
 			));
 
+			$app_list = array();
 			foreach ( $apps as $app )
 			{
 
@@ -625,7 +762,8 @@
 						'acl_img_name'	=> $lang_acl,
 						'grant_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
 						'grant_img_name'=> $lang_grants,
-						'grant_url'		=> $grant_url
+						'grant_url'		=> $grant_url,
+						'i_am_admin'	=> in_array($app, $valid_apps)
 					);
 				}
 			}
@@ -717,8 +855,34 @@
 		{
 			$values									= phpgw::get_var('values', 'string', 'POST');
 			$values['account_groups']				= (array) phpgw::get_var('account_groups', 'int', 'POST');
-			$values['account_permissions']			= phpgw::get_var('account_permissions', 'bool', 'POST');
-			$values['account_permissions_admin']	= phpgw::get_var('account_permissions_admin', 'int', 'POST');
+			$account_permissions					= phpgw::get_var('account_permissions', 'int', 'POST');
+			$account_permissions_admin				= phpgw::get_var('account_permissions_admin', 'int', 'POST');
+
+			$values['account_permissions'] = array();
+			if ( is_array($account_permissions) && count($account_permissions) )
+			{
+				foreach($account_permissions as $app => $enabled)
+				{					
+					if($enabled)
+					{
+						$values['account_permissions'][$app] = true;
+					}
+				}
+			}
+			unset($account_permissions);
+
+			$values['account_permissions_admin'] = array();
+			if ( is_array($account_permissions_admin) && count($account_permissions_admin) )
+			{
+				foreach($account_permissions_admin as $app => $enabled)
+				{					
+					if($enabled)
+					{
+						$values['account_permissions_admin'][$app] = true;
+					}
+				}
+			}
+			unset($account_permissions_admin);
 
 			//FIXME Caeies fix waiting for JSCAL
 			$values['account_expires_year']	= phpgw::get_var('account_expires_year', 'int', 'POST');
@@ -905,13 +1069,35 @@
 
 			$group_list = array();
 
+
 			$all_groups = $account->get_list('groups');
+
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_groups = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_groups	= array_merge($valid_groups,$GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_groups = array_unique($valid_groups);
+			}
+			else
+			{
+				$valid_groups = array_keys($all_groups);
+			}
+
 			foreach ( $all_groups as $group )
 			{
 				$group_list[$group->id] = array
 				(
 					'account_id'	=> $group->id,
-					'account_lid'	=> (string) $group
+					'account_lid'	=> $group->__toString(),
+					'i_am_admin'	=> in_array($group->id, $valid_groups)
 				);
 			}
 
@@ -927,9 +1113,18 @@
 			$db_perms = $apps->read_account_specific();
 
 			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id);
-
+			
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
+			else
+			{
+				$valid_apps = array_keys($available_apps);
+			}
+
 			foreach ( $available_apps as $key => $application )
 			{
 				if ($application['enabled'] && $application['status'] != 3)
@@ -942,6 +1137,8 @@
 				}
 			}
 			asort($perm_display);
+
+			$app_list = array();
 			foreach ( $perm_display as $perm )
 			{
 				$checked = false;
@@ -958,7 +1155,8 @@
 					'checkbox_name'			=> "account_permissions[{$perm['app_name']}]",
 					'checked'				=> $checked,
 					'checkbox_name_admin'	=> "account_permissions_admin[{$perm['app_name']}]",
-					'checked_admin'			=> in_array($perm['app_name'],$apps_admin)
+					'checked_admin'			=> in_array($perm['app_name'], $apps_admin),
+					'i_am_admin'			=> in_array($perm['app_name'], $valid_apps)
 				);
 			}
 

@@ -883,6 +883,7 @@ link to the request for this project	property	no	Link til tiltak omfattet av det
 link to the request originatet from this ticket	property	no	Link til tiltak som har opprinnelse fra dette hendelsen
 link_view	property	no	Vis lenke
 list	property	no	Oversikt
+list %1	property	no	List %1
 list activities per agreement	property	no	List aktiviteter pr avtale
 list activities per agreement_group	property	no	List aktiviteter pr avtalegruppe
 list agreement	property	no	list avtale
@@ -948,6 +949,7 @@ location type	property	no	Lokaliserings type
 location type not chosen!	property	no	Lokaliseringsnivå ikke valgt
 longevity	property	no	Levetid
 lookup	property	no	Slå opp
+lookup template	property	no	Slå opp standardbeskrivelser
 lookup tenant	property	no	Slå opp leietaker
 lowest	property	no	Lavest
 mailing method is not chosen! (admin section)	property	no	Mail metode er ikke valgt! (admin seksjon)
@@ -1066,6 +1068,7 @@ order_dim1	property	no	Aktivitet
 order id	property	no	OrdreNr
 order_id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
+order template	property	no	Standardtekster
 order text	property	no	Bestillingstekst
 other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt-faktor
@@ -1194,6 +1197,7 @@ property has been edited	property	no	eiendom er oppdater
 property has been saved	property	no	eiendom er lagret
 property id	property	no	eiendoms ID
 property name	property	no	Eiendoms Navn
+public	property	no	Vises for alle
 publish text	property	no	Publiser tekst
 purchase cost	property	no	anskaffelses kostnad
 quantity	property	no	Mengde

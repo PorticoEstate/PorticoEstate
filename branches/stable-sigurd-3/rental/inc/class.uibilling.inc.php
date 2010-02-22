@@ -284,12 +284,27 @@ class rental_uibilling extends rental_uicommon
 		$infoMsgs = array();
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 		$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
+		
 		if($billing_job == null) // Not found
 		{
 			$errorMsgs[] = lang('Could not find specified billing job.');
 		}
 		else if(phpgw::get_var('generate_export') != null) // User wants to generate export
 		{
+			//Loop through  billing info array to find the first month
+			$month = 12;
+			foreach($billing_info_array as $billing_info)
+			{
+				$year = $billing_info->get_year();
+				if($month > $billing_info->get_month())
+				{
+					$month = $billing_info->get_month();
+				}
+			}
+			
+			$billing_job->set_year($year);
+			$billing_job->set_month($month);
+			
 			if(rental_sobilling::get_instance()->generate_export($billing_job))
 			{
 				$infoMsgs[] = lang('Export generated.');
@@ -492,19 +507,32 @@ class rental_uibilling extends rental_uicommon
 		//$browser->content_header('export.txt','text/plain');
 		
 		$stop = phpgw::get_var('date');
-		$export_format = explode('_',phpgw::get_var('export_format'));
-		$file_ending = $export_format[1];
-		if($file_ending == 'gl07')
-		{
-			$type = 'intern';
+		
+		$cs15 = phpgw::get_var('generate_cs15');
+		if($cs15 == null){
+			$export_format = explode('_',phpgw::get_var('export_format'));
+			$file_ending = $export_format[1];
+			if($file_ending == 'gl07')
+			{
+				$type = 'intern';
+			}
+			else if($file_ending == 'lg04')
+			{
+				$type = 'faktura';
+			}
+			$date = date('Ymd', $stop);
+			header('Content-type: text/plain');
+			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
+			print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
 		}
-		else if($file_ending == 'lg04')
-		{
-			$type = 'faktura';
+		else{
+			$file_ending = 'cs15';
+			$type = 'kundefil';
+			$date = date('Ymd', $stop);
+			header('Content-type: text/plain');
+			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
+			print rental_sobilling::get_instance()->generate_cs15_export((int)phpgw::get_var('id'));
 		}
-		$date = date('Ymd', $stop);
-		header("Content-Disposition: attachment; filename='PE_{$type}_{$date}.{$file_ending}'");
-		print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
     }
 
 }

@@ -266,16 +266,13 @@
 		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
 		{
 			$entries =  $this->so->get_persons($fields, $start, $limit, $orderby, $sort, $criteria, $token_criteria);
+			$persons = array();
 			if(is_array($entries))
 			{
 				foreach($entries as $data)
 				{
 					$persons[$data['contact_id']] = $data;
 				}
-			}
-			else
-			{
-				$persons = array();
 			}
 			$this->total = $this->so->contacts->total_records;
 			return $persons;

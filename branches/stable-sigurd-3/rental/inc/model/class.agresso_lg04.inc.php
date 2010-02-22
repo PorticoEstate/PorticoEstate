@@ -108,165 +108,178 @@ class rental_agresso_lg04 implements rental_exportable
 	 */
 	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text)
 	{
+		
+		$order_id = $order_id + 39500000;
 		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$order = array();
+		
+		
 		$order[] =  // Header line
-			 '1'														//  1	accept_flag
-			.sprintf("%8s", '')											//		just white space..
-			.sprintf("%20s", '')										//  3	accountable
-			.sprintf("%160s", '')										//  4	address
-			.sprintf("%20s", '')										//		just white space..
-			.sprintf("%08s", '')										//  8	apar_id
-			.sprintf("%30s", '')										//  9	apar_name
-			.sprintf("%50s", '')										//		just white space..
-			.sprintf("%2s", '')											// 12	att_1_id
-			.sprintf("%2s", '')											// 13	att_2_id
-			.sprintf("%2s", '')											// 14	att_3_id
-			.sprintf("%2s", '')											// 15	att_4_id
-			.sprintf("%2s", '')											// 16	att_5_id
-			.sprintf("%2s", '')											// 17	att_6_id
-			.sprintf("%2s", '')											// 18	att_7_id
-			.sprintf("%35s", '')										// 19	bank_account
-			.sprintf("%-12s", "PE{$this->date_str}")					// 20	batch_id
-			.'BY'														// 21	client
-			.sprintf("%2s", '')											// 22	client_ref
-			.sprintf("%17s", "{$this->date_str}")						// 23	confirm_date
-			.sprintf("%1s", '')											// 24	control
-			.sprintf("%17s", '')										//		just white space..
-			.'NOK'														// 26	currency
-			.sprintf("%60s", '')										// 27	del_met_descr
-			.sprintf("%60s", '')										// 28	del_term_descr
-			.sprintf("%255s", '')										// 29	deliv_addr
-			.sprintf("%50s", '')										// 30	deliv_attention
-			.sprintf("%3s", '')											// 31	deliv_countr
-			.sprintf("%17s", "{$this->date_str}")						// 32	deliv_date
-			.sprintf("%8s", '')											// 33	deliv_method
-			.sprintf("%8s", '')											// 34	deliv_terms
-			.sprintf("%52s", '')										//		just white space..
-			.sprintf("%-12.12s", $account)								// 42	dim_value_1
-			.sprintf("%12s", '')										// 43	dim_value_2
-			.sprintf("%12s", '')										// 44	dim_value_3
-			.sprintf("%12s", '')										// 45	dim_value_4
-			.sprintf("%12s", '')										// 46	dim_value_5
-			.sprintf("%12s", '')										// 47	dim_value_6
-			.sprintf("%12s", '')										// 48	dim_value_7
-			.sprintf("%17s", '')										//		just white space..
-			.sprintf("%017s", '')										// 51	exch_rate
-			.sprintf("%-15.15s", $party_id)								// 52	ext_ord_ref
-			.sprintf("%6s", '')											// 53	intrule_id
-			.sprintf("%8s", '')											//	just white space..
-			.sprintf("%-120.120s", $header)								// 56	long_info1
-			.sprintf("%120s", '')										// 57	long_info2
-			.sprintf("%10s", '')										//		just white space..
-			.sprintf("%08s", '')										// 59	main_apar_id
-			.sprintf("%50s", '')										// 60?	mark_attention
-			.sprintf("%3s", '')											// 61	mark_ctry_cd
-			.sprintf("%120s", '')										// 62	markings
-			.sprintf("%-17s", '')										// 63	obs_date
-			.sprintf("%-17s", '')										// 64	order_date
-			.sprintf("%09.9s", $order_id)								// 65	order_id
-			.'FS'														// 66	order_type
-			.'IP'														// 67	pay_method
-			.sprintf("%02s", '').sprintf("%04.4s", $bill_year).sprintf("%02.2s", $bill_month)	// 69?	period
-			.sprintf("%30s", '')										// 70	place
-			.sprintf("%40s", '')										// 71	province
-			.sprintf("%12s", '')										//		just white space..
-			.sprintf("%-8s", 'PE')										// 73	responsible
-			.sprintf("%-8s", 'PE')										// 74	responsible2
-			.sprintf("%8s", '')											//		just white space..
-			.sprintf("%-08s", '')										// 76	sequence_ref
-			.sprintf("%80s", '')										//		just white space..
-			.'N'														// 79	status
-			.sprintf("%4s", '')											//		just white space..
-			.sprintf("%08s", '')										// 83	template_id
-			.sprintf("%2s", '')											// 84	terms_id
-			.sprintf("%12s", '')										// 85	tekx1
-			.sprintf("%12s", '')										// 86	tekst2
-			.sprintf("%12s", '')										// 87	tekst3
-			.sprintf("%12s", '')										// 88	text4
-			.'42'														// 89	trans_type
-			.sprintf("%70s", '')										//		just white space..
-			.sprintf("%09s", '')										// 93	voucher_ref
-			.'XX'														// 94	voucher_type
-			.sprintf("%4s", '')											//		just white space..
-			.sprintf("%15s", '')										// 96	zip_code
+			 '1'														//  1		accept_flag
+			.sprintf("%8s", '')											//	2		just white space..
+			.sprintf("%20s", '')										//  3		accountable
+			.sprintf("%160s", '')										//  4		address
+			.sprintf("%20s", '')										//	5-7		just white space..
+			.sprintf("%08s", '')										//  8		apar_id
+			.sprintf("%30s", '')										//  9		apar_name
+			.sprintf("%50s", '')										//	10-11	just white space..
+			.sprintf("%2s", '')											// 	12		att_1_id
+			.sprintf("%2s", '')											// 	13		att_2_id
+			.sprintf("%2s", '')											// 	14		att_3_id
+			.sprintf("%2s", '')											// 	15		att_4_id
+			.sprintf("%2s", '')											// 	16		att_5_id
+			.sprintf("%2s", '')											// 	17		att_6_id
+			.sprintf("%2s", '')											// 	18		att_7_id
+			.sprintf("%35s", '')										// 	19		bank_account
+			.sprintf("%-12s", "BKBPE{$this->date_str}")					// 	20		batch_id				DATA
+			.'BY'														// 	21		client					DATA
+			.sprintf("%2s", '')											// 	22		client_ref
+			.sprintf("%17s", "{$this->date_str}")						// 	23		confirm_date			DATA
+			.sprintf("%1s", '')											// 	24		control
+			.sprintf("%17s", '')										//	25		just white space..
+			.'NOK'														// 	26		currency				DATA
+			.sprintf("%60s", '')										// 	27		del_met_descr
+			.sprintf("%60s", '')										// 	28		del_term_descr
+			.sprintf("%255s", '')										// 	29		deliv_addr
+			.sprintf("%50s", '')										// 	30		deliv_attention
+			.sprintf("%3s", '')											// 	31		deliv_countr
+			.sprintf("%17s", "{$this->date_str}")						// 	32		deliv_date				DATA
+			.sprintf("%8s", '')											// 	33		deliv_method
+			.sprintf("%8s", '')											// 	34		deliv_terms
+			.sprintf("%52s", '')										//	35-41	just white space..
+			.sprintf("%-12.12s", $account)								// 	42		dim_value_1				DATA
+			.sprintf("%12s", '')										// 	43		dim_value_2
+			.sprintf("%12s", '')										// 	44		dim_value_3
+			.sprintf("%12s", '')										// 	45		dim_value_4
+			.sprintf("%12s", '')										// 	46		dim_value_5
+			.sprintf("%12s", '')										// 	47		dim_value_6	
+			.sprintf("%12s", '')										// 	48		dim_value_7
+			.sprintf("%17s", '')										//	49-50	just white space..
+			.sprintf("%017s", '')										// 	51		exch_rate
+			.sprintf("%-15.15s", '')									// 	52		ext_ord_ref				
+			.sprintf("%6s", '')											// 	53		intrule_id
+			.sprintf("%8s", '')											//	54-55	just white space..
+			.sprintf("%-120.120s", $header)								// 	56		long_info1				DATA
+			.sprintf("%120s", '')										//	57		long_info2
+			.sprintf("%10s", '')										//	58		just white space..
+			.sprintf("%08s", '')										// 	59		main_apar_id
+			.sprintf("%50s", '')										// 	60		mark_attention
+			.sprintf("%3s", '')											// 	61		mark_ctry_cd
+			.sprintf("%120s", '')										// 	62		markings
+			.sprintf("%-17s", '')										// 	63		obs_date
+			.sprintf("%-17s", '')										// 	64		order_date
+			.sprintf("%09.9s", $order_id)								// 	65		order_id				DATA
+			.'FS'														// 	66		order_type				DATA
+			.'IP'														// 	67		pay_method				DATA
+																		//	(68)
+			.sprintf("%02s", '')
+			.sprintf("%04.4s", $bill_year)
+			.sprintf("%02.2s", $bill_month)								// 	69		period					DATA
+			.sprintf("%30s", '')										// 	70		place
+			.sprintf("%40s", '')										// 	71		province
+			.sprintf("%12s", '')										//	72		just white space..
+			.sprintf("%-8s", 'BKBPE')									// 	73		responsible				DATA
+			.sprintf("%-8s", 'BKBPE')									// 	74		responsible2			DATA
+			.sprintf("%8s", '')											//	75		just white space..
+			.sprintf("%-08s", '')										// 	76		sequence_ref
+			.sprintf("%80s", '')										//	77-78	just white space..
+			.'N'														// 	79		status					DATA
+			.sprintf("%4s", '')											//	80-82	just white space..
+			.sprintf("%08s", '')										// 	83		template_id
+			.sprintf("%2s", '')											// 	84		terms_id
+			.sprintf("%12s", '')										// 	85		tekx1
+			.sprintf("%12s", $party_id)									// 	86		tekst2					DATA
+			.sprintf("%12s", '')										// 	87		tekst3
+			.sprintf("%12s", '')										// 	88		text4
+			.'42'														// 	89		trans_type				DATA
+			.sprintf("%70s", '')										//	90-92	just white space..
+			.sprintf("%09s", '')										// 	93		voucher_ref
+			.'FU'														// 	94		voucher_type			DATA
+			.sprintf("%4s", '')											//	95		just white space..
+			.sprintf("%15s", '')										// 	96		zip_code
 		;
 		$item_counter = 0;
 		foreach($product_items as $item) // All products (=price items)
 		{
 			$order[] = // Product line
-				'0'										//		just white space..  sprintf("%1s", '')
-				.sprintf("%8s", '')										//  2	account
-				.sprintf("%180s", '')									//		just white space..
-				.sprintf("%02s", '')									//  5	allocation_key
-				.$this->get_formatted_amount($item['amount'])			//  6	amount
-				.'1'													//  7	amount_set
-				.sprintf("%38s", '')									//		just white space..
-				.sprintf("%-35.35s", $item['article_description'])		// 10	art_descr
-				.sprintf("%-15.15s", $item['article_code'])				// 11	article
-				.sprintf("%49s", '')									//		just white space..
-				.sprintf("%-12s", "PE{$this->date_str}")				// 20	batch_id
-				.'BY'													// 21	client
-				.sprintf("%20s", '')									//		just white space..
-				.sprintf("%017s", '')									// 25	cur_amount
-				.sprintf("%464s", '')									//		just white space..
-				.sprintf("%-8.8s", $responsibility)						// 35	dim_1
-				.sprintf("%-8.8s", $service)							// 36	dim_2
-				.sprintf("%-8.8s", $building)							// 37	dim_3
-				.sprintf("%8s", '')										// 38	dim_4
-				.sprintf("%-12.12s", $project)							// 39	dim_5
-				.sprintf("%4s", '')										// 40	dim_6
-				.sprintf("%4s", '')										// 41	dim_7
-				.sprintf("%84s", '')									//		just white space..
-				.sprintf("%017s", '')									// 49	disc_percent
-				.sprintf("%017s", '')									// 51?	exch_rate
-				.sprintf("%21s", '')									//		just white space..
-				.sprintf("%04.4s", ++$item_counter)						// 54	line_no
-				.sprintf("%4s", '')										// 55	location
-				.sprintf("%240s", '')									//		just white space..
-				.sprintf("%10s", '')									// 58	lot
-				.sprintf("%215s", '')									//		just white space..
-				.sprintf("%09.9s", $order_id)							// 65	order_id
-				.sprintf("%4s", '')										//		just white space..
-				.sprintf("%02s", '').sprintf("%04.4s", $bill_year).sprintf("%02.2s", $bill_month)	// 69?	period
-				.sprintf("%70s", '')									//		just white space..
-				.sprintf("%12s", '')									// 72	rel_value
-				.sprintf("%16s", '')									//		just white space..
-				.sprintf("%08s", '')									// 75	sequence_no
-				.sprintf("%8s", '')										//		just white space..
-				.sprintf("%20s", '')									// 77	serial_no
-				.sprintf("%60s", '')									//		just white space..
-				.'N'													// 79	status
-				.sprintf("%2s", '')										// 81	tax_code
-				.sprintf("%2s", '')										// 82	tax_system
-				.sprintf("%-08s", '')									// 83	template_id
-				.sprintf("%50s", '')									//		just white space..
-				.'42'													// 89	trans_type
-				.sprintf("%3s", '')										// 90	unit_code
-				.sprintf("%50s", '')									// 91	unit_descr
-				.sprintf("%017s", 1*100)								// 92	value_1
-				.sprintf("%9s", '')										//		just white space..
-				.'XX'													// 94	voucher_type
-				.sprintf("%4s", '')										// 95	warehouse
-				.sprintf("%15s", '')									//		just white space..
+				'0'														//	1		0 for påfølgende linjer etter ordrehde
+				.sprintf("%8s", '')										//  2		account
+				.sprintf("%180s", '')									//	3-4		just white space..
+				.sprintf("%2s", '')										//  5		allocation_key
+				.$this->get_formatted_amount($item['amount'])			//  6		amount					DATA
+				.'1'													//  7		amount_set
+				.sprintf("%38s", '')									//	8-9		just white space..
+				.sprintf("%-35.35s", $item['article_description'])		// 	10		art_descr				DATA
+				.sprintf("%-15.15s", $item['article_code'])				// 	11		article					DATA
+				.sprintf("%49s", '')									//	12-19	just white space..
+				.sprintf("%-12s", "BKBPE{$this->date_str}")				// 	20		batch_id				DATA
+				.'BY'													// 	21		client					DATA
+				.sprintf("%20s", '')									//	22-24	just white space..
+				.sprintf("%017s", '')									// 	25		cur_amount
+				.sprintf("%464s", '')									//	26-34	just white space..
+				.sprintf("%-8.8s", $responsibility)						// 	35		dim_1					DATA
+				.sprintf("%-8.8s", $service)							// 	36		dim_2					DATA
+				.sprintf("%-8.8s", $building)							// 	37		dim_3					DATA
+				.sprintf("%8s", '')										// 	38		dim_4
+				.sprintf("%-12.12s", $project)							// 	39		dim_5					DATA
+				.sprintf("%4s", '')										// 	40		dim_6
+				.sprintf("%4s", '')										// 	41		dim_7
+				.sprintf("%84s", '')									//	42-48	just white space..
+				.sprintf("%017s", '')									// 	49		disc_percent
+																		//	(50)
+				.sprintf("%017s", '')									// 	51		exch_rate
+				.sprintf("%21s", '')									//	52-53	just white space..
+				.sprintf("%04.4s", ++$item_counter)						// 	54		line_no					DATA
+				.sprintf("%4s", '')										// 	55		location
+				.sprintf("%240s", '')									//	56-57	just white space..
+				.sprintf("%10s", '')									// 	58		lot
+				.sprintf("%215s", '')									//	59-64	just white space..
+				.sprintf("%09.9s", $order_id)							// 	65	order_id					DATA
+				.sprintf("%4s", '')										//	66-67	just white space..
+																		//	(68)
+				.sprintf("%02s", '')
+				.sprintf("%04.4s", $bill_year)
+				.sprintf("%02.2s", $bill_month)							//	69		period					DATA
+				.sprintf("%70s", '')									//	70-71	just white space..
+				.sprintf("%12s", '')									// 	72		rel_value
+				.sprintf("%16s", '')									//	73-74	just white space..
+				.sprintf("%08s", '')									// 	75		sequence_no
+				.sprintf("%8s", '')										//	76		just white space..
+				.sprintf("%20s", '')									// 	77		serial_no
+				.sprintf("%60s", '')									//	78		just white space..
+				.'N'													// 	79		status					DATA
+																		//	(80)
+				.sprintf("%2s", '')										// 	81		tax_code
+				.sprintf("%2s", '')										// 	82		tax_system
+				.sprintf("%-08s", '')									// 	83		template_id
+				.sprintf("%50s", '')									//	84-88	just white space..
+				.'42'													// 	89		trans_type
+				.sprintf("%3s", '')										// 	90		unit_code
+				.sprintf("%50s", '')									// 	91		unit_descr
+				.sprintf("%017s", 1*100)								// 	92		value_1					DATA
+				.sprintf("%9s", '')										//	93		just white space..
+				.'FU'													// 	94		voucher_type			DATA
+				.sprintf("%4s", '')										// 	95		warehouse
+				.sprintf("%15s", '')									//	96		just white space..
 			;
 			$order[] = // Text line
-				 sprintf("%346s", '')									//		just white space..
-				.sprintf("%-12s", "PE{$this->date_str}")				// 20	batch_id
-				.'BY'													// 21	client
-				.sprintf("%692s", '')									//		just white space..
-				.sprintf("%04.4s", $item_counter)						// 54	line_no
-				.sprintf("%469s", '')									//		just white space..
-				.sprintf("%09.9s", $order_id)							// 65	order_id
-				.sprintf("%110s", '')									//		just white space..
-				.sprintf("%08s", 1)										// 75	sequence_no
-				.sprintf("%28s", '')									//		just white space..
-				.sprintf("%-60.60s", $text)								// 78	shot_info
-				.sprintf("%63s", '')									//		just white space..
-				.'42'													// 89	trans_type
-				.sprintf("%79s", '')									//		just white space..
-				.'XX'													// 94	voucher_type
-				.sprintf("%19s", '')									//		just white space..
+				'0'.													//	1
+				 sprintf("%345s", '')									//	2-19	just white space..		DATA
+				.sprintf("%-12s", "BKBPE{$this->date_str}")				// 	20		batch_id				DATA
+				.'BY'													// 	21		client					DATA
+				.sprintf("%692s", '')									//	22-53	just white space..
+				.sprintf("%04.4s", $item_counter)						// 	54		line_no					DATA
+				.sprintf("%469s", '')									//	55-64	just white space..
+				.sprintf("%09.9s", $order_id)							// 	65		order_id				DATA
+				.sprintf("%110s", '')									//	66-74	just white space..
+				.sprintf("%08s", 1)										// 	75		sequence_no				DATA
+				.sprintf("%28s", '')									//	76-77	just white space..
+				.sprintf("%-60.60s", $text)								// 	78		shot_info				DATA
+				.sprintf("%63s", '')									//	79-88	just white space..
+				.'42'													// 	89		trans_type				DATA
+				.sprintf("%79s", '')									//	90-93	just white space..
+				.'FU'													// 	94		voucher_type			DATA
+				.sprintf("%19s", '')									//	95-96	just white space..
 			;
 		}
 		return str_replace(array("\n", "\r"), '', $order);

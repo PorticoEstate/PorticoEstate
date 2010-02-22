@@ -543,10 +543,21 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 		}
 	);
 
+	var navConfig = {
+			strings: {
+				month:"<?php echo lang('month') ?>",
+				year:"<?php echo lang('year') ?>",
+				submit: "<?php echo lang('ok') ?>",
+				cancel: "<?php echo lang('cancel') ?>",
+				invalidYear: "<?php echo lang('select_date_valid_year') ?>"
+				},
+				initialFocus: "month"
+			}
+	
 	var cal = new YAHOO.widget.Calendar(
 		"calendar",
 		calendarBodyId,
-		{ 	navigator:true,
+		{ 	navigator:navConfig,
 			title: '<?php echo lang('select_date') ?>',
 			start_weekday:1,
 			LOCALE_WEEKDAYS:"short"}
