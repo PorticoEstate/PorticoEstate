@@ -469,12 +469,12 @@
 			}
 			
 			$comm_preferred = $fields['tab_comms']['preferred'];
-//_debug_array($fields);die();			
+
 			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
 			@$this->upgrade_comms($fields['edit_comms']['insert'], 
 					     $fields['edit_comms']['delete'], 
 					     $fields['edit_comms']['edit'],
-			    	     $fields['tab_comms']['comm_data'], $comm_preferred, $person_id);
+			    	     $fields['comm_data'], $comm_preferred, $person_id);
 
 			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
 			@$this->upgrade_others($fields['edit_others']['insert'],
@@ -500,15 +500,18 @@
                         }
 
 			/* Update the first and last name in accounts */
-			$account_id = $this->contacts->get_account_id($person_id);
-			if($account_id)
+			if($fields['tab_person_data'])
 			{
-				$account = CreateObject('phpgwapi.accounts',$account_id,'u');
-				$account_data = $account->read();
-				$account_data->firstname = $fields['tab_person_data']['per_first_name'];
-				$account_data->lastname = $fields['tab_person_data']['per_last_name'];
-				$account->update_data($account_data);
-				$account->save_repository();
+				$account_id = $this->contacts->get_account_id($person_id);
+				if($account_id)
+				{
+					$account = CreateObject('phpgwapi.accounts',$account_id,'u');
+					$account_data = $account->read();
+					$account_data->firstname = $fields['tab_person_data']['per_first_name'];
+					$account_data->lastname = $fields['tab_person_data']['per_last_name'];
+					$account->update_data($account_data);
+					$account->save_repository();
+				}
 			}
 			
 			$this->contacts->finalize_edit($person_id);
@@ -887,6 +890,7 @@
 				$data = array();
 			}
 			$this->edit_comms_by_contact($contact_id, array('comm_preferred'=>'N'), PHPGW_SQL_RUN_SQL);
+
 			foreach($data as $key => $value)
 			{
 				if(array_key_exists($value['comm_description'], $del_comms))
@@ -905,7 +909,7 @@
 						$preferred = 'N';
 					}
 					
-					$this->edit_comms($value['key_comm_id'], 
+					$this->edit_comms($value['key_comm_id'],
 							  array('comm_data' => $edit_comms[$value['comm_description']],
 								'comm_preferred' => $preferred), 
 							  PHPGW_SQL_RUN_SQL);
