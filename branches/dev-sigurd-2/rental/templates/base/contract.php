@@ -463,7 +463,7 @@ if($contract->get_id() > 0) {
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+								echo '';
 							}
 							else
 							{
