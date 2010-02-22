@@ -354,6 +354,7 @@
 					$contract->set_invoice_header(phpgw::get_var('invoice_header'));
 					$contract->set_account_in(phpgw::get_var('account_in'));
 					
+					/*
 					if($contract->get_contract_type_id() != phpgw::get_var('contract_type'))
 					{
 						// New contract type id set, retrieve correct account out
@@ -368,9 +369,9 @@
 						}
 					}
 					else
-					{
+					{*/
 						$contract->set_account_out(phpgw::get_var('account_out'));
-					}
+					//}
 					
 					$contract->set_project_id(phpgw::get_var('project_id'));
 					$contract->set_due_date(strtotime(phpgw::get_var('due_date_hidden')));
