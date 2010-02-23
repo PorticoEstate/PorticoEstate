@@ -2425,6 +2425,7 @@
 			{
 				foreach($comms as $comm)
 				{
+					$comm['comm_preferred'] = isset($comm['comm_preferred']) && $comm['comm_preferred'] ? $comm['comm_preferred'] : 'N';
 					$this->add_communication_media($comm, $cid, PHPGW_SQL_RUN_SQL);
 					$this->unlock_table();
 				}
