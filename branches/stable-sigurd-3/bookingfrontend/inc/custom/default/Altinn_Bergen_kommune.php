@@ -54,8 +54,12 @@
 		 */
 		public $debug = false;
 
-		public function __construct($wsdl, $options, $userid)
+		public function __construct($wsdl, $options, $userid, $debug = false)
 		{
+			if($debug)
+			{
+				$this->debug = true;
+			}
 			try
 			{
 				$BrukerService	= new BrukerService($wsdl, $options);
@@ -68,7 +72,6 @@
 					echo '<br>wsdl: ' . $wsdl;
 					echo '<br>options:';
 					_debug_array($options);
-					die();
 				}
 			}
 

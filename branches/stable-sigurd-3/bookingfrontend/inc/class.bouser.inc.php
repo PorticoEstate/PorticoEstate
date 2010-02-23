@@ -81,11 +81,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
 			{
-				return true;
+//				return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+//				return false;
 			}
 			$so = CreateObject('booking.soorganization');
 			$organization = $so->read_single($organization_id);
@@ -97,11 +97,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
 			{
-				return true;
+//				return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+//				return false;
 			}
 			$so = CreateObject('booking.sogroup');
 			$group = $so->read_single($group_id);
@@ -136,19 +136,31 @@
 		{
 			$config		= CreateObject('phpgwapi.config','bookingfrontend');
 			$config->read();
-			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'OSSO-USER-DN';
+
+			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
 			$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
 
 			$headers = getallheaders();
 
-//			$headers[$header_key] = 'cn=30034502192,cn=users, dc=bergen,dc=kommune,dc=no'; //Test data
+			if(isset($config->config_data['debug']) && $config->config_data['debug'])
+			{
+				$this->debug = true;
+				echo 'headers:<br>';
+				_debug_array($headers);
+			}
 
 			if(isset($headers[$header_key]) && $headers[$header_key])
 			{
 				$matches = array();
 				preg_match_all($header_regular_expression,$headers[$header_key], $matches);
-		//		_debug_array($matches);
 				$userid = $matches[1][0];
+
+				if($this->debug)
+				{
+					echo 'matches:<br>';
+					_debug_array($matches);
+				}
+
 			}
 
 			$options = array();
@@ -168,8 +180,14 @@
 
 			require_once PHPGW_SERVER_ROOT."/bookingfrontend/inc/custom/default/{$authentication_method}";
 			
-			$external_user = new booking_external_user($wsdl, $options, $userid);
+			$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
 
+			if($this->debug)
+			{
+				echo 'External user:<br>';
+				_debug_array($external_user);
+				die();
+			}
 			try
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
