@@ -72,7 +72,6 @@
 					echo '<br>wsdl: ' . $wsdl;
 					echo '<br>options:';
 					_debug_array($options);
-					die();
 				}
 			}
 

@@ -81,11 +81,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
 			{
-				return true;
+//				return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+//				return false;
 			}
 			$so = CreateObject('booking.soorganization');
 			$organization = $so->read_single($organization_id);
@@ -97,11 +97,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0)
 			{
-				return true;
+//				return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+//				return false;
 			}
 			$so = CreateObject('booking.sogroup');
 			$group = $so->read_single($group_id);
@@ -145,10 +145,9 @@
 			if(isset($config->config_data['debug']) && $config->config_data['debug'])
 			{
 				$this->debug = true;
+				echo 'headers:<br>';
 				_debug_array($headers);
 			}
-
-//			$headers[$header_key] = 'cn=30034502192,cn=users, dc=bergen,dc=kommune,dc=no'; //Test data
 
 			if(isset($headers[$header_key]) && $headers[$header_key])
 			{
@@ -185,7 +184,8 @@
 
 			if($this->debug)
 			{
-				_debug_array("External user: {$external_user}");
+				echo 'External user:<br>';
+				_debug_array($external_user);
 				die();
 			}
 			try
