@@ -293,6 +293,8 @@ choose to send mailnotification	property	no	Velg å sende påminnelse på epost
 chose if this column is nullable	property	no	Velg om denne kolonnen kan være uten verdier
 claim	property	no	Krav
 claim id	property	no	Krav ID
+claim %1 has been saved	property	no	Krav nr %1 er lagret
+claim %1 has been edited	property	no	Krav nr %1 er endret
 click this button to add a invice	property	no	Klikk på denne knappen for å legg til en faktura
 click this button to add a invoice	property	no	Klikk denne knappen for å legge til en faktura
 click this button to start the import	property	no	Press denne knappen for å starte importen
@@ -1561,6 +1563,7 @@ tenant claim categories	property	no	Leietaker kategorier klager
 tenant claim is not issued for project in voucher %1	property	no	Krav mot leietaker er ikke registert for prosjekt i bilag %1
 tenant global categories	property	no	Leietaker globale kategorier
 tenant_id	property	no	Leietaker ID
+tenant is not defined, claim not issued	property	no	Leietaker er ikke definert - Krav ikke lagret
 tenant phone	property	no	Leietaker tlf
 tender chapter	property	no	Beskrivelse kapittel
 termination date	property	no	oppsigelse dato
