@@ -136,10 +136,17 @@
 		{
 			$config		= CreateObject('phpgwapi.config','bookingfrontend');
 			$config->read();
-			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'OSSO-USER-DN';
+
+			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
 			$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
 
 			$headers = getallheaders();
+
+			if(isset($config->config_data['debug']) && $config->config_data['debug'])
+			{
+				$this->debug = true;
+				_debug_array($headers);
+			}
 
 //			$headers[$header_key] = 'cn=30034502192,cn=users, dc=bergen,dc=kommune,dc=no'; //Test data
 
@@ -147,8 +154,14 @@
 			{
 				$matches = array();
 				preg_match_all($header_regular_expression,$headers[$header_key], $matches);
-		//		_debug_array($matches);
 				$userid = $matches[1][0];
+
+				if($this->debug)
+				{
+					echo 'matches:<br>';
+					_debug_array($matches);
+				}
+
 			}
 
 			$options = array();
@@ -168,8 +181,13 @@
 
 			require_once PHPGW_SERVER_ROOT."/bookingfrontend/inc/custom/default/{$authentication_method}";
 			
-			$external_user = new booking_external_user($wsdl, $options, $userid);
+			$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
 
+			if($this->debug)
+			{
+				_debug_array("External user: {$external_user}");
+				die();
+			}
 			try
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
