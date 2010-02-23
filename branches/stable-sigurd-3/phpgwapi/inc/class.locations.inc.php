@@ -410,7 +410,7 @@
 		{
 			if ( !$appname )
 			{
-		 		$appname = $GLOBALS['phpgw']['flags']['currentapp'];
+		 		$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
 
 			$appname = $this->_db->db_addslashes($appname);
