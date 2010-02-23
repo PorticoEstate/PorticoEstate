@@ -656,7 +656,17 @@
 
 				$value_set['workorder']	= $target;
 
-				$boclaim->save($value_set);
+				if(!$value_set['tenant_id'])
+				{
+					$receipt['error'][] = array('msg'=>lang('tenant is not defined, claim not issued'));
+				}
+				else
+				{
+					$receipt_claim = $boclaim->save($value_set);
+					unset($receipt_claim['id']);
+					$receipt['error'] = array_merge($receipt['error'] , $receipt_claim['error']);
+					$receipt['message'] = array_merge($receipt['message'] , $receipt_claim['message']);
+				}
 			}
 
 			return $receipt;
