@@ -9,3 +9,6 @@
 	*/
 
 	$GLOBALS['phpgw']->locations->add('org_person', "Allow custom fields on relation org_person", 'addressbook', false, 'phpgw_contact_org_person');
+	$GLOBALS['phpgw']->locations->add('person', "Allow custom fields on table person", 'addressbook', false, 'phpgw_contact_person');
+	$GLOBALS['phpgw']->locations->add('organisation', "Allow custom fields on table org", 'addressbook', false, 'phpgw_contact_org');
+
