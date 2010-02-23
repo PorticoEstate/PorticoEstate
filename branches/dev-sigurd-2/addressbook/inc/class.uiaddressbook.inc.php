@@ -3408,10 +3408,13 @@ class uiaddressbook
 
 		function process_list(allboxname, myboxname)
 		{
-			mybox = document.body_form.elements[myboxname];
-			for(c = 0; c < mybox.options.length; c++) 
+			if(myboxname)
 			{
-				mybox.options[c].selected = true;
+				mybox = document.body_form.elements[myboxname];
+				for(c = 0; c < mybox.options.length; c++) 
+				{
+					mybox.options[c].selected = true;
+				}
 			}
 		}
 
