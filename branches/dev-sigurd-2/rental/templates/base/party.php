@@ -425,7 +425,8 @@
 			$url_add_on = "&amp;type=contracts_part&amp;party_id=".$party->get_id();
 			$extra_cols = array(
 				array("key" => "type", "label" => lang('title'), "index" => 3),
-				array("key" => "composite", "label" => lang('composite'), "index" => 4)
+				array("key" => "composite", "label" => lang('composite'), "index" => 4),
+				array("key" => "contract_notification_status", "label" => lang('notification_status'))
 			);
 			include('contract_list_partial.php');
 			?>

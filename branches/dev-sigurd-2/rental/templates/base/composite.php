@@ -162,7 +162,8 @@
 				$editable = false;
 				$extra_cols = array(
 					array("key" => "type", "label" => lang('title'), "index" => 3),
-					array("key" => "party", "label" => lang('party'), "index" => 4)
+					array("key" => "party", "label" => lang('party'), "index" => 4),
+					array("key" => "contract_notification_status", "label" => lang('notification_status'))
 				);
 				unset($related);
 				include('contract_list_partial.php');
