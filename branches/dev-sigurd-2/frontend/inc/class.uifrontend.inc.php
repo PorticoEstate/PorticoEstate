@@ -57,9 +57,32 @@
 			unset($locations['.']);
 			unset($locations['admin']);
 
-			$tabs = array();
+			$config	= CreateObject('phpgwapi.config','frontend');
+			$config->read();
+
+
+			$_locations = array();
 			foreach ($locations as $location => $name)
 			{
+				$_locations[] = array
+				(
+					'location'	=> $location,
+					'name'		=> $name,
+					'sort'		=> isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99
+				);
+			}
+		
+			if(isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
+			{
+				array_multisort($config->config_data['tab_sorting'], SORT_ASC, $_locations);
+			}
+
+			$tabs = array();
+			foreach ($_locations as $key => $entry)
+			{
+				$name = $entry['name'];
+				$location = $entry['location'];
+
 				if ( $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'frontend') )
 				{
 					$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', $location);

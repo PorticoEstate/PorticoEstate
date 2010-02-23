@@ -12,10 +12,14 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_frontend_settings}</b></td>
 		</tr>
-		<tr class="row_on">
-			<td>{lang_dummy}:</td>
-			<td><input name="newsettings[dummy]" value="{value_dummy}"></td>
-		</tr>
+	   <tr class="row_on">
+	    <td>{lang_tab_sorting}:</td>
+	    <td>
+	     <table>
+{hook_tab_sorting}
+	     </table>
+	    </td>
+	   </tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
