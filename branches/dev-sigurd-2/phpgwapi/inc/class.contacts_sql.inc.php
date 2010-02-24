@@ -884,10 +884,12 @@
 		*/
 		function read($start=0,$limit=0,$fields='',$query='',$filter='',$sort='',$order='', $lastmod=-1)
 		{
+			throw new Exception('deprecated method called (contatcts_sql::read)');
+
 			foreach($fields as $field)
 			{
 				// we need search for a this communication media
-				if(@array_key_exists($field, $comm_old))
+				if(@array_key_exists($field, $this->comm_old))
 				{
 					$comms[] = array($field, 'comm_descr');
 					unset($fields[$field]);
@@ -2732,7 +2734,7 @@
 			$note['note_creaton'] = $this->get_mkdate();
 			$note['note_modon'] = $this->get_mkdate();
 
-			unset($comm['key_note_id']);
+			//unset($comm['key_note_id']);
 
 			return $this->_add($note,'note','note_contact_id',$cid,$action);
 		}
@@ -3394,7 +3396,7 @@
 			$this->request('contact_id');
 			$this->request($data);
 			$this->criteria(array('my_person_id' => $person_id));
-			return $this->get_query($aciton, __LINE__, __FILE__);
+			return $this->get_query($action, __LINE__, __FILE__);
 		}
 
 		/**
@@ -3684,7 +3686,7 @@
 			}
 
 			if( isset($search_fields['comm_media'])
-				&& is_array($search_fielss['comm_media'])
+				&& is_array($search_fields['comm_media'])
 				&& count($search_fields['comm_media']) > 0)
 			{
 				$search_fields_comms = $search_fields['comm_media'];
@@ -3751,7 +3753,7 @@
 			$records = $this->get_records(__LINE__, __FILE__);
 			if(is_array($records))
 			{
-				foreach($records as $key => $value)
+				foreach($records as $value)
 				{
 					$info[] = $value['contact_id'];
 				}
@@ -4129,7 +4131,7 @@
 		*/
 		function slice_old_fields($fields, $data_type)
 		{
-			foreach ($comm_old as $old_field => $value)
+			foreach ($this->comm_old as $old_field => $value)
 			{
 				if($fields[$old_field])
 				{
@@ -4269,7 +4271,7 @@
 
 			$person = $this->get_principal_persons_data($id);
 
-			$time = gettimeofday();
+			//$time = gettimeofday();
 			$uid = $person[0]['contact_id'].':'.$person[0]['per_full_name'];
 			$dn = 'uid=' . utf8_encode($uid).',' . $GLOBALS['phpgw_info']['server']['ldap_contact_context'];
 
