@@ -7,5 +7,5 @@
 <!-- END principal_tab -->
 
 <!-- BEGIN principal_button -->
-		<li {principal_tab_css}><a href="{principal_action}">{principal_value}</a>
+		<li {principal_tab_css}><a href="{principal_action}"><em>{principal_value}</em></a></li>
 <!-- END principal_button -->

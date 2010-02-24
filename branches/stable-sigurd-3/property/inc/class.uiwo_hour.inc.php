@@ -490,7 +490,7 @@
 				'lang_vendor_name'			=> lang('Vendor'),
 				'vendor_name'				=> $workorder['vendor_name'],
 				'vendor_email'				=> $workorder['vendor_email'],
-				'descr'					=> $workorder['descr'],
+				'descr'						=> htmlentities($workorder['descr']),
 
 				'lang_workorder_id'			=> lang('Workorder ID'),
 				'workorder_id'				=> $workorder['workorder_id'],

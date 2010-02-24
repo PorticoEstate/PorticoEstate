@@ -50,7 +50,10 @@
 					tbox[c] = no;
 				}
 
-				move_cbo(sboxname, cboxname);
+				if(sboxname && cboxname)
+				{
+					move_cbo(sboxname, cboxname);
+				}
 			}
 
 		function move_cbo(sboxname, cboxname) {

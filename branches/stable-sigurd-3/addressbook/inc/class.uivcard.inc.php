@@ -71,9 +71,9 @@
 
 		function out()
 		{
-			$ab_id   = $GLOBALS['HTTP_GET_VARS']['ab_id'] ? $GLOBALS['HTTP_GET_VARS']['ab_id'] : $GLOBALS['HTTP_POST_VARS']['ab_id'];
-			$nolname = $GLOBALS['HTTP_GET_VARS']['nolname'];
-			$nofname = $GLOBALS['HTTP_GET_VARS']['nofname'];
+			$ab_id   = phpgw::get_var('ab_id');
+			$nolname = phpgw::get_var('nolname');
+			$nofname = phpgw::get_var('nofname');
 
 			if($nolname || $nofname)
 			{
@@ -266,4 +266,3 @@
 			}
 		}
 	}
-?>

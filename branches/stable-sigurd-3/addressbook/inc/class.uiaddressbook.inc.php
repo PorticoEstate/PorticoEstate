@@ -1118,22 +1118,20 @@ class uiaddressbook
 		switch ($form_tab)
 		{
 			case $this->tab_orgs:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_orgs][]\', 
-					\'entry[my_orgs][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_orgs][]');
+				$this->template->set_var('onsubjs2', 'entry[my_orgs][]');
 				break;
 			case $this->tab_cats:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_cats][]\', 
-					\'entry[my_cats][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_cats][]');
+				$this->template->set_var('onsubjs2', 'entry[my_cats][]');
 				break;
 			case $this->tab_persons:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_person][]\', 
-					\'entry[my_person][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_person][]');
+				$this->template->set_var('onsubjs2', 'entry[my_person][]');
 				break;
 			default:
-				$this->template->set_var('onsubjs', '');
+				$this->template->set_var('onsubjs1', '');
+				$this->template->set_var('onsubjs2', '');
 		}
 
 		switch ($section) 
@@ -3318,9 +3316,10 @@ class uiaddressbook
 	*/
 	function java_script()
 	{
-		return '
+		$code = <<<JS
 			<script type="text/javascript">
-			function move(fboxname, tboxname, sboxname, cboxname) {
+			function move(fboxname, tboxname, sboxname, cboxname)
+			{
 				var arrFbox = new Array();
 				var arrTbox = new Array();
 				var arrLookup = new Array();
@@ -3371,10 +3370,14 @@ class uiaddressbook
 					tbox[c] = no;
 				}
 
-				move_cbo(sboxname, cboxname);
+				if(sboxname && cboxname)
+				{
+					move_cbo(sboxname, cboxname);
+				}
 			}
 
-		function move_cbo(sboxname, cboxname) {
+		function move_cbo(sboxname, cboxname)
+		{
 			sbox = document.body_form.elements[sboxname];
 			cbox = document.body_form.elements[cboxname];
 			if(sbox.length > 0)
@@ -3403,11 +3406,15 @@ class uiaddressbook
 			}
 		}
 
-		function process_list(allboxname, myboxname) {
-			mybox = document.body_form.elements[myboxname];
-			for(c = 0; c < mybox.options.length; c++) 
+		function process_list(allboxname, myboxname)
+		{
+			if(myboxname)
 			{
-				mybox.options[c].selected = true;
+				mybox = document.body_form.elements[myboxname];
+				for(c = 0; c < mybox.options.length; c++) 
+				{
+					mybox.options[c].selected = true;
+				}
 			}
 		}
 
@@ -3417,7 +3424,9 @@ class uiaddressbook
 			if (oDiv)
 				oDiv.style.display = oDiv.style.display == "none" ? "" : "none";
 		}
-		</script>';
+		</script>'
+JS;
+		return $code;
 	}
 
 	function get_comm_descr($comm_selected, $type='')

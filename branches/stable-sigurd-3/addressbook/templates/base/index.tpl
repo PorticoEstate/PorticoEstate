@@ -10,10 +10,10 @@
 	<thead>
 		<tr>
 			{cols}
-			<th>{lang_view}</th>
-			<th>{lang_vcard}</th>
-			<th>{lang_edit}</th>
-			<th>{lang_owner}</th>
+			<th width="5%">{lang_view}</th>
+			<th width="5%">{lang_vcard}</th>
+			<th width="5%">{lang_edit}</th>
+			<th width="5%">{lang_owner}</th>
 		</tr>
 	</thead>
 	<tbody>
