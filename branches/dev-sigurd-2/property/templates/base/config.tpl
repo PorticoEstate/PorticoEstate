@@ -75,28 +75,36 @@
     <td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Tax_[%]}:</td>
+    <td>{lang_Tax}: [%]</td>
     <td><input name="newsettings[fm_tax]" value="{value_fm_tax}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_Enter_the_location_of_files_URL.} <br>
-	{lang_Example:_http://www.domain.com/files}:</td>
+    <td>{lang_Enter_the_location_of_files_URL} <br>
+	{lang_Example}: http://www.domain.com/files</td>
     <td><input name="newsettings[files_url]" value="{value_files_url}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Enter_MAP_URL.} <br>
-	{lang_Example:_http://www.domain.com/map}:</td>
+    <td>{lang_Enter_MAP_URL} <br>
+	{lang_Example}: http://www.domain.com/map</td>
     <td><input name="newsettings[map_url]" value="{value_map_url}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_Enter_GAB_Location_Level.} <br>
+    <td>{lang_Enter_GAB_Location_Level} <br>
 	{lang_Default_value_is}: 3</td>
     <td><input name="newsettings[gab_insert_level]" value="{value_gab_insert_level}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Enter_GAB_URL.} <br>
-	{lang_Example:_http://www.domain.com/gab}:</td>
+    <td>{lang_Enter_GAB_URL} <br>
+	{lang_Example}: http://www.domain.com/gab</td>
     <td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_gab_url_paramtres}:<br>
+    lang_Example: type=eiendom&knr=__kommune_nr__&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__
+    </td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[gab_url_paramtres]" wrap="virtual">{value_gab_url_paramtres}</textarea>
+    </td>
    </tr>
    <tr class="row_off">
     <td>{lang_suppress_old_tenant}:</td>

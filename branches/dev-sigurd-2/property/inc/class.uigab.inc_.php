@@ -405,7 +405,9 @@
 				$text_map=lang('Map');
 			}
 
-			$link_to_gab = (isset($config->config_data['gab_url'])?$config->config_data['gab_url']:'');
+			$link_to_gab = isset($config->config_data['gab_url'])?$config->config_data['gab_url']:'';
+			$gab_url_paramtres = isset($config->config_data['gab_url_paramtres']) ? $config->config_data['gab_url_paramtres']:'type=eiendom&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__';
+_debug_array($config->config_data);die();
 			if($link_to_gab)
 			{
 				$text_gab=lang('GAB');
@@ -414,10 +416,10 @@
 			$payment_date = $this->bo->payment_date;
 
 			$uicols = array (
-				'input_type'	=>	array(hidden,text,text,text,text,hidden,text,text,text,link,link),
-				'name'			=>	array(gab_id,gaards_nr,bruksnr,feste_nr,seksjons_nr,hits,owner,location_code,address,map,gab),
+				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','text','link','link'),
+				'name'			=>	array('gab_id','gaards_nr','bruksnr','feste_nr','seksjons_nr','hits','owner','location_code','address','map','gab'),
 				'formatter'		=>	array('','','','','','','','','','',''),
-				'descr'			=>	array(dummy,lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
+				'descr'			=>	array('dummy',lang('Gaards nr'),lang('Bruks nr'),lang('Feste nr'),lang('Seksjons nr'),lang('hits'),lang('Owner'),lang('Location'),lang('Address'),lang('Map'),lang('Gab')),
 				'className'		=> 	array('','','','','','','','','','','')
 				);
 
@@ -488,11 +490,29 @@
 							}
 							if(isset($uicols['input_type']) && isset($uicols['input_type'][$i]) && $uicols['input_type'][$i]=='link' && $uicols['name'][$i] == 'gab' )
 							{
+								$value_kommune_nr	= substr($gab['gab_id'],0,4);
 								$value_gaards_nr	= substr($gab['gab_id'],4,5);
 								$value_bruks_nr		= substr($gab['gab_id'],9,4);
 								$value_feste_nr		= substr($gab['gab_id'],13,4);
 								$value_seksjons_nr	= substr($gab['gab_id'],17,3);
-								$link = phpgw::safe_redirect($link_to_gab . '?type=eiendom&Gnr=' . (int)$value_gaards_nr . '&Bnr=' . (int)$value_bruks_nr . '&Fnr=' . (int)$value_feste_nr . '&Snr=' . (int)$value_seksjons_nr);
+
+								$_param = str_replace(array
+									(
+										'__kommune_nr__',
+										'__gaards_nr__',
+										'__bruks_nr__',
+										'__feste_nr__',
+										'__seksjons_nr__'
+									),array
+									(
+										$value_kommune_nr,
+										(int)$value_gaards_nr,
+										(int)$value_bruks_nr,
+										(int)$value_feste_nr,
+										(int)$value_seksjons_nr
+									), $gab_url_paramtres);
+
+								$link = phpgw::safe_redirect("$link_to_gab?{$_param}");
 
 								$datatable['rows']['row'][$j]['column'][$i]['format'] 	= 'link';
 								$datatable['rows']['row'][$j]['column'][$i]['value']	= $text_gab;
