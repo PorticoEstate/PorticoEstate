@@ -254,6 +254,12 @@
      </select>
     </td>
    </tr>
+   <tr class="row_off">
+		<td>{lang_support_email_address}:</td>
+		<td>
+			<input name="newsettings[support_address]" value="{value_support_address}" size="40">
+		</td>
+	</tr>
 
 	
 <!-- END body -->
