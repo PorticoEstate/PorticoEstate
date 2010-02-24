@@ -43,6 +43,20 @@
 			$var['help_icon'] = 'icon icon-help';
 		}
 
+
+		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
+		{
+			$var['support_url'] = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'manual.uisupport.send'
+			 )) . "','700','600')";
+
+			$var['support_text'] = lang('support');
+			$var['support_icon'] = 'icon icon-help';
+		
+		}
+
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 		{
 			$var['debug_url'] = "javascript:openwindow('"
