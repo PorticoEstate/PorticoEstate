@@ -201,8 +201,7 @@
 
 	<fieldset>
 		<!-- Contract type filter -->
-		<h3><?php echo lang('filters') ?></h3>
-			<label class="toolbar_element_label" for="ctrl_toggle_contract_type"><?php echo lang('type') ?></label>
+		<h3><?php echo lang('field_of_responsibility') ?></h3>
 			<select name="contract_type" id="<?php echo $list_id ?>_ctrl_toggle_contract_type">
 				<option value="all"><?php echo lang('all') ?></option>
 				<?php
