@@ -313,7 +313,7 @@
 		                                                     'tab_index' => 9
 	                                                    ),
 				                                // FIXME test on lightbox for date search
-				                                /*
+				                                
 				                                        array( //boton     Date SEARCH
 				                                            'id' => 'btn_date_search',
 				                                            'name' => 'date_search',
@@ -321,7 +321,7 @@
 				                                            'type' => 'button',
 				                                            'tab_index' => 5
 				                                        ),
-												*/
+												
 
 				                                        array( //boton     SEARCH
 				                                            'id' => 'btn_search',

@@ -300,6 +300,26 @@
 		lightbox.show();
 	}
 
+	// Test for support in lightbox
+	this.onSupportClick = function()
+	{
+		var oArgs = {menuaction:'manual.uisupport.send'};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "300";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+
+
  /********************************************************************************
  *
  */
