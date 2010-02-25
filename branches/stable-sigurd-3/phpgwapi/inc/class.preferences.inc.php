@@ -610,7 +610,7 @@
 					$value = $this->db->db_addslashes(serialize($value));	// this addslashes is for the database
 					$app = $this->db->db_addslashes($app);
 
-					$this->db->query($sql = "INSERT INTO phpgw_preferences".
+					$this->db->query("INSERT INTO phpgw_preferences".
 							" (preference_owner,preference_app,preference_value)".
 							" VALUES ($account_id,'$app','$value')",__LINE__,__FILE__);
 				}

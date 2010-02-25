@@ -1447,7 +1447,7 @@
 		protected function _get_choices($location_id, $attrib_id)
 		{
 			$location_id	= (int) $location_id;
-			$ttrib_id		= (int) $attrib_id;
+			$attrib_id		= (int) $attrib_id;
 			
 			$sql = "SELECT * FROM phpgw_cust_choice " 
 				. " WHERE location_id = {$location_id}"

@@ -38,7 +38,7 @@ HTML;
 				$slctd =  $i == $selected ? ' selected' : '';
 				$formatted = phpgwapi_datetime::formattime($i);
 				$html .= <<<HTML
-				<option value="{$i}" {$slctd}>{$fomatted}</option>
+				<option value="{$i}" {$slctd}>{$formatted}</option>
 
 HTML;
 			}

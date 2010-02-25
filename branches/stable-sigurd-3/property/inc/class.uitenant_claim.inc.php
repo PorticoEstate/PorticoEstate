@@ -74,7 +74,7 @@
 			$this->query		= $this->bo->query;
 			$this->sort		= $this->bo->sort;
 			$this->order		= $this->bo->order;
-			$this->filter		= $this->bo->filter;
+			$this->user_id		= $this->bo->user_id;
 			$this->status		= $this->bo->status;
 			$this->cat_id		= $this->bo->cat_id;
 			$this->allrows		= $this->bo->allrows;
@@ -89,7 +89,8 @@
 				'query'			=> $this->query,
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
-				'filter'		=> $this->filter,
+				'user_id'		=> $this->user_id,
+				'district_id'	=> $this->district_id,
 				'status'		=> $this->status,
 				'cat_id'		=> $this->cat_id,
 				'allrows'		=> $this->allrows
@@ -122,14 +123,18 @@
 	    			'menuaction'			=> 'property.uitenant_claim.index',
 	    			'query'            		=> $this->query,
  	                'cat_id'				=> $this->cat_id,
- 	                'order'					=> $this->order
+ 	                'order'					=> $this->order,
+					'user_id'				=> $this->user_id,
+					'district_id'			=> $this->district_id
    				));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uitenant_claim.index',"
 	    											."sort: '{$this->sort}',"
  	                        						."order: '{$this->order}',"
  	                        						."status: '{$this->status}',"
- 	                        						."project_id: '{$this->project_id}'," 	                        						
+ 	                        						."project_id: '{$this->project_id}',"
+ 	                        						."user_id: '{$this->user_id}',"
+ 	                        						."district_id: '{$this->district_id}',"
  	                        						."query: '{$this->query}'";
 
 				$datatable['config']['allow_allrows'] = true;
@@ -140,7 +145,7 @@
 					'sort'		=> $this->sort,
 					'order'		=> $this->order,
 					'cat_id'	=> $this->cat_id,
-					'filter'	=> $this->filter,
+					'user_id'	=> $this->user_id,
 					'status_id'	=> $this->status_id,
 					'project_id'=> $this->project_id,
 					'query'		=> $this->query
@@ -150,9 +155,17 @@
 				$default_value = array ('id'=>'','name'=> lang('no category'));
 				array_unshift ($values_combo_box[0],$default_value);
 
-				$values_combo_box[1]  = $this->bo->get_status_list(array('format' => 'filter', 'selected' => $this->status,'default' => 'open'));
-				$default_value = array ('id'=>'','name'=>lang('open'));
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = $this->bo->get_status_list(array('format' => 'filter', 'selected' => $this->status,'default' => 'open'));
+				$default_value = array ('id'=>'','name'=>lang('open'));
+				array_unshift ($values_combo_box[2],$default_value);
+
+				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[3],$default_value);
 
 				$datatable['actions']['form'] = array(
 				array(
@@ -174,26 +187,44 @@
 				                                            'tab_index' => 1
 
 				                                        ),
+									array
+										( //boton 	STATUS
+										'id' => 'btn_district_id',
+										'name' => 'district_id',
+										'value'	=> lang('District'),
+										'type' => 'button',
+										'style' => 'filter',
+											'tab_index' => 2
+									),
 				                                        array( //boton 	STATUS
 				                                            'id' => 'btn_status_id',
 				                                            'name' => 'status_id',
 				                                            'value'	=> lang('Status'),
 				                                            'type' => 'button',
 				                                            'style' => 'filter',
-				                                            'tab_index' => 2
+				                                            'tab_index' => 3
 				                                        ),
+									array
+									( //boton 	USER
+										'id' => 'btn_user_id',
+										'name' => 'user_id',
+										'value'	=> lang('User'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 4
+									),
 				                                        array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
 							                                'value'	=> lang('add'),
-							                                'tab_index' => 5
+							                                'tab_index' => 7
 							                            ),
 				                                        array( //boton     SEARCH
 				                                            'id' => 'btn_search',
 				                                            'name' => 'search',
 				                                            'value'    => lang('search'),
 				                                            'type' => 'button',
-				                                            'tab_index' => 4
+				                                            'tab_index' => 6
 				                                        ),
 				   										array( // TEXT INPUT
 				                                            'name'     => 'query',
@@ -202,7 +233,7 @@
 				                                            'type' => 'text',
 				                                            'onkeypress' => 'return pulsar(event)',
 				                                            'size'    => 28,
-				                                            'tab_index' => 3
+				                                            'tab_index' => 5
 				                                        ),
 			                           				),
 			                       		'hidden_value' => array
@@ -212,11 +243,22 @@
 								                                	'id' => 'values_combo_box_0',
 								                                    'value'	=> $this->bocommon->select2String($values_combo_box[0])
 								                                ),
+									array
+									( //div values  combo_box_1
+										'id' => 'values_combo_box_1',
+										'value'	=> $this->bocommon->select2String($values_combo_box[1])
+									),
 								                                array
-								                                ( //div values  combo_box_1
-								                                	'id' => 'values_combo_box_1',
-								                                    'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								                                )
+								                                ( //div values  combo_box_2
+								                                	'id' => 'values_combo_box_2',
+								                                    'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								                                ),
+									array
+									( //div values  combo_box_3
+										'id' => 'values_combo_box_3',
+										'value'	=> $this->bocommon->select2String($values_combo_box[3])
+									),
+
 			                       						  )
 										)
 					 )
@@ -231,23 +273,29 @@
 			$uicols['name'][0]['name'] = 'claim id';
 			$uicols['name'][0]['value'] = 'claim_id';
 
-			$uicols['name'][1]['name'] = 'Project';
-			$uicols['name'][1]['value'] = 'project_id';
+			$uicols['name'][1]['name'] = 'district_id';
+			$uicols['name'][1]['value'] = 'district_id';
 
-			$uicols['name'][2]['name'] = 'name';
-			$uicols['name'][2]['value'] = 'name';
+			$uicols['name'][2]['name'] = 'Project';
+			$uicols['name'][2]['value'] = 'project_id';
 
-			$uicols['name'][3]['name'] = 'time created';
-			$uicols['name'][3]['value'] = 'entry_date';
+			$uicols['name'][3]['name'] = 'name';
+			$uicols['name'][3]['value'] = 'name';
 
-			$uicols['name'][4]['name'] = 'category';
-			$uicols['name'][4]['value'] = 'category';
+			$uicols['name'][4]['name'] = 'time created';
+			$uicols['name'][4]['value'] = 'entry_date';
 
-			$uicols['name'][5]['name'] = 'Status';
-			$uicols['name'][5]['value'] = 'status';
+			$uicols['name'][5]['name'] = 'user';
+			$uicols['name'][5]['value'] = 'user';
 
-			$uicols['name'][6]['name'] = 'tenant_id';
-			$uicols['name'][6]['value'] = 'tenant_id';
+			$uicols['name'][6]['name'] = 'category';
+			$uicols['name'][6]['value'] = 'category';
+
+			$uicols['name'][7]['name'] = 'Status';
+			$uicols['name'][7]['value'] = 'status';
+
+			$uicols['name'][8]['name'] = 'tenant_id';
+			$uicols['name'][8]['value'] = 'tenant_id';
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -349,7 +397,12 @@
 					$datatable['headers']['header'][$i]['sortable']			= false;
 				}
 
-				if($uicols['name'][$i]['value']=='claim_id' || $uicols['name'][$i]['value']=='project_id' || $uicols['name'][$i]['value']=='name' || $uicols['name'][$i]['value']=='entry_date')
+				if($uicols['name'][$i]['value']=='claim_id'
+					|| $uicols['name'][$i]['value']=='project_id'
+					|| $uicols['name'][$i]['value']=='name'
+					|| $uicols['name'][$i]['value']=='district_id'
+					|| $uicols['name'][$i]['value']=='entry_date'
+				)
 				{
 					$datatable['headers']['header'][$i]['sortable']		= true;
 					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i]['value'];

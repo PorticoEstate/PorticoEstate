@@ -294,7 +294,6 @@ XSLT;
 		function xml_parse()
 		{
 			$this->xmldata = '';
-			$xmlvars = $this->xmlvars;
 
 			$xmldata = $this->vars;
 
