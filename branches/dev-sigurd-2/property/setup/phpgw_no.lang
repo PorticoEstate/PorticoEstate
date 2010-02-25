@@ -216,7 +216,7 @@ billable hours changed	property	no	Fakturerbar time endret
 billable rate changed	property	no	Fakturerbar sats endret
 bill per unit	property	no	Pris pr enhet, ex mva
 branch	property	no	Fag
-b - responsible	property	no	B-ansv
+b - responsible	property	no	Anviser
 bruks nr	property	no	bruks nr
 budget	property	no	Budsjett
 budget account	property	no	Budsjett konto
@@ -225,7 +225,7 @@ budget changed	property	no	Budsjett er endret
 budget code is missing from sub invoice in :	property	no	Budsjett konto mangler fra underbilag i :
 budget cost	property	no	Budsjett-beløp
 budget_cost	property	no	Budsjett-beløp
-budget responsible	property	no	Budsjett ansvarlig
+budget responsible	property	no	Anviser
 building	property	no	Bygning
 building common	property	no	Bygnings felles
 building has been edited	property	no	Bygning er endret
@@ -852,7 +852,7 @@ invoice tranferred	property	no	bilag er overført
 is registered	property	no	er registert
 is there a demand from the authorities to correct this condition?	property	no	Finnes det offentlige pålegg fo å rette opp tilstanden?
 items	property	no	Detaljer
-janitor	property	no	Oppsynsmann
+janitor	property	no	Bestiller
 jasper reports	property	no	JasperReports
 key deliver location	property	no	Sted for å levere nøkkel
 key fetch location	property	no	Sted for å hente nøkkel
@@ -1029,7 +1029,7 @@ no grouping	property	no	Ingen gruppering
 no history	property	no	Historie er ikke registert
 no history for this record	property	no	Ingen historie for denne meldingen
 no hour category	property	no	Ingen post-kategori
-no janitor	property	no	Oppsynsmann ikke valgt
+no janitor	property	no	Bestiller ikke valgt
 no location	property	no	Lokalisering ikke valgt
 no mailaddress is selected	property	no	E-post ikke valgt
 no member	property	no	Ingen medlem
@@ -1038,7 +1038,7 @@ none consequences	property	no	Ingen konsekvenser
 no part of town	property	no	Bydel ikke valgt
 no revision	property	no	Ingen revisjon
 no status	property	no	Status ikke valgt
-no supervisor	property	no	Boligleder ikke valgt
+no supervisor	property	no	Attestant ikke valgt
 note	property	no	Notat
 nothing to do!	property	no	Ingen ting å gjøre
 notify	property	no	varsle
@@ -1127,7 +1127,7 @@ please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	angi detaljer
 please select a branch !	property	no	velg fag
 please select a budget account !	property	no	Velg en budsjettkonto
-please select a budget reponsible!	property	no	Velg en budsjettansvarlig
+please select a budget reponsible!	property	no	Velg en anviser
 please select a building id !	property	no	velg bygnings ID
 please select a category !	property	no	velg kategori
 please select a coordinator !	property	no	Velg en koordinator
@@ -1150,7 +1150,7 @@ please select a type !	property	no	velg type
 please select a valid project !	property	no	velg et gyldig prosjekt
 please - select a vendor!	property	no	velg en leverandør
 please select a workorder !	property	no	velg en ordre!
-please - select budget responsible!	property	no	velg en budsjettansvarlig
+please - select budget responsible!	property	no	velg en anviser
 please select change type	property	no	Velg en endringstype
 please - select either payment date or number of days from invoice date !	property	no	velg enten betalingsdato eller angi antall dager till forfall fra fakturadato
 please select entity type !	property	no	Velg en entitets-type
@@ -1321,7 +1321,7 @@ select a service agreement type	property	no	Velg en serviceavtale-type
 select a standard-code from the norwegian standard	property	no	velg en standard NS-kode
 select a tenant	property	no	Velg en leietaker
 select branch	property	no	velg fag
-select b-responsible	property	no	Velg budsjettansvarlig
+select b-responsible	property	no	Velg anviser
 select building part	property	no	velg bygningsdel
 select category	property	no	Velg Kategori
 select chapter	property	no	velg kapittel
@@ -1362,7 +1362,7 @@ select the branches for this project	property	no	velg fag for dette prosjektet
 select the branches for this request	property	no	velg fag for denne anmodningen
 select the branch for this activity.	property	no	velg fag for denne aktiviteten
 select the branch for this document	property	no	velg fag for dette dokumentet
-select the budget responsible	property	no	Velg budsjettansvarlig
+select the budget responsible	property	no	Velg anviser
 select the building part for this activity.	property	no	velg bygningsdel for denne aktiviteten
 select the category the actor belongs to. to do not use a category select no category	property	no	Velg kategorien denne aktøren tilhører
 select the category the agreement belongs to. to do not use a category select no category	property	no	Velg kategorien denne avtalen tilhører
@@ -1411,7 +1411,7 @@ select the filter. to show all entries select show all	property	no	Velg filter. 
 select the granting group. to do not use a granting group select no granting group	property	no	Angi tildelings gruppe
 select the grouping for this activity.	property	no	velg gruppering for denne posten
 select the grouping the selection belongs to	property	no	Velg gruppering utvelgelsen gjelder
-select the janitor responsible for this invoice. to do not use janitor -  select no janitor	property	no	velg oppsynsmann bilaget tilhører. For ikke å tildele oppsynsmann velg OPPSYNSMANN IKKE VALG
+select the janitor responsible for this invoice. to do not use janitor -  select no janitor	property	no	velg bestiller bilaget tilhører. For ikke å tildele bestiller velg BESTILLER IKKE VALG
 select the key responsible for this project	property	no	velg nøkkelansvarlig
 select the level for this information	property	no	Velg nivå for denne informasjonen
 select the method for this times service	property	no	Velg metode
@@ -1429,7 +1429,7 @@ select the status the agreement group belongs to. to do not use a category selec
 select the status the document belongs to. to do not use a category select no status	property	no	velg status dokument tilhører. For ikke å bruke status velg STATUS IKKE VALGT
 select the status. to do not use a status select no status	property	no	Velg status
 select the street name	property	no	velg gatenavn
-select the supervisor responsible for this invoice. to do not use supervisor -  select no supervisor	property	no	velg boligleder bilaget tilhører. For ikke å tildele oppsynsmann velg BOLIGLEDER IKKE VALG
+select the supervisor responsible for this invoice. to do not use supervisor -  select no supervisor	property	no	velg attestant bilaget tilhører. For ikke å tildele bestiller velg ATTESTANT IKKE VALG
 select the template-chapter	property	no	velg kapittel
 select the tolerance for this activity.	property	no	velg toleranse for denne posten
 select the type  invoice. to do not use type -  select no type	property	no	velg type
@@ -1543,7 +1543,7 @@ summary	property	no	Sammendrag
 sum of calculation	property	no	Sum kalkulasjon
 sum tax	property	no	sum mva
 sum workorder	property	no	Sum bestilling
-supervisor	property	no	Saksbehandler
+supervisor	property	no	Attestant
 sync account-contact	common	no	Synkroniser Brukerer og Kontakter
 table could not be added	property	no	Tabell kunne ikke legges til i databasen
 table has not been saved	property	no	Tabell er ikke lagret
@@ -1766,8 +1766,8 @@ yearly	property	no	Årlig
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet
-you have to select a budget responsible for this invoice in order to add the invoice	property	no	Du må velge en budsjettansvarlig for å kunne legge til en faktura
-you have to select a budget responsible for this invoice in order to make the import	property	no	Du må velge en budsjettansvarlig for å importere
+you have to select a budget responsible for this invoice in order to add the invoice	property	no	Du må velge en anviser for å kunne legge til en faktura
+you have to select a budget responsible for this invoice in order to make the import	property	no	Du må velge en anviser for å importere
 you have to select the conversion for this import	property	no	Du må velge importformat
 you have to select type of invoice	property	no	Du må velge art
 your message could not be sent!	property	no	Din melding kunne ikke sendes
