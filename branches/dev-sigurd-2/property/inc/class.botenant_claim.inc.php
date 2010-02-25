@@ -59,11 +59,15 @@
 			$query	= phpgw::get_var('query');
 			$sort	= phpgw::get_var('sort');
 			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
+			$user_id	= phpgw::get_var('user_id', 'int');
 			$status	= phpgw::get_var('status');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows= phpgw::get_var('allrows', 'bool');
 			$project_id	= phpgw::get_var('project_id', 'int');
+			$district_id= phpgw::get_var('district_id', 'int');
+
+			$this->district_id		= isset($_REQUEST['district_id']) 	? $district_id		: $this->district_id;
+
 			$this->project_id = $project_id;
 
 			if ($start)
@@ -79,9 +83,9 @@
 			{
 				$this->query = $query;
 			}
-			if(!empty($filter))
+			if(!empty($user_id))
 			{
-				$this->filter = $filter;
+				$this->user_id = $user_id;
 			}
 			if(isset($status))
 			{
@@ -123,11 +127,12 @@
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
+			$this->user_id	= isset($data['user_id'])?$data['user_id']:'';
 			$this->status	= $data['status'];
 			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
+			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
 		}
 
 		function check_perms($has, $needed)
@@ -177,14 +182,15 @@
 			$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 
 			$claim = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'status' => $this->status,'cat_id' => $this->cat_id,
-											'allrows'=>$this->allrows,'project_id' => $project_id));
+											'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
+											'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
 			$this->total_records = $this->so->total_records;
 
 			foreach ($claim as &$entry)
 			{
 				$entry['entry_date']  = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['status'] = lang($entry['status']);
+				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
 			}
 			return $claim;
 		}
