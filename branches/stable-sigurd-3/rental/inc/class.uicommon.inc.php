@@ -462,7 +462,12 @@
             }
 
              // Use keys as headings
-            $headings = $keys;
+            $headings = array();
+            $count_keys = count($keys);
+            for($j=0;$j<$count_keys;$j++)
+            {
+            	array_push($headings, lang($keys[$j]));
+            }
 
             $property_common = CreateObject('property.bocommon');
             $property_common->download($list, $keys, $headings);

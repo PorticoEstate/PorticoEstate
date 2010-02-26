@@ -138,5 +138,20 @@ class rental_soadjustment extends rental_socommon
 		$adjustment->set_id($adjustment_id);
 		return $adjustment_id;
 	}
+	
+	public function adjustment_exist($adjustment)
+	{
+		$query = "SELECT * FROM rental_adjustment WHERE " .
+				 "responsibility_id = {$adjustment->get_responsibility_id()} " .
+				 "AND adjustment_date = {$adjustment->get_adjustment_date()} " . 
+				 "AND interval = {$adjustment->get_interval()} " .
+				 "AND percent = {$adjustment->get_percent()}";
+		$result = $this->db->query($query);
+		if($this->db->next_record())
+		{
+			return true;
+		}
+		return false;
+	}
 }
 ?>

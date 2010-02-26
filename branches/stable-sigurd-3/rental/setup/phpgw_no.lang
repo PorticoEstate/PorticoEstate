@@ -26,6 +26,8 @@ agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
 agresso_lg04	rental	no	Agresso LG04 - salgsordrer
 add_location	rental	no	Legg enhet til leieobjektet
+address1	rental	no	Adresse 1
+address2	rental	no	Adresse 2
 all	rental	no	Alle
 all_locations	rental	no	Enheter fra eiendomsregisteret
 and	rental	no	og
@@ -78,6 +80,7 @@ comments	rental	no	Kommentarer
 Commit	rental	no	Avslutt
 Commited	rental	no	Avsluttet
 company	rental	no	Foretak
+company_name	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
 composite_back	rental	no	Leieobjektsliste
@@ -91,6 +94,7 @@ contracts	rental	no	Kontrakter
 contracts_under_dismissal	rental	no	Kontrakter under avslutning
 contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
+contract_notification_status	rental	no	Status
 contract_status	rental	no	Status
 contract_type_eksternleie	rental	no	Eksternleie
 contract_type_eksternleie_feste	rental	no	Feste (1520)
@@ -105,6 +109,7 @@ contract_type_internleie_KF	rental	no	KF
 contract_type_internleie_andre	rental	no	Andre
 contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
+contract_type_id	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
 contracts_closing_due_date	rental	no	Kontrakter nær opsjonsfrist
 Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
@@ -183,6 +188,7 @@ frontpage_was_reset	rental	no	Oppsettet på forsiden ble nullstilt
 frontpage_reset_setup	rental	no	Nullstill oppsett 
 f_select_columns	rental	no	Velg kolonner
 gab	rental	no	GAB
+gab_id	rental	no	GAB
 Generate export	rental	no	Generér eksport
 Generate cs15	rental	no	Generér kundefil
 half-year	rental	no	Halvårig
@@ -203,6 +209,7 @@ invoice	rental	no	Faktura
 invoice_run	rental	no	Fakturakjøring
 invoice_menu	rental	no	Faktura
 invoice_header	rental	no	Fakturaoverskrift
+is_active	rental	no	Aktiv
 is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 is_inactive	rental	no	Inaktiv
@@ -217,10 +224,12 @@ last_updated	rental	no	Sist oppdatert
 level	rental	no	Nivå
 link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer
+location_id	rental	no	Intern organisasjonstilknytning
 log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus.
 manual_adjust_price_item	rental	no	Manuell regulering av priselement
 manual_adjust_price_item_select	rental	no	Velg priselement
 manual_adjustment	rental	no	Manuell regulering
+max_area	rental	no	Areal
 message	rental	no	Melding
 messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
 messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
@@ -322,6 +331,7 @@ party	rental	no	Kontraktspart
 party_back	rental	no	Kontraktspartliste
 party_location	rental	no	Intern organisasjonstilhørighet
 party_type	rental	no	Type kontraktspart
+payer_id	rental	no	Fakturamottaker
 percent	rental	no	Prosent
 period	rental	no	Periode
 permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å editere kontrakten
@@ -332,6 +342,8 @@ phone	rental	no	Telefon
 postal_code_place	rental	no	Postnummer/-sted
 post_code	rental	no	Postnummer
 post_place	rental	no	Sted
+postal_code	rental	no	Postnummer
+place	rental	no	Sted
 previous	rental	no	Forrige
 price_item	rental	no	Priselement
 price_item_type_apiece	rental	no	Stk.
@@ -366,6 +378,7 @@ reset_price_item	rental	no	Hent verdier fra prisboken
 reset	rental	no	Nullstill
 reskontro	rental	no	Reskontro
 responsibility	rental	no	Ansvar
+responsibility_id	rental	no	Ansvar
 Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
 responsibility_id_not_numeric	rental	no	Ansvar må være et tall
 result_unit_number	rental	no	Resultatsenhet
@@ -392,6 +405,7 @@ selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer
 serial	rental	no	Løpenummer
 service	rental	no	Tjeneste
+service_id	rental	no	Tjeneste
 Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
 service_id_not_numeric	rental	no	Tjeneste må være et tall
 set_payer	rental	no	Sett som fakturamottaker
