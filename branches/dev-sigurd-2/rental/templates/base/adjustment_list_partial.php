@@ -48,7 +48,7 @@
 		},
 		{
 			key: "interval",
-			label: "<?php echo lang('interval') ?>",
+			label: "<?php echo lang('interval') ?>"
 		},
 		{
 			key: "responsibility_title",
