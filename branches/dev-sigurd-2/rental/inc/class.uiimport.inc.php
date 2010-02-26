@@ -227,7 +227,9 @@
 			// Prerequistes: Contracts
 			if (!phpgwapi_cache::session_get('rental', 'facilit_adjustments')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
-				$this->import_adjustments($contracts, phpgwapi_cache::session_get('rental', 'facilit_events'));
+				$event_data = phpgwapi_cache::session_get('rental', 'facilit_events');
+				$regulation_id_location_id = isset($event_data) ? $event_data : array();
+				$this->import_adjustments($contracts, $regulation_id_location_id);
                 $this->log_messages(7);
                 $this->clean_up();
 			}
@@ -240,6 +242,7 @@
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_events');
+			phpgwapi_cache::session_clear('rental', 'facilit_adjustments');
 			return '7';
 		}
 		
