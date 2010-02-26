@@ -20,18 +20,23 @@
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			if($created)
-				$subject = "Søknad #{$application[id]} er mottatt";
-			else
-				$subject = "Søknad #{$application[id]} endret/oppdatert";
+			$subject = 'Automatisk svar fra Bergen kommune - AktivBy';
 			$link = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiapplication.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
-			$link = 'http://'. $external_site_address . $link;
+			$link = $external_site_address . $link;
 			$link = str_replace('&amp;', '&', $link);
-			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
+
+			if ($created) {
+				$body = '<p>Din søknad om leie/lån er mottatt.</p>';
+			} else {
+				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
+			}
+			$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
+			$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'plain');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'html');
 			}
 			catch (phpmailerException $e)
 			{
