@@ -549,6 +549,12 @@ class rental_socontract extends rental_socommon
 		return false;
 	}
 	
+	public function remove_Last_edited_by_information()
+	{
+		$sql = "DELETE * FROM rental_contract_last_edited";
+		$this->db->query($sql);
+	}
+	
 	public function get_last_edited_by($contract_id)
 	{
 		$sql = "SELECT account_id FROM rental_contract_last_edited where contract_id={$contract_id} ORDER by edited_on DESC";
@@ -1036,7 +1042,16 @@ class rental_socontract extends rental_socommon
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
     	$new_adjustment_interval = $this->marshal($adjustment_interval, 'int');
-    	$sql = "UPDATE rental_contract SET adjustable=true, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id}";
+    	$sql = "UPDATE rental_contract SET adjustable=true, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id} AND adjustment_year<{$new_adjusted_year}";
+    	$this->db->query($sql);
+    	return $this->db->affected_rows() > 0 ? true : false;
+    }
+    
+    public function update_contract_end_date($contract_id, $date)
+    {
+    	$cid = $this->marshal($contract_id, 'int');
+    	$end_date = $this->marshal($date, 'int');
+    	$sql = "UPDATE rental_contract SET date_end={$end_date} WHERE id = {$cid}";
     	$this->db->query($sql);
     }
     
@@ -1048,6 +1063,7 @@ class rental_socontract extends rental_socommon
     	while($this->db->next_record()){
     		$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id={$contract_id}";
     		$this->db->query($sql);
+    		return $this->db->affected_rows() > 0 ? true : false;
     	}
     }
     
