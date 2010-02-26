@@ -1,28 +1,7 @@
-<!-- $Id: tts.xsl 4859 2010-02-18 23:09:16Z sigurd $ -->
-
-	<xsl:template name="app_data">
-		<xsl:choose>
-			<xsl:when test="demo_section_within_template">
-				<xsl:apply-templates select="demo_section_within_template"/>
-			</xsl:when>
-			<xsl:when test="demo_2">
-				<xsl:apply-templates select="demo_2"/>
-			</xsl:when>
-			<xsl:when test="inline_table">
-				<xsl:apply-templates select="inline_table"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="list"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	<xsl:template match="list">
-	</xsl:template>
-
+<!-- $Id$ -->
 
 <!-- 1 -->
-	<xsl:template match="demo_section_within_template" xmlns:php="http://php.net/xsl">
+	<xsl:template match="demo_1" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -79,8 +58,8 @@
 	</xsl:template>
 	
 	
-<!--Inline table-->
-	<xsl:template match="inline_table" xmlns:php="http://php.net/xsl">
+<!-- 3 -->
+	<xsl:template match="demo_3" xmlns:php="http://php.net/xsl">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<table cellpadding="2" cellspacing="2" width="95%" align="center">

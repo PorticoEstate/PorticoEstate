@@ -1,4 +1,7 @@
 <?php
+
+	phpgw::import_class('frontend.bofrontend');
+
 	class frontend_menu
 	{
 		function get_menu()
@@ -39,52 +42,13 @@
 			);
 
 
-			$menus['navigation'] = array
-			(
-				'show'	=> array
-				(
-					'text'	=> lang('show'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'frontend.uicontract.show'))
-				),
-				'demo_tab'	=> array
-				(
-					'text'	=> 'Demo Tabs',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'frontend.ui_demo_tabs.first'))
-				),
-				'demo_tab_noframework'	=> array
-				(
-					'text'	=> 'Demo Tabs noframework',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'frontend.ui_demo_tabs.first', 'noframework' => true))
-				)
-			);
+			$menus['navigation'] = array();
 
 
-			$locations = $GLOBALS['phpgw']->locations->get_locations();
-
-			unset($locations['.']);
-			unset($locations['admin']);
-
-			$config	= CreateObject('phpgwapi.config','frontend');
-			$config->read();
-
-			$_locations = array();
-			foreach ($locations as $location => $name)
-			{
-				$_locations[] = array
-				(
-					'location'	=> $location,
-					'name'		=> $name,
-					'sort'		=> isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99
-				);
-			}
-		
-			if(isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
-			{
-				array_multisort($config->config_data['tab_sorting'], SORT_ASC, $_locations);
-			}
+			$locations = frontend_bofrontend::get_sections();
 
 			$tabs = array();
-			foreach ($_locations as $key => $entry)
+			foreach ($locations as $key => $entry)
 			{
 				$name = $entry['name'];
 				$location = $entry['location'];
@@ -94,13 +58,11 @@
 					$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', $location);
 					$menus['navigation'][$location_id] = array(
 						'text' => lang($name),
-						'url'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.uifrontend.{$name}", 'type'=>$location_id, 'noframework' => $noframework))
+						'url'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.ui{$name}.index", 'type'=>$location_id, 'noframework' => $noframework))
 					);
 				}			
 			}
 			
-
-
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

@@ -71,7 +71,7 @@
 
 	this.onAddClick = function()
 	{
-		var oArgs = {menuaction:'frontend.uifrontend.add_ticket'};
+		var oArgs = {menuaction:'frontend.uihelpdesk.add_ticket'};
 		var sUrl = phpGWLink('index.php', oArgs);
 
 		var onDialogShow = function(e, args, o)
