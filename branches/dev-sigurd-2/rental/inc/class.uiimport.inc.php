@@ -151,7 +151,7 @@
 		 */
 		public function import()
 		{
-					
+			
 			$steps = 7;
 			
 			/* Import logic:
@@ -167,36 +167,29 @@
 			$this->warnings = array();
 			$this->errors = array();
 			
-			// Import contract parts
-			// Step result:
+			// Import contract parties if not done before and put them on the users session
 			if (!phpgwapi_cache::session_get('rental', 'facilit_parties')) {
 				phpgwapi_cache::session_set('rental', 'facilit_parties', $this->import_parties()); 
-				$this->import_button_label = "2/{$steps}: Continue to import composites";
                 $this->log_messages(1);
 				return '1';
 			}
 			
-			// Import composites and units
-			// Step result:
+			// Import composites if not done before and put them on the users session
 			if (!phpgwapi_cache::session_get('rental', 'facilit_composites')) {
 				phpgwapi_cache::session_set('rental', 'facilit_composites', $this->import_composites());
-				$this->import_button_label = "3/{$steps}: Continue to import composite-to-contract link table";
                 $this->log_messages(2);
 				return '2';
 			}
 			
-			// Import composite to contract link table.  Assumes 1-1 link.
-			// Step result:
+			// Load composite to contract link table if not done before and put them on the users session
 			if (!phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract')) {
 				phpgwapi_cache::session_set('rental', 'facilit_rentalobject_to_contract', $this->import_rentalobject_to_contract());
-				$this->import_button_label = "4/{$steps}: Continue to import contracts";
                 $this->log_messages(3);
 				return '3';
 			}
 			
-			// Import contracts
+			// Import contracts if not done before and put them on the users session
 			// Prerequisites: Composites, parties, contract to composite bindings, and default values for accounts/project number for 
-			// Step result:
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contracts')) {
 				$composites = phpgwapi_cache::session_get('rental', 'facilit_composites');
 				$rentalobject_to_contract = phpgwapi_cache::session_get('rental', 'facilit_rentalobject_to_contract');
@@ -206,53 +199,47 @@
 				$defalt_values['account_out'] = rental_socontract::get_instance()->get_default_account($location_id, false); //OUT
 				$defalt_values['project_number'] = rental_socontract::get_instance()->get_default_project_number($location_id); //PROJECTNUMBER
 				phpgwapi_cache::session_set('rental', 'facilit_contracts', $this->import_contracts($composites, $rentalobject_to_contract, $parties, $defalt_values));
-				$this->import_button_label = "5/{$steps}: Continue to import contract price items";
                 $this->log_messages(4);
 				return '4';
 			}
 			
-			// Import price items
-			// Prerequisites: Contracts
-			// Step result:
+			// Import price items if not done before and put them on the users session
+			// Prerequisites: Contracts	
 			if (!phpgwapi_cache::session_get('rental', 'facilit_contract_price_items')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
 				phpgwapi_cache::session_set('rental', 'facilit_contract_price_items', $this->import_contract_price_items($contracts));
-				$this->import_button_label = "6/{$steps}: Continue to import events"; 
                 $this->log_messages(5);
 				return '5';
 			}
 			
-			// Import events
+			// Import events if not done before and put them on the users session
 			// Prerequistes: Contracts
-			// Step result
 			if (!phpgwapi_cache::session_get('rental', 'facilit_events')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
-				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts));
-				$this->import_button_label = "7/{$steps}: Continue to import adjustments";
+				$event_data = phpgwapi_cache::session_get('rental', 'facilit_events');
+				$regulation_id_location_id = isset($event_data) ? $event_data : array();
+				phpgwapi_cache::session_set('rental', 'facilit_events', $this->import_events($contracts, $regulation_id_location_id));
 				$this->log_messages(6);
 				return '6';
 			}
 			
 			// Import adjustments
 			// Prerequistes: Contracts
-			// Step result
 			if (!phpgwapi_cache::session_get('rental', 'facilit_adjustments')) {
 				$contracts = phpgwapi_cache::session_get('rental', 'facilit_contracts');
-				phpgwapi_cache::session_set('rental', 'facilit_adjustments', $this->import_adjustments($contracts));
+				$this->import_adjustments($contracts, phpgwapi_cache::session_get('rental', 'facilit_events'));
                 $this->log_messages(7);
                 $this->clean_up();
-				$this->import_button_label = "Import done";
-				//return;
 			}
 
 			// We're done with the import, so clear all session variables so we're ready for a new one
-			//phpgwapi_cache::session_clear('rental', 'facilit_parties');
+			// We do not clear parties (same for all responsibility areas)
+			// We do not clear event data, the array is just added for each
 			phpgwapi_cache::session_clear('rental', 'facilit_composites');
 			phpgwapi_cache::session_clear('rental', 'facilit_rentalobject_to_contract');
 			phpgwapi_cache::session_clear('rental', 'facilit_contracts');
 			phpgwapi_cache::session_clear('rental', 'facilit_contract_price_items');
 			phpgwapi_cache::session_clear('rental', 'facilit_events');
-			//phpgwapi_cache::session_clear('rental', 'facilit_adjustments');
 			return '7';
 		}
 		
@@ -336,7 +323,7 @@
 	                        }
 	                        else
 	                        {
-	                        	$this->warnings[] = "Party with valid identifier ({$identifier}) not found in internal organisation tree.";
+	                        	$this->warnings[] = "Party with valid identifier ({$identifier}) not found in internal organisation tree. Company name({$party->get_company_name()})";
 	                        }
                     		$valid_identifier = true;
                     	}
@@ -359,7 +346,7 @@
 	                        }
 	                        else
 	                        {
-	                        	$this->warnings[] = "Party with valid identifier ({$identifier}- original R{$identifier}) not found in internal organisation tree.";
+	                        	$this->warnings[] = "Party with valid identifier ({$identifier}- original R{$identifier}) not found in internal organisation tree. Company name({$party->get_company_name()})";
 	                        }
                     		$valid_identifier = true;
                     	}
@@ -398,7 +385,7 @@
                 	$party->set_last_name($this->decode($data[1]));			//cEtternavn
                     $party->set_company_name($this->decode($data[2]));		//cForetaksnavn
                     $party->set_is_inactive(true);
-                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). Setting as inactive.";
+                    $this->warnings[] = "Party with unknown 'cPersonForetaknr' format ({$identifier}). First name ({$party->get_first_name()}). Last name({$party->get_last_name()}). Company name({$party->get_company_name()}) Setting as inactive.";
                 }
                 
                 	// Fødselsnr/Foretaksnr/AgressoID
@@ -418,8 +405,11 @@
 				}
 			}
 			
-			$this->messages[] = "Successfully imported " . count($parties) . " contract parties. (" . (time() - $start_time) . " seconds)";
+			$this->messages[] = "Successfully imported " . count($parties) . " contract parties. (" . (time() - $start_time) . " seconds).";
 
+			//Clean up
+			//unset();
+			
 			return $parties;
 		}
 		
@@ -834,7 +824,23 @@
                     	$socomposite = rental_socomposite::get_instance();
                     	$contract->set_rented_area($socomposite->get_area($composite_id));
                 	}	
-                } 
+                }
+                else if($title == 'contract_type_innleie')
+                {
+                	$rented_area_on_contract = $this->decode($data[21]);
+                	if(isset($rented_area_on_contract) && $rented_area_on_contract > 0)
+                	{
+                		$contract->set_rented_area($rented_area_on_contract);
+                	}
+                	else
+                	{
+                		if($composite_id)
+	                	{
+	                    	$socomposite = rental_socomposite::get_instance();
+	                    	$contract->set_rented_area($socomposite->get_area($composite_id));
+	                	}	
+                	}
+                }
                 else 
                 {
                 	// ... and for others contract types the rented area resides on the contract
@@ -1079,14 +1085,26 @@
                             {
                             	if($detail_price_items[$facilit_id]['amount'] != $rented_area)
                             	{
-                            		$this->warnings[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		if($rented_area == 0)
+                            		{
+                            			$contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
+                            			$this->warnings[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already has rented area set to 0. Using rented area from price item.";
+                            		}
+                            		else
+                            		{
+                            			$this->warnings[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
                             		. " while contract {$contract_id} already has rented area {$rented_area}. Using rented area on contract.";
+                            		}
                             	}
                             }
                             else
                             {
                             	//Store price item area on contract if the contract has no area (not from contract)
                             	$contract->set_rented_area($detail_price_items[$facilit_id]['amount']);
+                            	$this->message[] = "Price item {$id} - (Facilit ID {$facilit_id}) has area " . $detail_price_items[$facilit_id]['amount'] 
+                            		. " while contract {$contract_id} already no area {$rented_area}. Using rented area on price item.";
+                            	
                             	//Store the contract
                            		$socontract->store($contract);
                             }
@@ -1140,7 +1158,7 @@
             return true;
 		}
 		
-		protected function import_events($contracts)
+		protected function import_events($contracts, $regulation_id_location_id)
 		{
 			$start_time = time();
 			
@@ -1155,40 +1173,85 @@
 			foreach ($datalines as $data) {
 				$type_id = $data[2];
 				
-				// We do not import adjustments.  And only import if there is a title.
-				if ($type_id != 1 && $type_id != '1' && !$this->is_null($data[3])) {
-					$date_array = explode(".",$this->decode($data[7]));		
-					if(count($date_array) == 3)
+				$date_array = explode(".",$this->decode($data[7]));		
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$date = strtotime($y."-".$m."-".$d);
+				}
+					
+				//Which contract the event is linked to
+				$contract_id = $contracts[$this->decode($data[1])];
+				
+				if(!isset($contract_id) || $contract_id <= 0)
+				{
+					//This event is not bound to a contract that is part of the currently importing respensibiliry area
+					continue;
+				}
+				
+				$location_id = $this->location_id;
+				
+				// Add event description to title
+				$title = $this->decode($data[3]);
+				if (!$this->is_null($data[4])) {
+					$title .= " " . $this->decode($data[4]);
+				}
+					
+				//Contract ending event
+				if($type_id == '3')
+				{
+					if(isset($date) && is_numeric($date) && $contract_id > 0)
 					{
-						$y = $date_array[2];
-						$m = $date_array[1];
-						$d = $date_array[0];
-						$date = strtotime($y."-".$m."-".$d);
+						//Set date as contract date
+						$socontract->update_contract_end_date($contract_id, $date);
+						$this->messages[] = "Successfully updated contract end date to '" . $this->decode($data[7]) . "' for contract {$contract_id}";
+						if(isset($title) && $title != '')
+						{
+							$this->warnings[] = "Contract event of type end date (" . $this->decode($data[7]) . ") for contract {$contract_id} has a title {$title} which is not imported";
+						}
 					}
-					$contract_id = $contracts[$data[1]];
-					$location_id = $this->location_id;
-					
-					$title = $this->decode($data[3]);
-					if (!$this->is_null($data[4])) {
-						$title .= " " . $this->decode($data[4]);
+					else
+					{
+						$this->warnings[] = "Skipped contract end event with either no date ({$this->decode($data[7])}) or not valid contract identifier ({$contract_id}/{$this->decode($data[1])})";
 					}
 					
-					$repeating = ($data[7] == '0');
-					$interval = $data[8];
-					
-					if ($repeating && ($interval > 1) || ($contract_id == 0)) {
-						$this->warnings[] = "Skipping price item " . $data[0] . " because the repeat interval is larger than 1 year or it has no contract.";
-					} else {
+				}
+				else if($type_id == '4')// Event of type notification
+				{
+					if(isset($title) && $title != '' && $contract_id > 0)
+					{
 						// All is good, store notification
 						$notification = new rental_notification(null, null, $location_id, $contract_id, $date, $title);
 						if ($sonotification->store($notification)) {
-							$this->messages[] = "Successfully imported event '" . $notification->get_message() . "' for contract {$contract_id}";
+							$this->messages[] = "Successfully imported notification '" . $notification->get_message() . "' for contract {$contract_id}";
 						} else {
-							$this->errors[] = "Error importing event " . $notification->get_message() . " for contract {$contract_id}";
+							$this->errors[] = "Error importing notification " . $notification->get_message() . " for contract {$contract_id}";
 						}
 					}
-				} else if($type_id == 1 || $type_id == '1') {	//price adjustment
+					else
+					{
+						$this->warnings[] = "Skipped notification with no valid contract identifer ({$contract_id} or no title ({$title})";
+					}
+				}
+				else if($type_id == '1') {	//price adjustment
 					$adjusted = $this->decode($data[8]);
+					
+					//$reg_id_generated = $this->decode($data[9]);
+					$reg_id_regulated = $this->decode($data[10]);
+					
+					/*if(isset($reg_id_generated) && $reg_id_generated != '')
+					{
+						$regulation_id_location_id[$reg_id_generated] = $location_id;
+					}*/
+					
+					if(isset($reg_id_regulated) && $reg_id_regulated != '')
+					{
+						$regulation_id_location_id[$reg_id_regulated] = $location_id;
+					}
+					
+				
 					if($adjusted == 0 || $adjusted == '0'){
 						$current_year = date('Y');
 						$date_tmp = explode(".", $this->decode($data[7]));
@@ -1204,16 +1267,23 @@
 						if($last_adjusted_year <= $current_year){
 							//update last adjusted on contract.
 							if($contract_id > 0 && $last_adjusted_year > 0){
-								$socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+								$result = $socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+								if($result)
+								{
+									$this->messages[] = "Successfully imported regulation. Set last regulation year '" . $last_adjusted_year . "' for contract {$contract_id} with interval '{$interval}'";
+								}
 							}
 						}
 						else{
-							$this->warnings[] = "Skipping adjustment on contract {$contract_id} because last adjusted year is after {$current_year}.";
+							$this->warnings[] = "Skipping adjustment on contract ({$contract_id}) because the contract's last adjusted year ({$last_adjusted_year}) is after current year '{$current_year}'.";
 						}
 					}
-				} else {
-					$this->warnings[] = "Skipping price item " . $data[0] . " because it has no title or is an adjustment (regulering).";
 				}
+				else // Unknown event type
+				{
+					$this->warnings[] = "Unknow event type " . $type_id . " for contract {$contract_id} with title/description {$title}";
+				}
+				unset($date); 
 			}
 			
 			//loop through events once more to update previous adjustments
@@ -1235,7 +1305,11 @@
 						$contract_id = $contracts[$data[1]];
 						if($year <= $current_year){
 							if($contract_id > 0 && $year > 0){
-								$socontract->update_adjustment_year($contract_id, $year);
+								$result = $socontract->update_adjustment_year($contract_id, $year);
+								if($result)
+								{
+									$this->messages[] = "Successfully updated regulation information. Set last regulation year '" . $year	 . "' for contract {$contract_id}";
+								}
 							}
 						}
 						else{
@@ -1246,10 +1320,10 @@
 			}
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
-			return true;
+			return $regulation_id_location_id;
 		}
 		
-		protected function import_adjustments($contracts)
+		protected function import_adjustments($contracts, $regulation_id_location_id)
 		{
 			$start_time = time();
 			
@@ -1260,23 +1334,24 @@
 			$this->messages[] = "Read 'u_Regulering.csv' file in " . (time() - $start_time) . " seconds";
 			$this->messages[] = "'u_Regulering.csv' contained " . count($datalines) . " lines";
 			
-			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
-			$location_id_intern = array_search('contract_type_internleie', $types);
-			$location_id_extern = array_search('contract_type_eksternleie', $types);
-			
 			foreach ($datalines as $data) {
-				if(count($data) <= 9)
+				if(count($data) <= 8)
 				{
 					continue;
 				}
-				$adjustment = new rental_adjustment();
-				$responsibility_id = $this->decode($data[9]);	//nResponsibility
 				
-				if ($responsibility_id == 1 || $responsibility_id == '1') {
-					$adjustment->set_responsibility_id($location_id_intern);	//internal
+				$adjustment = new rental_adjustment();
+				$regulation_id = $this->decode($data[0]);	//nReguleringId
+				$loc_id = $regulation_id_location_id[$regulation_id];
+				
+				if(isset($loc_id) && $loc_id != '')
+				{
+					$adjustment->set_responsibility_id($loc_id);
 				}
-				else{
-					$adjustment->set_responsibility_id($location_id_extern);	//external
+				else
+				{
+					$this->messages[] = "This adjustment '" . $regulation_id . "' could not be linked to this responsibility area.  Date ({$this->decode($data[1])}), Text ({$this->decode($data[4])}), Interval ({$this->decode($data[2])})";
+					continue;
 				}
 				
 				$date_array = explode(".",$this->decode($data[1]));	//dAktuellDato
@@ -1289,8 +1364,9 @@
 				}
 				$adjustment->set_adjustment_date($date);
 				
-				$percent_tmp =$this->decode($data[4]);	//cBeskrivelse
-				$percent = substr($percent_tmp, 34, -2);
+				$description_array = explode(" ", $this->decode($data[4]));	//cBeskrivelse
+				$number = end($description_array);
+				$percent = substr($number, 0,strlen($number)-2);
 				$percent = str_replace(',', '.', $percent);
 				$adjustment->set_percent($percent);
 				
@@ -1298,13 +1374,19 @@
 				
 				$adjustment->set_new_price(0);
 				$adjustment->set_price_item_id(0);
-
 				
-				// All is good, store notification
-				if ($soadjustment->store($adjustment)) {
-					$this->messages[] = "Successfully imported adjustment '" . $adjustment->get_id() . "' for contract {$contract_id}";
-				} else {
-					$this->errors[] = "Error importing adjustment " . $adjustment->get_id() . " for contract {$contract_id}";
+				if(!$soadjustment->adjustment_exist($adjustment))
+				{
+					// All is good, store notification
+					if ($soadjustment->store($adjustment)) {
+						$this->messages[] = "Successfully imported adjustment: Date ({$this->decode($data[1])}), Percent ({$adjustment->get_percent()}), Interval ({$adjustment->get_interval()})";
+					} else {
+						$this->errors[] = "Error importing adjustment: Date ({$this->decode($data[1])}), Percent ({$adjustment->get_percent()}), Interval ({$adjustment->get_interval()})";
+					}
+				}
+				else
+				{
+					$this->messages[] = "Adjustment already exist: Date ({$this->decode($data[1])}), Percent ({$adjustment->get_percent()}), Interval ({$adjustment->get_interval()})";
 				}
 			}
 			
