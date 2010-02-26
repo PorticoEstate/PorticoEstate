@@ -74,10 +74,13 @@
 
     function party_export(ptype) {
         var select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_type');
-        var option = select.options[select.selectedIndex].value;
+        var pType = select.options[select.selectedIndex].value;
 
-        var sSelect = document.getElementById('<?php echo $list_id ?>_ctr_toggle_party_fields');
+        var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_fields');
         var sOption = sSelect.options[sSelect.selectedIndex].value;
+
+        var statusSelect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active');
+        var pStatus = statusSelect.options[statusSelect.selectedIndex].value;
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
         <?php
@@ -88,9 +91,9 @@
         ?>
         
         window.location = 'index.php?menuaction=rental.uiparty.download'+
-            '&amp;party_type='+option+
+        	'&amp;party_type='+pType+
             '<?php echo $url_add_on; ?>'+
-            '&amp;type='+ptype+
+            '&amp;active='+pStatus+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
         	'&amp;export=true';
@@ -116,8 +119,8 @@
 		<!-- Search -->
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
-		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
-			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
+		<label class="toolbar_element_label" for="ctrl_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
+			<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_party_fields">
 				<option value="all" <?php echo ($s_type == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
 				<option value="name" <?php echo ($s_type == 'name') ? 'selected' : ''?>><?php echo lang('name') ?></option>
 				<option value="address" <?php echo ($s_type == 'address') ? 'selected' : ''?>><?php echo lang('address') ?></option>

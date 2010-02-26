@@ -26,8 +26,8 @@ agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
 agresso_lg04	rental	no	Agresso LG04 - salgsordrer
 add_location	rental	no	Legg enhet til leieobjektet
-adress_1	rental	no	Adresse 1
-adress_2	rental	no	Adresse 2
+address1	rental	no	Adresse 1
+address2	rental	no	Adresse 2
 all	rental	no	Alle
 all_locations	rental	no	Enheter fra eiendomsregisteret
 and	rental	no	og
@@ -80,6 +80,7 @@ comments	rental	no	Kommentarer
 Commit	rental	no	Avslutt
 Commited	rental	no	Avsluttet
 company	rental	no	Foretak
+company_name	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
 composite_back	rental	no	Leieobjektsliste
