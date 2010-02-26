@@ -79,6 +79,7 @@
 			$external		= isset($data['external'])?$data['external']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new			= isset($data['new']) ? $data['new'] : '';
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -255,6 +256,12 @@
 			if ($start_date)
 			{
 				$filtermethod .= " $where fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date ";
+				$where= 'AND';
+			}
+
+			if ($location_code)
+			{
+				$filtermethod .= " $where fm_tts_tickets.location_code {$this->like} '{$location_code}%'";
 				$where= 'AND';
 			}
 
