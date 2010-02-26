@@ -36,7 +36,8 @@
 
 		public $public_functions = array
 		(
-			'demo'				=> true,
+			'index'		=> true,
+			'demo'		=> true
 		);
 
 		public function __construct()
@@ -73,6 +74,12 @@
 		/**
 		 * TODO
 		 */
+		public function index()
+		{
+			$this->demo();
+		}
+
+
 		public function demo()
 		{
 			$data = array
