@@ -115,7 +115,7 @@
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
 				echo '<li class="info">Innleie: finished step ' .$result. '</li>';
-				while($result != '7')
+				while($result != '6')
 				{
 					$result = $this->import();
 					echo '<li class="info">Innleie: finished step ' .$result. '</li>';
