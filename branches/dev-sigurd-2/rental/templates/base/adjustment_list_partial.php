@@ -26,9 +26,10 @@
 
 	// Defining columns for datatable
 	var columnDefs = [
-        {
-            key: "id",
-            label: "<?php echo lang('id') ?>"
+		{
+			key: "adjustment_date",
+			label: "<?php echo lang('adjustment_date') ?>",
+		  	sortable: true
 		},
 		{
 			key: "price_item_id",
@@ -53,11 +54,6 @@
 		{
 			key: "responsibility_title",
 			label: "<?php echo lang('responsibility') ?>",
-		  	sortable: true
-		},
-		{
-			key: "adjustment_date",
-			label: "<?php echo lang('adjustment_date') ?>",
 		  	sortable: true
 		},
 		{
