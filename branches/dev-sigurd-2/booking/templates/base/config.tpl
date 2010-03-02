@@ -24,6 +24,14 @@
 			<td>{lang_logopath_frontend}:example: /phpgwapi/templates/bkbooking/images/bergen_logo.png</td>
 			<td><input name="newsettings[logopath_frontend]" value="{value_logopath_frontend}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_image_maxheight}:example: 300</td>
+			<td><input name="newsettings[image_maxheight]" value="{value_image_maxheight}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_image_maxwidth}:example: 300</td>
+			<td><input name="newsettings[image_maxwidth]" value="{value_image_maxwidth}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
