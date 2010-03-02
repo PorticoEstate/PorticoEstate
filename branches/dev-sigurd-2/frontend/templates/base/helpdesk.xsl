@@ -12,19 +12,8 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-				<div class="yui-navset" id="ticket_tabview">
-					<xsl:value-of disable-output-escaping="yes" select="tabs" />
-					<div class="yui-content">
-						<div class="toolbar-container">
-							<div class="toolbar">
-								<xsl:apply-templates select="datatable/actions" />
-							</div>
-						</div>
-					</div>
-				</div>
-
-			<xsl:apply-templates select="datatable" />
+			
+		<xsl:call-template name="datatable" />
 	</xsl:template>
 
 	<xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">

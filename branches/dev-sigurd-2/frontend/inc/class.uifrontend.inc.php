@@ -33,6 +33,11 @@
 
 	class frontend_uifrontend
 	{
+        /**
+         * Used to save state of header (select box, ++) between requests
+         * @var array
+         */
+        public $header_state;
 
 		public $public_functions = array
 		(
@@ -69,6 +74,10 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
+
+            $this->header_state = array(
+                'selected' => array('-1')
+            );
 		}
 
 		/**

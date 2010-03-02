@@ -59,7 +59,12 @@
 				'date_start'	=> $GLOBALS['phpgw']->yuical->add_listener('date_start', $date_start),
 				'date_end'		=> $GLOBALS['phpgw']->yuical->add_listener('date_end', $date_end),
 			);
+
+            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'header'));
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'demo'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('demo_2' => $data));
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array(
+                'header'    => $this->header_state,
+                'demo_2'    => $data
+            ));
 		}
     }

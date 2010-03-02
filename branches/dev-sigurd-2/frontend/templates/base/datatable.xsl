@@ -140,7 +140,7 @@
 
 	Entrypoint for this datatable. Renders pagination and datatable.
 -->
-<xsl:template match="datatable">
+<xsl:template name="datatable" match="datatable">
 
 		<xsl:choose>
 			<xsl:when test="//exchange_values!=''">

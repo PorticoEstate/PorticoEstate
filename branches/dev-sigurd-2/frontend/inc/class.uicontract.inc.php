@@ -22,32 +22,47 @@
          */
         public function index()
         {
+            // This is the main container for all contract data sent to XSLT template stuff
+            $contractdata = array();
+
+            // Array of errors and other notifications displayed to user
+            $msglog = array();
+
+            // Holds the contract object (for use in this function only), if any
+            $contract = null;
             $cid = phpgw::get_var('cid', 'int', 'REQUEST', 0);
-            $contract = array();
+            
             if($cid)
             {
             	$contract = rental_socontract::get_instance()->get_single($cid);
             }
-            //print_r($contract);
-            $tpldata = array(); // Collect all contracts as arrays in this
-            if($contract)
+            else
             {
-            	$tpldata[] = array
+                $msglog['error'][] = array('msg' => 'Gje meg en kontraktid!');
+            }
+
+            if(is_object($contract))
+            {
+            	$contractdata[] = array
             	(
-            	    'id' => $contract->get_id()
+            	    'id' => $contract->get_id(),
+                    'rawdata' => var_export($contract, true)
             	);
             }
   
  			$data = array
 			(
-				'tabs'		=> $this->tabs,
-				'tpldata'	=> $tpldata
+				'tabs'          => $this->tabs,
+				'contract'      => $contractdata,
+                'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			);
 
+            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'header'));
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'contract'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('contract' => $data));
- 
-            //_debug_array($contract);
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array(
+                'header'    => $this->header_state,
+                'contract'  => $data
+            ));
         }
 
         /**
@@ -55,6 +70,18 @@
          */
         public function show()
         {
-			$this->index();
+			$sotts = CreateObject('property.botts');
+            
+            /*$json = $sotts->read(array(
+                'query' => '1101-01-01-01-105'
+
+            ));*/
+            $sotts->query = '1101-01-01-01-105';
+            $json = $sotts->read();
+
+            print_r($json);
+
+
+
         }
     }
