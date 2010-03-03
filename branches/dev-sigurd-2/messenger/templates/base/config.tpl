@@ -31,10 +31,9 @@
 		<tr class="row_off">
 			<td>{lang_Restrict_users_to_only_sending_to_the_follow_group}:</td>
 			<td>
-				<select name="newsettings[restrict_to_group]">
-					<option value="0">{lang_no_restriction}</a>
+				<table>
 					{hook_restrict_to_group}
-				</select>
+				</table>
 			</td>
 		</tr>
 <!-- END body -->
