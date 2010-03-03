@@ -38,122 +38,298 @@
         public $public_functions = array
             (
             'index'     	=> true,
-            'download'      => true,
             'add_ticket'	=> true,
+            'view'	=> true,
         );
 
         public function __construct()
         {
             parent::__construct();
-        }
-
-        public function query()
-        {
-            $location_code	= phpgw::get_var('location_code');
-
-            $tickets = frontend_boproperty::get_tickets($location_code);
-
-
-            //Serialize the contracts found
-            $rows = array();
-            foreach ($tickets as $result)
-            {
-                if(isset($result))
-                {
-                    $rows[] = $result->serialize();
-                }
-            }
-
-            //Add context menu columns (actions and labels)
-            array_walk($rows, array($this, 'add_actions'), array($type));
-
-            //Build a YUI result from the data
-            $result_data = array('results' => $rows, 'total_records' => count($rows));
-
-            return $this->yui_results($result_data, 'total_records', 'results');
-        }
-
-        /**
-         * Add data for context menu
-         *
-         * @param $value pointer to
-         * @param $key ?
-         * @param $params [type of query, editable]
-         */
-        public function add_actions(&$value, $key, $params)
-        {
-            $value['ajax'] = array();
-            $value['actions'] = array();
-            $value['labels'] = array();
-
-            $type = $params[0];
-
-            $value['ajax'][] = false;
-            $value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uihelpdesk.view', 'id' => $value['id'])));
-            $value['labels'][] = lang('view');
+            $this->location_code = phpgw::get_var('location_code');
         }
 
         public function index()
         {
-            $location_code	= phpgw::get_var('location_code');
 
-            
-            $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+            $bo	= CreateObject('property.botts',true);
+
+            $dry_run = false;
+            $second_display = phpgw::get_var('second_display', 'bool');
+
+            $datatable = array();
+
+            if( phpgw::get_var('phpgw_return_as') != 'json' )
+            {
+
+
+                $datatable['config']['allow_allrows'] = true;
+
+                $datatable['config']['base_java_url'] = "menuaction:'frontend.uihelpdesk.index',"
+                    ."second_display:1,"
+                    ."sort: '{$this->sort}',"
+                    ."order: '{$this->order}',"
+                    ."cat_id:'{$this->cat_id}',"
+                    ."status_id: '{$this->status_id}',"
+                    ."user_id: '{$this->user_id}',"
+                    ."query: '{$this->query}',"
+                    ."district_id: '{$this->district_id}',"
+                    ."start_date: '{$start_date}',"
+                    ."end_date: '{$end_date}',"
+                    ."allrows:'{$this->allrows}'";
+
+
+                $dry_run = true;
+            }
+
+            $ticket_list = array();
+            if(!$dry_run)
+            {
+                $bo->location_code = $this->location_code;
+                $ticket_list = $bo->read();
+            }
+
+            $uicols = array();
+            $i = 0;
+            $uicols['name'][$i++] = 'id';
+            $uicols['name'][$i++] = 'subject';
+            $uicols['name'][$i++] = 'entry_date';
+            $uicols['name'][$i++] = 'status';
+
+            $count_uicols_name = count($uicols['name']);
+
+            if(is_array($ticket_list))
+            {
+                $status['X'] = array
+                    (
+                    'bgcolor'			=> '#5EFB6E',
+                    'status'			=> lang('closed'),
+                    'text_edit_status'	=> isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open'),
+                    'new_status' 		=> 'O'
+                );
+
+                $custom_status	= $bo->get_custom_status();
+
+                foreach($custom_status as $custom)
+                {
+                    $status["C{$custom['id']}"] = array
+                        (
+                        'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+                        'status'			=> $custom['name'],
+                        'text_edit_status'	=> lang('close'),
+                        'new_status'		=> 'X'
+                    );
+                }
+
+                $j = 0;
+                foreach($ticket_list as $ticket)
+                {
+                    for ($k = 0 ; $k < $count_uicols_name ; $k++)
+                    {
+                        if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
+                        {
+                            $datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
+                            $datatable['rows']['row'][$j]['column'][$k]['value'] 	= isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open');
+                        }
+                        else if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='C')
+                        {
+                            $datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
+                            $datatable['rows']['row'][$j]['column'][$k]['value'] 	= lang('Closed');
+                        }
+                        else if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
+                        {
+                            $datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
+                            $datatable['rows']['row'][$j]['column'][$k]['value'] 	= $status[$ticket[$uicols['name'][$k]]]['status'];
+                        }
+                        else
+                        {
+                            $datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
+                            $datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]];
+                        }
+                    }
+
+                    $j++;
+                }
+            }
+
+            $parameters = array
                 (
-                'menuaction'		=> 'frontend.uihelpdesk.index',
-                'location_code'				=> $this->location_code
+                'parameter' => array
+                (
+                    array
+                    (
+                        'name'		=> 'id',
+                        'source'	=> 'id'
+                    ),
                 )
             );
 
-            $datatable['config']['allow_allrows'] = true;
-
-            $datatable['config']['base_java_url'] = "menuaction:'frontend.uihelpdesk.query',"
-                ."second_display:1,"
-                ."sort: '{$this->sort}',"
-                ."location_code: '{$this->location_code}',"
-                ."order: '{$this->order}',"
-                ."cat_id:'{$this->cat_id}',"
-                ."status_id: '{$this->status_id}',"
-                ."user_id: '{$this->user_id}',"
-                ."query: '{$this->query}',"
-                ."district_id: '{$this->district_id}',"
-                ."start_date: '{$start_date}',"
-                ."end_date: '{$end_date}',"
-                ."allrows:'{$this->allrows}'";
-
-            $uicols = array(
-                array('id', '', false, false),
-                array('title','title', true, false),
-                array('date','date', true, false),
-                array('user','user', true, false)
+            $datatable['rowactions']['action'][] = array(
+                'my_name' 			=> 'view',
+                'statustext' 	=> lang('view the ticket'),
+                'text'			=> lang('view'),
+                'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+                (
+                'menuaction'	=> 'frontend.uihelpdesk.view'
+                )),
+                'parameters'	=> $parameters
             );
 
-            for ($i = 0 ; $i < count($uicols) ; $i++)
-			{
-					$datatable['headers']['header'][$i]['name'] 		= $uicols[$i][0];
-					$datatable['headers']['header'][$i]['text'] 		= lang($uicols[$i][1]);
-					$datatable['headers']['header'][$i]['visible'] 		= $uicols[$i][2];
-					$datatable['headers']['header'][$i]['sortable']		= $uicols[$i][3];
-			}
+            unset($parameters);
+            for ($i = 0 ; $i < $count_uicols_name ; $i++)
+            {
+                $datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
+                $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+                $datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
+                $datatable['headers']['header'][$i]['visible'] 			= true;
+                $datatable['headers']['header'][$i]['sortable']			= false;
+                if($uicols['name'][$i]=='id' || $uicols['name'][$i]=='user' || $uicols['name'][$i]=='entry_date')
+                {
+                    $datatable['headers']['header'][$i]['sortable']		= true;
+                    $datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
+                }
+                if($uicols['name'][$i]=='id')
+                {
+                    $datatable['headers']['header'][$i]['visible'] 		= false;
+                }
+            }
+
+            //path for property.js
+            $datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+            // Pagination and sort values
+            $datatable['pagination']['records_start'] 	= (int)$bo->start;
+            $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+            if($dry_run)
+            {
+                $datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+            }
+            else
+            {
+                $datatable['pagination']['records_returned']= count($ticket_list);
+            }
+            $datatable['pagination']['records_total'] 	= $bo->total_records;
+
+            $datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+
+            $appname						= lang('helpdesk');
+            $function_msg					= lang('list ticket');
+
+            if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+            {
+                $datatable['sorting']['order'] 			= 'entry_date'; // name key Column in myColumnDef
+                $datatable['sorting']['sort'] 			= 'desc'; // ASC / DESC
+            }
+            else
+            {
+                $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+                $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+            }
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+            //values for Pagination
+            $json = array(
+                'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+                'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+                'startIndex' 		=> $datatable['pagination']['records_start'],
+                'sort'				=> $datatable['sorting']['order'],
+                'dir'				=> $datatable['sorting']['sort'],
+                'records'			=> array()
+            );
+
+            // values for datatable
+            if(is_array($datatable['rows']['row']))
+            {
+                foreach( $datatable['rows']['row'] as $row )
+                {
+                    $json_row = array();
+                    foreach( $row['column'] as $column)
+                    {
+                        $json_row[$column['name']] = $column['value'];
+                    }
+                    $json['records'][] = $json_row;
+                }
+            }
+
+            // right in datatable
+            if(is_array($datatable['rowactions']['action']))
+            {
+                $json['rights'] = $datatable['rowactions']['action'];
+            }
+
+            if( phpgw::get_var('phpgw_return_as') == 'json' )
+            {
+                return $json;
+            }
 
 
-			$data = array
-			(
-				'tabs'			=> $this->tabs,
-				'datatable' 	=> $datatable
-			);
+            $datatable['json_data'] = json_encode($json);
+//-------------------- JSON CODE ----------------------
 
-            //print_r($mekk);
+// Prepare template variables and process XSLT
 
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk', 'datatable'));
+            $data = array(
+                'tabs'			=> $this->tabs,
+                'datatable' 	=> $datatable,
+                'lightbox_name'	=> lang('add ticket')
+            );
+
+            if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+            {
+                $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+            }
+
+            phpgwapi_yui::load_widget('dragdrop');
+            phpgwapi_yui::load_widget('datatable');
+            phpgwapi_yui::load_widget('menu');
+            phpgwapi_yui::load_widget('connection');
+            phpgwapi_yui::load_widget('loader');
+            phpgwapi_yui::load_widget('paginator');
+
+            // Prepare CSS Style
+            $GLOBALS['phpgw']->css->validate_file('datatable');
+            $GLOBALS['phpgw']->css->validate_file('property');
+            $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+            $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+            $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+            $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+            $GLOBALS['phpgw_info']['flags']['app_header'] = lang('frontend') . ' - ' . $appname . ': ' . $function_msg;
+
+            $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'helpdesk.list' , 'frontend' );
+
+            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));
             $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('helpdesk' => $data));
 
         }
 
-        public function helpdesk_download()
+
+        public function view()
         {
-            echo 'implement me';
+            $bo	= CreateObject('property.botts',true);
+            $ticketid = phpgw::get_var('id');
+            $ticket = $bo->read_single($ticketid);
+
+            $data = array(
+                'tabs'			=> $this->tabs,
+                'ticket'	=> $ticket
+            );
+
+            if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+            {
+                $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+            }
+
+            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'ticketview'));
+            $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('ticketinfo' => $data));
+
+//            print_r($ticket);
+//            echo "--------------";
+//            print_r($bo->read_additional_notes($ticketid));
+//            echo "--------------";
+//            print_r($bo->read_record_history($ticketid));
         }
+
+
         public function add_ticket()
         {
 
@@ -167,7 +343,7 @@
                 if($GLOBALS['phpgw']->session->is_repost())
                 {
                     $receipt['error'][]=array('msg'=>lang('repost'));
-              ø  }
+                }
 
                 if(!isset($values['address']) || !$values['address'])
                 {
@@ -237,9 +413,4 @@
             $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
         }
 
-        public function download()
-        {
-            echo 'implement me';
-            die();
-        }
     }
