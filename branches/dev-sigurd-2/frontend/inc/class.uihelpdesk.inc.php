@@ -1,4 +1,5 @@
 <?php
+
     /**
      * Frontend : a simplified tool for end users.
      *
@@ -302,6 +303,25 @@
 
         }
 
+        public function cmp($a, $b)
+        {
+            $timea = explode('/', $a['date']);
+            $timeb = explode('/', $b['date']);
+            $year_and_maybe_time_a = explode(' - ', $timea[2]);
+            $year_and_maybe_time_b = explode(' - ', $timeb[2]);
+            $time_of_day_a = explode(':', $year_and_maybe_time_a[1]);
+            $time_of_day_b = explode(':', $year_and_maybe_time_b[1]);
+
+            $timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
+            $timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
+
+            if($timestamp_a > $timestamp_b) {
+                return 1;
+            }
+
+            return -1;
+        }
+
 
         public function view()
         {
@@ -309,16 +329,50 @@
             $ticketid = phpgw::get_var('id');
             $ticket = $bo->read_single($ticketid);
 
-            $data = array(
-                'tabs'			=> $this->tabs,
-                'ticket'	=> $ticket
-            );
+            $notes = $bo->read_additional_notes($ticketid);
+            $history = $bo->read_record_history($ticketid);
 
-            if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+            $tickethistory = array();
+
+            foreach($notes as $note)
             {
-                $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+                if(empty($note['value_publish']) || $note['value_publish']) {
+                    $tickethistory[] = array(
+                            'date' => $note['value_date'],
+                            'user' => $note['value_user'],
+                            'note' => $note['value_note']
+                        );
+                }
             }
 
+
+            foreach($history as $story)
+            {
+                $tickethistory[] = array(
+                        'date' => $story['value_date'],
+                        'user' => $story['value_user'],
+                        'action'=> $story['value_action'],
+                        'new_value' => $story['value_new_value'],
+                        'old_value' => $story['value_old_value']
+                    );
+            }
+
+            usort($tickethistory, array($this, "cmp"));
+
+            
+
+            $i=0;
+            foreach($tickethistory as $foo) {
+                $tickethistory2['record'.$i] = $foo;
+                $i++;
+            }
+
+            $data = array(
+                'tabs'			=> $this->tabs,
+                'ticket'        => $ticket,
+                'tickethistory'	=> $tickethistory2
+            );
+            
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'ticketview'));
             $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('ticketinfo' => $data));
 
@@ -332,8 +386,6 @@
 
         public function add_ticket()
         {
-
-            $GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 
             $values	= phpgw::get_var('values');
 
