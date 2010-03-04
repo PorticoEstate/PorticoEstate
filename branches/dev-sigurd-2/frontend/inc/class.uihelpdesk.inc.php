@@ -268,12 +268,6 @@
 
 // Prepare template variables and process XSLT
 
-            $data = array(
-                'tabs'			=> $this->tabs,
-                'datatable' 	=> $datatable,
-                'lightbox_name'	=> lang('add ticket')
-            );
-
             if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
             {
                 $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
@@ -298,9 +292,17 @@
 
             $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'helpdesk.list' , 'frontend' );
 
+            $data = array(
+            	'header' 		=>	$this->header_state,
+                'tabs'			=> 	$this->tabs,
+                'helpdesk' 		=> array('datatable' => $datatable)
+  
+                //'lightbox_name'	=> 	lang('add ticket')
+            );
+            
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));
-            $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('helpdesk' => $data));
-
+            $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
+			//print_r( $GLOBALS['phpgw']->xslttpl->get_vars());
         }
 
         private function cmp($a, $b)
