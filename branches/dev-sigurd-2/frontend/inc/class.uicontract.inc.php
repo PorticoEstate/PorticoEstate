@@ -52,17 +52,14 @@
   
  			$data = array
 			(
-				'tabs'          => $this->tabs,
-				'contract'      => $contractdata,
-                'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+				'header' =>$this->header_state,
+				'tabs' => $this->tabs,
+				'contract'      => 'test'
 			);
-
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'header'));
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'contract'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array(
-                'header'    => $this->header_state,
-                'contract'  => $data
-            ));
+			
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
+        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
         }
 
         /**

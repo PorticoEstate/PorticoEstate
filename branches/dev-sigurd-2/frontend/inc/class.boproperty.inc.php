@@ -1,4 +1,5 @@
 <?php
+    include_class('frontend', 'ticket', 'inc/model/');
 
     class frontend_boproperty
     {
