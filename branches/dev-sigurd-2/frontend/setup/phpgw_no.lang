@@ -6,4 +6,7 @@ refurbishment	frontend	no	Oppgraderinger
 services	frontend	no	Tjenester
 contract	frontend	no	Kontrakter
 helpdesk	frontend	no	Melding om avvik
-
+subject	frontend	no	Meldingstittel
+entry_date	frontend	no	Dato
+status	frontend	no	Status
+list ticket	frontend	no	Meldingsoversikt
