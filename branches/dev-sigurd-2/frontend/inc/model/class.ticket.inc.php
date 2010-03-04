@@ -3,9 +3,18 @@
     class frontend_ticket
     {
 
-        private $id, $title, $date, $user, $messages;
+        private $id, $title, $date, $user, $messages, $location_description;
 
+        public function get_location_description()
+        {
+            return $this->location_description;
+        }
 
+        public function set_location_description($location_description)
+        {
+            $this->location_description = $location_description;
+        }
+        
         public function get_id()
         {
             return $this->id;

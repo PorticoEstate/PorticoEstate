@@ -212,8 +212,8 @@
 
             $datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
 
-            $appname						= lang('helpdesk');
-            $function_msg					= lang('list ticket');
+            $appname		= lang('helpdesk');
+            $function_msg	= lang('list ticket');
 
             if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
             {
@@ -303,7 +303,7 @@
 
         }
 
-        public function cmp($a, $b)
+        private function cmp($a, $b)
         {
             $timea = explode('/', $a['date']);
             $timeb = explode('/', $b['date']);
@@ -315,7 +315,8 @@
             $timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
             $timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
 
-            if($timestamp_a > $timestamp_b) {
+            if($timestamp_a > $timestamp_b)
+            {
                 return 1;
             }
 
@@ -336,12 +337,13 @@
 
             foreach($notes as $note)
             {
-                if(empty($note['value_publish']) || $note['value_publish']) {
+                if(empty($note['value_publish']) || $note['value_publish'])
+                {
                     $tickethistory[] = array(
-                            'date' => $note['value_date'],
-                            'user' => $note['value_user'],
-                            'note' => $note['value_note']
-                        );
+                        'date' => $note['value_date'],
+                        'user' => $note['value_user'],
+                        'note' => $note['value_note']
+                    );
                 }
             }
 
@@ -349,20 +351,20 @@
             foreach($history as $story)
             {
                 $tickethistory[] = array(
-                        'date' => $story['value_date'],
-                        'user' => $story['value_user'],
-                        'action'=> $story['value_action'],
-                        'new_value' => $story['value_new_value'],
-                        'old_value' => $story['value_old_value']
-                    );
+                    'date' => $story['value_date'],
+                    'user' => $story['value_user'],
+                    'action'=> $story['value_action'],
+                    'new_value' => $story['value_new_value'],
+                    'old_value' => $story['value_old_value']
+                );
             }
 
             usort($tickethistory, array($this, "cmp"));
 
-            
 
             $i=0;
-            foreach($tickethistory as $foo) {
+            foreach($tickethistory as $foo)
+            {
                 $tickethistory2['record'.$i] = $foo;
                 $i++;
             }
@@ -372,91 +374,50 @@
                 'ticket'        => $ticket,
                 'tickethistory'	=> $tickethistory2
             );
-            
+
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'ticketview'));
             $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('ticketinfo' => $data));
-
-//            print_r($ticket);
-//            echo "--------------";
-//            print_r($bo->read_additional_notes($ticketid));
-//            echo "--------------";
-//            print_r($bo->read_record_history($ticketid));
         }
 
 
         public function add_ticket()
         {
+            $bo	= CreateObject('property.botts',true);
 
-            $values	= phpgw::get_var('values');
+            $values         = phpgw::get_var('values');
+            $missingfields  = false;
+            $msglog         = array();
 
-            $receipt = array();
             if (isset($values['save']))
             {
-                if($GLOBALS['phpgw']->session->is_repost())
+                foreach($values as $key => $value)
                 {
-                    $receipt['error'][]=array('msg'=>lang('repost'));
-                }
-
-                if(!isset($values['address']) || !$values['address'])
-                {
-                    $receipt['error'][]=array('msg'=>lang('Missing address'));
-                }
-
-                if(!isset($values['details']) || !$values['details'])
-                {
-                    $receipt['error'][]=array('msg'=>lang('Please give som details'));
-                }
-
-                $attachments = array();
-
-                if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
-                {
-                    $file_name	= str_replace(' ','_',$_FILES['file']['name']);
-                    $mime_magic = createObject('phpgwapi.mime_magic');
-                    $mime       = $mime_magic->filename2mime($file_name);
-
-                    $attachments[] = array
-                        (
-                        'file' => $_FILES['file']['tmp_name'],
-                        'name' => $file_name,
-                        'type' => $mime
-                    );
-                }
-
-                if (!$receipt['error'])
-                {
-                    if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+                    if(empty($value) && $key != 'file')
                     {
-                        if (!is_object($GLOBALS['phpgw']->send))
-                        {
-                            $GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-                        }
-
-                        $from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$values['from_address']}>";
-
-                        $receive_notification = true;
-                        $rcpt = $GLOBALS['phpgw']->send->msg('email', $values['address'],'Support',
-                            stripslashes(nl2br($values['details'])), '', '', '',
-                            $from , $GLOBALS['phpgw_info']['user']['fullname'],
-                            'html', '', $attachments , $receive_notification);
-
-                        if($rcpt)
-                        {
-                            $receipt['message'][]=array('msg'=>lang('message sent'));
-                        }
+                        $missingfields = true;
                     }
-                    else
-                    {
-                        $receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
-                    }
+                }
+
+                if(!$missingfields)
+                {
+
+
+                    $ticket = new frontend_ticket();
+                    $ticket->set_date(time());
+                    $ticket->set_title($values('title'));
+                    $ticket->set_location_description($values('locationdesc'));
+                    $ticket->set_messages(array($values('title')));
+                }
+                else
+                {
+                    $msglog['error'][] = array('msg'=>lang('Missing field(s)'));
                 }
             }
 
-            $data = array
-                (
-                'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-                'from_name'		=> $GLOBALS['phpgw_info']['user']['fullname'],
-                'from_address'	=> $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
+            $data = array(
+                'msgbox_data'       => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+                'from_name'         => $GLOBALS['phpgw_info']['user']['fullname'],
+                'from_address'      => $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
                 'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket')),
                 'support_address'	=> $GLOBALS['phpgw_info']['server']['support_address'],
             );
